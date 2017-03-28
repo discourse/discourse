@@ -474,6 +474,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       DiscourseURL.routeTo(this.get('model.lastPostUrl'), { skipIfOnScreen: false });
     },
 
+    jumpUnread() {
+      this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
     selectAll() {
       const posts = this.get('model.postStream.posts');
       const selectedPosts = this.get('selectedPosts');

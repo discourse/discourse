@@ -1773,8 +1773,7 @@ describe Topic do
 
       it "should add user to the group" do
         expect(Guardian.new(walter).can_see?(group_private_topic)).to be_falsey
-        invite = group_private_topic.invite(group_manager, walter.email)
-        expect(invite).to be_nil
+        expect { group_private_topic.invite(group_manager, walter.email) }.to raise_error(StandardError)
         expect(walter.groups).to include(group)
         expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
       end

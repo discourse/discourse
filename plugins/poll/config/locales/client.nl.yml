@@ -54,6 +54,7 @@ nl:
         insert: Poll invoegen
         help:
           options_count: Voer minstens 2 opties in
+          invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
         poll_type:
           label: Type
           regular: Eén keuze

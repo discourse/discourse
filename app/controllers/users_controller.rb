@@ -585,7 +585,7 @@ class UsersController < ApplicationController
 
     session.delete(SessionController::ACTIVATE_USER_KEY)
 
-    if @user.active
+    if @user.active && @user.email_confirmed?
       render_json_error(I18n.t('activation.activated'), status: 409)
     else
       @email_token = @user.email_tokens.unconfirmed.active.first

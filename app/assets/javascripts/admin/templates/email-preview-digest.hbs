@@ -43,7 +43,7 @@
       {{#if htmlEmpty}}
         <p>{{i18n 'admin.email.no_result'}}</p>
       {{else}}
-        <iframe src="{{iframeSrc}}" />
+        <iframe srcdoc={{model.html_content}} />
       {{/if}}
     {{else}}
       <pre>{{{model.text_content}}}</pre>

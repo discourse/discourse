@@ -23,20 +23,22 @@ export default createWidget('header-topic-info', {
       }
     }
     const loaded = topic.get('details.loaded');
+    const fancyTitle = topic.get('fancyTitle');
+    const href = topic.get('url');
 
-    if (loaded) {
+    if (fancyTitle && href) {
       heading.push(this.attach('topic-status', attrs));
 
-      const titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
+      const titleHTML = new RawHtml({ html: `<span>${fancyTitle}</span>` });
       heading.push(this.attach('link', { className: 'topic-link',
                                          action: 'jumpToTopPost',
-                                         href: topic.get('url'),
+                                         href,
                                          contents: () => titleHTML }));
     }
 
     const title = [h('h1', heading)];
-    if (loaded) {
-      const category = topic.get('category');
+    const category = topic.get('category');
+    if (loaded || category) {
       if (category && (!category.get('isUncategorizedCategory') || !this.siteSettings.suppress_uncategorized_badge)) {
         const parentCategory = category.get('parentCategory');
         if (parentCategory) {

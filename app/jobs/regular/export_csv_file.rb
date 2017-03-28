@@ -12,6 +12,7 @@ module Jobs
       user_archive:   ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at'],
       user_list:      ['id','name','username','email','title','created_at','last_seen_at','last_posted_at','last_emailed_at','trust_level','approved','suspended_at','suspended_till','blocked','active','admin','moderator','ip_address'],
       user_stats:     ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received'],
+      user_profile:   ['location','website','views'],
       user_sso:       ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url'],
       staff_action:   ['staff_user','action','subject','created_at','details', 'context'],
       screened_email: ['email','action','match_count','last_match_at','created_at','ip_address'],
@@ -79,7 +80,7 @@ module Jobs
 
       if SiteSetting.enable_sso
         # SSO enabled
-        User.where(condition).includes(:user_stat, :single_sign_on_record, :groups).find_each do |user|
+        User.where(condition).includes(:user_profile, :user_stat, :single_sign_on_record, :groups).find_each do |user|
           user_info_array = get_base_user_array(user)
           user_info_array = add_single_sign_on(user, user_info_array)
           user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
@@ -88,7 +89,7 @@ module Jobs
         end
       else
         # SSO disabled
-        User.where(condition).includes(:user_stat, :groups).find_each do |user|
+        User.where(condition).includes(:user_profile, :user_stat, :groups).find_each do |user|
           user_info_array = get_base_user_array(user)
           user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
           user_info_array = add_group_names(user, user_info_array)
@@ -152,7 +153,7 @@ module Jobs
 
     def get_header
       if @entity == 'user_list'
-        header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats']
+        header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats'] + HEADER_ATTRS_FOR['user_profile']
         header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_sso
         user_custom_fields = UserField.all
         if user_custom_fields.present?
@@ -180,7 +181,7 @@ module Jobs
 
       def get_base_user_array(user)
         user_array = []
-        user_array.push(user.id,escape_comma(user.name),user.username,user.email,escape_comma(user.title),user.created_at,user.last_seen_at,user.last_posted_at,user.last_emailed_at,user.trust_level,user.approved,user.suspended_at,user.suspended_till,user.blocked,user.active,user.admin,user.moderator,user.ip_address,user.user_stat.topics_entered,user.user_stat.posts_read_count,user.user_stat.time_read,user.user_stat.topic_count,user.user_stat.post_count,user.user_stat.likes_given,user.user_stat.likes_received)
+        user_array.push(user.id,escape_comma(user.name),user.username,user.email,escape_comma(user.title),user.created_at,user.last_seen_at,user.last_posted_at,user.last_emailed_at,user.trust_level,user.approved,user.suspended_at,user.suspended_till,user.blocked,user.active,user.admin,user.moderator,user.ip_address,user.user_stat.topics_entered,user.user_stat.posts_read_count,user.user_stat.time_read,user.user_stat.topic_count,user.user_stat.post_count,user.user_stat.likes_given,user.user_stat.likes_received,escape_comma(user.user_profile.location),user.user_profile.website,user.user_profile.views)
       end
 
       def add_single_sign_on(user, user_info_array)

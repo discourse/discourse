@@ -108,7 +108,7 @@ def gzip(path)
 end
 
 def brotli(path)
-  if ENV['COMPRESS_BROTLI']
+  if ENV['COMPRESS_BROTLI']&.to_i == 1
     STDERR.puts "brotli #{path}"
     STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
     STDERR.puts `chmod +r #{path}.br`
@@ -174,6 +174,18 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
     # protected
     manifest.send :save
+
+    if GlobalSetting.fallback_assets_path.present?
+      begin
+        FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
+      rescue => e
+        STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
+        STDERR.puts e
+        STDERR.puts e.backtrace
+      end
+    end
+
+
   end
 
 end

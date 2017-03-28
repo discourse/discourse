@@ -19,7 +19,7 @@ export default createWidget('link', {
         return Discourse.getURL(router.router.generate.apply(router.router, params));
       }
     } else {
-      return attrs.href;
+      return Discourse.getURL(attrs.href);
     }
   },
 

@@ -1,11 +1,20 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
 
-registerUnbound('topic-link', function(topic) {
-  var title = topic.get('fancyTitle');
-  var url = topic.linked_post_number ? topic.urlForPostNumber(topic.linked_post_number) : topic.get('lastUnreadUrl');
+registerUnbound('topic-link', (topic, args) => {
+  const title = topic.get('fancyTitle');
+  const url = topic.linked_post_number ?
+    topic.urlForPostNumber(topic.linked_post_number) :
+    topic.get('lastUnreadUrl');
 
-  var extraClass = topic.get('last_read_post_number') === topic.get('highest_post_number') ? " visited" : "";
-  var string = "<a href='" + url + "' class='title" + extraClass + "'>" + title + "</a>";
+  const classes = ['title'];
+  if (topic.get('last_read_post_number') === topic.get('highest_post_number')) {
+    classes.push('visited');
+  }
 
-  return new Handlebars.SafeString(string);
+  if (args.class) {
+    args.class.split(" ").forEach(c => classes.push(c));
+  }
+
+  const result = `<a href='${url}' class='${classes.join(' ')}'>${title}</a>`;
+  return new Handlebars.SafeString(result);
 });

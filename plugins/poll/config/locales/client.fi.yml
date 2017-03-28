@@ -54,6 +54,7 @@ fi:
         insert: Lisää äänestys
         help:
           options_count: Valitse vähintään 2 vaihtoehtoa
+          invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
         poll_type:
           label: Tyyppi
           regular: Valitaan yksi

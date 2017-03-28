@@ -505,7 +505,7 @@ class Post < ActiveRecord::Base
                 SET avg_time = (x.gmean / 1000)
                 FROM (SELECT post_timings.topic_id,
                              post_timings.post_number,
-                             round(exp(avg(ln(msecs)))) AS gmean
+                             round(exp(avg(CASE WHEN msecs > 0 THEN ln(msecs) ELSE 0 END))) AS gmean
                       FROM post_timings
                       INNER JOIN posts AS p2
                         ON p2.post_number = post_timings.post_number

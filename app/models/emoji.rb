@@ -43,7 +43,7 @@ class Emoji
     filename = "#{emoji['filename'] || name}.png"
     Emoji.new.tap do |e|
       e.name = name
-      e.url = "/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
+      e.url = "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
     end
   end
 
@@ -102,6 +102,7 @@ class Emoji
     Plugin::CustomEmoji.emojis.each do |name, url|
       result << Emoji.new.tap do |e|
         e.name = name
+        url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
         e.url = url
       end
     end

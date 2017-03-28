@@ -110,6 +110,7 @@ fi:
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
   invite:
     not_found: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä sivuston ylläpitäjään."
+    user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='/users/%{username}/summary'>on jo tunnus!</a>"
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
@@ -337,6 +338,10 @@ fi:
           attributes:
             payload_url:
               invalid: "URL ei kelpaa- URL:in tulee sisältää http:// tai https://. Välilyöntejä ei saa olla."
+        custom_emoji:
+          attributes:
+            name:
+              taken: on jo varattu toiselle emojille
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Minusta -kohta käyttäjäprofiilissasi on vielä täyttämättä,<a href='/users/%{username_lower}/preferences/about-me'>haluaisitko täyttää sen nyt?</a></div>"
@@ -1330,10 +1335,13 @@ fi:
       topic: 'Tulokset'
       user: 'Käyttäjät'
   sso:
+    login_error: "Virhe kirjauduttaessa"
     not_found: "Tiliäsi ei löydetty. Ota yhteyttä sivuston ylläpitäjään."
     account_not_approved: "Tilisi odottaa hyväksyntää. Saat sähköpostin, kun tunnuksesi on hyväksytty."
     unknown_error: "Tiliisi liittyen on tapahtunut virhe. Ota yhteyttä sivuston ylläpitäjään."
     timeout_expired: "Kirjautuminen on vanhentunut, yritä kirjautua sisään uudestaan."
+    no_email: "Sähköpostiosoitetta ei annettu. Ota yhteyttä sivuston ylläpitäjään."
+    email_error: "Tunnusta ei voitu luoda osoitteelle <b>%{email}</b>. Ota yhteyttä sivuston ylläpitäjään."
   original_poster: "Alkuperäinen kirjoittaja"
   most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
@@ -1547,7 +1555,7 @@ fi:
       (jos yllä oleva linkki on vanhentunut, valitse "unohdin salasanani" kirjautuessasi sisään sähköpostiosoitteellasi)
   download_backup_mailer:
     title: "Lataa varmuuskopio"
-    subject_template: "[%{site_name}] Varmuuskopion lataus sivustosta"
+    subject_template: "[%{email_prefix}] Varmuuskopion lataus sivustosta"
     text_body_template: |
       Tässä [varmuuskopio sivustosta](%{backup_file_path}), jota pyysit.
 
@@ -1558,7 +1566,7 @@ fi:
       Pahoittelut, tämä varmuuskopion latauslinkki on jo käytetty tai on vanhentunut.
   test_mailer:
     title: "Sähköpostipalvelun testaus"
-    subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
+    subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
     text_body_template: |
       Tämä on testisähköposti osoitteesta
 
@@ -1602,7 +1610,7 @@ fi:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Uusi versio"
-    subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
+    subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
     text_body_template: |
       Hurraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
 
@@ -1616,7 +1624,7 @@ fi:
       - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     title: "Uusi versio julkaisumuistiolla"
-    subject_template: "[%{site_name}] päivitys saatavilla"
+    subject_template: "[%{email_prefix}] päivitys saatavilla"
     text_body_template: |
       Hurraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
 
@@ -1635,8 +1643,8 @@ fi:
   queued_posts_reminder:
     title: "Viestejä jonossa"
     subject_template:
-      one: "[%{site_name}] 1 viesti odottaa hyväksyntää"
-      other: "[%{site_name}] %{count} viestiä odottaa hyväksyntää"
+      one: "[%{email_prefix}] 1 viesti odottaa hyväksyntää"
+      other: "[%{email_prefix}] %{count} viestiä odottaa hyväksyntää"
     text_body_template: |
       Hei,
 
@@ -1786,21 +1794,21 @@ fi:
       text_body_template: "Pahoittelemme, mutta datan vientisi epäonnistui. Tarkasta lokit tai ota yhteyttä henkilökuntaan."
     email_reject_insufficient_trust_level:
       title: "Sähköposti hylätty - riittämätön luottamustaso"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Riittämätön luottamustaso"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Riittämätön luottamustaso"
       text_body_template: |
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
 
         Tilisi luottamustaso ei ole riittävä, jotta saisit lähettää uusia ketjuja tähän sähköpostiosoitteeseen. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
     email_reject_user_not_found:
       title: "Sähköposti hylätty - käyttäjää ei löytynyt"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Käyttäjää ei löytynyt"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Käyttäjää ei löytynyt"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Yritä lähettää viesti toisesta osoitteesta, tai ota yhteyttä henkilökuntaan.
     email_reject_screened_email:
       title: "Sähköposti hylätty - estetty sähköpostiosoite"
-      subject_template: "[%{site_name}] Sähköpostiongelma-- Estetty sähköpostiosoite"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma-- Estetty sähköpostiosoite"
       text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -1808,35 +1816,35 @@ fi:
 
     email_reject_inactive_user:
       title: "Sähköposti hylätty - aktivoimaton käyttäjä"
-      subject_template: "[%{site_name}]  Sähköpostiongelma -- Aktivoimaton käyttäjä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Aktivoimaton käyttäjä"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Käyttäjätiliä tällä sähköpostiosoitteella ei ole aktivoitu. Aktivoi käyttäjätili ennen sähköpostien lähettämistä.
     email_reject_blocked_user:
       title: "Sähköposti hylätty - estetty käyttäjä"
-      subject_template: "[%{site_name}] Sähköpostiongelma-- Estetty käyttäjä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma-- Estetty käyttäjä"
       text_body_template: |
         Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Käyttäjätili tällä sähköpostiosoitteella on estetty.
     email_reject_reply_user_not_matching:
       title: "Sähköposti hylätty - käyttäjä ei täsmää"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Odottamaton vastausosoite"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Vastaus odottamattomasta osoitteesta"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
         Viestisi ei saapunut siitä sähköpostiosoitteesta josta odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_no_account:
       title: "Sähköposti hylätty - ei käyttäjätiliä"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon tili"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon tili"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
         Sähköpostiosoitteesi ei vastaa yhtäkään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       title: "Sähköposti hylätty - tyhjä"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Ei sisältöä"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei sisältöä"
       text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -1846,35 +1854,35 @@ fi:
 
     email_reject_parsing:
       title: "Sähköposti hylätty - jäsennys"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Sisältöä ei tunnistettu"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Sisältöä ei tunnistettu"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Emme tunnistaneet sähköpostiviestistäsi sisältöä. **Varmista, että kirjoitit viestisi sähköpostiviestin alkuun** - emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
     email_reject_invalid_access:
       title: "Sähköposti hylätty - pääsy estetty"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei pääsyoikeutta"
       text_body_template: |
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
 
         Tilisi luottamustaso ei ole riittävä, jotta saisit luoda uusia ketjuja tälle alueelle. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
     email_reject_strangers_not_allowed:
       title: "Sähköposti hylätty - vierailla ei pääsyä"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei pääsyoikeutta"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Alueelle jolle lähetit viestin voivat kirjoittaa ne, joilla on käypä käyttäjätunnus ja sähköpostiosoite. Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_reject_invalid_post:
       title: "Sähköposti hylätty - viesti ei kelpaa"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |
         Pahoittelemme: sähköpostiviestisi kohteeseen %{destination} (titled %{former_title}) ei toiminut odotetusti.
 
         Mahdollisia syitä ovat ainakin: ei-tuettu muotoilu, liian suuri viesti, liian pieni viesti. Ole hyvä ja yritä uudelleen; voit myös lähettää viestisi sivuston kautta, jos tämä ongelma ei vaikuta poistuvan.
     email_reject_invalid_post_specified:
       title: "Sähköposti hylätty - viesti ei kelpaa, tarkennettu"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -1885,49 +1893,49 @@ fi:
         Jos voit korjata ongelman, yritä uudelleen.
     email_reject_invalid_post_action:
       title: "Sähköposti hylätty - kielletty viestitoiminto"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Kielletty viestitoiminto"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Kielletty viestitoiminto"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Toimintoa ei tunnistettu. Yritä uudelleen tai lähetä viesti nettisivun kautta, jos ongelma jatkuu.
     email_reject_reply_key:
       title: "Sähköposti hylätty - vastausavain"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon vastausavain"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon vastausavain"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
         Sähköpostiviestin vastaustunniste, engl. 'reply key', ei ole kelvollinen, minkä vuoksi ei tiedetä, mihin asiaan viestisi oli tarkoitus vastata. Ota yhteyttä henkilökuntaan.
     email_reject_bad_destination_address:
       title: "Sähköposti hylätty - tuntematon vastaanottajaosoite"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
         Viestisi kohdesähköpostiosoitteet olivat tuntemattomia. Ole hyvä ja varmistu, että lähetit viestin oikeaan osoitteeseen.
     email_reject_topic_not_found:
       title: "Sähköposti hylätty - ketjua ei löytynyt"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Ketjua ei löytynyt"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ketjua ei löytynyt"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Ketjua johon yritit kirjoittaa ei ole enää olemassa -- ehkä se poistettiin? Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_reject_topic_closed:
       title: "Sähköposti hylätty - ketju suljettu"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Suljettu ketju"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Suljettu ketju"
       text_body_template: |
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
 
         Ketju, johon yritit vastata on tällä hetkellä suljettu, eikä siihen voi vastata. Jos uskot, että on tapahtunut virhe, ota yhteyttä palstan henkilökuntaan.
     email_reject_auto_generated:
       title: "Sähköposti hylätty - automaattivastaus"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Automaattivastaus"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- Automaattivastaus"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Järjestelmä havaitsi viestisi olevan tietokoneen automaattisesti luoma, eikä ihmisen kirjoittama, eikä sitä voitu siksi hyväksyä. Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_error_notification:
       title: "Ilmoitus sähköpostivirheestä"
-      subject_template: "[%{site_name}] Sähköpostiongelma -- POP-autentikoinnin virhe"
+      subject_template: "[%{email_prefix}] Sähköpostiongelma -- virhe POP-autentikoinnissa"
       text_body_template: |
         Sähköpostin pollauksessa POP-serveriltä tapahtui autentikointivirhe.
 
@@ -2065,7 +2073,7 @@ fi:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Käyttäjä kutsuttiin yksityiskeskusteluun"
-      subject_template: "[%{site_name}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2074,7 +2082,7 @@ fi:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Esikäyttäjä kutsuttiin yksityiskeskusteluun"
-      subject_template: "[%{site_name}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2083,7 +2091,7 @@ fi:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Käyttäjä kutsuttiin ketjuun"
-      subject_template: "[%{site_name}] %{username} kutsui sinut ketjuun '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} kutsui sinut ketjuun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2092,7 +2100,7 @@ fi:
         %{respond_instructions}
     user_replied:
       title: "Käyttäjälle vastattiin"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2103,7 +2111,7 @@ fi:
         %{respond_instructions}
     user_replied_pm:
       title: "Käyttäjän yksityisviestiin vastattiin"
-      subject_template: "[%{site_name}] [YV] %{topic_title}"
+      subject_template: "[%{email_prefix}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2114,7 +2122,7 @@ fi:
         %{respond_instructions}
     user_quoted:
       title: "Käyttäjää lainattiin"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2125,7 +2133,7 @@ fi:
         %{respond_instructions}
     user_linked:
       title: "Käyttäjä linkitettiin"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2136,7 +2144,7 @@ fi:
         %{respond_instructions}
     user_mentioned:
       title: "Käyttäjä mainittiin"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2147,7 +2155,7 @@ fi:
         %{respond_instructions}
     user_group_mentioned:
       title: "Käyttäjän ryhmä mainittiin"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2158,7 +2166,7 @@ fi:
         %{respond_instructions}
     user_posted:
       title: "Käyttäjälle kirjoittiin"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2169,7 +2177,7 @@ fi:
         %{respond_instructions}
     user_watching_first_post:
       title: "Käyttäjä tarkkailee uusia ketjuja"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2180,7 +2188,7 @@ fi:
         %{respond_instructions}
     user_posted_pm:
       title: "Käyttäjälle lähetettiin YV"
-      subject_template: "[%{site_name}] [YV] %{topic_title}"
+      subject_template: "[%{email_prefix}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2209,14 +2217,14 @@ fi:
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
-      subject_template: "[%{site_name}] Kooste"
+      subject_template: "[%{email_prefix}] Kooste"
       unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä %{unsubscribe_link}."
       click_here: "klikkaa tästä"
       from: "%{site_name} kooste"
       preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
     mailing_list:
       why: "Kaikki toiminta sivustolla [%{site_name}] ajalla %{date}"
-      subject_template: "[%{site_name}] Kooste ajalle %{date}"
+      subject_template: "[%{email_prefix}] Kooste ajalle %{date}"
       unsubscribe: "Tämä kooste lähetettiin, koska postituslistatila on otettu käyttöön. Peruaksesi tilauksen %{unsubscribe_link}."
       from: "%{site_name} kooste"
       new_topics: "Uudet ketjut"
@@ -2225,7 +2233,7 @@ fi:
       back_to_top: "Takaisin alkuun"
     forgot_password:
       title: "Unohtunut salasana"
-      subject_template: "[%{site_name}] Salasanan uusiminen"
+      subject_template: "[%{email_prefix}] Salasanan uusiminen"
       text_body_template: |
         Salasanasi uusimista pyydettiin sivustolla [%{site_name}](%{base_url}).
 
@@ -2235,7 +2243,7 @@ fi:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Syötä salasana"
-      subject_template: "[%{site_name}] Syötä salasana"
+      subject_template: "[%{email_prefix}] Aseta salasana"
       text_body_template: |
         Joku on pyytänyt lisäämään salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden avulla (Google, Facebook, etc) joissa on käytössä tämä sama sähköpostiosoite.
 
@@ -2245,7 +2253,7 @@ fi:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
-      subject_template: "[%{site_name}] Kirjautuminen"
+      subject_template: "[%{email_prefix}] Kirjautuminen"
       text_body_template: |
         Joku pyysi sinua kirjautumaan tilillesi sivustolla [%{site_name}](%{base_url}).
 
@@ -2255,7 +2263,7 @@ fi:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "Tili luotu"
-      subject_template: "[%{site_name}] Uusi käyttäjätilisi"
+      subject_template: "[%{email_prefix}] Uusi käyttäjätilisi"
       text_body_template: |
         Sinulle luotiin uusi käyttäjätunnus sivustolla %{site_name}
 
@@ -2263,14 +2271,14 @@ fi:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Vahvista uusi sähköpostiosoite"
-      subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
+      subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
         Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "Vahvista vanha sähköpostiosoite"
-      subject_template: "[%{site_name}] Vahvista nykyinen sähköpostiosoiteesi"
+      subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
       text_body_template: |+
         Ennen kuin voit vaihtaa sähköpostiosoitteesti, meidän täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Kun olet suorittanut tämän, varmistamme vielä uuden sähköpostiosoitteenkin.
 
@@ -2280,7 +2288,7 @@ fi:
 
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
-      subject_template: "[%{site_name}] Sähköpostiosoitteesi on vaihdettu"
+      subject_template: "[%{email_prefix}] Sähköpostiosoitteesi on vaihdettu"
       text_body_template: |
         Tämä on automaattinen vahvistus siitä, että sähköpostiosoitteesi sivustolle %{site_name} on vaihdettu. Jos on tapahtunut virhe, ota yhteyttä sivuston ylläpitäjään.
 
@@ -2309,7 +2317,7 @@ fi:
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     signup:
       title: "Liity"
-      subject_template: "[%{site_name}] Vahvista uusi käyttäjätilisi"
+      subject_template: "[%{email_prefix}] Vahvista uusi käyttäjätilisi"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
 
@@ -2406,10 +2414,10 @@ fi:
 
       Saatat haluta esittää eriävän mielipiteen johonkin liittyen. Se on sallittua. Muista kuitenkin _kritisoida esitettyjä ajatuksia, älä niiden esittäjiä_. Vältä:
 
-      * nimittelyä.
-      * henkilökohtaisuuksiin menemistä.
-      * toisen käyttäjän viestin sävyn arviointia: keskity sisältöön.
-      * poteroitumista.
+      * nimittelyä
+      * henkilökohtaisuuksiin menemistä
+      * toisen käyttäjän viestin sävyn arviointia: keskity sisältöön
+      * poteroitumista
 
       Tarjoa sen sijaan perusteltuja, keskustelua edistäviä vasta-argumentteja.
 
@@ -2419,9 +2427,9 @@ fi:
 
       Keskustelut vaikuttavat palstan yleismielialaan. Vaikutat parhaiten yhteisön tulevaisuuteen osallistumalla niihin keskusteluihin, jotka tekevät tästä kiintoisan paikan &mdash; ja välttämällä niitä, joilla on päinvastainen vaikutus.
 
-      Discoursen työkalut mahdollistavat sen, että yhteisö kollektiivisesti tunnistaa parhaan (ja huonoimman) sisällön: suosikit, kirjanmerkit, tykkäykset, liputukset, vastaukset, muokkaukset ja niin edelleen. Käyttämällä niitä parannat omaa käyttäjäkokemustasi ja samalla kaikkien muidenkin.
+      Discoursen työkalut mahdollistavat sen, että yhteisö kollektiivisesti tunnistaa parhaan (ja huonoimman) sisällön: kirjanmerkit, tykkäykset, liputukset, vastaukset, muokkaukset ja niin edelleen. Käyttämällä niitä parannat omaa käyttäjäkokemustasi ja samalla kaikkien muidenkin.
 
-      Yritetään jättää puisto parempaan kuntoon kuin se oli tullessa.
+      Jätetään yhteisö parempaan kuntoon kuin se oli tullessa.
 
       <a name="flag-problems"></a>
 
@@ -2431,7 +2439,7 @@ fi:
 
       Jos havaitset huonoa käytöstä, älä vastaa siihen. Huomiointi vain yllyttää sitä, kuluttaa voimiasi ja tuhlaa kaikkien aikaa. _Liputa se_. Jos tarpeeksi moni liputtaa, asiaan puututaan, joko palstan automaation tai valvojien toimesta.
 
-      Yhteisömme ylläpitämiseksi valvojat pidättävät oikeuden poistaa sisältöä tai käyttäjätunnuksia harkintansa mukaan kaikissa tilanteissa. Valvojat eivät ennakkosensuroi viestejä millään tapaa; valvojat tai ylläpito ei ota vastuuta mistään, mitä yhteisö julkaisee.
+      Yhteisömme ylläpitämiseksi valvojat pidättävät oikeuden poistaa sisältöä tai käyttäjätunnuksia harkintansa mukaan kaikissa tilanteissa. Valvojat eivät ennakkosensuroi viestejä; valvojat tai ylläpito ei ota vastuuta mistään, mitä yhteisö julkaisee.
 
       <a name="be-civil"></a>
 
@@ -2483,6 +2491,88 @@ fi:
     title: "Käyttöehdot"
   privacy_topic:
     title: "Rekisteriseloste"
+    body: |
+      <a name="collect"></a>
+
+      ## [Mitä tietoja keräämme?](#collect)
+
+      Tallennamme tietoa sinusta, kun rekisteröidyt sivustolle, ja keräämme dataa toimistasi palstalla: lukemisestasi, kirjoittamisestasi ja siitä miten reagoit täällä jaettuun sisältöön.
+
+      Kun rekisteröidyt sivustolle, sinua voidaan pyytää antamaan nimesi ja sähköpostiosoitteesi. Voit kuitenkin halutessasi vierailla sivustolla rekisteröitymättä. Sähköpostiosoitteesi varmistetaan aidoksi ainutkertaisen linkin sisältävän sähköpostiviestin avulla. Kun linkkiä klikataan, tiedämme sinun hallinnoivan antamaasi sähköpostiosoitetta.
+
+      Kun olet rekisteröitynyt ja kirjoitat, tallennamme IP-osoitteen josta viesti lähtee. Voimme myös ylläpitää palvelinlokia, joka sisältää jokaista palvelimellemme lähetettyä pyyntöä vastaavan IP-osoitteen.
+
+      <a name="use"></a>
+
+      ## [Mihin käytämme sinusta kerättyä tietoa?](#use)
+
+      Mitä tahansa sinusta kerättyä tietoa voidaan käyttää jollain näistä tavoista:
+
+      *   Tarjotaksemme yksilöllisen kokemuksen &mdash; tietojen avulla vastaamme sinun henkilökohtaisiin tarpeisiisi.
+      *   Parantaaksemme sivustoa &mdash; pyrimme jatkuvasti parantamaan sivuston toimintaa kerätyn tiedon ja käyttäjäpalautteen perusteella.
+      *   Parantaaksemme asiakaspalvelua &mdash; tiedot auttavat tarjoamaan tehokkaampaa asiakaspalvelua ja teknistä tukea.
+      *   Lähettääksemme ajoittain sähköpostiviestejä &mdash; antamaasi sähköpostiosoitteeseen voidaan lähettää tietoa, valitsemiasi ilmoituksia tapahtumista eri ketjuissa tai käyttäjänimeesi liittyen ja/tai vastineita tiedusteluihisi, pyyntöihisi tai kysymyksiisi.
+
+      <a name="protect"></a>
+
+      ## [Miten suojaamme tietojasi?](#protect)
+
+      Meillä on liuta erilaisia turvallisuuskäytänteitä, joilla pidämme henkilötietosi turvassa kun syötät, tallennat tai tarkastelet tietoa.
+
+      <a name="data-retention"></a>
+
+      ## [Miten dataa säilötään?](#data-retention)
+
+      Pyrimme parhaamme mukaan:
+
+      *   Säilömään kaikkia pyyntöjä vastaavan IP-osoitteen sisältävän palvelinlokin enintään 90 päivän ajan.
+      *   Säilömään rekisteröityneeseen käyttäjään ja hänen viesteihinsä liittyvät IP-osoitteet enintään 5 vuoden ajan.
+
+      <a name="cookies"></a>
+
+      ## [Käytämmekö evästeitä?](#cookies)
+
+      Kyllä. Evästeet ovat pieniä tiedostoja, jotka sivusto tai sen palveluntarjoaja siirtää tietokoneesi kiintolevylle verkkoselaimesi kautta (jos sallit sen). Nämä evästeet mahdollistavat selaimesi tunnistamisen ja jos olet rekisteröitynyt käyttäjä, sen yhdistämisen käyttäjätunnukseesi.
+
+      Evästeiden avulla tunnistamme ja tallennamme asetuksia tulevia vierailuja varten ja keräämme yleisluontoista dataa sivuston liikennemääristä ja sivustolla liikkumisesta, jotta voimme tarjota tulevaisuudessa paremman käyttökokemuksen ja hyödyllisiä toimintoja. Voimme tehdä yhteistyötä kolmansien osapuolien kanssa ymmärtääksemme paremmin sivustolla vierailevia. Näillä palveluntarjoajilla ei ole lupaa käyttää keräämäämme tietoa muuhun kuin palvelumme kehittämiseen.
+
+      <a name="disclose"></a>
+
+      ## [Paljastammeko tietoa ulkopuolisille tahoille?](#disclose)
+
+      Emme myy, vaihda tai muutoin käy kauppaa ulkopuolisten tahojen kanssa yksilöllisesti tunnistettavilla tiedoilla. Tähän poikkeus on luotetut kolmannet osapuolet, jotka auttavat sivustomme ja toimintamme pyörittämisessä tai sinun palvelemisessa; vaadimme näitä tahoja pitämään tiedot luottamuksellisina. Voimme myös jakaa tietojasi, jos uskomme sen olevan tarpeen lain, sivustomme käytäntöjen, omien tai muiden tahojen oikeuksien tai omaisuuden tai turvallisuuden kannalta. Yksilöimättömiä tietoja voidaan kuitenkin jakaa muiden tahojen kanssa kaupankäynnin tai markkinoinnin avuksi tai muuhun käyttöön.
+
+      <a name="third-party"></a>
+
+      ## [Linkit kolmansien tahojen sivustoille](#third-party)
+
+      Joissain tapauksissa, harkintamme mukaan, voimme sallia tai tarjota kolmannen osapuolen tuotteita tai palveluita sivustollamme. Näillä kolmannen osapuolen sivustoilla on erilliset itsenäiset tietosuojaselosteensa. Emme ole edesvastuussa sisällöstä tai toiminnasta näillä linkitetyillä sivustoilla. Joka tapauksessa, pyrimme vaalimaan sivustomme kunniallisuutta ja otamme ilolla vastaan kaikenlaisen palautteen näitä sivustoja koskien.
+
+      <a name="coppa"></a>
+
+      ## [Lapsen yksilönsuoja internetissä -lain noudattaminen](#coppa)
+
+      Sivustomme, tuottteemme ja palvelumme on suunnattu 13-vuotiaille ja sitä vanhemmille. Jos tämä palvelin on Yhdysvalloissa ja olet alle 13-vuotias, COPPA-lain ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nojalla älä käytä tätä sivustoa.
+
+      <a name="online"></a>
+
+      ## [Tietosuojaseloste koskee vain internetiä](#online)
+
+      Tämä tietosuojakäytäntö koskee vain sivustomme kautta kerättyä tietoa eikä siten koske verkon ulkopuolelta kerättyä tietoa.
+
+      <a name="consent"></a>
+
+      ## [Suostumuksesi](#consent)
+
+      Käyttämällä sivustoa hyväksyt sivustomme tietosuojaselosteen.
+
+      <a name="changes"></a>
+
+      ## [Muutokset tietosuojaselosteeseen](#changes)
+
+      Jos päätämme muuttaa tietosuojaselostettamme, muutokset ovat nähtävissä tällä sivulla.
+
+      Tämä tiedosto on CC-BY-SA-lisensoitu. Viimeksi päivitetty 31.5.2013.
   badges:
     editor:
       name: Muokkaaja

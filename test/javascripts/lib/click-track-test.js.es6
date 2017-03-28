@@ -8,12 +8,13 @@ var windowOpen,
 
 module("lib:click-track", {
   setup: function() {
-
     // Prevent any of these tests from navigating away
     win = {focus: function() { } };
     redirectTo = sandbox.stub(DiscourseURL, "redirectTo");
     windowOpen = sandbox.stub(window, "open").returns(win);
     sandbox.stub(win, "focus");
+
+    sessionStorage.clear();
 
     fixture().html(
       `<div id="topic" data-topic-id="1337">

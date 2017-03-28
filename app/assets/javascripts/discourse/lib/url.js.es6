@@ -34,10 +34,12 @@ export function jumpToElement(elementId) {
   });
 }
 
+let _transitioning = false;
+
 const DiscourseURL = Ember.Object.extend({
 
   isJumpScheduled() {
-    return _jumpScheduled;
+    return _transitioning || _jumpScheduled;
   },
 
   // Jumps to a particular post in the stream
@@ -45,12 +47,14 @@ const DiscourseURL = Ember.Object.extend({
     opts = opts || {};
     const holderId = `#post_${postNumber}`;
 
+    _transitioning = true;
     Em.run.schedule('afterRender', () => {
       let elementId;
       let holder;
 
       if (postNumber === 1 && !opts.anchor) {
         $(window).scrollTop(0);
+        _transitioning = false;
         return;
       }
 
@@ -64,7 +68,11 @@ const DiscourseURL = Ember.Object.extend({
         holder = $(elementId);
       }
 
-      const lockon = new LockOn(elementId);
+      const lockon = new LockOn(elementId, {
+        finished() {
+          _transitioning = false;
+        }
+      });
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
         const elementTop = lockon.elementTop();
@@ -73,6 +81,7 @@ const DiscourseURL = Ember.Object.extend({
         const height = holder.height();
 
         if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
+          _transitioning = false;
           return;
         }
       }

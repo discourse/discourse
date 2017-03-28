@@ -152,11 +152,10 @@ describe Invite do
   context 'an existing user' do
     let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
     let(:coding_horror) { Fabricate(:coding_horror) }
-    let!(:invite) { topic.invite_by_email(topic.user, coding_horror.email) }
 
     it "works" do
       # doesn't create an invite
-      expect(invite).to be_blank
+      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(StandardError)
 
       # gives the user permission to access the topic
       expect(topic.allowed_users.include?(coding_horror)).to eq(true)

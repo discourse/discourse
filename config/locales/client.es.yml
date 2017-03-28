@@ -136,7 +136,7 @@ es:
         enabled: 'listado %{when}'
         disabled: 'quitado de la lista, invisible %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
-    wizard_required: "¡Hora de configurar tu foro! ¡<a href='%{url}' data-auto-route='true'>Inicia el Asistente de Configuración</a>!"
+    wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     bootstrap_mode_enabled: "Para lanzar tu nuevo sitio más fácilmente, estás en modo de arranque. A todos los nuevos usuarios se les concederá el nivel 1 de confianza y recibirán resúmenes diarios por email. Esto se desactivará automáticamente cuando el número total de usuarios exceda los %{min_users}."
     bootstrap_mode_disabled: "El modo de arranque se desactivará en las próximas 24 horas."
@@ -928,7 +928,7 @@ es:
       logging_in: "Iniciando Sesión"
       or: "O"
       authenticating: "Autenticando..."
-      awaiting_confirmation: "Tu cuenta está pendiente de activación, usa el enlace de 'olvidé contraseña' para recibir otro e-mail de activación."
+      awaiting_activation: "Tu cuenta está pendiente de activación, usa el enlace de 'olvidé contraseña' para recibir otro e-mail de activación."
       awaiting_approval: "Tu cuenta todavía no ha sido aprobada por un moderador. Recibirás un e-mail cuando sea aprobada."
       requires_invite: "Lo sentimos pero solo se puede acceder a este foro mediante invitación."
       not_activated: "No puedes iniciar sesión todavía. Anteriormente te hemos enviado un email de activación a <b>{{sentTo}}</b>. Por favor sigue las instrucciones en ese email para activar tu cuenta."
@@ -1192,6 +1192,8 @@ es:
           first: son el primer post del tema
           pinned: están destacados con pin
           unpinned: no están destacados con pin
+          seen: Leídos
+          unseen: No leídos
           wiki: son tipo wiki
         statuses:
           label: Donde los temas
@@ -1732,6 +1734,17 @@ es:
           side_by_side_markdown:
             title: "Mostrar las diferencias crudas a la par"
             button: 'Fuente'
+      raw_email:
+        displays:
+          raw:
+            title: "Mostrar emails sin procesar"
+            button: 'Sin procesar'
+          text_part:
+            title: "Mostrar la parte del texto del email"
+            button: 'Texto'
+          html_part:
+            title: "Mostrar la parte HTML del email"
+            button: 'HTML'
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
@@ -1784,8 +1797,9 @@ es:
       email_in_disabled_click: 'activa la opción "email in".'
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
       show_subcategory_list: "Mostrar la lista de subcategorías encima de los temas en esta categoría."
+      num_featured_topics: "Número de temas a mostrar en la página de categorías:"
+      subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página superior de categorías:"
       all_topics_wiki: "Hacer todos los temas wiki por defecto"
-      sort_order: "Orden por defecto:"
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
@@ -1924,7 +1938,7 @@ es:
     history: "Historia"
     changed_by: "por {{author}}"
     raw_email:
-      title: "E-mail Original"
+      title: "Emails entrantes"
       not_available: "¡No disponible!"
     categories_list: "Lista de categorías"
     filters:
@@ -2327,6 +2341,8 @@ es:
         add_owners: Añadir propietarios
         incoming_email: "Correos electrónicos entrantes personalizados"
         incoming_email_placeholder: "introducir dirección de email"
+        none_selected: "Selecciona un grupo para empezar"
+        no_custom_groups: "Crear un nuevo grupo personalizado"
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."
@@ -2462,7 +2478,8 @@ es:
             without_uploads: "Sí (no incluir archivos)"
           download:
             label: "Descargar"
-            title: "Descargar la copia de seguridad"
+            title: "Enviar email con enlace de descarga"
+            alert: "El enlace para descargar este backup te ha sido enviado por email."
           destroy:
             title: "Borrar la copia de seguridad"
             confirm: "¿Estás seguro que quieres borrar esta copia de seguridad?"

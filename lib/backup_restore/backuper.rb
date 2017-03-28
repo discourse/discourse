@@ -260,7 +260,7 @@ module BackupRestore
       status = @success ? :backup_succeeded : :backup_failed
 
       SystemMessage.create_from_system_user(@user, status,
-        logs: Discouse::Utils.pretty_logs(@logs)
+        logs: Discourse::Utils.pretty_logs(@logs)
       )
     end
 

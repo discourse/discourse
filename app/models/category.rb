@@ -463,7 +463,7 @@ SQL
     old_name = changed_attributes["name"]
     return unless topic.present?
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
-      topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
+      topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
     end
   end
 
@@ -550,12 +550,18 @@ end
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
-#  all_topics_wiki               :boolean          default(FALSE)
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
 #  uploaded_logo_id              :integer
 #  uploaded_background_id        :integer
+#  topic_featured_link_allowed   :boolean          default(TRUE)
+#  all_topics_wiki               :boolean          default(FALSE), not null
+#  show_subcategory_list         :boolean          default(FALSE)
+#  num_featured_topics           :integer          default(3)
+#  default_view                  :string(50)
+#  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
+#  default_top_period            :string(20)       default("all")
 #
 # Indexes
 #
