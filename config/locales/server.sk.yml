@@ -228,6 +228,14 @@ sk:
       - Konštruktívna kritika je vítana, avšak kritizujte "nápady", nie ľudí.
 
       Pre viac informácií, [pozri návody](/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
+    avatar: |
+      ### Čo takto nastaviť svoj profilový obrázok?
+
+      Pridali ste niekoľko tém a odpovedí, ale Váš profilový obrázok nie je taký jedinečný ako Vy - je to len písmeno.
+
+      Uvažovali ste **[návštíviť svoj používateľský profil](%{profile_path})** a nahrať obrázok, ktorý vás vystihuje?
+
+      Je jednoduchšie sledovať diskusiu a nájsť zaujímavých ľudí v rozhovoroch, keď má každý jedinečný profilový obrázok!
   activerecord:
     attributes:
       category:

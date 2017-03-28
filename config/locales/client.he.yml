@@ -135,6 +135,9 @@ he:
       visible:
         enabled: 'נכנס לרשימה %{when}'
         disabled: 'הוצא מהרשימה %{when}'
+      banner:
+        enabled: 'באנר זה נוצר ב-%{when}. הוא יופיע בראש כל דף עד שישוחרר על ידי המשתמש/ת.'
+        disabled: 'באנר זה הוסר ב-%{when}. הוא לא יופיע יותר בראש כל דף.'
     topic_admin_menu: "פעולות ניהול לנושא"
     wizard_required: "ברוכים הבאים לסידקורס החדש שלכם! בואו נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, לא תשלח."
@@ -1802,8 +1805,9 @@ he:
       num_featured_topics: "מספר הנושאים המוצגים בדף הקטגוריות:"
       subcategory_num_featured_topics: "מספר הנושאים המומלצים בדף קטגוריית ההורה:"
       all_topics_wiki: "כברירת מחדל נושאים חדשים יהיו וויקי."
-      sort_order: "סידור ברירת מחדל:"
-      default_view: "תצוגת ברירת מחדל:"
+      subcategory_list_style: "סגנון רשימות קטגוריות משנה:"
+      sort_order: "סידור ברירת מחדל לנושאים:"
+      default_view: "תצוגת ברירת מחדל לנושאים:"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
@@ -1841,6 +1845,11 @@ he:
         created: "נוצרו"
       sort_ascending: 'בסדר עולה'
       sort_descending: 'בסדר יורד'
+      subcategory_list_styles:
+        rows: "שורות"
+        rows_with_featured_topics: "שורות עם נושאים מומלצים"
+        boxes: "קופסאות"
+        boxes_with_featured_topics: "קופסאות אם נושאים מומלצים"
     flagging:
       title: 'תודה על עזרתך לשמירה על תרבות הקהילה שלנו!'
       action: 'דגלו פוסט'

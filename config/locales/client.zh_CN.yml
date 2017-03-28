@@ -866,7 +866,7 @@ zh_CN:
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
       title: "重置密码"
-      action: "我忘记了我的密码"
+      action: "我忘记了密码"
       invite: "输入你的用户名或邮箱地址，我们会发送密码重置邮件给你。"
       reset: "重置密码"
       complete_username: "如果你的账户名 <b>%{username}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
@@ -901,22 +901,22 @@ zh_CN:
       forgot: "我记不清账号详情了"
       not_approved: "你的帐号还未通过审核。一旦审核通过，我们将邮件通知你。"
       google:
-        title: "使用 Google 帐号登录"
+        title: "Google 登录"
         message: "正在通过 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       google_oauth2:
-        title: "使用 Google 帐号登录"
+        title: "Google 登录"
         message: "正在通过 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       twitter:
-        title: "使用 Twitter 帐号登录"
+        title: "Twitter 登录"
         message: "正在通过 Twitter 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       instagram:
         title: "用 Instagram 登录"
         message: "正在通过 Instagram 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       facebook:
-        title: "使用 Facebook 帐号登录"
+        title: "Facebook 登录"
         message: "正在通过 Facebook 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       yahoo:
-        title: "使用 Yahoo 帐号登录"
+        title: "Yahoo 登录"
         message: "正在通过 Yahoo 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       github:
         title: "用 GitHub 帐号登录"

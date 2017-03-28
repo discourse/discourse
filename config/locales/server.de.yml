@@ -1465,25 +1465,81 @@ de:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
     text_body_template: |
-      Jemand (wahrscheinlich du?) hat angefragt, keine E-Mail-Updates mehr von %{site_domain_name} auf dieser Adresse zu erhalten.
-      Wenn du keine Benachrichtigungen mehr erhalten möchtest, dann klicke bitte diesen Link:
+      Jemand (womöglich du?) hat angefordert, nicht mehr länger E-Mail-Aktualisierungen von %{site_domain_name} an diese Adresse zu erhalten.
+      Wenn du dies bestätigen möchtest, klicke bitte diesen Link:
 
       %{confirm_unsubscribe_link}
 
 
-      Wenn du weiterhin E-Mail-Updates erhalten möchtest, dann kannst du diese E-Mail ignorieren.
+      Wenn du weiterhin E-Mail-Aktualisierungen erhalten möchtest, kannst du diese E-Mail ignorieren.
   invite_mailer:
     title: "Einladung zu einem Thema"
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
+    text_body_template: |
+      %{invitee_name} hat dich eingeladen zur Diskussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      bei
+
+      > %{site_title} -- %{site_description}
+
+      Wenn du interessiert bist, klicke auf den folgenden Link:
+
+      %{invite_link}
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
     subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} hat dich eingeladen zur Diskussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      bei
+
+      > %{site_title} -- %{site_description}
+
+      Mit dieser Notiz:
+
+      > %{user_custom_message}
+
+      Falls du Interesse hast, klicke auf den nachfolgenden Link:
+
+      %{invite_link}
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
+    text_body_template: |
+      %{invitee_name} hat dich eingeladen, der folgenden Seite beizutreten:
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Falls du Interesse hast, klicke auf den folgenden Link:
+
+      %{invite_link}
   custom_invite_forum_mailer:
     title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
+    text_body_template: |
+      %{invitee_name} hat dich eingeladen der folgenden Seite beizutreten:
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Mit dieser Notiz:
+
+      > %{user_custom_message}
+
+      Falls du Interesse hast, klicke auf den nachfolgenden Link:
+
+      %{invite_link}
   invite_password_instructions:
     title: "Passwort festlegen"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
@@ -1496,12 +1552,16 @@ de:
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
   download_backup_mailer:
     title: "Backup-Download Mailer"
-    subject_template: "Backup-Download für [%{site_name}]"
+    text_body_template: |
+      Here ist der [Seiten-Backup-Download](%{backup_file_path}), den du angefordert hast.
+
+      Wir haben diesen Download-Link aus Sicherheitsgründen an deine überprüfte E-Mail-Adresse geschickt.
+
+      (Wenn du diesen Download *nicht* angefordert hast, solltest du in Sorge sein -- jemand hat Administrationszugriff auf deine Seite.)
     no_token: |
       Entschuldige, der Backup-Download-Link wurde schon verwendet oder ist abgelaufen.
   test_mailer:
     title: "Test-E-Mail"
-    subject_template: "[%{site_name}] Test der E-Mail-Zustellbarkeit"
     text_body_template: |
       Dies ist eine Test-E-Mail von
 
@@ -2941,7 +3001,7 @@ de:
             description: "Allgemeines Kontaktformular für euch oder eure Organisation. Wird angezeigt auf <a href='/about' target='_blank'>eurer „Über uns“-Seite</a>."
           site_contact:
             label: "Automatische Nachrichten"
-            description: "Alle automatischen, persönlichen Discourse-Nachrichten werden von diesem Benutzer versandt. Insbesondere wird dieser Benutzer der ausgewiesene Absender jeder Willkommensnachricht sein, die automatisch an neue Benutzer geschickt werden."
+            description: "Alle automatischen privaten Nachrichten in Discourse werden von diesem Benutzer verschickt, wie etwa die Willkommensnachricht, die jedem neuen Benutzer geschickt wird."
       corporate:
         title: "Organisation"
         description: "Diese Namen werden in eure <a href='/privacy' target='blank'>Datenschutzerklärung</a> und <a href='/tos' target='blank'>Nutzungsbedingungen</a> eingefügt, die du jederzeit in der Team-Kategorie ändern kannst Wenn du keine Firma hast, kannst du diesen Schritt auch überspringen."

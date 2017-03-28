@@ -54,6 +54,7 @@ nb_NO:
         insert: 'Sett inn avstemning '
         help:
           options_count: Må inneholde minst 2 alternativer
+          invalid_values: Minimumsverdien må være mindre enn maksimumsverdien.
         poll_type:
           label: Type
           regular: Et valg

@@ -97,7 +97,7 @@ nl:
     template:
       body: 'Er waren problemen met de volgende velden:'
       header:
-        one: 1 fout heeft voorkomen %{model} kon worden opgeslagen
+        one: 1 fout heeft voorkomen dat %{model} kon worden opgeslagen
         other: '%{count} fouten hebben voorkomen dat %{model} kon worden opgeslagen'
     embed:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
@@ -110,6 +110,7 @@ nl:
       s3_upload_bucket_is_required: "U kunt geen uploads naar S3 toestaan voordat u de 's3_upload_bucket' hebt opgegeven."
   invite:
     not_found: "Uw uitnodigingstoken is ongeldig. Neem contact op met de beheerder van de website."
+    user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='/users/%{username}/summary'>heeft al een account!</a>"
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand dient de CSV-indeling te hebben."
     error: "Er is een fout opgetreden tijdens het uploaden van dat bestand. Probeer het later opnieuw."
@@ -250,6 +251,48 @@ nl:
       - Opbouwende kritiek is welkom, maar geef kritiek op *ideeën*, niet op mensen.
 
       [Bekijk onze gemeenschapsrichtlijnen](/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
+    avatar: |
+      ### Wat dacht u van een afbeelding voor uw account?
+
+      U hebt een paar topics en antwoorden geplaatst, maar uw profielafbeelding is niet zo uniek als uzelf – het is maar een brief.
+
+      Hebt u overwogen **[uw gebruikersprofiel te bezoeken](%{profile_path})** en een afbeelding te uploaden die u vertegenwoordigt?
+
+      Het volgen van discussies en vinden van interessante mensen in conversaties is makkelijker wanneer iedereen een unieke profielafbeelding heeft!
+    sequential_replies: |
+      ### Overweeg meerdere berichten tegelijk te beantwoorden
+
+      Overweeg één antwoord dat citaten uit eerdere berichten or @naam-verwijzingen bevat in plaats van verschillende antwoorden in een topic achter elkaar.
+
+      U kunt uw eerdere antwoord bewerken om een citaat toe te voegen door tekst te accentueren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
+
+      Het is voor iedereen makkelijker om topics te lezen die minder uitgebreide antwoorden bevatten dan die met veel kleine, individuele antwoorden.
+    dominating_topic: |
+      ### Laat anderen aan de conversatie deelnemen
+
+      Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
+
+      Weet u zeker dat u anderen voldoende tijd geeft om ook hun gedachten te delen?
+    get_a_room: |
+      ### Overweeg meerdere mensen te beantwoorden
+
+      U hebt al %{count} keer in dit bepaalde topic op @%{reply_username} geantwoord.
+
+      Hebt u overwogen *andere* mensen in de discussie ook te beantwoorden? Een goede discussie omvat veel stemmen en perspectieven.
+
+      Als u uw conversatie met deze bepaalde gebruiker uitvoerig wilt voortzetten, [stuur deze dan een persoonlijk bericht](/users/%{reply_username}).
+    too_many_replies: |
+      ### U hebt de antwoordlimiet voor dit topic bereikt
+
+      Het spijt ons, maar nieuwe gebruikers hebben een tijdelijke beperking van %{newuser_max_replies_per_topic} antwoorden in hetzelfde topic.
+
+      Overweeg uw eerdere antwoorden te bewerken of andere topics te bezoeken in plaats van nog een antwoord toe te voegen.
+    reviving_old_topic: |
+      ### Dit topic nieuw leven inblazen?
+
+      Het laatste antwoord op dit topic was **%{days}** dagen geleden. Uw antwoord zal het topic naar de bovenkant van de bijbehorende lijst verplaatsen en iedereen die eerder bij de conversatie was betrokken op de hoogte brengen.
+
+      Weet u zeker dat u deze oude conversatie wilt voortzetten?
   activerecord:
     attributes:
       category:
@@ -266,114 +309,132 @@ nl:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Je kunt alleen waarschuwingen aan privéberichten toevoegen."
-              too_many_users: "Je kunt een waarschuwing per keer slechts naar één ander lid sturen."
+              warning_requires_pm: "U kunt alleen waarschuwingen aan privéberichten toevoegen."
+              too_many_users: "U kunt alleen waarschuwingen naar één gebruiker tegelijk sturen."
               cant_send_pm: "Sorry, u kunt geen privébericht naar die gebruiker sturen."
-              no_user_selected: "Je moet een geldige gebruiker selecteren."
+              no_user_selected: "U moet een geldige gebruiker selecteren."
             featured_link:
               invalid: "is ongeldig. URL moet http:// of https:// bevatten."
-              invalid_category: "kan niet worden gewijzigd in deze categorie."
+              invalid_category: "kan niet worden bewerkt in deze categorie."
         user:
           attributes:
             password:
               common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
-              same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
-              same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
-              same_as_current: "is hetzelfde als je huidige wachtwoord."
+              same_as_username: "is hetzelfde als uw gebruikersnaam. Gebruik een veiliger wachtwoord."
+              same_as_email: "is hetzelfde als uw e-mailadres. Gebruik een veiliger wachtwoord."
+              same_as_current: "is hetzelfde als uw huidige wachtwoord."
+              unique_characters: "heeft te veel herhaalde tekens. Gebruik een veiliger wachtwoord."
             ip_address:
-              signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
+              signup_not_allowed: "Registratie vanaf deze account is niet toegestaan."
         color_scheme_color:
           attributes:
             hex:
-              invalid: "is niet een geldige kleur"
+              invalid: "is geen geldige kleur"
         post_reply:
           base:
-            different_topic: "Het bericht en antwoord moeten bij hetzelfde topic horen."
+            different_topic: "Bericht en antwoord moeten bij hetzelfde topic horen."
         web_hook:
           attributes:
             payload_url:
-              invalid: "De URL is ongeldig. URL's moeten http:// of https:// bevatten. En een leeg veld is niet toegestaan."
+              invalid: "URL is ongeldig. URL's moeten http:// of https:// bevatten, en spaties zijn niet toegestaan."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
+    no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} heeft nog niets in het veld Over mij van zijn of haar profiel ingevoerd</div>"
   vip_category_name: "Lounge"
-  vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
-  meta_category_name: "Site Feedback"
-  meta_category_description: "Discussies over deze site, de organisatie, hoe het werkt en hoe het verbeterd kan worden."
+  vip_category_description: "Een exclusieve categorie voor leden met vertrouwensniveau 3 en hoger."
+  meta_category_name: "Feedback op website"
+  meta_category_description: "Discussies over deze website, de organisatie, hoe deze werkt en hoe we deze kunnen verbeteren."
   staff_category_name: "Staf"
-  staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
-  assets_topic_body: "Dit is een permanent topic, dat alleen zichtbaar is voor de staf, en dient als opslag voor afbeeldingen en documenten die worden gebruikt in het design van de site . Gooi deze niet weg!\n\n\nHoe het werkt:\n\n\n1. Antwoord op dit topic.\n2. Upload hier alle afbeeldingen die je wenst te gebruiken als logo's, favicons enzovoort. (Gebruik het upload icoon in de toolbar, sleep afbeeldingen, of plak afbeeldingen.)\n3. Verzend je bericht om het te posten.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeelding te verkrijgen, of klik het bewerken icoon om je bericht te wijzigen en zo het pad naar de afbeeldingen te verkrijgen. Kopieer het pad naar de afbeeldingen.\n5. Plak deze paden naar de afbeeldingen in [basic settings](/admin/site_settings/category/required).\n\n\nAls je andere bestandstypen wilt kunnen uploaden, moet je dit instellen in `authorized_extensions` in de [file settings](/admin/site_settings/category/files)."
+  staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
+  assets_topic_title: "Assets voor het websiteontwerp"
+  assets_topic_body: "Dit is een permanent topic, alleen zichtbaar voor staf, voor het opslaan van afbeeldingen en bestanden die in het ontwerp van de website worden gebruikt. Verwijder het niet!\n\n\nZo werkt het:\n\n\n1. Antwoord op dit topic.\n2. Upload hier alle afbeeldingen die u voor logo's, favicons, enzovoorts wilt gebruiken. (Gebruik het werkbalkpictogram voor uploaden in de berichteditor, of sleep of plak afbeeldingen.)\n3. Verzend uw antwoord om dit te plaatsen.\n4. Klik met de rechtermuisknop op de afbeeldingen in uw nieuwe bericht om het pad naar de geüploade afbeeldingen te verkrijgen, of klik op het bewerkingspictogram om uw bericht te bewerken en het pad naar de afbeeldingen op te halen. Kopieer de afbeeldingspaden.\n5. Plak die afbeeldingspaden in [basisinstellingen](/admin/site_settings/category/required).\n\n\nAls u verschillende soorten uploads van bestandstypen dient in te schakelen, bewerk dan 'authorized_extensions' in de [bestandsinstellingen](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Welkom bij Discourse"
+    body: |2
+
+      De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
+
+      **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
+
+      - Voor wie is deze bestemd?
+      - Wat kunnen ze hier vinden?
+      - Waarom zouden ze hier moeten komen?
+      - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   lounge_welcome:
     title: "Welkom in de Lounge"
     body: |2
 
       Gefeliciteerd! :confetti_ball:
 
-      Als je dit bericht kunt zien ben je recent gepromoveerd naar **Vaste bezoeker** (trust level 3).
+      Als u dit bericht kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
 
-      Je kunt nu &hellip;
+      U kunt nu &hellip;
 
-      * De titel wijzigen van ieder topic
-      * De categorie wijzigen van ieder topic
-      * Al je links worden gevolgd ([automatische nofollow](http://en.wikipedia.org/wiki/Nofollow) is verwijderd)
-      * De privé-lounge categorie in welke alleen zichtbaar is voor gebruikers op trust level 3 en hoger
-      * Spam verbergen met een enkele vlag
+      * De titel van elk topic bewerken
+      * De categorie van elk topic wijzigen
+      * Al uw koppelingen laten volgen ([automatische nofollow](http://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
+      * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
+      * Spam verbergen met één markering
 
-      Hier is de [huidige lijst van vaste bezoekers](/badges/3/regular). Zeg zeker even hallo.
+      Hier is de [huidige lijst van vaste gebruikers](/badges/3/regular). Zeg zeker even hallo.
 
-      Bedankt dat je een belangrijk onderdeel bent van deze gemeenschap!
+      Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
 
-      (Voor meer informatie over trust levels, [bekijk dit topic][trust]. Wees wel bewust dat alleen leden die blijven voldoen aan de voorwaarden vaste gebruikers blijven.)
+      ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
 
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "(Vervang deze eerste alinea door een korte beschrijving van uw nieuwe categorie. Deze leidraad verschijnt in het categorieselectiegebied, dus probeer deze onder de 200 tekens te houden. **Voordat u deze beschrijving bewerkt of topics aanmaakt, verschijnt deze categorie niet op de categoriepagina.**)"
-    post_template: "%{replace_paragraph}\n\nGebruik de volgende paragrafen voor een langere beschrijving, of om categorierichtlijnen of regels vast te stellen:\n\n- Waarom zouden mensen deze categorie gebruiken? Waar dient het voor?\n\n- Op welke punten onderscheid het zich van andere categorieën die we al hebben?\n\n- Wat moet topics in deze categorie over het algemeen bevatten?\n\n- Hebben we deze categorie nodig? Kunnen we het samenvoegen met een andere categorie of subcategorie?\n"
+    post_template: "%{replace_paragraph}\n\nGebruik de volgende alinea's voor een langere beschrijving, of om richtlijnen of regels voor de categorie op te stellen:\n\n- Waarom zouden mensen deze categorie gebruiken? Waar dient deze voor?\n\n- Op welke punten onderscheidt deze categorie zich van andere categorieën die we al hebben?\n\n- Wat dienen topics in deze categorie over het algemeen te bevatten?\n\n- Hebben we deze categorie nodig? Kunnen we deze samenvoegen met een andere categorie of subcategorie?\n"
     errors:
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
-      depth: "Je kan een subcategorie niet onder een andere subcategorie plaatsen"
+      depth: "U kunt geen subcategorie onder een andere subcategorie plaatsen"
       invalid_email_in: "'%{email}' is geen geldig e-mailadres."
       email_already_used_in_group: "'%{email}' wordt al gebruikt door de groep '%{group_name}'."
       email_already_used_in_category: "'%{email}' wordt al gebruikt door de categorie '%{category_name}'."
     cannot_delete:
-      uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
-      has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën bevat"
+      uncategorized: "Ongecategoriseerd kan niet worden verwijderd"
+      has_subcategories: "Deze categorie kan niet worden verwijderd, omdat deze subcategorieën bevat"
       topic_exists:
-        one: "Categorie kan niet verwijderd worden omdat het 1 topic heeft. Het oudste topic is %{topic_link}."
-        other: "Categorie kan niet verwijderd worden omdat het %{count} topics heeft. Het oudste topic is %{topic_link}."
-      topic_exists_no_oldest: "Categorie kan niet verwijderd worden omdat het aantal topics %{count} is."
+        one: "Deze categorie kan niet worden verwijderd, omdat deze 1 topic bevat. Het oudste topic is %{topic_link}."
+        other: "Deze categorie kan niet worden verwijderd, omdat deze %{count} topics bevat. Het oudste topic is %{topic_link}."
+      topic_exists_no_oldest: "Deze categorie kan niet worden verwijderd, omdat het aantal topics %{count} is."
     uncategorized_description: "Topics die geen categorie nodig hebben of niet in een andere bestaande categorie passen."
   trust_levels:
     newuser:
-      title: "nieuw lid"
+      title: "nieuwe gebruiker"
     basic:
-      title: "lid"
+      title: "basisgebruiker"
     member:
       title: "lid"
     regular:
-      title: "Normaal"
+      title: "vaste gebruiker"
     leader:
       title: "leider"
-    change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
+    change_failed_explanation: "U probeerde %{user_name} naar '%{new_trust_level}' te degraderen. Zijn of haar vertrouwensniveau is echter al '%{current_trust_level}'. %{user_name} blijft op vertrouwensniveau '%{current_trust_level}'. Als u de gebruiker wil degraderen, vergrendel dan eerst het vertrouwensniveau."
   rate_limiter:
     slow_down: "U hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
-    too_many_requests: "Er is een dagelijks limiet voor hoe vaak je dat kan doen. Wacht %{time_left} voordat je dit opnieuw probeert."
+    too_many_requests: "Er is een dagelijks limiet voor hoe vaak die actie kan worden uitgevoerd. Wacht %{time_left} voordat u het opnieuw probeert."
     by_type:
       first_day_replies_per_day: "U hebt het maximale aantal antwoorden dat een nieuwe gebruiker op de eerste dag kan plaatsen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       first_day_topics_per_day: "U hebt het maximale aantal topics dat een nieuwe gebruiker op de eerste dag kan plaatsen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_topic: "Je maakt te snel topics aan. Wacht %{time_left} voordat je het opnieuw probeert. "
-      create_post: "Je reageert te snel. Wacht %{time_left} voordat je het opnieuw probeert. "
-      delete_post: "Je verwijdert berichten te snel. Wacht %{time_left} voor je het opnieuw probeert."
+      create_topic: "U maakt te snel topics aan. Wacht %{time_left} voordat u het opnieuw probeert."
+      create_post: "U antwoordt te snel. Wacht %{time_left} voordat u het opnieuw probeert."
+      delete_post: "U verwijdert berichten te snel. Wacht %{time_left} voor u het opnieuw probeert."
+      public_group_membership: "U neemt deel aan of verlaat groepen te regelmatig. Wacht %{time_left} voordat u het opnieuw probeert."
       topics_per_day: "U hebt het maximale aantal nieuwe topics voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       pms_per_day: "U hebt het maximale aantal berichten voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       create_like: "U hebt het maximale aantal likes voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       create_bookmark: "U hebt het maximale aantal bladwijzers voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       edit_post: "U hebt het maximale aantal bewerkingen voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
+      live_post_counts: "U vraagt te snel om live berichtaantallen. Wacht %{time_left} voordat u het opnieuw probeert."
       unsubscribe_via_email: "U hebt het maximale aantal uitschrijvingen via e-mail voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       topic_invitations_per_day: "U hebt het maximale aantal topicuitnodigingen voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
     hours:
@@ -422,10 +483,10 @@ nl:
         one: "1j"
         other: "%{count}j"
     distance_in_words_verbose:
-      half_a_minute: "zonet"
+      half_a_minute: "zojuist"
       less_than_x_seconds:
-        one: "zonet"
-        other: "zonet"
+        one: "zojuist"
+        other: "zojuist"
       x_seconds:
         one: "1 seconde geleden"
         other: "%{count} seconden geleden"
@@ -458,71 +519,73 @@ nl:
         other: "bijna %{count} jaar geleden"
   password_reset:
     no_token: "Sorry, die koppeling voor het wijzigen van uw wachtwoord is te oud. Selecteer de knop Aanmelden en gebruik 'Ik ben mijn wachtwoord vergeten' om een nieuwe koppeling te ontvangen."
-    update: 'Wijzig wachtwoord'
-    save: 'Bewaar wachtwoord'
-    title: 'Herstel wachtwoord'
-    success: "Je hebt met succes je wachtwoord aangepast en bent nu ingelogd."
-    success_unapproved: "Je hebt met succes je wachtwoord aangepast."
+    choose_new: "Een nieuw wachtwoord kiezen"
+    choose: "Een wachtwoord kiezen"
+    update: 'Wachtwoord bijwerken'
+    save: 'Wachtwoord instellen'
+    title: 'Wachtwoord herinitialiseren'
+    success: "U hebt uw wachtwoord met succes gewijzigd en bent nu aangemeld."
+    success_unapproved: "U hebt uw wachtwoord met succes gewijzigd."
   change_email:
-    confirmed: "Je e-mailadres is aangepast."
-    please_continue: "Ga verder naar %{site_name}"
-    error: "Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?"
-    error_staged: "Er ging iets mis bij het wijzigen van je e-mailadres. Het adres is reeds in gebruik door een staged gebruiker."
-    already_done: "Sorry, de bevestigingslink is niet langer geldig. Misschien is je e-mail al veranderd?"
+    confirmed: "Uw e-mailadres is bijgewerkt."
+    please_continue: "Doorgaan naar %{site_name}"
+    error: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Misschien is het adres al in gebruik?"
+    error_staged: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Het adres is al in gebruik door een staged gebruiker."
+    already_done: "Sorry, deze bevestigingskoppeling is niet meer geldig. Misschien is uw e-mailadres al gewijzigd?"
     authorizing_old:
-      title: "Dank voor het bevestigen van je e-mailadres"
-      description: "We sturen nu ter bevestiging een e-mail naar je nieuwe adres."
+      title: "Bedankt voor het bevestigen van uw huidige e-mailadres"
+      description: "We sturen nu ter bevestiging een e-mail naar uw nieuwe adres."
   activation:
-    action: "Klik hier om je account te activeren"
-    already_done: "Sorry, de link om je account te activeren is niet langer geldig. Wellicht is je account al geactiveerd?"
-    please_continue: "Je account is bevestigd en je wordt nu doorgestuurd naar de homepage."
-    continue_button: "Ga verder naar %{site_name}"
+    action: "Klik hier om uw account te activeren"
+    already_done: "Sorry, deze koppeling voor het bevestigen van uw account is niet meer geldig. Misschien is uw account al actief?"
+    please_continue: "Uw account is bevestigd; u wordt nu doorgestuurd naar de startpagina."
+    continue_button: "Doorgaan naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
-    approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
-    missing_session: "We kunnen niet vaststellen of je account is aangemaakt, wees er alsjeblieft zeker van dat je cookies accepteert."
+    approval_required: "Voordat u toegang hebt tot dit forum, moet een moderator uw nieuwe account handmatig goedkeuren. U ontvangt een e-mail zodra uw account is goedgekeurd!"
+    missing_session: "We kunnen niet vaststellen of uw account is aangemaakt; zorg ervoor dat u cookies hebt ingeschakeld."
     activated: "Sorry, deze account is al geactiveerd."
   post_action_types:
     off_topic:
       title: 'Off-topic'
-      description: 'Dit bericht wijkt erg af van het onderwerp van deze discussie, en moet wellicht naar een ander topic worden verplaatst.'
-      long_form: 'heeft dit als off-topic gemeld'
+      description: 'Dit bericht is niet relevant voor de huidige discussie zoals beschreven door de titel en het eerste bericht, en dient wellicht naar een ander topic te worden verplaatst.'
+      long_form: 'heeft dit als off-topic gemarkeerd'
     spam:
       title: 'Spam'
-      description: 'Dit bericht bevat reclame. Het draagt niets bij aan deze topic en is er alleen om iets te promoten.'
-      long_form: 'heeft dit als spam gemeld'
-      email_title: '"%{title}" is als spam gemarkeerd'
+      description: 'Dit bericht is een advertentie. Het is niet nuttig of relevant voor het huidige topic, maar promotioneel van aard.'
+      long_form: 'heeft dit als spam gemarkeerd'
+      email_title: '''%{title}'' is als spam gemarkeerd'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ongepast'
-      description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
-      long_form: 'heeft dit als ongepast gemeld'
+      description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="/guidelines">onze richtlijnen</a> zou beschouwen.'
+      long_form: 'heeft dit als ongepast gemarkeerd'
     notify_user:
-      title: 'Stuur @{{username}} een bericht'
-      description: 'I wil praten met deze persoon direct en privé over hun bericht.'
-      long_form: 'bericht verstuurd aan gebruiker'
-      email_title: 'Je bericht in ''%{title}'''
+      title: '@{{username}} een bericht sturen'
+      description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
+      long_form: 'bericht verstuurd naar gebruiker'
+      email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
-      description: 'Dit bericht vereist actie van de moderator voor een reden die hier boven niet genoemd wordt.'
-      long_form: 'heeft dit gemarkeerd voor moderatie'
-      email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
+      description: 'Dit bericht vereist aandacht van een staflid om een andere reden dan hierboven vermeld.'
+      long_form: 'heeft dit gemarkeerd voor aandacht van een staflid'
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een staflid'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Favoriet'
-      description: 'Voeg deze post toe aan je favorieten'
-      long_form: 'heeft deze post toegevoegd aan zijn favorieten'
+      title: 'Bladwijzer maken'
+      description: 'Bladwijzer voor dit bericht maken'
+      long_form: 'heeft een bladwijzer voor dit bericht gemaakt'
     like:
       title: 'Leuk'
-      description: 'Vind ik leuk'
+      description: 'Dit bericht leuk vinden'
       long_form: 'vindt dit bericht leuk'
     vote:
-      title: 'Stem'
-      description: 'Stem op dit bericht'
+      title: 'Stemmen'
+      description: 'Stemmen op dit bericht'
       long_form: 'heeft op dit bericht gestemd'
   user_activity:
     no_bookmarks:
-      self: "Je hebt geen favoriete berichten, als favoriet gemarkeerde berichten kun je later makkelijk terugvinden."
+      self: "U hebt geen bladwijzers voor berichten; door bladwijzers voor berichten te maken, kunt u deze later makkelijk terugvinden."
       others: "Geen bladwijzers."
     no_likes_given:
       self: "U hebt geen berichten geliket."
@@ -530,53 +593,72 @@ nl:
   topic_flag_types:
     spam:
       title: 'Spam'
-      description: 'Deze topic is een advertentie. Het promoot iets en is als zodanig niet bruikzaam of relevant voor deze site.'
-      long_form: 'markeerde dit als spam'
+      description: 'Dit topic is een advertentie. Het is niet nuttig of relevant voor deze website, maar promotioneel van aard.'
+      long_form: 'heeft dit als spam gemarkeerd'
     inappropriate:
       title: 'Ongepast'
-      description: 'Dit topic bevat inhoud die een gemiddeld persoon als beledigend, kwetsend, of als een overtreding van <a href="/guidelines">de regels</a> zou beschouwen.'
-      long_form: 'markeerde dit als ongepast'
+      description: 'Dit topic bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="/guidelines">onze richtlijnen</a> zou beschouwen.'
+      long_form: 'heeft dit als ongepast gemarkeerd'
     notify_moderators:
       title: "Iets anders"
-      description: 'Dit topic moet door een staflid bekeken worden. Dit vanwege de <a href="/guidelines">regels</a>, <a href="%{tos_url}">voorwaarden</a> of vanwege een andere reden.'
-      long_form: 'heeft dit gemarkeerd voor moderatie'
-      email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
+      description: 'Dit topic vereist algemene aandacht van een staflid op basis van de <a href="/guidelines">richtlijnen</a>, <a href="%{tos_url}">voorwaarden</a>, of om een andere reden dan hierboven vermeld.'
+      long_form: 'heeft dit gemarkeerd voor aandacht van een moderator'
+      email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Je bericht is gemarkeerd door de gemeenschap. Bekijk a.u.b. <a href="/my/messages">je berichten</a>.</p>'
-    user_must_edit: '<p>Je bericht heeft het maximaal aantal moderatie-meldingen gekregen en is daarom tijdelijk onzichtbaar.</p>'
+    you_must_edit: '<p>Uw bericht is gemarkeerd door de gemeenschap. <a href="/my/messages">Bekijk uw berichten</a>.</p>'
+    user_must_edit: '<p>Uw bericht is gemarkeerd door de gemeenschap en is tijdelijk verborgen.</p>'
   archetypes:
     regular:
-      title: "Standaard Topic"
+      title: "Normaal topic"
     banner:
-      title: "Banner Topic"
+      title: "Bannertopic"
       message:
-        make: "Dit topic is nu een banner. Het zal bovenaan elke pagina verschijnen totdat het is weggeklikt door de gebruiker."
+        make: "Dit topic is nu een banner. De banner verschijnt bovenaan elke pagina, totdat de gebruiker deze verbergt."
         remove: "Dit topic is geen banner meer. Het zal niet meer bovenaan elke pagina verschijnen."
   unsubscribed:
-    title: "Afgemeld!"
+    title: "Uitgeschreven!"
+    description: "U bent uitgeschreven. <a href='%{url}'>Bezoek uw gebruikersvoorkeuren</a> om uw e-mailinstellingen te wijzigen."
+    topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw voor %{link} in te schrijven."
   unsubscribe:
-    title: "Afmelden"
+    title: "Uitschrijven"
+    stop_watching_topic: "Dit topic niet meer in de gaten houden, %{link}"
+    mute_topic: "Alle meldingen voor dit topic negeren, %{link}"
+    unwatch_category: "Geen topics in %{category} meer in de gaten houden"
     mailing_list_mode: "Mailinglijstmodus uitschakelen"
+    disable_digest_emails: "Geen e-mailsamenvattingen meer verzenden"
+    all: "Mij geen e-mail van %{sitename} sturen"
+    different_user_description: "U bent momenteel aangemeld als een andere gebruiker dan die we een e-mail hebben gestuurd. Meld u af, of open de anonieme modus, en probeer het opnieuw."
+    not_found_description: "Sorry, we konden u niet uitschrijven. Is het mogelijk dat de koppeling in uw e-mail is verlopen?"
     log_out: "Afmelden"
   user_api_key:
     title: "Toegang tot toepassingen autoriseren"
     authorize: "Autoriseren"
     read: "lezen"
     read_write: "lezen/schrijven"
+    description: "'%{application_name}' vraagt de volgende toegang tot uw account:"
+    no_trust_level: "Sorry, u hebt niet het vereiste vertrouwensniveau voor toegang tot de gebruikers-API."
+    generic_error: "Sorry, we kunnen geen API-sleutels voor gebruikers uitgeven; deze functie is mogelijk uitgeschakeld door de websitebeheerder."
+    scopes:
+      message_bus: "Live-updates"
+      notifications: "Meldingen lezen en wissen"
+      push: "Meldingen naar externe services sturen"
+      session_info: "Info van gebruikerssessie lezen"
+      read: "Alles lezen"
+      write: "Alles schrijven"
   reports:
     visits:
-      title: "Bezoeken"
+      title: "Gebruikersbezoeken"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
     signups:
-      title: "Nieuwe Gebruikers"
+      title: "Nieuwe gebruikers"
       xaxis: "Dag"
-      yaxis: "Aantal leden"
+      yaxis: "Aantal nieuwe gebruikers"
     profile_views:
-      title: "Gebruikersprofielen bekeken"
+      title: "Gebruikersprofielweergaven"
       xaxis: "Dag"
-      yaxis: "Aantal gebruikersprofielen bekeken"
+      yaxis: "Aantal weergegeven gebruikersprofielen"
     topics:
       title: "Topics"
       xaxis: "Dag"
@@ -586,31 +668,31 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal nieuwe berichten"
     likes:
-      title: "Leuk"
+      title: "Likes"
       xaxis: "Dag"
-      yaxis: "Aantal nieuwe 'leuk gevonden'"
+      yaxis: "Aantal nieuwe likes"
     flags:
       title: "Markeringen"
       xaxis: "Dag"
       yaxis: "Aantal markeringen"
     bookmarks:
-      title: "Favorieten"
+      title: "Bladwijzers"
       xaxis: "Dag"
-      yaxis: "Aantal nieuwe favorieten"
+      yaxis: "Aantal nieuwe bladwijzers"
     starred:
       title: "Met ster"
       xaxis: "Dag"
       yaxis: "Aantal nieuwe topics met ster"
     users_by_trust_level:
-      title: "Leden per trustlevel"
-      xaxis: "Trustlevel"
-      yaxis: "Aantal leden"
+      title: "Gebruikers per vertrouwensniveau"
+      xaxis: "Vertrouwensniveau"
+      yaxis: "Aantal gebruikers"
     emails:
-      title: "E-mails verzonden"
+      title: "Verzonden e-mails"
       xaxis: "Dag"
       yaxis: "Aantal e-mails"
     user_to_user_private_messages:
-      title: "Lid-naar-lid"
+      title: "Gebruiker-naar-gebruiker"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     system_private_messages:
@@ -618,52 +700,52 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     moderator_warning_private_messages:
-      title: "Moderatiewaarschuwing"
+      title: "Moderatorwaarschuwing"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     notify_moderators_private_messages:
-      title: "Licht moderators in"
+      title: "Moderators inlichten"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     notify_user_private_messages:
-      title: "Licht persoon in"
+      title: "Gebruiker inlichten"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
     top_referrers:
-      title: "Top verwijzingen"
-      xaxis: "Lid"
-      num_clicks: "Clicks"
+      title: "Topverwijzingen"
+      xaxis: "Gebruiker"
+      num_clicks: "Klikken"
       num_topics: "Topics"
     top_traffic_sources:
-      title: "Top trafficbronnen"
+      title: "Topverkeersbronnen"
       xaxis: "Domein"
-      num_clicks: "Clicks"
+      num_clicks: "Klikken"
       num_topics: "Topics"
-      num_users: "Leden"
+      num_users: "Gebruikers"
     top_referred_topics:
       title: "Top doorverwezen topics"
       xaxis: "Topic"
-      num_clicks: "Clicks"
+      num_clicks: "Klikken"
     page_view_anon_reqs:
       title: "Anoniem"
       xaxis: "Dag"
       yaxis: "Anonieme paginaweergaven"
     page_view_logged_in_reqs:
-      title: "Ingelogd"
+      title: "Aangemeld"
       xaxis: "Dag"
-      yaxis: "Ingelogde paginaweergaven"
+      yaxis: "Paginaweergaven door aangemelde gebruikers"
     page_view_crawler_reqs:
-      title: "Web Crawlers"
+      title: "Webcrawlers"
       xaxis: "Dag"
-      yaxis: "Web Crawler paginaweergaven"
+      yaxis: "Webcrawler-paginaweergaven"
     page_view_total_reqs:
       title: "Totaal"
       xaxis: "Dag"
-      yaxis: "Totaal paginaweergaven"
+      yaxis: "Totale paginaweergaven"
     page_view_logged_in_mobile_reqs:
-      title: "Ingelogde paginaweergaven"
+      title: "Paginaweergaven door aangemelde gebruikers"
       xaxis: "Dag"
-      yaxis: "Mobiele ingelogde paginaweergaven"
+      yaxis: "Paginaweergaven door mobiele aangemelde gebruikers"
     page_view_anon_mobile_reqs:
       title: "Anonieme paginaweergaven"
       xaxis: "Dag"
@@ -671,50 +753,50 @@ nl:
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
-      yaxis: "Aanvragen gebruikt voor live update en tracking"
+      yaxis: "Voor live-updates en tracking gebruikte aanvragen"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Dag"
-      yaxis: "Successful requests (Status 2xx)"
+      yaxis: "Geslaagde aanvragen (Status 2xx)"
     http_3xx_reqs:
-      title: "HTTP 3xx (Redirect)"
+      title: "HTTP 3xx (Omleiding)"
       xaxis: "Dag"
-      yaxis: "Redirect requests (Status 3xx)"
+      yaxis: "Aanvragen tot omleiding (Status 3xx)"
     http_4xx_reqs:
-      title: "HTTP 4xx (Client Error)"
+      title: "HTTP 4xx (Clientfout)"
       xaxis: "Dag"
-      yaxis: "Client Errors (Status 4xx)"
+      yaxis: "Clientfouten (Status 4xx)"
     http_5xx_reqs:
-      title: "HTTP 5xx (Server Error)"
+      title: "HTTP 5xx (Serverfout)"
       xaxis: "Dag"
-      yaxis: "Server Errors (Status 5xx)"
+      yaxis: "Serverfouten (Status 5xx)"
     http_total_reqs:
       title: "Totaal"
       xaxis: "Dag"
-      yaxis: "Totaal aanvragen"
+      yaxis: "Totale aanvragen"
     time_to_first_response:
-      title: "Tijd tot eerste reactie"
+      title: "Tijd tot eerste antwoord"
       xaxis: "Dag"
       yaxis: "Gemiddelde tijd (uur)"
     topics_with_no_response:
-      title: "Topics zonder reactie"
+      title: "Topics zonder antwoord"
       xaxis: "Dag"
       yaxis: "Totaal"
     mobile_visits:
-      title: "Gebruiker bezoeken"
+      title: "Gebruikersbezoeken"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
   dashboard:
-    rails_env_warning: "Je server draait in %{env} modus."
-    host_names_warning: "Het bestand config/database.yml heeft localhost als standaard hostname. Verander dat in de hostname van je site."
-    gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
-    sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
-    queue_size_warning: 'Het aantal taken in de wachtrij %{queue_size} is hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen.'
+    rails_env_warning: "Uw server werkt in de modus voor %{env}."
+    host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
+    gc_warning: 'Uw server gebruikt standaardparameters voor Ruby garbage collection, waardoor niet de beste prestaties worden verkregen. Lees dit topic over het verbeteren van prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
+    sidekiq_warning: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg ervoor dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
+    queue_size_warning: 'Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit zou op een probleem met Sidekiq-processen kunnen duiden, of mogelijk dient u meer Sidekiq-workers toe te voegen.'
     memory_warning: 'Uw server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen.'
-    google_oauth2_config_warning: 'De server is geconfigureerd om aanmelden en inloggen via Google OAuth2 (enable_google_oauth2_logins) toe te staan, maar de client id en client secret values zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Site Instellingen</a> en stel deze in. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze gids voor meer informatie</a>.'
-    facebook_config_warning: 'De server is geconfigureerd om registratie en inloggen via Facebook mogelijk te maken (enable_facebook_logins), maar er zijn geen app id en app secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
-    twitter_config_warning: 'De server is geconfigureerd om registratie en inloggen via Twitter mogelijk te maken (enable_twitter_logins), maar er zijn geen key en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
-    github_config_warning: 'De server is geconfigureerd om registratie en inloggen via Github mogelijk te maken (enable_github_logins), maar er zijn geen client id en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Zie deze uitleg voor meer informatie</a>.'
+    google_oauth2_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 (enable_google_oauth2_logins) toe te staan, maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    facebook_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Facebook toe te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    twitter_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
+    github_config_warning: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
     image_magick_warning: 'De server is geconfigureerd om miniaturen van grote afbeeldingen te maken, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met uw favoriete pakketbeheerder, of <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download de nieuwste versie</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} e-mail jobs mislukt. Controleer in app.yml of de e-mailserver instelling correct zijn. <a href="/sidekiq/retries" target="_blank">Toon de mislukte jobs in Sidekiq</a>.'
     subfolder_ends_in_slash: "Je submap setup is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt in een schuine streep."
@@ -1173,7 +1255,7 @@ nl:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
     ip_address:
-      blocked: "Nieuwe registraties zijn niet toegestaan vanaf uw IP-adres."
+      blocked: "Nieuwe registraties vanaf uw IP-adres zijn niet toegestaan."
       max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf uw IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een staflid."
   flags_reminder:
     subject_template:
