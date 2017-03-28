@@ -47,8 +47,8 @@ const DiscourseURL = Ember.Object.extend({
     opts = opts || {};
     const holderId = `#post_${postNumber}`;
 
-    _transitioning = true;
-    Em.run.schedule('afterRender', () => {
+    _transitioning = postNumber > 1;
+    Ember.run.schedule('afterRender', () => {
       let elementId;
       let holder;
 
