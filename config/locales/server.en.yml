@@ -138,7 +138,7 @@ en:
 
   invite:
     not_found: "Your invite token is invalid. Please contact the site's administrator."
-    user_exists: "There's no need to invite <b>%{email}</b>, they <a href='/users/%{username}/summary'>already have an account!</a>"
+    user_exists: "There's no need to invite <b>%{email}</b>, they <a href='/u/%{username}/summary'>already have an account!</a>"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -329,7 +329,7 @@ en:
 
       Have you considered replying to *other* people in the discussion, too? A great discussion involves many voices and perspectives.
 
-      If you’d like to continue your conversation with this particular user at length, [send them a personal message](/users/%{reply_username}).
+      If you’d like to continue your conversation with this particular user at length, [send them a personal message](/u/%{reply_username}).
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
@@ -398,7 +398,7 @@ en:
               taken: is already in use by another emoji
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
+    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/u/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
 
   vip_category_name: "Lounge"
@@ -1770,7 +1770,7 @@ en:
       Thanks for accepting your invitation to %{site_name} -- welcome!
 
       Click this link to choose a password now:
-      %{base_url}/users/password-reset/%{email_token}
+      %{base_url}/u/password-reset/%{email_token}
 
       (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
 
@@ -2552,7 +2552,7 @@ en:
         If it was not you, you can safely ignore this email.
 
         Click the following link to choose a new password:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
 
     set_password:
       title: "Set Password"
@@ -2563,7 +2563,7 @@ en:
         If you did not make this request, you can safely ignore this email.
 
         Click the following link to choose a password:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
 
     admin_login:
       title: "Admin Login"
@@ -2574,7 +2574,7 @@ en:
         If you did not make this request, you can safely ignore this email.
 
         Click the following link to login:
-        %{base_url}/users/admin-login/%{email_token}
+        %{base_url}/u/admin-login/%{email_token}
 
     account_created:
       title: "Account Created"
@@ -2583,7 +2583,7 @@ en:
         A new account was created for you at %{site_name}
 
         Click the following link to choose a password for your new account:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
 
     confirm_new_email:
       title: "Confirm New Email"
@@ -2591,7 +2591,7 @@ en:
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
-        %{base_url}/users/authorize-email/%{email_token}
+        %{base_url}/u/authorize-email/%{email_token}
 
     confirm_old_email:
       title: "Confirm Old Email"
@@ -2603,7 +2603,7 @@ en:
 
         Confirm your current email address for %{site_name} by clicking on the following link:
 
-        %{base_url}/users/authorize-email/%{email_token}
+        %{base_url}/u/authorize-email/%{email_token}
 
     notify_old_email:
       title: "Notify Old Email"
@@ -2626,7 +2626,7 @@ en:
         A staff member approved your account on %{site_name}.
 
         Click the following link to confirm and activate your new account:
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
@@ -2645,7 +2645,7 @@ en:
         Welcome to %{site_name}!
 
         Click the following link to confirm and activate your new account:
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 

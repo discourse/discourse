@@ -83,14 +83,14 @@ export default Discourse.Route.extend({
   activate() {
     this._super();
     const user = this.modelFor('user');
-    this.messageBus.subscribe("/users/" + user.get('username_lower'), function(data) {
+    this.messageBus.subscribe("/u/" + user.get('username_lower'), function(data) {
       user.loadUserAction(data);
     });
   },
 
   deactivate() {
     this._super();
-    this.messageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
+    this.messageBus.unsubscribe("/u/" + this.modelFor('user').get('username_lower'));
 
     // Remove the search context
     this.searchService.set('searchContext', null);

@@ -130,8 +130,8 @@ test("Links", function() {
          "<p>Here's a tweet:<br/><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
          "It doesn't strip the new line.");
 
-  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity<br/>next line.",
-        "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/users/eviltrout/activity\">http://meta.discourse.org/users/eviltrout/activity</a><br>next line.</li></ol>",
+  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/u/eviltrout/activity<br/>next line.",
+        "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/u/eviltrout/activity\">http://meta.discourse.org/u/eviltrout/activity</a><br>next line.</li></ol>",
         "allows autolinking within a list without inserting a paragraph.");
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");

@@ -40,7 +40,7 @@ test("search scope checkbox", () => {
   });
   click('#search-button');
 
-  visit("/users/eviltrout");
+  visit("/u/eviltrout");
   click('#search-button');
   andThen(() => {
     ok(exists('.search-context input:checked'), 'scope to user checkbox is checked');
