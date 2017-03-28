@@ -189,7 +189,7 @@ class UsersController < ApplicationController
       cookies[:destination_url] = "/my/#{params[:path]}"
       redirect_to "/login-preferences"
     else
-      redirect_to(path("/users/#{current_user.username}/#{params[:path]}"))
+      redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
     end
   end
 

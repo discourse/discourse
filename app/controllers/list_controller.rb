@@ -192,8 +192,8 @@ class ListController < ApplicationController
     target_user = fetch_user_from_params
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics"
-    @atom_link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics.rss"
+    @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
+    @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
     @topic_list = TopicQuery.new(nil, order: 'created').send("list_topics_by", target_user)
 

@@ -137,7 +137,7 @@ http://b.com/#{'a'*500}
     end
 
     context "link to a user on discourse" do
-      let(:post) { topic.posts.create(user: user, raw: "<a href='/users/#{user.username_lower}'>user</a>") }
+      let(:post) { topic.posts.create(user: user, raw: "<a href='/u/#{user.username_lower}'>user</a>") }
       before do
         TopicLink.extract_from(post)
       end

@@ -315,7 +315,7 @@ Discourse::Application.routes.draw do
   post "u/read-faq" => "users#read_faq"
   get "u/search/users" => "users#search_users"
   get "u/account-created/" => "users#account_created"
-  get "u/password-reset/:token" => "users#password_reset"
+  get "u/password-reset/:token" => "users#password_reset", as: 'password_reset_token'
   get "u/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
   put "u/password-reset/:token" => "users#password_reset"
   get "u/activate-account/:token" => "users#activate_account"

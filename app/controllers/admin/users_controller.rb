@@ -348,7 +348,9 @@ class Admin::UsersController < Admin::AdminController
                     email_token: email_token.token)
     end
 
-    render json: success_json.merge!(password_url: "#{Discourse.base_url}/users/password-reset/#{email_token.token}")
+    render json: success_json.merge!(
+      password_url: "#{Discourse.base_url}#{password_reset_token_path(token: email_token.token)}"
+    )
 
   end
 

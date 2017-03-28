@@ -46,7 +46,7 @@
     <% if (u = post.user) %>
       <div class='creator'>
         <span>
-          <a href='<%= Discourse.base_uri %>/users/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
+          <a href='<%= Discourse.base_uri %>/u/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
            <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
            <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
              <%= post.created_at %>
