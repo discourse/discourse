@@ -66,7 +66,7 @@ nl:
         almost_x_years:
           one: "1j"
           other: "%{count}j"
-        date_month: "MMM D"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -78,7 +78,7 @@ nl:
         x_days:
           one: "1 dag"
           other: "%{count} dagen"
-        date_year: "MMM D, 'YY"
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 min geleden"
@@ -135,6 +135,9 @@ nl:
       visible:
         enabled: 'zichtbaar gemaakt op %{when}'
         disabled: 'onzichtbaar gemaakt op %{when}'
+      banner:
+        enabled: 'heeft deze banner gemaakt op %{when}. De banner verschijnt bovenaan elke pagina, totdat de gebruiker deze verbergt.'
+        disabled: 'heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen.'
     topic_admin_menu: "beheeracties voor topic"
     wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
@@ -171,7 +174,7 @@ nl:
     show_help: "opties"
     links: "Koppelingen"
     links_lowercase:
-      one: "link"
+      one: "koppeling"
       other: "koppelingen"
     faq: "FAQ"
     guidelines: "Richtlijnen"
@@ -216,7 +219,7 @@ nl:
       post_count: "Berichten"
       user_count: "Gebruikers"
       active_user_count: "Actieve gebruikers"
-      contact: "Neem contact met ons op"
+      contact: "Contact"
       contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact met ons op via %{contact_info}."
     bookmarked:
       title: "Bladwijzer maken"
@@ -375,8 +378,8 @@ nl:
         title: "Groepen"
         empty: "Er zijn geen zichtbare groepen."
       title:
-        one: "groep"
-        other: "groepen"
+        one: "Groep"
+        other: "Groepen"
       activity: "Activiteit"
       members: "Leden"
       topics: "Topics"
@@ -387,8 +390,8 @@ nl:
         title: "Wie kan deze groep een bericht sturen en taggen?"
         nobody: "Niemand"
         only_admins: "Alleen beheerders"
-        mods_and_admins: "Alleen moderatoren en beheerders"
-        members_mods_and_admins: "Alleen groepsleden, moderatoren en beheerders"
+        mods_and_admins: "Alleen moderators en beheerders"
+        members_mods_and_admins: "Alleen groepsleden, moderators en beheerders"
         everyone: "Iedereen"
       trust_levels:
         title: "Vertrouwensniveau dat automatisch aan nieuwe gebruikers wordt toegekend:"
@@ -875,12 +878,12 @@ nl:
       hide_session: "Mij morgen herinneren"
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, ik vraag het u morgen. U kunt ook altijd 'Aanmelden' gebruiken om een account aan te maken."
-      intro: "Hallo daar! :heart_eyes: Zo te zien beleeft u plezier aan deze discussie, maar hebt u zich niet voor een account geregistreerd."
+      intro: "Hallo! :heart_eyes: Zo te zien beleeft u plezier aan de discussie, maar hebt u zich niet voor een account geregistreerd."
       value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u direct kunt verdergaan waar u was gebleven. U ontvangt dan ook meldingen bij nieuwe berichten, hier en via e-mail, en u kunt ook nog berichten liken. :heartbeat:"
     summary:
       enabled_description: "U bekijkt een samenvatting van dit topic: de meeste interessante berichten zoals bepaald door de gemeenschap."
       description: "Er zijn <b>{{replyCount}}</b> antwoorden."
-      description_time: "Er zijn <b>{{replyCount}}</b> antwoorden met een geschatte leestijd van<b>{{readingTime}} minuten</b>."
+      description_time: "Er zijn <b>{{replyCount}}</b> antwoorden met een geschatte leestijd van <b>{{readingTime}} minuten</b>."
       enable: 'Samenvatting van dit topic maken'
       disable: 'Alle berichten tonen'
     deleted_filter:
@@ -1324,7 +1327,7 @@ nl:
       read_more: "Wilt u meer lezen? {{catLink}} of {{latestLink}}."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='/unread'>1 ongelezen</a> } other { zijn <a href='/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
-      view_latest_topics: bekijk de nieuwste topics
+      view_latest_topics: nieuwste topics bekijken
       suggest_create_topic: Waarom maakt u geen topic aan?
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
@@ -1486,7 +1489,7 @@ nl:
         email_placeholder: 'name@example.com'
         success_email: "Er is een uitnodiging naar <b>{{emailOrUsername}}</b> gemaild. We stellen u op de hoogte als op de uitnodiging is ingegaan. Controleer het uitnodigingentabblad op uw gebruikerspagina om uw uitnodigingen bij te houden."
         success_username: "We hebben die gebruiker uitgenodigd om aan dit topic deel te nemen."
-        error: "Sorry, we konden deze persoon niet uitnodigen. Wellicht is deze al uitgenodigd? (Uitnodigingen zijn in aantal beperkt)"
+        error: "Sorry, we konden deze persoon niet uitnodigen. Misschien is deze al uitgenodigd? (Uitnodigingen zijn in aantal beperkt)"
       login_reply: 'Meld u aan om te antwoorden'
       filters:
         n_posts:
@@ -1800,8 +1803,9 @@ nl:
       num_featured_topics: "Aantal getoonde topics op de categoriepagina:"
       subcategory_num_featured_topics: "Aantal aanbevolen topics op pagina van bovenliggende categorie:"
       all_topics_wiki: "Standaard wiki's van nieuwe topics maken"
-      sort_order: "Standaardsortering:"
-      default_view: "Standaardweergave:"
+      subcategory_list_style: "Stijl van subcategorielijst:"
+      sort_order: "Topiclijst sorteren op:"
+      default_view: "Standaard topiclijst:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
       edit_permissions: "Toestemmingen wijzigen"
       add_permission: "Toestemming toevoegen"
@@ -1839,6 +1843,11 @@ nl:
         created: "Gemaakt"
       sort_ascending: 'Oplopend'
       sort_descending: 'Aflopend'
+      subcategory_list_styles:
+        rows: "Rijen"
+        rows_with_featured_topics: "Rijen met aanbevolen topics"
+        boxes: "Vakken"
+        boxes_with_featured_topics: "Vakken met aanbevolen topics"
     flagging:
       title: 'Bedankt voor het beleefd houden van onze gemeenschap!'
       action: 'Bericht markeren'
@@ -1944,8 +1953,8 @@ nl:
       not_available: "Niet beschikbaar!"
     categories_list: "Categorielijst"
     filters:
-      with_topics: "%{filter}-topics"
-      with_category: "%{filter}-topics in %{category}"
+      with_topics: "%{filter} topics"
+      with_category: "%{filter} topics in %{category}"
       latest:
         title: "Nieuwste"
         title_with_count:
@@ -2189,7 +2198,7 @@ nl:
           bookmarks: "Er zijn geen topics met bladwijzers meer."
           search: "Er zijn geen zoekresultaten meer."
     invite:
-      custom_message: "Maak uw uitnodiging iets persoonlijker door het schrijven van een "
+      custom_message: "Maak uw uitnodiging iets persoonlijker door het schrijven van een"
       custom_message_link: "eigen bericht"
       custom_message_placeholder: "Voer uw eigen bericht in"
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
@@ -2616,7 +2625,7 @@ nl:
         send_test: "Testmail verzenden"
         sent_test: "verzonden!"
         delivery_method: "Verzendmethode"
-        preview_digest_desc: "Een voorbeeld bekijken van de samenvattingsmails die naar inactieve leden worden verstuurd."
+        preview_digest_desc: "Een voorbeeld bekijken van de e-mailsamenvattingen die naar inactieve leden worden verzonden."
         refresh: "Vernieuwen"
         send_digest_label: "Dit resultaat verzenden naar:"
         send_digest: "Verzenden"
@@ -2795,7 +2804,7 @@ nl:
           newuser: 'Gebruikers op vertrouwensniveau 0 (Nieuwe gebruiker)'
           basic: 'Gebruikers op vertrouwensniveau 1 (Basisgebruiker)'
           member: 'Gebruikers op vertrouwensniveau 2 (Lid)'
-          regular: 'Gebruikers op vertrouwensniveau 3 (Vaste bezoeker)'
+          regular: 'Gebruikers op vertrouwensniveau 3 (Vaste gebruiker)'
           leader: 'Gebruikers op vertrouwensniveau 4 (Leider)'
           staff: "Stafleden"
           admins: 'Beheerders'
@@ -2870,8 +2879,8 @@ nl:
         anonymize_yes: "Ja, deze account anonimiseren"
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van de account."
         delete: "Gebruiker verwijderen"
-        delete_forbidden_because_staff: "Beheerders en moderatoren kunnen niet worden verwijderd."
-        delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderatoren verwijderen."
+        delete_forbidden_because_staff: "Beheerders en moderators kunnen niet worden verwijderd."
+        delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderators verwijderen."
         delete_forbidden:
           one: "Gebruikers kunnen niet worden verwijderd als ze berichten hebben geplaatst. Verwijder alle berichten voordat u een gebruiker probeert te verwijderen. (Berichten ouder dan %{count} dag kunnen niet worden verwijderd.)"
           other: "Gebruikers kunnen niet worden verwijderd als ze berichten hebben geplaatst. Verwijder alle berichten voordat u een gebruiker probeert te verwijderen. (Berichten ouder dan %{count} dagen kunnen niet worden verwijderd.)"

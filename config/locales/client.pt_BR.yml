@@ -135,6 +135,8 @@ pt_BR:
       visible:
         enabled: 'listou %{when}'
         disabled: 'desalistou %{when}'
+      banner:
+        enabled: 'tornou isso um banner %{when}. Isso será mostrado no todo de todas as páginas até que seja descartado pelo usuário.'
     topic_admin_menu: "ações administrativas do tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
@@ -1238,7 +1240,7 @@ pt_BR:
         selected:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
-        change_tags: "Mudar Etiquetas"
+        change_tags: "Substituir marcadores"
         choose_new_tags: "Escolha novas tags para esses tópicos:"
         changed_tags: "As tags para esses tópicos foram alteradas."
       none:
@@ -1732,6 +1734,17 @@ pt_BR:
           side_by_side_markdown:
             title: "Mostrar a diferença da fonte crua lado-a-lado"
             button: 'Texto Bruto'
+      raw_email:
+        displays:
+          raw:
+            title: "Mostrar Email"
+            button: 'Texto Bruto'
+          text_part:
+            title: "Mostrar texto do email"
+            button: 'Texto'
+          html_part:
+            title: "Mostrar texto html do email"
+            button: 'HTML'
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -1786,8 +1799,9 @@ pt_BR:
       show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
       num_featured_topics: "Número de tópicos exibidos na página de Categorias:"
       all_topics_wiki: "Tornar novos tópicos wikis por padrão."
-      sort_order: "Ordenação Padrão:"
-      default_view: "Visualização Padrão:"
+      subcategory_list_style: "Estilo da lista de subcategorias"
+      sort_order: "Classificar lista de tópicos:"
+      default_view: "Lista padrão de tópicos"
       allow_badges_label: "Permitir a concessão de emblemas nessa categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -1825,6 +1839,11 @@ pt_BR:
         created: "Criado"
       sort_ascending: 'Ascendente'
       sort_descending: 'Descendente'
+      subcategory_list_styles:
+        rows: "Linhas"
+        rows_with_featured_topics: "Linhas com Tópicos em destaque"
+        boxes: "Caixas"
+        boxes_with_featured_topics: "Caixas com tópicos em destaque"
     flagging:
       title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
       action: 'Sinalizar resposta'
@@ -1926,7 +1945,7 @@ pt_BR:
     history: "Histórico"
     changed_by: "por {{author}}"
     raw_email:
-      title: "Email Raw"
+      title: "Detalhes dos Emails Recebidos"
       not_available: "Não disponível!"
     categories_list: "Lista de categorias"
     filters:

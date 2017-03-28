@@ -135,6 +135,9 @@ fi:
       visible:
         enabled: 'listasi %{when}'
         disabled: 'poisti listauksista %{when}'
+      banner:
+        enabled: 'teki tästä bannerin %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi.'
+        disabled: 'poisti tämän bannerin %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa.'
     topic_admin_menu: "ketjun ylläpitotoimet"
     wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
@@ -395,10 +398,10 @@ fi:
         none: "Ei mitään"
       notifications:
         watching:
-          title: "Tarkkaillut"
+          title: "Tarkkailussa"
           description: "Saat ilmoituksen uusista viesteistä jokaisessa viestiketjussa, ja uusien vastausten lukumäärä näytetään."
         watching_first_post:
-          title: "Tarkkaile uusia ketjuja"
+          title: "Uudet ketjut tarkkailussa"
           description: "Saat ilmoituksen vain ketjujen ensimmäisistä viesteistä tässä ryhmässä."
         tracking:
           title: "Seurannassa"
@@ -407,7 +410,7 @@ fi:
           title: "Tavallinen"
           description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
-          title: "Vaimennetut"
+          title: "Vaimennettu"
           description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
       flair_url: "Avatarpinssin kuva"
       flair_url_placeholder: "(Valinnainen) kuvan URL tai Font Awesome -luokka"
@@ -504,7 +507,7 @@ fi:
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
-        each_browser_note: "Huom: Sinun täytyy vaihtaa tämä asetus kaikissa selaimista, joita käytät."
+        each_browser_note: "Huom: Asetus on säädettävä erikseen jokaisessa selaimessa, jota käytät."
       dismiss_notifications: "Unohda kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
@@ -665,7 +668,7 @@ fi:
       log_out: "Kirjaudu ulos"
       location: "Sijainti"
       card_badge:
-        title: "Käyttäjäkortin tunnus"
+        title: "Ansiomerkki käyttäjäkortissa"
       website: "Nettisivu"
       email_settings: "Sähköposti"
       like_notification_frequency:
@@ -695,13 +698,13 @@ fi:
       other_settings: "Muut"
       categories_settings: "Keskustelualueet"
       new_topic_duration:
-        label: "Tulkitse ketju uudeksi, kun"
+        label: "Tulkitse ketju uudeksi, jos"
         not_viewed: "en ole avannut sitä vielä"
         last_here: "se on luotu edellisen käyntini jälkeen"
-        after_1_day: "luotu päivän aikana"
-        after_2_days: "luotu 2 päivän aikana"
-        after_1_week: "luotu viikon aikana"
-        after_2_weeks: "luotu 2 viikon aikana"
+        after_1_day: "se on luotu päivän aikana"
+        after_2_days: "se on luotu 2 päivän aikana"
+        after_1_week: "se on luotu viikon aikana"
+        after_2_weeks: "se on luotu 2 viikon aikana"
       auto_track_topics: "Seuraa automaattisesti ketjuja, jotka avaan"
       auto_track_options:
         never: "ei koskaan"
@@ -1801,8 +1804,9 @@ fi:
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
       subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
       all_topics_wiki: "Tee uusista ketjuista wiki-viestejä oletuksena."
-      sort_order: "Oletusjärjestys:"
-      default_view: "Oletusnäkymä:"
+      subcategory_list_style: "Tytäraluelistan tyyli:"
+      sort_order: "Ketjulistaus järjestetään:"
+      default_view: "Oletuslistaus:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
@@ -1840,6 +1844,11 @@ fi:
         created: "Luomisaika"
       sort_ascending: 'Nouseva'
       sort_descending: 'Laskeva'
+      subcategory_list_styles:
+        rows: "Rivit"
+        rows_with_featured_topics: "Rivit ja ketjuja"
+        boxes: "Laatikot"
+        boxes_with_featured_topics: "Laatikot ja ketjuja"
     flagging:
       title: 'Kiitos avustasi yhteisön hyväksi!'
       action: 'Liputa viesti'

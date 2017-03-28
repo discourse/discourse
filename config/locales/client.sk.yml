@@ -368,6 +368,7 @@ sk:
       add: "Pridať"
       closed_group: Uzavretá skupina
       membership: "Členstvo"
+      name: "Meno"
       user_count: "Počet členov"
       bio: "O skupine"
       selector_placeholder: "Pridať členov"
@@ -943,6 +944,11 @@ sk:
       github:
         title: "pomocou GitHub"
         message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
+    invites:
+      accept_title: "Pozvánka"
+      accept_invite: "Prijať pozvánku"
+      success: "Váš účet bol vytvorený a ste prihlásený."
+      password_label: "Nastaviť heslo (voliteľne)"
     emoji_set:
       apple_international: "Apple/Medzinárodné"
       google: "Google"
@@ -1153,6 +1159,7 @@ sk:
     not_logged_in_user: 'používateľská stránka so súhrnom aktivít a nastavení'
     current_user: 'prejsť na Vašu používateľskú stránku'
     topics:
+      new_messages_marker: "posledná návševa"
       bulk:
         unlist_topics: "Dôverné témy"
         reset_read: "Obnoviť prečítané"

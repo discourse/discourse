@@ -9,4 +9,4 @@ fi:
   site_settings:
     enable_imgur: "Lataa kuvat imgurliin käyttäen apia, älä tallenna kuvia paikallisesti palvelimelle"
     imgur_client_id: "Imgurl.com client ID, vaaditaan kuvien lataamiseksi"
-    imgur_client_secret: "Imgurl.com client secret. Ei tällä hetkellä pakollinen kuvien lataamiseksi, mutta saattaa tulla pakolliseksi tulevaisuudessa."
+    imgur_client_secret: "Client secret -salausavaimesi Imgur.comissa. Ei tällä hetkellä pakollinen kuvien lataamiseksi, mutta saattaa tulla pakolliseksi tulevaisuudessa."

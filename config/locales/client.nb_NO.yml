@@ -135,8 +135,11 @@ nb_NO:
       visible:
         enabled: 'gjort synlig %{when}'
         disabled: 'skjult %{when}'
+      banner:
+        enabled: 'laget dette banneret %{when}. Det vil vises på toppen av hver side til brukeren lukker det.'
+        disabled: 'Fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side.'
     topic_admin_menu: "admin-handlinger for emne"
-    wizard_required: "Det er på tide å sette opp forumet!  <a href='%{url}' data-auto-route='true'>Start veiviseren</a>!"
+    wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     bootstrap_mode_enabled: "For å gjøre det enklere å lansere det nye nettstedet ditt er det i bootstrap-modus. Alle nye brukere vil få tillitsnivå 1 og få daglige oppdateringer på e-post aktivert. Dette vil automatisk bli slått av når antallet brukere overstiger %{min_users}."
     bootstrap_mode_disabled: "Bootstrap modus vil bli deaktivert i løpet av de neste 24 timene."
@@ -258,8 +261,8 @@ nb_NO:
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
-      close: "Fjern denne banneren"
-      edit: "Endre denne banneren >>"
+      close: "Fjern dette banneret"
+      edit: "Endre dette banneret >>"
     choose_topic:
       none_found: "Ingen emner funnet."
       title:
@@ -928,7 +931,7 @@ nb_NO:
       logging_in: "Logger på…"
       or: "Eller"
       authenticating: "Autentiserer…"
-      awaiting_confirmation: "Din konto avventer aktivering. Bruk lenken for glemt passord for å sende en ny e-post for aktivering."
+      awaiting_activation: "Din konto avventer aktivering. Bruk lenken for glemt passord for å sende en ny e-post for aktivering."
       awaiting_approval: "Din konto har ikke blitt godkjent av en moderator ennå. Du vil motta en e-post når den er godkjent."
       requires_invite: "Beklager, tilgang til dette forumet kun ved invitasjon."
       not_activated: "Du kan ikke logge inn ennå. Vi sendte en e-post for aktivering til deg på <b>{{sentTo}}</b>. Følg instruksjonene i den e-posten for å aktivere din konto."
@@ -1192,6 +1195,8 @@ nb_NO:
           first: er det første innlegget
           pinned: er festet
           unpinned: er ikke festet
+          seen: Jeg har lest
+          unseen: Jeg har ikke lest
           wiki: er wiki
         statuses:
           label: Der emner
@@ -1236,8 +1241,10 @@ nb_NO:
         selected:
           one: "Du har valgt <b>1</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
-        change_tags: "Endre stikkord"
+        change_tags: "Erstatt stikkord"
+        append_tags: "Legg til stikkord"
         choose_new_tags: "Velg nye stikkord for disse emnene:"
+        choose_append_tags: "Velg nye stikkord å legge til disse emnene:"
         changed_tags: "Stikkordene på disse innleggene ble endret."
       none:
         unread: "Du har ingen uleste emner å lese."
@@ -1730,6 +1737,17 @@ nb_NO:
           side_by_side_markdown:
             title: "Vis diff for kilderåtekst side ved side"
             button: 'Rå'
+      raw_email:
+        displays:
+          raw:
+            title: "Vis e-posten i råformat"
+            button: 'Rå'
+          text_part:
+            title: "Vis tekstdelen av e-posten"
+            button: 'Tekst'
+          html_part:
+            title: "Vis HTML-delen av e-posten"
+            button: 'HTML'
     category:
       can: 'kan&hellip;'
       none: '(no category)'
@@ -1781,8 +1799,13 @@ nb_NO:
       email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       suppress_from_homepage: "Utelat denne kategorien fra hjemmesiden."
+      show_subcategory_list: "Vis underkategoriliste over emner i denne kategorien"
+      num_featured_topics: "Antall emner vist på kategori-siden:"
+      subcategory_num_featured_topics: "Antall framhevede emner på opphavets kategoriside:"
       all_topics_wiki: "Gjør nye emner til wiki-er som forvalg."
-      sort_order: "Forvalgt sortering:"
+      subcategory_list_style: "Listestil for underkategorier:"
+      sort_order: "Sorter emneliste etter:"
+      default_view: "Forvalgt emneliste:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
       add_permission: "Legg til tillatelser"
@@ -1820,6 +1843,11 @@ nb_NO:
         created: "Opprettet"
       sort_ascending: 'Stigende'
       sort_descending: 'Synkende'
+      subcategory_list_styles:
+        rows: "Rader"
+        rows_with_featured_topics: "Rader med framhevede emner"
+        boxes: "Bokser"
+        boxes_with_featured_topics: "Bokser med framhevede emner"
     flagging:
       title: 'Takk for at du hjelper å holde forumet ryddig!'
       action: 'Rapporter innlegg'
@@ -1921,7 +1949,7 @@ nb_NO:
     history: "Historie"
     changed_by: "av {{author}}"
     raw_email:
-      title: "Rå e-post"
+      title: "Innkommende e-post"
       not_available: "Ikke tilgjengelig!"
     categories_list: "Kategoriliste"
     filters:
@@ -2324,6 +2352,8 @@ nb_NO:
         add_owners: Legg til eiere
         incoming_email: "Egendefinert innkommende e-postadresse"
         incoming_email_placeholder: "oppgi e-postadresse"
+        none_selected: "Velg en gruppe for å komme i gang"
+        no_custom_groups: "Opprett en ny egendefinert gruppe"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det er ingen aktive API-nøkler akkurat nå."
@@ -2459,7 +2489,8 @@ nb_NO:
             without_uploads: "Ja (ikke inkluder filer)"
           download:
             label: "Last ned"
-            title: "Last ned sikkerhetskopi"
+            title: "Send e-post med nedlastingslenke"
+            alert: "En lenke til nedlasting av denne sikkerhetskopien har blitt sendt til deg per e-post."
           destroy:
             title: "Fjern sikkerhetskopi"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
@@ -2815,6 +2846,7 @@ nb_NO:
         refresh_browsers_message: "Melding sendt til alle klienter!"
         show_public_profile: "Vis offentlig profil"
         impersonate: 'Gi deg ut for å være en annen'
+        action_logs: "Handlingslogger"
         ip_lookup: "IP Lookup"
         log_out: "Logg ut"
         logged_out: "Brukeren ble logget ut på alle enheter"

@@ -35,6 +35,7 @@ nb_NO:
   remove_posts_deleted_by_author: "Slettet av forfatter"
   emails:
     incoming:
+      default_subject: "Emnet trenger en tittel"
       show_trimmed_content: "Vis beskjært innhold"
       errors:
         no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."

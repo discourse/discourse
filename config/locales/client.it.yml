@@ -270,7 +270,7 @@ it:
       approve: 'Approva'
       reject: 'Scarta'
       delete_user: 'Elimina Utente'
-      title: "Richiede Approvazione"
+      title: "Da Approvare"
       none: "Non ci sono messaggi da revisionare."
       edit: "Modifica"
       cancel: "Annulla"
@@ -281,7 +281,7 @@ it:
       confirm: "Salva Modifiche"
       delete_prompt: "Sei sicuro di voler eliminare <b>%{username}</b>? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'indirizzo IP."
       approval:
-        title: "Il Messaggio Richiede Approvazione"
+        title: "Il messaggio è da approvare"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
         pending_posts:
           one: "Hai <strong>1</strong> messaggio in attesa."

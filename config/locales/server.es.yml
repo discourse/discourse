@@ -190,6 +190,12 @@ es:
     latest: "Temas recientes"
     hot: "Temas candentes"
     top: "Top temas"
+    top_all: "Todos los Temas Top"
+    top_yearly: "Anual: Temas Top"
+    top_quarterly: "Cuatrimestral: Temas Top"
+    top_monthly: "Mensual: Temas Top"
+    top_weekly: "Semanal: Temas Top"
+    top_daily: "Diario: Temas Top"
     posts: "Últimos posts"
     private_posts: "Últimos mensajes privados"
     group_posts: "Últimos posts de %{group_name}"
@@ -536,6 +542,7 @@ es:
     welcome_to: "Bienvenido a %{site_name}!"
     approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprobada!"
     missing_session: "No hemos podido detectar si tu cuenta fue creada. Por favor, asegúrate de tener activadas las cookies en tu navegador."
+    activated: "Disculpa, esta cuenta ya ha sido activada."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -939,7 +946,7 @@ es:
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: si tienes usuarios o grupos con mayor cantidad de caracteres que ésta, tu sitio se romperá."
-    reserved_usernames: "Nombres de usuario no permitidos en el registro."
+    reserved_usernames: "Nombres de usuario que no están permitidos. El símbolo Asterisco * puede ser usado para coincidir con cualquier carácter cero o más veces."
     min_password_length: "Longitud mínima de contraseña."
     min_admin_password_length: "Longitud mínima de la contraseña para un Admin."
     password_unique_characters: "Número mínimo de caracteres únicos que la contraseña debe tener."
@@ -1212,6 +1219,7 @@ es:
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "El título de la página del tema incluye el nombre de la categoría."
     native_app_install_banner: "Preguntar a visitantes recurrentes si quieren instalar la app nativa de Discourse"
+    share_anonymized_statistics: "Compartir estadísticas del uso anónimas."
     max_prints_per_hour_per_user: "Número máximo de impresiones de página /print (pon un 0 para desactivar esta opción)"
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
@@ -1425,6 +1433,8 @@ es:
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
     activated_by_staff: "Activado por el staff"
+    new_user_typed_too_fast: "El nuevo usuario escribió demasiado rápido"
+    content_matches_auto_block_regex: "El contenido coincide con regex de bloqueo automático"
     username:
       short: "debe contener al menos %{min} caracteres"
       long: "debe contener no más de %{max} caracteres"
@@ -1548,9 +1558,18 @@ es:
       %{base_url}/users/password-reset/%{email_token}
 
       (Si el enlace anterior ha caducado, utiliza "Olvidé mi contraseña" cuando vayas a iniciar sesión con tu dirección de email.)
+  download_backup_mailer:
+    title: "Descargar Mailer Backup"
+    text_body_template: |
+      Aquí está el enlace de [descarga del backup del sitio](%{backup_file_path}) que solicitaste.
+
+      Te enviamos el enlace de descarga al email que validaste por razones de seguridad.
+
+      (Si tú *no has* solicitado esta descarga, deberías estar seriamente preocupado -- alguien tiene acceso como administrador a tu sitio.)
+    no_token: |
+      Disculpa, este enlace de descarga del backup ya ha sido usado o ha expirado.
   test_mailer:
     title: "Mail de prueba"
-    subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |
       Este es un correo electrónico de prueba de
 
@@ -3002,7 +3021,7 @@ es:
             description: "Tu página de contacto o la de tu organización. Será mostrada en la <a href='/about' target='_blank'>página de acerca de</a>."
           site_contact:
             label: "Mensajes automáticos"
-            description: "Todos los mensajes privados automáticos de Discourse serán mandados desde este usuarios. Más importante, este usuario será el que envíe el mensaje de bienvenida que se manda automáticamente a todos los usuarios."
+            description: "Todos los mensajes privados automáticos de Discourse serán enviados desde este usuario, como por ejemplo, el mensaje de bienvenida que se envía a los usuarios nuevos."
       corporate:
         title: "Organización"
         description: "Estos nombres se usarán en tu <a href='/privacy' target='blank'>Política de privacidad</a> y <a href='/tos' target='blank'>Términos y condiciones</a>, que podrás editar en todo momento en la categoría Staff. Si no tienes una empresa, puedes saltarte este paso por ahora."
