@@ -1309,7 +1309,6 @@ uncategorized:
 
   share_anonymized_statistics: true
 
-
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
