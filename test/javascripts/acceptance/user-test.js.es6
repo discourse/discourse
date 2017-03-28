@@ -3,28 +3,28 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("User", {loggedIn: true});
 
 test("Invites", () => {
-  visit("/users/eviltrout/invited/pending");
+  visit("/u/eviltrout/invited/pending");
   andThen(() => {
     ok($('body.user-invites-page').length, "has the body class");
   });
 });
 
 test("Messages", () => {
-  visit("/users/eviltrout/messages");
+  visit("/u/eviltrout/messages");
   andThen(() => {
     ok($('body.user-messages-page').length, "has the body class");
   });
 });
 
 test("Notifications", () => {
-  visit("/users/eviltrout/notifications");
+  visit("/u/eviltrout/notifications");
   andThen(() => {
     ok($('body.user-notifications-page').length, "has the body class");
   });
 });
 
 test("Root URL - Viewing Self", () => {
-  visit("/users/eviltrout");
+  visit("/u/eviltrout");
   andThen(() => {
     ok($('body.user-activity-page').length, "has the body class");
     equal(currentPath(), 'user.userActivity.index', "it defaults to activity");

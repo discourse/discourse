@@ -56,7 +56,7 @@
           <div>
             <img style="float: left; width: 20px; padding-right: 5px;" src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
             <p style="font-size: 15px; color: #888">
-              <a href='<%= "#{Discourse.base_url}/users/#{post.user.username}" %>'>
+              <a href='<%= "#{Discourse.base_url}/u/#{post.user.username}" %>'>
                 <%- if show_username_on_post(post) %>
                   <%= post.user.username %>
                 <% end %>

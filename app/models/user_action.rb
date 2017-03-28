@@ -260,7 +260,7 @@ SQL
         end
 
         if action.user
-          MessageBus.publish("/users/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
+          MessageBus.publish("/u/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
         end
 
         action

@@ -30,7 +30,7 @@ acceptance("Password Reset", {
 test("Password Reset Page", () => {
   PreloadStore.store('password_reset', {is_developer: false});
 
-  visit("/users/password-reset/myvalidtoken");
+  visit("/u/password-reset/myvalidtoken");
   andThen(() => {
     ok(exists(".password-reset input"), "shows the input");
   });

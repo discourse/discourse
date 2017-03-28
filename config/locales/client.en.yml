@@ -1519,7 +1519,7 @@ en:
           "2_8": 'You will receive notifications because you are tracking this category.'
           "2_4": 'You will receive notifications because you posted a reply to this topic.'
           "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "2": 'You will receive notifications because you <a href="/u/{{username}}/preferences">read this topic</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
           "0_7": 'You are ignoring all notifications in this category.'

@@ -194,7 +194,7 @@ begin
     ["categories", "/categories"],
     ["home", "/"],
     ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"]
-    # ["user", "/users/admin1/activity"],
+    # ["user", "/u/admin1/activity"],
   ]
 
   tests = tests.map{|k,url| ["#{k}_admin", "#{url}#{append}"]} + tests

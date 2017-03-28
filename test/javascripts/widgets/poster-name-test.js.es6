@@ -7,7 +7,7 @@ widgetTest('basic rendering', {
   setup() {
     this.set('args', {
       username: 'eviltrout',
-      usernameUrl: '/users/eviltrout',
+      usernameUrl: '/u/eviltrout',
       name: 'Robin Ward',
       user_title: 'Trout Master' });
   },
@@ -26,7 +26,7 @@ widgetTest('extra classes and glyphs', {
   setup() {
     this.set('args', {
       username: 'eviltrout',
-      usernameUrl: '/users/eviltrout',
+      usernameUrl: '/u/eviltrout',
       staff: true,
       admin: true,
       moderator: true,

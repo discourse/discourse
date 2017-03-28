@@ -98,8 +98,6 @@ EOM
   def import_users
     puts '', "creating users"
 
-    username = nil
-
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER}';").first['count']
 
     batches(BATCH_SIZE) do |offset|
@@ -404,7 +402,7 @@ EOM
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create( url: "#{BASE}/user-id-#{ucf['import_id']}.html", external_url: "/users/#{u.username}" ) rescue nil
+        Permalink.create( url: "#{BASE}/user-id-#{ucf['import_id']}.html", external_url: "/u/#{u.username}" ) rescue nil
         print '.'
       end
     end

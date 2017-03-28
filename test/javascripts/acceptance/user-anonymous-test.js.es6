@@ -16,7 +16,7 @@ function hasTopicList() {
 }
 
 test("Root URL", () => {
-  visit("/users/eviltrout");
+  visit("/u/eviltrout");
   andThen(() => {
     ok($('body.user-summary-page').length, "has the body class");
     equal(currentPath(), 'user.summary', "it defaults to summary");
@@ -24,21 +24,21 @@ test("Root URL", () => {
 });
 
 test("Filters", () => {
-  visit("/users/eviltrout/activity");
+  visit("/u/eviltrout/activity");
   andThen(() => {
     ok($('body.user-activity-page').length, "has the body class");
   });
   hasStream();
 
-  visit("/users/eviltrout/activity/topics");
+  visit("/u/eviltrout/activity/topics");
   hasTopicList();
 
-  visit("/users/eviltrout/activity/replies");
+  visit("/u/eviltrout/activity/replies");
   hasStream();
 });
 
 test("Badges", () => {
-  visit("/users/eviltrout/badges");
+  visit("/u/eviltrout/badges");
   andThen(() => {
     ok($('body.user-badges-page').length, "has the body class");
     ok(exists(".user-badges-list .badge-card"), "shows a badge");
@@ -46,7 +46,7 @@ test("Badges", () => {
 });
 
 test("Restricted Routes", () => {
-  visit("/users/eviltrout/preferences");
+  visit("/u/eviltrout/preferences");
 
   andThen(() => {
     equal(currentURL(), '/u/eviltrout/activity', "it redirects from preferences");
