@@ -142,7 +142,10 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
         this.appEvents.trigger('header:show-topic', topic);
       } else {
         if (!DiscourseURL.isJumpScheduled()) {
-          this.appEvents.trigger('header:hide-topic');
+          const loadingNear = topic.get('postStream.loadingNearPost') || 1;
+          if (loadingNear === 1) {
+            this.appEvents.trigger('header:hide-topic');
+          }
         }
       }
     }
