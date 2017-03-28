@@ -124,7 +124,8 @@ class PostAnalyzer
     def link_is_a_mention?(l)
       html_class = l['class']
       return false if html_class.blank?
-      html_class.to_s['mention'] && l['href'].to_s[/^\/users\//]
+      href = l['href'].to_s
+      html_class.to_s['mention'] && href[/^\/u\//] || href[/^\/users\//]
     end
 
 end

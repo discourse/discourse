@@ -227,7 +227,7 @@ test("Mentions", function() {
   const alwaysTrue = { mentionLookup: (function() { return "user"; }) };
 
   cookedOptions("Hello @sam", alwaysTrue,
-                "<p>Hello <a class=\"mention\" href=\"/users/sam\">@sam</a></p>",
+                "<p>Hello <a class=\"mention\" href=\"/u/sam\">@sam</a></p>",
                 "translates mentions to links");
 
   cooked("[@codinghorror](https://twitter.com/codinghorror)",
@@ -303,11 +303,11 @@ test("Mentions", function() {
          "handles mentions separated by a slash.");
 
   cookedOptions("@eviltrout", alwaysTrue,
-                "<p><a class=\"mention\" href=\"/users/eviltrout\">@eviltrout</a></p>",
+                "<p><a class=\"mention\" href=\"/u/eviltrout\">@eviltrout</a></p>",
                 "it doesn't onebox mentions");
 
   cookedOptions("<small>a @sam c</small>", alwaysTrue,
-                "<p><small>a <a class=\"mention\" href=\"/users/sam\">@sam</a> c</small></p>",
+                "<p><small>a <a class=\"mention\" href=\"/u/sam\">@sam</a> c</small></p>",
                 "it allows mentions within HTML tags");
 });
 

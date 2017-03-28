@@ -1,5 +1,6 @@
 import { setting, propertyEqual } from 'discourse/lib/computed';
 import DiscourseURL from 'discourse/lib/url';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend({
   taken: false,
@@ -48,7 +49,7 @@ export default Ember.Controller.extend({
         if (result) {
           this.set('saving', true);
           this.get('content').changeUsername(this.get('newUsername')).then(() => {
-            DiscourseURL.redirectTo("/users/" + this.get('newUsername').toLowerCase() + "/preferences");
+            DiscourseURL.redirectTo(userPath(this.get('newUsername').toLowerCase() + "/preferences"));
           })
           .catch(() => this.set('error', true))
           .finally(() => this.set('saving', false));

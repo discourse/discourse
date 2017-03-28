@@ -9,6 +9,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { censor } from 'pretty-text/censored-words';
 import { emojiUnescape } from 'discourse/lib/text';
 import PreloadStore from 'preload-store';
+import { userPath } from 'discourse/lib/url';
 
 export function loadTopicView(topic, args) {
   const topicId = topic.get('id');
@@ -182,9 +183,10 @@ const Topic = RestModel.extend({
     return this.urlForPostNumber(1) + (this.get('has_summary') ? "?filter=summary" : "");
   }.property('url'),
 
-  lastPosterUrl: function() {
-    return Discourse.getURL("/users/") + this.get("last_poster.username");
-  }.property('last_poster'),
+  @computed('last_poster.username')
+  lastPosterUrl(username) {
+    return userPath(username);
+  },
 
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.

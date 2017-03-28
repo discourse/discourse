@@ -5,6 +5,7 @@ import afterTransition from 'discourse/lib/after-transition';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
+import { userPath } from 'discourse/lib/url';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
@@ -92,7 +93,7 @@ export default Ember.Component.extend(CleansUp, {
 
     // Don't show on mobile
     if (this.site.mobileView) {
-      DiscourseURL.routeTo(`/users/${username}`);
+      DiscourseURL.routeTo(userPath(username));
       return false;
     }
 

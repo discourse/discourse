@@ -17,7 +17,6 @@ const BareRouter = Ember.Router.extend({
         url = `${url}?${params[1]}`;
       }
     }
-    console.log(url);
     return this._super(url);
   }
 });

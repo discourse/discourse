@@ -15,6 +15,7 @@ import Topic from 'discourse/models/topic';
 import { emojiUnescape } from 'discourse/lib/text';
 import PreloadStore from 'preload-store';
 import { defaultHomepage } from 'discourse/lib/utilities';
+import { userPath } from 'discourse/lib/url';
 
 const User = RestModel.extend({
 
@@ -71,7 +72,7 @@ const User = RestModel.extend({
   @computed()
   path() {
     // no need to observe, requires a hard refresh to update
-    return Discourse.getURL(`/users/${this.get('username_lower')}`);
+    return userPath(this.get('username_lower'));
   },
 
   @computed()
@@ -124,11 +125,10 @@ const User = RestModel.extend({
 
     // directly targetted so go to inbox
     if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
-      return Discourse.getURL(`/users/${username}/messages`);
+      return userPath(`${username}/messages`);
     } else {
-      if (groups && groups[0])
-      {
-        return Discourse.getURL(`/users/${username}/messages/group/${groups[0].name}`);
+      if (groups && groups[0]) {
+        return userPath(`${username}/messages/group/${groups[0].name}`);
       }
     }
 
@@ -179,14 +179,14 @@ const User = RestModel.extend({
   },
 
   changeUsername(new_username) {
-    return ajax(`/users/${this.get('username_lower')}/preferences/username`, {
+    return ajax(userPath(`${this.get('username_lower')}/preferences/username`), {
       type: 'PUT',
       data: { new_username }
     });
   },
 
   changeEmail(email) {
-    return ajax(`/users/${this.get('username_lower')}/preferences/email`, {
+    return ajax(userPath(`${this.get('username_lower')}/preferences/email`), {
       type: 'PUT',
       data: { email }
     });
@@ -254,7 +254,7 @@ const User = RestModel.extend({
 
     // TODO: We can remove this when migrated fully to rest model.
     this.set('isSaving', true);
-    return ajax(`/users/${this.get('username_lower')}.json`, {
+    return ajax(userPath(`${this.get('username_lower')}.json`), {
       data: data,
       type: 'PUT'
     }).then(result => {
@@ -330,7 +330,7 @@ const User = RestModel.extend({
     const user = this;
 
     return PreloadStore.getAndRemove(`user_${user.get('username')}`, () => {
-      return ajax(`/users/${user.get('username')}.json`, { data: options });
+      return ajax(userPath(`${user.get('username')}.json`), { data: options });
     }).then(json => {
 
       if (!Em.isEmpty(json.user.stats)) {
@@ -375,13 +375,13 @@ const User = RestModel.extend({
 
   findStaffInfo() {
     if (!Discourse.User.currentProp("staff")) { return Ember.RSVP.resolve(null); }
-    return ajax(`/users/${this.get("username_lower")}/staff-info.json`).then(info => {
+    return ajax(userPath(`${this.get("username_lower")}/staff-info.json`)).then(info => {
       this.setProperties(info);
     });
   },
 
   pickAvatar(upload_id, type, avatar_template) {
-    return ajax(`/users/${this.get("username_lower")}/preferences/avatar/pick`, {
+    return ajax(userPath(`${this.get("username_lower")}/preferences/avatar/pick`), {
       type: 'PUT',
       data: { upload_id, type }
     }).then(() => this.setProperties({
@@ -437,7 +437,7 @@ const User = RestModel.extend({
 
   "delete": function() {
     if (this.get('can_delete_account')) {
-      return ajax("/users/" + this.get('username'), {
+      return ajax(userPath(this.get('username')), {
         type: 'DELETE',
         data: {context: window.location.pathname}
       });
@@ -448,14 +448,14 @@ const User = RestModel.extend({
 
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
-    ajax(`/users/${this.get('username')}`, {
+    ajax(userPath(this.get('username')), {
       type: 'PUT',
       data: { dismissed_banner_key: bannerKey }
     });
   },
 
   checkEmail() {
-    return ajax(`/users/${this.get("username_lower")}/emails.json`, {
+    return ajax(userPath(`${this.get("username_lower")}/emails.json`), {
       data: { context: window.location.pathname }
     }).then(result => {
       if (result) {
@@ -468,7 +468,7 @@ const User = RestModel.extend({
   },
 
   summary() {
-    return ajax(`/users/${this.get("username_lower")}/summary.json`)
+    return ajax(userPath(`${this.get("username_lower")}/summary.json`))
            .then(json => {
               const summary = json["user_summary"];
               const topicMap = {};
@@ -526,7 +526,7 @@ User.reopenClass(Singleton, {
   },
 
   checkUsername(username, email, for_user_id) {
-    return ajax('/users/check_username', {
+    return ajax(userPath('check_username'), {
       data: { username, email, for_user_id }
     });
   },
@@ -557,7 +557,7 @@ User.reopenClass(Singleton, {
   },
 
   createAccount(attrs) {
-    return ajax("/users", {
+    return ajax(userPath(), {
       data: {
         name: attrs.accountName,
         email: attrs.accountEmail,

@@ -5,6 +5,7 @@ import { SEPARATOR } from 'discourse/lib/category-hashtags';
 import Category from 'discourse/models/category';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import userSearch from 'discourse/lib/user-search';
+import { userPath } from 'discourse/lib/url';
 
 export function translateResults(results, opts) {
 
@@ -29,7 +30,7 @@ export function translateResults(results, opts) {
 
   results.posts = results.posts.map(post => {
     if (post.username) {
-      post.userPath = Discourse.getURL(`/users/${post.username.toLowerCase()}`);
+      post.userPath = userPath(post.username.toLowerCase());
     }
     post = Post.create(post);
     post.set('topic', topicMap[post.topic_id]);

@@ -305,6 +305,7 @@ Discourse::Application.routes.draw do
   get 'u/check_username' => 'users#check_username'
   get 'u/is_local_username' => 'users#is_local_username'
   post 'u' => 'users#create'
+  get "u/hp" => "users#get_honeypot_value"
 
   get "u/admin-login" => "users#admin_login"
   put "u/admin-login" => "users#admin_login"
@@ -320,7 +321,6 @@ Discourse::Application.routes.draw do
   get "u/activate-account/:token" => "users#activate_account"
   put "u/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
   get "u/authorize-email/:token" => "users_email#confirm"
-  get "u/hp" => "users#get_honeypot_value"
 
   get "u/:username/private-messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "u/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -377,6 +377,7 @@ Discourse::Application.routes.draw do
   get 'users/check_username' => 'users#check_username'
   get 'users/is_local_username' => 'users#is_local_username'
   post 'users' => 'users#create'
+  get "users/hp" => "users#get_honeypot_value"
 
   get "users/admin-login" => "users#admin_login"
   put "users/admin-login" => "users#admin_login"

@@ -35,6 +35,10 @@ export function clearRewrites() {
   rewrites.length = 0;
 }
 
+export function userPath(subPath) {
+  return Discourse.getURL(subPath ? `/u/${subPath}` : '/u');
+}
+
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
   if (_jumpScheduled || Ember.isEmpty(elementId)) { return; }
@@ -190,7 +194,7 @@ const DiscourseURL = Ember.Object.extend({
     if (path.indexOf('/my/') === 0) {
       const currentUser = Discourse.User.current();
       if (currentUser) {
-        path = path.replace('/my/', '/users/' + currentUser.get('username_lower') + "/");
+        path = path.replace('/my/', userPath(currentUser.get('username_lower') + "/"));
       } else {
         document.location.href = "/404";
         return;
