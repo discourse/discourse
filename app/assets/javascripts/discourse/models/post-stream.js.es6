@@ -15,6 +15,7 @@ export default RestModel.extend({
   loadingAbove: null,
   loadingBelow: null,
   loadingFilter: null,
+  loadingNearPost: null,
   stagingPost: null,
   postsWithPlaceholders: null,
   timelineLookup: null,
@@ -206,6 +207,7 @@ export default RestModel.extend({
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
     this.set('loadingFilter', true);
+    this.set('loadingNearPost', opts.nearPost);
 
     opts = _.merge(opts, this.get('streamFilters'));
 
@@ -216,6 +218,8 @@ export default RestModel.extend({
     }).catch(result => {
       this.errorLoading(result);
       throw result;
+    }).finally(() => {
+      this.set('loadingNearPost', null);
     });
   },
 
