@@ -166,6 +166,11 @@ createWidget('header-buttons', {
 
 const forceContextEnabled = ['category', 'user', 'private_messages'];
 
+let additionalPanels = []
+export function attachAdditionalPanel(name, toggle, transformAttrs) {
+  additionalPanels.push({ name, toggle, transformAttrs });
+}
+
 export default createWidget('header', {
   tagName: 'header.d-header.clearfix',
   buildKey: () => `header`,
@@ -184,10 +189,6 @@ export default createWidget('header', {
     }
 
     return states;
-  },
-
-  attachAdditionalPanel(name, toggle, attrFn) {
-    this.additionalPanels.push({ name, toggle, attrFn });
   },
 
   html(attrs, state) {
@@ -219,9 +220,9 @@ export default createWidget('header', {
       panels.push(this.attach('user-menu'));
     }
 
-    this.additionalPanels.map((panel) => {
+    additionalPanels.map((panel) => {
       if (this.state[panel.toggle]) {
-        panels.push(this.attach(panel.name, panel.attrFn.call(this, attrs, state)));
+        panels.push(this.attach(panel.name, panel.transformAttrs.call(this, attrs, state)));
       }
     });
 
