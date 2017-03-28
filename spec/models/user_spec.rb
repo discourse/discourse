@@ -1213,6 +1213,13 @@ describe User do
       expect(group.users.include?(inactive_user)).to eq(false)
     end
 
+    it "doesn't automatically add users with unconfirmed email" do
+      unconfirmed_email_user = Fabricate(:user, active: true, email: "wat@wat.com")
+      unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
+      group.reload
+      expect(group.users.include?(unconfirmed_email_user)).to eq(false)
+    end
+
     it "doesn't automatically add staged users" do
       staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
       group.reload
@@ -1221,6 +1228,8 @@ describe User do
 
     it "is automatically added to a group when the email matches" do
       user = Fabricate(:user, active: true, email: "foo@bar.com")
+      email_token = user.email_tokens.create(email: user.email).token
+      EmailToken.confirm(email_token)
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1241,6 +1250,8 @@ describe User do
 
       user.password_required!
       user.save!
+      email_token = user.email_tokens.create(email: user.email).token
+      EmailToken.confirm(email_token)
       user.reload
 
       expect(user.title).to eq("bars and wats")
