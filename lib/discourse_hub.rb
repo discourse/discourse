@@ -3,18 +3,26 @@ require_dependency 'version'
 
 module DiscourseHub
 
+  STATS_FETCHED_AT_KEY = "stats_fetched_at"
+
   def self.version_check_payload
-    {
-      installed_version: Discourse::VERSION::STRING
-    }.merge!( Discourse.git_branch == "unknown" ? {} : {branch: Discourse.git_branch})
+    default_payload = { installed_version: Discourse::VERSION::STRING }.merge!(Discourse.git_branch == "unknown" ? {} : {branch: Discourse.git_branch})
+    default_payload.merge!(get_payload)
   end
 
   def self.discourse_version_check
     get('/version_check', version_check_payload)
   end
 
+  def self.stats_fetched_at=(time_with_zone)
+    $redis.set STATS_FETCHED_AT_KEY, time_with_zone.to_i
+  end
 
   private
+
+  def self.get_payload
+    SiteSetting.share_anonymized_statistics && stats_fetched_at < 7.days.ago ? About.fetch_cached_stats.symbolize_keys : {}
+  end
 
   def self.get(rel_url, params={})
     singular_action :get, rel_url, params
@@ -54,6 +62,11 @@ module DiscourseHub
 
   def self.referer
     Discourse.base_url
+  end
+
+  def self.stats_fetched_at
+    t = $redis.get(STATS_FETCHED_AT_KEY)
+    t ? Time.zone.at(t.to_i) : 1.year.ago
   end
 
 end
