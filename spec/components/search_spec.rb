@@ -613,7 +613,28 @@ describe Search do
 
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
+    end
 
+    it 'can order by topic creation' do
+      today        = Date.today
+      yesterday    = 1.day.ago
+      two_days_ago = 2.days.ago
+
+      old_topic    = Fabricate(:topic,
+          title: 'First Topic, testing the created_at sort',
+          created_at: two_days_ago)
+      latest_topic = Fabricate(:topic,
+          title: 'Second Topic, testing the created_at sort',
+          created_at: yesterday)
+
+      old_relevant_topic_post     = Fabricate(:post, topic: old_topic, created_at: yesterday, raw: 'Relevant Topic')
+      latest_irelevant_topic_post = Fabricate(:post, topic: latest_topic, created_at: today, raw: 'Not Relevant')
+
+      # Expecting the default results
+      expect(Search.execute('Topic').posts.map(&:id)).to eq([old_relevant_topic_post.id, latest_irelevant_topic_post.id])
+
+      # Expecting the ordered by topic creation results
+      expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([latest_irelevant_topic_post.id, old_relevant_topic_post.id])
     end
 
     it 'can tokenize dots' do
