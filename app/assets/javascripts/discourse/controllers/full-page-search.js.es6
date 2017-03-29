@@ -75,14 +75,7 @@ export default Ember.Controller.extend({
 
   @computed('q')
   noSortQ(q) {
-    if (q) {
-      SortOrders.forEach((order) => {
-        if (q.indexOf(order.term) > -1){
-          q = q.replace(order.term, "");
-          q = q.trim();
-        }
-      });
-    }
+    q = this.cleanTerm(q);
     return escapeExpression(q);
   },
 
@@ -90,19 +83,23 @@ export default Ember.Controller.extend({
 
   setSearchTerm(term) {
     this._searchOnSortChange = false;
+    term = this.cleanTerm(term);
+    this._searchOnSortChange = true;
+    this.set('searchTerm', term);
+  },
+
+  cleanTerm(term) {
     if (term) {
       SortOrders.forEach(order => {
-        let term_start      = term.indexOf(order.term)
-        let char_after_term = term[term_start + (order.term || '').length]
-        if (term_start > -1 && (!char_after_term || char_after_term.match(/\s/))){
+        let matches = term.match(new RegExp(`${order.term}\\b`));
+        if (matches) {
           this.set('sortOrder', order.id);
-          term = term.replace(order.term, "");
+          term = term.replace(new RegExp(`${order.term}\\b`, 'g'), "");
           term = term.trim();
         }
       });
     }
-    this._searchOnSortChange = true;
-    this.set('searchTerm', term);
+    return term;
   },
 
   @observes('sortOrder')
