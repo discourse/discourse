@@ -166,7 +166,7 @@ createWidget('header-buttons', {
 
 const forceContextEnabled = ['category', 'user', 'private_messages'];
 
-let additionalPanels = []
+let additionalPanels = [];
 export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
