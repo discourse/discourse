@@ -31,3 +31,10 @@ test("userPath", assert => {
   assert.equal(userPath('eviltrout'), '/u/eviltrout');
   assert.equal(userPath('hp.json'), '/u/hp.json');
 });
+
+test("userPath with BaseUri", assert => {
+  Discourse.BaseUri = "/forum";
+  assert.equal(userPath(), '/forum/u');
+  assert.equal(userPath('eviltrout'), '/forum/u/eviltrout');
+  assert.equal(userPath('hp.json'), '/forum/u/hp.json');
+});
