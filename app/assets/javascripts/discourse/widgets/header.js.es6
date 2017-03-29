@@ -166,9 +166,15 @@ createWidget('header-buttons', {
 
 const forceContextEnabled = ['category', 'user', 'private_messages'];
 
+let additionalPanels = []
+export function attachAdditionalPanel(name, toggle, transformAttrs) {
+  additionalPanels.push({ name, toggle, transformAttrs });
+}
+
 export default createWidget('header', {
   tagName: 'header.d-header.clearfix',
   buildKey: () => `header`,
+  additionalPanels: [],
 
   defaultState() {
     let states =  {
@@ -213,6 +219,12 @@ export default createWidget('header', {
     } else if (state.userVisible) {
       panels.push(this.attach('user-menu'));
     }
+
+    additionalPanels.map((panel) => {
+      if (this.state[panel.toggle]) {
+        panels.push(this.attach(panel.name, panel.transformAttrs.call(this, attrs, state)));
+      }
+    });
 
     const contents = [ this.attach('home-logo', { minimized: !!attrs.topic }),
                        h('div.panel.clearfix', panels) ];
