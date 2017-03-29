@@ -93,6 +93,12 @@ $tag-color: scale-color($primary, $lightness: 40%);
   }
 }
 
+.d-header .topic-header-extra {
+  display: inline-block;
+  .discourse-tags { display: inline-block; }
+  .topic-featured-link { margin-left: 8px; }
+}
+
 .select2-container-multi .select2-choices .select2-search-choice.discourse-tag-select2 {
   padding-top: 5px;
   -webkit-box-shadow: none;
