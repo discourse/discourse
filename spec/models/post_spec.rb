@@ -952,7 +952,7 @@ describe Post do
 
   it "will unhide the post but will keep the topic invisible/unlisted" do
     hidden_topic = Fabricate(:topic, visible: false)
-    _first_post = create_post(topic: hidden_topic)
+    create_post(topic: hidden_topic)
     second_post = create_post(topic: hidden_topic)
 
     second_post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
