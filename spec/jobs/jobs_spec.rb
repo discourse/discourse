@@ -1,4 +1,3 @@
-require "sidekiq/testing"
 require 'rails_helper'
 require_dependency 'jobs/base'
 
@@ -123,4 +122,3 @@ describe Jobs do
   end
 
 end
-

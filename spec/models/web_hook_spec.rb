@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'sidekiq/testing'
 
 describe WebHook do
   it { is_expected.to validate_presence_of :payload_url }

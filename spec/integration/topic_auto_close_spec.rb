@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 require 'rails_helper'
-require 'sidekiq/testing'
 
 describe Topic do
 
