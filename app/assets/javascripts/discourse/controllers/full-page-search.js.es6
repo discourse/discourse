@@ -11,6 +11,8 @@ const SortOrders = [
   {name: I18n.t('search.latest_post'), id: 1, term: 'order:latest'},
   {name: I18n.t('search.most_liked'), id: 2, term: 'order:likes'},
   {name: I18n.t('search.most_viewed'), id: 3, term: 'order:views'},
+  {name: I18n.t('search.latest_topic'), id: 4, term: 'order:latest_topic'},
+
 ];
 
 export default Ember.Controller.extend({
@@ -90,7 +92,9 @@ export default Ember.Controller.extend({
     this._searchOnSortChange = false;
     if (term) {
       SortOrders.forEach(order => {
-        if (term.indexOf(order.term) > -1){
+        let term_start      = term.indexOf(order.term)
+        let char_after_term = term[term_start + (order.term || '').length]
+        if (term_start > -1 && (!char_after_term || char_after_term.match(/\s/))){
           this.set('sortOrder', order.id);
           term = term.replace(order.term, "");
           term = term.trim();

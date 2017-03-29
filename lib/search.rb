@@ -477,6 +477,9 @@ class Search
         if word == 'order:latest'
           @order = :latest
           nil
+        elsif word == 'order:latest_topic'
+          @order = :latest_topic
+          nil
         elsif word =~ /topic:(\d+)/
           topic_id = $1.to_i
           if topic_id > 1
@@ -679,6 +682,12 @@ class Search
           posts = posts.order("MAX(posts.created_at) DESC")
         else
           posts = posts.order("posts.created_at DESC")
+        end
+      elsif @order == :latest_topic
+        if opts[:aggregate_search]
+          posts = posts.order("MAX(topics.created_at) DESC")
+        else
+          posts = posts.order("topics.created_at DESC")
         end
       elsif @order == :views
         if opts[:aggregate_search]
