@@ -28,7 +28,7 @@ module UserNameSuggester
       i += 1
     end
     until attempt == allow_username || User.username_available?(attempt) || i > 200
-      attempt = SecureRandom.hex[0..SiteSetting.max_username_length]
+      attempt = SecureRandom.hex[1..SiteSetting.max_username_length]
       i += 1
     end
     attempt
