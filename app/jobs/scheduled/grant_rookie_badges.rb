@@ -11,7 +11,13 @@ module Jobs
       scores.each do |user_id, score|
         # Don't bother awarding to users who haven't received any likes
         if score > 0.0
-          BadgeGranter.grant(badge, User.find(user_id))
+          user = User.find(user_id)
+          if user.badges.where(id: Badge::RookieOfTheMonth).blank?
+            BadgeGranter.grant(badge, user)
+            SystemMessage.new(user).create('rookie_of_the_month', {
+              month_year: Time.now.strftime("%B %Y")
+            })
+          end
         end
       end
     end

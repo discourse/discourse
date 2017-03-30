@@ -2319,6 +2319,16 @@ en:
 
         [Please review and fix them](%{base_url}/admin).
 
+    rookie_of_the_month:
+      title: "You're a Rookie of the Month!"
+      subject_template: "You're a Rookie of the Month!"
+      text_body_template: |
+        Congratulations, you've been awarded the **Rookie of the Month award for %{month_year}**.
+
+        You received this because you've quickly become a valuable member of the community and other members are really enjoying your posts.
+
+        Thanks and keep up the great work!
+
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
