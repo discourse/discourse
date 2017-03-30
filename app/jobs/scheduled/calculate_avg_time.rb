@@ -1,5 +1,4 @@
 module Jobs
-
   class CalculateAvgTime < Jobs::Scheduled
     every 1.day
 
