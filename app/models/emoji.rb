@@ -92,7 +92,7 @@ class Emoji
   def self.load_custom
     result = []
 
-    CustomEmoji.all.each do |emoji|
+    CustomEmoji.order(:name).all.each do |emoji|
       result << Emoji.new.tap do |e|
         e.name = emoji.name
         e.url = emoji.upload.url
