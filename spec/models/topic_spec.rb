@@ -1054,6 +1054,10 @@ describe Topic do
 
     end
 
+    it 'trigger :topic_category_changed discourse event' do
+      DiscourseEvent.expects(:trigger).with(:topic_category_changed, @topic, @topic.category, @category)
+      @topic.changed_to_category(@category)
+    end
   end
 
   describe 'scopes' do

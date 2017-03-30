@@ -614,9 +614,8 @@ SQL
     return true if new_category.blank? || Category.find_by(topic_id: id).present?
     return false if new_category.id == SiteSetting.uncategorized_category_id && !SiteSetting.allow_uncategorized_topics
 
+    old_category = category
     Topic.transaction do
-      old_category = category
-
       if self.category_id != new_category.id
         self.category_id = new_category.id
         self.update_column(:category_id, new_category.id)
@@ -633,6 +632,10 @@ SQL
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
     end
 
+    # Shouldn't trigger event during topic creation
+    if !created_at_changed?
+      DiscourseEvent.trigger(:topic_category_changed, self, old_category, new_category)
+    end
     true
   end
 
