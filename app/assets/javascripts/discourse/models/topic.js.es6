@@ -223,7 +223,7 @@ const Topic = RestModel.extend({
 
   toggleStatus(property) {
     this.toggleProperty(property);
-    this.saveStatus(property, !!this.get(property));
+    return this.saveStatus(property, !!this.get(property));
   },
 
   saveStatus(property, value, until) {
