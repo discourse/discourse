@@ -402,8 +402,8 @@ Badge.seed do |b|
 end
 
 Badge.seed do |b|
-  b.id = Badge::RookieOfTheMonth
-  b.name = "Rookie of the Month"
+  b.id = Badge::NewUserOfTheMonth
+  b.name = "New User of the Month"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false

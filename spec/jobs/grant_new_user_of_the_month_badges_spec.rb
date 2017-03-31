@@ -1,7 +1,7 @@
 require 'rails_helper'
-require_dependency 'jobs/scheduled/grant_rookie_badges'
+require_dependency 'jobs/scheduled/grant_new_user_of_the_month_badges'
 
-describe Jobs::GrantRookieBadges do
+describe Jobs::GrantNewUserOfTheMonthBadges do
 
   let(:granter) { described_class.new }
 
@@ -14,7 +14,7 @@ describe Jobs::GrantRookieBadges do
 
     granter.execute({})
 
-    badge = user.user_badges.where(badge_id: Badge::RookieOfTheMonth)
+    badge = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
     expect(badge).to be_present
 
   end

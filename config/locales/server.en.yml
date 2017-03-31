@@ -2319,11 +2319,11 @@ en:
 
         [Please review and fix them](%{base_url}/admin).
 
-    rookie_of_the_month:
-      title: "You're a Rookie of the Month!"
-      subject_template: "You're a Rookie of the Month!"
+    new_user_of_the_month:
+      title: "You're a New User of the Month!"
+      subject_template: "You're a New User of the Month!"
       text_body_template: |
-        Congratulations, you've been awarded the **Rookie of the Month award for %{month_year}**.
+        Congratulations, you've been awarded the **New User of the Month award for %{month_year}**.
 
         You received this because you've quickly become a valuable member of the community and other members are really enjoying your posts.
 
@@ -3300,8 +3300,8 @@ en:
       description: Replied to a Post via email
       long_description: |
         This badge is granted the first time you reply to a post via email :e-mail:.
-    rookie_of_the_month:
-      name: "Rookie of the Month"
+    new_user_of_the_month:
+      name: "New User of the Month"
       description: Contributed a lot of value in their first month
       long_description: |
         This badge is granted to two high quality users who joined in the last month. The quality is determined by how many of their posts were liked and by whom.
