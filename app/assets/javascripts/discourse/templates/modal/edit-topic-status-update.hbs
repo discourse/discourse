@@ -26,14 +26,14 @@
 
     {{#if autoReopen}}
       {{auto-update-input
-          inputLabelKey='topic.auto_reopen.label'
+          inputLabelKey='topic.topic_status_update.time'
           input=updateTime
           inputValid=updateTimeValid
           hideBasedOnLastPost=true
           basedOnLastPost=false}}
     {{else if autoClose}}
       {{auto-update-input
-          inputLabelKey='topic.auto_close.label'
+          inputLabelKey='topic.topic_status_update.time'
           input=updateTime
           inputValid=updateTimeValid
           limited=topicStatusUpdate.based_on_last_post
