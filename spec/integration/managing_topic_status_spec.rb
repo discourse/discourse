@@ -56,6 +56,7 @@ RSpec.describe "Managing a topic's status update", type: :request do
         .to be_within(1.seconds).of(DateTime.parse(topic_status_update.execute_at.to_s))
 
       expect(json['duration']).to eq(topic_status_update.duration)
+      expect(json['closed']).to eq(topic.reload.closed)
     end
 
     it 'should be able to delete a topic status update' do
@@ -72,6 +73,7 @@ RSpec.describe "Managing a topic's status update", type: :request do
 
       expect(json['execute_at']).to eq(nil)
       expect(json['duration']).to eq(nil)
+      expect(json['closed']).to eq(topic.closed)
     end
 
     describe 'invalid status type' do
