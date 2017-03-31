@@ -944,6 +944,9 @@ spam:
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
   num_flags_to_close_topic: 12
+  num_hours_to_close_topic:
+    default: 4
+    min: 1
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
   auto_block_fast_typers_on_first_post: true
