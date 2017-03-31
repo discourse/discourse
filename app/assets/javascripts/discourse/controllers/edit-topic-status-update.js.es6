@@ -71,6 +71,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         this.send('closeModal');
         this.set('topicStatusUpdate.execute_at', result.execute_at);
         this.set('topicStatusUpdate.duration', result.duration);
+        this.set('model.closed', result.closed);
       } else {
         this.set('topicStatusUpdate', Ember.Object.create({}));
         this.set('selection', null);

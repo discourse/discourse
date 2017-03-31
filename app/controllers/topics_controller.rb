@@ -310,7 +310,8 @@ class TopicsController < ApplicationController
       render json: success_json.merge!({
         execute_at: topic_status_update&.execute_at,
         duration: topic_status_update&.duration,
-        based_on_last_post: topic_status_update&.based_on_last_post
+        based_on_last_post: topic_status_update&.based_on_last_post,
+        closed: topic.closed
       })
     else
       render_json_error(topic)
