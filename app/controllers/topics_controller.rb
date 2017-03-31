@@ -273,7 +273,12 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_moderate!(@topic)
     @topic.update_status(status, enabled, current_user, until: params[:until])
-    render nothing: true
+
+    render json: success_json.merge!(
+      topic_status_update: TopicStatusUpdateSerializer.new(
+        TopicStatusUpdate.find_by(topic: @topic), root: false
+      )
+    )
   end
 
   def mute

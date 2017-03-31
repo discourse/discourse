@@ -412,14 +412,19 @@ describe TopicsController do
         expect { xhr :put, :status, topic_id: @topic.id, status: 'title', enabled: 'true' }.to raise_error(Discourse::InvalidParameters)
       end
 
-      it 'calls update_status on the forum topic with false' do
-        Topic.any_instance.expects(:update_status).with('closed', false, @user, until: nil)
-        xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
-      end
+      it 'should update the status of the topic correctly' do
+        @topic = Fabricate(:topic, user: @user, closed: true, topic_status_updates: [
+          Fabricate(:topic_status_update, status_type: TopicStatusUpdate.types[:open])
+        ])
 
-      it 'calls update_status on the forum topic with true' do
-        Topic.any_instance.expects(:update_status).with('closed', true, @user, until: nil)
-        xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'true'
+        xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
+
+        expect(response).to be_success
+        expect(@topic.reload.closed).to eq(false)
+
+        body = JSON.parse(response.body)
+
+        expect(body['topic_status_update']).to eq(nil)
       end
 
     end

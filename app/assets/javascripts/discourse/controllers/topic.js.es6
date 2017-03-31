@@ -588,7 +588,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleClosed() {
-      this.get('content').toggleStatus('closed');
+      const topic = this.get('content');
+
+      this.get('content').toggleStatus('closed').then(result => {
+        topic.set('topic_status_update', result.topic_status_update);
+      });
     },
 
     recoverTopic() {

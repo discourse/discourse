@@ -4,13 +4,14 @@ export default Ember.Component.extend(bufferedRender({
   elementId: 'topic-status-info',
   delayedRerender: null,
 
-  rerenderTriggers: ['topic.closed',
-                     'topic.topic_status_update.execute_at',
-                     'topic.topic_status_update.based_on_last_post',
-                     'topic.topic_status_update.duration'],
+  rerenderTriggers: [
+    'topic.topic_status_update',
+    'topic.topic_status_update.execute_at',
+    'topic.topic_status_update.based_on_last_post',
+    'topic.topic_status_update.duration'
+  ],
 
   buildBuffer(buffer) {
-    if (Ember.isEmpty(this.get('topic.topic_status_update.execute_at'))) return;
     if (!this.get('topic.topic_status_update')) return;
 
     let statusUpdateAt = moment(this.get('topic.topic_status_update.execute_at'));
