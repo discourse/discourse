@@ -108,6 +108,10 @@ const DiscourseURL = Ember.Object.extend({
       }
 
       lockon.lock();
+      if (lockon.elementTop() < 1) {
+        _transitioning = false;
+        return;
+      }
     });
   },
 

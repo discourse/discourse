@@ -37,7 +37,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     const enteredAt = this.get('enteredAt');
     if (enteredAt && (this.get('lastEnteredAt') !== enteredAt)) {
       this._lastShowTopic = null;
-      this.scrolled();
+      Ember.run.schedule('afterRender', () => this.scrolled());
       this.set('lastEnteredAt', enteredAt);
     }
   },
@@ -131,20 +131,21 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
       }
     }
 
+
     this.set('hasScrolled', offset > 0);
 
     const topic = this.get('topic');
     const showTopic = this.showTopicInHeader(topic, offset);
     if (showTopic !== this._lastShowTopic) {
-      this._lastShowTopic = showTopic;
-
       if (showTopic) {
         this.appEvents.trigger('header:show-topic', topic);
+        this._lastShowTopic = true;
       } else {
         if (!DiscourseURL.isJumpScheduled()) {
           const loadingNear = topic.get('postStream.loadingNearPost') || 1;
           if (loadingNear === 1) {
             this.appEvents.trigger('header:hide-topic');
+            this._lastShowTopic = false;
           }
         }
       }
