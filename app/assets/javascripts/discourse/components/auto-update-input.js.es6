@@ -3,33 +3,31 @@ import { observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   limited: false,
-  autoCloseValid: false,
+  inputValid: false,
 
   @computed("limited")
-  autoCloseUnits(limited) {
-    const key = limited ? "composer.auto_close.limited.units" : "composer.auto_close.all.units";
-    return I18n.t(key);
+  inputUnitsKey(limited) {
+    return limited ? "topic.auto_update_input.limited.units" : "topic.auto_update_input.all.units";
   },
 
   @computed("limited")
-  autoCloseExamples(limited) {
-    const key = limited ? "composer.auto_close.limited.examples" : "composer.auto_close.all.examples";
-    return I18n.t(key);
+  inputExamplesKey(limited) {
+    return limited ? "topic.auto_update_input.limited.examples" : "topic.auto_update_input.all.examples";
   },
 
-  @observes("autoCloseTime", "limited")
-  _updateAutoCloseValid() {
-    const limited = this.get("limited"),
-          autoCloseTime = this.get("autoCloseTime"),
-          isValid = this._isAutoCloseValid(autoCloseTime, limited);
-    this.set("autoCloseValid", isValid);
+  @observes("input", "limited")
+  _updateInputValid() {
+    this.set(
+      "inputValid", this._isInputValid(this.get("input"), this.get("limited"))
+    );
   },
 
-  _isAutoCloseValid(autoCloseTime, limited) {
-    const t = (autoCloseTime || "").toString().trim();
+  _isInputValid(input, limited) {
+    const t = (input || "").toString().trim();
+
     if (t.length === 0) {
-      // "empty" is always valid
       return true;
+      // "empty" is always valid
     } else if (limited) {
       // only # of hours in limited mode
       return t.match(/^(\d+\.)?\d+$/);

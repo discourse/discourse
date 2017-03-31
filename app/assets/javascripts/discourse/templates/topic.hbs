@@ -81,7 +81,7 @@
             toggleClosed=(action "toggleClosed")
             toggleArchived=(action "toggleArchived")
             toggleVisibility=(action "toggleVisibility")
-            showAutoClose=(action "topicRouteAction" "showAutoClose")
+            showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
             showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
             showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
             convertToPublicTopic=(action "convertToPublicTopic")
@@ -107,7 +107,7 @@
             toggleClosed=(action "toggleClosed")
             toggleArchived=(action "toggleArchived")
             toggleVisibility=(action "toggleVisibility")
-            showAutoClose=(action "topicRouteAction" "showAutoClose")
+            showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
             showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
             showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
             convertToPublicTopic=(action "convertToPublicTopic")
@@ -174,7 +174,7 @@
           {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
             {{#if loadedAllPosts}}
 
-              {{topic-closing topic=model}}
+              {{topic-status-info topic=model}}
               {{#if session.showSignupCta}}
                 {{! replace "Log In to Reply" with the infobox }}
                 {{signup-cta}}
@@ -188,7 +188,7 @@
                     toggleClosed=(action "toggleClosed")
                     toggleArchived=(action "toggleArchived")
                     toggleVisibility=(action "toggleVisibility")
-                    showAutoClose=(action "topicRouteAction" "showAutoClose")
+                    showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
                     showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
                     showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
                     convertToPublicTopic=(action "convertToPublicTopic")

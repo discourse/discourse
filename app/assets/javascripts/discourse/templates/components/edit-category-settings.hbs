@@ -1,8 +1,10 @@
 <section class='field'>
-  {{auto-close-form autoCloseTime=category.auto_close_hours
-                    autoCloseBasedOnLastPost=category.auto_close_based_on_last_post
-                    autoCloseExamples=""
-                    limited="true" }}
+  {{auto-update-input
+      inputLabelKey='topic.auto_close.label'
+      input=category.auto_close_hours
+      basedOnLastPost=category.auto_close_based_on_last_post
+      inputExamplesKey=''
+      limited=true}}
 </section>
 
 <section class='field'>
