@@ -33,8 +33,11 @@ module Jobs
           SUM(CASE
                WHEN pa.id IS NOT NULL THEN
                  CASE
-                   WHEN liked_by.created_at > (CURRENT_TIMESTAMP - '1 week'::INTERVAL) THEN 0.1
-                   WHEN liked_by.created_at > (CURRENT_TIMESTAMP - '1 month'::INTERVAL) THEN 0.5
+                   WHEN liked_by.trust_level = 0 THEN 0.1
+                   WHEN liked_by.trust_level = 1 THEN 0.25
+                   WHEN liked_by.trust_level = 2 THEN 1.0
+                   WHEN liked_by.trust_level = 3 THEN 1.5
+                   WHEN liked_by.trust_level = 4 THEN 2.0
                    ELSE 1.0
                  END
                ELSE 0
