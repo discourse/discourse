@@ -55,6 +55,8 @@ export default class LockOn {
 
     const interval = setInterval(() => {
       let top = this.elementTop();
+      if (top < 0) { top = 0; }
+
       const scrollTop = $(window).scrollTop();
 
       if (typeof(top) === "undefined" || isNaN(top)) {
