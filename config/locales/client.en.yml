@@ -1481,8 +1481,12 @@ en:
         all:
           units: ""
           examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+      temp_open:
+        title: "Open Temporarily"
       auto_reopen:
         title: "Auto-open Topic"
+      temp_close:
+        title: "Close Temporarily"
       auto_close:
         title: "Auto-Close Topic"
         label: "Auto-close topic time:"
