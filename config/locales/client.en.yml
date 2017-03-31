@@ -1470,11 +1470,9 @@ en:
       deleted: "The topic has been deleted"
 
       topic_status_update:
-        title: "Defer Topic Status Update"
-        save: "Set Topic Status Update"
-      close:
-        title: "Close Topic"
-        save: "Close topic"
+        title: "Set Topic Timer"
+        save: "Set Timer"
+        time: "Time:"
       auto_update_input:
         limited:
           units: "(# of hours)"
@@ -1483,8 +1481,7 @@ en:
           units: ""
           examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
       auto_reopen:
-        title: "Auto-Reopen Topic"
-        label: "Auto-reopen topic time:"
+        title: "Auto-open Topic"
         remove: "Don't Auto-Reopen This Topic"
       auto_close:
         title: "Auto-Close Topic"
@@ -1571,7 +1568,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        timed_update: "Defer Status Update..."
+        timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
