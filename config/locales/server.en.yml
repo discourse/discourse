@@ -2323,11 +2323,13 @@ en:
       title: "You're a New User of the Month!"
       subject_template: "You're a New User of the Month!"
       text_body_template: |
-        Congratulations, you've been awarded the **New User of the Month award for %{month_year}**.
+        Congratulations, you've been awarded the **New User of the Month award for %{month_year}**. :trophy:
 
-        You received this because you've quickly become a valuable member of the community and other members are really enjoying your posts.
+        You've quickly become a valuable member of our community and everyone is really enjoying your posts.
 
-        Thanks and keep up the great work!
+        This award will be permamently visible as a badge on [your user page](/my/badges).
+
+        Thanks, and keep up the great work!
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -3289,7 +3291,7 @@ en:
         This badge is granted the first time you add an Emoji to your post :thumbsup:. Emoji let you convey emotion in your posts, from happiness :smiley: to sadness :anguished: to anger :angry: and everything in between :sunglasses: . Just type a : (colon) or press the Emoji toolbar button in the editor to select from hundreds of choices :ok_hand:
     first_mention:
       name: First Mention
-      description: Mentioned a user in a Post
+      description: Mentioned a user in a post
       long_description: This badge is granted the first time you mention someone's @username in your post. Each mention generates a notification to that person, so they know about your post. Just begin typing @ (at symbol) to mention any user or, if allowed, group – it's a convenient way to bring something to their attention.
     first_onebox:
       name: First Onebox
@@ -3297,14 +3299,14 @@ en:
       long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
     first_reply_by_email:
       name: First Reply By Email
-      description: Replied to a Post via email
+      description: Replied to a post via email
       long_description: |
         This badge is granted the first time you reply to a post via email :e-mail:.
     new_user_of_the_month:
       name: "New User of the Month"
-      description: Contributed a lot of value in their first month
+      description: Outstanding contributions in their first month
       long_description: |
-        This badge is granted to two high quality users who joined in the last month. The quality is determined by how many of their posts were liked and by whom.
+        This badge is granted to congratulate two new users each month for their excellent overall contributions, as measured by how often their posts were liked, and by whom.
 
   admin_login:
     success: "Email Sent"
