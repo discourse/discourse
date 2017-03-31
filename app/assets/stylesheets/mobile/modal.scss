@@ -49,23 +49,24 @@
   margin-bottom: 5px;
 }
 
+.modal-close {
+  display: inline-block;
+  float: right;
+}
+
 .modal-header {
-  // we need tighter spacing on mobile for header
-  // this clearfix under the modal title h3 pushes it way down
-  .clearfix {
-    display:none;
-  }
+  padding: 10px 0px;
+
   h3 {
+    display: inline-block;
     font-size: 1.286em;
     padding-left: 15px;
-    margin-bottom: 5px;
+    margin: 0px;
   }
 }
 .close {
-  float: right;
   font-size: 1.714em;
   padding: 10px 15px 5px 5px;
-  margin: -15px 0 0 0;
   color: $primary;
 }
 
