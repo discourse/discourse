@@ -1473,6 +1473,7 @@ en:
         title: "Set Topic Timer"
         save: "Set Timer"
         time: "Time:"
+        remove: "Remove Timer"
       auto_update_input:
         limited:
           units: "(# of hours)"
@@ -1482,13 +1483,11 @@ en:
           examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
       auto_reopen:
         title: "Auto-open Topic"
-        remove: "Don't Auto-Reopen This Topic"
       auto_close:
         title: "Auto-Close Topic"
         label: "Auto-close topic time:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
-        remove: "Don't Auto-Close This Topic"
 
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."

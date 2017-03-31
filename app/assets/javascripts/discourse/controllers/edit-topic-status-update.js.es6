@@ -41,15 +41,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return Ember.isEmpty(updateTime) || updateTimeInvalid || loading;
   },
 
-  @computed('autoReopen', 'autoClose')
-  removeStatusUpdateLabel(autoReopen, autoClose) {
-    if (autoReopen) {
-      return 'topic.auto_reopen.remove';
-    } else if (autoClose) {
-      return 'topic.auto_close.remove';
-    }
-  },
-
   @observes("topicStatusUpdate.execute_at", "topicStatusUpdate.duration")
   setAutoCloseTime() {
     let time = null;

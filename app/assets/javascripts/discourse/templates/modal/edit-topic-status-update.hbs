@@ -58,7 +58,9 @@
     {{conditional-loading-spinner size="small" condition=loading}}
 
     {{#if topicStatusUpdate.execute_at}}
-      {{d-button class="pull-right" action="removeStatusUpdate" label=removeStatusUpdateLabel}}
+      {{d-button class="pull-right btn-danger"
+          action="removeStatusUpdate"
+          label='topic.topic_status_update.remove'}}
     {{/if}}
   </div>
 </form>
