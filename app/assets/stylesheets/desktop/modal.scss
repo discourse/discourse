@@ -46,15 +46,20 @@
   margin-left: -1px;
 }
 
+.modal-close {
+  display: inline-block;
+  float: right;
+  margin: 7px;
+}
+
 .modal-header {
   h3 {
+    display: inline-block;;
     font-size: 1.429em;
     padding: 10px 15px 7px;
   }
-  .close {margin: 10px;}
 }
 .close {
-  float: right;
   font-size: 1.429em;
   text-decoration: none;
   color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
