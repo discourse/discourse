@@ -64,11 +64,11 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       PostAction.act(new_user, p, PostActionType.types[:like])
       PostAction.act(med_user, p, PostActionType.types[:like])
       PostAction.act(old_user, p, PostActionType.types[:like])
-      expect(granter.scores[user.id]).to eq(0.4)
+      expect(granter.scores[user.id]).to eq(0.1875)
 
       # It goes down the more they post
       Fabricate(:post, user: user)
-      expect(granter.scores[user.id]).to eq(0.32)
+      expect(granter.scores[user.id]).to eq(0.15)
     end
 
     it "is limited to two accounts" do
