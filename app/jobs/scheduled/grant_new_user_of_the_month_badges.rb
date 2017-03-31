@@ -1,20 +1,20 @@
 require 'badge_granter'
 
 module Jobs
-  class GrantRookieBadges < Jobs::Scheduled
+  class GrantNewUserOfTheMonthBadges < Jobs::Scheduled
     every 1.month
 
     MAX_AWARDED = 2
 
     def execute(args)
-      badge = Badge.find(Badge::RookieOfTheMonth)
+      badge = Badge.find(Badge::NewUserOfTheMonth)
       scores.each do |user_id, score|
         # Don't bother awarding to users who haven't received any likes
         if score > 0.0
           user = User.find(user_id)
-          if user.badges.where(id: Badge::RookieOfTheMonth).blank?
+          if user.badges.where(id: Badge::NewUserOfTheMonth).blank?
             BadgeGranter.grant(badge, user)
-            SystemMessage.new(user).create('rookie_of_the_month', {
+            SystemMessage.new(user).create('new_user_of_the_month', {
               month_year: Time.now.strftime("%B %Y")
             })
           end
