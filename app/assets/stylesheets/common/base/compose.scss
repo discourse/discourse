@@ -140,9 +140,6 @@ div.ac-wrap {
   label {
     font-size: 1em;
   }
-  input {
-    width: 150px;
-  }
   .examples {
     color: lighten($primary, 40%);
   }
@@ -187,5 +184,3 @@ div.ac-wrap {
 .cooked > *:first-child {
   margin-top: 0;
 }
-
-
