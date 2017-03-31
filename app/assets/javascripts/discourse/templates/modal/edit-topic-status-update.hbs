@@ -9,7 +9,13 @@
           selection=selection}}
 
       <label class="radio" for="auto-close">
-        {{fa-icon "clock-o"}} {{fa-icon "lock"}} {{i18n 'topic.auto_close.title'}}
+        {{fa-icon "clock-o"}} {{fa-icon "lock"}}
+
+        {{#if model.closed}}
+          {{i18n 'topic.temp_open.title'}}
+        {{else}}
+          {{i18n 'topic.auto_close.title'}}
+        {{/if}}
       </label>
 
       {{radio-button
@@ -20,7 +26,14 @@
           selection=selection}}
 
       <label class="radio" for="auto-reopen">
-        {{fa-icon "clock-o"}} {{fa-icon "unlock"}} {{i18n 'topic.auto_reopen.title'}}
+        {{fa-icon "clock-o"}} {{fa-icon "unlock"}}
+
+
+        {{#if model.closed}}
+          {{i18n 'topic.auto_reopen.title'}}
+        {{else}}
+          {{i18n 'topic.temp_close.title'}}
+        {{/if}}
       </label>
     </div>
 
