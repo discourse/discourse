@@ -970,7 +970,7 @@ SQL
       num_hours = time.to_f
 
       if num_hours > 0
-        last_post_created_at = self.ordered_posts.last.created_at || time_now
+        last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
         topic_status_update.execute_at = last_post_created_at + num_hours.hours
         topic_status_update.created_at = last_post_created_at
       end
