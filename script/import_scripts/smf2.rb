@@ -65,6 +65,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     import_categories
     import_posts
     postprocess_posts
+    make_prettyurl_permalinks('/forum')
   end
 
   def import_groups
@@ -661,6 +662,31 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end #Node
 
   end #MessageDependencyGraph
+
+  def make_prettyurl_permalinks(prefix)
+    puts 'creating permalinks for prettyurl plugin'
+    begin
+      serialized = query(<<-SQL, as: :single)
+        SELECT value FROM {prefix}settings
+        WHERE variable='pretty_board_urls';
+      SQL
+      board_slugs = Array.new
+      ser = /\{(.*)\}/.match(serialized)[1]
+      ser.scan(/i:(\d+);s:\d+:\"(.*?)\";/).each do |nv|
+        board_slugs[nv[0].to_i] = nv[1]
+      end
+      topic_urls = query(<<-SQL, as: :array)
+        SELECT t.id_first_msg, t.id_board,u.pretty_url
+        FROM smf_topics t
+        LEFT JOIN smf_pretty_topic_urls u ON u.id_topic = t.id_topic ;
+      SQL
+      topic_urls.each do |url|
+        t = topic_lookup_from_imported_post_id(url[:id_first_msg])
+        Permalink.create(url: "#{prefix}/#{board_slugs[url[:id_board]]}/#{url[:pretty_url]}", topic_id: t[:topic_id])
+      end
+    rescue
+    end
+  end
 
 end
 
