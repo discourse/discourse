@@ -94,6 +94,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     create_users(query(<<-SQL), total: total) do |member|
       SELECT a.id_member, a.member_name, a.date_registered, a.real_name, a.email_address,
+             CONCAT(LCASE(a.member_name),':', a.passwd) AS password,
              a.is_activated, a.last_login, a.birthdate, a.member_ip, a.id_group, a.additional_groups,
              b.id_attach, b.file_hash, b.filename
       FROM {prefix}members AS a
@@ -106,6 +107,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       {
         id: member[:id_member],
         username: member[:member_name],
+        password: member[:password],
         created_at: create_time,
         name: member[:real_name],
         email: member[:email_address],
