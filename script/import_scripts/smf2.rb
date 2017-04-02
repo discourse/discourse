@@ -184,58 +184,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
     end
 
-    topics = Enumerator.new do |y|
-      last_topic_id = nil
-      topic_messages = nil
-      query("SELECT id_msg, id_topic, body FROM {prefix}messages ORDER BY id_topic ASC, id_msg ASC") do |message|
-        if last_topic_id != message[:id_topic]
-          y << topic_messages
-          last_topic_id = message[:id_topic]
-          topic_messages = [ message ]
-        else
-          topic_messages << message
-        end
-      end
-      y << topic_messages
-    end
-
-    graph = MessageDependencyGraph.new
-    topics.each do |messages|
-      next unless messages.present?
-      (messages.reverse << nil).each_cons(2) do |message, prev|
-        graph.add_message(message[:id_msg], prev ? prev[:id_msg] : nil,
-          extract_quoted_message_ids(message[:body]).to_a)
-      end
-      print "\r#{spinner.next}"
-    end
-
-    begin
-      cycles = graph.cycles
-      print "\r#{spinner.next}"
-      cycles.each do |cycle|
-        candidate = cycle.detect {|n| ((cycle - [n]) & n.quoted).present? }
-        candidate.ignore_quotes = true
-      end
-    end while cycles.present?
-    message_order = graph.tsort
-    print "\r#{spinner.next}"
-
-    query(<<-SQL, as: :array)
-      CREATE TEMPORARY TABLE {prefix}import_message_order (
-        message_id int(11) NOT NULL,
-        message_order int(11) NOT NULL AUTO_INCREMENT,
-        ignore_quotes tinyint(1) NOT NULL,
-        PRIMARY KEY (message_id),
-        UNIQUE KEY message_order (message_order)
-      ) ENGINE=MEMORY
-    SQL
-    message_order.each_slice(100) do |nodes|
-      query(<<-SQL, as: :array)
-        INSERT INTO {prefix}import_message_order (message_id, ignore_quotes)
-        VALUES #{ nodes.map {|n| "(#{n.id}, #{n.ignore_quotes? ? 1 : 0})" }.join(',') }
-      SQL
-      print "\r#{spinner.next}"
-    end
 
     db2 = create_db_connection
 
@@ -243,11 +191,10 @@ class ImportScripts::Smf2 < ImportScripts::Base
       SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, o.ignore_quotes,
              m.subject, t.id_board, t.id_first_msg, COUNT(a.id_attach) AS attachment_count
       FROM {prefix}messages AS m
-      LEFT JOIN {prefix}import_message_order AS o ON o.message_id = m.id_msg
       LEFT JOIN {prefix}topics AS t ON t.id_topic = m.id_topic
       LEFT JOIN {prefix}attachments AS a ON a.id_msg = m.id_msg AND a.attachment_type = 0
       GROUP BY m.id_msg
-      ORDER BY o.message_order ASC
+      ORDER BY m.id_topic ASC, m.id_msg ASC
     SQL
       skip = false
       ignore_quotes = (message[:ignore_quotes] == 1)
