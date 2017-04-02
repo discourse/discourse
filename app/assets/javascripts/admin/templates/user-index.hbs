@@ -22,18 +22,40 @@
 
   <div class='display-row username'>
     <div class='field'>{{i18n 'user.username.title'}}</div>
-    <div class='value'>{{model.username}}</div>
+    <div class='value'>
+      {{#if editingUsername}}
+        {{text-field value=userUsernameValue autofocus="autofocus"}}
+      {{else}}
+        <span {{action "toggleUsernameEdit"}}>{{model.username}}</span>
+      {{/if}}
+    </div>
     <div class='controls'>
-      {{#link-to 'preferences.username' model class="btn"}}
-        {{fa-icon "pencil"}}
-        {{i18n 'user.change_username.title'}}
-      {{/link-to}}
+      {{#if editingUsername}}
+        {{d-button action="saveUsername" label="admin.user_fields.save"}}
+        <a href {{action "toggleUsernameEdit"}}>{{i18n 'cancel'}}</a>
+      {{else}}
+        {{d-button action="toggleUsernameEdit" icon="pencil"}}
+      {{/if}}
     </div>
   </div>
 
   <div class='display-row'>
     <div class='field'>{{i18n 'user.name.title'}}</div>
-    <div class='value'>{{model.name}}</div>
+    <div class='value'>
+      {{#if editingName}}
+        {{text-field value=userNameValue autofocus="autofocus"}}
+      {{else}}
+        <span {{action "toggleNameEdit"}}>{{model.name}}</span>
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if editingName}}
+        {{d-button action="saveName" label="admin.user_fields.save"}}
+        <a href {{action "toggleNameEdit"}}>{{i18n 'cancel'}}</a>
+      {{else}}
+        {{d-button action="toggleNameEdit" icon="pencil"}}
+      {{/if}}
+    </div>
   </div>
 
   {{#if canCheckEmails}}
@@ -90,10 +112,10 @@
     </div>
     <div class='controls'>
       {{#if editingTitle}}
-        {{d-button action="saveTitle" label="admin.user.save_title"}}
+        {{d-button action="saveTitle" label="admin.user_fields.save"}}
         <a href {{action "toggleTitleEdit"}}>{{i18n 'cancel'}}</a>
       {{else}}
-        {{d-button action="toggleTitleEdit" icon="pencil" label="admin.user.edit_title"}}
+        {{d-button action="toggleTitleEdit" icon="pencil"}}
       {{/if}}
     </div>
   </div>
