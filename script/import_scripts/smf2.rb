@@ -121,6 +121,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
         post_create_action: proc do |user|
           user.update(created_at: create_time) if create_time < user.created_at
+          user.save
           GroupUser.transaction do
             group_ids.each do |gid|
               group_id = group_id_from_imported_group_id(gid) and
