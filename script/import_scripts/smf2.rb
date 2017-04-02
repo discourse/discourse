@@ -391,30 +391,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
     return opts[:ignore_quotes] ? body : convert_quotes(body)
   end
 
-  def v8
-    @ctx ||= begin
-      ctx = PrettyText.create_new_context
-      PrettyText.decorate_context(ctx)
-      # provides toHumanSize but restores I18n.t which we need to fix again
-      ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
-      helper = PrettyText::Helpers.new
-      ctx['I18n']['t'] = proc {|_,key,opts| helper.t(key, opts) }
-      # from i18n_helpers.js -- can't load it directly because Ember is missing
-      ctx.eval(<<-'end')
-        var oldI18ntoHumanSize = I18n.toHumanSize;
-        I18n.toHumanSize = function(number, options) {
-          options = options || {};
-          options.format = I18n.t("number.human.storage_units.format");
-          return oldI18ntoHumanSize.apply(this, [number, options]);
-        };
-      end
-      ctx
-    end
-  end
-
   def get_upload_markdown(upload)
-    @func ||= v8.eval("Discourse.Utilities.getUploadMarkdown")
-    return @func.call(upload).to_s
+    html_for_upload(upload, upload.original_filename)
   end
 
   def convert_quotes(body)
