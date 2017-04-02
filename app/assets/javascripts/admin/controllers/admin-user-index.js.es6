@@ -4,6 +4,8 @@ import { propertyNotEqual, setting } from 'discourse/lib/computed';
 import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(CanCheckEmails, {
+  editingUsername: false,
+  editingName: false,
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,
@@ -55,6 +57,48 @@ export default Ember.Controller.extend(CanCheckEmails, {
     anonymize() { return this.get('model').anonymize(); },
     destroy() { return this.get('model').destroy(); },
 
+    toggleUsernameEdit() {
+      this.set('userUsernameValue', this.get('model.username'));
+      this.toggleProperty('editingUsername');
+    },
+
+    saveUsername() {
+      const self = this;
+      const old_username = self.get('model.username');
+
+      self.set('model.username', self.get('userUsernameValue'));
+      return ajax(`/users/${old_username.toLowerCase()}/preferences/username`, {
+        data: { new_username: this.get('userUsernameValue') },
+        type: 'PUT'
+      }).catch(function(e) {
+        self.set('model.username', old_username);
+        bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+      }).finally(function() {
+        self.toggleProperty('editingUsername');
+      });
+    },
+
+    toggleNameEdit() {
+        this.set('userNameValue', this.get('model.name'));
+        this.toggleProperty('editingName');
+    },
+
+    saveName() {
+      const self = this;
+      const old_name = self.get('model.name');
+
+      self.set('model.name', self.get('userNameValue'));
+      return ajax(userPath(`${this.get('model.username').toLowerCase()}.json`), {
+        data: {name: this.get('userNameValue')},
+        type: 'PUT'
+      }).catch(function(e) {
+        self.set('model.name', old_name);
+        bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+      }).finally(function() {
+        self.toggleProperty('editingName');
+      });
+    },
+
     toggleTitleEdit() {
       this.set('userTitleValue', this.get('model.title'));
       this.toggleProperty('editingTitle');
@@ -62,14 +106,16 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     saveTitle() {
       const self = this;
+      const old_title = self.get('userTitleValue');
 
+      self.set('model.title', self.get('userTitleValue'));
       return ajax(userPath(`${this.get('model.username').toLowerCase()}.json`), {
         data: {title: this.get('userTitleValue')},
         type: 'PUT'
       }).catch(function(e) {
+        self.set('model.title', old_title);
         bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
       }).finally(function() {
-        self.set('model.title', self.get('userTitleValue'));
         self.toggleProperty('editingTitle');
       });
     },
