@@ -188,7 +188,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     db2 = create_db_connection
 
     create_posts(query(<<-SQL), total: total) do |message|
-      SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, o.ignore_quotes,
+      SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, 
              m.subject, t.id_board, t.id_first_msg, COUNT(a.id_attach) AS attachment_count
       FROM {prefix}messages AS m
       LEFT JOIN {prefix}topics AS t ON t.id_topic = m.id_topic
@@ -197,7 +197,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       ORDER BY m.id_topic ASC, m.id_msg ASC
     SQL
       skip = false
-      ignore_quotes = (message[:ignore_quotes] == 1)
+      ignore_quotes = false
       post = {
         id: message[:id_msg],
         user_id: user_id_from_imported_user_id(message[:id_member]) || -1,
