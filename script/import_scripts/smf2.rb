@@ -355,9 +355,9 @@ class ImportScripts::Smf2 < ImportScripts::Base
           tl = topic_lookup_from_imported_post_id($~[:msg].to_i)
           quote << ", post:#{tl[:post_number]}, topic:#{tl[:topic_id]}" if tl
         end
-        quote << "\"]#{inner}[/quote]"
+        quote << "\"]#{convert_quotes(inner)}[/quote]"
       else
-        "<blockquote>#{inner}</blockquote>"
+        "<blockquote>#{convert_quotes(inner)}</blockquote>"
       end
     end
   end
