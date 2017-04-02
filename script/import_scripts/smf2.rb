@@ -465,7 +465,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     private
 
     def get_php_timezone
-      phpinfo, status = Open3.capture2('phpnope', '-i')
+      phpinfo, status = Open3.capture2('php', '-i')
       phpinfo.lines.each do |line|
         key, *vals = line.split(' => ').map(&:strip)
         break vals[0] if key == 'Default timezone'
