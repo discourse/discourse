@@ -409,6 +409,7 @@ users:
     client: true
   anonymous_posting_min_trust_level:
     default: 1
+    enum: 'TrustLevelSetting'
     client: true
   anonymous_account_duration_minutes:
     default: 10080
@@ -1383,6 +1384,7 @@ user_api:
     hidden: true
   min_trust_level_for_user_api_key:
     default: 1
+    enum: 'TrustLevelSetting'
   allowed_user_api_push_urls:
     default: ''
     type: list
