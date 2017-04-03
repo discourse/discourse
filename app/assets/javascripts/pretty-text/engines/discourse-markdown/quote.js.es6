@@ -10,6 +10,7 @@ registerOption((siteSettings, opts) => {
 
 export function setup(helper) {
   register(helper, 'quote', {noWrap: true, singlePara: true}, (contents, bbParams, options) => {
+
     const params = {'class': 'quote'};
     let username = null;
     const opts = helper.getOptions();
