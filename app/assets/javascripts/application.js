@@ -26,7 +26,6 @@
 //= require ./discourse/lib/formatter
 //= require ./discourse/lib/eyeline
 //= require ./discourse/mixins/scrolling
-//= require ./discourse/mixins/scrolling
 //= require ./discourse/models/model
 //= require ./discourse/models/rest
 //= require ./discourse/models/badge-grouping
