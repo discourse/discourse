@@ -1138,6 +1138,13 @@ describe Topic do
       end
     end
 
+    it 'can take a number of hours as a string and can handle based on last post' do
+      Timecop.freeze(now) do
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '18', {by_user: admin, based_on_last_post: true})
+        expect(topic.topic_status_updates.first.execute_at).to eq(18.hours.from_now)
+      end
+    end
+
     it "can take a time later in the day" do
       Timecop.freeze(now) do
         topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '13:00', {by_user: admin})
