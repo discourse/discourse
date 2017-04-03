@@ -85,11 +85,5 @@ RSpec.describe "Managing a topic's status update", type: :request do
         end.to raise_error(Discourse::InvalidParameters)
       end
     end
-
-    describe 'when the last post is old enough' do
-      it 'should close the topic immediately' do
-
-      end
-    end
   end
 end
