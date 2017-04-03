@@ -220,6 +220,11 @@ test("Quotes", function() {
                 "<p>1</p>\n\n<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob:" +
                 "</div><blockquote><p>my quote</p></blockquote></aside>\n\n<p>2</p>",
                 "includes no avatar if none is found");
+
+  cooked(`[quote]\na\n\n[quote]\nb\n[/quote]\n[/quote]`,
+         "<p><aside class=\"quote\"><blockquote><p>a</p><p><aside class=\"quote\"><blockquote><p>b</p></blockquote></aside></p></blockquote></aside></p>",
+         "handles nested quotes properly");
+
 });
 
 test("Mentions", function() {
