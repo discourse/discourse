@@ -12,7 +12,7 @@ export default Ember.Component.extend(bufferedRender({
   ],
 
   buildBuffer(buffer) {
-    if (!this.get('topic.topic_status_update')) return;
+    if (!this.get('topic.topic_status_update.execute_at')) return;
 
     let statusUpdateAt = moment(this.get('topic.topic_status_update.execute_at'));
     if (statusUpdateAt < new Date()) return;
