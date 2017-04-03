@@ -40,6 +40,7 @@ module Jobs
           SUM(CASE
                WHEN pa.id IS NOT NULL THEN
                  CASE
+                   WHEN liked_by.admin OR liked_by.moderator THEN 2.0
                    WHEN liked_by.trust_level = 0 THEN 0.1
                    WHEN liked_by.trust_level = 1 THEN 0.25
                    WHEN liked_by.trust_level = 2 THEN 1.0

@@ -95,18 +95,26 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       p = Fabricate(:post, user: user)
       Fabricate(:post, user: user)
 
-      new_user = Fabricate(:user, created_at: 2.days.ago)
-      med_user = Fabricate(:user, created_at: 3.weeks.ago)
-      old_user = Fabricate(:user, created_at: 6.months.ago)
+      u0 = Fabricate(:user, trust_level: 0)
+      u1 = Fabricate(:user, trust_level: 1)
+      u2 = Fabricate(:user, trust_level: 2)
+      u3 = Fabricate(:user, trust_level: 3)
+      u4 = Fabricate(:user, trust_level: 4)
+      um = Fabricate(:user, trust_level: 3, moderator: true)
+      ua = Fabricate(:user, trust_level: 0, admin: true)
 
-      PostAction.act(new_user, p, PostActionType.types[:like])
-      PostAction.act(med_user, p, PostActionType.types[:like])
-      PostAction.act(old_user, p, PostActionType.types[:like])
-      expect(granter.scores[user.id]).to eq(0.375)
+      PostAction.act(u0, p, PostActionType.types[:like])
+      PostAction.act(u1, p, PostActionType.types[:like])
+      PostAction.act(u2, p, PostActionType.types[:like])
+      PostAction.act(u3, p, PostActionType.types[:like])
+      PostAction.act(u4, p, PostActionType.types[:like])
+      PostAction.act(um, p, PostActionType.types[:like])
+      PostAction.act(ua, p, PostActionType.types[:like])
+      expect(granter.scores[user.id]).to eq(4.425)
 
       # It goes down the more they post
       Fabricate(:post, user: user)
-      expect(granter.scores[user.id]).to eq(0.25)
+      expect(granter.scores[user.id]).to eq(2.95)
     end
 
     it "is limited to two accounts" do
