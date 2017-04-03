@@ -8,9 +8,7 @@ class TopicStatusUpdate < ActiveRecord::Base
   validates :topic_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
-
   validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }
-
   validate :ensure_update_will_happen
 
   before_save do
@@ -22,7 +20,7 @@ class TopicStatusUpdate < ActiveRecord::Base
   end
 
   after_save do
-    if execute_at_changed? || user_id_changed?
+    if (execute_at_changed? || user_id_changed?) && topic
       now = Time.zone.now
       time = execute_at < now ? now : execute_at
 
@@ -33,7 +31,8 @@ class TopicStatusUpdate < ActiveRecord::Base
   def self.types
     @types ||= Enum.new(
       close: 1,
-      open: 2
+      open: 2,
+      publish_to_category: 3
     )
   end
 
@@ -69,26 +68,30 @@ class TopicStatusUpdate < ActiveRecord::Base
     end
     alias_method :cancel_auto_open_job, :cancel_auto_close_job
 
-    def schedule_auto_open_job(time)
-      if topic
-        topic.update_status('closed', true, user) if !topic.closed
+    def cancel_auto_publish_to_category_job
+      Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_status_update_id: id)
+    end
 
-        Jobs.enqueue_at(time, :toggle_topic_closed,
-          topic_status_update_id: id,
-          state: false
-        )
-      end
+    def schedule_auto_open_job(time)
+      topic.update_status('closed', true, user) if !topic.closed
+
+      Jobs.enqueue_at(time, :toggle_topic_closed,
+        topic_status_update_id: id,
+        state: false
+      )
     end
 
     def schedule_auto_close_job(time)
-      if topic
-        topic.update_status('closed', false, user) if topic.closed
+      topic.update_status('closed', false, user) if topic.closed
 
-        Jobs.enqueue_at(time, :toggle_topic_closed,
-          topic_status_update_id: id,
-          state: true
-        )
-      end
+      Jobs.enqueue_at(time, :toggle_topic_closed,
+        topic_status_update_id: id,
+        state: true
+      )
+    end
+
+    def schedule_auto_publish_to_category_job(time)
+      Jobs.enqueue_at(time, :publish_topic_to_category, topic_status_update_id: id)
     end
 end
 
@@ -106,6 +109,7 @@ end
 #  deleted_by_id      :integer
 #  created_at         :datetime
 #  updated_at         :datetime
+#  category_id        :integer
 #
 # Indexes
 #
