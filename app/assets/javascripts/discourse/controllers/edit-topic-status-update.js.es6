@@ -5,18 +5,36 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 const CLOSE_STATUS_TYPE = 'close';
 const OPEN_STATUS_TYPE = 'open';
+const PUBLISH_TO_CATEGORY_STATUS_TYPE = 'publish_to_category';
 
 export default Ember.Controller.extend(ModalFunctionality, {
+  closeStatusType: CLOSE_STATUS_TYPE,
+  openStatusType: OPEN_STATUS_TYPE,
+  publishToCategoryStatusType: PUBLISH_TO_CATEGORY_STATUS_TYPE,
   updateTimeValid: null,
   updateTimeInvalid: Em.computed.not('updateTimeValid'),
   loading: false,
   updateTime: null,
   topicStatusUpdate: Ember.computed.alias("model.topic_status_update"),
   selection: Ember.computed.alias('model.topic_status_update.status_type'),
-  autoReopen: Ember.computed.equal('selection', OPEN_STATUS_TYPE),
+  autoOpen: Ember.computed.equal('selection', OPEN_STATUS_TYPE),
   autoClose: Ember.computed.equal('selection', CLOSE_STATUS_TYPE),
-  disableAutoReopen: Ember.computed.and('autoClose', 'updateTime'),
-  disableAutoClose: Ember.computed.and('autoReopen', 'updateTime'),
+  publishToCategory: Ember.computed.equal('selection', PUBLISH_TO_CATEGORY_STATUS_TYPE),
+
+  @computed('autoClose', 'updateTime')
+  disableAutoClose(autoClose, updateTime) {
+    return updateTime && !autoClose;
+  },
+
+  @computed('autoOpen', 'updateTime')
+  disableAutoOpen(autoOpen, updateTime) {
+    return updateTime && !autoOpen;
+  },
+
+  @computed('publishToCatgory', 'updateTime')
+  disablePublishToCategory(publishToCatgory, updateTime) {
+    return updateTime && !publishToCatgory;
+  },
 
   @computed('topicStatusUpdate.based_on_last_post', 'updateTime', 'model.last_posted_at')
   willCloseImmediately(basedOnLastPost, updateTime, lastPostedAt) {
@@ -42,7 +60,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   @observes("topicStatusUpdate.execute_at", "topicStatusUpdate.duration")
-  setAutoCloseTime() {
+  _setUpdateTime() {
     let time = null;
 
     if (this.get("topicStatusUpdate.based_on_last_post")) {
@@ -65,12 +83,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.get('model.id'),
       time,
       this.get('topicStatusUpdate.based_on_last_post'),
-      status_type
+      status_type,
+      this.get('categoryId')
     ).then(result => {
       if (time) {
         this.send('closeModal');
-        this.set('topicStatusUpdate.execute_at', result.execute_at);
-        this.set('topicStatusUpdate.duration', result.duration);
+
+        this.get("topicStatusUpdate").setProperties({
+          execute_at: result.execute_at,
+          duration: result.duration,
+          category_id: result.category_id
+        });
+
         this.set('model.closed', result.closed);
       } else {
         this.set('topicStatusUpdate', Ember.Object.create({}));

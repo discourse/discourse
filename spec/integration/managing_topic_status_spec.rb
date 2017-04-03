@@ -76,6 +76,31 @@ RSpec.describe "Managing a topic's status update", type: :request do
       expect(json['closed']).to eq(topic.closed)
     end
 
+    describe 'publishing topic to category in the future' do
+      it 'should be able to create the topic status update' do
+        post "/t/#{topic.id}/status_update.json",
+          time: 24,
+          status_type: TopicStatusUpdate.types[3],
+          category_id: topic.category_id
+
+        expect(response).to be_success
+
+        topic_status_update = TopicStatusUpdate.last
+
+        expect(topic_status_update.topic).to eq(topic)
+
+        expect(topic_status_update.execute_at)
+          .to be_within(1.second).of(24.hours.from_now)
+
+        expect(topic_status_update.status_type)
+          .to eq(TopicStatusUpdate.types[:publish_to_category])
+
+        json = JSON.parse(response.body)
+
+        expect(json['category_id']).to eq(topic.category_id)
+      end
+    end
+
     describe 'invalid status type' do
       it 'should raise the right error' do
         expect do

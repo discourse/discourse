@@ -3,7 +3,8 @@ class TopicStatusUpdateSerializer < ApplicationSerializer
              :execute_at,
              :duration,
              :based_on_last_post,
-             :status_type
+             :status_type,
+             :category_id
 
   def status_type
     TopicStatusUpdate.types[object.status_type]
