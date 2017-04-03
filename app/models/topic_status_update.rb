@@ -70,21 +70,25 @@ class TopicStatusUpdate < ActiveRecord::Base
     alias_method :cancel_auto_open_job, :cancel_auto_close_job
 
     def schedule_auto_open_job(time)
-      topic.update_status('closed', true, user) if !topic.closed
+      if topic
+        topic.update_status('closed', true, user) if !topic.closed
 
-      Jobs.enqueue_at(time, :toggle_topic_closed,
-        topic_status_update_id: id,
-        state: false
-      )
+        Jobs.enqueue_at(time, :toggle_topic_closed,
+          topic_status_update_id: id,
+          state: false
+        )
+      end
     end
 
     def schedule_auto_close_job(time)
-      topic.update_status('closed', false, user) if topic.closed
+      if topic
+        topic.update_status('closed', false, user) if topic.closed
 
-      Jobs.enqueue_at(time, :toggle_topic_closed,
-        topic_status_update_id: id,
-        state: true
-      )
+        Jobs.enqueue_at(time, :toggle_topic_closed,
+          topic_status_update_id: id,
+          state: true
+        )
+      end
     end
 end
 

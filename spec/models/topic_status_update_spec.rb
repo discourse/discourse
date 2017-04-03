@@ -4,6 +4,10 @@ RSpec.describe TopicStatusUpdate, type: :model do
   let(:topic_status_update) { Fabricate(:topic_status_update) }
   let(:topic) { Fabricate(:topic) }
 
+  before do
+    Jobs::ToggleTopicClosed.jobs.clear
+  end
+
   context "validations" do
     describe '#status_type' do
       it 'should ensure that only one active topic status update exists' do
@@ -122,6 +126,56 @@ RSpec.describe TopicStatusUpdate, type: :model do
         end
       end
     end
+
+    describe 'when a open topic status update is created for an open topic' do
+      let(:topic) { Fabricate(:topic, closed: false) }
+
+      let(:topic_status_update) do
+        Fabricate(:topic_status_update,
+          status_type: described_class.types[:open],
+          topic: topic
+        )
+      end
+
+      it 'should close the topic' do
+        topic_status_update
+        expect(topic.reload.closed).to eq(true)
+      end
+
+      describe 'when topic has been deleted' do
+        it 'should not queue the job' do
+          topic.trash!
+          topic_status_update
+
+          expect(Jobs::ToggleTopicClosed.jobs).to eq([])
+        end
+      end
+    end
+
+    describe 'when a close topic status update is created for a closed topic' do
+      let(:topic) { Fabricate(:topic, closed: true) }
+
+      let(:topic_status_update) do
+        Fabricate(:topic_status_update,
+          status_type: described_class.types[:close],
+          topic: topic
+        )
+      end
+
+      it 'should open the topic' do
+        topic_status_update
+        expect(topic.reload.closed).to eq(false)
+      end
+
+      describe 'when topic has been deleted' do
+        it 'should not queue the job' do
+          topic.trash!
+          topic_status_update
+
+          expect(Jobs::ToggleTopicClosed.jobs).to eq([])
+        end
+      end
+    end
   end
 
   describe '.ensure_consistency!' do
@@ -156,32 +210,6 @@ RSpec.describe TopicStatusUpdate, type: :model do
 
       expect(job_args["topic_status_update_id"]).to eq(open_topic_status_update.id)
       expect(job_args["state"]).to eq(false)
-    end
-  end
-
-  describe 'when a open topic status update is created for an open topic' do
-    it 'should close the topic' do
-      topic = Fabricate(:topic, closed: false)
-
-      Fabricate(:topic_status_update,
-        status_type: described_class.types[:open],
-        topic: topic
-      )
-
-      expect(topic.reload.closed).to eq(true)
-    end
-  end
-
-  describe 'when a close topic status update is created for a closed topic' do
-    it 'should open the topic' do
-      topic = Fabricate(:topic, closed: true)
-
-      Fabricate(:topic_status_update,
-        status_type: described_class.types[:close],
-        topic: topic
-      )
-
-      expect(topic.reload.closed).to eq(false)
     end
   end
 end
