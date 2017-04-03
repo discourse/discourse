@@ -6,6 +6,9 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
   let(:granter) { described_class.new }
 
   it "runs correctly" do
+    u0 = Fabricate(:user, created_at: 2.weeks.ago)
+    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: 1.month.ago)
+
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
     Fabricate(:post, user: user)
@@ -19,6 +22,25 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
 
     badge = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
     expect(badge).to be_present
+  end
+
+  it "does nothing if it's been awarded recently" do
+    u0 = Fabricate(:user, created_at: 2.weeks.ago)
+    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0)
+
+    user = Fabricate(:user, created_at: 1.week.ago)
+    p = Fabricate(:post, user: user)
+    Fabricate(:post, user: user)
+
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostAction.act(old_user, p, PostActionType.types[:like])
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostAction.act(old_user, p, PostActionType.types[:like])
+
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
+    expect(badge).to be_blank
   end
 
   describe '.scores' do

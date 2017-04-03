@@ -8,6 +8,13 @@ module Jobs
 
     def execute(args)
       badge = Badge.find(Badge::NewUserOfTheMonth)
+
+      # Don't award it if a month hasn't gone by
+      return if UserBadge.where("badge_id = ? AND granted_at >= ?",
+        badge.id,
+        (1.month.ago + 1.day)  # give it a day slack just in case
+      ).exists?
+
       scores.each do |user_id, score|
         # Don't bother awarding to users who haven't received any likes
         if score > 0.0
