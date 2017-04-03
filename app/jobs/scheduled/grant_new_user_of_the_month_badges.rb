@@ -54,7 +54,9 @@ module Jobs
           NOT(u.moderator) AND
           u.created_at >= CURRENT_TIMESTAMP - '1 month'::INTERVAL
         GROUP BY u.id
-        HAVING COUNT(DISTINCT p.id) > 1 AND COUNT(DISTINCT p.topic_id) > 1
+        HAVING COUNT(DISTINCT p.id) > 1
+          AND COUNT(DISTINCT p.topic_id) > 1
+          AND COUNT(pa.id) > 1
         ORDER BY score DESC
         LIMIT :max_awarded
       SQL
