@@ -1,5 +1,6 @@
 require_dependency 'user_destroyer'
 require_dependency 'admin_user_index_query'
+require_dependency 'admin_confirmation'
 
 class Admin::UsersController < Admin::AdminController
 
@@ -103,10 +104,8 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
-    guardian.ensure_can_grant_admin!(@user)
-    @user.grant_admin!
-    StaffActionLogger.new(current_user).log_grant_admin(@user)
-    render_serialized(@user, AdminUserSerializer)
+    AdminConfirmation.new(@user, current_user).create_confirmation
+    render json: success_json
   end
 
   def revoke_moderation
@@ -321,6 +320,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def invite_admin
+    raise Discourse::InvalidAccess.new unless is_api?
 
     email = params[:email]
     unless user = User.find_by_email(email)

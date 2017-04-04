@@ -1807,4 +1807,69 @@ describe UsersController do
     end
   end
 
+
+  describe ".confirm_admin" do
+    it "fails without a valid token" do
+      expect {
+        get :confirm_admin, token: 'invalid-token'
+      }.to raise_error(ActionController::UrlGenerationError)
+    end
+
+    it "fails with a missing token" do
+      get :confirm_admin, token: 'a0a0a0a0a0'
+      expect(response).to_not be_success
+    end
+
+    it "succeeds with a valid code as anonymous" do
+      user = Fabricate(:user)
+      ac = AdminConfirmation.new(user, Fabricate(:admin))
+      ac.create_confirmation
+      get :confirm_admin, token: ac.token
+      expect(response).to be_success
+
+      user.reload
+      expect(user.admin?).to eq(false)
+    end
+
+    it "succeeds with a valid code when logged in as that user" do
+      admin = log_in(:admin)
+      user = Fabricate(:user)
+
+      ac = AdminConfirmation.new(user, admin)
+      ac.create_confirmation
+      get :confirm_admin, token: ac.token
+      expect(response).to be_success
+
+      user.reload
+      expect(user.admin?).to eq(false)
+    end
+
+    it "fails if you're logged in as a different account" do
+      log_in(:admin)
+      user = Fabricate(:user)
+
+      ac = AdminConfirmation.new(user, Fabricate(:admin))
+      ac.create_confirmation
+      get :confirm_admin, token: ac.token
+      expect(response).to_not be_success
+
+      user.reload
+      expect(user.admin?).to eq(false)
+    end
+
+    describe "post" do
+      it "gives the user admin access when POSTed" do
+        user = Fabricate(:user)
+        ac = AdminConfirmation.new(user, Fabricate(:admin))
+        ac.create_confirmation
+        post :confirm_admin, token: ac.token
+        expect(response).to be_success
+
+        user.reload
+        expect(user.admin?).to eq(true)
+      end
+    end
+
+  end
+
 end

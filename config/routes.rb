@@ -322,6 +322,11 @@ Discourse::Application.routes.draw do
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
     get "#{root_path}/authorize-email/:token" => "users_email#confirm"
+    get({
+      "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
+      constraints: { token: /[0-9a-f]+/ }
+    }.merge(index == 1 ? { as: 'confirm_admin' } : {}))
+    post "#{root_path}/confirm-admin/:token" => "users#confirm_admin", constraints: { token: /[0-9a-f]+/ }
     get "#{root_path}/:username/private-messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}

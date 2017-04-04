@@ -3,11 +3,12 @@ require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'
 require_dependency 'wizard'
 require_dependency 'wizard/builder'
+require_dependency 'admin_confirmation'
 
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
   before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
                                           :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
@@ -27,7 +28,8 @@ class UsersController < ApplicationController
                                                             :send_activation_email,
                                                             :password_reset,
                                                             :confirm_email_token,
-                                                            :admin_login]
+                                                            :admin_login,
+                                                            :confirm_admin]
 
   def index
   end
@@ -724,6 +726,21 @@ class UsersController < ApplicationController
     end
 
     render json: result
+  end
+
+  def confirm_admin
+    @confirmation = AdminConfirmation.find_by_code(params[:token])
+
+    raise Discourse::NotFound unless @confirmation
+    raise Discourse::InvalidAccess.new unless
+      @confirmation.performed_by.id == (current_user&.id || @confirmation.performed_by.id)
+
+    if request.post?
+      @confirmation.email_confirmed!
+      @confirmed = true
+    end
+
+    render layout: 'no_ember'
   end
 
   private
