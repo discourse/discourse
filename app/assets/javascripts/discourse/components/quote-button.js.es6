@@ -55,7 +55,8 @@ export default Ember.Component.extend({
     const { isIOS, isAndroid, isSafari } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid;
 
-    // used to work around Safari losing selection
+    // Don't mess with the original range as it results in weird behaviours
+    // where certain browsers will deselect the selection
     const clone = firstRange.cloneRange();
 
     // create a marker element containing a single invisible character
@@ -63,9 +64,9 @@ export default Ember.Component.extend({
     markerElement.appendChild(document.createTextNode("\ufeff"));
 
     // on mobile, collapse the range at the end of the selection
-    if (showAtEnd) { firstRange.collapse(); }
+    if (showAtEnd) { clone.collapse(); }
     // insert the marker
-    firstRange.insertNode(markerElement);
+    clone.insertNode(markerElement);
 
     // retrieve the position of the marker
     const $markerElement = $(markerElement);
