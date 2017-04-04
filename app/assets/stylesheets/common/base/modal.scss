@@ -295,47 +295,11 @@
   }
 }
 
-.topic-close-modal {
-  .radios {
-    padding-bottom: 20px;
-    display: inline-block;
-
-    input[type='radio'] {
-      vertical-align: middle;
-      margin: 0px;
-    }
-
-    label {
-      padding: 0 10px 0px 5px;
-      display: inline-block;
-    }
-  }
-
-  .btn.pull-right {
-    margin-right: 10px;
-  }
-  form {
-    margin: 0;
-  }
-  .auto-update-input {
-    i.fa-clock-o {
-      font-size: 1.143em;
-    }
-    input {
-      margin: 0;
-    }
-  }
-}
-
 .edit-category-modal {
   .auto-update-input, .num-featured-topics-fields, .position-fields {
     input[type=text] {
       width: 50px;
     }
-  }
-
-  .auto-update-input label {
-    font-size: .929em;
   }
 
   .subcategory-list-style-field {

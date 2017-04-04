@@ -1,0 +1,29 @@
+.topic-close-modal {
+  label {
+    display: inline-block;
+  }
+
+  .radios {
+    padding-bottom: 20px;
+    display: inline-block;
+
+    input[type='radio'] {
+      vertical-align: middle;
+      margin: 0px;
+    }
+
+    label {
+      padding: 0 10px 0px 5px;
+    }
+  }
+
+  .btn.pull-right {
+    margin-right: 10px;
+  }
+
+  .auto-update-input {
+    input {
+      margin: 0;
+    }
+  }
+}

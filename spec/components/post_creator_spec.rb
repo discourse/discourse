@@ -260,6 +260,9 @@ describe PostCreator do
       end
 
       describe "topic's auto close" do
+        before do
+          SiteSetting.queue_jobs = true
+        end
 
         it "doesn't update topic's auto close when it's not based on last post" do
           Timecop.freeze do
@@ -275,8 +278,6 @@ describe PostCreator do
         end
 
         it "updates topic's auto close date when it's based on last post" do
-          SiteSetting.queue_jobs = true
-
           Timecop.freeze do
             topic = Fabricate(:topic,
               topic_status_updates: [Fabricate(:topic_status_update,
