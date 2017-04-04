@@ -3,6 +3,7 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { observes, on } from 'ember-addons/ember-computed-decorators';
 import PermissionType from 'discourse/models/permission-type';
+import Category from 'discourse/models/category';
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
@@ -14,13 +15,16 @@ export default ComboboxView.extend({
   content(scopedCategoryId, categories) {
     // Always scope to the parent of a category, if present
     if (scopedCategoryId) {
-      const scopedCat = Discourse.Category.findById(scopedCategoryId);
+      const scopedCat = Category.findById(scopedCategoryId);
       scopedCategoryId = scopedCat.get('parent_category_id') || scopedCat.get('id');
     }
 
+    const excludeCategoryId = this.get('excludeCategoryId');
+
     return categories.filter(c => {
-      if (scopedCategoryId && c.get('id') !== scopedCategoryId && c.get('parent_category_id') !== scopedCategoryId) { return false; }
-      if (c.get('isUncategorizedCategory')) { return false; }
+      const categoryId = c.get('id');
+      if (scopedCategoryId && categoryId !== scopedCategoryId && c.get('parent_category_id') !== scopedCategoryId) { return false; }
+      if (c.get('isUncategorizedCategory') || excludeCategoryId === categoryId) { return false; }
       return c.get('permission') === PermissionType.FULL;
     });
   },
@@ -30,8 +34,8 @@ export default ComboboxView.extend({
   _updateCategories() {
     if (!this.get('categories')) {
       const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
-                           Discourse.Category.list() :
-                           Discourse.Category.listByActivity();
+                           Category.list() :
+                           Category.listByActivity();
       this.set('categories', categories);
     }
   },
@@ -42,7 +46,7 @@ export default ComboboxView.extend({
       if (rootNone) {
         return "category.none";
       } else {
-        return Discourse.Category.findUncategorized();
+        return Category.findUncategorized();
       }
     } else {
       return 'category.choose';
@@ -54,12 +58,12 @@ export default ComboboxView.extend({
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
     if (Ember.isEmpty(item.id)) {
-      const uncat = Discourse.Category.findUncategorized();
+      const uncat = Category.findUncategorized();
       if (uncat && uncat.get('name') === item.text) {
         category = uncat;
       }
     } else {
-      category = Discourse.Category.findById(parseInt(item.id,10));
+      category = Category.findById(parseInt(item.id,10));
     }
 
     if (!category) return item.text;
@@ -67,7 +71,7 @@ export default ComboboxView.extend({
     const parentCategoryId = category.get('parent_category_id');
 
     if (parentCategoryId) {
-      result = categoryBadgeHTML(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
+      result = categoryBadgeHTML(Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
     }
 
     result += ` <span class='topic-count'>&times; ${category.get('topic_count')}</span>`;

@@ -1474,6 +1474,7 @@ en:
         save: "Set Timer"
         time: "Time:"
         remove: "Remove Timer"
+        publish_to: "Publish To:"
       auto_update_input:
         limited:
           units: "(# of hours)"
@@ -1481,6 +1482,8 @@ en:
         all:
           units: ""
           examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+      publish_to_category:
+        title: "Schedule Publishing"
       temp_open:
         title: "Open Temporarily"
       auto_reopen:
@@ -1496,7 +1499,7 @@ en:
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."
         auto_close: "This topic will automatically close %{timeLeft}."
-        auto_open_based_on_last_post: "This topic will open %{duration} after the last reply."
+        auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
       auto_close_title: 'Auto-Close Settings'
       auto_close_immediate:

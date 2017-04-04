@@ -5,7 +5,7 @@
           disabled=disableAutoClose
           name="auto-close"
           id="auto-close"
-          value="close"
+          value=closeStatusType
           selection=selection}}
 
       <label class="radio" for="auto-close">
@@ -19,15 +19,14 @@
       </label>
 
       {{radio-button
-          disabled=disableAutoReopen
+          disabled=disableAutoOpen
           name="auto-reopen"
           id="auto-reopen"
-          value="open"
+          value=openStatusType
           selection=selection}}
 
       <label class="radio" for="auto-reopen">
         {{fa-icon "clock-o"}} {{fa-icon "unlock"}}
-
 
         {{#if model.closed}}
           {{i18n 'topic.auto_reopen.title'}}
@@ -35,30 +34,55 @@
           {{i18n 'topic.temp_close.title'}}
         {{/if}}
       </label>
+
+      {{radio-button
+          disabled=disablePublishToCategory
+          name="publish-to-category"
+          id="publish-to-category"
+          value=publishToCategoryStatusType
+          selection=selection}}
+
+      <label class="radio" for="publish-to-category">
+        {{fa-icon "clock-o"}} {{i18n 'topic.publish_to_category.title'}}
+      </label>
     </div>
 
-    {{#if autoReopen}}
-      {{auto-update-input
-          inputLabelKey='topic.topic_status_update.time'
-          input=updateTime
-          inputValid=updateTimeValid
-          hideBasedOnLastPost=true
-          basedOnLastPost=false}}
-    {{else if autoClose}}
-      {{auto-update-input
-          inputLabelKey='topic.topic_status_update.time'
-          input=updateTime
-          inputValid=updateTimeValid
-          limited=topicStatusUpdate.based_on_last_post
-          basedOnLastPost=topicStatusUpdate.based_on_last_post}}
-
-      {{#if willCloseImmediately}}
-        <div class="warning">
-          {{fa-icon "warning"}}
-          {{willCloseI18n}}
+    <div>
+      {{#if autoOpen}}
+        {{auto-update-input
+            inputLabelKey='topic.topic_status_update.time'
+            input=updateTime
+            inputValid=updateTimeValid
+            hideBasedOnLastPost=true
+            basedOnLastPost=false}}
+      {{else if publishToCategory}}
+        <div class="control-group">
+          <label>{{i18n 'topic.topic_status_update.publish_to'}}</label>
+          {{category-chooser valueAttribute="id" value=categoryId excludeCategoryId=model.category_id}}
         </div>
+
+        {{auto-update-input
+            inputLabelKey='topic.topic_status_update.time'
+            input=updateTime
+            inputValid=updateTimeValid
+            hideBasedOnLastPost=true
+            basedOnLastPost=false}}
+      {{else if autoClose}}
+        {{auto-update-input
+            inputLabelKey='topic.topic_status_update.time'
+            input=updateTime
+            inputValid=updateTimeValid
+            limited=topicStatusUpdate.based_on_last_post
+            basedOnLastPost=topicStatusUpdate.based_on_last_post}}
+
+        {{#if willCloseImmediately}}
+          <div class="warning">
+            {{fa-icon "warning"}}
+            {{willCloseI18n}}
+          </div>
+        {{/if}}
       {{/if}}
-    {{/if}}
+    </div>
   {{/d-modal-body}}
 
   <div class="modal-footer">

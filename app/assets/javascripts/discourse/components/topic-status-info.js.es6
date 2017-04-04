@@ -1,4 +1,5 @@
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
+import Category from 'discourse/models/category';
 
 export default Ember.Component.extend(bufferedRender({
   elementId: 'topic-status-info',
@@ -8,7 +9,8 @@ export default Ember.Component.extend(bufferedRender({
     'topic.topic_status_update',
     'topic.topic_status_update.execute_at',
     'topic.topic_status_update.based_on_last_post',
-    'topic.topic_status_update.duration'
+    'topic.topic_status_update.duration',
+    'topic.topic_status_update.category_id',
   ],
 
   buildBuffer(buffer) {
@@ -35,11 +37,23 @@ export default Ember.Component.extend(bufferedRender({
 
     buffer.push('<h3><i class="fa fa-clock-o"></i> ');
 
-    buffer.push(I18n.t(this._noticeKey(), {
+    let options = {
       timeLeft: duration.humanize(true),
-      duration: moment.duration(autoCloseHours, "hours").humanize()
-    }));
+      duration: moment.duration(autoCloseHours, "hours").humanize(),
+    };
 
+    const categoryId = this.get('topic.topic_status_update.category_id');
+
+    if (categoryId) {
+      const category = Category.findById(categoryId);
+
+      options = _.assign({
+        categoryName: category.get('slug'),
+        categoryUrl: category.get('url')
+      }, options);
+    }
+
+    buffer.push(I18n.t(this._noticeKey(), options));
     buffer.push('</h3>');
 
     // TODO Sam: concerned this can cause a heavy rerender loop

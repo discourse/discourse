@@ -134,12 +134,6 @@ div.ac-wrap {
 }
 
 .auto-update-input {
-  div:not(:first-child) {
-    margin-top: 10px;
-  }
-  label {
-    font-size: 1em;
-  }
   .examples {
     color: lighten($primary, 40%);
   }

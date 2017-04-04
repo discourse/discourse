@@ -290,7 +290,7 @@ class TopicsController < ApplicationController
   end
 
   def status_update
-    params.permit(:time, :timezone_offset, :based_on_last_post)
+    params.permit(:time, :timezone_offset, :based_on_last_post, :category_id)
     params.require(:status_type)
 
     status_type =
@@ -303,12 +303,18 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
 
-    topic_status_update = topic.set_or_create_status_update(
-      status_type,
-      params[:time],
+    options = {
       by_user: current_user,
       timezone_offset: params[:timezone_offset]&.to_i,
       based_on_last_post: params[:based_on_last_post]
+    }
+
+    options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+
+    topic_status_update = topic.set_or_create_status_update(
+      status_type,
+      params[:time],
+      options
     )
 
     if topic.save
@@ -316,7 +322,8 @@ class TopicsController < ApplicationController
         execute_at: topic_status_update&.execute_at,
         duration: topic_status_update&.duration,
         based_on_last_post: topic_status_update&.based_on_last_post,
-        closed: topic.closed
+        closed: topic.closed,
+        category_id: topic_status_update&.category_id
       })
     else
       render_json_error(topic)

@@ -1,9 +1,12 @@
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   limited: false,
-  inputValid: false,
+
+  didInsertElement() {
+    this._super();
+    this._updateInputValid();
+  },
 
   @computed("limited")
   inputUnitsKey(limited) {

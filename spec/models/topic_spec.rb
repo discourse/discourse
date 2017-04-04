@@ -1265,7 +1265,7 @@ describe Topic do
 
         expect(topic.reload.closed).to eq(false)
 
-        Timecop.freeze(3.hours.from_now) do
+        Timecop.travel(3.hours.from_now) do
           TopicStatusUpdate.ensure_consistency!
           expect(topic.reload.closed).to eq(true)
         end
