@@ -182,7 +182,7 @@ class PostCreator
     create
 
     if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new("Failed to create post", self)
+      raise ActiveRecord::RecordNotSaved.new("Failed to create post: #{self.errors.full_messages}")
     end
 
     @post
