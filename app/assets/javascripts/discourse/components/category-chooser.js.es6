@@ -40,11 +40,11 @@ export default ComboboxView.extend({
     }
   },
 
-  @computed("rootNone")
-  none(rootNone) {
+  @computed("rootNone", "rootNoneLabel")
+  none(rootNone, rootNoneLabel) {
     if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('allowUncategorized')) {
       if (rootNone) {
-        return "category.none";
+        return rootNoneLabel || "category.none";
       } else {
         return Category.findUncategorized();
       }
