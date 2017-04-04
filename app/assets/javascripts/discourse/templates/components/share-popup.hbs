@@ -1,5 +1,9 @@
 <h3>{{shareTitle}}</h3>
 
+{{#if copied}}
+  <span class="copy-text">{{i18n 'share.copied'}}</span>
+{{/if}}
+
 {{#if date}}
   <span class="date">{{displayDate}}</span>
 {{/if}}
