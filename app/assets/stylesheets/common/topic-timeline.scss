@@ -244,6 +244,7 @@
       background-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
       height: 100%;
       float: left;
+      z-index: 501;
     }
 
     .timeline-scroller-content {
@@ -279,6 +280,7 @@
         color: $tertiary;
         margin-right: 1em;
       }
+      z-index: 502;
     }
 
     .back-button {

@@ -17,6 +17,7 @@
               {{d-button icon="plus" action="showInvite" label="user.invited.create" class="btn"}}
               {{#if canBulkInvite}}
                 {{csv-uploader uploading=uploading}}
+                <a href="https://meta.discourse.org/t/sending-bulk-user-invites/16468" target="_blank" style="color:black;">{{fa-icon "question-circle"}}</a>
               {{/if}}
               {{#if showReinviteAllButton}}
                 {{#if reinvitedAll}}

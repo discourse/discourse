@@ -48,6 +48,7 @@ const bindings = {
   'shift+p':         {handler: 'pinUnpinTopic'},
   'shift+r':         {handler: 'replyToTopic'},
   'shift+s':         {click: '#topic-footer-buttons button.share', anonymous: true}, // share topic
+  'shift+u':         {handler: 'goToUnreadPost'},
   'shift+z shift+z': {handler: 'logout'},
   't':               {postAction: 'replyAsNewTopic'},
   'u':               {handler: 'goBack', anonymous: true},
@@ -115,6 +116,10 @@ export default {
 
   goToLastPost() {
     this._jumpTo('jumpBottom');
+  },
+
+  goToUnreadPost() {
+    this._jumpTo('jumpUnread');
   },
 
   _jumpTo(direction) {

@@ -65,10 +65,6 @@ export function postUrl(slug, topicId, postNumber) {
   return url;
 }
 
-export function userUrl(username) {
-  return Discourse.getURL("/users/" + username.toLowerCase());
-}
-
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
@@ -104,6 +100,8 @@ export function selectedText() {
   $div.find(".clicks").remove();
   // replace emojis
   $div.find("img.emoji").replaceWith(function() { return this.title; });
+  // replace br with newlines
+  $div.find("br").replaceWith(() => "\n");
 
   return String($div.text()).trim();
 }

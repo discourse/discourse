@@ -1,9 +1,14 @@
 import debounce from 'discourse/lib/debounce';
 import { i18n } from 'discourse/lib/computed';
 import AdminUser from 'admin/models/admin-user';
+import { observes } from 'ember-addons/ember-computed-decorators';
+
 
 export default Ember.Controller.extend({
   query: null,
+  queryParams: ['order', 'ascending'],
+  order: 'seen',
+  ascending: null,
   showEmails: false,
   refreshing: false,
   listFilter: null,
@@ -39,14 +44,15 @@ export default Ember.Controller.extend({
     this._refreshUsers();
   }, 250).observes('listFilter'),
 
+
+  @observes('order', 'ascending')
   _refreshUsers: function() {
-    var self = this;
     this.set('refreshing', true);
 
-    AdminUser.findAll(this.get('query'), { filter: this.get('listFilter'), show_emails: this.get('showEmails') }).then(function (result) {
-      self.set('model', result);
-    }).finally(function() {
-      self.set('refreshing', false);
+    AdminUser.findAll(this.get('query'), { filter: this.get('listFilter'), show_emails: this.get('showEmails'), order: this.get('order'), ascending: this.get('ascending') }).then( (result) => {
+      this.set('model', result);
+    }).finally( () => {
+      this.set('refreshing', false);
     });
   },
 

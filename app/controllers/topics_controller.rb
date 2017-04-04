@@ -21,7 +21,7 @@ class TopicsController < ApplicationController
                                           :merge_topic,
                                           :clear_pin,
                                           :re_pin,
-                                          :autoclose,
+                                          :status_update,
                                           :bulk,
                                           :reset_new,
                                           :change_post_owners,
@@ -273,7 +273,12 @@ class TopicsController < ApplicationController
     @topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_moderate!(@topic)
     @topic.update_status(status, enabled, current_user, until: params[:until])
-    render nothing: true
+
+    render json: success_json.merge!(
+      topic_status_update: TopicStatusUpdateSerializer.new(
+        TopicStatusUpdate.find_by(topic: @topic), root: false
+      )
+    )
   end
 
   def mute
@@ -284,20 +289,41 @@ class TopicsController < ApplicationController
     toggle_mute
   end
 
-  def autoclose
-    params.permit(:auto_close_time, :timezone_offset)
-    params.require(:auto_close_based_on_last_post)
+  def status_update
+    params.permit(:time, :timezone_offset, :based_on_last_post, :category_id)
+    params.require(:status_type)
 
-    topic = Topic.find_by(id: params[:topic_id].to_i)
+    status_type =
+      begin
+        TopicStatusUpdate.types.fetch(params[:status_type].to_sym)
+      rescue
+        invalid_param(:status_type)
+      end
+
+    topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
 
-    topic.auto_close_based_on_last_post = params[:auto_close_based_on_last_post]
-    topic.set_auto_close(params[:auto_close_time], {by_user: current_user, timezone_offset: params[:timezone_offset] ? params[:timezone_offset].to_i : nil})
+    options = {
+      by_user: current_user,
+      timezone_offset: params[:timezone_offset]&.to_i,
+      based_on_last_post: params[:based_on_last_post]
+    }
+
+    options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+
+    topic_status_update = topic.set_or_create_status_update(
+      status_type,
+      params[:time],
+      options
+    )
 
     if topic.save
       render json: success_json.merge!({
-        auto_close_at: topic.auto_close_at,
-        auto_close_hours: topic.auto_close_hours
+        execute_at: topic_status_update&.execute_at,
+        duration: topic_status_update&.duration,
+        based_on_last_post: topic_status_update&.based_on_last_post,
+        closed: topic.closed,
+        category_id: topic_status_update&.category_id
       })
     else
       render_json_error(topic)

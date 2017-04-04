@@ -122,11 +122,12 @@ export default createWidget('topic-admin-menu', {
                      action: 'toggleClosed',
                      icon: 'lock',
                      label: 'actions.close' });
-      buttons.push({ className: 'topic-admin-autoclose',
-                     action: 'showAutoClose',
-                     icon: 'clock-o',
-                     label: 'actions.auto_close' });
     }
+
+    buttons.push({ className: 'topic-admin-status-update',
+                   action: 'showTopicStatusUpdate',
+                   icon: 'clock-o',
+                   label: 'actions.timed_update' });
 
     const isPrivateMessage = topic.get('isPrivateMessage');
 
@@ -137,10 +138,13 @@ export default createWidget('topic-admin-menu', {
                      icon: 'thumb-tack',
                      label: featured ? 'actions.unpin' : 'actions.pin' });
     }
-    buttons.push({ className: 'topic-admin-change-timestamp',
-                   action: 'showChangeTimestamp',
-                   icon: 'calendar',
-                   label: 'change_timestamp.title' });
+
+    if (this.currentUser.admin) {
+      buttons.push({ className: 'topic-admin-change-timestamp',
+                     action: 'showChangeTimestamp',
+                     icon: 'calendar',
+                     label: 'change_timestamp.title' });
+    }
 
     if (!isPrivateMessage) {
       buttons.push({ className: 'topic-admin-archive',

@@ -6,6 +6,7 @@ import { h } from 'virtual-dom';
 import { emojiUnescape } from 'discourse/lib/text';
 import { postUrl, escapeExpression } from 'discourse/lib/utilities';
 import { setTransientHeader } from 'discourse/lib/ajax';
+import { userPath } from 'discourse/lib/url';
 
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
@@ -45,11 +46,11 @@ createWidget('notification-item', {
     }
 
     if (attrs.notification_type === INVITED_TYPE) {
-      return Discourse.getURL('/users/' + data.display_username);
+      return userPath(data.display_username);
     }
 
     if (data.group_id) {
-      return Discourse.getURL('/users/' + data.username + '/messages/group/' + data.group_name);
+      return userPath(data.username + '/messages/group/' + data.group_name);
     }
   },
 

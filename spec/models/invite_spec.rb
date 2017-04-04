@@ -152,11 +152,10 @@ describe Invite do
   context 'an existing user' do
     let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
     let(:coding_horror) { Fabricate(:coding_horror) }
-    let!(:invite) { topic.invite_by_email(topic.user, coding_horror.email) }
 
     it "works" do
       # doesn't create an invite
-      expect(invite).to be_blank
+      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(StandardError)
 
       # gives the user permission to access the topic
       expect(topic.allowed_users.include?(coding_horror)).to eq(true)
@@ -224,6 +223,7 @@ describe Invite do
       it 'does not enqueue an email if the user has already set password' do
         Fabricate(:user, email: invite.email, password_hash: "7af7805c9ee3697ed1a83d5e3cb5a3a431d140933a87fdcdc5a42aeef9337f81")
         Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
+        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup)) # should enqueue an account activation email
         invite.redeem
       end
 

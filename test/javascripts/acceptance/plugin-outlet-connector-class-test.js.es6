@@ -35,7 +35,7 @@ acceptance("Plugin Outlet - Connector Class", {
 });
 
 test("Renders a template into the outlet", assert => {
-  visit("/users/eviltrout");
+  visit("/u/eviltrout");
   andThen(() => {
     assert.ok(find('.user-profile-primary-outlet.hello').length === 1, 'it has class names');
     assert.ok(!find('.user-profile-primary-outlet.dont-render').length, "doesn't render");

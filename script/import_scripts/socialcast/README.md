@@ -10,12 +10,22 @@ password: 'my-socialcast-password'
 ```
 
 Create the directory for the json files to export: `mkdir output`
-Then run `ruby export.rb /path/to/config.yml`
+Then run `bundle exec ruby export.rb /path/to/config.yml`
 
-Create a category named "Socialcast Import" or all topics will be imported into
-the "Uncategorized" category.
+If desired, edit the `socialcast_message.rb` file to set the category
+and tags for each topic based on the name of the Socialcast group it was
+originally posted to.
 
-Topics will be tagged with the names of the groups they were originally posted
-in on Socialcast.
+You must create categories with the same names first in your site.
 
-To run the import, run `ruby import.rb`
+All topics will get the `DEFAULT_TAG` at minimum.
+
+Topics posted to a group that matches any group name in the `TAGS_AND_CATEGORIES`
+map will get the associated category and tags.
+
+Other topics will be tagged with the original groupname and placed in the
+`DEFAULT_CATEGORY`.
+
+To run the import, run `bundle exec ruby import.rb`
+
+To run the import in a production, run `RAILS_ENV=production bundle exec ruby import.rb`

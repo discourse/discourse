@@ -3,6 +3,7 @@ import { queryParams } from 'discourse/controllers/discovery-sortable';
 import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
 import { endWith } from 'discourse/lib/computed';
 import showModal from 'discourse/lib/show-modal';
+import { userPath } from 'discourse/lib/url';
 
 const controllerOpts = {
   discovery: Ember.inject.controller(),
@@ -133,14 +134,14 @@ const controllerOpts = {
   }.property('allLoaded', 'model.topics.length'),
 
   footerEducation: function() {
-    if (!this.get('allLoaded') || this.get('model.topics.length') > 0 || !Discourse.User.current()) { return; }
+    if (!this.get('allLoaded') || this.get('model.topics.length') > 0 || !this.currentUser) { return; }
 
     const split = (this.get('model.filter') || '').split('/');
 
     if (split[0] !== 'new' && split[0] !== 'unread') { return; }
 
     return I18n.t("topics.none.educate." + split[0], {
-      userPrefsUrl: Discourse.getURL("/users/") + (Discourse.User.currentProp("username_lower")) + "/preferences"
+      userPrefsUrl: userPath(`${this.currentUser.get('username_lower')}/preferences`)
     });
   }.property('allLoaded', 'model.topics.length')
 

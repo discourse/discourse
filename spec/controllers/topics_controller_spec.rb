@@ -412,14 +412,19 @@ describe TopicsController do
         expect { xhr :put, :status, topic_id: @topic.id, status: 'title', enabled: 'true' }.to raise_error(Discourse::InvalidParameters)
       end
 
-      it 'calls update_status on the forum topic with false' do
-        Topic.any_instance.expects(:update_status).with('closed', false, @user, until: nil)
-        xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
-      end
+      it 'should update the status of the topic correctly' do
+        @topic = Fabricate(:topic, user: @user, closed: true, topic_status_updates: [
+          Fabricate(:topic_status_update, status_type: TopicStatusUpdate.types[:open])
+        ])
 
-      it 'calls update_status on the forum topic with true' do
-        Topic.any_instance.expects(:update_status).with('closed', true, @user, until: nil)
-        xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'true'
+        xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
+
+        expect(response).to be_success
+        expect(@topic.reload.closed).to eq(false)
+
+        body = JSON.parse(response.body)
+
+        expect(body['topic_status_update']).to eq(nil)
       end
 
     end
@@ -1108,82 +1113,6 @@ describe TopicsController do
 
       end
 
-    end
-
-  end
-
-  describe 'autoclose' do
-
-    it 'needs you to be logged in' do
-      expect {
-        xhr :put, :autoclose, topic_id: 99, auto_close_time: '24', auto_close_based_on_last_post: false
-      }.to raise_error(Discourse::NotLoggedIn)
-    end
-
-    it 'needs you to be an admin or mod' do
-      log_in
-      xhr :put, :autoclose, topic_id: 99, auto_close_time: '24', auto_close_based_on_last_post: false
-      expect(response).to be_forbidden
-    end
-
-    describe 'when logged in' do
-      before do
-        @admin = log_in(:admin)
-        @topic = Fabricate(:topic, user: @admin)
-      end
-
-      it "can set a topic's auto close time and 'based on last post' property" do
-        Topic.any_instance.expects(:set_auto_close).with("24", {by_user: @admin, timezone_offset: -240})
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true, timezone_offset: -240
-        json = ::JSON.parse(response.body)
-        expect(json).to have_key('auto_close_at')
-        expect(json).to have_key('auto_close_hours')
-      end
-
-      it "can remove a topic's auto close time" do
-        Topic.any_instance.expects(:set_auto_close).with(nil, anything)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false, timezone_offset: -240
-      end
-
-      it "will close a topic when the time expires" do
-        topic = Fabricate(:topic)
-        Timecop.freeze(20.hours.ago) do
-          create_post(topic: topic, raw: "This is the body of my cool post in the topic, but it's a bit old now")
-        end
-        topic.save
-
-        Jobs.expects(:enqueue_at).at_least_once
-        xhr :put, :autoclose, topic_id: topic.id, auto_close_time: 24, auto_close_based_on_last_post: true
-
-        topic.reload
-        expect(topic.closed).to eq(false)
-        expect(topic.posts.last.raw).to match(/cool post/)
-
-        Timecop.freeze(5.hours.from_now) do
-          Jobs::CloseTopic.new.execute({topic_id: topic.id, user_id: @admin.id})
-        end
-
-        topic.reload
-        expect(topic.closed).to eq(true)
-        expect(topic.posts.last.raw).to match(/automatically closed/)
-      end
-
-      it "will immediately close if the last post is old enough" do
-        topic = Fabricate(:topic)
-        Timecop.freeze(20.hours.ago) do
-          create_post(topic: topic)
-        end
-        topic.save
-        Topic.reset_highest(topic.id)
-        topic.reload
-
-        xhr :put, :autoclose, topic_id: topic.id, auto_close_time: 10, auto_close_based_on_last_post: true
-
-        topic.reload
-        expect(topic.closed).to eq(true)
-        expect(topic.posts.last.raw).to match(/after the last reply/)
-        expect(topic.posts.last.raw).to match(/10 hours/)
-      end
     end
 
   end

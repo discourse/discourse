@@ -347,7 +347,6 @@ export default createWidget('topic-timeline', {
       result.push(h('div.title', elems));
     }
 
-
     if (!attrs.fullScreen && currentUser && currentUser.get('canManageTopic')) {
       result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
     }

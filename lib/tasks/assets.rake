@@ -15,6 +15,10 @@ task 'assets:precompile:before' do
     $node_uglify = true
   end
 
+  unless ENV['USE_SPROCKETS_UGLIFY']
+    $bypass_sprockets_uglify = true
+  end
+
   puts "Bundling assets"
 
   # in the past we applied a patch that removed asset postfixes, but it is terrible practice
@@ -28,7 +32,7 @@ task 'assets:precompile:before' do
   load "#{Rails.root}/lib/global_path.rb"
   include GlobalPath
 
-  if $node_uglify
+  if $bypass_sprockets_uglify
     Rails.configuration.assets.js_compressor = nil
     Rails.configuration.assets.gzip = false
   end
@@ -84,14 +88,18 @@ def compress_ruby(from,to)
 
   uglified, map = Uglifier.new(comments: :none,
                                screw_ie8: true,
-                               source_filename: File.basename(from),
-                               output_filename: File.basename(to)
+                               source_map: {
+                                 filename: File.basename(from),
+                                 output_filename: File.basename(to)
+                               }
                               )
                           .compile_with_map(data)
   dest = "#{assets_path}/#{to}"
 
   File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
   File.write(dest + ".map", map)
+
+  GC.start
 end
 
 def gzip(path)
@@ -100,7 +108,7 @@ def gzip(path)
 end
 
 def brotli(path)
-  if ENV['COMPRESS_BROTLI']
+  if ENV['COMPRESS_BROTLI']&.to_i == 1
     STDERR.puts "brotli #{path}"
     STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
     STDERR.puts `chmod +r #{path}.br`
@@ -108,7 +116,7 @@ def brotli(path)
 end
 
 def compress(from,to)
-  if @has_uglifyjs ||= !`which uglifyjs`.empty?
+  if $node_uglify
     compress_node(from,to)
   else
     compress_ruby(from,to)
@@ -129,7 +137,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
   # Run after assets:precompile
   Rake::Task["assets:precompile:css"].invoke
 
-  if $node_uglify
+  if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
     manifest = Sprockets::Manifest.new(assets_path)
 
@@ -166,6 +174,18 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
     # protected
     manifest.send :save
+
+    if GlobalSetting.fallback_assets_path.present?
+      begin
+        FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
+      rescue => e
+        STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
+        STDERR.puts e
+        STDERR.puts e.backtrace
+      end
+    end
+
+
   end
 
 end

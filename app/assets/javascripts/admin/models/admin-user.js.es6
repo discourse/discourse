@@ -5,6 +5,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ApiKey from 'admin/models/api-key';
 import Group from 'discourse/models/group';
 import TL3Requirements from 'admin/models/tl3-requirements';
+import { userPath } from 'discourse/lib/url';
 
 const AdminUser = Discourse.User.extend({
 
@@ -346,7 +347,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   sendActivationEmail() {
-    return ajax('/users/action/send_activation_email', {
+    return ajax(userPath('action/send_activation_email'), {
       type: 'POST',
       data: { username: this.get('username') }
     }).then(function() {

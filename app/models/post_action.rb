@@ -497,8 +497,18 @@ SQL
     return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
 
     # the threshold has been reached, we will close the topic waiting for intervention
-    message = I18n.t("temporarily_closed_due_to_flags")
-    topic.update_status("closed", true, Discourse.system_user, message: message)
+    topic.update_status("closed", true, Discourse.system_user,
+      message: I18n.t(
+        "temporarily_closed_due_to_flags",
+        count: SiteSetting.num_hours_to_close_topic
+      )
+    )
+
+    topic.set_or_create_status_update(
+      TopicStatusUpdate.types[:open],
+      SiteSetting.num_hours_to_close_topic,
+      by_user: Discourse.system_user
+    )
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)

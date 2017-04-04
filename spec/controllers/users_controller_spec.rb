@@ -100,7 +100,7 @@ describe UsersController do
     it "redirects to their profile when logged in" do
       user = log_in
       get :user_preferences_redirect
-      expect(response).to redirect_to("/users/#{user.username_lower}/preferences")
+      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
 
@@ -188,6 +188,27 @@ describe UsersController do
         end
       end
 
+    end
+  end
+
+  describe '#perform_account_activation' do
+    describe 'when cookies contains a destination URL' do
+      let(:token) { 'asdadwewq' }
+      let(:user) { Fabricate(:user) }
+
+      before do
+        UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false)
+        EmailToken.expects(:confirm).with(token).returns(user)
+      end
+
+      it 'should redirect to the URL' do
+        destination_url = 'http://thisisasite.com/somepath'
+        request.cookies[:destination_url] = destination_url
+
+        put :perform_account_activation, token: token
+
+        expect(response).to redirect_to(destination_url)
+      end
     end
   end
 
@@ -1403,10 +1424,60 @@ describe UsersController do
     context 'for an existing user' do
       let(:user) { Fabricate(:user, active: false) }
 
+      context 'for an activated account with email confirmed' do
+        it 'fails' do
+          active_user = Fabricate(:user, active: true)
+          email_token = active_user.email_tokens.create(email: active_user.email).token
+          EmailToken.confirm(email_token)
+          session[SessionController::ACTIVATE_USER_KEY] = active_user.id
+          xhr :post, :send_activation_email, username: active_user.username
+
+          expect(response.status).to eq(409)
+
+          expect(JSON.parse(response.body)['errors']).to include(I18n.t(
+            'activation.activated'
+          ))
+
+          expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
+        end
+      end
+
+      context 'for an activated account with unconfirmed email' do
+        it 'should send an email' do
+          unconfirmed_email_user = Fabricate(:user, active: true)
+          unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
+          session[SessionController::ACTIVATE_USER_KEY] = unconfirmed_email_user.id
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
+          xhr :post, :send_activation_email, username: unconfirmed_email_user.username
+
+          expect(response.status).to eq(200)
+
+          expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
+        end
+      end
+
+      describe 'when user does not have a valid session' do
+        it 'should not be valid' do
+          user = Fabricate(:user)
+          xhr :post, :send_activation_email, username: user.username
+          expect(response.status).to eq(403)
+        end
+
+        it 'should allow staff regardless' do
+          log_in :admin
+          user = Fabricate(:user, active: false)
+          xhr :post, :send_activation_email, username: user.username
+          expect(response.status).to eq(200)
+        end
+      end
+
       context 'with a valid email_token' do
         it 'should send the activation email' do
+          session[SessionController::ACTIVATE_USER_KEY] = user.id
           Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
           xhr :post, :send_activation_email, username: user.username
+
+          expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
         end
       end
 
@@ -1418,13 +1489,17 @@ describe UsersController do
 
         it 'should generate a new token' do
           expect {
+            session[SessionController::ACTIVATE_USER_KEY] = user.id
             xhr :post, :send_activation_email, username: user.username
           }.to change{ user.email_tokens(true).count }.by(1)
         end
 
         it 'should send an email' do
+          session[SessionController::ACTIVATE_USER_KEY] = user.id
           Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
           xhr :post, :send_activation_email, username: user.username
+
+          expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
         end
       end
     end

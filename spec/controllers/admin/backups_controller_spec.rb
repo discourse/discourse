@@ -75,18 +75,6 @@ describe Admin::BackupsController do
 
     end
 
-    describe ".cancel" do
-
-      it "cancels an export" do
-        BackupRestore.expects(:cancel!)
-
-        xhr :delete, :cancel
-
-        expect(response).to be_success
-      end
-
-    end
-
     describe ".show" do
 
       it "uses send_file to transmit the backup" do
@@ -207,18 +195,6 @@ describe Admin::BackupsController do
         xhr :post, :restore, id: backup_filename, client_id: "foo"
 
         expect(SiteSetting.disable_emails).to eq(true)
-        expect(response).to be_success
-      end
-
-    end
-
-    describe ".rollback" do
-
-      it "rolls back to previous working state" do
-        BackupRestore.expects(:rollback!)
-
-        xhr :get, :rollback
-
         expect(response).to be_success
       end
 

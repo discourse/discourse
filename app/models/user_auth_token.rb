@@ -177,12 +177,18 @@ end
 #  id              :integer          not null, primary key
 #  user_id         :integer          not null
 #  auth_token      :string           not null
-#  prev_auth_token :string
+#  prev_auth_token :string           not null
 #  user_agent      :string
 #  auth_token_seen :boolean          default(FALSE), not null
 #  legacy          :boolean          default(FALSE), not null
 #  client_ip       :inet
-#  rotated_at      :datetime
+#  rotated_at      :datetime         not null
 #  created_at      :datetime
 #  updated_at      :datetime
+#  seen_at         :datetime
+#
+# Indexes
+#
+#  index_user_auth_tokens_on_auth_token       (auth_token) UNIQUE
+#  index_user_auth_tokens_on_prev_auth_token  (prev_auth_token) UNIQUE
 #

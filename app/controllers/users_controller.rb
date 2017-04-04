@@ -189,7 +189,7 @@ class UsersController < ApplicationController
       cookies[:destination_url] = "/my/#{params[:path]}"
       redirect_to "/login-preferences"
     else
-      redirect_to(path("/users/#{current_user.username}/#{params[:path]}"))
+      redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
     end
   end
 
@@ -392,12 +392,12 @@ class UsersController < ApplicationController
     token = params[:token]
 
     if EmailToken.valid_token_format?(token)
-      if request.put?
-        @user = EmailToken.confirm(token)
-      else
-        email_token = EmailToken.confirmable(token)
-        @user = email_token.try(:user)
-      end
+      @user =
+        if request.put?
+          EmailToken.confirm(token)
+        else
+          EmailToken.confirmable(token)&.user
+        end
 
       if @user
         secure_session["password-#{token}"] = @user.id
@@ -438,11 +438,11 @@ class UsersController < ApplicationController
 
       format.json do
         if request.put?
-          if @error || @user.errors&.any?
+          if @error || @user&.errors&.any?
             render json: {
               success: false,
               message: @error,
-              errors: @user.errors.to_hash,
+              errors: @user&.errors.to_hash,
               is_developer: UsernameCheckerService.is_developer?(@user.email)
             }
           else
@@ -550,7 +550,13 @@ class UsersController < ApplicationController
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+
+        if Wizard.user_requires_completion?(@user)
+          return redirect_to(wizard_path)
+        elsif destination_url = cookies[:destination_url]
+          cookies[:destination_url] = nil
+          return redirect_to(destination_url)
+        end
       else
         @needs_approval = true
       end
@@ -571,9 +577,21 @@ class UsersController < ApplicationController
 
     raise Discourse::NotFound unless @user
 
-    @email_token = @user.email_tokens.unconfirmed.active.first
-    enqueue_activation_email if @user
-    render nothing: true
+    if !current_user&.staff? &&
+        @user.id != session[SessionController::ACTIVATE_USER_KEY]
+
+      raise Discourse::InvalidAccess
+    end
+
+    session.delete(SessionController::ACTIVATE_USER_KEY)
+
+    if @user.active && @user.email_confirmed?
+      render_json_error(I18n.t('activation.activated'), status: 409)
+    else
+      @email_token = @user.email_tokens.unconfirmed.active.first
+      enqueue_activation_email
+      render nothing: true
+    end
   end
 
   def enqueue_activation_email

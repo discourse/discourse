@@ -12,6 +12,7 @@ import Post from 'discourse/models/post';
 import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import QuoteState from 'discourse/lib/quote-state';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -126,7 +127,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
 
   gotoInbox(name) {
-    var url = '/users/' + this.get('currentUser.username_lower') + '/messages';
+    let url = userPath(this.get('currentUser.username_lower') + '/messages');
     if (name) {
       url = url + '/group/' + name;
     }
@@ -158,10 +159,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     topicRouteAction(name, model) {
       return this.send(name, model);
-    },
-
-    openAutoClose() {
-      this.send('showAutoClose');
     },
 
     openFeatureTopic() {
@@ -474,6 +471,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       DiscourseURL.routeTo(this.get('model.lastPostUrl'), { skipIfOnScreen: false });
     },
 
+    jumpUnread() {
+      this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
     selectAll() {
       const posts = this.get('model.postStream.posts');
       const selectedPosts = this.get('selectedPosts');
@@ -587,7 +588,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleClosed() {
-      this.get('content').toggleStatus('closed');
+      const topic = this.get('content');
+
+      this.get('content').toggleStatus('closed').then(result => {
+        topic.set('topic_status_update', result.topic_status_update);
+      });
     },
 
     recoverTopic() {
@@ -913,7 +918,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (data.reload_topic) {
         topic.reload().then(() => {
           this.send('postChangedRoute', topic.get('post_number') || 1);
-          this.appEvents.trigger('header:show-topic', topic);
+          this.appEvents.trigger('header:update-topic', topic);
         });
       } else {
         if (topic.get('isPrivateMessage') &&

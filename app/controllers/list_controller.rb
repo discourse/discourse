@@ -46,6 +46,7 @@ class ListController < ApplicationController
     :parent_category_category_top,
     # top pages (ie. with a period)
     TopTopic.periods.map { |p| :"top_#{p}" },
+    TopTopic.periods.map { |p| :"top_#{p}_feed" },
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
     TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
@@ -168,7 +169,7 @@ class ListController < ApplicationController
     @link = "#{Discourse.base_url}/top"
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
-    @topic_list = TopicQuery.new(nil).list_top_for("monthly")
+    @topic_list = TopicQuery.new(nil).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
 
     render 'list', formats: [:rss]
   end
@@ -191,8 +192,8 @@ class ListController < ApplicationController
     target_user = fetch_user_from_params
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics"
-    @atom_link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics.rss"
+    @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
+    @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
     @topic_list = TopicQuery.new(nil, order: 'created').send("list_topics_by", target_user)
 
@@ -232,7 +233,7 @@ class ListController < ApplicationController
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
       list.prev_topics_url = construct_url_with(:prev, top_options)
-      @rss = "top"
+      @rss = "top_#{period}"
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title")
@@ -251,6 +252,19 @@ class ListController < ApplicationController
 
     define_method("parent_category_category_top_#{period}") do
       self.send("top_#{period}", category: @category.id)
+    end
+
+    # rss feed
+    define_method("top_#{period}_feed") do |options = nil|
+      discourse_expires_in 1.minute
+
+      @description = I18n.t("rss_description.top_#{period}")
+      @title = "#{SiteSetting.title} - #{@description}"
+      @link = "#{Discourse.base_url}/top/#{period}"
+      @atom_link = "#{Discourse.base_url}/top/#{period}.rss"
+      @topic_list = TopicQuery.new(nil).list_top_for(period)
+
+      render 'list', formats: [:rss]
     end
   end
 
@@ -352,8 +366,15 @@ class ListController < ApplicationController
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_with_topics_for(previous_visit_at, category_id=nil)
-    best_periods_for(previous_visit_at).each do |period|
+  def self.best_period_for(previous_visit_at, category_id=nil)
+    default_period = ((category_id && Category.where(id: category_id).pluck(:default_top_period).first) ||
+          SiteSetting.top_page_default_timeframe).to_sym
+
+    best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
+  end
+
+  def self.best_period_with_topics_for(previous_visit_at, category_id=nil, default_period=SiteSetting.top_page_default_timeframe)
+    best_periods_for(previous_visit_at, default_period.to_sym).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
       top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
@@ -363,14 +384,8 @@ class ListController < ApplicationController
     false
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
-    best_period_with_topics_for(previous_visit_at, category_id) ||
-      SiteSetting.top_page_default_timeframe.to_sym
-  end
-
-  def self.best_periods_for(date)
+  def self.best_periods_for(date, default_period=:all)
     date ||= 1.year.ago
-    default_period = SiteSetting.top_page_default_timeframe.to_sym
     periods = []
     periods << default_period if :all     != default_period
     periods << :daily         if :daily   != default_period && date >   8.days.ago

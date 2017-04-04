@@ -1,6 +1,6 @@
 class PostTimestampChanger
   def initialize(params)
-    @topic = Topic.with_deleted.find(params[:topic_id])
+    @topic = params[:topic] || Topic.with_deleted.find(params[:topic_id])
     @posts = @topic.posts
     @timestamp = Time.at(params[:timestamp])
     @time_difference = calculate_time_difference
@@ -21,6 +21,8 @@ class PostTimestampChanger
       end
 
       update_topic(last_posted_at)
+
+      yield(@topic) if block_given?
     end
 
     # Burst the cache for stats

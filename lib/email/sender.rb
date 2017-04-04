@@ -81,7 +81,7 @@ module Email
         topic = Topic.find_by(id: topic_id)
         first_post = topic.ordered_posts.first
 
-        topic_message_id = first_post.incoming_email&.message_id.present? ? 
+        topic_message_id = first_post.incoming_email&.message_id.present? ?
           "<#{first_post.incoming_email.message_id}>" :
           "<topic/#{topic_id}@#{host}>"
 

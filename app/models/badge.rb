@@ -56,6 +56,8 @@ class Badge < ActiveRecord::Base
   GivesBack = 32
   Empathetic = 39
 
+  NewUserOfTheMonth = 44
+
   # other consts
   AutobiographerMinBioLength = 10
 

@@ -35,5 +35,18 @@ RSpec.describe GroupMentionsUpdater do
 
       expect(post.reload.raw_mentions).to eq([])
     end
+
+    it "should ignore validations" do
+      Fabricate(:group, name: "awesome_team")
+      Fabricate(:group, name: "pro_team")
+      post.update!(raw: "@awesome_team is cool and so is @pro_team")
+
+      SiteSetting.max_mentions_per_post = 1
+      GroupMentionsUpdater.update('cool_team', 'awesome_team')
+
+      post.reload
+      expect(post.raw_mentions).to match_array(['cool_team', 'pro_team'])
+    end
+
   end
 end

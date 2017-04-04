@@ -11,6 +11,8 @@ class GlobalSetting
   # for legacy reasons
   REDIS_SECRET_KEY = 'SECRET_TOKEN'
 
+  REDIS_VALIDATE_SECONDS = 30
+
   # In Rails secret_key_base is used to encrypt the cookie store
   # the cookie store contains session data
   # Discourse also uses this secret key to digest user auth tokens
@@ -19,9 +21,22 @@ class GlobalSetting
   # - generate a token on the fly if needed and cache in redis
   # - enforce rules about token format falling back to redis if needed
   def self.safe_secret_key_base
+
+    if @safe_secret_key_base && @token_in_redis && (@token_last_validated + REDIS_VALIDATE_SECONDS) < Time.now
+      @token_last_validated = Time.now
+      token = $redis.without_namespace.get(REDIS_SECRET_KEY)
+      if token.nil?
+        $redis.without_namespace.set(REDIS_SECRET_KEY, @safe_secret_key_base)
+      end
+    end
+
     @safe_secret_key_base ||= begin
       token = secret_key_base
       if token.blank? || token !~ VALID_SECRET_KEY
+
+        @token_in_redis = true
+        @token_last_validated = Time.now
+
         token = $redis.without_namespace.get(REDIS_SECRET_KEY)
         unless token && token =~ VALID_SECRET_KEY
           token = SecureRandom.hex(64)
@@ -39,8 +54,21 @@ class GlobalSetting
     default_provider = FileProvider.from(File.expand_path('../../../config/discourse_defaults.conf', __FILE__))
     default_provider.keys.concat(@provider.keys).uniq.each do |key|
       default = default_provider.lookup(key, nil)
+
+      instance_variable_set("@#{key}_cache", nil)
+
       define_singleton_method(key) do
-        provider.lookup(key, default)
+        val = instance_variable_get("@#{key}_cache")
+        unless val.nil?
+          val == :missing ? nil : val
+        else
+          val = provider.lookup(key, default)
+          if val.nil?
+            val = :missing
+          end
+          instance_variable_set("@#{key}_cache", val)
+          val == :missing ? nil : val
+        end
       end
     end
   end

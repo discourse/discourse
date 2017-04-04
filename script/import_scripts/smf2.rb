@@ -65,6 +65,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     import_categories
     import_posts
     postprocess_posts
+    make_prettyurl_permalinks('/forum')
   end
 
   def import_groups
@@ -93,6 +94,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     create_users(query(<<-SQL), total: total) do |member|
       SELECT a.id_member, a.member_name, a.date_registered, a.real_name, a.email_address,
+             CONCAT(LCASE(a.member_name),':', a.passwd) AS password,
              a.is_activated, a.last_login, a.birthdate, a.member_ip, a.id_group, a.additional_groups,
              b.id_attach, b.file_hash, b.filename
       FROM {prefix}members AS a
@@ -105,6 +107,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       {
         id: member[:id_member],
         username: member[:member_name],
+        password: member[:password],
         created_at: create_time,
         name: member[:real_name],
         email: member[:email_address],
@@ -118,6 +121,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
         post_create_action: proc do |user|
           user.update(created_at: create_time) if create_time < user.created_at
+          user.save
           GroupUser.transaction do
             group_ids.each do |gid|
               group_id = group_id_from_imported_group_id(gid) and
@@ -180,73 +184,20 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
     end
 
-    topics = Enumerator.new do |y|
-      last_topic_id = nil
-      topic_messages = nil
-      query("SELECT id_msg, id_topic, body FROM {prefix}messages ORDER BY id_topic ASC, id_msg ASC") do |message|
-        if last_topic_id != message[:id_topic]
-          y << topic_messages
-          last_topic_id = message[:id_topic]
-          topic_messages = [ message ]
-        else
-          topic_messages << message
-        end
-      end
-      y << topic_messages
-    end
-
-    graph = MessageDependencyGraph.new
-    topics.each do |messages|
-      next unless messages.present?
-      (messages.reverse << nil).each_cons(2) do |message, prev|
-        graph.add_message(message[:id_msg], prev ? prev[:id_msg] : nil,
-          extract_quoted_message_ids(message[:body]).to_a)
-      end
-      print "\r#{spinner.next}"
-    end
-
-    begin
-      cycles = graph.cycles
-      print "\r#{spinner.next}"
-      cycles.each do |cycle|
-        candidate = cycle.detect {|n| ((cycle - [n]) & n.quoted).present? }
-        candidate.ignore_quotes = true
-      end
-    end while cycles.present?
-    message_order = graph.tsort
-    print "\r#{spinner.next}"
-
-    query(<<-SQL, as: :array)
-      CREATE TEMPORARY TABLE {prefix}import_message_order (
-        message_id int(11) NOT NULL,
-        message_order int(11) NOT NULL AUTO_INCREMENT,
-        ignore_quotes tinyint(1) NOT NULL,
-        PRIMARY KEY (message_id),
-        UNIQUE KEY message_order (message_order)
-      ) ENGINE=MEMORY
-    SQL
-    message_order.each_slice(100) do |nodes|
-      query(<<-SQL, as: :array)
-        INSERT INTO {prefix}import_message_order (message_id, ignore_quotes)
-        VALUES #{ nodes.map {|n| "(#{n.id}, #{n.ignore_quotes? ? 1 : 0})" }.join(',') }
-      SQL
-      print "\r#{spinner.next}"
-    end
 
     db2 = create_db_connection
 
     create_posts(query(<<-SQL), total: total) do |message|
-      SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, o.ignore_quotes,
+      SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, 
              m.subject, t.id_board, t.id_first_msg, COUNT(a.id_attach) AS attachment_count
       FROM {prefix}messages AS m
-      LEFT JOIN {prefix}import_message_order AS o ON o.message_id = m.id_msg
       LEFT JOIN {prefix}topics AS t ON t.id_topic = m.id_topic
       LEFT JOIN {prefix}attachments AS a ON a.id_msg = m.id_msg AND a.attachment_type = 0
       GROUP BY m.id_msg
-      ORDER BY o.message_order ASC
+      ORDER BY m.id_topic ASC, m.id_msg ASC
     SQL
       skip = false
-      ignore_quotes = (message[:ignore_quotes] == 1)
+      ignore_quotes = false
       post = {
         id: message[:id_msg],
         user_id: user_id_from_imported_user_id(message[:id_member]) || -1,
@@ -390,30 +341,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
     return opts[:ignore_quotes] ? body : convert_quotes(body)
   end
 
-  def v8
-    @ctx ||= begin
-      ctx = PrettyText.create_new_context
-      PrettyText.decorate_context(ctx)
-      # provides toHumanSize but restores I18n.t which we need to fix again
-      ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
-      helper = PrettyText::Helpers.new
-      ctx['I18n']['t'] = proc {|_,key,opts| helper.t(key, opts) }
-      # from i18n_helpers.js -- can't load it directly because Ember is missing
-      ctx.eval(<<-'end')
-        var oldI18ntoHumanSize = I18n.toHumanSize;
-        I18n.toHumanSize = function(number, options) {
-          options = options || {};
-          options.format = I18n.t("number.human.storage_units.format");
-          return oldI18ntoHumanSize.apply(this, [number, options]);
-        };
-      end
-      ctx
-    end
-  end
-
   def get_upload_markdown(upload)
-    @func ||= v8.eval("Discourse.Utilities.getUploadMarkdown")
-    return @func.call(upload).to_s
+    html_for_upload(upload, upload.original_filename)
   end
 
   def convert_quotes(body)
@@ -426,9 +355,9 @@ class ImportScripts::Smf2 < ImportScripts::Base
           tl = topic_lookup_from_imported_post_id($~[:msg].to_i)
           quote << ", post:#{tl[:post_number]}, topic:#{tl[:topic_id]}" if tl
         end
-        quote << "\"]#{inner}[/quote]"
+        quote << "\"]#{convert_quotes(inner)}[/quote]"
       else
-        "<blockquote>#{inner}</blockquote>"
+        "<blockquote>#{convert_quotes(inner)}</blockquote>"
       end
     end
   end
@@ -536,7 +465,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     private
 
     def get_php_timezone
-      phpinfo, status = Open3.capture2('phpnope', '-i')
+      phpinfo, status = Open3.capture2('php', '-i')
       phpinfo.lines.each do |line|
         key, *vals = line.split(' => ').map(&:strip)
         break vals[0] if key == 'Default timezone'
@@ -661,6 +590,31 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end #Node
 
   end #MessageDependencyGraph
+
+  def make_prettyurl_permalinks(prefix)
+    puts 'creating permalinks for prettyurl plugin'
+    begin
+      serialized = query(<<-SQL, as: :single)
+        SELECT value FROM {prefix}settings
+        WHERE variable='pretty_board_urls';
+      SQL
+      board_slugs = Array.new
+      ser = /\{(.*)\}/.match(serialized)[1]
+      ser.scan(/i:(\d+);s:\d+:\"(.*?)\";/).each do |nv|
+        board_slugs[nv[0].to_i] = nv[1]
+      end
+      topic_urls = query(<<-SQL, as: :array)
+        SELECT t.id_first_msg, t.id_board,u.pretty_url
+        FROM smf_topics t
+        LEFT JOIN smf_pretty_topic_urls u ON u.id_topic = t.id_topic ;
+      SQL
+      topic_urls.each do |url|
+        t = topic_lookup_from_imported_post_id(url[:id_first_msg])
+        Permalink.create(url: "#{prefix}/#{board_slugs[url[:id_board]]}/#{url[:pretty_url]}", topic_id: t[:topic_id])
+      end
+    rescue
+    end
+  end
 
 end
 

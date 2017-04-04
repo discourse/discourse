@@ -323,9 +323,9 @@ HTML
     end
 
     it "adds base url to relative links" do
-      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
+      html = "<p><a class=\"mention\" href=\"/u/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/u/trollol\">@trollol</a> what do you guys think? </p>"
       output = described_class.format_for_email(html, post)
-      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
+      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/u/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/u/trollol\">@trollol</a> what do you guys think? </p>")
     end
 
     it "doesn't change external absolute links" do
@@ -431,7 +431,9 @@ HTML
 
   describe "custom emoji" do
     it "replaces the custom emoji" do
-      Emoji.stubs(:custom).returns([ Emoji.create_from_path('trout') ])
+      CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))
+      Emoji.clear_cache
+      
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
     end
   end

@@ -6,7 +6,7 @@
 # To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+# After this file is changed, ift needs to be pushed by a maintainer to Transifex:
 #
 #   tx push -s
 #
@@ -162,6 +162,9 @@ en:
       visible:
         enabled: 'listed %{when}'
         disabled: 'unlisted %{when}'
+      banner:
+        enabled: 'made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user.'
+        disabled: 'removed this banner %{when}. It will no longer appear at the top of every page.'
 
     topic_admin_menu: "topic admin actions"
 
@@ -1187,16 +1190,6 @@ en:
         body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
-      auto_close:
-        label: "Auto-close topic time:"
-        error: "Please enter a valid value."
-        based_on_last_post: "Don't close until the last post in the topic is at least this old."
-        all:
-          units: ""
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(# of hours)"
-          examples: 'Enter number of hours (24).'
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
@@ -1273,6 +1266,7 @@ en:
       sort_by: "Sort by"
       relevance: "Relevance"
       latest_post: "Latest Post"
+      latest_topic: "Latest Topic"
       most_viewed: "Most Viewed"
       most_liked: "Most Liked"
       select_all: "Select All"
@@ -1316,6 +1310,8 @@ en:
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
+          seen: I've read
+          unseen: I've not read
           wiki: are wiki
         statuses:
           label: Where topics
@@ -1473,11 +1469,39 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
+      topic_status_update:
+        title: "Set Topic Timer"
+        save: "Set Timer"
+        time: "Time:"
+        remove: "Remove Timer"
+        publish_to: "Publish To:"
+      auto_update_input:
+        limited:
+          units: "(# of hours)"
+          examples: 'Enter number of hours (24).'
+        all:
+          units: ""
+          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+      publish_to_category:
+        title: "Schedule Publishing"
+      temp_open:
+        title: "Open Temporarily"
+      auto_reopen:
+        title: "Auto-open Topic"
+      temp_close:
+        title: "Close Temporarily"
+      auto_close:
+        title: "Auto-Close Topic"
+        label: "Auto-close topic time:"
+        error: "Please enter a valid value."
+        based_on_last_post: "Don't close until the last post in the topic is at least this old."
+
+      status_update_notice:
+        auto_open: "This topic will automatically open %{timeLeft}."
+        auto_close: "This topic will automatically close %{timeLeft}."
+        auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
       auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Save"
-      auto_close_remove: "Don't Auto-Close This Topic"
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
@@ -1513,7 +1537,7 @@ en:
           "2_8": 'You will receive notifications because you are tracking this category.'
           "2_4": 'You will receive notifications because you posted a reply to this topic.'
           "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "2": 'You will receive notifications because you <a href="/u/{{username}}/preferences">read this topic</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
           "0_7": 'You are ignoring all notifications in this category.'
@@ -1550,7 +1574,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        auto_close: "Auto Close…"
+        timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
@@ -1918,6 +1942,18 @@ en:
             title: "Show the raw source diffs side-by-side"
             button: 'Raw'
 
+      raw_email:
+        displays:
+          raw:
+            title: "Show the raw email"
+            button: 'Raw'
+          text_part:
+            title: "Show the text part of the email"
+            button: 'Text'
+          html_part:
+            title: "Show the html part of the email"
+            button: 'HTML'
+
     category:
       can: 'can&hellip; '
       none: '(no category)'
@@ -1973,8 +2009,10 @@ en:
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default."
-      sort_order: "Default Sort:"
-      default_view: "Default View:"
+      subcategory_list_style: "Subcategory List Style:"
+      sort_order: "Topic List Sort By:"
+      default_view: "Default Topic List:"
+      default_top_period: "Default Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -2012,6 +2050,11 @@ en:
         created: "Created"
       sort_ascending: 'Ascending'
       sort_descending: 'Descending'
+      subcategory_list_styles:
+        rows: "Rows"
+        rows_with_featured_topics: "Rows with featured topics"
+        boxes: "Boxes"
+        boxes_with_featured_topics: "Boxes with featured topics"
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
@@ -2123,7 +2166,7 @@ en:
     changed_by: "by {{author}}"
 
     raw_email:
-      title: "Raw Email"
+      title: "Incoming Email"
       not_available: "Not available!"
 
     categories_list: "Categories List"
@@ -2554,6 +2597,8 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        none_selected: "Select a group to get started"
+        no_custom_groups: "Create a new custom group"
 
       api:
         generate_master: "Generate Master API Key"

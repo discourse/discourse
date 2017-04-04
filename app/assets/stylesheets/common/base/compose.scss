@@ -133,16 +133,7 @@ div.ac-wrap {
   }
 }
 
-.auto-close-fields {
-  div:not(:first-child) {
-    margin-top: 10px;
-  }
-  label {
-    font-size: 1em;
-  }
-  input {
-    width: 150px;
-  }
+.auto-update-input {
   .examples {
     color: lighten($primary, 40%);
   }
@@ -187,5 +178,3 @@ div.ac-wrap {
 .cooked > *:first-child {
   margin-top: 0;
 }
-
-

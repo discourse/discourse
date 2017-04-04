@@ -199,13 +199,13 @@ describe Email::MessageBuilder do
   context "template_args" do
     let(:template_args) { builder.template_args }
 
-    it "has the site name as the site title when `SiteSetting.email_prefix` is not set" do
-      expect(template_args[:site_name]).to eq(SiteSetting.title)
+    it "has the email prefix as the site title when `SiteSetting.email_prefix` is not set" do
+      expect(template_args[:email_prefix]).to eq(SiteSetting.title)
     end
 
-    it "has the site name as SiteSetting.email_prefix when it is set" do
+    it "has the email prefix as SiteSetting.email_prefix when it is set" do
       SiteSetting.email_prefix = 'some email prefix'
-      expect(template_args[:site_name]).to eq(SiteSetting.email_prefix)
+      expect(template_args[:email_prefix]).to eq(SiteSetting.email_prefix)
     end
 
     it "has the base url" do

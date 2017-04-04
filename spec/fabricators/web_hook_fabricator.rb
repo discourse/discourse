@@ -28,3 +28,11 @@ Fabricator(:topic_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:topic_hook]]
   end
 end
+
+Fabricator(:user_web_hook, from: :web_hook) do
+  transient user_hook: WebHookEventType.find_by(name: 'user')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:user_hook]]
+  end
+end

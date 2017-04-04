@@ -92,13 +92,13 @@ test("url", function() {
   var t, testClass;
   
   testClass = Em.Object.extend({
-    userUrl: url('username', "/users/%@")
+    userUrl: url('username', "/u/%@")
   });
 
   t = testClass.create({ username: 'eviltrout' });
-  equal(t.get('userUrl'), "/users/eviltrout", "it supports urls without a prefix");
+  equal(t.get('userUrl'), "/u/eviltrout", "it supports urls without a prefix");
 
   Discourse.BaseUri = "/prefixed";
   t = testClass.create({ username: 'eviltrout' });
-  equal(t.get('userUrl'), "/prefixed/users/eviltrout", "it supports urls with a prefix");
+  equal(t.get('userUrl'), "/prefixed/u/eviltrout", "it supports urls with a prefix");
 });
