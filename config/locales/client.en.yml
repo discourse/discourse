@@ -3111,6 +3111,7 @@ en:
         logged_out: "User was logged out on all devices"
         revoke_admin: 'Revoke Admin'
         grant_admin: 'Grant Admin'
+        grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
         unblock: 'Unblock'

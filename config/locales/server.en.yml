@@ -624,6 +624,12 @@ en:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
+    admin_confirm:
+      title: "Confirm Admin Account"
+      description: "Are you sure you want <b>%{target_username}</b> to be an administrator?"
+      grant: "Grant Admin Access"
+      complete: "<b>%{target_username}</b> is now an administrator."
+      back_to: "Return to %{title}"
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -1810,6 +1816,14 @@ en:
       (If you *didn't* request this download, you should be seriously concerned -- someone has admin access to your site.)
     no_token: |
       Sorry, this backup download link has already been used or has expired.
+
+  admin_confirmation_mailer:
+    title: "Admin Confirmation"
+    subject_template: "[%{email_prefix}] Confirm new Admin Account"
+    text_body_template: |
+      Please confirm that you'd like to add **%{target_username}** as an administrator for your forum.
+
+      [Confirm Administrator Account](%{admin_confirm_url})
 
   test_mailer:
     title: "Test Mailer"
