@@ -392,12 +392,12 @@ class UsersController < ApplicationController
     token = params[:token]
 
     if EmailToken.valid_token_format?(token)
-      if request.put?
-        @user = EmailToken.confirm(token)
-      else
-        email_token = EmailToken.confirmable(token)
-        @user = email_token.try(:user)
-      end
+      @user =
+        if request.put?
+          EmailToken.confirm(token)
+        else
+          EmailToken.confirmable(token)&.user
+        end
 
       if @user
         secure_session["password-#{token}"] = @user.id
@@ -438,11 +438,11 @@ class UsersController < ApplicationController
 
       format.json do
         if request.put?
-          if @error || @user.errors&.any?
+          if @error || @user&.errors&.any?
             render json: {
               success: false,
               message: @error,
-              errors: @user.errors.to_hash,
+              errors: @user&.errors.to_hash,
               is_developer: UsernameCheckerService.is_developer?(@user.email)
             }
           else
