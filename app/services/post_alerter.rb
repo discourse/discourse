@@ -373,7 +373,7 @@ class PostAlerter
                               post_action_id: opts[:post_action_id],
                               data: notification_data.to_json)
 
-   if !existing_notification && NOTIFIABLE_TYPES.include?(type)
+   if !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
      # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
      if post_url

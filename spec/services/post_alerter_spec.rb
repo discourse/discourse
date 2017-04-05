@@ -328,6 +328,26 @@ describe PostAlerter do
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:')}
     let(:topic) { mention_post.topic }
 
+    it "pushes nothing to suspended users" do
+
+      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+
+      evil_trout.update_columns(suspended_till: 1.year.from_now)
+
+      2.times do |i|
+        UserApiKey.create!(user_id: evil_trout.id,
+                           client_id: "xxx#{i}",
+                           key: "yyy#{i}",
+                           application_name: "iPhone#{i}",
+                           scopes: ['notifications'],
+                           push_url: "https://site2.com/push")
+      end
+
+      # should only happen once even though we are using 2 keys
+      RestClient.expects(:post).never
+      mention_post
+    end
+
     it "correctly pushes notifications if configured correctly" do
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
