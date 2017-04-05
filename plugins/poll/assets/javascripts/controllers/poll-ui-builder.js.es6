@@ -2,6 +2,7 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend({
+  regularPollType: 'regular',
   numberPollType: 'number',
   multiplePollType: 'multiple',
 
@@ -10,14 +11,20 @@ export default Ember.Controller.extend({
     this._setupPoll();
   },
 
-  @computed("numberPollType", "multiplePollType")
-  pollTypes(numberPollType, multiplePollType) {
+  @computed("regularPollType", "numberPollType", "multiplePollType")
+  pollTypes(regularPollType, numberPollType, multiplePollType) {
     let types = [];
 
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.regular"), value: regularPollType });
     types.push({ name: I18n.t("poll.ui_builder.poll_type.number"), value: numberPollType });
     types.push({ name: I18n.t("poll.ui_builder.poll_type.multiple"), value: multiplePollType });
 
     return types;
+  },
+
+  @computed("pollType", "regularPollType")
+  isRegular(pollType, regularPollType) {
+    return pollType === regularPollType;
   },
 
   @computed("pollType", "pollOptionsCount", "multiplePollType")
@@ -30,9 +37,9 @@ export default Ember.Controller.extend({
     return pollType === numberPollType;
   },
 
-  @computed("isNumber", "isMultiple")
-  showMinMax(isNumber, isMultiple) {
-    return isNumber || isMultiple;
+  @computed("isRegular")
+  showMinMax(isRegular) {
+    return !isRegular;
   },
 
   @computed("pollOptions")
@@ -61,9 +68,9 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("isMultiple", "isNumber", "pollOptionsCount")
-  pollMinOptions(isMultiple, isNumber, count) {
-    if (!isMultiple && !isNumber) return;
+  @computed("isRegular", "isMultiple", "isNumber", "pollOptionsCount")
+  pollMinOptions(isRegular, isMultiple, isNumber, count) {
+    if (isRegular) return;
 
     if (isMultiple) {
       return this._comboboxOptions(1, count + 1);
@@ -72,9 +79,9 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("isMultiple", "isNumber", "pollOptionsCount", "pollMin", "pollStep")
-  pollMaxOptions(isMultiple, isNumber, count, pollMin, pollStep) {
-    if (!isMultiple && !isNumber) return;
+  @computed("isRegular", "isMultiple", "isNumber", "pollOptionsCount", "pollMin", "pollStep")
+  pollMaxOptions(isRegular, isMultiple, isNumber, count, pollMin, pollStep) {
+    if (isRegular) return;
     const pollMinInt = parseInt(pollMin) || 1;
 
     if (isMultiple) {
@@ -120,9 +127,9 @@ export default Ember.Controller.extend({
     return output;
   },
 
-  @computed("pollOptionsCount", "isNumber", "pollMin", "pollMax")
-  disableInsert(count, isNumber, pollMin, pollMax) {
-    return (pollMin >= pollMax) || (isNumber ? false : (count < 2));
+  @computed("pollOptionsCount", "isRegular", "isMultiple", "isNumber", "pollMin", "pollMax")
+  disableInsert(count, isRegular, isMultiple, isNumber, pollMin, pollMax) {
+    return (isRegular && count < 2) || (isMultiple && count < pollMin && pollMin >= pollMax) || (isNumber ? false : (count < 2));
   },
 
   @computed("pollMin", "pollMax")
