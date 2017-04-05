@@ -3099,8 +3099,6 @@ en:
         blocked: "Blocked?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        edit_title: "Edit Title"
-        save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
         refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
