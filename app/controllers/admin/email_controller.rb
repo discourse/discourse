@@ -75,7 +75,7 @@ class Admin::EmailController < Admin::AdminController
     # These strings aren't localized; they are sent to an anonymous SMTP user.
     if User.find_by_email(params[:from]).nil? && !SiteSetting.enable_staged_users
         render json: { reject: true, reason: "Mail from your address is not accepted. Do you have an account here?" }
-    elsif Email::Receiver.new(params[:from]).check_address(params[:to]).nil?
+    elsif Email::Receiver.check_address(Email.downcase(params[:to])).nil?
         render json: { reject: true, reason: "Mail to this address is not accepted. Check the address and try to send again?" }
     else
         render json: { reject: false }
