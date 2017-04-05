@@ -42,6 +42,7 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
   - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
   - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
+  - git clone --depth=1 https://github.com/discourse/discourse-slack-official.git plugins/discourse-slack-official
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
