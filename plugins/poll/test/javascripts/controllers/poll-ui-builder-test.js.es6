@@ -59,6 +59,14 @@ test("showMinMax", function() {
   });
 
   equal(controller.get("showMinMax"), true, "it should be true");
+
+  controller.setProperties({
+    isNumber: false,
+    isMultiple: false,
+    isRegular: true
+  });
+
+  equal(controller.get("showMinMax"), false, "it should be false");
 });
 
 test("pollOptionsCount", function() {
@@ -147,6 +155,14 @@ test("disableInsert", function() {
   const controller = this.subject();
   controller.siteSettings = Discourse.SiteSettings;
 
+  controller.setProperties({ isRegular: true });
+
+  equal(controller.get("disableInsert"), true, "it should be true");
+
+  controller.setProperties({ isRegular: true, pollOptionsCount: 2 });
+
+  equal(controller.get("disableInsert"), false, "it should be false");
+
   controller.setProperties({ isNumber: true });
 
   equal(controller.get("disableInsert"), false, "it should be false");
@@ -188,12 +204,16 @@ test("regular pollOutput", function() {
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.set("pollOptions", "1\n2");
+  controller.setProperties({
+    pollOptions: "1\n2",
+    pollType: controller.get("regularPollType")
+  });
 
-  equal(controller.get("pollOutput"), "[poll]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  equal(controller.get("pollOutput"), "[poll type=regular]\n* 1\n* 2\n[/poll]", "it should return the right output");
 
   controller.set("publicPoll", "true");
 
-  equal(controller.get("pollOutput"), "[poll public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  equal(controller.get("pollOutput"), "[poll type=regular public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
 });
 
 
