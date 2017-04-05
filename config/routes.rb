@@ -308,6 +308,7 @@ Discourse::Application.routes.draw do
       end
     end
 
+    put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"

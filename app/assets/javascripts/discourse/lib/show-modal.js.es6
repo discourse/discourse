@@ -11,16 +11,22 @@ export default function(name, opts) {
 
   const controllerName = opts.admin ? `modals/${name}` : name;
 
-  const controller = container.lookup('controller:' + controllerName);
+  let controller = container.lookup('controller:' + controllerName);
   const templateName = opts.templateName || Ember.String.dasherize(name);
 
   const renderArgs = { into: 'modal', outlet: 'modalBody'};
-  if (controller) { renderArgs.controller = controllerName; }
+  if (controller) {
+    renderArgs.controller = controllerName;
+  } else {
+    // use a basic controller
+    renderArgs.controller = 'basic-modal-body';
+    controller = container.lookup(`controller:${renderArgs.controller}`);
+  }
+
 
   if (opts.addModalBodyView) {
     renderArgs.view = 'modal-body';
   }
-
 
   const modalName = `modal/${templateName}`;
   const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
@@ -29,13 +35,11 @@ export default function(name, opts) {
     modalController.set('title', I18n.t(opts.title));
   }
 
-  if (controller) {
-    controller.set('modal', modalController);
-    const model = opts.model;
-    if (model) { controller.set('model', model); }
-    if (controller.onShow) { controller.onShow(); }
-    controller.set('flashMessage', null);
-  }
+  controller.set('modal', modalController);
+  const model = opts.model;
+  if (model) { controller.set('model', model); }
+  if (controller.onShow) { controller.onShow(); }
+  controller.set('flashMessage', null);
 
   return controller;
 };

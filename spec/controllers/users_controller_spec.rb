@@ -1872,4 +1872,77 @@ describe UsersController do
 
   end
 
+
+  describe '.update_activation_email' do
+
+    it "raises an error with an invalid username" do
+      xhr :put, :update_activation_email, {
+        username: 'eviltrout',
+        password: 'invalid-password',
+        email: 'updatedemail@example.com'
+      }
+      expect(response).to_not be_success
+    end
+
+    it "raises an error with an invalid password" do
+      xhr :put, :update_activation_email, {
+        username: Fabricate(:inactive_user).username,
+        password: 'invalid-password',
+        email: 'updatedemail@example.com'
+      }
+      expect(response).to_not be_success
+    end
+
+    it "raises an error for an active user" do
+      xhr :put, :update_activation_email, {
+        username: Fabricate(:walter_white).username,
+        password: 'letscook',
+        email: 'updatedemail@example.com'
+      }
+      expect(response).to_not be_success
+    end
+
+    it "raises an error when logged in" do
+      log_in(:moderator)
+
+      xhr :put, :update_activation_email, {
+        username: Fabricate(:inactive_user).username,
+        password: 'qwerqwer123',
+        email: 'updatedemail@example.com'
+      }
+      expect(response).to_not be_success
+    end
+
+    it "raises an error when the new email is taken" do
+      user = Fabricate(:user)
+
+      xhr :put, :update_activation_email, {
+        username: Fabricate(:inactive_user).username,
+        password: 'qwerqwer123',
+        email: user.email
+      }
+      expect(response).to_not be_success
+    end
+
+    it "can be updated" do
+      user = Fabricate(:inactive_user)
+      token = user.email_tokens.first
+
+      xhr :put, :update_activation_email, {
+        username: user.username,
+        password: 'qwerqwer123',
+        email: 'updatedemail@example.com'
+      }
+
+      expect(response).to be_success
+
+      user.reload
+      expect(user.email).to eq('updatedemail@example.com')
+      expect(user.email_tokens.where(email: 'updatedemail@example.com', expired: false)).to be_present
+
+      token.reload
+      expect(token.expired?).to eq(true)
+    end
+  end
+
 end

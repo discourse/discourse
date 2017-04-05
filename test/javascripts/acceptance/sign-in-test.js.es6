@@ -41,16 +41,40 @@ test("sign in - not activated", () => {
       ok(!exists('.modal-body small'), 'it escapes the email address');
     });
 
-    click('.modal-body .resend-link');
+    click('.modal-footer button.resend');
     andThen(() => {
       equal(find('.modal-body b').text(), '<small>current@example.com</small>');
       ok(!exists('.modal-body small'), 'it escapes the email address');
     });
-
-
   });
 });
 
+test("sign in - not activated - edit email", () => {
+  visit("/");
+  andThen(() => {
+    click("header .login-button");
+    andThen(() => {
+      ok(exists('.login-modal'), "it shows the login modal");
+    });
+
+    fillIn('#login-account-name', 'eviltrout');
+    fillIn('#login-account-password', 'not-activated-edit');
+    click('.modal-footer .btn-primary');
+    click('.modal-footer button.edit-email');
+    andThen(() => {
+      equal(find('.activate-new-email').val(), 'current@example.com');
+      equal(find('.modal-footer .btn-primary:disabled').length, 1, "must change email");
+    });
+    fillIn('.activate-new-email', 'different@example.com');
+    andThen(() => {
+      equal(find('.modal-footer .btn-primary:disabled').length, 0);
+    });
+    click(".modal-footer .btn-primary");
+    andThen(() => {
+      equal(find('.modal-body b').text(), 'different@example.com');
+    });
+  });
+});
 
 test("create account", () => {
   visit("/");
