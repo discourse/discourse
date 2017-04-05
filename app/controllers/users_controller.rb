@@ -26,6 +26,7 @@ class UsersController < ApplicationController
                                                             :activate_account,
                                                             :perform_account_activation,
                                                             :send_activation_email,
+                                                            :update_activation_email,
                                                             :password_reset,
                                                             :confirm_email_token,
                                                             :admin_login,
@@ -567,6 +568,28 @@ class UsersController < ApplicationController
       flash.now[:error] = I18n.t('activation.already_done')
     end
     render layout: 'no_ember'
+  end
+
+  def update_activation_email
+    RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
+
+    @user = User.find_by_username_or_email(params[:username])
+    raise Discourse::InvalidAccess.new unless @user.present?
+    raise Discourse::InvalidAccess.new if @user.active?
+    raise Discourse::InvalidAccess.new if current_user.present?
+
+    raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
+
+    User.transaction do
+      @user.email = params[:email]
+      if @user.save
+        @user.email_tokens.create(email: @user.email)
+        enqueue_activation_email
+        render json: success_json
+      else
+        render_json_error(@user)
+      end
+    end
   end
 
   def send_activation_email

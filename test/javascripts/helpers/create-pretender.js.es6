@@ -195,10 +195,18 @@ export default function() {
                           current_email: '<small>current@example.com</small>' });
       }
 
+      if (data.password === 'not-activated-edit') {
+        return response({ error: "not active",
+                          reason: "not_activated",
+                          sent_to_email: 'eviltrout@example.com',
+                          current_email: 'current@example.com' });
+      }
+
       return response(400, {error: 'invalid login'});
     });
 
     this.post('/u/action/send_activation_email', success);
+    this.put('/u/update-activation-email', success);
 
     this.get('/u/hp.json', function() {
       return response({"value":"32faff1b1ef1ac3","challenge":"61a3de0ccf086fb9604b76e884d75801"});

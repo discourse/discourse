@@ -25,6 +25,7 @@
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter
 //= require ./discourse/lib/eyeline
+//= require ./discourse/lib/show-modal
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/models/model
 //= require ./discourse/models/rest
@@ -68,7 +69,6 @@
 //= require ./discourse/lib/emoji/groups
 //= require ./discourse/lib/emoji/toolbar
 //= require ./discourse/components/d-editor
-//= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track
 //= require ./discourse/routes/discourse
 //= require ./discourse/routes/build-topic-route

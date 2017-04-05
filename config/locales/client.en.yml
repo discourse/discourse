@@ -1040,6 +1040,12 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
+
+      resend_title: "Resend Activation Email"
+      change_email: "Change Email Address"
+      provide_new_email: "Provide a new address and we'll resend your confirmation email."
+      submit_new_email: "Update Email Address"
+
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
