@@ -367,7 +367,7 @@ export default Ember.Controller.extend({
 
     cannotSeeMention(mentions) {
       mentions.forEach(mention => {
-        const translation = (this.get('topic.isPrivateMessage')) ?
+        const translation = (this.get('model.topic.isPrivateMessage')) ?
           'composer.cannot_see_mention.private' :
           'composer.cannot_see_mention.category';
         const body = I18n.t(translation, {
