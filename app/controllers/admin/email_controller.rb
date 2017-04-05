@@ -73,7 +73,7 @@ class Admin::EmailController < Admin::AdminController
     params.require(:from)
     params.require(:to)
     # These strings aren't localized; they are sent to an anonymous SMTP user.
-    if User.find_by_email(params[:from]).nil? && !SiteSetting.enable_staged_users
+    if !User.exists?(email: Email.downcase(params[:from])) && !SiteSetting.enable_staged_users
         render json: { reject: true, reason: "Mail from your address is not accepted. Do you have an account here?" }
     elsif Email::Receiver.check_address(Email.downcase(params[:to])).nil?
         render json: { reject: true, reason: "Mail to this address is not accepted. Check the address and try to send again?" }
