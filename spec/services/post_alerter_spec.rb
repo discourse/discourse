@@ -343,7 +343,6 @@ describe PostAlerter do
                            push_url: "https://site2.com/push")
       end
 
-      # should only happen once even though we are using 2 keys
       RestClient.expects(:post).never
       mention_post
     end
