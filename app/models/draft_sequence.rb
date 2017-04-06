@@ -3,7 +3,7 @@ class DraftSequence < ActiveRecord::Base
     user_id = user
     user_id = user.id unless user.class == Fixnum
 
-    return 0 if user_id == Discourse::SYSTEM_USER_ID
+    return 0 if user_id < 0
 
     h = { user_id: user_id, draft_key: key }
     c = DraftSequence.find_by(h)

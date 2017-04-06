@@ -160,9 +160,12 @@ SQL
 
   def self.clear_flags!(post, moderator)
     # -1 is the automatic system cleary
-    action_type_ids = moderator.id == -1 ?
-        PostActionType.auto_action_flag_types.values :
+    action_type_ids =
+      if moderator.id == Discourse::SYSTEM_USER_ID
+        PostActionType.auto_action_flag_types.values
+      else
         PostActionType.flag_types.values
+      end
 
     actions = PostAction.where(post_id: post.id)
                         .where(post_action_type_id: action_type_ids)
@@ -487,7 +490,7 @@ SQL
                       .flags
                       .joins(:post)
                       .where("posts.topic_id = ?", topic.id)
-                      .where.not(user_id: Discourse::SYSTEM_USER_ID)
+                      .where("post_actions.user_id > 0")
                       .group("post_actions.user_id")
                       .pluck("post_actions.user_id, COUNT(post_id)")
 
