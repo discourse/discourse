@@ -3321,6 +3321,7 @@ en:
       description: Outstanding contributions in their first month
       long_description: |
         This badge is granted to congratulate two new users each month for their excellent overall contributions, as measured by how often their posts were liked, and by whom.
+    badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
     success: "Email Sent"
