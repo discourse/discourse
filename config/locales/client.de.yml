@@ -535,7 +535,7 @@ de:
         few_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa 2 pro Tag)"
       tag_settings: "Schlagwörter"
       watched_tags: "Beobachtet"
-      watched_tags_instructions: "Du wirst automatisch alle neuen Themen imit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      watched_tags_instructions: "Du wirst automatisch alle neuen Themen mit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       tracked_tags: "Verfolgt"
       tracked_tags_instructions: "Du wirst automatisch alle Themen mit diesen Schlagwörtern verfolgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_tags: "Stummgeschaltet"
