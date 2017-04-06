@@ -627,6 +627,7 @@ en:
       muted_users_instructions: "Suppress all notifications from these users."
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
+      tracked_topics_link: "Show tracked topics"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
       apps: "Apps"
       revoke_access: "Revoke Access"
