@@ -92,6 +92,7 @@ class PostMover
       acting_user: user,
       skip_validations: true
     )
+    PostAction.copy(post, p)
     p.update_column(:reply_count, @reply_count[1] || 0)
   end
 

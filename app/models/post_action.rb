@@ -308,6 +308,23 @@ SQL
     PostAction.where(where_attrs).first
   end
 
+  def self.copy(original_post, target_post)
+    cols_to_copy =
+      column_names.reject { |name| %w(id post_id).include?(name) }.join(', ')
+
+    exec_sql <<-SQL.squish
+      INSERT INTO post_actions(post_id, #{cols_to_copy})
+      SELECT #{target_post.id}, #{cols_to_copy}
+      FROM post_actions
+      WHERE post_id = #{original_post.id}
+    SQL
+
+    post_cols_to_copy =
+      PostActionType.types.keys.map { |key| :"#{key}_count" } + [:like_score]
+
+    target_post.update_columns(original_post.slice(*post_cols_to_copy))
+  end
+
   def self.remove_act(user, post, post_action_type_id)
 
     limit_action!(user,post,post_action_type_id)
