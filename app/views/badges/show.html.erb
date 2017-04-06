@@ -1,0 +1,3 @@
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: "#{@badge.display_name} badge on #{SiteSetting.title}", description: @badge.long_description) %>
+<% end %>
