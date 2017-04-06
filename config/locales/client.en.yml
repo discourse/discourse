@@ -421,7 +421,7 @@ en:
       automatic_group: Automatic Group
       closed_group: Closed Group
       is_group_user: "You are a member of this group"
-      allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
+      allow_membership_requests: "Allow users to send membership requests to group owners"
       membership: "Membership"
       name: "Name"
       user_count: "Number of Members"
