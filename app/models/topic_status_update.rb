@@ -3,6 +3,7 @@ class TopicStatusUpdate < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :topic
+  belongs_to :category
 
   validates :user_id, presence: true
   validates :topic_id, presence: true
