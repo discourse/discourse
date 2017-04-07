@@ -544,7 +544,9 @@ export default RestModel.extend({
     return Ember.RSVP.Promise.resolve();
   },
 
-  triggerChangedPost(postId, updatedAt) {
+  triggerChangedPost(postId, updatedAt, opts) {
+    opts = opts || {};
+
     const resolved = Ember.RSVP.Promise.resolve();
     if (!postId) { return resolved; }
 
@@ -552,7 +554,13 @@ export default RestModel.extend({
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
-      return ajax(url).then(p => this.storePost(store.createRecord('post', p)));
+      return ajax(url).then(p => {
+        if (opts.preserveCooked) {
+          p.cooked = existing.get('cooked');
+        }
+
+        this.storePost(store.createRecord('post', p));
+      });
     }
     return resolved;
   },

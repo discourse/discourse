@@ -891,7 +891,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       switch (data.type) {
         case "acted":
-          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id, refreshLikes: true }));
+          postStream.triggerChangedPost(
+            data.id,
+            data.updated_at,
+            { preserveCooked: true }
+          ).then(() => refresh({ id: data.id, refreshLikes: true }));
           break;
         case "revised":
         case "rebaked": {
