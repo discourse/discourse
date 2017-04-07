@@ -1806,6 +1806,7 @@ nl:
       subcategory_list_style: "Stijl van subcategorielijst:"
       sort_order: "Topiclijst sorteren op:"
       default_view: "Standaard topiclijst:"
+      default_top_period: "Standaard topperiode:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
       edit_permissions: "Toestemmingen wijzigen"
       add_permission: "Toestemming toevoegen"

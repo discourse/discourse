@@ -384,7 +384,6 @@ fr:
       pms_per_day: "Vous avez atteint le nombre maximum de nouveaux messages pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_like: "Vous avez atteint le nombre maximum de J'aime pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_bookmark: "Vous avez atteint le nombre maximum de favoris pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
-      edit_post: "Vous avez atteint le nombre maximum de modifications pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       live_post_counts: "Vous demandez le nombre de posts en activité trop rapidement. Veuillez respecter le temps d'attente %{time_left} avant de réessayer."
       unsubscribe_via_email: "Vous avez atteint le nombre maximum de désinscriptions par email pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       topic_invitations_per_day: "Vous avez atteint le nombre maximum d'invitations dans un sujet pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
@@ -797,7 +796,6 @@ fr:
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
     max_image_width: "Largeur maximale des images dans un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
-    category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\""
@@ -855,7 +853,6 @@ fr:
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir http://google.com/analytics"
     gtm_container_id: "ID du conteneur Google Tag Manager, par exemple : GTM-ABCDEF"
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP surveillées (Admin > Journaux > IP surveillés)."
@@ -892,7 +889,6 @@ fr:
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent explicitement être invités par les membres ou l'équipe du forum."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
-    reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée."
     min_password_length: "Longueur minimale du mot de passe."
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font partie des 10 000 les plus utilisés."
@@ -1304,10 +1300,6 @@ fr:
   change_owner:
     post_revision_text: "Auteur du message changé de %{old_user} vers %{new_user}"
     deleted_user: "un utilisateur supprimé"
-  emoji:
-    errors:
-      name_already_exists: "Désolé, le nom « %{name} » est déjà utilisé par un autre emoji."
-      error_while_storing_emoji: "Désolé,  il y a eu une erreur lors de l'enregistrement de l'emoji."
   topic_statuses:
     archived_enabled: "Ce sujet est maintenant archivé. Il est gelé et ne peut plus être modifié d'aucune façon."
     archived_disabled: "Ce sujet est maintenant désarchivé. Il n'est plus figé et peut être modifié."
@@ -1402,14 +1394,6 @@ fr:
       other: "%{count} signalements en attente de traitement."
   unsubscribe_mailer:
     subject_template: "Confirmez que vous ne souhaitez plus recevoir de courriels de mises à jour de %{site_title}"
-    text_body_template: |
-      Quelqu’un (est-ce vous ?) a demandé à ne plus envoyer de courriels de mises à jour de %{site_domain_name} à cette adresse.
-      Pour confirmer, merci de cliquer sur ce lien :
-
-      %{confirm_unsubscribe_link}
-
-
-      Si vous souhaitez continuer à recevoir ces courriels, vous pouvez ignorer ce message.
   invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
   custom_invite_mailer:
@@ -1428,7 +1412,6 @@ fr:
 
       (Si le lien est expiré, choisissez "J'ai oublié mon mot de passe" lorsque vous essayez de vous connecter avec votre adresse mail.)
   test_mailer:
-    subject_template: "[%{site_name}] Test de délivrabilité d'un courriel"
     text_body_template: |
       Ceci est un courriel de test de
 
@@ -1471,7 +1454,6 @@ fr:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
-    subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
     text_body_template: |+
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
 
@@ -1485,7 +1467,6 @@ fr:
       - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
 
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] mise à jour disponible"
     text_body_template: |
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
 
@@ -1502,9 +1483,6 @@ fr:
 
       %{notes}
   queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 message en attente de modération"
-      other: "[%{site_name}] %{count} messages en attente de modération"
     text_body_template: |
       Bonjour,
 
@@ -1619,49 +1597,41 @@ fr:
       subject_template: "Échec de l'exportation des données "
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consulter les journaux ou contacter un responsable."
     email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] Problème de courriel -- Niveau de confiance insuffisant "
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse de courriel. Si vous pensez qu'il s'agit d'une erreur, contacter un responsable.
     email_reject_user_not_found:
-      subject_template: "[%{site_name}] Problème de courriel -- L'utilisateur est introuvable"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre réponse a été envoyée depuis une adresse inconnue. Essayez de l'envoyer depuis une autre adresse, ou contactez un responsable.
     email_reject_screened_email:
-      subject_template: "[%{site_name}] Problème de courriel -- Courriel bloqué"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou contactez un responsable.
     email_reject_inactive_user:
-      subject_template: "[%{site_name}] Problème de courriel -- Compte inactivé"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Le compte associé avec cette adresse existe n'est pas activé. Veuillez activer votre compte avant d'envoyer des courriels.
     email_reject_blocked_user:
-      subject_template: "[%{site_name}] Problème de courriel -- Utilisateur bloqué"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Le compte associé avec cette adresse a été bloqué.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Problème de courriel -- Adresse de réponse inattendue"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Votre réponses nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse, ou contactez un responsable.
     email_reject_no_account:
-      subject_template: "[%{site_name}] Problème de courriel - Compte utilisateur inconnu"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Aucun compte utilisateur avec cette adresse n'a été trouvé. Essayez de l'envoyer depuis une autre adresse ou contactez un responsable.
     email_reject_empty:
-      subject_template: "[%{site_name}] Problème de courriel - sans contenu"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -1669,31 +1639,26 @@ fr:
 
         Si vous obtenez ce message alors que vous _aviez_ inclus une réponse, réessayez avec un formatage plus simple.
     email_reject_parsing:
-      subject_template: "[%{site_name}] Problème de courriel -- Contenu non reconnu"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Nous n'avons pas pu trouver votre réponse dans le courriel. **Assurez-vous que votre réponse se trouve au début du courriel** -- nous ne pouvons pas traiter les réponses en ligne.
     email_reject_invalid_access:
-      subject_template: "[%{site_name}] Problème de courriel -- Accès invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet dans cette catégorie. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_strangers_not_allowed:
-      subject_template: "[%{site_name}] Problème de courriel -- Accès invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         La catégorie vers laquelle vous avez envoyé ce courriel autorise uniquement les réponses d'utilisateurs avec un compte valide et une adresse de courriel connue. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_invalid_post:
-      subject_template: "[%{site_name}] Problème de courriel -- Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Cela peut-être à cause d'un format trop complexe, d'un message trop long ou trop court. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
     email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] Problème de courriel -- Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -1703,43 +1668,36 @@ fr:
 
         Si vous pouvez corriger les erreurs, veuillez réessayer.
     email_reject_invalid_post_action:
-      subject_template: "[%{site_name}] Problème de courriel -- Action Post invalide"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le Post Action n'était pas reconnu. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
     email_reject_reply_key:
-      subject_template: "[%{site_name}] Problème de courriel -- Mauvaise clé de réponse"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse. Contactez un responsable.
     email_reject_bad_destination_address:
-      subject_template: "[%{site_name}] Problème de courriel - Adresse de destinataire inconnue"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Aucune des adresses de destination n'est reconnue. Veuillez vérifier que vous envoyez bien à l'adresse de courriel fournie par les responsables.
     email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Problème de courriel -- Le sujet est introuvable"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le sujet à lequel vous répondez n'existe plus. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_topic_closed:
-      subject_template: "[%{site_name}] Problème de courriel -- Le sujet est fermé"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le sujet à lequel vous répondez est actuellement fermé et n'accepte plus de réponses. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_auto_generated:
-      subject_template: "[%{site_name}] Problème de courriel - Réponse automatique"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre courriel a été marqué comme "automatiquement généré", ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ces types de courriel. Si vous pensez qu'il s'agit d'une erreur, contacter un responsable.
     email_error_notification:
-      subject_template: "[%{site_name}] Problème de courriel -- Erreur d'authentification POP3"
       text_body_template: |
         Malheureusement il y a eu un erreur d'authentification lors de la récupération des courriels depuis le serveur POP.
 
@@ -1875,7 +1833,6 @@ fr:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Utilisateur invité au MP"
-      subject_template: "[%{site_name}] %{username} vous a invité dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -1883,7 +1840,6 @@ fr:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} vous a invité dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -1892,7 +1848,6 @@ fr:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Utilisateur invité au sujet"
-      subject_template: "[%{site_name}] %{username} vous a invité dans « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -1901,7 +1856,6 @@ fr:
         %{respond_instructions}
     user_replied:
       title: "Utilisateur a répondu"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1912,7 +1866,6 @@ fr:
         %{respond_instructions}
     user_replied_pm:
       title: "Utilisateur a répondu au MP"
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1923,7 +1876,6 @@ fr:
         %{respond_instructions}
     user_quoted:
       title: "Utilisateur a cité"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1933,7 +1885,6 @@ fr:
 
         %{respond_instructions}
     user_linked:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1944,7 +1895,6 @@ fr:
         %{respond_instructions}
     user_mentioned:
       title: "Utilisateur a mentionné"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1954,7 +1904,6 @@ fr:
 
         %{respond_instructions}
     user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1964,7 +1913,6 @@ fr:
 
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1974,7 +1922,6 @@ fr:
 
         %{respond_instructions}
     user_watching_first_post:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1984,7 +1931,6 @@ fr:
 
         %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2012,14 +1958,12 @@ fr:
       join_the_discussion: "Lire la suite"
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
-      subject_template: "[%{site_name}] Résumé"
       unsubscribe: "Ce résumé est envoyé depuis %{site_link} lorsque nous ne vous voyons plus depuis un moment. Pour se désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "résumé de %{site_name}"
       preheader: "Un bref résumé depuis votre dernière visite le %{last_seen_at}"
     mailing_list:
       why: "Toute l'activité sur %{site_link} le %{date}"
-      subject_template: "[%{site_name}] Résumé du %{date}"
       unsubscribe: "Ce résumé est envoyé quotidiennement car la liste de diffusion est activée. Pour se désabonner %{unsubscribe_link}."
       from: "%{site_name} résumé"
       new_topics: "Nouveaux sujets"
@@ -2028,7 +1972,6 @@ fr:
       back_to_top: "Aller en haut"
     forgot_password:
       title: "Mot de passe oublié"
-      subject_template: "[%{site_name}] Réinitialisation du mot de passe"
       text_body_template: |
         Quelqu'un a demandé la réinitialisation de votre mot de passe sur [%{site_name}](%{base_url}).
 
@@ -2038,7 +1981,6 @@ fr:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Définir le mot de passe"
-      subject_template: "[%{site_name}] Définir le mot de passe"
       text_body_template: |
         Quelqu'un a demandé d'ajouter un mot de passe à votre compte sur  [%{site_name}](%{base_url}). Alternativement, vous pouvez vous connecter en utilisant un service en ligne pris en charge (Google, Facebook, etc) déjà associé à cette adresse de courriel validée.
 
@@ -2047,7 +1989,6 @@ fr:
         Cliquez sur le lien suivant pour choisir un mot de passe:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] Identification"
       text_body_template: |
         On a cherché à se connecter à votre compte sur [%{site_name}](%{base_url}).
 
@@ -2056,20 +1997,17 @@ fr:
         Sinon, cliquez sur ce lien pour vous connecter :
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Votre nouveau compte"
       text_body_template: |
         Un nouveau compte utilisateur a été créé pour vous sur {site_name}
 
         Cliquez sur le lien ci-dessous pour choisir un mot de passe pour votre nouveau compte :
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
-      subject_template: "[%{site_name}] Confirmer votre nouvelle adresse courriel"
       text_body_template: |
         Confirmer votre nouvelle adresse courriel pour %{site_name} en cliquant sur le lien suivant :
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
-      subject_template: "[%{site_name}] Confirmer votre adresse courriel actuelle"
       text_body_template: |
         Avant de pouvoir changer votre adresse courriel, nous devons confirmer que vous contrôlez
         bien l'adresse actuelle. Après avoir effectuée cette étape, vous devrez confirmer
@@ -2079,7 +2017,6 @@ fr:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
-      subject_template: "[%{site_name}] Votre adresse courriel a bien été modifiée"
       text_body_template: |
         Ceci est un message automatique pour vous informer que votre adresse courriel pour
         %{site_name} a été modifiée. Si c'est une erreur, merci de contacter
@@ -2109,7 +2046,6 @@ fr:
         (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     signup:
       title: "Inscription"
-      subject_template: "[%{site_name}] Confirmer votre nouveau compte"
       text_body_template: |
         Bienvenue sur %{site_name} !
 
@@ -2181,104 +2117,6 @@ fr:
     Modifier le premier message de ce sujet pour changer le contenu de la page  %{page_name}.
   guidelines_topic:
     title: "FAQ/Charte"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Ceci est un endroit civilisé, merci de le respecter](#civilized)
-
-      Merci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.
-
-      Il ne s'agit pas de règles absolues, uniquement d'aide au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.
-
-      <a name="improve"></a>
-
-      ## [Améliorez la discussion](#improve)
-
-      Aidez nous à faire de cet endroit un lieu idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.
-
-      Les sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.
-
-      Une façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.
-
-      <a name="agreeable"></a>
-
-      ## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)
-
-      La critique peut être constructive. Vous pouvez répondre à une personne en étant en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. Merci d'éviter :
-
-      * les injures,
-      * les attaques ad hominem,
-      * de répondre à la tonalité d'un sujet plutôt qu'à son contenu réel,
-      * les contradictions primaires.
-
-      Au lieu de cela, fournissez des contre-arguments motivés qui améliorent la conversation.
-
-      <a name="participate"></a>
-
-      ## [Votre participation compte](#participate)
-
-      Les conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant &mdash; et en évitant celles qui n'y participent pas.
-
-      Discourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions : favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres aussi.
-
-      Essayons de laisser notre parc mieux que nous l'avons trouvé.
-
-      <a name="flag-problems"></a>
-
-      ## [Si vous voyez un problème, signaler le](#flag-problems)
-
-      Les modérateurs ont un rôle spécial ; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté et pas seulement des concierges ou des policiers.
-
-      Quand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez-le*. Si suffisamment de signalements s'accumulent, des mesures seront prises, automatiquement ou par l'intervention d'un modérateur.
-
-      Afin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.
-
-      <a name="be-civil"></a>
-
-      ## [Soyez toujours civilisé](#be-civil)
-
-      Rien ne sabote une conversation saine mieux que la grossièreté :
-
-      * Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.
-      * Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.
-      * Se respecter mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.
-      * Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.
-
-      Il ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avez un doute, demandez-vous comment vous vous sentiriez si votre sujet était publié sur la première page du Monde.
-
-      Il s'agit d'un forum public et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.
-
-      <a name="keep-tidy"></a>
-
-      ## [Gardez cet endroit propre](#keep-tidy)
-
-      Faites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps à discuter et moins à ranger. Ainsi :
-
-      * Ne commencez pas un sujet dans la mauvaise catégorie.
-      * Ne postez pas le même contenu dans plusieurs discussions.
-      * Ne postez pas de message sans contenu.
-      * Ne pas détourner un sujet en le changeant en cours de route.
-      * Ne signez pas vos messages &mdash; chaque message dispose d'informations sur le profil qui s'y rattache.
-
-      Plutôt que de poster "+1", "lol", "mdr" ou "d'accord", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez "Répondre en créant un sujet lié".
-
-      <a name="stealing"></a>
-
-      ## [Postez seulement vos propres trucs](#stealing)
-
-      Vous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      Ce site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about).
-
-      <a name="tos"></a>
-
-      ## [Lisez les conditions générales d'utilisation](#tos)
-
-      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
   privacy_topic:
@@ -2661,7 +2499,6 @@ fr:
             description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='/about' target='_blank'>À propos</a>."
           site_contact:
             label: "Messages automatiques"
-            description: "Tous les messages privés automatiques de Discourse seront envoyés par cet utilisateur. Plus important, cet utilisateur sera l'envoyeur désigné de tous les messages de bienvenue à destination des nouveaux utilisateurs."
       corporate:
         title: "Organisation"
         description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."

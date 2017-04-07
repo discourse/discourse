@@ -110,6 +110,7 @@ de:
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
   invite:
     not_found: "Dein Einladungsschlüssel ist ungültig. Bitte kontaktiere den Administrator der Seite."
+    user_exists: "Es ist nicht nötig <b>%{email}</b> einzuladen, weil <a href='/users/%{username}/summary'>es dieses Konto bereits gibt!</a>"
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
@@ -336,6 +337,10 @@ de:
           attributes:
             payload_url:
               invalid: "URL ist ungültig. URL sollte http:// oder https:// enthalten, Leerzeichen sind nicht erlaubt."
+        custom_emoji:
+          attributes:
+            name:
+              taken: wird schon von einem anderen Emoji verwendet
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
@@ -848,7 +853,6 @@ de:
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
-    category_featured_topics: "Anzahl der angezeigten Themen je Kategorie auf der /categories Seite. Nachdem dieser Wert geändert wurde, dauert es bis zu 15 Minuten bis die Kategorieseite aktualisiert ist."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     fixed_category_positions_on_create: "Wenn aktiviert wird die Kategoriezuordnung beim Erstellen eines Themas erhalten (benötigt fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten 'rel nofollow' hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Markdown-Beiträge aktualisierst: \"rake posts:rebake\""
@@ -907,7 +911,6 @@ de:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; Siehe http://google.com/analytics"
     gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCDEF"
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Aktiviere Standard-Suchmaschinen-Webcrawler-Unterstützung durch den noscript-Tag"
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_whitelist: "Administratoren können sich nur anmelden, wenn sie von einer IP-Adresse aus zugreifen, welcher unter den vertrauenswürden IP-Adressen gelistet ist (Admin > Logs > Screened Ips)."
@@ -1335,10 +1338,13 @@ de:
       topic: 'Ergebnisse'
       user: 'Benutzer'
   sso:
+    login_error: "Fehler bei der Anmeldung"
     not_found: "Dein Konto wurde nicht erkannt. Bitte kontaktiere den Administrator dieser Site."
     account_not_approved: "Dein Konto wurde noch nicht genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
     unknown_error: "Es besteht ein Problem mit deinem Konto. Bitte kontaktiere den Administrator dieser Site."
     timeout_expired: "Die Anmeldung ist abgelaufen, bitte versuch dich erneut anzumelden."
+    no_email: "Es wurde keine E-Mail-Adresse angegeben. Bitte kontaktiere den Administrator dieser Seite."
+    email_error: "Ein Konto konnte nicht registriert werden mit der E-Mail-Adresse <b>%{email}</b>. Bitte kontaktiere den Administrator dieser Seite."
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
@@ -1363,10 +1369,6 @@ de:
   change_owner:
     post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
     deleted_user: "ein gelöschter Benutzer"
-  emoji:
-    errors:
-      name_already_exists: "Es tut uns leid, der Name '%{name}' wird schon von einem anderen emoji verwendet."
-      error_while_storing_emoji: "Es tut uns leid, es gab einen Fehler beim Speichern des emoji."
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
@@ -1552,6 +1554,7 @@ de:
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
   download_backup_mailer:
     title: "Backup-Download Mailer"
+    subject_template: "[%{email_prefix}] Backup der Seite herunterladen"
     text_body_template: |
       Here ist der [Seiten-Backup-Download](%{backup_file_path}), den du angefordert hast.
 
@@ -1562,6 +1565,7 @@ de:
       Entschuldige, der Backup-Download-Link wurde schon verwendet oder ist abgelaufen.
   test_mailer:
     title: "Test-E-Mail"
+    subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
     text_body_template: |
       Dies ist eine Test-E-Mail von
 
@@ -1605,7 +1609,7 @@ de:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Neue Version"
-    subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
+    subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
 
@@ -1619,7 +1623,7 @@ de:
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
   new_version_mailer_with_notes:
     title: "Neue Version mit Versionshinweisen"
-    subject_template: "[%{site_name}] Update verfügbar"
+    subject_template: "[%{email_prefix}] Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
 
@@ -1638,8 +1642,8 @@ de:
   queued_posts_reminder:
     title: "Erinnerung an Freischaltung wartender Beiträge"
     subject_template:
-      one: "[%{site_name}] %{count} auf Freischaltung wartender Beitrag."
-      other: "[%{site_name}] %{count} auf Freischaltung wartende Beiträge."
+      one: "[%{email_prefix}] 1 Beitrag wartet auf Überprüfung"
+      other: "[%{email_prefix}] %{count} Beiträge warten auf Überprüfung"
     text_body_template: |
       Hallo,
 
@@ -1789,56 +1793,56 @@ de:
       text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere ein Team-Mitglied oder überprüfe die Logdateien."
     email_reject_insufficient_trust_level:
       title: "E-Mail abgelehnt weil Vertrauensstufe unzureichend"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unzureichende Vertrauensstufe"
+      subject_template: "[%{email_prefix}] E-Mail-Probme -- Vertrauensstufe nicht ausreichend"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) konnte nicht zugestellt werden.
 
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_user_not_found:
       title: "E-Mail abgelehnt weil Benutzer nicht gefunden"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Benutzer nicht gefunden"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_screened_email:
       title: "E-Mail abgelehnt weil E-Mail-Adresse gesperrt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Blockiertee E-Mail-Adresse"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail-Adresse blockiert"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_inactive_user:
       title: "E-Mail abgelehnt weil Benutzer inaktiv"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Inaktiver Benutzer"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
     email_reject_blocked_user:
       title: "E-Mail abgelehnt weil Benutzer gesperrt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Blockierter Benutzer"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer blockiert"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Konto wurde blockiert.
     email_reject_reply_user_not_matching:
       title: "E-Mail abgelehnt weil E-Mail-Adresse abweichend"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unerwartete Antwort-Adresse"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortadresse unerwartet"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_no_account:
       title: "E-Mail abgelehnt weil unbekanntes Konto"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Konto unbekannt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Wir konnten kein Konto finden, das zu deiner E-Mail-Adresse passt. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_empty:
       title: "E-Mail abgelehnt weil kein Inhalt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
@@ -1847,35 +1851,35 @@ de:
         Wenn du diese E-Mail bekommst, obwohl deine E-Mail Inhalt enthalten hat, versuche es erneut mit weniger Formatierung.
     email_reject_parsing:
       title: "E-Mail abgelehnt weil Inhalt nicht erkannt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Inhalt nicht erkannt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Wir konnten keinen Inhalt in deiner E-Mail feststellen. **Versichere dich, dass du den Inhalt oberhalb der erhaltenen E-Mail eingegeben hast** -- Eingebettete Antworten können wir nicht verarbeiten.
     email_reject_invalid_access:
       title: "E-Mail abgelehnt weil nicht erlaubt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Du hast nicht die notwendigen Zugriffsrechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_strangers_not_allowed:
       title: "E-Mail abgelehnt weil Zugriff nicht erlaubt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Zugriff nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Die Kategorie, an die du die E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und von bekannten E-Mail-Adressen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_invalid_post:
       title: "E-Mail abgelehnt weil ungültiger Beitrag"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Mögliche Gründe sind komplizierte Formatierung und zu lange oder kurze Nachrichten. Bitte versuche es erneut oder schreibe deinen Beitrag über die Website.
     email_reject_invalid_post_specified:
       title: "E-Mail abgelehnt weil ungültiger Beitrag"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
@@ -1886,49 +1890,49 @@ de:
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_invalid_post_action:
       title: "E-Mail abgelehnt weil fehlerhafte Beitragsaktion"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Fehlerhafte Beitragsaktion"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitragsaktion ungültig"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Die Beitragsaktion wurde nicht erkannt. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
     email_reject_reply_key:
       title: "E-Mail abgelehnt weil unbekannter Antwort-Schlüssel"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortschlüssel unbekannt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Bitte kontaktiere ein Team-Mitglied.
     email_reject_bad_destination_address:
       title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
-      subject_template: "[%{site_name}] E-Mail Problem -- Unbekannte An:-Adresse"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Keine der Ziel-E-Mail-Adressen wurde erkannt.  Bitte stelle sicher, dass du die E-Mail an die richtige Adresse schickst, die dir von unserem Team genannt wurde.
     email_reject_topic_not_found:
       title: "E-Mail abgelehnt weil Thema nicht gefunden"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Thema nicht gefunden"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Das Thema, auf das du geantwortet hast, existiert nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_topic_closed:
       title: "E-Mail abgelehnt weil Thema geschlossen"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Thema geschlossen"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema geschlossen"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_auto_generated:
       title: "E-Mail abgelehnt weil automatisch generierte Antwort"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Automatisch erzeugte Antwort"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort automatisch generiert"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt wurde statt von einem Menschen getippt; wir können diese Arten von E-Mails nicht akzeptieren. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-POP-Authentifizierungsfehler"
-      subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
         Leider gab es einen Authentifizierungsfehler beim Abrufen von E-Mails vom POP-Server.
 
@@ -2066,7 +2070,7 @@ de:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Benutzer zu Nachricht eingeladen"
-      subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -2075,7 +2079,7 @@ de:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Benutzer zu Nachricht eingeladen (automatisch)"
-      subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -2084,7 +2088,7 @@ de:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Benutzer zu Thema eingeladen"
-      subject_template: "[%{site_name}] %{username} hat dich zum Thema '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich eingeladen zu '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2093,7 +2097,7 @@ de:
         %{respond_instructions}
     user_replied:
       title: "Benutzer hat auf Beitrag geantwortet"
-      subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2104,7 +2108,7 @@ de:
         %{respond_instructions}
     user_replied_pm:
       title: "Benutzer hat auf Nachricht geantwortet"
-      subject_template: "[%{site_name}] [PN] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2115,7 +2119,7 @@ de:
         %{respond_instructions}
     user_quoted:
       title: "Benutzer wurde zitiert"
-      subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' zitiert"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2126,7 +2130,7 @@ de:
         %{respond_instructions}
     user_linked:
       title: "Benutzer wurde verlinkt"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2137,7 +2141,7 @@ de:
         %{respond_instructions}
     user_mentioned:
       title: "Benutzer wurde erwähnt"
-      subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2148,7 +2152,7 @@ de:
         %{respond_instructions}
     user_group_mentioned:
       title: "Gruppe wurde erwähnt"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2159,7 +2163,7 @@ de:
         %{respond_instructions}
     user_posted:
       title: "Benutzer hat in Thema geantwortet"
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2170,7 +2174,7 @@ de:
         %{respond_instructions}
     user_watching_first_post:
       title: "Benutzer folgt erstem Beitrag"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2181,7 +2185,7 @@ de:
         %{respond_instructions}
     user_posted_pm:
       title: "Benutzer hat Nachricht geschrieben"
-      subject_template: "[%{site_name}] [PN] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2210,14 +2214,14 @@ de:
       join_the_discussion: "Mehr lesen"
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
-      subject_template: "Zusammenfassung für [%{site_name}]"
+      subject_template: "[%{email_prefix}] Zusammenfassung"
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
     mailing_list:
       why: "Alle Aktivitäten auf %{site_link} am %{date}"
-      subject_template: "[%{site_name}] Zusammenfassung für den %{date}"
+      subject_template: "[%{email_prefix}] Zusammenfassung für den %{date}"
       unsubscribe: "Diese Zusammenfassung wird täglich gesendet, weil der Mailinglisten-Modus aktiviret ist. Zum Abmelden %{unsubscribe_link}."
       from: "%{site_name} Zusammenfassung"
       new_topics: "Neue Themen"
@@ -2226,7 +2230,7 @@ de:
       back_to_top: "Zurück nach oben"
     forgot_password:
       title: "Passwort vergessen"
-      subject_template: "[%{site_name}] Passwort zurückgesetzt"
+      subject_template: "[%{email_prefix}] Passwort zurücksetzen"
       text_body_template: |
         Jemand hat darum gebeten, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
 
@@ -2236,7 +2240,7 @@ de:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Passwort setzen"
-      subject_template: "[%{site_name}] Setze Passwort"
+      subject_template: "[%{email_prefix}] Passwort wählen"
       text_body_template: |
         Jemand hat ein Passwort für dein Konto auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), der mit dieser validierten E-Mail-Adresse verknüpft ist, anmelden.
 
@@ -2246,7 +2250,7 @@ de:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Administrator-Anmeldung"
-      subject_template: "[%{site_name}] Anmeldung"
+      subject_template: "[%{email_prefix}] Anmeldung"
       text_body_template: |
         Jemand hat versucht sich in dein Konto auf [%{site_name}](%{base_url}) anzumelden.
 
@@ -2256,7 +2260,7 @@ de:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "Konto erstellt"
-      subject_template: "[%{site_name}] Dein neues Konto"
+      subject_template: "[%{email_prefix}] Dein neues Konto"
       text_body_template: |
         Ein neues Konto wurde für dich auf %{site_name} erstellt.
 
@@ -2264,14 +2268,14 @@ de:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "E-Mail-Adresse bestätigen (an neue)"
-      subject_template: "[%{site_name}] Bestätige deine neue E-Mail-Adresse"
+      subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
         Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
-      subject_template: "[%{site_name}] Bestätige deine aktuelle E-Mail-Adresse"
+      subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
         Bevor wir deine E-Mail-Adresse ändern können, müssen wir dich bitten zu bestätigen, dass du das E-Mail-Konto kontrollierst. Nach diesem Schritt, werden wir dich bitten die neue E-Mail-Adresse zu bestätigen.
 
@@ -2280,7 +2284,7 @@ de:
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
-      subject_template: "[%{site_name}] Deine E-Mail-Adresse wurde geändert"
+      subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere ein Team-Mitglied, wenn du von einem Fehler ausgehst.
 
@@ -2309,7 +2313,7 @@ de:
         (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Team-Mitglieder](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     signup:
       title: "Konto bestätigen nach Anmeldung"
-      subject_template: "[%{site_name}] Bestätige deinen neuen Account"
+      subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
       text_body_template: |
         Willkommen bei %{site_name}!
 
@@ -2384,101 +2388,101 @@ de:
     body: |
       <a name="civilized"></a>
 
-      ## [Dies ist ein zivilisierter Platz für öffentliche Diskussionen](#civilized)
+      ## [This is a Civilized Place for Public Discussion](#civilized)
 
-      Bitte behandle dieses Diskussionsforum mit dem gleichen Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinsame Community-Ressource &mdash; ein Platz, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
+      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
 
-      Dies sind keine harten oder schnelle Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Folge diesen Richtlinien, damit dies ein sauberer, gut beleuchteter Platz für zivilisierten, öffentlichen Diskurs bleibt.
+      These are not hard and fast rules, merely guidelines to aid the human judgment of our community and keep this a clean and well-lighted place for civilized public discourse.
 
       <a name="improve"></a>
 
-      ## [Verbessere die Diskussion](#improve)
+      ## [Improve the Discussion](#improve)
 
-      Hilf uns, dies zu einem großartigen Platz für Diskussionen zu machen, indem du stets daran arbeitest, die Diskussion in irgendeiner Art zu verbessern, egal wie geringfügig. Wenn du dir nicht sicher bist, ob dein Beitrag zum Dialog beiträgt, denke darüber nach, was du sagen möchtest und probiere es später noch einmal.
+      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
 
-      Die hier diskutierten Themen sind uns wichtig und wir möchten, dass du dich so verhältst, als wären sie auch genauso wichtig für dich. Respektiere die Themen und die Personen, die diese diskutieren, auch wenn du mit dem was gesagt wird, nicht einverstanden bist.
+      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
 
-      Ein Weg, die Diskussion zu verbessern, besteht darin zu entdecken, was schon passiert ist. Bitte verbringe etwas Zeit damit, die Themen hier zu durchsuchen, bevor du antwortest oder deine eigenen startest, und du wirst eine bessere Chance haben andere zu treffen, die deine Interessen teilen.
+      One way to improve the discussion is by discovering ones that are already happening. Spend time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
 
       <a name="agreeable"></a>
 
-      ## [Sei nett, auch wenn du anderer Meinung bist](#agreeable)
+      ## [Be Agreeable, Even When You Disagree](#agreeable)
 
-      Du magst auf etwas antworten möchten, indem du widersprichst. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
+      You may wish to respond to something by disagreeing with it. That’s fine. But remember to _criticize ideas, not people_. Please avoid:
 
-      *   Beschimpfungen
-      *   Persönliche Angriffe
-      *   Antworten auf den Tonfall eines Beitrags statt auf dessen Inhalt
-      *   Reflexartiges Widersprechen
+      *   Name-calling
+      *   Ad hominem attacks
+      *   Responding to a post’s tone instead of its actual content
+      *   Knee-jerk contradiction
 
-      Biete stattdessen vernünftige Gegenargumente, die den Dialog verbessern.
+      Instead, provide reasoned counter-arguments that improve the conversation.
 
       <a name="participate"></a>
 
-      ## [Deine Beteiligung zählt](#participate)
+      ## [Your Participation Counts](#participate)
 
-      Die hier geführten Dialoge geben den Ton für alle an. Hilf uns dabei, die Zukunft dieser Community zu beeinflussen, indem wir uns bewusst für Dialoge entscheiden, die dieses Forum zu einem interessanten Aufenthaltsraum machen &mdash; und jene vermeiden, die das nicht tun.
+      The conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
 
-      Discourse bietet Werkzeuge, die der Community ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Favoriten, Lesezeichen, „Gefällt mir“-Angaben, Meldungen, Antworten, Bearbeitungen, und so weiter. Benutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern, und die von allen anderen ebenso.
+      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
 
-      Lass uns versuchen, den Park besser zu verlassen als wir ihn vorgefunden haben.
+      Let’s leave our community better than we found it.
 
       <a name="flag-problems"></a>
 
-      ## [Wenn du ein Problem siehst, melde es](#flag-problems)
+      ## [If You See a Problem, Flag It](#flag-problems)
 
-      Moderatoren haben besondere Befugnisse; sie sind verantwortlich für dieses Forum. Aber das gilt auch für dich. Mit deiner Hilfe können Moderatoren die Vermittler der Community sein, nicht nur die Hausmeister oder die Polizei.
+      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
 
-      Wenn du schlechtes Verhalten siehst, antworte nicht. Schlechtes Verhalten wird gefördert, indem es anerkannt wird, es verbraucht deine Energie und verbraucht die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen eingeleitet, entweder automatisch oder durch das Eingreifen eines Moderators.
+      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
 
-      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Sitebetreiber übernehmen keine Verantwortung für jeglichen Inhalt, der in der Community geschrieben wird.
+      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.
 
       <a name="be-civil"></a>
 
-      ## [Immer höflich bleiben](#be-civil)
+      ## [Always Be Civil](#be-civil)
 
-      Nichts sabotiert einen gesunden Dialog so sehr wie Unhöflichkeit.
+      Nothing sabotages a healthy conversation like rudeness:
 
-      *   Sei höflich. Schreibe nichts, was eine vernünftige Person als anstößig, beleidigend oder als Hasstirade auffassen würde.
-      *   Halte den Platz sauber. Schreibe nichts, was obszön oder sexuell explizit ist.
-      *   Lasst uns gegenseitig respektieren. Belästige niemanden, füge niemandem Kummer zu, gib dich nicht als jemand anderes aus und veröffentliche niemandes persönliche Informationen.
-      *   Respektiere unser Forum. Schreibe keinen Spam und beschädige das Forum auch sonst in keiner Weise.
+      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
+      *   Keep it clean. Don’t post anything obscene or sexually explicit.
+      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
+      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
 
-      Dies sind keine konkreten Bedingungen mit präzisen Definitionen &mdash; vermeide sogar den _Anschein_ von jedem dieser Dinge. Wenn du dir nicht sicher bist, frage dich selbst, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite der Frankfurter Allgemeinen Zeitung erscheinen würde.
+      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
 
-      Dies ist ein öffentliches Forum und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder sicher für Familie und Freunde.
+      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
 
       <a name="keep-tidy"></a>
 
-      ## [Halte den Platz sauber](#keep-tidy)
+      ## [Keep It Tidy](#keep-tidy)
 
-      Betreibe die nötigen Anstrengungen, um Dinge an der richtigen Stelle zu platzieren, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen können. Daher:
+      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
 
-      *   Erstelle keine Themen in der falschen Kategorie
-      *   Schreibe Beiträge nicht gleichzeitig in mehreren Themen
-      *   Schreibe keine leeren Antworten
-      *   Lenke nicht vom Thema ab, indem du es mitten drin änderst
-      *   Signiere deine Beiträge nicht &mdash; jedem Beitrag sind deine Profilinformationen beigefügt
+      *   Don’t start a topic in the wrong category.
+      *   Don’t cross-post the same thing in multiple topics.
+      *   Don’t post no-content replies.
+      *   Don’t divert a topic by changing it midstream.
+      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
 
-      Verwende die „Gefällt mir“-Schaltfläche statt „+1“ oder „Einverstanden“ zu schreiben. Statt ein bestehendes Thema in eine völlig andere Richtung zu lenken, verwende die Funktion „Mit verknüpftem Thema antworten“.
+      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
 
       <a name="stealing"></a>
 
-      ## [Poste nur deine eigenen Sachen](#stealing)
+      ## [Post Only Your Own Stuff](#stealing)
 
-      Du darfst ohne Erlaubnis nichts schreiben, was jemand anderem gehört. Du darfst keine Beschreibungen von, Links zu oder Methoden beschreiben, die geistiges Eigentum verletzen (Software, Video, Audio, Bilder) oder gegen geltendes Gesetz verstoßen.
+      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
 
       <a name="power"></a>
 
-      ## [Betrieben von Euch](#power)
+      ## [Powered by You](#power)
 
-      Diese Site wird von eurem [freundlichen Team](/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Site](/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](/about).
+      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
 
       <a name="tos"></a>
 
-      ## [Nutzungsbedingungen](#tos)
+      ## [Terms of Service](#tos)
 
-      Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedingungen](/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](/tos) einverstanden erklären.
+      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |

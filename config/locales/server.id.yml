@@ -457,7 +457,6 @@ id:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
     account_created:
-      subject_template: "[%{site_name}] Akun Baru Anda"
       text_body_template: |+
         Anda mendapatkan akun baru di %{site_name}
 
@@ -467,14 +466,11 @@ id:
         %{base_url}/users/password-reset/%{email_token}
 
     confirm_new_email:
-      subject_template: "[%{site_name}] Konfirmasi email baru Anda"
       text_body_template: |
         Silahkan mengkonfirmasi email baru Anda di %{site_name} dengan mengunjungi tautan dibawah:
 
 
         %{base_url}/users/authorize-email/%{email_token}
-    signup:
-      subject_template: "[%{site_name}] Konfirmasi akun baru Anda"
   page_not_found:
     see_more: "Selengkapnya"
   terms_of_service:

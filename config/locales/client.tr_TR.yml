@@ -118,7 +118,6 @@ tr_TR:
         enabled: '%{when} listelendi'
         disabled: '%{when} listelenmedi'
     topic_admin_menu: "konuyla alakalı yönetici eylemleri"
-    wizard_required: "Forumunuzu yapılandırma zamanı geldi! <a href='%{url}' data-auto-route='true'>Kur Sihirbazını çalıştırın</a>!"
     emails_are_disabled: "Tüm giden e-postalar yönetici tarafından genel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi kolayca çalıştırmak için bootstrap modundasınız. Tüm yeni kullanıcılar güven seviyesi 1den başlar ve e-posta uyarıcıları açıksa günlük mail alırlar. Bu özellik kullanıcı sayısı %{min_users} rakamına ulaştığında otomatik kapatılacaktır."
     bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
@@ -888,7 +887,6 @@ tr_TR:
       logging_in: "Oturum açılıyor..."
       or: "ya da"
       authenticating: "Kimliğiniz doğrulanıyor..."
-      awaiting_confirmation: "Hesabınız etkinleştirilmemiş. Yeni bir etkinleştirme e-postası almak için parolamı unuttum bağlantısını kullanabilirsiniz. "
       awaiting_approval: "Hesabınız henüz bir görevli tarafından onaylanmadı. Onaylandığında e-posta ile haberdar edileceksiniz."
       requires_invite: "Üzgünüz, bu foruma sadece davetliler erişebilir."
       not_activated: "Henüz oturum açamazsınız. Hesabınızı etkinleştirmek için lütfen daha önceden <b>{{sentTo}}</b> adresine yollanan etkinleştirme e-postasındaki açıklamaları okuyun."
@@ -1186,7 +1184,6 @@ tr_TR:
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
-        change_tags: "Etiketleri Değiştir"
         choose_new_tags: "Konular için yeni etiketler seçin:"
         changed_tags: "Bu konuların etiketleri değiştirildi."
       none:
@@ -1690,7 +1687,6 @@ tr_TR:
       email_in_disabled_click: '"e-postala" ayarını etkinleştir'
       suppress_from_homepage: "Bu kategoriyi ana sayfadan gizle"
       all_topics_wiki: "Yeni konuyu varsayılan olarak wiki yap"
-      sort_order: "Öntanımlı Sıralama:"
       allow_badges_label: "Bu kategoride rozet verilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
       add_permission: "İzin Ekle"
@@ -1820,7 +1816,6 @@ tr_TR:
     history: "Geçmiş"
     changed_by: "Yazan {{author}}"
     raw_email:
-      title: "Ham e-posta"
       not_available: "Müsait değil!"
     categories_list: "Kategori Listesi"
     filters:
@@ -2341,7 +2336,6 @@ tr_TR:
             without_uploads: "Evet (dosya eklemeyin)"
           download:
             label: "İndir"
-            title: "Yedeği indir"
           destroy:
             title: "Yedeği kaldır"
             confirm: "Bu yedeği yok etmek istediğinize emin misiniz?"

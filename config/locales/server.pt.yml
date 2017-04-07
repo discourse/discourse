@@ -354,7 +354,6 @@ pt:
       pms_per_day: "Atingiu o número máximo de mensagens de hoje. Por favor espere %{time_left} antes de tentar novamente."
       create_like: "Atingiu o número máximo de gostos de hoje. Por favor espere %{time_left} antes de tentar novamente."
       create_bookmark: "Atingiu o número máximo de marcações de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      edit_post: "Atingiu o número máximo de edições de hoje. Por favor espere %{time_left} antes de tentar novamente."
       live_post_counts: "Está a pedir por contagens de publicações em tempo real a um ritmo demasiado rápido. Por favor espere %{time_left} antes de tentar outra vez."
       unsubscribe_via_email: "Atingiu o número máximo de cancelamentos de subscrições por email de hoje. Por favor espere %{time_left} antes de tentar novamente."
       topic_invitations_per_day: "Atingiu o número máximo de convites para tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
@@ -765,7 +764,6 @@ pt:
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
     max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
     max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
-    category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
@@ -823,7 +821,6 @@ pt:
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: omeusitio.com; ver http://google.com/analytics"
     gtm_container_id: "id de contentor do Google Tag Manager. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Reverter para a Google Ajax-Crawling API se nenhum webcrawler for detectado. Ver https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Ativar o suporte básico para pesquisas em motores de pesquisa através da etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir que os moderadores criem novas categorias"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_whitelist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
@@ -860,7 +857,6 @@ pt:
     invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
     invite_only: "O registo público está desativado, todos os novos utilizadores devem ser explicitamente convidados por outros membros ou pelo pessoal."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
-    reserved_usernames: "Nomes de utilizadores para os quais o registo não é permitido."
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
@@ -1263,10 +1259,6 @@ pt:
   change_owner:
     post_revision_text: "Direito de posse transferido de %{old_user} para %{new_user}"
     deleted_user: "um utilizador eliminado"
-  emoji:
-    errors:
-      name_already_exists: "Pedimos desculpa, o nome '%{name}' já está a ser usado por outro emoji."
-      error_while_storing_emoji: "Pedimos desculpa, ocorreu um erro enquanto o seu emoji estava a ser guardado."
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer maneira."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
@@ -1357,14 +1349,6 @@ pt:
       other: "%{count} sinalizações à espera de serem tratadas"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
-    text_body_template: |
-      Alguém (possivelmente você?) pediu para não receber mais emails com com actualizações de %{site_domain_name} neste endereço.
-      Se confirma este pedido por favor carregue nesta ligação:
-
-      %{confirm_unsubscribe_link}
-
-
-      Se quiser continuar a receber emails com actualizações pode ignorar este email.
   invite_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
   custom_invite_mailer:
@@ -1383,7 +1367,6 @@ pt:
 
       (Se a hiperligação acima tiver expirado, escolha "Esqueci a minha palavra-passe" ao iniciar sessão com o seu endereço de email.)
   test_mailer:
-    subject_template: "[%{site_name}] Teste de entrega de email"
     text_body_template: |
       Este é um email de teste de
 
@@ -1426,7 +1409,6 @@ pt:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
-    subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
     text_body_template: |
       Hurrah, uma nova versão do [Discourse](http://www.discourse.org) está disponível!
 
@@ -1439,7 +1421,6 @@ pt:
 
       - Visite [meta.discourse.org](https://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] atualização disponível"
     text_body_template: |
       Hurrah, uma nova versão do [Discourse](http://www.discourse.org) está disponível!
 
@@ -1456,9 +1437,6 @@ pt:
 
       %{notes}
   queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 mensagem à espera de revisão"
-      other: "[%{site_name}] %{count} mensagens à espera de revisão"
     text_body_template: |
       Olá,
 
@@ -1567,52 +1545,44 @@ pt:
       subject_template: "A exportação dos dados falhou"
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."
     email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] Problema com Email -- Nível de Confiança Insuficiente"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) falhou.
 
         A sua conta não possui o nível de confiança necessário para criar novos tópicos para este endereço de email. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
     email_reject_user_not_found:
-      subject_template: "[%{site_name}] Problema de email -- Utilizador Não Encontrado"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua resposta foi enviada de um endereço de email desconhecido. Tente enviá-la de outro endereço de email, ou contacte um membro da equipa de apoio.
     email_reject_screened_email:
-      subject_template: "[%{site_name}] Problema de email -- Email Bloqueado"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua resposta foi enviada de um endereço de email bloqueado. Tente enviá-la de outro endereço de email, ou contacte um membro da equipa de apoio.
     email_reject_inactive_user:
-      subject_template: "[%{site_name}] Problema de email -- Utilizador inactivo"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
     email_reject_blocked_user:
-      subject_template: "[%{site_name}] Problema de email -- Utilizador Bloqueado"
       text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua conta associada com este endereço de email foi bloqueada.
 
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Problema de email -- Endereço de Resposta Inesperado"
       text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro da equipa de apoio.
 
     email_reject_no_account:
-      subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
       text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         Não conseguimos encontrar nenhuma conta com o seu endereço de email. Tente enviar de outro endereço de email, ou contacte um membro da equipa de apoio.
 
     email_reject_empty:
-      subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (com título%{former_title}) não funcionou.
 
@@ -1620,32 +1590,27 @@ pt:
 
         Se está a obter isto e _realmente_ incluiu uma resposta, tente novamente com um formato mais simples.
     email_reject_parsing:
-      subject_template: "[%{site_name}]  Problema de email -- Conteúdo Não Reconhecido"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
         Não conseguimos encontrar a sua resposta no email. **Certifique-se que a sua resposta se encontra no topo do email** - não conseguimos processar respostas em linha.
     email_reject_invalid_access:
-      subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua conta não tem privilégios para publicar novos tópicos nessa categoria. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
     email_reject_strangers_not_allowed:
-      subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
       text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         A categoria que enviou neste email apenas permite respostas de utilizadores com contas validadas e endereços de email conhecidos. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
 
     email_reject_invalid_post:
-      subject_template: "[%{site_name}] Problema de email -- Erro de Publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         Algumas causas possíveis são: formatação complexa, mensagem demasiado grande, mensagem demasiado pequena. Por favor tente novamente, ou publique através do sítio se isto continuar.
     email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] Problema de email -- Erro de Publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
@@ -1655,43 +1620,36 @@ pt:
 
         Se conseguir corrigir o problema, tente novamente.
     email_reject_invalid_post_action:
-      subject_template: "[%{site_name}] Problema de email -- Acção de Publicação inválida"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A Acção de Publicação não foi reconhecida. Por favor tente novamente, ou publique através do sítio se isto continuar.
     email_reject_reply_key:
-      subject_template: "[%{site_name}] Problema de email -- Chave de Resposta Desconhecida"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A chave de resposta no email é inválida ou desconhecida e por isso não conseguimos determinar a que é o que email estava a responder. Contacte um membro da equipa de apoio.
     email_reject_bad_destination_address:
-      subject_template: "[%{site_name}] Problema de Email -- Endereço Para: Desconhecido"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que está a enviar o endereço de email correcto fornecido pela equipa de apoio.
     email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Problema de email -- Tópico Não Encontrado"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         O tópico ao qual está a responder já não existe -- talvez tenha sido apagado. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
     email_reject_topic_closed:
-      subject_template: "[%{site_name}] Problema de email -- Tópico Encerrado"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         O tópico ao qual está a responder encontra-se fechado e já não aceita respostas. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
     email_reject_auto_generated:
-      subject_template: "[%{site_name}] Problema de email -- Resposta Gerada Automaticamente"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         O seu email foi marcado como "gerado automaticamente", o que quer dizer que foi automaticamente criado por um computador em vez de ser escrito por uma pessoa; não podemos aceitar esse tipo de emails. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
     email_error_notification:
-      subject_template: "[%{site_name}] Problema de email -- Erro de autenticação POP"
       text_body_template: |
         Infelizmente, ocorreu um erro de autenticação ao recuperar emails do servidor POP.
 
@@ -1822,7 +1780,6 @@ pt:
 
 
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1830,7 +1787,6 @@ pt:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1838,7 +1794,6 @@ pt:
 
         %{respond_instructions}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} convidou-o para '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1846,7 +1801,6 @@ pt:
 
         %{respond_instructions}
     user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1856,7 +1810,6 @@ pt:
 
         %{respond_instructions}
     user_replied_pm:
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1866,7 +1819,6 @@ pt:
 
         %{respond_instructions}
     user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1876,7 +1828,6 @@ pt:
 
         %{respond_instructions}
     user_linked:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1886,7 +1837,6 @@ pt:
 
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1896,7 +1846,6 @@ pt:
 
         %{respond_instructions}
     user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1906,7 +1855,6 @@ pt:
 
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1916,7 +1864,6 @@ pt:
 
         %{respond_instructions}
     user_watching_first_post:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1926,7 +1873,6 @@ pt:
 
         %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1952,14 +1898,12 @@ pt:
       follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
-      subject_template: "Sumário de [%{site_name}] "
       unsubscribe: "Este resumo é enviado de %{site_link} quando não o vemos há algum tempo. Para anular a subscrição %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
     mailing_list:
       why: "Toda a atividade em %{site_link} em %{date}"
-      subject_template: "Resumo de [%{site_name}]  para %{date}"
       unsubscribe: "Este resumo é enviado diariamente devido ao modo de lista de distribuição estar ativado. Para anular a subscrição %{unsubscribe_link}."
       from: "resumo de %{site_name}"
       new_topics: "Novos tópicos"
@@ -1967,7 +1911,6 @@ pt:
       view_this_topic: "Ver este tópico"
       back_to_top: "Voltar ao topo"
     forgot_password:
-      subject_template: "[%{site_name}] Repor palavra-passe"
       text_body_template: |
         Alguém pediu para redefinir a sua palavra-passe em [%{site_name}](%{base_url}).
 
@@ -1976,7 +1919,6 @@ pt:
         Para escolher a sua nova palavra-passe clique na seguinte hiperligação:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Configurar Palavra-passe"
       text_body_template: |
         Alguém pediu para adicionar uma palavra-passe à sua conta em [%{site_name}](%{base_url}). Como alternativa, pode entrar usando qualquer serviço online suportado (Google, Facebook, etc) que estiver associado a este endereço de email validado.
 
@@ -1985,7 +1927,6 @@ pt:
         Clique na hiperligação seguinte para escolher uma palavra-passe.
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] Iniciar sessão"
       text_body_template: |
         Alguém pediu para iniciar sessão na sua conta em [%{site_name}](%{base_url}).
 
@@ -1994,20 +1935,17 @@ pt:
         Clique na seguinte hiperligação para iniciar sessão:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] A Sua Nova Conta"
       text_body_template: |
         Uma nova conta foi criada para si em %{site_name}
 
         Clique na hiperligação seguinte para escolher uma palavra-passe para a sua nova conta.
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
-      subject_template: "[%{site_name}] Confirme o seu novo endereço de email"
       text_body_template: |
         Confirme o seu novo endereço de email para %{site_name} ao clicar na seguinte ligação:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
-      subject_template: "[%{site_name}] Confirme o seu endereço de email atual"
       text_body_template: |
         Antes de podermos alterar o seu endereço de email, precisámos que confirme que
         controla
@@ -2018,7 +1956,6 @@ pt:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
-      subject_template: "[%{site_name}] O seu endereço de email foi alterado"
       text_body_template: |
         Isto é uma mensagem automática para o informar que o seu endereço de email para
         %{site_name} foi alterado. Se isto foi feito em erro, por favor contacte
@@ -2047,7 +1984,6 @@ pt:
 
         (Se precisar de comunicar com [membros da equipa de apoio](%{base_url}/about) como um novo utilizador, apenas responda a esta mensagem.)
     signup:
-      subject_template: "[%{site_name}] Confirme a sua nova conta"
       text_body_template: |
         BeM-vindo ao %{site_name}!
 
@@ -2118,103 +2054,6 @@ pt:
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Orientações"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Este é um Local Civilizado para Discussão Pública](#civilized)
-
-      Por favor trate este fórum de discussão com o mesmo respeito com que trataria um parque público. Nós somos também uma comunidade de partilha de recursos &mdash; um local para partilhar habilidades, conhecimento e interesses através de conversações.
-
-      Estas não são regras rígidas e rápidas, meramente ajudas para o julgamento humano da nossa comunidade. Utilize estas orientações para manter este local limpo e iluminado para discussões públicas civilizadas.
-
-      <a name="improve"></a>
-
-      ## [Melhorar a Discussão](#improve)
-
-      Ajude-nos a fazer deste um óptimo local para debates ao trabalhar constantemente para melhorar esses debates de alguma maneira, mesmo que pequena. Se não tem a certeza que a sua mensagem adiciona algo à conversação, pense novamente no que quer dizer e tente novamente mais tarde.
-
-      Os tópicos discutidos aqui têm importância para nós, e queremos que aja como se também fossem importantes para si. Seja respeitador dos tópicos e das pessoas que o debatem, mesmo que discorde com algo do que está a ser dito.
-
-      Uma maneira de melhorar o debate é descobrindo os que já estão a ocorrer. Por favor perca algum tempo a pesquisar os tópicos existentes aqui antes de responder ou começar um novo, e terá melhores hipóteses de conhecer outros que partilhem os mesmos interesses que você.
-
-      <a name="agreeable"></a>
-
-      ## [Seja Agradável, Mesmo Que Discorde](#agreeable)
-
-      Pode desejar responder a algo ao discordar do mesmo. Não há qualquer problema nisso. Mas lembre-se de _criticar ideias, não pessoas_. Por favor, evite:
-
-      *   Insultos.
-      *   Ataques pessoais.
-      *   Responder ao tom de uma mensagem e não ao seu conteúdo.
-      *   Contradições instintivas
-
-      Pelo contrário, forneça contra-argumentos que melhorem a conversação.
-
-      <a name="participate"></a>
-
-      ## [A Sua Participação Conta](#participate)
-
-      As conversações que temos aqui definem o tom para toda a gente. Ajude-nos a influenciar o futuro desta comunidade ao escolher investir nos debates que tornam este fórum um local interessante para se estar &mdash; e evite os que não o fazem.
-
-      O Discourse fornece ferramentas que permitem que a comunidade identifique as melhores (e piores) contribuições: favoritos, marcadores, gostos, denúncias, respostas, edições, entre outras. Utilize estas ferramentas para melhorar a sua experiência e de todos os outros também.
-
-      Vamos tentar deixar o nosso parque em melhor condições do que as em que o encontramos.
-
-      <a name="flag-problems"></a>
-
-      ## [Se vir um Problema, Denuncie-o](#flag-problems)
-
-      Os moderadores têm uma autoridade especial; são responsáveis por este fórum. Mas você também o é. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas porteiros ou polícias.
-
-      Quando vir mau comportamento, não responda. O reconhecimento encoraja o mau comportamento, consome a sua energia e gasta o tempo de todos. Apenas denuncio-o. Se denúncias suficientes, ações irão ser tomadas, seja automaticamente ou por intervenção dos moderadores.
-
-      De maneira a manter a ordem da comunidade, os moderadores reservam-se ao direito de remover qualquer conteúdo e qualquer conta de utilizador por qualquer razão em qualquer altura. Os moderadores não prevêem novas publicações de qualquer maneira; os moderadores e os operadores do sítio não têm qualquer responsabilidade por qualquer conteúdo publicado pela comunidade.
-
-      <a name="be-civil"></a>
-
-      ## [Seja sempre civilizado](#be-civil)
-
-      Nada estraga mais uma conversação saudável do que ser rude:
-
-      *Seja civilizado. Não publique nada que uma pessoa sensata consideraria ofensiva, abusiva ou discurso de ódio.
-      *Mantenha-o limpo. Não publique nada obsceno ou sexualmente explicito.
-      *Respeite os outros. Não assedie ou magoe, não personifique pessoas, e não exponha informações pessoais.
-      *Respeite o nosso fórum. Não publique spam ou vandalize de outra maneira o fórum.
-
-      Estes não são termos concretos com definições precisas &mdash; evite até a _aparência_ de qualquer uma destas coisas. Se não tem a certeza, pergunte-se a si próprio como se sentiria se a sua publicação fosse capa de notícia.
-
-      Este é um fórum público, e motores de pesquisa indexam estes debates. Mantenha a linguagem, ligações e imagens seguras para família e amigos.
-
-      <a name="keep-tidy"></a>
-
-      ## [Mantenha-o Organizado](#keep-tidy)
-
-      Faça o esforço para colocar as coisas no local certo, para que possamos passar mais tempo a debater e menos a limpar. Por isso:
-
-      *   Não comece um tópico na categoria errada.
-      *   Não cruze publicações sobre o mesmo tema em múltiplos tópicos.
-      *   Não publique respostas sem conteúdo.
-      *   Não desvie um tópico ao mudar o seu centro de atenção.
-      *   Não assine as suas publicações &mdash; qualquer publicação tem a sua informação de perfil anexada à mesma.
-
-      Em vez de publicar “+1” ou “Concordo”, utilize o botão Gosto. Em vez de levar um tópico existente para uma direção completamente diferente, utilize Responder como Novo Tópico.
-
-      <a name="stealing"></a>
-
-      ## [Publique Apenas As Suas Próprias Coisas](#stealing)
-
-      Não deve publicar nada digital que pertença a qualquer outra pessoa, sem a sua permissão. Não pode publicar descrições de, ligações a, ou métodos para roubar propriedade intelectual de outras pessoas (software, vídeo, áudio, imagens), ou para quebrar qualquer outra lei.
-
-      <a name="power"></a>
-      ## [Patrocinado Por Si](#power)
-
-      Este sítio é operado pelos seus [membros locais amigáveis](/about) e por *si*, a comunidade. Se tem alguma questão adicional sobre como as coisas funcionam por aqui, abra um novo tópico na [categoria de retorno](/c/site-feedback) e iremos debatê-lo. Se ocorrer algum assunto crítico ou urgente que não pode ser tratado por um meta-tópico ou por uma denúncia, contacte-nos através da [equipa de apoio](/about).
-
-      <a name="tos"></a>
-
-      ## [Termos de Serviço](#tos)
-
-      Sim, texto jurídico é chato, mas temos que nos proteger &ndash; e por extensão, protegê-lo a si e aos seus dados &ndash; contra pessoal pouco amigável. Temos os [Termos de Serviço](/tos) que descrevem o seu (e o nosso) comportamento e direitos relativamente a conteúdo, privacidade e leis. Para usar este serviço, tem que concordar em cumprir os nossos [TDS](/tos).
   tos_topic:
     title: "Termos de Serviço"
     body: |
@@ -2733,7 +2572,6 @@ pt:
             description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='/about' target='_blank'>sua página de descrição</a>."
           site_contact:
             label: "Mensagens Automatizadas"
-            description: "Todas as mensagens pessoais automatizadas do Discourse serão enviadas deste utilizador. Acima de tudo, este utilizador será o remetente de todas as mensagens de boas-vindas automaticamente enviadas a novos utilizadores."
       corporate:
         title: "Organização"
         fields:

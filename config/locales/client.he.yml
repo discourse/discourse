@@ -1808,6 +1808,7 @@ he:
       subcategory_list_style: "סגנון רשימות קטגוריות משנה:"
       sort_order: "סידור ברירת מחדל לנושאים:"
       default_view: "תצוגת ברירת מחדל לנושאים:"
+      default_top_period: "פרק זמן דיפולטיבי להובלה"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"

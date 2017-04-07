@@ -192,7 +192,7 @@ sk:
     privacy: "Súkromie"
     terms_of_service: "Podmienky používania"
     mobile_view: "Mobilná verzia"
-    desktop_view: "Desktop verzia"
+    desktop_view: "Zobrazenie pre počítač"
     you: "Vy"
     or: "alebo"
     now: "práve teraz"
@@ -399,16 +399,16 @@ sk:
         none: "Žiadny"
       notifications:
         watching:
-          title: "Pozorovať"
+          title: "Sledovať"
           description: "Budete upozornený na každý nový príspevok vo všetkých správach a zobrazí sa počet nových odpovedí."
         watching_first_post:
-          title: "Pozorovať prvý príspevok"
+          title: "Sledovať prvý príspevok"
           description: "Budete upozornený iba na prvý príspevok v každej téme v tejto skupine."
         tracking:
-          title: "Sledovať"
+          title: "Pozorovať"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie a zobrazí sa počet nových odpovedí."
         regular:
-          title: "Bežný"
+          title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted:
           title: "Ignorované"
@@ -530,18 +530,18 @@ sk:
         few_per_day: "Pošli mi email pri každom novom príspevku (cca 2 denne)"
       tag_settings: "Štítky"
       watched_tags: "Sledované"
-      watched_tags_instructions: "Budete automaticky pozerať všetky témy s týmito štítkami. Budete upozornený na všetky nové príspevky a témy, a zároveň bude vedľa témy zobrazený počet nových príspevkov."
-      tracked_tags: "Sledované"
-      tracked_tags_instructions: "Budete automaticky sledovať všetky témy s týmito štítkami. Počet nových príspevkov sa bude zobrazovať vedľa témy."
+      watched_tags_instructions: "Budete automaticky sledovať všetky témy s týmito štítkami. Budete upozornený na všetky nové príspevky a témy, a zároveň bude vedľa témy zobrazený počet nových príspevkov."
+      tracked_tags: "Pozorované"
+      tracked_tags_instructions: "Budete automaticky pozorovať všetky témy s týmito štítkami. Počet nových príspevkov sa bude zobrazovať vedľa témy."
       muted_tags: "Stíšené"
       muted_tags_instructions: "Nebudete informovaný o nových témach s týmito štítkami a nezobrazia sa ani medzi najnovšími."
-      watched_categories: "Pozorované"
-      watched_categories_instructions: "Budete automaticky pozerať všetky témy v týchto kategóriách. Budete upozornený na všetky nové príspevky a témy, a zároveň bude vedľa témy zobrazený počet nových príspevkov."
-      tracked_categories: "Sledované"
-      tracked_categories_instructions: "Budete automaticky sledovať všetky témy v tejto kategórii. Počet nových príspevkov sa bude zobrazovať vedľa témy."
-      watched_first_post_categories: "Pozorovať prvý príspevok"
+      watched_categories: "Sledované"
+      watched_categories_instructions: "Budete automaticky sledovať všetky témy v týchto kategóriách. Budete upozornený na všetky nové príspevky a témy, a zároveň bude vedľa témy zobrazený počet nových príspevkov."
+      tracked_categories: "Pozorované"
+      tracked_categories_instructions: "Budete automaticky pozorovať všetky témy v tejto kategórii. Počet nových príspevkov sa bude zobrazovať vedľa témy."
+      watched_first_post_categories: "Sledovaný prvý príspevok"
       watched_first_post_categories_instructions: "Budete upozornený na prvý príspevok v každej novej téme v týchto kategóriách."
-      watched_first_post_tags: "Pozorovať prvý príspevok"
+      watched_first_post_tags: "Sledovaný prvý príspevok"
       watched_first_post_tags_instructions: "Budete upozornený na prvý príspevok v každej novej téme s týmito štítkami."
       muted_categories: "Ignorované"
       muted_categories_instructions: "Nebudete informovaný o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
@@ -555,7 +555,7 @@ sk:
       muted_users: "Ignorovaní"
       muted_users_instructions: "Pozastaviť všetky notifikácie od týchto používateľov."
       muted_topics_link: "Zobraziť stíšené témy"
-      watched_topics_link: "Zobraziť pozorované témy"
+      watched_topics_link: "Zobraziť sledované témy"
       apps: "Appky"
       revoke_access: "Odvolať prístup"
       undo_revoke_access: "Zrušiť odvolanie prístupu"
@@ -565,7 +565,7 @@ sk:
         flagged_posts: "označkované príspevky"
         deleted_posts: "vymazané príspevky"
         suspensions: "pozastavenia"
-        warnings_received: "upozornenia"
+        warnings_received: "varovania"
       messages:
         all: "Všetky"
         inbox: "Prijatá pošta"
@@ -689,7 +689,7 @@ sk:
         after_2_days: "vytvorené posledné 2 dni"
         after_1_week: "vytvorené za posledný týždeň"
         after_2_weeks: "vytvorené za posledné 2 týždne"
-      auto_track_topics: "Automaticky sleduj témy, do ktorých vstúpim"
+      auto_track_topics: "Automaticky pozoruj témy, do ktorých vstúpim"
       auto_track_options:
         never: "nikdy"
         immediately: "ihneď"
@@ -912,7 +912,6 @@ sk:
       logging_in: "Prebieha prihlásenie..."
       or: "Alebo"
       authenticating: "Prebieha overovanie..."
-      awaiting_confirmation: "Váš účet čaká na aktiváciu. Ak chcete zaslať aktivačný e-mail znova, použite odkaz pre zabudnuté heslo."
       awaiting_approval: "Váš účet zatiaľ nebol schválený členom tímu. Keď bude schválený, dostanete e-mail."
       requires_invite: "Ľutujeme, ale prístup k tomuto fóru majú iba pozvaní používatelia."
       not_activated: "Systém vás nemôže prihlásiť. Na emailovú adresu <b>{{sentTo}}</b> sme vám poslali aktivačný email. Prosím, postupujte podľa inštrukcií na aktiváciu účtu, ktoré sú uvedené v tomto emaile."
@@ -1072,7 +1071,7 @@ sk:
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správ vo vašej {{group_name}} schránke</p>"
       alt:
         mentioned: "Zmienený od"
-        quoted: "Citovaný od"
+        quoted: "Citovaný používateľom"
         replied: "Odpovedané"
         posted: "Príspevok od"
         edited: "Upravte Váš príspevok do"
@@ -1142,6 +1141,8 @@ sk:
           label: Hľadaj iba v témach/prispevkoch, ktoré...
           likes: sa mi páčia
           posted: obsahujú môj príspevok
+          watching: Sledujem
+          tracking: Pozorujem
           private: sú v mojich správach
           seen: som čítal
           unseen: som nečítal
@@ -1167,8 +1168,8 @@ sk:
         dismiss: "Zahodiť"
         dismiss_read: "Zahodiť všetký neprečítané"
         dismiss_button: "Zahadzujem....."
-        dismiss_tooltip: "Zahoď nové príspevky, alebo prestaň sledovať témy"
-        also_dismiss_topics: "Prestať sledovať tieto témy. Už sa nikdy nebudu ukazovať medzi neprečítanými"
+        dismiss_tooltip: "Zahoď iba nové príspevky, alebo prestaň pozorovať témy"
+        also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
         dismiss_new: "Zahodiť. Nová"
         toggle: "prepnuť hromadne vybrané témy"
         actions: "Hromadné akcie"
@@ -1181,7 +1182,6 @@ sk:
           one: "Označíli ste <b>1</b> tému."
           few: "Označíli ste <b>{{count}}</b> tém.y"
           other: "Označíli ste <b>{{count}}</b> tém."
-        change_tags: "Zmeniť štítky"
         choose_new_tags: "Vyberte pre tému nové štítky:"
         changed_tags: "Štítky tém boli zmenené."
       none:
@@ -1197,7 +1197,7 @@ sk:
         search: "Nenašli sa žiadne výsledky"
         educate:
           new: '<p>Tu sa zobrazia Vaše nové témy.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazí indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> ak boli vytvorené za posledné 2 dni.</p><p>Môžete to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
-          unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili sledovanie alebo pozeranie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
+          unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili pozorovanie alebo sledovanie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
         hot: "Nie je už viac horúcich tém"
@@ -1300,15 +1300,15 @@ sk:
       notifications:
         title: zmeň ako často dostávaš upozornenia o tejto téme
         reasons:
-          '3_10': 'Budete dostávať upozornenia, pretože pozeráte štítok na tejto téme.'
-          '3_6': 'Budete dostávať upozornenia, pretože pozeráte túto kategóriu.'
-          '3_5': 'Budete automaticky dostávať upozornenie pretože ste začali pozerať túto tému.'
-          '3_2': 'Budete dostávať upozornenia, pretože pozeráte túto tému.'
+          '3_10': 'Budete dostávať upozornenia, pretože sledujete štítok na tejto téme.'
+          '3_6': 'Budete dostávať upozornenia, pretože sledujete túto kategóriu.'
+          '3_5': 'Budete automaticky dostávať upozornenie pretože ste začali sledovať túto tému.'
+          '3_2': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
           '3_1': 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
-          '3': 'Budete dostávať upozornenia, pretože pozeráte túto tému.'
-          '2_8': 'Budete dostávať upozornenia, pretože sledujete túto kategóriu.'
+          '3': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
+          '2_8': 'Budete dostávať upozornenia, pretože pozorujete túto kategóriu.'
           '2_4': 'Budete dostávať upozornenia, pretože ste zaslali odpoveď na túto tému.'
-          '2_2': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
+          '2_2': 'Budete dostávať upozornenia, pretože pozorujete túto tému.'
           '2': 'Budete dostávať upozornenia, pretože ste <a href="/users/{{username}}/preferences">čítali túto tému</a>.'
           '1_2': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '1': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
@@ -1316,22 +1316,22 @@ sk:
           '0_2': 'Ignorujete všetky upozornenia k tejto téme.'
           '0': 'Ignorujete všetky upozornenia k tejto téme.'
         watching_pm:
-          title: "Pozorovať"
+          title: "Sledovať"
           description: "Budete upozornený na každú novú odpoveď na túto správu a zobrazí sa počet nových odpovedí."
         watching:
-          title: "Pozorovať"
+          title: "Sledovať"
           description: "Budete upozornený na každú novu odpoveď na túto tému a zobrazí sa počet nových odpovedí."
         tracking_pm:
-          title: "Sledovať"
+          title: "Pozorovať"
           description: "Zobrazí počet nových odpovedí na túto správu. Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         tracking:
-          title: "Sledovať"
+          title: "Pozorovať"
           description: "Zobrazí počet nových odpovedí na túto tému. Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         regular:
-          title: "Bežný"
+          title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         regular_pm:
-          title: "Bežný"
+          title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted_pm:
           title: "Stíšené"
@@ -1487,6 +1487,7 @@ sk:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Citácia"
       edit: "Upravujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Dôvod:"
       post_number: "príspevok {{number}}"
@@ -1740,15 +1741,15 @@ sk:
       parent: "Nadradená kategória"
       notifications:
         watching:
-          title: "Pozorovať"
-          description: "Budete automaticky pozerať všetky témy v týchto kategóriách. Budete upozornený na každý nový príspevok v každej téme. Zároveň bude zobrazený počet nových odpovedí."
-        watching_first_post:
-          title: "Pozerať prvý príspevok"
-        tracking:
           title: "Sledovať"
-          description: "Budete automaticky sledovať všetky témy v týchto kategóriách. Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie. Zároveň bude zobrazený počet nových odpovedí."
+          description: "Budete automaticky sledovať všetky témy v týchto kategóriách. Budete upozornený na každý nový príspevok v každej téme. Zároveň bude zobrazený počet nových odpovedí."
+        watching_first_post:
+          title: "Sledovať prvý príspevok"
+        tracking:
+          title: "Pozorovať"
+          description: "Budete automaticky pozorovať všetky témy v týchto kategóriách. Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie. Zároveň bude zobrazený počet nových odpovedí."
         regular:
-          title: "Bežný"
+          title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted:
           title: "Stíšené"
@@ -1853,7 +1854,6 @@ sk:
     history: "História"
     changed_by: "od {{author}}"
     raw_email:
-      title: "Neupravený email"
       not_available: "Nedostupné!"
     categories_list: "Zoznam kategórií"
     filters:
@@ -1885,7 +1885,7 @@ sk:
           one: "Neprečítaná (1)"
           few: "Neprečítané ({{count}})"
           other: "Neprečítaných ({{count}})"
-        help: "témy ktorých neprečítané príspevky v súčastnosti pozeráte alebo sledujete "
+        help: "témy ktorých neprečítané príspevky v súčastnosti sledujete alebo pozorujete "
         lower_title_with_count:
           one: "1 neprečítaná"
           few: "{{count}} neprečítané"
@@ -1993,8 +1993,8 @@ sk:
         delete: '<b>d</b> Zmazať príspevok'
         mark_muted: '<b>m</b>, <b>m</b> Umlčať tému'
         mark_regular: '<b>m</b>, <b>r</b> Obyčajná (preddefinovaná) téma'
-        mark_tracking: '<b>m</b>, <b>t</b> Sledovať tému'
-        mark_watching: '<b>m</b>, <b>w</b> Pozerať tému'
+        mark_tracking: '<b>m</b>, <b>t</b> Pozorovať tému'
+        mark_watching: '<b>m</b>, <b>w</b> Pozorovať tému'
     badges:
       earned_n_times:
         one: "Získal tento odkaz 1-krát"
@@ -2038,14 +2038,14 @@ sk:
       manage_groups_description: "Zadefinujte skupiny pre usporiadanie štítkov"
       notifications:
         watching:
-          title: "Pozorovať"
-          description: "Budete automaticky pozerať všetky témy s týmto štítkom. Budete upozornený na všetky nové príspevky a témy, navyše počet neprečítaných a nových príspevok bude zobrazený pri téme."
+          title: "Sledovať"
+          description: "Budete automaticky sledovať všetky témy s týmto štítkom. Budete upozornený na všetky nové príspevky a témy, navyše počet neprečítaných a nových príspevok bude zobrazený pri téme."
         watching_first_post:
-          title: "Pozorovať prvý príspevok"
+          title: "Sledovať prvý príspevok"
           description: "Budete upozornený iba na prvý príspevok v každej téme s týmto štítkom."
         tracking:
-          title: "Sledovať"
-          description: "Budete automaticky sledovať všetky témy s týmto štítkom. Počet neprečítaných a nových príspevkov sa bude zobrazovať vedľa témy."
+          title: "Pozorovať"
+          description: "Budete automaticky pozorovať všetky témy s týmto štítkom. Počet neprečítaných a nových príspevkov sa bude zobrazovať vedľa témy."
         regular:
           title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo odpovie na Váš príspevok."
@@ -2304,7 +2304,6 @@ sk:
             without_uploads: "Áno (nezahŕňať súbory)"
           download:
             label: "Stiahnuť"
-            title: "Stiahnuť zálohu"
           destroy:
             title: "Odstrániť zálohu"
             confirm: "Ste si istý, že chcete odstrániť túto zálohu?"
@@ -2877,7 +2876,7 @@ sk:
           sql_error_header: "Nastala chyba s požiadavkou."
           error_help: "Pozrite si nasledujäce odkazy pre pomoc s dopytovacími odznakmi."
           bad_count_warning:
-            header: "UPOZORNENIE!"
+            header: "VAROVANIE!"
             text: "Chýbajú ukážky práv. Toto sa stane, ak dotaz na odznak vráti ID používateľa alebo príspevku, ktorý neexistuje. Toto môže zapríčiniť neskoršie neočakávané výsledky - prosíme znovu overte Váš dotaz."
           no_grant_count: "Žiadne odznaky na pridelenie."
           grant_count:

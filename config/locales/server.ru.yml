@@ -417,7 +417,6 @@ ru:
       pms_per_day: "Вы достигли лимита сообщений на сегодня. Пожалуйста, подождите %{time_left} перед следующей попыткой."
       create_like: "Вы достигли лимита симпатий на сегодня. Пожалуйста, подождите %{time_left} перед следующей попыткой."
       create_bookmark: "Вы достигли лимита закладок на сегодня. Пожалуйста, подождите %{time_left} перед следующей попыткой."
-      edit_post: "Вы достигли лимита редактирования сообщений на сегодня. Пожалуйста, подождите %{time_left} перед следующей попыткой."
       unsubscribe_via_email: "Вы достигли лимита отказа от подписок через email на сегодня. Пожалуйста, подождите %{time_left} перед следующей попыткой."
       topic_invitations_per_day: "На сегодня вы достигли лимита приглашений в темы. Пожалуйста, подождите %{time_left} перед следующей попыткой."
     hours:
@@ -856,7 +855,6 @@ ru:
     delete_removed_posts_after: "Сообщение, которое удалено автором, будет автоматически удалено через (n) часов. Если установлено 0, то сообщение будет удалено немедленно."
     max_image_width: "Максимальная ширина уменьшенных версий изображений, показываемых в сообщениях"
     max_image_height: "Максимальная высота уменьшенных версий изображений, показываемых в сообщениях"
-    category_featured_topics: "Количество тем, отображаемых для одного разделе на странице разделов. После изменения значения потребуется около 15 минут для обновления списков."
     fixed_category_positions: "Если влючено, разделы можно будет отсортировать в определенном порядке. Иначе разделы будут отображаться в порядке активности в них."
     add_rel_nofollow_to_user_content: "Добавить \"rel nofollow\" для всех ссылок за исключением внутренних (включая родительский домен). Изменение данной настройки потребует обновления всех сообщений с помощью команды \"rake posts:rebake\""
     post_excerpt_maxlength: "Максимальная длина краткого изложения сообщения."
@@ -890,7 +888,6 @@ ru:
     pending_users_reminder_delay: "Уведомлять модераторов, если новые пользователи ждут одобрения больше чем столько часов. Установите в -1 для отключения уведомлений."
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code код, например: UA-12345678-9; больше информации можно узнать на странице http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) доменное имя, например: mysite.com; больше можно найти на странице http://google.com/analytics"
-    enable_noscript_support: "Включить поддержку тэга noscript для поисковых роботов"
     allow_moderators_to_create_categories: "Разрешить модераторам создавать новые разделы"
     cors_origins: "Разрешенные источники для cross-origin запросов (CORS). Каждый запрос должен включать http:// или https://. Чтобы включить CORS, переменная окружения DISCOURSE_ENABLE_CORS должна быть установлена в значение true."
     top_menu: "Определите, какие элементы должны располагаться в навигации на главной странице и в каком порядке. Пример: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -922,7 +919,6 @@ ru:
     invite_passthrough_hours: "Как долго пользователь может воспользоваться ключем приглашения для входа на сайт, указывается в часах"
     invite_only: "Публичная регистрация отключена. Регистрация только по приглашениям. Новые пользователи могут получить приглашения для регистрации от существующих пользователей или от редакции сайта."
     login_required: "Требовать авторизации для доступа к сайту, анонимный доступ запретить."
-    reserved_usernames: "Псевдонимы, запрещенные для регистрации"
     min_password_length: "Минимальная длина пароля"
     min_admin_password_length: "Минимальная длина пароля для Администратора."
     block_common_passwords: "Не позволять использовать пароли из списка 10 000 самых частоиспользуемых паролей."
@@ -1215,10 +1211,6 @@ ru:
   change_owner:
     post_revision_text: "Владелец сменен с %{old_user} на %{new_user}"
     deleted_user: "Удаленный пользователь"
-  emoji:
-    errors:
-      name_already_exists: "Название \"%{name}\" уже используется для другой иконки."
-      error_while_storing_emoji: "Произошла ошибка во время сохранения иконки."
   topic_statuses:
     archived_enabled: "Эта тема отправлена в Архив. Она заморожена и не может быть изменена."
     archived_disabled: "Эта тема разархивирована. Она более не заморожена, и может быть изменена."
@@ -1342,18 +1334,6 @@ ru:
       %{base_url}/users/password-reset/%{email_token}
 
       Если срок действия этой ссылки истек, нажмите на кнопку "Войти", а затем "Я забыл свой пароль" и введите ваш e-mail.
-  test_mailer:
-    subject_template: "[%{site_name}] Проверка доставки писем"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Ихууу, доступна новая версия Discourse!"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] новые обновления"
-  queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 сообщение ожидает проверки"
-      few: "[%{site_name}] %{count} сообщения ожидают проверки"
-      many: "[%{site_name}] %{count} сообщений ожидают проверки"
-      other: "[%{site_name}] %{count} сообщений ожидают проверки"
   flag_reasons:
     off_topic: "Сообщество считает, что ваше сообщение **не относится к теме**, учитывая ее заголовок и первое сообщение."
     inappropriate: "Сообщество считает ваше сообщение **неприемлемым**, т.е. оскорбительным, непристойным или нурашающим [кодекс чести](/guidelines)."
@@ -1416,31 +1396,11 @@ ru:
       title: "Неудачный Экспорт CSV"
       subject_template: "Экспорт не удался"
       text_body_template: "Мы сожалеем, но возникли неполадки с экспортом ваших данных. Свяжитесь с администратором сайта."
-    email_reject_inactive_user:
-      subject_template: "[%{site_name}] Неполадки с e-mail -- неактивный пользователь"
-    email_reject_blocked_user:
-      subject_template: "[%{site_name}] Неполадки с e-mail -- заблокированный пользователь"
-    email_reject_no_account:
-      subject_template: "[%{site_name}] Неполадки с письмом - не найдена учетная запись"
-    email_reject_empty:
-      subject_template: "[%{site_name}] Неполадки с письмом - отсутствует текст"
     email_reject_parsing:
       text_body_template: |
         К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
 
         Система не смогла обнаружить тект сообщения в теле письма. Советуем убедится в том, что вы написали желаемый текст **в самом верху письма**.
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}] Системное сообщение -- Доступ запрещен"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Системное сообщение -- Неизвестный ключ для ответа"
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Системное сообщение -- Тема не найдена"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] Неполадки с письмом - Топик закрыт"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] системное сообщение - Автоматически сгенерирован ответ"
-    email_error_notification:
-      subject_template: "[%{site_name}] Системное сообщение -- ошибка POP аутентификации"
     blocked_by_staff:
       title: "Заблокировано Персоналом"
       subject_template: "Учётная запись временно заблокирована"
@@ -1482,24 +1442,6 @@ ru:
     visit_link_to_respond: "[Посетите тему](%{base_url}%{url}) чтобы ответить."
     visit_link_to_respond_pm: "[Посетите сообщение](%{base_url}%{url}) чтобы ответить."
     posted_by: "Отправлено %{username} %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} приглашает вас к обсуждению сообщения '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_replied_pm:
-      subject_template: "[%{site_name}] [ЛС] %{topic_title}"
-    user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_linked:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [Личное сообщение] %{topic_title}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
@@ -1525,7 +1467,6 @@ ru:
       back_to_top: "Наверх"
     forgot_password:
       title: "Забыл Пароль"
-      subject_template: "[%{site_name}] Сброс пароля"
       text_body_template: |
         Кто-то запросил смену вашего пароля на сайте [%{site_name}](%{base_url}).
 
@@ -1535,7 +1476,6 @@ ru:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Установить Пароль"
-      subject_template: "[%{site_name}] Установить пароль"
       text_body_template: |
         Кто-то попросил добавить пароль в вашу учётную запись на сайте [%{site_name}](%{base_url}). Вы так же можете войти на сайт используя любой поддерживаемый онлайн-сервис (такие как Google, Facebook и другие), которые связанны с вашим электронным адресом.
 
@@ -1544,7 +1484,6 @@ ru:
         Нажмите на следующую ссылку для того, что бы изменить пароль:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] Войти"
       text_body_template: |
         Кто-то запросил ссылку для входа в ваш аккаунт  [%{site_name}](%{base_url}).
 
@@ -1554,7 +1493,6 @@ ru:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "Учётная Запись Создана"
-      subject_template: "[%{site_name}] Ваша новая учетная запись"
       text_body_template: |
         Для вас была создана новая учетная запись на сайте %{site_name}
 
@@ -1562,15 +1500,10 @@ ru:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Подтвердить Новый E-mail"
-      subject_template: "[%{site_name}] Подтвердите новый адрес электронной почты"
       text_body_template: |
         Подтвердите ваш новый адрес электронной почты для сайта %{site_name}, перейдя по следующей ссылке:
 
         %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      subject_template: "[%{site_name}] Подтвердите текущий адрес электронной почты"
-    notify_old_email:
-      subject_template: "[%{site_name}] Ваш адрес электронной почты был подтвержден"
     signup_after_approval:
       subject_template: "Ваша учетная запись на сайте %{site_name} одобрена!"
       text_body_template: |
@@ -1592,7 +1525,6 @@ ru:
 
         (Если вам требуется помощь [администрации](%{base_url}/about),  вы можете задать свой вопрос, просто ответив на данное письмо.)
     signup:
-      subject_template: "[%{site_name}] Активируйте свою учетную запись"
       text_body_template: |
         Добро пожаловать на сайт %{site_name}!
 
@@ -1866,7 +1798,6 @@ ru:
             description: "Основная страница для связи с Вами или Вашей организацией. Будет отображаться на <a href='/about' target='_blank'>вашей информационной странице</a>."
           site_contact:
             label: "Автоматизированные Сообщения"
-            description: "Все автоматизированные личные сообщения Discourse будут отправляться от этого пользователя. Наиболее важно, этот пользователь будет указан отправителем каждого приветственного сообщения, автоматически высылаемого новым пользователям."
       corporate:
         title: "Организация"
         description: "Эти имена будут указаны в Вашей <a href='/privacy' target='blank'>Политике Конфиденциальности</a> и <a href='/tos' target='blank'>Условиях Предоставления Услуг</a>, которые являются записями, которые Вы можете изменить в разделе \"Персонал\"."

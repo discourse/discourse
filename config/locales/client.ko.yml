@@ -118,7 +118,6 @@ ko:
         enabled: '%{when} 목록에 게시'
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "주제 관리자 기능"
-    wizard_required: "포럼을 설정하세요! <a href='%{url}' data-auto-route='true'>설치 마법사를 시작하세요</a>!"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가 %{min_users}를 초과 할 때 자동으로 꺼집니다."
     bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
@@ -810,7 +809,6 @@ ko:
       logging_in: "로그인 중.."
       or: "또는"
       authenticating: "인증 중..."
-      awaiting_confirmation: "계정 활성화를 기다리고 있습니다. 다른 인증 이메일을 받고 싶으면 비밀번호 찾기를 누르세요."
       awaiting_approval: "스태프가 아직 내 계정을 승인하지 않았습니다. 승인되면 이메일을 받게됩니다."
       requires_invite: "죄송합니다. 초대를 받은 사람만 이용하실 수 있습니다."
       not_activated: "아직 로그인 할 수 없습니다. 계정을 만들었을때 <b> {{sentTo}} </b> 주소로 인증 이메일을 보냈습니다. 계정을 활성화하려면 해당 이메일의 지침을 따르십시오."
@@ -1556,7 +1554,6 @@ ko:
     history: "기록"
     changed_by: "{{author}}에 의해"
     raw_email:
-      title: "Raw 이메일"
       not_available: "Raw 이메일이 가능하지 않습니다."
     categories_list: "카테고리 목록"
     filters:
@@ -1835,7 +1832,6 @@ ko:
             without_uploads: "예 (파일을 포함하지 않음)"
           download:
             label: "다운로드"
-            title: "백업 다운로드"
           destroy:
             title: "백업 삭제"
             confirm: "정말 이 백업을 삭제할까요?"

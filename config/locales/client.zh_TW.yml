@@ -118,7 +118,6 @@ zh_TW:
         enabled: '於 %{when} 列出'
         disabled: '於 %{when} 除名'
     topic_admin_menu: "版區管理員操作"
-    wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
     bootstrap_mode_enabled: "為方便站點準備發佈，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設置接受每日郵件摘要。初始化模式會在用戶數超過 %{min_users} 個時關閉。"
     bootstrap_mode_disabled: "初始化模式將會在24小時後關閉。"
@@ -888,7 +887,6 @@ zh_TW:
       logging_in: "登入中..."
       or: "或"
       authenticating: "正在認證..."
-      awaiting_confirmation: "你的帳號尚未啟用，請使用忘記密碼連結重新發出啟用帳號的電子郵件。"
       awaiting_approval: "你的帳號尚未通過工作人員的審核，當審核通過時你會收到電子郵件通知。"
       requires_invite: "抱歉，只有受邀請者才能進入此論壇。"
       not_activated: "你還無法登入，我們之前曾將啟用帳號的電子郵件寄至 <b>{{sentTo}}</b>，請從該電子郵件啟用你的帳號。"
@@ -1699,7 +1697,6 @@ zh_TW:
       suppress_from_homepage: "不在首頁上顯示此分類。"
       show_subcategory_list: "在此分類中，將子分類顯示在主題上方。"
       all_topics_wiki: "新的主題預設為共筆。"
-      sort_order: "預設排序："
       allow_badges_label: "允許授予本分類的徽章"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
@@ -1829,7 +1826,6 @@ zh_TW:
     history: "歷史"
     changed_by: "作者 {{author}}"
     raw_email:
-      title: "原始 Email"
       not_available: "不可使用"
     categories_list: "分類清單"
     filters:
@@ -2350,7 +2346,6 @@ zh_TW:
             without_uploads: "是 ( 不包含檔案 )"
           download:
             label: "下載"
-            title: "下載備份"
           destroy:
             title: "刪除備份"
             confirm: "你確定要刪除備份嗎?"

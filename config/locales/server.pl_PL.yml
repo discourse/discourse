@@ -451,7 +451,6 @@ pl_PL:
       pms_per_day: "Osiągnąłeś maksymalną liczbę wiadomości na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       create_like: "Osiągnąłeś maksymalną liczbę lajków na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       create_bookmark: "Wyczerpałeś na dziś możliwość dodawania zakładek. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      edit_post: "Wyczerpałeś na dziś możliwość edytowania. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie postów . Musisz poczekać %{time_left}, zanim znów spróbujesz."
       unsubscribe_via_email: "Osiągnąłeś maksymalną liczbę wypisań przez maila na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       topic_invitations_per_day: "Osiągnąłeś maksymalną liczbę zaproszeń do tematów na dziś. Odczekaj %{time_left} przed kolejną próbą."
@@ -916,7 +915,6 @@ pl_PL:
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
     max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     fixed_category_positions_on_create: "Jeżeli jest sprawdzone to porządkowanie kategorii będzie zależało od stworzonego tematu (requires fixed_category_positions). "
     add_rel_nofollow_to_user_content: "Dodaj rel nofollow do wszystkich treści użytkownika, poza wewnętrznymi linkami (wliczając domeny nadrzędne). Jeśli to zmienisz, musisz rebake wszystkie posty poprzez: \"rake post:rebake\""
@@ -974,7 +972,6 @@ pl_PL:
     ga_universal_domain_name: "Domena dla Google Universal Analytics (analytics.js), np: mysite.com; zobacz http://google.com/analytics"
     gtm_container_id: "Kontener menadżera tagów Google np: GTM-ABCDEF"
     enable_escaped_fragments: "Odwołuj się do API Google Ajax-Crawling jeżeli nie wykryto żadnego robota internetowego. Sprawdź https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Zezwól moderatorom na tworzenie nowych kategorii"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_whitelist: "Administratorzy mogą się logować tylko z adresów IP zdefiniowanych w liście Screened IPs (Admin > Logi > Screened Ips)."
@@ -1012,7 +1009,6 @@ pl_PL:
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
     min_username_length: "Minimalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy krótsze niż ta, twój serwis się uszkodzi!"
     max_username_length: "Maksymalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy dłuższe niż ta, twój serwis się uszkodzi!"
-    reserved_usernames: "Niedozwolone nazwy użytkowników."
     min_password_length: "Minimalna długość hasła."
     min_admin_password_length: "Minimalna długość hasła dla Admina."
     password_unique_characters: "Minimalna ilość różnych znaków, które muszą być w haśle."
@@ -1253,10 +1249,6 @@ pl_PL:
   change_owner:
     post_revision_text: "Zmieniono właściciela z %{old_user} na %{new_user}"
     deleted_user: "usunięty użytkownik"
-  emoji:
-    errors:
-      name_already_exists: "Nazwa \"%{name}\" wkorzystywana jest już przez inny emotikon."
-      error_while_storing_emoji: "Wystąpił błąd podczas zapisywania emotikonu."
   topic_statuses:
     archived_enabled: "Temat został zarchiwizowany. Został zablokowany i nie może być zmieniany. "
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
@@ -1363,14 +1355,6 @@ pl_PL:
       other: "%{count} flagi oczekują na reakcję"
   unsubscribe_mailer:
     subject_template: "Potwierdź, że nie chcesz już otrzymywać powiadomień mailowych ze strony %{site_title}"
-    text_body_template: |
-      Ktoś (może ty?) zażądał, by strona %{site_domain_name} nie wysyłała już powiadomień mailowych na ten adres.
-      Jeśli to potwierdzasz, kliknij w ten link:
-
-      %{confirm_unsubscribe_link}
-
-
-      Jeśli nadal chcesz otrzymywać powiadomienia mailowe, po prostu zignoruj ten mail.
   invite_mailer:
     subject_template: "%{invitee_name} zaprosił cię do '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
@@ -1451,7 +1435,6 @@ pl_PL:
       (Jeśli powyższy link wygasł, wybierz "Zapomniałem hasła", logując się za pomocą adresu email.)
 
   test_mailer:
-    subject_template: "[%{site_name}] Test dostarczania poczty"
     text_body_template: |
       To testowy mail z serwisu:
 
@@ -1494,7 +1477,6 @@ pl_PL:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
-    subject_template: "[%{site_name}] Aktualizacja do nowej wersji Discourse jest dostępna."
     text_body_template: |
       Pojawiła się nowa wersja [Discourse](http://www.discourse.org)!
 
@@ -1507,7 +1489,6 @@ pl_PL:
 
       - Sprawdź najnowsze informacje, weź udział w dyskusji lub skorzystaj z wsparcia technicznego Discourse na stronie [meta.discourse.org](https://meta.discourse.org)
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] dostępna aktualizacja"
     text_body_template: |
       Pojawiła się nowa wersja [Discourse](http://www.discourse.org)!
 
@@ -1524,11 +1505,6 @@ pl_PL:
 
       %{notes}
   queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 post oczekuje na przejrzenie"
-      few: "[%{site_name}] %{count} posty oczekuje na przejrzenie"
-      many: "[%{site_name}] %{count} postów oczekuje na przejrzenie"
-      other: "[%{site_name}] %{count} postów oczekuje na przejrzenie"
     text_body_template: |
       Witaj,
 
@@ -1652,25 +1628,8 @@ pl_PL:
       title: "Email odrzucony Pusty"
     email_reject_invalid_access:
       title: "Email odrzucony Nieprawidłowy dostęp"
-    email_reject_invalid_post:
-      subject_template: "[%{site_name}] Problem z mailem -- błąd postu"
-    email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] Problem z mailem -- błąd postu"
-    email_reject_invalid_post_action:
-      subject_template: "[%{site_name}] Problem z mailem -- błędna akcja postu"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Problem z mailem -- Nieznany Klucz Odpowiedzi"
-    email_reject_bad_destination_address:
-      subject_template: "[%{site_name}] Problem z mailem -- Nieznany: Adres"
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Problem z mailem -- Temat Nieznaleziony "
     email_reject_topic_closed:
       title: "Email odrzucony Temat zamknięty"
-      subject_template: "[%{site_name}] Problem z mailem -- Temat Zamknięty"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] Problem z mailem -- Odpowiedź Wygenerowana Automatycznie "
-    email_error_notification:
-      subject_template: "[%{site_name}] Problem z mailem -- Błąd uwierzytelnienia POP"
     too_many_spam_flags:
       subject_template: "Nowe konto zawieszone"
     too_many_tl3_flags:
@@ -1740,7 +1699,6 @@ pl_PL:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Użytkownik zaprosił do PW"
-      subject_template: "[%{site_name}] %{username} zaprasza cie do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1748,7 +1706,6 @@ pl_PL:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} zaprasza cie do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1757,7 +1714,6 @@ pl_PL:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Użytkownik zaprosił do Tematu"
-      subject_template: "[%{site_name}] %{username} zaprasza cie do '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1766,7 +1722,6 @@ pl_PL:
         %{respond_instructions}
     user_replied:
       title: "Użytkownik odpowiedział"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1777,7 +1732,6 @@ pl_PL:
         %{respond_instructions}
     user_replied_pm:
       title: "Użytkownik odpowiedział przez PW"
-      subject_template: "[%{site_name}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1788,7 +1742,6 @@ pl_PL:
         %{respond_instructions}
     user_quoted:
       title: "Użytkownik Zacytował"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1799,7 +1752,6 @@ pl_PL:
         %{respond_instructions}
     user_linked:
       title: "Użytkownik podał link"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1810,7 +1762,6 @@ pl_PL:
         %{respond_instructions}
     user_mentioned:
       title: "Użytkownik Wspomniany"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1821,7 +1772,6 @@ pl_PL:
         %{respond_instructions}
     user_group_mentioned:
       title: "Grupa Użytkowników Wspomniana"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1832,7 +1782,6 @@ pl_PL:
         %{respond_instructions}
     user_posted:
       title: "Użytkownik Opublikował"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1843,7 +1792,6 @@ pl_PL:
         %{respond_instructions}
     user_watching_first_post:
       title: "Użytkownik Pregląda pierwszy post"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1854,7 +1802,6 @@ pl_PL:
         %{respond_instructions}
     user_posted_pm:
       title: "Użytkownik Napisał PM"
-      subject_template: "[%{site_name}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1881,13 +1828,11 @@ pl_PL:
       join_the_discussion: "Czytaj więcej"
       popular_posts: "Popularne wpisy"
       more_new: "Nowe dla ciebie"
-      subject_template: "%{site_name} Podsumowanie"
       click_here: "kliknij tutaj"
       from: "%{site_name} podsumowanie"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
     mailing_list:
       why: "Cała aktywność w %{site_link} dla %{date}"
-      subject_template: "[%{site_name}] Podsumowanie dla %{date}"
       from: "%{site_name} podsumowanie"
       new_topics: "Nowe tematy"
       topic_updates: "Aktualizacje tematu"
@@ -1895,7 +1840,6 @@ pl_PL:
       back_to_top: "Powrót do góry"
     forgot_password:
       title: "Zapomniane hasło"
-      subject_template: "[%{site_name}] Reset hasła"
       text_body_template: |
         Ktoś poprosił o zresetowanie Twojego hasła na [%{site_name}](%{base_url}).
 
@@ -1905,7 +1849,6 @@ pl_PL:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Ustaw hasło"
-      subject_template: "[%{site_name}] Ustaw hasło"
       text_body_template: |
         Ktoś poprosił o dodanie hasła do twojego konta [%{site_name}](%{base_url}). Możesz się zalogować przy pomocy konta w i innym serwisie (Google, Facebook, itd.) które zostało powiązane z twoim potwierdzonym adresem email.
 
@@ -1915,10 +1858,8 @@ pl_PL:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Logowanie administratora. "
-      subject_template: "[%{site_name}] Login"
     account_created:
       title: "Utworzono Konto"
-      subject_template: "[%{site_name}] Twoje nowe konto"
       text_body_template: |
         Utworzyliśmy Twoje konto na %{site_name}
 
@@ -1926,13 +1867,10 @@ pl_PL:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Potwierdź Nowy Email"
-      subject_template: "[%{site_name}] Potwierdź nowy adres email"
     confirm_old_email:
       title: "Potwierdź stary email"
-      subject_template: "[%{site_name}] Potwierdź aktualny adres email"
     notify_old_email:
       title: "Powiadom Stary Email"
-      subject_template: "[%{site_name}] Twój adres email został zmieniony"
     signup_after_approval:
       title: "Zarejestruj się po zatwierdzeniu"
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
@@ -1956,7 +1894,6 @@ pl_PL:
 
     signup:
       title: "Podpis"
-      subject_template: "[%{site_name}] Potwierdź swoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
 

@@ -137,6 +137,7 @@ pt_BR:
         disabled: 'desalistou %{when}'
       banner:
         enabled: 'tornou isso um banner %{when}. Isso será mostrado no todo de todas as páginas até que seja descartado pelo usuário.'
+        disabled: 'removeu esse banner %{when}. Ele não vai mais aparecer no topo de todas as páginas.'
     topic_admin_menu: "ações administrativas do tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
@@ -877,7 +878,7 @@ pt_BR:
       hide_session: "Lembre-me amanhã"
       hide_forever: "não obrigado"
       hidden_for_session: "OK, Eu vou perguntar amanhã. Você pode também sempre usar o 'Registre-se' para criar uma conta."
-      intro: "Ei você! :heart_eyes: Para que você está gostando da discussão, mas ainda não criou uma conta."
+      intro: "Ei você! :heart_eyes: Parece que você está gostando da discussão, mas ainda não criou uma conta."
       value_prop: "Quando você cria uma conta, nós lembramos exatamente o que você leu, assim você sempre volta exatamente aonde estava. Você também recebe notificações, aqui e por e-mail, quando novas mensagens são feitas. E você pode curtir tópicos para compartilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
@@ -1241,7 +1242,9 @@ pt_BR:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
         change_tags: "Substituir marcadores"
+        append_tags: "Adicionar Etiquetas"
         choose_new_tags: "Escolha novas tags para esses tópicos:"
+        choose_append_tags: "Escolha novos marcadores para anexar a esses tópicos:"
         changed_tags: "As tags para esses tópicos foram alteradas."
       none:
         unread: "Não há nenhum tópico não lido."
@@ -1798,6 +1801,7 @@ pt_BR:
       suppress_from_homepage: "Suprimir esta categoria da página inicial."
       show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
       num_featured_topics: "Número de tópicos exibidos na página de Categorias:"
+      subcategory_num_featured_topics: "Número de tópicos em destaque na página da categoria pai:"
       all_topics_wiki: "Tornar novos tópicos wikis por padrão."
       subcategory_list_style: "Estilo da lista de subcategorias"
       sort_order: "Classificar lista de tópicos:"

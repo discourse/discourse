@@ -118,7 +118,6 @@ vi:
         enabled: 'được hiển thị lúc %{when}'
         disabled: 'bỏ hiển thị lúc %{when}'
     topic_admin_menu: "Lựa chọn quản lí chủ đề."
-    wizard_required: "Đến lúc tuỳ biến diễn đàn của bạn! <a href='%{url}' data-auto-route='true'>Bắt đầu</a>!"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
     bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có trust level 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}."
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị tắt trong 24 giờ tới."
@@ -860,7 +859,6 @@ vi:
       logging_in: "Đăng nhập..."
       or: "Hoặc"
       authenticating: "Đang xác thực..."
-      awaiting_confirmation: "Tài khoản của bạn đang đợi kích hoạt, sử dụng liên kết quên mật khẩu trong trường hợp kích hoạt ở 1 email khác."
       awaiting_approval: "Tài khoản của bạn chưa được chấp nhận bới thành viên. Bạn sẽ được gửi một email khi được chấp thuận "
       requires_invite: "Xin lỗi, bạn phải được mời để tham gia diễn đàn"
       not_activated: "Bạn không thể đăng nhập. Chúng tôi đã gửi trước email kích hoạt cho bạn tại <b>{{sentTo}}</b>. Vui lòng làm theo hướng dẫn trong email để kích hoạt tài khoản của bạn."
@@ -1127,7 +1125,6 @@ vi:
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
           other: "Bạn đã chọn <b>{{count}}</b> chủ đề"
-        change_tags: "Đổi thẻ"
       none:
         unread: "Bạn không có chủ đề nào chưa đọc."
         new: "Bạn không có chủ đề mới nào."
@@ -1594,7 +1591,6 @@ vi:
       email_in_disabled: "Tạo chủ đề mới thông qua email đã được tắt trong thiết lập. Để bật tính năng này, "
       email_in_disabled_click: 'kích hoạt thiết lập thư điện tử'
       suppress_from_homepage: "Ngăn chặn chuyên mục này hiển thị trên trang chủ."
-      sort_order: "Sắp xếp mặc định:"
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
       add_permission: "Thêm quyền"
@@ -1714,7 +1710,6 @@ vi:
     history: "Lịch sử"
     changed_by: "bởi {{author}}"
     raw_email:
-      title: "Email gốc"
       not_available: "Không sẵn sàng!"
     categories_list: "Danh sách Danh mục"
     filters:
@@ -2060,7 +2055,6 @@ vi:
             without_uploads: "Đúng (không bao gồm những tập tin)"
           download:
             label: "Tải xuống"
-            title: "Tải xuống bản sao lưu này"
           destroy:
             title: "Xóa bản sao lưu này"
             confirm: "Bạn muốn hủy bản sao lưu này?"

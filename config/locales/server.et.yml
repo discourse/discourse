@@ -379,7 +379,6 @@ et:
       pms_per_day: "Oled ületanud tänaseks lubatud sõnumite limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       create_like: "Oled ületanud tänaseks lubatud meeldimiste lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       create_bookmark: "Oled ületanud tänaseks lubatud järjehoidjate lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      edit_post: "Oled ületanud tänaseks lubatud postituste muutmise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       live_post_counts: "Küsid postituste reaalajas loendit liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
       unsubscribe_via_email: "Oled ületanud tänaseks lubatud meilitsi tellimuste tühistamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       topic_invitations_per_day: "Oled ületanud tänaseks lubatud teemadesse kutsumise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
@@ -753,28 +752,13 @@ et:
         %{message}
     mailing_list:
       why: "Saidi %{site_link} kõik toimingud päeval %{date}"
-      subject_template: "[%{site_name}] Kokkuvõte päeval %{date}"
       from: "%{site_name} kokkuvõte"
       new_topics: "Uued teemad"
       topic_updates: "eemade uuendused"
       view_this_topic: "Vaata seda teemat"
       back_to_top: "Tagasi üles"
-    forgot_password:
-      subject_template: "[%{site_name}] Parooli uuendamine"
-    set_password:
-      subject_template: "[%{site_name}] Määra parool"
-    admin_login:
-      subject_template: "[%{site_name}] Logi sisse"
-    account_created:
-      subject_template: "[%{site_name}] Sinu uus konto"
-    confirm_old_email:
-      subject_template: "[%{site_name}] Kinnita oma kehtiv meiliaadress"
-    notify_old_email:
-      subject_template: "[%{site_name}] Sinu meiliaadress on muudetud"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
-    signup:
-      subject_template: "[%{site_name}] Kinnita oma uus konto"
   page_not_found:
     title: "Oih! Soovitud lehte ei ole või on see privaatne."
     popular_topics: "Populaarsed"

@@ -154,7 +154,6 @@ ro:
         enabled: 'afișat %{when}'
         disabled: 'ascuns %{when}'
     topic_admin_menu: "Opțiuni administrare subiect"
-    wizard_required: "Acum a sosit momentul să configurați forumul! <a href='%{url}' data-auto-route='true'>Porniți Setup Wizard</a>!"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     bootstrap_mode_enabled: "Pentru a ușura lansarea site-ului tău ești în modul bootstrap. Toți noii utilizatori vor primi nivelul de încredere 1 și vor avea activată primirea zilnică a unui email-rezumat.  Această setare va fi dezactivată automat de îndată ce numărul total de utilizatori depășește %{min_users}."
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore."
@@ -957,7 +956,6 @@ ro:
       logging_in: "În curs de autentificare..."
       or: "sau"
       authenticating: "Se autentifică..."
-      awaiting_confirmation: "Contul tău așteaptă să fie activat. Folosește linkul de reamintire a parolei, pentru a cere un alt email de activare."
       awaiting_approval: "Contul tău nu a fost aprobat încă de un admin . Vei primi un email când se aprobă."
       requires_invite: "Ne pare rău, accesul la forum se face pe bază de invitație."
       not_activated: "Nu te poți loga încă. Am trimis anterior un email de activare pentru <b>{{sentTo}}</b>. Urmează instrucțiunile din email pentru a-ți activa contul."
@@ -1258,7 +1256,6 @@ ro:
           one: "Ai selectat <b>un</b> subiect."
           few: "Ai selectat <b>{{count}}</b> subiecte."
           other: "Ai selectat <b>{{count}}</b> de subiecte."
-        change_tags: "Schimbă etichete"
         choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
         changed_tags: "Etichetele pentru aceste subiecte au fost schimbate."
       none:
@@ -1830,7 +1827,6 @@ ro:
       email_in_disabled_click: 'activează opțiunea "primire email ".'
       suppress_from_homepage: "Elimină această categorie de pe pagina principală."
       all_topics_wiki: "Transformă subiectele noi în wiki-uri, implicit."
-      sort_order: "Sortare implicită:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       edit_permissions: "Editează permisiuni"
       add_permission: "Adaugă permisiune"
@@ -1974,7 +1970,6 @@ ro:
     history: "Istoric"
     changed_by: "de {{author}}"
     raw_email:
-      title: "Email"
       not_available: "Indisponibil!"
     categories_list: "Listă categorii"
     filters:
@@ -2526,7 +2521,6 @@ ro:
             without_uploads: "Da (nu include fişierele)"
           download:
             label: "Descărcare"
-            title: "Descarcă backup-ul"
           destroy:
             title: "Șterge backup-ul"
             confirm: "Ești sigur că vrei să ștergi acest backup?"

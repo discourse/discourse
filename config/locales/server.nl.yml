@@ -832,7 +832,6 @@ nl:
     delete_removed_posts_after: "Berichten verwijderd door de auteur zullen automatisch verwijderd worden na (n) uur. Als dit ingesteld is op 0 zullen berichten direct verwijderd worden."
     max_image_width: "Maximale breedte van een thumbnail van afbeeldingen in een bericht"
     max_image_height: "Maximale hoogte van een thumbnail van afbeeldingen in een bericht"
-    category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
     fixed_category_positions: "Indien aangevinkt kun je categorieën in een vaste volgorde arrangeren. Indien uitgevinkt zullen de categorieeen gesorteerd worden op activiteit."
     fixed_category_positions_on_create: "Indien aangevinkt wordt de categorie volgorde aangehouden in het menu voor nieuwe topics (vaste-categorie-posities vereist)."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: \"rake posts:rebake\""
@@ -871,7 +870,6 @@ nl:
     pending_users_reminder_delay: "Stuur moderators een bericht als nieuwe gebruikers al langer dan dit aantal uren op goedkeuring wacht. Stel in op -1 om notificaties uit te schakelen."
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) trackingcode, bijv. UA-12345678-9; zie http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
-    enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
     cors_origins: "Toegestane domeinen voor ´cross-origin requests´ (CORS). Elk domein moet http:// of https:// bevatten. De DISCOURSE_ENABLE_CORS omgevingsvariabele moet staan ingesteld op ´WAAR´ om CORS te kunnen gebruiken."
     use_admin_ip_whitelist: "Beheerders kunnen zich alleen aanmelden vanaf een IP-adres dat in de lijst Gecontroleerde IP-nummers is gedefinieerd (Beheer > Logboeken > Gecontroleerde IP-adressen)."
@@ -905,7 +903,6 @@ nl:
     invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
     invite_only: "Openbare registratie is uitgeschakeld, alle nieuwe gebruikers moeten expliciet worden uitgenodigd door andere leden of personeel."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
-    reserved_usernames: "Gebruikersnamen waarvoor registratie niet is toegestaan."
     min_password_length: "Minimum lengte wachtwoord."
     min_admin_password_length: "Minimale wachtwoordlengte voor de beheerder."
     block_common_passwords: "Accepteer geen wachtwoorden die voorkomen in de 10.000 meest voorkomende wachtwoorden."
@@ -1182,10 +1179,6 @@ nl:
   change_owner:
     post_revision_text: "Eigendom overgezet van %{old_user} naar %{new_user}"
     deleted_user: "een verwijderde gebruiker"
-  emoji:
-    errors:
-      name_already_exists: "Sorry, de naam '%{name}' is al in gebruik voor een andere emoji."
-      error_while_storing_emoji: "Sorry, fout opgetreden tijdens het opslaan van de emoji."
   topic_statuses:
     archived_enabled: "Deze topic is nu gearchiveerd en kan niet meer veranderd worden."
     archived_disabled: "Deze topic is niet langer gearchiveerd en kan weer veranderd worden."
@@ -1274,16 +1267,6 @@ nl:
       %{base_url}/users/password-reset/%{email_token}
 
       (Als bovenstaande link is verlopen, kies dan "Ik ben mijn wachtwoord vergeten" tijdens het inloggen met je e-mail adres.)
-  test_mailer:
-    subject_template: "[%{site_name}] E-mail Bezorgtest"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Nieuwe Discourse-versie, update beschikbaar"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] Update beschikbaar"
-  queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 bericht wacht op beoordeling"
-      other: "[%{site_name}] %{count} berichten wachten op beoordeling"
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de gemeenschap meent het niet goed past bij het onderwerp, zoals momenteel bepaald door de titel en de eerste post."
     inappropriate: "Je bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](/guidelines)."
@@ -1335,16 +1318,12 @@ nl:
       title: "CSV Export Mislukt"
       subject_template: "Export mislukt"
       text_body_template: "Het spijt ons, maar de export is mislukt. Bekijk de logbestanden of neem contact op met de staf."
-    email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] E-mailprobleem -- Vertrouwensniveau te laag"
     email_reject_inactive_user:
-      subject_template: "[%{site_name}] E-mailprobleem -- Gebruiker inactief"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Het account dat bij dit e-mailadres hoort, is niet geactiveerd. Je moet je account activeren voordat je e-mails instuurt.
     email_reject_blocked_user:
-      subject_template: "[%{site_name}] E-mailprobleem -- Geblokkeerde gebruiker"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
@@ -1355,13 +1334,11 @@ nl:
 
         Je reactie werd verstuurd van een ander e-mailadres dan we verwacht hadden, dus we weten niet zeker of dit dezelfde persoon is. Probeer de e-mail vanaf een ander adres te sturen, of neem contact op met de staf.
     email_reject_no_account:
-      subject_template: "[%{site_name}] E-mailprobleem -- Onbekende account"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         We konden geen accounts vinden die overeenkomen met je e-mailadres. Probeer de e-mail van een ander adres te sturen, of neem contact op met de staf.
     email_reject_empty:
-      subject_template: "[%{site_name}] E-mailprobleem -- Geen inhoud"
       text_body_template: |+
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
@@ -1375,18 +1352,12 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         We konden je reactie niet in je e-mail vinden. **Zorg ervoor dat je reactie bovenaan de e-mail staat**, we kunnen ingebedde reacties niet verwerken.
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}] E-mailprobleem -- Ongeldige toegang"
-    email_reject_strangers_not_allowed:
-      subject_template: "[%{site_name}] E-mailprobleem -- Ongeldige toegang"
     email_reject_invalid_post:
-      subject_template: "[%{site_name}] E-mailprobleem -- Foutmelding bij het plaatsen"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Dit kan bijvoorbeeld komen door complexe opmaak of door een te groot of te klein bericht. Probeer het opnieuw of plaats je bericht via de website als het nog steeds niet lukt.
     email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] E-mailprobleem -- Foutmelding bij het plaatsen"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
@@ -1396,31 +1367,20 @@ nl:
 
         Probeer het opnieuw als je het probleem kan oplossen.
     email_reject_invalid_post_action:
-      subject_template: "[%{site_name}] E-mailprobleem -- Ongeldige plaatsingsactie"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         De plaatsingsactie werd niet herkend. Probeer het opnieuw of plaats je bericht via de website als het nog steeds niet lukt.
     email_reject_reply_key:
-      subject_template: "[%{site_name}] E-mailprobleem -- Onbekende antwoordsleutel"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         De antwoordsleutel in de e-mail is ongeldig of onbekend, dus we weten niet waar deze e-mail een reactie op is. Neem contact op met de staf.
     email_reject_bad_destination_address:
-      subject_template: "[%{site_name}] E-mailprobleem -- Onbekend bestemmingsadres"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Geen van de bestemmingsadressen werd herkend. Zorg ervoor dat je je e-mail naar het juiste door de staf verstrekte e-mailadres stuurt.
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] E-mailprobleem -- Topic niet gevonden"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] E-mailprobleem -- Topic gesloten"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] E-mailprobleem -- Automatisch gegenereerde reactie"
-    email_error_notification:
-      subject_template: "[%{site_name}] Email probleem -- POP authenticatie fout"
     blocked_by_staff:
       subject_template: "Account tijdelijk geblokkeerd"
     user_automatically_blocked:
@@ -1459,18 +1419,6 @@ nl:
       title: "Uitschrijven"
       description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
     posted_by: "Geplaatst door %{username} op %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} nodigt je uit voor een bericht '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
       liked_received: "Ontvangen likes"
@@ -1481,7 +1429,6 @@ nl:
       popular_posts: "Populaire berichten"
       click_here: "klik hier"
     forgot_password:
-      subject_template: "[%{site_name}] Wachtwoord herstellen"
       text_body_template: |
         Iemand heeft aangegeven je wachtwoord te willen herstellen op [%{site_name}](%{base_url}).
 
@@ -1490,7 +1437,6 @@ nl:
         Klik op de volgende link om een nieuw wachtwoord te kiezen:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Stel wachtwoord in"
       text_body_template: |
         Iemand heeft verzocht een wachtwoord aan je account toe te voegen op [%{site_name}](%{base_url}). Je kan ook nog - indien geactiveerd - inloggen met een online service (Google, Facebook, etc) waar je met hetzelfde mailadres geregistreerd staat.
 
@@ -1499,7 +1445,6 @@ nl:
         Klik op de volgende link om een wachtwoord in te stellen:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] Login"
       text_body_template: |
         Iemand heeft geprobeerd om met je account op [%{site_name}](%{base_url}) in te loggen.
 
@@ -1508,7 +1453,6 @@ nl:
         Klik op de volgende link om in te loggen:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Uw Nieuwe Account"
       text_body_template: |
         Er is een nieuw account voor je aangemaakt op  %{site_name}
 
@@ -1534,7 +1478,6 @@ nl:
 
         (Als je contact wilt opnemen met [staff members](%{base_url}/about) als nieuwe gebruiker, stuur dan een reply op dit bericht.)
     signup:
-      subject_template: "[%{site_name}] Bevestig je nieuwe account"
       text_body_template: |
         Welkom op %{site_name}!
 

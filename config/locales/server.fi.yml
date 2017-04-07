@@ -854,7 +854,6 @@ fi:
     delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos asetetaan 0, viestit poistetaan välittömästi."
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
-    category_featured_topics: "Näytettävien ketjujen lukumäärä alueittan Alueet-sivulla. Arvon muuttamisen jälkeen voi kestää jopa 15 minuuttia sivun päivittymiseen."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun luomisen dialogissa (edellyttää fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""
@@ -912,7 +911,6 @@ fi:
     ga_universal_domain_name: "Google Universal analytics (analytics.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
     gtm_container_id: "Google Tag Manager -säiliön ID. Esim: GTM-ABCDEF"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Ota käyttöön noscript-tagi hakukoneiden webcrawlereille"
     allow_moderators_to_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
     use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
@@ -1100,7 +1098,7 @@ fi:
     max_image_size_kb: "Liitetyn kuvan suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     max_attachment_size_kb: "Liitetyn tiedoston suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     authorized_extensions: "Liitetiedostojen sallitut tiedostopäätteet (käytä '*' salliaksesi kaikki tiedostotyypit)"
-    max_similar_results: "Kuinka monta samankaltaista ketjua näytetään viestikentän yläpuolella uutta ketjua luotaessa. Vertailu perustuu sekä otsikkoon että leipätekstiin."
+    max_similar_results: "Kuinka monta samankaltaista ketjua näytetään viestikentän päällä uutta ketjua luotaessa. Vertailu perustuu sekä otsikkoon että leipätekstiin."
     max_image_megapixels: "Kuvan enimmäiskoko megapikseleinä."
     title_prettify: "Estä yleiset kirjoitusvirheet otsikossa, kuten pelkät isot kirjaimet, pieni ensimmäinen kirjain, useat !- ja ?-merkit ym."
     topic_views_heat_low: "Näin monen katselun jälkeen katselut-saraketta korostetaan hieman."
@@ -1366,10 +1364,6 @@ fi:
   change_owner:
     post_revision_text: "Omistus vaihdettu käyttäjältä %{old_user} käyttäjälle %{new_user}"
     deleted_user: "poistettu käyttäjä"
-  emoji:
-    errors:
-      name_already_exists: "Pahoittelut, nimi '%{name}' on jo käytössä toisella emojilla."
-      error_while_storing_emoji: "Pahoittelut, tämän emojin tallentamisessa tapahtui virhe."
   topic_statuses:
     archived_enabled: "Tämä ketju on arkistoitu. Se on jäädytetty eikä sitä voi muuttaa millään tavalla."
     archived_disabled: "Ketjun arkistointi on poistettu, se ei ole enää jäädytettynä ja sitä voi taas muuttaa."

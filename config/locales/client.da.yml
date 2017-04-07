@@ -136,7 +136,6 @@ da:
         enabled: 'listet %{when}'
         disabled: 'aflistet %{when}'
     topic_admin_menu: "administrationshandlinger på emne"
-    wizard_required: "Det er tid til at konfigurere dig forum! <a href='%{url}' data-auto-route='true'>Start Konfigurations Guiden</a>!"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     bootstrap_mode_enabled: "For at gøre det nemmere at lancere dit nye website, er du i bootstrap tilstand. Alle nye brugere vil blive tildelt niveau 1 og daglige email updateringer vil være slået til. Dette vil blive automatisk slået fra når total antal brugere overskrider %{min_users} brugere."
     bootstrap_mode_disabled: "Bootstrap tilstand vil blive deaktiveret indenfor de næste 24 timer."
@@ -347,7 +346,19 @@ da:
         title: "Medlemskabsanmodning"
         body: "Jeg vil gerne ansøge om medlemskab i @%{groupName}."
       name_placeholder: "Gruppe navn, ingen mellemrum, samme som reglen for brugernavn"
+      empty:
+        members: "Der er ingen medlemmer i denne gruppe."
+        mentions: "Denne gruppe bliver ikke nævnt nogen steder."
+        messages: "Der er ingen beskeder til denne gruppe."
+        topics: "Der er ingen emner skrevet af medlemmer i denne gruppe."
+        logs: "Der er ingen logning for denne gruppe."
       add: "Tilføj"
+      join: "Bliv medlem af gruppen"
+      leave: "Forlad gruppen"
+      request: "Anmod om indmeldelse i gruppen"
+      automatic_group: Automatisk gruppe
+      closed_group: Lukket gruppe
+      is_group_user: "Du er medlem af denne gruppe"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
       visible: "Gruppen er synlige for alle brugere"
@@ -866,7 +877,6 @@ da:
       logging_in: "Logger ind..."
       or: "Eller"
       authenticating: "Logger ind…"
-      awaiting_confirmation: "Din konto mangler at blive aktiveret. Brug “Jeg har glemt min adgangskode”-linket for at få en ny aktiverings-mail."
       awaiting_approval: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
       requires_invite: "Beklager, det kræve en invitation at blive medlem af dette forum."
       not_activated: "Du kan ikke logge ind endnu. Vi har tidligere sendt en aktiverings-e-mail til dig på <b>{{sentTo}}</b>. Følg venligst instruktionerne i den e-mail for at aktivere din konto."
@@ -1108,7 +1118,6 @@ da:
         selected:
           one: "Du har valgt <b>1</b> indlæg."
           other: "Du har valgt <b>{{count}}</b> indlæg."
-        change_tags: "Skift Tags"
         choose_new_tags: "Vælg nye tags for dette emne"
         changed_tags: "Tags for dette emne blev ændret"
       none:
@@ -1740,7 +1749,6 @@ da:
     history: "Historik"
     changed_by: "af {{author}}"
     raw_email:
-      title: "Email kildekode"
       not_available: "Ikke tilgængelig!"
     categories_list: "Kategorioversigt"
     filters:
@@ -2155,7 +2163,6 @@ da:
             without_uploads: "Ja (inkluder ikke filer)"
           download:
             label: "Download"
-            title: "Download backuppen"
           destroy:
             title: "Sletter backuppen"
             confirm: "Er du sikker på du vil fjerne denne backup?"

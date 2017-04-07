@@ -575,7 +575,6 @@ cs:
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
-    category_featured_topics: "Počet témat zobrazených v seznamu kategorií"
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
@@ -583,7 +582,6 @@ cs:
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     ga_universal_tracking_code: "Kód Google Universal Analytics (analytics.js); například UA–12345678-9; více na http://google.com/analytics"
     ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
-    enable_noscript_support: "Povolit podporu &lt;noscript&gt; tagu"
     allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
@@ -670,12 +668,6 @@ cs:
     email:
       not_allowed: "není povolen od tohoto emailového poskytovatele. Prosím použijte jinou emailovou adresu."
       blocked: "není povolen."
-  test_mailer:
-    subject_template: "[%{site_name}] Zkušební email"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Je k dispozici nová verze Discourse."
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] Updates Are Available"
   system_messages:
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
@@ -707,22 +699,9 @@ cs:
       title: "Odhlásit z odběru emailů"
       description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} Vás pozval do konverzace '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-    user_quoted:
-      subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-    user_posted:
-      subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       click_here: "klikněte zde"
     forgot_password:
-      subject_template: "[%{site_name}] Obnovení hesla"
       text_body_template: |
         Někdo zažádal o obnovení vašeho hesla na [%{site_name}](%{base_url}).
 
@@ -731,7 +710,6 @@ cs:
         Klikněte na následující odkaz pro vytvoření nového hesla:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -739,8 +717,6 @@ cs:
 
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      subject_template: "[%{site_name}] Přihlášení"
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
     signup:

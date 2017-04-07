@@ -413,7 +413,6 @@ zh_TW:
       pms_per_day: "您今天發表的訊息數已經達到上限。請等待 %{time_left} 後再行嘗試。"
       create_like: "您今天給予讚的次數已經達到上限。請等待 %{time_left} 再行嘗試。"
       create_bookmark: "您今天加入書籤的數目已經達到上限。請等待 %{time_left} 再行嘗試。"
-      edit_post: "您今天編輯的次數已達到上限。請等待 %{time_left} 再行嘗試。"
       live_post_counts: "您要求的即時文章計數過於快速。請等待 %{time_left} 再行嘗試。"
       unsubscribe_via_email: "你已經達到了今日用郵件解除訂閲的最大數量限制。請等待%{time_left}之後再試。"
       topic_invitations_per_day: "你已經達到了今日主題邀請的最大數量限制。請等待%{time_left}之後再試。"
@@ -802,7 +801,6 @@ zh_TW:
     delete_removed_posts_after: "帖子被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，帖子將被立即刪除。"
     max_image_width: "文章中最大的縮圖寬度"
     max_image_height: "文章中的允許圖片最大的縮圖高度"
-    category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
@@ -860,7 +858,6 @@ zh_TW:
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
     enable_escaped_fragments: "如未偵測到爬蟲回退到使用 Google Ajax-Crawling API。參見 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "開啟noscript來對網路爬蟲來做標準的支援"
     allow_moderators_to_create_categories: "允許板主建立新分類"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
     use_admin_ip_whitelist: "當目前的IP剛好處于IP段禁止名單(Admin > Logs > Screened Ips)中的時候，只有管理員才可登入。"
@@ -1307,10 +1304,6 @@ zh_TW:
   change_owner:
     post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
     deleted_user: "已經刪除的用戶"
-  emoji:
-    errors:
-      name_already_exists: "抱歉，名字 '%{name}' 已經被另一個 emoji 使用。"
-      error_while_storing_emoji: "抱歉，存儲 emoji 時發生錯誤。"
   topic_statuses:
     archived_enabled: "此討論話題已封存，即已經凍結，無法修改。"
     archived_disabled: "此討論話題已被解除封存，即不再凍結，可以修改。"
@@ -1483,7 +1476,6 @@ zh_TW:
       (如果連結已經過期，在登入頁面選擇「我忘了我的密碼」，再次輸入你的 email 即可)
   test_mailer:
     title: "測試 Mailer"
-    subject_template: "[%{site_name}] 電子郵件發送測試"
     text_body_template: |
       這是一封測試電子郵件，發自：
 
@@ -1527,7 +1519,6 @@ zh_TW:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "新版本 Mailer"
-    subject_template: "[%{site_name}] 有可用的新版 Discourse 更新"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
 
@@ -1541,7 +1532,6 @@ zh_TW:
       - 訪問 [meta.discourse.org（英文）](https://meta.discourse.org) 獲取 Discourse 的最新資訊、討論和支持。也可訪問 [meta.discoursecn.org 非官方的中文支持論壇](https://meta.discoursecn.org) 獲得支持。
   new_version_mailer_with_notes:
     title: "包含提醒的新版本 Mailer"
-    subject_template: "[%{site_name}] 可以升級"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
 
@@ -1559,8 +1549,6 @@ zh_TW:
       %{notes}
   queued_posts_reminder:
     title: "排定中的文章提醒"
-    subject_template:
-      other: "[%{site_name}] %{count} 個帖子等待審核"
     text_body_template: |
       你好，
 
@@ -1704,56 +1692,48 @@ zh_TW:
       text_body_template: "很抱歉，你的資料匯出失敗了。請檢查日誌，或聯繫管理人員。"
     email_reject_insufficient_trust_level:
       title: "電子郵件拒絕 信任等級不足"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 信任等級不足"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         你的賬戶沒有足夠的信任等級以該郵件地址發佈新主題。如果你有異議，聯繫管理人員。
     email_reject_user_not_found:
       title: "電子郵件拒絕 找不到用戶"
-      subject_template: "[%{site_name}] 郵件問題 -- 用戶未找到"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         你發送回覆的郵件地址是未知的郵件地址。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_screened_email:
       title: "電子郵件拒絕 屏蔽的電子郵件地址"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 被封禁的郵件地址"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         你發送回覆的郵件地址是已被封禁的郵件地址。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_inactive_user:
       title: "電子郵件拒絕 用戶尚未啟動"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 未激活用戶"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         與你賬戶關聯的郵件地址沒有激活，請先激活你的賬號再發送郵件。
     email_reject_blocked_user:
       title: "電子郵件拒絕 已封鎖的用戶"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 被封禁的用戶"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         與你賬戶關聯的郵件地址已經被封禁。
     email_reject_reply_user_not_matching:
       title: "點子郵件拒絕 未找到符合的用戶"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 未預期的回覆地址"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         你發送回覆的郵件地址與我們等待的地址不同，所以我們不確定你是不是同一個人。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_no_account:
       title: "電子郵件拒絕 沒有帳號"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 未知賬戶"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         我們找不到匹配你郵件地址的賬號。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_empty:
       title: "電子郵件拒絕 空白"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 無內容"
       text_body_template: |
         我們很抱歉，但是你發送至 %{destination}（名為 %{former_title}）的郵件沒有成功。
 
@@ -1762,21 +1742,18 @@ zh_TW:
         如果你**確定**你的郵件中有回覆內容，試試用更簡單的格式。
     email_reject_parsing:
       title: "電子郵件拒絕 分析"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 內容無法識別"
       text_body_template: |
         我們很抱歉，但是你發送至 %{destination}（名為 %{former_title}）的郵件無法發送。
 
         我們不能找到你郵件中的回覆。**請確認將你的回覆置於郵件頂端**——我們不能處理行內回覆。
     email_reject_invalid_access:
       title: "電子郵件拒絕 無效存取"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 無權限"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         你的賬戶沒有達到足夠的信任等級在該分類發佈新主題。如果你有異議，聯繫管理人員。
     email_reject_strangers_not_allowed:
       title: "電子郵件拒絕 陌生人禁止"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 無權限"
       text_body_template: |+
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
@@ -1784,14 +1761,12 @@ zh_TW:
 
     email_reject_invalid_post:
       title: "電子郵件拒絕 無效貼文"
-      subject_template: "[%{site_name}] 郵件問題 -- 發佈時錯誤"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         可能的原因是：複雜的格式、消息超長、消息太短。請再試一次，如果還不行，使用網站發表。
     email_reject_invalid_post_specified:
       title: "電子郵件拒絕 無效貼文認定"
-      subject_template: "[%{site_name}] 郵件問題 -- 發佈時錯誤"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
@@ -1802,49 +1777,42 @@ zh_TW:
         如果你能解決錯誤，請再試一次。
     email_reject_invalid_post_action:
       title: "電子郵件拒絕 無效貼文動作"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 無發表權限"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         發送的命令無法被識別。請再試一次，如果還有問題，使用網站發表。
     email_reject_reply_key:
       title: "電子郵件拒絕 復原金鑰"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 未知回覆指紋"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         郵件中的回覆信令是無效或者未知的，所以我們不知道這封郵件回覆給誰了。請聯繫管理人員。
     email_reject_bad_destination_address:
       title: "電子郵件拒絕 不良目的地位址"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- 未知的回覆至地址"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}） 郵件出問題了。
 
         目標郵件地址無法識別。請確保你在向管理人員提供的郵件地址發信。
     email_reject_topic_not_found:
       title: "電子郵件拒絕 未找到討論話題"
-      subject_template: "[%{site_name}] 郵件問題 -- 主題未找到"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         你回覆的主題不存在——可能已經被刪除了？如果你有異議，聯繫管理人員。
     email_reject_topic_closed:
       title: "電子郵件拒絕 討論話題已關閉"
-      subject_template: "[%{site_name}] 郵件問題 -- 主題已關閉"
       text_body_template: |
         我們很抱歉，但是你發送至 %{destination} ( 名為 %{former_title} )的郵件出問題了。
 
         你回覆的主題已經被關閉，不允許回覆。如果你有異議，聯繫管理人員。
     email_reject_auto_generated:
       title: "電子郵件拒絕 自動生成"
-      subject_template: "[%{site_name}] 郵件問題 -- 自動生成的回覆"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         系統覺得你的郵件是“自動生成”的，即電腦生成了該郵件而不是由你輸入的；我們不能接受這樣的郵件。如果你有異議，聯繫管理人員。
     email_error_notification:
       title: "電子郵件錯誤通知"
-      subject_template: "[%{site_name}] 電子郵件錯誤 -- POP 驗證錯誤"
       text_body_template: |
         不幸的是，從 POP 伺服器查詢郵件時遇到了驗證錯誤。
 
@@ -1980,7 +1948,6 @@ zh_TW:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "用戶被邀請至私人訊息"
-      subject_template: "[%{site_name}] %{username} 邀請你參與討論 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1989,7 +1956,6 @@ zh_TW:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "用戶被邀請至私人訊息狀態"
-      subject_template: "[%{site_name}] %{username} 邀請你加入消息交流：'%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1998,7 +1964,6 @@ zh_TW:
         %{respond_instructions}
     user_invited_to_topic:
       title: "用戶被邀請至討論話題"
-      subject_template: "[%{site_name}] %{username}邀請你參與“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
 
@@ -2007,7 +1972,6 @@ zh_TW:
         %{respond_instructions}
     user_replied:
       title: "用戶回覆"
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
       text_body_template: |
         %{header_instructions}
 
@@ -2018,7 +1982,6 @@ zh_TW:
         %{respond_instructions}
     user_replied_pm:
       title: "用戶回復私人訊息"
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2029,7 +1992,6 @@ zh_TW:
         %{respond_instructions}
     user_quoted:
       title: "用戶引述"
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題引用了你的內容"
       text_body_template: |
         %{header_instructions}
 
@@ -2040,7 +2002,6 @@ zh_TW:
         %{respond_instructions}
     user_linked:
       title: "用戶連結"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2051,7 +2012,6 @@ zh_TW:
         %{respond_instructions}
     user_mentioned:
       title: "用戶提及"
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題提及了你"
       text_body_template: |
         %{header_instructions}
 
@@ -2062,7 +2022,6 @@ zh_TW:
         %{respond_instructions}
     user_group_mentioned:
       title: "用戶群組提及"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2073,7 +2032,6 @@ zh_TW:
         %{respond_instructions}
     user_posted:
       title: "用戶貼文"
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 討論話題發表了文章"
       text_body_template: |
         %{header_instructions}
 
@@ -2084,7 +2042,6 @@ zh_TW:
         %{respond_instructions}
     user_watching_first_post:
       title: "用戶觀看第一個主題"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2095,7 +2052,6 @@ zh_TW:
         %{respond_instructions}
     user_posted_pm:
       title: "用戶發表私人訊息"
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2124,14 +2080,12 @@ zh_TW:
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
-      subject_template: "[%{site_name}] 摘要"
       unsubscribe: "這是封來自%{site_link}的摘要郵件，因為你長時間沒有訪問而發送。%{unsubscribe_link}取消訂閲。"
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     mailing_list:
       why: "%{date}%{site_link}上的所有情況"
-      subject_template: "[%{site_name}] %{date}摘要"
       unsubscribe: "這是每日摘要郵件。站點啟用了郵件列表模式，點擊連結 %{unsubscribe_link} 退訂。"
       from: "%{site_name}的摘要"
       new_topics: "近期主題"
@@ -2140,7 +2094,6 @@ zh_TW:
       back_to_top: "回到頂部"
     forgot_password:
       title: "忘記密碼"
-      subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |
         有人請求重設你在 [%{site_name}](%{base_url}) 上的密碼。
 
@@ -2150,7 +2103,6 @@ zh_TW:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "設定密碼"
-      subject_template: "[%{site_name}] 設定密碼"
       text_body_template: |
         有人請求添加你在 [%{site_name}](%{base_url}) 的密碼。除此之外，你可以通過已驗證過你郵件地址的在綫服務商登錄。
 
@@ -2160,7 +2112,6 @@ zh_TW:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "管理員登入"
-      subject_template: "[%{site_name}]登錄"
       text_body_template: |
         有人嘗試登錄你在[%{site_name}](%{base_url})的賬戶。
 
@@ -2170,7 +2121,6 @@ zh_TW:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "建立用戶"
-      subject_template: "[%{site_name}] 你的新帳號"
       text_body_template: |
         你在 %{site_name} 上建立了一個新賬號
 
@@ -2178,14 +2128,12 @@ zh_TW:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "確認新郵件"
-      subject_template: "[%{site_name}] 確認你的電子郵件位址"
       text_body_template: |
         點擊以下連結確認你在[%{site_name}]上的新電子郵件：
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "確認舊郵件"
-      subject_template: "[%{site_name}] 確認你的新電子郵箱地址"
       text_body_template: |
         在我們修改你的郵箱地址前，我們需要你確認你擁有當前的郵件賬號。在你完成這步之後，我們將確認你的新郵件地址。
 
@@ -2194,7 +2142,6 @@ zh_TW:
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "通知舊的郵件"
-      subject_template: "[%{site_name}] 你的郵箱地址已經修改成功"
       text_body_template: |
         這是%{site_name}自動發出的郵件，以告知你的郵箱地址已經被修改了。如果這是一個錯誤，請聯繫站點管理人員。
 
@@ -2223,7 +2170,6 @@ zh_TW:
         (如果你需要和[管理人員](%{base_url}/about)聯繫的話，請直接回覆這則訊息。)
     signup:
       title: "註冊"
-      subject_template: "[%{site_name}] 確認你的新賬戶"
       text_body_template: |
         歡迎來到 %{site_name}！
 
@@ -2295,103 +2241,6 @@ zh_TW:
     編輯本主題的第一帖以改變 %{page_name} 頁面的內容。
   guidelines_topic:
     title: "FAQ / 使用守則"
-    body: |
-      <a name="civilized"></a>
-
-      ## [這是一個文明討論的地方](#civilized)
-
-      在論壇上請表現得像在公共公園一樣得體。我們一群人共享着一個公共社群資源 &mdash; 一個通過不斷進行討論以分享我們技能、知識和興趣的地方。
-
-      這些都不是死規矩或者是草率決定，只是一些幫助社群的人們來判斷的規定。試用這些指引來保持乾淨和充滿靈感的文明的公開論壇。
-
-      <a name="improve"></a>
-
-      ## [改善討論](#improve)
-
-      幫助我們讓這個地方變成一個討論的好地方。你可以總是一致的做一些幫助改善討論的事，即使是小事也行。如果你不確定你的帖子有益於討論，認真想一想你要說什麼再發佈。
-
-      這裡討論的主題對我們很重要，並且我們希望你也覺得這些內容對你很重要。尊重這些討論的主題，以及討論他們的人們，特別是當你不同意他們所說的時候。
-
-      改善討論的一種方法是找一找已經發生過的事。請在發帖或創建你自己的主題前，花一些時間瀏覽這些主題，這樣你更有機會遇見和你有共同愛好的人。
-
-      <a name="agreeable"></a>
-
-      ## [即使你不同意他人時，尊重他人](#agreeable)
-
-      你可能想表達你的不同意。這沒問題。但是，記住_批評觀點，而不是人_。請避免：
-
-      *   指名道姓。
-      *   人生攻擊。
-      *   回覆帖子無關於帖子的內容。
-      *   下意識的反駁。
-
-      相反，提供合理的觀點改善討論。
-
-      <a name="participate"></a>
-
-      ## [你的參與有意義](#participate)
-
-      我們在這兒的討論為大家樹立了榜樣。通過選擇參與有意義的討論，幫助我們將論壇變成一個有意思的地方 &mdash; 並且避免那些沒有幫助的行為。
-
-      Discourse 提供了讓社群共同鑒別最棒（或最差）的貢獻的工具：收藏、書籤、贊、標記、回覆和編輯等等。使用這些工具不僅能改善你自己的體驗，也能改善其他人的體驗。
-
-      讓我們創造一個更美好的社群。
-
-      <a name="flag-problems"></a>
-
-      ## [如果你發現問題了，標記它](#flag-problems)
-      版主有特別的權力；他們對論壇負責。但是你也是。有了你的幫助，版主能成為社群監察者，而不僅是守衛或者警察。
-
-      當你見到不合適的行為，不要回覆。這種承認變相鼓勵了這種不合適的行為，浪費了你的精力，並且浪費了每一個人的時間。_只要標記它。_如果收到了足夠的標記，將會有相應的處理，這個處理可能是自動地，也可能由版主介入。
-
-      為了維護我們的社群，版主保留了任何情況下刪除任何內容和任何用戶的權力。版主沒有預先審核任何新帖子；版主和站點維護人員對社群裡發表的任何言論均不負責任。
-
-      <a name="be-civil"></a>
-
-      ## [永遠保持文明](#be-civil)
-
-      粗魯這樣的行為會破壞健康的討論：
-
-      *   文明。不要發表任何理智的人會認為冒犯的、過分的或招致怨恨的言論。
-      *   拒絶色情。不要發表任何淫穢或性暗示的東西。
-      *   尊重每一個人。不要騷擾或者讓別人難過，檢視別人，或暴露他們的個人信息。
-      *   尊重我們的論壇。不要發表廣告或者其他垃圾信息。
-
-      這些條款不是法律條文，並且沒有準確的定義 &mdash; 避免任何做關於他們的_可能擦邊_的事。如果你不確定，問問自己的帖子是否能出現在紐約時報的頭版頭條上。
-
-      這是一個公共論壇，並且搜索引擎會索引這些討論。注意發表的語言、連結和圖片，不要在其中包含你的家庭和朋友。
-
-      <a name="keep-tidy"></a>
-
-      ## [保持整潔](#keep-tidy)
-
-      花一點時間讓東西出現在正確的位置，這樣我們能花更多的時間在討論上而非清理格式。所以：
-
-      *   不要在錯誤的分類發表新主題。
-      *   不要在多個主題中回覆同樣的內容。
-      *   不要發佈沒有內容的回覆。
-      *   不要在中途改變主題。
-      *   不要在你的帖子中簽名 &mdash; 每一貼都附有你的個人信息。
-
-      比起發表“+1”或者“同意”，使用贊按鈕。比起將帖子帶向一個決然不同的方向，使用“回覆為關聯主題”。
-
-      <a name="stealing"></a>
-
-      ## [只發表你自己的東西](#stealing)
-
-      你不能在沒有他人授權的情況下發表任何屬於他人的數字資產。你可能不能發表關於竊據他人知識產權（軟件、視頻、音頻和圖像）的任何簡介、連結或方法，或其他任何違反法律的內容。
-
-      <a name="power"></a>
-
-      ## [有你參與](#power)
-
-      這個站點由[一群友善的管理人員](/about)、你和社群一起運營。如果你對這裡的事情仍有疑問，在[站點反饋](/c/site-feedback)分類新建一個主題並且開始討論！如果遇到了重要或緊急的事情，並且不能用站務分類的主題或標記解決，通過[管理人員頁面](/about)聯繫我們。
-
-      <a name="tos"></a>
-
-      ## [使用條款](#tos)
-
-      是的，法律很無聊，但是我們必須保護我們自己 &ndash; 引申開來，你和你的數據 &ndash; 用於針對不友好的傢伙們。我們有一個[使用條款](/tos)描述你的（以及我們）關於內容、隱私和法律的行為和權力。要使用我們的服務，你必須同意遵守[使用條款](/tos)。
   tos_topic:
     title: "服務條款"
     body: |
@@ -2914,7 +2763,6 @@ zh_TW:
             description: "你或者你的組織平時用於聯絡的網頁。將被顯示在<a href='/about' target='_blank'>關於頁面</a>中。"
           site_contact:
             label: "自動消息"
-            description: "所有自動發送自 Discourse 的私人消息將以該用戶的名義發送。最重要的是，這個用戶將被指定為發送給每個新用戶的歡迎消息的發送人。"
       corporate:
         title: "組織"
         description: "這些名字將顯示於<a href='/privacy' target='blank'>隱私策略</a>和<a href='/tos' target='blank'>服務條款</a>中，你可以在工作人員分類中編輯這些主題。如果你沒有公司，你可以跳過這個步驟。"
