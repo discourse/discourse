@@ -868,7 +868,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     const refresh = (args) => this.appEvents.trigger('post-stream:refresh', args);
 
-    this.messageBus.subscribe("/topic/" + this.get('model.id'), data => {
+    this.messageBus.subscribe(`/topic/${this.get('model.id')}`, data => {
       const topic = this.get('model');
 
       if (data.notification_level_change) {
@@ -878,6 +878,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
 
       const postStream = this.get('model.postStream');
+
+      if (data.reload_topic) {
+        topic.reload().then(() => {
+          this.send('postChangedRoute', topic.get('post_number') || 1);
+          this.appEvents.trigger('header:update-topic', topic);
+          if (data.refresh_stream) postStream.refresh();
+        });
+
+        return;
+      }
+
       switch (data.type) {
         case "acted":
           postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id, refreshLikes: true }));
@@ -915,27 +926,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
       }
 
-      if (data.reload_topic) {
-        topic.reload().then(() => {
-          this.send('postChangedRoute', topic.get('post_number') || 1);
-          this.appEvents.trigger('header:update-topic', topic);
-        });
-      } else {
-        if (topic.get('isPrivateMessage') &&
-            this.currentUser &&
-            this.currentUser.get('id') !== data.user_id &&
-            data.type === 'created') {
+      if (topic.get('isPrivateMessage') &&
+          this.currentUser &&
+          this.currentUser.get('id') !== data.user_id &&
+          data.type === 'created') {
 
-          const postNumber = data.post_number;
-          const notInPostStream = topic.get('highest_post_number') <= postNumber;
-          const postNumberDifference = postNumber - topic.get('currentPost');
+        const postNumber = data.post_number;
+        const notInPostStream = topic.get('highest_post_number') <= postNumber;
+        const postNumberDifference = postNumber - topic.get('currentPost');
 
-          if (notInPostStream &&
-            postNumberDifference > 0 &&
-            postNumberDifference < 7) {
+        if (notInPostStream &&
+          postNumberDifference > 0 &&
+          postNumberDifference < 7) {
 
-            this._scrollToPost(data.post_number);
-          }
+          this._scrollToPost(data.post_number);
         }
       }
     });
