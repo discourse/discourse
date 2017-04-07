@@ -117,6 +117,7 @@ SQL
 
       topic_id = topic_id.to_i
       user_id = user_id.to_i
+      topic_user = TopicUser.find_by(topic_id: topic_id, user_id: user_id)
 
       TopicUser.transaction do
         attrs = attrs.dup
@@ -124,13 +125,10 @@ SQL
           attrs[:notifications_changed_at] ||= DateTime.now
           attrs[:notifications_reason_id] ||= TopicUser.notification_reasons[:user_changed]
         end
-        attrs_array = attrs.to_a
 
-        attrs_sql = attrs_array.map { |t| "#{t[0]} = ?" }.join(", ")
-        vals = attrs_array.map { |t| t[1] }
-        rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all([attrs_sql, *vals])
-
-        if rows == 0
+        if topic_user
+          topic_user.update!(attrs)
+        else
           create_missing_record(user_id, topic_id, attrs)
         end
       end
