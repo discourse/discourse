@@ -697,7 +697,7 @@ describe Topic do
 
         it 'should archive correctly' do
           expect(@archived_topic).not_to be_archived
-          expect(@archived_topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(@archived_topic.bumped_at.to_f).to be_within(0.1).of(@original_bumped_at)
           expect(@archived_topic.moderator_posts_count).to eq(1)
         end
       end
