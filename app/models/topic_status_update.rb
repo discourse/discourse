@@ -9,6 +9,8 @@ class TopicStatusUpdate < ActiveRecord::Base
   validates :execute_at, presence: true
   validates :status_type, presence: true
   validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }
+  validates :category_id, presence: true, if: :publishing_to_category?
+
   validate :ensure_update_will_happen
 
   before_save do
@@ -92,6 +94,10 @@ class TopicStatusUpdate < ActiveRecord::Base
 
     def schedule_auto_publish_to_category_job(time)
       Jobs.enqueue_at(time, :publish_topic_to_category, topic_status_update_id: id)
+    end
+
+    def publishing_to_category?
+      self.status_type.to_i == TopicStatusUpdate.types[:publish_to_category]
     end
 end
 

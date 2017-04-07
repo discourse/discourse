@@ -969,7 +969,7 @@ SQL
     topic_status_update.based_on_last_post = !based_on_last_post.blank?
 
     if status_type == TopicStatusUpdate.types[:publish_to_category]
-      topic_status_update.category_id = category_id
+      topic_status_update.category = Category.find_by(category_id)
     end
 
     if topic_status_update.based_on_last_post
