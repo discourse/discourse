@@ -56,4 +56,60 @@ describe TopicStatusUpdater do
     expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_lastpost_hours", count: 10))
   end
 
+  describe "repeat actions" do
+
+    shared_examples "an action that doesn't repeat" do
+      it "does not perform the update twice" do
+        topic = Fabricate(:topic, status_name => false)
+        updated = TopicStatusUpdater.new(topic, admin).update!(status_name, true)
+        expect(updated).to eq(true)
+        expect(topic.send("#{status_name}?")).to eq(true)
+
+        updated = TopicStatusUpdater.new(topic, admin).update!(status_name, true)
+        expect(updated).to eq(false)
+        expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(1)
+
+        updated = TopicStatusUpdater.new(topic, admin).update!(status_name, false)
+        expect(updated).to eq(true)
+        expect(topic.send("#{status_name}?")).to eq(false)
+
+        updated = TopicStatusUpdater.new(topic, admin).update!(status_name, false)
+        expect(updated).to eq(false)
+        expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(2)
+      end
+
+    end
+
+    it_behaves_like "an action that doesn't repeat" do
+      let(:status_name) { "closed" }
+    end
+
+    it_behaves_like "an action that doesn't repeat" do
+      let(:status_name) { "visible" }
+    end
+
+    it_behaves_like "an action that doesn't repeat" do
+      let(:status_name) { "archived" }
+    end
+
+    it "updates autoclosed" do
+      topic = Fabricate(:topic)
+      updated = TopicStatusUpdater.new(topic, admin).update!('autoclosed', true)
+      expect(updated).to eq(true)
+      expect(topic.closed?).to eq(true)
+
+      updated = TopicStatusUpdater.new(topic, admin).update!('autoclosed', true)
+      expect(updated).to eq(false)
+      expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(1)
+
+      updated = TopicStatusUpdater.new(topic, admin).update!('autoclosed', false)
+      expect(updated).to eq(true)
+      expect(topic.closed?).to eq(false)
+
+      updated = TopicStatusUpdater.new(topic, admin).update!('autoclosed', false)
+      expect(updated).to eq(false)
+      expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(2)
+    end
+
+  end
 end

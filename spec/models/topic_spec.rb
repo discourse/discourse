@@ -689,14 +689,16 @@ describe Topic do
     context 'archived' do
       context 'disable' do
         before do
-          @topic.update_status('archived', false, @user)
-          @topic.reload
+          @archived_topic = Fabricate(:topic, archived: true, bumped_at: 1.hour.ago)
+          @original_bumped_at = @archived_topic.bumped_at.to_f
+          @archived_topic.update_status('archived', false, @user)
+          @archived_topic.reload
         end
 
         it 'should archive correctly' do
-          expect(@topic).not_to be_archived
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
-          expect(@topic.moderator_posts_count).to eq(1)
+          expect(@archived_topic).not_to be_archived
+          expect(@archived_topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(@archived_topic.moderator_posts_count).to eq(1)
         end
       end
 
@@ -719,14 +721,16 @@ describe Topic do
     shared_examples_for 'a status that closes a topic' do
       context 'disable' do
         before do
-          @topic.update_status(status, false, @user)
-          @topic.reload
+          @closed_topic = Fabricate(:topic, closed: true, bumped_at: 1.hour.ago)
+          @original_bumped_at = @closed_topic.bumped_at.to_f
+          @closed_topic.update_status(status, false, @user)
+          @closed_topic.reload
         end
 
         it 'should not be pinned' do
-          expect(@topic).not_to be_closed
-          expect(@topic.moderator_posts_count).to eq(1)
-          expect(@topic.bumped_at.to_f).not_to eq(@original_bumped_at)
+          expect(@closed_topic).not_to be_closed
+          expect(@closed_topic.moderator_posts_count).to eq(1)
+          expect(@closed_topic.bumped_at.to_f).not_to eq(@original_bumped_at)
         end
 
       end
