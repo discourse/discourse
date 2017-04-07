@@ -1777,7 +1777,7 @@ en:
       %{invite_link}
 
   custom_invite_forum_mailer:
-    title: "Invite Forum Mailer"
+    title: "Custom Invite Forum Mailer"
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
