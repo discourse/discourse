@@ -5,8 +5,14 @@ class NotificationsController < ApplicationController
   before_filter :ensure_logged_in
 
   def index
-    user = current_user
-    user = User.find_by_username(params[:username].to_s) if params[:username]
+    user =
+      if params[:username] && !params[:recent]
+        user_record = User.find_by(username: params[:username].to_s)
+        raise Discourse::InvalidParameters.new(:username) if !user_record
+        user_record
+      else
+        current_user
+      end
 
     guardian.ensure_can_see_notifications!(user)
 
