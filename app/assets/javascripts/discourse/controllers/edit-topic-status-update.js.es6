@@ -59,6 +59,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return Ember.isEmpty(updateTime) || updateTimeInvalid || loading;
   },
 
+  @computed("model.visible")
+  excludeCategoryId(visible) {
+    if (visible) return this.get('model.category_id');
+  },
+
   @observes("topicStatusUpdate.execute_at", "topicStatusUpdate.duration")
   _setUpdateTime() {
     let time = null;
