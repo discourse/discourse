@@ -130,7 +130,6 @@ bs_BA:
         enabled: 'izlistan %{when}'
         disabled: 'sklonjen %{when}'
     topic_admin_menu: "topic admin actions"
-    wizard_required: "Vrijeme je za kofiguraciju vašeg foruma! <a href='%{url}' data-auto-route='true'>Startajte Setup Postavke</a>!"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Niti jedna notifikacija bilo kakve vrste neće biti poslana."
     bootstrap_mode_enabled: "Kako bi lakše lansirali svoj novi sajt, trenutno ste u bootstrap modu. Svi novi korisnici će dobiti razinu povjerenja 1 i imati uključen sistematizovani dnevni e-mail pregleda promjena. Naknadno će biti automatski isključeno nakon što ukupan broj korisnika pređe brojku od %{min_users}."
     bootstrap_mode_disabled: "Bootstrap mod će biti ugašen u sljedećih 24 sata."
@@ -889,7 +888,6 @@ bs_BA:
       logging_in: "Ulogujem se..."
       or: "Or"
       authenticating: "Autorizacija..."
-      awaiting_confirmation: "Vaš nalog čeka aktivaciju, koristite opciju za ponovno slanje aktivacije."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
@@ -1163,7 +1161,6 @@ bs_BA:
         archive_topics: "Archive Topics"
         notification_level: "Change Notification Level"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        change_tags: "Izmijeni tagove"
         choose_new_tags: "Odaberi nove tagove za ove teme:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
       none:
@@ -1818,8 +1815,6 @@ bs_BA:
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
             without_uploads: "Yes (do not include files)"
-          download:
-            title: "Download the backup"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"

@@ -310,7 +310,6 @@ uk:
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
-    category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -318,7 +317,6 @@ uk:
     notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
-    enable_noscript_support: "Увімкнути стандартну підтримку пошукових роботів через теґ noscript"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     port: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Використовувати цей HTTP-порт замість звичайного порту 80. Лишіть порожнім, щоб використовувати значення за замовчуванням 80."
@@ -405,10 +403,6 @@ uk:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "не допускається."
-  test_mailer:
-    subject_template: "[%{site_name}] Тест доставки електронної пошти"
-  new_version_mailer_with_notes:
-    subject_template: "оновлення [%{site_name}] доступно"
   system_messages:
     welcome_user:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
@@ -431,20 +425,9 @@ uk:
       title: "Відпісатися"
       description: "Не зацікавлені в отриманні цих листів? Немає проблем! Натисніть нижче, щоб відписатися назавжди:"
     posted_by: "Опубліковано %{username} %{post_date}"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [ПП] %{topic_title}"
     digest:
       click_here: "натисніть тут"
     forgot_password:
-      subject_template: "[%{site_name}] Скидання пароля"
       text_body_template: |
         Хтось попросив скинути Ваш пароль на сайті [%{site_name}](%{base_url}).
 
@@ -453,7 +436,6 @@ uk:
         Перейдіть за посиланням, щоб обрати новий пароль:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Встановлення пароля"
       text_body_template: |
         Хтось попросив додати пароль до Вашого облікового запису на сайті [%{site_name}](%{base_url}). Замість цього, Ви можете входити в систему, використовуючи будь-який із підтримуваних онлайн-сервісів (Google, Facebook, і т. ін.), який поєднаний із цією перевіреною електронною скринькою.
 

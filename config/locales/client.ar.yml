@@ -304,9 +304,10 @@ ar:
         bookmark: "انقر لتعليم أوّل مشاركة في هذا الموضوع"
         unbookmark: "انقر لإزالة كلّ العلامات في هذا الموضوع"
     bookmarks:
+      not_logged_in: "نأسف، عليك الولوج لتعليم المشاركات"
       created: "لقد علّمت هذه المشاركة"
-      not_bookmarked: "لقد قرأتَ هذا المنشور، انقر لتعليمه"
-      last_read: "هذا آخر منشور قرأته، انقر لتعليمه"
+      not_bookmarked: "لقد قرأتَ هذه المشاركة، انقر لتعليمها"
+      last_read: "هذا آخر مشاركة قرأتها، انقر لتعليمها"
       remove: "أزل العلامة"
       confirm_clear: "أمتأكّد من إزالة كلّ العلامات في هذا الموضوع؟"
     topic_count_latest:
@@ -594,10 +595,10 @@ ar:
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
-        button_text: "تحميل مواضيعي"
+        button_text: "نزّل مشاركاتي"
         confirm: "أمتأكّد من تنزيل مشاركاتك؟"
         success: "بدأ التحميل, سيتم إعلامك برسالة عند اكتمال العملية."
-        rate_limit_error: "المشاركات يمكن تحميلها لمرة واحدة في اليوم , الرجاء المحاولة غدا."
+        rate_limit_error: "يمكن تنزيل المشاركات مرّة واحدة يوميًّا فقط. رجاءً أعد المحاولة غدًا."
       new_private_message: "رسالة جديدة"
       private_message: "رسالة خاصة"
       private_messages: "الرسائل"
@@ -667,7 +668,7 @@ ar:
       delete_account: "حذف الحساب"
       delete_account_confirm: "أمتأكّد من حذف حسابك للأبد؟ هذا إجراء لا عودة فيه!"
       deleted_yourself: "حُذف حسابك بنجاح."
-      delete_yourself_not_allowed: "لايمكنك حذف حسابك الان , تواصل مع المدير ليحذف حسابك "
+      delete_yourself_not_allowed: "لا يمكنك حذف حسابك الآن. راسل أحد المدراء لحذف حسابك."
       unread_message_count: "الرسائل"
       admin_delete: "حذف"
       users: "الأعضاء"
@@ -681,8 +682,6 @@ ar:
       undo_revoke_access: "رفع توقيف صلاحيات الوصول"
       api_approved: "موافق عليه:"
       staff_counters:
-        flags_given: "علامات مساعدة"
-        flagged_posts: "# مشاركات"
         deleted_posts: "حذف جميع المشاركات"
         suspensions: "موقوف"
         warnings_received: "تحذيرات"
@@ -779,7 +778,7 @@ ar:
       last_emailed: "أخر مراسلة"
       last_seen: "آخر تواجد مُنذ "
       created: "إنضم"
-      log_out: "تسجيل الخروج"
+      log_out: "اخرج"
       location: "الموقع"
       card_badge:
         title: "وسام بطاقة المستخدم"
@@ -899,19 +898,19 @@ ar:
           many: "عدد المواضيع"
           other: "عدد المواضيع"
         likes_given:
-          zero: "لم يعطي اي إعجاب. "
-          one: "أعطى <i class='fa fa-heart'></i> "
-          two: "أعطى <i class='fa fa-heart'></i> "
-          few: "أعطى <i class='fa fa-heart'></i> "
-          many: "أعطى <i class='fa fa-heart'></i> "
-          other: "أعطى <i class='fa fa-heart'></i> "
+          zero: "ما أعطى من <i class='fa fa-heart'></i>"
+          one: "ما أعطى من <i class='fa fa-heart'></i>"
+          two: "ما أعطى من <i class='fa fa-heart'></i>"
+          few: "ما أعطى من <i class='fa fa-heart'></i>"
+          many: "ما أعطى من <i class='fa fa-heart'></i>"
+          other: "ما أعطى من <i class='fa fa-heart'></i>"
         likes_received:
-          zero: "<i class='fa fa-heart'></i> لم يتلقى أي اعجاب."
-          one: "تلقى  <i class='fa fa-heart'></i> "
-          two: "تلقى  <i class='fa fa-heart'></i> "
-          few: "تلقى  <i class='fa fa-heart'></i> "
-          many: "تلقى  <i class='fa fa-heart'></i> "
-          other: "تلقى  <i class='fa fa-heart'></i> "
+          zero: "ما استقبل من <i class='fa fa-heart'></i>"
+          one: "ما استقبل من <i class='fa fa-heart'></i>"
+          two: "ما استقبل من <i class='fa fa-heart'></i>"
+          few: "ما استقبل من <i class='fa fa-heart'></i>"
+          many: "ما استقبل من <i class='fa fa-heart'></i>"
+          other: "ما استقبل من <i class='fa fa-heart'></i>"
         days_visited:
           zero: "اجمالي الأيام التي زار فيها الموقع"
           one: "اجمالي الأيام التي زار فيها الموقع"
@@ -993,8 +992,8 @@ ar:
       enabled: "هذا الموقع في وضع القراءة فقط. نأمل أن تتابع تصفّحه، ولكنّ الرّدّ، والإعجاب وغيرها من إجراءات معطّلة حاليًّا."
       login_disabled: "الولوج معطّل في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "الخروج معطّل في حال كان الموقع في وضع القراءة فقط."
-    too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة بدأت!</a> يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. الزوار الجدد بحاجة إلى بعض الأحاديث لقراءة والرد على."
-    too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي!</a> وهناك حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
+    too_few_topics_and_posts_notice: " يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. "
+    too_few_topics_notice: "قم بإنشاء على الاقل 5 مواضيع عامة و %{posts} عامة للبدء بالمناقشة , المستخدمين الجدد لايمكن أن يحصلوا على مستوى الثقة حتى يكون هناك محتوى لهم , هذه الرسالة تظهر فقط للمدير"
     too_few_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي بدأت!</a> يوجد حاليا <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> وصل الحد الأعلى لإعدادت الموقع %{siteSettingRate}."
@@ -1076,7 +1075,7 @@ ar:
       rate_limit: "رجاءً انتظر قبل أن تلج مرّة أخرى."
       blank_username_or_password: "رجاءً أدخل اسم المستخدم (أو البريد الإلكترونيّ) وكلمة السّرّ."
       reset_password: 'صفّر كلمة السّرّ'
-      logging_in: "...تسجيل الدخول "
+      logging_in: "يلج..."
       or: "أو "
       authenticating: "يستوثق..."
       awaiting_approval: "لم يوافق أيّ من أعضاء الطّاقم على حسابك بعد. سيُرسل إليك بريد حالما يتمّ ذلك."
@@ -1114,8 +1113,8 @@ ar:
     invites:
       accept_title: "دعوة"
       welcome_to: "مرحباً بك في %{site_name}!"
-      invited_by: "لقد تمت دعوتك بواسطة"
-      social_login_available: "سيمكنك ايضاً تسجيل دخولك باستخدام الشبكات الإجتماعية بواسطة هذا الإيميل"
+      invited_by: "لقد دعاك:"
+      social_login_available: "يمكنك أيضًا الولوج عبر أيّ شبكة اجتماعيّة مستخدمًا هذا البريد."
       your_email: "بريدك الإلكتروني  <b>%{email}</b>."
       accept_invite: "قُبول الدعوة "
       success: "أُنشئ حسابك وقد ولجت الآن."
@@ -1177,6 +1176,7 @@ ar:
       title: "أو اضغط Ctrl+Enter"
       users_placeholder: "أضف مستخدما"
       title_placeholder: "بجملة واحدة، ما الذي تود النقاش عنه؟"
+      title_or_link_placeholder: "اكتب عنوانًا أو ألصق رابطًا"
       edit_reason_placeholder: "لماذا تعدّل النص؟"
       show_edit_reason: "(أضف سبب التعديل)"
       reply_placeholder: "اكتب ما تريد هنا. استخدم Markdown، أو BBCode، أو HTML للتنسيق. اسحب الصور أو ألصقها."
@@ -1324,11 +1324,11 @@ ar:
         with_tags:
           label: مع أوسمة
         filters:
-          label: ابحث عن المواضيع والمنشورات التي...
+          label: ابحث عن المواضيع والمشاركات التي...
           likes: أعجبتني
           posted: شاركت فيها
-          watching: التي أراقبها
-          tracking: التي اتابعها
+          watching: أراقبها
+          tracking: أتابعها
           private: موجودة في رسائلي
           bookmarks: علّمتُها
           first: تلك المشاركة الاولى
@@ -1639,7 +1639,7 @@ ar:
         action: "دعوة"
         success: "لقد دعونا ذلك المستخدم للمشاركة في هذه الرسالة."
         success_group: "لقد دعونا تلك المجموعة للمشاركة في هذه الرسالة."
-        error: "آسفون، حدثت مشكلة في دعوة المستخدم."
+        error: "نأسف، حدث عطل أثناء دعوة هذا المستخدم."
         group_name: "اسم المجموعة"
       controls: "خصائص  الموضوع"
       invite_reply:
@@ -1657,7 +1657,7 @@ ar:
         success_email: "قمنا بإرسال دعوة بالبريد لـ <b>{{emailOrUsername}}</b> . سيتم تنبيهك عند قبول الدعوة , تحقق من تبويب الدعوات في صفحتك الشخصية لمتابعة دعوتك."
         success_username: "دعونا هذا العضو للمشاركة في هذا الموضوع."
         error: "نأسف لا يمكنك دعوة هذا المُستَخدم , ربما لأنه مُسَجِل لدينا مسبقاً (الدعوات محدودة)"
-      login_reply: 'لِج لتردّ'
+      login_reply: 'عليك الولوج للرّدّ'
       filters:
         n_posts:
           zero: "لا مشاركات"
@@ -1693,13 +1693,13 @@ ar:
       merge_posts:
         title: "ادمج المشاركات المحدّدة"
         action: "ادمج المشاركات المحددة"
-        error: "حدث خطأ في دمج المشاركات المحددة."
+        error: "حدث عطل أثناء دمج المشاركات المحدّدة."
       change_owner:
         title: "تغيير صاحب المشاركة"
         action: "تغيير العضوية "
-        error: "هناك خطأ في نغيير العضوية"
+        error: "حدث عطل أثناء تغيير مالك المشاركات."
         label: "عضوية جديدة للمشاركات"
-        placeholder: "اسم مستخدم للعضوية الجديدة"
+        placeholder: "اسم مستخدم المالك الجديد"
         instructions:
           zero: "لم يتم تحديد أي مشاركة!"
           one: "الرجاء اختيار المالك الجديد لمشاركة نُشرت بواسطة <b>{{old_user}}</b>."
@@ -1709,10 +1709,10 @@ ar:
           other: "الرجاء اختيار المالك الجديد لـ {{count}} مشاركة نُشرت بواسطة <b>{{old_user}}</b>."
         instructions_warn: "ملاحطة لن يتم نقل الاشعارت القديمة  للمشاركة  للمسخدم الجديد <br>تحذير: اي بيانات تتعلق بالمشاركة هذه لن يتم نقلها للمستخدم الجديد. استعملها بحذر."
       change_timestamp:
-        title: "تغيير الطابع الزمني"
-        action: "تغيير الطابع الزمني"
-        invalid_timestamp: "الطابع الزمني لا يمكن أن يكون في المستقبل."
-        error: "هناك خطأ في نغيير الطابع الزمني للموضوع."
+        title: "غيّر الختم الزّمنيّ"
+        action: "غيّر الختم الزّمنيّ"
+        invalid_timestamp: "لا يمكن أن يكون الختم الزمنيّ مستقبليّ."
+        error: "حدث عطل أثناء تغيير ختم الموضوع الزّمنيّ."
         instructions: "من فضلك اختر الطابع الزمني الجديد للموضوع. ستُحدّث المشاركات فيه لألا يختلف فرق تاريخ نشرها ووقته."
       multi_select:
         select: 'حددها'
@@ -1813,7 +1813,7 @@ ar:
         has_liked: "أعجبتك هذه المشاركة"
         undo_like: "ألغِ الإعجاب"
         edit: "عدّل المشاركة"
-        edit_anonymous: "آسفون، عليك الولوج لتعديل المشاركة."
+        edit_anonymous: "نأسف، عليك الولوج لتعديل المشاركة."
         flag: "بلَغ عن هذا الموضوع او ارسل تنبيه خاص لأدارة الموقع."
         delete: "احذف المشاركة"
         undelete: "التراجع عن حذف المشاركة"
@@ -2364,7 +2364,7 @@ ar:
         help: '<b>?</b> فتح مساعدة لوحة المفاتيح'
         dismiss_new_posts: 'تجاهل جديد / المشاركات <b>x</b>, <b>r</b>'
         dismiss_topics: '<b>x</b>, <b>t</b> تجاهل المواضيع'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> تسجيل خروج'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> الخروج'
       actions:
         title: 'إجراءات'
         bookmark_topic: '<b>f</b> تبديل علامة مرجعية الموضوع'
@@ -2688,6 +2688,7 @@ ar:
         all_users: "جميع المستخدمين"
         note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
       web_hooks:
+        detailed_instruction: "سيُرسل طلب POST إلى العنوان الموفّر عندما يحدث الحدث المنتقى."
         create: "أنشئ"
         save: "حفظ"
         destroy: "مسح"
@@ -2707,6 +2708,13 @@ ar:
           successful: "نجاح"
         events:
           none: "لا يوجد أحداث مماثلة"
+          incoming:
+            zero: "لا أحداث جديدة."
+            one: "هناك حدث واحد جديد."
+            two: "هناك حدثان جديدان."
+            few: "هناك {{count}} أحداث جديدة."
+            many: "هناك {{count}} حدثًا جديدًا."
+            other: "هناك {{count}} حدث جديد."
           request: "طلب"
           response: "الرد"
           headers: "الرؤوس"
@@ -2813,6 +2821,7 @@ ar:
         body_tag:
           text: "</body>"
           title: "رقْم HTML الذي سيُدرج قبل وسم ‎</body>‎"
+        override_default: "لا تضمّن ورقة الأنماط القياسيّة"
         enabled: "مفعّل؟"
         preview: "معاينة"
         undo_preview: "ازالة المعاينة"
@@ -3137,8 +3146,8 @@ ar:
         impersonate: 'انتحال شخصية'
         action_logs: "سجلات الاجراء"
         ip_lookup: "جدول \"IP\""
-        log_out: "تسجيل الخروج"
-        logged_out: "أخرجنا العضو من كل أجهزته"
+        log_out: "اخرج"
+        logged_out: "أخرجنا العضو من كلّ أجهزته"
         revoke_admin: 'سحب الإدارة'
         grant_admin: 'منحة إدارية'
         revoke_moderation: 'سحب المراقبة'
@@ -3329,7 +3338,7 @@ ar:
           legal: "قانوني"
           uncategorized: 'أخرى'
           backups: "النسخ الإحتياطية"
-          login: "تسجيل الدخول"
+          login: "الولوج"
           plugins: "الإضافات "
           user_preferences: "تفضيلات العضو"
           tags: "الوسوم"

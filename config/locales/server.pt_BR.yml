@@ -419,7 +419,6 @@ pt_BR:
       pms_per_day: "Você alcançou o número máximo de mensagens por hoje. Por favor aguarde %{time_left} antes de tentar de novo."
       create_like: "Você atingiu o número máximo de curtidas hoje. Por favor aguarde% {time_left} antes de tentar novamente."
       create_bookmark: "Você atingiu o número máximo de marcadores hoje. Por favor aguarde% {time_left} antes de tentar novamente."
-      edit_post: "Você atingiu o número máximo de edições hoje. Por favor aguarde% {tempo} esquerda antes de tentar novamente."
       live_post_counts: "Você está pedindo contagens de publicações ao vivo rápido demais. Por favor, espere %{time_left} antes de tentar novamente."
       unsubscribe_via_email: "Você atingiu o número máximo de cancelamentos de inscrição via email por hoje. Por favor, espere %{time_left} antes de tentar novamente."
       topic_invitations_per_day: "Você atingiu o número máximo de convites para tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -826,7 +825,6 @@ pt_BR:
     delete_removed_posts_after: "Postagens removidas pelo autor serão automaticamente deletadas depois de (n) horas. Se o valor definido for 0, as postagens serão deletadas imediatamente."
     max_image_width: "Largura máxima para imagens em um post"
     max_image_height: "Altura máxima para imagens em um post"
-    category_featured_topics: "Número de tópicos exibidos por categoria na página /categories. Depois de alterar este valor, levará até 15 minutos para a página de categorias atualizar-se."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     fixed_category_positions_on_create: "Se ativado, a ordenação das categorias vai ser mantida no formulário de criação de tópico. (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
@@ -881,7 +879,6 @@ pt_BR:
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: meusite.com; veja http://google.com/analytics"
     gtm_container_id: "ID do container do Gerenciador de Tags do Google. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Voltar à API de Ajax-Crawling do Google se nenhum webcrawler for detectado. Veja https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     allow_moderators_to_create_categories: "Permitir a criação de categorias por moderadores"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://.  A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     use_admin_ip_whitelist: "Administradores só podem logar se estiverem na lista de IPs Filtrados (Administração > Logs > IPs Filtrados)."
@@ -917,7 +914,6 @@ pt_BR:
     invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
     invite_only: "Cadastro público está desabilitado, todos os novos usuários devem ser explicitamente convidados por outros membros ou equipe."
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
-    reserved_usernames: "Nomes de usuário não permitidos para criação de contas."
     min_password_length: "Comprimento mínimo da senha."
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
@@ -1204,10 +1200,6 @@ pt_BR:
   change_owner:
     post_revision_text: "Autoria transferida de %{old_user} para %{new_user}"
     deleted_user: "um usuário deletado"
-  emoji:
-    errors:
-      name_already_exists: "Desculpe, o nome '%{name}' já está sendo usado por outro emoji."
-      error_while_storing_emoji: "Desculpe, houve um erro ao armazenar o emoji."
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer forma."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
@@ -1296,16 +1288,6 @@ pt_BR:
       %{base_url}/users/password-reset/%{email_token}
 
       (Se o link acima expirou, escolha a opção "Esqueci minha senha" quando efetuar o login com o seu endereço de e-mail.)
-  test_mailer:
-    subject_template: "[%{site_name}] Teste de entrega de email"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] atualização disponível"
-  queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 mensagem aguardando revisão"
-      other: "[%{site_name}] %{count} mensagens aguardando revisão"
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **off-topic**: a comunidade sente que não é uma boa adequação ao tópico, como atualmante definido de acordo com o título e o primeiro post."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](/guidelines)."
@@ -1359,30 +1341,11 @@ pt_BR:
     csv_export_failed:
       subject_template: "A exportação de dados falhou"
       text_body_template: "Nos desculpamos, mas sua exportação de dados falhou. Por favor verifique os logs ou entre em contato com um membro da staff."
-    email_reject_no_account:
-      subject_template: "[%{site_name}] Problema com Email -- Conta Desconhecida"
-    email_reject_empty:
-      subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
     email_reject_parsing:
-      subject_template: "[%{site_name}] Problema com email -- Conteúdo Não Reconhecido"
       text_body_template: |
         Nos desculpamos, mas sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         Não pudemos encontrar seu resposta no email. **Certifique-se que sua resposta está no topo do email** -- não conseguimos processar respostas em linha.
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}] Email -- Acesso Inválido"
-    email_reject_strangers_not_allowed:
-      subject_template: "[%{site_name}] Problema com Email -- Acesso Inválido"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Problema com email -- Chave de Resposta Desconhecida"
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Problema com email -- Tópico Não Encontrado"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] Problema com email -- Tópico Fechado"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
-    email_error_notification:
-      subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
     too_many_spam_flags:
       subject_template: "Nova conta suspensa"
     too_many_tl3_flags:
@@ -1435,7 +1398,6 @@ pt_BR:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} convidou você para uma mensagem '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1457,7 +1419,6 @@ pt_BR:
 
         %{respond_instructions}
     user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1467,7 +1428,6 @@ pt_BR:
 
         %{respond_instructions}
     user_replied_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1477,7 +1437,6 @@ pt_BR:
 
         %{respond_instructions}
     user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1487,7 +1446,6 @@ pt_BR:
 
         %{respond_instructions}
     user_linked:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1497,7 +1455,6 @@ pt_BR:
 
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1507,7 +1464,6 @@ pt_BR:
 
         %{respond_instructions}
     user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1517,7 +1473,6 @@ pt_BR:
 
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1527,7 +1482,6 @@ pt_BR:
 
         %{respond_instructions}
     user_watching_first_post:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1537,7 +1491,6 @@ pt_BR:
 
         %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1563,13 +1516,11 @@ pt_BR:
       follow_topic: "Seguir esse tópico"
       join_the_discussion: "Leia Mais"
       popular_posts: "Publicações Populares"
-      subject_template: "[%{site_name}] Resumo das discussões"
       unsubscribe: "Este resumo é enviado por %{site_link} quando não o vemos há algum tempo. Para cancelar a assinatura %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo do site %{site_name} "
       preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"
     mailing_list:
-      subject_template: "[%{site_name}] Resumo das discussões do dia %{date}"
       unsubscribe: "Este resumo está sendo enviado diariamente devido à configuração de \"lista de email\" estar habilitada. Para deixar de receber estas mensagens, clique em  %{unsubscribe_link}."
       from: "Resumo das discussões do site %{site_name}"
       new_topics: "Novos tópicos"
@@ -1577,7 +1528,6 @@ pt_BR:
       view_this_topic: "Ver esse tópico"
       back_to_top: "Voltar ao topo"
     forgot_password:
-      subject_template: "[%{site_name}] Redefinição de senha"
       text_body_template: |
         Alguém pediu para redefinir a sua senha em [%{site_name}](%{base_url}).
 
@@ -1586,7 +1536,6 @@ pt_BR:
         Para escolher a sua nova senha clique no link a seguir:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Definir Senha"
       text_body_template: |
         Alguém solicitou para adicionar uma senha para a sua conta em [%{site_name}] (% {base_url}). Alternativamente, você pode fazer login usando qualquer serviço online suportado (Google, Facebook, etc) que está associado a este endereço de e-mail validado.
 
@@ -1595,7 +1544,6 @@ pt_BR:
         Clique no link abaixo para escolher uma senha:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] Login"
       text_body_template: |
         Alguém pediu para logar na sua conta no [%{site_name}](%{base_url}).
 
@@ -1604,7 +1552,6 @@ pt_BR:
         Clique no link a seguir para logar:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Sua nova Conta"
       text_body_template: |
         Uma nova conta foi criada para você em %{site_name}
 
@@ -1612,13 +1559,11 @@ pt_BR:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Confirmar novo e-mail"
-      subject_template: "[%{site_name}] Confirme seu novo endereço de email"
       text_body_template: |
         Confirme seu novo endereço de email para %{site_name} clicando no link a seguir:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
-      subject_template: "[%{site_name}] Confirme seu endereço de email atual"
       text_body_template: |
         Antes que possamos mudar seu endereço de email, precisamos confirmar que você controla
         a conta de email atual. Após completar esse passo, pediremos que você confirme
@@ -1628,7 +1573,6 @@ pt_BR:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
-      subject_template: "[%{site_name}] Seu endereço de email foi alterado."
       text_body_template: |
         Esta é uma mensagem automática para lhe avisar que seu endereço de email para
         %{site_name} foi modificado. Se isso foi um erro, por favor entre em contato
@@ -1657,7 +1601,6 @@ pt_BR:
 
         (Se precisar se comunicar com um [membro interno](%{base_url}/about) como um novo usuário, só responder a esta mensagem.)
     signup:
-      subject_template: "[%{site_name}] Confirme sua nova conta"
       text_body_template: |
         Ben-vindo ao %{site_name}!
 

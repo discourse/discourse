@@ -848,7 +848,6 @@ es:
     delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
     max_image_width: "Ancho máximo de las miniaturas de las imágenes en un post"
     max_image_height: "Alto máximo de las miniaturas de las imágenes en un post"
-    category_featured_topics: "Número de temas mostrados por categoría en la página /categories. Este cambio puede tardar hasta 15 minutos en verse reflejado"
     fixed_category_positions: "Si está marcado, podrás ordenar las categorías en un orden fijado. Si no, las categorías se mostrarán según su actividad reciente."
     fixed_category_positions_on_create: "Al marcar esta opción, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: \"rake posts:rebake\""
@@ -907,7 +906,6 @@ es:
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
     gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Habilitar el soporte de motor de búsqueda estándar webcrawler mediante la etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
     use_admin_ip_whitelist: "Los admins solo pueden iniciar sesión si están en una dirección IP definida en la lista de Screened IPs (Admin > Logs > Screened Ips)."
@@ -1363,10 +1361,6 @@ es:
   change_owner:
     post_revision_text: "Se ha transferido la propiedad de %{old_user} a %{new_user}"
     deleted_user: "un usuario eliminado"
-  emoji:
-    errors:
-      name_already_exists: "Lo sentimos, el nombre '%{name}' ya está en uso por otro emoji."
-      error_while_storing_emoji: "Lo sentimos, ha habido un error mientras se guardaba el emoji."
   topic_statuses:
     archived_enabled: "Este tema está ahora archivado. Se paraliza y no puede ser cambiado en ningún modo."
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
@@ -1613,7 +1607,6 @@ es:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Email de Nueva versión"
-    subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
     text_body_template: |
       ¡Genial, una nueva versión de [Discourse](http://www.discourse.org) está disponible!
 
@@ -1627,7 +1620,6 @@ es:
       - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debates y ayuda para Discourse.
   new_version_mailer_with_notes:
     title: "Email de Nueva versión con notas"
-    subject_template: "[%{site_name}] actualización disponible"
     text_body_template: |+
       ¡Genial, una nueva versión de [Discourse](http://www.discourse.org) está disponible!
 
@@ -1646,9 +1638,6 @@ es:
 
   queued_posts_reminder:
     title: "Recordatorio de post en revisión"
-    subject_template:
-      one: "[%{site_name}] 1 post esperando ser revisado"
-      other: "[%{site_name}] %{count} posts esperando ser revisados"
     text_body_template: |
       Hola,
 
@@ -1803,56 +1792,48 @@ es:
       text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
     email_reject_insufficient_trust_level:
       title: "Email rechazado, insuficiente nivel de confianza"
-      subject_template: "[%{site_name}] Problema relacionado con el email -- Insuficiente nivel de confianza"
       text_body_template: |
         Lo sentimos, pero tu mensaje de email a %{destination} (con título %{former_title}) no ha funcionado.
 
         Tu cuenta no tiene el nivel de confianza necesario para publicar nuevos temas a esta dirección de email. Si crees que se trata de un error, contacta a un miembro del staff.
     email_reject_user_not_found:
       title: "Email rechazado, cuenta de usuario no encontrada"
-      subject_template: "[%{site_name}] Problema de email -- Usuario no encontrado"
       text_body_template: |
         Lo sentimos, pero tu mensaje de email para %{destination} (titulado %{former_title}) no se ha enviado.
 
         No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_screened_email:
       title: "Email rechazado, correo bloqueado"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_inactive_user:
       title: "Email rechazado, usuario inactivo"
-      subject_template: "[%{site_name}] Problema relacionado con el email -- Usuario inactivo"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
 
         La cuenta asociada a esta dirección de email no ha sido activada. Por favor activa tu cuenta antes de enviar emails.
     email_reject_blocked_user:
       title: "Email rechazado, usuario bloqueado"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Usuario bloqueado"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
 
         La cuenta asociada a esta dirección de email ha sido bloqueada.
     email_reject_reply_user_not_matching:
       title: "Email rechazado, el usuario no coincide"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Email de respuesta no esperado"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se ha enviado.
 
         No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_no_account:
       title: "Email rechazado, no hay cuenta"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Cuenta Desconocida"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         No hay una cuenta de usuario asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_empty:
       title: "Email rechazado, email vacío"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Sin Contenido"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titled %{former_title}) no funcionó.
 
@@ -1861,21 +1842,18 @@ es:
         Si estás teniendo este problema y _sí_ incluiste contenido, inténtalo de nuevo con un formato más simple.
     email_reject_parsing:
       title: "Email rechazado, contenido erróneo"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Contenido erróneo"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - no podemos analizar respuestas entre líneas.
     email_reject_invalid_access:
       title: "Email rechazado, acceso inválido"
-      subject_template: "[%{site_name}] Error de email -- Acceso no válido"
       text_body_template: |
         Lo sentimos, pero tu mensaje por email a %{destination} (titled %{former_title}) no funcionó.
 
         Tu cuenta no tiene los privilegios para publicar nuevos temas en esa categoría. Si crees que esto es un error, contacta a un moderador o administrador.
     email_reject_strangers_not_allowed:
       title: "Rechazar emails desconocidos No permitido"
-      subject_template: "[%{site_name}] Error de email -- Acceso no válido"
       text_body_template: |+
         Lo sentimos, pero tu mensaje de email para %{destination} (titulado %{former_title}) no fue aceptado.
 
@@ -1884,14 +1862,12 @@ es:
 
     email_reject_invalid_post:
       title: "Email rechazado, post inválido"
-      subject_template: "[%{site_name}] Problemas del Email -- Posting error"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         Posibles causas: formato complejo, mensaje demasiado extenso o demasiado breve. Por favor, inténtalo de nuevo, o bien publícalo en el foro.
     email_reject_invalid_post_specified:
       title: "Email Rechazado, Post Especificado Inválido"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de publicación"
       text_body_template: |
         Lo sentimos, pero tu mensaje de email para %{destination} (titled %{former_title}) no funcionó.
 
@@ -1902,49 +1878,42 @@ es:
         Si puedes corregir el problema sugerido, por favor inténtalo de nuevo.
     email_reject_invalid_post_action:
       title: "Email Rechazado, Acción de Post Inválida"
-      subject_template: "[%{site_name}] Email Error -- Acción de Post Inválida"
       text_body_template: |
         Lo sentimos, pero tu mensaje de email para %{destination} (titled %{former_title}) no funcionó.
 
         La "Post Action" no fue reconocida. Por favor prueba luego o envía el mensaje desde el sitio web de forma tradicional si el error continua.
     email_reject_reply_key:
       title: "El email rechazó la clave de respuesta"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Clave de Respuesta Desconocida"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         La clave de respuesta proporcionada no es válida o es desconocida, por lo que no sabemos a qué responde este email. Contacta con algún miembro del staff.
     email_reject_bad_destination_address:
       title: "Email rechazado, mala dirección del destinatario"
-      subject_template: "[%{site_name}] Problema con el email -- Dirección desconocida"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         Ninguna de las direcciones de emails ha sido reconocida. Por favor asegúrate de que estás enviando los correos a las direcciones correctas provistas por los administradores.
     email_reject_topic_not_found:
       title: "Email rechazado, tema no encontrado"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Tema no encontrado"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         El tema al que estás respondiendo ya no existe, quizá debe haber sido eliminado? Si crees que esto es un error, contacta a un administrador.
     email_reject_topic_closed:
       title: "Email rechazado, tema cerrado"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Tema cerrado"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         El tema actualmente está cerrado y no acepta más respuestas. Si crees que esto es un error, contacta a un administrador.
     email_reject_auto_generated:
       title: "Email autogenerado rechazado"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Respuesta Auto Generada"
       text_body_template: |
         Lo sentimos, pero tu mensaje de correo electrónico para %{destination} (titulado %{former_title}) no funcionó.
 
         Tu respuesta de correo fue marcada como "generada automáticamente", lo que significa que fue creado automáticamente por una computadora, en vez de un ser humano; no aceptamos este tipo de emails. Si crees que se trata de un error contacta con un administrador.
     email_error_notification:
       title: "Email, error de notificación"
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de autenticación POP"
       text_body_template: |+
         Hubo un error de autenticación mientras se ejecutaba el polling de los emails desde el servidor POP.
 
@@ -2084,7 +2053,6 @@ es:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Usuario invitado a MP"
-      subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2093,7 +2061,6 @@ es:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Usuario invitado a MP provisional"
-      subject_template: "[%{site_name}] %{username} te ha invitado a un mensaje '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2102,7 +2069,6 @@ es:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Usuario invitado a tema"
-      subject_template: "[%{site_name}] %{username} te invitó a '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2111,7 +2077,6 @@ es:
         %{respond_instructions}
     user_replied:
       title: "Usuario respondió"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2122,7 +2087,6 @@ es:
         %{respond_instructions}
     user_replied_pm:
       title: "Usuario respondió por MP"
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2133,7 +2097,6 @@ es:
         %{respond_instructions}
     user_quoted:
       title: "Usuario citado"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2144,7 +2107,6 @@ es:
         %{respond_instructions}
     user_linked:
       title: "Usuario enlazado"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2155,7 +2117,6 @@ es:
         %{respond_instructions}
     user_mentioned:
       title: "Usuario mencionado"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2166,7 +2127,6 @@ es:
         %{respond_instructions}
     user_group_mentioned:
       title: "Grupo del usuario mencionado"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2177,7 +2137,6 @@ es:
         %{respond_instructions}
     user_posted:
       title: "Usuario publicó"
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} publicó en '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2188,7 +2147,6 @@ es:
         %{respond_instructions}
     user_watching_first_post:
       title: "Usuarios vigilando el primer Post"
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2199,7 +2157,6 @@ es:
         %{respond_instructions}
     user_posted_pm:
       title: "Usuario envió un MP"
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2228,14 +2185,12 @@ es:
       join_the_discussion: "Leer más"
       popular_posts: "Temas populares"
       more_new: "Nuevo para ti"
-      subject_template: "Resumen de [%{site_name}]"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando pasa un tiempo desde tu última visita. Para cancelar tu suscripción %{unsubscribe_link}."
       click_here: "clic aquí"
       from: "resumen de %{site_name}"
       preheader: "Un corto resumen desde tu última visita el %{last_seen_at}"
     mailing_list:
       why: "Actividad en %{site_link} a %{date}"
-      subject_template: "[%{site_name}] Resumen del %{date}"
       unsubscribe: "Este resumen se envía diariamente dado que el modo lista de correo está activado. Puedes darte de baja %{unsubscribe_link}."
       from: "%{site_name} resumen"
       new_topics: "Nuevos temas"
@@ -2244,7 +2199,6 @@ es:
       back_to_top: "Volver al inicio"
     forgot_password:
       title: "Olvidé la Contraseña"
-      subject_template: "[%{site_name}] Restablecer contraseña"
       text_body_template: |
         Alguien ha pedido restablecer tu contraseña en [%{site_name}](%{base_url}).
 
@@ -2254,7 +2208,6 @@ es:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Pon una contraseña"
-      subject_template: "[%{site_name}] Establecer contraseña"
       text_body_template: |
         Se ha solicitado añadir una contraseña a tu cuenta en [%{site_name}](%{base_url}). Otra opción es iniciar sesión usando cualquier servicio online soportado (Google, Twitter, etc) que esté asociado con esta dirección de email validada.
 
@@ -2264,7 +2217,6 @@ es:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Admin Login"
-      subject_template: "[%{site_name}] inicio sesión"
       text_body_template: |
         Alguien pidió iniciar sesión con tu cuenta en [%{site_name}](%{base_url}).
 
@@ -2274,7 +2226,6 @@ es:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "Cuenta creada"
-      subject_template: "[%{site_name}] Tu nueva cuenta"
       text_body_template: |
         Una nueva cuenta ha sido creada por ti en %{site_name}
 
@@ -2282,14 +2233,12 @@ es:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Confirmar Nuevo Email"
-      subject_template: "[%{site_name}] Confirma tu nueva dirección de email"
       text_body_template: |
         Confirma tu nueva dirección de email para %{site_name} haciendo clic en el siguiente enlace:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "Confirmar Viejo Email"
-      subject_template: "[%{site_name}] Confirma tu dirección actual de email"
       text_body_template: |
         Antes de cambiar tu dirección de correo electrónico, necesitamos que confirmes que tienes acceso a dicho email. Después de completar este paso, podrás confirmar la nueva dirección de correo electrónico.
 
@@ -2298,7 +2247,6 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "Antiguo email de notificaciones"
-      subject_template: "[%{site_name}] Tu dirección de email ha sido cambiada"
       text_body_template: |
         Este es un mensaje automático que se ha generado para comunicarte que tu email para el sitio %{site_name} ha sido modificado. Si ha habido un error, por favor contacta al administrador.
 
@@ -2327,7 +2275,6 @@ es:
         (Si necesitas comunicarte por privado con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     signup:
       title: "Registrate"
-      subject_template: "[%{site_name}] Confirma tu nueva cuenta"
       text_body_template: |
         ¡Bienvenido a %{site_name}!
 
@@ -2399,105 +2346,6 @@ es:
     Edita el primer post de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
     title: "Preguntas Frecuentes / Directrices"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Este es un lugar público para conversaciones civilizadas](#civilized)
-
-      Por favor, trata este foro de debate con el mismo respeto con el que tratarías un parque. Este es un lugar donde compartir habilidades, conocimiento e intereses a través de debates y conversaciones.
-
-      Estas no son unas normas estrictas y cerradas, sino una ayuda para el correcto desarrollo de la comunidad. Usa estas pautas para mantener este sitio como un lugar limpio y adecuado para poder debatir y conversar correctamente.
-
-      <a name="improve"></a>
-
-      ## [Aporta](#improve)
-
-      Ayúdanos a mantener este foro como un buen lugar esforzándote para mejorar el debate de alguna manera, aunque sea mínima. Si no estás seguro de lo que tu mensaje aporta a la conversación, piensa sobre lo que quieres decir e intenta contestar después.
-
-      El contenido de este foro nos importa, y queremos que actúes como si te importara a ti también. Sé respetuoso con los temas debatidos y con la gente que los debate, aunque no estés de acuerdo con algo de lo que digan.
-
-      Una buena manera de de mejorar el foro es investigando un poco lo que está pasando o ya ha pasado. Por favor, echa un vistazo a los temas ya existentes antes de responder a uno o crearlo y así podrás ver quién opina lo mismo o tiene intereses parecidos a los tuyos.
-
-      <a name="agreeable"></a>
-
-      ## [Sé aceptable incluso cuando no estés de acuerdo](#agreeable)
-
-      Cuando vayas a responder a algo con lo que no estás de acuerdo acuérdate de __criticar las ideas y no las personas__. Por favor, evita:
-
-
-      * Ridiculizar a los demás.
-      * Faltar al respeto e insultar.
-      * Responder al tono del mensaje en vez de a su contenido.
-      * Hacer comparaciones y contradicciones exageradas y/o fuera de lugar.
-
-      En lugar de eso, da argumentos que aporten algo al tema, por favor.
-
-      <a name="participate"></a>
-
-      ## [Tu participación cuenta](#participate)
-
-      Eres parte de la comunidad, y queremos que todo el mundo participe en ella. Crea o responde a los temas aportando algo y harás de este foro un lugar más interesante y agradable.
-
-      Este foro ofrece herramientas que permiten a la comunidad identificar entre todas las mejores (y peores) contribuciones: "Me gusta", marcadores, reportes, distintivos, respuestas, ediciones, y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
-
-      Intentemos dejar esto mejor de lo que nos lo encontramos.
-
-      <a name="flag-problems"></a>
-
-      ## [Si ves un problema, repórtalo](#flag-problems)
-
-      Los moderadores tienen una autoridad especial: son los responsables de este foro. Pero tú lo eres también. Con tu ayuda, los moderadores pueden ser personas que faciliten el desarrollo de la comunidad en lugar de la policía del foro o el servicio de limpieza.
-
-      Cuando veas un comportamiento inadecuado, no respondas. Eso hace que, al reconocer públicamente el contenido inadecuado, se siga publicando contenido de esa clase. Además, lo único que harás será perder energía y el tiempo de todos. En su lugar, repórtalo. Si un post es reportado lo suficiente, se tomarán medidas automáticamente o mediante la intervención de un moderador.
-
-      Para el correcto funcionamiento de esta comunidad, los moderadores se reservan el derecho de eliminar cualquier contenido y cualquier cuenta, por cualquier razón en cualquier momento. Los moderadores no ven los temas antes de que sean publicados por lo que ellos y los operadores del foro no son responsables del contenido publicado por la comunidad.
-
-      <a name="be-civil"></a>
-
-      ## [Sé educado](#be-civil)
-
-      Nada estropea más una conversación que la mala educación.
-
-      * Sé educado. No publoques nada que una persona razonable consideraría ofensivo o abusivo.
-      * Mantén limpio el foro. No publiques nada obsceno o sexualmente explícito.
-      * Respeta. No molestes ni acoses a los demás usuarios, tampoco publiques su información privada y/o personal.
-      * Respeta el foro. No publiques spam ni nos estropees el foro.
-
-      Como puedes ver, estos no son términos exactos con definiciones exactas. Evita siquiera la aparición de cualquiera de estas cosas en el foro. Si no estás seguro, piensa en cómo te sentirías si tu post apareciera en la portada de algún periódico importante.
-
-      Este es un foro público y por tanto el contenido puede aparecer en los motores de búsqueda. El foro es para todos los públicos, así que debes tener cuidado con el vocabulario y el contenido.
-
-      <a name="keep-tidy"></a>
-
-      ## [Mantén limpio y organizado el foro](#keep-tidy)
-
-      Esfuérzate para poner las cosas en su lugar correspondiente para que podamos estar más tiempo participando en la comunidad y menos tiempo limpiando y organizando.
-
-      * No empieces un nuevo tema en la categoría equivocada.
-      * No publiques lo mismo en varios temas diferentes.
-      * No respondas con un mensaje sin contenido.
-      * No desvíes un tema en mitad de la discusión.
-      * No firmes tus mensajes &mdash; tu información y perfil están claramente visibles junto al post.
-
-      En vez de responder “+1” or “Estoy de acuerdo”, usa el botón de Me gusta. En lugar de cambiar radicalmente la dirección de un tema, responde como nuevo tema.
-
-      <a name="stealing"></a>
-
-      ## [Publica sólo lo que es tuyo](#stealing)
-
-      No publiques nada que pertenezca a otra persona sin permiso. No debes facilitar enlaces, descipciones o métodos de robar la propiedad intelectual de los demás. (software, vídeo, audio, imágenes, etc.), o formas de violar las leyes.
-
-      <a name="power"></a>
-
-      ## [Funcionamos gracias a gente como tú](#power)
-
-      Este foro es operado por nuestro [equipo](/about) y *vosotros*, la comunidad. Si tienes alguna pregunta sobre cómo deberían funcionar las cosas aquí, abre un nuevo tema en la [categoría de Sugerencias](/c/site-feedback). Si pasa algo urgente que no puede ser resuelto con un tema o un reporte, contáctanos a través de [esta página](/about).
-
-      <a name="tos"></a>
-
-      ## [Términos del Servicio](#tos)
-
-      Sí, estos temas aburren, pero debemos protegernos &ndash; y, por extensión, a ti y a tus datos &ndash; frente a gente poco amigable. Tenemos unos [Términos del Servicio](/tos) que describen nuestra forma de actuar (y la tuya), y los derechos con relación al contenido, la privacidad y las leyes, Para usar nuestros servicios, debes aceptar nuestros [Términos y Condiciones](/tos).
   tos_topic:
     title: "Términos de Servicio"
     body: |

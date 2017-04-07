@@ -136,7 +136,6 @@ pt:
         enabled: 'listado %{when}'
         disabled: 'removido da lista %{when}'
     topic_admin_menu: "Ações administrativas dos Tópicos"
-    wizard_required: "É altura de configurar o seu fórum! <a href='%{url}' data-auto-route='true'>Iniciar o ajudante de configuração</a>!"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo sítio mais fácil, encontra-se agora em modo de inicialização. Qualquer utilizador novo terá nível de confiança 1 e resumos de email diários ligados. Este modo será automaticamente desligado quando o número total de utilizadores ultrapassar %{min_users}."
     bootstrap_mode_disabled: "Modo de inicialização será desligado dentro das próximas 24 horas."
@@ -911,7 +910,6 @@ pt:
       logging_in: "A iniciar sessão..."
       or: "Ou"
       authenticating: "A autenticar..."
-      awaiting_confirmation: "A sua conta está a aguardar ativação. Utilize a ligação \"Esqueci a Palavra-passe\" para pedir um novo email de ativação."
       awaiting_approval: "A sua conta ainda não foi aprovada por um membro do pessoal. Receberá um email quando a sua conta for aprovada."
       requires_invite: "Pedimos desculpa, o acesso a este fórum é permitido somente por convite de outro membro."
       not_activated: "Ainda não pode iniciar sessão. Enviámos anteriormente um email de ativação para o endereço <b>{{sentTo}}</b>. Por favor siga as instruções contidas nesse email para ativar a sua conta."
@@ -1206,7 +1204,6 @@ pt:
         selected:
           one: "Selecionou  <b>1</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
-        change_tags: "Mudar Etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
         changed_tags: "As etiquetas para esses tópicos foram mudadas."
       none:
@@ -1744,7 +1741,6 @@ pt:
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
       suppress_from_homepage: "Suprimir esta categoria da página principal."
-      sort_order: "Ordenação Predefinida:"
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -1880,7 +1876,6 @@ pt:
     history: "Histórico"
     changed_by: "por {{author}}"
     raw_email:
-      title: "Email em bruto"
       not_available: "Indisponível!"
     categories_list: "Lista de Categorias"
     filters:
@@ -2414,7 +2409,6 @@ pt:
             without_uploads: "Sim (não incluir ficheiros)"
           download:
             label: "Descarregar"
-            title: "Descarregar a cópia de segurança"
           destroy:
             title: "Remover a cópia de segurança"
             confirm: "Tem a certeza que deseja destruir esta cópia de segurança?"

@@ -865,7 +865,6 @@ sq:
       logging_in: "Duke u identifikuar..."
       or: "Ose"
       authenticating: "Duke u autorizuar..."
-      awaiting_confirmation: "Llogaria juaj është në pritje të aktivizimit, përdorni butonin e fjalëkalimit të humbur që të merrni një email të ri me kodin e aktivizimit."
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
       requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
       not_activated: "Nuk mund të identifikoheni akoma. Ju kemi dërguar një email aktivizimi tek <b>{{sentTo}}</b>. Ndiqni udhëzimet në atë email për të aktivizuar llogarinë tuaj. "
@@ -1116,7 +1115,6 @@ sq:
         selected:
           one: "Keni zgjedhur <b>1</b> temë."
           other: "Keni zgjedhur <b>{{count}}</b> tema."
-        change_tags: "Ndrysho etiketat"
         choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
         changed_tags: "Etiketat e temave u ndryshuan. "
       none:
@@ -1731,8 +1729,6 @@ sq:
     category_title: "Kategoria"
     history: "Historia"
     changed_by: "nga {{author}}"
-    raw_email:
-      title: "Raw Email"
     categories_list: "Lista Kategorive"
     filters:
       with_topics: "Temat nga %{filter}"
@@ -2165,7 +2161,6 @@ sq:
             confirm: "Do you want to start a new backup?"
           download:
             label: "Shkarko"
-            title: "Shkarko kopjen"
           restore:
             label: "Rikthe"
           rollback:

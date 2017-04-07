@@ -594,7 +594,6 @@ uk:
       logging_in: "Вхід..."
       or: "Або"
       authenticating: "Автентифікуємося..."
-      awaiting_confirmation: "Ваш обліковий запис очікує на активацію. Для отримання ще одного активаційного листа використайте посилання Забув пароль."
       awaiting_approval: "Ваш обліковий запис ще не затверджено членом команди. Коли його буде активовано, Ви отримаєте електронного листа."
       requires_invite: "Даруйте, доступ до цього форуму - лише за запрошеннями."
       not_activated: "Ви ще не можете увійти. Ми вже надіслали Вам листа для активації на скриньку <b>{{sentTo}}</b>. Будь ласка, виконайте інструкції в цьому листі, щоб активувати обліковий запис."
@@ -1001,7 +1000,6 @@ uk:
       auto_close_label: "Автоматично закривати теми після:"
       auto_close_units: "годин"
       email_in: "Custom incoming email address:"
-      sort_order: "Типове сортування:"
       allow_badges_label: "Дозволити нагороджувати значками у цій категорії"
       edit_permissions: "Редагувати дозволи"
       add_permission: "Додати дозвіл"
@@ -1310,7 +1308,6 @@ uk:
             without_uploads: "Так (не включати файли)"
           download:
             label: "Завантажити"
-            title: "Download the backup"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"

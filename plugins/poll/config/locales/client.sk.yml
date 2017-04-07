@@ -11,7 +11,7 @@ sk:
       voters:
         one: "volič"
         few: "voliči"
-        other: "voliči"
+        other: "účastníci"
       total_votes:
         one: "hlas celkom"
         few: "hlasy celkom"
@@ -38,11 +38,11 @@ sk:
         title: "Hlasovať"
         label: "Hlasuj teraz!"
       show-results:
-        title: "Zobraiť výsledky hlasovania"
+        title: "Zobraziť výsledky hlasovania"
         label: "Zobraz výsledky"
       hide-results:
         title: "Návrat na odovzdané hlasy"
-        label: "Skyť výsledky"
+        label: "Skryť výsledky"
       open:
         title: "Zahájiť hlasovanie"
         label: "Zahájiť"
@@ -53,12 +53,13 @@ sk:
         confirm: "Ste si istý, že chcete uzavrieť toto hlasovanie?"
       error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
       error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."
-      error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazovaní voličov."
+      error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazení účastníkov."
       ui_builder:
         title: Vytvoriť hlasovanie
         insert: Vložiť hlasovanie
         help:
           options_count: Zadajte aspoň 2 možnosti
+          invalid_values: Minimálna hodnota musí byť menšia ako maximálna hodnota.
         poll_type:
           label: Typ
           regular: Jedna možnosť
@@ -71,4 +72,4 @@ sk:
         poll_public:
           label: Ukázať kto hlasoval
         poll_options:
-          label: Zadajte jednu možnosť voľby na riadok
+          label: Zadajte každú možnosť voľby do nového riadka

@@ -1965,8 +1965,6 @@ pl_PL:
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
       num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       all_topics_wiki: "Stwórz nowe tematy domyślnie jako wiki"
-      sort_order: "Domyślnie sortuj:"
-      default_view: "Domyślny Widok:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"

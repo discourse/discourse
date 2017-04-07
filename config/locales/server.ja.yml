@@ -567,7 +567,6 @@ ja:
     delete_removed_posts_after: "投稿者は投稿を削除してから(N)時間後に削除されます。0を設定すると、すぐに削除されます"
     max_image_width: "投稿内での画像サムネイルの最大の幅"
     max_image_height: "投稿内での画像サムネイルの最大の高さ"
-    category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピックの数。変更後、カテゴリページの更新におよそ15分程かかります。"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
@@ -603,7 +602,6 @@ ja:
     must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
     ga_universal_tracking_code: "Google Universal Analytics(analytics.js)  のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
-    enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
     allow_moderators_to_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
     top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例:  latest|new|unread|categories|top|read|posted|bookmarks"
@@ -635,7 +633,6 @@ ja:
     invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
     invite_only: "パブリックなユーザー登録を無効化し、全てのユーザは他のメンバーかスタッフの招待を必要とする"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
-    reserved_usernames: "サインアップが許可されていないユーザ名。"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
     enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：ユーザーのメールアドレスは必ず外部サイトで認証されなければなりません)"
@@ -874,10 +871,6 @@ ja:
   change_owner:
     post_revision_text: "%{old_user} から %{new_user}にownershipを移動させました"
     deleted_user: "削除されたユーザ"
-  emoji:
-    errors:
-      name_already_exists: "申し訳ありません。'%{name}'は既に別の絵文字で使われています"
-      error_while_storing_emoji: "申し訳ありません、絵文字の保存中にエラーが発生しました"
   topic_statuses:
     archived_enabled: "このトピックはアーカイブされました。すべての内容は凍結されており、一切の変更ができません。"
     archived_disabled: "このトピックはアーカイブ解除されました。凍結解除され、変更可能になりました。"
@@ -955,15 +948,6 @@ ja:
       %{base_url}/users/password-reset/%{email_token}
 
       (リンクの有効期限が切れていた場合は、"パスワードを忘れたました"を選択しメールアドレスを入力してください)
-  test_mailer:
-    subject_template: "[%{site_name}] メール送信テスト"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Discourseの新しいバージョンがあります。"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] アップデートがあります"
-  queued_posts_reminder:
-    subject_template:
-      other: "[%{site_name}] %{count} 件の投稿がレビュー待ちです"
   flag_reasons:
     off_topic: "あなたの投稿/トピックは「話題に関係ない」として通報されました"
     inappropriate: "あなたの投稿は「不適切」として通報されました。攻撃的、 [コミュニティガイドライン](/guidelines)に違反している可能性があります。"
@@ -1018,30 +1002,10 @@ ja:
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
       text_body_template: "申し訳ありません。データのエクスポートに失敗しました。ログを確認するかスタッフメンバーにお問い合わせください。"
-    email_reject_no_account:
-      subject_template: "[%{site_name}] Email issue -- 不明なアカウント"
-    email_reject_empty:
-      subject_template: "[%{site_name}] Email issue -- 本文なし"
     email_reject_parsing:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}] Email issue -- 不正なアクセス"
-    email_reject_invalid_post:
-      subject_template: "[%{site_name}] Email issue -- 投稿エラー"
-    email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] Email issue -- 投稿エラー"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Email issue -- 不明なReply Key"
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}]  Email issue -- 存在しないトピック"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] Email issue -- クローズ済みトピック"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] Email issue -- 自動生成された返信"
-    email_error_notification:
-      subject_template: "[%{site_name}] Email issue -- POP認証エラー"
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
     pending_users_reminder:
@@ -1062,18 +1026,6 @@ ja:
       title: "解除"
       description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
     posted_by: "%{post_date} に %{username} が投稿"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} がメッセージにあなたを招待しました '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
-    user_quoted:
-      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたを引用しました"
-    user_mentioned:
-      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをタグ付けしました"
-    user_posted:
-      subject_template: "[%{site_name}] '%{topic_title}' に %{subject_prefix}個の新しいポストが投稿されました"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [プライベートメッセージ] %{topic_title}"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
@@ -1081,7 +1033,6 @@ ja:
     mailing_list:
       new_topics: "新着トピック"
     forgot_password:
-      subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |
         [%{site_name}](%{base_url}) にて、パスワードのリセットリクエストが行われました。
 
@@ -1089,7 +1040,6 @@ ja:
 
         新たなパスワードを設定する場合は次のリンクをクリックしてください: %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] パスワード設定"
       text_body_template: |
         [%{site_name}](%{base_url}) のあなたのアカウントに対してパスワード追加のリクエストがありました。
         あるいは、この検証済みメールアドレスに関連付けられている任意のサポートされているオンラインサービス（グーグル、フェイスブックなど）を使用してログインすることができます。
@@ -1098,17 +1048,13 @@ ja:
 
         パスワードを選択する場合は次のリンクをクリックしてください:
         %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      subject_template: "[%{site_name}] ログイン"
     account_created:
-      subject_template: "[%{site_name}] あなたの新しいアカウント"
       text_body_template: |
         %{site_name}のあなたの新しいアカウントが作成されました。
 
         以下のリンクをクリックしてパスワードを設定してください:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
-      subject_template: "[%{site_name}] 新しいメールアドレスを確認してください"
       text_body_template: |
         以下のリンクをクリックして、%{site_name}で利用するメールアドレスを有効化してください:
 
@@ -1133,7 +1079,6 @@ ja:
 
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     signup:
-      subject_template: "[%{site_name}] アカウントの確認"
       text_body_template: |
         Welcome to %{site_name}!
 

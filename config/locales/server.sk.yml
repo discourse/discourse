@@ -349,7 +349,6 @@ sk:
       pms_per_day: "Dosiahli ste maximálny počet správ na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
       create_like: "Dosiahli ste maximálny počet  \"Páči sa\" na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
       create_bookmark: "Dosiahli ste maximálny počet záložiek na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
-      edit_post: "Dosiahli ste maximálny počet  úprav na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
     hours:
       one: "1 hodina"
       few: "%{count} hodiny"
@@ -737,7 +736,6 @@ sk:
     delete_removed_posts_after: "Príspevky zmazané autorom budú automaticky zmazané po (n) hodinách. Pokiaľ je nastavená 0, príspevky budú zmazané okamžite."
     max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
     max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
-    category_featured_topics: "Počet zobrazených tém na jednu kategóriu na stránke /katgórie. Zmena hodnoty sa na stránkach prejaví do 15 minút."
     fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
     fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""
@@ -777,7 +775,6 @@ sk:
     ga_tracking_code: "ZASTARALÉ: Google analytics (ga.js) sledovací kód, napr.: UA-12345678-9; pozri http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) sledovací kód, napr: UA-12345678-9; pozri http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) názov domény, napr: mysite.com; pozri http://google.com/analytics"
-    enable_noscript_support: "Zapnúť štandardnú podporu prehľadávačov pomocou značky noscript"
     allow_moderators_to_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_whitelist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
@@ -811,7 +808,6 @@ sk:
     invite_passthrough_hours: "Ako dlho môže používateľ používať získaný pozývací kľúč na prihlasovanie, v hodinách"
     invite_only: "Verejná registrácia je vypnutá, všetci noví používatelia musia byť explicitne pozvaní ostatnými členmi alebo obsluhou."
     login_required: "Požadovať prihlásenie pre čítanie obshau tejto stránky, zakáž anonymný prístup. "
-    reserved_usernames: "Používateľské mená, ktorých registrácia nie je povolená."
     min_password_length: "Minimálna dĺžka hesla."
     min_admin_password_length: "Minimálna dĺžka hesla pre Administrátora."
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
@@ -1098,10 +1094,6 @@ sk:
   change_owner:
     post_revision_text: "Vlástníctvo bolo prenesené z  %{old_user} na %{new_user}"
     deleted_user: "vymazaný užívateľ"
-  emoji:
-    errors:
-      name_already_exists: "Ľutujeme, meno '%{name}' je už použité iným emoji."
-      error_while_storing_emoji: "Ľutujeme, pri ukladaní emoji nastala chyba."
   topic_statuses:
     archived_enabled: "Táto téma je archivovaná. Je zmrazená a už sa nedá nijako meniť. "
     archived_disabled: "Táto téma je vyňatá z archivu. Už nie je zmrazená a môže sa opäť meniť. "
@@ -1192,14 +1184,6 @@ sk:
       other: "%{count} značiek čaká na zpracovanie"
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
-    text_body_template: |
-      Niekto (pravdepodobne vy?) požiadal aby ďalej na túto adresu neboli zasielané emailové aktualizácie z %{site_domain_name}.
-      Ak si prajete potvrdiť, prosíme kliknite na odkaz:
-
-      %{confirm_unsubscribe_link}
-
-
-      Ak chcete pokračovať v prijímaní emailových aktualizácií, môžete tento email ignorovať.
   invite_mailer:
     subject_template: "%{invitee_name} Vás pozval '%{topic_title}' na %{site_domain_name}"
   invite_forum_mailer:
@@ -1213,17 +1197,6 @@ sk:
       %{base_url}/users/password-reset/%{email_token}
 
       (Ak vyššie uvedený odkaz vyexpiroval, vyberte "Zabudol som heslo" keď sa prihlasujete pomocou svojej emailovej adresy.)
-  test_mailer:
-    subject_template: "[%{site_name}] Overenie doručiteľnosti emailu"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Nové verzia Discourse, dostupná aktualizácia"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] aktualizácia dostupná"
-  queued_posts_reminder:
-    subject_template:
-      one: "%{site_name}] 1 príspevok čaká na revíziu"
-      few: "[%{site_name}] %{count} príspevky čakajú na revíziu"
-      other: "[%{site_name}] %{count} príspevkov čaká na revíziu"
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
     inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita cíti, že je úrážlivý, nemiestny alebo porušuje [naše pravidlá komunity](/guidelines)."
@@ -1268,7 +1241,6 @@ sk:
       subject_template: "Export dát zlyhal"
       text_body_template: "Ľutujeme, ale export Vašich dát zlyhal. Prosím, skontrolujte logy alebo kontaktujte člena obsluhy."
     email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] Problém s emailom -- Nízka úroveň dôvery"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
@@ -1284,7 +1256,6 @@ sk:
 
         Vaša odpoveď bola poslaná z blokovanej emailovej adresy. Skúste ju poslať z inej emailovej adresy alebo kontaktujte obsluhu.
     email_reject_inactive_user:
-      subject_template: "[%{site_name}] Problém s emailom -- Neaktívny užívateľ"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
@@ -1300,13 +1271,11 @@ sk:
 
         Vaša odpoveď bola poslaná z inej emailovej adresy ako sme očakávali, takže si nie sme istí či sa jedná o tú istú osobu. Skúste ju poslať z inej emailovej adresy alebo kontaktujte obsluhu.
     email_reject_no_account:
-      subject_template: "[%{site_name}] Problém s emailom -- Neznámy účet"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Nemôžeme nájsť žiaden účet zodpovedajúci Vašej emailovej adrese. Skúste ju poslať z inej emailovej adresy alebo kontaktujte obsluhu.
     email_reject_empty:
-      subject_template: "[%{site_name}] Problém s emailom -- Žiadny obsah"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
@@ -1319,25 +1288,21 @@ sk:
 
         Vo Vašom emaile se nepodarilo nájsť pridávaný obsah. **Uistite sa, že ste odpoveď uviedli na začiatku emailu** -- nedokážeme spracovať vložené odpovede.
     email_reject_invalid_access:
-      subject_template: "[%{site_name}] Problém s emailom -- Nesprávny prístup"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Váš účet nemá právo na vytváranie nových tém v danej kategórii. Ak si myslíte, že ide o chybu, kontaktujte obsluhu.
     email_reject_strangers_not_allowed:
-      subject_template: "[%{site_name}] Problém s emailom -- Nesprávny prístup"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Kategória, do ktorej ste poslali tento email, povoľuje odpovede iba od používateľov s platným účtom a známou emailovou adresou. Ak si mysíte, že ide o chybu, kontaktujte zamestnanca stránok.
     email_reject_invalid_post:
-      subject_template: "[%{site_name}] Problém s emailom -- Chyba pri uverejnení"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Medzi možnými príčinami môže byť: komplexné formátovanie, správa je príliš veľká, správa je príliš krátka. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
     email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] Problém s emailom -- Chyba pri uverejnení"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
@@ -1347,43 +1312,35 @@ sk:
 
         Ak tento problém dokážete odstrániť, prosíme pokus opakujte.
     email_reject_invalid_post_action:
-      subject_template: "[%{site_name}] Problém s emailom -- Neplatná akcia k príspevku"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Akcia uverejnenia nebola rozpoznaná. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
     email_reject_reply_key:
-      subject_template: "[%{site_name}] Problém s emailom -- Neznámy kľúč odpovede"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Kľúč odpovede v emaili je neplatný alebo neznámy, takže nedokážeme zistiť na čo tento email odpovedá. Kontaktujte obsluhu.
     email_reject_bad_destination_address:
-      subject_template: "[%{site_name}] Problém s emailom  -- Neznáma adresa príjemcu - Komu:"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Žiadna z adries príjemcov nebola rozpoznaná. Prosíme, uistite sa, že email posielate na správnu adresu poskytnutú obsluhou.
     email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Problém s emailom -- Téma nebola nájdená"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Téma, na ktorú odpovedáte už neexistuje - možno bola zmazaná? Ak si myslíte, že ide o chybu, kontaktujte obsluhu.
     email_reject_topic_closed:
-      subject_template: "[%{site_name}] Problém s emailom -- Téma je uzavretá"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Téma, na ktorú odpovedáte je momentálne zavretá a neakceptuje ďalšie odpovede. Ak si myslíte, že ide o chybu, kontaktujte obsluhu.
     email_reject_auto_generated:
-      subject_template: "[%{site_name}] Problém s emailom -- Automaticky generovaná odpoveď"
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Váš email bol označený ako "automaticky vygenerovaný", čo znamená, že bol vytvorený automaticky počítačom namiesto napísaný človekom; tento typ emailov nemôžeme akceptovať. Ak si myslíte, že ide o chybu, kontaktujte obsluhu.
-    email_error_notification:
-      subject_template: "[%{site_name}] Problém s emailom -- Chyba pri POP autentifikácií"
     spam_post_blocked:
       subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
     pending_users_reminder:
@@ -1401,31 +1358,13 @@ sk:
       title: "Odhlásiť"
       description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
     posted_by: "Príspevok od %{username} dňa %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
-    user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_replied_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
-    user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
+      since_last_visit: "Od Vašej poslednej návštevy"
       click_here: "kliknite tu"
     forgot_password:
-      subject_template: "[%{site_name}] Obnovenie hesla"
       text_body_template: |
         Niekto si vyžiadal reset Vášho hesla na [%{site_name}](%{base_url}).
 
@@ -1433,12 +1372,7 @@ sk:
 
         Pre zmenu hesl kliknite na nasledujúci odkaz
         %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      subject_template: "[%{site_name}] Nastaviť heslo"
-    admin_login:
-      subject_template: "[%{site_name}] Prihlásenie"
     account_created:
-      subject_template: "[%{site_name}] Váš nový účet"
       text_body_template: |
         Nový účet bol pre Vás vytvorený na %{site_name}
 
@@ -1446,8 +1380,6 @@ sk:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
-    signup:
-      subject_template: "[%{site_name}] Potvrďte Váš nový účet"
   page_not_found:
     title: "Stránka neexistuje alebo je privátna."
     popular_topics: "Populárne"
@@ -1501,104 +1433,6 @@ sk:
 
   guidelines_topic:
     title: "FAQ/Pravidlá"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Toto je miesto pre civilizovanú diskusiu](#civilized)
-
-      Prosíme majte k tejto diskusii rešpekt podobný ako k verejnému parku. My, sme tiež zdieľaný zdroj &mdash; miesto na zdieľanie znalostí, vedomostí a záujmov pomocou nepretržitej diskusie.
-
-      Toto nie sú jednoznačné pravidlá, skôr návod ľudskému úsudku naše komunity. Použite tieto pravidlá na udržanie prehľadnú a svetlého miesta pre civilizovanú verejnú diskusiu.
-
-      <a name="improve"></a>
-
-      ## [Vylepšujte diskusiu](#improve)
-
-      Pomôžte nám tvoriť toto skvelé miesto akýmkoľvek snahou o zlepšenie diskuzie, stačí drobnosť. Ak nie ste si istý že Váš príspevok posúva diskuziu, premyslite si čo chcete povedať a skúste neskôr.
-
-      Diskutované témy sú nám blízke a chceme, aby ste sa správali tak, akoby Vám boli blízke tiež. Rešpektujte témy a diskutujúcich dokonca i v prípade, ak nesúhlasíte s tým, čo bolo povedané.
-
-      Jedným zo spôsobov ako vylepšiť diskusiu je objavenie tej ktoré už prebieha. Prosíme, venujte trochu času zoznámeniu sa s témami predtým, ako začnete odpovedať alebo začínať svoje vlastné a budete mať vačšiu šancu stretnúť tých, ktorý s Vami zdieľajú záujmy.
-
-      <a name="agreeable"></a>
-
-      ## [Buďte príjemný i keď nesúhlasíte](#agreeable)
-
-      Môžete mať túžbu odpovedať na niečo s čím nesúhlasíte. To je v poriadku. Ale pamätajte _kritizujte myšienky a nie ľudí_. Prosíme, vyvarujte sa:
-
-      * Posmeškom.
-      * Útokom na konkrétnu osobu.
-      * Odpovediam na tón príspevku miesto skutočného obsahu.
-      * Impulzívnym reakciám.
-
-      Namiesto toho poskytnite logické proti argumenty, ktoré zlepšia konverzáciu.
-
-      <a name="participate"></a>
-
-      ## [Vaša účasť sa počíta](#participate)
-
-      Konverzácie, ktoré tu máme nastavujú tón pre všetkých. Pomôžte nám ovplyvniť budúcnosť tejto komunity zapojením sa do diskusií ktoré z tohoto fóra robia zaujímavé miesto a vyhýbaním sa tým ktoré to nerobia.
-
-      Discourse poskytuje nástroje, ktoré komunite spoločne umožňujú identifikovať najlepšie (a najhoršie) príspevky, záložky, páči sa mi, značky, odpovede, úpravy a podobne. Použite ich na vylepšenie Vašej skúsenosti i skúsenosti kohokoľvek iného.
-
-      Poďme náš park zanechať v lepšom stave než v akom sme ho našli.
-
-      <a name="flag-problems"></a>
-
-      ## [Ak vidíte problém označte ho](#flag-problems)
-
-      Moderátori majú špeciálnu autoritu, sú zodpovedný za fórum. Ale Vy tiež. S Vašou pomocou sa moderátori môžu stať sprostredkovateľmi a nie iba školníkmi alebo políciou.
-
-      Ak vidíte nevhodné chovanie, neodpovedajte. Reakciou naň ho posiľujete, míňate svoju energiu a strácate čas nás všetkých. _Oba ho označte_. Ak sa zíde viačej značiek, budú prijaté opatrenia, či už automatické alebo zásahom moderátora.
-
-      Na správu komunity majú moderátori vyhradené práva na odstránenie akéhokoľvek obsahu a používateľského účtu kedukoľvek z akéhokoľvek dôvodu. Moderátori žiadnym spôsobom nekontrolujú príspevky, moderátori a vlastníci stránky nepreberajú žiadku zodpovednosť za obsah publikovaný komunitou.
-
-      <a name="be-civil"></a>
-
-      ## [Buďte civilizovaný](#be-civil)
-
-      Nič nesabotuje zdravú diskusiu tak ako hrubosť:
-
-      * Buďte zdvorilí, Neuverejňujte nič, čo by múdra osoba považovala za urážlivé, znevažujúce alebo nenávistné.
-      * Udržujte poriadok. Neuverejnujte nič nemravné alebo explicitne sexuálne.
-      * Rešpektujte iných. Neprenasledujte alebo nezarmucujte ostatných, nenapodobnujte ľudí, alebo nezverejňujte ich súkromné informácie.
-      * Rešpektujte naše fórum. Neuverejňujte spam alebo iným spôsobom nevandalizujte fórum.
-
-      Toto nie sú jednoznačné pravidlá s presnými definiciami &mdash; vyhnite sa čo i len _náznaku_ akejkoľvek z týchto vecí. Ak nie ste si istý, spýtajte sa, či by Váš príspevok bol zverejnený na hlavnej strane New York Times.
-
-      Toto je verejné fórum a diskusie sú indexované vyhľadávačmi. Udržujte jazyk, odkazy a obrázky bezpečné pre rodinu a priateĺov.
-
-      <a name="keep-tidy"></a>
-
-      ## [Udržujte poriadok](#keep-tidy)
-
-      Vynaložte snahu dať veci na správne miesto, tak môžeme stráviť viac času diskusiou a menej udržiavaním poriadku. Takže:
-
-      * Nezačínajte tému v nesprávnej kategórií.
-      * Neuverejňujte rovnaké veci vo viacetých témach.
-      * Nepublikujte príspevky bez obsahu.
-      * Nepresmerujte tému zmenou uprostred.
-      * Nepodpisujte sa &mdash; každý príspevok má pripojený odkaz na Váš profil.
-
-      Namiesto poslania “+1” or “Súhlasím”, radšej použite tlačítko Páči sa mi. Namiesto radikálnej zmeny témy v priebehu diskusie radšej odpovedzte spojenou témou.
-
-      <a name="stealing"></a>
-
-      ## [Uverejňujte iba svoj obsah](#stealing)
-
-      Bez dovolenia nemôžete publikovať nič digitálne, čo patrí niekomu inému. Nemôžete publikovať popis, odkazy alebo metódy na kradnutie niekoho intelektuálneho vlastníctva (softvéru, videa, audia, obrázkov), alebo porušovať akýkoľvek iný zákon.
-
-      <a name="power"></a>
-
-      ## [Založené na Vás](#power)
-
-      Táto stránka je prevádzkovaná [miestnym priateľským personálom](/about) a *Vami*, komunitou. Ak máte akékoľvek ďalšie otázky ako by tu veci mali fungovať, založte novú tému v [kategórií spätná väzba](/c/site-feedback) a poďme diskutovať! Ak ste narazili na kritický alebo urgentný problém ktorý nemôže byť riešený pomocou tém v meta alebo príznakom, kontaktujte nás pomocou [stránky personálu](/about).
-
-      <a name="tos"></a>
-
-      ## [Podmienky](#tos)
-
-      Áno, právnický žargón je nudný, ale musíme chrániť seba &ndash; tým následne i Vás a vaše dáta &ndash; voči nepriateľským ľuďom. Máme  [Podmienky](/tos) popisujúce Vaše (a naše ) správanie a práva súvisiace s obsahom, súkromým a legislatívou. K používaniu tejto služby musíte dodžiavať naše [Pravidlá](/tos).
   tos_topic:
     title: "Podmienky používania"
   privacy_topic:

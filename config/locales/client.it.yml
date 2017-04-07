@@ -926,7 +926,6 @@ it:
       logging_in: "Connessione in corso..."
       or: "Oppure"
       authenticating: "Autenticazione..."
-      awaiting_confirmation: "Il tuo account è in attesa di attivazione, usa il collegamento \"password dimenticata\" per ricevere una nuova email di attivazione."
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
       not_activated: "Non puoi ancora connetterti. Abbiamo inviato un'email di attivazione a <b>{{sentTo}}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
@@ -1224,7 +1223,6 @@ it:
         selected:
           one: "Hai selezionato <b>1</b> argomento."
           other: "Hai selezionato <b>{{count}}</b> argomenti."
-        change_tags: "Cambia Etichette"
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
       none:
@@ -1767,7 +1765,6 @@ it:
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
-      sort_order: "Ordinamento Predefinito:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
@@ -1900,7 +1897,6 @@ it:
     history: "Storia"
     changed_by: "da {{author}}"
     raw_email:
-      title: "Email Greggia"
       not_available: "Non disponibile!"
     categories_list: "Lista Categorie"
     filters:
@@ -2433,7 +2429,6 @@ it:
             without_uploads: "Sì (non includere i file)"
           download:
             label: "Scarica"
-            title: "Scarica il backup"
           destroy:
             title: "Rimuovi il backup"
             confirm: "Sicuro di voler distruggere questo backup?"

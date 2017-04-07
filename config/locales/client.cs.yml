@@ -154,7 +154,6 @@ cs:
         enabled: 'uvedeno %{when}'
         disabled: 'neuvedeno %{when}'
     topic_admin_menu: "akce administrátora tématu"
-    wizard_required: "Je čas nastavit vaše fórum! <a href='%{url}' data-auto-route='true'>Spustit průvodce nastavením</a>!"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile počet registrovaných uživatelů překročí %{min_users}."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
@@ -916,7 +915,6 @@ cs:
       logging_in: "Přihlašuji..."
       or: "Nebo"
       authenticating: "Autorizuji..."
-      awaiting_confirmation: "Váš účet nyní čeká na aktivaci, použijte odkaz pro zapomené heslo, jestli chcete, abychom vám zaslali další aktivační email."
       awaiting_approval: "Váš účet zatím nebyl schválen členem redakce. Až se tak stane, budeme vás informovat emailem."
       requires_invite: "Promiňte, toto fórum je pouze pro zvané."
       not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email v <b>{{sentTo}}</b>. Prosím následujte instrukce v tomto emailu, abychom mohli váš účet aktivovat."
@@ -1214,7 +1212,6 @@ cs:
           one: "Vybrali jste <b>1</b> téma."
           few: "Vybrali jste <b>{{count}}</b> témata."
           other: "Vybrali jste <b>{{count}}</b> témat."
-        change_tags: "Změnit štítky"
         choose_new_tags: "Zvolte nové tagy pro témata:"
         changed_tags: "Tagy témat byly změněny."
       none:
@@ -1782,7 +1779,6 @@ cs:
       email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
       email_in_disabled_click: 'povolit nastavení "email in"'
       suppress_from_homepage: "Potlač tuto kategorii na domovské stránce."
-      sort_order: "Výchozít řazení:"
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
       add_permission: "Přidat oprávnění"
@@ -1926,7 +1922,6 @@ cs:
     history: "Historie"
     changed_by: "od uživatele {{author}}"
     raw_email:
-      title: "Neupravený email"
       not_available: "Není k dispozici!"
     categories_list: "Seznam kategorií"
     filters:
@@ -2423,7 +2418,6 @@ cs:
             without_uploads: "Ano (nepřikládej soubory)"
           download:
             label: "Stáhnout"
-            title: "Stáhnout zálohu"
           destroy:
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"

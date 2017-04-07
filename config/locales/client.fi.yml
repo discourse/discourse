@@ -1807,6 +1807,7 @@ fi:
       subcategory_list_style: "Tytäraluelistan tyyli:"
       sort_order: "Ketjulistaus järjestetään:"
       default_view: "Oletuslistaus:"
+      default_top_period: "Huiput-listauksen oletusajanjakso:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"

@@ -808,8 +808,6 @@ nb_NO:
     ip_address:
       blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
       max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}]-oppdatering tilgjengelig"
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "
@@ -849,33 +847,23 @@ nb_NO:
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
-      subject_template: "[%{site_name}] Oppsummering"
       unsubscribe: "Denne oppsummeringen blir sendt fra %{site_link} når vi ikke har sett deg på en stund. For å melde deg av %{unsubscribe_link}."
       click_here: "trykk her"
       from: "%{site_name} oppsummering"
       preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
     mailing_list:
-      subject_template: "[%{site_name}] Oppsummering for %{date}"
       unsubscribe: "Denne oppsummeringen sendes daglig fordi e-postlistemodus er aktivert. For å melde deg deg av %{unsubscribe_link}."
       from: "%{site_name}-oppsummering"
       new_topics: "Nye emner"
       view_this_topic: "Vis dette emnet"
       back_to_top: "Tilbake til toppen"
     account_created:
-      subject_template: "[%{site_name}] Din Nye Konto"
       text_body_template: |
         En ny konto ble registrert for deg på %{site_name}
 
         Trykk på følgende link for å velge et passord for kontoen din:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Bekreft e-postadressen din"
-    confirm_old_email:
-      subject_template: "[%{site_name}] Bekreft nåværende e-postadresse"
-    notify_old_email:
-      subject_template: "[%{site_name}] Din e-postadresse har blitt endret"
     signup:
-      subject_template: "[%{site_name}] Bekreft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 
@@ -917,105 +905,6 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
-  guidelines_topic:
-    body: |
-      <a name="sivilisert"></a>
-
-      ## [Dette er et sivilisert sted for offentlig diskusjon](#sivilisert)
-
-      Vær så snill og behandle denne diskusjonen med samme respekt du ville behandlet en offentlig park med. Også vi er en ressurs delt med fellesskapet &ndash; et sted hvor en kan dele ferdigheter, kunnskap og interesse gjennom en samtale som går sin gang.
-
-      Dette er ikke definitive regler, bare hjelpemidler for fellesskapets menneskelige vurderingsevne. Bruk disse retningslinjene til å holde dette stedet rent og godt belyst for sivilisert offentlig samtale.
-
-      <a name="forbedre"></a>
-
-      ## [Forbedre diskusjonen](#forbedre)
-
-      Hjelp oss å gjøre dette til et godt sted for diskusjon ved å alltid jobbe mot å gjøre diskusjonen bedre på en eller annen måte. Hvis du ikke er sikker på at innlegget ditt tilfører noe til diskusjonen, så tenk over hva det er du vil si og prøv igjen senere.
-
-      Emnene som diskuteres her, betyr noe for oss, og vi vil at du skal oppføre deg som om de betyr noe for deg også. Vis respekt for dem og menneskene som diskuterer dem, selv om du er uenig med noe av det som blir sagt.
-
-      En måte å forbedre diskusjonen på er å utforske dem som allerede foregår. Vær så snill og bruk litt tid til å streife gjennom emnene her før du svarer eller startet ditt eget, og du vil ha større sjanse for å møte noen som deler dine interesser.
-
-      <a name="grei"></a>
-
-      ## [Vær grei, også dersom du er uenig](#grei)
-
-      Du ønsker kanskje å svare på noe du er uenig med. Det er greit. Men husk å _krisere idéer, ikke mennesker_. Vær så snill å unngå:
-
-      *   Utskjelling.
-      *   Personangrep.
-      *   Å svare på et innleggs tone i stedet for dets faktiske innhold
-      *   Refleksartig motsigelse.
-
-      Kom med begrunnede motargumenter i stedet som forbedrer samtalen.
-
-      <a name="delta"></a>
-
-      ## [Din deltakelse teller](#delta)
-
-      Samtalene vi fører her, setter tonen for alle. Hjelp oss å påvirke fremtiden til dette fellesskapet ved å velge å ta del i diskusjoner som gjør dette forumet til et interessant sted å være &ndash; og ved å unngå dem som ikke gjør det.
-
-      Discourse kommer med verktøy som gjør fellesskapeti stand til å sammen identifisere de beste (og dårligste) bidragene: favoritter, bokmerker, liker, rapportering, svar, redigering, osv. Bruk disse verktøyene til å forbedre din egen opplevelse, og alle andres.
-
-      La oss prøve å forlate parken i bedre stand enn da vi kom.
-
-      <a name="rapporter-problemer"></a>
-
-      ## [Dersom du ser et problem, rapportér det](#rapporter-problemer)
-
-      Moderatorer har en særmakt; de er ansvarlige for dette forumet. Men det er du også. Med din hjelp kan moderatorene være meglere, ikke bare vaktmestre eller politi.
-
-      Når du ser dårlig oppførsel, ikke var. Det oppmuntrer den dårlige oppførselen ved å gi den oppmerksomhet, tærer på kreftene dine og kaster bort alles tid. _Bare rapportér den_. Dersom nok rapporteringer blir registrert, vil det bli handlet, enten automatisk eller ved at en moderator griper inn.
-
-      For å opprettholde fellesskapet forbeholder moderatorene seg retten til å fjerne hvilket som helst innhold fra hvilken som helst bruker av hvilken som helst grunn når som helst. Moderatorer godkjenner ikke nye innlegg på noen som helst måte; moderatorene og sideoperatøren påtar seg intet ansvar for innhold publisert av fellesskapet.
-
-      <a name="vaer-sivilisert"></a>
-
-      ## [Vær alltid sivilisert](#vaer-sivilisert)
-
-      Ingenting saboterer en sunn samtale som frekkhet:
-
-      *   Vær sivilisert. Ikke publiser noe som et fornuftig menneske ville ansett som fornærmende, sårende eller hatefult.
-      *   Hold det rent. Ikke publiser noe usømmelig eller pornografisk.
-      *   Respektér hverandre. Ikke trakassér eller plag noen, utgi deg for å være for å være en annen eller prisgi andres fortrolighet.
-      * Respekt forumet vårt. Ikke publiser spam eller vandalisér forumet på annet vis.
-
-      Dette er ikke håndfaste begrep med nøyaktige definisjoner &ndash; unngå til og med det som _ser ut_ til å være noe av disse tingene. Hvis du er usikker, spør deg selv hvordan det ville føles om innlegget ditt sto på forsiden av New York Times.
-
-      Dette er et offentlig forum, og søkemotorer indekserer disse diskusjonene. Sørg for at språket, lenkene og bildene er trygt for familie og venner.
-
-      <a name="hold-det-ryddig"></a>
-
-      ## [Hold det ryddig](#hold-det-ryddig)
-
-      Anstreng deg for å sette ting på riktig plass slik at vi bruke mer tid på å diskutere og mindre på å rydde opp. Derfor:
-
-      *   Ikke start et emne i gal kategori.
-      *   Ikke publiser samme ting i flere kategorier.
-      *   Ikke publiser svar uten innhold.
-      *   Ikke avled et emne ved å endre det midt i diskusjonen.
-      *   Ikke signér innleggene dine &ndash; hvert innlegg har profilinformasjonen din tilknyttet.
-
-      I stedet for å publisere «+1» eller «Enig» bruk liker-knappen. I stedet for å ta et eksisterende emne i en radikalt annerledes retning, bruk Svar med lenket emne.
-
-      <a name="tyveri"></a>
-
-      ## [Publisér dine egne ting](#tyveri)
-
-      Du har ikke lov publisere noe digitalt som tilhører en annen, uten tillatelse. Du har ikke lov til å publisere beskrivelser av, lenker til eller metoder for å stjele andres åndsverk (programvare, film, lyd, bilde), eller for å bryte andre lover.
-
-      <a name="drevet-av"></a>
-
-      ## [Drevet av deg](#drevet-av)
-
-      Denne siden drives av ditt [vennlige personell](/about) og *deg*, en del av felleskapet. Dersom du har noen flere spørsmål om hvordan ting skal fungere her, opprett et nytt emne i [kategorien for tilbakemeldinger](/c/site-feedback) og la oss diskutere! Hvis det er et kritisk eller akutt problem som ikke kan bli håndtert med et meta-emne eller en rapportering, ta kontakt med oss via [personell-siden](/about).
-
-      <a name="vilkaar"></a>
-
-      ## [Vilkår](#vilkaar)
-
-      Ja, juridisk fagspråk er kjedelig, men vi må beskytte oss selv &ndash; og i utvidet betydning deg og dine data &ndash; mot uvennlige mennesker. Vi har [Vilkår](/tos) som beskriver din (og vår) oppførsel og rettigheter med tanke på innhold, personvern og lover. For å bruke denne tjenesten må du samtykke å overholde våre [Vilkår](/tos).
   tos_topic:
     title: "Bruksvilkår"
   privacy_topic:

@@ -54,6 +54,7 @@ de:
         insert: Umfrage einfügen
         help:
           options_count: Gib mindestens 2 Optionen ein
+          invalid_values: Der minimale Wert muss kleiner sein als der maximale Wert.
         poll_type:
           label: Art
           regular: Einfachauswahl

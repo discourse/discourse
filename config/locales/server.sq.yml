@@ -571,7 +571,6 @@ sq:
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
@@ -608,7 +607,6 @@ sq:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
@@ -640,7 +638,6 @@ sq:
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
     login_required: "Require authentication to read content on this site, disallow anonymous access."
-    reserved_usernames: "Usernames for which signup is not allowed."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
@@ -880,10 +877,6 @@ sq:
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
     deleted_user: "a deleted user"
-  emoji:
-    errors:
-      name_already_exists: "Sorry, the name '%{name}' is already used by another emoji."
-      error_while_storing_emoji: "Sorry, there has been an error while storing the emoji."
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -968,16 +961,6 @@ sq:
 
       (Nëse lidhjes së mësipërme i ka mbaruar afati, zgjidhni "Kam harruar fjalëkalimin" kur të hyni me adresën tuaj email.)
 
-  test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
-  new_version_mailer:
-    subject_template: "[%{site_name}] verion i ri i Discourse, përditësoje!"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] ka perditesime"
-  queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 postim pret moderimin"
-      other: "[%{site_name}] %{count} postime po presin moderimin"
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
@@ -1047,29 +1030,11 @@ sq:
     csv_export_failed:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
-    email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] Problem emaili -- Niveli i Besimit nuk mjafton"
-    email_reject_no_account:
-      subject_template: "[%{site_name}] Email issue -- Unknown Account"
-    email_reject_empty:
-      subject_template: "[%{site_name}] Email issue -- No Content"
     email_reject_parsing:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         We couldn't find your reply in the email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}] Email issue -- Invalid Access"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Email issue -- Topic Not Found"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] Email issue -- Topic Closed"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
-    email_error_notification:
-      subject_template: "[%{site_name}] Email issue -- POP authentication error"
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
@@ -1131,7 +1096,6 @@ sq:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} të ka ftuar tek mesazhi '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1139,7 +1103,6 @@ sq:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} të ka ftuar tek mesazhi '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1147,7 +1110,6 @@ sq:
 
         %{respond_instructions}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} të ka ftuar tek tema '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1155,7 +1117,6 @@ sq:
 
         %{respond_instructions}
     user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1165,7 +1126,6 @@ sq:
 
         %{respond_instructions}
     user_replied_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1175,7 +1135,6 @@ sq:
 
         %{respond_instructions}
     user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1185,7 +1144,6 @@ sq:
 
         %{respond_instructions}
     user_linked:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1195,7 +1153,6 @@ sq:
 
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1205,7 +1162,6 @@ sq:
 
         %{respond_instructions}
     user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1215,7 +1171,6 @@ sq:
 
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1225,7 +1180,6 @@ sq:
 
         %{respond_instructions}
     user_watching_first_post:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1235,7 +1189,6 @@ sq:
 
         %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1251,12 +1204,10 @@ sq:
         %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
-      subject_template: "[%{site_name}] - Një përmbledhje e shkurtër"
       unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
     mailing_list:
-      subject_template: "[%{site_name}] Përmbledhja për %{date}"
       unsubscribe: "Përmbledhja dërgohet përditë, duke qënë se faqja është në formatin \"mailing list\". %{unsubscribe_link} për t'u çabonuar."
       from: "%{site_name} përmbledhje"
       new_topics: "Tema të reja"
@@ -1264,7 +1215,6 @@ sq:
       view_this_topic: "Shiko këtë temë"
       back_to_top: "Kthehu sipër"
     forgot_password:
-      subject_template: "[%{site_name}] Rivendosje fjalëkalimi"
       text_body_template: |
         Dikush kërkoi për të rivendosur fjalëkalimin tuaj tek [%{site_name}](%{base_url}).
 
@@ -1273,7 +1223,6 @@ sq:
         Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim të ri:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Vendos fjalëkalimin"
       text_body_template: |
         Dikush kërkoi për të shtuar një fjalëkalim tek [%{site_name}](%{base_url}). Nga ana tjetër, mund të hyni në sistem duke përdorur një nga shërbimet online që mbështeten (Google, Facebook, etj) i cili është i lidhur me këtë adresë email.
 
@@ -1282,7 +1231,6 @@ sq:
         Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] Identifikohu"
       text_body_template: |
         Somebody asked to login to your account on [%{site_name}](%{base_url}).
 
@@ -1291,20 +1239,17 @@ sq:
         Click the following link to login:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Llogaria Juaj e Re"
       text_body_template: |
         Një llogari e re u krijua për ju tek %{site_name}
 
         Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim për llogarinë tuaj të re:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
-      subject_template: "[%{site_name}] Konfirmo adresën e re email"
       text_body_template: |
         Konfirmo adresën e re email për faqen %{site_name} duke klikuar në linkun më poshtë:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
-      subject_template: "[%{site_name}] Konfirmoni adresën e tanishme email"
       text_body_template: |
         Përpara se sa ta ndryshoni adresën tuaj email, nevojitet të konfirmoni që jeni i
         zoti i saj. Pasi ta përmbushni këtë hap, ne
@@ -1314,7 +1259,6 @@ sq:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
-      subject_template: "[%{site_name}] Adresa juaj email u ndryshua"
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për
         %{site_name} u ndryshua. Nëse ky është një gabim, njoftoni një administrator
@@ -1342,7 +1286,6 @@ sq:
 
         (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
     signup:
-      subject_template: "[%{site_name}] Konfirmoni llogarinë tuaj të re"
       text_body_template: |
         Mirësevini tek %{site_name}!
 
@@ -1403,104 +1346,6 @@ sq:
     Modifiko postimin e parë të kësaj teme puer të ndryshuar përmbajtjen e faqes %{page_name}.
   guidelines_topic:
     title: "Pyetje dhe Përgjigje/Udhëzime"
-    body: |
-      <a name="civilized"></a>
-
-      ## [This is a Civilized Place for Public Discussion](#civilized)
-
-      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
-
-      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
-
-      <a name="improve"></a>
-
-      ## [Improve the Discussion](#improve)
-
-      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
-
-      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
-
-      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
-
-      <a name="agreeable"></a>
-
-      ## [Be Agreeable, Even When You Disagree](#agreeable)
-
-      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
-
-      *   Name-calling.
-      *   Ad hominem attacks.
-      *   Responding to a post’s tone instead of its actual content.
-      *   Knee-jerk contradiction.
-
-      Instead, provide reasoned counter-arguments that improve the conversation.
-
-      <a name="participate"></a>
-
-      ## [Your Participation Counts](#participate)
-
-      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
-
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
-
-      Let’s try to leave our park better than we found it.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
-
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
-
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
-
-      <a name="be-civil"></a>
-
-      ## [Always Be Civil](#be-civil)
-
-      Nothing sabotages a healthy conversation like rudeness:
-
-      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-      *   Keep it clean. Don’t post anything obscene or sexually explicit.
-      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
-
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
-
-      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
-
-      *   Don’t start a topic in the wrong category.
-      *   Don’t cross-post the same thing in multiple topics.
-      *   Don’t post no-content replies.
-      *   Don’t divert a topic by changing it midstream.
-      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
-
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "Termat e Shërbimit "
     body: |

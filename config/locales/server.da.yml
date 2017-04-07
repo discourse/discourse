@@ -336,7 +336,6 @@ da:
       pms_per_day: "Du har nu nået det maksimalt antal tilladte beskeder. Vent venligst %{time_left} før du prøver igen."
       create_like: "Du har nået grænsen for antal tilladte 'likes' for i dag. Vent venligst %{time_left} før du prøver igen."
       create_bookmark: "Du har nået det maksimalt antal tilladte bogmærker i dag. Vent venligst %{time_left} før du prøver igen. "
-      edit_post: "Du har nået det maksimalt antal tilladte redigeringer i dag. Vent venligst %{time_left} før du prøver igen."
       live_post_counts: "Du efterspørger udgivede emner for hurtigt. Vent venligst %{time_left} før du prøver igen."
       unsubscribe_via_email: "Du har nået det maksimalt antal tilladte afmeldinger via email i dag.  Vent venligst%{time_left} før du prøver igen."
       topic_invitations_per_day: "Du har nået det maksimalt antal tilladte emne invitationer i dag. Vent venligst %{time_left} før du prøver igen."
@@ -729,7 +728,6 @@ da:
     delete_removed_posts_after: "Indlæg, fjernet af forfatteren, vil blive automatisk slettet efter (n) hours. Såfremt værdien sat til 0 vil indlæg blive fjernet straks."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
-    category_featured_topics: "Antallet af emner der vises pr. kategori på /categories-siden. Efter ændring af denne værdi kan det tage op til 15 minutter før kategorisiden opdateres."
     fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     exclude_rel_nofollow_domains: "En liste af domæner hvor 'nofollow' skal tilføjes til links. tid.com vil desuden automatisk tillade sub.tid Som minimum bør du tilføje top level domænet til sitet, for at hjælpe webcrawlere finde alt indhold. Såfremt andre dele af jeres site er på andre domæner, så tilføj også disse."
@@ -782,7 +780,6 @@ da:
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
-    enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
     allow_moderators_to_create_categories: "Tillad moderatorer at skabe nye kategorier"
     use_admin_ip_whitelist: "Admins kan kun logge ind hvis de logger på fra en prædefineret IP liste:  (Admin > Logs > Screened Ips)."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -804,7 +801,6 @@ da:
     invite_passthrough_hours: "Hvor længe kan en bruger benytte en tidligere benyttet invitation til at logge ind, i timer."
     invite_only: "Offentlig registrering er deaktiveret, alle nye brugere skal inviteres af andre medlemmer eller Staff."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
-    reserved_usernames: "Brugernavne for hvem oprettelse ikke er mulig."
     min_password_length: "Mindste adgangskodelængde."
     min_admin_password_length: "Minimumslængde for Admin adgangskoder."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
@@ -947,17 +943,11 @@ da:
       other: "%{count} flag venter på at blive håndteret"
   unsubscribe_mailer:
     subject_template: "Bekræft at du ikke længere ønsker at modtage email opdateringer fra %{site_title}"
-  test_mailer:
-    subject_template: "[%{site_name}] test af e-mail-udsendelse"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] Opdateringer er tilgængelige"
   system_messages:
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
       subject_template: "Velkommen til %{site_name}!"
-    email_reject_strangers_not_allowed:
-      subject_template: "[%{site_name}] Email problem -- ugyldig adgang"
     pending_users_reminder:
       subject_template:
         one: "1 bruger afventer godkendelse"
@@ -983,16 +973,6 @@ da:
     reply_by_email: "[Besøg emnet](%{base_url}%{url}) eller svar på denne email for at svare."
     reply_by_email_pm: "[Gå til besked](%{base_url}%{url}) eller svar på denne email for at svare."
     posted_by: "Oprettet af %{username} den %{post_date}"
-    user_replied:
-      subject_template: "[%{site_name}] %{username} svarede på dit indlæg i emnet '%{topic_title}'"
-    user_quoted:
-      subject_template: "[%{site_name}] %{username} citerede dig i emnet '%{topic_title}'"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} skrev et indlæg i emnet '%{topic_title}'"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
@@ -1000,15 +980,11 @@ da:
       new_posts: "Nye indlæg"
       popular_topics: "Populære emner"
       join_the_discussion: "Læs mere"
-      subject_template: "[%{site_name}] Resumé"
       unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} resumé"
       preheader: "Et kort resume siden de sidste besøg %{last_seen_at}"
-    mailing_list:
-      subject_template: "[%{site_name}] Resumé for %{date}"
     forgot_password:
-      subject_template: "[%{site_name}] Nulstil kodeord"
       text_body_template: |
         Nogen har bedt om at få nulstillet dit kodeord på [%{site_name}](%{base_url}).
 
@@ -1017,7 +993,6 @@ da:
         Klik her for at vælge et nyt kodeord:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Sæt kodeord"
       text_body_template: |
         Nogen har bedt om at tilføje et kodeord til din konto på [%{site_name}](%{base_url}).
         Du kan også loge ind med en af de undestøttede online services (Google, Facebook o.s.v. ) som associeret med denne bekræftede emailadresse.
@@ -1026,18 +1001,9 @@ da:
 
         Klik på følgende for at vælge et kodeord.:
         %{base_url}/users/password-reset/%{email_token}
-    account_created:
-      subject_template: "[%{site_name}] Din nye konto"
-    confirm_new_email:
-      subject_template: "[%{site_name}] Bekræft din nye email adresse"
-    confirm_old_email:
-      subject_template: "[%{site_name}] Bekræft din nuværende email adresse"
-    notify_old_email:
-      subject_template: "[%{site_name}] Din email adresse er blevet ændret"
     signup_after_approval:
       subject_template: "Du er blevet godkendt på %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Bekræft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 

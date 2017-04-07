@@ -471,7 +471,6 @@ te:
     post_edit_time_limit: "రచయిత వారు చేసిన టపా (n) నిమిషాల తర్వాత సవరించవచ్చు లేదా తొలగించవచ్చు. ఎప్పటికీ 0 అమర్చుము."
     max_image_width: "ఒక టపాలో థంబ్నైల్ గరిష్ట వెడల్పు"
     max_image_height: "ఒక టపాలో థంబ్నైల్ గరిష్ట ఎత్తు"
-    show_subcategory_list: "ఒక అంశం జాబితా వర్గంలో నమోదు చేసేటప్పుడు బదులుగా ఉపవర్గం జాబితా చూపించు."
     post_excerpt_maxlength: "ఒక టపా సంగ్రహం/సారాంశం గరిష్ట పొడవు."
     allow_moderators_to_create_categories: "మధ్యవర్తులు కొత్త వర్గాలు సృష్టించడానికి అనుమతించు"
     topics_per_period_in_top_summary: "అప్రమేయ అగ్ర విషయాల సారాంశంలో చూపే అగ్ర విషయాల సంఖ్య."
@@ -542,12 +541,8 @@ te:
       subject_template: "%{site_name} కు సుస్వాగతం!"
   user_notifications:
     previous_discussion: "గత జవాబులు"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
     digest:
       click_here: "ఇక్కడ క్లిక్ చేయండి"
-    account_created:
-      subject_template: "[%{site_name}] మీ కొత్త ఖాతా"
   page_not_found:
     popular_topics: "ప్రముఖ"
     recent_topics: "తాజా"

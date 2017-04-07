@@ -391,7 +391,6 @@ it:
       pms_per_day: "Hai raggiunto il massimo numero di messaggi per oggi. Per favore attendi %{time_left} prima di riprovare."
       create_like: "Hai raggiunto il massimo numero di \"Mi piace\" per oggi. Per favore attendi %{time_left} prima di riprovare."
       create_bookmark: "Hai raggiunto il massimo numero di segnalibri per oggi. Per favore attendi %{time_left} prima di riprovare."
-      edit_post: "Hai raggiunto il massimo numero di modifiche per oggi. Per favore attendi %{time_left} prima di riprovare."
       live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Attendi %{time_left} prima di riprovare."
       unsubscribe_via_email: "Hai raggiunto il massimo numero di cancellazioni via email per oggi. Per favore aspetta %{time_left}  prima di riprovare ancora."
       topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti per oggi. Per favore aspetta %{time_left} prima di riprovare."
@@ -801,7 +800,6 @@ it:
     delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio"
     max_image_height: "Altezza massima delle miniature delle immagini in un messaggio"
-    category_featured_topics: "Numero di argomenti mostrati per categoria nella pagina /categories. Dopo il cambiamento di questo valore, la pagina delle categorie impiega fino a 14 minuti per aggiornarsi."
     fixed_category_positions: "Se attivata, potrai ordinare le categorie. Se non attivata, le categorie vengono elencate in ordine di attività."
     fixed_category_positions_on_create: "Se attivata, verrà mantenuto l'ordinamento delle categorie nella finestra di creazione argomenti (richiede fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""
@@ -855,7 +853,6 @@ it:
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
     gtm_container_id: "Container id di Google Tag Manager. Es: GTM-ABCDEF"
     enable_escaped_fragments: "Usa le Ajax-Crawling API di Google se non viene rilevato un webcrawler. Vedi https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Abilita il supporto standard ai webcrawler dei motori di ricerca attraverso il tag noscript"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
@@ -892,7 +889,6 @@ it:
     invite_passthrough_hours: "Per quanto tempo un utente può usare una chiave d'invito per connettersi, espresso in ore"
     invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere invitati esplicitamente da altri membri o dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
-    reserved_usernames: "Nomi utente ai quali non è permessa l'iscrizione.."
     min_password_length: "Minima lunghezza della password."
     min_admin_password_length: "Lunghezza minima password Amministratore."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
@@ -1211,16 +1207,6 @@ it:
     subject_template: "%{invitee_name} ti invita a partecipare su %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Imposta la password per il tuo account su %{site_name}"
-  test_mailer:
-    subject_template: "[%{site_name}] Test Invio Email"
-  new_version_mailer:
-    subject_template: "[%{site_name}] Nuova versione di Discourse, aggiornamento disponibile"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] aggiornamento disponibile"
-  queued_posts_reminder:
-    subject_template:
-      one: "[%{site_name}] 1 messaggio in attesa di essere revisionato"
-      other: "[%{site_name}] %{count} messaggi in attesa di essere revisionati"
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."
@@ -1295,45 +1281,22 @@ it:
       subject_template: "Esportazione dati completa"
     csv_export_failed:
       subject_template: "Esportazione dati fallita"
-    email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] Problema email -- Livello Esperienza Insufficiente"
     email_reject_screened_email:
-      subject_template: "[%{site_name}] Problema email -- Email Bloccata"
       text_body_template: |
         Spiacenti, il tuo messaggio email a %{destination} (intitolato %{former_title}) non ha funzionato.
 
         La tua risposta è stata inviata da un indirizzo email bloccato. Prova a spedire da un altro indirizzo email, oppure contatta un membro dello staff.
-    email_reject_inactive_user:
-      subject_template: "[%{site_name}] Problema email -- Utente Inattivo"
-    email_reject_blocked_user:
-      subject_template: "[%{site_name}] Problema email -- Utente Bloccato"
     email_reject_no_account:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Account Sconosciuto"
       text_body_template: |
         Ci dispiace, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
         Non esiste un account con quell'indirizzo email. Prova ad inviarla a un altro indirizzo o contatta un membro dello staff.
-    email_reject_empty:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Nessun Contenuto"
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Accesso non valido"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
     email_reject_bad_destination_address:
-      subject_template: "[%{site_name}] Problema email -- Destinatario sconosciuto"
       text_body_template: |+
         Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
 
         Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.
 
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Chiuso"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Risposta Autogenerata"
-    email_error_notification:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Errore di autenticazione POP"
     too_many_spam_flags:
       subject_template: "Nuovo account sospeso"
       text_body_template: |
@@ -1381,12 +1344,7 @@ it:
     visit_link_to_respond: "[Visita Argomento](%{base_url}%{url}) per replicare."
     visit_link_to_respond_pm: "[Visita Messaggio](%{base_url}%{url}) per replicare."
     posted_by: "Pubblicato da %{username} il %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
     user_replied_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1396,7 +1354,6 @@ it:
 
         %{respond_instructions}
     user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1406,7 +1363,6 @@ it:
 
         %{respond_instructions}
     user_linked:
-      subject_template: "[%{site_name}] %{topic_title} "
       text_body_template: |
         %{header_instructions}
 
@@ -1416,7 +1372,6 @@ it:
 
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1426,7 +1381,6 @@ it:
 
         %{respond_instructions}
     user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1436,7 +1390,6 @@ it:
 
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1446,7 +1399,6 @@ it:
 
         %{respond_instructions}
     user_watching_first_post:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1456,7 +1408,6 @@ it:
 
         %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1472,7 +1423,6 @@ it:
         %{message}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
-      subject_template: "[%{site_name}] Riepilogo"
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
@@ -1483,7 +1433,6 @@ it:
       view_this_topic: "Vedi questo argomento"
       back_to_top: "Torna in cima"
     forgot_password:
-      subject_template: "[%{site_name}] Reimposta password"
       text_body_template: |
         Qualcuno ha richiesto l'azzeramento della tua password su [%{site_name}](%{base_url}).
 
@@ -1492,7 +1441,6 @@ it:
         Clicca il seguente collegamento per scegliere una nuova password:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Imposta Password"
       text_body_template: |
         Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato.
 
@@ -1501,7 +1449,6 @@ it:
         Clicca sul seguente collegamento per scegliere una password:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "Connessione [%{site_name}]"
       text_body_template: |
         Qualcuno ha richiesto di connettersi al tuo account su [%{site_name}](%{base_url}).
 
@@ -1510,7 +1457,6 @@ it:
         Altrimenti, clicca sul seguente collegamento per connetterti:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Il Tuo Nuovo Account "
       text_body_template: |
         Ti è stato creato un account su %{site_name}
 
@@ -1536,7 +1482,6 @@ it:
 
         ps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.
     signup:
-      subject_template: "[%{site_name}] Conferma il tuo nuovo account"
       text_body_template: |
         Benvenuto su %{site_name}!
 

@@ -136,7 +136,6 @@ fr:
         enabled: 'a rendu ce sujet visible %{when}'
         disabled: 'a rendu ce sujet invisible %{when}'
     topic_admin_menu: "actions d'administration sur le sujet"
-    wizard_required: "C'est le moment de configurer votre forum ! <a href='%{url}' data-auto-route='true'>Démarrer l'assistant de configuration</a>."
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confirance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque le nombre d'utilisateurs dépassera %{min_users}."
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
@@ -928,7 +927,6 @@ fr:
       logging_in: "Connexion en cours…"
       or: "ou"
       authenticating: "Authentification…"
-      awaiting_confirmation: "Votre compte est en attente d'activation, utilisez le lien mot de passe oublié pour demander un nouveau courriel d'activation."
       awaiting_approval: "Votre compte n'a pas encore été approuvé par un modérateur. Vous recevrez une confirmation par courriel lors de l'activation."
       requires_invite: "Désolé, l'accès à ce forum est sur invitation seulement."
       not_activated: "Vous ne pouvez pas vous encore vous connecter. Nous avons envoyé un courriel d'activation à <b>{{sentTo}}</b>. Merci de suivre les instructions afin d'activer votre compte."
@@ -1785,7 +1783,6 @@ fr:
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       all_topics_wiki: "Faire des nouveaux sujets des Wikis par défaut"
-      sort_order: "Tri par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
       add_permission: "Ajouter la permission"
@@ -1924,7 +1921,6 @@ fr:
     history: "Historique"
     changed_by: "par {{author}}"
     raw_email:
-      title: "Couriel au format brut"
       not_available: "Indisponible !"
     categories_list: "Liste des catégories"
     filters:
@@ -2462,7 +2458,6 @@ fr:
             without_uploads: "Oui (ne pas inclure les fichiers)"
           download:
             label: "Télécharger"
-            title: "Télécharger la sauvegarde"
           destroy:
             title: "Supprimer la sauvegarde"
             confirm: "Êtes-vous sûr de vouloir détruire cette sauvegarde?"

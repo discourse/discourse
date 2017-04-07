@@ -135,6 +135,9 @@ de:
       visible:
         enabled: 'sichtbar gemacht, %{when}'
         disabled: 'unsichtbar gemacht, %{when}'
+      banner:
+        enabled: 'hat dieses Banner erstellt %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird.'
+        disabled: 'hat dieses Banner entfernt %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt.'
     topic_admin_menu: "Thema administrieren"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
@@ -654,7 +657,7 @@ de:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
         default: "(Standard)"
-        any: "jegliche"
+        any: "(keine Einschränkung)"
       password_confirmation:
         title: "Wiederholung des Passworts"
       last_posted: "Letzter Beitrag"
@@ -1172,7 +1175,7 @@ de:
       advanced:
         title: Erweiterte Suche
         posted_by:
-          label: Verfasst von
+          label: Beiträge von
         in_category:
           label: In der Kategorie
         in_group:
@@ -1182,33 +1185,33 @@ de:
         with_tags:
           label: Mit den Schlagwörtern
         filters:
-          label: Zeige nur Beiträge an, die...
-          likes: Mir gefallen
-          posted: Ich schrieb einen Beitrag in
-          watching: Ich beobachte
-          tracking: Ich verfolge
-          private: sind in meinen Nachrichten
-          bookmarks: Ich habe ein Lesezeichen gesetzt
-          first: sind die allerersten Beiträge
-          pinned: sind angeheftet
-          unpinned: sind nicht angeheftet
-          seen: Habe ich gelesen
-          unseen: Habe ich nicht gelesen
-          wiki: sind Wiki
+          label: 'Themen/Beiträge einschränken:'
+          likes: Themen/Beiträge, die mir gefallen
+          posted: Themen mit Beiträgen von mir
+          watching: Themen, die ich beobachte
+          tracking: Themen, denen ich folge
+          private: Beiträge in meinen Unterhaltungen
+          bookmarks: Gemerkte Themen/Beiträge
+          first: Erste Beiträge in Themen
+          pinned: Angeheftete Themen
+          unpinned: Nicht angeheftete Themen
+          seen: Gelesene Themen/Beiträge
+          unseen: Ungelesene Themen/Beiträge
+          wiki: Wikis
         statuses:
-          label: Wo Themen
-          open: sind offen
-          closed: sind geschlossen
-          archived: sind archiviert
-          noreplies: haben keine Antworten
-          single_user: enthalten nur einen Nutzer
+          label: 'Themen einschränken:'
+          open: Offene Themen
+          closed: Geschlossene Themen
+          archived: Archivierte Themen
+          noreplies: Themen ohne Antwort
+          single_user: Themen mit nur einem Benutzer
         post:
           count:
-            label: Minimale anzahl an Beiträgen
+            label: Themen mit … oder mehr Beiträgen
           time:
-            label: Beigetragen
-            before: vorher
-            after: nachher
+            label: 'Zeitraum einschränken:'
+            before: Beiträge vor dem
+            after: Beiträge nach dem
     hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: 'zurückgehen'
@@ -1800,8 +1803,10 @@ de:
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
       subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
-      sort_order: "Standardsortierung:"
-      default_view: "Standardansicht:"
+      subcategory_list_style: "Listenstil für Unterkategorien"
+      sort_order: "Themenliste sortieren nach:"
+      default_view: "Standard-Themenliste"
+      default_top_period: "Standard-Zeitraum für Top-Beiträge:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
@@ -1839,6 +1844,11 @@ de:
         created: "Erstellt"
       sort_ascending: 'Aufsteigend'
       sort_descending: 'Absteigend'
+      subcategory_list_styles:
+        rows: "Zeilen"
+        rows_with_featured_topics: "Zeilen mit hervorgehobenen Themen"
+        boxes: "Spalten"
+        boxes_with_featured_topics: "Spalten mit hervorgehobenen Themen"
     flagging:
       title: 'Danke für deine Mithilfe!'
       action: 'Beitrag melden'
