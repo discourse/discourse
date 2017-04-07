@@ -38,12 +38,13 @@ RSpec.describe Jobs::PublishTopicToCategory do
   end
 
   it 'should publish the topic to the new category correctly' do
-    Timecop.travel(1.hour.ago) { topic }
+    Timecop.travel(1.hour.ago) { topic.update!(visible: false) }
 
     described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
 
     topic.reload
     expect(topic.category).to eq(another_category)
+    expect(topic.visible).to eq(true)
 
     %w{created_at bumped_at updated_at last_posted_at}.each do |attribute|
       expect(topic.public_send(attribute)).to be_within(1.second).of(Time.zone.now)
