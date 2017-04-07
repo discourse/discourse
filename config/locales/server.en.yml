@@ -387,7 +387,7 @@ en:
               invalid: "is not a valid color"
         post_reply:
           base:
-            different_topic: "Post and reply must be.long to the same topic."
+            different_topic: "Post and reply must belong to the same topic."
         web_hook:
           attributes:
             payload_url:
