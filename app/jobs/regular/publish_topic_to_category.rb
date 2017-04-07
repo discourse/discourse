@@ -9,6 +9,7 @@ module Jobs
 
       PostTimestampChanger.new(timestamp: Time.zone.now, topic: topic).change! do
         topic.change_category_to_id(topic_status_update.category_id)
+        topic.update_columns(visible: true)
       end
     end
   end
