@@ -3,7 +3,12 @@ import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
   composerOpen: null,
-  info: Em.Object.create(),
+  info: null,
+
+  init() {
+    this._super();
+    this.set('info', Ember.Object.create());
+  },
 
   _performCheckSize() {
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
