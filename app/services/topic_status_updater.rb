@@ -4,23 +4,36 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
 
     @topic_status_update = topic.topic_status_update
 
+    updated = nil
     Topic.transaction do
-      change(status, opts)
-      highest_post_number = topic.highest_post_number
-      create_moderator_post_for(status, opts[:message])
-      update_read_state_for(status, highest_post_number)
+      updated = change(status, opts)
+      if updated
+        highest_post_number = topic.highest_post_number
+        create_moderator_post_for(status, opts[:message])
+        update_read_state_for(status, highest_post_number)
+      end
     end
+
+    updated
   end
 
   private
 
   def change(status, opts={})
+    result = true
+
     if status.pinned? || status.pinned_globally?
       topic.update_pinned(status.enabled?, status.pinned_globally?, opts[:until])
     elsif status.autoclosed?
-      topic.update_column('closed', status.enabled?)
+      rc = Topic.where(id: topic.id, closed: !status.enabled?).update_all(closed: status.enabled?)
+      topic.closed = status.enabled?
+      result = false if rc == 0
     else
-      topic.update_column(status.name, status.enabled?)
+      rc = Topic.where(:id => topic.id, status.name => !status.enabled)
+                .update_all(status.name => status.enabled?)
+
+      topic.send("#{status.name}=", status.enabled?)
+      result = false if rc == 0
     end
 
     if @topic_status_update
@@ -38,6 +51,8 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
         (status.disabled? && status.visible?))
       CategoryFeaturedTopic.where(topic_id: topic.id).delete_all
     end
+
+    result
   end
 
   def create_moderator_post_for(status, message=nil)
