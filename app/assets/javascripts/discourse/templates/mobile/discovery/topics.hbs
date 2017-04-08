@@ -35,7 +35,7 @@
       <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}>{{i18n 'topics.bulk.dismiss_new'}}</button>
+      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}><i class="fa fa-check"></i> {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
 
     {{#if latest}}
