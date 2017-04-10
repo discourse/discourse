@@ -9,7 +9,7 @@ class OneboxController < ApplicationController
     preview = Oneboxer.cached_preview(params[:url])
     preview.strip! if preview.present?
 
-    return render(text: preview) if preview.present?
+    return render(plain: preview) if preview.present?
 
     # only 1 outgoing preview per user
     return render(nothing: true, status: 429) if Oneboxer.is_previewing?(params[:user_id])
@@ -26,7 +26,7 @@ class OneboxController < ApplicationController
     if preview.blank?
       render nothing: true, status: 404
     else
-      render text: preview
+      render plain: preview
     end
   end
 

@@ -14,7 +14,7 @@ class ExceptionsController < ApplicationController
     # Don't show google search if it's embedded in the Ember app
     @hide_google = true
 
-    render text: build_not_found_page(200, false)
+    render html: build_not_found_page(200, false)
   end
 
 end
