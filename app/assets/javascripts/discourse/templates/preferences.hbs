@@ -263,12 +263,14 @@
       <div class="controls category-controls">
       <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
       </div>
-      <div class="instructions"></div>
       <div class="controls category-controls">
         <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_categories'}}</label>
         {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
+      <div class="controls category-controls">
+      <a href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+      </div>
       <div class="controls category-controls">
         <label><span class="icon fa fa-dot-circle-o watching-first-post"></span> {{i18n 'user.watched_first_post_categories'}}</label>
         {{category-selector categories=model.watchedFirstPostCategories}}

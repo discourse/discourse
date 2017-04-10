@@ -1,5 +1,6 @@
 import PreloadStore from 'preload-store';
 import { ajax } from 'discourse/lib/ajax';
+import { userPath } from 'discourse/lib/url';
 
 export default Discourse.Route.extend({
   titleToken() {
@@ -15,7 +16,7 @@ export default Discourse.Route.extend({
   afterModel(model) {
     // confirm token here so email clients who crawl URLs don't invalidate the link
     if (model) {
-      return ajax({ url: `/users/confirm-email-token/${model.token}.json`, dataType: 'json' });
+      return ajax({ url: userPath(`confirm-email-token/${model.token}.json`), dataType: 'json' });
     }
   }
 });

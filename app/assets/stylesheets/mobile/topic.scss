@@ -43,7 +43,7 @@
   clear: both;
 }
 
-#topic-closing-info {
+#topic-status-info {
   margin-left: 10px;
 }
 
@@ -190,7 +190,7 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 }
 
 // make mobile timeline top and bottom dates easier to select
-.topic-timeline { 
+.topic-timeline {
   .start-date { font-size: 110%; padding: 5px; }
   .now-date { font-size: 110%; padding: 5px; }
 }

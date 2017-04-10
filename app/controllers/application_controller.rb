@@ -147,7 +147,11 @@ class ApplicationController < ActionController::Base
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
 
-    if (request.format && request.format.json?) || (request.xhr?)
+    show_json_errors = (request.format && request.format.json?) ||
+                       (request.xhr?) ||
+                       ((params[:external_id] || '').ends_with? '.json')
+
+    if show_json_errors
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
         return render status: status_code, layout: false, text: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : I18n.t(type)

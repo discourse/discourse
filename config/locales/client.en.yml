@@ -6,7 +6,7 @@
 # To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+# After this file is changed, ift needs to be pushed by a maintainer to Transifex:
 #
 #   tx push -s
 #
@@ -421,7 +421,7 @@ en:
       automatic_group: Automatic Group
       closed_group: Closed Group
       is_group_user: "You are a member of this group"
-      allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
+      allow_membership_requests: "Allow users to send membership requests to group owners"
       membership: "Membership"
       name: "Name"
       user_count: "Number of Members"
@@ -627,6 +627,7 @@ en:
       muted_users_instructions: "Suppress all notifications from these users."
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
+      tracked_topics_link: "Show tracked topics"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
       apps: "Apps"
       revoke_access: "Revoke Access"
@@ -1040,6 +1041,12 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
+
+      resend_title: "Resend Activation Email"
+      change_email: "Change Email Address"
+      provide_new_email: "Provide a new address and we'll resend your confirmation email."
+      submit_new_email: "Update Email Address"
+
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
@@ -1190,16 +1197,6 @@ en:
         body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
-      auto_close:
-        label: "Auto-close topic time:"
-        error: "Please enter a valid value."
-        based_on_last_post: "Don't close until the last post in the topic is at least this old."
-        all:
-          units: ""
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(# of hours)"
-          examples: 'Enter number of hours (24).'
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
@@ -1276,6 +1273,7 @@ en:
       sort_by: "Sort by"
       relevance: "Relevance"
       latest_post: "Latest Post"
+      latest_topic: "Latest Topic"
       most_viewed: "Most Viewed"
       most_liked: "Most Liked"
       select_all: "Select All"
@@ -1478,11 +1476,39 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
+      topic_status_update:
+        title: "Set Topic Timer"
+        save: "Set Timer"
+        time: "Time:"
+        remove: "Remove Timer"
+        publish_to: "Publish To:"
+      auto_update_input:
+        limited:
+          units: "(# of hours)"
+          examples: 'Enter number of hours (24).'
+        all:
+          units: ""
+          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+      publish_to_category:
+        title: "Schedule Publishing"
+      temp_open:
+        title: "Open Temporarily"
+      auto_reopen:
+        title: "Auto-open Topic"
+      temp_close:
+        title: "Close Temporarily"
+      auto_close:
+        title: "Auto-Close Topic"
+        label: "Auto-close topic time:"
+        error: "Please enter a valid value."
+        based_on_last_post: "Don't close until the last post in the topic is at least this old."
+
+      status_update_notice:
+        auto_open: "This topic will automatically open %{timeLeft}."
+        auto_close: "This topic will automatically close %{timeLeft}."
+        auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
       auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Save"
-      auto_close_remove: "Don't Auto-Close This Topic"
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
@@ -1518,7 +1544,7 @@ en:
           "2_8": 'You will receive notifications because you are tracking this category.'
           "2_4": 'You will receive notifications because you posted a reply to this topic.'
           "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "2": 'You will receive notifications because you <a href="/u/{{username}}/preferences">read this topic</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
           "0_7": 'You are ignoring all notifications in this category.'
@@ -1555,7 +1581,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        auto_close: "Auto Close…"
+        timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
@@ -3080,8 +3106,6 @@ en:
         blocked: "Blocked?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        edit_title: "Edit Title"
-        save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
         refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
@@ -3092,6 +3116,7 @@ en:
         logged_out: "User was logged out on all devices"
         revoke_admin: 'Revoke Admin'
         grant_admin: 'Grant Admin'
+        grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
         unblock: 'Unblock'

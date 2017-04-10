@@ -32,7 +32,7 @@ export default Ember.Mixin.create({
       topicTitle,
       topicBody,
       archetypeId: 'private_message',
-      draftKey: 'new_private_message'
+      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY
     });
   }
 

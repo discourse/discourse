@@ -65,10 +65,6 @@ export function postUrl(slug, topicId, postNumber) {
   return url;
 }
 
-export function userUrl(username) {
-  return Discourse.getURL("/users/" + username.toLowerCase());
-}
-
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;

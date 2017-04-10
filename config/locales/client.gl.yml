@@ -136,7 +136,6 @@ gl:
         enabled: 'listado o %{when}'
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
-    wizard_required: "É hora de configura-lo teu foro! <a href='%{url}' data-auto-route='true'>Inicie o Asistente de Configuración</a>!"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     s3:
       regions:
@@ -758,7 +757,6 @@ gl:
       logging_in: "Iniciando sesión..."
       or: "ou"
       authenticating: "Autenticando..."
-      awaiting_confirmation: "A túa conta está pendente de se activar, emprega a ligazón de contrasinal esquecido para emitir outro correo de activación."
       awaiting_approval: "A túa conta non foi aínda aprobada polos membros do equipo. Enviaráseche unha mensaxe cando así for."
       requires_invite: "Sentímolo pero o acceso a este foro é unicamente por convite."
       not_activated: "Non podes acceder aínda. Antes debemos enviarche unha mensaxe a <b>{{sentTo}}</b>. Por favor, sigue as instrucións desta mensaxe para activar a túa conta."
@@ -1566,7 +1564,6 @@ gl:
     history: "Historial"
     changed_by: "por {{author}}"
     raw_email:
-      title: "Fonte do correo"
       not_available: "Non dispoñíbel."
     categories_list: "Lista de categorías"
     filters:
@@ -1850,7 +1847,6 @@ gl:
             without_uploads: "Si (non incluír ficheiros)"
           download:
             label: "Descargar"
-            title: "Descargar a copia de seguranza"
           destroy:
             title: "Eliminar a copia de seguranza"
             confirm: "Confirmas a destrución desta copia de seguranza?"

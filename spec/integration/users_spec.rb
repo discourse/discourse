@@ -6,7 +6,7 @@ RSpec.describe "Users" do
   describe "viewing a user" do
 
     it "should be able to view a user" do
-      get "/users/#{user.username}"
+      get "/u/#{user.username}"
 
       expect(response).to be_success
       expect(response.body).to include(user.username)
@@ -18,7 +18,7 @@ RSpec.describe "Users" do
       end
 
       it "should be able to view a user" do
-        get "/users/#{user.username}"
+        get "/u/#{user.username}"
 
         expect(response).to be_success
         expect(response.body).to include(user.username)
@@ -32,7 +32,7 @@ RSpec.describe "Users" do
     end
 
     it "should be able to update a user" do
-      put "/users/#{user.username}.json", { name: 'test.test' }
+      put "/u/#{user.username}.json", { name: 'test.test' }
 
       expect(response).to be_success
       expect(user.reload.name).to eq('test.test')
@@ -44,7 +44,7 @@ RSpec.describe "Users" do
       end
 
       it "should be able to update a user" do
-        put "/users/#{user.username}.json", { name: 'testing123' }
+        put "/u/#{user.username}.json", { name: 'testing123' }
 
         expect(response).to be_success
         expect(user.reload.name).to eq('testing123')

@@ -36,6 +36,7 @@ Fabricator(:inactive_user, from: :user) do
   name 'Inactive User'
   username 'inactive_user'
   email 'inactive@idontexist.com'
+  password 'qwerqwer123'
   active false
 end
 

@@ -1,0 +1,12 @@
+{{#d-modal-body}}
+  <p>{{i18n "login.provide_new_email"}}</p>
+  {{input value=newEmail class="activate-new-email"}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="changeEmail"
+             label="login.submit_new_email"
+             disabled=submitDisabled
+             class="btn-primary"}}
+  {{d-button action="closeModal" label="close"}}
+</div>

@@ -14,7 +14,7 @@ acceptance("Plugin Outlet - Single Template", {
 });
 
 test("Renders a template into the outlet", assert => {
-  visit("/users/eviltrout");
+  visit("/u/eviltrout");
   andThen(() => {
     assert.ok(find('.user-profile-primary-outlet.hello').length === 1, 'it has class names');
     assert.equal(find('.hello-username').text(), 'eviltrout', 'it renders into the outlet');

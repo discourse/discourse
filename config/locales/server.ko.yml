@@ -566,7 +566,6 @@ ko:
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
-    category_featured_topics: "카테고리 페이지에서 한 카테고리당 보여질 글타래의 수"
     fixed_category_positions: "활성화하면 고정된 순서의 카테고리들을 바꿀 수 있다. 활성화 하지 않으면 카테고리는 활동적인 순서에 따라 정렬된다."
     fixed_category_positions_on_create: "선택 시, 카테고리 정렬이 유지됩니다. (fixed_category_positions가 체크돼 있어야 합니다.)"
     add_rel_nofollow_to_user_content: "사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  \"rake posts:rebake\" 명령으로 변경해주서야 함"
@@ -602,7 +601,6 @@ ko:
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
-    enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 태그를 이용한 일반적인 웹 크롤러를 활성화"
     allow_moderators_to_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다.  DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     top_menu: "첫페이지 메뉴에 어떤 아이템이 뜨고 어떤 순서로 뜰지 정합니다 예 최근|새로씀|안읽음|카테고리|위로|읽음|쓴글|북마크"
@@ -634,7 +632,6 @@ ko:
     invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
     invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
-    reserved_usernames: "회원가입 금지된 아이디 목록"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
@@ -854,10 +851,6 @@ ko:
     not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 글타래들입니다."
   change_owner:
     post_revision_text: "소유권이 %{old_user}에서 %{new_user}으로 이전되었습니다."
-  emoji:
-    errors:
-      name_already_exists: "죄송합니다. '%{name}'은/는 이미 다른 이모티콘이 사용하고 있습니다."
-      error_while_storing_emoji: "죄송합니다, emoji를 저장하는 도중 오류가 발생했습니다."
   topic_statuses:
     archived_enabled: "이 글타래는 보관되었고 더이상 변경하실 수 없습니다."
     archived_disabled: "이 글타래의 보관이 풀렸고 이제 변경하실 수 있습니다."
@@ -926,15 +919,6 @@ ko:
     subject_template: "%{site_domain_name}의 %{invitee_name}님께서 당신을 초대하였습니다."
   invite_password_instructions:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
-  test_mailer:
-    subject_template: "[%{site_name}] 이메일 발송 테스트"
-  new_version_mailer:
-    subject_template: "[%{site_name}] 새 Discourse 버전으로 업데이트 가능."
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] 업데이트 가능."
-  queued_posts_reminder:
-    subject_template:
-      other: "[%{site_name}]의 %{count}개의 글이 검토를 기다리고 있습니다."
   flag_reasons:
     off_topic: "내가 올린 글타래가 **주제 벗어난 이야기**으로 신고 되었습니다. 사람들이 이 글타래의 제목이랑 글 내용이 안 맞는다고 느끼나 봅니다. "
     inappropriate: "내가 올린 글타래가 **부적절**로 신고 되었습니다. 사람들이 이 글타래가 [가이드라인](/guidelines)에서 벗어나 공격적, 모욕적, 폭력적이라고 느낍니다."
@@ -988,27 +972,11 @@ ko:
     csv_export_failed:
       subject_template: "데이터 추출 실패"
       text_body_template: "죄송합니다. 데이터 추출에 실패하였습니다. 로그를 확인하시거나 관리자에게 문의해주세요."
-    email_reject_no_account:
-      subject_template: "[%{site_name}]  이메일 문제 -- 모르는 계정"
-    email_reject_empty:
-      subject_template: "[%{site_name}]  이메일 문제 -- 내용 없음"
     email_reject_parsing:
       text_body_template: |
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
         이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
-    email_reject_invalid_access:
-      subject_template: "[%{site_name}]  이메일 문제 -- 잘못된 접근"
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] 이메일 문제 -- 잘못된 답글 Key"
-    email_reject_topic_not_found:
-      subject_template: "[%{site_name}] 이메일 문제 -- 글타래 못 찾음"
-    email_reject_topic_closed:
-      subject_template: "[%{site_name}] 이메일 문제 -- 글타래 닫힘"
-    email_reject_auto_generated:
-      subject_template: "[%{site_name}] 이메일 문제 -- 자동 생성된 답글"
-    email_error_notification:
-      subject_template: "[%{site_name}] 이메일 문제 -- POP 인증 오류"
     spam_post_blocked:
       subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
     pending_users_reminder:
@@ -1029,30 +997,16 @@ ko:
       title: "구독해지"
       description: "이메일들에 관심이 없나요? 아래 구독해지를 눌러서 바로 구독을 해지할 수 있습니다:"
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} 회원님이 '%{topic_title}' 글타래에 초대했습니다"
-    user_replied:
-      subject_template: "[%{site_name}] '%{topic_title}'에 답글이 달렸습니다"
-    user_quoted:
-      subject_template: "[%{site_name}] %{username}님께서 '%{topic_title}' 글타래에 당신을 인용하였습니다"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{username}님께서 '%{topic_title}'에서 당신을 언급하였습니다"
-    user_posted:
-      subject_template: "[%{site_name}] %{subject_prefix} '%{topic_title}'에 새로운 글이 등록되었습니다"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       click_here: "클릭"
     forgot_password:
-      subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |
         [%{site_name}](%{base_url}) 사이트에서 누군가 당신의 패스워드를 재설정 요청하였습니다.
 
         아래 링크를 클릭하여 패스워드를 재설정하세요:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |
         [%{site_name}](%{base_url})의 회원님 계정에 비밀번호를 추가 요청을 받았습니다. 이 이메일이 사용된 다른 온라인 서비스 (Google, Facebook, etc)를 이용해 로그인할 수 있습니다.
 
@@ -1061,7 +1015,6 @@ ko:
         비밀번호 선택 페이지:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
-      subject_template: "[%{site_name}] 로그인"
       text_body_template: |
         [%{site_name}](%{base_url})의 회원님 계정에 로그인 요청을 받았습니다.
 
@@ -1070,7 +1023,6 @@ ko:
         로그인 페이지:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] 당신의 새 계정"
       text_body_template: |
         %{site_name}에 새 계정이 만들어 졌습니다.
 
@@ -1096,7 +1048,6 @@ ko:
 
         (새 사용자로서 할말이 있으시면 이글에 답변함으로써 [스태프](%{base_url}/about)들에게 이야기해주세요.)
     signup:
-      subject_template: "[%{site_name}] 새 계정 확인"
       text_body_template: |
         %{site_name}에 오신것을 환영합니다!
 

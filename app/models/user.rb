@@ -521,6 +521,8 @@ class User < ActiveRecord::Base
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
     update_column(:first_seen_at, now) unless self.first_seen_at
+
+    DiscourseEvent.trigger(:user_seen, self)
   end
 
   def self.gravatar_template(email)
@@ -900,7 +902,7 @@ class User < ActiveRecord::Base
   end
 
   def is_singular_admin?
-    User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
+    User.where(admin: true).where.not(id: id).human_users.blank?
   end
 
   def logged_out
@@ -925,7 +927,7 @@ class User < ActiveRecord::Base
   end
 
   def clear_global_notice_if_needed
-    return if id == Discourse::SYSTEM_USER_ID
+    return if id < 0
 
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false

@@ -7,7 +7,7 @@ import { observes } from 'ember-addons/ember-computed-decorators';
 export default Ember.Controller.extend({
   query: null,
   queryParams: ['order', 'ascending'],
-  order: 'seen',
+  order: null,
   ascending: null,
   showEmails: false,
   refreshing: false,

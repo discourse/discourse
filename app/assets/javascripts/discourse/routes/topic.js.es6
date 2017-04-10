@@ -50,9 +50,11 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
 
-    showAutoClose() {
-      showModal('edit-topic-auto-close', { model: this.modelFor('topic') });
-      this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
+    showTopicStatusUpdate() {
+      const model = this.modelFor('topic');
+      model.set('topic_status_update', Ember.Object.create(model.get('topic_status_update')));
+      showModal('edit-topic-status-update', { model });
+      this.controllerFor('modal').set('modalClass', 'topic-close-modal');
     },
 
     showChangeTimestamp() {

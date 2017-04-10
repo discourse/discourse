@@ -118,7 +118,6 @@ zh_CN:
         enabled: '%{when}列出'
         disabled: '于%{when}隐藏'
     topic_admin_menu: "管理主题"
-    wizard_required: "是时候配置你的论坛啦！<a href='%{url}' data-auto-route='true'>点击开始设置向导</a>！"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过 %{min_users} 个时关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
@@ -888,7 +887,6 @@ zh_CN:
       logging_in: "登录中..."
       or: "或"
       authenticating: "验证中..."
-      awaiting_confirmation: "你的帐号尚未激活，点击忘记密码链接以重新发送激活邮件。"
       awaiting_approval: "你的帐号尚未被论坛版主审核。请等待一段时间，当你的帐号被审核时会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
       not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>{{sentTo}}</b>，请打开它并完成账号激活。"
@@ -1208,7 +1206,7 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>这里显示了近期主题列表。</p><p>默认情况下，以下主题将显示在近期列表。如果是最近 2 天内创建的，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
+          new: '<p>这里显示了近期主题列表。</p><p>默认情况下，最近 2 天内创建的主题将显示在近期列表，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
           unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
@@ -1698,7 +1696,6 @@ zh_CN:
       suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       all_topics_wiki: "默认将新主题设为维基主题"
-      sort_order: "默认排序："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
@@ -2348,7 +2345,6 @@ zh_CN:
             without_uploads: "是（不包括文件）"
           download:
             label: "下载"
-            title: "下载该备份"
           destroy:
             title: "删除备份"
             confirm: "你确定要删除该备份吗？"

@@ -13,7 +13,7 @@ describe EmailController do
 
       it 'redirects to your user preferences' do
         get :preferences_redirect
-        expect(response).to redirect_to("/users/#{user.username}/preferences")
+        expect(response).to redirect_to("/u/#{user.username}/preferences")
       end
     end
 

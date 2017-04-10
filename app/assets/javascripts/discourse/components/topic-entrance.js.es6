@@ -94,11 +94,15 @@ export default Ember.Component.extend(CleansUp, {
 
   actions: {
     enterTop() {
-      DiscourseURL.routeTo(this.get('topic.url'));
+      const topic = this.get('topic');
+      this.appEvents.trigger('header:update-topic', topic);
+      DiscourseURL.routeTo(topic.get('url'));
     },
 
     enterBottom() {
-      DiscourseURL.routeTo(this.get('topic.lastPostUrl'));
+      const topic = this.get('topic');
+      this.appEvents.trigger('header:update-topic', topic);
+      DiscourseURL.routeTo(topic.get('lastPostUrl'));
     }
   }
 });

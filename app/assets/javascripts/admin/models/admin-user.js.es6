@@ -5,6 +5,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ApiKey from 'admin/models/api-key';
 import Group from 'discourse/models/group';
 import TL3Requirements from 'admin/models/tl3-requirements';
+import { userPath } from 'discourse/lib/url';
 
 const AdminUser = Discourse.User.extend({
 
@@ -114,11 +115,10 @@ const AdminUser = Discourse.User.extend({
   },
 
   revokeAdmin() {
-    const self = this;
-    return ajax("/admin/users/" + this.get('id') + "/revoke_admin", {
+    return ajax(`/admin/users/${this.get('id')}/revoke_admin`, {
       type: 'PUT'
-    }).then(function() {
-      self.setProperties({
+    }).then(() => {
+      this.setProperties({
         admin: false,
         can_grant_admin: true,
         can_revoke_admin: false
@@ -127,15 +127,10 @@ const AdminUser = Discourse.User.extend({
   },
 
   grantAdmin() {
-    const self = this;
-    return ajax("/admin/users/" + this.get('id') + "/grant_admin", {
+    return ajax(`/admin/users/${this.get('id')}/grant_admin`, {
       type: 'PUT'
-    }).then(function() {
-      self.setProperties({
-        admin: true,
-        can_grant_admin: false,
-        can_revoke_admin: true
-      });
+    }).then(() => {
+      bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
     }).catch(popupAjaxError);
   },
 
@@ -346,7 +341,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   sendActivationEmail() {
-    return ajax('/users/action/send_activation_email', {
+    return ajax(userPath('action/send_activation_email'), {
       type: 'POST',
       data: { username: this.get('username') }
     }).then(function() {

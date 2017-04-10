@@ -404,7 +404,6 @@ zh_CN:
       pms_per_day: "你今天的消息数量已经到达上限，请等待%{time_left}之后再试。"
       create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
       create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
-      edit_post: "你今天编辑帖子的数量已经到达上限，请等待%{time_left}之后再试。"
       live_post_counts: "你请求帖子数量的速度太快了，请等待%{time_left}之后再试。"
       unsubscribe_via_email: "你已经达到了今日用邮件解除订阅的最大数量限制。请等待%{time_left}之后再试。"
       topic_invitations_per_day: "你已经达到了今日主题邀请的最大数量限制。请等待%{time_left}之后再试。"
@@ -791,7 +790,6 @@ zh_CN:
     delete_removed_posts_after: "帖子被作者删除，将在(n)小时后被自动删除。"
     max_image_width: "帖子中图片允许的最大缩略图宽度"
     max_image_height: "帖子中图片允许的最大缩略图宽度"
-    category_featured_topics: "在分类 /categories 页面中每个分类显示的主题数目。在修改这个值之后，分类页面需要 15 分钟后完成更新。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     fixed_category_positions_on_create: "如果选择了，目录排序将会在话题创建对话框中被包含(要求固定目录位置选项)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
@@ -849,7 +847,6 @@ zh_CN:
     ga_universal_domain_name: "Google 通用分析域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
@@ -886,7 +883,6 @@ zh_CN:
     invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
     invite_only: "公开注册已禁用，新用户必须被其他成员或管理人员邀请。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
-    reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
     min_admin_password_length: "管理员最短密码长度"
     password_unique_characters: "密码中必须包含几个不同的字符。"
@@ -1298,10 +1294,6 @@ zh_CN:
   change_owner:
     post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
     deleted_user: "已经删除的用户"
-  emoji:
-    errors:
-      name_already_exists: "抱歉，名字 '%{name}' 已经被另一个 emoji 使用。"
-      error_while_storing_emoji: "抱歉，存储 emoji 时发生错误。"
   topic_statuses:
     archived_enabled: "本主题已归档，即已经冻结，无法修改。"
     archived_disabled: "本主题已被解除归档，即不再冻结，可以修改。"
@@ -1386,14 +1378,6 @@ zh_CN:
       other: "%{count} 个标记需要被处理"
   unsubscribe_mailer:
     subject_template: "确认你不想要收到%{site_title}的电子邮件更新"
-    text_body_template: |
-      有人（可能是你？）请求不再接受来自%{site_domain_name}的邮件更新。
-      点击链接以确认退订：
-
-      %{confirm_unsubscribe_link}
-
-
-      如果你想要继续接受邮件更新，你可以忽略这封邮件。
   invite_mailer:
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
   custom_invite_mailer:
@@ -1412,7 +1396,6 @@ zh_CN:
 
       （如果链接已经过期，在登录时用，选择“我忘记了密码”，再次输入你的邮箱即可。）
   test_mailer:
-    subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |
       这是一封测试电子邮件，发自：
 
@@ -1455,7 +1438,6 @@ zh_CN:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
-    subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
 
@@ -1468,7 +1450,6 @@ zh_CN:
 
       - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] 可以升级"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
 
@@ -1485,8 +1466,6 @@ zh_CN:
 
       %{notes}
   queued_posts_reminder:
-    subject_template:
-      other: "[%{site_name}] %{count} 个帖子等待审核"
     text_body_template: |
       你好，
 
@@ -1607,56 +1586,48 @@ zh_CN:
       subject_template: "数据导出失败"
       text_body_template: "我们很抱歉，但是你的数据导出请求失败了。请检查日志或联系一位管理人员。"
     email_reject_insufficient_trust_level:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 信任等级不足"
       text_body_template: |
         我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
         你的账户没有足够的信任等级以该邮件地址发布新主题。如果你有异议，联系管理人员。
     email_reject_user_not_found:
       title: "Email被拒绝：用户未找到"
-      subject_template: "[%{site_name}] 邮件问题 -- 用户未找到"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_screened_email:
       title: "Email被拒绝：被屏蔽的Email地址"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 被封禁的邮件地址"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_inactive_user:
       title: "Email被拒绝：未激活的用户"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 未激活用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         与你账户关联的邮件地址没有激活，请先激活你的账号再发送邮件。
     email_reject_blocked_user:
       title: "Email被拒绝：被禁用的用户"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 被封禁的用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         与你账户关联的邮件地址已经被封禁。
     email_reject_reply_user_not_matching:
       title: "Email被拒绝：用户未找到"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 未预期的回复地址"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         你发送回复的邮件地址与我们等待的地址不同，所以我们不确定你是不是同一个人。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_no_account:
       title: "Email被拒绝：帐户不存在"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 未知账户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         我们找不到匹配你邮件地址的账号。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_empty:
       title: "Email被拒绝：空"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 无内容"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
 
@@ -1664,34 +1635,29 @@ zh_CN:
 
         如果你**确定**你的邮件中有回复内容，试试用更简单的格式。
     email_reject_parsing:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 内容无法识别"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
         我们不能找到你邮件中的回复。**请确认将你的回复置于邮件顶端**——我们不能处理行内回复。
     email_reject_invalid_access:
       title: "Email被拒绝：无效访问"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
       text_body_template: |
         我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
         你的账户没有达到足够的信任等级在该分类发布新主题。如果你有异议，联系管理人员。
     email_reject_strangers_not_allowed:
       title: "Email被拒绝：不允许陌生人"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
       text_body_template: |+
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         邮件发至的分类只接受来自合法帐户且邮件地址已确认的用户的有邮件。如果你有异议，联系管理人员。
 
     email_reject_invalid_post:
-      subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，如果还不行，使用网站发表。
     email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
@@ -1701,46 +1667,39 @@ zh_CN:
 
         如果你能解决错误，请再试一次。
     email_reject_invalid_post_action:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 无发表权限"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         发送的命令无法被识别。请再试一次，如果还有问题，使用网站发表。
     email_reject_reply_key:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 未知回复指纹"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         邮件中的回复信令是无效或者未知的，所以我们不知道这封邮件回复给谁了。请联系管理人员。
     email_reject_bad_destination_address:
       title: "Email被拒绝：收件人地址不正确"
-      subject_template: "[%{site_name}] 电子邮件错误 -- 未知的回复至地址"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}） 邮件出问题了。
 
         目标邮件地址无法识别。请确保你在向管理人员提供的邮件地址发信。
     email_reject_topic_not_found:
       title: "Email被拒绝：主题不存"
-      subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
       text_body_template: |
         我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
         你回复的主题不存在——可能已经被删除了？如果你有异议，联系管理人员。
     email_reject_topic_closed:
       title: "Email被拒绝：主题已关闭"
-      subject_template: "[%{site_name}] 邮件问题 -- 主题已关闭"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination} ( 名为 %{former_title} )的邮件出问题了。
 
         你回复的主题已经被关闭，不允许回复。如果你有异议，联系管理人员。
     email_reject_auto_generated:
-      subject_template: "[%{site_name}] 邮件问题 -- 自动生成的回复"
       text_body_template: |
         我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
         系统觉得你的邮件是“自动生成”的，即电脑生成了该邮件而不是由你输入的；我们不能接受这样的邮件。如果你有异议，联系管理人员。
     email_error_notification:
-      subject_template: "[%{site_name}] 电子邮件错误 -- POP 验证错误"
       text_body_template: |
         不幸的是，从 POP 服务器查询邮件时遇到了验证错误。
 
@@ -1869,7 +1828,6 @@ zh_CN:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1877,7 +1835,6 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -1885,7 +1842,6 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username}邀请你参与“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
 
@@ -1893,7 +1849,6 @@ zh_CN:
 
         %{respond_instructions}
     user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1903,7 +1858,6 @@ zh_CN:
 
         %{respond_instructions}
     user_replied_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1913,7 +1867,6 @@ zh_CN:
 
         %{respond_instructions}
     user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1923,7 +1876,6 @@ zh_CN:
 
         %{respond_instructions}
     user_linked:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1933,7 +1885,6 @@ zh_CN:
 
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1943,7 +1894,6 @@ zh_CN:
 
         %{respond_instructions}
     user_group_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1953,7 +1903,6 @@ zh_CN:
 
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1963,7 +1912,6 @@ zh_CN:
 
         %{respond_instructions}
     user_watching_first_post:
-      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1973,7 +1921,6 @@ zh_CN:
 
         %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2017,7 +1964,6 @@ zh_CN:
       back_to_top: "回到顶部"
     forgot_password:
       title: "忘记密码"
-      subject_template: "[%{site_name}] 密码重置"
       text_body_template: |
         有人请求重置你在 [%{site_name}](%{base_url}) 上的密码。
 
@@ -2027,7 +1973,6 @@ zh_CN:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "设置密码"
-      subject_template: "[%{site_name}] 设置密码"
       text_body_template: |
         有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
 
@@ -2037,7 +1982,6 @@ zh_CN:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "管理员登陆"
-      subject_template: "[%{site_name}]登录"
       text_body_template: |
         有人尝试登录你在[%{site_name}](%{base_url})的账户。
 
@@ -2047,7 +1991,6 @@ zh_CN:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "帐号已创建"
-      subject_template: "[%{site_name}] 你的新帐号"
       text_body_template: |
         你在 %{site_name} 上建立了一个新账号
 
@@ -2055,14 +1998,12 @@ zh_CN:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "确认新邮箱"
-      subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "确认旧邮箱"
-      subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         在我们修改你的邮箱地址前，我们需要你确认你拥有当前的邮件账号。在你完成这步之后，我们将确认你的新邮件地址。
 
@@ -2071,7 +2012,6 @@ zh_CN:
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
-      subject_template: "[%{site_name}] 你的邮箱地址已经修改成功"
       text_body_template: |
         这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
 
@@ -2100,7 +2040,6 @@ zh_CN:
         （如果你在新用户级别需要和[管理人员](%{base_url/about)沟通的话，直接回复这个消息。）
     signup:
       title: "注册"
-      subject_template: "[%{site_name}] 确认你的新账户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
@@ -2172,103 +2111,6 @@ zh_CN:
     编辑本主题的第一帖以改变 %{page_name} 页面的内容。
   guidelines_topic:
     title: "FAQ/指引"
-    body: |
-      <a name="civilized"></a>
-
-      ## [这是一个文明讨论的地方](#civilized)
-
-      在论坛上请表现得像在公共公园一样得体。我们一群人共享着一个公共社群资源 &mdash; 一个通过不断进行讨论以分享我们技能、知识和兴趣的地方。
-
-      这些都不是死规矩或者是草率决定，只是一些帮助社群的人们来判断的规定。试用这些指引来保持干净和充满灵感的文明的公开论坛。
-
-      <a name="improve"></a>
-
-      ## [改善讨论](#improve)
-
-      帮助我们让这个地方变成一个讨论的好地方。你可以总是一致的做一些帮助改善讨论的事，即使是小事也行。如果你不确定你的帖子有益于讨论，认真想一想你要说什么再发布。
-
-      这里讨论的主题对我们很重要，并且我们希望你也觉得这些内容对你很重要。尊重这些讨论的主题，以及讨论他们的人们，特别是当你不同意他们所说的时候。
-
-      改善讨论的一种方法是找一找已经发生过的事。请在发帖或创建你自己的主题前，花一些时间浏览这些主题，这样你更有机会遇见和你有共同爱好的人。
-
-      <a name="agreeable"></a>
-
-      ## [即使你不同意他人时，尊重他人](#agreeable)
-
-      你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：
-
-      *   指名道姓。
-      *   人生攻击。
-      *   回复帖子无关于帖子的内容。
-      *   下意识的反驳。
-
-      相反，提供合理的观点改善讨论。
-
-      <a name="participate"></a>
-
-      ## [你的参与有意义](#participate)
-
-      我们在这儿的讨论为大家树立了榜样。通过选择参与有意义的讨论，帮助我们将论坛变成一个有意思的地方 &mdash; 并且避免那些没有帮助的行为。
-
-      Discourse 提供了让社群共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。
-
-      让我们创造一个更美好的社群。
-
-      <a name="flag-problems"></a>
-
-      ## [如果你发现问题了，标记它](#flag-problems)
-      版主有特别的权力；他们对论坛负责。但是你也是。有了你的帮助，版主能成为社群监察者，而不仅是守卫或者警察。
-
-      当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它。_如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。
-
-      为了维护我们的社群，版主保留了任何情况下删除任何内容和任何用户的权力。版主没有预先审核任何新帖子；版主和站点维护人员对社群里发表的任何言论均不负责任。
-
-      <a name="be-civil"></a>
-
-      ## [永远保持文明](#be-civil)
-
-      粗鲁这样的行为会破坏健康的讨论：
-
-      *   文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。
-      *   拒绝色情。不要发表任何淫秽或性暗示的东西。
-      *   尊重每一个人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。
-      *   尊重我们的论坛。不要发表广告或者其他垃圾信息。
-
-      这些条款不是法律条文，并且没有准确的定义 &mdash; 避免任何做关于他们的_可能擦边_的事。如果你不确定，问问自己的帖子是否能出现在纽约时报的头版头条上。
-
-      这是一个公共论坛，并且搜索引擎会索引这些讨论。注意发表的语言、链接和图片，不要在其中包含你的家庭和朋友。
-
-      <a name="keep-tidy"></a>
-
-      ## [保持整洁](#keep-tidy)
-
-      花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：
-
-      *   不要在错误的分类发表新主题。
-      *   不要在多个主题中回复同样的内容。
-      *   不要发布没有内容的回复。
-      *   不要在中途改变主题。
-      *   不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。
-
-      比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。
-
-      <a name="stealing"></a>
-
-      ## [只发表你自己的东西](#stealing)
-
-      你不能在没有他人授权的情况下发表任何属于他人的数字资产。你可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何违反法律的内容。
-
-      <a name="power"></a>
-
-      ## [有你参与](#power)
-
-      这个站点由[一群友善的管理人员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站点反馈](/c/site-feedback)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[管理人员页面](/about)联系我们。
-
-      <a name="tos"></a>
-
-      ## [使用条款](#tos)
-
-      是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](/tos)。
   tos_topic:
     title: "服务条款"
     body: |
@@ -2791,7 +2633,6 @@ zh_CN:
             description: "你或者你的组织平时用于联络的网页。将被显示在<a href='/about' target='_blank'>关于页面</a>中。"
           site_contact:
             label: "自动消息"
-            description: "所有自动发送自 Discourse 的私人消息将以该用户的名义发送。最重要的是，这个用户将被指定为发送给每个新用户的欢迎消息的发送人。"
       corporate:
         title: "组织"
         fields:

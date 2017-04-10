@@ -297,7 +297,3 @@ and (max-width : 600px) {
     border: none;
   }
 }
-
-.user-preferences .watching-first-post.fa-dot-circle-o {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-}

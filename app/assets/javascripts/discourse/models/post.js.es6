@@ -2,11 +2,12 @@ import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
-import { url, propertyEqual } from 'discourse/lib/computed';
+import { propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
 import { postUrl } from 'discourse/lib/utilities';
 import { cook } from 'discourse/lib/text';
+import { userPath } from 'discourse/lib/url';
 
 const Post = RestModel.extend({
 
@@ -60,7 +61,10 @@ const Post = RestModel.extend({
     return postNumber === 1 ? baseUrl + "/1" : baseUrl;
   },
 
-  usernameUrl: url('username', '/users/%@'),
+  @computed('username')
+  usernameUrl(username) {
+    return userPath(username);
+  },
 
   topicOwner: propertyEqual('topic.details.created_by.id', 'user_id'),
 

@@ -302,11 +302,11 @@ module Email
 
     def destinations
       all_destinations
-        .map { |d| check_address(d) }
+        .map { |d| Email::Receiver.check_address(d) }
         .drop_while(&:blank?)
     end
 
-    def check_address(address)
+    def self.check_address(address)
       # only check for a group/category when 'email_in' is enabled
       if SiteSetting.email_in
         group = Group.find_by_email(address)
@@ -317,7 +317,7 @@ module Email
       end
 
       # reply
-      match = reply_by_email_address_regex.match(address)
+      match = Email::Receiver.reply_by_email_address_regex.match(address)
       if match && match.captures
         match.captures.each do |c|
           next if c.blank?
@@ -443,7 +443,7 @@ module Email
       true
     end
 
-    def reply_by_email_address_regex
+    def self.reply_by_email_address_regex
       @reply_by_email_address_regex ||= begin
         reply_addresses = [
            SiteSetting.reply_by_email_address,
@@ -652,7 +652,7 @@ module Email
     end
 
     def should_invite?(email)
-      email !~ reply_by_email_address_regex &&
+      email !~ Email::Receiver.reply_by_email_address_regex &&
       email !~ group_incoming_emails_regex &&
       email !~ category_email_in_regex
     end

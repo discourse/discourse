@@ -274,6 +274,8 @@ bs_BA:
       title: "Users"
       xaxis: "Day"
       yaxis: "Number of new users"
+    profile_views:
+      xaxis: "Dan"
     topics:
       title: "Topics"
       xaxis: "Day"
@@ -341,6 +343,8 @@ bs_BA:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    page_view_anon_reqs:
+      xaxis: "Dan"
     time_to_first_response:
       yaxis: "Prosječno vrijeme (hours)"
   dashboard:
@@ -382,7 +386,6 @@ bs_BA:
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
@@ -407,7 +410,6 @@ bs_BA:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
@@ -588,6 +590,7 @@ bs_BA:
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
+    enable_emoji: "Omogući smajlije"
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -662,12 +665,6 @@ bs_BA:
     subject_template: "%{invitee_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
-  test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
-  new_version_mailer:
-    subject_template: "[%{site_name}] New Discourse version, update available"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] update available"
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
@@ -720,14 +717,6 @@ bs_BA:
     csv_export_failed:
       subject_template: "Export failed"
       text_body_template: "The export has failed. Please check the logs."
-    email_reject_no_account:
-      subject_template: "Email issue -- No Account"
-    email_reject_empty:
-      subject_template: "Email issue -- No Content"
-    email_reject_reply_key:
-      subject_template: "Email issue -- Bad Reply Key"
-    email_error_notification:
-      subject_template: "Email issue -- POP authentication error"
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
@@ -746,23 +735,10 @@ bs_BA:
       title: "Odjavi se"
       description: "Niste zainteresovani za ove email-e? Nema problema! Kliknite ovdje da se odjavite:"
     posted_by: "Odgovoreno %{username} dana %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
       click_here: "klikni ovdje"
     forgot_password:
-      subject_template: "[%{site_name}] Obnova Šifre"
       text_body_template: |
         Potražena je obnova šifre na [%{site_name}](%{base_url}).
 
@@ -771,7 +747,6 @@ bs_BA:
         Kliknite ovdje da resetujete vašu šifru:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Odredi Šifru"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -780,7 +755,6 @@ bs_BA:
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Vaš Novi Nalog"
       text_body_template: |
         Novi nalog je kreiran za vas na %{site_name}
 

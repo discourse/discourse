@@ -440,7 +440,7 @@ export default {
     },
     {
       "id":94544,
-      "cooked":"<p><a class=\"mention\" href=\"/users/techapj\">@techapj</a> fixed this for 1.2.</p>",
+      "cooked":"<p><a class=\"mention\" href=\"/u/techapj\">@techapj</a> fixed this for 1.2.</p>",
       "created_at":"2015-01-23T05:49:35.881Z",
       "title":"After sign-in, I'm not redirected to the conversation",
       "url":"/t/after-sign-in-im-not-redirected-to-the-conversation/17753/8",
@@ -540,7 +540,7 @@ export default {
     },
     {
       "id":94542,
-      "cooked":"<p>Hmm that looks like a bug, <a class=\"mention\" href=\"/users/techapj\">@techapj</a> can you have a look?</p>",
+      "cooked":"<p>Hmm that looks like a bug, <a class=\"mention\" href=\"/u/techapj\">@techapj</a> can you have a look?</p>",
       "created_at":"2015-01-23T05:43:55.602Z",
       "title":"RSS is not valid",
       "url":"/t/rss-is-not-valid/24338/2",
@@ -590,7 +590,7 @@ export default {
     },
     {
       "id":94522,
-      "cooked":"<p>Oh I see. <a class=\"mention\" href=\"/users/zogstrip\">@zogstrip</a> can you have a look?</p>",
+      "cooked":"<p>Oh I see. <a class=\"mention\" href=\"/u/zogstrip\">@zogstrip</a> can you have a look?</p>",
       "created_at":"2015-01-23T03:00:20.485Z",
       "title":"Pasted image upload size error",
       "url":"/t/pasted-image-upload-size-error/24320/4",
@@ -640,7 +640,7 @@ export default {
     },
     {
       "id":94521,
-      "cooked":"<p><a class=\"mention\" href=\"/users/techapj\">@techapj</a> fixed this for 1.2.</p>",
+      "cooked":"<p><a class=\"mention\" href=\"/u/techapj\">@techapj</a> fixed this for 1.2.</p>",
       "created_at":"2015-01-23T02:58:27.451Z",
       "title":"The end of Clown Vomit, or, simplified category styles",
       "url":"/t/the-end-of-clown-vomit-or-simplified-category-styles/24249/57",

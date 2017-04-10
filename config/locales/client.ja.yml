@@ -738,7 +738,6 @@ ja:
       logging_in: "ログイン中..."
       or: "または"
       authenticating: "認証中..."
-      awaiting_confirmation: "アカウントはアクティベーション待ち状態です。もう一度アクティベーションメールを送信するには「パスワードを忘れました」リンクをクリックしてください。"
       awaiting_approval: "アカウントはまだスタッフに承認されていません。承認され次第メールにてお知らせいたします。"
       requires_invite: "申し訳ありませんが、このフォーラムは招待制です。"
       not_activated: "まだログインできません。<b>{{sentTo}}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
@@ -949,7 +948,6 @@ ja:
         choose_new_category: "このトピックの新しいカテゴリを選択してください"
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
-        change_tags: "タグを変更"
       none:
         unread: "未読のトピックはありません。"
         new: "新しいトピックはありません。"
@@ -1472,7 +1470,6 @@ ja:
     history: "History"
     changed_by: "by {{author}}"
     raw_email:
-      title: "メール"
       not_available: "利用不可"
     categories_list: "カテゴリ一覧"
     filters:
@@ -1816,7 +1813,6 @@ ja:
             without_uploads: "はい(ファイルは含まない)"
           download:
             label: "ダウンロード"
-            title: "バックアップをダウンロード"
           destroy:
             title: "バックアップを削除"
             confirm: "このバックアップを削除しますか？"

@@ -18,9 +18,11 @@ import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
 import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
 import { addPostClassesCallback } from 'discourse/widgets/post';
 import { addPostTransformCallback } from 'discourse/widgets/post-stream';
+import { attachAdditionalPanel } from 'discourse/widgets/header';
+
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.5';
+const PLUGIN_API_VERSION = '0.8.6';
 
 class PluginApi {
   constructor(version, container) {
@@ -332,6 +334,26 @@ class PluginApi {
   addFlagProperty(property) {
     return addFlagProperty(property);
   }
+
+  /**
+   * Adds a panel to the header
+   *
+   * takes a widget name, a value to toggle on, and a function which returns the attrs for the widget
+   * Example:
+   * ```javascript
+   * api.addHeaderPanel('widget-name', 'widgetVisible', function(attrs, state) {
+   *   return { name: attrs.name, description: state.description };
+   * });
+   * ```
+   * 'toggle' is an attribute on the state of the header widget,
+   *
+   * 'transformAttrs' is a function which is passed the current attrs and state of the widget,
+   * and returns a hash of values to pass to attach
+   *
+   **/
+   addHeaderPanel(name, toggle, transformAttrs) {
+     attachAdditionalPanel(name, toggle, transformAttrs);
+   }
 
   /**
    * Adds a pluralization to the store

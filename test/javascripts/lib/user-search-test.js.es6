@@ -10,7 +10,7 @@ module("lib:user-search", {
       ];
     };
 
-    server.get('/users/search/users', () => { //eslint-disable-line
+    server.get('/u/search/users', () => { //eslint-disable-line
       return response(
         {
           users: [

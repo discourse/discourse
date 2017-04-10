@@ -1,5 +1,4 @@
 require "rails_helper"
-require 'sidekiq/testing'
 
 describe DiscourseSingleSignOn do
   before do

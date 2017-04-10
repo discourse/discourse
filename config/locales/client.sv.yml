@@ -136,7 +136,6 @@ sv:
         enabled: 'listades %{when}'
         disabled: 'avlistades %{when}'
     topic_admin_menu: "administratörsåtgärder för ämne"
-    wizard_required: "Det är dags att konfigurera ditt forum! <a href='%{url}' data-auto-route='true'>Starta installationsguiden</a>!"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
     bootstrap_mode_disabled: "Bootstrap-läge otillgängliggörs i 24 timmar."
@@ -639,6 +638,7 @@ sv:
         short_instructions: "Folk kan nämna dig som @{{username}}"
         available: "Ditt användarnamn är tillgängligt"
         not_available: "Inte tillgängligt. Prova {{suggestion}}?"
+        not_available_no_suggestion: "Inte tillgänglig"
         too_short: "Ditt användarnamn är för kort"
         too_long: "Ditt användarnamn är för långt"
         checking: "Kollar användarnamnets tillgänglighet..."
@@ -918,7 +918,6 @@ sv:
       logging_in: "Loggar in..."
       or: "Eller"
       authenticating: "Autentiserar..."
-      awaiting_confirmation: "Ditt konto väntar på aktivering, använd glömt lösenordslänken för att skicka ett nytt aktiveringsbrev."
       awaiting_approval: "Ditt konto har inte godkänts av en moderator än. Du kommer att få ett e-postmeddelande när det är godkänt."
       requires_invite: "Tyvärr, inbjudan krävs för tillgång till detta forum."
       not_activated: "Du kan inte logga in än. Vi har tidigare skickat ett aktiveringsbrev till dig via <b>{{sentTo}}</b>. Var god följ instruktionerna i det e-postmeddelandet för att aktivera ditt konto."
@@ -951,6 +950,9 @@ sv:
       github:
         title: "med GitHub"
         message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
+    invites:
+      accept_title: "Inbjudan"
+      welcome_to: "Välkommen till %{site_name}!"
     emoji_set:
       apple_international: "Apple/International"
       google: "Google"
@@ -1214,7 +1216,6 @@ sv:
         selected:
           one: "Du har markerat <b>1</b> ämne."
           other: "Du har markerat <b>{{count}}</b> ämnen."
-        change_tags: "Ändra taggar"
         choose_new_tags: "Välj nya taggar för de här ämnena:"
         changed_tags: "Taggarna för de här ämnena ändrades."
       none:
@@ -1706,6 +1707,12 @@ sv:
           side_by_side_markdown:
             title: "Visa skillnader i rådatan sida vid sida"
             button: 'Rå'
+      raw_email:
+        displays:
+          text_part:
+            button: 'Text'
+          html_part:
+            button: 'HTML'
     category:
       can: 'can&hellip; '
       none: '(ingen kategori)'
@@ -1758,7 +1765,6 @@ sv:
       email_in_disabled_click: 'aktivera "inkommande e-post" inställningen.'
       suppress_from_homepage: "Undanta den här kategorin från hemsidan."
       all_topics_wiki: "Gör nya inlägg till wikis som standard"
-      sort_order: "Standard slag:"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
       add_permission: "Lägg till behörighet"
@@ -1894,7 +1900,6 @@ sv:
     history: "Historik"
     changed_by: "av {{author}}"
     raw_email:
-      title: "Rå e-post"
       not_available: "Ej tillgänglig!"
     categories_list: "Kategorilista"
     filters:
@@ -2426,7 +2431,6 @@ sv:
             without_uploads: "Ja (inkludera inte filer)"
           download:
             label: "Ladda ner"
-            title: "Ladda ned säkerhetskopian"
           destroy:
             title: "Ta bort säkerhetskopian"
             confirm: "Är du säker på att du vill förstöra denna säkerhetskopia?"

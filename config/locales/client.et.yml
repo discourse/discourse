@@ -136,7 +136,6 @@ et:
         enabled: 'lisatud %{when}'
         disabled: 'eemaldatud %{when}'
     topic_admin_menu: "teema admintegevused"
-    wizard_required: "On aeg oma foorum seadistada! <a href='%{url}' data-auto-route='true'>Käivita algseadistamise viisard</a>!"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     bootstrap_mode_enabled: "Oma uue saidi lansseerimise hõlbustamiseks oled käivitusrežiimil. Kõik uued kasutajad saavad usaldustaseme 1 ja nende igapäevased kokkuvõtvad teavitused meili teel on aktiveeritud. See lülitub automaatselt välja kui kasutajate koguarv ületab %{min_users} piiri."
     bootstrap_mode_disabled: "Käivitusrežiim lülitub välja järgmise 24 tunni jooksul."
@@ -928,7 +927,6 @@ et:
       logging_in: "Login sisse..."
       or: "Või"
       authenticating: "Autendin..."
-      awaiting_confirmation: "Sinu konto ootab aktiveerimist. Kasuta unustasin parooli - viidet, et aktiveerimise meil uuesti saata."
       awaiting_approval: "Sinu konto on alles meeskonna poolt kinnitamata. Saadame sulle kohe meili, kui see on heaks kiidetud."
       requires_invite: "Vabandame, sellesse foorumisse pääseb ainult kutsega."
       not_activated: "Sa ei saa veel sisse logida. Saatsime sulle aktiveerimise meili aadressile <b>{{sentTo}}</b>. Järgi palun selles meilis olevaid juhiseid oma konto aktiveerimiseks."
@@ -1785,7 +1783,6 @@ et:
       suppress_from_homepage: "Eemalda see foorum avalehelt."
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
       all_topics_wiki: "Tee uued teemad vaikimisi wikideks."
-      sort_order: "Vaikejärjestus"
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
       add_permission: "Lisa kasutusõigus"
@@ -1924,7 +1921,6 @@ et:
     history: "Ajalugu"
     changed_by: "autor {{author}}"
     raw_email:
-      title: "Täätlemata meil"
       not_available: "Pole saadaval!"
     categories_list: "Foorumite loend"
     filters:
@@ -2464,7 +2460,6 @@ et:
             without_uploads: "Jah (ära kaasa faile)"
           download:
             label: "Lae alla"
-            title: "Lae varukoopia alla"
           destroy:
             title: "Eemalda varukoopia"
             confirm: "Oled kindel, et soovid selle varukoopia hävitada?"

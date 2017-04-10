@@ -2,6 +2,7 @@ import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
+import { userPath } from 'discourse/lib/url';
 
 const flatten = array => [].concat.apply([], array);
 
@@ -19,7 +20,7 @@ createWidget('priority-faq-link', {
   click(e) {
     e.preventDefault();
     if (this.siteSettings.faq_url === this.attrs.href) {
-      ajax("/users/read-faq", { method: "POST" }).then(() => {
+      ajax(userPath("read-faq"), { method: "POST" }).then(() => {
         this.currentUser.set('read_faq', true);
         DiscourseURL.routeToTag($(e.target).closest('a')[0]);
       });

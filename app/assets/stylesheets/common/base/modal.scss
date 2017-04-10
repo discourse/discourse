@@ -295,32 +295,11 @@
   }
 }
 
-.edit-auto-close-modal {
-  .btn.pull-right {
-    margin-right: 10px;
-  }
-  form {
-    margin: 0;
-  }
-  .auto-close-fields {
-    i.fa-clock-o {
-      font-size: 1.143em;
-    }
-    input {
-      margin: 0;
-    }
-  }
-}
-
 .edit-category-modal {
-  .auto-close-fields, .num-featured-topics-fields, .position-fields {
+  .auto-update-input, .num-featured-topics-fields, .position-fields {
     input[type=text] {
       width: 50px;
     }
-  }
-
-  .auto-close-fields label {
-    font-size: .929em;
   }
 
   .subcategory-list-style-field {
@@ -398,3 +377,10 @@
   }
 }
 
+.modal-button-bar {
+  margin-top: 1em;
+
+  button {
+    margin-right: 0.5em;
+  }
+}
