@@ -4,6 +4,7 @@ require_dependency 'age_words'
 
 class UserNotifications < ActionMailer::Base
   include UserNotificationsHelper
+  include ApplicationHelper
   helper :application
   default charset: 'UTF-8'
 
@@ -117,7 +118,7 @@ class UserNotifications < ActionMailer::Base
             .for_mailing_list(user, min_date)
             .where('posts.post_type = ?', Post.types[:regular])
             .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
-            .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 5.0)
+            .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 1.0)
             .limit(SiteSetting.digest_posts)
       else
         []
@@ -399,7 +400,7 @@ class UserNotifications < ActionMailer::Base
         invite_template = "user_notifications.invited_to_topic_body"
       end
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
-      message = I18n.t(invite_template, username: username, topic_title: title, topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
+      message = I18n.t(invite_template, username: username, topic_title: gsub_emoji_to_unicode(title), topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
 
       unless translation_override_exists
         html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
@@ -434,7 +435,7 @@ class UserNotifications < ActionMailer::Base
     end
 
     email_opts = {
-      topic_title: title,
+      topic_title: gsub_emoji_to_unicode(title),
       topic_title_url_encoded: title ? URI.encode(title) : title,
       message: message,
       url: post.url,

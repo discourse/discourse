@@ -124,7 +124,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
       <td style="padding: 0 8px 8px 16px; text-align:left; width:100%;">
         <h2 style="font-size:18px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal">
           <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
-            <strong><%= t.title.truncate(60, separator: /\s/) -%></strong>
+            <strong><%= gsub_emoji_to_unicode(t.title.truncate(60, separator: /\s/)) -%></strong>
           </a>
         </h2>
         <%- if SiteSetting.show_topic_featured_link_in_digest && t.featured_link %>
@@ -279,7 +279,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;text-align:right;">
         <p style="color:#8f8f8f;line-height:1.3;margin:0 0 10px 0;padding:0;text-align:right;">
-          <a href="<%= post.full_url -%>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none"><%= post.topic.title.truncate(60, separator: /\s/) -%></a>
+          <a href="<%= post.full_url -%>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none"><%= gsub_emoji_to_unicode(post.topic.title.truncate(60, separator: /\s/)) -%></a>
         </p>
         <a href="<%= post.full_url -%>" class="with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space: nowrap;">
           <%=t 'user_notifications.digest.join_the_discussion' %>
@@ -325,7 +325,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
     <tr style="vertical-align:top;">
       <td style="padding:8px;text-align:left;">
         <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
-          <strong><%= t.title.truncate(60, separator: /\s/) -%></strong>
+          <strong><%= gsub_emoji_to_unicode(t.title.truncate(60, separator: /\s/)) -%></strong>
         </a>
         <%- if SiteSetting.show_topic_featured_link_in_digest && t.featured_link %>
           <a class='topic-featured-link' href='<%= t.featured_link %>'><%= raw topic_featured_link_domain(t.featured_link) %></a>
