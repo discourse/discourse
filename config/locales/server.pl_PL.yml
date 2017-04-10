@@ -347,16 +347,16 @@ pl_PL:
           attributes:
             hex:
               invalid: "nie jest poprawnym kolorem"
-        post_reply:
-          base:
-            different_topic: "Wpis i odpowiedź muszą należeć do tego samego tematu."
         web_hook:
           attributes:
             payload_url:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://. Puste pole jest niedozwolone."
+        topic_status_update:
+          attributes:
+            execute_at:
+              in_the_past: "musi wskazywać na przyszłość."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Pole O mnie w Twoim profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>czy chcesz je wypełnić?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
   vip_category_name: "Salon"
   vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
@@ -610,6 +610,9 @@ pl_PL:
     welcome_to: "Witamy na forum %{site_name}!"
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
     missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
+    activated: "Przepraszamy, to konto zostało już aktywowane."
+    admin_confirm:
+      back_to: "Wróć do %{title}"
   post_action_types:
     off_topic:
       title: 'Nie na temat'
@@ -1840,33 +1843,16 @@ pl_PL:
       back_to_top: "Powrót do góry"
     forgot_password:
       title: "Zapomniane hasło"
-      text_body_template: |
-        Ktoś poprosił o zresetowanie Twojego hasła na [%{site_name}](%{base_url}).
-
-        Jeśli to nie Ty, możesz bezpiecznie zignorować tę wiadomość.
-
-        Kliknij na poniższy link by wybrać nowe hasło:
-        %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Ustaw hasło"
-      text_body_template: |
-        Ktoś poprosił o dodanie hasła do twojego konta [%{site_name}](%{base_url}). Możesz się zalogować przy pomocy konta w i innym serwisie (Google, Facebook, itd.) które zostało powiązane z twoim potwierdzonym adresem email.
-
-        Jeśli to nie była twoja prośba, możesz zignorować tą wiadomość.
-
-        Kliknij odnośnik poniżej by ustawić hasło:
-        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Logowanie administratora. "
     account_created:
       title: "Utworzono Konto"
-      text_body_template: |
-        Utworzyliśmy Twoje konto na %{site_name}
-
-        Kliknij na linku poniżej, aby ustawić swoje hasło:
-        %{base_url}/users/password-reset/%{email_token}
+      subject_template: "[%{site_name}] Twoje Nowe Konto"
     confirm_new_email:
       title: "Potwierdź Nowy Email"
+      subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
     confirm_old_email:
       title: "Potwierdź stary email"
     notify_old_email:
@@ -2102,14 +2088,15 @@ pl_PL:
       description: Użyto Emoji w Poście
     first_mention:
       name: Pierwsze Wspomnienie
-      description: Wspomniano o użytkowniku w Poście
     first_onebox:
       name: Pierwszy Onebox
     first_reply_by_email:
       name: Pierwsza Odpowiedz przez Email
-      description: Odpowiedź na post przez maila
+      description: Odpowiedział na post poprzez email
       long_description: |
         Ta odznaka jest przyznawana za kiedy pierwszy raz odpowiesz na post poprzez maila:.
+    new_user_of_the_month:
+      name: "Nowy Użytkownik Miesiąca"
   admin_login:
     success: "Email wysłany"
     error: "Błąd!"
@@ -2163,6 +2150,7 @@ pl_PL:
         fields:
           welcome:
             label: "Temat powitalny"
+            one_paragraph: "Ogranicz wiadomość powitalną do jednego akapitu."
       privacy:
         title: "Dostęp"
         fields:

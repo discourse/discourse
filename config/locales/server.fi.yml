@@ -110,7 +110,7 @@ fi:
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
   invite:
     not_found: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä sivuston ylläpitäjään."
-    user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='/users/%{username}/summary'>on jo tunnus!</a>"
+    user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='/u/%{username}/summary'>on jo tunnus!</a>"
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
@@ -281,7 +281,7 @@ fi:
 
       Oletko harkinnut vastaavasi myös *muille* keskusteluun osallistuville? Parhaissa keskusteluissa on useita ääniä ja näkökantoja.
 
-      Jos haluat jatkaa keskustelua tämän käyttäjän kanssa edelleen, [lähetä hänelle yksityisviesti](/users/%{reply_username}).
+      Jos haluat jatkaa keskustelua tämän käyttäjän kanssa edelleen, [lähetä hänelle yksityisviesti](/u/%{reply_username}).
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -342,9 +342,13 @@ fi:
           attributes:
             name:
               taken: on jo varattu toiselle emojille
+        topic_status_update:
+          attributes:
+            execute_at:
+              in_the_past: "täytyy olla tulevaisuudessa."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Minusta -kohta käyttäjäprofiilissasi on vielä täyttämättä,<a href='/users/%{username_lower}/preferences/about-me'>haluaisitko täyttää sen nyt?</a></div>"
+    no_info_me: "<div class='missing-profile'>Tietoa minusta -kenttä käyttäjätiedoissasi on täyttämättä. <a href='/u/%{username_lower}/preferences/about-me'>Haluaisitko täyttää sen nyt?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ei ole täyttänyt vielä mitään Minusta -kohtaan profiilissaan</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
@@ -549,6 +553,12 @@ fi:
     approval_required: "Valvojan täytyy hyväksyä uusi tilisi, jotta pääset palstalle. Saat sähköpostin, kun tilisi on hyväksytty."
     missing_session: "Emme voineet havaita, onnistuiko tilisi luonti. Varmista, että selaimesi sallii evästeiden käytön."
     activated: "Pahoittelut, tämä tili on jo aktivoitu."
+    admin_confirm:
+      title: "Vahvista ylläpitäjätili"
+      description: "Oletko varma, että haluat käyttäjästä <b>%{target_username}</b> ylläpitäjän?"
+      grant: "Myönnä ylläpitäjäoikeudet"
+      complete: "<b>%{target_username}</b> on nyt ylläpitäjä."
+      back_to: "Palaa %{title}"
   post_action_types:
     off_topic:
       title: 'Se eksyy aiheesta'
@@ -1126,8 +1136,9 @@ fi:
     min_ban_entries_for_roll_up: "Kun Kääri-painiketta painetaan, luodaan IP-porttikielloista aliverkon kattavia kieltoja jos kieltoja on asettu vähintään (N) määrä."
     max_age_unmatched_emails: "Poista osumattomat seulotut sähköpostiosoitteet (N) päivän jälkeen."
     max_age_unmatched_ips: "Poista osumattomat seulotut IP-osoitteet (N) päivän jälkeen."
-    num_flaggers_to_close_topic: "Minimimäärä uniikkeja liputtajia, joka vaaditaan ketjun automaattiseksi keskeyttämiseksi."
-    num_flags_to_close_topic: "Minimimäärä aktiivisia lippuja, joka vaaditaan ketjun automaattiseksi keskeyttämiseksi."
+    num_flaggers_to_close_topic: "Kuinka monta eri liputtajaa tarvitaan, jotta ketju voi mennä tauolle puuttumistoimia odottamaan"
+    num_flags_to_close_topic: "Kuinka monta aktiivista lippua tarvitaan, jotta ketju voi mennä tauolle puuttumistoimia odottamaan"
+    num_hours_to_close_topic: "Kuinka moneksi tunniksi ketju menee tauolle puuttumistoimia odottamaan."
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus lippua poistettaessa."
     min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 ottaaksesi pois käytöstä (ei suositella)."
     auto_block_fast_typers_on_first_post: "Estä automaattisesti käyttäjät, jotka eivät saavuta min_first_post_typing_time"
@@ -1393,6 +1404,24 @@ fi:
     autoclosed_enabled_lastpost_minutes:
       one: "Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Ketju suljettiin automaattisesti %{count} minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
+    autoclosed_disabled_days:
+      one: "Ketju avattiin ajastetusti 1 päivän kuluttua."
+      other: "Ketju avattiin ajastetusti %{count} päivän kuluttua."
+    autoclosed_disabled_hours:
+      one: "Ketju avattiin ajastetusti 1 tunnin kuluttua."
+      other: "Ketju avattiin ajastetusti %{count} tunnin kuluttua."
+    autoclosed_disabled_minutes:
+      one: "Ketju avattiin ajastetusti 1 minuutin kuluttua."
+      other: "Ketju avattiin ajastetusti %{count} minuutin kuluttua."
+    autoclosed_disabled_lastpost_days:
+      one: "Ketju avattiin automaattisesti 1 päivän kuluttua viimeisimmästä viestistä."
+      other: "Ketju avattiin automaattisesti %{count} päivän kuluttua viimeisimmästä viestistä."
+    autoclosed_disabled_lastpost_hours:
+      one: "Ketju avattiin automaattisesti 1 tunnin kuluttua viimeisimmästä viestistä."
+      other: "Ketju avattiin automaattisesti %{count} tunnin kuluttua viimeisimmästä viestistä."
+    autoclosed_disabled_lastpost_minutes:
+      one: "Ketju avattiin automaattisesti 1 minuutin kuluttua viimeisimmästä viestistä."
+      other: "Ketju avattiin automaattisesti %{count} minuutin kuluttua viimeisimmästä viestistä."
     autoclosed_disabled: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     pinned_enabled: "Tämä ketju on nyt kiinnitetty. Se näytetään alueensa ylimmäisenä. Kiinnityksen voi poistaa joko henkilökunnan jäsen kaikilta yhteisesti tai yksittäiset käyttäjät itseltään."
@@ -1406,7 +1435,7 @@ fi:
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
     wait_approval: "Kiitos kirjautumisesta. Ilmoitamme, kun tilisi on hyväksytty."
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
-    activate_email: "<p>Olet melkein valmis! Lähetimme sähköpostin osoitteeseen <b>%{email}</b>. Seuraa viestin ohjeita aktivoidaksesi käyttäjätilisi.</p><p>Jos viesti ei tullut perille, tarkista roskapostikansiosta tai yritä kirjautua sisään, jolloin aktivointiviestin voi lähettää uudestaan.</p>"
+    activate_email: "<p>Melkein valmista! Lähetimme sähköpostin osoitteeseen <b>%{email}</b>. Aktivoi käyttäjätilisi seuraamalla viestin ohjeita.</p><p>Jos viesti ei tullut perille, tarkista roskapostikansiosi - tai yritä kirjautua sisään, jolloin voit lähettää aktivointiviestin uudelleen tai muuttaa sähköpostiosoitetta.</p>"
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
@@ -1543,10 +1572,10 @@ fi:
     text_body_template: |
       Kiitos, kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
 
-      Avaa tämä linkki valitaksesi salasanan nyt:
-      %{base_url}/users/password-reset/%{email_token}
+      Valitse salasana tämän linkin kautta:
+      %{base_url}/u/password-reset/%{email_token}
 
-      (jos yllä oleva linkki on vanhentunut, valitse "unohdin salasanani" kirjautuessasi sisään sähköpostiosoitteellasi)
+      (Jos yllä oleva linkki on vanhentunut, valitse "Unohdin salasanani", kun kirjaudut sisään sähköpostiosoitteellasi.)
   download_backup_mailer:
     title: "Lataa varmuuskopio"
     subject_template: "[%{email_prefix}] Varmuuskopion lataus sivustosta"
@@ -1558,6 +1587,13 @@ fi:
       (Jos *et* pyytänyt varmuuskopiota, on asia otettava vakavissaan -- jollakulla on ylläpitäjän oikeudet sivustoosi.)
     no_token: |
       Pahoittelut, tämä varmuuskopion latauslinkki on jo käytetty tai on vanhentunut.
+  admin_confirmation_mailer:
+    title: "Ylläpitäjän vahvistaminen"
+    subject_template: "[%{email_prefix}] Vahvista uusi ylläpitäjätili"
+    text_body_template: |
+      Vahvista, että haluat käyttäjästä **%{target_username}** ylläpitäjän palstallesi.
+
+      [Vahvista ylläpitäjäoikeudet](%{admin_confirm_url})
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
@@ -1654,7 +1690,9 @@ fi:
     disagreed: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
     deferred: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
     deferred_and_deleted: "Kiitos kun toit asian tietoomme. Poistimme kyseisen viestin."
-  temporarily_closed_due_to_flags: "Tämä ketju on väliaikaisesti suljettu, johtuen suuresta määrästä liputuksia."
+  temporarily_closed_due_to_flags:
+    one: "Ketju on suljettu väliaikaisesti 1 tunnin ajan suuren lippumäärän vuoksi."
+    other: "Ketju on suljettu väliaikaisesti %{count} tunnin ajan suuren lippumäärän vuoksi."
   system_messages:
     post_hidden:
       title: "Viesti piilotettu"
@@ -2020,6 +2058,17 @@ fi:
         Ylläpitäjän hallintapaneelissa on raportoitu virheistä.
 
         [Tarkastele ja korjaa ne](%{base_url}/admin).
+    new_user_of_the_month:
+      title: "Olet kuukauden tulokas!"
+      subject_template: "Olet kuukauden tulokas!"
+      text_body_template: |
+        Onneksi olkoon, sinulle myönnettiin Kuukauden tulokas -palkinto %{month_year}** :trophy:
+
+        Sinusta on äkkiä tullut tärkeä osa yhteisöä, ja kaikki todella pitävät viesteistäsi.
+
+        Palkinto näkyy pysyvästi ansiomerkkinä [käyttäjäsivullasi](/my/badges).
+
+        Kiitos - jatka samaa rataa!
   unsubscribe_link: |
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2231,54 +2280,54 @@ fi:
       text_body_template: |
         Salasanasi uusimista pyydettiin sivustolla [%{site_name}](%{base_url}).
 
-        Jos et halua muuttaa salasanaasi, voit jättää tämän viestin huomiotta.
+        Jos pyytäjä et ollut sinä, voit huoletta jättää tämän viestin huomiotta.
 
-        Klikkaa alla olevaa linkkiä vaihtaaksesi salasanasi:
-        %{base_url}/users/password-reset/%{email_token}
+        Valitse uusi salasana klikkaamalla linkkiä:
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "Syötä salasana"
       subject_template: "[%{email_prefix}] Aseta salasana"
       text_body_template: |
-        Joku on pyytänyt lisäämään salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden avulla (Google, Facebook, etc) joissa on käytössä tämä sama sähköpostiosoite.
+        Joku haluaa lisätä salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden (Google, Facebook, etc) tileillä, jotka ovat tämän saman sähköpostiosoitteen alaisia.
 
-        Jos et ole pyytänyt salasanan lisäämistä, voit jättää viestin huomiotta.
+        Jos et ole pyynnön taustalla, voit huoletta jättää tämän viestin huomiotta.
 
-        Klikkaa tätä linkkiä valitaksesi salasanan:
-        %{base_url}/users/password-reset/%{email_token}
+        Valitse uusi salasana klikkaamalla linkkiä:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
       text_body_template: |
-        Joku pyysi sinua kirjautumaan tilillesi sivustolla [%{site_name}](%{base_url}).
+        Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
 
-        Jos et ole pyynnön takana, voit huoletta jättää tämän viestin huomiotta.
+        Jos et ole pyynnön taustalla, voit huoletta jättää tämän viestin huomiotta.
 
-        Klikkaa tätä linkkiä kirjautuaksesi:
-        %{base_url}/users/admin-login/%{email_token}
+        Kirjaudu sisään klikkaamalla linkkiä:
+        %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "Tili luotu"
       subject_template: "[%{email_prefix}] Uusi käyttäjätilisi"
       text_body_template: |
-        Sinulle luotiin uusi käyttäjätunnus sivustolla %{site_name}
+        Sinulle luotiin käyttäjätili sivustolle %{site_name}
 
-        Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
-        %{base_url}/users/password-reset/%{email_token}
+        Valitse salasana uudelle tilillesi klikkaamalla linkkiä:
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Vahvista uusi sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
-        Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:
+        Vahvista uusi sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
-        %{base_url}/users/authorize-email/%{email_token}
+        %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       title: "Vahvista vanha sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
       text_body_template: |+
-        Ennen kuin voit vaihtaa sähköpostiosoitteesti, meidän täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Kun olet suorittanut tämän, varmistamme vielä uuden sähköpostiosoitteenkin.
+        Ennen kuin vaihdamme sähköpostiosoitteesi täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Tämän jälkeen varmistamme vielä uudenkin sähköpostiosoitteen.
 
-        Vahvista sähköpostiosoitteesti sivustolle %{site_name} klikkaamalla linkkiä:
+        Vahvista nykyinen sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
-        %{base_url}/users/authorize-email/%{email_token}
+        %{base_url}/u/authorize-email/%{email_token}
 
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
@@ -2297,8 +2346,8 @@ fi:
 
         Henkilökunnan edustaja on hyväksynyt tilisi sivustolla %{site_name}.
 
-        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisi:
-        %{base_url}/users/activate-account/%{email_token}
+        Vahvista ja aktivoi uusi tilisi klikkaamalla linkkiä:
+        %{base_url}/u/activate-account/%{email_token}
 
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
 
@@ -2315,8 +2364,8 @@ fi:
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
 
-        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisi:
-        %{base_url}/users/activate-account/%{email_token}
+        Vahvista ja aktivoi uusi tilisi klikkaamalla linkkiä:
+        %{base_url}/u/activate-account/%{email_token}
 
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
   page_not_found:
@@ -2783,6 +2832,12 @@ fi:
       description: Vastasi sähköpostilla
       long_description: |
         Tämä ansiomerkki myönnetään, kun vastaat ensimmäistä kertaa sähköpostilla :e-mail:.
+    new_user_of_the_month:
+      name: "Kuukauden tulokas"
+      description: Erinomaista osallistumista ensimmäisen kuukauden aikana
+      long_description: |
+        Tämä ansiomerkki myönnetään kahdelle uudelle käyttäjälle joka kuukausi kiitoksena erinomaisesta osallistumisestaan. Mittari on tykkäykset: kuinka usein viesteistä tykätään ja kuka tykkää.
+    badge_title_metadata: "%{display_name} -ansiomerkki sivustolla %{site_title}"
   admin_login:
     success: "Sähköposti lähetetty"
     error: "Virhe!"

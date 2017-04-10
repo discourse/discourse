@@ -933,6 +933,8 @@ fr:
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
+      resend_title: "Renvoyer le courriel d'activation"
+      change_email: "Changer l'adresse de courriel"
       sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       to_continue: "Veuillez vous connecter"
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
