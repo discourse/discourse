@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     unless is_api? || is_user_api?
       super
       clear_current_user
-      render text: "[\"BAD CSRF\"]", status: 403
+      render plain: "[\"BAD CSRF\"]", status: 403
     end
   end
 
@@ -159,7 +159,7 @@ class ApplicationController < ActionController::Base
 
       render_json_error I18n.t(type), type: type, status: status_code
     else
-      render text: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
+      render html: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
     end
   end
 

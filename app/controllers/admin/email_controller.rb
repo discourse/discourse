@@ -85,7 +85,7 @@ class Admin::EmailController < Admin::AdminController
   def handle_mail
     params.require(:email)
     Email::Processor.process!(params[:email])
-    render text: "email was processed"
+    render plain: "email was processed"
   end
 
   def raw_email
