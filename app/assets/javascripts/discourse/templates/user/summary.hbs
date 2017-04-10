@@ -179,7 +179,7 @@
   <div class='top-section badges-section'>
     <h3 class='stats-title'>{{i18n "user.summary.top_badges"}}</h3>
     {{#each model.badges as |badge|}}
-      {{badge-card badge=badge count=badge.count navigateOnClick="true" username=user.username_lower}}
+      {{badge-card badge=badge count=badge.count username=user.username_lower}}
     {{else}}
       <p>{{i18n "user.summary.no_badges"}}</p>
     {{/each}}
