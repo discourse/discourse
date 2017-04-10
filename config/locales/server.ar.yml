@@ -1644,11 +1644,11 @@ ar:
   static_topic_first_reply: |
     تعديل محتويات المنشور الاول في هذا الموضوع  %{page_name} page.
   guidelines_topic:
-    title: "الأسئلة الشائعة/توجيهات"
+    title: "الأسئلة الشّائعة/توجيهات"
   tos_topic:
     title: "شروط الخدمة"
   privacy_topic:
-    title: "سياسة الخصوصية"
+    title: "سياسة الخصوصيّة"
     body: |
       <a name="collect"></a>
 

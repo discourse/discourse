@@ -687,9 +687,9 @@ ar:
         warnings_received: "تحذيرات"
       messages:
         all: "الكل"
-        inbox: "البريد الوارد"
-        sent: "مرسلة"
-        archive: "الارشيف"
+        inbox: "الوارد"
+        sent: "الصّادر"
+        archive: "الأرشيف"
         groups: "مجموعاتي"
         bulk_select: "إختيار رسائل"
         move_to_inbox: "الذهاب إلى الرسائل الواردة"
@@ -777,13 +777,13 @@ ar:
       last_posted: "آخر مشاركة"
       last_emailed: "أخر مراسلة"
       last_seen: "آخر تواجد مُنذ "
-      created: "إنضم"
+      created: "انضم"
       log_out: "اخرج"
       location: "الموقع"
       card_badge:
-        title: "وسام بطاقة المستخدم"
+        title: "شارة بطاقة المستخدم"
       website: "موقع الكتروني"
-      email_settings: "بريد الكتروني"
+      email_settings: "البريد الإلكترونيّ"
       like_notification_frequency:
         title: "أرسل إشعارا عند الإعجاب"
         always: "دوما"
@@ -832,7 +832,7 @@ ar:
       notification_level_when_replying: "إن شاركت في موضوع ما، اجعله"
       invited:
         search: "نوع البحث عن الدعوات"
-        title: "دعوة"
+        title: "الدّعوات"
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
         none: "لا توجد دعوات معلقة لعرضها."
@@ -891,12 +891,12 @@ ar:
           many: "عدد المواضيع المنشأة"
           other: "عدد المواضيع المنشأة"
         post_count:
-          zero: "عدد المواضيع"
-          one: "عدد المواضيع"
-          two: "عدد المواضيع"
-          few: "عدد المواضيع"
-          many: "عدد المواضيع"
-          other: "عدد المواضيع"
+          zero: "عدد المشاركات"
+          one: "عدد المشاركات"
+          two: "عدد المشاركات"
+          few: "عدد المشاركات"
+          many: "عدد المشاركات"
+          other: "عدد المشاركات"
         likes_given:
           zero: "ما أعطى من <i class='fa fa-heart'></i>"
           one: "ما أعطى من <i class='fa fa-heart'></i>"
@@ -912,19 +912,19 @@ ar:
           many: "ما استقبل من <i class='fa fa-heart'></i>"
           other: "ما استقبل من <i class='fa fa-heart'></i>"
         days_visited:
-          zero: "اجمالي الأيام التي زار فيها الموقع"
-          one: "اجمالي الأيام التي زار فيها الموقع"
-          two: "اجمالي الأيام التي زار فيها الموقع"
-          few: "اجمالي الأيام التي زار فيها الموقع"
-          many: "اجمالي الأيام التي زار فيها الموقع"
-          other: "اجمالي الأيام التي زار فيها الموقع"
+          zero: "أيّام الزّيارة"
+          one: "أيّام الزّيارة"
+          two: "أيّام الزّيارة"
+          few: "أيّام الزّيارة"
+          many: "أيّام الزّيارة"
+          other: "أيّام الزّيارة"
         posts_read:
-          zero: "لم يشاهد اي مشاركة بعد. "
-          one: "مشاركة مقروءة"
-          two: "مشاركة مقروءة"
-          few: "مشاركات مقروءة"
-          many: "مشاركة مقروءة"
-          other: "مشاركة مقروءة"
+          zero: "المشاركات المقروءة"
+          one: "المشاركات المقروءة"
+          two: "المشاركات المقروءة"
+          few: "المشاركات المقروءة"
+          many: "المشاركات المقروءة"
+          other: "المشاركات المقروءة"
         bookmark_count:
           zero: "عدد العلامات"
           one: "عدد العلامات"
@@ -1047,7 +1047,7 @@ ar:
     username: 'إسم المستخدم'
     last_seen: 'شوهدت'
     created: 'مكتوبة'
-    created_lowercase: 'أُنشئ'
+    created_lowercase: 'الإنشاء'
     trust_level: 'مستوى التقة'
     search_hint: 'اسم المستخدم، أو بريد إلكترونيّ أو عنوان IP'
     create_account:
@@ -1497,11 +1497,12 @@ ar:
       jump_reply_up: انتقل إلى أول رد
       jump_reply_down: انتقل إلى آخر رد
       deleted: "الموضوع محذوف"
-      auto_close_notice: "سيُغلق الموضوع آليًّا %{timeLeft}."
-      auto_close_notice_based_on_last_post: "سيُغلق الموضوع بعد %{duration} من آخر رد."
+      status_update_notice:
+        auto_open: "سيُفتح هذا الموضوع آليًّا %{timeLeft}."
+        auto_close: "سيُغلق هذا الموضوع آليًّا %{timeLeft}."
+        auto_publish_to_category: "سيُنشر هذا الموضوع في<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "سيُغلق هذا الموضوع %{duration} بعد آخر ردّ فيه."
       auto_close_title: 'إعدادات الإغلاق الآلي'
-      auto_close_save: "احفظ"
-      auto_close_remove: "لا تغلق هذا الموضوع آليا"
       timeline:
         back: "الرجوع"
         back_description: "عُد إلى آخر مشاركة غير مقروءة"

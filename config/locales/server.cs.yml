@@ -149,6 +149,7 @@ cs:
   excerpt_image: "obrázek"
   groups:
     errors:
+      can_not_modify_automatic: "Nelze měnit automatické skupiny"
       member_already_exist: "'%{username}' je už členem této skupiny."
     default_names:
       everyone: "kdokoliv"
@@ -444,7 +445,9 @@ cs:
       xaxis: "Den"
       yaxis: "Počet nových uživatelů"
     profile_views:
+      title: "Zobrazení uživatelských profilů"
       xaxis: "Den"
+      yaxis: "Počet zobrazení uživatelských profilů"
     topics:
       title: "Témata"
       xaxis: "Den"
@@ -552,8 +555,11 @@ cs:
       xaxis: "Den"
       yaxis: "Celkem požadavků"
     time_to_first_response:
+      title: "Čas první odpovědi"
       xaxis: "Den"
+      yaxis: "Průměrný čas (hodiny)"
     topics_with_no_response:
+      title: "Témat bez odpovědi"
       xaxis: "Den"
       yaxis: "Celkem"
     mobile_visits:
@@ -573,6 +579,7 @@ cs:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
+    allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
@@ -773,6 +780,8 @@ cs:
   badges:
     welcome:
       name: Vítejte
+    autobiographer:
+      description: Vyplněné informace v <a href="/my/preferences">profilu</a>
     first_like:
       name: První "to se mi líbí"
     first_share:

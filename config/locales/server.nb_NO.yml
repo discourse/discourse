@@ -96,7 +96,9 @@ nb_NO:
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
+      min_username_length_exists: "Du kan ikke sette minimumslengden på brukernavn over det korteste brukernavnet."
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
+      max_username_length_exists: "Du kan ikke sette maksimallengden for brukernavn under det lengste brukernavnet."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
   invite:
@@ -113,8 +115,8 @@ nb_NO:
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
-  reading_time: "Lese tid"
-  likes: "Likes"
+  reading_time: "Lesetid"
+  likes: "Kjærtegn"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme emnet."
     other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme emnet."
@@ -171,6 +173,12 @@ nb_NO:
     latest: "Siste emner"
     hot: "Populære emner"
     top: "Mest Populære Emner"
+    top_all: "Tidenes mest populære emner"
+    top_yearly: "Årets mest populære emner"
+    top_quarterly: "Kvartalets mest populære emner"
+    top_monthly: "Månedens mest populære emner"
+    top_weekly: "Ukas mest populære emner"
+    top_daily: "Dagens mest populære emner"
     posts: "Siste innlegg"
     private_posts: "Siste private meldinger"
     group_posts: "Siste innlegg fra %{group_name}"
@@ -184,6 +192,10 @@ nb_NO:
   groups:
     errors:
       member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
+      invalid_domain: "'%{domain}' er ikke et gyldig domene."
+      invalid_incoming_email: "'%{email}' er ikke en gyldig e-postadresse."
+      email_already_used_in_group: "'%{email}' er allerede i bruk av gruppa '%{group_name}'."
+      email_already_used_in_category: "'%{email}' er allerede i bruk av kategorien '%{category_name}'."
     default_names:
       everyone: "alle"
       admins: "administratorer"
@@ -270,7 +282,7 @@ nb_NO:
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
-  assets_topic_body: "Dette er et permanent emne, synlig bare for staben, for å lagre bilder of filer brukt i designet på siden. Ikke slett det!\n\n\nHvordan legge til nye filer:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du vil bruke, som logoer, favicons osv. (Bare dra bildene inn i skrivefeltet, eller bruk knappen for opplasting.)\n3. Send ditt svar.\n4. Høyrklikk bildene i din nye post for å få lenken til de opplastede bildene, eller klikk på redigeringsikonet for å kopiere lenkene fra skrivefeltet.\n5. Lim disse lenkene inn i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du trenger å tillate andre filtyper, rediger `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
+  assets_topic_body: "Dette er et permanent emne, synlig bare for staben, for å lagre bilder og filer brukt i sidens design. Ikke slett det!\n\n\nHvordan legge til nye filer:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du vil bruke, som logoer, favicons osv. (Bare dra bildene inn i skrivefeltet, eller bruk knappen for opplasting.)\n3. Send inn svaret ditt for å poste det.\n4. Høyreklikk på bildene i din nye post for å få lenken til de opplastede bildene, eller klikk på redigeringsikonet for å kopiere lenkene fra skrivefeltet.\n5. Lim disse lenkene inn i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du trenger å tillate andre filtyper, rediger `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
   lounge_welcome:
@@ -328,6 +340,8 @@ nb_NO:
     by_type:
       first_day_replies_per_day: "Du har nådd det maksimale antall svar en ny bruker kan publisere på sin første dag. Vær så snill og vent %{time_left} før du prøver igjen."
       first_day_topics_per_day: "Du har nådd det maksimale antall emner en ny bruker kan publisere på sin første dag. Vær så snill og vent %{time_left} før du prøver igjen."
+      create_post: "Du svarer for raskt. Vent %{time_left} før du prøver igjen."
+      delete_post: "Du sletter innlegg for raskt. Vent %{time_left} før du prøver igjen."
       topics_per_day: "Du har oppnådd høyest antall innlegg for i dag. Vær så snill og vent %{time_left} før du prøver igjen."
     hours:
       one: "1 time"
@@ -412,6 +426,7 @@ nb_NO:
   password_reset:
     no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
     choose_new: "Velg et nytt passord"
+    choose: "Velg et passord"
     update: 'Oppdater passord'
     save: 'Sett passord'
     title: 'Tilbakestill passord'
@@ -425,11 +440,16 @@ nb_NO:
       title: "Takk for at du bekreftet din nåværende e-postadresse"
       description: "Vi sender deg en e-post til din nye adresse for bekreftelse."
   activation:
+    action: "Klikk her for å aktivere din konto"
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
     please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
     continue_button: "Fortsett til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
+    admin_confirm:
+      title: "Bekreft admin-konto"
+      grant: "Tildel admin-tilgang"
+      back_to: "Gå tilbake til %{title}"
   post_action_types:
     off_topic:
       title: 'Urelatert'
@@ -497,11 +517,13 @@ nb_NO:
         make: "Dette emnet er nå en banner. Det vil vises på toppen av hver side til brukeren lukker det."
         remove: "Dette emnet er ikke lenger en banner. Det vil ikke lenger vises på toppen av hver side."
   unsubscribe:
+    title: "Avmeld"
     stop_watching_topic: "Slutt å følge dette emnet, %{link}"
     mute_topic: "Demp alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
     mailing_list_mode: "Slå av e-postlistemodus"
     disable_digest_emails: "Slutt å sende meg oppsummerings-eposter"
+    all: "Ikke send meg noen e-poster fra %{sitename}"
     log_out: "Logg ut"
   user_api_key:
     read: "les"
@@ -532,9 +554,9 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Antall nye innlegg"
     likes:
-      title: "Likes"
+      title: "Kjærtegn"
       xaxis: "Dag"
-      yaxis: "Antall nye likes"
+      yaxis: "Antall nye kjærtegn"
     flags:
       title: "Flagg"
       xaxis: "Dag"
@@ -654,7 +676,7 @@ nb_NO:
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
-    default_locale: "Standard språk for denne instansen av Discourse (ISO 639-1 Kode)"
+    default_locale: "Forvalgt språk for denne instansen av Discourse (ISO 639-1 Kode)"
     allow_user_locale: "Tillat brukere å velge eget språk"
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
@@ -668,9 +690,9 @@ nb_NO:
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"
     educate_until_posts: "Når bruker begynner å skrive på de første (n) innleggene, vis pop-up med opplæringspanelet for nye brukere i editoren."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
-    site_description: "Beskriv siden med en setning, vil brukes i description-taggen."
-    contact_email: "Epost til ansvarlig kontakt for denne siden. Brukes til kritiske påminninger som uhåndterte flagg og som kontakt-adresse på /about-siden."
-    contact_url: "Kontakt URL for siden. Brukes på /about siden."
+    site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
+    contact_email: "E-post til ansvarlig kontakt for denne siden. Brukes til kritiske påminninger som uhåndterte flagg og som kontakt-adresse på /om-siden."
+    contact_url: "Kontakt-URL for siden. Brukes på /om siden."
     queue_jobs: "KUN FOR UTVIKLERE! ADVARSEL! Jobber køes som forvalg i Sidekiq. Hvis det slås av vil siden ikke fungere. "
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
@@ -686,6 +708,7 @@ nb_NO:
     apple_touch_icon_url: "Ikon brukt på Apple touch enheter. Anbefalt størrelse er 144px x 144px."
     summary_max_results: "Maksimalt antall innlegg som returneres av 'Oppsummer dette emnet'"
     allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
+    send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall topp-emner vises som forvalg i oppsummeringen av topp-emner."
     show_email_on_profile: "Vis brukerens e-postadresse i profilen (kun synlig for brukeren selv og forumstaben)"
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
@@ -694,9 +717,12 @@ nb_NO:
     invite_expiry_days: "Hvor lenge en bruker invitasjons nøkkel er gyldig i dager"
     min_password_length: "Minimums passordslengde."
     min_admin_password_length: "Minimums passordslengde for administrator."
+    google_oauth2_client_id: "Klient-ID tilhørende din Google-søknad."
     rate_limit_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     rate_limit_new_user_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
-    max_likes_per_day: "Maximum antall liker per bruker per dag"
+    max_likes_per_day: "Maximum antall kjærtegn per bruker per dag"
+    max_invites_per_day: "Maksimalt antall invitasjoner en bruker kan sende hver dag."
+    max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
     newuser_max_images: "Hvor mange bilder en ny bruker kan legge til i et innlegg."
     title_prettify: "Unngå vanlige skrivefeil i titler, sånn som store bokstaver, liten bokstav først, mange !, ? og punktum på slutten, osv."
@@ -710,7 +736,7 @@ nb_NO:
     digest_other_topics: "Maksimalt antall emner å vise i delen 'Nytt i emner og kategorier du følger' i oppsummerings-e-posten."
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
-    disable_digest_emails: "Deaktivér oppsummerings-eposter for alle brukere."
+    disable_digest_emails: "Deaktiver oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig drakt, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
@@ -723,7 +749,7 @@ nb_NO:
     default_include_tl0_in_digests: "La det være forvalgt innstilling å inkludere innlegg fra nye brukere i oppsummerings-e-poster. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
     disable_mailing_list_mode: "Forby brukere å slå på e-postlistemodus"
-    default_email_previous_replies: "Inkludér tidligere svar i e-poster som forvalg."
+    default_email_previous_replies: "Inkluder tidligere svar i e-poster som forvalg."
     default_topics_automatic_unpin: "Automatisk fjern feste for emner når brukeren når bunnen som forvalg."
     default_categories_watching: "Liste med kategorier som følges som forvalg"
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
@@ -748,7 +774,7 @@ nb_NO:
   most_posts: "Flest innlegg"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
-    new_user: "Velkommen til vårt forum! Dette er de mest populære emnene for tiden. "
+    new_user: "Velkommen til forumet vårt! Dette er de mest populære emnene for tiden. "
     not_seen_in_a_month: "Velkommen tilbake! Nå har ikke vi sett deg på en stund. Dette er de mest populære emnene for tiden."
   change_owner:
     deleted_user: "en slettet bruker"
@@ -840,6 +866,7 @@ nb_NO:
       new_topics: "Nye emner"
       unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
+      liked_received: "Kjærtegn mottatt"
       new_posts: "Nye innlegg"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
@@ -908,7 +935,7 @@ nb_NO:
   tos_topic:
     title: "Bruksvilkår"
   privacy_topic:
-    title: "Personvernerklæring"
+    title: "Personvernserklæring"
     body: |
       <a name="samle"></a>
 
@@ -943,7 +970,7 @@ nb_NO:
 
       Vi vil forsøke i god tro å:
 
-      *   Ikke oppbevare tjener-logger som inneholder IP-adressen til alle forspørslene til denne tjeneren ikke lenger enn i 90 dager.
+      *   Ikke oppbevare tjener-logger som inneholder IP-adressen til alle forespørslene til denne tjeneren i lenger enn i 90 dager.
       *   Ikke oppbevare IP-adressene forbundet med registrerte brukere og deres innlegg lenger enn i 5 år.
 
       <a name="informasjonskapsler"></a>
@@ -958,7 +985,7 @@ nb_NO:
 
       ## [Gir vi noen opplysninger videre til andre parter?](#gi-videre)
 
-      Vi verken selger, handler med eller overfører på noen annen måte til andre parter dine identifiserbare personopplysninger. Dette inkluderer ikke tredjeparter som har vår tillit og bistår oss i å drive nettstedet, utføre våre anliggender eller yter tjenester til deg, så lenge disse partene samtykker til å behandle disse opplysningene fortrolig. Vi kan også frigi opplysningene dine dersom vi tror at å frigi dem er hensiktsmessig for å overholde loven, håndheve nettstedet retningslinjer eller beskytte våre og andres rettigheter. Imidlertid kan opplysninger som ikke er personlig identifiserbare, bli delt med andre parter for marketsføring, reklame eller annet bruk.
+      Vi verken selger, handler med eller overfører på noen annen måte til andre parter dine identifiserbare personopplysninger. Dette inkluderer ikke tredjeparter som har vår tillit og bistår oss i å drive nettstedet, utføre våre anliggender eller yter tjenester til deg, så lenge disse partene samtykker til å behandle disse opplysningene fortrolig. Vi kan også frigi opplysningene dine dersom vi tror at å frigi dem er hensiktsmessig for å overholde loven, håndheve nettstedet retningslinjer eller beskytte våre og andres rettigheter. Imidlertid kan opplysninger som ikke er personlig identifiserbare, bli delt med andre parter for markedsføring, reklame eller annet bruk.
 
       <a name="tredjepart"></a>
 

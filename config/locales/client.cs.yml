@@ -365,6 +365,9 @@ cs:
         title: 'Editovat skupinu'
         full_name: 'Celé jméno'
       add: "Přidat"
+      automatic_group: Automatická skupina
+      membership: "Členství"
+      user_count: "Počet členů"
       bio: "O skupině"
       selector_placeholder: "Přidat členy"
       owner: "Vlastník"
@@ -864,7 +867,7 @@ cs:
       hide_forever: "děkuji, ne"
       hidden_for_session: "Dobrá, zeptám se tě zítra. Pro založení účtu můžeš také vždy použít 'Přihlásit se'."
       intro: "Nazdar! :heart_eyes: Vypadá to, že si užíváš diskuzi, ale zatím jsi si nezaložil účet."
-      value_prop: "Pokud si založíš účet, budeme si přesně pomatovat, co jsi četly, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění, zde a přes e-mail, kdykoli přibydou nově příspěvky. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartbeat:"
+      value_prop: "Pokud si založíš účet, budeme si přesně pamatovat, co jsi četl, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění zde a přes e-mail, kdykoli přibudou nově příspěvky. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartbeat:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
       description: "Je tu <b>{{replyCount}}</b> odpovědí."
@@ -949,6 +952,7 @@ cs:
     invites:
       accept_title: "Pozvání"
       invited_by: "Pozvání od:"
+      success: "Váš účet byl vytvořen a nyní jste přihlášeni."
     emoji_set:
       apple_international: "Apple/Mezinárodní"
       google: "Google"
@@ -1169,6 +1173,8 @@ cs:
           first: jsou první příspěvek v tématu
           pinned: jsou připnuty
           unpinned: nejsou připnuty
+          seen: jsem četl
+          unseen: jsem nečetl
           wiki: jsou wiki
         statuses:
           label: Kde příspěvky
@@ -1192,6 +1198,8 @@ cs:
     topics:
       new_messages_marker: "poslední navštívení"
       bulk:
+        select_all: "Vybrat vše"
+        clear_all: "Zrušit vše"
         unlist_topics: "Odebrat témata ze seznamu"
         reset_read: "reset přečteného"
         delete: "Smazat témata"
@@ -1326,6 +1334,7 @@ cs:
         go_bottom: "dolů"
         go: "go"
         jump_bottom: "na poslední příspěvek"
+        jump_prompt: "přejít na..."
         jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
@@ -2015,7 +2024,7 @@ cs:
     keyboard_shortcuts_help:
       title: 'Klávesové zkratky'
       jump_to:
-        title: 'Jump To'
+        title: 'Přejít na'
         home: '<b>g</b>, <b>h</b> Domů'
         latest: '<b>g</b>, <b>l</b> Poslední'
         new: '<b>g</b>, <b>n</b> Nový'
@@ -2200,7 +2209,7 @@ cs:
         admins: 'Administrátoři:'
         blocked: 'Blokováno:'
         suspended: 'Zakázáno:'
-        private_messages_short: "Msgs"
+        private_messages_short: "Zpráv"
         private_messages_title: "Zprávy"
         mobile_title: "Mobilní verze"
         space_free: "{{size}} prázdné"

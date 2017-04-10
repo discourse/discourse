@@ -366,7 +366,7 @@ fi:
       automatic_group: Automaattinen ryhmä
       closed_group: Suljettu ryhmä
       is_group_user: "Olet tämän ryhmän jäsen"
-      allow_membership_requests: "Salli käyttäjien lähettää jäsenhakemuksia ryhmien isännille (vaatii että kaikki voivat mainita ryhmän)"
+      allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille"
       membership: "Jäsenyys"
       name: "Nimi"
       user_count: "Jäsenmäärä"
@@ -564,7 +564,8 @@ fi:
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
       muted_topics_link: "Näytä vaimennetut ketjut"
-      watched_topics_link: "Näytä tarkkaillut ketjut"
+      watched_topics_link: "Näytä tarkkailtavat ketjut"
+      tracked_topics_link: "Näytä seurattavat ketjut"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       apps: "Sovellukset"
       revoke_access: "Peru käyttöoikeus"
@@ -939,6 +940,10 @@ fi:
       not_allowed_from_ip_address: "Kirjautuminen estetty tästä IP-osoitteesta."
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi vahvistusviestin uudelleen."
+      resend_title: "Lähetä aktivointisähköposti uudelleen"
+      change_email: "Vaihda sähköpostiosoitetta"
+      provide_new_email: "Anna uusi osoite niin lähetämme sinulle vahvistamissähköpostin."
+      submit_new_email: "Päivitä sähköpostiosoite"
       sent_activation_email_again: "Lähetimme uuden vahvistusviestin sinulle osoitteeseen <b>{{currentEmail}}</b>. Viestin saapumisessa voi kestää muutama minuutti; muista tarkastaa myös roskapostikansio."
       to_continue: "Ole hyvä ja kirjaudu sisään"
       preferences: "Sinun täytyy olla kirjautuneena sisään muokataksesi tilisi asetuksia"
@@ -1155,6 +1160,7 @@ fi:
       sort_by: "Järjestä"
       relevance: "Osuvuus"
       latest_post: "Uusin viesti"
+      latest_topic: "Uusin ketju"
       most_viewed: "Katselluin"
       most_liked: "Tykätyin"
       select_all: "Valitse kaikki"
@@ -1333,11 +1339,37 @@ fi:
       jump_reply_up: hyppää aiempaan vastaukseen
       jump_reply_down: hyppää myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
-      auto_close_notice: "Tämä ketju sulkeutuu automaattisesti %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Tämä ketju suljetaan %{duration} kuluttua viimeisimmästä viestistä."
+      topic_status_update:
+        title: "Aseta ajastin ketjulle"
+        save: "Aseta ajastin"
+        time: "Aika:"
+        remove: "Poista ajastin"
+        publish_to: "Mihin julkaistaan:"
+      auto_update_input:
+        limited:
+          units: "(# tuntia)"
+          examples: 'Syötä aika tunteina (24).'
+        all:
+          examples: 'Syötä aika tunteina (24), kellonaikana (17:30) tai aikaleimana (2013-11-22 14:00).'
+      publish_to_category:
+        title: "Julkaise määrättynä ajankohtana"
+      temp_open:
+        title: "Avaa väliaikaisesti"
+      auto_reopen:
+        title: "Avaa ketju automaattisesti"
+      temp_close:
+        title: "Sulje väliaikaisesti"
+      auto_close:
+        title: "Sulje ketju automaattisesti"
+        label: "Aika, jolloin suljetaan automaattisesti:"
+        error: "Arvo ei kelpaa."
+        based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on ainakin näin vanha."
+      status_update_notice:
+        auto_open: "Ketju avautuu automaattisesti %{timeLeft}."
+        auto_close: "Ketju suljetaan ajastetusti %{timeLeft}."
+        auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} viimeisimmästä viestistä."
       auto_close_title: 'Automaattisen sulkemisen asetukset'
-      auto_close_save: "Tallenna"
-      auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
       auto_close_immediate:
         one: "Ketjun viimeisin viesti on jo tunnin vanha, joten ketju suljetaan heti."
         other: "Ketjun viimeisin viesti on jo %{hours} tuntia vanha, joten ketju suljetaan heti."
@@ -1370,7 +1402,7 @@ fi:
           '2_8': 'Saat ilmoituksia, koska olet asettanut tämän alueen seurantaan.'
           '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun.'
           '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
-          '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luit ketjua aiemmin</a>.'
+          '2': 'Saat ilmoituksia, koska <a href="/u/{{username}}/preferences">luit ketjua aiemmin</a>.'
           '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
@@ -1406,7 +1438,7 @@ fi:
         open: "Avaa ketju"
         close: "Sulje ketju"
         multi_select: "Valitse viestejä..."
-        auto_close: "Sulje automaattisesti..."
+        timed_update: "Aseta ajastin ketjulle..."
         pin: "Kiinnitä ketju..."
         unpin: "Poista ketjun kiinnitys..."
         unarchive: "Poista ketjun arkistointi"
@@ -2854,6 +2886,7 @@ fi:
         logged_out: "Käyttäjä on kirjautunut ulos kaikilla laitteilla"
         revoke_admin: 'Peru ylläpitäjän oikeudet'
         grant_admin: 'Myönnä ylläpitäjän oikeudet'
+        grant_admin_confirm: "Vahvistaaksemme uuden ylläpitäjän lähetimme sinulle sähköpostin. Avaa se ja noudata ohjeita."
         revoke_moderation: 'Peru valvojan oikeudet'
         grant_moderation: 'Myönnä valvojan oikeudet'
         unblock: 'Poista esto'

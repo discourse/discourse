@@ -110,7 +110,7 @@ he:
       s3_upload_bucket_is_required: "אינכם יכולים להעלות ל-S3 ללא 's3_upload_bucket'."
   invite:
     not_found: "אסימון ההזמנה שלכם אינו תקין. אנא צרו קשר עם האדמיניסטרטור של האתר."
-    user_exists: "אין צורך להזמין את <b>%{email}</b>, <a href='/users/%{username}/summary'>כבר יש לו/ה חשבון!</a>"
+    user_exists: "אין צורך להזמין את <b>%{email}</b>, הוא/היא <a href='/u/%{username}/summary'>כבר בעלים של חשבון!</a>"
   bulk_invite:
     file_should_be_csv: "הקובץ שמועלה אמור להיות בפורמט csv."
     error: "ארעה שגיאה בהעלת הקובץ. אנא נסו שוב מאוחר יותר."
@@ -273,11 +273,11 @@ he:
     get_a_room: |
       ### שיקלו לענות ליותר אנשים
 
-      כבר עניתם %{count} פעמים ל-@%{reply_username} בנושא ספציפי זה.
+      כבר הגבתם %{count} פעמים ל-@%{reply_username} בנושא ספציפי זה.
 
-      האם שקלתם לענות לאנשים *אחרים* בדיון גם כן? דיון מעולה מערב הרבה קולות ופקספקטיבות.
+      האם שקלתם לענות לאנשים *אחרים* בדיון גם כן? דיון מעולה מערב פרספקטיבות וקולות רבים.
 
-      אם תרצו להמשיך את הדיון באריכות עם משתמש ספציפי זה, [שילחו אליו/ה הודעה אישית](/users/%{reply_username}).
+      אם הייתם רוצים להמשיך את הדיון באריכות עם משתמש/ת ספציפי/ת זה/זו, [שילחו אליהם הודעה אישית](/u/%{reply_username}).
     too_many_replies: |
       ### הגעתם למספר המקסימלי של תגובות לנושא זה
 
@@ -329,7 +329,7 @@ he:
               invalid: "זהו אינו צבע תקני"
         post_reply:
           base:
-            different_topic: "פוסט ותגובה חייבים להיות באותו הנושא."
+            different_topic: "פוסט ותגובה חייבים להיות שייכים לאותו הנושא."
         web_hook:
           attributes:
             payload_url:
@@ -338,9 +338,12 @@ he:
           attributes:
             name:
               taken: כבר בשימוש על ידי אמוג'י אחר
+        topic_status_update:
+          attributes:
+            execute_at:
+              in_the_past: "חייב להיות בעתיד."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>שדה האודות של הפרופיל שלכם ריק כרגע, <a href='/users/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין/ה דבר בשדה אודות של הפרופיל שלו/ה</div>"
   vip_category_name: "לאונג'"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
@@ -544,6 +547,12 @@ he:
     approval_required: "מנהל צריך לאשר את החשבון שלכם ידנית לפני שתוכלו להיכנס לפורום הזה. יישלח אליכם דואר אלקטרוני כשהחשבון שלכם יאושר!"
     missing_session: "אנחנו לא יכולים לזהות אם חשבונכם נוצר, אנא וודאו שיש לכם עוגיות (cookies) מאופשרות."
     activated: "מצטערים, חשבון זה כבר הופעל."
+    admin_confirm:
+      title: "אישור חשבון ניהול"
+      description: "האם אתם בטוחים שאתם מעוניינים ש-<b>%{target_username}</b> יהיה/תהיה מנהל/ת?"
+      grant: "הענקת גישת ניהול"
+      complete: "<b>%{target_username}</b> הוא/היא עכשיו מנהלים."
+      back_to: "חזרה ל-%{title}"
   post_action_types:
     off_topic:
       title: 'אוף-טופיק'
@@ -1125,6 +1134,7 @@ he:
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של דגלים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
     num_flags_to_close_topic: "מספר מינימלי של דגלים פעילים שנדרש כדי להשהות באופן אוטומטי את היכולת להתערב בנושא"
+    num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
     auto_respond_to_flag_actions: "אפשרו תגובה אוטמטית עם הסרת דגל."
     min_first_post_typing_time: "זמן מינימלי במילי-שניות שמשתמש חייב להקיש בזמן הפוסט הראשון, אם הסף לא נעבר הפוסט אוטומטית יכנס לתור של אלו שצריכים אישור. קיבעו 0 כדי לנטרל (לא מומלץ)"
     auto_block_fast_typers_on_first_post: "חסימה אוטומטית של משתמשים שלא עונים על min_first_post_typing_time"
@@ -1394,6 +1404,15 @@ he:
     autoclosed_enabled_lastpost_minutes:
       one: "נושא זה ננעל אוטומטית לאחר דקה מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
       other: "נושא זה נסגר אוטומטית לאחר %{count} דקות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
+    autoclosed_disabled_days:
+      one: "נושא זה נפתח אוטומטית לאחר יום 1."
+      other: "נושא זה נפתח אוטומטית לאחר %{count} ימים."
+    autoclosed_disabled_hours:
+      one: "נושא זה נפתח אוטומטית לאחר שעה 1."
+      other: "נושא זה נפתח אוטומטית לאחר %{count} שעות."
+    autoclosed_disabled_minutes:
+      one: "נושא זה נפתח אוטומטית לאחר דקה 1."
+      other: "נושא זה נפתוח אוטומטית לאחר %{count} דקות."
     autoclosed_disabled: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     pinned_enabled: "הנושא הזה ננעץ. הוא יופיע בראש הקטגוריה שלו עד שיוסר מנעיצה על ידי מנהל או שכפתור נקה נעיצות נלחץ."
@@ -2018,6 +2037,9 @@ he:
         כמה בעיות מדווחות ללוח המכוונים של האדמיניסטרטור.
 
         [אנא סיקרו וטפלו בהן](%{base_url}/admin).
+    new_user_of_the_month:
+      title: "אתם המשתמשים החדשים של החודש!"
+      subject_template: "אתם המשתמשים החדשים של החודש!"
   unsubscribe_link: |
     כדי להפסיק את המיילים האלו, [לחצו כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2819,9 +2841,12 @@ he:
       long_description: עיטור זה מוענק בפעם הראשונה שמפרסמים קישור בשורה נפרדת, מה שיגרום לו להתרחב לתיבת onebox עם תקציר של העמוד המקושר, כותרת ותמונה (כאשר ישנה תמונה בעמוד המקושר).
     first_reply_by_email:
       name: תגובה ראשונה במייל
-      description: השיבו לפוסט באמצעות מייל
+      description: הגיבו לפוסט באמצעות מייל
       long_description: |
         עיטור זה מוענק בפעם הראשונה שאתם עונים לפוסט באמצעות מייל :e-mail:.
+    new_user_of_the_month:
+      name: "המשתמש/ת החדש/ה של החודש"
+      description: תרומות יוצאות מהכלל בחודש הראשון שלהם
   admin_login:
     success: "דוא\"ל נשלח"
     error: "שגיאה!"
