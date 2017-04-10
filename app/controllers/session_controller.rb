@@ -48,7 +48,7 @@ class SessionController < ApplicationController
         sso.moderator = current_user.moderator?
 
         if sso.return_sso_url.blank?
-          render text: "return_sso_url is blank, it must be provided", status: 400
+          render plain: "return_sso_url is blank, it must be provided", status: 400
           return
         end
 
