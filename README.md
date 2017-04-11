@@ -1,10 +1,10 @@
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
-Discourse is the 100% open source discussion platform built for the next decade of the Internet. It works as:
+Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
 
-- a mailing list
-- a discussion forum
-- a long-form chat room
+- mailing list
+- discussion forum
+- long-form chat room
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
@@ -38,12 +38,12 @@ If you're looking for business class hosting, see [discourse.org/buy](https://ww
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-| Browsers | Tablets |  Smartphones |
+| Browsers | Tablets |  Phones |
 | -------- | ------- | ----------- |
-| Safari 6.1+| iPad 2+ |  iOS 7+ |
-| Google Chrome 23+ |  Android 4.3+ | Android 4.3+ |
-| Internet Explorer 11+ | Windows 8 | Windows Phone 8 |
-| Firefox 16+ | |
+| Safari 6.1+ | iPad 3+ |  iOS 8+ |
+| Google Chrome 32+ |  Android 4.3+ | Android 4.3+ |
+| Internet Explorer 11+ |  |  |
+| Firefox 27+ | | |
 
 ## Built With
 
