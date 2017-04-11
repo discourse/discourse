@@ -47,6 +47,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
     topic.reload
     expect(topic.category).to eq(another_category)
     expect(topic.visible).to eq(true)
+    expect(TopicStatusUpdate.find_by(id: topic.topic_status_update.id)).to eq(nil)
 
     %w{created_at bumped_at updated_at last_posted_at}.each do |attribute|
       expect(topic.public_send(attribute)).to be_within(1.second).of(Time.zone.now)
