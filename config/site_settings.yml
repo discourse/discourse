@@ -717,7 +717,7 @@ files:
   max_image_megapixels:
     default: 40
     min: 5
-    max: 100
+    max: 150
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
