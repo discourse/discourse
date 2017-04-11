@@ -12,7 +12,10 @@
     align-content: flex-start;
 
     box-sizing: border-box;
-    border-width: 0 0 0 6px;
+
+    border-width: 0;
+    border-left-width: 6px;
+
     border-style: solid;
     border-color: blend-primary-secondary(20%);
 
@@ -34,7 +37,10 @@
   .category-box-inner {
     width: 100%;
     padding: 0;
-    border-width: 2px 2px 2px 0;
+
+    border-width: 2px;
+    border-left-width: 0;
+
     border-style: solid;
     border-color: blend-primary-secondary(20%);
   }
