@@ -85,7 +85,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         end
 
       when "aside"
-        @in_quote = true unless @keep_onebox_source
+        attributes = Hash[*attributes.flatten]
+
+        unless @keep_onebox_source && attributes['class'].include?('onebox')
+          @in_quote = true
+        end
       when 'article'
         if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
           @in_quote = true
