@@ -59,17 +59,17 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
   describe 'when topic is a private message' do
     before do
-      expect { topic.convert_to_private_message(Discourse.system_user) }
-        .to change { topic.private_message? }.to(true)
+      Timecop.travel(1.hour.ago) do
+        expect { topic.convert_to_private_message(Discourse.system_user) }
+          .to change { topic.private_message? }.to(true)
+      end
     end
 
 
     it 'should publish the topic to the new category' do
-      described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
-
       message = MessageBus.track_publish do
         described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
-      end.first
+      end.last
 
       topic.reload
       expect(topic.category).to eq(another_category)
