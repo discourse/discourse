@@ -10,6 +10,7 @@ module Jobs
       PostTimestampChanger.new(timestamp: Time.zone.now, topic: topic).change! do
         topic.change_category_to_id(topic_status_update.category_id)
         topic.update_columns(visible: true)
+        topic_status_update.trash!(Discourse.system_user)
       end
 
       MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)
