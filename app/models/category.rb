@@ -528,6 +528,7 @@ end
 #  topics_month                  :integer          default(0)
 #  topics_week                   :integer          default(0)
 #  slug                          :string           not null
+#  email_subject_slug            :string
 #  description                   :text
 #  text_color                    :string(6)        default("FFFFFF"), not null
 #  read_restricted               :boolean          default(FALSE), not null

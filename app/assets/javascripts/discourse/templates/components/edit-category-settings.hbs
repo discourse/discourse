@@ -97,6 +97,14 @@
   </section>
 {{/if}}
 
+<section class='field'>
+  <label>
+    {{fa-icon "envelope-o"}}
+    {{i18n 'category.email_subject_slug'}}
+    {{text-field class="email-in" value=category.email_subject_slug}}
+  </label>
+</section>
+
 {{#if emailInEnabled}}
     <section class='field'>
       <label>

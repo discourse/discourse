@@ -177,6 +177,19 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def update_email_subject_slug
+    @category = Category.find(params[:category_id].to_i)
+    guardian.ensure_can_edit!(@category)
+
+    custom_slug = params[:email_subject_slug].to_s
+
+    if custom_slug.present? && @category.update_attributes(email_subject_slug: custom_slug)
+      render json: success_json
+    else
+      render_json_error(@category)
+    end
+  end
+
   def set_notifications
     category_id = params[:category_id].to_i
     notification_level = params[:notification_level].to_i
@@ -240,6 +253,7 @@ class CategoriesController < ApplicationController
                         :uploaded_logo_id,
                         :uploaded_background_id,
                         :slug,
+                        :email_subject_slug,
                         :allow_badges,
                         :topic_template,
                         :sort_order,

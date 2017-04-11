@@ -371,6 +371,7 @@ class UserNotifications < ActionMailer::Base
     category = Topic.find_by(id: post.topic_id).category
     if opts[:show_category_in_subject] && post.topic_id && category && !category.uncategorized?
       show_category_in_subject = category.name
+      show_category_slug_in_subject = category.email_subject_slug
 
       # subcategory case
       if !category.parent_category_id.nil?
@@ -378,6 +379,7 @@ class UserNotifications < ActionMailer::Base
       end
     else
       show_category_in_subject = nil
+      show_category_slug_in_subject = nil
     end
 
     if SiteSetting.private_email?
@@ -464,6 +466,7 @@ class UserNotifications < ActionMailer::Base
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
+      show_category_slug_in_subject: show_category_slug_in_subject,
       private_reply: post.topic.private_message?,
       include_respond_instructions: !(user.suspended? || user.staged?),
       template: template,

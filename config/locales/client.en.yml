@@ -1995,6 +1995,7 @@ en:
       save: 'Save Category'
       slug: 'Category Slug'
       slug_placeholder: '(Optional) dashed-words for url'
+      email_subject_slug: 'Email Subject Slug'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       name: "Category Name"

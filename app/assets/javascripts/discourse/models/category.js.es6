@@ -81,6 +81,7 @@ const Category = RestModel.extend({
       data: {
         name: this.get('name'),
         slug: this.get('slug'),
+        email_subject_slug: this.get('email_subject_slug'),
         color: this.get('color'),
         text_color: this.get('text_color'),
         secure: this.get('secure'),
