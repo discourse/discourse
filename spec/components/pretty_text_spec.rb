@@ -124,12 +124,28 @@ HTML
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100)).to eq("[image]")
       end
 
-      it "should keep alt tags" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100)).to eq("[car]")
+      context 'alt tags' do
+        it "should keep alt tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>", 100)).to eq("[car]")
+        end
+
+        describe 'when alt tag is empty' do
+          it "should not keep alt tags" do
+            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq("[#{I18n.t('excerpt_image')}]")
+          end
+        end
       end
 
-      it "should keep title tags" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100)).to eq("[car]")
+      context 'title tags' do
+        it "should keep title tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100)).to eq("[car]")
+        end
+
+        describe 'when title tag is empty' do
+          it "should not keep title tags" do
+            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq("[#{I18n.t('excerpt_image')}]")
+          end
+        end
       end
 
       it "should convert images to markdown if the option is set" do
