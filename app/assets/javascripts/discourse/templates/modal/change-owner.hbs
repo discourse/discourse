@@ -5,8 +5,11 @@
   </p>
 
   <form>
-      <label>{{i18n 'topic.change_owner.label'}}</label>
-    {{user-selector single="true" usernames=new_user placeholderKey="topic.change_owner.placeholder"}}
+    <label>{{i18n 'topic.change_owner.label'}}</label>
+    {{user-selector single="true"
+                    usernames=new_user
+                    placeholderKey="topic.change_owner.placeholder"
+                    autocomplete="off"}}
   </form>
 {{/d-modal-body}}
 
