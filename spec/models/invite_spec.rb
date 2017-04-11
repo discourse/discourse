@@ -102,8 +102,15 @@ describe Invite do
             expect(topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo')).to eq(@invite)
           end
 
+          it 'updates timestamp of existing invite' do
+            @invite.created_at = 10.days.ago
+            @invite.save
+            resend_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+            expect(resend_invite.created_at).to be_within(1.minute).of(Time.zone.now)
+          end
+
           it 'returns a new invite if the other has expired' do
-            SiteSetting.stubs(:invite_expiry_days).returns(1)
+            SiteSetting.invite_expiry_days = 1
             @invite.created_at = 2.days.ago
             @invite.save
             new_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
