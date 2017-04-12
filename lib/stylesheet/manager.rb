@@ -48,8 +48,13 @@ class Stylesheet::Manager
     themes << nil
     themes.each do |key,name|
       [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
+        theme_key = key || SiteSetting.default_theme_key
+        cache_key = "#{target}_#{theme_key}"
+
         STDERR.puts "precompile target: #{target} #{name}"
-        stylesheet_link_tag(target, nil, key)
+        builder = self.new(target, theme_key)
+        builder.compile(force: true)
+        cache[cache_key] = nil
       end
     end
     nil
