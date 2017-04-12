@@ -2,7 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 import { refreshCSS } from 'discourse/initializers/live-development';
 const keySelector = 'meta[name=discourse_theme_key]';
 
-function currentThemeKey() {
+export function currentThemeKey() {
   let themeKey = null;
   let elem = _.first($(keySelector));
   if (elem) {
