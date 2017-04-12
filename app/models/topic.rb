@@ -7,6 +7,7 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
+require_dependency 'search'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
