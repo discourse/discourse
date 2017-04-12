@@ -257,8 +257,7 @@ module Onebox
         end
 
         def is_video?
-          data[:type] =~ /video/ &&
-          !Onebox::Helpers.blank?(data[:video])
+          data[:type] =~ /^video\// && !Onebox::Helpers.blank?(data[:video])
         end
 
         def is_embedded?
@@ -289,26 +288,15 @@ module Onebox
         def video_html
           escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:video])
 
-          if data[:video_type] == "video/mp4"
-            <<-HTML
-              <video title='#{data[:title]}'
-                     width='#{data[:video_width]}'
-                     height='#{data[:video_height]}'
-                     style='max-width:100%'
-                     controls=''>
-                <source src='#{escaped_src}'>
-              </video>
-            HTML
-          else
-            <<-HTML
-              <iframe src='#{escaped_src}'
-                      title='#{data[:title]}'
-                      width='#{data[:video_width]}'
-                      height='#{data[:video_height]}'
-                      frameborder='0'>
-              </iframe>
-            HTML
-          end
+          <<-HTML
+            <video title='#{data[:title]}'
+                   width='#{data[:video_width]}'
+                   height='#{data[:video_height]}'
+                   style='max-width:100%'
+                   controls=''>
+              <source src='#{escaped_src}'>
+            </video>
+          HTML
         end
 
         def embedded_html
