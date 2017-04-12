@@ -85,6 +85,7 @@ describe PostCreator do
         DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
         DiscourseEvent.expects(:trigger).with(:after_trigger_post_process, anything).once
         DiscourseEvent.expects(:trigger).with(:markdown_context, anything).at_least_once
+        DiscourseEvent.expects(:trigger).with(:topic_notification_level_changed, anything, anything, anything).at_least_once
         creator.create
       end
 
