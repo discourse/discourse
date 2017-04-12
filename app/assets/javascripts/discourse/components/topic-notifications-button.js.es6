@@ -9,12 +9,14 @@ export default MountWidget.extend({
   },
 
   @observes('topic.details.notification_level')
-  _triggerRerender() {
-    this.queueRerender();
+  _triggerEvent() {
+    this.appEvents.trigger('topic-notifications-button:changed', {
+      type: 'notification', id: this.get('topic.details.notification_level')
+    });
   },
 
   didInsertElement() {
     this._super();
-    this.dispatch('topic-notifications-button:keyboard-trigger', 'topic-notifications-button');
+    this.dispatch('topic-notifications-button:changed', 'topic-notifications-button');
   }
 });
