@@ -72,7 +72,7 @@ describe TopicUser do
     guardian = Guardian.new(u)
     TopicCreator.create(u, guardian, title: "this is my topic title")
   }
-  let(:topic_user) { TopicUser.get(topic,user) }
+  let(:topic_user) { TopicUser.get(topic, user) }
   let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
 
   let(:post) { Fabricate(:post, topic: topic, user: user) }
@@ -99,6 +99,18 @@ describe TopicUser do
   end
 
   describe 'notifications' do
+    it 'should trigger the right DiscourseEvent' do
+      begin
+        called = false
+        DiscourseEvent.on(:topic_notification_level_changed) { called = true }
+
+        TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        expect(called).to eq(true)
+      ensure
+        DiscourseEvent.off(:topic_notification_level_changed) { called = true }
+      end
+    end
 
     it 'should be set to tracking if auto_track_topics is enabled' do
       user.user_option.update_column(:auto_track_topics_after_msecs, 0)
