@@ -7,7 +7,7 @@ class GitImporter
     if @url.start_with?("https://github.com") && !@url.end_with?(".git")
       @url += ".git"
     end
-    @temp_folder = "#{Dir.tmpdir}/discourse_theme_#{SecureRandom.hex}"
+    @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
   end
 
   def import!
