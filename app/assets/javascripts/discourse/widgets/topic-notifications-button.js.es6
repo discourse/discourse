@@ -88,7 +88,7 @@ export default createWidget('topic-notifications-button', {
     return this.attrs.topic.get('details').updateNotifications(id);
   },
 
-  topicNotificationsButtonKeyboardTrigger(msg) {
+  topicNotificationsButtonChanged(msg) {
     switch(msg.type) {
       case 'notification':
         this.notificationLevelChanged(msg.id);
