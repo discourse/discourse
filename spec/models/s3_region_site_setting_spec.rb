@@ -14,7 +14,7 @@ describe S3RegionSiteSetting do
 
   describe 'values' do
     it 'returns all the S3 regions' do
-      expect(S3RegionSiteSetting.values.map {|x| x[:value]}.sort).to eq(['us-east-1', 'us-west-1', 'us-west-2', 'us-gov-west-1', 'eu-west-1', 'eu-central-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'ap-northeast-1', 'ap-northeast-2', 'sa-east-1', 'cn-north-1'].sort)
+      expect(S3RegionSiteSetting.values.map {|x| x[:value]}.sort).to eq(['us-east-1', 'us-west-1', 'us-west-2', 'us-gov-west-1', 'eu-west-1', 'eu-west-2', 'eu-central-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'ap-northeast-1', 'ap-northeast-2', 'sa-east-1', 'cn-north-1'].sort)
     end
   end
 
