@@ -1,0 +1,62 @@
+<div class="current-style {{if maximized 'maximized'}}">
+  <div class='wrapper'>
+    <h2>{{i18n 'admin.customize.theme.edit_css_html'}} {{#link-to 'adminCustomizeThemes.show' model.id replace=true}}{{model.name}}{{/link-to}}</h2>
+
+    <ul class='nav nav-pills target'>
+      <li>
+        {{#link-to 'adminCustomizeThemes.edit' model.id 'common' fieldName replace=true title=field.title}}
+          {{i18n 'admin.customize.theme.common'}}
+        {{/link-to}}
+      </li>
+      <li>
+        {{#link-to 'adminCustomizeThemes.edit' model.id 'desktop' fieldName replace=true title=field.title}}
+          {{i18n 'admin.customize.theme.desktop'}}
+          {{fa-icon 'desktop'}}
+        {{/link-to}}
+      </li>
+      <li>
+        {{#link-to 'adminCustomizeThemes.edit' model.id 'mobile' fieldName replace=true title=field.title}}
+          {{i18n 'admin.customize.theme.mobile'}}
+          {{fa-icon 'mobile'}}
+        {{/link-to}}
+      </li>
+    </ul>
+
+    <div class='admin-controls'>
+      <ul class='nav nav-pills fields'>
+        {{#each fields as |field|}}
+          <li>
+            {{#link-to 'adminCustomizeThemes.edit' model.id currentTargetName field.name replace=true title=field.title}}
+              {{#if field.icon}}{{fa-icon field.icon}} {{/if}}
+              {{i18n field.key}}
+            {{/link-to}}
+          </li>
+        {{/each}}
+        <li class='toggle-maximize'>
+          <a {{action "toggleMaximize"}}>
+            <i class="fa fa-{{maximizeIcon}}"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <div class='custom-ace-gutter'></div>
+      {{ace-editor content=activeSection mode=activeSectionMode}}
+    </div>
+
+    <div class='admin-footer'>
+      <div class='status-actions'>
+        {{#unless model.changed}}
+          <a class='preview-link' href={{previewUrl}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
+        {{/unless}}
+      </div>
+
+      <div class='buttons'>
+        {{#d-button action="save" disabled=saveDisabled class='btn-primary'}}
+          {{saveButtonText}}
+        {{/d-button}}
+      </div>
+    </div>
+  </div>
+</div>

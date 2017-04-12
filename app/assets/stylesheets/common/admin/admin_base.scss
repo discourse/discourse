@@ -3,6 +3,8 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+@import "common/admin/customize";
+
 $mobile-breakpoint: 700px;
 
 // Change the box model for .admin-content
@@ -721,138 +723,6 @@ section.details {
 
   .content-list {
     margin-right: 20px;
-  }
-}
-
-// Customise area
-.customize {
-  .admin-footer {
-    margin-top: 20px;
-  }
-  .current-style.maximized {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100000;
-    background-color: white;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    .wrapper {
-      position: absolute;
-      top: 20px;
-      bottom: 10px;
-      left: 20px;
-      right: 20px;
-    }
-  }
-  .nav.nav-pills {
-    margin-left: 10px;
-  }
-  .content-list, .current-style {
-    float: left;
-  }
-  .content-list ul {
-    margin-bottom: 10px;
-  }
-  .current-style {
-    .nav.nav-pills{
-      position: relative;
-    }
-    .toggle-mobile {
-      position: absolute;
-      right: 35px;
-      font-size: 20px;
-    }
-    .toggle-maximize {
-      position: absolute;
-      right: -5px;
-    }
-    .delete-link {
-      margin-left: 15px;
-      margin-top: 5px;
-    }
-    .preview-link {
-      margin-left: 15px;
-    }
-    .export {
-      float: right;
-    }
-    padding-left: 10px;
-    width: 70%;
-    .style-name {
-      width: 350px;
-      height: 25px;
-      // Remove height to for `box-sizing: border-box`
-      height: auto;
-    }
-    .ace-wrapper {
-      position: relative;
-      height: 400px;
-      width: 100%;
-    }
-    &.maximized {
-      .admin-container {
-        position: absolute;
-        bottom: 50px;
-        top: 80px;
-        width: 100%;
-      }
-      .admin-footer {
-        position: absolute;
-        bottom: 10px;
-      }
-      .ace-wrapper {
-        height: 100%;
-      }
-    }
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-    .status-actions {
-      float: right;
-      margin-top: 7px;
-      span {
-        margin-right: 10px;
-      }
-    }
-    .buttons {
-      float: left;
-      width: 200px;
-      .saving {
-        padding: 5px 0 0 0;
-        margin-left: 10px;
-        width: 80px;
-        color: $primary;
-      }
-    }
-  }
-  .color-scheme {
-    .controls {
-      span, button, a {
-        margin-right: 10px;
-      }
-    }
-  }
-  .colors {
-    thead th       { border: none; }
-    td.hex         { width: 100px; }
-    td.actions     { width: 200px; }
-    .hex-input     { width: 80px; margin-bottom: 0; }
-    .hex           { text-align: center; }
-    .description   { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
-
-    .invalid .hex input {
-      background-color: white;
-      color: black;
-      border-color: $danger;
-    }
   }
 }
 
@@ -1970,6 +1840,12 @@ table#user-badges {
     background: $secondary;
   }
 }
+
+.inline-edit label {
+  display: inline-block;
+  margin-right: 20px;
+}
+
 .cbox0 { background: blend-primary-secondary(0%); }
 .cbox10 { background: blend-primary-secondary(10%); }
 .cbox20 { background: blend-primary-secondary(20%); }

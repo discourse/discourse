@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Middleware
 
   # Cheat and bypass Rails in development mode if the client attempts to download a static asset

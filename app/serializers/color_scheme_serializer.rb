@@ -1,8 +1,4 @@
 class ColorSchemeSerializer < ApplicationSerializer
-  attributes :id, :name, :enabled, :is_base
+  attributes :id, :name, :is_base, :base_scheme_id
   has_many :colors, serializer: ColorSchemeColorSerializer, embed: :objects
-
-  def base
-    object.is_base || false
-  end
 end

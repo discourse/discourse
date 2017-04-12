@@ -11,7 +11,8 @@ export default RestrictedUserRoute.extend({
     controller.reset();
     controller.setProperties({
       model: user,
-      newNameInput: user.get('name')
+      newNameInput: user.get('name'),
+      selectedTheme: $.cookie('preview_style')
     });
   },
 

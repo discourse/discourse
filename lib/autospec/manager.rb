@@ -222,12 +222,14 @@ class Autospec::Manager
           end
         end
       end
+
       # special watcher for styles/templates
-      Autospec::ReloadCss::WATCHERS.each do |k, _|
-        matches = []
-        matches << file if k.match(file)
-        Autospec::ReloadCss.run_on_change(matches) if matches.present?
-      end
+      # now handled via libass integration
+      # Autospec::ReloadCss::WATCHERS.each do |k, _|
+      #   matches = []
+      #   matches << file if k.match(file)
+      #   Autospec::ReloadCss.run_on_change(matches) if matches.present?
+      # end
     end
 
     queue_specs(specs) if hit

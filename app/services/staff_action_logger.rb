@@ -113,34 +113,49 @@ class StaffActionLogger
     }))
   end
 
-  SITE_CUSTOMIZATION_LOGGED_ATTRS = [
-    'stylesheet', 'mobile_stylesheet',
-    'header', 'mobile_header',
-    'top', 'mobile_top',
-    'footer', 'mobile_footer',
-    'head_tag',
-    'body_tag',
-    'position',
-    'enabled',
-    'key'
-  ]
+  def theme_json(theme)
+    ThemeSerializer.new(theme, root:false).to_json
+  end
 
-  def log_site_customization_change(old_record, site_customization_params, opts={})
-    raise Discourse::InvalidParameters.new(:site_customization_params) unless site_customization_params
+  def strip_duplicates(old,cur)
+    return [old,cur] unless old && cur
+
+    old = JSON.parse(old)
+    cur = JSON.parse(cur)
+
+    old.each do |k, v|
+      next if k == "name"
+      next if k == "id"
+      if (v == cur[k])
+        cur.delete(k)
+        old.delete(k)
+      end
+    end
+
+    [old.to_json, cur.to_json]
+  end
+
+  def log_theme_change(old_json, new_theme, opts={})
+    raise Discourse::InvalidParameters.new(:new_theme) unless new_theme
+
+    new_json = theme_json(new_theme)
+
+    old_json,new_json = strip_duplicates(old_json,new_json)
+
     UserHistory.create( params(opts).merge({
-      action: UserHistory.actions[:change_site_customization],
-      subject: site_customization_params[:name],
-      previous_value: old_record ? old_record.attributes.slice(*SITE_CUSTOMIZATION_LOGGED_ATTRS).to_json : nil,
-      new_value: site_customization_params.slice(*(SITE_CUSTOMIZATION_LOGGED_ATTRS.map(&:to_sym))).to_json
+      action: UserHistory.actions[:change_theme],
+      subject: new_theme.name,
+      previous_value: old_json,
+      new_value: new_json
     }))
   end
 
-  def log_site_customization_destroy(site_customization, opts={})
-    raise Discourse::InvalidParameters.new(:site_customization) unless site_customization
+  def log_theme_destroy(theme, opts={})
+    raise Discourse::InvalidParameters.new(:theme) unless theme
     UserHistory.create( params(opts).merge({
-      action: UserHistory.actions[:delete_site_customization],
-      subject: site_customization.name,
-      previous_value: site_customization.attributes.slice(*SITE_CUSTOMIZATION_LOGGED_ATTRS).to_json
+      action: UserHistory.actions[:delete_theme],
+      subject: theme.name,
+      previous_value: theme_json(theme)
     }))
   end
 

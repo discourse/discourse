@@ -2,6 +2,44 @@ require 'rails_helper'
 require_dependency 'site'
 
 describe Site do
+
+  def expect_correct_themes(guardian)
+    json = Site.json_for(guardian)
+    parsed = JSON.parse(json)
+
+    expected = Theme.where('key = :default OR user_selectable',
+                    default: SiteSetting.default_theme_key)
+         .order(:name)
+         .pluck(:key, :name)
+         .map{|k,n| {"theme_key" => k, "name" => n, "default" => k == SiteSetting.default_theme_key}}
+
+    expect(parsed["user_themes"]).to eq(expected)
+  end
+
+  it "includes user themes and expires them as needed" do
+    default_theme = Theme.create!(user_id: -1, name: 'default')
+    SiteSetting.default_theme_key = default_theme.key
+    user_theme = Theme.create!(user_id: -1, name: 'user theme', user_selectable: true)
+
+    anon_guardian = Guardian.new
+    user_guardian = Guardian.new(Fabricate(:user))
+
+    expect_correct_themes(anon_guardian)
+    expect_correct_themes(user_guardian)
+
+    Theme.clear_default!
+
+    expect_correct_themes(anon_guardian)
+    expect_correct_themes(user_guardian)
+
+    user_theme.user_selectable = false
+    user_theme.save!
+
+    expect_correct_themes(anon_guardian)
+    expect_correct_themes(user_guardian)
+
+  end
+
   it "omits categories users can not write to from the category list" do
     category = Fabricate(:category)
     user = Fabricate(:user)
