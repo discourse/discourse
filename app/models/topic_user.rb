@@ -136,7 +136,17 @@ SQL
       end
 
       if attrs[:notification_level]
-        MessageBus.publish("/topic/#{topic_id}", { notification_level_change: attrs[:notification_level] }, user_ids: [user_id])
+        MessageBus.publish(
+          "/topic/#{topic_id}",
+          { notification_level_change: attrs[:notification_level] },
+          user_ids: [user_id]
+        )
+
+        DiscourseEvent.trigger(:topic_notification_level_changed,
+          attrs[:notification_level],
+          user_id,
+          topic_id
+        )
       end
 
     rescue ActiveRecord::RecordNotUnique
