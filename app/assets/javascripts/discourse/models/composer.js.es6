@@ -73,6 +73,11 @@ const Composer = RestModel.extend({
     }
   },
 
+  @computed('categoryId')
+  category(categoryId) {
+    return categoryId ? this.site.categories.findBy('id', categoryId) : null;
+  },
+
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
