@@ -14,8 +14,6 @@ Discourse::Application.configure do
 
   config.assets.js_compressor = :uglifier
 
-  config.assets.css_compressor = :sass
-
   # stuff should be pre-compiled
   config.assets.compile = false
 

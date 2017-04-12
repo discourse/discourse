@@ -174,6 +174,9 @@ en:
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
 
+    themes:
+      default_description: "Default"
+
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -634,6 +637,7 @@ en:
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      theme: "Theme"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -2780,32 +2784,14 @@ en:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
-        css: "CSS"
-        header: "Header"
-        top: "Top"
-        footer: "Footer"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML that will be inserted before the </head> tag"
-        body_tag:
-          text: "</body>"
-          title: "HTML that will be inserted before the </body> tag"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
         preview: "preview"
-        undo_preview: "remove preview"
-        rescue_preview: "default style"
         explain_preview: "See the site with this custom stylesheet"
-        explain_undo_preview: "Go back to the currently enabled custom stylesheet"
-        explain_rescue_preview: "See the site with the default stylesheet"
         save: "Save"
         new: "New"
         new_style: "New Style"
         import: "Import"
-        import_title: "Select a file or paste text"
         delete: "Delete"
-        delete_confirm: "Delete this customization?"
+        delete_confirm: "Delete this theme?"
         about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
         color: "Color"
         opacity: "Opacity"
@@ -2819,13 +2805,67 @@ en:
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
 
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS and HTML Customizations"
+        theme:
+          import_theme: "Import Theme"
+          customize_desc: "Customize:"
+          title: "Themes"
+          long_title: "Amend colors, CSS and HTML contents of your site"
+          edit: "Edit"
+          edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
+          common: "Common"
+          desktop: "Desktop"
+          mobile: "Mobile"
+          is_default: "Theme is enabled by default"
+          user_selectable: "Theme can be selected by users"
+          color_scheme: "Color Scheme"
+          color_scheme_select: "Select colors to be used by theme"
+          custom_sections: "Custom sections:"
+          included_themes: "Included Themes"
+          child_themes_check: "Theme includes other child themes"
+          css_html: "Custom CSS/HTML"
+          edit_css_html: "Edit CSS/HTML"
+          edit_css_html_help: "You have not edited any CSS or HTML"
+          import_web_tip: "Repository containing theme"
+          import_file_tip: ".dcstyle.json file containing theme"
+          about_theme: "About Theme"
+          license: "License"
+          update_to_latest: "Update to Latest"
+          check_for_updates: "Check for Updates"
+          updating: "Updating..."
+          up_to_date: "Theme is up-to-date, last checked:"
+          add: "Add"
+          commits_behind:
+            one: "Theme is 1 commit behind!"
+            other: "Theme is {{count}} commit behind!"
+          scss:
+            text: "CSS"
+            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+          header:
+            text: "Header"
+            title: "Enter HTML to display above site header"
+          after_header:
+            text: "After Header"
+            title: "Enter HTML to display on all pages after header"
+          footer:
+            text: "Footer"
+            title: "Enter HTML to display on page footer"
+          embedded_scss:
+            text: "Embedded CSS"
+            title: "Enter custom CSS to deliver with embedded version of comments"
+          head_tag:
+            text: "</head>"
+            title: "HTML that will be inserted before the </head> tag"
+          body_tag:
+            text: "</body>"
+            title: "HTML that will be inserted before the </body> tag"
         colors:
+          select_base:
+            title: "Select base color scheme"
+            description: "Base scheme:"
           title: "Colors"
+          edit: "Edit Color Schemes"
           long_title: "Color Schemes"
-          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
+          about: "Modify the colors used by your themes. Create a new color scheme to start."
           new_name: "New Color Scheme"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
@@ -2966,8 +3006,8 @@ en:
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
+            change_theme: "change theme"
+            delete_theme: "delete theme"
             change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"

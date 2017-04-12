@@ -1,0 +1,157 @@
+// Customise area
+.customize {
+  .admin-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .admin-footer {
+    margin-top: 20px;
+  }
+  .show-current-style {
+    margin-left: 20px;
+    float: left;
+    width: 70%;
+    h2 {
+      margin-bottom: 15px;
+    }
+    h3 {
+      margin-bottom: 10px;
+      margin-top: 30px;
+    }
+  }
+
+  .current-style.maximized {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100000;
+    background-color: white;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    .wrapper {
+      position: absolute;
+      top: 20px;
+      bottom: 10px;
+      left: 20px;
+      right: 20px;
+    }
+  }
+
+  .nav.nav-pills.fields {
+    margin-left: 10px;
+  }
+  .content-list, .current-style {
+    float: left;
+  }
+  .content-list ul {
+    margin-bottom: 10px;
+  }
+  .current-style {
+    width: 100%;
+
+    .admin-container {
+      margin: 0;
+    }
+
+    .nav.target {
+      margin-top: 15px;
+      .fa {
+        margin-left: 3px;
+      }
+      .fa-mobile {
+        font-size: 1.3em;
+      }
+    }
+
+    .toggle-maximize {
+      position: absolute;
+      right: -5px;
+    }
+
+    .ace-wrapper {
+      position: relative;
+      height: 600px;
+      width: 100%;
+    }
+
+    &.maximized {
+      .admin-container {
+        position: absolute;
+        bottom: 50px;
+        top: 80px;
+        width: 100%;
+      }
+      .admin-footer {
+        position: absolute;
+        bottom: 10px;
+      }
+      .ace-wrapper {
+        height: 100%;
+      }
+    }
+
+    .custom-ace-gutter {
+      width: 41px;
+      background-color: #ebebeb;
+      height: 15px;
+    }
+
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .status-actions {
+      float: right;
+      margin-top: 7px;
+      span {
+        margin-right: 10px;
+      }
+    }
+
+    .buttons {
+      float: left;
+      width: 200px;
+      .saving {
+        padding: 5px 0 0 0;
+        margin-left: 10px;
+        width: 80px;
+        color: $primary;
+      }
+    }
+  }
+  .color-scheme {
+    .controls {
+      span, button, a {
+        margin-right: 10px;
+      }
+    }
+  }
+  .colors {
+    thead th       { border: none; }
+    td.hex         { width: 160px; }
+    td.actions     { width: 200px; }
+    .hex-input     { width: 80px; margin-bottom: 0; }
+    .hex           { text-align: center; }
+    .description   { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+
+    .invalid .hex input {
+      background-color: white;
+      color: black;
+      border-color: $danger;
+    }
+  }
+
+  .status-message {
+    display: block;
+    font-size: 0.8em;
+    margin-top: 8px;
+  }
+}
+

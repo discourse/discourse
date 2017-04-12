@@ -56,8 +56,6 @@ Discourse::Application.routes.draw do
   get "site/basic-info" => 'site#basic_info'
   get "site/statistics" => 'site#statistics'
 
-  get "site_customizations/:key" => "site_customizations#show"
-
   get "srv/status" => "forums#status"
 
   get "wizard" => "wizard#index"
@@ -162,6 +160,7 @@ Discourse::Application.routes.draw do
 
     scope "/logs" do
       resources :staff_action_logs,     only: [:index]
+      get 'staff_action_logs/:id/diff' => 'staff_action_logs#diff'
       resources :screened_emails,       only: [:index, :destroy]
       resources :screened_ip_addresses, only: [:index, :create, :update, :destroy] do
         collection do
@@ -174,9 +173,9 @@ Discourse::Application.routes.draw do
     get "/logs" => "staff_action_logs#index"
 
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
-    get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
-    get "customize/css_html/:id/:section" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize/themes" => "themes#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
+    get "customize/colors/:id" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
     put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
@@ -186,11 +185,16 @@ Discourse::Application.routes.draw do
     post "flags/agree/:id" => "flags#agree"
     post "flags/disagree/:id" => "flags#disagree"
     post "flags/defer/:id" => "flags#defer"
-    resources :site_customizations, constraints: AdminConstraint.new
+
+    resources :themes, constraints: AdminConstraint.new
+    post "themes/import" => "themes#import"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
+
+      get 'themes/:id/:target/:field_name/edit' => 'themes#index'
+      get 'themes/:id' => 'themes#index'
 
       # They have periods in their URLs often:
       get 'site_texts'          => 'site_texts#index'
@@ -385,7 +389,8 @@ Discourse::Application.routes.draw do
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
-  get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[a-z0-9_]+/ }
+  get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
+  get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
 
   post "uploads" => "uploads#create"
 
@@ -707,6 +712,8 @@ Discourse::Application.routes.draw do
 
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
+
+  get "/themes/assets/:key" => "themes#assets"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 

@@ -114,28 +114,31 @@ class Wizard
       end
 
       @wizard.append_step('colors') do |step|
-        theme_id = ColorScheme.where(via_wizard: true).pluck(:theme_id)
-        theme_id = theme_id.present? ? theme_id[0] : 'default'
+        scheme_id = ColorScheme.where(via_wizard: true).pluck(:base_scheme_id)&.first
+        scheme_id ||= 'default'
 
-        themes = step.add_field(id: 'theme_id', type: 'dropdown', required: true, value: theme_id)
-        ColorScheme.themes.each {|t| themes.add_choice(t[:id], data: t) }
+        themes = step.add_field(id: 'base_scheme_id', type: 'dropdown', required: true, value: scheme_id)
+        ColorScheme.base_color_scheme_colors.each do |t|
+          with_hash = t[:colors].dup
+          with_hash.map{|k,v| with_hash[k] = "##{v}"}
+          themes.add_choice(t[:id], data: {colors: with_hash})
+        end
         step.add_field(id: 'theme_preview', type: 'component')
 
         step.on_update do |updater|
-          scheme_name = updater.fields[:theme_id]
+          scheme_name = updater.fields[:base_scheme_id]
 
-          theme = ColorScheme.themes.find {|s| s[:id] == scheme_name }
+          theme = ColorScheme.base_color_schemes.find{|s| s.base_scheme_id == scheme_name}
 
           colors = []
-          theme[:colors].each do |name, hex|
-            colors << {name: name, hex: hex[1..-1] }
+          theme.colors.each do |color|
+            colors << {name: color.name, hex: color.hex }
           end
 
           attrs = {
-            enabled: true,
             name: I18n.t("wizard.step.colors.fields.theme_id.choices.#{scheme_name}.label"),
             colors: colors,
-            theme_id: scheme_name
+            base_scheme_id: scheme_name
           }
 
           scheme = ColorScheme.where(via_wizard: true).first
@@ -148,6 +151,14 @@ class Wizard
             scheme = ColorScheme.new(attrs)
             scheme.save!
           end
+
+          default_theme = Theme.find_by(key: SiteSetting.default_theme_key)
+          unless default_theme
+            default_theme = Theme.new(name: "Default Theme", user_id: -1)
+          end
+          default_theme.color_scheme_id = scheme.id
+          default_theme.save!
+          SiteSetting.default_theme_key = default_theme.key
         end
       end
 

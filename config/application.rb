@@ -78,11 +78,12 @@ module Discourse
       path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
     end]
 
-    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
-                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
-                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
-                                 'pretty-text-bundle.js', 'wizard.css', 'wizard-application.js',
-                                 'wizard-vendor.js', 'plugin.js', 'plugin-third-party.js']
+    config.assets.precompile += %w{
+                                 vendor.js admin.js preload-store.js.es6
+                                 browser-update.js break_string.js ember_jquery.js
+                                 pretty-text-bundle.js wizard-application.js
+                                 wizard-vendor.js plugin.js plugin-third-party.js
+                                 }
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
@@ -168,6 +169,8 @@ module Discourse
     if GlobalSetting.relative_url_root.present?
       config.relative_url_root = GlobalSetting.relative_url_root
     end
+
+    require_dependency 'stylesheet/manager'
 
     config.after_initialize do
       # require common dependencies that are often required by plugins

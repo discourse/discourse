@@ -9,7 +9,6 @@ describe Admin::ColorSchemesController do
     let!(:user) { log_in(:admin) }
     let(:valid_params) { { color_scheme: {
         name: 'Such Design',
-        enabled: true,
         colors: [
           {name: 'primary', hex: 'FFBB00'},
           {name: 'secondary', hex: '888888'}

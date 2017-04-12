@@ -1,0 +1,53 @@
+<div class="color-scheme show-current-style">
+  <div class="admin-container">
+    <h1>{{text-field class="style-name" value=model.name}}</h1>
+
+    <div class="controls">
+      <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'admin.customize.save'}}</button>
+      <button {{action "copy" model}} class='btn'><i class="fa fa-copy"></i> {{i18n 'admin.customize.copy'}}</button>
+      <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n 'admin.customize.delete'}}</button>
+      <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
+    </div>
+
+    <br/>
+
+    <div class='admin-controls'>
+      <div class='search controls'>
+        <label>
+          {{input type="checkbox" checked=onlyOverridden}}
+          {{i18n 'admin.site_settings.show_overriden'}}
+        </label>
+      </div>
+    </div>
+
+    {{#if colors.length}}
+    <table class="table colors">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="hex">{{i18n 'admin.customize.color'}}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each colors as |c|}}
+          <tr class="{{if c.changed 'changed'}} {{if c.valid 'valid' 'invalid'}}">
+            <td class="name" title={{c.name}}>
+              <b>{{c.translatedName}}</b>
+              <br/>
+              <span class="description">{{c.description}}</span>
+            </td>
+            <td class="hex">{{color-input hexValue=c.hex brightnessValue=c.brightness valid=c.valid}}</td>
+            <td class="actions">
+              <button class="btn revert {{unless c.savedIsOverriden 'invisible'}}" {{action "revert" c}} title="{{i18n 'admin.customize.colors.revert_title'}}">{{i18n 'revert'}}</button>
+              <button class="btn undo {{unless c.changed 'invisible'}}" {{action "undo" c}} title="{{i18n 'admin.customize.colors.undo_title'}}">{{i18n 'undo'}}</button>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+      <p>{{i18n 'search.no_results'}}</p>
+    {{/if}}
+  </div>
+</div>

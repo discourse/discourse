@@ -5,7 +5,7 @@ describe StylesheetsController do
   it 'can survive cache miss' do
 
     StylesheetCache.destroy_all
-    builder = DiscourseStylesheets.new('desktop_rtl')
+    builder = Stylesheet::Manager.new('desktop_rtl', nil)
     builder.compile
     builder.ensure_digestless_file
 
@@ -26,7 +26,7 @@ describe StylesheetsController do
     expect(cached.digest).to eq digest
 
     # tmp folder destruction and cached
-    `rm #{DiscourseStylesheets.cache_fullpath}/*`
+    `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
     get :show, name: 'desktop_rtl'
     expect(response).to be_success
@@ -36,6 +36,33 @@ describe StylesheetsController do
 
     # there is an edge case which is ... disk and db cache is nuked, very unlikely to happen
 
+  end
+
+  it 'can lookup theme specific css' do
+    scheme = ColorScheme.create_from_base({name: "testing", colors: []})
+    theme = Theme.create!(name: "test", color_scheme_id: scheme.id, user_id: -1)
+
+    builder = Stylesheet::Manager.new(:desktop, theme.key)
+    builder.compile
+
+    `rm #{Stylesheet::Manager.cache_fullpath}/*`
+
+    get :show, name: builder.stylesheet_filename.sub(".css", "")
+    expect(response).to be_success
+
+    get :show, name: builder.stylesheet_filename_no_digest.sub(".css", "")
+    expect(response).to be_success
+
+    builder = Stylesheet::Manager.new(:desktop_theme, theme.key)
+    builder.compile
+
+    `rm #{Stylesheet::Manager.cache_fullpath}/*`
+
+    get :show, name: builder.stylesheet_filename.sub(".css", "")
+    expect(response).to be_success
+
+    get :show, name: builder.stylesheet_filename_no_digest.sub(".css", "")
+    expect(response).to be_success
   end
 
 end
