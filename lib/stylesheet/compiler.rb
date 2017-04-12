@@ -19,7 +19,7 @@ module Stylesheet
 
       if Importer.special_imports[asset.to_s]
         filename = "theme.scss"
-        file = "@import \"#{asset}\";"
+        file = "@import \"theme_variables\"; @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
         path = "#{ASSET_ROOT}/#{filename}"
