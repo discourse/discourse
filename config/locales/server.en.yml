@@ -2763,6 +2763,8 @@ en:
 
   color_schemes:
     base_theme_name: "Base"
+    default: "Light Scheme"
+    dark: "Dark Scheme"
 
   about: "About"
   guidelines: "Guidelines"

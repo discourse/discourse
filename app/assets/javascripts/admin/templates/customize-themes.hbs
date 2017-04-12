@@ -1,0 +1,24 @@
+{{#unless editingTheme}}
+<div class='content-list span6'>
+  <h3>{{i18n 'admin.customize.theme.long_title'}}</h3>
+  <ul>
+    {{#each model as |theme|}}
+      <li>
+        {{#link-to 'adminCustomizeThemes.show' theme replace=true}}
+          {{theme.name}}
+          {{#if theme.user_selectable}}
+            {{fa-icon "user"}}
+          {{/if}}
+          {{#if theme.default}}
+            {{fa-icon "asterisk"}}
+          {{/if}}
+        {{/link-to}}
+      </li>
+    {{/each}}
+  </ul>
+
+  {{d-button label="admin.customize.new" icon="plus" action="newTheme" class="btn-primary"}}
+  {{d-button action="importModal" icon="upload" label="admin.customize.import"}}
+</div>
+{{/unless}}
+{{outlet}}

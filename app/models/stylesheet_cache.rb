@@ -3,11 +3,11 @@ class StylesheetCache < ActiveRecord::Base
 
   MAX_TO_KEEP = 50
 
-  def self.add(target,digest,content)
+  def self.add(target,digest,content,source_map)
 
     return false if where(target: target, digest: digest).exists?
 
-    success = create(target: target, digest: digest, content: content)
+    success = create(target: target, digest: digest, content: content, source_map: source_map)
 
     count = StylesheetCache.count
     if count > MAX_TO_KEEP
@@ -39,6 +39,8 @@ end
 #  content    :text             not null
 #  created_at :datetime
 #  updated_at :datetime
+#  theme_id   :integer          default(-1), not null
+#  source_map :text
 #
 # Indexes
 #

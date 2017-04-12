@@ -25,7 +25,7 @@ const Wizard = Ember.Object.extend({
     const colorStep = this.get('steps').findBy('id', 'colors');
     if (!colorStep) { return; }
 
-    const themeChoice = colorStep.get('fieldsById.theme_id');
+    const themeChoice = colorStep.get('fieldsById.base_scheme_id');
     if (!themeChoice) { return; }
 
     const themeId = themeChoice.get('value');

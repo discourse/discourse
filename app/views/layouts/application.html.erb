@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <meta name="discourse_theme_key" content="<%= theme_key %>">
     <%= render partial: "layouts/head" %>
     <%= render partial: "common/special_font_face" %>
     <%= render partial: "common/discourse_stylesheet" %>
@@ -41,7 +42,7 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
-      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
+      <%= raw theme_lookup("head_tag") %>
     <%- end %>
 
     <%= render_google_universal_analytics_code %>
@@ -82,7 +83,7 @@
     </noscript>
 
     <%- unless customization_disabled? || loading_admin? %>
-      <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
+      <%= theme_lookup("header") %>
     <%- end %>
 
     <section id='main'>
@@ -118,7 +119,7 @@
     <%= render_google_analytics_code %>
 
     <%- unless customization_disabled? %>
-      <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
+      <%= raw theme_lookup("body_tag") %>
     <%- end %>
   </body>
 </html>

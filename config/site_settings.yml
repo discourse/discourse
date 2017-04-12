@@ -184,6 +184,8 @@ basic:
   enable_mobile_theme:
     client: true
     default: true
+  default_theme_key:
+    hidden: true
   relative_date_duration:
     client: true
     default: 30

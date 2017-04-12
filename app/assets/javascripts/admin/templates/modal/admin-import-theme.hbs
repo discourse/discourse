@@ -1,0 +1,27 @@
+{{#d-modal-body class='upload-selector' title="admin.customize.theme.import_theme"}}
+  <div class="radios">
+    {{radio-button name="upload" id="local" value="local" selection=selection}}
+    <label class="radio" for="local">{{i18n 'upload_selector.from_my_computer'}}</label>
+    {{#if local}}
+      <div class="inputs">
+        <input type="file" id="file-input" accept='.dcstyle.json'><br>
+        <span class="description">{{i18n 'admin.customize.theme.import_file_tip'}}</span>
+      </div>
+    {{/if}}
+  </div>
+  <div class="radios">
+    {{radio-button name="upload" id="remote" value="remote" selection=selection}}
+    <label class="radio" for="remote">{{i18n 'upload_selector.from_the_web'}}</label>
+    {{#if remote}}
+      <div class="inputs">
+        {{input value=uploadUrl placeholder="https://github.com/discourse/discourse/sample_theme"}}
+        <span class="description">{{i18n 'admin.customize.theme.import_web_tip'}}</span>
+      </div>
+    {{/if}}
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="importTheme" disabled=loading class='btn btn-primary' icon='upload' label='admin.customize.import'}}
+  <a href {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+</div>

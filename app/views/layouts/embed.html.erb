@@ -5,7 +5,7 @@
 
     <%= stylesheet_link_tag 'embed' %>
     <%- unless customization_disabled? %>
-      <%= SiteCustomization.custom_stylesheet(session[:preview_style], :embedded) %>
+      <%= Theme.custom_stylesheet(session[:preview_style], :embedded) %>
     <%- end %>
     <%= javascript_include_tag 'break_string' %>
 

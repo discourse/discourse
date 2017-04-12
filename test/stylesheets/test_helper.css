@@ -1,7 +1,5 @@
-/*
- *= require desktop
- *= require_tree .
-*/
+@import '/stylesheets/desktop.css';
+
 .modal-backdrop {
   display: none;
 }
