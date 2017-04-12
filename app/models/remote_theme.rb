@@ -44,7 +44,16 @@ class RemoteTheme < ActiveRecord::Base
 
     Theme.targets.keys.each do |target|
       Theme::ALLOWED_FIELDS.each do |field|
-        value = importer["#{target}/#{field=="scss"?"#{target}.scss":"#{field}.html"}"]
+        lookup =
+          if field == "scss"
+            "#{target}.scss"
+          elsif field == "embedded_scss" && target == :common
+            "embedded.scss"
+          else
+            "#{field}.html"
+          end
+
+        value = importer["#{target}/#{lookup}"]
         theme.set_field(target.to_sym, field, value)
       end
     end

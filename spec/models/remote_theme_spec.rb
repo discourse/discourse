@@ -28,6 +28,7 @@ describe RemoteTheme do
         "desktop/desktop.scss" => "body {color: red;}",
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
+        "common/embedded.scss" => "EMBED",
       )
     end
 
@@ -51,12 +52,13 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
 
-      expect(@theme.theme_fields.length).to eq(2)
+      expect(@theme.theme_fields.length).to eq(3)
 
       mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target}-#{f.name}", f.value]}.flatten]
 
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq("body {color: red;}")
+      expect(mapped["0-embedded_scss"]).to eq("EMBED")
 
       expect(remote.remote_updated_at).to eq(time)
 

@@ -4,7 +4,7 @@ require_dependency 'stylesheet/manager'
 
 class Theme < ActiveRecord::Base
 
-  ALLOWED_FIELDS = %w{scss head_tag header after_header body_tag footer}
+  ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
   @cache = DistributedCache.new('theme')
 
