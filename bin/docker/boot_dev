@@ -44,7 +44,7 @@ if [ "${initialize}" = "initialize" ]; then
 
     echo "Migrating database..."
     "${SCRIPTPATH}/rake" db:migrate
-    "RAILS_ENV=test ${SCRIPTPATH}/rake" db:migrate
+    RAILS_ENV=test "${SCRIPTPATH}/rake" db:migrate
 
     echo "Creating admin user..."
     "${SCRIPTPATH}/rake" admin:create
