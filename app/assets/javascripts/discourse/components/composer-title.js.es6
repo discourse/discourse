@@ -45,7 +45,7 @@ export default Ember.Component.extend({
 
   @observes('composer.replyLength')
   _clearFeaturedLink() {
-    if (this.get('watchForLink') && this.get('composer.replyLength') === 0) {
+    if (this.get('watchForLink') && this.bodyIsDefault()) {
       this.set('composer.featuredLink', null);
     }
   },
@@ -53,7 +53,7 @@ export default Ember.Component.extend({
   _checkForUrl() {
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
-    if (this.get('isAbsoluteUrl') && (this.get('composer.reply')||"").length === 0) {
+    if (this.get('isAbsoluteUrl') && this.bodyIsDefault()) {
 
       // only feature links to external sites
       if (this.get('composer.title').match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i"))) { return; }
@@ -88,9 +88,10 @@ export default Ember.Component.extend({
       this.set('composer.featuredLink', this.get('composer.title'));
 
       const $h = $(html),
-            heading = $h.find('h3').length > 0 ? $h.find('h3') : $h.find('h4');
+            heading = $h.find('h3').length > 0 ? $h.find('h3') : $h.find('h4'),
+            composer = this.get('composer');
 
-      this.set('composer.reply', this.get('composer.title'));
+      composer.appendText(this.get('composer.title'), null, {block: true});
 
       if (heading.length > 0 && heading.text().length > 0) {
         this.changeTitle(heading.text());
@@ -112,5 +113,10 @@ export default Ember.Component.extend({
   @computed('composer.title')
   isAbsoluteUrl() {
     return this.get('composer.titleLength') > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(this.get('composer.title'));
+  },
+
+  bodyIsDefault() {
+    const reply = this.get('composer.reply')||"";
+    return (reply.length === 0 || (reply === (this.get("composer.category.topic_template")||"")));
   }
 });
