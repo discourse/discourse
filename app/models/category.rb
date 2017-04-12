@@ -1,5 +1,4 @@
 require_dependency 'distributed_cache'
-require_dependency 'sass/discourse_stylesheets'
 
 class Category < ActiveRecord::Base
 
@@ -492,7 +491,7 @@ SQL
   end
 
   def publish_discourse_stylesheet
-    DiscourseStylesheets.cache.clear
+    Stylesheet::Manager.cache.clear
   end
 
   def index_search

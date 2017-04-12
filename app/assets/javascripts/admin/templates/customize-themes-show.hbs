@@ -1,0 +1,112 @@
+<div class="show-current-style">
+  <h2>
+    {{#if editingName}}
+      {{text-field value=model.name autofocus="true"}}
+      {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
+      {{d-button action="cancelEditingName" class="btn-small cancel-edit" icon="times"}}
+    {{else}}
+      {{model.name}} <a {{action "startEditingName"}}>{{fa-icon "pencil"}}</a>
+    {{/if}}
+  </h2>
+
+  {{#if model.remote_theme}}
+  <p>
+    <a href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}}</a>
+  </p>
+  {{#if model.remote_theme.license_url}}
+  <p>
+    <a href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{fa-icon "copyright"}}</a>
+  </p>
+  {{/if}}
+  {{/if}}
+
+
+  <p>
+    {{inline-edit-checkbox action="applyDefault" labelKey="admin.customize.theme.is_default" checked=model.default}}
+    {{inline-edit-checkbox action="applyUserSelectable" labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
+  </p>
+
+  {{#if showSchemes}}
+  <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
+  <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
+  <p>{{combo-box content=colorSchemes
+                 nameProperty="name"
+                 value=colorSchemeId
+                 valueAttribute="id"}}
+     {{#if colorSchemeChanged}}
+        {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
+        {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
+     {{/if}}
+  </p>
+  {{#link-to 'adminCustomize.colors' class="btn edit"}}{{i18n 'admin.customize.colors.edit'}}{{/link-to}}
+  {{/if}}
+
+  <h3>{{i18n "admin.customize.theme.css_html"}}</h3>
+  {{#if hasEditedFields}}
+
+  <p>{{i18n "admin.customize.theme.custom_sections"}}</p>
+  <ul>
+  {{#each editedDescriptions as |desc|}}
+  <li>{{desc}}</li>
+  {{/each}}
+  </ul>
+  {{else}}
+  <p>
+  {{i18n "admin.customize.theme.edit_css_html_help"}}
+  </p>
+  {{/if}}
+  <p>
+    {{#if model.remote_theme}}
+      {{#if model.remote_theme.commits_behind}}
+      {{#d-button action="updateToLatest" icon="download"}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
+      {{else}}
+      {{#d-button action="checkForThemeUpdates" icon="refresh"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
+      {{/if}}
+    {{/if}}
+    {{#d-button action="editTheme" class="btn edit"}}{{i18n 'admin.customize.theme.edit_css_html'}}{{/d-button}}
+    {{#if model.remote_theme}}
+    <span class='status-message'>
+      {{#if updatingRemote}}
+      {{i18n 'admin.customize.theme.updating'}}
+      {{else}}
+        {{#if model.remote_theme.commits_behind}}
+          {{i18n 'admin.customize.theme.commits_behind' count=model.remote_theme.commits_behind}}
+        {{else}}
+          {{i18n 'admin.customize.theme.up_to_date'}} {{format-date model.remote_theme.updated_at leaveAgo="true"}}
+        {{/if}}
+      {{/if}}
+    </span>
+    {{/if}}
+  </p>
+
+  {{#if availableChildThemes}}
+    <h3>{{i18n "admin.customize.theme.included_themes"}}</h3>
+    {{#unless model.childThemes.length}}
+    <p>
+      <label class='checkbox-label'>
+        {{input type="checkbox" checked=allowChildThemes}}
+        {{i18n "admin.customize.theme.child_themes_check"}}
+      </label>
+    </p>
+    {{else}}
+    <ul>
+      {{#each model.childThemes as |child|}}
+        <li>{{child.name}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit" icon="times"}}</li>
+      {{/each}}
+    </ul>
+    {{/unless}}
+    {{#if selectableChildThemes}}
+      <p>{{combo-box content=selectableChildThemes
+                   nameProperty="name"
+                   value=selectedChildThemeId
+                   valueAttribute="id"}}
+
+        {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
+      </p>
+    {{/if}}
+  {{/if}}
+
+  <a class="btn export" target="_blank" href={{downloadUrl}}>{{fa-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+
+  {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
+</div>

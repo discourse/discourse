@@ -129,46 +129,56 @@ describe StaffActionLogger do
     end
   end
 
-  describe "log_site_customization_change" do
-    let(:valid_params) { {name: 'Cool Theme', stylesheet: "body {\n  background-color: blue;\n}\n", header: "h1 {color: white;}"} }
+  describe "log_theme_change" do
 
     it "raises an error when params are invalid" do
-      expect { logger.log_site_customization_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_theme_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    let :theme do
+      Theme.new(name: 'bob', user_id: -1)
     end
 
     it "logs new site customizations" do
-      log_record = logger.log_site_customization_change(nil, valid_params)
-      expect(log_record.subject).to eq(valid_params[:name])
+
+      log_record = logger.log_theme_change(nil, theme)
+      expect(log_record.subject).to eq(theme.name)
       expect(log_record.previous_value).to eq(nil)
       expect(log_record.new_value).to be_present
+
       json = ::JSON.parse(log_record.new_value)
-      expect(json['stylesheet']).to be_present
-      expect(json['header']).to be_present
+      expect(json['name']).to eq(theme.name)
     end
 
     it "logs updated site customizations" do
-      existing = SiteCustomization.new(name: 'Banana', stylesheet: "body {color: yellow;}", header: "h1 {color: brown;}")
-      log_record = logger.log_site_customization_change(existing, valid_params)
+      old_json = ThemeSerializer.new(theme, root:false).to_json
+
+      theme.set_field(:common, :scss, "body{margin: 10px;}")
+
+      log_record = logger.log_theme_change(old_json, theme)
+
       expect(log_record.previous_value).to be_present
-      json = ::JSON.parse(log_record.previous_value)
-      expect(json['stylesheet']).to eq(existing.stylesheet)
-      expect(json['header']).to eq(existing.header)
+
+      json = ::JSON.parse(log_record.new_value)
+      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}"}])
     end
   end
 
-  describe "log_site_customization_destroy" do
+  describe "log_theme_destroy" do
     it "raises an error when params are invalid" do
-      expect { logger.log_site_customization_destroy(nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_theme_destroy(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "creates a new UserHistory record" do
-      site_customization = SiteCustomization.new(name: 'Banana', stylesheet: "body {color: yellow;}", header: "h1 {color: brown;}")
-      log_record = logger.log_site_customization_destroy(site_customization)
+      theme = Theme.new(name: 'Banana')
+      theme.set_field(:common, :scss, "body{margin: 10px;}")
+
+      log_record = logger.log_theme_destroy(theme)
       expect(log_record.previous_value).to be_present
       expect(log_record.new_value).to eq(nil)
       json = ::JSON.parse(log_record.previous_value)
-      expect(json['stylesheet']).to eq(site_customization.stylesheet)
-      expect(json['header']).to eq(site_customization.header)
+
+      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}"}])
     end
   end
 

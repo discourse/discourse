@@ -354,6 +354,15 @@
     </div>
     {{/if}}
 
+    {{#if userSelectableThemes}}
+    <div class="control-group theme">
+      <label class="control-label">{{i18n 'user.theme'}}</label>
+      <div class="controls">
+        {{combo-box content=userSelectableThemes value=selectedTheme}}
+      </div>
+    </div>
+    {{/if}}
+
     {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
     <div class="control-group save-button">

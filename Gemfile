@@ -93,8 +93,6 @@ gem 'thor', require: false
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
-gem 'sass'
-gem 'sass-rails'
 gem 'sidekiq'
 gem 'sidekiq-statistic'
 
@@ -181,3 +179,5 @@ gem 'memory_profiler', require: false, platform: :mri
 gem 'rmmseg-cpp', require: false
 
 gem 'logster'
+
+gem 'sassc', require: false

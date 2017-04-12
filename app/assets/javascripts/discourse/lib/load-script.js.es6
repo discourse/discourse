@@ -24,6 +24,10 @@ function loadWithTag(path, cb) {
   };
 }
 
+export function loadCSS(url) {
+  return loadScript(url, { css: true });
+}
+
 export default function loadScript(url, opts) {
 
   // TODO: Remove this once plugins have been updated not to use it:
@@ -47,8 +51,11 @@ export default function loadScript(url, opts) {
       delete _loading[url];
     });
 
-    const cb = function() {
+    const cb = function(data) {
       _loaded[url] = true;
+      if (opts && opts.css) {
+        $("head").append("<style>" + data + "</style>");
+      }
       done();
       resolve();
     };
@@ -66,7 +73,7 @@ export default function loadScript(url, opts) {
     if (opts.scriptTag) {
       loadWithTag(cdnUrl, cb);
     } else {
-      ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
+      ajax({url: cdnUrl, dataType: opts.css ? "text": "script", cache: true}).then(cb);
     }
   });
 }
