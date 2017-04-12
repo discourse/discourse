@@ -132,8 +132,6 @@ def concurrent?
 end
 
 task 'assets:precompile' => 'assets:precompile:before' do
-  # Run after assets:precompile
-  Rake::Task["assets:precompile:css"].invoke
 
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
@@ -183,6 +181,8 @@ task 'assets:precompile' => 'assets:precompile:before' do
       end
     end
 
+
+    Rake::Task["assets:precompile:css"].invoke
 
   end
 

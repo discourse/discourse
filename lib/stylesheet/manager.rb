@@ -71,13 +71,12 @@ class Stylesheet::Manager
   end
 
   def self.max_file_mtime
-    globs = ["#{Rails.root}/app/assets/stylesheets/**/*.*css"]
+    globs = ["#{Rails.root}/app/assets/stylesheets/**/*.*css",
+             "#{Rails.root}/app/assets/images/**/*.*"]
 
     Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
-      globs += [
-        "#{path}/plugin.rb",
-        "#{path}/**/*.*css",
-      ]
+      globs << "#{path}/plugin.rb"
+      globs << "#{path}/**/*.*css"
     end
 
     globs.map do |pattern|
