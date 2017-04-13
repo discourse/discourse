@@ -213,7 +213,7 @@ class Theme < ActiveRecord::Base
     field = theme_fields.find{|f| f.name==name && f.target == target_id}
     if field
       if value.blank?
-        field.destroy
+        theme_fields.delete field.destroy
       else
         if field.value != value
           field.value = value
