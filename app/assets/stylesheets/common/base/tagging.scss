@@ -74,10 +74,18 @@ $tag-color: scale-color($primary, $lightness: 40%);
     color: $tag-color;
   }
 
+  .extra-info-wrapper & {
+    color: $header-primary !important;
+  }
+
   &.box {
     background-color: scale-color($primary, $lightness: 90%);
     color: scale-color($primary, $lightness: 30%);
     padding: 2px 8px;
+    .extra-info-wrapper & {
+      background-color: scale-color($header-primary, $lightness: 90%);
+      color: scale-color($header-primary, $lightness: 30%);
+    }
   }
 
   &.simple, &.simple:visited, &.simple:hover {
