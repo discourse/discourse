@@ -31,7 +31,7 @@ module Stylesheet
       @paths.each do |watch|
         Thread.new do
           begin
-            Listen.to("#{root}/#{watch}") do |modified, added, _|
+            listener = Listen.to("#{root}/#{watch}", ignore: /xxxx/) do |modified, added, _|
               paths = [modified, added].flatten
               paths.compact!
               paths.map!{|long| long[(root.length+1)..-1]}
@@ -40,6 +40,8 @@ module Stylesheet
           rescue => e
             STDERR.puts "Failed to listen for CSS changes at: #{watch}\n#{e}"
           end
+          listener.start
+          sleep
         end
       end
     end
