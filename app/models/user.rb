@@ -162,7 +162,7 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
-    !User.where(username_lower: lower).exists? && !reserved_username?(lower)
+    !reserved_username?(lower) && !User.where(username_lower: lower).exists?
   end
 
   def self.reserved_username?(username)
