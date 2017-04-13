@@ -82,7 +82,6 @@ class Report
                                         .sum(:count)
   end
 
-
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
 
