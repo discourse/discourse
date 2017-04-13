@@ -137,14 +137,17 @@ class SessionController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
 
       if SiteSetting.verbose_sso_logging
-        Rails.logger.warn(<<-EOF)
-          Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}\n
-          #{e.record.errors.to_h}\n
-          \n
-          #{sso.diagnostics}
+        Rails.logger.warn(<<~EOF)
+        Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
+        #{e.record.errors.to_h}
+
+        Attributes:
+        #{e.record.attributes.slice(*SingleSignOn::ACCESSORS.map(&:to_s))}
+
+        SSO Diagnostics:
+        #{sso.diagnostics}
         EOF
       end
-
 
       text = nil
 
