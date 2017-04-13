@@ -122,7 +122,7 @@ end
 group :test, :development do
   gem 'rspec'
   gem 'mock_redis'
-  gem 'listen', '0.7.3', require: false
+  gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false

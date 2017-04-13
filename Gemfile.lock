@@ -137,7 +137,10 @@ GEM
     jwt (1.5.6)
     kgio (2.10.0)
     libv8 (5.3.332.38.5)
-    listen (0.7.3)
+    listen (3.1.5)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+      ruby_dep (~> 1.2)
     logster (1.2.7)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
@@ -312,6 +315,7 @@ GEM
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
+    ruby_dep (1.5.0)
     sanitize (4.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
@@ -409,7 +413,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language (~> 2.0.5)
   image_optim
-  listen (= 0.7.3)
+  listen
   logster
   lru_redux
   mail
