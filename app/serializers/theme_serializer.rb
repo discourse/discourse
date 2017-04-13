@@ -39,4 +39,8 @@ class ThemeSerializer < ChildThemeSerializer
   has_many :theme_fields, serializer: ThemeFieldSerializer, embed: :objects
   has_many :child_themes, serializer: ChildThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
+
+  def child_themes
+    object.child_themes.order(:name)
+  end
 end
