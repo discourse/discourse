@@ -162,9 +162,15 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
+    !User.where(username_lower: lower).exists? && !reserved_username?(lower)
+  end
 
-    User.where(username_lower: lower).blank? &&
-      SiteSetting.reserved_usernames.split("|").all? { |reserved| !lower.match('^' + Regexp.escape(reserved).gsub('\*', '.*') + '$') }
+  def self.reserved_username?(username)
+    lower = username.downcase
+
+    SiteSetting.reserved_usernames.split("|").any? do |reserved|
+      !!lower.match("^#{Regexp.escape(reserved).gsub('\*', '.*')}$")
+    end
   end
 
   def self.plugin_staff_user_custom_fields

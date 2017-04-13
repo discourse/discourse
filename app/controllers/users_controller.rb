@@ -307,7 +307,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+    if User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
 

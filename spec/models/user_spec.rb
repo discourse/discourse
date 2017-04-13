@@ -459,7 +459,7 @@ describe User do
     end
   end
 
-  context '.username_available?' do
+  describe '.username_available?' do
     it "returns true for a username that is available" do
       expect(User.username_available?('BruceWayne')).to eq(true)
     end
@@ -471,25 +471,33 @@ describe User do
     it 'returns false when a username is reserved' do
       SiteSetting.reserved_usernames = 'test|donkey'
 
-      expect(User.username_available?('donkey')).to eq(false)
-      expect(User.username_available?('DonKey')).to eq(false)
-      expect(User.username_available?('test')).to eq(false)
+      expect(User.username_available?('tESt')).to eq(false)
+    end
+  end
+
+  describe '.reserved_username?' do
+    it 'returns true when a username is reserved' do
+      SiteSetting.reserved_usernames = 'test|donkey'
+
+      expect(User.reserved_username?('donkey')).to eq(true)
+      expect(User.reserved_username?('DonKey')).to eq(true)
+      expect(User.reserved_username?('test')).to eq(true)
     end
 
     it 'should not allow usernames matched against an expession' do
       SiteSetting.reserved_usernames = 'test)|*admin*|foo*|*bar|abc.def'
 
-      expect(User.username_available?('test')).to eq(true)
-      expect(User.username_available?('abc9def')).to eq(true)
+      expect(User.reserved_username?('test')).to eq(false)
+      expect(User.reserved_username?('abc9def')).to eq(false)
 
-      expect(User.username_available?('admin')).to eq(false)
-      expect(User.username_available?('foo')).to eq(false)
-      expect(User.username_available?('bar')).to eq(false)
+      expect(User.reserved_username?('admin')).to eq(true)
+      expect(User.reserved_username?('foo')).to eq(true)
+      expect(User.reserved_username?('bar')).to eq(true)
 
-      expect(User.username_available?('admi')).to eq(true)
-      expect(User.username_available?('bar.foo')).to eq(true)
-      expect(User.username_available?('foo.bar')).to eq(false)
-      expect(User.username_available?('baz.bar')).to eq(false)
+      expect(User.reserved_username?('admi')).to eq(false)
+      expect(User.reserved_username?('bar.foo')).to eq(false)
+      expect(User.reserved_username?('foo.bar')).to eq(true)
+      expect(User.reserved_username?('baz.bar')).to eq(true)
     end
   end
 
