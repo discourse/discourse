@@ -35,7 +35,7 @@ export default Ember.Controller.extend({
 
   @computed("fieldName")
   activeSectionMode(fieldName) {
-    return fieldName && fieldName.indexOf("scss") > -1 ? "css" : "html";
+    return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
   @computed("fieldName", "currentTargetName", "model")
