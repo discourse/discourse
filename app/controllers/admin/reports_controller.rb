@@ -9,7 +9,7 @@ class Admin::ReportsController < Admin::AdminController
 
     start_date = params[:start_date].present? ? Time.parse(params[:start_date]) : 30.days.ago
     end_date = params[:end_date].present? ? Time.parse(params[:end_date]) : start_date + 30.days
-    
+
     if params.has_key?(:category_id) && params[:category_id].to_i > 0
       category_id = params[:category_id].to_i
     else

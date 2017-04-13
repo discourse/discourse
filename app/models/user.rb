@@ -740,7 +740,7 @@ class User < ActiveRecord::Base
     (tl_badge + other_badges).take(limit)
   end
 
-  def self.count_by_signup_date(start_date, end_date, group_id=nil)
+  def self.count_by_signup_date(start_date, end_date, group_id = nil)
     result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
 
     if group_id
