@@ -8,7 +8,6 @@ export default Ember.Route.extend({
 
   setupController(controller, model) {
     this._super(controller, model);
-    // TODO ColorScheme to model
     controller.set("editingTheme", false);
   },
 
