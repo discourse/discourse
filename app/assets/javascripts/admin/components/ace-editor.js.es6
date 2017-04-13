@@ -7,6 +7,13 @@ export default Ember.Component.extend({
   _editor: null,
   _skipContentChangeEvent: null,
 
+  @observes('editorId')
+  editorIdChanged() {
+    if (this.get('autofocus')) {
+      this.send('focus');
+    }
+  },
+
   @observes('content')
   contentChanged() {
     if (this._editor && !this._skipContentChangeEvent) {
@@ -63,7 +70,20 @@ export default Ember.Component.extend({
           // xxx: don't run during qunit tests
           this.appEvents.on('ace:resize', self, self.resize);
         }
+
+        if (this.get("autofocus")) {
+          this.send("focus");
+        }
       });
     });
+  },
+
+  actions: {
+    focus() {
+      if (this._editor) {
+        this._editor.focus();
+        this._editor.navigateFileEnd();
+      }
+    }
   }
 });

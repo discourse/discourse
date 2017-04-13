@@ -17,7 +17,6 @@ export default Ember.Route.extend({
     };
   },
 
-
   setupController(controller, wrapper) {
     controller.set("model", wrapper.model);
     controller.setTargetName(wrapper.target || "common");
