@@ -69,7 +69,7 @@ describe Admin::ThemesController do
       end
 
       it 'updates a theme' do
-
+        #focus
         theme = Theme.new(name: 'my name', user_id: -1)
         theme.set_field(:common, :scss, '.body{color: black;}')
         theme.save
@@ -80,7 +80,10 @@ describe Admin::ThemesController do
             theme: {
           child_theme_ids: [child_theme.id],
           name: 'my test name',
-          theme_fields: [name: 'scss', target: 'common', value: 'body{color: red;}']
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'scss', target: 'desktop', value: 'body{color: blue;}' }
+          ]
         }
         expect(response).to be_success
 
@@ -88,8 +91,8 @@ describe Admin::ThemesController do
 
         fields = json["theme"]["theme_fields"]
 
+        expect(fields.first["value"]).to eq('body{color: blue;}')
         expect(fields.length).to eq(1)
-        expect(fields.first["value"]).to eq('body{color: red;}')
 
         expect(json["theme"]["child_themes"].length).to eq(1)
 
