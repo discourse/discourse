@@ -38,6 +38,11 @@ export default Ember.Controller.extend({
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
+  @computed("fieldName", "currentTargetName")
+  editorId(fieldName, currentTarget) {
+    return fieldName + "|" + currentTarget;
+  },
+
   @computed("fieldName", "currentTargetName", "model")
   activeSection: {
     get(fieldName, target, model) {
