@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 
-    <%= stylesheet_link_tag 'embed' %>
+    <%= discourse_stylesheet_link_tag 'embed', theme_key: nil %>
     <%- unless customization_disabled? %>
       <%= Theme.custom_stylesheet(session[:preview_style], :embedded) %>
     <%- end %>
