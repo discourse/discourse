@@ -106,7 +106,7 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      let edit = ()=>this.transitionToRoute('adminCustomizeThemes.edit', {model: this.get('model')});
+      let edit = ()=>this.transitionToRoute('adminCustomizeThemes.edit', this.get('model.id'), 'common', 'scss');
 
       if (this.get("model.remote_theme")) {
       bootbox.confirm(I18n.t("admin.customize.theme.edit_confirm"), result => {
