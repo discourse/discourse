@@ -226,6 +226,11 @@ RSpec.describe TopicStatusUpdate, type: :model do
 
       Fabricate(:topic_status_update)
 
+      Fabricate(:topic_status_update,
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour
+      ).topic.trash!
+
       expect { described_class.ensure_consistency! }
         .to change { Jobs::ToggleTopicClosed.jobs.count }.by(2)
 
