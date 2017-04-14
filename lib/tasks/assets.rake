@@ -49,7 +49,7 @@ task 'assets:precompile:css' => 'environment' do
       # Heroku precompiles assets before db migration, so tables may not exist.
       # css will get precompiled during first request instead in that case.
 
-      if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
+      if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         Stylesheet::Manager.precompile_css
       end
