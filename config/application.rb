@@ -90,6 +90,18 @@ module Discourse
       config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
     end
 
+    # out of the box sprockets 3 grabs loose files that are hanging in assets,
+    # the exclusion list does not include hbs so you double compile all this stuff
+    initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
+      app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
+      start_path = ::Rails.root.join("app/assets").to_s
+      exclude = ['.hbs', '.js', '.css', '']
+      app.config.assets.precompile << lambda do |logical_path, filename|
+        filename.start_with?(start_path) &&
+        !exclude.include?(File.extname(logical_path))
+      end
+    end
+
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'UTC'
