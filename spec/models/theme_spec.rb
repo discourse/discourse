@@ -137,5 +137,28 @@ HTML
     end
   end
 
+  it 'correctly caches theme keys' do
+    theme = Theme.create!(name: "bob", user_id: -1)
+
+    expect(Theme.theme_keys).to eq(Set.new([theme.key]))
+    expect(Theme.user_theme_keys).to eq(Set.new([]))
+
+    theme.user_selectable = true
+    theme.save
+
+    expect(Theme.user_theme_keys).to eq(Set.new([theme.key]))
+
+    theme.user_selectable = false
+    theme.save
+
+    theme.set_default!
+    expect(Theme.user_theme_keys).to eq(Set.new([theme.key]))
+
+    theme.destroy
+
+    expect(Theme.theme_keys).to eq(Set.new([]))
+    expect(Theme.user_theme_keys).to eq(Set.new([]))
+  end
+
 
 end

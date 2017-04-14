@@ -13,7 +13,7 @@ export default RestrictedUserRoute.extend({
     controller.setProperties({
       model: user,
       newNameInput: user.get('name'),
-      selectedTheme: $.cookie('preview_style') || currentThemeKey()
+      selectedTheme: $.cookie('theme_key') || currentThemeKey()
     });
   },
 

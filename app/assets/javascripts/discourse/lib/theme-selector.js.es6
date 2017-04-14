@@ -13,9 +13,9 @@ export function currentThemeKey() {
 
 export function selectDefaultTheme(key) {
   if (key) {
-    $.cookie('preview_style', key, {path: '/', expires: 9999});
+    $.cookie('theme_key', key, {path: '/', expires: 9999});
   } else {
-    $.cookie('preview_style', null, {path: '/', expires: 1});
+    $.cookie('theme_key', null, {path: '/', expires: 1});
   }
 }
 

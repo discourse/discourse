@@ -33,12 +33,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :handle_theme
   before_filter :set_current_user_for_logs
   before_filter :clear_notifications
   before_filter :set_locale
   before_filter :set_mobile_view
-  before_filter :inject_preview_style
-  before_filter :disable_customization
   before_filter :block_if_readonly_mode
   before_filter :authorize_mini_profiler
   before_filter :preload_json
@@ -243,28 +242,40 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  def inject_preview_style
-    style = request['preview-style']
+  NO_CUSTOM = "no_custom".freeze
+  NO_PLUGINS = "no_plugins".freeze
+  ONLY_OFFICIAL = "only_official".freeze
+  SAFE_MODE = "safe_mode".freeze
 
-    if style.nil?
-      session[:preview_style] = cookies[:preview_style]
-    else
-      cookies.delete(:preview_style)
-
-      if style.blank? || style == 'default'
-        session[:preview_style] = nil
-      else
-        session[:preview_style] = style
-        if request['sticky']
-          cookies[:preview_style] = style
-        end
-      end
+  def resolve_safe_mode
+    safe_mode = params[SAFE_MODE]
+    if safe_mode
+      request.env[NO_CUSTOM] = true if safe_mode.include?(NO_CUSTOM)
+      request.env[NO_PLUGINS] = true if safe_mode.include?(NO_PLUGINS)
+      request.env[ONLY_OFFICIAL] = true if safe_mode.include?(ONLY_OFFICIAL)
     end
-
   end
 
-  def disable_customization
-    session[:disable_customization] = params[:customization] == "0" if params.has_key?(:customization)
+  def handle_theme
+
+    return if request.xhr? || request.format.json?
+    return if request.method != "GET"
+
+    resolve_safe_mode
+    return if request.env[NO_CUSTOM]
+
+    theme_key = flash[:preview_theme_key] || cookies[:theme_key] || session[:theme_key]
+
+    if theme_key && !guardian.allow_theme?(theme_key)
+      theme_key = nil
+      cookies[:theme_key] = nil
+      session[:theme_key] = nil
+    end
+
+    theme_key ||= SiteSetting.default_theme_key
+    theme_key = nil if theme_key.blank?
+
+    @theme_key = request.env[:resolved_theme_key] = theme_key
   end
 
   def guardian
@@ -410,10 +421,14 @@ class ApplicationController < ActionController::Base
 
     def custom_html_json
       target = view_context.mobile_view? ? :mobile : :desktop
-      data = {
-        top: Theme.lookup_field(session[:preview_style], target, "after_header"),
-        footer: Theme.lookup_field(session[:preview_style], target, "footer")
-      }
+      data = if @theme_key
+               {
+                top: Theme.lookup_field(@theme_key, target, "after_header"),
+                footer: Theme.lookup_field(@theme_key, target, "footer")
+               }
+             else
+                {}
+             end
 
       if DiscoursePluginRegistry.custom_html
         data.merge! DiscoursePluginRegistry.custom_html

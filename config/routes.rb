@@ -188,6 +188,7 @@ Discourse::Application.routes.draw do
 
     resources :themes, constraints: AdminConstraint.new
     post "themes/import" => "themes#import"
+    get "themes/:id/preview" => "themes#preview"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new

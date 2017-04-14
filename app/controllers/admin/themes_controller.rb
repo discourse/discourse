@@ -1,6 +1,12 @@
 class Admin::ThemesController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:show]
+  skip_before_filter :check_xhr, only: [:show, :preview]
+
+  def preview
+    @theme = Theme.find(params[:id])
+
+    redirect_to path("/"), flash: {preview_theme_key: @theme.key}
+  end
 
   def import
 

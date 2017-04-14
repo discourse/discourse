@@ -45,6 +45,24 @@ class Theme < ActiveRecord::Base
     theme.notify_theme_change
   end, on: :update
 
+  def self.theme_keys
+    if keys = @cache["theme_keys"]
+      return keys
+    end
+    @cache["theme_keys"] = Set.new(Theme.pluck(:key))
+  end
+
+  def self.user_theme_keys
+    if keys = @cache["user_theme_keys"]
+      return keys
+    end
+    @cache["theme_keys"] = Set.new(
+      Theme
+      .where('user_selectable OR key = ?', SiteSetting.default_theme_key)
+      .pluck(:key)
+    )
+  end
+
   def self.expire_site_cache!
     Site.clear_anon_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")

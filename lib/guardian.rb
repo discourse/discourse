@@ -297,6 +297,14 @@ class Guardian
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
+  def allow_theme?(theme_key)
+    if is_staff?
+      Theme.theme_keys.include?(theme_key)
+    else
+      Theme.theme_user_keys.include?(theme_key)
+    end
+  end
+
 
   private
 
