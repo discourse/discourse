@@ -25,6 +25,8 @@ export default Ember.Controller.extend({
     return descriptions.reject(d=>Em.isBlank(d));
   },
 
+  previewUrl: url('model.id', '/admin/themes/%@/preview'),
+
   @computed("colorSchemeId", "model.color_scheme_id")
   colorSchemeChanged(colorSchemeId, existingId) {
     colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId);

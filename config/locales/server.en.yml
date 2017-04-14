@@ -3361,7 +3361,7 @@ en:
   safe_mode:
     title: "Enter safe mode"
     description: "Safe mode allows you to test your site without loading plugins or site customizations."
-    no_customizations: "Disable all site customizations"
+    no_customizations: "Disable current theme"
     only_official: "Disable unofficial plugins"
     no_plugins: "Disable all plugins"
     enter: "Enter Safe Mode"

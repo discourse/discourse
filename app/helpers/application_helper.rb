@@ -248,32 +248,23 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
-  NO_CUSTOM = "no_custom".freeze
-  NO_PLUGINS = "no_plugins".freeze
-  ONLY_OFFICIAL = "only_official".freeze
-  SAFE_MODE = "safe_mode".freeze
-
   def customization_disabled?
-    safe_mode = params[SAFE_MODE]
-    session[:disable_customization] || (safe_mode && safe_mode.include?(NO_CUSTOM))
+    request.env[ApplicationController::NO_CUSTOM]
   end
 
   def allow_plugins?
-    safe_mode = params[SAFE_MODE]
-    !(safe_mode && safe_mode.include?(NO_PLUGINS))
+    !request.env[ApplicationController::NO_PLUGINS]
   end
 
   def allow_third_party_plugins?
-    safe_mode = params[SAFE_MODE]
-    !(safe_mode && (safe_mode.include?(NO_PLUGINS) || safe_mode.include?(ONLY_OFFICIAL)))
+    allow_plugins? && !request.env[ApplicationController::ONLY_OFFICIAL]
   end
 
   def normalized_safe_mode
-    mode_string = params["safe_mode"]
     safe_mode = nil
-    (safe_mode ||= []) << NO_CUSTOM if mode_string.include?(NO_CUSTOM)
-    (safe_mode ||= []) << NO_PLUGINS if mode_string.include?(NO_PLUGINS)
-    (safe_mode ||= []) << ONLY_OFFICIAL if mode_string.include?(ONLY_OFFICIAL)
+    (safe_mode ||= []) << ApplicationController::NO_CUSTOM if customization_disabled?
+    (safe_mode ||= []) << ApplicationController::NO_PLUGINS if !allow_plugins?
+    (safe_mode ||= []) << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
     if safe_mode
       safe_mode.join(",").html_safe
     end
@@ -321,7 +312,7 @@ module ApplicationHelper
     if customization_disabled?
       nil
     else
-      session[:preview_style] || SiteSetting.default_theme_key
+      request.env[:resolved_theme_key]
     end
   end
 
