@@ -250,9 +250,9 @@ class ApplicationController < ActionController::Base
   def resolve_safe_mode
     safe_mode = params[SAFE_MODE]
     if safe_mode
-      request.env[NO_CUSTOM] = true if safe_mode.include?(NO_CUSTOM)
-      request.env[NO_PLUGINS] = true if safe_mode.include?(NO_PLUGINS)
-      request.env[ONLY_OFFICIAL] = true if safe_mode.include?(ONLY_OFFICIAL)
+      request.env[NO_CUSTOM] = !!safe_mode.include?(NO_CUSTOM)
+      request.env[NO_PLUGINS] = !!safe_mode.include?(NO_PLUGINS)
+      request.env[ONLY_OFFICIAL] = !!safe_mode.include?(ONLY_OFFICIAL)
     end
   end
 
