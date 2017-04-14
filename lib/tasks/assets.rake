@@ -187,9 +187,11 @@ end
 Rake::Task["assets:precompile"].enhance do
   class Sprockets::Manifest
     def reload
+      @filename = find_directory_manifest(@directory)
       @data = json_decode(File.read(@filename))
     end
   end
+
   # cause on boot we loaded a blank manifest,
   # we need to know where all the assets are to precompile CSS
   # cause CSS uses asset_path
