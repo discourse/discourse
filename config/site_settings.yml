@@ -377,6 +377,7 @@ users:
   invites_per_page:
     client: true
     default: 40
+    min: 1
   delete_user_max_post_age:
     client: true
     default: 60
