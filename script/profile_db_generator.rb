@@ -44,7 +44,7 @@ end
 
 def create_admin(seq)
   User.new.tap { |admin|
-    admin.email = "admin@localhost#{seq}"
+    admin.email = "admin@localhost#{seq}.fake"
     admin.username = "admin#{seq}"
     admin.password = "password"
     admin.save
