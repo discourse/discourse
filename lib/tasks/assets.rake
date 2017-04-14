@@ -180,10 +180,19 @@ task 'assets:precompile' => 'assets:precompile:before' do
         STDERR.puts e.backtrace
       end
     end
-
-
-    Rake::Task["assets:precompile:css"].invoke
-
   end
 
+end
+
+Rake::Task["assets:precompile"].enhance do
+  class Sprockets::Manifest
+    def reload
+      @data = json_decode(File.read(@filename))
+    end
+  end
+  # cause on boot we loaded a blank manifest,
+  # we need to know where all the assets are to precompile CSS
+  # cause CSS uses asset_path
+  Rails.application.assets_manifest.reload
+  Rake::Task["assets:precompile:css"].invoke
 end
