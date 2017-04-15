@@ -89,7 +89,6 @@ describe InviteRedeemer do
 
     it "can set password" do
       inviter = invite.invited_by
-      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
       user = InviteRedeemer.new(invite, username, name, password).redeem
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
