@@ -160,14 +160,14 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mock_redis (0.15.4)
-    moneta (0.8.1)
+    moneta (1.0.0)
     msgpack (1.0.2)
     multi_json (1.12.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mustache (1.0.5)
     netrc (0.11.0)
-    nokogiri (1.6.8.1)
+    nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.10)
       nokogiri
@@ -209,11 +209,11 @@ GEM
       rack
     onebox (1.8.4)
       fast_blank (>= 1.0.0)
-      htmlentities (~> 4.3.4)
-      moneta (~> 0.8)
+      htmlentities (~> 4.3)
+      moneta (~> 1.0)
       multi_json (~> 1.11)
       mustache
-      nokogiri (~> 1.6.6)
+      nokogiri (~> 1.7)
       sanitize
     openid-redis-store (0.0.2)
       redis
