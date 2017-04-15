@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :uploads
-  has_many :warnings
+  has_many :user_warnings
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
@@ -276,7 +276,7 @@ class User < ActiveRecord::Base
   def approve(approved_by, send_mail=true)
     self.approved = true
 
-    if approved_by.is_a?(Fixnum)
+    if approved_by.is_a?(Integer)
       self.approved_by_id = approved_by
     else
       self.approved_by = approved_by
@@ -614,7 +614,7 @@ class User < ActiveRecord::Base
   end
 
   def warnings_received_count
-    warnings.count
+    user_warnings.count
   end
 
   def flags_received_count
@@ -887,10 +887,6 @@ class User < ActiveRecord::Base
               .where(disagreed_at: nil)
               .where(post_action_type_id: PostActionType.notify_flag_type_ids)
               .count
-  end
-
-  def number_of_warnings
-    self.warnings.count
   end
 
   def number_of_suspensions
