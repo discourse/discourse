@@ -47,7 +47,7 @@ en:
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
 
   purge_reason: "Automatically deleted as abandoned, deactivated account"
@@ -1911,7 +1911,7 @@ en:
 
     usage_tips:
       text_body_template: |
-        For a few quick tips on getting started as a new user, [check out this blog post](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        For a few quick tips on getting started as a new user, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         As you participate here, we’ll get to know you, and temporary new user limitations will be lifted. Over time you’ll gain [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
 
