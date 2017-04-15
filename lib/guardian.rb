@@ -301,7 +301,7 @@ class Guardian
     if is_staff?
       Theme.theme_keys.include?(theme_key)
     else
-      Theme.theme_user_keys.include?(theme_key)
+      Theme.user_theme_keys.include?(theme_key)
     end
   end
 
