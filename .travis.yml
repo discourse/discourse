@@ -24,6 +24,7 @@ matrix:
   fast_finish: true
 
 rvm:
+  - 2.4.1
   - 2.3.3
 
 services:

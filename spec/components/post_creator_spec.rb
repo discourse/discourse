@@ -255,6 +255,8 @@ describe PostCreator do
       it 'creates a post with featured link' do
         SiteSetting.topic_featured_link_enabled = true
         SiteSetting.min_first_post_length = 100
+        SiteSetting.queue_jobs = true
+
         post = creator_with_featured_link.create
         expect(post.topic.featured_link).to eq('http://www.discourse.org')
         expect(post.valid?).to eq(true)
@@ -585,7 +587,7 @@ describe PostCreator do
 
     it 'acts correctly' do
       # It's not a warning
-      expect(post.topic.warning).to be_blank
+      expect(post.topic.user_warning).to be_blank
 
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
@@ -657,11 +659,11 @@ describe PostCreator do
 
       topic = post.topic
       expect(topic).to be_present
-      expect(topic.warning).to be_present
+      expect(topic.user_warning).to be_present
       expect(topic.subtype).to eq(TopicSubtype.moderator_warning)
-      expect(topic.warning.user).to eq(target_user1)
-      expect(topic.warning.created_by).to eq(user)
-      expect(target_user1.warnings.count).to eq(1)
+      expect(topic.user_warning.user).to eq(target_user1)
+      expect(topic.user_warning.created_by).to eq(user)
+      expect(target_user1.user_warnings.count).to eq(1)
     end
   end
 

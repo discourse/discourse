@@ -8,7 +8,7 @@ class CategoryFeaturedUser < ActiveRecord::Base
 
   def self.feature_users_in(category_or_category_id)
     category_id =
-      if category_or_category_id.is_a?(Fixnum)
+      if category_or_category_id.is_a?(Integer)
         category_or_category_id
       else
         category_or_category_id.id
