@@ -64,7 +64,7 @@ class TopicCreator
     rollback_with!(topic, :too_many_users) if @added_users.size != 1
 
     # Create a warning record
-    Warning.create(topic: topic, user: @added_users.first, created_by: @user)
+    UserWarning.create(topic: topic, user: @added_users.first, created_by: @user)
   end
 
   def watch_topic(topic)

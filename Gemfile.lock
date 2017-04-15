@@ -37,6 +37,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.5.1)
+      public_suffix (~> 2.0, >= 2.0.2)
     annotate (2.7.1)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 12.0)
@@ -69,6 +71,8 @@ GEM
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.0)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     crass (1.0.2)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
@@ -113,6 +117,7 @@ GEM
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     guess_html_encoding (0.0.11)
+    hashdiff (0.3.2)
     hashie (3.5.5)
     highline (1.7.8)
     hiredis (0.6.1)
@@ -228,6 +233,7 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
+    public_suffix (2.0.5)
     puma (3.6.0)
     r2 (0.2.6)
     rack (1.6.5)
@@ -316,6 +322,7 @@ GEM
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby_dep (1.5.0)
+    safe_yaml (1.0.4)
     sanitize (4.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
@@ -377,6 +384,10 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.10.0)
+    webmock (3.0.1)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
 
 PLATFORMS
   ruby
@@ -477,6 +488,7 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+  webmock
 
 BUNDLED WITH
    1.14.6

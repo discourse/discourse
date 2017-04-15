@@ -75,12 +75,12 @@ describe UploadsController do
       end
 
       it 'is successful with synchronous api' do
-        SiteSetting.stubs(:authorized_extensions).returns("*")
+        SiteSetting.authorized_extensions = "*"
         controller.stubs(:is_api?).returns(true)
 
         Jobs.expects(:enqueue).with(:create_thumbnails, anything)
 
-        FakeWeb.register_uri(:get, "http://example.com/image.png", :body => File.read('spec/fixtures/images/logo.png'))
+        stub_request(:get, "http://example.com/image.png").to_return(body: File.read('spec/fixtures/images/logo.png'))
 
         xhr :post, :create, url: 'http://example.com/image.png', type: "avatar", synchronous: true
 
