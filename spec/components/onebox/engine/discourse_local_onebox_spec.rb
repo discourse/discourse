@@ -71,7 +71,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
     it "returns nil if file type is not audio or video" do
       url = "#{Discourse.base_url}#{path}.pdf"
-      FakeWeb.register_uri(:get, url, body: "")
+      stub_request(:get, url).to_return(body: '')
       expect(Onebox.preview(url).to_s).to eq("")
     end
 

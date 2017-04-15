@@ -1155,6 +1155,7 @@ describe User do
   describe "refresh_avatar" do
     it "enqueues the update_gravatar job when automatically downloading gravatars" do
       SiteSetting.automatically_download_gravatars = true
+      SiteSetting.queue_jobs = true
 
       user = Fabricate(:user)
 
