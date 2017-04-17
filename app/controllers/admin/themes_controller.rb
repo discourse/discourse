@@ -101,25 +101,32 @@ class Admin::ThemesController < Admin::AdminController
 
     set_fields
 
+    save_remote = false
     if params[:theme][:remote_check]
       @theme.remote_theme.update_remote_version
-      @theme.remote_theme.save!
+      save_remote = true
     end
 
     if params[:theme][:remote_update]
       @theme.remote_theme.update_from_remote
-      @theme.remote_theme.save!
+      save_remote = true
     end
 
     respond_to do |format|
       if @theme.save
+
+        @theme.remote_theme.save! if save_remote
 
         update_default_theme
 
         log_theme_change(original_json, @theme)
         format.json { render json: @theme, status: :created}
       else
-        format.json { render json: @theme.errors, status: :unprocessable_entity }
+        format.json {
+
+          error = @theme.errors[:color_scheme] ? I18n.t("themes.bad_color_scheme") : I18n.t("themes.other_error")
+          render json: {errors: [ error ]}, status: :unprocessable_entity
+        }
       end
     end
   end

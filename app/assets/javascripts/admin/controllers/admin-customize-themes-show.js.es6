@@ -1,5 +1,6 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { url } from 'discourse/lib/computed';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend({
 
@@ -79,16 +80,20 @@ export default Ember.Controller.extend({
 
     updateToLatest() {
       this.set("updatingRemote", true);
-      this.get("model").updateToLatest().finally(()=>{
-        this.set("updatingRemote", false);
-      });
+      this.get("model").updateToLatest()
+        .catch(popupAjaxError)
+        .finally(()=>{
+          this.set("updatingRemote", false);
+        });
     },
 
     checkForThemeUpdates() {
       this.set("updatingRemote", true);
-      this.get("model").checkForUpdates().finally(()=>{
-        this.set("updatingRemote", false);
-      });
+      this.get("model").checkForUpdates()
+        .catch(popupAjaxError)
+        .finally(()=>{
+          this.set("updatingRemote", false);
+        });
     },
 
     cancelChangeScheme() {

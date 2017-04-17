@@ -82,7 +82,7 @@ class RemoteTheme < ActiveRecord::Base
     return unless hex
 
     override = hex.downcase
-    if override !~ /[0-9a-f]{6}/
+    if override !~ /^[0-9a-f]{6}$/
       override = nil
     end
     override
