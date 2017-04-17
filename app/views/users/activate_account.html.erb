@@ -10,8 +10,8 @@
 </div>
 
 <%- content_for(:no_ember_head) do %>
-  <%= script "ember_jquery" %>
-  <%= script "vendor" %>
+  <%= preload_script "ember_jquery" %>
+  <%= preload_script "vendor" %>
   <%= render_google_universal_analytics_code %>
 <%- end %>
 
