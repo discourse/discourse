@@ -434,6 +434,10 @@ class ApplicationController < ActionController::Base
         data.merge! DiscoursePluginRegistry.custom_html
       end
 
+      DiscoursePluginRegistry.html_builders.each do |name, blk|
+        data[name] = blk.call
+      end
+
       MultiJson.dump(data)
     end
 

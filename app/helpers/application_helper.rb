@@ -316,6 +316,11 @@ module ApplicationHelper
     end
   end
 
+  def build_plugin_html(name)
+    return "" unless allow_plugins?
+    DiscoursePluginRegistry.build_html(name) || ""
+  end
+
   def theme_lookup(name)
     lookup = Theme.lookup_field(theme_key, mobile_view? ? :mobile : :desktop, name)
     lookup.html_safe if lookup
