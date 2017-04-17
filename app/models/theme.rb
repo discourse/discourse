@@ -12,6 +12,7 @@ class Theme < ActiveRecord::Base
   has_many :theme_fields, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
   has_many :child_themes, through: :child_theme_relation, source: :child_theme
+  has_many :color_schemes
   belongs_to :remote_theme
 
   before_create do
@@ -19,7 +20,13 @@ class Theme < ActiveRecord::Base
     true
   end
 
+  def notify_color_change(color)
+    changed_colors << color
+  end
+
   after_save do
+    changed_colors.each(&:save!)
+    changed_colors.clear
     changed_fields.each(&:save!)
     changed_fields.clear
 
@@ -220,6 +227,10 @@ class Theme < ActiveRecord::Base
 
   def changed_fields
     @changed_fields ||= []
+  end
+
+  def changed_colors
+    @changed_colors ||= []
   end
 
   def set_field(target, name, value)

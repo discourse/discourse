@@ -36,6 +36,7 @@ class RemoteTheme < ActiveRecord::Base
   def update_from_remote(importer=nil)
     return unless remote_url
     cleanup = false
+
     unless importer
       cleanup = true
       importer = GitImporter.new(remote_url)
@@ -61,11 +62,12 @@ class RemoteTheme < ActiveRecord::Base
     theme_info = JSON.parse(importer["about.json"])
     self.license_url ||= theme_info["license_url"]
     self.about_url ||= theme_info["about_url"]
-
     self.remote_updated_at = Time.zone.now
     self.remote_version = importer.version
     self.local_version = importer.version
     self.commits_behind = 0
+
+    update_theme_color_schemes(theme, theme_info["color_schemes"])
 
     self
   ensure
@@ -73,6 +75,39 @@ class RemoteTheme < ActiveRecord::Base
       importer.cleanup! if cleanup
     rescue => e
       Rails.logger.warn("Failed cleanup remote git #{e}")
+    end
+  end
+
+  def normalize_override(hex)
+    return unless hex
+
+    override = hex.downcase
+    if override !~ /[0-9a-f]{6}/
+      override = nil
+    end
+    override
+  end
+
+  def update_theme_color_schemes(theme, schemes)
+    return if schemes.blank?
+
+    schemes.each do |name, colors|
+      existing = theme.color_schemes.find_by(name: name)
+      if existing
+        existing.colors.each do |c|
+          override = normalize_override(colors[c.name])
+          if override && c.hex != override
+            c.hex = override
+            theme.notify_color_change(c)
+          end
+        end
+      else
+        scheme = theme.color_schemes.build(name: name)
+        ColorScheme.base.colors_hashes.each do |color|
+          override = normalize_override(colors[color[:name]])
+          scheme.color_scheme_colors << ColorSchemeColor.new(name: color[:name], hex: override || color[:hex])
+        end
+      end
     end
   end
 end

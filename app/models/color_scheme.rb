@@ -52,6 +52,7 @@ class ColorScheme < ActiveRecord::Base
   after_save :publish_discourse_stylesheet
   after_save :dump_hex_cache
   after_destroy :dump_hex_cache
+  belongs_to :theme
 
   validates_associated :color_scheme_colors
 
