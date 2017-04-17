@@ -45,17 +45,17 @@ module ApplicationHelper
     end
   end
 
-  def script(*args)
+  def preload_script(script)
+    path = asset_path("#{script}.js")
+
     if  GlobalSetting.cdn_url &&
         GlobalSetting.cdn_url.start_with?("https") &&
         ENV["COMPRESS_BROTLI"] == "1" &&
         request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
-      tags = javascript_include_tag(*args)
-      tags.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
-      tags.html_safe
-    else
-      javascript_include_tag(*args)
+        path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
+"<link rel='preload' href='#{path}' as='script'/>
+<script src='#{path}'></script>".html_safe
   end
 
   def discourse_csrf_tags

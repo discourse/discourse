@@ -10,6 +10,7 @@
 
 <% font_domain = "#{request.protocol}#{request.host_with_port}&2" %>
 
+<link rel="preload" href="<%=asset_path "fontawesome-webfont.woff2"%>" as="font" type="font/woff2" crossorigin />
 <style>
   @font-face {
     font-family: 'FontAwesome';
