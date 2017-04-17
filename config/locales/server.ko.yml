@@ -208,7 +208,6 @@ ko:
               invalid: "유효한 색상이 아닙니다."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>프로필이 현재 비어있습니다. <a href='/users/%{username_lower}/preferences/about-me'>지금 작성하시겠습니까?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
   vip_category_name: "라운지"
   vip_category_description: "회원등 3 혹은 그 이상의 회원만 입장가능한 카테고리"
@@ -881,7 +880,6 @@ ko:
     incorrect_username_email_or_password: "계정 아이디, 이메일 또는 패스워드가 다릅니다."
     wait_approval: "가입해 주셔서 감사합니다. 곧 활성화 메일이 도착할 것 입니다."
     active: "당신의 계정이 활성화되었습니다."
-    activate_email: "<p>거의 끝났습니다. 인증 이메일을 <b>%{email}</b> 주소로 보냈습니다. 설명을 따라서 인증을 마쳐주시면 됩니다.</p><p>메일이 오지 않을 경우, 스팸폴더를 확인하거나 로그인 시도를 해서 다른 인증메일을 보내도록 할 수 있습니다..</p>"
     not_activated: "당신은 아직 로그인 할 수 없습니다. 계정 활성화 이메일을 보냈습니다. 계정을 활성화하기 위해 지침을 따라주세요."
     not_allowed_from_ip_address: "이 IP 주소에서는 %{username} 으로 로그인 할 수 없습니다."
     admin_not_allowed_from_ip_address: "그 IP로는 관리자로 로그인할 수 없습니다."
@@ -930,7 +928,6 @@ ko:
     disagreed: "알려줘서 감사합니다. 살펴보겠습니다."
     deferred: "알려줘서 감사합니다. 살펴보겠습니다."
     deferred_and_deleted: "알려줘서 감사합니다. 해당 글을 삭제했습니다."
-  temporarily_closed_due_to_flags: "이 글타래는 많은 신고가 들어와 임시로 닫힌 상태입니다."
   system_messages:
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
@@ -1000,61 +997,8 @@ ko:
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       click_here: "클릭"
-    forgot_password:
-      text_body_template: |
-        [%{site_name}](%{base_url}) 사이트에서 누군가 당신의 패스워드를 재설정 요청하였습니다.
-
-        아래 링크를 클릭하여 패스워드를 재설정하세요:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        [%{site_name}](%{base_url})의 회원님 계정에 비밀번호를 추가 요청을 받았습니다. 이 이메일이 사용된 다른 온라인 서비스 (Google, Facebook, etc)를 이용해 로그인할 수 있습니다.
-
-        이 요청을 하지 않았다면, 이 메일은 무시해도 안전합니다.
-
-        비밀번호 선택 페이지:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        [%{site_name}](%{base_url})의 회원님 계정에 로그인 요청을 받았습니다.
-
-        이 요청을 하지 않았다면, 이 메일은 무시해도 안전합니다.
-
-        로그인 페이지:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        %{site_name}에 새 계정이 만들어 졌습니다.
-
-        비밀번호 설정 페이지:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "당신은 %{site_name} 가입이 승인되었습니다!"
-      text_body_template: |
-        %{site_name}에 오신 것을 환영합니다!
-
-        스태프가 %{site_name} 계정을 승인했습니다.
-
-        새 계정을 활성화해서 시작하려면 아래를 클릭:
-        %{base_url}/users/activate-account/%{email_token}
-
-        링크가 안 될 경우 복사 붙여넣기로 주소에 넣어 들어가주세요.
-
-        %{new_user_tips}
-
-        우리는 [문화시민의 커뮤니티 활동 지침](%{base_url}/guidelines)을 항상 따릅니다.
-
-        커뮤니티를 즐겨주세요!
-
-        (새 사용자로서 할말이 있으시면 이글에 답변함으로써 [스태프](%{base_url}/about)들에게 이야기해주세요.)
-    signup:
-      text_body_template: |
-        %{site_name}에 오신것을 환영합니다!
-
-        사용자 계정 인증을 위해 아래 링크를 클릭해주세요:
-        %{base_url}/users/activate-account/%{email_token}
-
-        만약 위의 링크를 클릭 할 수 없으면 위 주소를 복사하여 웹브라우저에 붙여 넣으세요.
   page_not_found:
     popular_topics: "인기"
     recent_topics: "최근"

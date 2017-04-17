@@ -237,12 +237,8 @@ tr_TR:
           attributes:
             hex:
               invalid: "geçerli bir renk değil"
-        post_reply:
-          base:
-            different_topic: "Gönderi ve cevap aynı konuya ait olmak zorunda."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Profilinizdeki Hakkımda bölümü boş, <a href='/users/%{username_lower}/preferences/about-me'>doldurmak ister misiniz?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} profilinde Hakkımda kısmına henüz bir şey girmedi</div>"
   vip_category_name: "Lobi"
   vip_category_description: "Güven seviyesi 3 ve üzerinde olan üyelere özel kategori."
@@ -1117,7 +1113,6 @@ tr_TR:
     incorrect_username_email_or_password: "Yanlış kullanıcı adı, e-posta ya da parola"
     wait_approval: "Kayıt olduğunuz için teşekkürler. Hesabınız onaylandığında sizi haberdar edeceğiz."
     active: "Hesabınız etkinleştirildi ve kullanıma hazır."
-    activate_email: "<p>Az kaldı! <b>%{email}</b> adresine bir etkinleştirme e-postası gönderdik. Hesabınızı etkinleştirmek için lütfen e-postadaki yönlendirmeleri takip edin.</p><p>Eğer e-postayı almadıysanız, gereksiz klasörünüzü kontrol edin ya da başka bir etkinleştirme e-postası daha göndermek için tekrar giriş yapmayı deneyin.</p>"
     not_activated: "Henüz giriş yapamazsınız. Size bir etkinleştirme e-postası gönderdik. Hesabınızı etkinleştirmek için lütfen e-postadaki yönlendirmeleri takip edin."
     not_allowed_from_ip_address: "Bu IP adresinden %{username} kullanıcı adı ile giriş yapamazsınız."
     admin_not_allowed_from_ip_address: "Bu IP adresinden admin olarak giriş yapamazsınız."
@@ -1169,13 +1164,6 @@ tr_TR:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmaya davet etti"
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
-    text_body_template: |
-      %{site_name} topluluğuna olan davetiyeni kabul ettiğin için teşekkür ederiz -- hoş geldin!
-
-      Şimdi bir parola seçmek için şu bağlantıya tıklayın:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Eğer yukarıdaki bağlantının süresi dolmuşsa e-posta adresinizle giriş yaparken "Parolamı unuttum" bağlantısına tıklayınız.)
   new_version_mailer:
     text_body_template: |
       Yuhaaa, [Discourse](http://www.discourse.org) için yeni bir sürüm hazır!
@@ -1215,7 +1203,6 @@ tr_TR:
     disagreed: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
     deferred: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
     deferred_and_deleted: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Gönderiyi kaldırdık."
-  temporarily_closed_due_to_flags: "Bu konu topluluk tarafından çok fazla bildirildiği için geçici olarak kapatılmıştır."
   system_messages:
     post_hidden:
       subject_template: "Gönderi topluluk bildirimleri tarafından gizlendi"
@@ -1519,47 +1506,6 @@ tr_TR:
       topic_updates: "Konu güncellemeleri"
       view_this_topic: "Bu konuyu görüntüle"
       back_to_top: "Başa dön"
-    forgot_password:
-      text_body_template: |
-        [%{site_name}](%{base_url}) sitesinde, biri parolanızın sıfırlanması için talepte bulundu.
-
-        Eğer talepte bulunan siz değilseniz, bu e-postayı görmezden gelebilirsiniz.
-
-        Yeni parola oluşturmak için aşağıdaki bağlantıya tıklayın:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Biri, [%{site_name}](%{base_url}) sitesindeki hesabınıza parola ekleme talebinde bulundu. Dilerseniz, bu doğrulanmış e-posta hesabınızla eşleşen, desteklediğiniz herhangi bir çevrimiçi servisi (Google, Facebook, vs.) kullanarak da giriş yapabilirsiniz.
-
-        Eğer istekte bulunan siz değilseniz, bu e-postayı görmezden gelebilirsiniz.
-
-        Parola oluşturmak için aşağıdaki bağlantıya tıklayın:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        [%{site_name}](%{base_url}) sitesinde, biri hesabınıza giriş yapmaya talebinde bulundu.
-
-        Eğer talepte bulunan siz değilseniz, bu e-postayı görmezden gelebilirsiniz.
-
-        Giriş yapmak için aşağıdaki bağlantıya tıklayın:
-        %{base_url}/users/password-reset/%{email_token}
-    account_created:
-      text_body_template: |
-        %{site_name} sitesinde sizin için yeni bir hesap oluşturuldu.
-
-        Yeni hesabınıza ait bir parola oluşturmak için aşağıdaki bağlantıya tıklayın:
-        %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      text_body_template: |
-        %{site_name} adresindeki yeni e-posta adresinizi aşağıdaki bağlantıya tıklayarak doğrulayın
-        %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      text_body_template: |
-        E-posta adresinizi değiştirmeden önce, şu anki e-posta adresinizin kontrolünün sizde olduğunu doğrulamamız gerekiyor. Bu adımı tamamlandıktan sonra, yeni e-posta adresinizi doğrulayacaksınız.
-
-        %{site_name} sitesindeki şu anki e-posta adresinizi aşağıdaki bağlantıya tıklayıp doğrulayın:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       text_body_template: |
         Bu %{site_name} forumunda kullandığınız e-posta adresinizin değiştiğini
@@ -1571,30 +1517,6 @@ tr_TR:
         %{new_email}
     signup_after_approval:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
-      text_body_template: |
-        %{site_name} topluluğuna hoş geldiniz!
-
-        %{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı.
-
-        Aşağıdaki linke tıklayın ve yeni hesabınızı aktive edin: %{base_url}/users/activate-account/%{email_token}
-
-        Eğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz.
-
-        %{new_user_tips}
-
-        Biz her zaman [topluluk yönergelerimize](%{base_url}/guidelines) inanıyoruz.
-
-        Ziyaretinizin keyfini çıkarın!
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu iletiyi cevaplamanız yeterli.)
-    signup:
-      text_body_template: |
-        %{site_name} topluluğuna hoş geldiniz!
-
-        Hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıya tıklayın:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Eğer yukarıdaki bağlantı tıklanabilir değilse, bağlantıyı kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyin.
   page_not_found:
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"
@@ -1859,14 +1781,12 @@ tr_TR:
         Bu rozet gönderinize ilk defa bir emoji eklediğiniz için verilmiştir :thumbsup:.
     first_mention:
       name: İlk Bahsetme
-      description: 'Gönderide bir kullanıcıdan bahsetme '
       long_description: Bu rozet ilk defa gönderinizde başka bir kullanıcıdan bahsettiğiniz için verilmiştir. Her bahsetme bahsi geçen kullanıcıya bildirim gitmesini sağlar, böylece bu kullanıcı sizin gönderinizden haberdar olur. Sadece bahsi geçen kullanıcı adına @ gerekir.
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi
     first_reply_by_email:
       name: Mail İle İlk Cevap
-      description: 'Gönderiye mail yoluyla cevap verme '
       long_description: |
         Bu rozet ilk defa bir gönderiye mail yoluyla cevap verdiğiniz için verilmiştir :e-mail:.
   admin_login:

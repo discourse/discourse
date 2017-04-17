@@ -919,7 +919,6 @@ sq:
     incorrect_username_email_or_password: "Incorrect username, email or password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
-    activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
@@ -953,14 +952,6 @@ sq:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
-    text_body_template: |+
-      Faleminderit që pranuat ftesën tek %{site_name} -- mirësevini!
-
-      Klikoni këtë lidhje për të zgjedhur një fjalëkalim tani:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Nëse lidhjes së mësipërme i ka mbaruar afati, zgjidhni "Kam harruar fjalëkalimin" kur të hyni me adresën tuaj email.)
-
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
@@ -972,7 +963,6 @@ sq:
     disagreed: "Thanks for letting us know. We're looking into it."
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
-  temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga komuniteti."
   system_messages:
     post_hidden:
       subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"
@@ -1214,50 +1204,6 @@ sq:
       topic_updates: "Tema të azhornuara"
       view_this_topic: "Shiko këtë temë"
       back_to_top: "Kthehu sipër"
-    forgot_password:
-      text_body_template: |
-        Dikush kërkoi për të rivendosur fjalëkalimin tuaj tek [%{site_name}](%{base_url}).
-
-        Nëse nuk ishit ju, mund të mos e merrni parasysh këtë email pa asnjë problem.
-
-        Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim të ri:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Dikush kërkoi për të shtuar një fjalëkalim tek [%{site_name}](%{base_url}). Nga ana tjetër, mund të hyni në sistem duke përdorur një nga shërbimet online që mbështeten (Google, Facebook, etj) i cili është i lidhur me këtë adresë email.
-
-        Nëse nuk e bëtë ju këtë kërkesë, mund të mos e merrni parasysh këtë email pa asnjë problem.
-
-        Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        Somebody asked to login to your account on [%{site_name}](%{base_url}).
-
-        If you did not make this request, you can safely ignore this email.
-
-        Click the following link to login:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        Një llogari e re u krijua për ju tek %{site_name}
-
-        Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim për llogarinë tuaj të re:
-        %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      text_body_template: |
-        Konfirmo adresën e re email për faqen %{site_name} duke klikuar në linkun më poshtë:
-
-        %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      text_body_template: |
-        Përpara se sa ta ndryshoni adresën tuaj email, nevojitet të konfirmoni që jeni i
-        zoti i saj. Pasi ta përmbushni këtë hap, ne
-        do të miratojmë adresën tuaj të re email.
-
-        Konfirmoni adresën tuaj të tanishme email për %{site_name} duke klikuar lidhjen e mëtejshme:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për
@@ -1268,31 +1214,6 @@ sq:
         %{new_email}
     signup_after_approval:
       subject_template: "Jeni aprovuar tek %{site_name}!"
-      text_body_template: |
-        Mirësevini tek %{site_name}!
-
-        Një anëtar stafi miratoi llogarinë tuaj në %{site_name}.
-
-        Klikoni lidhjen e mëtejshme për të konfirmuar dhe aktivizuar llogarinë tuaj të re:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Nëse lidhja e mësipërme nuk punon, mundohuni ta kopjoni dhe hapni atë në shfletuesin tuaj web.
-
-        %{new_user_tips}
-
-        Ne besojmë në [sjelljen e qytetëruar të komunitetit](%{base_url}/guidelines) kurdoherë.
-
-        Shijojeni qëndrimin tuaj!
-
-        (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
-    signup:
-      text_body_template: |
-        Mirësevini tek %{site_name}!
-
-        Klikoni lidhjen e mëtejshme dhe aktivizoni llogarinë tuaj të re:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Nëse lidhja e mësipërme nuk punon, mundohuni ta kopjoni dhe hapni atë në shfletuesin tuaj web.
   page_not_found:
     popular_topics: "Popullore"
     recent_topics: "Më të fundit"
@@ -1689,7 +1610,6 @@ sq:
         Kjo stemë jepet kur ju shtoni një Emoji në postimin tuaj për herë të parë :thumbsup:. Emoji ju lejon të përçoni emocionet në postimet tuaja, prej kënaqësisë :smiley: tek mërzitja :anguished: e deri tek inati :angry: dhe çdo gjë midis :sunglasses:. Thjesht filloni të shkruani : (dy pika) ose shtypni butonin Emoji në shiritin e veglave të fushës së shkrimit për të zgjedhur mes qindra llojesh :ok_hand:
     first_mention:
       name: Përmendja e parë
-      description: Përmendi një përdorues në një postim
       long_description: Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt.
     first_onebox:
       name: Onebox i Parë
@@ -1697,7 +1617,6 @@ sq:
       long_description: Kjo stemë jepet herën e parë kur postoni një lidhje në një rresht të vetëm, i cili shpaloset automatikisht në një onebox me një përmbledhje të shkurtër të lidhjes, një titull, dhe (kur është e mundur) një imazh.
     first_reply_by_email:
       name: Përgjigja e parë me email
-      description: Iu përgjigj një postimi me email
       long_description: |
         Kjo stemë jepet herën e parë kur i përgjigjeni një postimi nëpërmjet email-it :e-mail:
   admin_login:

@@ -318,16 +318,12 @@ ar:
           attributes:
             hex:
               invalid: "ليس لونا صالحا"
-        post_reply:
-          base:
-            different_topic: "المشاركة والرد لابد ان يكونا في نفس الموضوع"
         web_hook:
           attributes:
             payload_url:
               invalid: "رابط غير صالح. يجب أن يحتوي الرابط على http://  او https://. المساحة الفارغة غير مسموح بها."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'> معلوماتك الشخصية لم يتم إضافتها بعد <a href='/users/%{username_lower}/preferences/about-me'> هل تريد إضافتها الآن؟</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} لم يدخلوا أي شيء في مجال المعلومات عني لملفهم بعد</div>"
   vip_category_name: "استراحة"
   vip_category_description: "فئة خاصة للمستخدمين ذوي مستوى الثقة 3 فأعلى."
@@ -615,6 +611,9 @@ ar:
     welcome_to: "مرحبا بك في %{site_name}!"
     approval_required: "يجب على المشرف أن يقبل حسابك الجديد قبل أن تستطيع الدخول لهذا المنتدى. سوف تتلقى بريد إلكتروني عندما يتم قبول حسابك."
     missing_session: "لا نستظيع تحديد اذا كان حسابك قد أنشئ. رجاء التأكد من أن (الكوكيز) بالمتصفح  الذى تستخدمة منشطة."
+    admin_confirm:
+      description: "أمتأكّد من جعل <b>%{target_username}</b> مديرًا؟"
+      complete: "المستخدم <b>%{target_username}</b> مدير الآن."
   post_action_types:
     off_topic:
       title: 'خارج الموضوع'
@@ -693,9 +692,9 @@ ar:
     topic_description: "لإعادة الاشتراك لل %{link}، استخدم ادارة التنبيهات في أسفل او يمين الموضوع."
   unsubscribe:
     title: "إلغاء الإشتراك"
-    stop_watching_topic: "توقف عن مراقبة هذا الموضوع،  %{link}"
-    mute_topic: "الغاء جميع التنبيهات لهذا الموضوع،  %{link}"
-    unwatch_category: "توقف عن مراقبة جميع المواضيع فى %{category}"
+    stop_watching_topic: "ألغِ مراقبة هذا الموضوع، %{link}"
+    mute_topic: "اكتم كلّ إشعارات هذا الموضوع، %{link}"
+    unwatch_category: "ألغِ مراقبة كلّ المواضيع في %{category}"
     mailing_list_mode: "الغاء وضعية قائمة المراسلات"
     disable_digest_emails: "توقف عن ارسال الملخصات بالبريد الالكترونى"
     all: "لا ترسل إليّ أيّ بريد من %{sitename}"
@@ -708,7 +707,7 @@ ar:
     read: "قراءة"
     read_write: "قراءة/كتابة"
     description: "\"%{application_name}\": يطلب الصلاحيات التالية لحسابك"
-    no_trust_level: "عذرا، ليس لديك درجة الموثوقية الكافية لدخول واجهة برمجة التطبيق الخاصة بالمستخدم."
+    no_trust_level: "نأسف، لست بمستوى الثّقة الكافي للوصول إلى واجهة برمجة التّطبيقات (API) للمستخدمين"
     generic_error: "نأسف، لا نستطيع إصدار مفاتيح API للمستخدمين؛ عطّل مدير الموقع هذه الميزة"
     scopes:
       message_bus: "تحديثات فورية"
@@ -718,16 +717,16 @@ ar:
       write: "كتابة الكلّ"
   reports:
     visits:
-      title: "زيارات العضو"
-      xaxis: "يوم"
-      yaxis: "عدد الزيارات"
+      title: "زيارات المستخدم"
+      xaxis: "اليوم"
+      yaxis: "مرّات الزّيارة"
     signups:
-      title: "أعضاء جدد"
-      xaxis: "يوم"
-      yaxis: "عدد الأعضاء الجدد"
+      title: "المستخدمون الجدد"
+      xaxis: "اليوم"
+      yaxis: "عدد المستخدمين الجدد"
     profile_views:
       title: "مشاهدات الحساب الشخصي للعضو"
-      xaxis: "يوم"
+      xaxis: "اليوم"
       yaxis: "عدد مشاهدات الحساب الشخصي العضو"
     topics:
       title: "المواضيع"
@@ -739,16 +738,16 @@ ar:
       yaxis: "عدد المشاركات الجديدة"
     likes:
       title: "اﻹعجابات"
-      xaxis: "يوم"
+      xaxis: "اليوم"
       yaxis: "عدد اﻹعجابات الجديدة"
     flags:
       title: "الأبلاغ"
       xaxis: "يوم"
       yaxis: "عدد الإبلاغات"
     bookmarks:
-      title: "المفضلة"
-      xaxis: "يوم"
-      yaxis: "عدد العلامات المرجعية الجديدة."
+      title: "العلامات"
+      xaxis: "اليوم"
+      yaxis: "عدد العلامات الجديدة"
     starred:
       title: "متألق"
       xaxis: "يوم"
@@ -756,9 +755,9 @@ ar:
     users_by_trust_level:
       title: "الأعضاء في مستوى الثقة"
       xaxis: "مستوى الثقة"
-      yaxis: "عدد اﻷعضاء"
+      yaxis: "عدد المستخدمين"
     emails:
-      title: "رسائل البريد الإلكتروني أرسلت"
+      title: "رسائل البريد المرسلَة"
       xaxis: "يوم"
       yaxis: "عدد رسائل البريد الإلكتروني"
     user_to_user_private_messages:
@@ -889,7 +888,7 @@ ar:
     search_tokenize_chinese_japanese_korean: "ارغام الباحث على تجميع احرف اللغات الصينية واليابانية والكورية حتى على المواقع الغير معدة لتلك اللغات."
     allow_uncategorized_topics: "اسمح بتصميم النقاشات من غير فئات.  تحذير: اذا كان هناك نقاشات غير مصنفه،  يجب عليك تصنيفها قبل اغلاق هذا "
     allow_duplicate_topic_titles: "اسمح بالمواضيع المماثلة والعناوين المكررة."
-    unique_posts_mins: "كمية الدقائق التي يمكن للعضو قبلها إنشاء مشاركة مع نفس المحتوى مجددا"
+    unique_posts_mins: "عدد الدّقائق التي يمكن للمستخدم بعدها نشر مشاركة فيها نفس المحتوى ثانيةً"
     educate_until_posts: "عندما يبدا المستخدم كتابه منشورهم الاول.، اظهر انبثاق  لوحه تعليمات المستخدم الجديد في المؤلف"
     title: "اسم هذا الموقع، يُستخدم في وسم title."
     site_description: "صِف هذا الموقع بجملة واحدة، يُستخدم في وسم meta description."
@@ -902,12 +901,12 @@ ar:
     download_remote_images_max_days_old: "لا تقم بتحميل الصور من مواقع اخرى للمشاركات اﻷقدم من عدد س من اﻷيام."
     disabled_image_download_domains: "الصور البعيدة لن يتم تنزيلها من هذا المجال. قائمة Pipe-delimited."
     editing_grace_period: "خلال (n) ثواني بعد نشر المشاركة ، التعديل لن يقوم بانشاء نسخة جديدة في السجل الخاص بالتعديل ."
-    post_edit_time_limit: "الكاتب  يتستطيع تعديل و مسح مشاركته لعده (n) دقائق بعد النشر.  اضبطه للعدد0 للابد"
+    post_edit_time_limit: "يمكن للكاتب تحرير مشاركته أو حذفها لمدّة (n) دقيقة بعد نشرها. اضبطه إلى 0 ليكون للأبد."
     edit_history_visible_to_public: "اسمح لاي شخص ان يرى النسخ السابقه للمنشورات المعدله.  عندما يتم تعطيلها.،فقط اعضاء فريق العمل يمكنهم رؤيتها "
     delete_removed_posts_after: "المشاركات التي تم إزالتها عن طريق الكتاب سيتم مسحها  اوتوماتيكياً بعد(n)  ساعات ة.  اذا تم ضبطها علي 0،  سيتم مسح المشاركه فوراً"
     max_image_width: "أقصى عرض للصور المصغرة في مشاركة"
     max_image_height: "أقصى ارتفاع للصور المصغرة في مشاركة"
-    fixed_category_positions: "إذا تم التحقق, ستتمكن من ترتيب الفئات على شكل المطلوب. وإذا لم يتم التحقق, ستسرد الفئات على حسب الفعالية."
+    fixed_category_positions: "إن أُشّر، فسيمكنك ترتيب الفئات بترتيب ثابت. إن لم يؤشّر، فستُسرد الفئات بترتيب نشاطها."
     fixed_category_positions_on_create: "إذا تحققت، سيحفظ ترتيب الفئة في موضوع الحوار المنشأ (يتطلب fixed_category_positions)."
     add_rel_nofollow_to_user_content: "أضف rel nofollow لجميع محتوى المستخدم المتقدم، باستثناء الروابط الداخلية (بما في ذلك المجالات الأصل). إذا غيرت هذا، يجب عليك عمل rebake لكل المشاركات بـ: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "قائمه النطاقات حيت لا اتباع لا يجب ان تضاف للروابط. tld.com سوف يقوم تلقائيا  بالسماح  sub.tld.com كذلك  مثل  الاصغر , يجب عليك اضافه النطاق الاعلى مستوي الخاص بالموقع لمساعده  زحف الويب ليجاد جميع المحتويات.اذا كان باقي اجزاء موقعك في نطاقات اخرى , اضفهم ايضا"
@@ -977,13 +976,13 @@ ar:
     topics_per_period_in_top_page: "عدد من أهم الموضوعات هو مبين في موجز أعلى الافتراضية المواضيع."
     redirect_users_to_top_page: "إعادة توجيه تلقائيا للمستخدمين الجدد وغائبة لمدة طويلة إلى أعلى الصفحة."
     top_page_default_timeframe: "الوقت المثبت علي الصفحة الأكثر مشاهدة."
-    show_email_on_profile: "إظهار بريدك المستخدم على صفحته الشخصية (مرئية فقط لأنفسهم والموظفين)"
-    email_token_valid_hours: "نسيت كلمه السر/ تنشيط رموز الحساب صالحه ل(n)  ساعات"
+    show_email_on_profile: "أظهر بريد المستخدمين الإلكترونيّ في لاحاتهم (يكون معروضًا لهم وللطّاقم)"
+    email_token_valid_hours: "أمارات نسيان كلمة السّرّ/تنشيط الحساب صالحة لمدّة (n) ساعة."
     enable_badges: "تفعيل نظام الأوسمة."
     allow_index_in_robots_txt: "حدّد في robots.txt إمكانيّة فهرسة محرّكات البحث في الوبّ هذا الموقع."
     email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
     email_domains_whitelist: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
-    forgot_password_strict: "عدم اعلام المستخدم بوجود حساب عند استخدامهم استمارة \"نسيت كلمة السر\""
+    forgot_password_strict: "لا تخبر المستخدمين بوجود الحساب عند استخدامهم حوار نسيان كلمة السّرّ."
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
     version_checks: "Ping ديسكورس مركزا لتحديثات الإصدار وإظهار الرسائل النسخة الجديدة على لوحة القيادة / مسؤول"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
@@ -1070,6 +1069,8 @@ ar:
     external_system_avatars_enabled: "استخدم خدمات الهه النظام الخارجي "
     default_opengraph_image_url: "عنوان رابط صورة ال اوبن جراف الثابتة"
     allow_all_attachments_for_group_messages: "اسمح بجميع ملحقات البريد  للرسائل الجماعيه "
+    convert_pasted_images_to_hq_jpg: "حوّل الصّور الملصقة إلى ملفّات JPG عالية الجودة."
+    convert_pasted_images_quality: "جودة ملفّات JPG المحوّلة (1 هي أدنى جودة، 100 هي أفضل جودة)."
     enable_flash_video_onebox: "فعّل تضمين روابط swf وflv (أدوبي فلاش) في الصّناديق. تحذير: قد يتسبّب بمخاطر أمنيّة."
     default_invitee_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين."
     default_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين.تحذير! التغيرات ستضعك تحت خطر البريد الغير هام."
@@ -1176,7 +1177,7 @@ ar:
     delete_all_posts_max: "العدد الاقص للمشاركات التي يمكن مسحها مره واحده بزر مسح كل المشاركات.اذا المستخدم لديه اكثر من هذا العدد من المشاركات, المشاركات لا يمكن مسح جميعها مره واحدهو المستخدم لا يمكن حذفه"
     username_change_period: "عدد الايام بعد التسجيل التي يستطيع فيها الحسابات بتغير اسم المستخدم الخاص بهم(0 لكي لا تسمح بتغير اسم المستخدم)"
     email_editable: "يُسمح للأعضاء بتغيير بريدهم الألكتروني بعد التسجيل."
-    allow_uploaded_avatars: "اسمح للمستخدمين بتحميل صور شخصيه مخصصه"
+    allow_uploaded_avatars: "اسمح للمستخدمين برفع صور لاحة مخصّصة."
     allow_animated_avatars: "يُسمح للمستخدمين باستخدام صور متحركة GIF كصورة شخصية.\nتحذير:يُمنع استخدام صور رمزية خليعة:سيتم تحديث الصورة فور تغييرها."
     allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
     default_avatars: "سيتم استخدام عناوين URL للصور الرمزية بشكل افتراضيًا للأعضاء الجدد حتى يغيروا صورهم."
@@ -1191,7 +1192,7 @@ ar:
     anonymous_posting_min_trust_level: "أدنى مستوى ثقة للسماح بنشر مشاركات مجهولة."
     anonymous_account_duration_minutes: "للحمايه الهويه اصنع حساب مجهول كل n دقائق لكل مستخدم.\nمثال:اذا ضبط 600 , بعد انقضي 600 دقيقه من اخر منشور و غير المستخدم  للمجهول.تم انشاء حساب مجهول."
     hide_user_profiles_from_public: "قم بإلغاء الصفحة الشخصية و حقيبة المستخدم و بطاقة المستخدم للمستخدمين المجهولين"
-    allow_profile_backgrounds: "اسمح للأعضاء برفع خلفيات ملف التعريف."
+    allow_profile_backgrounds: "اسمح للمستخدمين برفع خلفيّات للّاحة."
     sequential_replies_threshold: "عدد المشاركات التي يجب على المستخدم انشاءها في عمود في الموضوع الواحد قبل ان يتم تنبيه بكثره الردود المتتاليه ."
     enable_mobile_theme: "اجهزه الموبايل تستخدم ثيم مناسب للجوال,امكانيه التحويل للموقع الكامل .الغي هذا اذا اردت استخدام انماط سريعه الاستجابه"
     dominating_topic_minimum_percent: "ما هي النسبه المئويه للمشاركات التي يجب علي المستخدم عملها في الموضوع قبل تلقيه لتنبيه عن خروجه لنطاق الموضوع"
@@ -1363,7 +1364,6 @@ ar:
     incorrect_username_email_or_password: "اسم المستخدم او كلمة المرور او البريد الالكتروني غير صحيح"
     wait_approval: "شكرًا على التسجيل. سيتم إبلاغك عندما تتم عملية الموافقة على حسابك."
     active: "حسابك مفعل وجاهز للاستخدام."
-    activate_email: "انتهيت تقريبا! تم ارسال رسالة تفعيل لبريدك :  <b>%{email}</b> رجاءا اتبع التعليمات المرفقة في الرسالة لتفعيل حسابك.</p><p> اذا لم تصلك رسالة التفعيل، تفقد مجلد البريد الغير هام، أو حاول تسجيل الدخول مرة أخرى لإرسال رسالة تفعيل أخرى.</p>"
     not_activated: "لا يمكنك تسجيل الدخول حتى الان. أرسلنا رسالة تنشيط لك. يرجى اتباع التعليمات الواردة في البريد الإلكتروني لتفعيل حسابك"
     not_allowed_from_ip_address: "ﻻ يمكنك تسجيل الدخول كـ %{username} من هذا الـIP"
     admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمدير من خلال هذا العنوان الرقمي - IP."
@@ -1408,22 +1408,22 @@ ar:
       many: "%{count} تبليغات تنتظر التعامل معها"
       other: "%{count} تبليغات تنتظر التعامل معها"
   unsubscribe_mailer:
-    subject_template: "اكد انك لا تريد استقبال بريد الكتروني من %{site_title} بعد ألان"
+    subject_template: "أكّد عدم رغبتك بعد الآن باستقبال تحديثات %{site_title} على البريد"
   invite_mailer:
-    subject_template: "%{invitee_name} دعاك إلى '%{topic_title}' على %{site_domain_name}"
+    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على {site_domain_name}"
+  custom_invite_mailer:
+    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على {site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} قام بدعوتك للإنضمام إلى %{site_domain_name}"
+    subject_template: "دعاك %{invitee_name} للانضمام إلى {site_domain_name}"
   custom_invite_forum_mailer:
     subject_template: "دعاك %{invitee_name} للانضمام إلى %{site_domain_name}"
   invite_password_instructions:
-    subject_template: "تعيين كلمة مرور %{site_name} حسابك"
+    subject_template: "اضبط كلمة سرّ لحسابك على %{site_name}"
+  admin_confirmation_mailer:
     text_body_template: |
-      شكرا لقبول دعوتك إلى %{site_name} -- أهلا بك!
+      رجاء أكّد رغبتك بإضافة **%{target_username}** كمدير لمنتداك.
 
-      انقر فوق هذا الرابط لاختيار كلمة مرور الآن:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (إذا انتهت مدة صلاحية الرابط أعلاه، اختر "نسيت كلمة المرور" عند تسجيل الدخول مع عنوان البريد الإلكتروني الخاص بك.)
+      [أكّد حساب المدير](%{admin_confirm_url})
   new_version_mailer:
     subject_template: "[%{email_prefix}] إصدارة دسكورس جديدة، ثمّة تحديث متوفّر"
     text_body_template: |
@@ -1448,7 +1448,6 @@ ar:
     disagreed: "نشكرك لإعلامنا بذلك. نحن ننظر في الأمر."
     deferred: "نشكرك لإعلامنا بذلك. نحن ننظر في الأمر."
     deferred_and_deleted: "نشكرك لإعلامنا بذلك. لقد أزلنا المشاركة."
-  temporarily_closed_due_to_flags: "هذا الموضوع مغلق مؤقتا بسبب عدد التبليغات الكبير للمجتمع."
   system_messages:
     post_hidden:
       title: "المشاركة مخفية"
@@ -1535,61 +1534,8 @@ ar:
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
       click_here: "أنقر هنا"
-    forgot_password:
-      text_body_template: |
-        طلب أحدهم تصفير كلمة السّر لحسابك في [%{site_name}](%{base_url}).
-
-        إن لم يكن أنت ذلك الشّخص، فيمكنك تجاهل هذا البريد بأمان.
-
-        انقر الرّابط أدناه لاختيار كلمة سرّ جديدة:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        شخص ما طلب إضافة كلمة مرور لحسابك [%{site_name}](%{base_url}). بدلاً من ذلك، يمكنك تسجيل الدخول بإستخدام خدمات أخرى على الانترنت، مثل  (قوقل، فيس بوك,الخ...) سيتم اقران البريد الالكتروني والتحقق من صحته.
-
-        اذا لم تقم أنت بطلب هذا، يمكنك تجاهل هذه الرسالة الالكترونية بأمان.
-
-        أنقر على الرابط التالي لإختيار كلمة المرور :
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        شخص طلب تسجيل الدخول إلى الحساب الخاص بك في [%{site_name}](%{base_url}).
-
-        إذا كنت لم تتقدم بهذا الطلب، يمكنك تجاهل هذه الرسالة الإلكترونية بأمان.
-
-        اضغط على الرابط التالي للدخول:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        تم إنشاء حساب جديد بالنسبة لك في %{site_name}
-
-        انقر على الرابط التالي لاختيار كلمة مرور لحسابك الجديد:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "قد وافقت على %{site_name}!"
-      text_body_template: |
-        مرحبا بك الي  %{site_name}!
-
-        اعضاء الطاقم قاموا بالموافقه علي حسابك علي  %{site_name}
-
-        اضغط الرابط التالي للتاكيد و لتفعيل حسابك الجديد
-        base_url}/users/activate-account/%{email_token}%
-        اذا كان الرابط في الاعلى غير مضغوط , حاول نسخه و لصقه في ششريط العناوين الالكتروني في متصفح الويب خاصتك.
-        {new_user_tips}%
-        نح نؤمن في [سلوك المجتمع الراقي(base_url}/guidelines}%)  في كل الاوقات
-
-        تمتع ببقائك!
-
-        (اذا احتجت للاتصال مع [افراد الطاقم]({base_url}/about}%)كمستخدم جديد , فقط قم بالرد علي هذه الرساله).
-    signup:
-      text_body_template: |
-        أهلا وسهلا بك في %{site_name}!
-
-        أُنقر على الرابط التالي لتأكيد وتفعيل حسابك الجديد :
-
-        %{base_url}/users/activate-account/%{email_token}
-
-        إذا كان الرابط أعلاه غير قابل للنقر، حاول نسخه ولصقه في شريط العناوين في متصفح الويب عندك.
   page_not_found:
     popular_topics: "نَشط"
     recent_topics: "الأحدث"
@@ -1753,9 +1699,11 @@ ar:
       name: قائد
     welcome:
       name: مرحبًا
-      description: استقبلت إعجابًا
+      description: استقبلَ إعجابًا
       long_description: |
         تُمنح هذه الشّارة عندما تستقبل أولى الإعجابات لمشاركاتك. تهانينا. لقد نشرت شيئًا وجده أصدقاؤك أعضاء المجتمع أمرًا جديرًا بالاهتمام ومفيد!
+    autobiographer:
+      description: ملأ معلومات<a href="/my/preferences">اللاحة</a>
     anniversary:
       name: الذكرى السنوية
     nice_post:
@@ -1774,8 +1722,6 @@ ar:
       name: أول إعجاب
     first_flag:
       name: أول إبلاغ
-    promoter:
-      description: عضو غير صحيح
     first_share:
       name: أول مشاركة
     first_link:
@@ -1786,19 +1732,20 @@ ar:
       name: إقرأ القواعد العامة
     reader:
       name: قارئ
+      description: قرأ كلّ الرّدود في موضوع فيه أكثر من 100 ردّ
     popular_link:
       name: رابط شائع
     hot_link:
       name: رابط نَشط
     famous_link:
       name: رابط مشهور
-    appreciated:
-      name: مشكور
     respected:
       name: محترم
+    higher_love:
+      description: استخدمَ 50 إعجابًا يوميًّا 5 مرّات
     crazy_in_love:
       name: مجنون الحبّ
-      description: استخدمت 50 إعجابًا يوميًّا 20 مرّة
+      description: استخدمَ 50 إعجابًا يوميًّا 20 مرّة
       long_description: |
         تُمنح هذه الشّارة عندما تستخدم كلّ ال‍ 50 إعجابًا اليوميّة لمدّة 20 يومًا. مذهل! أصبحت أيقونة تشجّع بانتظام أصدقائها أعضاء المجتمع!
     thank_you:
@@ -1812,7 +1759,9 @@ ar:
       description: استخدمَ إيموجي في مشاركة
     first_mention:
       name: أوّل إشارة
-      description: أشرت إلى مستخدم في مشاركة
+      description: أشار إلى مستخدم في إحدى المشاركات
+    first_reply_by_email:
+      name: أوّل ردّ عبر البريد
   admin_login:
     success: "البريد أُرسل"
     error: "خطأ!"

@@ -276,16 +276,12 @@ et:
           attributes:
             hex:
               invalid: "pole korrektne värv"
-        post_reply:
-          base:
-            different_topic: "Postitus ja vastus peavad kuuluma samasse teemasse."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Sinu profiili väli 'Minust' on hetkel tühi, <a href='/users/%{username_lower}/preferences/about-me'>kas sooviksid selle ära täita?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} profiilis on väli 'Minust' veel täitmata</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
@@ -897,10 +893,8 @@ et:
       description: Kasutasid postituses emotikoni
     first_mention:
       name: Esimene mainimine
-      description: Mainisid postituses kasutajat
     first_reply_by_email:
       name: Esimene vastamine meiliga
-      description: Vastasid postitusele läbi e-maili
   admin_login:
     success: "Kiri saadetud"
     error: "Viga!"

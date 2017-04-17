@@ -1082,15 +1082,6 @@ fi:
         title: "Unohditko lisätä vastaanottajia?"
         body: "Olet lähettämässä viestiä vain itsellesi!"
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
-      auto_close:
-        label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
-        error: "Arvo ei kelpaa."
-        based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on vähintään näin vanha."
-        all:
-          examples: 'Syötä aika tunteina (24), absoluuttisena aikana (17:30) tai aikaleimana (2013-11-22 14:00).'
-        limited:
-          units: "(# tuntia)"
-          examples: 'Syötä aika tunteina (24).'
     notifications:
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, viesteistä ym."
       none: "Ilmoitusten lataaminen ei onnistunut."
@@ -2874,8 +2865,6 @@ fi:
         blocked: "Estetty?"
         staged: "Luotu?"
         show_admin_profile: "Ylläpito"
-        edit_title: "Muokkaa nimikettä"
-        save_title: "Tallenna nimike"
         refresh_browsers: "Pakota sivun uudelleen lataus"
         refresh_browsers_message: "Viesti lähetetty kaikille asiakkaille!"
         show_public_profile: "Näytä julkinen profiili"

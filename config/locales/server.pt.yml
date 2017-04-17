@@ -268,16 +268,12 @@ pt:
           attributes:
             hex:
               invalid: "não é uma cor válida"
-        post_reply:
-          base:
-            different_topic: "Publicação e resposta devem pertencer ao mesmo tópico."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL inválido. O URL deve incluir http:// ou https://. E espaços não são permitidos."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>o campo Sobre Mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer preenchê-lo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros de Nível de Confiança 3 ou superior."
@@ -1301,7 +1297,6 @@ pt:
     incorrect_username_email_or_password: "Utilizador, email ou palavra-passe incorretos"
     wait_approval: "Obrigado por se inscrever. Será notificado por email quando a sua conta for aprovada."
     active: "A sua conta está ativa e pronta para ser utilizada."
-    activate_email: "<p> Está quase no final! Enviámos um email de ativação para <b>%{email}</b>. Por favor siga as instruções no email para ativar a sua conta.</p><p>Se não receber o email, verifique a sua pasta de spam, ou tente autenticar-se novamente para enviar outro email de ativação.</p>"
     not_activated: "Ainda não pode iniciar sessão. Enviámos um email de ativação para si. Por favor siga as instruções no email para ativar a sua conta."
     not_allowed_from_ip_address: "Não pode iniciar sessão como %{username} a partir desse endereço IP."
     admin_not_allowed_from_ip_address: "Não pode iniciar sessão como administrador a partir desse endereço IP."
@@ -1359,13 +1354,6 @@ pt:
     subject_template: "%{invitee_name} convidou-o para %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
-    text_body_template: |
-      Obrigado por aceitar o seu convite para %{site_name} -- bem-vindo!
-
-      Clique nesta hiperligação para escolher uma nova palavra-passe:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Se a hiperligação acima tiver expirado, escolha "Esqueci a minha palavra-passe" ao iniciar sessão com o seu endereço de email.)
   test_mailer:
     text_body_template: |
       Este é um email de teste de
@@ -1452,7 +1440,6 @@ pt:
     disagreed: "Obrigado por nos informar. Estamos a analisá-lo."
     deferred: "Obrigado por nos informar. Estamos a analisá-lo."
     deferred_and_deleted: "Obrigado por nos informar. Removemos a mensagem."
-  temporarily_closed_due_to_flags: "Este tópico está fechado temporariamente devido a um grande número de bandeiras da comunidade. "
   system_messages:
     post_hidden:
       subject_template: "Publicação oculta devido a denúncias da comunidade"
@@ -1910,51 +1897,6 @@ pt:
       topic_updates: "Atualizações de tópico"
       view_this_topic: "Ver este tópico"
       back_to_top: "Voltar ao topo"
-    forgot_password:
-      text_body_template: |
-        Alguém pediu para redefinir a sua palavra-passe em [%{site_name}](%{base_url}).
-
-        Se este pedido não veio da sua parte, por favor ignore este email.
-
-        Para escolher a sua nova palavra-passe clique na seguinte hiperligação:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Alguém pediu para adicionar uma palavra-passe à sua conta em [%{site_name}](%{base_url}). Como alternativa, pode entrar usando qualquer serviço online suportado (Google, Facebook, etc) que estiver associado a este endereço de email validado.
-
-        Se não fez este pedido, pode ignorar este email.
-
-        Clique na hiperligação seguinte para escolher uma palavra-passe.
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        Alguém pediu para iniciar sessão na sua conta em [%{site_name}](%{base_url}).
-
-        Se não fez este pedido, pode ignorar este email com segurança.
-
-        Clique na seguinte hiperligação para iniciar sessão:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        Uma nova conta foi criada para si em %{site_name}
-
-        Clique na hiperligação seguinte para escolher uma palavra-passe para a sua nova conta.
-        %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      text_body_template: |
-        Confirme o seu novo endereço de email para %{site_name} ao clicar na seguinte ligação:
-
-        %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      text_body_template: |
-        Antes de podermos alterar o seu endereço de email, precisámos que confirme que
-        controla
-        a conta de email atual. Após completar este passo, terá de confirmar
-        o seu novo endereço de email.
-
-        Confirme o seu endereço de email para o %{site_name} ao clicar na seguinte ligação:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       text_body_template: |
         Isto é uma mensagem automática para o informar que o seu endereço de email para
@@ -1966,31 +1908,6 @@ pt:
         %{new_email}
     signup_after_approval:
       subject_template: "Foi aprovado no %{site_name}!"
-      text_body_template: |
-        Bem-vindo a %{site_name}!
-
-        Um membro do pessoal aprovou a sua conta em %{site_name}.
-
-        Clique na seguinte ligação para confirmar e ativar a sua nova conta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se a ligação acima não for clicável, tente copiá-la e colá-la na barra de endereço do seu navegador de internet.
-
-        %{new_user_tips}
-
-        Nós acreditamos em [comportamento civilizado da comunidade](%{base_url}/guidelines) em todas as alturas.
-
-        Desfrute da sua estadia!
-
-        (Se precisar de comunicar com [membros da equipa de apoio](%{base_url}/about) como um novo utilizador, apenas responda a esta mensagem.)
-    signup:
-      text_body_template: |
-        BeM-vindo ao %{site_name}!
-
-        Clique na seguinte hiperligação para confirmar e ativar a sua nova conta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se a hiperligação não for clicável, tente copiá-la e colá-la na barra de endereço do seu navegador de internet.
   page_not_found:
     title: "Oops! Essa página não existe or é privada."
     popular_topics: "Popular"
@@ -2478,7 +2395,6 @@ pt:
         Este distintivo é concedido quando pela primeira vez adiciona um Emoji à sua publicação :thumbsup:. Emoji deixam-no exprimir emoção  nas suas publicações, de felicidade :smiley: a tristeza :anguished: a raiva :angry: e tudo entre estes :sunglasses: . Escreva simplesmente : (dois pontos) ou prima o botão de Emoji na barra de ferramentas no editor para escolher um de entre centenas de escolhas :ok_hand:
     first_mention:
       name: Primeira Menção
-      description: Mencionou um utilizador numa Publicação
       long_description: Este distintivo é concedido pela primeira vez que menciona o @nome-de-utilizador de alguém numa publicação sua. Cada menção gera uma notificação para o mencionado, de maneira a que saibam da sua publicação. Simplesmente comece por escrever @ (símbolo arroba) para mencionar qualquer utilizador, ou, se permitido, um grupo – é uma maneira conveniente de chamar a atenção de alguém.
     first_onebox:
       name: Primeira Pré-visualização
@@ -2486,7 +2402,6 @@ pt:
       long_description: Este distintivo é concedido pela primeira vez que publica uma ligação numa linha por si próprio, que foi então automaticamente expandido numa pré-visualização com um breve sumário da ligação, um titulo, e (quando disponível) uma imagem.
     first_reply_by_email:
       name: Primeira Resposta por Email
-      description: Respondeu a uma Publicação por email
       long_description: |
         Este distintivo é concedido pela primeira vez que responde a uma publicação por email :e-mail:.
   admin_login:

@@ -246,7 +246,7 @@ de:
     click_to_show: "Klicke zum Anzeigen."
     preview: "Vorschau"
     cancel: "Abbrechen"
-    save: "Änderungen speichern"
+    save: "Speichern"
     saving: "Speichere…"
     saved: "Gespeichert!"
     upload: "Hochladen"
@@ -281,7 +281,7 @@ de:
       has_pending_posts:
         one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
-      confirm: "Änderungen speichern"
+      confirm: "Speichern"
       delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle Beiträge des Benutzers entfernt und dessen E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
@@ -366,7 +366,6 @@ de:
       automatic_group: Automatische Gruppe
       closed_group: Geschlossene Gruppe
       is_group_user: "Du bist ein Mitglied in dieser Gruppe."
-      allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppenbesitzer zu schicken (Erfordert, dass jeder die Gruppe erwähnen kann)"
       membership: "Mitgliedschaft"
       name: "Name"
       user_count: "Anzahl der Mitglieder"
@@ -1076,15 +1075,6 @@ de:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
-      auto_close:
-        label: "Zeitpunkt der automatischen Schließung:"
-        error: "Bitte gib einen gültigen Wert ein."
-        based_on_last_post: "Das Thema erst schließen, wenn der letzte Beitrag mindestens so alt ist."
-        all:
-          examples: 'Gib die Anzahl der Stunden (24), eine Uhrzeit (17:30) oder einen Zeitstempel (2013-11-22 14:00) ein.'
-        limited:
-          units: "(# Stunden)"
-          examples: 'Gib die Anzahl der Stunden ein (24).'
     notifications:
       title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Beiträge und Themen, Nachrichten, usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
@@ -1332,11 +1322,7 @@ de:
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
-      auto_close_notice: "Dieses Thema wird %{timeLeft} automatisch geschlossen."
-      auto_close_notice_based_on_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
       auto_close_title: 'Automatisches Schließen'
-      auto_close_save: "Speichern"
-      auto_close_remove: "Dieses Thema nicht automatisch schließen"
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits eine Stunde alt. Das Thema wird daher sofort geschlossen."
         other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort geschlossen."
@@ -1369,7 +1355,6 @@ de:
           '2_8': 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
-          '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
           '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
@@ -1405,7 +1390,6 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen..."
-        auto_close: "Automatisch schließen…"
         pin: "Thema anheften..."
         unpin: "Thema loslösen..."
         unarchive: "Thema aus Archiv holen"
@@ -2837,8 +2821,6 @@ de:
         blocked: "Geblockt?"
         staged: "Vorbereitet?"
         show_admin_profile: "Administration"
-        edit_title: "Titel bearbeiten"
-        save_title: "Titel speichern"
         refresh_browsers: "Aktualisierung im Browser erzwingen"
         refresh_browsers_message: "Nachricht wurde an alle Clients gesendet!"
         show_public_profile: "Zeige öffentliches Profil"

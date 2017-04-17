@@ -130,7 +130,6 @@ uk:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>поле Про Мене вашого профілю зараз є порожнім, <a href='/users/%{username_lower}/preferences/about-me'>ви маєте бажання заповнити його?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   staff_category_name: "Персонал"
@@ -427,32 +426,8 @@ uk:
     posted_by: "Опубліковано %{username} %{post_date}"
     digest:
       click_here: "натисніть тут"
-    forgot_password:
-      text_body_template: |
-        Хтось попросив скинути Ваш пароль на сайті [%{site_name}](%{base_url}).
-
-        Якщо це були не Ви, можете спокійно проігнорувати цей лист.
-
-        Перейдіть за посиланням, щоб обрати новий пароль:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Хтось попросив додати пароль до Вашого облікового запису на сайті [%{site_name}](%{base_url}). Замість цього, Ви можете входити в систему, використовуючи будь-який із підтримуваних онлайн-сервісів (Google, Facebook, і т. ін.), який поєднаний із цією перевіреною електронною скринькою.
-
-        Якщо Ви не робили такого запиту, можете спокійно проігнорувати цей лист.
-
-        Перейдіть за посиланням, щоб обрати пароль:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
-    signup:
-      text_body_template: |
-        Вітаємо у %{site_name}!
-
-        Натисніть це посилання для підтвердження та активації Вашого нового облікового запису:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
   page_not_found:
     popular_topics: "Популярні"
     recent_topics: "Останні"

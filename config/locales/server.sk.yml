@@ -268,12 +268,8 @@ sk:
           attributes:
             hex:
               invalid: "nesprávna farba"
-        post_reply:
-          base:
-            different_topic: "Príspevok a odpoveď musia patriť do rovnakej témy."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Položka \"O mne\" vo Vašom profile je prázdna, <a href='/users/%{username_lower}/preferences/about-me'>želáte si ju doplníť?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} nevložil zatiaľ nič do profilu \"O mne\"</div>"
   vip_category_name: "Salón"
   vip_category_description: "Kategória výhradne pre členov so stupňom dôvery 3 a vyšším"
@@ -1144,7 +1140,6 @@ sk:
     incorrect_username_email_or_password: "Nesprávne meno, email, alebo heslo"
     wait_approval: "Ďakujeme za registráciu. O schválení účtu Vás budeme informovať."
     active: "Váš účet je aktivovaný a pripravený na používanie."
-    activate_email: "<p>Skoro hotovo! Poslali sme Vám aktivačný email na <b>%{email}</b>. Pre aktiváciu účtu prosíme splňte inštrukcie v emaile.</p><p>Ak nedorazí, skontrolujte si zložku s nevyžiadanou poštou, alebo sa prihláste znovu, aby ste si zaslali ďalší aktivačný email.</p>"
     not_activated: "Systém vás nemôže prihlásiť. Poslali sme vám aktivačný email. Prosím, postupujte podľa inštrukcií na aktiváciu účtu, ktoré sú uvedené v tomto emaile."
     not_allowed_from_ip_address: "Nie je možné prihlásenie ako %{username} z tejto IP adresy."
     admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
@@ -1190,13 +1185,6 @@ sk:
     subject_template: "%{invitee_name} Vás pozval na %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Nastavte heslo pre účet na  %{site_name}"
-    text_body_template: |
-      Ďakujeme za akceptovanie Vašej pozvánky na %{site_name} -- vitajte!
-
-      Kliknite na odkaz aby ste si vybrali heslo:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Ak vyššie uvedený odkaz vyexpiroval, vyberte "Zabudol som heslo" keď sa prihlasujete pomocou svojej emailovej adresy.)
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
     inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita cíti, že je úrážlivý, nemiestny alebo porušuje [naše pravidlá komunity](/guidelines)."
@@ -1208,7 +1196,6 @@ sk:
     disagreed: "Ďakujeme za upozornenie. Práve to riešime."
     deferred: "Ďakujeme za upozornenie. Práve to riešime."
     deferred_and_deleted: "Ďakujeme za upozornenie. Daný príspevok sme odstránili."
-  temporarily_closed_due_to_flags: "Tento príspevok je dočasne uzamknutý z dôvodu veľkého množstva vlajok od komunity."
   system_messages:
     welcome_user:
       subject_template: "Vitajte na %{site_name}!"
@@ -1364,20 +1351,6 @@ sk:
       why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
       since_last_visit: "Od Vašej poslednej návštevy"
       click_here: "kliknite tu"
-    forgot_password:
-      text_body_template: |
-        Niekto si vyžiadal reset Vášho hesla na [%{site_name}](%{base_url}).
-
-        Ak ste to neboli Vy, môžete ignorovať tento email.
-
-        Pre zmenu hesl kliknite na nasledujúci odkaz
-        %{base_url}/users/password-reset/%{email_token}
-    account_created:
-      text_body_template: |
-        Nový účet bol pre Vás vytvorený na %{site_name}
-
-        Kliknite na nasledujúci odkaz pre nastavenie hesla k Vášmu novému účtu:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
   page_not_found:
@@ -1440,7 +1413,6 @@ sk:
   badges:
     first_mention:
       name: Prvá zmienka
-      description: Zmienený používateľ v príspevku
       long_description: Tento odznak je udelený, keď prvýkrát zmienite niekoho @meno vo Vašom príspevku. Každá zmienka generuje upozornenie danej osobe, takže bude vedieť o Vašom príspevku. Jednoducho začnite písať @ (zavináč) aby ste zmienili používateľa alebo, ak je to povolené, skupinu - Je to pohodlný spôsob ako upútať ich pozornosť.
   admin_login:
     success: "Email odoslaný"

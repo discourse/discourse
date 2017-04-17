@@ -51,6 +51,10 @@ bs_BA:
           one: "1 sekunda"
           few: "%{count} sekundi"
           other: "%{count} sekundi"
+        x_minutes:
+          one: "minutu"
+          few: "minuta"
+          other: "%{count} minuta"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
@@ -364,7 +368,6 @@ bs_BA:
       automatic_group: Automatska grupa
       closed_group: Zatvorena grupa
       is_group_user: "Vi ste član ove grupe"
-      allow_membership_requests: "Dozvolite korisnicima da šalju zahtjeve za članstvom vlasnicima grupe (Zahtjeva da svako može @spomenuti grupu)"
       membership: "Članstvo"
       name: "Ime"
       user_count: "Broj članova"
@@ -463,6 +466,7 @@ bs_BA:
       other_accounts: "Other accounts with this IP address"
       delete_other_accounts: "Izbriši %{count}"
       username: "korisničko ime"
+      trust_level: "NP"
       read_time: "vrijeme čitanja"
       topics_entered: "pogledano tema"
       post_count: "# postova"
@@ -556,6 +560,7 @@ bs_BA:
       muted_users_instructions: "Odbij sve notifikacije od ovih korisnika."
       muted_topics_link: "Prikaži utišane teme"
       watched_topics_link: "Prikaži gledane teme"
+      tracked_topics_link: "Prikaži praćene teme"
       automatically_unpin_topics: "Automatski otkači temu kada dođem do dna"
       apps: "Aplikacije"
       revoke_access: "Oduzmi pristup"
@@ -625,6 +630,10 @@ bs_BA:
         invalid: "Molimo vas unesite validnu email adresu."
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency_immediately: "Slati ćemo vam e-mail obavijesti odmah na novo, ukoliko niste pročitali sadržaj koji smo vam prvobitno e-mailom poslali."
+        frequency:
+          one: "Poslaćemo ti email samo u slučaju da te nismo vidjeli u zadnjoj minuti."
+          few: "Poslaćemo ti email samo u slučaju da te nismo vidjeli u zadnjih {{count}} minuta."
+          other: "Poslaćemo ti email samo u slučaju da te nismo vidjeli u zadnjih {{count}} minuta."
       name:
         title: "Ime"
         instructions: "vaše puno ime (opciono)"
@@ -894,6 +903,7 @@ bs_BA:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "Ne možete se logirati kao admin sa te IP adrese."
       resend_activation_email: "Click here to send the activation email again."
+      change_email: "Promijeni email adresu"
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Molimo vas ulogujte se"
       preferences: "Morate biti ulogovani kako bi mjenjali vaše postavke"
@@ -919,6 +929,12 @@ bs_BA:
       github:
         title: "sa GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+    invites:
+      accept_title: "Pozivnica"
+      welcome_to: "Dobrodošli na %{site_name}!"
+      invited_by: "Pozvani ste od:"
+      accept_invite: "Prihvati pozivnicu"
+      success: "Vaš račun je napravljen i sada ste prijavljeni."
     emoji_set:
       apple_international: "Apple/International"
       google: "Google"
@@ -983,8 +999,10 @@ bs_BA:
       show_preview: 'pokaži pregled &raquo;'
       hide_preview: '&laquo; sakri pregled'
       quote_post_title: "Citiraj cjeli post"
+      bold_label: "B"
       bold_title: "Bold"
       bold_text: "bold tekst"
+      italic_label: "I"
       italic_title: "Ukošen"
       italic_text: "ukošen tekst"
       link_title: "Link"
@@ -1015,15 +1033,6 @@ bs_BA:
         title: "Da li ste zaboravili da dodate primaoca?"
         body: "Trenutno ova poruka biješe poslana samo vama!"
       admin_options_title: "Optional staff settings for this topic"
-      auto_close:
-        label: "Auto-close topic time:"
-        error: "Please enter a valid value."
-        based_on_last_post: "Don't close until the last post in the topic is at least this old."
-        all:
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(# of hours)"
-          examples: 'Enter number of hours (24).'
     notifications:
       title: "obaviještenja na spomenuti @nadimak, odgovori na vaše teme i postove, privatne poruke, itd"
       none: "Nemate obavijesti trenutno."
@@ -1228,11 +1237,20 @@ bs_BA:
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
+      topic_status_update:
+        time: "Vrijeme:"
+        remove: "Ukloni tajmer"
+      temp_open:
+        title: "Privremeno otvori"
+      auto_reopen:
+        title: "Automatski otvori temu"
+      temp_close:
+        title: "Privremeno zatvori"
+      auto_close:
+        title: "Automatski zatvori temu"
+        label: "Vrijeme automatskog zatvaranja teme:"
+        error: "Molim unesite ispravnu vrijednost."
       auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Sačuvaj"
-      auto_close_remove: "Don't Auto-Close This Topic"
       timeline:
         back: "Nazad"
         back_description: "Vratite se nazad na vašu zadnju nepročitanu objavu"
@@ -1262,7 +1280,6 @@ bs_BA:
           '2_8': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
           '2_4': 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
           '2_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
-          '2': 'Dobijat ćete notifikacije zato što <a href="/users/{{username}}/preferences">pročitao ovu temu</a>.'
           '1_2': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
           '1': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
           '0_7': 'Ignorišete sve notifikacije u ovoj kategoriji.'
@@ -1298,7 +1315,6 @@ bs_BA:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts"
-        auto_close: "Auto Close"
         pin: "Pin Topic"
         unpin: "Un-Pin Topic"
         unarchive: "Unarchive Topic"
@@ -1314,6 +1330,8 @@ bs_BA:
         pin_globally: "Okači temu globalno"
         make_banner: "Banner tema"
         remove_banner: "Odstrani Banner temu"
+      reply:
+        title: 'Odgovori'
       clear_pin:
         title: "Clear pin"
         help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
@@ -1386,6 +1404,9 @@ bs_BA:
         title: "Move to Existing Topic"
         action: "move to existing topic"
         error: "There was an error moving posts into that topic."
+      merge_posts:
+        title: "Spoji izabrane postove"
+        action: "spoji izabrane postove"
       change_owner:
         title: "Change Owner of Posts"
         action: "change ownership"
@@ -1393,6 +1414,11 @@ bs_BA:
         label: "New Owner of Posts"
         placeholder: "username of new owner"
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+      change_timestamp:
+        title: "Izmijeni vrijeme"
+        action: "izmijeni vrijeme"
+        invalid_timestamp: "Vrijeme ne može biti u budućnosti."
+        error: "Došlo je do greške prilikom izmjene vremena teme."
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
@@ -1402,6 +1428,7 @@ bs_BA:
         select_all: select all
         deselect_all: deselect all
     post:
+      quote_reply: "Citat"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Razlog: "
       post_number: "post {{number}}"
@@ -1451,6 +1478,7 @@ bs_BA:
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
         unhide: "Unhide"
+        change_owner: "Izmijeni vlasništvo"
       actions:
         flag: 'Opomena'
         undo:
@@ -2069,8 +2097,6 @@ bs_BA:
         admin: "Admin?"
         blocked: "Blocked?"
         show_admin_profile: "Admin"
-        edit_title: "Edit Title"
-        save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
         refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
@@ -2271,7 +2297,11 @@ bs_BA:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         add: "Dodaj novi emoji"
+        name: "Ime"
+        image: "Slika"
       embedding:
+        edit: "uredi"
+        add_host: "Dodaj host"
         embed_whitelist_selector: "CSS selector za elemente koji su dozvoljeni u embeds"
         embed_blacklist_selector: "CSS selector za elemente koji su odstranjeni sa embeds"
         embed_classname_whitelist: "Dopuštena CSS class imena"

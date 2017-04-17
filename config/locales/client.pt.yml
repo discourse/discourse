@@ -1041,15 +1041,6 @@ pt:
         title: "Esqueceu-se de adicionar destinatários?"
         body: "Neste momento esta mensagem está a ser enviada a você apenas!"
       admin_options_title: "Configurações opcionais do pessoal para este tópico"
-      auto_close:
-        label: "Tempo de fecho automático do tópico:"
-        error: "Por favor introduza um valor válido."
-        based_on_last_post: "Não fechar até que a última resposta no tópico tenha pelo menos esta idade."
-        all:
-          examples: 'Insira o número de horas (24), tempo absoluto (17:30) ou um selo temporal (2013-11-22 14:00).'
-        limited:
-          units: "(# de horas)"
-          examples: 'Introduza o número de horas (24).'
     notifications:
       title: "notificações de menções de @nome, respostas às suas publicações e tópicos, mensagens, etc"
       none: "Impossível de carregar as notificações neste momento."
@@ -1292,11 +1283,7 @@ pt:
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi eliminado"
-      auto_close_notice: "Este tópico vai ser automaticamente encerrado em %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Este tópico será encerrado %{duration} depois da última resposta"
       auto_close_title: 'Configurações para Fechar Automaticamente'
-      auto_close_save: "Guardar"
-      auto_close_remove: "Não Fechar Este Tópico Automaticamente"
       auto_close_immediate:
         one: "A última publicação neste tópico já tem 1 hora, por isso o tópico será fechado imediatamente."
         other: "A última publicação neste tópico já tem %{count} horas, por isso o tópico será fechado imediatamente."
@@ -1329,7 +1316,6 @@ pt:
           '2_8': 'Receberá notificações porque está a seguir esta categoria.'
           '2_4': 'Receberá notificações porque publicou uma resposta a este tópico.'
           '2_2': 'Receberá notificações porque está a seguir este tópico.'
-          '2': 'Receberá notificações porque <a href="/users/{{username}}/preferences">leu este tópico</a>.'
           '1_2': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
           '1': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
           '0_7': 'Está a ignorar todas as notificações nesta categoria.'
@@ -1365,7 +1351,6 @@ pt:
         open: "Abrir Tópico"
         close: "Fechar Tópico"
         multi_select: "Selecionar Publicações..."
-        auto_close: "Fechar Automaticamente..."
         pin: "Fixar Tópico..."
         unpin: "Desafixar Tópico..."
         unarchive: "Desarquivar Tópico"
@@ -2751,8 +2736,6 @@ pt:
         blocked: "Bloqueado?"
         staged: "Temporário?"
         show_admin_profile: "Administração"
-        edit_title: "Editar Título"
-        save_title: "Guardar Título"
         refresh_browsers: "Forçar atualização da página no browser"
         refresh_browsers_message: "Mensagem enviada para todos os clientes!"
         show_public_profile: "Mostrar Perfil Público"

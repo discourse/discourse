@@ -1038,15 +1038,6 @@ sk:
       modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
       admin_options_title: "Nepovinné zamestnanecké nastavenia pre túto tému"
-      auto_close:
-        label: "Čas na automatické uzavretie témy:"
-        error: "Prosím zadajte platnú hodnotu."
-        based_on_last_post: "Nezatvárať pokým posledný príspevok v téme nie je takto starý."
-        all:
-          examples: 'Zadajte číslo v hodinách (24), absolútny čas (17:30) alebo časovú značku (2013-11-22 14:00).'
-        limited:
-          units: "(# hodín)"
-          examples: 'Zadajte počet hodín (24).'
     notifications:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
@@ -1277,11 +1268,7 @@ sk:
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
-      auto_close_notice: "Táto téma bude automaticky uzavretá o %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Táto téma bude uzavretá %{duration} po poslednej odpovedi."
       auto_close_title: 'Nastavenia automatického zatvárania'
-      auto_close_save: "Uložiť"
-      auto_close_remove: "Neuzatvárať túto tému automaticky"
       auto_close_immediate:
         one: "Posledný príspevok k téme je starý už 1 hodinu, takže téma bude okamžite uzavretá. "
         few: "Posledný príspevok k téme je starý už %{hours} hodiny, takže téma bude okamžite uzavretá. "
@@ -1309,7 +1296,6 @@ sk:
           '2_8': 'Budete dostávať upozornenia, pretože pozorujete túto kategóriu.'
           '2_4': 'Budete dostávať upozornenia, pretože ste zaslali odpoveď na túto tému.'
           '2_2': 'Budete dostávať upozornenia, pretože pozorujete túto tému.'
-          '2': 'Budete dostávať upozornenia, pretože ste <a href="/users/{{username}}/preferences">čítali túto tému</a>.'
           '1_2': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '1': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '0_7': 'Ignorujete všetky upozornenia v tejto kategórii.'
@@ -1345,7 +1331,6 @@ sk:
         open: "Otvoriť tému"
         close: "Uzavrieť tému"
         multi_select: "Označ príspevky...."
-        auto_close: "Automaticky zatvor...."
         pin: "Pripni tému...."
         unpin: "Odopni tému...."
         unarchive: "Zruš archiváciu témy"
@@ -2638,8 +2623,6 @@ sk:
         blocked: "Blokovaný?"
         staged: "Dočasný?"
         show_admin_profile: "Admin"
-        edit_title: "Upraviť názov"
-        save_title: "Uložiť názov"
         refresh_browsers: "Vynútiť refresh browsera."
         refresh_browsers_message: "Správa odoslaná všetkým klientom!"
         show_public_profile: "Ukázať verejný profil"

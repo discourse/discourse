@@ -254,14 +254,6 @@ zh_TW:
       這篇主題真的對你很重要 &ndash; 你在這個討論中已回覆多於 %{percent}% 的回應。
 
       你有沒有提供其他人充足的時間，以便表達意見呢？
-    get_a_room: |
-      ### 考慮回應更多參與者
-
-      你已經在這個特定主題中，回應了 @%{reply_username} %{count} 次。
-
-      你有考慮回應討論中的 *其他* 人嗎？一個好的討論，需要納入更多人的觀點與意見。
-
-      如果你還是想要與他繼續討論，請考慮透過[個人訊息](/users/%{reply_username})來進行。
     too_many_replies: |
       ### 你發表的回應數量已經達到主題的回覆上限
 
@@ -311,16 +303,12 @@ zh_TW:
           attributes:
             hex:
               invalid: "不是一個有效顏色"
-        post_reply:
-          base:
-            different_topic: "貼文和回覆都必須處在相同的討論話題下。"
         web_hook:
           attributes:
             payload_url:
               invalid: "URL 不合法。URL 應包括 http:// 或 https://。並且其中沒有空格。"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
@@ -1338,7 +1326,6 @@ zh_TW:
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"
     wait_approval: "謝謝註冊帳號。我們會在你的帳號獲得批准之後通知你。"
     active: "你的帳號已經被啟用，可以使用了。"
-    activate_email: "<p>快完成了！我們已寄送了一封確認信件到 <b>%{email}</b>，請按照信中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件收件夾，或者試試再登錄一次，以再次發送另一封確認信件。</p>"
     not_activated: "你還不能登入。我們發送了一封啟用郵件給你，請按照郵件中的步驟來啟用你的帳號。"
     not_allowed_from_ip_address: "你無法透過此 IP 登入成為 %{username}。"
     admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
@@ -1448,7 +1435,6 @@ zh_TW:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name}邀請你加入%{site_domain_name}"
     text_body_template: |
       %{invitee_name} 留下以下留言
@@ -1467,13 +1453,6 @@ zh_TW:
   invite_password_instructions:
     title: "邀請密碼的說明"
     subject_template: "為 %{site_name} 的帳戶設置密碼"
-    text_body_template: |
-      感謝你接受來自 %{site_name} 的邀請，歡迎！
-
-      點擊下面的連結，立即設定你的密碼：
-      %{base_url}/users/password-reset/%{email_token}
-
-      (如果連結已經過期，在登入頁面選擇「我忘了我的密碼」，再次輸入你的 email 即可)
   test_mailer:
     title: "測試 Mailer"
     text_body_template: |
@@ -1564,7 +1543,6 @@ zh_TW:
     disagreed: "感謝你讓我們知道。我們正在調查。"
     deferred: "感謝你讓我們知道。我們正在調查。"
     deferred_and_deleted: "感謝通知我們。我們已經刪除了帖子。"
-  temporarily_closed_due_to_flags: "主題因為大量的社群標記暫時關閉"
   system_messages:
     post_hidden:
       title: "文章已隱藏"
@@ -2094,52 +2072,16 @@ zh_TW:
       back_to_top: "回到頂部"
     forgot_password:
       title: "忘記密碼"
-      text_body_template: |
-        有人請求重設你在 [%{site_name}](%{base_url}) 上的密碼。
-
-        如果那不是你，你可以直接忽略本郵件。
-
-        點擊下面的連結來選擇一個新密碼：
-        %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "設定密碼"
-      text_body_template: |
-        有人請求添加你在 [%{site_name}](%{base_url}) 的密碼。除此之外，你可以通過已驗證過你郵件地址的在綫服務商登錄。
-
-        如果不是你在請求添加密碼，你可以直接忽略本郵件。
-
-        點擊下面的連結來選擇一個新密碼：
-        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "管理員登入"
-      text_body_template: |
-        有人嘗試登錄你在[%{site_name}](%{base_url})的賬戶。
-
-        如果不是你在操作，你可以安全地忽略這封郵件。
-
-        點擊下面的連結登錄：
-        %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "建立用戶"
-      text_body_template: |
-        你在 %{site_name} 上建立了一個新賬號
-
-        點擊下面的連結來為新賬戶設置密碼：
-        %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "確認新郵件"
-      text_body_template: |
-        點擊以下連結確認你在[%{site_name}]上的新電子郵件：
-
-        %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "確認舊郵件"
-      text_body_template: |
-        在我們修改你的郵箱地址前，我們需要你確認你擁有當前的郵件賬號。在你完成這步之後，我們將確認你的新郵件地址。
-
-        點擊下面的連結來確認你當前在%{site_name}上的電子郵箱地址：
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "通知舊的郵件"
       text_body_template: |
@@ -2151,32 +2093,8 @@ zh_TW:
     signup_after_approval:
       title: "在同意之後註冊"
       subject_template: "你已受到 %{site_name} 的認可！"
-      text_body_template: |
-        歡迎加入 %{site_name}！
-
-        管理人員已批准了你在 %{site_name} 的帳戶申請。
-
-        請點擊以下連結，以確認和啟用你的新帳號：
-        %{base_url}/users/activate-account/%{email_token}
-
-        如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器中開啟。
-
-        %{new_user_tips}
-
-        我們始終相信[社群守則](%{base_url}/guidelines)。
-
-        好好享受你在論壇的時光吧！
-
-        (如果你需要和[管理人員](%{base_url}/about)聯繫的話，請直接回覆這則訊息。)
     signup:
       title: "註冊"
-      text_body_template: |
-        歡迎來到 %{site_name}！
-
-        請點擊以下連結，以確認和啟用你的新帳號：
-        %{base_url}/users/activate-account/%{email_token}
-
-        如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器中開啟。
   page_not_found:
     title: "抱歉！這個頁面不存在或者是私密的。"
     popular_topics: "熱門"
@@ -2667,7 +2585,6 @@ zh_TW:
         該徽章授予給第一次在帖子中使用 Emoji 的你 :thumbsup:。Emoji 讓你在帖子中表達快樂 :smiley:、悲傷 :anguished:、憤怒 :angry: 以及任何東西 :sunglasses:。輸入 :（冒號）或在編輯器中的 Emoji 工具欄中選擇吧 :ok_hand:
     first_mention:
       name: 首次提及
-      description: 在帖子中提到用戶
       long_description: 該徽章授予給第一次在帖子中@別人的你。每個提及都將通知對方，讓他們知道你發了貼。輸入 @ 提及任何用戶，如果可以的話，也可以提及群組——這是個獲得他們注意的好辦法。
     first_onebox:
       name: 首個Onebox
@@ -2675,7 +2592,6 @@ zh_TW:
       long_description: 該徽章授予給第一次在空行中發錶鏈接的你，連結將被展開成 onebox。其中有連結摘要、標題和（如果有）圖片。
     first_reply_by_email:
       name: 首次郵件回覆
-      description: 通過郵件回覆
       long_description: |
         該徽章授予給第一次通過郵件回覆的你 :e-mail:。
   admin_login:

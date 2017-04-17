@@ -281,14 +281,13 @@ sv:
               invalid: "är inte en giltig färg"
         post_reply:
           base:
-            different_topic: "Inlägg och svar måste tillhöra samma ämne."
+            different_topic: "Inlägg och svar måste höra till samma ämne."
         web_hook:
           attributes:
             payload_url:
               invalid: "Webbadressen är ogiltig. Webbadressen skall inkludera :// eller https://. Inga blanktecken är tillåtna"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences/about-me'>skulle du vilja fylla i det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
   vip_category_name: "Lounge"
   vip_category_description: "En kategori exklusiv för medlemmar med en förtroendenivå av 3 eller högre."
@@ -1302,7 +1301,6 @@ sv:
     incorrect_username_email_or_password: "Felaktigt användarnamn, e-post eller lösenord"
     wait_approval: "Tack för din registrering. Vi meddelar dig när ditt konto blivit godkänt."
     active: "Ditt konto är aktiverat och redo att användas."
-    activate_email: "<p>Du är nästan klar! Vi skickade ett e-post med aktivering till <b>%{email}</b>. Var god följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte mottar e-posten, kontrollera skräpposten eller försök logga in igen för att skicka ett nytt aktiveringsbrev. </p>"
     not_activated: "Du kan inte logga in ännu. Vi har skickat ett aktiveringsmejl till dig. Vänligen följ instruktionerna i mejlet för att aktivera ditt konto."
     not_allowed_from_ip_address: "Du kan inte logga in som %{username} från den IP-adressen."
     admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
@@ -1360,18 +1358,10 @@ sv:
     title: "Invitera forumets skrivare"
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
   custom_invite_forum_mailer:
-    title: "Invitera forumets skrivare"
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
   invite_password_instructions:
     title: "Invitera lösenords instruktioner"
     subject_template: "Ange lösenord för ditt konto på %{site_name}"
-    text_body_template: |
-      Tack för att du har accepterat inbjudan till %{site_name} -- välkommen hit!
-
-      Klicka på länken nedanför för att bestämma ett nytt lösenord nu:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Om länken ovanför har löpt ut, klicka på "jag har glömt mitt lösenord" när du loggar in med din e-postadress).
   test_mailer:
     title: "test mail skrivare"
   new_version_mailer:
@@ -1395,7 +1385,6 @@ sv:
     disagreed: "Tack för att du meddelande oss. Vi undersöker det."
     deferred: "Tack för att du meddelande oss. Vi undersöker det."
     deferred_and_deleted: "Tack för att du meddelande oss. Vi har raderat inlägget."
-  temporarily_closed_due_to_flags: "Detta ämne är tillfälligt stängt på grund av ett stort antal flaggor."
   system_messages:
     post_hidden:
       title: "Gömda inlägg"
@@ -1859,52 +1848,16 @@ sv:
       back_to_top: "Tillbaka till början"
     forgot_password:
       title: "Glömt lösenord"
-      text_body_template: |
-        Någon bad om att få återställa ditt lösenord på [%{site_name}](%{base_url}).
-
-        Om detta inte var du, kan du utan problem ignorera detta mejl.
-
-        Klicka på följande länk för att välja ett nytt lösenord:
-        %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Välj lösenord"
-      text_body_template: |
-        Någon har begärt att lägga till ett lösenord till ditt konto på [%{site_name}](%{base_url}). Du kan också logga in genom att använda någon av våra alternativa onlinetjänster (Google eller Facebook) som är kopplat till din validerade e-postadress.
-
-        Om det inte var på din begäran så kan du utan problem ignorera det här e-postmeddelandet.
-
-        Följ nedanstående länk för att välja ett nytt lösenord:
-        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Administratörs login"
-      text_body_template: |
-        Någon bad om att få återställa ditt lösenord på [%{site_name}](%{base_url}).
-
-        Om det inte var på din begäran kan du utan problem ignorera detta mejl.
-
-        Klicka på följande länk för att logga in:
-        %{base_url}/users/password-reset/%{email_token}
     account_created:
       title: "Konto skapat"
-      text_body_template: |
-        Ett nytt konto har skapats för dig på %{site_name}
-
-        Klicka på följande länk för att välja ett nytt lösenord för ditt nya konto:
-        %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Bekräfta den nya emailadressen"
-      text_body_template: |
-        Bekräfta din nya e-postadress för %{site_name} genom att klicka på länken nedanför:
-
-        %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "Bekräfta den gamla email adressen"
-      text_body_template: |
-        Vänligen bekräfta att du kontrollerar den här e-postadressen innan vi ändrar din e-postadress.
-
-        Du kan bekräfta e-postadressen för %{site_name} genom att följa länken nedan:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "Meddela gamla epostmeddelanden"
       text_body_template: |
@@ -1916,32 +1869,8 @@ sv:
     signup_after_approval:
       title: "Bli medlem efter godkännande"
       subject_template: "Du har blivit godkänd på %{site_name}!"
-      text_body_template: |
-        Välkommen till %{site_name}!
-
-        En administratör har godkänt ditt konto på %{site_name}.
-
-        Klicka på följande länk för att bekräfta och aktivera ditt nya konto:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Om länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.
-
-        %{new_user_tips}
-
-        Vi tror på ett [civiliserat beteende](%{base_url}/guidelines) vid alla tillfällen.
-
-        Njut av din vistelse!
-
-        (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande.)
     signup:
       title: "Bli medlem"
-      text_body_template: |
-        Välkommen till %{site_name}!
-
-        Klicka på följande länk för att bekräfta och aktivera ditt nya konto:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Om länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
@@ -2212,7 +2141,6 @@ sv:
         Den här utmärkelsen beviljas när du för första gången använder en emoji i ditt inlägg :thumbsup:. Emojis låter dig förmedla dina känslor i dina inlägg, från glädje :smiley: till sorgsenhet :anguished: till ilska :angry: och allt däremellan :sunglasses:. Skriv bara ett : (kolon) eller klicka på emoji-knappen i redigeraren för att välja mellan hundratals emojis :ok_hand:
     first_mention:
       name: Första omnämningen
-      description: Omnämnde en användare i ett inlägg
       long_description: 'Den här utmärkelsen beviljas när du nämner någons @användarnamn i ett inlägg. Varje omnämnande genererar en notifiering till den personen, så att det känner till ditt inlägg. Börja skriva @ (snabel-a) för att nämna en användare, eller, om det tillåts, en grupp - det är ett bekvämt sätt att uppmärksamma dem på något. '
     first_onebox:
       name: Första onebox:en
@@ -2220,7 +2148,6 @@ sv:
       long_description: 'Den här utmärkelsen beviljas när du för första gången lägger upp en länk på en rad för sig själv, vilken sedan automatiskt utvidgas och blir en onebox med en kort sammanfattning av länken, en rubrik och (när det finns tillgängligt) även en bild. '
     first_reply_by_email:
       name: Första svaret via e-post
-      description: Svarade på ett inlägg via e-post
       long_description: |
         Den här utmärkelsen beviljas när du för första gången svarar på ett inlägg via e-post :e-mail:.
   admin_login:

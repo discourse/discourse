@@ -198,7 +198,6 @@ id:
               invalid: "bukan warna yang valid."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>kolom Tentang Saya dari profil Anda masih kosong, <a href='/users/%{username_lower}/preferences/about-me'>apakah Anda mau mengisinya?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"
   vip_category_name: "Lounge / Santai"
   staff_category_name: "Staf"
@@ -456,21 +455,6 @@ id:
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
-    account_created:
-      text_body_template: |+
-        Anda mendapatkan akun baru di %{site_name}
-
-
-        Silahkan sentuh tautan dibawah ini untuk menentukan sandi dari akun baru Anda:
-
-        %{base_url}/users/password-reset/%{email_token}
-
-    confirm_new_email:
-      text_body_template: |
-        Silahkan mengkonfirmasi email baru Anda di %{site_name} dengan mengunjungi tautan dibawah:
-
-
-        %{base_url}/users/authorize-email/%{email_token}
   page_not_found:
     see_more: "Selengkapnya"
   terms_of_service:

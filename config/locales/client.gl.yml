@@ -860,15 +860,6 @@ gl:
       modal_cancel: "Cancelar"
       cant_send_pm: "Sentímolo pero non podes enviar unha mensaxe a %{username}."
       admin_options_title: "Axustes do equipo para este tema"
-      auto_close:
-        label: "Tempo para o peche automático deste tema:"
-        error: "Introduce un valor correcto."
-        based_on_last_post: "Non pechar até que a última publicación do tema teña alomenos este tempo."
-        all:
-          examples: 'Introducir o número de horas (24), hora absoluta (17:30) ou a marca data/hora (2013-11-22 14:00).'
-        limited:
-          units: "(# de horas)"
-          examples: 'Introducir o número de horas (24).'
     notifications:
       title: "notificacións das mencións ao teu @nome, respostas ás túas publicacións e temas, mensaxes, etc"
       none: "Non é posíbel cargar as notificacións neste intre"
@@ -1060,11 +1051,7 @@ gl:
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
-      auto_close_notice: "Este tema pechará automaticamente en %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Este tema pechará %{duration} despois da última resposta."
       auto_close_title: 'Axustes do peche automático'
-      auto_close_save: "Gardar"
-      auto_close_remove: "arriba"
       progress:
         title: progreso do tema
         go_top: "principio"
@@ -1084,7 +1071,6 @@ gl:
           '2_8': 'Recibirás notificacións porque segues esta categoría.'
           '2_4': 'Recibirás notificacións porque publicaches unha resposta neste tema.'
           '2_2': 'Recibirás notificacións porque segues este tema.'
-          '2': 'Recibirás notificacións porque <a href="/users/{{username}}/preferences">liches este tema</a>.'
           '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '0_7': 'Estás ignorando todas as notificacións desta categoría.'
@@ -1120,7 +1106,6 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións..."
-        auto_close: "Pechar automaticamente..."
         pin: "Pegar tema..."
         unpin: "Despegar tema..."
         unarchive: "Desarquivar tema"
@@ -2178,8 +2163,6 @@ gl:
         blocked: "Bloqueado?"
         staged: "Transitorio?"
         show_admin_profile: "Administración"
-        edit_title: "Editar título"
-        save_title: "Gardar título"
         refresh_browsers: "Forzar a actualización do navegador"
         refresh_browsers_message: "Mensaxe enviada a todos os clientes."
         show_public_profile: "Amosar o perfil público"

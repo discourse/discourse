@@ -290,14 +290,6 @@ pl_PL:
       Ten temat jest dla Ciebie istotny  &ndash; napisałeś tu ponad %{percent}% wszystkich odpowiedzi.
 
       Czy na pewno dajesz innym wystarczająco czasu na przedstawienie swoich punktów widzenia?
-    get_a_room: |
-      ### Rozważ odpowiadanie większej liczbie osób
-
-      Dotychczas odpowiedziałeś %{count} razy @%{reply_username} w tym temacie.
-
-      Czy rozważałeś odpowiadanie *innym* ludziom biorącym udział w dyskusji? Na dobrą dyskusję składa się wiele głosów i perspektyw.
-
-      Jeśli chciałbyś kontynuować dłuższą rozmowę z tym użytkownikiem, [wyślij im prywatną wiadomość](/users/%{reply_username}).
     too_many_replies: |
       ### Osiągnąłeś limit odpowiedzi w tym temacie
 
@@ -1310,7 +1302,6 @@ pl_PL:
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
-    activate_email: "<p>Prawie gotowe! Wysłaliśmy email aktywacyjny na adres <b>%{email}</b>. Postępuj zgodnie z instrukcją z tego emaila, żeby dokończyć ten proces.</p><p>Jeśli email nie dotrze do Ciebie, sprawdź folder ze spamem, lub zaloguj sie jeszcze raz, żeby wysłać go ponownie.</p>"
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     not_allowed_from_ip_address: "Nie możesz się zalogować jako %{username} z tego adresu IP."
     admin_not_allowed_from_ip_address: "Nie możesz zalogować się jako administrator z tego adresu IP."
@@ -1424,19 +1415,6 @@ pl_PL:
       %{invite_link}
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |+
-      Dziękujemy za zaakceptowanie zaproszenia do %{site_name} -- witamy!
-
-
-
-      Kliknij ten link, by wybrać hasło:
-
-      %{base_url}/users/password-reset/%{email_token}
-
-
-
-      (Jeśli powyższy link wygasł, wybierz "Zapomniałem hasła", logując się za pomocą adresu email.)
-
   test_mailer:
     text_body_template: |
       To testowy mail z serwisu:
@@ -1523,7 +1501,6 @@ pl_PL:
     disagreed: "Dziękujemy za zwrócenie uwagi. Zajmiemy się tym wkrótce."
     deferred: "Dziękujemy za zwrócenie uwagi. Zajmiemy się tym wkrótce."
     deferred_and_deleted: "Dziękujemy za zwrócenie uwagi. Wpis został usunięty."
-  temporarily_closed_due_to_flags: "Ten temat został tymczasowo zamknięty z uwagi na wysoką liczbę oflagowań wykonanych przez społeczność."
   system_messages:
     post_hidden:
       title: "Ukryty post"
@@ -1831,6 +1808,7 @@ pl_PL:
       join_the_discussion: "Czytaj więcej"
       popular_posts: "Popularne wpisy"
       more_new: "Nowe dla ciebie"
+      subject_template: "[%{email_prefix}] Podsumowanie"
       click_here: "kliknij tutaj"
       from: "%{site_name} podsumowanie"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
@@ -1860,33 +1838,8 @@ pl_PL:
     signup_after_approval:
       title: "Zarejestruj się po zatwierdzeniu"
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
-      text_body_template: |+
-        Witamy na %{site_name}!
-
-        Nasz personel zatwierdził twoje konto na %{site_name}.
-
-        Kliknij na podany link, aby potwierdzić i aktywować swoje nowe konto:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Jeśli podany link nie działa, spróbuj skopiować go i przykleić w pasku adresów swojej wyszukiwarki.
-
-        %{new_user_tips}
-
-        Wierzymy, że [cywilizowana dyskusja](%{base_url}/guidelines) jest zawsze możliwa.
-
-        Baw się dobrze!
-
-        (Jeśli potrzebujesz skontaktować się z [członkiem zespołu](%{base_url}/about) jako nowy użytkownik, odpowiedz na tę wiadomość.)
-
     signup:
       title: "Podpis"
-      text_body_template: |
-        Witaj na %{site_name}!
-
-        Kliknij na poniższy link by potwierdzić i aktywować Twoje nowe konto:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"

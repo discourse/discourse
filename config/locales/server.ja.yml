@@ -192,7 +192,6 @@ ja:
               invalid: "は有効なカラーではありません"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
@@ -901,7 +900,6 @@ ja:
     incorrect_username_email_or_password: "ユーザ名、メールアドレス、またはパスワードが違います"
     wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
     active: "アカウントが利用可能になりました。"
-    activate_email: "<p>あと少しです！アクティベーションメールを <b>%{email}</b> へ送信しました。メール内に記載されている指示に従い、認証を行って下さい。 </p><p>もし、届いていない場合は迷惑メールフォルダを確認するか、再度メールを送信してみてください。</p>"
     not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
     not_allowed_from_ip_address: "そのIPアドレスからは%{username} としてログインできません"
     admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
@@ -941,13 +939,6 @@ ja:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
-    text_body_template: |
-      %{site_name} へようこそ
-
-      このリンクをクリックしてパスワードを設定してください:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (リンクの有効期限が切れていた場合は、"パスワードを忘れたました"を選択しメールアドレスを入力してください)
   flag_reasons:
     off_topic: "あなたの投稿/トピックは「話題に関係ない」として通報されました"
     inappropriate: "あなたの投稿は「不適切」として通報されました。攻撃的、 [コミュニティガイドライン](/guidelines)に違反している可能性があります。"
@@ -959,7 +950,6 @@ ja:
     disagreed: "伝えてくれてありがとうございます。調査しています"
     deferred: "伝えてくれてありがとうございます。調査しています"
     deferred_and_deleted: "伝えてくれてありがとうございます。投稿を削除しました"
-  temporarily_closed_due_to_flags: "このトピックへの通報が多いため、一時的に投稿が制限されています。"
   system_messages:
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
@@ -1032,60 +1022,8 @@ ja:
       click_here: "ここをクリック"
     mailing_list:
       new_topics: "新着トピック"
-    forgot_password:
-      text_body_template: |
-        [%{site_name}](%{base_url}) にて、パスワードのリセットリクエストが行われました。
-
-        もしリクエストを行っていない場合は、このメールを無視してください。
-
-        新たなパスワードを設定する場合は次のリンクをクリックしてください: %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        [%{site_name}](%{base_url}) のあなたのアカウントに対してパスワード追加のリクエストがありました。
-        あるいは、この検証済みメールアドレスに関連付けられている任意のサポートされているオンラインサービス（グーグル、フェイスブックなど）を使用してログインすることができます。
-
-        もし、リクエストをしていない場合は、このメールを無視してください。
-
-        パスワードを選択する場合は次のリンクをクリックしてください:
-        %{base_url}/users/password-reset/%{email_token}
-    account_created:
-      text_body_template: |
-        %{site_name}のあなたの新しいアカウントが作成されました。
-
-        以下のリンクをクリックしてパスワードを設定してください:
-        %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      text_body_template: |
-        以下のリンクをクリックして、%{site_name}で利用するメールアドレスを有効化してください:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
-      text_body_template: |
-        %{site_name}へようこそ！
-
-        スタッフが%{site_name}でのアカウントを承認しました。
-
-        アカウントを有効にするには以下のリンクをクリックしてください:
-        %{base_url}/users/activate-account/%{email_token}
-
-        上記のURLがクリック出来ない場合は、コピーし、ウェブブラウザのアドレスバーに貼り付けてください。
-
-        %{new_user_tips}
-
-        [ガイドライン](%{base_url}/guidelines)をよく読み、しっかり守りましょう。
-
-        それでは、お楽しみください！
-
-        (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
-    signup:
-      text_body_template: |
-        Welcome to %{site_name}!
-
-        リンクをクリックして、アカウントを有効化してください:
-        %{base_url}/users/activate-account/%{email_token}
-
-        もし、上記のURLがクリックできない場合は、ブラウザのアドレスバーへURLをコピーして貼り付けて下さい。
   page_not_found:
     title: "ページが見つからないか、アクセス出来ない場所にあります。"
     popular_topics: "人気"

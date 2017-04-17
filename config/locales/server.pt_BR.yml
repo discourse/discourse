@@ -262,14 +262,6 @@ pt_BR:
       Este tópico claramente é importante para você &ndash; você postou mais de %{percent}% das respostas aqui.
 
       Tem certeza que você está dando tempo para que outras pessoas também compartilhem seus pontos de vista?
-    get_a_room: |
-      ### Considere responder para mais pessoas
-
-      Você já respondeu %{count} vezes o usuário @%{reply_username} neste tópico em particular.
-
-      Já pensou em responder também *outras* pessoas nesta discussão? Uma boa discussão envolve várias vozes e perspectivas.
-
-      Se quiser continuar estendendo sua conversa com este usuário, [envie uma mensagem pessoal para ele](/users/%{reply_username}).
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
@@ -318,16 +310,12 @@ pt_BR:
           attributes:
             hex:
               invalid: "Não é uma cor válida"
-        post_reply:
-          base:
-            different_topic: "Postagem e réplica precisam pertencer ao mesmo tópico."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL inválida. A URL deve conter http:// ou https://. Espaço em branco não é permitido."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
@@ -1236,7 +1224,6 @@ pt_BR:
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     wait_approval: "Obrigado por se registar. Você será notificado por email quando a sua conta for aprovada."
     active: "A sua conta está ativa e pronta."
-    activate_email: "<p>Você está quase lá! Enviamos um email de ativação para <b>%{email}</b>. Por favor, siga as instruções contidas nele para ativar sua conta.</p><p>Se ele não chegar, verifique sua pasta de spam, ou tente entrar novamente para enviar outro email de ativação.</p>"
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
     not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
@@ -1281,13 +1268,6 @@ pt_BR:
     subject_template: "%{invitee_name} convidou você para participar de %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Defina uma senha para a sua %{site_name}  conta"
-    text_body_template: |
-      Obrigado por aceitar o seu convite para %{site_name} -- Bem-Vindo!
-
-      Clique neste link para escolher uma senha agora:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Se o link acima expirou, escolha a opção "Esqueci minha senha" quando efetuar o login com o seu endereço de e-mail.)
   flag_reasons:
     off_topic: "Sua postagem foi sinalizada como **off-topic**: a comunidade sente que não é uma boa adequação ao tópico, como atualmante definido de acordo com o título e o primeiro post."
     inappropriate: "Sua postagem foi sinalizada como **não apropriada**: a comunidade sente que ela é ofensiva, abusiva, ou uma violação das [nossas orientações da comunidade](/guidelines)."
@@ -1299,7 +1279,6 @@ pt_BR:
     disagreed: "Obrigado por nos avisar. Nós estamos olhando nele."
     deferred: "Obrigado por nos avisar. Nós estamos olhando nele."
     deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
-  temporarily_closed_due_to_flags: "Este tópico foi temporariamente fechado devido a um grande número de sinalizações da comunidade."
   system_messages:
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
@@ -1527,51 +1506,8 @@ pt_BR:
       topic_updates: "Atualizações do tópico"
       view_this_topic: "Ver esse tópico"
       back_to_top: "Voltar ao topo"
-    forgot_password:
-      text_body_template: |
-        Alguém pediu para redefinir a sua senha em [%{site_name}](%{base_url}).
-
-        Se não foi você, por favor ignore este email.
-
-        Para escolher a sua nova senha clique no link a seguir:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Alguém solicitou para adicionar uma senha para a sua conta em [%{site_name}] (% {base_url}). Alternativamente, você pode fazer login usando qualquer serviço online suportado (Google, Facebook, etc) que está associado a este endereço de e-mail validado.
-
-        Se você não fez esse pedido, você pode ignorar este e-mail.
-
-        Clique no link abaixo para escolher uma senha:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        Alguém pediu para logar na sua conta no [%{site_name}](%{base_url}).
-
-        Se você não realizou esse pedido, você pode ignorar esse email com segurança.
-
-        Clique no link a seguir para logar:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        Uma nova conta foi criada para você em %{site_name}
-
-        Clique no link a seguir para escolher uma senha para a sua nova conta:
-        %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "Confirmar novo e-mail"
-      text_body_template: |
-        Confirme seu novo endereço de email para %{site_name} clicando no link a seguir:
-
-        %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      text_body_template: |
-        Antes que possamos mudar seu endereço de email, precisamos confirmar que você controla
-        a conta de email atual. Após completar esse passo, pediremos que você confirme
-        o novo endereço de email.
-
-        Confirme seu endereço de email atual para %{site_name} clicando no link a seguir:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       text_body_template: |
         Esta é uma mensagem automática para lhe avisar que seu endereço de email para
@@ -1583,31 +1519,6 @@ pt_BR:
         %{new_email}
     signup_after_approval:
       subject_template: "Você foi aprovado no %{site_name}!"
-      text_body_template: |
-        Bem vindo a %{site_name}!
-
-        Um membro interno aprovou sua conta no %{site_name}.
-
-        Selecione o endereço a seguir para confirmar e ativar sua nova conta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se preferir, tente copiar e colar o endereço acima no seu navegador.
-
-        %{new_user_tips}
-
-        Nós acreditamos sempre em [comportamento comunitario civilizado](%{base_url}/guidelines).
-
-        Aproveite sua participação!
-
-        (Se precisar se comunicar com um [membro interno](%{base_url}/about) como um novo usuário, só responder a esta mensagem.)
-    signup:
-      text_body_template: |
-        Ben-vindo ao %{site_name}!
-
-        Clique no seguinte link para confirmar e aticar a sua nova conta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
   page_not_found:
     title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Popular"
@@ -1806,7 +1717,6 @@ pt_BR:
       description: Utilizou um emoji em uma publicação
     first_mention:
       name: Primeira menção
-      description: Mencionou um usuário em uma publicação
       long_description: Este emblema é concedido na primeira vez em que você menciona o @nomedeusuaio de alguém em uma publicação. Cada menção gera uma notificação para a pessoa de forma que ela saiba o que você publicou. Simplesmente comece a digitar "@" (arroba) para mencionar qualquer usuário ou, caso permitido, um grupo -- é uma maneira conveniente de chamar a atenção de alguém.
     first_onebox:
       name: Primeiro Onebox
@@ -1814,7 +1724,6 @@ pt_BR:
       long_description: 'Esse emblema é concedido na primeira vez em que você posta um link que é convertido automaticamente em uma caixa com um título, sumário e uma imagem (se disponível) sumarizando o link. '
     first_reply_by_email:
       name: Primeira Resposta por email
-      description: Respondeu uma mensagem por email
   admin_login:
     success: "Email Enviado"
     error: "Erro!"

@@ -1081,15 +1081,6 @@ nb_NO:
         title: "Glemte du å legge til mottagere?"
         body: "Nå sender du denne meldingen bare til deg selv!"
       admin_options_title: "Valgfrie emne-instillinger for stab"
-      auto_close:
-        label: "Tid for auto-lukking av emnet:"
-        error: "Skriv inn en gyldig verdi."
-        based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
-        all:
-          examples: 'Før inn antall timer (24), absolutt tid (17:30) eller tidsstempel (2013-11-22 14:00).'
-        limited:
-          units: "(# timer)"
-          examples: 'Før inn antall timer (24).'
     notifications:
       title: "varsler om at ditt @navn blir nevnt, svar på dine innlegg, emner, meldinger, osv"
       none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."

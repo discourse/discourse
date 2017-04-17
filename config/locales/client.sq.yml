@@ -992,15 +992,6 @@ sq:
         title: "Mos harruat të shtonit marrësit?"
         body: "Për momentin ky mesazh po ju dërgohet vetëm juve!"
       admin_options_title: "Rregullime opsionale të stafit për këtë temë"
-      auto_close:
-        label: "Data e mbylljes automatike të temës:"
-        error: "Ju lutem shkruani një vlerë të vlefshme."
-        based_on_last_post: "Mos e mbyll derisa postimi i fundit brenda temës të jetë të paktën kaq i vjetër. "
-        all:
-          examples: 'Vendosni numrin e orëve (24), orën absolute (17:30) ose një "timestamp" (2013-11-22 14:00).'
-        limited:
-          units: "(# i orëve)"
-          examples: 'Vendosni numrin e orëve (24).'
     notifications:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
@@ -1202,11 +1193,7 @@ sq:
       jump_reply_up: hidhe tek përgjigja paraardhëse
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
-      auto_close_notice: "Kjo temë do të mbyllet automatikisht %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Kjo temë do të mbyllet %{duration} pas përgjigjes së fundit. "
       auto_close_title: 'Rregullimet e Mbylljes Automatike'
-      auto_close_save: "Ruaj"
-      auto_close_remove: "Mos e Mbyll Automatikisht Këtë Temë"
       timeline:
         back: "Kthehu mbrapa"
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
@@ -1233,7 +1220,6 @@ sq:
           '2_8': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
           '2_4': 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
           '2_2': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
-          '2': 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
           '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
@@ -1269,7 +1255,6 @@ sq:
         open: "Hap temën"
         close: "Mbyll temën"
         multi_select: "Përzgjidhni Postimet..."
-        auto_close: "Mbylle Automatikisht..."
         pin: "Ngjite temën..."
         unpin: "Çngjite temën..."
         unarchive: "Çarkivoje temën"
@@ -2459,8 +2444,6 @@ sq:
         blocked: "Bllokuar?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        edit_title: "Redakto Titullin"
-        save_title: "Ruaj Titullin"
         refresh_browsers: "Forco rifreskimin e shfletuesit"
         refresh_browsers_message: "Mesazhi u dërgua tek të gjithë klientët!"
         show_public_profile: "Shfaq Profilin Publik"

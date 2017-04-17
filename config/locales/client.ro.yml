@@ -40,7 +40,7 @@ ro:
       long_date_with_year_without_time: "DD MMM 'YY"
       long_date_without_year_with_linebreak: "DD MMM<br/>HH:mm"
       long_date_with_year_with_linebreak: "DD MMM 'YY<br/>HH:mm"
-      wrap_ago: "%{date} (de) zile în urmă"
+      wrap_ago: "%{date} în urmă"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -387,7 +387,6 @@ ro:
       automatic_group: Grup automat
       closed_group: Grup închis
       is_group_user: "Ești membru al acestui grup"
-      allow_membership_requests: "Permite utilizatorilor să trimită cereri de adăugare ca membri către proprietarii grupului. (Presupune ca toată lumea să aibă posibilitatea de a menționa grupul)"
       membership: "Apartenență"
       name: "Nume"
       user_count: "Număr de membri"
@@ -1089,15 +1088,6 @@ ro:
         title: "Ai uitat să adaugi destinatari?"
         body: "În acest moment mesajul acesta nu este trimis decât către tine însuți!"
       admin_options_title: "Setări opționale pentru moderatori cu privire la acest subiect"
-      auto_close:
-        label: "Închide automat discuția la:"
-        error: "Introduceţi o valoare validă."
-        based_on_last_post: "Nu închide subiectul până când ultimul răspuns nu are o vechime de cel puțin"
-        all:
-          examples: 'Introdu numărul de ore (24), timpul absolut (17:30) sau data şi ora cu secunde (2013-11-22 14:00).'
-        limited:
-          units: "(# de ore)"
-          examples: 'Introdu numărul de ore (24).'
     notifications:
       title: "notificări la menționările @numelui tău, răspunsuri la postările sau subiectele tale, mesaje, etc."
       none: "Nu pot încărca notificările în acest moment."
@@ -1351,11 +1341,7 @@ ro:
       jump_reply_up: sări la un răspuns mai vechi
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
-      auto_close_notice: "Acest subiect va fi automat închis în %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Acest subiect va fi automat închis după %{duration} de la ultimul răspuns."
       auto_close_title: 'Setări de închidere automată'
-      auto_close_save: "Salvează"
-      auto_close_remove: "Nu închide automat acest subiect"
       auto_close_immediate:
         one: "Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat."
         few: "Ultima postare din subiect este deja veche de %{count} ore, așa că subiectul va fi închis imediat."
@@ -1387,7 +1373,6 @@ ro:
           '2_8': 'Vei primi notificări deoarece urmărești această categorie.'
           '2_4': 'Vei primi notificări deoarece ai postat un răspuns în acest subiect.'
           '2_2': 'Vei primi notificări fiindcă urmărești acest subiect.'
-          '2': 'Vei primi notificări fiindcă citești <a href="/users/{{username}}/preferences">acest subiect</a>.'
           '1_2': 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
           '1': 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
           '0_7': 'Ignori toate notificările din această categorie.'
@@ -1423,7 +1408,6 @@ ro:
         open: "Deschide subiect"
         close: "Închide subiect"
         multi_select: "Selectează subiectele ..."
-        auto_close: "Închidere automată..."
         pin: "Fixează subiect..."
         unpin: "Anulează subiect fixat..."
         unarchive: "Dezarhivează subiect"
@@ -2866,8 +2850,6 @@ ro:
         blocked: "Blocat?"
         staged: "În așteptare?"
         show_admin_profile: "Admin"
-        edit_title: "Editează titlu"
-        save_title: "Salvează titlu"
         refresh_browsers: "Forțează reîmprospătarea browserului"
         refresh_browsers_message: "Mesajul a fost trimis către toţi. "
         show_public_profile: "Arată profilul public"
