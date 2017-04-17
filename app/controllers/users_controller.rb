@@ -3,11 +3,12 @@ require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'
 require_dependency 'wizard'
 require_dependency 'wizard/builder'
+require_dependency 'admin_confirmation'
 
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
   before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
                                           :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
@@ -25,9 +26,11 @@ class UsersController < ApplicationController
                                                             :activate_account,
                                                             :perform_account_activation,
                                                             :send_activation_email,
+                                                            :update_activation_email,
                                                             :password_reset,
                                                             :confirm_email_token,
-                                                            :admin_login]
+                                                            :admin_login,
+                                                            :confirm_admin]
 
   def index
   end
@@ -304,7 +307,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+    if User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
 
@@ -488,7 +491,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.where(email: params[:email], admin: true).where.not(id: Discourse::SYSTEM_USER_ID).first
+      user = User.where(email: params[:email], admin: true).human_users.first
       if user
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
@@ -565,6 +568,28 @@ class UsersController < ApplicationController
       flash.now[:error] = I18n.t('activation.already_done')
     end
     render layout: 'no_ember'
+  end
+
+  def update_activation_email
+    RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
+
+    @user = User.find_by_username_or_email(params[:username])
+    raise Discourse::InvalidAccess.new unless @user.present?
+    raise Discourse::InvalidAccess.new if @user.active?
+    raise Discourse::InvalidAccess.new if current_user.present?
+
+    raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
+
+    User.transaction do
+      @user.email = params[:email]
+      if @user.save
+        @user.email_tokens.create(email: @user.email)
+        enqueue_activation_email
+        render json: success_json
+      else
+        render_json_error(@user)
+      end
+    end
   end
 
   def send_activation_email
@@ -719,11 +744,26 @@ class UsersController < ApplicationController
 
     result = {}
 
-    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
+    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
       result[info] = @user.send(info)
     end
 
     render json: result
+  end
+
+  def confirm_admin
+    @confirmation = AdminConfirmation.find_by_code(params[:token])
+
+    raise Discourse::NotFound unless @confirmation
+    raise Discourse::InvalidAccess.new unless
+      @confirmation.performed_by.id == (current_user&.id || @confirmation.performed_by.id)
+
+    if request.post?
+      @confirmation.email_confirmed!
+      @confirmed = true
+    end
+
+    render layout: 'no_ember'
   end
 
   private

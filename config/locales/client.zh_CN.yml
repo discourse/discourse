@@ -118,7 +118,6 @@ zh_CN:
         enabled: '%{when}列出'
         disabled: '于%{when}隐藏'
     topic_admin_menu: "管理主题"
-    wizard_required: "是时候配置你的论坛啦！<a href='%{url}' data-auto-route='true'>点击开始设置向导</a>！"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过 %{min_users} 个时关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
@@ -337,7 +336,6 @@ zh_CN:
       automatic_group: 自动群组
       closed_group: 封闭群组
       is_group_user: "你是该群组的一个成员"
-      allow_membership_requests: "允许用户向群组拥有者发送加入小组请求（群组需要能让所有人提及）"
       membership: "成员资格"
       name: "名字"
       user_count: "成员数目"
@@ -611,7 +609,7 @@ zh_CN:
         ok: "昵称可用"
       username:
         title: "用户名"
-        instructions: "不重复，无空格，短"
+        instructions: "独一无二，没有空格，简短"
         short_instructions: "其他人可以用 @{{username}} 来提及你"
         available: "用户名可用"
         not_available: "不可用。试试 {{suggestion}} ？"
@@ -888,7 +886,6 @@ zh_CN:
       logging_in: "登录中..."
       or: "或"
       authenticating: "验证中..."
-      awaiting_confirmation: "你的帐号尚未激活，点击忘记密码链接以重新发送激活邮件。"
       awaiting_approval: "你的帐号尚未被论坛版主审核。请等待一段时间，当你的帐号被审核时会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
       not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>{{sentTo}}</b>，请打开它并完成账号激活。"
@@ -1032,15 +1029,6 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       admin_options_title: "本主题可选设置"
-      auto_close:
-        label: "自动关闭主题时间："
-        error: "请输入一个有效值。"
-        based_on_last_post: "以最后回复的时间开始计时"
-        all:
-          examples: '输入小时数（24），绝对时间（17:30）或时间戳（2013-11-22 14:00）。'
-        limited:
-          units: "(# 小时数）"
-          examples: '输入小时数（24）。'
     notifications:
       title: "使用@提到你，回复你的内容、消息以及其他的通知"
       none: "现在无法载入通知"
@@ -1208,7 +1196,7 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>这里显示了近期主题列表。</p><p>默认情况下，以下主题将显示在近期列表。如果是最近 2 天内创建的，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
+          new: '<p>这里显示了近期主题列表。</p><p>默认情况下，最近 2 天内创建的主题将显示在近期列表，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
           unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
@@ -1275,11 +1263,7 @@ zh_CN:
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
       deleted: "此主题已被删除"
-      auto_close_notice: "本主题将在%{timeLeft}自动关闭。"
-      auto_close_notice_based_on_last_post: "在最后一个帖子 %{duration} 无人回复关闭帖子的时间。"
       auto_close_title: '自动关闭设置'
-      auto_close_save: "保存"
-      auto_close_remove: "不要自动关闭该主题"
       auto_close_immediate:
         other: "主题中的最后一帖是 %{hours} 小时前发出的，所以主题将会立即关闭。"
       timeline:
@@ -1311,7 +1295,6 @@ zh_CN:
           '2_8': '因为你正在跟踪该分类，你将收到通知。'
           '2_4': '因为你发布了对该主题的回复，你将会收到通知。'
           '2_2': '因为你正在跟踪该主题，你将收到通知。'
-          '2': '因为你<a href="/users/{{username}}/preferences">阅读了该主题</a>，你将会收到通知。'
           '1_2': '如果有人@你或回复你，将通知你。'
           '1': '如果有人@你或回复你，将通知你。'
           '0_7': '你将忽略关于该分类的所有通知。'
@@ -1347,7 +1330,6 @@ zh_CN:
         open: "打开主题"
         close: "关闭主题"
         multi_select: "选择帖子..."
-        auto_close: "自动关闭..."
         pin: "置顶主题..."
         unpin: "取消置顶主题..."
         unarchive: "取消存档主题"
@@ -1698,7 +1680,6 @@ zh_CN:
       suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       all_topics_wiki: "默认将新主题设为维基主题"
-      sort_order: "默认排序："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
@@ -2348,7 +2329,6 @@ zh_CN:
             without_uploads: "是（不包括文件）"
           download:
             label: "下载"
-            title: "下载该备份"
           destroy:
             title: "删除备份"
             confirm: "你确定要删除该备份吗？"
@@ -2694,8 +2674,6 @@ zh_CN:
         blocked: "已封?"
         staged: "暂存？"
         show_admin_profile: "管理员"
-        edit_title: "编辑头衔"
-        save_title: "保存头衔"
         refresh_browsers: "强制浏览器刷新"
         refresh_browsers_message: "消息发送至所有用户！"
         show_public_profile: "显示公开介绍"

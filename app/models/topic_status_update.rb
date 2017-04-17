@@ -3,12 +3,15 @@ class TopicStatusUpdate < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :topic
+  belongs_to :category
 
   validates :user_id, presence: true
   validates :topic_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
   validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }
+  validates :category_id, presence: true, if: :publishing_to_category?
+
   validate :ensure_update_will_happen
 
   before_save do
@@ -20,7 +23,7 @@ class TopicStatusUpdate < ActiveRecord::Base
   end
 
   after_save do
-    if (execute_at_changed? || user_id_changed?) && topic
+    if (execute_at_changed? || user_id_changed?)
       now = Time.zone.now
       time = execute_at < now ? now : execute_at
 
@@ -37,7 +40,9 @@ class TopicStatusUpdate < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    TopicStatusUpdate.where("execute_at < ?", Time.zone.now).find_each do |topic_status_update|
+    TopicStatusUpdate.where("topic_status_updates.execute_at < ?", Time.zone.now)
+      .find_each do |topic_status_update|
+
       topic_status_update.send(
         "schedule_auto_#{self.types[topic_status_update.status_type]}_job",
         topic_status_update.execute_at
@@ -73,6 +78,7 @@ class TopicStatusUpdate < ActiveRecord::Base
     end
 
     def schedule_auto_open_job(time)
+      return unless topic
       topic.update_status('closed', true, user) if !topic.closed
 
       Jobs.enqueue_at(time, :toggle_topic_closed,
@@ -82,6 +88,7 @@ class TopicStatusUpdate < ActiveRecord::Base
     end
 
     def schedule_auto_close_job(time)
+      return unless topic
       topic.update_status('closed', false, user) if topic.closed
 
       Jobs.enqueue_at(time, :toggle_topic_closed,
@@ -92,6 +99,10 @@ class TopicStatusUpdate < ActiveRecord::Base
 
     def schedule_auto_publish_to_category_job(time)
       Jobs.enqueue_at(time, :publish_topic_to_category, topic_status_update_id: id)
+    end
+
+    def publishing_to_category?
+      self.status_type.to_i == TopicStatusUpdate.types[:publish_to_category]
     end
 end
 

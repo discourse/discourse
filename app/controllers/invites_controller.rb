@@ -36,9 +36,7 @@ class InvitesController < ApplicationController
         user = invite.redeem(username: params[:username], password: params[:password])
         if user.present?
           log_on_user(user)
-
-          # Send a welcome message if required
-          user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+          post_process_invite(user)
         end
 
         topic = user.present? ? invite.topics.first : nil
@@ -128,10 +126,7 @@ class InvitesController < ApplicationController
       user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name], params[:topic].to_i)
       if user.present?
         log_on_user(user)
-
-        # Send a welcome message if required
-        user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
-
+        post_process_invite(user)
         topic = invite.topics.first
         if topic.present?
           redirect_to path("#{topic.relative_url}")
@@ -223,4 +218,15 @@ class InvitesController < ApplicationController
       false
     end
   end
+
+  private
+
+    def post_process_invite(user)
+      user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+      if user.has_password?
+        email_token = user.email_tokens.create(email: user.email)
+        Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
+      end
+    end
+
 end

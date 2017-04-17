@@ -376,9 +376,8 @@ const Topic = RestModel.extend({
   },
 
   reload() {
-    const self = this;
-    return ajax('/t/' + this.get('id'), { type: 'GET' }).then(function(topic_json) {
-      self.updateFromJson(topic_json);
+    return ajax(`/t/${this.get('id')}`, { type: 'GET' }).then(topic_json => {
+      this.updateFromJson(topic_json);
     });
   },
 

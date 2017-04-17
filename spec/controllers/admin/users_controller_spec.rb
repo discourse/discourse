@@ -166,9 +166,9 @@ describe Admin::UsersController do
       end
 
       it 'updates the admin flag' do
+        expect(AdminConfirmation.exists_for?(@another_user.id)).to eq(false)
         xhr :put, :grant_admin, user_id: @another_user.id
-        @another_user.reload
-        expect(@another_user).to be_admin
+        expect(AdminConfirmation.exists_for?(@another_user.id)).to eq(true)
       end
     end
 
@@ -491,7 +491,14 @@ describe Admin::UsersController do
     end
 
     context ".invite_admin" do
+      it "doesn't work when not via API" do
+        controller.stubs(:is_api?).returns(false)
+        xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
+        expect(response).not_to be_success
+      end
+
       it 'should invite admin' do
+        controller.stubs(:is_api?).returns(true)
         Jobs.expects(:enqueue).with(:critical_user_email, anything).returns(true)
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         expect(response).to be_success
@@ -503,6 +510,7 @@ describe Admin::UsersController do
       end
 
       it "doesn't send the email with send_email falsy" do
+        controller.stubs(:is_api?).returns(true)
         Jobs.expects(:enqueue).with(:user_email, anything).never
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com', send_email: '0'
         expect(response).to be_success

@@ -54,6 +54,7 @@ da:
         insert: Indsæt afstemning
         help:
           options_count: Vælg mindst 2 muligheder
+          invalid_values: Minimumsværdien skal være mindre end maksimumværdien.
         poll_type:
           label: Type
           regular: Enkelt valg
@@ -66,4 +67,4 @@ da:
         poll_public:
           label: Vis hvem der stemte
         poll_options:
-          label: Indtast en afstemning pr. linje
+          label: Indtast en valgmulighed per linje

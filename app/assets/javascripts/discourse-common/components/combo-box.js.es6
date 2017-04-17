@@ -22,17 +22,40 @@ export default Ember.Component.extend(bufferedRender({
     let selected = this.get('value');
     if (!Em.isNone(selected)) { selected = selected.toString(); }
 
-    if (this.get('content')) {
-      this.get('content').forEach(o => {
+    let selectedFound = false;
+    let firstVal = undefined;
+    const content = this.get('content');
+
+    if (content) {
+      let first = true;
+      content.forEach(o => {
         let val = o[this.get('valueAttribute')];
         if (typeof val === "undefined") { val = o; }
         if (!Em.isNone(val)) { val = val.toString(); }
 
         const selectedText = (val === selected) ? "selected" : "";
         const name = Handlebars.Utils.escapeExpression(Ember.get(o, nameProperty) || o);
+
+        if (val === selected) {
+          selectedFound = true;
+        }
+        if (first) {
+          firstVal = val;
+          first = false;
+        }
         buffer.push(`<option ${selectedText} value="${val}">${name}</option>`);
       });
     }
+
+    if (!selectedFound) {
+      if (none) {
+        this.set('value', null);
+      } else {
+        this.set('value', firstVal);
+      }
+    }
+
+    Ember.run.scheduleOnce('afterRender', this, this._updateSelect2);
   },
 
   @observes('value')
@@ -81,7 +104,12 @@ export default Ember.Component.extend(bufferedRender({
       }
       this.set('value', val);
     });
+
     Ember.run.scheduleOnce('afterRender', this, this._triggerChange);
+  },
+
+  _updateSelect2() {
+    this.$().trigger('change.select2');
   },
 
   _triggerChange() {

@@ -13,7 +13,6 @@ class DiscoursePluginRegistry
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
-
     attr_accessor :custom_html
 
     def plugins
@@ -59,6 +58,10 @@ class DiscoursePluginRegistry
 
     def seed_data
       @seed_data ||= HashWithIndifferentAccess.new({})
+    end
+
+    def html_builders
+      @html_builders ||= {}
     end
   end
 
@@ -127,6 +130,14 @@ class DiscoursePluginRegistry
     self.seed_data[key] = value
   end
 
+  def self.register_html_builder(name, &block)
+    html_builders[name] = block
+  end
+
+  def self.build_html(name)
+    html_builders[name]&.call
+  end
+
   def javascripts
     self.class.javascripts
   end
@@ -169,6 +180,7 @@ class DiscoursePluginRegistry
     sass_variables.clear
     serialized_current_user_fields
     asset_globs.clear
+    html_builders.clear
   end
 
   def self.setup(plugin_class)

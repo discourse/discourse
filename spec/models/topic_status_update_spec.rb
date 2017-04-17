@@ -45,6 +45,34 @@ RSpec.describe TopicStatusUpdate, type: :model do
         end
       end
     end
+
+    describe '#category_id' do
+      describe 'when #status_type is publish_to_category' do
+        describe 'when #category_id is not present' do
+          it 'should not be valid' do
+            topic_status_update = Fabricate.build(:topic_status_update,
+              status_type: TopicStatusUpdate.types[:publish_to_category]
+            )
+
+            expect(topic_status_update).to_not be_valid
+            expect(topic_status_update.errors.keys).to include(:category_id)
+          end
+        end
+
+        describe 'when #category_id is present' do
+          it 'should be valid' do
+            topic_status_update = Fabricate.build(:topic_status_update,
+              status_type: TopicStatusUpdate.types[:publish_to_category],
+              category_id: Fabricate(:category).id,
+              user: Fabricate(:user),
+              topic: Fabricate(:topic)
+            )
+
+            expect(topic_status_update).to be_valid
+          end
+        end
+      end
+    end
   end
 
   context 'callbacks' do
@@ -197,6 +225,11 @@ RSpec.describe TopicStatusUpdate, type: :model do
       )
 
       Fabricate(:topic_status_update)
+
+      Fabricate(:topic_status_update,
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour
+      ).topic.trash!
 
       expect { described_class.ensure_consistency! }
         .to change { Jobs::ToggleTopicClosed.jobs.count }.by(2)

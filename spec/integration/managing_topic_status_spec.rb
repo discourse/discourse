@@ -78,6 +78,8 @@ RSpec.describe "Managing a topic's status update", type: :request do
 
     describe 'publishing topic to category in the future' do
       it 'should be able to create the topic status update' do
+        SiteSetting.queue_jobs = true
+
         post "/t/#{topic.id}/status_update.json",
           time: 24,
           status_type: TopicStatusUpdate.types[3],

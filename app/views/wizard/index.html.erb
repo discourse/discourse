@@ -1,10 +1,10 @@
 <html>
   <head>
-    <%= stylesheet_link_tag 'wizard' %>
-    <%= script 'ember_jquery' %>
-    <%= script 'wizard-vendor' %>
-    <%= script 'wizard-application' %>
-    <%= script "locales/#{I18n.locale}" %>
+    <%= discourse_stylesheet_link_tag :wizard, theme_key: nil %>
+    <%= preload_script 'ember_jquery' %>
+    <%= preload_script 'wizard-vendor' %>
+    <%= preload_script 'wizard-application' %>
+    <%= preload_script "locales/#{I18n.locale}" %>
     <%= render partial: "common/special_font_face" %>
     <script src="<%= Discourse.base_uri %>/extra-locales/wizard"></script>
     <%= csrf_meta_tags %>

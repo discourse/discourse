@@ -38,7 +38,8 @@ class TopicUser < ActiveRecord::Base
     end
 
     def auto_notification(user_id, topic_id, reason, notification_level)
-      if TopicUser.where(user_id: user_id, topic_id: topic_id, notifications_reason_id: nil).exists?
+      if TopicUser.where("user_id = ? AND topic_id = ? AND (notifications_reason_id IS NULL OR notification_level < ?)",
+                           user_id, topic_id, notification_level).exists?
         change(user_id, topic_id,
           notification_level: notification_level,
           notifications_reason_id: reason
@@ -136,7 +137,17 @@ SQL
       end
 
       if attrs[:notification_level]
-        MessageBus.publish("/topic/#{topic_id}", { notification_level_change: attrs[:notification_level] }, user_ids: [user_id])
+        MessageBus.publish(
+          "/topic/#{topic_id}",
+          { notification_level_change: attrs[:notification_level] },
+          user_ids: [user_id]
+        )
+
+        DiscourseEvent.trigger(:topic_notification_level_changed,
+          attrs[:notification_level],
+          user_id,
+          topic_id
+        )
       end
 
     rescue ActiveRecord::RecordNotUnique

@@ -135,6 +135,9 @@ de:
       visible:
         enabled: 'sichtbar gemacht, %{when}'
         disabled: 'unsichtbar gemacht, %{when}'
+      banner:
+        enabled: 'hat dieses Banner erstellt %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird.'
+        disabled: 'hat dieses Banner entfernt %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt.'
     topic_admin_menu: "Thema administrieren"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
@@ -243,7 +246,7 @@ de:
     click_to_show: "Klicke zum Anzeigen."
     preview: "Vorschau"
     cancel: "Abbrechen"
-    save: "Änderungen speichern"
+    save: "Speichern"
     saving: "Speichere…"
     saved: "Gespeichert!"
     upload: "Hochladen"
@@ -278,7 +281,7 @@ de:
       has_pending_posts:
         one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
-      confirm: "Änderungen speichern"
+      confirm: "Speichern"
       delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle Beiträge des Benutzers entfernt und dessen E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
@@ -363,7 +366,6 @@ de:
       automatic_group: Automatische Gruppe
       closed_group: Geschlossene Gruppe
       is_group_user: "Du bist ein Mitglied in dieser Gruppe."
-      allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppenbesitzer zu schicken (Erfordert, dass jeder die Gruppe erwähnen kann)"
       membership: "Mitgliedschaft"
       name: "Name"
       user_count: "Anzahl der Mitglieder"
@@ -654,7 +656,7 @@ de:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
         default: "(Standard)"
-        any: "jegliche"
+        any: "(keine Einschränkung)"
       password_confirmation:
         title: "Wiederholung des Passworts"
       last_posted: "Letzter Beitrag"
@@ -1073,15 +1075,6 @@ de:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
-      auto_close:
-        label: "Zeitpunkt der automatischen Schließung:"
-        error: "Bitte gib einen gültigen Wert ein."
-        based_on_last_post: "Das Thema erst schließen, wenn der letzte Beitrag mindestens so alt ist."
-        all:
-          examples: 'Gib die Anzahl der Stunden (24), eine Uhrzeit (17:30) oder einen Zeitstempel (2013-11-22 14:00) ein.'
-        limited:
-          units: "(# Stunden)"
-          examples: 'Gib die Anzahl der Stunden ein (24).'
     notifications:
       title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Beiträge und Themen, Nachrichten, usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
@@ -1172,7 +1165,7 @@ de:
       advanced:
         title: Erweiterte Suche
         posted_by:
-          label: Verfasst von
+          label: Beiträge von
         in_category:
           label: In der Kategorie
         in_group:
@@ -1182,33 +1175,33 @@ de:
         with_tags:
           label: Mit den Schlagwörtern
         filters:
-          label: Zeige nur Beiträge an, die...
-          likes: Mir gefallen
-          posted: Ich schrieb einen Beitrag in
-          watching: Ich beobachte
-          tracking: Ich verfolge
-          private: sind in meinen Nachrichten
-          bookmarks: Ich habe ein Lesezeichen gesetzt
-          first: sind die allerersten Beiträge
-          pinned: sind angeheftet
-          unpinned: sind nicht angeheftet
-          seen: Habe ich gelesen
-          unseen: Habe ich nicht gelesen
-          wiki: sind Wiki
+          label: 'Themen/Beiträge einschränken:'
+          likes: Themen/Beiträge, die mir gefallen
+          posted: Themen mit Beiträgen von mir
+          watching: Themen, die ich beobachte
+          tracking: Themen, denen ich folge
+          private: Beiträge in meinen Unterhaltungen
+          bookmarks: Gemerkte Themen/Beiträge
+          first: Erste Beiträge in Themen
+          pinned: Angeheftete Themen
+          unpinned: Nicht angeheftete Themen
+          seen: Gelesene Themen/Beiträge
+          unseen: Ungelesene Themen/Beiträge
+          wiki: Wikis
         statuses:
-          label: Wo Themen
-          open: sind offen
-          closed: sind geschlossen
-          archived: sind archiviert
-          noreplies: haben keine Antworten
-          single_user: enthalten nur einen Nutzer
+          label: 'Themen einschränken:'
+          open: Offene Themen
+          closed: Geschlossene Themen
+          archived: Archivierte Themen
+          noreplies: Themen ohne Antwort
+          single_user: Themen mit nur einem Benutzer
         post:
           count:
-            label: Minimale anzahl an Beiträgen
+            label: Themen mit … oder mehr Beiträgen
           time:
-            label: Beigetragen
-            before: vorher
-            after: nachher
+            label: 'Zeitraum einschränken:'
+            before: Beiträge vor dem
+            after: Beiträge nach dem
     hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: 'zurückgehen'
@@ -1329,11 +1322,7 @@ de:
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
-      auto_close_notice: "Dieses Thema wird %{timeLeft} automatisch geschlossen."
-      auto_close_notice_based_on_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
       auto_close_title: 'Automatisches Schließen'
-      auto_close_save: "Speichern"
-      auto_close_remove: "Dieses Thema nicht automatisch schließen"
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits eine Stunde alt. Das Thema wird daher sofort geschlossen."
         other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort geschlossen."
@@ -1366,7 +1355,6 @@ de:
           '2_8': 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
-          '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
           '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
@@ -1402,7 +1390,6 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen..."
-        auto_close: "Automatisch schließen…"
         pin: "Thema anheften..."
         unpin: "Thema loslösen..."
         unarchive: "Thema aus Archiv holen"
@@ -1800,8 +1787,10 @@ de:
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
       subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
-      sort_order: "Standardsortierung:"
-      default_view: "Standardansicht:"
+      subcategory_list_style: "Listenstil für Unterkategorien"
+      sort_order: "Themenliste sortieren nach:"
+      default_view: "Standard-Themenliste"
+      default_top_period: "Standard-Zeitraum für Top-Beiträge:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
@@ -1839,6 +1828,11 @@ de:
         created: "Erstellt"
       sort_ascending: 'Aufsteigend'
       sort_descending: 'Absteigend'
+      subcategory_list_styles:
+        rows: "Zeilen"
+        rows_with_featured_topics: "Zeilen mit hervorgehobenen Themen"
+        boxes: "Spalten"
+        boxes_with_featured_topics: "Spalten mit hervorgehobenen Themen"
     flagging:
       title: 'Danke für deine Mithilfe!'
       action: 'Beitrag melden'
@@ -2827,8 +2821,6 @@ de:
         blocked: "Geblockt?"
         staged: "Vorbereitet?"
         show_admin_profile: "Administration"
-        edit_title: "Titel bearbeiten"
-        save_title: "Titel speichern"
         refresh_browsers: "Aktualisierung im Browser erzwingen"
         refresh_browsers_message: "Nachricht wurde an alle Clients gesendet!"
         show_public_profile: "Zeige öffentliches Profil"

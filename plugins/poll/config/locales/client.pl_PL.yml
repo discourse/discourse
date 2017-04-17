@@ -64,6 +64,7 @@ pl_PL:
         insert: Wstaw ankietę
         help:
           options_count: Wprowadź przynajmniej 2 opcje
+          invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
         poll_type:
           label: Typ
           regular: Pojedynczy wybór

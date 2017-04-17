@@ -7,11 +7,11 @@
   @module Discourse
 **/
 export default Discourse.Route.extend({
-  queryParams: { mode: {}, "start-date": {}, "end-date": {}, "category-id": {}, "group-id": {}},
+  queryParams: { mode: {}, "start_date": {}, "end_date": {}, "category_id": {}, "group_id": {} },
 
   model: function(params) {
     const Report = require('admin/models/report').default;
-    return Report.find(params.type, params['start-date'], params['end-date'], params['category-id'], params['group-id']);
+    return Report.find(params.type, params['start_date'], params['end_date'], params['category_id'], params['group_id']);
   },
 
   setupController: function(controller, model) {

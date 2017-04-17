@@ -1,12 +1,14 @@
 {{#d-modal-body}}
-  {{#if emailSent}}
-    {{{i18n 'login.sent_activation_email_again' currentEmail=currentEmail}}}
-  {{else}}
-    {{{i18n 'login.not_activated' sentTo=sentTo}}}
-    <a href {{action "sendActivationEmail"}} class="resend-link">{{i18n 'login.resend_activation_email'}}</a>
-  {{/if}}
+  {{{i18n 'login.not_activated' sentTo=sentTo}}}
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  <button class='btn btn-primary' {{action "closeModal"}}>{{i18n 'close'}}</button>
+  {{d-button action="sendActivationEmail"
+             label="login.resend_title"
+             icon="envelope"
+             class="btn-primary resend"}}
+  {{d-button action="editActivationEmail"
+             label="login.change_email"
+             icon="pencil"
+             class="edit-email"}}
 </div>

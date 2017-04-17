@@ -366,7 +366,7 @@ he:
       automatic_group: קבוצה אוטומטית
       closed_group: קבוצה סגורה
       is_group_user: "אתם חברים בקבוצה זו."
-      allow_membership_requests: "אפשרו למשתמשים לשלוח בקשות חברות לבעלי הקבוצה (מצריך שכולם יוכלו לאזכר את הקבוצה)"
+      allow_membership_requests: "אפשרו למשתמשים לשלוח בקשות חברות לבעלי קבוצה"
       membership: "חברות"
       name: "שם"
       user_count: "מספר חברים"
@@ -564,6 +564,7 @@ he:
       muted_users_instructions: "להשבית כל התראה ממשתמשים אלו"
       muted_topics_link: "הצג נושאים שהושתקו"
       watched_topics_link: "הצגת נושאים נצפים"
+      tracked_topics_link: "הצגת נושאים במעקב"
       automatically_unpin_topics: "בטל נעיצת נושאים באופן אוטומטי כאשר אני מגיע/ה לתחתית."
       apps: "אפליקציות"
       revoke_access: "שלילת גישה"
@@ -938,6 +939,10 @@ he:
       not_allowed_from_ip_address: "אינכם יכולים להתחבר מכתובת IP זו."
       admin_not_allowed_from_ip_address: "אינכם יכולים להתחבר כמנהל מערכת מכתובת IP זו."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
+      resend_title: "שליחה מחדש של מייל הפעלה"
+      change_email: "שינוי כתובת מייל"
+      provide_new_email: "הזינו כתובת חדשה ונשלח מחדש את מייל האישור שלכם."
+      submit_new_email: "עדכון כתובת מייל"
       sent_activation_email_again: "שלחנו לך הודעת דואר אלקטרוני נוספת להפעלת החשבון לכתובת <b>{{currentEmail}}</b>. זה יכול לקחת כמה דקות עד שיגיע, לא לשכוח לבדוק את תיבת דואר הזבל."
       to_continue: "התחברו בבקשה"
       preferences: "אתם צריכים להיות מחוברים כדי לשנות את העדפות המשתמש שלכם."
@@ -1076,15 +1081,6 @@ he:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
       admin_options_title: "אפשרויות צוות אופציונליות לנושא זה"
-      auto_close:
-        label: "מועד סגירה אוטומטית של נושא:"
-        error: "הזינו בבקשה ערך תקין."
-        based_on_last_post: "לא לסגור עד שהפוסט האחרון בנושא זה יהיה לפחות בגיל זה."
-        all:
-          examples: 'הזינו מספר שעות (24), שעה מדוייקת (17:30) או חותמת זמן (2013-11-22 14:00).'
-        limited:
-          units: "(# מספר שעות)"
-          examples: 'הזינו מספר שעות (24).'
     notifications:
       title: "התראות אודות אזכור @שם, תגובות לפוסטים ולנושאים שלכם, הודעות, וכד'"
       none: "לא ניתן לטעון כעת התראות."
@@ -1154,6 +1150,7 @@ he:
       sort_by: "מיון על פי"
       relevance: "רלוונטיות"
       latest_post: "הפוסטים האחרונים"
+      latest_topic: "נושא אחרון"
       most_viewed: "הנצפה ביותר"
       most_liked: "האהובים ביותר"
       select_all: "בחירה של הכל"
@@ -1334,11 +1331,37 @@ he:
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
-      auto_close_notice: "הנושא הזה יסגר אוטומטית %{timeLeft}."
-      auto_close_notice_based_on_last_post: "נושא זה ייסגר %{duration} אחר התגובה האחרונה."
+      topic_status_update:
+        title: "קביעת שעון עצר לנושא"
+        save: "קביעת שעון עצר"
+        time: "זמן:"
+        remove: "הסרת שעון עצר"
+        publish_to: "פרסום ל:"
+      auto_update_input:
+        limited:
+          units: "(# שעות)"
+          examples: 'הכניסו מספר שעות (24).'
+        all:
+          examples: 'הכניסו מספר שעות (24), זמן אבסולוטי (17:30) או חותמת זמן (2013-11-22 14:00).'
+      publish_to_category:
+        title: "תזמון פרסום"
+      temp_open:
+        title: "פתיחה זמנית"
+      auto_reopen:
+        title: "פתיחה אוטומטית של נושא"
+      temp_close:
+        title: "סגירה זמנית"
+      auto_close:
+        title: "סגירה אוטומטית של נושא"
+        label: "זמן סגירה אוטומטית של נושא:"
+        error: "אנא הכניסו ערך תקין."
+        based_on_last_post: "אל תסגרו עד שהפוסט האחרון בנושא הוא לפחות בגיל זה."
+      status_update_notice:
+        auto_open: "נושא זה ייפתח אוטומטית %{timeLeft}."
+        auto_close: "נושא זו ייסגר אוטומטית %{timeLeft}."
+        auto_publish_to_category: "נושא זה יפורסם ל-<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "נושא זה ייסגר %{duration} אחרי התגובה האחרונה."
       auto_close_title: 'הגדרות סגירה אוטומטית'
-      auto_close_save: "שמור"
-      auto_close_remove: "אל תנעל נושא זה אוטומטית"
       auto_close_immediate:
         one: "הפוסט האחרון בנושא הוא כבר בן שעה, אז הנושא ייסגר מיידית."
         other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
@@ -1371,7 +1394,7 @@ he:
           '2_8': 'תקבלו התראות כיוון שאתם עוקבים אחר קטגוריה זו.'
           '2_4': 'תקבלו התראות כיוון שפרסמתם תגובה לנושא זה.'
           '2_2': 'תקבלו התראות כיוון שאתם עוקבים אחרי הנושא הזה.'
-          '2': 'תקבלו התראות כיוון ש<a href="/users/{{username}}/preferences">קראתם את הנושא הזה</a>.'
+          '2': 'תקבלו התראות כיוון שאתם <a href="/u/{{username}}/preferences">קוראים נושא זה</a>.'
           '1_2': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלכם או ישיב לכם.'
           '1': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלכם או ישיב לכם.'
           '0_7': 'אתם מתעלמים מכל ההתראות בקטגוריה זו.'
@@ -1407,7 +1430,7 @@ he:
         open: "פתיחת נושא"
         close: "סגירת נושא"
         multi_select: "בחרו פוסטים..."
-        auto_close: "סגירה אוטומטית..."
+        timed_update: "קביעת שעון עצר נושא..."
         pin: "נעיצת נושא..."
         unpin: "שחרור נעיצת נושא..."
         unarchive: "הוצאת נושא מארכיון"
@@ -1808,6 +1831,7 @@ he:
       subcategory_list_style: "סגנון רשימות קטגוריות משנה:"
       sort_order: "סידור ברירת מחדל לנושאים:"
       default_view: "תצוגת ברירת מחדל לנושאים:"
+      default_top_period: "פרק זמן דיפולטיבי להובלה"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
@@ -2842,8 +2866,6 @@ he:
         blocked: "חסום?"
         staged: "מועמד?"
         show_admin_profile: "מנהל ראשי"
-        edit_title: "ערוך כותרת"
-        save_title: "שמור כותרת"
         refresh_browsers: "הכרח רענון דפדפן"
         refresh_browsers_message: "ההודעה נשלחה לכל הלקוחות!"
         show_public_profile: "הצג פרופיל פומבי"
@@ -2854,6 +2876,7 @@ he:
         logged_out: "המשתמש/ת התנתקו בכל המכשירים"
         revoke_admin: 'שלול ניהול ראשי'
         grant_admin: 'הענקת ניהול'
+        grant_admin_confirm: "שלחנו אליכם מייל כדי לוודא את האדמיניסטרטור החדש. בבקשה פיתחו אותו ועיקבו אחר ההוראות."
         revoke_moderation: 'שללו הנחיה'
         grant_moderation: 'הענקת הנחיה'
         unblock: 'ביטול חסימה'

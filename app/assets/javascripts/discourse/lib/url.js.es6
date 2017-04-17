@@ -120,7 +120,6 @@ const DiscourseURL = Ember.Object.extend({
     if (window.history &&
         window.history.pushState &&
         window.history.replaceState &&
-        !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/) &&
         (window.location.pathname !== path)) {
 
         // Always use replaceState in the next runloop to prevent weird routes changing

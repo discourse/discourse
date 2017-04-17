@@ -54,6 +54,7 @@ es:
         insert: Insertar Encuesta
         help:
           options_count: Introducir al menos 2 opciones
+          invalid_values: El valor mínimo debe ser menor que el valor máximo.
         poll_type:
           label: Tipo
           regular: Una opción

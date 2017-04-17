@@ -865,7 +865,6 @@ sq:
       logging_in: "Duke u identifikuar..."
       or: "Ose"
       authenticating: "Duke u autorizuar..."
-      awaiting_confirmation: "Llogaria juaj është në pritje të aktivizimit, përdorni butonin e fjalëkalimit të humbur që të merrni një email të ri me kodin e aktivizimit."
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
       requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
       not_activated: "Nuk mund të identifikoheni akoma. Ju kemi dërguar një email aktivizimi tek <b>{{sentTo}}</b>. Ndiqni udhëzimet në atë email për të aktivizuar llogarinë tuaj. "
@@ -993,15 +992,6 @@ sq:
         title: "Mos harruat të shtonit marrësit?"
         body: "Për momentin ky mesazh po ju dërgohet vetëm juve!"
       admin_options_title: "Rregullime opsionale të stafit për këtë temë"
-      auto_close:
-        label: "Data e mbylljes automatike të temës:"
-        error: "Ju lutem shkruani një vlerë të vlefshme."
-        based_on_last_post: "Mos e mbyll derisa postimi i fundit brenda temës të jetë të paktën kaq i vjetër. "
-        all:
-          examples: 'Vendosni numrin e orëve (24), orën absolute (17:30) ose një "timestamp" (2013-11-22 14:00).'
-        limited:
-          units: "(# i orëve)"
-          examples: 'Vendosni numrin e orëve (24).'
     notifications:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
@@ -1116,7 +1106,6 @@ sq:
         selected:
           one: "Keni zgjedhur <b>1</b> temë."
           other: "Keni zgjedhur <b>{{count}}</b> tema."
-        change_tags: "Ndrysho etiketat"
         choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
         changed_tags: "Etiketat e temave u ndryshuan. "
       none:
@@ -1204,11 +1193,7 @@ sq:
       jump_reply_up: hidhe tek përgjigja paraardhëse
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
-      auto_close_notice: "Kjo temë do të mbyllet automatikisht %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Kjo temë do të mbyllet %{duration} pas përgjigjes së fundit. "
       auto_close_title: 'Rregullimet e Mbylljes Automatike'
-      auto_close_save: "Ruaj"
-      auto_close_remove: "Mos e Mbyll Automatikisht Këtë Temë"
       timeline:
         back: "Kthehu mbrapa"
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
@@ -1235,7 +1220,6 @@ sq:
           '2_8': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
           '2_4': 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
           '2_2': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
-          '2': 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
           '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
@@ -1271,7 +1255,6 @@ sq:
         open: "Hap temën"
         close: "Mbyll temën"
         multi_select: "Përzgjidhni Postimet..."
-        auto_close: "Mbylle Automatikisht..."
         pin: "Ngjite temën..."
         unpin: "Çngjite temën..."
         unarchive: "Çarkivoje temën"
@@ -1731,8 +1714,6 @@ sq:
     category_title: "Kategoria"
     history: "Historia"
     changed_by: "nga {{author}}"
-    raw_email:
-      title: "Raw Email"
     categories_list: "Lista Kategorive"
     filters:
       with_topics: "Temat nga %{filter}"
@@ -2165,7 +2146,6 @@ sq:
             confirm: "Do you want to start a new backup?"
           download:
             label: "Shkarko"
-            title: "Shkarko kopjen"
           restore:
             label: "Rikthe"
           rollback:
@@ -2464,8 +2444,6 @@ sq:
         blocked: "Bllokuar?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        edit_title: "Redakto Titullin"
-        save_title: "Ruaj Titullin"
         refresh_browsers: "Forco rifreskimin e shfletuesit"
         refresh_browsers_message: "Mesazhi u dërgua tek të gjithë klientët!"
         show_public_profile: "Shfaq Profilin Publik"

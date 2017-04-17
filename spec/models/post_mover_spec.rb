@@ -273,10 +273,7 @@ describe PostMover do
           new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
 
           expect(new_topic).to be_present
-          new_topic.posts.reload
           expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
-
-          new_topic.reload
           expect(new_topic.posts_count).to eq(2)
           expect(new_topic.highest_post_number).to eq(2)
 
@@ -284,7 +281,7 @@ describe PostMover do
           p1.reload
           expect(p1.sort_order).to eq(1)
           expect(p1.post_number).to eq(1)
-          p1.topic_id == topic.id
+          expect(p1.topic_id).to eq(topic.id)
           expect(p1.reply_count).to eq(0)
 
           # New first post
@@ -295,13 +292,24 @@ describe PostMover do
           p2.reload
           expect(p2.post_number).to eq(2)
           expect(p2.sort_order).to eq(2)
-          p2.topic_id == new_topic.id
+          expect(p2.topic_id).to eq(new_topic.id)
           expect(p2.reply_to_post_number).to eq(1)
           expect(p2.reply_count).to eq(0)
 
           topic.reload
           expect(topic.posts.by_post_number).to match_array([p1, p3, p4])
           expect(topic.highest_post_number).to eq(p4.post_number)
+        end
+
+        it "preserves post actions in the new post" do
+          PostAction.act(another_user, p1, PostActionType.types[:like])
+
+          new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
+          new_post = new_topic.posts.where(post_number: 1).first
+
+          expect(new_topic.like_count).to eq(1)
+          expect(new_post.like_count).to eq(1)
+          expect(new_post.post_actions.size).to eq(1)
         end
 
       end

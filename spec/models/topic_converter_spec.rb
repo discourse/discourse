@@ -5,13 +5,42 @@ describe TopicConverter do
   context 'convert_to_public_topic' do
     let(:admin) { Fabricate(:admin) }
     let(:author) { Fabricate(:user) }
+    let(:category) { Fabricate(:category) }
     let(:private_message) { Fabricate(:private_message_topic, user: author) }
 
     context 'success' do
       it "converts private message to regular topic" do
-        topic = private_message.convert_to_public_topic(admin)
+        SiteSetting.allow_uncategorized_topics = true
+        topic = described_class.new(private_message, admin).convert_to_public_topic
+        topic.reload
+
         expect(topic).to be_valid
         expect(topic.archetype).to eq("regular")
+        expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
+      end
+
+      describe 'when uncategorized category is not allowed' do
+        before do
+          SiteSetting.allow_uncategorized_topics = false
+          category.update!(read_restricted: false)
+        end
+
+        it 'should convert private message into the right category' do
+          topic = described_class.new(private_message, admin).convert_to_public_topic
+          topic.reload
+
+          expect(topic).to be_valid
+          expect(topic.archetype).to eq("regular")
+          expect(topic.category_id).to eq(category.id)
+        end
+      end
+
+      describe 'when a custom category_id is given' do
+        it 'should convert private message into the right category' do
+          topic = described_class.new(private_message, admin).convert_to_public_topic(category.id)
+
+          expect(topic.reload.category).to eq(category)
+        end
       end
 
       it "updates user stats" do

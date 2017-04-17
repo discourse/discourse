@@ -12,7 +12,8 @@ class UserHistorySerializer < ApplicationSerializer
              :post_id,
              :category_id,
              :action,
-             :custom_type
+             :custom_type,
+             :id
 
   has_one :acting_user, serializer: BasicUserSerializer, embed: :objects
   has_one :target_user, serializer: BasicUserSerializer, embed: :objects

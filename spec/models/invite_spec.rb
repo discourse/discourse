@@ -102,8 +102,15 @@ describe Invite do
             expect(topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo')).to eq(@invite)
           end
 
+          it 'updates timestamp of existing invite' do
+            @invite.created_at = 10.days.ago
+            @invite.save
+            resend_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+            expect(resend_invite.created_at).to be_within(1.minute).of(Time.zone.now)
+          end
+
           it 'returns a new invite if the other has expired' do
-            SiteSetting.stubs(:invite_expiry_days).returns(1)
+            SiteSetting.invite_expiry_days = 1
             @invite.created_at = 2.days.ago
             @invite.save
             new_invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
@@ -223,7 +230,6 @@ describe Invite do
       it 'does not enqueue an email if the user has already set password' do
         Fabricate(:user, email: invite.email, password_hash: "7af7805c9ee3697ed1a83d5e3cb5a3a431d140933a87fdcdc5a42aeef9337f81")
         Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup)) # should enqueue an account activation email
         invite.redeem
       end
 

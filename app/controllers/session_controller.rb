@@ -48,7 +48,7 @@ class SessionController < ApplicationController
         sso.moderator = current_user.moderator?
 
         if sso.return_sso_url.blank?
-          render text: "return_sso_url is blank, it must be provided", status: 400
+          render plain: "return_sso_url is blank, it must be provided", status: 400
           return
         end
 
@@ -137,14 +137,17 @@ class SessionController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
 
       if SiteSetting.verbose_sso_logging
-        Rails.logger.warn(<<-EOF)
-          Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}\n
-          #{e.record.errors.to_h}\n
-          \n
-          #{sso.diagnostics}
+        Rails.logger.warn(<<~EOF)
+        Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
+        #{e.record.errors.to_h}
+
+        Attributes:
+        #{e.record.attributes.slice(*SingleSignOn::ACCESSORS.map(&:to_s))}
+
+        SSO Diagnostics:
+        #{sso.diagnostics}
         EOF
       end
-
 
       text = nil
 
@@ -243,7 +246,7 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-login-min-#{params[:login].to_s[0..100]}", 3, 1.minute).performed!
 
     user = User.find_by_username_or_email(params[:login])
-    user_presence = user.present? && user.id != Discourse::SYSTEM_USER_ID && !user.staged
+    user_presence = user.present? && user.id > 0 && !user.staged
     if user_presence
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)

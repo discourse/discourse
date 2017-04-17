@@ -179,12 +179,14 @@ class Autospec::Manager
       puts "@@@@@@@@@ Listen to #{path}/#{watch} #{options}" if @debug
       Thread.new do
         begin
-          Listen.to("#{path}/#{watch}", options) do |modified, added, _|
+          listener = Listen.to("#{path}/#{watch}", options) do |modified, added, _|
             paths = [modified, added].flatten
             paths.compact!
             paths.map!{|long| long[(path.length+1)..-1]}
             process_change(paths)
           end
+          listener.start
+          sleep
         rescue => e
           puts "FAILED to listen on changes to #{path}/#{watch}"
           puts e
@@ -222,12 +224,14 @@ class Autospec::Manager
           end
         end
       end
+
       # special watcher for styles/templates
-      Autospec::ReloadCss::WATCHERS.each do |k, _|
-        matches = []
-        matches << file if k.match(file)
-        Autospec::ReloadCss.run_on_change(matches) if matches.present?
-      end
+      # now handled via libass integration
+      # Autospec::ReloadCss::WATCHERS.each do |k, _|
+      #   matches = []
+      #   matches << file if k.match(file)
+      #   Autospec::ReloadCss.run_on_change(matches) if matches.present?
+      # end
     end
 
     queue_specs(specs) if hit

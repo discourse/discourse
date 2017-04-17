@@ -1,7 +1,7 @@
 #!/bin/bash
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" && cd ../.. && pwd -P)
-DATA_DIR=$SOURCE_DIR/tmp/postgres
+DATA_DIR="$SOURCE_DIR/tmp/postgres"
 
 show_help() {
 cat <<EOF
@@ -36,16 +36,16 @@ echo "Using data in:   ${DATA_DIR}"
 
 mkdir -p "${DATA_DIR}"
 
-docker run -d -p 1080:1080 -p 3000:3000 -v $DATA_DIR:/shared/postgres_data -v $SOURCE_DIR:/src --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:latest /sbin/boot
+docker run -d -p 1080:1080 -p 3000:3000 -v "$DATA_DIR:/shared/postgres_data" -v "$SOURCE_DIR:/src" --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:latest /sbin/boot
 
 if [ "${initialize}" = "initialize" ]; then
     echo "Installing gems..."
-    ${SCRIPTPATH}/bundle install
+    "${SCRIPTPATH}/bundle" install
 
     echo "Migrating database..."
-    ${SCRIPTPATH}/rake db:migrate
-    RAILS_ENV=test ${SCRIPTPATH}/rake db:migrate
+    "${SCRIPTPATH}/rake" db:migrate
+    RAILS_ENV=test "${SCRIPTPATH}/rake" db:migrate
 
     echo "Creating admin user..."
-    ${SCRIPTPATH}/rake admin:create
+    "${SCRIPTPATH}/rake" admin:create
 fi

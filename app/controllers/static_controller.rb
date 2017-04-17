@@ -43,7 +43,7 @@ class StaticController < ApplicationController
     end
 
     if I18n.exists?("static.#{@page}")
-      render text: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
+      render html: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
       return
     end
 
@@ -163,7 +163,7 @@ class StaticController < ApplicationController
       rescue Errno::ENOENT
         expires_in 1.second, public: true, must_revalidate: false
 
-        render text: "can not find #{params[:path]}", status: 404
+        render plain: "can not find #{params[:path]}", status: 404
         return
       end
     end

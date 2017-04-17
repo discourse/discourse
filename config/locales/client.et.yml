@@ -136,7 +136,6 @@ et:
         enabled: 'lisatud %{when}'
         disabled: 'eemaldatud %{when}'
     topic_admin_menu: "teema admintegevused"
-    wizard_required: "On aeg oma foorum seadistada! <a href='%{url}' data-auto-route='true'>Käivita algseadistamise viisard</a>!"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     bootstrap_mode_enabled: "Oma uue saidi lansseerimise hõlbustamiseks oled käivitusrežiimil. Kõik uued kasutajad saavad usaldustaseme 1 ja nende igapäevased kokkuvõtvad teavitused meili teel on aktiveeritud. See lülitub automaatselt välja kui kasutajate koguarv ületab %{min_users} piiri."
     bootstrap_mode_disabled: "Käivitusrežiim lülitub välja järgmise 24 tunni jooksul."
@@ -363,7 +362,6 @@ et:
       automatic_group: Automaatne grupp
       closed_group: Suletud grupp
       is_group_user: "Oled selle grupi liige"
-      allow_membership_requests: "Luba kasutajatel saata grupi omanikele liikmelisuse taotlusi (eeldab, et igaüks saab gruppi mainida)"
       membership: "Liikmelisus"
       name: "Nimi"
       user_count: "Liikmete arv"
@@ -928,7 +926,6 @@ et:
       logging_in: "Login sisse..."
       or: "Või"
       authenticating: "Autendin..."
-      awaiting_confirmation: "Sinu konto ootab aktiveerimist. Kasuta unustasin parooli - viidet, et aktiveerimise meil uuesti saata."
       awaiting_approval: "Sinu konto on alles meeskonna poolt kinnitamata. Saadame sulle kohe meili, kui see on heaks kiidetud."
       requires_invite: "Vabandame, sellesse foorumisse pääseb ainult kutsega."
       not_activated: "Sa ei saa veel sisse logida. Saatsime sulle aktiveerimise meili aadressile <b>{{sentTo}}</b>. Järgi palun selles meilis olevaid juhiseid oma konto aktiveerimiseks."
@@ -1073,15 +1070,6 @@ et:
         title: "Kas unustasid saajad lisada?"
         body: "Hetkel saadetakse see sõnum vaid sulle endale!"
       admin_options_title: "Meeskonna valikulised sätted selle teema jaoks"
-      auto_close:
-        label: "Teema automaatse sulgemise aeg:"
-        error: "Palun sisesta lubatav väärtus."
-        based_on_last_post: "Ära sule enne, kui selle teema viimane postitus on vähemalt nii vana."
-        all:
-          examples: 'Sisesta tundide arv (24), absoluutne aeg (17:30) või ajatempel (2013-11-22 14:00).'
-        limited:
-          units: "(tundide arv)"
-          examples: 'Sisesta tundide arv (24).'
     notifications:
       title: "teavitused @name mainimiste, oma postitustele ja teemadele vastamiste, sõnumite, jne kohta"
       none: "Hetkel ei saa teavitusi laadida."
@@ -1327,11 +1315,7 @@ et:
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
-      auto_close_notice: "See teema sulgub %{timeLeft} pärast ise."
-      auto_close_notice_based_on_last_post: "See teema sulgub %{duration} peale viimast vastust."
       auto_close_title: 'Automaatse sulgumise sätted'
-      auto_close_save: "Salvesta"
-      auto_close_remove: "Ära lase sel teemal automaatselt sulguda"
       auto_close_immediate:
         one: "Viimane postitus selles teemas on juba 1 tund aega vana, seega sulgub see teema nüüd."
         other: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
@@ -1364,7 +1348,6 @@ et:
           '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda foorumit.'
           '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
           '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          '2': 'Sulle saabuvad teavitused kuna <a href="/users/{{username}}/preferences">luges seda teemat</a>.'
           '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
           '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
           '0_7': 'Eirad kõiki teavitusi selles foorumis.'
@@ -1400,7 +1383,6 @@ et:
         open: "Ava teema"
         close: "Sulge teema"
         multi_select: "Vali postitused..."
-        auto_close: "Sulge automaatselt..."
         pin: "Tõsta teema esile..."
         unpin: "Eemalda teema esiletõstmine..."
         unarchive: "Taasta teema arhiivist"
@@ -1785,7 +1767,6 @@ et:
       suppress_from_homepage: "Eemalda see foorum avalehelt."
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
       all_topics_wiki: "Tee uued teemad vaikimisi wikideks."
-      sort_order: "Vaikejärjestus"
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
       add_permission: "Lisa kasutusõigus"
@@ -1924,7 +1905,6 @@ et:
     history: "Ajalugu"
     changed_by: "autor {{author}}"
     raw_email:
-      title: "Täätlemata meil"
       not_available: "Pole saadaval!"
     categories_list: "Foorumite loend"
     filters:
@@ -2464,7 +2444,6 @@ et:
             without_uploads: "Jah (ära kaasa faile)"
           download:
             label: "Lae alla"
-            title: "Lae varukoopia alla"
           destroy:
             title: "Eemalda varukoopia"
             confirm: "Oled kindel, et soovid selle varukoopia hävitada?"
@@ -2814,8 +2793,6 @@ et:
         blocked: "Blokeeritud?"
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
-        edit_title: "Muuda tiitlit"
-        save_title: "Salvesta tiitel"
         refresh_browsers: "Sunni brauserit värskendama"
         refresh_browsers_message: "Sõnum saadetud kõigile klientidele!"
         show_public_profile: "Näita avalikku profiili"

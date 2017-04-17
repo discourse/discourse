@@ -160,9 +160,12 @@ SQL
 
   def self.clear_flags!(post, moderator)
     # -1 is the automatic system cleary
-    action_type_ids = moderator.id == -1 ?
-        PostActionType.auto_action_flag_types.values :
+    action_type_ids =
+      if moderator.id == Discourse::SYSTEM_USER_ID
+        PostActionType.auto_action_flag_types.values
+      else
         PostActionType.flag_types.values
+      end
 
     actions = PostAction.where(post_id: post.id)
                         .where(post_action_type_id: action_type_ids)
@@ -303,6 +306,19 @@ SQL
     # can happen despite being .create
     # since already bookmarked
     PostAction.where(where_attrs).first
+  end
+
+  def self.copy(original_post, target_post)
+    cols_to_copy = (column_names - %w{id post_id}).join(', ')
+
+    exec_sql <<~SQL
+    INSERT INTO post_actions(post_id, #{cols_to_copy})
+    SELECT #{target_post.id}, #{cols_to_copy}
+    FROM post_actions
+    WHERE post_id = #{original_post.id}
+    SQL
+
+    target_post.post_actions.each { |post_action| post_action.update_counters }
   end
 
   def self.remove_act(user, post, post_action_type_id)
@@ -487,7 +503,7 @@ SQL
                       .flags
                       .joins(:post)
                       .where("posts.topic_id = ?", topic.id)
-                      .where.not(user_id: Discourse::SYSTEM_USER_ID)
+                      .where("post_actions.user_id > 0")
                       .group("post_actions.user_id")
                       .pluck("post_actions.user_id, COUNT(post_id)")
 

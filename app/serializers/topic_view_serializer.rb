@@ -3,6 +3,7 @@ require_dependency 'new_post_manager'
 
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
+  include ApplicationHelper
 
   def self.attributes_from_topic(*list)
     [list].flatten.each do |attribute|
@@ -58,7 +59,8 @@ class TopicViewSerializer < ApplicationSerializer
              :message_archived,
              :tags,
              :featured_link,
-             :topic_status_update
+             :topic_status_update,
+             :unicode_title
 
   # TODO: Split off into proper object / serializer
   def details
@@ -262,6 +264,14 @@ class TopicViewSerializer < ApplicationSerializer
 
   def featured_link
     object.topic.featured_link
+  end
+
+  def include_unicode_title?
+    !!(object.topic.title =~ /:([\w\-+]*):/)
+  end
+
+  def unicode_title
+    gsub_emoji_to_unicode(object.topic.title)
   end
 
 end

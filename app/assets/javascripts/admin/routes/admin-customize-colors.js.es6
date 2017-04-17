@@ -6,9 +6,7 @@ export default Ember.Route.extend({
     return ColorScheme.findAll();
   },
 
-  deactivate() {
-    this._super();
-    this.controllerFor('adminCustomizeColors').set('selectedItem', null);
-  },
-
+  setupController(controller, model) {
+    controller.set("model", model);
+  }
 });

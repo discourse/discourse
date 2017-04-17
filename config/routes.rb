@@ -56,8 +56,6 @@ Discourse::Application.routes.draw do
   get "site/basic-info" => 'site#basic_info'
   get "site/statistics" => 'site#statistics'
 
-  get "site_customizations/:key" => "site_customizations#show"
-
   get "srv/status" => "forums#status"
 
   get "wizard" => "wizard#index"
@@ -155,12 +153,14 @@ Discourse::Application.routes.draw do
         get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
         get "preview-digest" => "email#preview_digest"
         get "send-digest" => "email#send_digest"
+        get "smtp_should_reject"
         post "handle_mail"
       end
     end
 
     scope "/logs" do
       resources :staff_action_logs,     only: [:index]
+      get 'staff_action_logs/:id/diff' => 'staff_action_logs#diff'
       resources :screened_emails,       only: [:index, :destroy]
       resources :screened_ip_addresses, only: [:index, :create, :update, :destroy] do
         collection do
@@ -173,9 +173,9 @@ Discourse::Application.routes.draw do
     get "/logs" => "staff_action_logs#index"
 
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
-    get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
-    get "customize/css_html/:id/:section" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize/themes" => "themes#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
+    get "customize/colors/:id" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
     put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
@@ -185,11 +185,17 @@ Discourse::Application.routes.draw do
     post "flags/agree/:id" => "flags#agree"
     post "flags/disagree/:id" => "flags#disagree"
     post "flags/defer/:id" => "flags#defer"
-    resources :site_customizations, constraints: AdminConstraint.new
+
+    resources :themes, constraints: AdminConstraint.new
+    post "themes/import" => "themes#import"
+    get "themes/:id/preview" => "themes#preview"
 
     scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
+
+      get 'themes/:id/:target/:field_name/edit' => 'themes#index'
+      get 'themes/:id' => 'themes#index'
 
       # They have periods in their URLs often:
       get 'site_texts'          => 'site_texts#index'
@@ -308,6 +314,7 @@ Discourse::Application.routes.draw do
       end
     end
 
+    put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
@@ -322,6 +329,11 @@ Discourse::Application.routes.draw do
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
     get "#{root_path}/authorize-email/:token" => "users_email#confirm"
+    get({
+      "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
+      constraints: { token: /[0-9a-f]+/ }
+    }.merge(index == 1 ? { as: 'confirm_admin' } : {}))
+    post "#{root_path}/confirm-admin/:token" => "users#confirm_admin", constraints: { token: /[0-9a-f]+/ }
     get "#{root_path}/:username/private-messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -378,7 +390,8 @@ Discourse::Application.routes.draw do
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
-  get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[a-z0-9_]+/ }
+  get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
+  get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
 
   post "uploads" => "uploads#create"
 
@@ -700,6 +713,8 @@ Discourse::Application.routes.draw do
 
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
+
+  get "/themes/assets/:key" => "themes#assets"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 

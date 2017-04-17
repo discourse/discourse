@@ -66,10 +66,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer', '0.1.6'
 
-# note: for image_optim to correctly work you need to follow
-# https://github.com/toy/image_optim
-# pinned due to https://github.com/toy/image_optim/pull/75, docker image must be upgraded to upgrade
-gem 'image_optim', '0.20.2'
+gem 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -96,8 +93,6 @@ gem 'thor', require: false
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
-gem 'sass'
-gem 'sass-rails'
 gem 'sidekiq'
 gem 'sidekiq-statistic'
 
@@ -117,6 +112,7 @@ group :assets do
 end
 
 group :test do
+  gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
   gem 'timecop'
@@ -127,7 +123,7 @@ end
 group :test, :development do
   gem 'rspec'
   gem 'mock_redis'
-  gem 'listen', '0.7.3', require: false
+  gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false
@@ -184,3 +180,5 @@ gem 'memory_profiler', require: false, platform: :mri
 gem 'rmmseg-cpp', require: false
 
 gem 'logster'
+
+gem 'sassc', require: false

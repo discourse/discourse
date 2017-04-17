@@ -297,6 +297,8 @@ describe Email::Receiver do
     end
 
     it "supports attached images" do
+      SiteSetting.queue_jobs = true
+
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
 

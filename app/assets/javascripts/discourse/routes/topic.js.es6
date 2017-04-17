@@ -19,7 +19,7 @@ const TopicRoute = Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor('topic');
     if (model) {
-      const result = model.get('title'),
+      const result = model.get('unicode_title') ? model.get('unicode_title') : model.get('title'),
             cat = model.get('category');
 
       // Only display uncategorized in the title tag if it was renamed

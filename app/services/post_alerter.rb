@@ -8,7 +8,7 @@ class PostAlerter
 
   def not_allowed?(user, post)
     user.blank? ||
-    user.id == Discourse::SYSTEM_USER_ID ||
+    user.id < 0 ||
     user.id == post.user_id
   end
 
@@ -269,7 +269,7 @@ class PostAlerter
 
   def create_notification(user, type, post, opts=nil)
     return if user.blank?
-    return if user.id == Discourse::SYSTEM_USER_ID
+    return if user.id < 0
 
     return if type == Notification.types[:liked] && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
 
@@ -373,7 +373,7 @@ class PostAlerter
                               post_action_id: opts[:post_action_id],
                               data: notification_data.to_json)
 
-   if !existing_notification && NOTIFIABLE_TYPES.include?(type)
+   if !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
      # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
      if post_url

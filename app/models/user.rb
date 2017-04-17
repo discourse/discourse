@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :uploads
-  has_many :warnings
+  has_many :user_warnings
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
@@ -162,9 +162,15 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
+    !reserved_username?(lower) && !User.where(username_lower: lower).exists?
+  end
 
-    User.where(username_lower: lower).blank? &&
-      SiteSetting.reserved_usernames.split("|").all? { |reserved| !lower.match('^' + Regexp.escape(reserved).gsub('\*', '.*') + '$') }
+  def self.reserved_username?(username)
+    lower = username.downcase
+
+    SiteSetting.reserved_usernames.split("|").any? do |reserved|
+      !!lower.match("^#{Regexp.escape(reserved).gsub('\*', '.*')}$")
+    end
   end
 
   def self.plugin_staff_user_custom_fields
@@ -270,7 +276,7 @@ class User < ActiveRecord::Base
   def approve(approved_by, send_mail=true)
     self.approved = true
 
-    if approved_by.is_a?(Fixnum)
+    if approved_by.is_a?(Integer)
       self.approved_by_id = approved_by
     else
       self.approved_by = approved_by
@@ -521,6 +527,8 @@ class User < ActiveRecord::Base
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
     update_column(:first_seen_at, now) unless self.first_seen_at
+
+    DiscourseEvent.trigger(:user_seen, self)
   end
 
   def self.gravatar_template(email)
@@ -606,7 +614,7 @@ class User < ActiveRecord::Base
   end
 
   def warnings_received_count
-    warnings.count
+    user_warnings.count
   end
 
   def flags_received_count
@@ -732,7 +740,7 @@ class User < ActiveRecord::Base
     (tl_badge + other_badges).take(limit)
   end
 
-  def self.count_by_signup_date(start_date, end_date, group_id=nil)
+  def self.count_by_signup_date(start_date, end_date, group_id = nil)
     result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
 
     if group_id
@@ -789,7 +797,7 @@ class User < ActiveRecord::Base
   end
 
   def find_email
-    last_sent_email_address || email
+    last_sent_email_address.present? && EmailValidator.email_regex =~ last_sent_email_address ? last_sent_email_address : email
   end
 
   def tl3_requirements
@@ -881,10 +889,6 @@ class User < ActiveRecord::Base
               .count
   end
 
-  def number_of_warnings
-    self.warnings.count
-  end
-
   def number_of_suspensions
     UserHistory.for(self, :suspend_user).count
   end
@@ -900,7 +904,7 @@ class User < ActiveRecord::Base
   end
 
   def is_singular_admin?
-    User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
+    User.where(admin: true).where.not(id: id).human_users.blank?
   end
 
   def logged_out
@@ -925,7 +929,7 @@ class User < ActiveRecord::Base
   end
 
   def clear_global_notice_if_needed
-    return if id == Discourse::SYSTEM_USER_ID
+    return if id < 0
 
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false

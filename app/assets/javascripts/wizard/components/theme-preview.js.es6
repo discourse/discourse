@@ -11,7 +11,7 @@ export default createPreviewComponent(659, 320, {
   logo: null,
   avatar: null,
 
-  @observes('step.fieldsById.theme_id.value')
+  @observes('step.fieldsById.base_scheme_id.value')
   themeChanged() {
     this.triggerRepaint();
   },

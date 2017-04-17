@@ -272,14 +272,6 @@ de:
       Das Thema ist ohne Frage wichtig für dich &ndash; du hast hier mehr als %{percent}% der Antworten geschrieben.
 
       Bist du dir sicher, dass du anderen Leuten angemessen viel Raum lässt, auch ihre eigenen Punkte mitzuteilen?
-    get_a_room: |
-      ### Denke darüber nach, weiteren Personen zu antworten
-
-      Du hast in diesem Thema bereits %{count}-mal auf @%{reply_username} geantwortet.
-
-      Hast du schon darüber nachgedacht, auch *anderen* Personen in in der Diskussion zu antworten? Eine großartige Diskussion bezieht viele Stimmen und Perspektiven ein.
-
-      Wenn du dein Gespräch mit dieser bestimmten Person ausführlich fortsetzen möchtest, [schicke ihr eine persönliche Nachricht](/users/%{reply_username}).
     too_many_replies: |
       ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
 
@@ -329,16 +321,16 @@ de:
           attributes:
             hex:
               invalid: "ist keine gültige Farbe"
-        post_reply:
-          base:
-            different_topic: "Beitrag und Antwort müssen zum gleichen Thema gehören."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL ist ungültig. URL sollte http:// oder https:// enthalten, Leerzeichen sind nicht erlaubt."
+        custom_emoji:
+          attributes:
+            name:
+              taken: wird schon von einem anderen Emoji verwendet
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Benutzerprofils eingetragen</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
@@ -848,7 +840,6 @@ de:
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
-    category_featured_topics: "Anzahl der angezeigten Themen je Kategorie auf der /categories Seite. Nachdem dieser Wert geändert wurde, dauert es bis zu 15 Minuten bis die Kategorieseite aktualisiert ist."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     fixed_category_positions_on_create: "Wenn aktiviert wird die Kategoriezuordnung beim Erstellen eines Themas erhalten (benötigt fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten 'rel nofollow' hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Markdown-Beiträge aktualisierst: \"rake posts:rebake\""
@@ -907,7 +898,6 @@ de:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; Siehe http://google.com/analytics"
     gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCDEF"
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
-    enable_noscript_support: "Aktiviere Standard-Suchmaschinen-Webcrawler-Unterstützung durch den noscript-Tag"
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_whitelist: "Administratoren können sich nur anmelden, wenn sie von einer IP-Adresse aus zugreifen, welcher unter den vertrauenswürden IP-Adressen gelistet ist (Admin > Logs > Screened Ips)."
@@ -1335,10 +1325,13 @@ de:
       topic: 'Ergebnisse'
       user: 'Benutzer'
   sso:
+    login_error: "Fehler bei der Anmeldung"
     not_found: "Dein Konto wurde nicht erkannt. Bitte kontaktiere den Administrator dieser Site."
     account_not_approved: "Dein Konto wurde noch nicht genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
     unknown_error: "Es besteht ein Problem mit deinem Konto. Bitte kontaktiere den Administrator dieser Site."
     timeout_expired: "Die Anmeldung ist abgelaufen, bitte versuch dich erneut anzumelden."
+    no_email: "Es wurde keine E-Mail-Adresse angegeben. Bitte kontaktiere den Administrator dieser Seite."
+    email_error: "Ein Konto konnte nicht registriert werden mit der E-Mail-Adresse <b>%{email}</b>. Bitte kontaktiere den Administrator dieser Seite."
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
@@ -1363,10 +1356,6 @@ de:
   change_owner:
     post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
     deleted_user: "ein gelöschter Benutzer"
-  emoji:
-    errors:
-      name_already_exists: "Es tut uns leid, der Name '%{name}' wird schon von einem anderen emoji verwendet."
-      error_while_storing_emoji: "Es tut uns leid, es gab einen Fehler beim Speichern des emoji."
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
@@ -1409,7 +1398,6 @@ de:
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto genehmigt wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
-    activate_email: "<p>Fast fertig!  Eine E-Mail mit einem Aktivierungscode wurde an deine E-Mail-Adresse <b>%{email}</b> gesendet. <br>Dort findest du die Anleitung, um deinen Zugang zu aktivieren.</p><p>Solltest du die E-Mail nicht vorfinden, kontrolliere bitte auch den Spam-Ordner. Gegebenenfalls kannst du dir von hier eine weitere Aktivierungs-E-Mail zusenden lassen.</p>"
     not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als %{username} anmelden."
     admin_not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als Administrator anmelden."
@@ -1524,7 +1512,6 @@ de:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
       %{invitee_name} hat dich eingeladen der folgenden Seite beizutreten:
@@ -1543,15 +1530,9 @@ de:
   invite_password_instructions:
     title: "Passwort festlegen"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
-    text_body_template: |
-      Schön, dass du die Einladung zu %{site_name} angenommen hast -- Willkommen!
-
-      Klicke hier um jetzt dein Passwort festzulegen:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
   download_backup_mailer:
     title: "Backup-Download Mailer"
+    subject_template: "[%{email_prefix}] Backup der Seite herunterladen"
     text_body_template: |
       Here ist der [Seiten-Backup-Download](%{backup_file_path}), den du angefordert hast.
 
@@ -1562,6 +1543,7 @@ de:
       Entschuldige, der Backup-Download-Link wurde schon verwendet oder ist abgelaufen.
   test_mailer:
     title: "Test-E-Mail"
+    subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
     text_body_template: |
       Dies ist eine Test-E-Mail von
 
@@ -1605,7 +1587,7 @@ de:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Neue Version"
-    subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
+    subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
 
@@ -1619,7 +1601,7 @@ de:
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
   new_version_mailer_with_notes:
     title: "Neue Version mit Versionshinweisen"
-    subject_template: "[%{site_name}] Update verfügbar"
+    subject_template: "[%{email_prefix}] Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
 
@@ -1638,8 +1620,8 @@ de:
   queued_posts_reminder:
     title: "Erinnerung an Freischaltung wartender Beiträge"
     subject_template:
-      one: "[%{site_name}] %{count} auf Freischaltung wartender Beitrag."
-      other: "[%{site_name}] %{count} auf Freischaltung wartende Beiträge."
+      one: "[%{email_prefix}] 1 Beitrag wartet auf Überprüfung"
+      other: "[%{email_prefix}] %{count} Beiträge warten auf Überprüfung"
     text_body_template: |
       Hallo,
 
@@ -1655,7 +1637,6 @@ de:
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
     deferred: "Danke für deine Meldung. Wir sehen uns das an."
     deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
-  temporarily_closed_due_to_flags: "Dieses Thema ist vorrübergehend geschlossen. Mehrere User haben dieses Thema gemeldet. "
   system_messages:
     post_hidden:
       title: "Benachrichtigung: Beitrag versteckt"
@@ -1789,56 +1770,56 @@ de:
       text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere ein Team-Mitglied oder überprüfe die Logdateien."
     email_reject_insufficient_trust_level:
       title: "E-Mail abgelehnt weil Vertrauensstufe unzureichend"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unzureichende Vertrauensstufe"
+      subject_template: "[%{email_prefix}] E-Mail-Probme -- Vertrauensstufe nicht ausreichend"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) konnte nicht zugestellt werden.
 
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_user_not_found:
       title: "E-Mail abgelehnt weil Benutzer nicht gefunden"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Benutzer nicht gefunden"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_screened_email:
       title: "E-Mail abgelehnt weil E-Mail-Adresse gesperrt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Blockiertee E-Mail-Adresse"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail-Adresse blockiert"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_inactive_user:
       title: "E-Mail abgelehnt weil Benutzer inaktiv"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Inaktiver Benutzer"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
     email_reject_blocked_user:
       title: "E-Mail abgelehnt weil Benutzer gesperrt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Blockierter Benutzer"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer blockiert"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Konto wurde blockiert.
     email_reject_reply_user_not_matching:
       title: "E-Mail abgelehnt weil E-Mail-Adresse abweichend"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unerwartete Antwort-Adresse"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortadresse unerwartet"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_no_account:
       title: "E-Mail abgelehnt weil unbekanntes Konto"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Konto unbekannt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Wir konnten kein Konto finden, das zu deiner E-Mail-Adresse passt. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_empty:
       title: "E-Mail abgelehnt weil kein Inhalt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
@@ -1847,35 +1828,35 @@ de:
         Wenn du diese E-Mail bekommst, obwohl deine E-Mail Inhalt enthalten hat, versuche es erneut mit weniger Formatierung.
     email_reject_parsing:
       title: "E-Mail abgelehnt weil Inhalt nicht erkannt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Inhalt nicht erkannt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Wir konnten keinen Inhalt in deiner E-Mail feststellen. **Versichere dich, dass du den Inhalt oberhalb der erhaltenen E-Mail eingegeben hast** -- Eingebettete Antworten können wir nicht verarbeiten.
     email_reject_invalid_access:
       title: "E-Mail abgelehnt weil nicht erlaubt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Du hast nicht die notwendigen Zugriffsrechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_strangers_not_allowed:
       title: "E-Mail abgelehnt weil Zugriff nicht erlaubt"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Zugriff nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Die Kategorie, an die du die E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und von bekannten E-Mail-Adressen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_invalid_post:
       title: "E-Mail abgelehnt weil ungültiger Beitrag"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Mögliche Gründe sind komplizierte Formatierung und zu lange oder kurze Nachrichten. Bitte versuche es erneut oder schreibe deinen Beitrag über die Website.
     email_reject_invalid_post_specified:
       title: "E-Mail abgelehnt weil ungültiger Beitrag"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
@@ -1886,49 +1867,49 @@ de:
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_invalid_post_action:
       title: "E-Mail abgelehnt weil fehlerhafte Beitragsaktion"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Fehlerhafte Beitragsaktion"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitragsaktion ungültig"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Die Beitragsaktion wurde nicht erkannt. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
     email_reject_reply_key:
       title: "E-Mail abgelehnt weil unbekannter Antwort-Schlüssel"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortschlüssel unbekannt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Bitte kontaktiere ein Team-Mitglied.
     email_reject_bad_destination_address:
       title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
-      subject_template: "[%{site_name}] E-Mail Problem -- Unbekannte An:-Adresse"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Keine der Ziel-E-Mail-Adressen wurde erkannt.  Bitte stelle sicher, dass du die E-Mail an die richtige Adresse schickst, die dir von unserem Team genannt wurde.
     email_reject_topic_not_found:
       title: "E-Mail abgelehnt weil Thema nicht gefunden"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Thema nicht gefunden"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Das Thema, auf das du geantwortet hast, existiert nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_topic_closed:
       title: "E-Mail abgelehnt weil Thema geschlossen"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Thema geschlossen"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema geschlossen"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_auto_generated:
       title: "E-Mail abgelehnt weil automatisch generierte Antwort"
-      subject_template: "[%{site_name}] E-Mail-Problem -- Automatisch erzeugte Antwort"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort automatisch generiert"
       text_body_template: |
         Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
         Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt wurde statt von einem Menschen getippt; wir können diese Arten von E-Mails nicht akzeptieren. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-POP-Authentifizierungsfehler"
-      subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
         Leider gab es einen Authentifizierungsfehler beim Abrufen von E-Mails vom POP-Server.
 
@@ -2066,7 +2047,7 @@ de:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Benutzer zu Nachricht eingeladen"
-      subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -2075,7 +2056,7 @@ de:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Benutzer zu Nachricht eingeladen (automatisch)"
-      subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
 
@@ -2084,7 +2065,7 @@ de:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Benutzer zu Thema eingeladen"
-      subject_template: "[%{site_name}] %{username} hat dich zum Thema '%{topic_title}' eingeladen"
+      subject_template: "[%{email_prefix}] %{username} hat dich eingeladen zu '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2093,7 +2074,7 @@ de:
         %{respond_instructions}
     user_replied:
       title: "Benutzer hat auf Beitrag geantwortet"
-      subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2104,7 +2085,7 @@ de:
         %{respond_instructions}
     user_replied_pm:
       title: "Benutzer hat auf Nachricht geantwortet"
-      subject_template: "[%{site_name}] [PN] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2115,7 +2096,7 @@ de:
         %{respond_instructions}
     user_quoted:
       title: "Benutzer wurde zitiert"
-      subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' zitiert"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2126,7 +2107,7 @@ de:
         %{respond_instructions}
     user_linked:
       title: "Benutzer wurde verlinkt"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2137,7 +2118,7 @@ de:
         %{respond_instructions}
     user_mentioned:
       title: "Benutzer wurde erwähnt"
-      subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2148,7 +2129,7 @@ de:
         %{respond_instructions}
     user_group_mentioned:
       title: "Gruppe wurde erwähnt"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2159,7 +2140,7 @@ de:
         %{respond_instructions}
     user_posted:
       title: "Benutzer hat in Thema geantwortet"
-      subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2170,7 +2151,7 @@ de:
         %{respond_instructions}
     user_watching_first_post:
       title: "Benutzer folgt erstem Beitrag"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2181,7 +2162,7 @@ de:
         %{respond_instructions}
     user_posted_pm:
       title: "Benutzer hat Nachricht geschrieben"
-      subject_template: "[%{site_name}] [PN] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2210,14 +2191,14 @@ de:
       join_the_discussion: "Mehr lesen"
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
-      subject_template: "Zusammenfassung für [%{site_name}]"
+      subject_template: "[%{email_prefix}] Zusammenfassung"
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
     mailing_list:
       why: "Alle Aktivitäten auf %{site_link} am %{date}"
-      subject_template: "[%{site_name}] Zusammenfassung für den %{date}"
+      subject_template: "[%{email_prefix}] Zusammenfassung für den %{date}"
       unsubscribe: "Diese Zusammenfassung wird täglich gesendet, weil der Mailinglisten-Modus aktiviret ist. Zum Abmelden %{unsubscribe_link}."
       from: "%{site_name} Zusammenfassung"
       new_topics: "Neue Themen"
@@ -2226,61 +2207,25 @@ de:
       back_to_top: "Zurück nach oben"
     forgot_password:
       title: "Passwort vergessen"
-      subject_template: "[%{site_name}] Passwort zurückgesetzt"
-      text_body_template: |
-        Jemand hat darum gebeten, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
-
-        Wenn du es nicht selbst warst, kannst du diese E-Mail einfach ignorieren.
-
-        Andernfalls besuche den folgenden Link, um ein neues Passwort zu wählen:
-        %{base_url}/users/password-reset/%{email_token}
+      subject_template: "[%{email_prefix}] Passwort zurücksetzen"
     set_password:
       title: "Passwort setzen"
-      subject_template: "[%{site_name}] Setze Passwort"
-      text_body_template: |
-        Jemand hat ein Passwort für dein Konto auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), der mit dieser validierten E-Mail-Adresse verknüpft ist, anmelden.
-
-        Wenn diese Anfrage nicht von dir kam, kannst du diese E-Mail einfach ignorieren.
-
-        Klicke auf den folgenden Link, um ein Passwort auszuwählen:
-        %{base_url}/users/password-reset/%{email_token}
+      subject_template: "[%{email_prefix}] Passwort wählen"
     admin_login:
       title: "Administrator-Anmeldung"
-      subject_template: "[%{site_name}] Anmeldung"
-      text_body_template: |
-        Jemand hat versucht sich in dein Konto auf [%{site_name}](%{base_url}) anzumelden.
-
-        Wenn dieser Anmeldeversuch nicht von dir stammt, kannst du diese E-Mail ignorieren.
-
-        Klicke den folgenden Link, um dich anzumelden:
-        %{base_url}/users/admin-login/%{email_token}
+      subject_template: "[%{email_prefix}] Anmeldung"
     account_created:
       title: "Konto erstellt"
-      subject_template: "[%{site_name}] Dein neues Konto"
-      text_body_template: |
-        Ein neues Konto wurde für dich auf %{site_name} erstellt.
-
-        Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
-        %{base_url}/users/password-reset/%{email_token}
+      subject_template: "[%{email_prefix}] Dein neues Konto"
     confirm_new_email:
       title: "E-Mail-Adresse bestätigen (an neue)"
-      subject_template: "[%{site_name}] Bestätige deine neue E-Mail-Adresse"
-      text_body_template: |
-        Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
-        %{base_url}/users/authorize-email/%{email_token}
+      subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
-      subject_template: "[%{site_name}] Bestätige deine aktuelle E-Mail-Adresse"
-      text_body_template: |
-        Bevor wir deine E-Mail-Adresse ändern können, müssen wir dich bitten zu bestätigen, dass du das E-Mail-Konto kontrollierst. Nach diesem Schritt, werden wir dich bitten die neue E-Mail-Adresse zu bestätigen.
-
-        Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
-        %{base_url}/users/authorize-email/%{email_token}
+      subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
-      subject_template: "[%{site_name}] Deine E-Mail-Adresse wurde geändert"
+      subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere ein Team-Mitglied, wenn du von einem Fehler ausgehst.
 
@@ -2290,33 +2235,9 @@ de:
     signup_after_approval:
       title: "Konto bestätigen nach Genehmigung"
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Willkommen bei %{site_name}!
-
-        Einer unserer Team-Mitglieder hat dein Benutzerkonto bei %{site_name} genehmigt.
-
-        Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Wenn der obige Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
-
-        %{new_user_tips}
-
-        Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
-        Viel Spaß!
-
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Team-Mitglieder](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     signup:
       title: "Konto bestätigen nach Anmeldung"
-      subject_template: "[%{site_name}] Bestätige deinen neuen Account"
-      text_body_template: |
-        Willkommen bei %{site_name}!
-
-        Um dein Konto zu aktivieren, klicke auf den folgenden Link:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
+      subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
   page_not_found:
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"
@@ -2905,7 +2826,6 @@ de:
         Das Abzeichen wird verliehen, wenn du das erste Mal einen Emoji zu deinem Beitrag hinzufügst. :thumbsup: Emojis lassen dich Emotionen in deinen Beiträgen vermitteln, von Glück :smiley: zu Trauer :anguished: zu Wut :angry: und allem dazwischen :sunglasses:. Gib einfach einen : (Doppelpunkt) ein oder drücke die Emoji-Schaltfläche im Editor, um aus Hunderten Auswahlmöglichkeiten zu wählen :ok_hand:
     first_mention:
       name: Erste Erwähnung
-      description: Hat einen Benutzer in einem Beitrag erwähnt
       long_description: Das Abzeichen wird verliehen, wenn du das erste Mal den @Benutzernamen von jemandem in deinem Beitrag erwähnst. Jede Erwähnung erzeugt eine Benachrichtigung an die Person, sodass sie über deinen Beitrag informiert wird. Gib einfach ein @ (At-Zeichen) ein und erwähne einen beliebigen Benutzer oder, sofern erlaubt, eine Gruppe – es ist ein komfortabler Weg, die Aufmerksamkeit von jemandem auf etwas zu lenken.
     first_onebox:
       name: Erste Onebox
@@ -2913,7 +2833,6 @@ de:
       long_description: Das Abzeichen wird verliehen, wenn du das erste Mal einen Link auf einer eigenen Zeile schreibst, der dann automatisch in eine Onebox umgewandelt wurde, mit einer kurzen Zusammenfassung des Links, einem Titel und einem Bild (falls verfügbar).
     first_reply_by_email:
       name: Erste Antwort per E-Mail
-      description: Hat auf einen Beitrag per E-Mail geantwortet.
       long_description: |
         Das Abzeichen wird verliehen, wenn du das erste Mal per E-Mail :e-mail: auf einen Beitrag antwortest.
   admin_login:

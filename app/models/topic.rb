@@ -7,6 +7,7 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
+require_dependency 'search'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -117,7 +118,7 @@ class Topic < ActiveRecord::Base
   has_many :invites, through: :topic_invites, source: :invite
   has_many :topic_status_updates, dependent: :destroy
 
-  has_one :warning
+  has_one :user_warning
   has_one :first_post, -> {where post_number: 1}, class_name: Post
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -969,7 +970,7 @@ SQL
     topic_status_update.based_on_last_post = !based_on_last_post.blank?
 
     if status_type == TopicStatusUpdate.types[:publish_to_category]
-      topic_status_update.category_id = category_id
+      topic_status_update.category = Category.find_by(id: category_id)
     end
 
     if topic_status_update.based_on_last_post

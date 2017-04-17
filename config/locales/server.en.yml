@@ -47,7 +47,7 @@ en:
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
 
   purge_reason: "Automatically deleted as abandoned, deactivated account"
@@ -55,6 +55,9 @@ en:
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
 
+  themes:
+    bad_color_scheme: "Can not update theme, invalid color scheme"
+    other_error: "Something went wrong updating theme"
   emails:
     incoming:
       default_subject: "This topic needs a title"
@@ -387,7 +390,7 @@ en:
               invalid: "is not a valid color"
         post_reply:
           base:
-            different_topic: "Post and reply must be.long to the same topic."
+            different_topic: "Post and reply must belong to the same topic."
         web_hook:
           attributes:
             payload_url:
@@ -624,6 +627,12 @@ en:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
+    admin_confirm:
+      title: "Confirm Admin Account"
+      description: "Are you sure you want <b>%{target_username}</b> to be an administrator?"
+      grant: "Grant Admin Access"
+      complete: "<b>%{target_username}</b> is now an administrator."
+      back_to: "Return to %{title}"
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -1649,7 +1658,7 @@ en:
     incorrect_username_email_or_password: "Incorrect username, email or password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
-    activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail.</p>"
+    activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail or to input a new email address.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
@@ -1771,7 +1780,7 @@ en:
       %{invite_link}
 
   custom_invite_forum_mailer:
-    title: "Invite Forum Mailer"
+    title: "Custom Invite Forum Mailer"
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
@@ -1810,6 +1819,14 @@ en:
       (If you *didn't* request this download, you should be seriously concerned -- someone has admin access to your site.)
     no_token: |
       Sorry, this backup download link has already been used or has expired.
+
+  admin_confirmation_mailer:
+    title: "Admin Confirmation"
+    subject_template: "[%{email_prefix}] Confirm new Admin Account"
+    text_body_template: |
+      Please confirm that you'd like to add **%{target_username}** as an administrator for your forum.
+
+      [Confirm Administrator Account](%{admin_confirm_url})
 
   test_mailer:
     title: "Test Mailer"
@@ -1938,7 +1955,7 @@ en:
 
     usage_tips:
       text_body_template: |
-        For a few quick tips on getting started as a new user, [check out this blog post](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        For a few quick tips on getting started as a new user, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         As you participate here, we’ll get to know you, and temporary new user limitations will be lifted. Over time you’ll gain [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
 
@@ -2749,6 +2766,8 @@ en:
 
   color_schemes:
     base_theme_name: "Base"
+    default: "Light Scheme"
+    dark: "Dark Scheme"
 
   about: "About"
   guidelines: "Guidelines"
@@ -3307,6 +3326,7 @@ en:
       description: Outstanding contributions in their first month
       long_description: |
         This badge is granted to congratulate two new users each month for their excellent overall contributions, as measured by how often their posts were liked, and by whom.
+    badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
     success: "Email Sent"
@@ -3344,7 +3364,7 @@ en:
   safe_mode:
     title: "Enter safe mode"
     description: "Safe mode allows you to test your site without loading plugins or site customizations."
-    no_customizations: "Disable all site customizations"
+    no_customizations: "Disable current theme"
     only_official: "Disable unofficial plugins"
     no_plugins: "Disable all plugins"
     enter: "Enter Safe Mode"

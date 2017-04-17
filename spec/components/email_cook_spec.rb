@@ -28,6 +28,7 @@ LONG_COOKED
   end
 
   it 'autolinks' do
+    stub_request(:get, "https://www.eviltrout.com").to_return(body: "")
     expect(EmailCook.new("https://www.eviltrout.com").cook).to eq("<a href='https://www.eviltrout.com'>https://www.eviltrout.com</a><br>")
   end
 
