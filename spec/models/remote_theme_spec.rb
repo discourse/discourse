@@ -18,13 +18,26 @@ describe RemoteTheme do
       repo_dir
     end
 
-    let :initial_repo do
-      setup_git_repo(
-        "about.json" => '{
+    def about_json(options = {})
+      options[:love] ||= "FAFAFA"
+
+<<JSON
+        {
           "name": "awesome theme",
           "about_url": "https://www.site.com/about",
-          "license_url": "https://www.site.com/license"
-        }',
+          "license_url": "https://www.site.com/license",
+          "color_schemes": {
+            "Amazing": {
+              "love": "#{options[:love]}"
+            }
+          }
+        }
+JSON
+    end
+
+    let :initial_repo do
+      setup_git_repo(
+        "about.json" => about_json,
         "desktop/desktop.scss" => "body {color: red;}",
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
@@ -62,8 +75,15 @@ describe RemoteTheme do
 
       expect(remote.remote_updated_at).to eq(time)
 
+      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      expect(scheme.name).to eq("Amazing")
+      expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
+
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
+      File.write("#{initial_repo}/about.json", about_json(love: "EAEAEA"))
+
       `cd #{initial_repo} && git commit -am "update"`
+
 
       time = Time.new('2001')
       freeze_time time
@@ -76,6 +96,10 @@ describe RemoteTheme do
       remote.update_from_remote
       @theme.save
       @theme.reload
+
+      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      expect(scheme.name).to eq("Amazing")
+      expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
 
       mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target}-#{f.name}", f.value]}.flatten]
 

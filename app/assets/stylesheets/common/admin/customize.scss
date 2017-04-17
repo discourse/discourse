@@ -1,5 +1,11 @@
 // Customise area
 .customize {
+  h1 {
+    margin-bottom: 10px;
+    input {
+      margin-bottom: 0;
+    }
+  }
   .admin-container {
     padding-left: 10px;
     padding-right: 10px;

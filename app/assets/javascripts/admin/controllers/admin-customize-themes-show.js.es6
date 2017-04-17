@@ -3,6 +3,13 @@ import { url } from 'discourse/lib/computed';
 
 export default Ember.Controller.extend({
 
+  @computed("model", "allThemes")
+  parentThemes(model, allThemes) {
+    let parents = allThemes.filter(theme =>
+        _.contains(theme.get("childThemes"), model));
+    return parents.length === 0 ? null : parents;
+  },
+
   @computed("model.theme_fields.@each")
   hasEditedFields(fields) {
     return fields.any(f=>!Em.isBlank(f.value));
@@ -47,8 +54,6 @@ export default Ember.Controller.extend({
     });
     return themes.length === 0 ? null : themes;
   },
-
-  showSchemes: Em.computed.or("model.default", "model.user_selectable"),
 
   @computed("allThemes", "allThemes.length", "model")
   availableChildThemes(allThemes, count) {
