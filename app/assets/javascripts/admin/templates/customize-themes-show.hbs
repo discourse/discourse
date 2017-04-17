@@ -65,7 +65,7 @@
   <p>
     {{#if model.remote_theme}}
       {{#if model.remote_theme.commits_behind}}
-      {{#d-button action="updateToLatest" icon="download"}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
+      {{#d-button action="updateToLatest" icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
       {{else}}
       {{#d-button action="checkForThemeUpdates" icon="refresh"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
       {{/if}}
