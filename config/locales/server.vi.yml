@@ -240,7 +240,6 @@ vi:
               invalid: "không phải là một màu không hợp lệ"
       <<: *errors
   user_profile:
-    no_info_me: "<div class = 'missing-profile''> Mục nói về bản thân bạn trong hồ sơ của bạn hiện đang trống, <a href='/users/%{username_lower}/preferences/about-me'> bạn muốn điền vào nó? </ a> </ div>"
     no_info_other: "<div class = 'missing-profile'>%{name} đã không nhập bất cứ điều gì nói về bản thân của họ </ div>"
   vip_category_name: "Phòng khách"
   vip_category_description: "Một chuyên mục chỉ dành cho thành viên có mức tin tưởng 3 hoặc cao hơn"
@@ -1065,7 +1064,6 @@ vi:
     incorrect_username_email_or_password: "Không đúng tài khoản, email hoặc mật khẩu"
     wait_approval: "Cảm ơn bạn đã đăng ký. Chúng tôi sẽ thông báo sau khi tài khoản của bạn được kiểm duyệt."
     active: "Tài khoản của bạn đã được kích hoạt và sẵn sàng để sử dụng."
-    activate_email: "<p>Bạn đã gần hoàn thành! Chúng tôi đã gửi bạn một email kích hoạt tới địa chỉ <b>%{email}</b>. Xin hãy làm theo hướng dẫn trong email đó để kích hoạt tài khoản của bạn.</p><p>Nếu bạn không nhận được thư, hãy kiểm tra thư mục thư rác, hoặc thử đăng nhập lại để được nhận email kích hoạt khác.</p>"
     not_activated: "Bạn không thể đăng nhập bây giờ. Chúng tôi đã gửi bạn một email kích hoạt tài khoản. Vui lòng làm theo hướng dẫn trong email để kích hoạt tài khoản của bạn."
     not_allowed_from_ip_address: "Bạn không thể đăng nhập như là %{username} từ địa chỉ IP này."
     admin_not_allowed_from_ip_address: "Bạn không thể đăng nhập như quản trị từ IP này."
@@ -1114,13 +1112,6 @@ vi:
     subject_template: "%{invitee_name} đã mời bạn gia nhập %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Đặt mật khẩu cho tài khoản của bạn ở %{site_name}"
-    text_body_template: |
-      Cám ơn bạn đã chấp nhận lời mời tham gia %{site_name} -- chào mừng!
-
-      Xin hãy click liên kết sau để đặt mật khẩu:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Nếu liên kết trên hết hạn, bạn hãy chọn "Quên mật khẩu" khi đăng nhập với email của bạn).
   flag_reasons:
     off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
     inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](/guidelines)."
@@ -1132,7 +1123,6 @@ vi:
     disagreed: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
     deferred: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
     deferred_and_deleted: "Cảm ơn bạn đã cho chúng tôi biết, chúng tôi đã gỡ bỏ bài viết."
-  temporarily_closed_due_to_flags: "Chủ đề này tạm thời đóng do có một lượng lớn đánh dấu từ cộng đồng."
   system_messages:
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
@@ -1353,48 +1343,6 @@ vi:
       new_topics: "Chủ đề mới"
       view_this_topic: "Xem chủ đề này"
       back_to_top: "Trở lên trên"
-    forgot_password:
-      text_body_template: |
-        Có người đã yêu cầu được đặt lại mật khẩu của bạn trên [%{site_name}](%{base_url}).
-
-        Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.
-
-        Click vào liên kết sau để chọn mật khẩu mới:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Có người đã yêu cầu thêm mật khẩu vào tài khoản của bạn trên [%{site_name}](%{base_url}). Ngoài ra, bạn có thể đăng nhập sử dụng bất kỳ dịch vụ trực tuyến nào hỗ trợ (Google, Facebook,...) được liên kết với địa chỉ email này.
-
-        Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.
-
-        Click vào liên kết sau để chọn mật khẩu mới:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        Có người đã yêu cầu đăng nhập vào tài khoản của bạn trên [%{site_name}](%{base_url}).
-
-        Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.
-
-        Click liên kết sau để đăng nhập:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        Tài khoản mới cho bạn trên %{site_name} đã được tạo
-
-        Click liên kết sau để chọn mật khẩu cho tài khoản của bạn:
-        %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      text_body_template: |
-        Xác nhận địa chỉ email mới của bạn trên %{site_name} bằng cách click liên kết sau:
-
-        %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      text_body_template: |
-        Trước khi thay đổi địa chỉ email của bạn, chúng tôi cần xác nhận rằng bạn kiểm soát địa chỉ email của tài khoản hiện tại. Sau khi hoàn thành bước này, bạn có thể xác nhận địa chỉ email mới.
-
-        Xác nhận địa chỉ email hiện tại của bạn trên %{site_name} bằng cách click liên kết sau:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       text_body_template: |
         Đây là tin nhắn tự động để thông báo rằng địa chỉ email của bạn trên %{site_name} đã được thay đổi. Nếu điều này là không đúng, xin hãy liên hệ với BQT.
@@ -1404,31 +1352,6 @@ vi:
         %{new_email}
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
-      text_body_template: |
-        Chào mừng bạn tham gia %{site_name}!
-
-        BQT đã chấp nhận tài khoản của bạn trên %{site_name}.
-
-        Click liên kết sau để xác nhận và kích hoạt tài khoản của bạn:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Nếu bạn không thể click liên kết trên, hãy thử sao chép và dán vào thanh địa chỉ của trình duyệt web.
-
-        %{new_user_tips}
-
-        Chúng tôi tin rằng bạn sẽ cùng chúng tôi hướng tới một cộng đồng văn minh [quy tắc ứng xử văn minh](%{base_url}/guidelines).
-
-        Chúc vui vẻ!
-
-        (Nếu bạn cần liên hệ với BQT [nhân viên quản trị](%{base_url}/about), bạn có thể gửi trả lời tin nhắn này).
-    signup:
-      text_body_template: |
-        Chào mừng bạn tham gia %{site_name}!
-
-        Click liên kết sau để xác nhận và kích hoạt tài khoản của bạn:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Nếu bạn không thể click liên kết trên, hãy thử sao chép và dán vào thanh địa chỉ của trình duyệt web.
   page_not_found:
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
     popular_topics: "Phổ biến"
@@ -1678,7 +1601,6 @@ vi:
       description: Sử dụng Emoji trong bài viết
     first_mention:
       name: Đề cập đầu tiên
-      description: Đề cập một thành viên trong bài viết
   admin_login:
     success: "Gửi mail lỗi"
     error: "Lỗi!"

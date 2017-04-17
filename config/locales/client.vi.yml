@@ -336,7 +336,6 @@ vi:
       automatic_group: Nhóm tự động
       closed_group: Nhóm riêng
       is_group_user: "Bạn là một thành viên của nhóm này"
-      allow_membership_requests: "Cho phép người dùng gửi thư xin gia nhập cho người đứng đầu nhóm (Yêu cầu mọi người phải có quyền nhắc tới nhóm)"
       membership: "Thành viên"
       name: "Tên"
       user_count: "Số lượng thành viên"
@@ -975,15 +974,6 @@ vi:
       yourself_confirm:
         title: "Bạn có quên chưa thêm người nhận?"
       admin_options_title: "Tùy chọn quản trị viên cho chủ đề này"
-      auto_close:
-        label: "Thời gian tự khóa chủ đề:"
-        error: "Vui lòng nhập một giá trị hợp lệ."
-        based_on_last_post: "Không đóng cho đến khi bài viết cuối cùng trong chủ đề này trở thành bài cũ"
-        all:
-          examples: 'Nhập giờ (định dạng 24h), thời gian chính xác ( vd: 17:30) hoặc thời gian kèm ngày tháng (2013-11-22 14:00).'
-        limited:
-          units: "(# của giờ)"
-          examples: 'Nhập số giờ ( theo định dạng 24h)'
     notifications:
       title: "thông báo của @name nhắc đến, trả lời bài của bạn và chủ đề, tin nhắn, vv"
       none: "Không thể tải các thông báo tại thời điểm này."
@@ -1202,11 +1192,7 @@ vi:
       jump_reply_up: nhảy đến những trả lời trước đó
       jump_reply_down: nhảy tới những trả lời sau đó
       deleted: "Chủ đề này đã bị xóa"
-      auto_close_notice: "Chủ đề này sẽ tự động đóng %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Chủ đề này sẽ đóng %{duration} sau trả lời cuối cùng."
       auto_close_title: 'Tự động-Đóng các Cài đặt'
-      auto_close_save: "Lưu"
-      auto_close_remove: "Đừng Tự Động-Đóng Chủ Đề Này"
       timeline:
         back: "Quay lại"
       progress:
@@ -1230,7 +1216,6 @@ vi:
           '2_8': 'Bạn sẽ nhận được thông báo bởi vì bạn đang theo dõi chuyên mục này.'
           '2_4': 'Bạn sẽ nhận được các thông báo bởi vì bạn đã đăng một trả lời vào chủ đề này'
           '2_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang theo dõi chủ đề này.'
-          '2': 'Bạn sẽ nhận được các thông báo bởi vì bạn <a href="/users/{{username}}/preferences"> đọc chủ đề này </a>'
           '1_2': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
           '1': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
           '0_7': 'Bạn đang bỏ qua tất cả các thông báo trong chuyên mục này'
@@ -1266,7 +1251,6 @@ vi:
         open: "Mở Chủ Đề"
         close: "Đóng Chủ Đề"
         multi_select: "Chọn Bài Viết..."
-        auto_close: "Tự Động Đóng..."
         pin: "Ghim Chủ Đề..."
         unpin: "Bỏ-Ghim Chủ Đề..."
         unarchive: "Chủ đề Không Lưu Trữ"
@@ -2383,8 +2367,6 @@ vi:
         blocked: "Đã khóa?"
         staged: "Cấp bậc?"
         show_admin_profile: "Quản trị"
-        edit_title: "Sửa Tiêu đề"
-        save_title: "Lưu Tiêu đề"
         refresh_browsers: "Bắt buộc làm mới trình duyệt"
         refresh_browsers_message: "Tin nhắn đã gửi cho tất cả người dùng!"
         show_public_profile: "Hiển thị hồ sơ công khai"

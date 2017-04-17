@@ -366,7 +366,6 @@ pt_BR:
       automatic_group: Grupo Automático
       closed_group: Grupo Fechado
       is_group_user: "Você é membro deste grupo"
-      allow_membership_requests: "Permitir que usuários enviem pedidos de adesão a donos do grupo (Requer que todos possam mencionar o grupo)"
       membership: "Adesão"
       name: "Nom"
       user_count: "Número de Membros"
@@ -938,6 +937,9 @@ pt_BR:
       not_allowed_from_ip_address: "Você não pode logar deste endereço IP."
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
       resend_activation_email: "Clique aqui para enviar o email de ativação novamente."
+      resend_title: "Reenviar E-mail de Ativação"
+      change_email: "Trocar Endereço de E-mail"
+      submit_new_email: "Atualizar Endereço de E-mail"
       sent_activation_email_again: "Nós enviamos mais um email de ativação para você no endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spams."
       to_continue: "Por favor efetue o login"
       preferences: "Você precisa estar logado para mudar suas preferências de usuário."
@@ -1076,15 +1078,6 @@ pt_BR:
         title: "Você se esqueceu de adicionar destinatários?"
         body: "No momento esta mensagem está sendo enviada apenas para si mesmo!"
       admin_options_title: "Configurações opcionais da equipe para este tópico"
-      auto_close:
-        label: "Tempo para fechamento automático do tópico:"
-        error: "Por favor, digite um valor válido."
-        based_on_last_post: "Não feche até que o último post no tópico seja o mais velho."
-        all:
-          examples: 'Insira o número de horaas (24), hora absoluta (17:30) ou o timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(núm. de horas)"
-          examples: 'Insira o número de horas (24).'
     notifications:
       title: "notificações de menção de @name, respostas às suas postagens,  tópicos, mensagens, etc"
       none: "Não foi possível carregar notificações no momento."
@@ -1332,11 +1325,7 @@ pt_BR:
       jump_reply_up: pular para a resposta mais recente
       jump_reply_down: pular para a resposta mais antiga
       deleted: "Este tópico foi apagado"
-      auto_close_notice: "Este tópico vai ser automaticamente fechado em %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Este tópico fechará %{duration} depois da última resposta."
       auto_close_title: 'Configurações para fechar automaticamente'
-      auto_close_save: "Salvar"
-      auto_close_remove: "Não fechar automaticamente este tópico"
       auto_close_immediate:
         one: "A última publicação no tópico já tem 1 hora, portanto ele será fechado imediatamente."
         other: "A última publicação no tópico já tem %{count} horas, portanto ele será fechado imediatamente."
@@ -1369,7 +1358,6 @@ pt_BR:
           '2_8': 'Você receberá notificações porque você está monitorando essa categoria.'
           '2_4': 'Você receberá notificações porque postou uma resposta neste tópico.'
           '2_2': 'Você receberá notificações porque está monitorando este tópico.'
-          '2': 'Você receberá notificações porque você <a href="/users/{{username}}/preferences">leu este tópico</a>.'
           '1_2': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '1': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '0_7': 'Você está ignorando todas as notificações nessa categoria.'
@@ -1405,7 +1393,6 @@ pt_BR:
         open: "Abrir tópico"
         close: "Fechar tópico"
         multi_select: "Selecionar Mensagens..."
-        auto_close: "Fechar automaticamente..."
         pin: "Fixar Tópico..."
         unpin: "Desafixar Tópico..."
         unarchive: "Desarquivar tópico"
@@ -2840,8 +2827,6 @@ pt_BR:
         blocked: "Bloqueado?"
         staged: "Testado?"
         show_admin_profile: "Admin"
-        edit_title: "Editar Título"
-        save_title: "Salvar Título"
         refresh_browsers: "Forçar atualização da página no browser"
         refresh_browsers_message: "Mensagem enviada para todos os clientes!"
         show_public_profile: "Mostrar Perfil Público"

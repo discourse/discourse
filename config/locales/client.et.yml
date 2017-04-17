@@ -362,7 +362,6 @@ et:
       automatic_group: Automaatne grupp
       closed_group: Suletud grupp
       is_group_user: "Oled selle grupi liige"
-      allow_membership_requests: "Luba kasutajatel saata grupi omanikele liikmelisuse taotlusi (eeldab, et igaüks saab gruppi mainida)"
       membership: "Liikmelisus"
       name: "Nimi"
       user_count: "Liikmete arv"
@@ -1071,15 +1070,6 @@ et:
         title: "Kas unustasid saajad lisada?"
         body: "Hetkel saadetakse see sõnum vaid sulle endale!"
       admin_options_title: "Meeskonna valikulised sätted selle teema jaoks"
-      auto_close:
-        label: "Teema automaatse sulgemise aeg:"
-        error: "Palun sisesta lubatav väärtus."
-        based_on_last_post: "Ära sule enne, kui selle teema viimane postitus on vähemalt nii vana."
-        all:
-          examples: 'Sisesta tundide arv (24), absoluutne aeg (17:30) või ajatempel (2013-11-22 14:00).'
-        limited:
-          units: "(tundide arv)"
-          examples: 'Sisesta tundide arv (24).'
     notifications:
       title: "teavitused @name mainimiste, oma postitustele ja teemadele vastamiste, sõnumite, jne kohta"
       none: "Hetkel ei saa teavitusi laadida."
@@ -1325,11 +1315,7 @@ et:
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
-      auto_close_notice: "See teema sulgub %{timeLeft} pärast ise."
-      auto_close_notice_based_on_last_post: "See teema sulgub %{duration} peale viimast vastust."
       auto_close_title: 'Automaatse sulgumise sätted'
-      auto_close_save: "Salvesta"
-      auto_close_remove: "Ära lase sel teemal automaatselt sulguda"
       auto_close_immediate:
         one: "Viimane postitus selles teemas on juba 1 tund aega vana, seega sulgub see teema nüüd."
         other: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
@@ -1362,7 +1348,6 @@ et:
           '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda foorumit.'
           '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
           '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          '2': 'Sulle saabuvad teavitused kuna <a href="/users/{{username}}/preferences">luges seda teemat</a>.'
           '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
           '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
           '0_7': 'Eirad kõiki teavitusi selles foorumis.'
@@ -1398,7 +1383,6 @@ et:
         open: "Ava teema"
         close: "Sulge teema"
         multi_select: "Vali postitused..."
-        auto_close: "Sulge automaatselt..."
         pin: "Tõsta teema esile..."
         unpin: "Eemalda teema esiletõstmine..."
         unarchive: "Taasta teema arhiivist"
@@ -2809,8 +2793,6 @@ et:
         blocked: "Blokeeritud?"
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
-        edit_title: "Muuda tiitlit"
-        save_title: "Salvesta tiitel"
         refresh_browsers: "Sunni brauserit värskendama"
         refresh_browsers_message: "Sõnum saadetud kõigile klientidele!"
         show_public_profile: "Näita avalikku profiili"

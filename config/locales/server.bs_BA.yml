@@ -131,7 +131,6 @@ bs_BA:
               invalid: "is not a valid color"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
@@ -635,7 +634,6 @@ bs_BA:
     incorrect_username_email_or_password: "Netačan nadimak, email ili šifra"
     wait_approval: "Hvala vam što ste se prijavili. We will notify you when your account has been approved."
     active: "Vaš nalog je aktivan i spreman za korišćenje."
-    activate_email: "<p>Skoro ste gotovi! Poslali smo email za aktivaciju na <b>%{email}</b>. Molimo vas da pratite upustva u emailu da bi ste aktivirali vaš nalog.</p><p>Ako email ne stigne, provjerite SPAM folder, ili se probajte ulogovat opet da bi poslali email za aktivaciju.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
     suspended: "You can't log in until %{date}."
@@ -738,53 +736,8 @@ bs_BA:
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
       click_here: "klikni ovdje"
-    forgot_password:
-      text_body_template: |
-        Potražena je obnova šifre na [%{site_name}](%{base_url}).
-
-        Ako je niste vi zatražili ignirišite ovaj email.
-
-        Kliknite ovdje da resetujete vašu šifru:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
-
-        If you did not make this request, you can safely ignore this email.
-
-        Click the following link to choose a password:
-        %{base_url}/users/password-reset/%{email_token}
-    account_created:
-      text_body_template: |
-        Novi nalog je kreiran za vas na %{site_name}
-
-        Kliknite na link ispod da kreirate šifru za vaš nalog:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Welcome to %{site_name}!
-
-        A staff member approved your account on %{site_name}.
-
-        Click the following link to confirm and activate your new account:
-        %{base_url}/users/activate-account/%{email_token}
-
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-    signup:
-      text_body_template: |
-        Dobrodošli na %{site_name}!
-
-        Kliknite na link ispod za aktovaciju vašeg naloga:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Ako link iznad ne može da se klikne onda ga kopirajte i ubacite u vaš internet pretraživač.
   page_not_found:
     popular_topics: "Popularne"
     recent_topics: "Nove"

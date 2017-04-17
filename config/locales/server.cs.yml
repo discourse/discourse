@@ -204,12 +204,8 @@ cs:
           attributes:
             hex:
               invalid: "není platná barva"
-        post_reply:
-          base:
-            different_topic: "Příspěvek a odpověď musí náležet stejnému topicu"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
@@ -236,6 +232,7 @@ cs:
         few: "Tato kategorie nejde smazat protože obsahuje %{count} témata. Nejstarší téma je %{topic_link}."
         other: "Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}."
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
+    uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
   trust_levels:
     newuser:
       title: "nový uživatel"
@@ -708,32 +705,10 @@ cs:
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
     digest:
       click_here: "klikněte zde"
-    forgot_password:
-      text_body_template: |
-        Někdo zažádal o obnovení vašeho hesla na [%{site_name}](%{base_url}).
-
-        Pokud jste to nebyli vy, můžete tento email ignorovat.
-
-        Klikněte na následující odkaz pro vytvoření nového hesla:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
-
-        If you did not make this request, you can safely ignore this email.
-
-        Click the following link to choose a password:
-        %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      title: "Účet vytvořen"
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
-    signup:
-      text_body_template: |
-        Vítejte na %{site_name}!
-
-        Kliknutím na následující odkaz potvrdíte a aktivujete svůj nový účet:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
     popular_topics: "Populární"
     recent_topics: "Nedávné"

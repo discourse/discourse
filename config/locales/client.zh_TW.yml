@@ -336,7 +336,6 @@ zh_TW:
       automatic_group: 自動群組
       closed_group: 關閉群組
       is_group_user: "你是團隊裡面的成員"
-      allow_membership_requests: "允許用戶向群組擁有者發送加入小組請求（群組需要能讓所有人提及）"
       membership: "會員資格"
       name: "名字"
       user_count: "成員數量"
@@ -1030,15 +1029,6 @@ zh_TW:
         title: "你忘記添加收信人了嗎？"
         body: "目前該私信只發給了你自己！"
       admin_options_title: "此討論話題可選用之工作人員設定選項"
-      auto_close:
-        label: "自動關閉主題時間："
-        error: "請輸入一個有效值。"
-        based_on_last_post: "在最後一個文章發表後，暫不關閉主題的時間。"
-        all:
-          examples: '輸入小時數（24）、絕對時間（17:30）、或時間戳（2013-11-22 14:00）。'
-        limited:
-          units: "（# 小時數）"
-          examples: '輸入小時數（24）'
     notifications:
       title: "當有人以「@用戶名稱」提及您、回覆您的貼文、或是傳送訊息給您的時候通知您的設定。"
       none: "目前無法載入通知訊息。"
@@ -1273,11 +1263,7 @@ zh_TW:
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "此討論話題已被刪除"
-      auto_close_notice: "此討論話題將在 %{timeLeft}自動關閉。"
-      auto_close_notice_based_on_last_post: "主題在最後一則回覆後，將會關閉 %{duration}"
       auto_close_title: '自動關閉設定'
-      auto_close_save: "儲存"
-      auto_close_remove: "不要自動關閉此討論話題"
       auto_close_immediate:
         other: "主題中的最後一帖是 %{hours} 小時前發出的，所以主題將會立即關閉。"
       timeline:
@@ -1309,7 +1295,6 @@ zh_TW:
           '2_8': '你將會收到通知，因為你在追蹤此分類。'
           '2_4': '你將收到關於此討論話題的通知，因為你回覆了此討論話題。'
           '2_2': '你將收到關於此討論話題的通知，因為你正在追蹤此討論話題。'
-          '2': '你將收到關於此討論話題的通知，因為你<a href="/users/{{username}}/preferences">看過此討論話題</a>。'
           '1_2': '如果有人@你或回覆你，將通知你。'
           '1': '如果有人@你或回覆你，將通知你。'
           '0_7': '你正忽略此分類中的所有通知。'
@@ -1345,7 +1330,6 @@ zh_TW:
         open: "開放討論話題"
         close: "關閉討論話題"
         multi_select: "選擇文章"
-        auto_close: "自動關閉"
         pin: "置頂主題"
         unpin: "取消置頂主題"
         unarchive: "復原已封存的討論話題"
@@ -2691,8 +2675,6 @@ zh_TW:
         blocked: "已封鎖？"
         staged: "暫存？"
         show_admin_profile: "管理員"
-        edit_title: "編輯頭銜"
-        save_title: "儲存頭銜"
         refresh_browsers: "強制瀏覽器重新整理"
         refresh_browsers_message: "訊息已寄出給所有用戶!"
         show_public_profile: "顯示公開的基本資料"

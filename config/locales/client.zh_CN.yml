@@ -336,7 +336,6 @@ zh_CN:
       automatic_group: 自动群组
       closed_group: 封闭群组
       is_group_user: "你是该群组的一个成员"
-      allow_membership_requests: "允许用户向群组拥有者发送加入小组请求（群组需要能让所有人提及）"
       membership: "成员资格"
       name: "名字"
       user_count: "成员数目"
@@ -610,7 +609,7 @@ zh_CN:
         ok: "昵称可用"
       username:
         title: "用户名"
-        instructions: "不重复，无空格，短"
+        instructions: "独一无二，没有空格，简短"
         short_instructions: "其他人可以用 @{{username}} 来提及你"
         available: "用户名可用"
         not_available: "不可用。试试 {{suggestion}} ？"
@@ -1030,15 +1029,6 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       admin_options_title: "本主题可选设置"
-      auto_close:
-        label: "自动关闭主题时间："
-        error: "请输入一个有效值。"
-        based_on_last_post: "以最后回复的时间开始计时"
-        all:
-          examples: '输入小时数（24），绝对时间（17:30）或时间戳（2013-11-22 14:00）。'
-        limited:
-          units: "(# 小时数）"
-          examples: '输入小时数（24）。'
     notifications:
       title: "使用@提到你，回复你的内容、消息以及其他的通知"
       none: "现在无法载入通知"
@@ -1273,11 +1263,7 @@ zh_CN:
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
       deleted: "此主题已被删除"
-      auto_close_notice: "本主题将在%{timeLeft}自动关闭。"
-      auto_close_notice_based_on_last_post: "在最后一个帖子 %{duration} 无人回复关闭帖子的时间。"
       auto_close_title: '自动关闭设置'
-      auto_close_save: "保存"
-      auto_close_remove: "不要自动关闭该主题"
       auto_close_immediate:
         other: "主题中的最后一帖是 %{hours} 小时前发出的，所以主题将会立即关闭。"
       timeline:
@@ -1309,7 +1295,6 @@ zh_CN:
           '2_8': '因为你正在跟踪该分类，你将收到通知。'
           '2_4': '因为你发布了对该主题的回复，你将会收到通知。'
           '2_2': '因为你正在跟踪该主题，你将收到通知。'
-          '2': '因为你<a href="/users/{{username}}/preferences">阅读了该主题</a>，你将会收到通知。'
           '1_2': '如果有人@你或回复你，将通知你。'
           '1': '如果有人@你或回复你，将通知你。'
           '0_7': '你将忽略关于该分类的所有通知。'
@@ -1345,7 +1330,6 @@ zh_CN:
         open: "打开主题"
         close: "关闭主题"
         multi_select: "选择帖子..."
-        auto_close: "自动关闭..."
         pin: "置顶主题..."
         unpin: "取消置顶主题..."
         unarchive: "取消存档主题"
@@ -2690,8 +2674,6 @@ zh_CN:
         blocked: "已封?"
         staged: "暂存？"
         show_admin_profile: "管理员"
-        edit_title: "编辑头衔"
-        save_title: "保存头衔"
         refresh_browsers: "强制浏览器刷新"
         refresh_browsers_message: "消息发送至所有用户！"
         show_public_profile: "显示公开介绍"

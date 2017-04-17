@@ -135,6 +135,9 @@ it:
       visible:
         enabled: 'listato %{when}'
         disabled: 'delistato %{when}'
+      banner:
+        enabled: 'lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall''utente. '
+        disabled: 'ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina.'
     topic_admin_menu: "azioni amministrative sull'argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
@@ -363,7 +366,6 @@ it:
       automatic_group: Gruppo Automatico
       closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
-      allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo (il gruppo deve essere menzionabile da chiunque)"
       membership: "Iscrizione"
       name: "Nome"
       user_count: "Numero di Membri"
@@ -773,7 +775,7 @@ it:
           one: "<i class='fa fa-heart'></i> ricevuto"
           other: "<i class='fa fa-heart'></i> ricevuti"
         days_visited:
-          one: "Giorno visitato"
+          one: "giorno di frequenza"
           other: "giorni di frequenza"
         posts_read:
           one: "messaggio letto"
@@ -1060,15 +1062,6 @@ it:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
-      auto_close:
-        label: "Tempo per auto-chiusura argomento:"
-        error: "Inserisci un valore valido."
-        based_on_last_post: "Non chiudere finché l'ultimo messaggio dell'argomento non è almeno altrettanto vecchio."
-        all:
-          examples: 'Inserisci un numero di ore (24), un orario assoluto (17:30) o un timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(n° di ore)"
-          examples: 'Inserisci il numero di ore (24).'
     notifications:
       title: "notifiche di menzioni @nome, risposte ai tuoi messaggi e argomenti ecc."
       none: "Impossibile caricare le notifiche al momento."
@@ -1311,11 +1304,7 @@ it:
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato cancellato"
-      auto_close_notice: "Questo argomento si chiuderà automaticamente %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Questo argomento si chiuderà %{duration} dopo l'ultima risposta."
       auto_close_title: 'Impostazioni di auto-chiusura'
-      auto_close_save: "Salva"
-      auto_close_remove: "Non chiudere automaticamente questo argomento"
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento ha già 1 ora, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento ha già %{count} ore, per cui l'argomento verrà chiuso immediatamente."
@@ -1348,7 +1337,6 @@ it:
           '2_8': 'Riceverai notifiche perché stai seguendo questa categoria.'
           '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
           '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
-          '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
           '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
@@ -1384,7 +1372,6 @@ it:
         open: "Apri Argomento"
         close: "Chiudi Argomento"
         multi_select: "Seleziona Messaggi..."
-        auto_close: "Chiudi Automaticamente..."
         pin: "Appunta Argomento..."
         unpin: "Spunta Argomento..."
         unarchive: "De-archivia Argomento"
@@ -2778,8 +2765,6 @@ it:
         blocked: "Bloccato?"
         staged: "Temporaneo?"
         show_admin_profile: "Amministratore"
-        edit_title: "Modifica Titolo"
-        save_title: "Salva Titolo"
         refresh_browsers: "Forza l'aggiornamento del browser"
         refresh_browsers_message: "Messaggio inviato a tutti i client!"
         show_public_profile: "Mostra Profilo Pubblico"

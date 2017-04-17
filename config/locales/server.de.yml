@@ -110,7 +110,6 @@ de:
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
   invite:
     not_found: "Dein Einladungsschlüssel ist ungültig. Bitte kontaktiere den Administrator der Seite."
-    user_exists: "Es ist nicht nötig <b>%{email}</b> einzuladen, weil <a href='/users/%{username}/summary'>es dieses Konto bereits gibt!</a>"
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
@@ -273,14 +272,6 @@ de:
       Das Thema ist ohne Frage wichtig für dich &ndash; du hast hier mehr als %{percent}% der Antworten geschrieben.
 
       Bist du dir sicher, dass du anderen Leuten angemessen viel Raum lässt, auch ihre eigenen Punkte mitzuteilen?
-    get_a_room: |
-      ### Denke darüber nach, weiteren Personen zu antworten
-
-      Du hast in diesem Thema bereits %{count}-mal auf @%{reply_username} geantwortet.
-
-      Hast du schon darüber nachgedacht, auch *anderen* Personen in in der Diskussion zu antworten? Eine großartige Diskussion bezieht viele Stimmen und Perspektiven ein.
-
-      Wenn du dein Gespräch mit dieser bestimmten Person ausführlich fortsetzen möchtest, [schicke ihr eine persönliche Nachricht](/users/%{reply_username}).
     too_many_replies: |
       ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
 
@@ -330,9 +321,6 @@ de:
           attributes:
             hex:
               invalid: "ist keine gültige Farbe"
-        post_reply:
-          base:
-            different_topic: "Beitrag und Antwort müssen zum gleichen Thema gehören."
         web_hook:
           attributes:
             payload_url:
@@ -343,7 +331,6 @@ de:
               taken: wird schon von einem anderen Emoji verwendet
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Benutzerprofils eingetragen</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
@@ -1411,7 +1398,6 @@ de:
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto genehmigt wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
-    activate_email: "<p>Fast fertig!  Eine E-Mail mit einem Aktivierungscode wurde an deine E-Mail-Adresse <b>%{email}</b> gesendet. <br>Dort findest du die Anleitung, um deinen Zugang zu aktivieren.</p><p>Solltest du die E-Mail nicht vorfinden, kontrolliere bitte auch den Spam-Ordner. Gegebenenfalls kannst du dir von hier eine weitere Aktivierungs-E-Mail zusenden lassen.</p>"
     not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als %{username} anmelden."
     admin_not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als Administrator anmelden."
@@ -1526,7 +1512,6 @@ de:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
       %{invitee_name} hat dich eingeladen der folgenden Seite beizutreten:
@@ -1545,13 +1530,6 @@ de:
   invite_password_instructions:
     title: "Passwort festlegen"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
-    text_body_template: |
-      Schön, dass du die Einladung zu %{site_name} angenommen hast -- Willkommen!
-
-      Klicke hier um jetzt dein Passwort festzulegen:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
   download_backup_mailer:
     title: "Backup-Download Mailer"
     subject_template: "[%{email_prefix}] Backup der Seite herunterladen"
@@ -1659,7 +1637,6 @@ de:
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
     deferred: "Danke für deine Meldung. Wir sehen uns das an."
     deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
-  temporarily_closed_due_to_flags: "Dieses Thema ist vorrübergehend geschlossen. Mehrere User haben dieses Thema gemeldet. "
   system_messages:
     post_hidden:
       title: "Benachrichtigung: Beitrag versteckt"
@@ -2231,57 +2208,21 @@ de:
     forgot_password:
       title: "Passwort vergessen"
       subject_template: "[%{email_prefix}] Passwort zurücksetzen"
-      text_body_template: |
-        Jemand hat darum gebeten, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
-
-        Wenn du es nicht selbst warst, kannst du diese E-Mail einfach ignorieren.
-
-        Andernfalls besuche den folgenden Link, um ein neues Passwort zu wählen:
-        %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "Passwort setzen"
       subject_template: "[%{email_prefix}] Passwort wählen"
-      text_body_template: |
-        Jemand hat ein Passwort für dein Konto auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), der mit dieser validierten E-Mail-Adresse verknüpft ist, anmelden.
-
-        Wenn diese Anfrage nicht von dir kam, kannst du diese E-Mail einfach ignorieren.
-
-        Klicke auf den folgenden Link, um ein Passwort auszuwählen:
-        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "Administrator-Anmeldung"
       subject_template: "[%{email_prefix}] Anmeldung"
-      text_body_template: |
-        Jemand hat versucht sich in dein Konto auf [%{site_name}](%{base_url}) anzumelden.
-
-        Wenn dieser Anmeldeversuch nicht von dir stammt, kannst du diese E-Mail ignorieren.
-
-        Klicke den folgenden Link, um dich anzumelden:
-        %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "Konto erstellt"
       subject_template: "[%{email_prefix}] Dein neues Konto"
-      text_body_template: |
-        Ein neues Konto wurde für dich auf %{site_name} erstellt.
-
-        Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
-        %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "E-Mail-Adresse bestätigen (an neue)"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
-      text_body_template: |
-        Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
-      text_body_template: |
-        Bevor wir deine E-Mail-Adresse ändern können, müssen wir dich bitten zu bestätigen, dass du das E-Mail-Konto kontrollierst. Nach diesem Schritt, werden wir dich bitten die neue E-Mail-Adresse zu bestätigen.
-
-        Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
@@ -2294,33 +2235,9 @@ de:
     signup_after_approval:
       title: "Konto bestätigen nach Genehmigung"
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Willkommen bei %{site_name}!
-
-        Einer unserer Team-Mitglieder hat dein Benutzerkonto bei %{site_name} genehmigt.
-
-        Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Wenn der obige Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
-
-        %{new_user_tips}
-
-        Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
-        Viel Spaß!
-
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Team-Mitglieder](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     signup:
       title: "Konto bestätigen nach Anmeldung"
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
-      text_body_template: |
-        Willkommen bei %{site_name}!
-
-        Um dein Konto zu aktivieren, klicke auf den folgenden Link:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
   page_not_found:
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"
@@ -2909,7 +2826,6 @@ de:
         Das Abzeichen wird verliehen, wenn du das erste Mal einen Emoji zu deinem Beitrag hinzufügst. :thumbsup: Emojis lassen dich Emotionen in deinen Beiträgen vermitteln, von Glück :smiley: zu Trauer :anguished: zu Wut :angry: und allem dazwischen :sunglasses:. Gib einfach einen : (Doppelpunkt) ein oder drücke die Emoji-Schaltfläche im Editor, um aus Hunderten Auswahlmöglichkeiten zu wählen :ok_hand:
     first_mention:
       name: Erste Erwähnung
-      description: Hat einen Benutzer in einem Beitrag erwähnt
       long_description: Das Abzeichen wird verliehen, wenn du das erste Mal den @Benutzernamen von jemandem in deinem Beitrag erwähnst. Jede Erwähnung erzeugt eine Benachrichtigung an die Person, sodass sie über deinen Beitrag informiert wird. Gib einfach ein @ (At-Zeichen) ein und erwähne einen beliebigen Benutzer oder, sofern erlaubt, eine Gruppe – es ist ein komfortabler Weg, die Aufmerksamkeit von jemandem auf etwas zu lenken.
     first_onebox:
       name: Erste Onebox
@@ -2917,7 +2833,6 @@ de:
       long_description: Das Abzeichen wird verliehen, wenn du das erste Mal einen Link auf einer eigenen Zeile schreibst, der dann automatisch in eine Onebox umgewandelt wurde, mit einer kurzen Zusammenfassung des Links, einem Titel und einem Bild (falls verfügbar).
     first_reply_by_email:
       name: Erste Antwort per E-Mail
-      description: Hat auf einen Beitrag per E-Mail geantwortet.
       long_description: |
         Das Abzeichen wird verliehen, wenn du das erste Mal per E-Mail :e-mail: auf einen Beitrag antwortest.
   admin_login:

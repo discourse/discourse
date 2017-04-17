@@ -734,6 +734,7 @@ cs:
         create: "Poslat pozvánku"
         generate_link: "Zkopírovat odkaz na pozvánku"
         bulk_invite:
+          none: "Nikoho jsi zatím nepozval. Odešli individuální pozvánky, případně <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrej CSV soubor</a>a pozvi tak několik lidí najednou."
           text: "Hromadné pozvání s pomocí souboru"
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
       password:
@@ -1051,15 +1052,6 @@ cs:
         title: "Zapomněl/a jste přidat přijemce?"
         body: "Nyní tuto zprávu posíláte pouze sám/sama sobě!"
       admin_options_title: "Volitelné redakční nastavení tématu"
-      auto_close:
-        label: "Automaticky zavřít téma za:"
-        error: "Prosím zadejte platnou hodnotu."
-        based_on_last_post: "Neuzavírejte téma dokud poslední příspěvek v tomto tématu není alespoň takto starý."
-        all:
-          examples: 'Zadejte počet hodin (24), přesný čas (17:30) nebo časovou značku (2013-11-22 14:00).'
-        limited:
-          units: "(počet hodin)"
-          examples: 'Zadejte počet hodin (24).'
     notifications:
       title: "oznámení o zmínkách pomocí @name, odpovědi na vaše příspěvky a témata, zprávy, atd."
       none: "Notifikace nebylo možné načíst."
@@ -1220,6 +1212,8 @@ cs:
           one: "Vybrali jste <b>1</b> téma."
           few: "Vybrali jste <b>{{count}}</b> témata."
           other: "Vybrali jste <b>{{count}}</b> témat."
+        change_tags: "Zaměnit štítky"
+        append_tags: "Přidat štítky"
         choose_new_tags: "Zvolte nové tagy pro témata:"
         changed_tags: "Tagy témat byly změněny."
       none:
@@ -1315,11 +1309,7 @@ cs:
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
-      auto_close_notice: "Toto téma se automaticky zavře %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Toto téma se uzavře za %{duration} po poslední odpovědi."
       auto_close_title: 'Nastavení automatického zavření'
-      auto_close_save: "Uložit"
-      auto_close_remove: "Nezavírat téma automaticky"
       auto_close_immediate:
         one: "Poslední příspěvek v témetu je již 1 hodinu starý, takže toto téma bude okamžitě uzavřeno."
         few: "Poslední příspěvek v témetu je již %{count} hodiny starý, takže toto téma bude okamžitě uzavřeno."
@@ -1351,7 +1341,6 @@ cs:
           '2_8': 'Budete dostávat upozornění, protože sledujete tuto kategorii.'
           '2_4': 'Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.'
           '2_2': 'Budete dostávat oznámení, protože sledujete toto téma.'
-          '2': 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
           '1_2': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           '1': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           '0_7': 'Ignorujete všechna oznámení v této kategorii.'
@@ -1387,7 +1376,6 @@ cs:
         open: "Otevřít téma"
         close: "Zavřít téma"
         multi_select: "Zvolte příspěvky…"
-        auto_close: "Automaticky zavřít"
         pin: "Připevnit téma"
         unpin: "Odstranit připevnění"
         unarchive: "Navrátit z archivu"
@@ -1403,6 +1391,8 @@ cs:
         pin_globally: "Připnout téma globálně"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
+      reply:
+        title: 'Odpovědět'
       clear_pin:
         title: "Odstranit připnutí"
         help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
@@ -1959,7 +1949,7 @@ cs:
       unread:
         title: "Nepřečtená"
         title_with_count:
-          one: "Nepřečtená ({{1}})"
+          one: "Nepřečtená (1)"
           few: "Nepřečtená ({{count}})"
           other: "Nepřečtená ({{count}})"
         help: "témata. která sledujete nebo hlídáte, s nepřečtenými příspěvky"
@@ -1969,8 +1959,8 @@ cs:
           other: "{{count}} nepřečtených"
       new:
         lower_title_with_count:
-          one: "{{count}} nové"
-          few: "{{count}} nových"
+          one: "1 nové"
+          few: "{{count}} nová"
           other: "{{count}} nových"
         lower_title: "nové"
         title: "Nová"
@@ -2756,8 +2746,6 @@ cs:
         admin: "Administrátor?"
         blocked: "Zablokovaný?"
         show_admin_profile: "Administrace"
-        edit_title: "Upravit titul"
-        save_title: "Uložit nadpis"
         refresh_browsers: "Vynutit obnovení prohlížeče"
         refresh_browsers_message: "Zpráva odeslána všem klientům!"
         show_public_profile: "Zobrazit veřejný profil"
@@ -2776,7 +2764,7 @@ cs:
         activity: Aktivita
         like_count: Rozdaných / obdržených 'líbí se'
         last_100_days: 'Za posledních 100 dní'
-        private_topics_count: Počet soukromách témat
+        private_topics_count: Počet soukromých témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků
         topics_entered: Témat zobrazeno

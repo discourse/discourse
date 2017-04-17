@@ -344,6 +344,7 @@ he:
               in_the_past: "חייב להיות בעתיד."
       <<: *errors
   user_profile:
+    no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין/ה דבר בשדה אודות של הפרופיל שלו/ה</div>"
   vip_category_name: "לאונג'"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
@@ -1413,6 +1414,15 @@ he:
     autoclosed_disabled_minutes:
       one: "נושא זה נפתח אוטומטית לאחר דקה 1."
       other: "נושא זה נפתוח אוטומטית לאחר %{count} דקות."
+    autoclosed_disabled_lastpost_days:
+      one: "הנושא נפתח אוטומטית יום 1 אחרי התגובה האחרונה."
+      other: "הנושא נפתח אוטומטית %{count} ימים אחרי התגובה האחרונה."
+    autoclosed_disabled_lastpost_hours:
+      one: "נושא זה נפתח אוטומטית שעה 1 אחרי התגובה האחרונה."
+      other: "נושא זה נפתח אוטומטית %{count} שעות אחרי התגובה האחרונה."
+    autoclosed_disabled_lastpost_minutes:
+      one: "נושא זה נפתח אוטומטית דקה 1 אחרי התגובה האחרונה."
+      other: "נושא זה נפתח אוטומטית %{count} דקות אחרי התגובה האחרונה."
     autoclosed_disabled: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     pinned_enabled: "הנושא הזה ננעץ. הוא יופיע בראש הקטגוריה שלו עד שיוסר מנעיצה על ידי מנהל או שכפתור נקה נעיצות נלחץ."
@@ -1426,7 +1436,7 @@ he:
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
-    activate_email: "<p>כמעט סיימנו! שלחנו מייל אקטיבציה אל <b>%{email}</b>. אנא עקבו אחר ההנחיות במייל כדי להפעיל את חשבונכם. </p><p> אם המייל לא יגיע, בדקו את תיקיית הספאם שלכם, או נסו להתחבר פעם נוספת כדי לשלוח מייל אקטיביזציה נוסף.</p>"
+    activate_email: "<p>כמעט סיימתם! שלחנו מייל הפעלה ל-<b>%{email}</b>. בבקשה עיקבו אחרי ההוראות במייל כדי להפעיל את החשבון שלכם.</p><p>אם הוא לא מגיע, בידקו בתיקיית הספאם, או נסו להתחבר שוב כדי לשלוח עוד מייל הפעלה או להכניס כתובת מייל אחרת.</p>"
     not_activated: "אינכם יכולים להתחבר עדיין. שלחנו לכם הודעת דואר אלקטרוני לאישור. בבקשה עיקבו אחר ההוראות במייל כדי להפעיל את חשבונכם."
     not_allowed_from_ip_address: "אינכם יכולים להתחבר כ-%{username}  מכתובת IP זו. "
     admin_not_allowed_from_ip_address: "אינכם יכולים להתחבר כמנהלי מערכת מכתובת IP זו."
@@ -1541,7 +1551,7 @@ he:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    title: "שולח-מיילים להזמנה לפורום"
+    title: "דואר הזמנה לפורום מותאם אישית"
     subject_template: "%{invitee_name} הזמין/ה אתכם להצטרף ל %{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/ה אתכם להצטרף
@@ -1561,9 +1571,12 @@ he:
     title: "הנחיות סיסמה למוזמנים"
     subject_template: "צרו סיסמה עבור חשבון ה-%{site_name} שלכם."
     text_body_template: |
-      תודה שקיבלתם את ההזמנה שלכם ל %{site_name} -- ברוכים הבאים!
-      לחצו על הקישור בשביל לבחור סיסמה: %{base_url}/users/password-reset/%{email_token}
-      (אם הקישור פג תוקף, בחרו ב"שכחתי את הסיסמה שלי" בהתחברות.)
+      תודה שקיבלתם את ההזמנה ל-%{site_name} -- ברוכים הבאים!
+
+      לחצו על קישור זה כדי לבחור סיסמה עכשיו:
+      %{base_url}/u/password-reset/%{email_token}
+
+      (אם אתם חושבים שהקישור למעלה פקע, בחרו ב״שכחתי את הסיסמה שלי״ כשאתם מתחברים עם כתובת המייל שלכם.)
   download_backup_mailer:
     title: "הורדת גיבוי שולח מיילים"
     subject_template: "הורדת גיבוי אתר [%{email_prefix}]"
@@ -1575,6 +1588,13 @@ he:
       (אם *לא* ביקשתם הורדה זו, אתם אמורים להיות מוטרדים למדי -- למישהו יש הרשאות אדמיניסטרציה לאתר שלכם.)
     no_token: |
       מצטערים, כבר נעשה שימוש בקישור הורדת גיבוי זה או שהוא פקע.
+  admin_confirmation_mailer:
+    title: "אישור אדמיניסטרטור"
+    subject_template: "[%{email_prefix}] אישור חשבון חדש"
+    text_body_template: |
+      בבקשה אשרו שהייתם מעוניינים להוסיף את **%{target_username}** כאדמיניסטרטור של הפורום שלכם.
+
+      [Confirm Administrator Account](%{admin_confirm_url})
   test_mailer:
     title: "שולח-מיילים לבדיקה"
     subject_template: "[%{email_prefix}] מייל בדיקת שליחתיות"
@@ -1671,7 +1691,9 @@ he:
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
     deferred: "תודה שעדכנתם אותנו. אנחנו בודקים את העניין."
     deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפוסט."
-  temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר רב של דגלים של הקהילה. "
+  temporarily_closed_due_to_flags:
+    one: "נושא זה סגור זמנית לשעה 1 עקב מספר רב של דגלי קהילה."
+    other: "נושא זה סגור זמנית ל-%{count} שעות עקב מספר רב של דגלי קהילה."
   system_messages:
     post_hidden:
       title: "פוסט חבוי"
@@ -2040,6 +2062,14 @@ he:
     new_user_of_the_month:
       title: "אתם המשתמשים החדשים של החודש!"
       subject_template: "אתם המשתמשים החדשים של החודש!"
+      text_body_template: |
+        ברכותינו, הוענק לכם **פרס המשתמש החדש של החודש עבור %{month_year}**. :trophy:
+
+        הפכתם במהרה לחברים מוערכים בקהילה שלנו וכולם ממש נהנים מהפוסטים שלכם.
+
+        פרס זה יוצג בקביעות כעיטור ב[דף המשתמש שלכם](/my/badges).
+
+        תודה, והמשיכו עם העבודה המעולה!
   unsubscribe_link: |
     כדי להפסיק את המיילים האלו, [לחצו כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2249,56 +2279,57 @@ he:
       title: "שכח/ה סיסמה"
       subject_template: "[%{email_prefix}] איפוס סיסמה"
       text_body_template: |
-        מישהו ביקש לאפס את הסיסמה שלכם ב [%{site_name}](%{base_url}).
+        מישהו ביקש לאפס את הסיסמה שלכם ב-[%{site_name}](%{base_url}).
 
-        אם זה לא הייתם אתם, אתם יכולים להתעלם ממייל זה בביטחה.
+        אם זה לא הייתם אתם, אתם יכולים פשוט להתעלם ממייל זה.
 
         לחצו על הקישור הבא כדי לבחור סיסמה חדשה:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "קביעת סיסמה"
       subject_template: "[%{email_prefix}] קביעת סיסמה"
       text_body_template: |
-        מישהו ביקש להוסיף סיסמה לחשבון שלכם ב [%{site_name}](%{base_url}). לחילופין, תוכלו להתחבר באמצעות כל שירות נתמך (גוגל, פייסבוק, וכד׳) שמקושר לכתובת מייל תקינה.
+        מישהו ביקש להוסיף סיסמה לחשבון שלכם ב-[%{site_name}](%{base_url}). לחילופין, אתם יכולים להתחבר באמצעות כל שירות מקוון נתמך (גוגל, פייסבוק, וכד׳) שמקושר עם כתובת מייל זו.
 
-        אם לא אתם ביקשתם זאת, תוכלו להתעלם ממייל זה ללא חשש.
+        אם לא אתם ביקשתם זאת, אתם יכולים פשוט להתעלם ממייל זה.
 
-        לחצו על הלינק הבא כדי לבחור סיסמה:
-        %{base_url}/users/password-reset/%{email_token}
+        לחצו על הקישור הבא כדי לבחור סיסמה:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "התחברות אדמיניסטרטור"
       subject_template: "[%{email_prefix}] התחברות"
       text_body_template: |
-        מישהו ביקש להתחבר לחשבונכם ב [%{site_name}](%{base_url}).
-        אם לא ביקשתם זאת, תוכלו להתעלם מהמייל הזה.
-        לחצו על הקישור הבא להתחבר:
-        %{base_url}/users/admin-login/%{email_token}
+        מישהו ניסה להתחבר לחשבון שלכם ב-[%{site_name}](%{base_url}).
+
+        אם לא אתם ביקשתם זאת, אתם יכולים פשוט להתעלם ממייל זה.
+
+        לחצו על הקישור הבא כדי להתחבר:
+        %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
       subject_template: "[%{email_prefix}] החשבון החדש שלך"
       text_body_template: |
-        חשבון חדש נוצר עבורך ב%{site_name}
+        חשבון חדש נוצר עבורכם ב-%{site_name}
 
-        הקישו על הקישור המצורף כדי להגדיר סיסמה לחשבונכם החדש:
-        %{base_url}/users/password-reset/%{email_token}
+        לחצו על הקישור הבא כדי לבחור סיסמה לחשבון החדש שלכם:
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "אישור מייל חדש"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל החדשה שלכם"
       text_body_template: |
         אשרו את כתובת המייל החדשה שלכם עבור %{site_name} על ידי לחיצה על הקישור הבא:
 
-        %{base_url}/users/authorize-email/%{email_token}
+        %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       title: "אישור מייל ישן"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
       text_body_template: |
-        לפני שתוכלו להחליף את כתובת המייל שלכם, אנחנו צריכים שתאשרו שאתם שולטים
-        בכתובת המייל הנוכחית. אחרי שאתם משלימים את הצעד הזה, אנחנו נבקש שתאשרו
-        את כתובת המייל החדשה.
+        לפני שנוכל לשנות את כתובת המייל שלכם, אנחנו צריכים שתאשרו שאתם שולטים
+        בחשבון המייל הנוכחי. אחרי שתשלימו שלב זה, נבקש שתאשרו את כתובת המייל החדשה.
 
-        אשרו את כתובת המייל הנוכחית שלכם עבור %{site_name} על ידי לחיצה על הקישור הבא:
+        אשרו את כתובת המייל הנוכחית עבור %{site_name} על ידי לחיצה על הקישור הבא:
 
-        %{base_url}/users/authorize-email/%{email_token}
+        %{base_url}/u/authorize-email/%{email_token}
     notify_old_email:
       title: "התראת מייל ישן"
       subject_template: "[%{email_prefix}] כתובת המייל שלכם שונתה"
@@ -2312,32 +2343,32 @@ he:
       title: "הרשמה אחרי אישור"
       subject_template: "אושרתם באתר %{site_name}!"
       text_body_template: |
-        ברוכים הבאים ל%{site_name}!
+        ברוכים הבאים ל-%{site_name}!
 
-        חבר צוות אישר את החשבון שלכם ב %{site_name}.
+        חבר צוות אישר את החשבון שלכם ב-%{site_name}.
 
-        לחצו על הקישור הבא לאשר והפעיל את החשבון החדש שלכם:
-        %{base_url}/users/activate-account/%{email_token}
+        לחצו על הקישור הבא כדי לאשר ולהפעיל את החשבון החדש שלכם:
+        %{base_url}/u/activate-account/%{email_token}
 
-        אם הלינק לא לחיץ, נסו להעתיק ולהדביק אותו לסרגל הכתובת בראש הדפדפן.
+        אם הקישור למעלה אינו לחיץ, נסו להעתיק ולהדביק אותו בשורת הכתובת של הדפדפן שלכם.
 
         %{new_user_tips}
 
-        אנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל זמן.
+        אנחנו מאמינים ב-[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל זמן שהוא.
 
         תהנו מהביקור!
 
-        (אם אתם צריכים ליצור קשר עם [חברי צוות](%{base_url}/about) כחברים חדשים, רק השיבו להודעה זאת.)
+        (אם אתם צריכים ליצור קשר עם [חברי צוות](%{base_url}/about) כמשתמשים חדשים, פשוט השיבו להודעה זו.)
     signup:
       title: "הרשמה"
       subject_template: "[%{email_prefix}] אשרו את חשבונכם החדש"
       text_body_template: |
-        ברוכים הבאים ל %{site_name}!
+        ברוכים הבאים ל-%{site_name}!
 
         לחצו על הקישור הבא כדי לאשר ולהפעיל את החשבון החדש שלכם:
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
-        אם הקישור למעלה אינו לחיץ, נסו להעתיק ולהדביק אותו לשורת הכתובת של הדפדפן שלכם.
+        אם הקישור למעלה אינו לחיץ, נסו להעתיק ולהדביק אותו בשורת הכתובת של הדפדפן שלכם.
   page_not_found:
     title: "אופס! הדף לא קיים או שהוא פרטי."
     popular_topics: "פופלארי"
@@ -2847,6 +2878,9 @@ he:
     new_user_of_the_month:
       name: "המשתמש/ת החדש/ה של החודש"
       description: תרומות יוצאות מהכלל בחודש הראשון שלהם
+      long_description: |
+        עיטור זה מוענק כדי לברך שני משתמשים חדשים בכל חודש בעבור תרומות מצטיינות שלהם, שנמדדות לפי תדירות הלייקים לפוסטים שלכם, וממי הם ניתנו.
+    badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
     success: "דוא\"ל נשלח"
     error: "שגיאה!"

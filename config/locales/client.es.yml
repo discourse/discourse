@@ -363,7 +363,6 @@ es:
       automatic_group: Grupo automático
       closed_group: Grupo cerrado
       is_group_user: "Eres miembro de este grupo"
-      allow_membership_requests: "Permitir a los usuarios solicitudes para ser miembro a los dueños del grupo (es necesario que todo el mundo pueda mencionar al grupo)"
       membership: "Membresía"
       name: "Nombre"
       user_count: "Número de miembros"
@@ -935,6 +934,9 @@ es:
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el email de activación nuevamente."
+      change_email: "Cambiar dirección de email"
+      provide_new_email: "Escribe una nueva dirección y le reenviaremos el correo de confirmación."
+      submit_new_email: "Actualizar dirección de email"
       sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentemail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
       to_continue: "Por favor, inicia sesión"
       preferences: "Debes tener una sesión iniciada para cambiar tus preferencias de usuario."
@@ -1073,15 +1075,6 @@ es:
         title: "¿Olvidaste añadir destinatarios?"
         body: "¡Vas a enviarte este mensaje a ti mismo!"
       admin_options_title: "Opciones de moderación para este tema"
-      auto_close:
-        label: "Tiempo para cierre automático del tema"
-        error: "Por favor introduzca un valor válido."
-        based_on_last_post: "No cerrar hasta que el último post en el tema es al menos así de antiguo."
-        all:
-          examples: 'Introduzca el número de horas (24), tiempo absoluto (17:30) o timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(# de horas)"
-          examples: 'Introduzca el número de horas (24).'
     notifications:
       title: "notificaciones por menciones a tu @nombre, respuestas a tus posts y temas, mensajes, etc"
       none: "No se han podido cargar las notificaciones."
@@ -1151,6 +1144,7 @@ es:
       sort_by: "Ordenar por"
       relevance: "Relevancia"
       latest_post: "Post más reciente"
+      latest_topic: "Último tema"
       most_viewed: "Más visto"
       most_liked: "Más \"Me gusta\" recibidos"
       select_all: "Seleccionar todo"
@@ -1329,11 +1323,32 @@ es:
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido borrado"
-      auto_close_notice: "Este tema se cerrará automáticamente en %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Este tema cerrara %{duration} después de la última respuesta."
+      topic_status_update:
+        time: "Tiempo:"
+      auto_update_input:
+        limited:
+          units: "(número de horas)"
+          examples: 'Introduce las horas (24).'
+        all:
+          examples: 'Introduce el número de horas (24), hora absoluta (17:30) o timestamp (2013-11-22 14:00).'
+      publish_to_category:
+        title: "Programar publicación"
+      temp_open:
+        title: "Abrir temporalmente"
+      auto_reopen:
+        title: "Abrir tema automáticamente"
+      temp_close:
+        title: "Cerrar temporalmente"
+      auto_close:
+        title: "Cerrar tema automáticamente"
+        error: "Por favor, introduce un valor válido."
+        based_on_last_post: "No cerrar hasta que el último post en el tema sea al menos así de antiguo."
+      status_update_notice:
+        auto_open: "Este tema se abrirá automáticamente %{timeLeft}."
+        auto_close: "Este tema se cerrará automáticamente %{timeLeft}."
+        auto_publish_to_category: "Este tema será publicado en <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "Este tema se cerrará %{duration} después de la última respuesta."
       auto_close_title: 'Configuración de auto-cerrado'
-      auto_close_save: "Guardar"
-      auto_close_remove: "No Auto-Cerrar Este Tema"
       auto_close_immediate:
         one: "El último post se publicó hace 1 hora, por lo que el tema se cerrará inmediatamente."
         other: "El último post se publicó hace %{count} horas, por lo que el tema se cerrará inmediatamente."
@@ -1366,7 +1381,7 @@ es:
           '2_8': 'Recibirás notificaciones porque estás siguiendo esta categoría.'
           '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
           '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
-          '2': 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
+          '2': 'Recibirás notificaciones porque has <a href="/u/{{username}}/preferences">leído este tema</a>.'
           '1_2': 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
           '1': 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
@@ -1402,7 +1417,6 @@ es:
         open: "Abrir tema"
         close: "Cerrar tema"
         multi_select: "Seleccionar posts..."
-        auto_close: "Auto-cierre..."
         pin: "Destacar tema..."
         unpin: "Dejar de destacar..."
         unarchive: "Desarchivar Tema"
@@ -1800,6 +1814,7 @@ es:
       num_featured_topics: "Número de temas a mostrar en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página superior de categorías:"
       all_topics_wiki: "Hacer todos los temas wiki por defecto"
+      subcategory_list_style: "Estilo de la lista de subcategorías:"
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
@@ -1837,6 +1852,11 @@ es:
         created: "Cread"
       sort_ascending: 'Ascendente'
       sort_descending: 'Descendente'
+      subcategory_list_styles:
+        rows: "Filas"
+        rows_with_featured_topics: "Filas con temas destacados"
+        boxes: "Caja"
+        boxes_with_featured_topics: "Cajas con temas destacados"
     flagging:
       title: '¡Gracias por ayudar a mantener una comunidad civilizada!'
       action: 'Reportar post'
@@ -2829,8 +2849,6 @@ es:
         blocked: "¿Bloqueado?"
         staged: "¿Provisional?"
         show_admin_profile: "Administrador"
-        edit_title: "Editar título"
-        save_title: "Guardar título"
         refresh_browsers: "Forzar recarga del navegador"
         refresh_browsers_message: "¡Mensaje enviado a todos los clientes!"
         show_public_profile: "Ver perfil público"
@@ -2841,6 +2859,7 @@ es:
         logged_out: "El usuario ha cerrado sesión desde todos los dispositivos"
         revoke_admin: 'Revocar administrador'
         grant_admin: 'Conceder administración'
+        grant_admin_confirm: "Te hemos enviado un email para verificar el nuevo administrador. Por favor, ábrelo y sigue las instrucciones."
         revoke_moderation: 'Revocar moderación'
         grant_moderation: 'Conceder moderación'
         unblock: 'Desbloquear'

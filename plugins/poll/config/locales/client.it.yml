@@ -54,6 +54,7 @@ it:
         insert: Inserisci Sondaggio
         help:
           options_count: Inserisci almeno 2 opzioni
+          invalid_values: Il valore minimo deve essere minore del valore massimo.
         poll_type:
           label: Tipo
           regular: Scelta Singola

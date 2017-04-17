@@ -302,16 +302,12 @@ zh_CN:
           attributes:
             hex:
               invalid: "不是有效颜色值"
-        post_reply:
-          base:
-            different_topic: "帖子和回复必须属于同一主题."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL 不合法。URL 应包括 http:// 或 https://。并且其中没有空格。"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的资料中，关于我部分目前还是空白，<a href='/users/%{username_lower}/preferences/about-me'>你想要写些什么吗？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
   vip_category_name: "贵宾室"
   vip_category_description: "信任等级3的用户参与讨论的分类。"
@@ -1328,7 +1324,6 @@ zh_CN:
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     wait_approval: "谢谢注册帐号。我们会在你的帐号获得批准之后通知你。"
     active: "你的帐号已经被激活，可以使用了。"
-    activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活你的帐号。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱，或者试试再登录一次，看看能不能收到另一封激活邮件。</p>"
     not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的帐号。"
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登陆。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
@@ -1388,13 +1383,6 @@ zh_CN:
     subject_template: "%{invitee_name}邀请你加入%{site_domain_name}"
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
-    text_body_template: |
-      感谢你接受来自%{site_name}的邀请——欢迎！
-
-      点击下面的链接立即选择一个密码：
-      %{base_url}/users/password-reset/%{email_token}
-
-      （如果链接已经过期，在登录时用，选择“我忘记了密码”，再次输入你的邮箱即可。）
   test_mailer:
     text_body_template: |
       这是一封测试电子邮件，发自：
@@ -1481,7 +1469,6 @@ zh_CN:
     disagreed: "谢谢你的消息。我们正在进行处理。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
-  temporarily_closed_due_to_flags: "主题因为大量的社群标记暂时关闭"
   system_messages:
     post_hidden:
       subject_template: "帖子因社群标记隐藏"
@@ -1964,52 +1951,16 @@ zh_CN:
       back_to_top: "回到顶部"
     forgot_password:
       title: "忘记密码"
-      text_body_template: |
-        有人请求重置你在 [%{site_name}](%{base_url}) 上的密码。
-
-        如果那不是你，你可以直接忽略本邮件。
-
-        点击下面的链接来选择一个新密码：
-        %{base_url}/users/password-reset/%{email_token}
     set_password:
       title: "设置密码"
-      text_body_template: |
-        有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
-
-        如果不是你在请求添加密码，你可以直接忽略本邮件。
-
-        点击下面的链接来选择一个新密码：
-        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       title: "管理员登陆"
-      text_body_template: |
-        有人尝试登录你在[%{site_name}](%{base_url})的账户。
-
-        如果不是你在操作，你可以安全地忽略这封邮件。
-
-        点击下面的链接登录：
-        %{base_url}/users/admin-login/%{email_token}
     account_created:
       title: "帐号已创建"
-      text_body_template: |
-        你在 %{site_name} 上建立了一个新账号
-
-        点击下面的链接来为新账户设置密码：
-        %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       title: "确认新邮箱"
-      text_body_template: |
-        点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
-
-        %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       title: "确认旧邮箱"
-      text_body_template: |
-        在我们修改你的邮箱地址前，我们需要你确认你拥有当前的邮件账号。在你完成这步之后，我们将确认你的新邮件地址。
-
-        点击下面的链接来确认你当前在%{site_name}上的电子邮箱地址：
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
       text_body_template: |
@@ -2021,32 +1972,8 @@ zh_CN:
     signup_after_approval:
       title: "在审批之后注册"
       subject_template: "你已经被 %{site_name} 论坛批准加入了！"
-      text_body_template: |
-        欢迎加入%{site_name}！
-
-        一个管理人员批准了你在%{site_name}的账户。
-
-        点击下面的链接来确认并激活你在 %{site_name} 上的新账号：
-        %{base_url}/users/activate-account/%{email_token}
-
-        如果上面的链接无法点击，请拷贝该链接并粘贴到你的浏览器的地址栏里。
-
-        %{new_user_tips}
-
-        我们始终相信[讨论应该文明](%{base_url}/guidelines)。
-
-        好好享受你在论坛的时光吧！
-
-        （如果你在新用户级别需要和[管理人员](%{base_url/about)沟通的话，直接回复这个消息。）
     signup:
       title: "注册"
-      text_body_template: |
-        欢迎来到 %{site_name}！
-
-        点击下面的链接来确认和激活你的新帐号：
-        %{base_url}/users/activate-account/%{email_token}
-
-        如果上面的链接无法点击，请拷贝该链接并粘贴到你的浏览器的地址栏里。
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
@@ -2537,7 +2464,6 @@ zh_CN:
         该徽章授予给第一次在帖子中使用 Emoji 的你 :thumbsup:。Emoji 让你在帖子中表达快乐 :smiley:、悲伤 :anguished:、愤怒 :angry: 以及任何东西 :sunglasses:。输入 :（冒号）或在编辑器中的 Emoji 工具栏中选择吧 :ok_hand:
     first_mention:
       name: 首次提及
-      description: 在帖子中提到用户
       long_description: 该徽章授予给第一次在帖子中@别人的你。每个提及都将通知对方，让他们知道你发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及群组——这是个获得他们注意的好办法。
     first_onebox:
       name: 首个Onebox
@@ -2545,7 +2471,6 @@ zh_CN:
       long_description: 该徽章授予给第一次在空行中发表链接的你，链接将被展开成 onebox。其中有链接摘要、标题和（如果有）图片。
     first_reply_by_email:
       name: 首次邮件回复
-      description: 通过邮件回复
       long_description: |
         该徽章授予给第一次通过邮件回复的你 :e-mail:。
   admin_login:

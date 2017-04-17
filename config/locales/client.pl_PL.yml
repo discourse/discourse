@@ -415,7 +415,6 @@ pl_PL:
       automatic_group: Automatyczna grupa
       closed_group: Zamknięta grupa
       is_group_user: "Jesteś członkiem tej grupy"
-      allow_membership_requests: "Pozwalaj użytkownikom wysyłać prośby o członkostwo do właścicieli grup (Wymagane jest aby wszyscy mogli wspominać grupę)"
       membership: "Członkostwo"
       name: "Nazwa"
       user_count: "Ilość użytkowników"
@@ -1153,15 +1152,6 @@ pl_PL:
         title: "Nie zapomniałeś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
-      auto_close:
-        label: "Automatycznie zamykaj tematy po:"
-        error: "Podaj poprawną wartość."
-        based_on_last_post: "Nie zamykaj tematu dopóki od ostatniego wpisu nie upłynie przynajmniej tyle czasu."
-        all:
-          examples: 'Podaj godzinę  (17:30), liczbę godzin (24) lub konkretną datę i czas (2013-11-22 14:00).'
-        limited:
-          units: "(# godzin)"
-          examples: 'Podaj liczbę godzin (24).'
     notifications:
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
@@ -1430,11 +1420,7 @@ pl_PL:
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
-      auto_close_notice: "Ten temat zostanie automatycznie zamknięty %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Ten temat zostanie automatycznie zamknięty %{duration} po ostatniej odpowiedzi."
       auto_close_title: 'Ustawienia automatycznego zamykania'
-      auto_close_save: "Zapisz"
-      auto_close_remove: "Nie zamykaj automatycznie tego tematu"
       auto_close_immediate:
         one: "Ostatni wpis w tym temacie został zamieszczony 1 godzinę temu, więc zostanie on natychmiastowo zamknięty."
         few: "Ostatni wpis w tym temacie został zamieszczony %{hours} godzin temu, więc zostanie on natychmiastowo zamknięty."
@@ -1468,7 +1454,6 @@ pl_PL:
           '2_8': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz tę kategorię.'
           '2_4': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
           '2_2': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
-          '2': 'Będziesz otrzymywać powiadomienia, ponieważ <a href="/users/{{username}}/preferences">ten temat został uznany za przeczytany</a>.'
           '1_2': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '1': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
@@ -1504,7 +1489,6 @@ pl_PL:
         open: "Otwórz temat"
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
-        auto_close: "Zamknij automatycznie…"
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
@@ -3049,8 +3033,6 @@ pl_PL:
         blocked: "Zablokowany?"
         staged: "Wystawiony?"
         show_admin_profile: "Admin"
-        edit_title: "Edytuj tytuł"
-        save_title: "Zapisz tytuł"
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
         refresh_browsers_message: "Wiadomość wysłana do wszystkich klientów!"
         show_public_profile: "Pokaż profil publiczny"

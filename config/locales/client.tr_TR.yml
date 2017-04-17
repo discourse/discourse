@@ -336,7 +336,6 @@ tr_TR:
       automatic_group: Otomatik Grup
       closed_group: Kapanmış Grup
       is_group_user: "Bu grubun bir üyesisiniz."
-      allow_membership_requests: "Kullanıcıların Grup başlarına üyelik istekleri göndermelerine izin ver ( Herkesin grupta birbirleri hakkında bahsetme özelliğinin açık olması gerekmektedir.)"
       membership: "Üyelik"
       name: "İsim"
       user_count: "Grup Sayısı"
@@ -1025,15 +1024,6 @@ tr_TR:
         title: "Alıcıları eklemeyi unuttun mu?"
         body: "Bu ileti şu an sadece sana gönderiliyor!"
       admin_options_title: "Bu konu için isteğe bağlı görevli ayarları"
-      auto_close:
-        label: "Başlığı otomatik kapatma zamanı:"
-        error: "Lütfen geçerli bir değer giriniz."
-        based_on_last_post: "Başlıktaki son gönderi de en az bu kadar eskiyinceye kadar kapatmayın."
-        all:
-          examples: 'Saat sayısı (24), kesin zaman (17:30) ya da zaman damgası (2013-11-22 14:00) girin.'
-        limited:
-          units: "(saat sayısı)"
-          examples: 'Saat sayısını giriniz (24).'
     notifications:
       title: "@isim bahsedilişleri, gönderileriniz ve konularınıza verilen cevaplar, iletilerle vb. ilgili bildiriler"
       none: "Şu an için bildirimler yüklenemiyor."
@@ -1265,11 +1255,7 @@ tr_TR:
       jump_reply_up: Daha önceki cevaba geç
       jump_reply_down: Daha sonraki cevaba geç
       deleted: "Konu silindi "
-      auto_close_notice: "Bu konu %{timeLeft} otomatik olarak kapanacak."
-      auto_close_notice_based_on_last_post: "Bu konu son cevaptan %{duration} sonra kapanacak."
       auto_close_title: 'Otomatik Kapatma Ayarları'
-      auto_close_save: "Kaydet"
-      auto_close_remove: "Bu Konuyu Otomatik Olarak Kapatma"
       auto_close_immediate:
         other: "Konudaki son gönderi zaten %{count} saat eski, bu yüzden konu hemen kapatılacak."
       timeline:
@@ -1301,7 +1287,6 @@ tr_TR:
           '2_8': 'Be kategoriyi takip ettiğiniz için bildirimlerini alacaksınız.'
           '2_4': 'Bu konuya cevap yazdığınız için bildirimlerini alacaksınız.'
           '2_2': 'Bu konuyu takip ettiğiniz için bildirimlerini alacaksınız.'
-          '2': '<a href="/users/{{username}}/preferences">Bu konuyu okuduğunuz için</a> bildirimlerini alacaksınız.'
           '1_2': 'Birisi @isminizden bahsederse ya da size cevap verirse bildirim alacaksınız.'
           '1': 'Birisi @isminizden bahsederse veya size cevap verirse bildirim alacaksınız.'
           '0_7': 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
@@ -1337,7 +1322,6 @@ tr_TR:
         open: "Konuyu Aç"
         close: "Konuyu Kapat"
         multi_select: "Gönderileri Seç..."
-        auto_close: "Otomatik Kapat..."
         pin: "Başa Tuttur..."
         unpin: "Baştan Kaldır..."
         unarchive: "Konuyu Arşivden Kaldır"
@@ -2681,8 +2665,6 @@ tr_TR:
         blocked: "Engellendi mi?"
         staged: "Aşamalı?"
         show_admin_profile: "Yönetici"
-        edit_title: "Başlığı Düzenle"
-        save_title: "Başlığı Kaydet"
         refresh_browsers: "Tarayıcıyı sayfa yenilemesine zorla"
         refresh_browsers_message: "İleti tüm kullanıcılara gönderildi!"
         show_public_profile: "Herkese Açık Profili Görüntüle"

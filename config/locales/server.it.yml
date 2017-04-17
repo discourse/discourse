@@ -110,6 +110,7 @@ it:
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti da S3 a meno che non imposti l'opzione 's3_upload_bucket'."
   invite:
     not_found: "Il tuo token di invito non è valido. Per favore contatta l'amministratore del sito."
+    user_exists: "Non c'è bisogno di invitare <b>%{email}</b>, perché <a href='/u/%{username}/summary'>ha già un account!</a>"
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     error: "Si è verificato un errore durante il caricamento del file. Per favore riprova più tardi."
@@ -302,16 +303,12 @@ it:
           attributes:
             hex:
               invalid: "non è un colore valido"
-        post_reply:
-          base:
-            different_topic: "Il messaggio e la risposta devono appartenere allo stesso argomento."
         web_hook:
           attributes:
             payload_url:
               invalid: "La URL non è valida. La URL dovrebbe iniziare per http:// o https:// e nessuno spazio non è ammesso. "
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
@@ -1171,7 +1168,6 @@ it:
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     wait_approval: "Grazie per esserti iscritto. Ti avvertiremo quando il tuo account sarà approvato."
     active: "Il tuo account è attivo e pronto all'uso."
-    activate_email: "<p>Ci siamo quasi! Abbiamo mandato una email di attivazione a <b>%{email}</b>. Per favore segui le istruzioni contenute nell'email per attivare il tuo account.</p><p>Se l'email non ti arriva, controlla la tua cartella spam o prova a collegarti ancora per inviare un'altra email di attivazione.</p>"
     not_activated: "Non puoi ancora collegarti. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     not_allowed_from_ip_address: "Non puoi collegarti come %{username} da quell'indirizzo IP."
     admin_not_allowed_from_ip_address: "Non puoi collegarti come admin da quell'indirizzo IP."
@@ -1218,7 +1214,6 @@ it:
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
     deferred: "Grazie per averci informato. Stiamo provvedendo."
     deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
-  temporarily_closed_due_to_flags: "Questo argomento è temporaneamente chiuso a causa di numerose segnalazioni della comunità."
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
@@ -1432,63 +1427,8 @@ it:
       topic_updates: "Aggiornamenti argomento"
       view_this_topic: "Vedi questo argomento"
       back_to_top: "Torna in cima"
-    forgot_password:
-      text_body_template: |
-        Qualcuno ha richiesto l'azzeramento della tua password su [%{site_name}](%{base_url}).
-
-        Se non sei stato tu, puoi tranquillamente ignorare questa email.
-
-        Clicca il seguente collegamento per scegliere una nuova password:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato.
-
-        Se non hai fatto tu questa richiesta, ignora tranquillamente questa email.
-
-        Clicca sul seguente collegamento per scegliere una password:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        Qualcuno ha richiesto di connettersi al tuo account su [%{site_name}](%{base_url}).
-
-        Se non sei stato tu ad avviare questa richiesta, puoi tranquillamente ignorare questa email.
-
-        Altrimenti, clicca sul seguente collegamento per connetterti:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        Ti è stato creato un account su %{site_name}
-
-        Fai clic sul seguente collegamento per scegliere una password per il tuo nuovo account:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
-      text_body_template: |
-        Benvenuto su %{site_name}!
-
-        Un membro dello staff ha approvato il tuo account su %{site_name}.
-
-        Clicca sul seguente collegamento per confermare e attivare il tuo nuovo account:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
-
-        %{new_user_tips}
-
-        Noi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre.
-
-        Buona permanenza!
-
-        ps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.
-    signup:
-      text_body_template: |
-        Benvenuto su %{site_name}!
-
-        Clicca sul collegamento seguente per confermare ed attivare il tuo nuovo account:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se il collegamento non è cliccabile, copialo ed incollalo manualmente nella barra degli indirizzi del tuo browser.
   page_not_found:
     title: "La pagina richiesta non esiste oppure è privata."
     popular_topics: "Di successo"
@@ -1602,6 +1542,9 @@ it:
       description: Ha ricevuto 2 "Mi piace" su 100 messaggi
     admired:
       description: Ha ricevuto 5 "Mi piace" su 300 messaggi
+    first_emoji:
+      long_description: |
+        Questo distintivo viene assegnato la prima volta che inserisci un Emoji in un messaggio :thumbsup:. Gli Emoji ti permettono di trasmettere emozioni nei messaggi, dalla felicità :smiley: alla tristezza :anguished: alla rabbia :angry: e tutto ciò che sta nel mezzo :sunglasses:. Digita semplicemente : (carattere due punti) oppure premi il bottone Emoji nella barra degli strumenti dell'editor, per selezionare tra centinaia di possibilità :ok_hand:
   admin_login:
     success: "email Inviata"
     error: "Errore!"

@@ -286,16 +286,12 @@ ro:
           attributes:
             hex:
               invalid: "nu este o culoare validă"
-        post_reply:
-          base:
-            different_topic: "Postarea și răspunsul trebuie să aparțină aceluiași subiect."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL-ul este invalid. URL-ul trebuie să includă http:// sau https:// , iar caracterul spațiu nu este permis."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>câmpul Despre mine din profilul tău este momentan gol.  <a href='/users/%{username_lower}/preferences/about-me'>Dorești să-l completezi?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} încă nu a introdus nimic în câmpul Despre mine din profilul său</div>"
   vip_category_name: "Sufragerie"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
@@ -1361,7 +1357,6 @@ ro:
     incorrect_username_email_or_password: "Nume de utilizator, email sau parolă incorecte"
     wait_approval: "Îți mulțumim pentru autentificare. Te vom anunța când contul dumneavoastră a fost aprobat."
     active: "Contul tău a fost activat și e gata să fie folosit."
-    activate_email: "Ești aproape gata! Am trimis un email de activare către <b>%{email}</b>. Te rugăm să urmezi instrucțiunile din email pentru a-ți activa contul."
     not_activated: "Nu te poți încă autentifica. Ți-am trimis un email de autentificare. Te rugăm să urmezi instrucțiunile din email pentru a-ți activa contul."
     not_allowed_from_ip_address: "Nu te poți conecta ca %{username} de la această adresa de IP."
     admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator de la această adresa de IP."
@@ -1421,13 +1416,6 @@ ro:
     subject_template: "%{invitee_name} te-a invitat să te alături pe %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
-    text_body_template: |
-      Îți mulțumim că ai acceptat invitația pe %{site_name} -- bun venit!
-
-      Acum dă click pe acest link pentru a-ți alege o parolă:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Dacă linkul de mai sus a expirat, alege "Mi-am uitat parola" la autentificarea cu adresa ta de email.)
   test_mailer:
     text_body_template: |
       Acesta este un email de test de la
@@ -1514,7 +1502,6 @@ ro:
     disagreed: "Îți mulțumim pentru avertizare. O să aruncăm o privire."
     deferred: "Îți mulțumim că ne-ai informat. O să aruncăm o privire."
     deferred_and_deleted: "Îți mulțumim că ne-ai informat. Am șters postarea."
-  temporarily_closed_due_to_flags: "Acest subiect este temporar închis din cauza numărului mare de marcaje de avertizare primite din partea comunității."
   system_messages:
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
@@ -1529,9 +1516,9 @@ ro:
 
         Mai mulți membri ai comunității au marcat acestă postare cu marcaje de avertizare înainte ca ea să fie ascunsă, așa că te rugăm să îți revizuiești postarea pentru a ține cont de feedback-ul primit. **Îți poți edita postarea după %{edit_delay} minute, și ea va fi automat re-afișată**
 
-        Totuși dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău..
+        Totuși, dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău..
 
-        Pentru îndreptări suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Citește câteva sfaturi rapide destinate noilor utilizatori, [urmărind această postare pe blog](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1729,7 +1716,7 @@ ro:
 
         Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
 
-        Pentru îndreptări suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Cont nou suspendat"
       text_body_template: |
@@ -1739,7 +1726,7 @@ ro:
 
         Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
 
-        Pentru îndreptări suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Cont suspendat temporar"
       text_body_template: |+
@@ -1749,7 +1736,7 @@ ro:
 
         Poți să continui să răsfoiești, dar nu vei mai putea să răspunzi sau să creezi subiecte până când un [membru al echipei](%{base_url}/about) nu îți verifică postările recente. Ne cerem scuze pentru inconveniență.
 
-        Pentru îndreptări suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
 
     user_automatically_blocked:
       subject_template: "Noul utilizator %{username} a fost blocat de marcajele de avertizare ale comunității."
@@ -1975,48 +1962,6 @@ ro:
       topic_updates: "Actualizări la subiect"
       view_this_topic: "Vizualizează acest subiect"
       back_to_top: "Înapoi sus"
-    forgot_password:
-      text_body_template: |
-        Cineva a cerut resetarea parolei tale pe site-ul [%{site_name}](%{base_url}).
-
-        Dacă nu ai cerut-o tu, poți ignora fără griji acest email.
-
-        Click pe următoarea adresă pentru a reseta parola:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      text_body_template: |
-        Cineva a cerut crearea unei parole pe site-ul [%{site_name}](%{base_url}). Alternativ, te poți autentifica folosind orice serviciu online acceptat (Google, Facebook, etc), serviciu ce este asociat cu acesta adresa de email validată.
-
-        Dacă nu ai cerut asta, poți ignora fără griji acest email.
-
-        Click pe adresa următoare pentru a alege o parolă:
-        %{base_url}/users/password-reset/%{email_token}
-    admin_login:
-      text_body_template: |
-        Cineva a încercat să se autentifice pe contul tău de pe [%{site_name}](%{base_url}).
-
-        Dacă ai fost tu, poți să ignori fără griji acest email.
-
-        Click pe următorul link pentru a te autentifica:
-        %{base_url}/users/admin-login/%{email_token}
-    account_created:
-      text_body_template: |
-        Un cont nou a fost creat pentru tine pe %{site_name}
-
-        Click pe următorul link pentru a-ți alege o parolă pentru noul tău cont
-        %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      text_body_template: |
-        Confirmă-ți noua adresă de email pentru %{site_name} dând click pe următorul link:
-
-        %{base_url}/users/authorize-email/%{email_token}
-    confirm_old_email:
-      text_body_template: |
-        Înainte de a-ți putea schimba adresa de email, trebuie să ne confirmi că deții controlul asupra adresei de email curente. După ce completezi acest pas, va trebui să ne confirmi noua adresă de email.
-
-        Confirmă-ți adresa de email curentă pentru %{site_name} dând click pe următorul link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.
@@ -2026,31 +1971,6 @@ ro:
         %{new_email}
     signup_after_approval:
       subject_template: "Contul tă pe site-ul %{site_name} a fost aprobat!"
-      text_body_template: |
-        Bun venit pe %{site_name}!
-
-        Un membru al echipei ți-a aprobat contul pe %{site_name}.
-
-        Click link-ul urmator pentru a-ți confirma și activa noul cont:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Dacă link-ul de mai sus nu este clickabil, încearcă să îl copiezi și să îl lipești în bara de adrese din browser.
-
-        %{new_user_tips}
-
-        Noi credem într-un [comportament civlizat al comunității](%{base_url}/guidelines) indiferent de circumstanțe.
-
-        ședere plăcută!
-
-        (Dacă ai nevoie să comunici cu [membrii echipei](%{base_url}/about) din postura de nou utilizator, pur și simplu dă reply la acest mesaj.)
-    signup:
-      text_body_template: |
-        Bine ai venit pe %{site_name}!
-
-        Click pe următoarea adresă pentru a confirma și activa noul tău cont:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Dacă adresa de mai sus nu e accesibilă, încearcă să o copiezi și să o lipești în bara de adrese a propriului browser.
   page_not_found:
     title: "Oops! Această pagină nu există sau este privată."
     popular_topics: "Populare"
@@ -2537,7 +2457,6 @@ ro:
         Acest ecuson se acordă prima data când adaugi un emoji la postarea ta :thumbsup:. Emoji permit transmiterea de emoții prin postări, de la fericire :smiley: la tristețe :anguished: la furie :angry: și întreaga planetă :sunglasses: . Apasă un : (două puncte) sau apasă pe butonul Emoji toolbar din editor pentru a alege dintre sute de opțiuni :ok_hand:
     first_mention:
       name: Prima mențiune
-      description: Ai fost menționat în postarea unui utilizator
       long_description: Acest ecuson se acordă când, pentru prima oară, ai menționat @numele de utilizator al cuiva într-o postare de-a ta. Fiecare menționare generează o notificare către acea persoană, astfel încât ea să știe despre postarea ta. Începi prin a apăsa tasta @ (simbolul at) ca să menționezi orice utilizator sau, dacă îți este permis, grup. E o metodă convenabilă să atragi atenția cuiva.
     first_onebox:
       name: Primul onebox
@@ -2545,7 +2464,6 @@ ro:
       long_description: Acest ecuson se acordă când, pentru prima data, ai postat un link singur pe line, ceea ce a făcut ca automat să fie expandat într-un onebox cu un scurt rezumat al link-ului, un titlu și (dacă e disponibilă) cu o poză.
     first_reply_by_email:
       name: Forum prin email
-      description: Ai răspuns la o postare prin email
       long_description: |
         Acest ecuosn se acordă când ai răspuns pentru prima dată la o postare prin email :e-mail:.
   admin_login:

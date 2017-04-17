@@ -366,7 +366,7 @@ nl:
       automatic_group: Automatische groep
       closed_group: Besloten groep
       is_group_user: "U bent een lid van deze groep"
-      allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen (Iedereen moet de groep hiervoor kunnen noemen)"
+      allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership: "Lidmaatschap"
       name: "Naam"
       user_count: "Aantal leden"
@@ -435,7 +435,7 @@ nl:
       '13': "Inbox"
       '14': "In wachtrij"
     categories:
-      all: "alle categorieën"
+      all: "Alle categorieën"
       all_subcategories: "alle"
       no_subcategory: "geen"
       category: "Categorie"
@@ -564,6 +564,7 @@ nl:
       muted_users_instructions: "Alle meldingen van deze gebruikers onderdrukken"
       muted_topics_link: "Genegeerde topics tonen"
       watched_topics_link: "In de gaten gehouden topics tonen"
+      tracked_topics_link: "Gevolgde topics tonen"
       automatically_unpin_topics: "Topics automatisch losmaken als ik de onderkant bereik"
       apps: "Apps"
       revoke_access: "Toegang intrekken"
@@ -657,7 +658,7 @@ nl:
         title: "Taal van interface"
         instructions: "Taal van de gebruikersinterface. Deze verandert zodra u de pagina opnieuw laadt."
         default: "(standaard)"
-        any: "elke"
+        any: "alle"
       password_confirmation:
         title: "Nogmaals het wachtwoord"
       last_posted: "Laatste bericht"
@@ -884,7 +885,7 @@ nl:
       enabled_description: "U bekijkt een samenvatting van dit topic: de meeste interessante berichten zoals bepaald door de gemeenschap."
       description: "Er zijn <b>{{replyCount}}</b> antwoorden."
       description_time: "Er zijn <b>{{replyCount}}</b> antwoorden met een geschatte leestijd van <b>{{readingTime}} minuten</b>."
-      enable: 'Samenvatting van dit topic maken'
+      enable: 'Dit topic samenvatten'
       disable: 'Alle berichten tonen'
     deleted_filter:
       enabled_description: "Dit topic bevat verwijderde berichten, die zijn verborgen."
@@ -938,6 +939,10 @@ nl:
       not_allowed_from_ip_address: "U kunt zich niet aanmelden vanaf dat IP-adres."
       admin_not_allowed_from_ip_address: "U kunt zich niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activeringsmail opnieuw te versturen."
+      resend_title: "Activeringsmail opnieuw versturen"
+      change_email: "E-mailadres wijzigen"
+      provide_new_email: "Geef een nieuw adres op en we sturen uw bevestigingsmail opnieuw."
+      submit_new_email: "E-mailadres bijwerken"
       sent_activation_email_again: "We hebben een nieuwe activeringsmail naar <b>{{currentEmail}}</b> gestuurd. Het kan een aantal minuten duren voor deze aankomt; controleer ook uw spammap."
       to_continue: "Meld u aan"
       preferences: "U dient aangemeld te zijn om uw gebruikersvoorkeuren te wijzigen."
@@ -1076,15 +1081,6 @@ nl:
         title: "Bent u ontvangers vergeten toe te voegen?"
         body: "Het bericht wordt nu alleen naar uzelf verstuurd!"
       admin_options_title: "Optionele stafinstellingen voor dit topic"
-      auto_close:
-        label: "Tijd waarna topic automatisch wordt gesloten:"
-        error: "Voer een geldige waarde in."
-        based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
-        all:
-          examples: 'Voer het aantal uur (24), een absolute tijd (17:30) of een tijdstempel (2013-11-22 14:00) in.'
-        limited:
-          units: "(# aantal uur)"
-          examples: 'Voer het aantal uur in (24).'
     notifications:
       title: "meldingen van @naam-vermeldingen, reacties op uw berichten en topics, berichten, etc."
       none: "Meldingen kunnen momenteel niet worden geladen."
@@ -1154,6 +1150,7 @@ nl:
       sort_by: "Sorteren op"
       relevance: "Relevantie"
       latest_post: "Nieuwste bericht"
+      latest_topic: "Nieuwste topic"
       most_viewed: "Meest bekeken"
       most_liked: "Meest geliket"
       select_all: "Alles selecteren"
@@ -1323,7 +1320,7 @@ nl:
       options: "Topic-opties"
       show_links: "koppelingen binnen dit topic tonen"
       toggle_information: "topicdetails in-/uitschakelen"
-      read_more_in_category: "Wilt u meer lezen? Blader dan door andere topics in {{catLink}} of {{latestLink}}."
+      read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in {{catLink}} bladeren, of de {{latestLink}}."
       read_more: "Wilt u meer lezen? {{catLink}} of {{latestLink}}."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='/unread'>1 ongelezen</a> } other { zijn <a href='/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
@@ -1332,11 +1329,37 @@ nl:
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
-      auto_close_notice: "Dit topic wordt na %{timeLeft} automatisch gesloten."
-      auto_close_notice_based_on_last_post: "Dit topic wordt %{duration} na het laatste antwoord gesloten."
+      topic_status_update:
+        title: "Topictimer instellen"
+        save: "Timer instellen"
+        time: "Tijd:"
+        remove: "Timer verwijderen"
+        publish_to: "Publiceren naar:"
+      auto_update_input:
+        limited:
+          units: "(# uren)"
+          examples: 'Voer het aantal uren in (24).'
+        all:
+          examples: 'Voer het aantal uren (24), een absolute tijd (17:30) of een tijdstempel (22-11-2013 14:00) in.'
+      publish_to_category:
+        title: "Publicatie plannen"
+      temp_open:
+        title: "Tijdelijk openen"
+      auto_reopen:
+        title: "Topic automatisch openen"
+      temp_close:
+        title: "Tijdelijk sluiten"
+      auto_close:
+        title: "Topic automatisch sluiten"
+        label: "Tijd voor automatisch sluiten van topic:"
+        error: "Voer een geldige waarde in."
+        based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
+      status_update_notice:
+        auto_open: "Dit topic zal automatisch %{timeLeft} worden geopend."
+        auto_close: "Dit topic zal automatisch %{timeLeft} worden gesloten."
+        auto_publish_to_category: "Dit topic zal %{timeLeft} naar <a href=%{categoryUrl}>#%{categoryName}</a> worden gepubliceerd."
+        auto_close_based_on_last_post: "Dit topic zal %{duration} na het laatste antwoord worden gesloten."
       auto_close_title: 'Instellingen voor automatisch sluiten'
-      auto_close_save: "Opslaan"
-      auto_close_remove: "Dit topic niet automatisch sluiten"
       auto_close_immediate:
         one: "Het laatste bericht in dit topic is al 1 uur oud, dus het topic zal meteen worden gesloten."
         other: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic zal meteen worden gesloten."
@@ -1369,7 +1392,7 @@ nl:
           '2_8': 'U ontvangt meldingen, omdat u deze categorie volgt.'
           '2_4': 'U ontvangt meldingen, omdat u een antwoord in dit topic hebt geplaatst.'
           '2_2': 'U ontvangt meldingen, omdat u dit topic volgt.'
-          '2': 'U ontvangt meldingen, omdat u <a href="/users/{{username}}/preferences">dit topic hebt gelezen</a>.'
+          '2': 'U ontvangt meldingen, omdat u <a href="/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
           '1_2': 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           '1': 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           '0_7': 'U negeert alle meldingen in deze categorie.'
@@ -1405,7 +1428,7 @@ nl:
         open: "Topic openen"
         close: "Topic sluiten"
         multi_select: "Berichten selecteren..."
-        auto_close: "Automatisch sluiten..."
+        timed_update: "Topictimer instellen..."
         pin: "Topic vastmaken..."
         unpin: "Topic losmaken..."
         unarchive: "Topic dearchiveren"
@@ -2841,8 +2864,6 @@ nl:
         blocked: "Geblokkeerd?"
         staged: "Staged?"
         show_admin_profile: "Beheerder"
-        edit_title: "Titel bewerken"
-        save_title: "Titel opslaan"
         refresh_browsers: "Vernieuwen in browser forceren"
         refresh_browsers_message: "Bericht verstuurd aan alle gebruikers!"
         show_public_profile: "Openbaar profiel tonen"
@@ -2853,6 +2874,7 @@ nl:
         logged_out: "Gebruiker is op alle apparaten afgemeld"
         revoke_admin: 'Beheerdersrechten intrekken'
         grant_admin: 'Beheerdersrechten toekennen'
+        grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe beheerder te verifiëren. Open deze en volg de instructies."
         revoke_moderation: 'Moderatierechten intrekken'
         grant_moderation: 'Moderatierechten toekennen'
         unblock: 'Deblokkeren'

@@ -334,7 +334,6 @@ ko:
       request: "그룹 참여 요청하기"
       closed_group: 닫힌 그룹
       is_group_user: "당신은 이 그룹의 구성원입니다."
-      allow_membership_requests: "사용자가 그룹 소유자에게 가입 요청을 하는 것을 허용합니다. (모든 유저가 그룹을 맨션할 수 있어야 함)"
       membership: "회원제"
       name: "이름"
       user_count: "멤버 수"
@@ -909,15 +908,6 @@ ko:
       modal_cancel: "취소"
       cant_send_pm: "죄송합니다. %{username}님에게 메시지를 보낼 수 없습니다."
       admin_options_title: "이 주제에 대한 옵션 설정"
-      auto_close:
-        label: "주제 자동-닫기 시간:"
-        error: "유효한 값은 눌러주세요."
-        based_on_last_post: "적어도 주제의 마지막 글이 이만큼 오래되지 않았으면 닫지 마세요."
-        all:
-          examples: '시간을 숫자(24이하)로 입력하거나 분을 포함한 시간(17:30) 혹은 타임스탬프(2013-11-22 14:00) 형식으로 입력하세요.'
-        limited:
-          units: "(# 시간)"
-          examples: '시간에 해당하는 숫자를 입력하세요. (24)'
     notifications:
       title: "@name 언급, 글과 주제에 대한 답글, 개인 메시지 등에 대한 알림"
       none: "현재 알림을 불러올 수 없습니다."
@@ -1095,11 +1085,7 @@ ko:
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "주제가 삭제되었습니다"
-      auto_close_notice: "이 주제는 곧 자동으로 닫힙니다. %{timeLeft}."
-      auto_close_notice_based_on_last_post: "이 주제는 마지막 답글이 달린 %{duration} 후 닫힙니다."
       auto_close_title: '자동으로 닫기 설정'
-      auto_close_save: "저장"
-      auto_close_remove: "이 주제를 자동으로 닫지 않기"
       progress:
         title: 진행 중인 주제
         go_top: "맨위"
@@ -1119,7 +1105,6 @@ ko:
           '2_8': '이 주제를 추적하고 있어서 알림을 받게 됩니다.'
           '2_4': '이 주제에 답글을 게시하여서 알림을 받게 됩니다.'
           '2_2': '이 주제를 추적하고 있어서 알림을 받게 됩니다.'
-          '2': '이 주제를 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
           '1_2': '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '1': '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '0_7': '이 주제에 관한 모든 알림을 무시하고 있습니다.'
@@ -1155,7 +1140,6 @@ ko:
         open: "주제 열기"
         close: "주제 닫기"
         multi_select: "글 선택"
-        auto_close: "자동으로 닫기..."
         pin: "주제 고정..."
         unpin: "주제 고정 취소..."
         unarchive: "주제 보관 취소"
@@ -2157,8 +2141,6 @@ ko:
         blocked: "블락"
         staged: "격리조치?"
         show_admin_profile: "관리자"
-        edit_title: "제목 수정"
-        save_title: "제목 저장"
         refresh_browsers: "브라우저 새로 고침"
         refresh_browsers_message: "모든 클라이언트에게 메시지 보내기"
         show_public_profile: "공개 프로필 보기"
