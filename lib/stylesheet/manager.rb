@@ -36,7 +36,7 @@ class Stylesheet::Manager
       builder = self.new(target, theme_key)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
+      tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}" rel="preload"/>]
       cache[cache_key] = tag
 
       tag.dup.html_safe

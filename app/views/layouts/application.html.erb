@@ -23,22 +23,22 @@
       window.EmberENV['FORCE_JQUERY'] = true;
     </script>
 
-    <%= script "locales/#{I18n.locale}" %>
-    <%= script "ember_jquery" %>
-    <%= script "preload-store" %>
-    <%= script "vendor" %>
-    <%= script "pretty-text-bundle" %>
-    <%= script "application" %>
+    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script "ember_jquery" %>
+    <%= preload_script "preload-store" %>
+    <%= preload_script "vendor" %>
+    <%= preload_script "pretty-text-bundle" %>
+    <%= preload_script "application" %>
     <%- if allow_plugins? %>
-    <%= script "plugin" %>
+    <%= preload_script "plugin" %>
     <%- end %>
     <%- if allow_third_party_plugins? %>
-    <%= script "plugin-third-party" %>
+    <%= preload_script "plugin-third-party" %>
     <%- end %>
 
     <%- if staff? %>
       <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>
-      <%= script "admin" %>
+      <%= preload_script "admin" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
