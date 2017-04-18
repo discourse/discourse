@@ -63,6 +63,7 @@ export default Ember.Component.extend({
           this._skipContentChangeEvent = false;
         });
         editor.$blockScrolling = Infinity;
+        editor.renderer.setScrollMargin(10,10);
 
         this.$().data('editor', editor);
         this._editor = editor;
