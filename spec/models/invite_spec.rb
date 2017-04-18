@@ -213,33 +213,6 @@ describe Invite do
 
     end
 
-    context 'enqueues a job to email "set password" instructions' do
-
-      it 'does not enqueue an email if sso is enabled' do
-        SiteSetting.stubs(:enable_sso).returns(true)
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        invite.redeem
-      end
-
-      it 'does not enqueue an email if local login is disabled' do
-        SiteSetting.stubs(:enable_local_logins).returns(false)
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        invite.redeem
-      end
-
-      it 'does not enqueue an email if the user has already set password' do
-        Fabricate(:user, email: invite.email, password_hash: "7af7805c9ee3697ed1a83d5e3cb5a3a431d140933a87fdcdc5a42aeef9337f81")
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        invite.redeem
-      end
-
-      it 'enqueues an email if all conditions are satisfied' do
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username))
-        invite.redeem
-      end
-
-    end
-
     context "as a moderator" do
       it "will give the user a moderator flag" do
         invite.invited_by = Fabricate(:admin)
