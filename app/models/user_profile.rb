@@ -1,7 +1,10 @@
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
 
+  WEBSITE_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(([0-9]{1,5})?\/.*)?$)/ix
+
   validates :bio_raw, length: { maximum: 3000 }
+  validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
@@ -102,13 +105,11 @@ class UserProfile < ActiveRecord::Base
   end
 
   def website_domain_validator
-    return if self.website.blank?
-    domain = Addressable::URI.parse(self.website).host
-    self.errors.add :website, :invalid unless PublicSuffix.valid?(domain, default_rule: nil)
+    allowed_domains = SiteSetting.user_website_domains_whitelist
+    return if (allowed_domains.blank? || self.website.blank?)
 
-    allowed_domains = SiteSetting.user_website_domains_whitelist.split('|')
-    return if allowed_domains.empty?
-    self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.join(", "))) unless allowed_domains.include?(domain)
+    domain = URI.parse(self.website).host
+    self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
 end
