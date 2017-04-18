@@ -243,8 +243,21 @@ describe InvitesController do
             xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
           end
 
+          it "does not send password reset email if sso is enabled" do
+            SiteSetting.enable_sso = true
+            Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
+            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+          end
+
+          it "does not send password reset email if local login is disabled" do
+            SiteSetting.enable_local_logins = false
+            Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
+            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+          end
+
           it 'sends an activation email if password is set' do
             user.password_hash = 'qaw3ni3h2wyr63lakw7pea1nrtr44pls'
+            Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
             Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, user_id: user.id))
             xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
           end
