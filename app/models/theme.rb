@@ -116,7 +116,7 @@ class Theme < ActiveRecord::Base
 
   def notify_scheme_change(clear_manager_cache=true)
     Stylesheet::Manager.cache.clear if clear_manager_cache
-    message = refresh_message_for_targets(["desktop", "mobile", "admin"], self.color_scheme_id, self, Rails.env.development?)
+    message = refresh_message_for_targets(["desktop", "mobile", "admin"], self)
     MessageBus.publish('/file-change', message)
   end
 
@@ -126,23 +126,19 @@ class Theme < ActiveRecord::Base
     themes = [self] + dependant_themes
 
     message = themes.map do |theme|
-      refresh_message_for_targets([:mobile_theme,:desktop_theme], theme.id, theme)
+      refresh_message_for_targets([:mobile_theme,:desktop_theme], theme)
     end.compact.flatten
     MessageBus.publish('/file-change', message)
   end
 
-  def refresh_message_for_targets(targets, id, theme, add_cache_breaker=false)
+  def refresh_message_for_targets(targets, theme)
     targets.map do |target|
-      link = Stylesheet::Manager.stylesheet_link_tag(target.to_sym, 'all', theme.key)
-      if link
-        href = link.split(/["']/)[1]
-        if add_cache_breaker
-          href << (href.include?("?") ? "&" : "?")
-          href << SecureRandom.hex
-        end
+      href = Stylesheet::Manager.stylesheet_href(target.to_sym, theme.key)
+      if href
         {
-          name: "/stylesheets/#{target}#{id ? "_#{id}": ""}",
-          new_href: href
+          target: target,
+          new_href: href,
+          theme_key: theme.key
         }
       end
     end

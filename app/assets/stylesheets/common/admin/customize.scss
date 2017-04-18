@@ -63,12 +63,18 @@
     }
 
     .nav.target {
+      li {
+        position: relative;
+      }
       margin-top: 15px;
       .fa {
         margin-left: 3px;
       }
       .fa-mobile {
-        font-size: 1.3em;
+        position: absolute;
+        right: -4px;
+        top: 2px;
+        font-size: 1.5em;
       }
     }
 

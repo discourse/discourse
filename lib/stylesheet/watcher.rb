@@ -52,11 +52,12 @@ module Stylesheet
         @queue.pop
       end
 
+      Stylesheet::Manager.cache.clear
+
       message = ["desktop", "mobile", "admin"].map do |name|
-        {hash: SecureRandom.hex, name: "/stylesheets/#{name}.css"}
+        {target: name, new_href: Stylesheet::Manager.stylesheet_href(name.to_sym) , theme_key: SiteSetting.default_theme_key}
       end
 
-      Stylesheet::Manager.cache.clear
       MessageBus.publish '/file-change', message
     end
 
