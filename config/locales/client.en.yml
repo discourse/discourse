@@ -2796,6 +2796,9 @@ en:
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
+        copy_to_clipboard: "Copy to Clipboard"
+        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard_error: "Error copying data to Clipboard"
         theme_owner: "Not editable, owned by:"
         email_templates:
           title: "Email Templates"
