@@ -62,6 +62,12 @@ describe UserProfile do
         expect(Fabricate.build(:user_profile, user: user, website: "https://google.com")).to be_valid
       end
 
+      it "recognizes new TLDs" do
+        expect(Fabricate.build(:user_profile, user: user, website: "http://discourse.productions")).to be_valid
+        expect(Fabricate.build(:user_profile, user: user, website: "https://website.vermögensberatung")).to be_valid
+        expect(Fabricate.build(:user_profile, user: user, website: "http://site.notavalidtld")).not_to be_valid
+      end
+
       it "validates website domain if user_website_domains_whitelist setting is present" do
         SiteSetting.user_website_domains_whitelist = "discourse.org"
         expect(Fabricate.build(:user_profile, user: user, website: "https://google.com")).not_to be_valid
