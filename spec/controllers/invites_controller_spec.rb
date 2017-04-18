@@ -223,7 +223,7 @@ describe InvitesController do
           end
         end
 
-        context 'welcome message and activation email' do
+        context '.post_process_invite' do
           before do
             Invite.any_instance.stubs(:redeem).returns(user)
             Jobs.expects(:enqueue).with(:invite_email, has_key(:invite_id))
@@ -233,11 +233,13 @@ describe InvitesController do
           it 'sends a welcome message if set' do
             user.send_welcome_message = true
             user.expects(:enqueue_welcome_message).with('welcome_invite')
+            Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_entries(username: user.username))
             xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
           end
 
-          it "doesn't send a welcome message if not set" do
+          it "sends password reset email if password is not set" do
             user.expects(:enqueue_welcome_message).with('welcome_invite').never
+            Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_entries(username: user.username))
             xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
           end
 
