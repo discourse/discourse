@@ -94,6 +94,10 @@ module PrettyText
       end
     end
 
+    DiscoursePluginRegistry.vendored_pretty_text.each do |vpt|
+      ctx.eval(File.read(vpt))
+    end
+
     ctx
   end
 
