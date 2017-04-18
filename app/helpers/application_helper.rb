@@ -318,7 +318,7 @@ module ApplicationHelper
 
   def build_plugin_html(name)
     return "" unless allow_plugins?
-    DiscoursePluginRegistry.build_html(name) || ""
+    DiscoursePluginRegistry.build_html(name, controller) || ""
   end
 
   def theme_lookup(name)

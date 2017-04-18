@@ -134,8 +134,8 @@ class DiscoursePluginRegistry
     html_builders[name] = block
   end
 
-  def self.build_html(name)
-    html_builders[name]&.call
+  def self.build_html(name, ctx)
+    html_builders[name]&.call(ctx)
   end
 
   def javascripts

@@ -435,7 +435,7 @@ class ApplicationController < ActionController::Base
       end
 
       DiscoursePluginRegistry.html_builders.each do |name, blk|
-        data[name] = blk.call
+        data[name] = blk.call(self)
       end
 
       MultiJson.dump(data)
