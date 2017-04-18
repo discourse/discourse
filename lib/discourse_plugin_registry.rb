@@ -134,7 +134,7 @@ class DiscoursePluginRegistry
     html_builders[name] = block
   end
 
-  def self.build_html(name, ctx)
+  def self.build_html(name, ctx=nil)
     html_builders[name]&.call(ctx)
   end
 
