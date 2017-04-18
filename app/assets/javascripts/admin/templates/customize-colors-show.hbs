@@ -6,6 +6,7 @@
       <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'admin.customize.save'}}</button>
       {{/unless}}
       <button {{action "copy" model}} class='btn'><i class="fa fa-copy"></i> {{i18n 'admin.customize.copy'}}</button>
+      <button {{action "copyToClipboard" model}} class='btn'><i class="fa fa-clipboard"></i> {{i18n 'admin.customize.copy_to_clipboard'}}</button>
       {{#if model.theme_id}}
       {{i18n "admin.customize.theme_owner"}}
       {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}
