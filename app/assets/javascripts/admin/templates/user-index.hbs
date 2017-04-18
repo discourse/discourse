@@ -343,32 +343,31 @@
   </div>
 </section>
 
-<section class='details'>
-  <h1>{{i18n 'admin.groups.title'}}</h1>
-
-  {{#if currentUser.admin}}
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.groups.automatic'}}</div>
-      <div class='value'>{{automaticGroups}}</div>
-    </div>
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.groups.custom'}}</div>
-      <div class='value'>
-        {{admin-group-selector selected=model.customGroups available=availableGroups}}
+{{#if currentUser.admin}}
+  <section class='details'>
+    <h1>{{i18n 'admin.groups.title'}}</h1>
+      <div class='display-row'>
+        <div class='field'>{{i18n 'admin.groups.automatic'}}</div>
+        <div class='value'>{{automaticGroups}}</div>
       </div>
-      <div class='controls'>
-        {{#if model.customGroups}}
-          {{i18n 'admin.groups.primary'}}
-          {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
-        {{/if}}
-        {{#if primaryGroupDirty}}
-          {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
-          {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
-        {{/if}}
+      <div class='display-row'>
+        <div class='field'>{{i18n 'admin.groups.custom'}}</div>
+        <div class='value'>
+          {{admin-group-selector selected=model.customGroups available=availableGroups}}
+        </div>
+        <div class='controls'>
+          {{#if model.customGroups}}
+            {{i18n 'admin.groups.primary'}}
+            {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+          {{/if}}
+          {{#if primaryGroupDirty}}
+            {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
+            {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
+          {{/if}}
+        </div>
       </div>
-    </div>
-  {{/if}}
-</section>
+  </section>
+{{/if}}
 
 <section class='details'>
   <h1>{{i18n 'admin.user.activity'}}</h1>
