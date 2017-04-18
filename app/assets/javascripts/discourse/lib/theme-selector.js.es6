@@ -7,6 +7,9 @@ export function currentThemeKey() {
   let elem = _.first($(keySelector));
   if (elem) {
     themeKey = elem.content;
+    if (_.isEmpty(themeKey)) {
+      themeKey = null;
+    }
   }
   return themeKey;
 }

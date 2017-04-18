@@ -1,4 +1,5 @@
 import DiscourseURL from 'discourse/lib/url';
+import { currentThemeKey } from 'discourse/lib/theme-selector';
 
 export function refreshCSS(node, hash, newHref, options) {
 
@@ -87,8 +88,16 @@ export default {
           // Refresh if necessary
           document.location.reload(true);
         } else {
+          let themeKey = currentThemeKey();
+
           $('link').each(function() {
-            if (this.href.match(me.name) && (me.hash || me.new_href)) {
+            if (me.hasOwnProperty('theme_key') && me.new_href) {
+              let target = $(this).data('target');
+              if (me.theme_key === themeKey && target === me.target) {
+                refreshCSS(this, null, me.new_href);
+              }
+            }
+            else if (this.href.match(me.name) && (me.hash || me.new_href)) {
               refreshCSS(this, me.hash, me.new_href);
             }
           });
