@@ -6,6 +6,18 @@
       margin-bottom: 0;
     }
   }
+
+  .edit-main-nav {
+    .nav-pills:after, .nav-pills:before {
+      display: inline;
+      content: "";
+    }
+    .show-overidden {
+      float: right;
+    }
+    margin-bottom: 10px;
+  }
+
   .admin-container {
     padding-left: 10px;
     padding-right: 10px;
@@ -76,10 +88,13 @@
       .fa {
         margin-left: 3px;
       }
+      li.mobile a {
+        padding-right: 25px;
+      }
       .fa-mobile {
         position: absolute;
-        right: -4px;
-        top: 2px;
+        right: 10px;
+        top: 3px;
         font-size: 1.5em;
       }
     }

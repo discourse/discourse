@@ -20,6 +20,15 @@ const Theme = RestModel.extend({
     return hash;
   },
 
+  hasEdited(target, name){
+    if (name) {
+      return !Em.isEmpty(this.getField(target, name));
+    } else {
+      let fields = this.get("theme_fields") || [];
+      return fields.any(field => (field.target === target && !Em.isEmpty(field.value)));
+    }
+  },
+
   getField(target, name) {
     let themeFields = this.get("themeFields");
     let key = target + " " + name;
