@@ -1,11 +1,10 @@
-<div class='content-list span6'>
+<div class='content-list span6 color-schemes'>
   <h3>{{i18n 'admin.customize.colors.long_title'}}</h3>
   <ul>
     {{#each model as |scheme|}}
       {{#unless scheme.is_base}}
-
       <li>
-        {{#link-to 'adminCustomize.colors.show' scheme replace=true}}{{scheme.description}}{{/link-to}}
+        {{#link-to 'adminCustomize.colors.show' scheme replace=true}}{{fa-icon 'paint-brush'}}{{scheme.description}}{{/link-to}}
       </li>
       {{/unless}}
     {{/each}}
