@@ -90,8 +90,17 @@ export default Ember.Component.extend(bufferedRender({
     const $elem = this.$();
     const caps = this.capabilities;
     const minimumResultsForSearch = (caps && caps.isIOS) ? -1 : 5;
+    if (!this.get("selectionTemplate") && this.get("selectionIcon")) {
+      this.selectionTemplate = (item) => {
+        let name = Em.get(item, 'text');
+        name = Handlebars.escapeExpression(name);
+        return `<i class='fa fa-${this.get("selectionIcon")}'></i>${name}`;
+      };
+    }
     $elem.select2({
-      formatResult: this.comboTemplate, minimumResultsForSearch,
+      formatResult: this.comboTemplate,
+      formatSelection: this.selectionTemplate,
+      minimumResultsForSearch,
       width: this.get('width') || 'resolve',
       allowClear: true
     });
