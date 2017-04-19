@@ -12,7 +12,9 @@ describe Jobs::PendingQueuedPostReminder do
   end
 
   context "notify_about_queued_posts_after is 24" do
-    before { SiteSetting.stubs(:notify_about_queued_posts_after).returns(24) }
+    before do
+      SiteSetting.notify_about_queued_posts_after = 24
+    end
 
     it "doesn't email if there are no queued posts" do
       described_class.any_instance.stubs(:should_notify_ids).returns([])
