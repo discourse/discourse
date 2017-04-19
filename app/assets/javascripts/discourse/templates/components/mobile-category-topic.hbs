@@ -1,6 +1,6 @@
 <td class='main-link'>
   <div class='topic-inset'>
-    {{topic-status topic=topic}}
+    {{raw "topic-status" topic=topic}}
     {{topic-link topic}}
     {{#if topic.unseen}}
       <span class="badge-notification new-topic"></span>
