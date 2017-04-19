@@ -1,5 +1,5 @@
 class ThemeFieldSerializer < ApplicationSerializer
-  attributes :name, :target, :value
+  attributes :name, :target, :value, :error
 
   def target
     case object.target
@@ -7,6 +7,10 @@ class ThemeFieldSerializer < ApplicationSerializer
     when 1 then "desktop"
     when 2 then "mobile"
     end
+  end
+
+  def include_error?
+    object.error.present?
   end
 end
 

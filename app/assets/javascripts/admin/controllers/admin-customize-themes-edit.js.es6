@@ -75,6 +75,11 @@ export default Ember.Controller.extend({
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
+  @computed("currentTargetName", "fieldName", "saving")
+  error(target, fieldName) {
+    return this.get('model').getError(target, fieldName);
+  },
+
   @computed("fieldName", "currentTargetName")
   editorId(fieldName, currentTarget) {
     return fieldName + "|" + currentTarget;
@@ -139,7 +144,8 @@ export default Ember.Controller.extend({
 
   actions: {
     save() {
-      this.get('model').saveChanges("theme_fields");
+      this.set('saving', true);
+      this.get('model').saveChanges("theme_fields").finally(()=>{this.set('saving', false);});
     },
 
     toggleMaximize: function() {
