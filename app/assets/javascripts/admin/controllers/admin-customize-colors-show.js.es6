@@ -60,10 +60,11 @@ export default Ember.Controller.extend({
 
     destroy: function() {
 
+      const model = this.get('model');
       return bootbox.confirm(I18n.t("admin.customize.colors.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), result => {
         if (result) {
-          this.get('model').destroy().then(()=>{
-            this.get('allColors').removeObject(this.get('model'));
+          model.destroy().then(()=>{
+            this.get('allColors').removeObject(model);
             this.replaceRoute('adminCustomize.colors');
           });
         }
