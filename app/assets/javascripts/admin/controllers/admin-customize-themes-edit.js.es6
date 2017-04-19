@@ -1,5 +1,5 @@
 import { url } from 'discourse/lib/computed';
-import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   maximized: false,
@@ -10,6 +10,43 @@ export default Ember.Controller.extend({
     {id: 1, name: I18n.t('admin.customize.theme.desktop')},
     {id: 2, name: I18n.t('admin.customize.theme.mobile')}
   ],
+
+  @computed('onlyOverridden')
+  showCommon() {
+    return this.shouldShow('common');
+  },
+
+  @computed('onlyOverridden')
+  showDesktop() {
+    return this.shouldShow('desktop');
+  },
+
+  @computed('onlyOverridden')
+  showMobile() {
+    return this.shouldShow('mobile');
+  },
+
+  @observes('onlyOverridden')
+  onlyOverriddenChanged() {
+    if (this.get('onlyOverridden')) {
+      if (!this.get('model').hasEdited(this.get('currentTargetName'), this.get('fieldName'))) {
+        let target = (this.get('showCommon') && 'common') ||
+          (this.get('showDesktop') && 'desktop') ||
+          (this.get('showMobile') && 'mobile');
+
+        let fields = this.get('model.theme_fields');
+        let field = fields && fields.find(f => (f.target === target));
+        this.replaceRoute('adminCustomizeThemes.edit', this.get('model.id'), target, field && field.name);
+      }
+    }
+  },
+
+  shouldShow(target){
+    if(!this.get("onlyOverridden")) {
+      return true;
+    }
+    return this.get("model").hasEdited(target);
+  },
 
   currentTarget: 0,
 
@@ -54,15 +91,20 @@ export default Ember.Controller.extend({
     }
   },
 
-
-  @computed("currentTarget")
-  fields(target) {
+  @computed("currentTarget", "onlyOverridden")
+  fields(target, onlyOverridden) {
     let fields = [
       "scss", "head_tag", "header", "after_header", "body_tag", "footer"
     ];
 
     if (parseInt(target) === 0) {
       fields.push("embedded_scss");
+    }
+
+    if (onlyOverridden) {
+      const model = this.get("model");
+      const targetName = this.get("currentTargetName");
+      fields = fields.filter(name => model.hasEdited(targetName, name));
     }
 
     return fields.map(name=>{

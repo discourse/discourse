@@ -2,25 +2,41 @@
   <div class='wrapper'>
     <h2>{{i18n 'admin.customize.theme.edit_css_html'}} {{#link-to 'adminCustomizeThemes.show' model.id replace=true}}{{model.name}}{{/link-to}}</h2>
 
-    <ul class='nav nav-pills target'>
-      <li>
-        {{#link-to 'adminCustomizeThemes.edit' model.id 'common' fieldName replace=true title=field.title}}
-          {{i18n 'admin.customize.theme.common'}}
-        {{/link-to}}
-      </li>
-      <li>
-        {{#link-to 'adminCustomizeThemes.edit' model.id 'desktop' fieldName replace=true title=field.title}}
-          {{i18n 'admin.customize.theme.desktop'}}
-          {{fa-icon 'desktop'}}
-        {{/link-to}}
-      </li>
-      <li>
-        {{#link-to 'adminCustomizeThemes.edit' model.id 'mobile' fieldName replace=true title=field.title}}
-          {{i18n 'admin.customize.theme.mobile'}}
-          {{fa-icon 'mobile'}}
-        {{/link-to}}
-      </li>
-    </ul>
+
+    <div class='edit-main-nav'>
+      <ul class='nav nav-pills target'>
+        {{#if showCommon}}
+        <li>
+          {{#link-to 'adminCustomizeThemes.edit' model.id 'common' fieldName replace=true title=field.title}}
+            {{i18n 'admin.customize.theme.common'}}
+          {{/link-to}}
+        </li>
+        {{/if}}
+        {{#if showDesktop}}
+        <li>
+          {{#link-to 'adminCustomizeThemes.edit' model.id 'desktop' fieldName replace=true title=field.title}}
+            {{i18n 'admin.customize.theme.desktop'}}
+            {{fa-icon 'desktop'}}
+          {{/link-to}}
+        </li>
+        {{/if}}
+        {{#if showMobile}}
+        <li class='mobile'>
+          {{#link-to 'adminCustomizeThemes.edit' model.id 'mobile' fieldName replace=true title=field.title}}
+            {{i18n 'admin.customize.theme.mobile'}}
+            {{fa-icon 'mobile'}}
+          {{/link-to}}
+        </li>
+        {{/if}}
+      </ul>
+      <div class='show-overidden'>
+        <label>
+          {{input type="checkbox" checked=onlyOverridden}}
+          {{i18n 'admin.site_settings.show_overriden'}}
+        </label>
+      </div>
+      <div class='clearfix'></div>
+    </div>
 
     <div class='admin-controls'>
       <ul class='nav nav-pills fields'>
