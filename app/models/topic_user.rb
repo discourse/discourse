@@ -39,8 +39,9 @@ class TopicUser < ActiveRecord::Base
 
     def auto_notification(user_id, topic_id, reason, notification_level)
       if TopicUser.where("user_id = :user_id AND topic_id = :topic_id AND (notifications_reason_id IS NULL OR
-        (notification_level < :notification_level AND notification_level > 1))",
-                           user_id: user_id, topic_id: topic_id, notification_level: notification_level).exists?
+        (notification_level < :notification_level AND notification_level > :normal_notification_level))",
+                           user_id: user_id, topic_id: topic_id, notification_level: notification_level,
+                           normal_notification_level: notification_levels[:regular]).exists?
         change(user_id, topic_id,
           notification_level: notification_level,
           notifications_reason_id: reason
