@@ -125,7 +125,12 @@ class Stylesheet::Manager
       )
     rescue SassC::SyntaxError => e
       Rails.logger.error "Failed to compile #{@target} stylesheet: #{e.message}"
-      [Stylesheet::Compiler.error_as_css(e, "#{@target} stylesheet"), nil]
+      if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
+        # no special errors for theme, handled in theme editor
+        ["", nil]
+      else
+        [Stylesheet::Compiler.error_as_css(e, "#{@target} stylesheet"), nil]
+      end
     end
 
     FileUtils.mkdir_p(cache_fullpath)

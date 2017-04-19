@@ -29,6 +29,15 @@ const Theme = RestModel.extend({
     }
   },
 
+  getError(target, name) {
+    let themeFields = this.get("themeFields");
+    let key = target + " " + name;
+    console.log(themeFields);
+    console.log(key);
+    let field = themeFields[key];
+    return field ? field.error : "";
+  },
+
   getField(target, name) {
     let themeFields = this.get("themeFields");
     let key = target + " " + name;

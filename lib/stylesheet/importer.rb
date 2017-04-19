@@ -13,6 +13,10 @@ module Stylesheet
       @special_imports[name] = blk
     end
 
+    register_import "theme_field" do
+      Import.new("theme_field.scss", source: @theme_field)
+    end
+
     register_import "plugins" do
       import_files(DiscoursePluginRegistry.stylesheets)
     end
@@ -67,6 +71,7 @@ module Stylesheet
 
     def initialize(options)
       @theme_id = options[:theme_id]
+      @theme_field = options[:theme_field]
     end
 
     def import_files(files)

@@ -7,6 +7,13 @@
     }
   }
 
+  .field-error {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
+    padding: 5px;
+  }
+
   .edit-main-nav {
     .nav-pills:after, .nav-pills:before {
       display: inline;

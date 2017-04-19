@@ -16,6 +16,8 @@ PLUGIN_API_JS
   end
 
   def process_html(html)
+    errors = nil
+
     doc = Nokogiri::HTML.fragment(html)
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
@@ -49,11 +51,13 @@ COMPILED
           node.replace("<script>#{code}</script>")
         rescue MiniRacer::RuntimeError => ex
           node.replace("<script type='text/discourse-js-error'>#{ex.message}</script>")
+          errors ||= []
+          errors << ex.message
         end
       end
     end
 
-    doc.to_s
+    [doc.to_s, errors&.join("\n")]
   end
 
 
@@ -61,16 +65,38 @@ COMPILED
     %w(body_tag head_tag header footer after_header)
   end
 
+  def self.scss_fields
+    %w(scss embedded_scss)
+  end
+
 
   def ensure_baked!
     if ThemeField.html_fields.include?(self.name)
       if !self.value_baked || compiler_version != COMPILER_VERSION
 
-        self.value_baked = process_html(self.value)
+        self.value_baked, self.error = process_html(self.value)
         self.compiler_version = COMPILER_VERSION
 
-        if self.value_baked_changed? || compiler_version.changed?
-          self.update_columns(value_baked: value_baked, compiler_version: compiler_version)
+        if self.value_baked_changed? || compiler_version.changed? || self.error_changed?
+          self.update_columns(value_baked: value_baked,
+                              compiler_version: compiler_version,
+                              error: error)
+        end
+      end
+    end
+  end
+
+  def ensure_scss_compiles!
+    if ThemeField.scss_fields.include?(self.name)
+      begin
+        Stylesheet::Compiler.compile("@import \"theme_variables\"; @import \"theme_field\";",
+                                     "theme.scss",
+                                     theme_field: self.value.dup)
+        self.error = nil unless error.nil?
+      rescue SassC::SyntaxError => e
+        self.error = e.message
+        if error_changed?
+          update_columns(error: self.error)
         end
       end
     end
@@ -88,12 +114,13 @@ COMPILED
 
   after_commit do
     ensure_baked!
+    ensure_scss_compiles!
 
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
 
     # TODO message for mobile vs desktop
-    MessageBus.publish "/header-change/#{theme.key}", self.value if self.name == "header"
-    MessageBus.publish "/footer-change/#{theme.key}", self.value if self.name == "footer"
+    MessageBus.publish "/header-change/#{theme.key}", self.value if theme && self.name == "header"
+    MessageBus.publish "/footer-change/#{theme.key}", self.value if theme && self.name == "footer"
   end
 end
 

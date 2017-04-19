@@ -2,6 +2,9 @@
   <div class='wrapper'>
     <h2>{{i18n 'admin.customize.theme.edit_css_html'}} {{#link-to 'adminCustomizeThemes.show' model.id replace=true}}{{model.name}}{{/link-to}}</h2>
 
+    {{#if error}}
+    <pre class='field-error'>{{error}}</pre>
+    {{/if}}
 
     <div class='edit-main-nav'>
       <ul class='nav nav-pills target'>
