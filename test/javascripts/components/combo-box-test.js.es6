@@ -56,3 +56,19 @@ componentTest('with none', {
     assert.equal(this.$("select option:eq(2)").text(), 'trout');
   }
 });
+
+componentTest('with Object none', {
+  template: '{{combo-box content=items none=none value=value selected="something"}}',
+  setup() {
+    this.set('none', { id: 'something', name: 'none' });
+    this.set('items', ['evil', 'trout', 'hat']);
+  },
+
+  test(assert) {
+    assert.equal(this.get('value'), 'something');
+    assert.equal(this.$("select option:eq(0)").text(), 'none');
+    assert.equal(this.$("select option:eq(0)").val(), 'something');
+    assert.equal(this.$("select option:eq(1)").text(), 'evil');
+    assert.equal(this.$("select option:eq(2)").text(), 'trout');
+  }
+});

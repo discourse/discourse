@@ -127,6 +127,7 @@ en:
           other: "%{count} years later"
       previous_month: 'Previous Month'
       next_month: 'Next Month'
+      placeholder: Pick a date
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -1484,16 +1485,19 @@ en:
       topic_status_update:
         title: "Set Topic Timer"
         save: "Set Timer"
-        time: "Time:"
+        num_of_hours: "Number of hours:"
         remove: "Remove Timer"
         publish_to: "Publish To:"
+        when: "When:"
       auto_update_input:
-        limited:
-          units: "(# of hours)"
-          examples: 'Enter number of hours (24).'
-        all:
-          units: ""
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+        none: ""
+        later_today: "Later today"
+        tomorrow: "Tomorrow"
+        later_this_week: "Later this week"
+        this_weekend: "This weekend"
+        next_week: "Next week"
+        pick_date_and_time: "Pick date and time"
+        set_based_on_last_post: "Close based on last post"
       publish_to_category:
         title: "Schedule Publishing"
       temp_open:
@@ -1504,7 +1508,7 @@ en:
         title: "Close Temporarily"
       auto_close:
         title: "Auto-Close Topic"
-        label: "Auto-close topic time:"
+        label: "Auto-close topic hours:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
 
@@ -2010,8 +2014,6 @@ en:
       security: "Security"
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
-      auto_close_label: "Auto-close topics after:"
-      auto_close_units: "hours"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "

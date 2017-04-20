@@ -110,9 +110,9 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('composer.title')
-  isAbsoluteUrl() {
-    return this.get('composer.titleLength') > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(this.get('composer.title'));
+  @computed('composer.title', 'composer.titleLength')
+  isAbsoluteUrl(title, titleLength) {
+    return titleLength > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(title);
   },
 
   bodyIsDefault() {

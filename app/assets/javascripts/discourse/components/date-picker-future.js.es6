@@ -5,7 +5,8 @@ export default DatePicker.extend({
 
   _opts() {
     return {
-      defaultDate: moment().add(1, "day").toDate(),
+      defaultDate: this.get('defaultDate') || moment().add(1, "day").toDate(),
+      setDefaultDate: !!this.get('defaultDate'),
       minDate: new Date(),
     };
   }

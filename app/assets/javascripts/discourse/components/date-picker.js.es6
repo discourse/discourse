@@ -1,6 +1,6 @@
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import { on } from "ember-addons/ember-computed-decorators";
+import { default as computed, on } from "ember-addons/ember-computed-decorators";
 
 export default Em.Component.extend({
   classNames: ["date-picker-wrapper"],
@@ -37,6 +37,11 @@ export default Em.Component.extend({
   @on("willDestroyElement")
   _destroy() {
     this._picker = null;
+  },
+
+  @computed()
+  placeholder() {
+    return I18n.t("dates.placeholder");
   },
 
   _opts() {
