@@ -194,4 +194,5 @@ end
 #  updated_at     :datetime         not null
 #  via_wizard     :boolean          default(FALSE), not null
 #  base_scheme_id :string
+#  theme_id       :integer
 #

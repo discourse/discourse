@@ -137,6 +137,7 @@ end
 #  created_at       :datetime
 #  updated_at       :datetime
 #  compiler_version :integer          default(0), not null
+#  error            :string
 #
 # Indexes
 #

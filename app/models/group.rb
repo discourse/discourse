@@ -552,6 +552,7 @@ end
 #  public                             :boolean          default(FALSE), not null
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
+#  default_notification_level         :integer          default(3), not null
 #
 # Indexes
 #

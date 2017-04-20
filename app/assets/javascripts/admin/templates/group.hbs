@@ -83,6 +83,12 @@
     {{combo-box name="alias" valueAttribute="value" value=model.alias_level content=aliasLevelOptions}}
   </div>
 
+  <div>
+    <label>{{i18n 'groups.notification_level'}}</label>
+    {{notifications-button i18nPrefix='groups.notifications' notificationLevel=model.default_notification_level}}
+    <div class='clearfix'></div>
+  </div>
+
   {{#unless model.automatic}}
     <div>
       <label for="automatic_membership">{{i18n 'admin.groups.automatic_membership_email_domains'}}</label>

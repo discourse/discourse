@@ -245,8 +245,13 @@ class GroupsController < ApplicationController
     group = find_group(:id)
     notification_level = params.require(:notification_level)
 
+    user_id = current_user.id
+    if guardian.is_staff?
+      user_id = params[:user_id] || user_id
+    end
+
     GroupUser.where(group_id: group.id)
-             .where(user_id: current_user.id)
+             .where(user_id: user_id)
              .update_all(notification_level: notification_level)
 
     render json: success_json
