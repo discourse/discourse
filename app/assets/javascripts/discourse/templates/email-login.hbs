@@ -1,0 +1,9 @@
+<div class="container email-login clearfix">
+  {{#if model.error}}
+    <div class='alert alert-error'>
+      {{{model.error}}}
+    </div>
+  {{else}}
+    {{i18n 'login.logging_in'}}
+  {{/if}}
+</div>

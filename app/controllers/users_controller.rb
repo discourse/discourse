@@ -8,7 +8,7 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
+  skip_before_action :check_xhr, only: [:show, :password_reset, :email_login, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
   before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
                                           :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
@@ -29,6 +29,7 @@ class UsersController < ApplicationController
                                                             :update_activation_email,
                                                             :password_reset,
                                                             :confirm_email_token,
+                                                            :email_login,
                                                             :admin_login,
                                                             :confirm_admin]
 
@@ -555,6 +556,36 @@ class UsersController < ApplicationController
   rescue RateLimiter::LimitExceeded
     @message = I18n.t("rate_limiter.slow_down")
     render layout: false
+  end
+
+  def email_login
+    return redirect_to path("/") if current_user
+
+    expires_now
+    params.require(:login)
+
+    RateLimiter.new(nil, "email-login-hour-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "email-login-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+    RateLimiter.new(nil, "email-login-hour-#{params[:login].to_s[0..100]}", 12, 1.hour).performed!
+    RateLimiter.new(nil, "email-login-min-#{params[:login].to_s[0..100]}", 3, 1.minute).performed!
+
+    user = User.human_users.find_by_username_or_email(params[:login])
+    user_presence = user.present? && !user.staged
+    if user_presence
+      email_token = user.email_tokens.create(email: user.email)
+      Jobs.enqueue(:critical_user_email, type: :email_login, user_id: user.id, email_token: email_token.token)
+    end
+
+    json = { result: "ok" }
+    unless SiteSetting.forgot_password_strict
+      json[:user_found] = user_presence
+    end
+
+    render json: json
+
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def toggle_anon

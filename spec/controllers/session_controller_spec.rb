@@ -879,6 +879,91 @@ describe SessionController do
     end
   end
 
+  describe '.email_login_page' do
+    let(:user) { Fabricate(:user) }
+
+    context 'missing token' do
+      before do
+        get :email_login_page, token: ''
+      end
+
+      it 'shows the error page' do
+        expect(assigns[:error]).to be_present
+        expect(session[:current_user_id]).to be_blank
+        expect(response).to be_success
+        expect(response).to render_template(layout: 'no_ember')
+      end
+    end
+
+    context 'invalid token' do
+      before do
+        get :email_login_page, token: "evil_trout!"
+      end
+
+      it 'disallows login' do
+        expect(assigns[:error]).to be_present
+        expect(session[:current_user_id]).to be_blank
+        expect(response).to be_success
+        expect(response).to render_template(layout: 'no_ember')
+      end
+    end
+
+    context 'valid token' do
+      let(:token) { user.email_tokens.create(email: user.email).token }
+      context 'when rendered' do
+        render_views
+
+        it 'renders referrer never on get requests' do
+          get :email_login_page, token: token
+
+          expect(response.body).to include('<meta name="referrer" content="never">')
+        end
+      end
+
+      it 'returns success' do
+        get :email_login_page, token: token
+        expect(response).to be_success
+        expect(assigns[:error]).to be_blank
+      end
+    end
+  end
+
+  describe '.email_login' do
+    let(:user) { Fabricate(:user) }
+
+    it 'fails when local logins disabled' do
+      SiteSetting.enable_local_logins = false
+      put :email_login, token: SecureRandom.hex
+      expect(response.status.to_i).to eq(500)
+    end
+
+    context 'missing token' do
+      it 'disallows login' do
+        put :email_login, token: ''
+
+        expect(session[:current_user_id]).to be_blank
+        expect(response.status.to_i).to eq 500
+      end
+    end
+
+    context 'valid token' do
+      let(:token) { user.email_tokens.create(email: user.email).token }
+
+      it "doesn't log in the user when not approved" do
+        SiteSetting.must_approve_users = true
+        put :email_login, token: token
+
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it 'logs in the user' do
+        put :email_login, token: token
+        expect(response).to be_success
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+    end
+  end
+
   describe '.current' do
     context "when not logged in" do
       it "retuns 404" do
