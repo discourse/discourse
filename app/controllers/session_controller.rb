@@ -7,9 +7,10 @@ class SessionController < ApplicationController
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password)
+  before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
+  before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login become sso_provider destroy email_login)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -187,9 +188,6 @@ class SessionController < ApplicationController
   end
 
   def create
-    RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
-    RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
-
     params.require(:login)
     params.require(:password)
 
@@ -208,7 +206,7 @@ class SessionController < ApplicationController
 
       # If the site requires user approval and the user is not approved yet
       if login_not_approved_for?(user)
-        login_not_approved
+        render json: login_not_approved
         return
       end
 
@@ -220,20 +218,31 @@ class SessionController < ApplicationController
       return
     end
 
-    if user.suspended?
-      failed_to_login(user)
-      return
+    if payload = login_error_check(user)
+      render json: payload
+    else
+      (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
+  end
 
-    if ScreenedIpAddress.should_block?(request.remote_ip)
-      return not_allowed_from_ip_address(user)
+  def email_login
+    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
+
+    if EmailToken.valid_token_format?(params[:token]) && (user = EmailToken.confirm(params[:token]))
+      if login_not_approved_for?(user)
+        @error = login_not_approved[:error]
+        return render layout: 'no_ember'
+      elsif payload = login_error_check(user)
+        @error = payload[:error]
+        return render layout: 'no_ember'
+      else
+        log_on_user(user)
+        redirect_to path("/")
+      end
+    else
+      @error = I18n.t('email_login.invalid_token')
+      return render layout: 'no_ember'
     end
-
-    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      return admin_not_allowed_from_ip_address(user)
-    end
-
-    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
   def forgot_password
@@ -291,6 +300,18 @@ class SessionController < ApplicationController
 
   private
 
+  def login_error_check(user)
+    return failed_to_login(user) if user.suspended?
+
+    if ScreenedIpAddress.should_block?(request.remote_ip)
+      return not_allowed_from_ip_address(user)
+    end
+
+    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      return admin_not_allowed_from_ip_address(user)
+    end
+  end
+
   def login_not_approved_for?(user)
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?
   end
@@ -300,7 +321,7 @@ class SessionController < ApplicationController
   end
 
   def login_not_approved
-    render json: { error: I18n.t("login.not_approved") }
+    { error: I18n.t("login.not_approved") }
   end
 
   def not_activated(user)
@@ -314,19 +335,21 @@ class SessionController < ApplicationController
   end
 
   def not_allowed_from_ip_address(user)
-    render json: { error: I18n.t("login.not_allowed_from_ip_address", username: user.username) }
+    { error: I18n.t("login.not_allowed_from_ip_address", username: user.username) }
   end
 
   def admin_not_allowed_from_ip_address(user)
-    render json: { error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username) }
+    { error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username) }
   end
 
   def failed_to_login(user)
     message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
 
-    render json: {
-      error: I18n.t(message, date: I18n.l(user.suspended_till, format: :date_only),
-                             reason: Rack::Utils.escape_html(user.suspend_reason)),
+    {
+      error: I18n.t(message,
+        date: I18n.l(user.suspended_till, format: :date_only),
+        reason: Rack::Utils.escape_html(user.suspend_reason)
+      ),
       reason: 'suspended'
     }
   end
@@ -340,6 +363,22 @@ class SessionController < ApplicationController
     else
       render_serialized(user, UserSerializer)
     end
+  end
+
+  def rate_limit_login
+    RateLimiter.new(
+      nil,
+      "login-hr-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_hour,
+      1.hour
+    ).performed!
+
+    RateLimiter.new(
+      nil,
+      "login-min-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_minute,
+      1.minute
+    ).performed!
   end
 
   def render_sso_error(status:, text:)

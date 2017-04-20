@@ -1083,6 +1083,16 @@ en:
       help: "Email not arriving? Be sure to check your spam folder first.<p>Not sure which email address you used? Enter an email address and we’ll let you know if it exists here.</p><p>If you no longer have access to the email address on your account, please contact <a href='/about'>our helpful staff.</a></p>"
       button_ok: "OK"
       button_help: "Help"
+
+    email_login:
+      label: "Login With Email"
+      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
+      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
+      complete_username_not_found: "No account matches the username <b>%{username}</b>"
+      complete_email_not_found: "No account matches <b>%{email}</b>"
+
     login:
       title: "Log In"
       username: "User"

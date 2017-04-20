@@ -340,4 +340,65 @@ RSpec.describe UsersController do
       expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
+
+  describe '#email_login' do
+    before do
+      SiteSetting.queue_jobs = true
+      SiteSetting.enable_local_logins_via_email = true
+    end
+
+    it "enqueues the right email" do
+      post "/u/email-login.json", params: { login: user.email }
+
+      expect(response).to be_success
+      expect(JSON.parse(response.body)['user_found']).to eq(true)
+
+      job_args = Jobs::CriticalUserEmail.jobs.last["args"].first
+
+      expect(job_args["user_id"]).to eq(user.id)
+      expect(job_args["type"]).to eq("email_login")
+      expect(job_args["email_token"]).to eq(user.email_tokens.last.token)
+    end
+
+    describe 'when enable_local_logins_via_email is disabled' do
+      before do
+        SiteSetting.enable_local_logins_via_email = false
+      end
+
+      it 'should return the right response' do
+        post "/u/email-login.json", params: { login: user.email }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe 'when username or email is not valid' do
+      it 'should not enqueue the email to login' do
+        post "/u/email-login.json", params: { login: '@random' }
+
+        expect(response).to be_success
+        expect(JSON.parse(response.body)['user_found']).to eq(false)
+        expect(Jobs::CriticalUserEmail.jobs).to eq([])
+      end
+    end
+
+    describe 'when hide_email_address_taken is true' do
+      it 'should return the right response' do
+        SiteSetting.hide_email_address_taken = true
+        post "/u/email-login.json", params: { login: user.email }
+
+        expect(response).to be_success
+        expect(JSON.parse(response.body).has_key?('user_found')).to eq(false)
+      end
+    end
+
+    describe "when user is already logged in" do
+      it 'should redirect to the root path' do
+        sign_in(user)
+        post "/u/email-login.json", params: { login: user.email }
+
+        expect(response).to redirect_to("/")
+      end
+    end
+  end
 end
