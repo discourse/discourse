@@ -66,7 +66,9 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer', '0.1.6'
 
-gem 'image_optim'
+# TODO Use official image_optim gem once https://github.com/toy/image_optim/pull/149
+# is merged.
+gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
