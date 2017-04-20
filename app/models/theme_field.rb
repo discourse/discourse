@@ -95,10 +95,12 @@ COMPILED
         self.error = nil unless error.nil?
       rescue SassC::SyntaxError => e
         self.error = e.message
-        if error_changed?
-          update_columns(error: self.error)
-        end
       end
+
+      if error_changed?
+        update_columns(error: self.error)
+      end
+
     end
   end
 
