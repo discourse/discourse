@@ -73,6 +73,10 @@ const Theme = RestModel.extend({
 
   addChildTheme(theme){
     let childThemes = this.get("childThemes");
+    if (!childThemes) {
+      childThemes = [];
+      this.set('childThemes', childThemes);
+    }
     childThemes.removeObject(theme);
     childThemes.pushObject(theme);
     return this.saveChanges("child_theme_ids");
