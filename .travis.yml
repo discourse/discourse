@@ -5,8 +5,10 @@ env:
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GC_MALLOC_LIMIT=50000000
   matrix:
-    - "RAILS_MASTER=0"
-    - "RAILS_MASTER=1"
+    - "RAILS_MASTER=0 QUNIT_RUN=0"
+    - "RAILS_MASTER=1 QUNIT_RUN=0"
+    - "RAILS_MASTER=0 QUNIT_RUN=1"
+    - "RAILS_MASTER=1 QUNIT_RUN=1"
 
 addons:
   postgresql: 9.5
@@ -19,8 +21,8 @@ addons:
 
 matrix:
   allow_failures:
-    - env: "RAILS_MASTER=1"
-    - rvm: rbx-2
+    - env: "RAILS_MASTER=1 QUNIT_RUN=0"
+    - env: "RAILS_MASTER=1 QUNIT_RUN=1"
   fast_finish: true
 
 rvm:
@@ -58,4 +60,4 @@ install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 
-script: "bundle exec rspec && bundle exec rake plugin:spec && bundle exec rake qunit:test['200000']"
+script: bash -c "if [ '$QUNIT_RUN' == '0' ]; then bundle exec rspec && bundle exec rake plugin:spec; else bundle exec rake qunit:test['200000']; fi"
