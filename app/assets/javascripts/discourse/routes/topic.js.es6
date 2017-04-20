@@ -54,7 +54,7 @@ const TopicRoute = Discourse.Route.extend({
       const model = this.modelFor('topic');
       model.set('topic_status_update', Ember.Object.create(model.get('topic_status_update')));
       showModal('edit-topic-status-update', { model });
-      this.controllerFor('modal').set('modalClass', 'topic-close-modal');
+      this.controllerFor('modal').set('modalClass', 'edit-topic-status-update-modal');
     },
 
     showChangeTimestamp() {
