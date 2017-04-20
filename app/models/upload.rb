@@ -155,7 +155,12 @@ class Upload < ActiveRecord::Base
 
         # optimize image (except GIFs, SVGs and large PNGs)
         if should_optimize?(file.path, [w, h])
-          ImageOptim.new.optimize_image!(file.path) rescue nil
+          begin
+            ImageOptim.new.optimize_image!(file.path)
+          rescue ImageOptim::Worker::TimeoutExceeded
+            # Don't optimize if it takes too long
+            Rails.logger.warn("ImageOptim timed out while optimizing #{filename}")
+          end
           # update the file size
           filesize = File.size(file.path)
         end
