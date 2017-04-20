@@ -12,10 +12,11 @@ class UserNotifications < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def signup(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.signup",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.signup",
+      user,
+      opts[:email_token]
+    )
   end
 
   def signup_after_approval(user, opts = {})
@@ -33,38 +34,51 @@ class UserNotifications < ActionMailer::Base
   end
 
   def confirm_old_email(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.confirm_old_email",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.confirm_old_email",
+      user,
+      opts[:email_token]
+    )
   end
 
   def confirm_new_email(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.confirm_new_email",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.confirm_new_email",
+      user,
+      opts[:email_token]
+    )
   end
 
   def forgot_password(user, opts = {})
-    build_email(user.email,
-                template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
+      user,
+      opts[:email_token]
+    )
+  end
+
+  def email_login(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.email_login",
+      user,
+      opts[:email_token]
+    )
   end
 
   def admin_login(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.admin_login",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.admin_login",
+      user,
+      opts[:email_token]
+    )
   end
 
   def account_created(user, opts = {})
-    build_email(user.email,
-                template: "user_notifications.account_created",
-                locale: user_locale(user),
-                email_token: opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.account_created",
+      user,
+      opts[:email_token]
+    )
   end
 
   def account_silenced(user, opts = nil)
@@ -531,6 +545,15 @@ class UserNotifications < ActionMailer::Base
   end
 
   private
+
+  def build_user_email_token_by_template(template, user, email_token)
+    build_email(
+      user.email,
+      template: template,
+      locale: user_locale(user),
+      email_token: email_token
+    )
+  end
 
   def build_summary_for(user)
     @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title # used by I18n

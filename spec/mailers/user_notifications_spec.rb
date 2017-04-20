@@ -79,6 +79,28 @@ describe UserNotifications do
 
   end
 
+  describe '.email_login' do
+    let(:email_token) { user.email_tokens.create!(email: user.email).token }
+    subject { UserNotifications.email_login(user, email_token: email_token) }
+
+    it "generates the right email" do
+      expect(subject.to).to eq([user.email])
+      expect(subject.from).to eq([SiteSetting.notification_email])
+
+      expect(subject.subject).to eq(I18n.t(
+        'user_notifications.email_login.subject_template',
+        email_prefix: SiteSetting.title
+      ))
+
+      expect(subject.body.to_s).to match(I18n.t(
+        'user_notifications.email_login.text_body_template',
+        site_name: SiteSetting.title,
+        base_url: Discourse.base_url,
+        email_token: email_token
+      ))
+    end
+  end
+
   describe '.digest' do
 
     subject { UserNotifications.digest(user) }

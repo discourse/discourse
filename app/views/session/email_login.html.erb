@@ -1,0 +1,17 @@
+<%if @error%>
+  <div class='alert alert-error'>
+    <%= @error %>
+  </div>
+<%end%>
+
+<% content_for :title do %><%=t "email_login.title" %><% end %>
+
+<%- content_for(:no_ember_head) do %>
+  <meta name="referrer" content="no-referrer">
+  <%= preload_script "ember_jquery" %>
+  <%= render_google_universal_analytics_code %>
+<%- end %>
+
+<%- content_for(:head) do %>
+  <meta name="referrer" content="no-referrer">
+<%- end %>
