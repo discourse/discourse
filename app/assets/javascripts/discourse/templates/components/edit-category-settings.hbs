@@ -1,10 +1,15 @@
 <section class='field'>
-  {{auto-update-input
-      inputLabelKey='topic.auto_close.label'
-      input=category.auto_close_hours
-      basedOnLastPost=category.auto_close_based_on_last_post
-      inputExamplesKey=''
-      limited=true}}
+  <div class="control-group">
+    <label>
+      {{i18n 'topic.auto_close.label'}}
+      {{text-field value=category.auto_close_hours type="number"}}
+    </label>
+
+    <label>
+      {{input type="checkbox" checked=category.auto_close_based_on_last_post}}
+      {{i18n 'topic.auto_close.based_on_last_post'}}
+    </label>
+  </div>
 </section>
 
 <section class='field'>

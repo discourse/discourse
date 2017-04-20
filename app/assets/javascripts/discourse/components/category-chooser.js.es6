@@ -1,11 +1,11 @@
-import ComboboxView from 'discourse-common/components/combo-box';
+import Combobox from 'discourse-common/components/combo-box';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { observes, on } from 'ember-addons/ember-computed-decorators';
 import PermissionType from 'discourse/models/permission-type';
 import Category from 'discourse/models/category';
 
-export default ComboboxView.extend({
+export default Combobox.extend({
   classNames: ['combobox category-combobox'],
   dataAttributes: ['id', 'description_text'],
   overrideWidths: true,

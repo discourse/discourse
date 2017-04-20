@@ -1,24 +1,52 @@
 <div class="auto-update-input">
   <div class="control-group">
-    <label>
-      {{i18n inputLabelKey}}
-      {{text-field value=input}}
-      {{i18n inputUnitsKey}}
-    </label>
+    <label>{{i18n "topic.topic_status_update.when"}}</label>
 
-    {{#if inputExamplesKey}}
-      <div class="examples">
-        {{i18n inputExamplesKey}}
-      </div>
-    {{/if}}
+    {{auto-update-input-selector
+        valueAttribute="id"
+        minimumResultsForSearch=-1
+        statusType=statusType
+        value=selection
+        input=input
+        width="50%"
+        none="topic.auto_update_input.none"}}
   </div>
 
-  {{#unless hideBasedOnLastPost}}
+  {{#if isCustom}}
+    <div class="control-group">
+      {{fa-icon "calendar"}} {{date-picker-future value=date defaultDate=date}}
+    </div>
+
+    <div class="control-group">
+      {{fa-icon "clock-o"}}
+      {{input type="time" value=time}}
+    </div>
+  {{/if}}
+
+  {{#if isBasedOnLastPost}}
     <div class="control-group">
       <label>
-        {{input type="checkbox" checked=basedOnLastPost}}
-        {{i18n 'topic.auto_close.based_on_last_post'}}
+        {{i18n 'topic.topic_status_update.num_of_hours'}}
+        {{text-field value=input type="number"}}
       </label>
     </div>
-  {{/unless}}
+
+    {{#if willCloseImmediately}}
+      <div class="warning">
+        {{fa-icon "warning"}}
+        {{willCloseI18n}}
+      </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if showTopicStatusInfo}}
+    <div class="alert alert-info">
+      {{topic-status-info
+          statusType=statusType
+          executeAt=executeAt
+          basedOnLastPost=basedOnLastPost
+          duration=duration
+          categoryId=categoryId}}
+    </div>
+  {{/if}}
 </div>

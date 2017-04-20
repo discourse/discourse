@@ -11,12 +11,14 @@ export default Ember.Component.extend(bufferedRender({
   buildBuffer(buffer) {
     const nameProperty = this.get('nameProperty');
     const none = this.get('none');
+    let noneValue = null;
 
     // Add none option if required
     if (typeof none === "string") {
       buffer.push('<option value="">' + I18n.t(none) + "</option>");
     } else if (typeof none === "object") {
-      buffer.push("<option value=\"\">" + Em.get(none, nameProperty) + "</option>");
+      noneValue = Em.get(none, this.get('valueAttribute'));
+      buffer.push(`<option value="${noneValue}">${Em.get(none, nameProperty)}</option>`);
     }
 
     let selected = this.get('value');
@@ -47,7 +49,7 @@ export default Ember.Component.extend(bufferedRender({
       });
     }
 
-    if (!selectedFound) {
+    if (!selectedFound && !noneValue) {
       if (none) {
         this.set('value', null);
       } else {
@@ -89,7 +91,8 @@ export default Ember.Component.extend(bufferedRender({
 
     const $elem = this.$();
     const caps = this.capabilities;
-    const minimumResultsForSearch = (caps && caps.isIOS) ? -1 : 5;
+    const minimumResultsForSearch = this.get('minimumResultsForSearch') || ((caps && caps.isIOS) ? -1 : 5);
+
     if (!this.get("selectionTemplate") && this.get("selectionIcon")) {
       this.selectionTemplate = (item) => {
         let name = Em.get(item, 'text');
@@ -97,13 +100,22 @@ export default Ember.Component.extend(bufferedRender({
         return `<i class='fa fa-${this.get("selectionIcon")}'></i>${name}`;
       };
     }
-    $elem.select2({
-      formatResult: this.comboTemplate,
-      formatSelection: this.selectionTemplate,
+
+    const options = {
       minimumResultsForSearch,
       width: this.get('width') || 'resolve',
       allowClear: true
-    });
+    };
+
+    if (this.comboTemplate) {
+      options.formatResult = this.comboTemplate.bind(this);
+    }
+
+    if (this.selectionTemplate) {
+      options.formatSelection = this.selectionTemplate.bind(this);
+    }
+
+    $elem.select2(options);
 
     const castInteger = this.get('castInteger');
     $elem.on("change", e => {
