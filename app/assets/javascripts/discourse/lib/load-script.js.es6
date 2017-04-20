@@ -63,7 +63,8 @@ export default function loadScript(url, opts) {
     var cdnUrl = url;
 
     // Scripts should always load from CDN
-    if (Discourse.CDN && url[0] === "/" && url[1] !== "/") {
+    // CSS is type text, to accept it from a CDN we would need to handle CORS
+    if (!opts.css && Discourse.CDN && url[0] === "/" && url[1] !== "/") {
       cdnUrl = Discourse.CDN.replace(/\/$/,"") + url;
     }
 
