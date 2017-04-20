@@ -171,6 +171,7 @@ class Group < ActiveRecord::Base
 
     unless group = self.lookup_group(name)
       group = Group.new(name: name.to_s, automatic: true)
+      group.default_notification_level = 2 if AUTO_GROUPS[:staff] == id
       group.id = id
       group.save!
     end
