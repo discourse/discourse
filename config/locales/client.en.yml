@@ -446,6 +446,7 @@ en:
       posts: "Posts"
       mentions: "Mentions"
       messages: "Messages"
+      notification_level: "Default notification level for group messages"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"

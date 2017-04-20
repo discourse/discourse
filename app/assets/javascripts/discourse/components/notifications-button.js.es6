@@ -43,7 +43,7 @@ export default DropdownButton.extend({
     }
   },
 
-  clicked(/* id */) {
-    // sub-class needs to implement this
+  clicked(id) {
+    this.set("notificationLevel", id);
   }
 });

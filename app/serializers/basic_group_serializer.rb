@@ -19,7 +19,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :bio_cooked,
              :public,
              :allow_membership_requests,
-             :full_name
+             :full_name,
+             :default_notification_level
 
   def include_incoming_email?
     staff?
