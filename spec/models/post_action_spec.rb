@@ -66,7 +66,7 @@ describe PostAction do
       expect(topic_user_ids).to include(mod.id)
 
       expect(topic.topic_users.where(user_id: mod.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
+              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:tracking])
 
       expect(topic.topic_users.where(user_id: codinghorror.id)
               .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
