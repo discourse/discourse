@@ -75,7 +75,7 @@ $tag-color: scale-color($primary, $lightness: 40%);
   }
 
   .extra-info-wrapper & {
-    color: $header-primary;
+    color: $header-primary !important;
   }
 
   &.box {
