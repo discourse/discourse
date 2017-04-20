@@ -42,7 +42,8 @@ describe Admin::GroupsController do
         "bio_cooked"=>nil,
         "public"=>false,
         "allow_membership_requests"=>false,
-        "full_name"=>group.full_name
+        "full_name"=>group.full_name,
+        "default_notification_level"=>3
       }])
 
     end
