@@ -8,7 +8,7 @@ describe SessionController do
     end
   end
 
-  describe 'become' do
+  describe '#become' do
     let!(:user) { Fabricate(:user) }
 
     it "does not work when not in development mode" do
@@ -26,7 +26,7 @@ describe SessionController do
     end
   end
 
-  describe '.sso_login' do
+  describe '#sso_login' do
 
     before do
       @sso_url = "http://somesite.com/discourse_sso"
@@ -410,7 +410,7 @@ describe SessionController do
     end
   end
 
-  describe '.sso_provider' do
+  describe '#sso_provider' do
     before do
       SiteSetting.enable_sso_provider = true
       SiteSetting.enable_sso = false
@@ -470,7 +470,7 @@ describe SessionController do
     end
   end
 
-  describe '.create' do
+  describe '#create' do
 
     let(:user) { Fabricate(:user) }
 
@@ -515,7 +515,9 @@ describe SessionController do
             login: user.username, password: 'sssss'
           }, format: :json
 
-          expect(::JSON.parse(response.body)['error']).to be_present
+          expect(::JSON.parse(response.body)['error']).to eq(
+            I18n.t("login.incorrect_username_email_or_password")
+          )
         end
       end
 
@@ -526,7 +528,9 @@ describe SessionController do
             login: user.username, password: ('s' * (User.max_password_length + 1))
           }, format: :json
 
-          expect(::JSON.parse(response.body)['error']).to be_present
+          expect(::JSON.parse(response.body)['error']).to eq(
+            I18n.t("login.incorrect_username_email_or_password")
+          )
         end
       end
 
@@ -536,14 +540,15 @@ describe SessionController do
           user.suspended_at = Time.now
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
+
           post :create, params: {
             login: user.username, password: 'myawesomepassword'
           }, format: :json
 
-          error = ::JSON.parse(response.body)['error']
-          expect(error).to be_present
-          expect(error).to match(/banned/)
-          expect(error).not_to match(/<strike>/)
+          expect(JSON.parse(response.body)['error']).to eq(I18n.t('login.suspended_with_reason',
+            date: I18n.l(user.suspended_till, format: :date_only),
+            reason: Rack::Utils.escape_html(user.suspend_reason)
+          ))
         end
       end
 
@@ -881,7 +886,7 @@ describe SessionController do
     end
   end
 
-  describe '.current' do
+  describe '#current' do
     context "when not logged in" do
       it "retuns 404" do
         get :current, format: :json
