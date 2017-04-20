@@ -21,8 +21,10 @@ HTML
     field = ThemeField.create!(theme_id: 1, target: 0, name: "scss", value: css)
     field.reload
     expect(field.error).not_to eq(nil)
-    field.value = ""
+    field.value = "body {color: blue};"
     field.save!
+    field.reload
+
     expect(field.error).to eq(nil)
   end
 end
