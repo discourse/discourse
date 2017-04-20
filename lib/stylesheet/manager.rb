@@ -41,10 +41,14 @@ class Stylesheet::Manager
 
     @lock.synchronize do
       builder = self.new(target, theme_key)
-      builder.compile unless File.exists?(builder.stylesheet_fullpath)
-      tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
-      cache[cache_key] = tag
+      if builder.is_theme? && !builder.theme
+        tag = ""
+      else
+        builder.compile unless File.exists?(builder.stylesheet_fullpath)
+        tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
+      end
 
+      cache[cache_key] = tag
       tag.dup.html_safe
     end
   end

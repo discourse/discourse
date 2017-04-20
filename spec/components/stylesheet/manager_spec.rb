@@ -2,6 +2,18 @@ require 'rails_helper'
 require 'stylesheet/compiler'
 
 describe Stylesheet::Manager do
+
+  it 'does not crash for missing theme' do
+    link = Stylesheet::Manager.stylesheet_link_tag(:embedded_theme)
+    expect(link).to eq("")
+
+    theme = Theme.create(name: "embedded", user_id: -1)
+    SiteSetting.default_theme_key = theme.key
+
+    link = Stylesheet::Manager.stylesheet_link_tag(:embedded_theme)
+    expect(link).not_to eq("")
+  end
+
   it 'can correctly compile theme css' do
     theme = Theme.new(
       name: 'parent',
