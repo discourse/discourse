@@ -36,7 +36,7 @@ module Jobs
     end
 
     def last_notified_id
-      (i = $redis.get(self.class.last_notified_key)) && i.to_i
+      $redis.get(self.class.last_notified_key)&.to_i
     end
 
     def last_notified_id=(arg)
