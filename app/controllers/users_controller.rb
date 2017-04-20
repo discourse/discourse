@@ -36,7 +36,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
+    return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
       { include_inactive: current_user.try(:staff?) },
