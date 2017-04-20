@@ -37,7 +37,7 @@
       text-overflow: ellipsis;
 
       .extra-info-wrapper & {
-        color: $header-primary;
+        color: $header-primary !important;
       }
     }
 
@@ -69,7 +69,7 @@
       }
 
       .extra-info-wrapper & {
-        color: $header-primary;
+        color: $header-primary !important;
       }
     }
 
