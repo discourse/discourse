@@ -235,7 +235,11 @@ class Wizard
           users.each do |u|
             args = {}
             args[:moderator] = true if u['role'] == 'moderator'
-            Invite.create_invite_by_email(u['email'], @wizard.user, args)
+            begin
+              Invite.create_invite_by_email(u['email'], @wizard.user, args)
+            rescue => e
+              updater.errors.add(:invite_list, e.message.concat("<br>"))
+            end
           end
         end
       end
@@ -261,4 +265,3 @@ class Wizard
     end
   end
 end
-
