@@ -38,8 +38,10 @@ class StatsSocket
       return false
     end
 
-    line = socket.readline
-    socket.write get_response(line.strip)
+    if IO.select(nil, [socket], nil, 10)
+      line = socket.read_nonblock(1000)
+      socket.write get_response(line.strip)
+    end
     socket.close
     true
   rescue IOError
