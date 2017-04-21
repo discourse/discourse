@@ -44,6 +44,8 @@ def clean_up_stats_socket(server, pid)
     FileUtils.rm_f(name)
     server.logger.info "Cleaned up stats socket at #{name}"
   end
+rescue => e
+  server.logger.warn "Failed to clean up stats socket #{e}"
 end
 
 def start_stats_socket(server)
@@ -52,6 +54,8 @@ def start_stats_socket(server)
     StatsSocket.new(name).start
     server.logger.info "Started stats socket at #{name}"
   end
+rescue => e
+  server.logger.warn "Failed to start stats socket #{e}"
 end
 
 initialized = false
@@ -72,9 +76,9 @@ before_fork do |server, worker|
     if @stats_socket_dir.present?
       server.logger.info "Initializing stats socket at #{@stats_socket_dir}"
       begin
+        require 'stats_socket'
         FileUtils.mkdir_p @stats_socket_dir
         FileUtils.rm_f Dir.glob("#{@stats_socket_dir}/*.sock")
-        require 'stats_socket'
         start_stats_socket(server)
       rescue => e
         server.logger.info "Failed to initialize stats socket dir #{e}"
