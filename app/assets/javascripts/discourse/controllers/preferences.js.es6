@@ -124,7 +124,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
                        { name: I18n.t('user.auto_track_options.after_10_minutes'), value: 600000 }],
 
   notificationLevelsForReplying: [{ name: I18n.t('topic.notifications.watching.title'), value: NotificationLevels.WATCHING },
-                                  { name: I18n.t('topic.notifications.tracking.title'), value: NotificationLevels.TRACKING }],
+                                  { name: I18n.t('topic.notifications.tracking.title'), value: NotificationLevels.TRACKING },
+                                  { name: I18n.t('topic.notifications.regular.title'), value: NotificationLevels.REGULAR }],
 
 
   considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },

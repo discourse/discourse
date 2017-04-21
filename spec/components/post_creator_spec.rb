@@ -899,6 +899,23 @@ describe PostCreator do
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
       expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
     end
+
+    it "topic notification level is normal based on preference" do
+      user.user_option.notification_level_when_replying = 1
+
+      admin = Fabricate(:admin)
+      topic = PostCreator.create(admin,
+                                 title: "this is the title of a topic created by an admin for tracking notification",
+                                 raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
+      )
+
+      post = PostCreator.create(user,
+                                topic_id: topic.topic_id,
+                                raw: "this is a reply to set the tracking state to normal ;)"
+      )
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+      expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:regular])
+    end
   end
 
   describe '#create!' do
