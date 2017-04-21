@@ -36,6 +36,24 @@ preload_app true
 # fast LAN.
 check_client_connection false
 
+@stats_socket_dir = ENV["UNICORN_STATS_SOCKET_DIR"]
+
+def clean_up_stats_socket(server, pid)
+  if @stats_socket_dir.present?
+    name = "#{@stats_socket_dir}/#{pid}.sock"
+    FileUtils.rm_f(name)
+    server.logger.info "Cleaned up stats socket at #{name}"
+  end
+end
+
+def start_stats_socket(server)
+  if @stats_socket_dir.present?
+    name = "#{@stats_socket_dir}/#{Process.pid}.sock"
+    StatsSocket.new(name).start
+    server.logger.info "Started stats socket at #{name}"
+  end
+end
+
 initialized = false
 before_fork do |server, worker|
 
@@ -50,6 +68,18 @@ before_fork do |server, worker|
 
     # router warm up
     Rails.application.routes.recognize_path('abc') rescue nil
+
+    if @stats_socket_dir.present?
+      server.logger.info "Initializing stats socket at #{@stats_socket_dir}"
+      begin
+        FileUtils.mkdir_p @stats_socket_dir
+        FileUtils.rm_f Dir.glob("#{@stats_socket_dir}/*.sock")
+        require 'stats_socket'
+        start_stats_socket(server)
+      rescue => e
+        server.logger.info "Failed to initialize stats socket dir #{e}"
+      end
+    end
 
     # get rid of rubbish so we don't share it
     GC.start
@@ -75,6 +105,11 @@ before_fork do |server, worker|
 
       require 'demon/sidekiq'
 
+      if @stats_socket_dir
+        Demon::Sidekiq.after_fork do
+          start_stats_socket(server)
+        end
+      end
       Demon::Sidekiq.start(sidekiqs)
 
       Signal.trap("SIGTSTP") do
@@ -168,12 +203,17 @@ before_fork do |server, worker|
   sleep 1
 end
 
+after_worker_exit do |server, worker, status|
+  clean_up_stats_socket(server, status.pid)
+end
+
 after_fork do |server, worker|
+  start_stats_socket(server)
+
   # warm up v8 after fork, that way we do not fork a v8 context
   # it may cause issues if bg threads in a v8 isolate randomly stop
   # working due to fork
   Discourse.after_fork
-
   begin
     PrettyText.cook("warm up **pretty text**")
   rescue => e

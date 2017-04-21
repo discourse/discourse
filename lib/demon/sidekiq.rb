@@ -6,6 +6,10 @@ class Demon::Sidekiq < Demon::Base
     "sidekiq"
   end
 
+  def self.after_fork(&blk)
+    blk ? (@blk=blk) : @blk
+  end
+
   private
 
   def suppress_stdout
@@ -17,6 +21,8 @@ class Demon::Sidekiq < Demon::Base
   end
 
   def after_fork
+    Demon::Sidekiq.after_fork&.call
+
     STDERR.puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
     # CLI will close the logger, if we have one set we can be in big
