@@ -42,7 +42,7 @@ class StatsSocket
     line = ""
 
     while Time.now - start < 10
-      if IO.select(nil, [socket], nil, 10)
+      if IO.select([socket], nil, nil, 10)
         begin
           line << socket.read_nonblock(1000)
         rescue IO::WaitReadable
