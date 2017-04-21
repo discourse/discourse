@@ -82,10 +82,11 @@ basic:
   categories_topics:
     default: 20
     min: 5
+    max: 2000
   suggested_topics:
     client: true
     default: 5
-    min: 0
+    max: 2000
   limit_suggested_to_category:
     default: false
   suggested_topics_max_days_old:
@@ -189,7 +190,6 @@ basic:
   relative_date_duration:
     client: true
     default: 30
-    min: 0
   topics_per_period_in_top_summary:
     default: 20
     min: 1
@@ -332,6 +332,7 @@ users:
     client: true
     default: 3
     min: 1
+    max: 60
   max_username_length:
     client: true
     default: 20
@@ -344,13 +345,16 @@ users:
     client: true
     default: 10
     min: 8
+    max: 2000
   min_admin_password_length:
     client: true
     default: 15
     min: 8
+    max: 2000
   password_unique_characters:
     default: 6
     min: 1
+    max: 2000
   block_common_passwords: true
   enforce_global_nicknames:
     default: false
@@ -371,8 +375,6 @@ users:
     default: true
   invite_expiry_days:
     default: 30
-    min: 0
-    max: 20000
   invite_passthrough_hours: 0
   invites_per_page:
     client: true
@@ -384,6 +386,7 @@ users:
   delete_all_posts_max:
     client: true
     default: 15
+    min: 1
   redirect_users_to_top_page: true
   show_email_on_profile:
     client: true
@@ -396,8 +399,6 @@ users:
     min: 1
   purge_unactivated_users_grace_period_days:
     default: 14
-    min: 0
-    max: 20000
   public_user_custom_fields:
     type: list
     default: ''
@@ -416,6 +417,7 @@ users:
     client: true
   anonymous_account_duration_minutes:
     default: 10080
+    max: 99000
   hide_user_profiles_from_public:
     default: false
     client: true
@@ -450,6 +452,7 @@ posting:
   max_post_length:
     client: true
     default: 32000
+    max: 99000
   topic_featured_link_enabled:
     client: true
     default: true
@@ -491,7 +494,6 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
-    min: 0
   traditional_markdown_linebreaks:
     client: true
     default: false
@@ -534,12 +536,11 @@ posting:
     default: false
   show_time_gap_days:
     default: 7
-    min: 0
-    max: 20000
     client: true
   short_progress_text_threshold:
     client: true
     default: 10000
+    max: 99000
   default_code_lang:
     client: true
     default: "auto"
@@ -582,7 +583,6 @@ posting:
     enum: 'TrustLevelSetting'
   notify_about_queued_posts_after:
     default: 24
-    min: 0
   auto_close_messages_post_count: 500
   auto_close_topics_post_count: 10000
   code_formatting_style:
@@ -613,8 +613,6 @@ email:
   digest_other_topics: 5
   suppress_digest_email_after_days:
     default: 365
-    min: 0
-    max: 20000
   digest_suppress_categories:
     type: category_list
     default: ''
@@ -671,8 +669,6 @@ email:
     default: false
   delete_email_logs_after_days:
     default: 365
-    min: 0
-    max: 20000
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -699,8 +695,6 @@ email:
     min: 2
   reset_bounce_score_after_days:
     default: 30
-    min: 0
-    max: 20000
   attachment_content_type_blacklist:
     type: list
     default: "pkcs7|x-vcard"
@@ -753,8 +747,6 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
-    min: 0
-    max: 20000
   prevent_anons_from_downloading_files:
     default: false
     client: true
@@ -839,8 +831,6 @@ trust:
   tl2_requires_time_spent_mins: 60
   tl2_requires_days_visited:
     default: 15
-    min: 0
-    max: 20000
   tl2_requires_likes_received: 1
   tl2_requires_likes_given: 1
   tl2_requires_topic_reply_count: 3
@@ -850,44 +840,31 @@ trust:
     max: 1000000
   tl3_requires_days_visited:
     default: 50
-    min: 0
-    max: 20000
   tl3_requires_topics_replied_to:
     default: 10
-    min: 0
   tl3_requires_topics_viewed:
     default: 25
-    min: 0
     max: 100
   tl3_requires_topics_viewed_cap:
     default: 500
-    min: 0
   tl3_requires_posts_read:
     default: 25
-    min: 0
     max: 100
   tl3_requires_posts_read_cap:
     default: 20000
-    min: 0
+    max: 99000
   tl3_requires_topics_viewed_all_time:
     default: 200
-    min: 0
   tl3_requires_posts_read_all_time:
     default: 500
-    min: 0
   tl3_requires_max_flagged:
     default: 5
-    min: 0
   tl3_promotion_min_duration:
     default: 14
-    min: 0
-    max: 20000
   tl3_requires_likes_given:
     default: 30
-    min: 0
   tl3_requires_likes_received:
     default: 20
-    min: 0
   tl3_links_no_follow:
     default: false
     client: true
@@ -940,7 +917,6 @@ spam:
     type: list
   levenshtein_distance_spammer_emails:
       default: 2
-      min: 0
       max: 3
   max_new_accounts_per_registration_ip: 3
   min_ban_entries_for_roll_up: 5
@@ -992,11 +968,9 @@ rate_limits:
     client: true
   max_logins_per_ip_per_hour:
     min: 1
-    max: 20000
     default: 30
   max_logins_per_ip_per_minute:
     min: 1
-    max: 20000
     default: 6
 
 developer:
@@ -1029,12 +1003,15 @@ developer:
   background_polling_interval:
     client: true
     default: 60000
+    max: 99000
   polling_interval:
     client: true
     default: 3000
+    max: 99000
   anon_polling_interval:
     client: true
     default: 15000
+    max: 99000
   flush_timings_secs:
     client: true
     default: 20
@@ -1044,13 +1021,10 @@ developer:
     client: true
   top_topics_formula_log_views_multiplier:
     default: 2
-    min: 0
   top_topics_formula_first_post_likes_multiplier:
     default: 0.5
-    min: 0
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
-    min: 0
   rebake_old_posts_count:
     default: 250
     min: 1
@@ -1216,18 +1190,12 @@ uncategorized:
   # Cold map thresholds
   cold_age_days_low:
     default: 14
-    min: 0
-    max: 20000
     client: true
   cold_age_days_medium:
     default: 90
-    min: 0
-    max: 20000
     client: true
   cold_age_days_high:
     default: 180
-    min: 0
-    max: 20000
     client: true
 
   # Warnings
@@ -1278,8 +1246,6 @@ uncategorized:
 
   delete_drafts_older_than_n_days:
     default: 180
-    min: 0
-    max: 20000
 
   tos_topic_id:
     default: -1
@@ -1294,7 +1260,6 @@ uncategorized:
   bootstrap_mode_min_users:
     default: 50
     client: true
-    min: 0
     max: 5000
 
   bootstrap_mode_enabled:
