@@ -553,6 +553,9 @@ section.details {
 
 .display-row.associations .value {
   width: 750px;
+  @media (max-width: $mobile-breakpoint) {
+    width: 100%;
+  }
 }
 
 .display-row {
@@ -598,6 +601,9 @@ section.details {
     width: 480px;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 100%;
+    }
     .btn {
       margin-right: 5px;
     }
@@ -1819,7 +1825,7 @@ table#user-badges {
 // Mobile specific style for Admin IP Lookup box
 .mobile-view .admin-contents .ip-lookup .location-box {
   width: 300px;
-  left: 20px;
+  left: -100%;
 }
 
 .cboxcontainer {
