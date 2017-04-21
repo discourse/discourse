@@ -29,6 +29,14 @@ describe StatsSocket do
       socket.close
     end
 
+    socket = UNIXSocket.new(socket_path)
+    socket.send "gc_st", 0
+    socket.flush
+    sleep 0.001
+    socket.send "at\n", 0
+    line = socket.readline
+    socket.close
+
     parsed = JSON.parse(line)
 
     expect(parsed.keys.sort).to eq(GC.stat.keys.map(&:to_s).sort)

@@ -38,16 +38,31 @@ class StatsSocket
       return false
     end
 
-    if IO.select(nil, [socket], nil, 10)
-      line = socket.read_nonblock(1000)
+    start = Time.now
+    line = ""
+
+    while Time.now - start < 10
+      if IO.select(nil, [socket], nil, 10)
+        begin
+          line << socket.read_nonblock(1000)
+        rescue IO::WaitReadable
+          sleep 0.001
+        end
+      end
+      break if line.include?("\n")
+    end
+
+    if line.include?("\n")
       socket.write get_response(line.strip)
     end
-    socket.close
+
     true
-  rescue IOError
+  rescue IOError => e
     # nothing to do here, case its normal on shutdown
   rescue => e
     Rails.logger.warn("Failed to handle connection in stats socket #{e}")
+  ensure
+    socket&.close rescue nil
   end
 
   def get_response(command)
