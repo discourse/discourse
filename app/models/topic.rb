@@ -884,7 +884,7 @@ SQL
   end
 
   def self.relative_url(id, slug, post_number=nil)
-    url = "#{Discourse.base_uri}/t/#{slug}/#{id}"
+    url = "/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
   end

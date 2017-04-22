@@ -34,7 +34,7 @@ describe Permalink do
 
     it "returns a topic url when topic_id is set" do
       permalink.topic_id = topic.id
-      expect(target_url).to eq(topic.relative_url)
+      expect(target_url).to eq(topic.url)
     end
 
     it "returns nil when topic_id is set but topic is not found" do
