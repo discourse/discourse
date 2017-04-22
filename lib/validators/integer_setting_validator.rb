@@ -1,8 +1,8 @@
 class IntegerSettingValidator
   def initialize(opts={})
     @opts = opts
-    @opts[:min] = 0 unless @opts[:min].present?
-    @opts[:max] = 20000 unless @opts[:max].present?
+    @opts[:min] = 0 unless @opts[:min].present? || @opts[:hidden]
+    @opts[:max] = 20000 unless @opts[:max].present? || @opts[:hidden]
   end
 
   def valid_value?(val)
