@@ -97,5 +97,14 @@ describe IntegerSettingValidator do
         expect(validator.valid_value?(-2)).to eq(false)
       end
     end
+
+    context "when setting is hidden" do
+      subject(:validator) { described_class.new(hidden: true) }
+
+      it "does not impose default validations" do
+        expect(validator.valid_value?(-1)).to eq(true)
+        expect(validator.valid_value?(20001)).to eq(true)
+      end
+    end
   end
 end
