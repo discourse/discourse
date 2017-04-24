@@ -184,3 +184,10 @@ gem 'rmmseg-cpp', require: false
 gem 'logster'
 
 gem 'sassc', require: false
+
+
+if ENV["IMPORT"] == "1"
+  gem 'mysql2'
+  gem 'php_serialize'
+  gem 'redcarpet'
+end
