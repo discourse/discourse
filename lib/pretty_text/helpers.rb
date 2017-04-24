@@ -31,9 +31,8 @@ module PrettyText
 
     def mention_lookup(name)
       return false   if name.blank?
-      return "group" if Group.where(name: name).exists?
-      return "user"  if User.where(username_lower: name.downcase).exists?
-      nil
+      return "group" if Group.exists?(name: name)
+      return "user"  if User.exists?(username_lower: name.downcase)
     end
 
     def category_hashtag_lookup(category_slug)
@@ -70,9 +69,8 @@ module PrettyText
     end
 
     def get_current_user(user_id)
-      user = User.find_by(id: user_id)
-      staff = user ? user.staff? : false
-      { staff: staff }
+      return unless Fixnum === user_id
+      { staff: User.where(id: user_id).where("moderator OR admin").exists? }
     end
   end
 end
