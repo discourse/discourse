@@ -67,6 +67,7 @@ describe InviteMailer do
           it 'renders invite link' do
             expect(custom_invite_mail.body.encoded).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
           end
+
         end
       end
     end
@@ -110,6 +111,14 @@ describe InviteMailer do
 
         it 'renders topic title' do
           expect(invite_mail.body.encoded).to match(topic.title)
+        end
+
+        it "respects the private_email setting" do
+          SiteSetting.private_email = true
+
+          message = invite_mail
+          expect(message.body.to_s).not_to include(topic.title)
+          expect(message.body.to_s).not_to include(topic.slug)
         end
       end
 

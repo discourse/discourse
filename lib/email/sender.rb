@@ -130,7 +130,14 @@ module Email
         # https://www.ietf.org/rfc/rfc3834.txt
         @message.header['Precedence']   = 'list'
         @message.header['List-ID']      = list_id
-        @message.header['List-Archive'] = topic.url if topic
+
+        if topic
+          if SiteSetting.private_email?
+            @message.header['List-Archive'] = "#{Discourse.base_url}#{topic.slugless_url}"
+          else
+            @message.header['List-Archive'] = topic.url
+          end
+        end
       end
 
       if reply_key.present? && @message.header['Reply-To'] =~ /\<([^\>]+)\>/
