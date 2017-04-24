@@ -40,12 +40,16 @@ class Topic < ActiveRecord::Base
     update_category_topic_count_by(-1) if deleted_at.nil?
     super(trashed_by)
     update_flagged_posts_count
+    self.topic_embed.trash! if has_topic_embed?
   end
 
   def recover!
     update_category_topic_count_by(1) unless deleted_at.nil?
     super
     update_flagged_posts_count
+    unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
+      topic_embed.recover!
+    end
   end
 
   rate_limit :default_rate_limiter
@@ -120,6 +124,8 @@ class Topic < ActiveRecord::Base
 
   has_one :user_warning
   has_one :first_post, -> {where post_number: 1}, class_name: Post
+
+  has_one :topic_embed, dependent: :destroy
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
