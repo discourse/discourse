@@ -5,6 +5,7 @@ class InviteMailer < ActionMailer::Base
 
   class UserNotificationRenderer < ActionView::Base
     include UserNotificationsHelper
+    include EmailHelper
   end
 
   def send_invite(invite, custom_message=nil)
@@ -30,12 +31,18 @@ class InviteMailer < ActionMailer::Base
         template = 'custom_invite_mailer'
       end
 
+      topic_title = first_topic.try(:title)
+      if SiteSetting.private_email?
+        topic_title = I18n.t("system_messages.secure_topic_title", id: first_topic.id)
+        topic_excerpt = ""
+      end
+
       build_email(invite.email,
                   template: template,
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
-                  topic_title: first_topic.try(:title),
+                  topic_title: topic_title,
                   topic_excerpt: topic_excerpt,
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title,

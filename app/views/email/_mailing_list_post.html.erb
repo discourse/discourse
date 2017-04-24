@@ -1,0 +1,5 @@
+<li>
+  <a href='<%= Discourse.base_url + topic.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(topic.title) %></a>
+  <span><%= post_count %></span>
+  <%= category_badge(topic.category, inline_style: true, absolute_url: true) %>
+</li>
