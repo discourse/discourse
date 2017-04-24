@@ -92,6 +92,8 @@ fa_IR:
       google+: 'این پیوند را در Google+‎ به اشتراک بگذارید.'
       email: 'این پیوند را با ایمیل بفرستید'
     action_codes:
+      public_topic: "عمومی کردن این مبحث در %{when} "
+      private_topic: "خصوصی کردن این مبحث در %{when}"
       split_topic: "این مبحث را جدا کنید %{when}"
       autoclosed:
         enabled: 'بسته شد %{when}'
@@ -144,6 +146,8 @@ fa_IR:
     more: "بیشتر"
     less: "کمتر"
     never: "هرگز"
+    every_30_minutes: "هر 30 دقیقه"
+    every_hour: "هر ساعت"
     daily: "روزانه"
     weekly: "هفتگی"
     every_two_weeks: "هر دو هفته"
@@ -154,6 +158,7 @@ fa_IR:
       other: "{{count}} نویسه"
     suggested_topics:
       title: "موضوعات پیشنهادی"
+      pm_title: "پیامهای پیشنهادی"
     about:
       simple_title: "درباره"
       title: "درباره %{title}"
@@ -167,6 +172,7 @@ fa_IR:
       like_count: "لایک ها "
       topic_count: "موضوعات"
       post_count: "پست ها"
+      user_count: "کاربران"
       active_user_count: "کاربران فعال"
       contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا با تماس بگیرید از طریق %{contact_info}."
@@ -204,6 +210,8 @@ fa_IR:
     undo: "برگردانی"
     revert: "برگشت"
     failed: "ناموفق"
+    switch_to_anon: "ورود به حالت ناشناس"
+    switch_from_anon: "خروج از حالت ناشناس"
     banner:
       close: "این سردر را رد بده."
       edit: "این بنر را ویرایش کنید >>"
@@ -225,6 +233,7 @@ fa_IR:
       has_pending_posts:
         other: "این عنوان دارای <b>{{count}}</b> نوشته‌ی در انتظار تایید است"
       confirm: "ذخیره سازی تغییرها"
+      delete_prompt: "آیا از حذف <b>%{username}</b> اطمینان دارید؟ این عمل باعث حذف شدن تمامی نوشته های او و همینطور باعث مسدود شدن IP و ایمیل او نیز می شود."
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی نیاز به تایید آن توسط یکی از مدیران است قبل از اینکه نمایش داده شود. لطفا صبر داشته باشید."
@@ -250,6 +259,8 @@ fa_IR:
       title: "کاربران"
       likes_given: "داده"
       likes_received: "دریافت"
+      topics_entered: "بازدید"
+      topics_entered_long: "بازدید مباحث"
       time_read: "زمان خوانده‌ شده"
       topic_count: "موضوعات"
       topic_count_long: "موضوعات ساخته شده"
@@ -262,17 +273,66 @@ fa_IR:
       posts_read_long: "خواندن نوشته ها"
       total_rows:
         other: "%{count} کاربران"
+    group_histories:
+      actions:
+        change_group_setting: "تغییر تنظیمات گروه"
+        add_user_to_group: "افزودن کاربر"
+        remove_user_from_group: "حذف کاربر"
+        make_user_group_owner: "مدیر کردن"
+        remove_user_as_group_owner: "ابطال مدیریت"
     groups:
+      logs:
+        title: "گزارش ها"
+        when: "چه زمانی"
+        action: "عمل"
+        acting_user: "کاربر اقدام کننده"
+        target_user: "کاربر مقصد"
+        subject: "موضوع"
+        details: "جزییات"
+        from: "از"
+        to: "به"
+      edit:
+        title: 'ویرایش گروه'
+        full_name: 'نام کامل'
+        add_members: "افزودن اعضا"
+        delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف گردد؟"
+      request_membership_pm:
+        title: "درخواست عضویت"
+        body: "من تقاضای عضویت در @%{groupName} را دارم."
+      name_placeholder: "در نام گروه نمی توان از فاصله استفاده کرد، مانند قوانین نامگذاری نام کاربری"
+      empty:
+        posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده."
+        members: "این گروه هیچ عضوی ندارد"
+        mentions: "هیچ اشاره ای به این گروه وجود ندارد."
+        messages: "هیچ پیامی برای این گروه وجود ندارد."
+        topics: "در این گروه هیچ مبحثی توسط اعضای آن ایجاد نشده."
+        logs: "هیچ گزارشی برای این گروه موجود نیست."
       add: "افزودن"
+      join: "ورود به گروه"
+      leave: "ترک گروه"
+      request: "درخواست ورود به گروه"
+      automatic_group: گروه خودکار
+      closed_group: گروه بسته شده
+      is_group_user: "شما عضو این گروه هستید"
+      allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
+      membership: "عضویت"
+      name: "نام"
+      user_count: "تعداد اعضا"
+      bio: "درباره گروه"
       selector_placeholder: "افزودن عضو"
       owner: "مالک"
       visible: "همهٔ کاربران گروه را می‌بینند"
       index:
         title: "گروه‌ها"
+        empty: "هیچ گروه قابل نمایشی وجود ندارد."
       title:
         other: "گروه‌ها"
+      activity: "فعالیت"
       members: "اعضا"
+      topics: "مباحث"
       posts: "نوشته ها"
+      mentions: "نام برده شده ها"
+      messages: "پیامها"
       alias_levels:
         title: "چه کسی میتواند پیام بفرستد و به این گروه @اشاره کند؟"
         nobody: "هیچ‌کس"
@@ -287,6 +347,9 @@ fa_IR:
         watching:
           title: "در حال مشاهده"
           description: "در صورت ارسال شدن پست جدید در هر پیام یک اعلان برای شما ارسال می‌شود و تعداد پاسخ‌های جدید نمایش داده می‌شود."
+        watching_first_post:
+          title: "درحال مشاهده نوشته اول"
+          description: "تنها برای اولین نوشته در هر مبحث جدید به شما اطلاع رسانی خواهد شد."
         tracking:
           title: "ردگیری"
           description: "در صورت اشاره شدن به @نام شما توسط اشخاص دیگر و یا دریافت پاسخ، اعلانی برای شما ارسال می‌شود و تعداد پاسخ‌های جدید نمایش داده می‌شود."
@@ -296,6 +359,14 @@ fa_IR:
         muted:
           title: "بی صدا شد"
           description: "با ارسال شدن موضوعات جدید در این گروه شما اعلانی دریافت نمی‌کنید."
+      flair_url: "تصویر آواتار"
+      flair_url_placeholder: "(اختیاری) URL تصویر و یا کلاس فونت Awesome "
+      flair_bg_color: "رنگ پس زمینه آواتار"
+      flair_bg_color_placeholder: "(اختیاری) کد هگز رنگ"
+      flair_color: "رنگ آواتار"
+      flair_color_placeholder: "(اختیاری) کد هگز رنگ"
+      flair_preview_icon: "پیشنمایش آیکون"
+      flair_preview_image: "پیش‌نمایش تصویر"
     user_action_groups:
       '1': "پسندهای داده شده"
       '2': "پسندهای دریافت شده"
@@ -329,6 +400,8 @@ fa_IR:
       latest_by: "آخرین توسط"
       toggle_ordering: "ضامن کنترل مرتب سازی"
       subcategories: "زیر دسته‌ بندی ها"
+      topic_sentence:
+        other: "%{count} مبحث"
       topic_stat_sentence:
         other: "%{count} موضوعات تازه در %{unit} گذشته."
     ip_lookup:
@@ -353,6 +426,11 @@ fa_IR:
       profile: "نمایه"
       mute: "بی صدا"
       edit: "ویرایش تنظیمات"
+      download_archive:
+        button_text: "دانلود نوشته های من"
+        confirm: "آیا مطمئنید که می‌خواهید نوشته‌هایتان را دانلود کنید؟"
+        success: "شروع فرایند دانلود، وقتی این فرایند تکمیل شود به شما از طریق پیام، اطلاع رسانی خواهد شد."
+        rate_limit_error: "نوشته ها را می توانید فقط روزی یک بار دانلود کنید. لطفا فردا دوباره امتحان کنید."
       new_private_message: "پیام های جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
@@ -370,10 +448,13 @@ fa_IR:
         not_supported: "اعلانات بر روی این مرورگر پشتیبانی نمیشوند. با عرض پوزش."
         perm_default: "فعال کردن اعلانات"
         perm_denied_btn: "دسترسی رد شد"
+        perm_denied_expl: "شما دسترسی دریافت پیام را بسته اید. در تنظیمات مرورگر خود آنرا فعال کنید."
         disable: "غیرفعال کردن اعلانات"
         enable: "فعال کردن اعلانات"
         each_browser_note: "نکته: شما باید این تنظیمات را در هر مرورگری که استفاده میکنید تغییر دهید."
+      dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
+      first_notification: "اولین پیام اطلاع رسانی شما! برای شروع آنرا انتخاب کنید."
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
       dynamic_favicon: " تعداد موضوعات جدید یا بروز شده را روی آیکون مرورگر نمایش بده"
       external_links_in_new_tab: "همهٔ پیوندهای برون‌رو را در یک تب جدید باز کن"
@@ -387,6 +468,7 @@ fa_IR:
       suspended_notice: "این کاربر تا {{date}} در وضعیت معلق است."
       suspended_reason: "دلیل: "
       github_profile: "Github"
+      email_activity_summary: "چکیدهٔ فعالیت"
       watched_categories: "تماشا شده"
       tracked_categories: "پی‌گیری شده"
       muted_categories: "بی صدا شد"
@@ -1714,32 +1796,12 @@ fa_IR:
       customize:
         title: "شخصی‌سازی"
         long_title: "شخصی‌سازی سایت"
-        css: "CSS"
-        header: "سردر"
-        top: "بالا"
-        footer: "پانوشته "
-        embedded_css: "CSS جاساز شده"
-        head_tag:
-          text: "</head>"
-          title: "HTML هایی که  قرار داده شده  قبل از تگ </head> "
-        body_tag:
-          text: "</body>"
-          title: "HTML هایی که  قرار داده شده  قبل از تگ </body> "
-        override_default: "شامل شیوه نامه استاندارد نکن"
-        enabled: "فعال شد؟"
         preview: "پیش‌نمایش"
-        undo_preview: "حذف پیش نمایش"
-        rescue_preview: "به سبک پیش فرض"
-        explain_preview: "مشاهده‌ی سایت با این قالب سفارشی"
-        explain_undo_preview: "بازگشت به شیوه نامه های  فعال شخصی"
-        explain_rescue_preview: "دیدن سایت با شیوه نامه پیش فرض"
         save: "ذخیره سازی"
         new: "تازه"
         new_style: "سبک جدید"
         import: "ورود داده‌ها"
-        import_title: "فایلی را انتخاب یا متنی را پیست کنید"
         delete: "پاک کردن"
-        delete_confirm: "پاک کردن این شخصی‌سازی؟"
         about: "اطلاح شیوه نامه CSS و هدر HTML در سایت، اضافه کردنیک سفارشی سازی برای شروع."
         color: "رنگ"
         opacity: "تاری"
@@ -1752,13 +1814,9 @@ fa_IR:
           none_selected: "یک قالب ایمیل برای شروع ویرایش انتخاب کنید."
           revert: "باطل کردن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را باطل کنید؟"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "شخصی‌سازی CSS و HTML"
         colors:
           title: "رنگ‌ها"
           long_title: "طرح‌های رنگی"
-          about: "تغییر رنگ استفاده شده در انجمن بدون نوشتن کد CSS.با اضافه کردن یک طرح شروع کنید."
           new_name: "طرح رنگ جدید"
           copy_name_prefix: "نمونه سازی از"
           delete_confirm: "این طرح رنگ پاک شود؟"
@@ -1874,8 +1932,6 @@ fa_IR:
             change_trust_level: "تغییر دادن سطح اعتماد"
             change_username: "تغییر نام کاربری"
             change_site_setting: "تغییر تنظیمات سایت"
-            change_site_customization: "تغییر سفارشی‌سازی سایت"
-            delete_site_customization: "پاک‌کردن سفارشی‌سازی سایت"
             change_site_text: "تغییر نوشته سایت"
             suspend_user: "کاربر تعلیق شده"
             unsuspend_user: "کابر تعلیق نشده"
@@ -2205,6 +2261,7 @@ fa_IR:
           post_revision: "هنگامی که یک کاربر نوشته ای ویرایش می‌کند یا فرستد"
           trust_level_change: "هنگامی که کاربری سطح اعتماد را تغییر می‌دهد"
           user_change: "هنگامی که کاربری ویرایش یا ساخته می‌شود"
+          post_processed: "پس از پردازش یک پست"
         preview:
           link_text: "پیش نمایش مدال های اعطایی"
           plan_text: "پیشنمایش با طرح پرسش"
@@ -2236,6 +2293,7 @@ fa_IR:
         sample: "از این کد HTML در سایت خود استفاده کنید تا بتوانید مبحث های Discourse ایجاد کنید یا جاساز کنید, این کد <b>REPLACE_ME</b> را به URL استاندارد صفحه ای که بر روی آن جاسازی میکنید تغییر دهید."
         title: "جاسازی"
         host: "میزبان های مجاز"
+        path_whitelist: "مسیر لیست سفید"
         edit: "ویرایش"
         category: "ارسال به دسته بندی"
         add_host: "اضافه کردن میزبان"
@@ -2247,9 +2305,11 @@ fa_IR:
         embed_by_username: "نام کاربری برای ساخت مبحث"
         embed_post_limit: "حداکثر تعداد پست هایی که میتوان جاساز کرد"
         embed_username_key_from_feed: "کلیدی برای کشیدن نام کاربری Discourse از فید"
+        embed_title_scrubber: "عبارت منظم استفاده میشه برای ورز دادن عنوان پست"
         embed_truncate: "کوتاه کردن نوشته های جاسازی شده"
         embed_whitelist_selector: "CSS انتخاب کننده برای المان هایی که اجازه دارند جاسازی شوند"
         embed_blacklist_selector: "انتخاب کننده CSS برای المان هایی که از جاسازی پاک شده اند"
+        embed_classname_whitelist: " دسترسی به کلاس های سی اس اس"
         feed_polling_enabled: "وارد کردن پست ها توسط RSS/ATOM"
         feed_polling_url: " لینک RSS/ATOM فید برای خزیدن"
         save: "ذخیره تنظیمات کدهای جاساز"
@@ -2268,3 +2328,12 @@ fa_IR:
           label: "جدید:"
           add: "افزودن"
           filter: "جستجو (آدرس یا آدرس خارجی)"
+  wizard_js:
+    wizard:
+      back: "قبلی"
+      next: "بعدی"
+      upload: "بارگذاری شد!"
+      uploading: "در حال بار گذاری ..."
+      quit: "شاید بعدا"
+      invites:
+        add_user: "اضافه کردن"

@@ -27,7 +27,7 @@ fi:
   topics: "Ketjut"
   posts: "viestit"
   loading: "Lataa"
-  powered_by_html: 'Voimanlähteenä <a href="http://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
+  powered_by_html: 'Voimanlähteenä <a href="https://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
   log_in: "Kirjaudu"
   purge_reason: "Hylätty, aktivoimaton tili poistettiin automaattisesti"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
@@ -826,7 +826,7 @@ fi:
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a>."
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Merkkijono, joka korvataan automaattisesti &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "Säännöllinen lauseke, joka korvataan automaattisesti &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Sivuston oletuskieli (ISO 639-1 koodi)"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
@@ -1713,9 +1713,9 @@ fi:
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        [Tässä blogikirjoituksessa](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
+        [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
 
-        Sitä mukaa kun toimit täällä, opimme tuntemaan sinut ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ja saat valtuuksia joiden avulla voit osallistua yhteisömme ylläpitoon.
+        Sitä mukaa kun toimit täällä, opimme tuntemaan sinut ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ja saat valtuuksia, joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
       title: "Tervetuloa käyttäjä"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
@@ -2421,6 +2421,8 @@ fi:
     no_echo_mailing_list_mode: "Postitustilassa ei sähköposti-ilmoituksia käyttäjän omista viesteistä"
   color_schemes:
     base_theme_name: "Pohja"
+    default: "Vaalea värimalli"
+    dark: "Tumma värimalli"
   about: "Tietoja"
   guidelines: "Ohjeet"
   privacy: "Yksityisyys"
@@ -2869,7 +2871,7 @@ fi:
   safe_mode:
     title: "Siirry vikasietotilaan"
     description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja sivuston mukautuksia."
-    no_customizations: "Poista käytöstä sivuston mukautukset"
+    no_customizations: "Poista nykyinen teema käytöstä"
     only_official: "Poista käytöstä epäviralliset lisäosat"
     no_plugins: "Poista käytöstä kaikki lisäosat"
     enter: "Siirry vikasietotilaan"

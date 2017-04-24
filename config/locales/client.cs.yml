@@ -185,7 +185,7 @@ cs:
     admin_title: "Administrace"
     flags_title: "Nahlášení"
     show_more: "zobrazit více"
-    show_help: "volby"
+    show_help: "možnosti"
     links: "Odkazy"
     links_lowercase:
       one: "odkaz"
@@ -195,7 +195,7 @@ cs:
     guidelines: "Pokyny"
     privacy_policy: "Ochrana soukromí"
     privacy: "Soukromí"
-    terms_of_service: "Podmínky služby"
+    terms_of_service: "Podmínky používání"
     mobile_view: "Mobilní verze"
     desktop_view: "Plná verze"
     you: "Vy"
@@ -223,7 +223,7 @@ cs:
     about:
       simple_title: "O fóru"
       title: "O %{title}"
-      stats: "Statistiky Webu"
+      stats: "Statistiky webu"
       our_admins: "Naši Admini"
       our_moderators: "Naši Moderátoři"
       stat:
@@ -1198,7 +1198,7 @@ cs:
         dismiss: "Odbýt"
         dismiss_read: "Odbýt všechna nepřečtená"
         dismiss_button: "Odbýt..."
-        dismiss_tooltip: "Odbýt jen nové příspěvka nebo přestat sledovat témata"
+        dismiss_tooltip: "Odbýt jen nové příspěvky nebo přestat sledovat témata"
         also_dismiss_topics: "Přestat sledovat tyto témata, takže se mi znovu nezobrazí jako nepřečtená"
         dismiss_new: "Odbýt nová"
         toggle: "hromadný výběr témat"
@@ -1304,7 +1304,7 @@ cs:
       read_more: "Chcete si přečíst další informace? {{catLink}} nebo {{latestLink}}."
       read_more_MF: "{ UNREAD, plural, =0 {} one { Je tu <a href='/unread'>1 nepřečtené</a> } other { Je tu <a href='/unread'># nepřečtených</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># nových</a> témat} } remaining, nebo {CATEGORY, select, true {si projděte ostatní témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
-      view_latest_topics: si zobrazte populární témata
+      view_latest_topics: zobrazte si populární témata
       suggest_create_topic: Co takhle založit nové téma?
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
@@ -1952,7 +1952,7 @@ cs:
           one: "Nepřečtená (1)"
           few: "Nepřečtená ({{count}})"
           other: "Nepřečtená ({{count}})"
-        help: "témata. která sledujete nebo hlídáte, s nepřečtenými příspěvky"
+        help: "témata, která sledujete nebo hlídáte, s nepřečtenými příspěvky"
         lower_title_with_count:
           one: "{{count}} nepřečtené"
           few: "{{count}} nepřečtených"
@@ -2446,31 +2446,12 @@ cs:
       customize:
         title: "Přizpůsobení"
         long_title: "Přizpůsobení webu"
-        css: "CSS"
-        header: "header"
-        top: "Vršek"
-        footer: "Patička"
-        head_tag:
-          text: "</head>"
-          title: "HTML které bude vloženo před </head> HTML tag"
-        body_tag:
-          text: "</body>"
-          title: "HTML které bude vloženo před </body> HTML tag"
-        override_default: "Přetížit výchozí?"
-        enabled: "Zapnuto?"
         preview: "náhled"
-        undo_preview: "odstranit náhled"
-        rescue_preview: "výchozí styl"
-        explain_preview: "Náhled stránky s vlastním stylesheetem."
-        explain_undo_preview: "Vrátit se k aktuálnímu použitému vlastnímu stylesheetu."
-        explain_rescue_preview: "Zobrazit web s výchozím stylesheetem."
         save: "Uložit"
         new: "Nové"
         new_style: "Nový styl"
         import: "Import"
-        import_title: "Vyberte soubor nebo vložte text"
         delete: "Smazat"
-        delete_confirm: "Smazat toto přizpůsobení?"
         about: "Změn CSS styly a hlavičky HTML na stránkách. Přidej přizpůsobení na začátek."
         color: "Barva"
         opacity: "Neprůhlednost"
@@ -2483,13 +2464,9 @@ cs:
           none_selected: "Pro začátek editace zvolte šablonu emailu."
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Přizpůsobení CSS a HTML"
         colors:
           title: "Barvy"
           long_title: "Barevná schémata"
-          about: "Změn barvy použité na stránkách bez psaní CSS. Přidej schéma na začátek."
           new_name: "Nové barevné schéma"
           copy_name_prefix: "Kopie"
           delete_confirm: "Chcete smazat toto barevné schéma?"
@@ -2623,8 +2600,6 @@ cs:
             change_trust_level: "z. důvěryhodnosti"
             change_username: "Změnit uživatelské jméno"
             change_site_setting: "změna nastavení"
-            change_site_customization: "změna přizpůsobení"
-            delete_site_customization: "odstranit přizpůsobení"
             change_site_text: "změnit text webu"
             suspend_user: "suspendovat uživatele"
             unsuspend_user: "zrušit suspendování"

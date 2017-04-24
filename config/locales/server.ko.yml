@@ -26,7 +26,6 @@ ko:
   topics: "글타래"
   posts: "글"
   loading: "로딩중"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "로그인"
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"

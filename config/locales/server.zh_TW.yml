@@ -27,7 +27,7 @@ zh_TW:
   topics: "討論話題"
   posts: "文章"
   loading: "載入中"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, 建議開啟 JavaScript 瀏覽'
   log_in: "登入"
   purge_reason: "自動當成遺棄、未啟動的帳戶刪除"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
@@ -1561,8 +1561,6 @@ zh_TW:
         然而，如果帖子再次被社群成員標記並隱藏，它將被隱藏至版主處理後——並且可能導致進一步的措施，如封禁帳號。
 
         想瞭解更多，請查看我們的[社群指引](%{base_url}/guidelines)。
-    usage_tips:
-      text_body_template: "要查看給新用戶的簡要技巧，[（英文）看看這篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。\n\n只要你參與，我們將更瞭解你，並且新用戶的臨時限制將被移除。\b隨着時間，你將獲得[信任等級](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，這將提供一些特殊功能來幫助我們更好地管理社群。\n"
     welcome_user:
       title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"
@@ -2625,7 +2623,6 @@ zh_TW:
   safe_mode:
     title: "進入安全模式"
     description: "安全模式讓你的站點不載入插件或站點自定義設置。"
-    no_customizations: "禁止所以站點自定義"
     only_official: "禁用非官方插件"
     no_plugins: "禁用所以插件"
     enter: "進入安全模式"

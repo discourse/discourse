@@ -15,6 +15,15 @@ fa_IR:
       average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
       public:
         title: "آرا عمومی هستند"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "حداقل تعداد <strong>%{count}</strong> گزینه انتخاب کنید."
+          up_to_max_options:
+            other: "حداکثر <strong>%{count}</strong> گزینه انتخاب کنید"
+          x_options:
+            other: "تعداد <strong>%{count}</strong> گزینه انتخاب کنید"
+          between_min_and_max_options: "بین <strong>%{min}</strong> تا <strong>%{max}</strong> گزینه انتخاب کنید"
       cast-votes:
         title: "انداختن رأی شما"
         label: "رای بدهید!"
@@ -32,15 +41,25 @@ fa_IR:
         title: "نظرسنجی را ببند"
         label: "بسته "
         confirm: "آیا از بستن این نظرسنجی اطمینان دارید ؟ "
+      error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."
+      error_while_casting_votes: "متاسفانه در ثبت رای شما خطایی رخ داده است."
+      error_while_fetching_voters: "متاسفانه در نمایش رای دهندگان خطایی رخ داده است."
       ui_builder:
         title: ساخت نظرسنجی
+        insert: درج نظر سنجی
+        help:
+          options_count: حداقل 2 گزینه وارد کنید
+          invalid_values: مقدار حداقل می بایست کمتر از مقدار حداکثر باشد.
         poll_type:
           label: نوع
           regular: یک انتخاب
           multiple: انتخاب چندگانه
+          number: تعداد امتیاز
         poll_config:
           max: بیشترین
           min: کمترین
           step: مرحله
         poll_public:
           label: نشان دادن رای دهندگان
+        poll_options:
+          label: در هر خط یک گزینه نظرسنجی را وارد کنید

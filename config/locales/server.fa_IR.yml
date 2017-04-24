@@ -27,7 +27,6 @@ fa_IR:
   topics: "موضوعات"
   posts: "نوشته ها"
   loading: "بارگذاری..."
-  powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
   purge_reason: "حساب کاربری غیرفعال. حذف شده به صورت خودکار به علت عدم استفاده."
   disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
@@ -207,6 +206,8 @@ fa_IR:
     attributes:
       category:
         name: "نام دسته"
+      topic:
+        title: 'عنوان'
       post:
         raw: "متن"
       user_profile:

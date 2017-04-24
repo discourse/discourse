@@ -157,6 +157,8 @@ ro:
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     bootstrap_mode_enabled: "Pentru a ușura lansarea site-ului tău ești în modul bootstrap. Toți noii utilizatori vor primi nivelul de încredere 1 și vor avea activată primirea zilnică a unui email-rezumat.  Această setare va fi dezactivată automat de îndată ce numărul total de utilizatori depășește %{min_users}."
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore."
+    themes:
+      default_description: "Implicit"
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -233,6 +235,7 @@ ro:
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
+      user_count: "Utilizatori"
       active_user_count: "Utilizatori activi"
       contact: "Contactează-ne"
       contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, contactează-ne la %{contact_info}."
@@ -401,6 +404,7 @@ ro:
         one: "Grup"
         few: "Grupuri"
         other: "de grupuri"
+      activity: "Activitate"
       members: "Membri"
       topics: "Subiecte"
       posts: "Postări"
@@ -614,6 +618,8 @@ ro:
         error: "(eroare)"
         action: "Trimite email pentru resetare parolă"
         set_password: "Introdu parolă"
+        choose_new: "Alege o parolă nouă"
+        choose: "Alege o parolă"
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -658,6 +664,7 @@ ro:
           other: "Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} de minute."
       name:
         title: "Nume"
+        instructions: "Numele tău complet (opțional)"
         instructions_required: "Numele tău complet"
         too_short: "Numele este prea scurt."
         ok: "Numele tău este OK."
@@ -666,6 +673,7 @@ ro:
         short_instructions: "Ceilalți te pot menționa ca @{{username}}."
         available: "Numele de utilizator este disponibil."
         not_available: "Nu este disponibil. Încerci {{suggestion}}?"
+        not_available_no_suggestion: "Indisponibil"
         too_short: "Numele de utilizator este prea scurt."
         too_long: "Numele de utilizator este prea lung."
         checking: "Verifică disponibilitatea numelui de utilizator..."
@@ -776,6 +784,7 @@ ro:
         same_as_username: "Parolă identică cu numele de utilizator"
         same_as_email: "Parolă identică cu adresa de email"
         ok: "Parola dumneavoastră este OK."
+        instructions: "minimum %{count} caractere"
       summary:
         title: "Sumar"
         stats: "Statistici"
@@ -961,6 +970,8 @@ ro:
       not_allowed_from_ip_address: "Nu te poți conecta cu această adresă IP."
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
+      change_email: "Schimbă adresa de email"
+      submit_new_email: "Actualizează adresa de email"
       sent_activation_email_again: "Am trimis un alt email de activare pentru tine la <b>{{currentEmail}}</b>. Poate dura câteva minute până ajunge; vezi și în secțiunea de spam a mailului."
       to_continue: "Te rog să te autentifici."
       preferences: "Trebuie să fii autentificat pentru a schimba preferințele."
@@ -1341,6 +1352,9 @@ ro:
       jump_reply_up: sări la un răspuns mai vechi
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
+      status_update_notice:
+        auto_close: "Acest subiect va fi automat închis în %{timeLeft}."
+        auto_close_based_on_last_post: "Acest subiect va fi automat închis după %{duration} de la ultimul răspuns."
       auto_close_title: 'Setări de închidere automată'
       auto_close_immediate:
         one: "Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat."
@@ -2535,32 +2549,12 @@ ro:
       customize:
         title: "Personalizare"
         long_title: "Personalizările site-ului"
-        css: "CSS"
-        header: "Antet"
-        top: "Sus"
-        footer: "Subsol"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML care va fi inserat înaintea de tag-ul </head>"
-        body_tag:
-          text: "</body>"
-          title: "HTML care va fi inserat înaintea de tag-ul </body>"
-        override_default: "Nu include foaia de stil standard"
-        enabled: "Activat?"
         preview: "previzualizare"
-        undo_preview: "șterge previzualizarea"
-        rescue_preview: "stil implicit"
-        explain_preview: "Vizualizează site-ul cu această foaie de stil personalizată"
-        explain_undo_preview: "Înapoi la foaia de stil personalizată activă acum"
-        explain_rescue_preview: "Vizualizează site-ul cu foaia de stil implicită"
         save: "Salvare"
         new: "Nou"
         new_style: "Stil nou"
         import: "Importă"
-        import_title: "Selectează un fișier sau lipește un text"
         delete: "Șterge"
-        delete_confirm: "Șterge această personalizare?"
         about: "Modifică foaia de stil CSS și header-ele HTML din site. Adaugă o personalizare pentru a începe."
         color: "Culoare"
         opacity: "Opacitate"
@@ -2573,13 +2567,9 @@ ro:
           none_selected: "Selectează un șablon pentru a începe editarea"
           revert: "Revocă schimbările"
           revert_confirm: "Ești sigur că vrei să revoci schimbările?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Personalizări CSS și HTML"
         colors:
           title: "Culori"
           long_title: "Scheme de culori"
-          about: "Modifică culorile folosite pe site fără a scrie CSS. Pentru a începe, adăugă o nouă schemă."
           new_name: "Nouă schemă de culori"
           copy_name_prefix: "Copie a"
           delete_confirm: "Ștergi această schemă de culori?"
@@ -2718,8 +2708,6 @@ ro:
             change_trust_level: "schimbă nivelul de încredere"
             change_username: "schimbă numele utilizatorului"
             change_site_setting: "schimbă setările site-ului"
-            change_site_customization: "schimbă preferințele site-ului"
-            delete_site_customization: "șterge preferințele site-ului"
             change_site_text: "schimbă textul site-ului"
             suspend_user: "suspendă utilizatorul"
             unsuspend_user: "reactivează utilizator"

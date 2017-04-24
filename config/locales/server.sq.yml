@@ -27,7 +27,6 @@ sq:
   topics: "Tema"
   posts: "postime"
   loading: "Loading"
-  powered_by_html: 'Mundësuar nga <a href="http://www.discourse.org">Discourse</a>, për një eksperience më të mirë aktivizoni JavaScript'
   log_in: "Identifikohu"
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."

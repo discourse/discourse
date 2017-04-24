@@ -25,7 +25,6 @@ ja:
   topics: "トピック"
   posts: "投稿"
   loading: "読み込み中"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "ログイン"
   purge_reason: "放棄されていたため自動的に削除、アカウントを停止しました。"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"

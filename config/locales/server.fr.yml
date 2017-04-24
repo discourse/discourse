@@ -27,7 +27,6 @@ fr:
   topics: "Sujets"
   posts: "messages"
   loading: "Chargement"
-  powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
   log_in: "Se connecter"
   purge_reason: "Supprimé automatiquement comme compte abandonné et non activé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
@@ -2429,7 +2428,6 @@ fr:
   safe_mode:
     title: "Activer le mode sans échec"
     description: "Le mode sans échec vous permet de tester votre site sans charger les extensions ou personnalisations."
-    no_customizations: "Désactiver toutes les personnalisations"
     only_official: "Désactiver les extensions non officielles"
     no_plugins: "Désactiver toutes les extensions"
     enter: "Activer le mode sans échec"

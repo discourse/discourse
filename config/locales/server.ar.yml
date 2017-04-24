@@ -27,7 +27,6 @@ ar:
   topics: "المواضيع"
   posts: "المشاركات"
   loading: "يحمّل"
-  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه وجافاسكربت مفعّل'
   log_in: "لِج"
   purge_reason: "حُذف آليًّا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."

@@ -14,7 +14,6 @@ uk:
   topics: "Теми"
   posts: "дописи"
   loading: "Завантаження"
-  powered_by_html: 'Створено за допомогою технології <a href="http://www.discourse.org">Discourse</a>, бажано переглядати з увімкненим JavaScript'
   log_in: "Вхід"
   emails:
     incoming:

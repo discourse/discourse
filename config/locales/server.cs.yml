@@ -27,7 +27,6 @@ cs:
   topics: "Témata"
   posts: "příspěvky"
   loading: "Nahrávám"
-  powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
@@ -620,7 +619,7 @@ cs:
     title_fancy_entities: "Převádět běžné ASCII znaky na HTML entity v názvech témat, ve stylu SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
-    tos_url: "Pokud máte dokument 'Podmínky Používání' hostovaný samostatně, napište sem jeho plnou URL."
+    tos_url: "Pokud máte dokument 'Podmínky používání' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
@@ -719,7 +718,7 @@ cs:
       #[Vítejte na %{title}](#welcome)
       Je vyžadován uživatelský účet. Prosím vytvořte si nový účet nebo se přihlaste.
   terms_of_service:
-    title: "Podmínky používání."
+    title: "Podmínky používání"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'smazáno'
   upload:

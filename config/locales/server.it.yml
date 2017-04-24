@@ -27,7 +27,6 @@ it:
   topics: "Argomenti"
   posts: "messaggi"
   loading: "Caricamento"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare JavaScript '
   log_in: "Connetti"
   purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
