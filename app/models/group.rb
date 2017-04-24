@@ -177,11 +177,11 @@ class Group < ActiveRecord::Base
     end
 
     # don't allow shoddy localization to break this
-    localized_name = I18n.t("groups.default_names.#{name}")
+    localized_name = I18n.t("groups.default_names.#{name}").downcase
     validator = UsernameValidator.new(localized_name)
 
     group.name =
-      if !Group.where("lower(name) = ?", localized_name).exists? && validator.valid_format?
+      if !Group.where("LOWER(name) = ?", localized_name).exists? && validator.valid_format?
         localized_name
       else
         name
@@ -196,54 +196,45 @@ class Group < ActiveRecord::Base
     end
 
     # Remove people from groups they don't belong in.
-    #
-    # BEWARE: any of these subqueries could match ALL the user records,
-    #         so they can't be used in IN clauses.
-    remove_user_subquery = case name
-                when :admins
-                  "SELECT u.id FROM users u WHERE NOT u.admin"
-                when :moderators
-                  "SELECT u.id FROM users u WHERE NOT u.moderator"
-                when :staff
-                  "SELECT u.id FROM users u WHERE NOT u.admin AND NOT u.moderator"
-                when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-                  "SELECT u.id FROM users u WHERE u.trust_level < #{id - 10}"
-                end
+    remove_subquery = case name
+                      when :admins
+                        "SELECT id FROM users WHERE NOT admin"
+                      when :moderators
+                        "SELECT id FROM users WHERE NOT moderator"
+                      when :staff
+                        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
+                      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+                        "SELECT id FROM users WHERE trust_level < #{id - 10}"
+                      end
 
-    remove_ids = exec_sql("SELECT gu.id id
-                             FROM group_users gu,
-                                  (#{remove_user_subquery}) u
-                            WHERE gu.group_id = #{group.id}
-                              AND gu.user_id = u.id").map {|x| x['id']}
-
-    if remove_ids.length > 0
-      remove_ids.each_slice(100) do |ids|
-        GroupUser.where(id: ids).delete_all
-      end
-    end
+    exec_sql <<-SQL
+      DELETE FROM group_users
+            USING (#{remove_subquery}) X
+            WHERE group_id = #{group.id}
+              AND user_id = X.id
+    SQL
 
     # Add people to groups
-    real_ids = case name
-               when :admins
-                 "SELECT u.id FROM users u WHERE u.admin"
-               when :moderators
-                 "SELECT u.id FROM users u WHERE u.moderator"
-               when :staff
-                 "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
-               when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-                 "SELECT u.id FROM users u WHERE u.trust_level >= #{id-10}"
-               when :trust_level_0
-                 "SELECT u.id FROM users u"
-               end
+    insert_subquery = case name
+                      when :admins
+                        "SELECT id FROM users WHERE admin"
+                      when :moderators
+                        "SELECT id FROM users WHERE moderator"
+                      when :staff
+                        "SELECT id FROM users WHERE moderator OR admin"
+                      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+                        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
+                      when :trust_level_0
+                        "SELECT id FROM users"
+                      end
 
-    missing_users = GroupUser
-      .joins("RIGHT JOIN (#{real_ids}) X ON X.id = user_id AND group_id = #{group.id}")
-      .where("user_id IS NULL")
-      .select("X.id")
-
-    missing_users.each do |u|
-      group.group_users.build(user_id: u.id)
-    end
+    exec_sql <<-SQL
+      INSERT INTO group_users (group_id, user_id, created_at, updated_at)
+           SELECT #{group.id}, X.id, now(), now()
+             FROM group_users
+       RIGHT JOIN (#{insert_subquery}) X ON X.id = user_id AND group_id = #{group.id}
+            WHERE user_id IS NULL
+    SQL
 
     group.save!
 
@@ -259,18 +250,24 @@ class Group < ActiveRecord::Base
   end
 
   def self.reset_all_counters!
-    Group.pluck(:id).each do |group_id|
-      Group.reset_counters(group_id, :group_users)
-    end
+    exec_sql <<-SQL
+      WITH X AS (
+          SELECT group_id
+               , COUNT(user_id) users
+            FROM group_users
+        GROUP BY group_id
+      )
+      UPDATE groups
+         SET user_count = X.users
+        FROM X
+       WHERE id = X.group_id
+         AND user_count <> X.users
+    SQL
   end
 
   def self.refresh_automatic_groups!(*args)
-    if args.length == 0
-      args = AUTO_GROUPS.keys
-    end
-    args.each do |group|
-      refresh_automatic_group!(group)
-    end
+    args = AUTO_GROUPS.keys if args.empty?
+    args.each { |group| refresh_automatic_group!(group) }
   end
 
   def self.ensure_automatic_groups!
@@ -466,24 +463,15 @@ class Group < ActiveRecord::Base
       return if new_record? && !self.title.present?
 
       if self.title_changed?
-        sql = <<SQL
-        UPDATE users SET title = :title
-        WHERE (title = :title_was OR
-              title = '' OR
-              title IS NULL) AND
-              COALESCE(title,'') <> COALESCE(:title,'') AND
-              id IN (
-                SELECT user_id
-                FROM group_users
-                WHERE group_id = :id
-              )
-SQL
+        sql = <<-SQL.squish
+          UPDATE users
+             SET title = :title
+           WHERE (title = :title_was OR title = '' OR title IS NULL)
+             AND COALESCE(title,'') <> COALESCE(:title,'')
+             AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
+        SQL
 
-        self.class.exec_sql(sql,
-              title: title,
-              title_was: title_was,
-              id: id
-        )
+        self.class.exec_sql(sql, title: title, title_was: title_was, id: id)
       end
     end
 
