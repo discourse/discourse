@@ -71,4 +71,16 @@ describe Admin::EmailController do
     end
   end
 
+  context '#handle_mail' do
+    before do
+      log_in_user(Fabricate(:admin))
+      SiteSetting.queue_jobs = true
+    end
+
+    it 'should enqueue the right job' do
+      expect { xhr :post, :handle_mail, email: email('cc') }
+        .to change { Jobs::ProcessEmail.jobs.count }.by(1)
+    end
+  end
+
 end
