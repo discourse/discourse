@@ -232,6 +232,4 @@ describe EmailController do
     end
   end
 
-
-
 end

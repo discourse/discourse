@@ -553,7 +553,7 @@ module Email
     def create_post_with_attachments(options={})
       # deal with attachments
       attachments.each do |attachment|
-        tmp = Tempfile.new("discourse-email-attachment")
+        tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }

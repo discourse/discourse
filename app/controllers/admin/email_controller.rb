@@ -84,8 +84,8 @@ class Admin::EmailController < Admin::AdminController
 
   def handle_mail
     params.require(:email)
-    Email::Processor.process!(params[:email])
-    render plain: "email was processed"
+    Jobs.enqueue(:process_email, mail: params[:email], retry_on_rate_limit: true)
+    render plain: "email has been received and is queued for processing"
   end
 
   def raw_email
