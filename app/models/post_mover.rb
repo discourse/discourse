@@ -77,7 +77,7 @@ class PostMover
       post.is_first_post? ? create_first_post(post) : move(post)
     end
 
-    PostReply.where("reply_id in (:post_ids) OR post_id in (:post_ids)", post_ids: post_ids).find_each do |post_reply|
+    PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
       if post_reply.post && post_reply.reply && post_reply.reply.topic_id != post_reply.post.topic_id
         PostReply.delete_all(reply_id: post_reply.reply.id, post_id: post_reply.post.id)
       end
