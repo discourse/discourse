@@ -27,7 +27,7 @@ nl:
   topics: "Topics"
   posts: "berichten"
   loading: "Laden"
-  powered_by_html: 'Mogelijk gemaakt door <a href="http://www.discourse.org">Discourse</a>, best bekeken met JavaScript ingeschakeld'
+  powered_by_html: 'Mogelijk gemaakt door <a href="https://www.discourse.org">Discourse</a>, best bekeken met JavaScript ingeschakeld'
   log_in: "Aanmelden"
   purge_reason: "Automatisch verwijderd als verlaten, gedeactiveerde account."
   disable_remote_images_download_reason: "Het downloaden van externe afbeeldingen is uitgeschakeld, omdat er niet genoeg schijfruimte beschikbaar was."
@@ -1552,7 +1552,6 @@ nl:
   finish_installation:
     congratulations: "Gefeliciteerd, u hebt Discourse geïnstalleerd!"
   safe_mode:
-    no_customizations: "Alle website-aanpassingen uitschakelen"
     only_official: "Niet-officiële plug-ins uitschakelen"
     no_plugins: "Alle plug-ins uitschakelen"
   wizard:

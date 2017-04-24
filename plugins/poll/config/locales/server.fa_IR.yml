@@ -9,6 +9,7 @@ fa_IR:
   site_settings:
     poll_enabled: "به کاربران اجازه ساخت نظرسنجی ها را بده ؟ "
     poll_maximum_options: "Maximum number of options allowed in a poll."
+    poll_edit_window_mins: "چند دقیقه بعد از ارسال نظر می توان آن را ویرایش کرد"
   poll:
     multiple_polls_without_name: "چند نظرسنجی متفاوت بدون اسم است. استفاده کن از  '<code>اسم/code>' ویژگی ٬ تا نظرسنجی منحصر به فرد را تشخیص دهد."
     multiple_polls_with_same_name: "چند نظرسنجی با اسم برابر وجود دارند: <strong>%{name}</strong>.استفاده کن از  '<code>اسم/code>' ویژگی ٬ تا نظرسنجی منحصر به فرد را تشخیص دهد."
@@ -23,6 +24,7 @@ fa_IR:
     default_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای پارامترهای نامعتبری وجود دارد."
     named_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای با نام <strong>%{name}</strong> پارامترهای نامعتبری وجود دارد."
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
+    default_cannot_be_made_public: "نظر سنجی با رای را نمی توان عمومی کرد"
     no_polls_associated_with_this_post: "هیچ نظرسنجی با این نوشته در تماس نیستند. "
     no_poll_with_this_name: "هیچ نظرسنجی اسم گزاری نشده  <strong>%{name}</strong> در تماس به این نوشته نیست. "
     post_is_deleted: "این کار را نمی‌توان روی یک نوشته حذف شده انجام داد."

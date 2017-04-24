@@ -23,7 +23,6 @@ id:
   topics: "Topik"
   posts: "post"
   loading: "Memuat"
-  powered_by_html: 'Didayakan oleh <a href="http://www.discourse.org">Discourse</a>, aktifkan JavaScript untuk tampilan terbaik'
   log_in: "Log In"
   purge_reason: "Secara otomatis dihapus sebagai akun yang ditinggalkan, dinon-aktifkan."
   disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."

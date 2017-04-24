@@ -27,7 +27,6 @@ zh_CN:
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>，启用JavaScript获致最佳浏览'
   log_in: "登录"
   purge_reason: "自动删除废弃，停用账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被停用。"
@@ -1486,8 +1485,6 @@ zh_CN:
         然而，如果帖子再次被社群成员标记并隐藏，它将被隐藏至版主处理后——并且可能导致进一步的措施，如封禁帐号。
 
         想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
-    usage_tips:
-      text_body_template: "要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。\n\n只要你参与，我们将更了解你，并且新用户的临时限制将被移除。\b随着时间，你将获得[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，这将提供一些特殊功能来帮助我们更好地管理社群。\n"
     welcome_user:
       title: "欢迎用户"
       subject_template: "欢迎来到 %{site_name}！"
@@ -2504,7 +2501,6 @@ zh_CN:
   safe_mode:
     title: "进入安全模式"
     description: "安全模式让你的站点不载入插件或站点自定义设置。"
-    no_customizations: "禁止所以站点自定义"
     only_official: "禁用非官方插件"
     no_plugins: "禁用所以插件"
     enter: "进入安全模式"

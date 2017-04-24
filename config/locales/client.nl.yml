@@ -143,6 +143,8 @@ nl:
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
     bootstrap_mode_enabled: "Om het lanceren van uw website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal %{min_users} gebruikers overschrijdt."
     bootstrap_mode_disabled: "De bootstrapmodus zal in de komende 24 uur worden uitgeschakeld."
+    themes:
+      default_description: "Standaard"
     s3:
       regions:
         us_east_1: "VS Oost (N. Virginia)"
@@ -150,6 +152,7 @@ nl:
         us_west_2: "VS West (Oregon)"
         us_gov_west_1: "AWS GovCloud (VS)"
         eu_west_1: "EU (Ierland)"
+        eu_west_2: "EU (Londen)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Azië Pacifisch (Singapore)"
         ap_southeast_2: "Azië Pacifisch (Sydney)"
@@ -570,6 +573,7 @@ nl:
       revoke_access: "Toegang intrekken"
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
+      theme: "Thema"
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -1201,7 +1205,7 @@ nl:
           closed: gesloten zijn
           archived: gearchiveerd zijn
           noreplies: geen antwoorden bevatten
-          single_user: een enkele gebruiker bevatten
+          single_user: maar één gebruiker bevatten
         post:
           count:
             label: Minimaal berichtaantal
@@ -2545,32 +2549,14 @@ nl:
       customize:
         title: "Aanpassen"
         long_title: "Websiteaanpassingen"
-        css: "CSS"
-        header: "Koptekst"
-        top: "Top"
-        footer: "Voettekst"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML die voor de </head>-tag wordt ingevoegd"
-        body_tag:
-          text: "</body>"
-          title: "HTML die voor de </body>-tag wordt ingevoegd"
-        override_default: "Standaardstylesheet uitsluiten"
-        enabled: "Ingeschakeld?"
         preview: "voorbeeld"
-        undo_preview: "voorbeeld verwijderen"
-        rescue_preview: "standaardstijl"
-        explain_preview: "De website bekijken met deze aangepaste stylesheet"
-        explain_undo_preview: "Terug naar de momenteel ingeschakelde aangepaste stylesheet"
-        explain_rescue_preview: "De website bekijken met de standaardstylesheet"
+        explain_preview: "De website bekijken met dit thema ingeschakeld"
         save: "Opslaan"
         new: "Nieuw"
         new_style: "Nieuwe stijl"
         import: "Importeren"
-        import_title: "Selecteer een bestand of plak tekst"
         delete: "Verwijderen"
-        delete_confirm: "Deze aanpassing verwijderen?"
+        delete_confirm: "Dit thema verwijderen?"
         about: "Pas CSS-stylesheets en HTML-kopteksten aan op de website. Voeg een aanpassing toe om te beginnen."
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
@@ -2583,13 +2569,68 @@ nl:
           none_selected: "Selecteer een e-mailsjabloon om met bewerken te beginnen."
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet u zeker dat u uw wijzigingen ongedaan wilt maken?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS- en HTML-aanpassingen"
+        theme:
+          import_theme: "Thema importeren"
+          customize_desc: "Aanpassen:"
+          title: "Thema's"
+          long_title: "Kleuren, CSS en HTML-inhoud van uw website aanpassen"
+          edit: "Bewerken"
+          edit_confirm: "Dit is een extern thema; als u CSS/HTML bewerkt, worden uw wijzigingen de volgende keer dat u het thema bijwerkt gewist."
+          common: "Algemeen"
+          desktop: "Desktop"
+          mobile: "Mobiel"
+          preview: "Voorbeeld"
+          is_default: "Thema is standaard ingeschakeld"
+          user_selectable: "Thema kan door gebruikers worden geselecteerd"
+          color_scheme: "Kleurenschema"
+          color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
+          custom_sections: "Aangepaste secties:"
+          included_themes: "Inbegrepen thema's"
+          child_themes_check: "Thema bevat andere onderliggende thema's"
+          css_html: "Aangepaste CSS/HTML"
+          edit_css_html: "CSS/HTML bewerken"
+          edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
+          import_web_tip: "Repository die thema bevat"
+          import_file_tip: ".dcstyle.json-bestand dat thema bevat"
+          about_theme: "Over thema"
+          license: "Licentie"
+          update_to_latest: "Bijwerken naar nieuwste"
+          check_for_updates: "Controleren op updates"
+          updating: "Bijwerken..."
+          up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
+          add: "Toevoegen"
+          commits_behind:
+            one: "Thema loopt 1 doorvoering achter!"
+            other: "Thema loopt {{count}} doorvoeringen achter!"
+          scss:
+            text: "CSS"
+            title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"
+          header:
+            text: "Koptekst"
+            title: "Voer HTML in voor weergave boven websitekoptekst"
+          after_header:
+            text: "Na koptekst"
+            title: "Voer HTML in voor weergave op alle pagina's na koptekst"
+          footer:
+            text: "Voettekst"
+            title: "Voer HTML in voor weergave op paginavoettekst"
+          embedded_scss:
+            text: "Embedded CSS"
+            title: "Voer aangepaste CSS in om met embedded versie van opmerkingen te leveren"
+          head_tag:
+            text: "</head>"
+            title: "HTML die voor de </head>-tag wordt ingevoegd"
+          body_tag:
+            text: "</body>"
+            title: "HTML die voor de </body>-tag wordt ingevoegd"
         colors:
+          select_base:
+            title: "Basiskleurenschema selecteren"
+            description: "Basisschema:"
           title: "Kleuren"
+          edit: "Kleurenschema's bewerken"
           long_title: "Kleurenschema's"
-          about: "Met kleurenschema's kunt u de kleuren op de website aanpassen zonder CSS te hoeven gebruiken. Voeg een schema toe om te beginnen."
+          about: "De door uw thema's gebruikte kleuren aanpassen. Maak een nieuw kleurenschema aan om te beginnen."
           new_name: "Nieuw kleurenschema"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenschema verwijderen?"
@@ -2728,8 +2769,8 @@ nl:
             change_trust_level: "vertrouwensniveau wijzigen"
             change_username: "gebruikersnaam wijzigen"
             change_site_setting: "website-instelling wijzigen"
-            change_site_customization: "website-aanpassing wijzigen"
-            delete_site_customization: "website-aanpassing verwijderen"
+            change_theme: "thema wijzigen"
+            delete_theme: "thema verwijderen"
             change_site_text: "tekst van website wijzigen"
             suspend_user: "gebruiker schorsen"
             unsuspend_user: "schorsing opheffen"

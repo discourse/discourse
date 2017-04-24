@@ -27,13 +27,14 @@ ro:
   topics: "Subiecte"
   posts: "Postări"
   loading: "Se încarcă"
-  powered_by_html: 'Propulsat <a href="http://www.discourse.org">de Discourse</a>, Vizualizare optimă cu JavaScript activat'
   log_in: "Autentificare"
   purge_reason: "Cont șters automat, ca fiind abandonat, dezactivat."
   disable_remote_images_download_reason: "Descărcarea de imagini la distanță a fost dezactivată deoarece nu mai era spațiu suficient pe disc."
   anonymous: "Anonime"
+  remove_posts_deleted_by_author: "Șters de către autor"
   emails:
     incoming:
+      default_subject: "Acest subiect are nevoie de un titlu"
       show_trimmed_content: "Arată conținut restrâns."
       maximum_staged_user_per_email_reached: "Număr maxim de utilizatori în așteptare, pe email."
       errors:
@@ -176,6 +177,7 @@ ro:
   spamming_host: "Nu poți adăuga un link pentru acest domeniu."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
   topic_not_found: "Ceva n-a mers bine. Poate că acest subiect a fost închis sau șters în timp ce te uitai la el?"
+  not_accepting_pms: "%{username} nu acceptă mesaje în acest moment."
   just_posted_that: "este prea asemănător cu ceea ce ați postat recent"
   invalid_characters: "conține caractere invalide"
   is_invalid: "pare neclar, e completă propoziția?"
@@ -250,6 +252,20 @@ ro:
       - Critica constructivă e binevenită, critică *ideea*, nu oamenii.
 
       Pentru detalii, [verifică regulile comune](/reguli). Acest panel va apărea doar pentru prima %{education_posts_text}.
+    avatar: |
+      ### Ce zici de o poză atașată contului tău?
+
+      Ai adăugat câteva comentarii și subiecte, dar poza ta de profil nu este unică, cum ești tu - este doar o literă.
+
+      Ai luat în considerare să **[îți actualizezi profilul](%{profile_path})** cu o imagine care te reprezintă?
+
+      Este mai ușor să urmărești o discuție și să găsești oameni interesanți într-o conversație atunci când fiecare are o imagine unică!
+    reviving_old_topic: |
+      ### Reînvii această discuție?
+
+      Ultimul răspuns în această discuție a fost în urmă cu **%{days}** zile. Răspunsul tău va pune discuția pe prima pagină și îi va notifica pe toți cei ce au fost implicați în discuție.
+
+      Ești sigur că vrei să continui această discuție veche?
   activerecord:
     attributes:
       category:
@@ -280,6 +296,7 @@ ro:
               same_as_username: "este identică cu nume utilizator. Te rugăm să folosești o parolă mai sigură."
               same_as_email: "este identică cu emailul. Te rugăm să folosești o parolă mai sigură."
               same_as_current: "este identică cu parola curentă."
+              unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
             ip_address:
               signup_not_allowed: "Înscrierea de pe acest cont nu este permisă."
         color_scheme_color:
@@ -290,6 +307,14 @@ ro:
           attributes:
             payload_url:
               invalid: "URL-ul este invalid. URL-ul trebuie să includă http:// sau https:// , iar caracterul spațiu nu este permis."
+        custom_emoji:
+          attributes:
+            name:
+              taken: este deja folosit de un alt emoji
+        topic_status_update:
+          attributes:
+            execute_at:
+              in_the_past: "trebuie să fie în viitor."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} încă nu a introdus nimic în câmpul Despre mine din profilul său</div>"
@@ -479,6 +504,8 @@ ro:
         other: "cu aproape %{count} de ani în urmă"
   password_reset:
     no_token: "Ne pare rău, dar link-ul de schimbare a parolei este prea vechi. Selectează butonul Înregistrare și folosește 'Mi-am uitat parola' pentru a obține un nou link."
+    choose_new: "Alege o parolă nouă"
+    choose: "Alege o parolă"
     update: 'Actualizează parola'
     save: 'Setează parola'
     title: 'Resetează parola'
@@ -501,6 +528,13 @@ ro:
     welcome_to: "Bine ai venit pe %{site_name}!"
     approval_required: "Un moderator trebuie să aprobe manual contul înainte să poți accesa forumul. Vei primi un email imediat ce contul ți-a fost aprobat!"
     missing_session: "Nu putem detecta dacă contul tău a fost deja creat. Te rugăm să verifici că ai cookie-urile activate. "
+    activated: "Acest cont a fost deja activat."
+    admin_confirm:
+      title: "Confirmă contul de Administrator"
+      description: "Eșți sigur că vrei ca <b>%{target_username}</b> să fie administrator?"
+      grant: "Acordă titlu de admin"
+      complete: "<b>%{target_username}</b> este administrator."
+      back_to: "Întoarce-te la %{title}"
   post_action_types:
     off_topic:
       title: 'În afara subiectului'
@@ -1519,11 +1553,6 @@ ro:
         Totuși, dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău..
 
         Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Citește câteva sfaturi rapide destinate noilor utilizatori, [urmărind această postare pe blog](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Pe măsură ce participi aici, vom ajunge să te cunoaștem iar limitările temporare aferente unui utilizator nou, îți vor fi ridicate. Cu timpul vei câștiga [niveluri de încredere](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) care includ abilități speciale și care îți vor da posibilitatea să ne ajuți să ne gestionăm împreuna comunitatea.
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
       text_body_template: |
@@ -2497,7 +2526,6 @@ ro:
   safe_mode:
     title: "Activează modul sigur"
     description: "Modul sigur îți permite să îți testezi site-ul fără să încarci plugin-uri și personalizări."
-    no_customizations: "Dezactivează toate personalizările site-ului"
     only_official: "Dezactivează plugin-urile neoficiale"
     no_plugins: "Dezactivează toate plugin-urile"
     enter: "Activează modul sigur"

@@ -27,7 +27,6 @@ nb_NO:
   topics: "Emner"
   posts: "innlegg"
   loading: "Laster"
-  powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript påslått'
   log_in: "Logg inn"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
@@ -1046,11 +1045,25 @@ nb_NO:
     description: "Sikkerhetsmodus lar deg teste nettstedet ditt uten at tillegg eller tilpasninger lastes."
   wizard:
     step:
+      forum_title:
+        title: "Navn"
       contact:
         fields:
           contact_email:
             label: "E-post"
             placeholder: "navn@example.com"
+          contact_url:
+            label: "Nettside"
+            placeholder: "http://www.eksempel.no/kontakt-oss"
+          site_contact:
+            label: "Automatiserte meldinger"
+      corporate:
+        title: "Organisasjon"
+        fields:
+          company_short_name:
+            label: "Bedriftsnavn (kort)"
+      colors:
+        title: "Drakt"
       logos:
         title: "Logoer"
         fields:

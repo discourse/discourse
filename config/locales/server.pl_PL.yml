@@ -27,7 +27,6 @@ pl_PL:
   topics: "Tematy"
   posts: "posty"
   loading: "Ładowanie"
-  powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   log_in: "Logowanie"
   purge_reason: "Automatycznie usunięte jako porzucone, dezaktywowane konto."
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
@@ -2078,7 +2077,6 @@ pl_PL:
       message: "<p>Powtórnie przesłaliśmy maila aktywacyjnego do <b>%{email}</b>"
   safe_mode:
     title: "Wejście w tryb bezpieczny"
-    no_customizations: "Wyłącz własną personalizację strony"
     only_official: "Wyłącz nieoficjalne wtyczki"
     no_plugins: "Wyłącz wszystkie wtyczki"
     enter: "Włącz Tryb Bezpieczny"

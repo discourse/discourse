@@ -27,7 +27,7 @@ he:
   topics: "נושאים"
   posts: "פוסטים"
   loading: "טוען"
-  powered_by_html: 'מונע ע"י <a href="http://www.discourse.org">Discourse</a>, פועל מיטבית עם Javascript מאופשר'
+  powered_by_html: 'מופעל על ידי <a href="https://www.discourse.org">דיסקורס</a>, לצפיה מיטבית יש להפעיל JavaScript'
   log_in: "התחברות"
   purge_reason: "נמחק אוטומטית כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אחסון פנוי."
@@ -1714,9 +1714,9 @@ he:
         להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        כמה טיפים לגבי איך להתחיל כמשתמשים חדשים, [ראו את הפוסט הזה](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        לכמה טיפים זריזים בנוגע להתחלה כמשתמשים חדשים, [קיראו פוסט זה](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        ככל שתשתתפו כאן, נכיר אתכם, ומגבלות זמניות על משתמשים חדשים יוסרו. במהלך הזמן תצבעו [דרגות אמון](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) שכוללות יכולות לסייע לנו לנהל את הקהילה שלנו ביחד.
+        ככל שתשתתפו כאן, נכיר אתכם, והגבלות זמניות של משתמשים חדשים יוסרו. במשך הזמן תצברו [רמות אמון](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) שיכללו יכולות מיוחדות שיעזרו לנו לנהל את הקהילה שלנו יחד.
     welcome_user:
       title: "ברוכים הבאים למשתמש/ת"
       subject_template: "ברוכים הבאים ל %{site_name}!"
@@ -2422,6 +2422,8 @@ he:
     no_echo_mailing_list_mode: "התראות רשימת תפוצה ינוטרלו עבור הפוסטים של המשתמש עצמו"
   color_schemes:
     base_theme_name: "בסיס"
+    default: "סכמה בהירה"
+    dark: "סכמה כהה"
   about: "אודות"
   guidelines: "קווים מנחים"
   privacy: "פרטיות"
@@ -2912,7 +2914,7 @@ he:
   safe_mode:
     title: "כנסו למצב בטוח"
     description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או התאמות אתר."
-    no_customizations: "נטרלו את כל התאמות האתר"
+    no_customizations: "ניטרול של תמה נוכחית"
     only_official: "נטרלו תוספים לא רשמיים"
     no_plugins: "נטרלו את כל התוספים"
     enter: "כנסו למצב בטוח"

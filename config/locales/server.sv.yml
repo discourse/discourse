@@ -27,7 +27,6 @@ sv:
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
-  powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript aktiverat'
   log_in: "Logga in"
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
   disable_remote_images_download_reason: "Nedladdning av externa bilder är inaktiverat eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
@@ -2178,7 +2177,6 @@ sv:
   safe_mode:
     title: "ange felsäkert läge"
     description: "I felsäkert läge kan du testa din webplats utan att ladda ner några plugins eller anpassade webplatser."
-    no_customizations: "Inaktivera alla webplats inställningar"
     only_official: "Inaktivera alla inofficiella plugins"
     no_plugins: "Inaktivera alla plugins"
     enter: "Starta felsäkert läge"

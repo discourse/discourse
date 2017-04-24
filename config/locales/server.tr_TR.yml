@@ -27,7 +27,6 @@ tr_TR:
   topics: "Konular"
   posts: "gönderiler"
   loading: "Yükleniyor"
-  powered_by_html: 'Gücünü <a href="http://www.discourse.org">Discourse</a>''tan alır, en iyi görünüm için JavaScript etkinleştirmeniz gerekir'
   log_in: "Giriş Yap"
   purge_reason: "terkedilmiş, edilgen hesap olarak otomatik olarak silindi"
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
@@ -1817,7 +1816,6 @@ tr_TR:
       message: "<p> <b>%{email}</b> adresine etkinleştirme e-postasını tekrar gönderdik"
   safe_mode:
     title: "Güvenli moda gir"
-    no_customizations: "Tüm site özelleştirmelerini devre dışı bırak"
     no_plugins: "Tüm eklentileri devre dışı bırak"
     enter: "Güvenli Moda Gir"
   wizard:

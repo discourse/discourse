@@ -26,7 +26,6 @@ sk:
   topics: "Témy"
   posts: "príspevky"
   loading: "Načítava sa"
-  powered_by_html: 'Systém beží na <a href="http://www.discourse.org">Discourse</a>, najlepšie funguje so zapnutým JavaScriptom'
   log_in: "Prihlásenie"
   purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."

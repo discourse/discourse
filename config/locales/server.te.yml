@@ -14,7 +14,6 @@ te:
   topics: "విషయాలు"
   posts: "టపాలు"
   loading: "లోడవుతోంది"
-  powered_by_html: ' <a href="http://www.discourse.org">డిస్కౌర్స్</a> చేత శక్తివంతం చేయబడింది, జావాస్క్రిప్ట్ చేతనం చేస్తే బాగా కనిపిస్తుంది. '
   log_in: "లాగిన్"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
   errors: &errors

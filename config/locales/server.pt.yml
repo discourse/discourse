@@ -27,7 +27,6 @@ pt:
   topics: "Tópicos"
   posts: "mensagens"
   loading: "A carregar"
-  powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, e melhor visualizado com o JavaScript ativo'
   log_in: "Iniciar Sessão"
   purge_reason: "Conta removida automaticamente como conta abandonada, desactivada."
   disable_remote_images_download_reason: "O download remoto de imagens foi desativado por não haver espaço disponível no disco."
@@ -2435,7 +2434,6 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     description: "O modo de segurança permite-lhe testar o seu sítio sem carregar plugins ou alterações."
-    no_customizations: "Desativar todas as alterações do sítio"
     only_official: "Desativar plugins não-oficiais"
     no_plugins: "Desativar todos os plugins"
     enter: "Entrar em Modo de Segurança"

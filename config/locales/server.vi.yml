@@ -26,7 +26,6 @@ vi:
   topics: "Chủ đề"
   posts: "bài viết"
   loading: "Đang tải"
-  powered_by_html: 'Được hỗ trợ bởi <a href="http://www.discourse.org">Discourse</a>, xem tốt nhất khi JavaScript được kích hoạt'
   log_in: "Đăng nhập"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì thiếu dung lượng."
   anonymous: "Ẩn danh"
