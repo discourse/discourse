@@ -13,6 +13,8 @@ class PostDestroyer
   end
 
   def self.destroy_stubs
+    context = I18n.t('remove_posts_deleted_by_author')
+
     # exclude deleted topics and posts that are actively flagged
     Post.where(deleted_at: nil, user_deleted: true)
         .where("NOT EXISTS (
@@ -28,8 +30,9 @@ class PostDestroyer
                         pa.deleted_at IS NULL AND
                         pa.post_action_type_id IN (?)
               )", PostActionType.notify_flag_type_ids)
-        .each do |post|
-      PostDestroyer.new(Discourse.system_user, post, {context: I18n.t('remove_posts_deleted_by_author')}).destroy
+        .find_each do |post|
+
+      PostDestroyer.new(Discourse.system_user, post, context: context).destroy
     end
   end
 
