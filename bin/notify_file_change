@@ -19,9 +19,8 @@ fi
 # 3. Add the following to your .vimrc
 #
 # function s:notify_file_change()
-#   let git_root = fugitive#extract_git_dir(expand("%:p"))
-#   let root = substitute(git_root, '.git', '', 'g')
-#   let notify = root . "bin/notify_file_change"
+#   let root = RailsRoot()
+#   let notify = root . "/bin/notify_file_change"
 #   if executable(notify)
 #     if executable('socat')
 #       execute "!" . notify . ' ' . expand("%:p") . " " . line(".")
