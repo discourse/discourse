@@ -3,6 +3,7 @@ require "thread"
 require "fileutils"
 require "autospec/reload_css"
 require "autospec/base_runner"
+require "socket_server"
 
 module Autospec; end
 
@@ -173,6 +174,25 @@ class Autospec::Manager
 
     path = File.expand_path(File.dirname(__FILE__) + "../../..")
 
+    if ENV['VIM_AUTOSPEC']
+      STDERR.puts "Using VIM file listener"
+
+      socket_path = (Rails.root + "tmp/file_change.sock").to_s
+      FileUtils.rm_f(socket_path)
+      server = SocketServer.new(socket_path)
+      server.start do |line|
+        file,line = line.split(' ')
+        file = file.sub(Rails.root.to_s << "/", "")
+        # process_change can aquire a mutex and block
+        # the acceptor
+        Thread.new do
+          process_change([[file,line]])
+        end
+        "OK"
+      end
+      return
+    end
+
     # to speed up boot we use a thread
     ["spec", "lib", "app", "config", "test", "vendor", "plugins"].each do |watch|
 
@@ -204,7 +224,7 @@ class Autospec::Manager
     specs = []
     hit = false
 
-    files.each do |file|
+    files.each do |file, line|
       @runners.each do |runner|
         # reloaders
         runner.reloaders.each do |k|
@@ -220,22 +240,21 @@ class Autospec::Manager
             puts "@@@@@@@@@@@@ #{file} matched a watcher for #{runner}" if @debug
             hit = true
             spec = v ? (v.arity == 1 ? v.call(m) : v.call) : file
-            specs << [file, spec, runner] if File.exists?(spec) || Dir.exists?(spec)
+            with_line = spec
+            if spec == file && line
+              with_line = spec + ":" << line.to_s
+            end
+            if File.exists?(spec) || Dir.exists?(spec)
+              if with_line != spec
+                specs << [file, spec, runner]
+              end
+              specs << [file, with_line, runner]
+            end
           end
         end
       end
-
-      # special watcher for styles/templates
-      # now handled via libass integration
-      # Autospec::ReloadCss::WATCHERS.each do |k, _|
-      #   matches = []
-      #   matches << file if k.match(file)
-      #   Autospec::ReloadCss.run_on_change(matches) if matches.present?
-      # end
     end
-
     queue_specs(specs) if hit
-
   rescue => e
     fail(e, "failed in watcher")
   end
@@ -260,7 +279,7 @@ class Autospec::Manager
       puts "@@@@@@@@@@@@ #{@queue}" if @debug
       specs.each do |file, spec, runner|
         # make sure there's no other instance of this spec in the queue
-        @queue.delete_if { |_, s, r| s.strip == spec.strip && r == runner }
+        @queue.delete_if { |_, s, r| s.strip.start_with?(spec.strip) && r == runner }
         # deal with focused specs
         if @queue.first && @queue.first[0] == "focus"
           focus = @queue.shift
