@@ -467,4 +467,3 @@ describe PostDestroyer do
   end
 
 end
-
