@@ -708,9 +708,11 @@ files:
   max_image_size_kb:
     client: true
     default: 3072
+    max: 100000
   max_attachment_size_kb:
     client: true
     default: 3072
+    max: 1024000
   max_image_megapixels:
     default: 40
     min: 5
