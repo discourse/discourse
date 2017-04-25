@@ -78,6 +78,8 @@ module Scheduler
         start = Time.now.to_f
         info = @mutex.synchronize { @manager.schedule_info(klass) }
         stat = nil
+        error = nil
+
         begin
           info.prev_result = "RUNNING"
           @mutex.synchronize { info.write! }
@@ -96,6 +98,7 @@ module Scheduler
           failed = true
         rescue => e
           Discourse.handle_job_exception(e, {message: "Running a scheduled job", job: klass})
+          error = "#{e.message}: #{e.backtrace.join("\n")}"
           failed = true
         end
         duration = ((Time.now.to_f - start) * 1000).to_i
@@ -103,10 +106,11 @@ module Scheduler
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
         if stat
-          stat.update_columns(
+          stat.update!(
             duration_ms: duration,
             live_slots_finish: GC.stat[:heap_live_slots],
-            success: !failed
+            success: !failed,
+            error: error
           )
         end
         attempts(3) do
