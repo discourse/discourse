@@ -708,7 +708,7 @@ files:
   max_image_size_kb:
     client: true
     default: 3072
-    max: 100000
+    max: 102400
   max_attachment_size_kb:
     client: true
     default: 3072
