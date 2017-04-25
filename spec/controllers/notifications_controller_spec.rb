@@ -36,8 +36,10 @@ describe NotificationsController do
 
       context 'when username params is not valid' do
         it 'should raise the right error' do
-          expect { xhr :get, :index, username: 'somedude' }
-            .to raise_error(Discourse::InvalidParameters)
+          xhr :get, :index, username: 'somedude'
+
+          expect(response).to_not be_success
+          expect(response.status).to eq(404)
         end
       end
     end
