@@ -1,10 +1,18 @@
 require_dependency 'nokogiri'
 
 class TopicEmbed < ActiveRecord::Base
+  include Trashable
+
   belongs_to :topic
   belongs_to :post
   validates_presence_of :embed_url
   validates_uniqueness_of :embed_url
+
+  before_validation(on: :create) do
+    unless (topic_embed = TopicEmbed.with_deleted.where('deleted_at IS NOT NULL AND embed_url = ?', embed_url).first).nil?
+      topic_embed.destroy!
+    end
+  end
 
   class FetchResponse
     attr_accessor :title, :body, :author
@@ -203,13 +211,15 @@ end
 #
 # Table name: topic_embeds
 #
-#  id           :integer          not null, primary key
-#  topic_id     :integer          not null
-#  post_id      :integer          not null
-#  embed_url    :string(1000)     not null
-#  content_sha1 :string(40)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id            :integer          not null, primary key
+#  topic_id      :integer          not null
+#  post_id       :integer          not null
+#  embed_url     :string(1000)     not null
+#  content_sha1  :string(40)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  deleted_at    :datetime
+#  deleted_by_id :integer
 #
 # Indexes
 #

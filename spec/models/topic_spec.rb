@@ -1493,6 +1493,15 @@ describe Topic do
         expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
       end
     end
+
+    it "trashes topic embed record" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, post_number: 1)
+      topic_embed = TopicEmbed.create!(topic_id: topic.id, embed_url: "https://blog.codinghorror.com/password-rules-are-bullshit", post_id: post.id)
+      topic.trash!
+      topic_embed.reload
+      expect(topic_embed.deleted_at).not_to eq(nil)
+    end
   end
 
   describe 'recover!' do
@@ -1508,6 +1517,15 @@ describe Topic do
         topic = Fabricate(:topic, category: category)
         expect { topic.recover! }.to_not change { category.reload.topic_count }
       end
+    end
+
+    it "recovers topic embed record" do
+      topic = Fabricate(:topic, deleted_at: 1.day.ago)
+      post = Fabricate(:post, topic: topic, post_number: 1)
+      topic_embed = TopicEmbed.create!(topic_id: topic.id, embed_url: "https://blog.codinghorror.com/password-rules-are-bullshit", post_id: post.id, deleted_at: 1.day.ago)
+      topic.recover!
+      topic_embed.reload
+      expect(topic_embed.deleted_at).to eq(nil)
     end
   end
 
