@@ -69,7 +69,7 @@ module PrettyText
     end
 
     def get_current_user(user_id)
-      return unless Fixnum === user_id
+      return unless user_id.is_a?(Integer)
       { staff: User.where(id: user_id).where("moderator OR admin").exists? }
     end
   end
