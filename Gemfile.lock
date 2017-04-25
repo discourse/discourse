@@ -62,9 +62,6 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    bootsnap (0.2.10)
-      msgpack (~> 1.0)
-      snappy (~> 0.0.15)
     builder (3.2.3)
     bullet (5.4.2)
       activesupport (>= 3.0.0)
@@ -357,7 +354,6 @@ GEM
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
     slop (3.6.0)
-    snappy (0.0.15)
     spork (1.0.0rc4)
     spork-rails (4.0.0)
       rails (>= 3.0.0, < 5)
@@ -404,7 +400,6 @@ DEPENDENCIES
   barber
   better_errors
   binding_of_caller
-  bootsnap
   bullet
   byebug
   certified

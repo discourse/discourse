@@ -10,7 +10,7 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
 require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
-if ENV['BOOTSNAP'] #&& ENV['RAILS_ENV'] != 'production'
+if false && ENV['BOOTSNAP'] #&& ENV['RAILS_ENV'] != 'production'
   require 'bootsnap'
   Bootsnap.setup(
     cache_dir:            'tmp/cache', # Path to your cache
