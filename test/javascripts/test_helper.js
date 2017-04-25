@@ -39,7 +39,7 @@
 //= require plugin_tests
 //= require_self
 //
-//= require jquery.magnific-popup-min.js
+//= require jquery.magnific-popup.min.js
 
 window.inTestEnv = true;
 
