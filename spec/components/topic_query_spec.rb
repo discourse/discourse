@@ -458,6 +458,8 @@ describe TopicQuery do
 
       context 'list_unread' do
         it 'lists topics correctly' do
+          new_topic = Fabricate(:post, user: creator).topic
+
           expect(topic_query.list_unread.topics).to eq([])
           expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
         end

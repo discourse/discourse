@@ -165,7 +165,7 @@ class TopicQuery
 
   def list_read
     create_list(:read, unordered: true) do |topics|
-      topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
+      topics.where('tu.last_visited_at IS NOT NULL').order('tu.last_visited_at DESC')
     end
   end
 
