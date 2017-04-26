@@ -99,7 +99,6 @@ gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
-gem 'sidekiq-statistic'
 
 # for sidekiq web
 gem 'sinatra', require: false
