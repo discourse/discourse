@@ -24,13 +24,22 @@ class Admin::GroupsController < Admin::AdminController
 
   def bulk_perform
     group = Group.find(params[:group_id].to_i)
+    users_added = 0
     if group.present?
       users = (params[:users] || []).map {|u| u.downcase}
-      user_ids = User.where("username_lower in (:users) OR email IN (:users)", users: users).pluck(:id)
-      group.bulk_add(user_ids) if user_ids.present?
+      valid_emails = valid_usernames = {}
+      valid_users = User.where("username_lower IN (:users) OR email IN (:users)", users: users).pluck(:id, :username_lower, :email)
+      valid_users.each do |vu|
+        valid_emails[vu[1]] = valid_usernames[vu[2]] = vu[0]
+        vu.slice!(1..2)
+      end
+      invalid_users = users.reject! { |u| valid_emails[u] || valid_usernames[u] }
+      valid_users.flatten!
+      group.bulk_add(valid_users) if valid_users.present?
+      users_added = valid_users.count
     end
 
-    render json: success_json
+    render json: { success: true, message: I18n.t('groups.success.bulk_add', users_added: users_added), users_not_added: invalid_users }
   end
 
   def create
