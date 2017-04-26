@@ -2601,6 +2601,7 @@ en:
         add_members: "Add members"
         custom: "Custom"
         bulk_complete: "The users have been added to the group."
+        bulk_complete_users_not_added: "These users were not added:"
         bulk: "Bulk Add to Group"
         bulk_paste: "Paste a list of usernames or emails, one per line:"
         bulk_select: "(select a group)"

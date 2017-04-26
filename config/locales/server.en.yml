@@ -255,6 +255,8 @@ en:
     delete_reason: "Deleted via post moderation queue"
 
   groups:
+    success:
+      bulk_add: "%{users_added} users have been added to the group."
     errors:
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
