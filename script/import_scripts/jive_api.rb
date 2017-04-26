@@ -69,9 +69,6 @@ class ImportScripts::JiveApi < ImportScripts::Base
           # category: discussion["question"] ? 5 : 21,
           views: discussion["viewCount"],
           custom_fields: { import_id: discussion["contentID"] },
-          post_create_action: proc do |post|
-            DiscourseTagging.tag_topic_by_names(post.topic, STAFF_GUARDIAN, ["legacy"])
-          end
         }
 
         post_id = post_id_from_imported_post_id(topic[:id])
@@ -90,7 +87,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
     fields = "fields=published,author.id,content.text,parent,answer,-resources,-author.resources"
 
     loop do
-      comments = get("messages/contents/#{discussion_id}?#{fields}&count=#{POST_COUNT}&startIndex=#{start_index}")
+      comments = get("messages/contents/#{discussion_id}?#{fields}&hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}")
       comments["list"].each do |comment|
         next if post_id_from_imported_post_id(comment["id"])
 
@@ -138,9 +135,6 @@ class ImportScripts::JiveApi < ImportScripts::Base
           category: 7,
           views: post["viewCount"],
           custom_fields: { import_id: post["contentID"], import_permalink: post["permalink"] },
-          post_create_action: proc do |p|
-            DiscourseTagging.tag_topic_by_names(p.topic, STAFF_GUARDIAN, ["legacy"])
-          end
         }
 
         create_post(pp, pp[:id])
@@ -149,6 +143,15 @@ class ImportScripts::JiveApi < ImportScripts::Base
       break if posts["list"].size < POST_COUNT || posts["links"].blank? || posts["links"]["next"].blank?
       break unless start_index = posts["links"]["next"][/startIndex=(\d+)/, 1]
     end
+  end
+
+  def create_post(options, import_id)
+    post = super(options, import_id)
+    if Post === post
+      add_post(import_id, post)
+      add_topic(post)
+    end
+    post
   end
 
   def process_raw(raw)
@@ -199,7 +202,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
     puts command.join(" ")
 
     JSON.parse `#{command.join(" ")}`
-  rescue => e
+  rescue
     retry if (tries -= 1) >= 0
   end
 
