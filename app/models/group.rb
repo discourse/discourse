@@ -595,7 +595,7 @@ end
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
-#  visibility_level                   :integer          default(0)
+#  visibility_level                   :integer          default(0), not null
 #
 # Indexes
 #

@@ -13,7 +13,8 @@ module Jobs
 
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
 
-      User.where("email ~* '@(#{domains})$'")
+      User.joins(:user_emails)
+          .where("user_emails.email ~* '@(#{domains})$'")
           .where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id)
           .activated
           .where(staged: false)

@@ -55,3 +55,16 @@ class SearchLog < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: search_logs
+#
+#  id               :integer          not null, primary key
+#  term             :string           not null
+#  user_id          :integer
+#  ip_address       :inet             not null
+#  clicked_topic_id :integer
+#  search_type      :integer          not null
+#  created_at       :datetime         not null
+#
