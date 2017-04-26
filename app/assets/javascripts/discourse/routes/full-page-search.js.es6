@@ -8,6 +8,10 @@ import { getOwner } from 'discourse-common/lib/get-owner';
 export default Discourse.Route.extend({
   queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
 
+  titleToken() {
+    return I18n.t('search.results_page');
+  },
+
   model(params) {
     const cached = getTransient('lastSearch');
     var args = { q: params.q };
