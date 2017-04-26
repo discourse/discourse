@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   users: null,
   groupId: null,
   saving: false,
+  bulkAddResponse: null,
 
   @computed('saving', 'users', 'groupId')
   buttonDisabled(saving, users, groupId) {
@@ -24,7 +25,8 @@ export default Ember.Controller.extend({
       ajax('/admin/groups/bulk', {
         data: { users, group_id: this.get('groupId') },
         method: 'PUT'
-      }).then(() => {
+      }).then(result => {
+        this.set('bulkAddResponse', result);
         this.transitionToRoute('adminGroups.bulkComplete');
       }).catch(popupAjaxError).finally(() => {
         this.set('saving', false);
