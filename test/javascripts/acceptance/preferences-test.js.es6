@@ -6,9 +6,11 @@ test("update some fields", () => {
 
   andThen(() => {
     ok($('body.user-preferences-page').length, "has the body class");
-    equal(currentURL(), '/u/eviltrout/preferences', "it doesn't redirect");
+    equal(currentURL(), '/u/eviltrout/preferences/account', "defaults to account tab");
     ok(exists('.user-preferences'), 'it shows the preferences');
   });
+
+  click(".preferences-nav .nav-profile a");
 
   fillIn("#edit-location", "Westeros");
 
