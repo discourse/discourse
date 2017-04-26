@@ -1732,7 +1732,7 @@ en:
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
 
       change_timestamp:
-        title: "Change Timestamp"
+        title: "Change Timestamp..."
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
