@@ -93,12 +93,12 @@ module Scheduler
             )
           end
           klass.new.perform
-        rescue Jobs::HandledExceptionWrapper
-          # Discourse.handle_exception was already called, and we don't have any extra info to give
-          failed = true
         rescue => e
-          Discourse.handle_job_exception(e, {message: "Running a scheduled job", job: klass})
-          error = "#{e.message}: #{e.backtrace.join("\n")}"
+          if e.class != Jobs::HandledExceptionWrapper
+            Discourse.handle_job_exception(e, message: "Running a scheduled job", job: klass)
+          end
+
+          error = "#{e.class}: #{e.message} #{e.backtrace.join("\n")}"
           failed = true
         end
         duration = ((Time.now.to_f - start) * 1000).to_i
