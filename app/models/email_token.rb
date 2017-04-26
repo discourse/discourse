@@ -71,7 +71,7 @@ class EmailToken < ActiveRecord::Base
       end
 
       if user
-        return User.find_by(email: Email.downcase(user.email)) if Invite.redeem_from_email(user.email).present?
+        return User.find_by_email(user.email) if Invite.redeem_from_email(user.email).present?
         user
       end
     end

@@ -38,8 +38,10 @@ describe BadgeGranter do
   describe 'preview' do
     it 'can correctly preview' do
       Fabricate(:user, email: 'sam@gmail.com')
-      result = BadgeGranter.preview('select id user_id, null post_id, created_at granted_at from users
-                                     where email like \'%gmail.com\'', explain: true)
+      result = BadgeGranter.preview('select u.id user_id, null post_id, u.created_at granted_at from users u
+                                     join user_emails ue on ue.user_id = u.id AND ue.primary
+                                     where ue.email like \'%gmail.com\'', explain: true)
+
       expect(result[:grant_count]).to eq(1)
       expect(result[:query_plan]).to be_present
     end

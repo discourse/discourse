@@ -381,7 +381,7 @@ describe Email::Receiver do
 
     it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
       expect { process(:cc) }.to change(Topic, :count)
-      emails = Topic.last.allowed_users.pluck(:email)
+      emails = Topic.last.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
       expect(emails.size).to eq(3)
       expect(emails).to include("someone@else.com", "discourse@bar.com", "wat@bar.com")
     end

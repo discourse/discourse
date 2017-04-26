@@ -810,7 +810,7 @@ SQL
   end
 
   def grant_permission_to_user(lower_email)
-    user = User.find_by(email: lower_email)
+    user = User.find_by_email(lower_email)
     topic_allowed_users.create!(user_id: user.id)
   end
 
