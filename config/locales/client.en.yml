@@ -1294,6 +1294,7 @@ en:
       no_more_results: "No more results found."
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
+      results_page: "Search Results"
 
       context:
         user: "Search posts by @{{username}}"
