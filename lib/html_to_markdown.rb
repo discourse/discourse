@@ -115,7 +115,7 @@ class HtmlToMarkdown
     RUBY
   end
 
-  WHITELISTED ||= %w{del ins kbd s small strike sub sup table tbody td tfoot th thead tr}
+  WHITELISTED ||= %w{del ins kbd s small strike sub sup}
   WHITELISTED.each do |tag|
     class_eval <<-RUBY
       def visit_#{tag}(node)

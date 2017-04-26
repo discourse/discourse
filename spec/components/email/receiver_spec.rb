@@ -157,7 +157,7 @@ describe Email::Receiver do
       expect(topic.posts.last.cooked).not_to match(/<br/)
 
       expect { process(:html_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a <b>HTML</b> reply ;)")
+      expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
 
       expect { process(:hebrew_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("שלום! מה שלומך היום?")
@@ -172,18 +172,6 @@ describe Email::Receiver do
     it "prefers text over html" do
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
-    end
-
-    it "prefers html over text when site setting is enabled" do
-      SiteSetting.incoming_email_prefer_html = true
-      expect { process(:text_and_html_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq('This is the <b>html</b> part.')
-    end
-
-    it "uses text when prefer_html site setting is enabled but no html is available" do
-      SiteSetting.incoming_email_prefer_html = true
-      expect { process(:text_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a text reply :)")
     end
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do
