@@ -20,7 +20,9 @@
 }
 
 .user-preferences {
-  input.category-selector, input.user-selector {
+  padding-top: 10px;
+
+  input.category-selector, input.user-selector, input.tag-chooser {
     width: 530px;
   }
 
@@ -40,9 +42,9 @@
     display: inline-block;
   }
   .instructions {
+    display: inline-block;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    margin-left: 160px;
-    margin-top: 5px;
+    margin-top: 0;
     margin-bottom: 10px;
     font-size: 80%;
     line-height: 1.4em;
@@ -66,15 +68,19 @@
     }
   }
 
-  .other .controls {
+  .category-notifications .controls, .tag-notifications .controls {
     select {
       width: 280px;
     }
   }
+
+  .category-notifications .category-controls, .tag-notifications .tag-controls {
+    margin-top: 24px;
+  }
 }
 
-.form-horizontal .control-group.other {
-  margin-bottom: 0;
+.user-main .user-preferences .user-field.text {
+  padding-top: 0;
 }
 
 .form-horizontal .control-group.category {
@@ -93,11 +99,11 @@
   // position: static;
 }
 
-.user-navigation {
+.user-navigation, .user-preferences {
   display: table-cell;
   vertical-align: top;
   width: 170px;
-  padding-right: 30px;
+  padding-left: 30px;
 
   h3 {
     color: $primary;
@@ -131,7 +137,6 @@
 
   .user-right {
     width: 900px;
-    margin-top: 20px;
     display: table-cell;
   }
 
@@ -578,12 +583,6 @@
   }
 
   .user-field {
-    label {
-      width: 140px;
-      float: left;
-      text-align: right;
-      font-weight: bold;
-    }
     input[type=text] {
       width: 530px;
     }
@@ -594,7 +593,8 @@
         font-weight: normal;
         float: auto;
       }
-      p {
+      .instructions {
+        display: block;
         color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         margin-top: 5px;
         margin-bottom: 10px;

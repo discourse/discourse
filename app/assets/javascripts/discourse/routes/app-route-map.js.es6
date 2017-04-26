@@ -93,6 +93,15 @@ export default function() {
     });
 
     this.route('preferences', { resetNamespace: true }, function() {
+      this.route('account');
+      this.route('profile');
+      this.route('emails');
+      this.route('notifications');
+      this.route('categories');
+      this.route('tags');
+      this.route('interface');
+      this.route('apps');
+
       this.route('username');
       this.route('email');
       this.route('about', { path: '/about-me' });

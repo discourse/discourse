@@ -65,6 +65,9 @@
       color: $primary;
     }
   }
+  > li.indent {
+    padding-left: 15px;
+  }
   .active > a, & li > a.active
   {
     color: $secondary;
