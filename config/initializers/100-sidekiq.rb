@@ -15,7 +15,6 @@ Sidekiq.configure_server do |config|
 end
 
 if Sidekiq.server?
-
   # warm up AR
   RailsMultisite::ConnectionManagement.each_connection do
     (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
@@ -24,20 +23,24 @@ if Sidekiq.server?
   end
 
   Rails.application.config.after_initialize do
-    require 'scheduler/scheduler'
-    manager = Scheduler::Manager.new
-    Scheduler::Manager.discover_schedules.each do |schedule|
-      manager.ensure_schedule!(schedule)
-    end
-    Thread.new do
-      while true
-        begin
-          manager.tick
-        rescue => e
-          # the show must go on
-          Discourse.handle_job_exception(e, {message: "While ticking scheduling manager"})
+    scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
+
+    if !scheduler_hostname || scheduler_hostname == `hostname`.strip
+      require 'scheduler/scheduler'
+      manager = Scheduler::Manager.new
+      Scheduler::Manager.discover_schedules.each do |schedule|
+        manager.ensure_schedule!(schedule)
+      end
+      Thread.new do
+        while true
+          begin
+            manager.tick
+          rescue => e
+            # the show must go on
+            Discourse.handle_job_exception(e, {message: "While ticking scheduling manager"})
+          end
+          sleep 1
         end
-        sleep 1
       end
     end
   end
