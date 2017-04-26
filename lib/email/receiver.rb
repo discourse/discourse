@@ -1,7 +1,7 @@
 require "digest"
 require_dependency "new_post_manager"
 require_dependency "post_action_creator"
-require_dependency "email/html_cleaner"
+require_dependency "html_to_markdown"
 
 module Email
 
@@ -188,17 +188,17 @@ module Email
         text = fix_charset(@mail)
       end
 
-      if html.present? && (SiteSetting.incoming_email_prefer_html || text.blank?)
-        html = Email::HtmlCleaner.new(html).output_html
-        html = trim_discourse_markers(html)
-        html, elided = EmailReplyTrimmer.trim(html, true)
-        return [html, elided]
-      end
-
       if text.present?
         text = trim_discourse_markers(text)
         text, elided = EmailReplyTrimmer.trim(text, true)
         return [text, elided]
+      end
+
+      if html.present?
+        markdown = HtmlToMarkdown.new(html).to_markdown
+        markdown = trim_discourse_markers(markdown)
+        markdown, elided = EmailReplyTrimmer.trim(markdown, true)
+        return [markdown, elided]
       end
     end
 
