@@ -27,7 +27,8 @@ class Admin::GroupsController < Admin::AdminController
     users_added = 0
     if group.present?
       users = (params[:users] || []).map {|u| u.downcase}
-      valid_emails = valid_usernames = {}
+      valid_emails = {}
+      valid_usernames = {}
       valid_users = User.where("username_lower IN (:users) OR email IN (:users)", users: users).pluck(:id, :username_lower, :email)
       valid_users.each do |vu|
         valid_emails[vu[1]] = valid_usernames[vu[2]] = vu[0]
