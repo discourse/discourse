@@ -26,7 +26,7 @@ class Admin::GroupsController < Admin::AdminController
     group = Group.find(params[:group_id].to_i)
     if group.present?
       users = (params[:users] || []).map {|u| u.downcase}
-      user_ids = User.where("username_lower in (:users) OR email IN (:users)", users: users).pluck(:id)
+      user_ids = User.joins(:primary_email).where("username_lower in (:users) OR user_emails.email IN (:users)", users: users).pluck(:id)
       group.bulk_add(user_ids) if user_ids.present?
     end
 
