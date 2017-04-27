@@ -25,7 +25,7 @@ export default function offsetCalculator(y) {
 
   const scrollTop = y || $(window).scrollTop();
   const docHeight = $(document).height();
-  const scrollPercent = (scrollTop / (docHeight-rawWinHeight));
+  let scrollPercent = Math.min((scrollTop / (docHeight-rawWinHeight)), 1.0);
 
   let inter = topPos - scrollTop + ($container.height() * scrollPercent);
   if (inter < headerHeight + eyeTarget) {
@@ -35,7 +35,7 @@ export default function offsetCalculator(y) {
 
   if (inter > ideal) {
     const bottom = $('#topic-bottom').offset().top;
-    const switchPos = bottom - rawWinHeight;
+    const switchPos = bottom - rawWinHeight - ideal;
 
     if (scrollTop > switchPos) {
       const p = Math.max(Math.min((scrollTop + inter - switchPos) / rawWinHeight, 1.0), 0.0);
