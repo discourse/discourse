@@ -646,6 +646,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
+  incoming_email_prefer_html: false
   email_in:
     default: false
     client: true

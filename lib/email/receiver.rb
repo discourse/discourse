@@ -188,17 +188,21 @@ module Email
         text = fix_charset(@mail)
       end
 
-      if text.present?
+      text, elided_text = if text.present?
         text = trim_discourse_markers(text)
-        text, elided = EmailReplyTrimmer.trim(text, true)
-        return [text, elided]
+        EmailReplyTrimmer.trim(text, true)
       end
 
-      if html.present?
+      markdown, elided_markdown = if html.present?
         markdown = HtmlToMarkdown.new(html).to_markdown
         markdown = trim_discourse_markers(markdown)
-        markdown, elided = EmailReplyTrimmer.trim(markdown, true)
-        return [markdown, elided]
+        EmailReplyTrimmer.trim(markdown, true)
+      end
+
+      if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
+        return [markdown, elided_markdown]
+      else
+        return [text, elided_text]
       end
     end
 
