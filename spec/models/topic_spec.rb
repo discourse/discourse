@@ -1867,4 +1867,54 @@ describe Topic do
       expect(Topic.with_no_response_total).to eq(1)
     end
   end
+
+  describe '#pm_with_non_human_user?' do
+    let(:robot) { Fabricate(:user, id: -3) }
+    let(:user) { Fabricate(:user) }
+
+    let(:topic) do
+      Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: robot),
+        Fabricate.build(:topic_allowed_user, user: user)
+      ])
+    end
+
+    describe 'when PM is between a human and a non human user' do
+      it 'should return true' do
+        expect(topic.pm_with_non_human_user?).to be(true)
+      end
+    end
+
+    describe 'when PM contains 2 human users and a non human user' do
+      it 'should return false' do
+        Fabricate(:topic_allowed_user, topic: topic, user: Fabricate(:user))
+
+        expect(topic.pm_with_non_human_user?).to be(false)
+      end
+    end
+
+    describe 'when PM only contains a user' do
+      it 'should return true' do
+        topic.topic_allowed_users.first.destroy!
+
+        expect(topic.reload.pm_with_non_human_user?).to be(true)
+      end
+    end
+
+    describe 'when PM contains a group' do
+      it 'should return false' do
+        Fabricate(:topic_allowed_group, topic: topic)
+
+        expect(topic.pm_with_non_human_user?).to be(false)
+      end
+    end
+
+    describe 'when topic is not a PM' do
+      it 'should return false' do
+        topic.convert_to_public_topic(Fabricate(:admin))
+
+        expect(topic.pm_with_non_human_user?).to be(false)
+      end
+    end
+  end
 end

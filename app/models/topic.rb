@@ -1187,6 +1187,15 @@ SQL
     private_topic
   end
 
+  def pm_with_non_human_user?
+    Topic.private_messages
+      .joins("LEFT JOIN topic_allowed_groups ON topics.id = topic_allowed_groups.topic_id")
+      .where("topic_allowed_groups.topic_id IS NULL")
+      .where("topics.id = ?", self.id)
+      .where("(SELECT COUNT(*) FROM topic_allowed_users WHERE topic_allowed_users.topic_id = ? AND topic_allowed_users.user_id > 0) = 1", self.id)
+      .exists?
+  end
+
   private
 
   def update_category_topic_count_by(num)

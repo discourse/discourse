@@ -5,13 +5,41 @@ describe Validators::PostValidator do
   let(:post) { build(:post) }
   let(:validator) { Validators::PostValidator.new({}) }
 
-  context "when empty raw can bypass post body validation" do
-    let(:validator) { Validators::PostValidator.new(skip_post_body: true) }
-
-    it "should be allowed for empty raw based on site setting" do
+  context "#post_body_validator" do
+    it 'should not allow a post with an empty raw' do
       post.raw = ""
       validator.post_body_validator(post)
-      expect(post.errors).to be_empty
+      expect(post.errors).to_not be_empty
+    end
+
+    context "when empty raw can bypass validation" do
+      let(:validator) { Validators::PostValidator.new(skip_post_body: true) }
+
+      it "should be allowed for empty raw based on site setting" do
+        post.raw = ""
+        validator.post_body_validator(post)
+        expect(post.errors).to be_empty
+      end
+    end
+
+    describe "when post's topic is a PM between a human and a non human user" do
+      let(:robot) { Fabricate(:user, id: -3) }
+      let(:user) { Fabricate(:user) }
+
+      let(:topic) do
+        Fabricate(:private_message_topic, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: robot),
+          Fabricate.build(:topic_allowed_user, user: user)
+        ])
+      end
+
+      it 'should allow a post with an empty raw' do
+        post = Fabricate.build(:post, topic: topic)
+        post.raw = ""
+        validator.post_body_validator(post)
+
+        expect(post.errors).to be_empty
+      end
     end
   end
 
