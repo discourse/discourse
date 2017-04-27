@@ -13,7 +13,7 @@ module EmailHelper
   end
 
   def private_topic_title(topic)
-    I18n.t("system_messages.secure_topic_title", id: topic.id)
+    I18n.t("system_messages.private_topic_title", id: topic.id)
   end
 
   def email_topic_link(topic)
