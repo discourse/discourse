@@ -907,7 +907,7 @@ zh_CN:
         title: "Twitter 登录"
         message: "正在通过 Twitter 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       instagram:
-        title: "用 Instagram 登录"
+        title: "Instagram 登录"
         message: "正在通过 Instagram 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       facebook:
         title: "Facebook 登录"
@@ -916,7 +916,7 @@ zh_CN:
         title: "Yahoo 登录"
         message: "正在通过 Yahoo 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       github:
-        title: "用 GitHub 帐号登录"
+        title: "GitHub 登录"
         message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
     invites:
       accept_title: "邀请"

@@ -33,6 +33,9 @@ he:
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אחסון פנוי."
   anonymous: "אנונימי"
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
+  themes:
+    bad_color_scheme: "לא ניתן לעדכן את התמה, סכמת צבעים שגויה"
+    other_error: "ארעה שגיאה בזמן עדכון התמה"
   emails:
     incoming:
       default_subject: "נושא זה צריך כותרת"
@@ -1252,7 +1255,7 @@ he:
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
     embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
     embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
-    notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, שילחו אימייל ל contact_email. קבעו 0 לניטרול."
+    notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר מספר זה של שעות, שילחו הודעה פרטית לצוות. קיבעו ל 0 כדי לנטרל."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו מודעה המבקשת מן המנהלים ליצור עוד נושאים."
     delete_drafts_older_than_n_days: מחקו טיוטות בנות יותר מ (n) ימים.
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"

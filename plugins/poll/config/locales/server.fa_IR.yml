@@ -7,8 +7,8 @@
 
 fa_IR:
   site_settings:
-    poll_enabled: "به کاربران اجازه ساخت نظرسنجی ها را بده ؟ "
-    poll_maximum_options: "Maximum number of options allowed in a poll."
+    poll_enabled: "به کاربران اجازه ساخت نظرسنجی داده شود؟ "
+    poll_maximum_options: "حداکثر تعداد گزینه برای نظرسنجی‌ها."
     poll_edit_window_mins: "چند دقیقه بعد از ارسال نظر می توان آن را ویرایش کرد"
   poll:
     multiple_polls_without_name: "چند نظرسنجی متفاوت بدون اسم است. استفاده کن از  '<code>اسم/code>' ویژگی ٬ تا نظرسنجی منحصر به فرد را تشخیص دهد."
