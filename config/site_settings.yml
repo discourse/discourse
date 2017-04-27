@@ -345,16 +345,15 @@ users:
     client: true
     default: 10
     min: 8
-    max: 2000
+    max: 500
   min_admin_password_length:
     client: true
     default: 15
     min: 8
-    max: 2000
+    max: 500
   password_unique_characters:
     default: 6
     min: 1
-    max: 2000
   block_common_passwords: true
   enforce_global_nicknames:
     default: false
