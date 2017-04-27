@@ -101,6 +101,7 @@ pt:
           other: "%{count} anos mais tarde"
       previous_month: 'Mês Anterior'
       next_month: 'Mês Seguinte'
+      placeholder: Escolha uma data
     share:
       topic: 'partilhar uma ligação para este tópico'
       post: 'publicação #%{postNumber}'
@@ -136,9 +137,12 @@ pt:
         enabled: 'listado %{when}'
         disabled: 'removido da lista %{when}'
     topic_admin_menu: "Ações administrativas dos Tópicos"
+    wizard_required: "Bem-vindo ao seu novo Discourse! Vamos começar com <a href='%{url}' data-auto-route='true'>o assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo sítio mais fácil, encontra-se agora em modo de inicialização. Qualquer utilizador novo terá nível de confiança 1 e resumos de email diários ligados. Este modo será automaticamente desligado quando o número total de utilizadores ultrapassar %{min_users}."
     bootstrap_mode_disabled: "Modo de inicialização será desligado dentro das próximas 24 horas."
+    themes:
+      default_description: "Predefinido"
     s3:
       regions:
         us_east_1: "Este dos E.U.A. (Virgínia do Norte)"
@@ -146,6 +150,7 @@ pt:
         us_west_2: "Oeste dos E.U.A. (Óregon)"
         us_gov_west_1: "AWS GovCloud (E.U.A.)"
         eu_west_1: "U.E. (Irlanda)"
+        eu_west_2: "EU (Londres)"
         eu_central_1: "U.E. (Francoforte)"
         ap_southeast_1: "Ásia-Pacífico (Singapura)"
         ap_southeast_2: "Ásia-Pacífico (Sydney)"
@@ -347,6 +352,7 @@ pt:
         title: "Pedido de Adesão"
         body: "Eu gostaria de aderir a @%{groupName}."
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
+      public: "Permitir aos utilizadores de se juntarem/saírem do grupo livremente (Requere que o grupo seja visível)"
       empty:
         posts: "Não existem publicações por membros deste grupo."
         members: "Não existem membros neste grupo."
@@ -358,8 +364,11 @@ pt:
       join: "Juntar ao Grupo"
       leave: "Sair do Grupo"
       request: "Pedir para Entrar no Grupo."
+      automatic_group: Grupo Automático
       closed_group: Grupo fechado
       is_group_user: "Você é membro deste grupo"
+      allow_membership_requests: "Permitir aos utilizadores enviar pedidos de adesão aos donos do grupo"
+      membership: "Adesão"
       name: "Nome"
       user_count: "Numero de Membros"
       bio: "Acerca do Grupo"
@@ -378,6 +387,7 @@ pt:
       posts: "Publicações"
       mentions: "Menções"
       messages: "Mensagens"
+      notification_level: "Nível de notificação por omissão para mensagens de grupo"
       alias_levels:
         title: "Quem pode mandar mensagens e @mencionar este grupo?"
         nobody: "Ninguém"
@@ -404,6 +414,7 @@ pt:
         muted:
           title: "Silenciado"
           description: "Não será notificado de nada relacionado com novos tópicos neste grupo."
+      flair_url: "Imagem da Marca de Avatar"
     user_action_groups:
       '1': "Gostos Dados"
       '2': "Gostos Recebidos"

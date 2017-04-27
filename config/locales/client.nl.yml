@@ -101,6 +101,7 @@ nl:
           other: "%{count} jaar later"
       previous_month: 'Vorige maand'
       next_month: 'Volgende maand'
+      placeholder: Kies een datum
     share:
       topic: 'een koppeling naar dit topic delen'
       post: 'bericht #%{postNumber}'
@@ -389,6 +390,7 @@ nl:
       posts: "Berichten"
       mentions: "Vermeldingen"
       messages: "Berichten"
+      notification_level: "Standaard meldingsniveau voor groepsberichten"
       alias_levels:
         title: "Wie kan deze groep een bericht sturen en taggen?"
         nobody: "Niemand"
@@ -1336,15 +1338,18 @@ nl:
       topic_status_update:
         title: "Topictimer instellen"
         save: "Timer instellen"
-        time: "Tijd:"
+        num_of_hours: "Aantal uren:"
         remove: "Timer verwijderen"
         publish_to: "Publiceren naar:"
+        when: "Wanneer:"
       auto_update_input:
-        limited:
-          units: "(# uren)"
-          examples: 'Voer het aantal uren in (24).'
-        all:
-          examples: 'Voer het aantal uren (24), een absolute tijd (17:30) of een tijdstempel (22-11-2013 14:00) in.'
+        later_today: "Later vandaag"
+        tomorrow: "Morgen"
+        later_this_week: "Later deze week"
+        this_weekend: "Dit weekend"
+        next_week: "Volgende week"
+        pick_date_and_time: "Kies datum en tijd"
+        set_based_on_last_post: "Sluiten op basis van laatste bericht"
       publish_to_category:
         title: "Publicatie plannen"
       temp_open:
@@ -1355,7 +1360,7 @@ nl:
         title: "Tijdelijk sluiten"
       auto_close:
         title: "Topic automatisch sluiten"
-        label: "Tijd voor automatisch sluiten van topic:"
+        label: "Tijden voor automatisch sluiten van topic:"
         error: "Voer een geldige waarde in."
         based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
       status_update_notice:
@@ -1393,10 +1398,10 @@ nl:
           '3_2': 'U ontvangt meldingen, omdat u dit topic in de gaten houdt.'
           '3_1': 'U ontvangt meldingen, omdat u dit topic hebt aangemaakt.'
           '3': 'U ontvangt meldingen, omdat u dit topic in de gaten houdt.'
-          '2_8': 'U ontvangt meldingen, omdat u deze categorie volgt.'
-          '2_4': 'U ontvangt meldingen, omdat u een antwoord in dit topic hebt geplaatst.'
-          '2_2': 'U ontvangt meldingen, omdat u dit topic volgt.'
-          '2': 'U ontvangt meldingen, omdat u <a href="/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
+          '2_8': 'U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt.'
+          '2_4': 'U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst.'
+          '2_2': 'U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt.'
+          '2': 'U ziet het aantal nieuwe antwoorden, omdat u <a href="/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
           '1_2': 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           '1': 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           '0_7': 'U negeert alle meldingen in deze categorie.'
@@ -2561,6 +2566,10 @@ nl:
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
         copy: "Kopiëren"
+        copy_to_clipboard: "Kopiëren naar klembord"
+        copied_to_clipboard: "Gekopieerd naar klembord"
+        copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
+        theme_owner: "Niet bewerkbaar, eigendom van:"
         email_templates:
           title: "E-mailsjablonen"
           subject: "Onderwerp"
@@ -2585,7 +2594,7 @@ nl:
           color_scheme: "Kleurenschema"
           color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
           custom_sections: "Aangepaste secties:"
-          included_themes: "Inbegrepen thema's"
+          theme_components: "Themaonderdelen"
           child_themes_check: "Thema bevat andere onderliggende thema's"
           css_html: "Aangepaste CSS/HTML"
           edit_css_html: "CSS/HTML bewerken"
@@ -2594,6 +2603,7 @@ nl:
           import_file_tip: ".dcstyle.json-bestand dat thema bevat"
           about_theme: "Over thema"
           license: "Licentie"
+          component_of: "Thema is een onderdeel van:"
           update_to_latest: "Bijwerken naar nieuwste"
           check_for_updates: "Controleren op updates"
           updating: "Bijwerken..."

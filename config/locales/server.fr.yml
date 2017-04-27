@@ -27,11 +27,15 @@ fr:
   topics: "Sujets"
   posts: "messages"
   loading: "Chargement"
+  powered_by_html: 'Motorisé par <a href="https://www.discourse.org">Discourse</a>, nécessite l''activation de JavaScript '
   log_in: "Se connecter"
   purge_reason: "Supprimé automatiquement comme compte abandonné et non activé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   anonymous: "Anonyme"
   remove_posts_deleted_by_author: "Supprimé par l'auteur"
+  themes:
+    bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleur est invalide"
+    other_error: "Il y a eu un problème pendant la mise à jour du thème"
   emails:
     incoming:
       default_subject: "Ce sujet a besoin d'un titre"
@@ -1755,6 +1759,7 @@ fr:
 
         S'il y a une interface web pour le compte POP, vous devrez peut-être vous y connecter pour vérifier les paramètres.
     too_many_spam_flags:
+      title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
       text_body_template: |
         Bonjour,
@@ -1935,6 +1940,7 @@ fr:
 
         %{respond_instructions}
     user_linked:
+      title: "Utilisateur lié"
       text_body_template: |
         %{header_instructions}
 
@@ -1963,6 +1969,7 @@ fr:
 
         %{respond_instructions}
     user_posted:
+      title: "Posté par l'utilisateur"
       text_body_template: |
         %{header_instructions}
 
@@ -2024,6 +2031,8 @@ fr:
       title: "Mot de passe oublié"
     set_password:
       title: "Définir le mot de passe"
+    admin_login:
+      title: "Identifiant Administrateur"
     notify_old_email:
       text_body_template: |
         Ceci est un message automatique pour vous informer que votre adresse courriel pour

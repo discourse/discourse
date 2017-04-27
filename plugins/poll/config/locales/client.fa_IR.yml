@@ -18,11 +18,11 @@ fa_IR:
       multiple:
         help:
           at_least_min_options:
-            other: "حداقل تعداد <strong>%{count}</strong> گزینه انتخاب کنید."
+            other: "حداقل <strong>%{count}</strong> گزینه انتخاب کنید."
           up_to_max_options:
             other: "حداکثر <strong>%{count}</strong> گزینه انتخاب کنید"
           x_options:
-            other: "تعداد <strong>%{count}</strong> گزینه انتخاب کنید"
+            other: "<strong>%{count}</strong> گزینه انتخاب کنید"
           between_min_and_max_options: "بین <strong>%{min}</strong> تا <strong>%{max}</strong> گزینه انتخاب کنید"
       cast-votes:
         title: "انداختن رأی شما"
@@ -53,13 +53,13 @@ fa_IR:
         poll_type:
           label: نوع
           regular: یک انتخاب
-          multiple: انتخاب چندگانه
-          number: تعداد امتیاز
+          multiple: چند انتخاب
+          number: امتیاز عددی
         poll_config:
           max: بیشترین
           min: کمترین
           step: مرحله
         poll_public:
-          label: نشان دادن رای دهندگان
+          label: نمایش رای دهندگان
         poll_options:
           label: در هر خط یک گزینه نظرسنجی را وارد کنید

@@ -33,6 +33,9 @@ nl:
   disable_remote_images_download_reason: "Het downloaden van externe afbeeldingen is uitgeschakeld, omdat er niet genoeg schijfruimte beschikbaar was."
   anonymous: "Anoniem"
   remove_posts_deleted_by_author: "Verwijderd door gebruiker"
+  themes:
+    bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenschema"
+    other_error: "Er is iets misgegaan bij het bijwerken van het thema"
   emails:
     incoming:
       default_subject: "Dit topic heeft een titel nodig"
@@ -840,8 +843,10 @@ nl:
     max_topic_title_length: "Maximaal toegestane lengte van een topictitel in tekens"
     min_private_message_title_length: "Minimaal toegestane titellengte voor een bericht in tekens"
     min_search_term_length: "Minimumlengte van een zoekterm in tekens"
+    search_prefer_recent_posts: "Als doorzoeken van uw grote forum traag werkt, probeert deze optie eerst een index van recentere berichten"
+    search_recent_posts_size: "Het aantal in de index te behouden recente berichten "
     allow_uncategorized_topics: "Topics zonder categorie toestaan. WAARSCHUWING: Alle topics moet weer aan een categorie zijn toegekend voor dit wordt uitgezet."
-    allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
+    allow_duplicate_topic_titles: "Topics met dezelfde identieke titels toestaan"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "Laat de popup voor nieuwe gebruikers zien als een gebruiker start met het typen van hun eerste (n) nieuwe berichten in de berichtopsteller."
     title: "De naam van deze site, wordt gebruikt in de titeltag"
@@ -852,6 +857,7 @@ nl:
     crawl_images: "Haal afbeeldingen van externe URLs om de correcte breedte- en hoogtedimensies in te voegen"
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
+    download_remote_images_max_days_old: "Geen externe afbeeldingen downloaden voor berichten die meer dan n dagen oud zijn."
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit gedownload worden van deze domeinen. Pipe-gescheiden lijst."
     editing_grace_period: "De eerste (n) seconden na het plaatsen van een bericht leidt het wijzigen ervan niet tot een nieuwe versie in de geschiedenis van het bericht."
     post_edit_time_limit: "Berichten mogen na (n) minuten nog gewijzigd of verwijderd worden door de schrijver. Gebruik 0 voor onbeperkt."
@@ -873,7 +879,7 @@ nl:
     apple_touch_icon_url: "Pictogram voor Apple touch-apparaten. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
-    email_subject: "Wijzigbaar onderwerp formaat voor standaard emails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
+    email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
     summary_posts_required: "Minimale aantal berichten in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld"
     summary_likes_required: "Minimale aantal likes in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld"
@@ -949,8 +955,8 @@ nl:
     enable_signup_cta: "Toon een notificatie aan terugkerende anonieme gebruikers waarin gevraagd wordt zich aan te melden voor een account."
     enable_yahoo_logins: "Yahoo-authenticatie inschakelen"
     enable_google_oauth2_logins: "Google Oauth2 authenticatie toestaan. Dit is de authenticatiemethode die momenteel door Google wordt ondersteund. Vereist key en secret."
-    google_oauth2_client_id: "Client ID van je Google applicatie."
-    google_oauth2_client_secret: "Client secret van je Google applicatie."
+    google_oauth2_client_id: "Client-ID van uw Google-toepassing."
+    google_oauth2_client_secret: "Client-geheim van uw Google-toepassing."
     enable_twitter_logins: "Twitter-authenticatie inschakelen; vereist twitter_consumer_key en twitter_consumer_secret."
     twitter_consumer_key: "consumer_key (registreer op dev.twitter.com)"
     twitter_consumer_secret: "consumer secret (registreer op dev.twitter.com)"
@@ -1040,7 +1046,7 @@ nl:
     title_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor een topictitel is vereist."
     body_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor de hoofdtekst van een bericht is vereist."
     allow_uppercase_posts: "Sta alleen hoofdletters toe in een topic titel of bericht inhoud."
-    title_fancy_entities: "Converteer algemene ASCII-tekens naar fancy HTML in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants)"
+    title_fancy_entities: "Algemene ASCII-tekens naar decoratieve HTML-entiteiten converteren in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants/)"
     min_title_similar_length: "De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics."
     min_body_similar_length: "De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics."
     category_colors: "Een lijst me hexadecimale kleurwaardes die gebruikt kunnen worden voor categorieën."
@@ -1049,6 +1055,7 @@ nl:
     max_attachment_size_kb: "De maximale grootte van te uploaden bijlages in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."
     authorized_extensions: "Een lijst met bestandsextensies die mogen worden geupload (gebruik '*' voor alle bestandsextensies)"
     max_similar_results: "Hoeveel vergelijkbare topics om te laten zien boven de editor bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
+    max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding."
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
     topic_views_heat_low: "Na dit aantal keer bekeken zal het aantal keer bekeken veld licht gemarkeerd zijn."
     topic_views_heat_medium: "Na dit aantal keer bekeken zal het aantal keer bekeken veld middelmatig gemarkeerd zijn."
@@ -1087,6 +1094,7 @@ nl:
     strip_images_from_short_emails: "Verwijder afbeeldingen met grootte van minder dan 2800 Bytes uit e-mails."
     short_email_length: "Korte e-mail lengte in Bytes"
     display_name_on_email_from: "Toon de volledige naam in het afzenderveld van e-mails."
+    max_emails_per_day_per_user: "Maximale aantal e-mails dat per dag naar gebruikers wordt verzonden. 0 om de limiet uit te schakelen"
     enable_staged_users: "Maak automatisch staged gebruikers aan bij het verwerken van inkomende e-mails."
     maximum_staged_users_per_email: "Maximale aantal staged gebruikers dat bij het verwerken van een inkomende e-mail wordt aangemaakt."
     pop3_polling_enabled: "Poll via POP3 voor antwoorden per e-mail."
@@ -1099,12 +1107,12 @@ nl:
     log_mail_processing_failures: "Log alle e-mail verwerkingsfouten naar http://yoursitename.com/logs"
     email_in: "Sta toe dat gebruikers een nieuw topic via e-mail (vereist het pollen van pop3). Configureer het adres in de \"Instellingen\" tabblad van elke categorie."
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen."
-    email_prefix: "Het [label] gebruikt in het onderwerp van e-mails. Als standaard wordt 'titel' gebruikt als niet gezet."
+    email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'title' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als uw 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
     minimum_topics_similar: "Hoeveel topics moeten er aanwezig zijn voordat er vergelijkbare topics worden voorgesteld bij het opstellen van nieuwe topics."
     relative_date_duration: "Na hoeveel dagen moet een post datum niet meer worden getoond als relatieve datum (7d) maar als absolute datum (20 feb)."
     delete_user_max_post_age: "Gebruikers wiens eerste bericht ouder dan (x) dagen is kunnen niet meer verwijderd worden."
-    delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
+    delete_all_posts_max: "Het maximale aantal berichten dat tegelijk met de knop 'Alle berichten verwijderen' kan worden verwijderd. Als een gebruiker meer berichten heeft, kunnen de berichten niet allemaal tegelijk worden verwijderd, en kan de gebruiker niet worden verwijderd."
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     allow_uploaded_avatars: "Sta gebruikers toe eigen profielfoto's te uploaden."
@@ -1112,8 +1120,12 @@ nl:
     allow_animated_thumbnails: "Genereer bewegende miniaturen van bewegende gifs."
     default_avatars: "URL's naar standaard te gebruiken avatars voor nieuwe gebruikers, totdat ze deze veranderen."
     automatically_download_gravatars: "Download Gravatars voor gebruikers bij account creatie of aanpassing van email."
+    digest_topics: "Het maximale aantal populaire topics dat in de e-mailsamenvatting wordt weergegeven."
+    digest_posts: "Het maximale aantal populaire berichten dat in de e-mailsamenvatting wordt weergegeven."
+    digest_other_topics: "Het maximale aantal topics dat in de sectie 'Nieuw in topics en categorieën die u volgt' van de e-mailsamenvatting wordt getoond."
+    email_link_color: "De kleur van koppelingen in HTML-e-mails. Voer een kleurnaam ('blue') of hex-waarde ('#0000FF') in."
     detect_custom_avatars: "Wel of niet te verifiëren of gebruikers eigen profielfoto's hebben geüpload.  "
-    max_daily_gravatar_crawls: "Maximaal aantal keren op een dag dat Discourse Gravatar zal controleren voor aangepaste avatars"
+    max_daily_gravatar_crawls: "Maximale aantal keren dat Discourse op een dag bij Gravatar op aangepaste gravatars controleert"
     public_user_custom_fields: "Een toegestane lijst van veldnamen voor een gebruiker dat publiekelijk kan worden getoond."
     staff_user_custom_fields: "Een toegestane lijst van veldnamen voor een gebruiker dat aan medewerkers wordt getoond."
     enable_user_directory: "Biedt een overzicht van gebruikers aan om door te bladeren."
@@ -1123,6 +1135,7 @@ nl:
     hide_user_profiles_from_public: "Uitschakelen gebruikerskaarten, gebruikersprofielen en het gebruikersoverzicht voor anonieme gebruikers."
     allow_profile_backgrounds: "Gebruikers mogen een profielachtergrond instellen."
     sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat hij een melding krijgt over te veel opeenvolgende reacties."
+    get_a_room_threshold: "Aantal berichten dat een gebruiker aan dezelfde persoon in hetzelfde topic moet richten voordat deze wordt gewaarschuwd."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     dominating_topic_minimum_percent: "Welk percentage van de berichten een gebruiker moet maken in een onderwerp voordat ze worden herinnerd aan het te veel domineren van een topic."
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
@@ -1130,6 +1143,7 @@ nl:
     disable_edit_notifications: "Schakelt bewerkingsnotificaties van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
     automatically_unpin_topics: "Automatisch ont-pinnen van topics als de gebruiker onderaan de pagina komt."
     topic_page_title_includes_category: "Paginatitel van topic bevat de categorienaam."
+    share_anonymized_statistics: "Geanonimiseerde gebruiksstatistieken delen."
     full_name_required: "Volledige naam is een verplicht veld van het gebruikersprofiel."
     enable_names: "Toon de volledige naam van de gebruiker op hun profiel, gebruikerskaart en e-mails. Scahkel uit om volledige naam overal te verbergen."
     display_name_on_posts: "Laat de volledige naam van een gebruiker bij zijn berichten zien, na de @gebruikersnaam"
@@ -1173,6 +1187,14 @@ nl:
     default_categories_watching: "Lijst van categorieën die standaard worden bekeken."
     default_categories_tracking: "Lijst van categorieën die standaard worden bijgehouden."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
+    max_user_api_reqs_per_day: "Maximale aantal API-aanvragen van gebruiker per sleutel per dag"
+    max_user_api_reqs_per_minute: "Maximale aantal API-aanvragen van gebruiker per sleutel per minuut"
+    allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
+    allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
+    max_api_keys_per_user: "Maximale aantal API-aanvragen van gebruiker per gebruiker"
+    min_trust_level_for_user_api_key: "Vereiste vertrouwensniveau voor genereren van API-sleutels van gebruiker"
+    allowed_user_api_auth_redirects: "Toegestane URL voor authenticatie-omleiding voor API-sleutels van gebruiker"
+    allowed_user_api_push_urls: "Toegestane URL's voor server-push naar gebruikers-API"
     errors:
       invalid_email: "Ongeldig e-mailadres."
       invalid_username: "Er is geen gebruiker met die gebruikersnaam."
@@ -1187,12 +1209,21 @@ nl:
       invalid_string_min: "Moet te minste uit %{min} tekens bestaan."
       invalid_string_max: "Mag uit niet meer dan %{max} tekens bestaan."
       invalid_reply_by_email_address: "Waarde moet '%{reply_key}' bevatten en moet afwijken van de e-mail notificatie."
+      invalid_regex: "Regex is ongeldig of niet toegestaan."
   search:
     within_post: "#%{post_number} door %{username}"
     types:
       category: 'Categorieën'
       topic: 'Resultaten'
       user: 'Leden'
+  sso:
+    login_error: "Aanmeldingsfout"
+    not_found: "Uw account kon niet worden gevonden. Neem contact op met de beheerder van de website."
+    account_not_approved: "Uw account wacht op goedkeuring. U ontvangt een e-mailmelding zodra deze is goedgekeurd."
+    unknown_error: "Er is een probleem met uw account. Neem contact op met de beheerder van de website."
+    timeout_expired: "Time-out bij accountaanmelding, probeer u opnieuw aan te melden."
+    no_email: "Er is geen e-mailadres opgegeven. Neem contact op met de beheerder van de website."
+    email_error: "Er kon geen account met het e-mailadres <b>%{email}</b> worden geregistreerd. Neem contact op met de beheerder van de website."
   original_poster: "Oorspronkelijk geplaatst door"
   most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
@@ -1211,36 +1242,60 @@ nl:
     post_revision_text: "Eigendom overgezet van %{old_user} naar %{new_user}"
     deleted_user: "een verwijderde gebruiker"
   topic_statuses:
-    archived_enabled: "Deze topic is nu gearchiveerd en kan niet meer veranderd worden."
-    archived_disabled: "Deze topic is niet langer gearchiveerd en kan weer veranderd worden."
-    closed_enabled: "Deze topic is nu gesloten. Nieuwe reacties worden niet langer geaccepteerd."
-    closed_disabled: "Deze topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
+    archived_enabled: "Dit topic is nu gearchiveerd. Het is bevroren en kan op geen enkele manier worden gewijzigd."
+    archived_disabled: "Dit topic is nu niet meer gearchiveerd. Het is niet meer bevroren en kan worden gewijzigd."
+    closed_enabled: "Dit topic is nu gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+    closed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
+    autoclosed_message_max_posts:
+      one: "Dit bericht is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
+      other: "Dit bericht is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
+    autoclosed_topic_max_posts:
+      one: "Dit topic is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
+      other: "Dit topic is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
     autoclosed_enabled_days:
-      one: "Dit topic is automatisch na één dag gesloten. Reageren is niet meer mogelijk."
-      other: "Dit topic is automatisch na %{count} dagen gesloten. Reageren is niet meer mogelijk."
+      one: "Dit topic is na 1 dag automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      other: "Dit topic is na %{count} dagen automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_hours:
       one: "Dit topic is na 1 uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is na %{count} uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_minutes:
-      one: "Dit topic is automatisch na één minuut gesloten. Reageren is niet meer mogelijk."
-      other: "Dit topic is automatisch na %{count} minuten gesloten. Reageren is niet meer mogelijk."
+      one: "Dit topic is na 1 minuut automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      other: "Dit topic is na %{count} minuten automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_lastpost_days:
-      one: "Dit topic is automatisch gesloten één dag na het laatste antwoord. Reageren is niet meer mogelijk."
-      other: "Dit topic is automatisch gesloten %{count} dagen na het laatste antwoord. Reageren is niet meer mogelijk."
+      one: "Dit topic is 1 dag na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      other: "Dit topic is %{count} dagen na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_lastpost_hours:
       one: "Dit topic is 1 uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is %{count} uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_lastpost_minutes:
-      one: "Dit topic is automatisch gesloten één minuut na het laatste antwoord. Reageren is niet meer mogelijk."
-      other: "Dit topic is automatisch gesloten %{count} minuten na het laatste antwoord. Reageren is niet meer mogelijk."
-    autoclosed_disabled: "Deze topic is geopend. Reageren is mogelijk."
+      one: "Dit topic is 1 minuut na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      other: "Dit topic is %{count} minuten na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+    autoclosed_disabled_days:
+      one: "Dit topic is na 1 dag automatisch geopend."
+      other: "Dit topic is na %{count} dagen automatisch geopend."
+    autoclosed_disabled_hours:
+      one: "Dit topic is na 1 uur automatisch geopend."
+      other: "Dit topic is na %{count} uur automatisch geopend."
+    autoclosed_disabled_minutes:
+      one: "Dit topic is na 1 minuut automatisch geopend."
+      other: "Dit topic is na %{count} minuten automatisch geopend."
+    autoclosed_disabled_lastpost_days:
+      one: "Dit topic is 1 dag na het laatste antwoord automatisch geopend."
+      other: "Dit topic is %{count} dagen na het laatste antwoord automatisch geopend."
+    autoclosed_disabled_lastpost_hours:
+      one: "Dit topic is 1 uur na het laatste antwoord automatisch geopend."
+      other: "Dit topic is %{count} uur na het laatste antwoord automatisch geopend."
+    autoclosed_disabled_lastpost_minutes:
+      one: "Dit topic is 1 minuut na het laatste antwoord automatisch geopend."
+      other: "Dit topic is %{count} minuten na het laatste antwoord automatisch geopend."
+    autoclosed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
     autoclosed_disabled_lastpost: "Dit topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
-    pinned_enabled: "Deze topic is nu vastgepind en zal bovenaan de categorie verschijnen totdat de pin door de staf voor iedereen of een gebruiker voor zichzelf verwijderd wordt."
-    pinned_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
-    pinned_globally_enabled: "Deze topic is nu globaal vastgepind en zal bovenaan de lijst van topics in zijn categorie en alle andere topiclijsten staan. Wanneer iemand op 'Verwijder pin' drukt, zal de topic voor diegene niet meer bovenaan staan."
-    pinned_globally_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
-    visible_enabled: "Deze topic is nu zichtbaar en zal weer worden weergegeven in topiclijsten."
-    visible_disabled: "Deze topic is nu onzichtbaar en zal niet worden weergegeven in topiclijsten, en kan alleen via een directe link worden bezocht."
+    pinned_enabled: "Dit topic is nu vastgemaakt. Het verschijnt bovenaan de categorie ervan totdat het door een staflid wordt losgemaakt voor iedereen, of door individuele gebruikers voor henzelf."
+    pinned_disabled: "Dit topic is nu losgemaakt. Het verschijnt niet meer bovenaan de categorie ervan."
+    pinned_globally_enabled: "Dit topic is nu globaal vastgemaakt. Het verschijnt bovenaan de categorie ervan en alle topiclijsten totdat het door een staflid wordt losgemaakt voor iedereen, of door individuele gebruikers voor henzelf."
+    pinned_globally_disabled: "Dit topic is nu losgemaakt. Het verschijnt niet meer bovenaan de categorie ervan."
+    visible_enabled: "Dit topic is nu zichtbaar. Het wordt in topiclijsten weergegeven."
+    visible_disabled: "Dit topic is nu onzichtbaar. Het wordt niet meer in topiclijsten weergegeven. De enige manier om dit topic te zien, is via een directe koppeling."
   login:
     not_approved: "Uw account is nog niet goedgekeurd. U ontvangt een melding via e-mail zodra u zich kunt aanmelden."
     incorrect_username_email_or_password: "Incorrecte gebruikersnaam, e-mailadres of wachtwoord"
@@ -1260,7 +1315,7 @@ nl:
     password_too_long: "Wachtwoorden mogen maximaal 200 tekens lang zijn."
     email_too_long: "De e-mail die je hebt opgegeven is te lang. Mailbox namen mogen niet langer zijn dan 254 tekens, en domeinnamen niet langer dan 253 tekens."
     reserved_username: "Die gebruikersnaam is niet toegestaan."
-    missing_user_field: "Je hebt niet alle velden ingevuld."
+    missing_user_field: "U hebt niet alle gebruikersvelden ingevuld"
     close_window: "Authenticatie is voltooid. Sluit dit venster om verder te gaan."
   user:
     no_accounts_associated: "Geen accounts gekoppeld"
@@ -1290,6 +1345,11 @@ nl:
     subject_template: "%{invitee_name} heeft je uitgenodigd voor %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Geeft wachtwoord voor je %{site_name} account"
+  queued_posts_reminder:
+    text_body_template: |
+      Hallo,
+
+      Er zijn berichten van nieuwe gebruikers voor moderatie achtergehouden die momenteel op goedkeuring wachten. [Keur ze goed of weiger ze hier](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de gemeenschap meent het niet goed past bij het onderwerp, zoals momenteel bepaald door de titel en de eerste post."
     inappropriate: "Je bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](/guidelines)."
@@ -1547,7 +1607,7 @@ nl:
   discourse_hub:
     access_token_problem: "Licht een admin in: Gelieve de site instellingen bijwerken met de juiste discourse_org_access_key."
   performance_report:
-    initial_post_raw: Deze topic bevat dagelijkse performancerapporten van je site
+    initial_post_raw: Dit topic bevat dagelijkse prestatierapporten voor uw website.
     initial_topic_title: Performancerapportages van de website
   finish_installation:
     congratulations: "Gefeliciteerd, u hebt Discourse geïnstalleerd!"
@@ -1588,7 +1648,7 @@ nl:
         title: "Emoji"
       invites:
         title: "Staf uitnodigen"
-        description: "Je bent bijna klaar! Nodig wat stafleden uit om te helpen met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>het starten van discussies</a> met interessante topics en berichten om je gemeenschap op te zetten."
+        description: "U bent bijna klaar! Nodig wat stafleden uit om te helpen met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>het starten van discussies</a> met interessante topics en berichten om uw gemeenschap op te zetten."
       finished:
         title: "Uw Discourse is gereed!"
         description: |

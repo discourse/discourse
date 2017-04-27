@@ -101,6 +101,7 @@ fi:
           other: "%{count} vuotta myöhemmin"
       previous_month: 'Edellinen kuukausi'
       next_month: 'Seuraava kuukausi'
+      placeholder: Valitse päivämäärä
     share:
       topic: 'jaa linkki tähän ketjuun'
       post: '%{postNumber}. viesti'
@@ -389,6 +390,7 @@ fi:
       posts: "Viestit"
       mentions: "Maininnat"
       messages: "Viestit"
+      notification_level: "Ryhmäviestien oletusilmoitusasetus"
       alias_levels:
         title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @mainita sen?"
         nobody: "Ei kukaan"
@@ -1337,15 +1339,18 @@ fi:
       topic_status_update:
         title: "Aseta ajastin ketjulle"
         save: "Aseta ajastin"
-        time: "Aika:"
+        num_of_hours: "Kuinka monta tuntia:"
         remove: "Poista ajastin"
         publish_to: "Mihin julkaistaan:"
+        when: "Milloin:"
       auto_update_input:
-        limited:
-          units: "(# tuntia)"
-          examples: 'Syötä aika tunteina (24).'
-        all:
-          examples: 'Syötä aika tunteina (24), kellonaikana (17:30) tai aikaleimana (2013-11-22 14:00).'
+        later_today: "Myöhemmin tänään"
+        tomorrow: "Huomenna"
+        later_this_week: "Myöhemmin tällä viikolla"
+        this_weekend: "Viikonloppuna"
+        next_week: "Ensi viikolla"
+        pick_date_and_time: "Valitse päivämäärä ja kellonaika"
+        set_based_on_last_post: "Sulje viimeisimmän viestin mukaan"
       publish_to_category:
         title: "Julkaise määrättynä ajankohtana"
       temp_open:
@@ -1356,7 +1361,7 @@ fi:
         title: "Sulje väliaikaisesti"
       auto_close:
         title: "Sulje ketju automaattisesti"
-        label: "Aika, jolloin suljetaan automaattisesti:"
+        label: "Tunteja automaattiseen sulkeutumiseen:"
         error: "Arvo ei kelpaa."
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on ainakin näin vanha."
       status_update_notice:
@@ -1394,10 +1399,10 @@ fi:
           '3_2': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
           '3_1': 'Saat ilmoituksia, koska loit tämän ketjun.'
           '3': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
-          '2_8': 'Saat ilmoituksia, koska olet asettanut tämän alueen seurantaan.'
-          '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun.'
-          '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
-          '2': 'Saat ilmoituksia, koska <a href="/u/{{username}}/preferences">luit ketjua aiemmin</a>.'
+          '2_8': 'Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan.'
+          '2_4': 'Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun.'
+          '2_2': 'Näet uusien vastausten määrän, koska olet asettanut ketjun seurantaan.'
+          '2': 'Näet uusien vastausten määrän, koska <a href="/u/{{username}}/preferences">luit ketjua aiemmin</a>.'
           '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
@@ -2562,6 +2567,10 @@ fi:
         color: "Väri"
         opacity: "Läpinäkyvyys"
         copy: "Kopioi"
+        copy_to_clipboard: "Kopioi leikepöydälle"
+        copied_to_clipboard: "Kopioitiin leikepöydälle"
+        copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
+        theme_owner: "Et voi muokata, omistaja:"
         email_templates:
           title: "Sähköpostipohjat"
           subject: "Otsikko"
@@ -2586,7 +2595,7 @@ fi:
           color_scheme: "Värimalli"
           color_scheme_select: "Valitse värit, joita teema käyttä"
           custom_sections: "Mukautetut osiot:"
-          included_themes: "Sisältyvät teemat"
+          theme_components: "Teeman osat"
           child_themes_check: "Teemaan kuuluu tytärteemoja"
           css_html: "Mukautettu CSS/HTML"
           edit_css_html: "Muokkaa CSS/HTML"
@@ -2595,6 +2604,7 @@ fi:
           import_file_tip: ".dcstyle.json-tiedosto, jossa teema on"
           about_theme: "Tietoa teemasta"
           license: "Lisenssi"
+          component_of: "Teema on osa teemaa:"
           update_to_latest: "Päivitä tuoreimpaan"
           check_for_updates: "Hae päivityksiä"
           updating: "Päivitetään..."
@@ -2888,7 +2898,7 @@ fi:
         staged: "Luotu?"
         show_admin_profile: "Ylläpito"
         refresh_browsers: "Pakota sivun uudelleen lataus"
-        refresh_browsers_message: "Viesti lähetetty kaikille asiakkaille!"
+        refresh_browsers_message: "Sanoma lähetettiin kaikille päätelaitteille!"
         show_public_profile: "Näytä julkinen profiili"
         impersonate: 'Esiinny käyttäjänä'
         action_logs: "Toimintaloki"
