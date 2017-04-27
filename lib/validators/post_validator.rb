@@ -30,7 +30,7 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def post_body_validator(post)
-    return if options[:skip_post_body]
+    return if options[:skip_post_body] || post.topic&.pm_with_non_human_user?
     stripped_length(post)
     raw_quality(post)
   end
