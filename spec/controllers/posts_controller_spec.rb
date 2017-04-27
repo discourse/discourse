@@ -448,6 +448,12 @@ describe PostsController do
         let(:post_action) { PostAction.act(user, post, PostActionType.types[:bookmark]) }
         let(:admin) { Fabricate(:admin) }
 
+        it "returns the right response when post is not bookmarked" do
+          xhr :put, :bookmark, post_id: Fabricate(:post, user: user).id
+
+          expect(response.status).to eq(404)
+        end
+
         it 'should be able to remove a bookmark' do
           post_action
           xhr :put, :bookmark, post_id: post.id
