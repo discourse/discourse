@@ -234,8 +234,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    user_email = UserEmail.find_by(email: Email.downcase(email))
-    user_email.user if user_email
+    UserEmail.find_by(email: Email.downcase(email))&.user
   end
 
   def self.find_by_username(username)
@@ -915,7 +914,7 @@ class User < ActiveRecord::Base
   end
 
   def email
-    primary_email.email if primary_email
+    primary_email&.email
   end
 
   def email=(email)
@@ -927,8 +926,7 @@ class User < ActiveRecord::Base
   end
 
   def associate_primary_email
-    primary_email.user_id = self.id
-    primary_email.save
+    primary_email.update!(user_id: self.id)
   end
 
   protected
@@ -1110,7 +1108,6 @@ end
 #  name                    :string
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
-#  email                   :string(513)      not null
 #  password_hash           :string(64)
 #  salt                    :string(32)
 #  active                  :boolean          default(FALSE), not null
@@ -1139,6 +1136,7 @@ end
 #  trust_level_locked      :boolean          default(FALSE), not null
 #  staged                  :boolean          default(FALSE), not null
 #  first_seen_at           :datetime
+#  primary_email_id        :integer          not null
 #
 # Indexes
 #
@@ -1146,6 +1144,7 @@ end
 #  idx_users_moderator                (id)
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
+#  index_users_on_primary_email_id    (primary_email_id)
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
 #  index_users_on_username            (username) UNIQUE
 #  index_users_on_username_lower      (username_lower) UNIQUE

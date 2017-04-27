@@ -16,3 +16,18 @@ class UserEmail < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: user_emails
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  email      :string(513)
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_user_emails_on_user_id  (user_id)
+#
