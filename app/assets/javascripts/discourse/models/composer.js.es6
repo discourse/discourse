@@ -73,6 +73,11 @@ const Composer = RestModel.extend({
     }
   },
 
+  @computed('categoryId')
+  category(categoryId) {
+    return categoryId ? this.site.categories.findBy('id', categoryId) : null;
+  },
+
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
@@ -279,13 +284,14 @@ const Composer = RestModel.extend({
 
     @property minimumTitleLength
   **/
-  minimumTitleLength: function() {
-    if (this.get('privateMessage')) {
+  @computed('privateMessage')
+  minimumTitleLength(privateMessage) {
+    if (privateMessage) {
       return this.siteSettings.min_private_message_title_length;
     } else {
       return this.siteSettings.min_topic_title_length;
     }
-  }.property('privateMessage'),
+  },
 
   @computed('minimumPostLength', 'replyLength', 'canEditTopicFeaturedLink')
   missingReplyCharacters(minimumPostLength, replyLength, canEditTopicFeaturedLink) {
@@ -299,16 +305,19 @@ const Composer = RestModel.extend({
 
     @property minimumPostLength
   **/
-  minimumPostLength: function() {
-    if( this.get('privateMessage') ) {
+  @computed('privateMessage', 'topicFirstPost', 'topic.pm_with_non_human_user')
+  minimumPostLength(privateMessage, topicFirstPost, pmWithNonHumanUser) {
+    if (pmWithNonHumanUser) {
+      return 1;
+    } else if (privateMessage) {
       return this.siteSettings.min_private_message_post_length;
-    } else if (this.get('topicFirstPost')) {
+    } else if (topicFirstPost) {
       // first post (topic body)
       return this.siteSettings.min_first_post_length;
     } else {
       return this.siteSettings.min_post_length;
     }
-  }.property('privateMessage', 'topicFirstPost'),
+  },
 
   /**
     Computes the length of the title minus non-significant whitespaces

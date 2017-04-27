@@ -23,7 +23,7 @@ class TopicStatusUpdate < ActiveRecord::Base
   end
 
   after_save do
-    if (execute_at_changed? || user_id_changed?) && topic
+    if (execute_at_changed? || user_id_changed?)
       now = Time.zone.now
       time = execute_at < now ? now : execute_at
 
@@ -40,7 +40,9 @@ class TopicStatusUpdate < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    TopicStatusUpdate.where("execute_at < ?", Time.zone.now).find_each do |topic_status_update|
+    TopicStatusUpdate.where("topic_status_updates.execute_at < ?", Time.zone.now)
+      .find_each do |topic_status_update|
+
       topic_status_update.send(
         "schedule_auto_#{self.types[topic_status_update.status_type]}_job",
         topic_status_update.execute_at
@@ -76,6 +78,7 @@ class TopicStatusUpdate < ActiveRecord::Base
     end
 
     def schedule_auto_open_job(time)
+      return unless topic
       topic.update_status('closed', true, user) if !topic.closed
 
       Jobs.enqueue_at(time, :toggle_topic_closed,
@@ -85,6 +88,7 @@ class TopicStatusUpdate < ActiveRecord::Base
     end
 
     def schedule_auto_close_job(time)
+      return unless topic
       topic.update_status('closed', false, user) if topic.closed
 
       Jobs.enqueue_at(time, :toggle_topic_closed,

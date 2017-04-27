@@ -13,10 +13,10 @@ describe UsersController do
         expect(response).to be_success
       end
 
-      it "raises an error for anon when profiles are hidden" do
+      it "should redirect to login page for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         xhr :get, :show, username: user.username, format: :json
-        expect(response).not_to be_success
+        expect(response).to redirect_to '/login'
       end
 
     end

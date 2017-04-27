@@ -78,15 +78,28 @@ module Discourse
       path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
     end]
 
-    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
-                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
-                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
-                                 'pretty-text-bundle.js', 'wizard.css', 'wizard-application.js',
-                                 'wizard-vendor.js', 'plugin.js', 'plugin-third-party.js']
+    config.assets.precompile += %w{
+                                 vendor.js admin.js preload-store.js
+                                 browser-update.js break_string.js ember_jquery.js
+                                 pretty-text-bundle.js wizard-application.js
+                                 wizard-vendor.js plugin.js plugin-third-party.js
+                                 }
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
       config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
+    end
+
+    # out of the box sprockets 3 grabs loose files that are hanging in assets,
+    # the exclusion list does not include hbs so you double compile all this stuff
+    initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
+      app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
+      start_path = ::Rails.root.join("app/assets").to_s
+      exclude = ['.es6', '.hbs', '.js', '.css', '']
+      app.config.assets.precompile << lambda do |logical_path, filename|
+        filename.start_with?(start_path) &&
+        !exclude.include?(File.extname(logical_path))
+      end
     end
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
@@ -168,6 +181,8 @@ module Discourse
     if GlobalSetting.relative_url_root.present?
       config.relative_url_root = GlobalSetting.relative_url_root
     end
+
+    require_dependency 'stylesheet/manager'
 
     config.after_initialize do
       # require common dependencies that are often required by plugins

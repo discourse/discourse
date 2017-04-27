@@ -1493,6 +1493,15 @@ describe Topic do
         expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
       end
     end
+
+    it "trashes topic embed record" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, post_number: 1)
+      topic_embed = TopicEmbed.create!(topic_id: topic.id, embed_url: "https://blog.codinghorror.com/password-rules-are-bullshit", post_id: post.id)
+      topic.trash!
+      topic_embed.reload
+      expect(topic_embed.deleted_at).not_to eq(nil)
+    end
   end
 
   describe 'recover!' do
@@ -1508,6 +1517,15 @@ describe Topic do
         topic = Fabricate(:topic, category: category)
         expect { topic.recover! }.to_not change { category.reload.topic_count }
       end
+    end
+
+    it "recovers topic embed record" do
+      topic = Fabricate(:topic, deleted_at: 1.day.ago)
+      post = Fabricate(:post, topic: topic, post_number: 1)
+      topic_embed = TopicEmbed.create!(topic_id: topic.id, embed_url: "https://blog.codinghorror.com/password-rules-are-bullshit", post_id: post.id, deleted_at: 1.day.ago)
+      topic.recover!
+      topic_embed.reload
+      expect(topic_embed.deleted_at).to eq(nil)
     end
   end
 
@@ -1847,6 +1865,56 @@ describe Topic do
       Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
       expect(Topic.with_no_response_total).to eq(1)
+    end
+  end
+
+  describe '#pm_with_non_human_user?' do
+    let(:robot) { Fabricate(:user, id: -3) }
+    let(:user) { Fabricate(:user) }
+
+    let(:topic) do
+      Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: robot),
+        Fabricate.build(:topic_allowed_user, user: user)
+      ])
+    end
+
+    describe 'when PM is between a human and a non human user' do
+      it 'should return true' do
+        expect(topic.pm_with_non_human_user?).to be(true)
+      end
+    end
+
+    describe 'when PM contains 2 human users and a non human user' do
+      it 'should return false' do
+        Fabricate(:topic_allowed_user, topic: topic, user: Fabricate(:user))
+
+        expect(topic.pm_with_non_human_user?).to be(false)
+      end
+    end
+
+    describe 'when PM only contains a user' do
+      it 'should return true' do
+        topic.topic_allowed_users.first.destroy!
+
+        expect(topic.reload.pm_with_non_human_user?).to be(true)
+      end
+    end
+
+    describe 'when PM contains a group' do
+      it 'should return false' do
+        Fabricate(:topic_allowed_group, topic: topic)
+
+        expect(topic.pm_with_non_human_user?).to be(false)
+      end
+    end
+
+    describe 'when topic is not a PM' do
+      it 'should return false' do
+        topic.convert_to_public_topic(Fabricate(:admin))
+
+        expect(topic.pm_with_non_human_user?).to be(false)
+      end
     end
   end
 end

@@ -334,7 +334,6 @@ ko:
       request: "그룹 참여 요청하기"
       closed_group: 닫힌 그룹
       is_group_user: "당신은 이 그룹의 구성원입니다."
-      allow_membership_requests: "사용자가 그룹 소유자에게 가입 요청을 하는 것을 허용합니다. (모든 유저가 그룹을 맨션할 수 있어야 함)"
       membership: "회원제"
       name: "이름"
       user_count: "멤버 수"
@@ -909,15 +908,6 @@ ko:
       modal_cancel: "취소"
       cant_send_pm: "죄송합니다. %{username}님에게 메시지를 보낼 수 없습니다."
       admin_options_title: "이 주제에 대한 옵션 설정"
-      auto_close:
-        label: "주제 자동-닫기 시간:"
-        error: "유효한 값은 눌러주세요."
-        based_on_last_post: "적어도 주제의 마지막 글이 이만큼 오래되지 않았으면 닫지 마세요."
-        all:
-          examples: '시간을 숫자(24이하)로 입력하거나 분을 포함한 시간(17:30) 혹은 타임스탬프(2013-11-22 14:00) 형식으로 입력하세요.'
-        limited:
-          units: "(# 시간)"
-          examples: '시간에 해당하는 숫자를 입력하세요. (24)'
     notifications:
       title: "@name 언급, 글과 주제에 대한 답글, 개인 메시지 등에 대한 알림"
       none: "현재 알림을 불러올 수 없습니다."
@@ -1095,11 +1085,7 @@ ko:
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "주제가 삭제되었습니다"
-      auto_close_notice: "이 주제는 곧 자동으로 닫힙니다. %{timeLeft}."
-      auto_close_notice_based_on_last_post: "이 주제는 마지막 답글이 달린 %{duration} 후 닫힙니다."
       auto_close_title: '자동으로 닫기 설정'
-      auto_close_save: "저장"
-      auto_close_remove: "이 주제를 자동으로 닫지 않기"
       progress:
         title: 진행 중인 주제
         go_top: "맨위"
@@ -1119,7 +1105,6 @@ ko:
           '2_8': '이 주제를 추적하고 있어서 알림을 받게 됩니다.'
           '2_4': '이 주제에 답글을 게시하여서 알림을 받게 됩니다.'
           '2_2': '이 주제를 추적하고 있어서 알림을 받게 됩니다.'
-          '2': '이 주제를 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
           '1_2': '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '1': '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '0_7': '이 주제에 관한 모든 알림을 무시하고 있습니다.'
@@ -1155,7 +1140,6 @@ ko:
         open: "주제 열기"
         close: "주제 닫기"
         multi_select: "글 선택"
-        auto_close: "자동으로 닫기..."
         pin: "주제 고정..."
         unpin: "주제 고정 취소..."
         unarchive: "주제 보관 취소"
@@ -1862,32 +1846,12 @@ ko:
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
-        css: "CSS"
-        header: "헤더"
-        top: "Top"
-        footer: "푸터(하단영역)"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "</head> 태그 전에 들어갈 HTML"
-        body_tag:
-          text: "</body>"
-          title: "</body> 태그 전에 들어갈 HTML"
-        override_default: "표준 스타일 시트를 포함하지 마십시오"
-        enabled: "사용가능?"
         preview: "미리 보기"
-        undo_preview: "미리보기 삭제"
-        rescue_preview: "기본 스타일"
-        explain_preview: "이 커스텀 스타일시트를 적용한 상태로 사이트를 봅니다."
-        explain_undo_preview: "현재 적용되어 있는 커스톰 스타일시트로 돌아갑니다."
-        explain_rescue_preview: "기본 스타일시트를 적용한 상태로 사이트를 봅니다."
         save: "저장"
         new: "새 사용자 지정"
         new_style: "새로운 스타일"
         import: "가져오기"
-        import_title: "파일을 선택하거나 텍스트를 붙여넣으세요"
         delete: "삭제"
-        delete_confirm: "이 정의를 삭제 하시겠습니까?"
         about: "사이트 Customization은 사이트의 스타일시트와 해더를 수정할 수 있게 해줍니다. 새로운 것을 추가하거나 기존 것을 선택해서 편집하세요."
         color: "색"
         opacity: "투명도"
@@ -1900,13 +1864,9 @@ ko:
           none_selected: "편집하려는 이메일 템플릿을 선택하세요."
           revert: "변경사항 취소"
           revert_confirm: "정말로 변경사항을 되돌리시겠습니까?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS, HTML 사용자 정의"
         colors:
           title: "색상"
           long_title: "색상 Schemes"
-          about: "CSS 작성 없이 사이트에 사용되는 색을 수정합니다. 시작하려면 Scheme을 추가하세요."
           new_name: "새로운 색 조합"
           copy_name_prefix: "복사본"
           delete_confirm: "이 컬러 스키마를 제거합니까?"
@@ -2037,8 +1997,6 @@ ko:
             change_trust_level: "회원등급 변경"
             change_username: "아이디 변경"
             change_site_setting: "사이트 설정 변경"
-            change_site_customization: "사이트 커스텀화 변경"
-            delete_site_customization: "사이트 커스텀화 삭제"
             change_site_text: "site text 변경"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
@@ -2157,8 +2115,6 @@ ko:
         blocked: "블락"
         staged: "격리조치?"
         show_admin_profile: "관리자"
-        edit_title: "제목 수정"
-        save_title: "제목 저장"
         refresh_browsers: "브라우저 새로 고침"
         refresh_browsers_message: "모든 클라이언트에게 메시지 보내기"
         show_public_profile: "공개 프로필 보기"

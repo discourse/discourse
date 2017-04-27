@@ -687,9 +687,6 @@ uk:
       modal_ok: "OK"
       modal_cancel: "Скасувати"
       admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"
-      auto_close:
-        limited:
-          units: "(# годин)"
     notifications:
       more: "переглянути старіші сповіщення"
       total_flagged: "всього дописів, на які поскаржилися"
@@ -788,10 +785,7 @@ uk:
       jump_reply_up: перейти до ранішої відповіді
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
-      auto_close_notice: "Ця тема автоматично закриється %{timeLeft}."
       auto_close_title: 'Налаштування автоматичного закриття'
-      auto_close_save: "Зберегти"
-      auto_close_remove: "Не закривати цю тему автоматично"
       timeline:
         back: "Назад"
       progress:
@@ -810,7 +804,6 @@ uk:
           '3': 'Ви будете отримувати сповіщення, бо Ви слідкуєте за цією темою.'
           '2_4': 'Ви будете отримувати сповіщення, бо Ви залишили відповідь в цій темі.'
           '2_2': 'Ви будете отримувати сповіщення, бо Ви стежите за цією темою.'
-          '2': 'Ви будете отримувати сповіщення, бо Ви <a href="/users/{{username}}/preferences">читаєте цю тему</a>.'
           '0_7': 'Ви ігноруєте всі сповіщення у цій категорії.'
           '0_2': 'Ви ігноруєте всі сповіщення з цієї теми.'
           '0': 'Ви ігноруєте всі сповіщення з цієї теми.'
@@ -1323,18 +1316,12 @@ uk:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
-        css: "CSS"
-        header: "Header"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
         preview: "preview"
-        rescue_preview: "стиль по замовчанню"
         save: "Save"
         new: "New"
         new_style: "New Style"
         import: "Імпорт"
         delete: "Delete"
-        delete_confirm: "Delete this customization?"
         color: "Колір"
         opacity: "Непрозорість"
         copy: "Копіювати"
@@ -1344,13 +1331,9 @@ uk:
           body: "Тіло"
           revert: "Повернути зміни"
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Налаштування CSS та HTML"
         colors:
           title: "Кольори"
           long_title: "Схеми Кольорів"
-          about: "Змінюйте кольори, що використовуються на сайті без написання CSS. Додати схему, щоб почати. "
           new_name: "Нова Схема Кольорів"
           copy_name_prefix: "Копіювати з"
           delete_confirm: "Видалити цю кольорову схему?"
@@ -1463,8 +1446,6 @@ uk:
             change_trust_level: "зміна рівня довіри"
             change_username: "зміна імені користувача"
             change_site_setting: "зміна налаштування сайта"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
             change_site_text: "змінити текст сайту"
             suspend_user: "призупинення користувача"
             unsuspend_user: "скасування призупинення"
@@ -1552,8 +1533,6 @@ uk:
         admin: "Адмін?"
         blocked: "Заблоковано?"
         show_admin_profile: "Адмін"
-        edit_title: "Редагувати назву"
-        save_title: "Зберегти назву"
         refresh_browsers: "Примусово оновити оглядач"
         refresh_browsers_message: "Повідомлення надіслано всім клієнтам!"
         show_public_profile: "Показати публічний профіль"

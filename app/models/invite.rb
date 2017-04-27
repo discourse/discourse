@@ -116,6 +116,8 @@ class Invite < ActiveRecord::Base
       invite = nil
     end
 
+    invite.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now) if invite
+
     if !invite
       create_args = { invited_by: invited_by, email: lower_email }
       create_args[:moderator] = true if opts[:moderator]

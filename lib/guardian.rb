@@ -159,7 +159,7 @@ class Guardian
   end
 
   def can_view_action_logs?(target)
-    is_staff? && target
+    target.present? && is_staff?
   end
 
   # Can we approve it?
@@ -295,6 +295,14 @@ class Guardian
     return true if is_staff?
     return false if entity_type == "admin"
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
+  end
+
+  def allow_theme?(theme_key)
+    if is_staff?
+      Theme.theme_keys.include?(theme_key)
+    else
+      Theme.user_theme_keys.include?(theme_key)
+    end
   end
 
 

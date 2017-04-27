@@ -14,9 +14,10 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 ### Hardware Requirements
 
-- Dual core CPU recommended
+- modern single core CPU, dual core recommended
 - 1 GB RAM minimum (with [swap][swap])
 - 64 bit Linux compatible with Docker
+- 10 GB disk space minimum
 
 ### Software Requirements
 

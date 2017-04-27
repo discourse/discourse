@@ -45,17 +45,17 @@ module ApplicationHelper
     end
   end
 
-  def script(*args)
+  def preload_script(script)
+    path = asset_path("#{script}.js")
+
     if  GlobalSetting.cdn_url &&
         GlobalSetting.cdn_url.start_with?("https") &&
         ENV["COMPRESS_BROTLI"] == "1" &&
         request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
-      tags = javascript_include_tag(*args)
-      tags.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
-      tags.html_safe
-    else
-      javascript_include_tag(*args)
+        path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
+"<link rel='preload' href='#{path}' as='script'/>
+<script src='#{path}'></script>".html_safe
   end
 
   def discourse_csrf_tags
@@ -248,32 +248,23 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
-  NO_CUSTOM = "no_custom".freeze
-  NO_PLUGINS = "no_plugins".freeze
-  ONLY_OFFICIAL = "only_official".freeze
-  SAFE_MODE = "safe_mode".freeze
-
   def customization_disabled?
-    safe_mode = params[SAFE_MODE]
-    session[:disable_customization] || (safe_mode && safe_mode.include?(NO_CUSTOM))
+    request.env[ApplicationController::NO_CUSTOM]
   end
 
   def allow_plugins?
-    safe_mode = params[SAFE_MODE]
-    !(safe_mode && safe_mode.include?(NO_PLUGINS))
+    !request.env[ApplicationController::NO_PLUGINS]
   end
 
   def allow_third_party_plugins?
-    safe_mode = params[SAFE_MODE]
-    !(safe_mode && (safe_mode.include?(NO_PLUGINS) || safe_mode.include?(ONLY_OFFICIAL)))
+    allow_plugins? && !request.env[ApplicationController::ONLY_OFFICIAL]
   end
 
   def normalized_safe_mode
-    mode_string = params["safe_mode"]
     safe_mode = nil
-    (safe_mode ||= []) << NO_CUSTOM if mode_string.include?(NO_CUSTOM)
-    (safe_mode ||= []) << NO_PLUGINS if mode_string.include?(NO_PLUGINS)
-    (safe_mode ||= []) << ONLY_OFFICIAL if mode_string.include?(ONLY_OFFICIAL)
+    (safe_mode ||= []) << ApplicationController::NO_CUSTOM if customization_disabled?
+    (safe_mode ||= []) << ApplicationController::NO_PLUGINS if !allow_plugins?
+    (safe_mode ||= []) << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
     if safe_mode
       safe_mode.join(",").html_safe
     end
@@ -315,5 +306,33 @@ module ApplicationHelper
     rescue
       ''
     end
+  end
+
+  def theme_key
+    if customization_disabled?
+      nil
+    else
+      request.env[:resolved_theme_key]
+    end
+  end
+
+  def build_plugin_html(name)
+    return "" unless allow_plugins?
+    DiscoursePluginRegistry.build_html(name, controller) || ""
+  end
+
+  def theme_lookup(name)
+    lookup = Theme.lookup_field(theme_key, mobile_view? ? :mobile : :desktop, name)
+    lookup.html_safe if lookup
+  end
+
+  def discourse_stylesheet_link_tag(name, opts={})
+    if opts.key?(:theme_key)
+      key = opts[:theme_key] unless customization_disabled?
+    else
+      key = theme_key
+    end
+
+    Stylesheet::Manager.stylesheet_link_tag(name, 'all', key)
   end
 end

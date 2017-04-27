@@ -7,6 +7,7 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
+require_dependency 'search'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -39,12 +40,16 @@ class Topic < ActiveRecord::Base
     update_category_topic_count_by(-1) if deleted_at.nil?
     super(trashed_by)
     update_flagged_posts_count
+    self.topic_embed.trash! if has_topic_embed?
   end
 
   def recover!
     update_category_topic_count_by(1) unless deleted_at.nil?
     super
     update_flagged_posts_count
+    unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
+      topic_embed.recover!
+    end
   end
 
   rate_limit :default_rate_limiter
@@ -117,8 +122,10 @@ class Topic < ActiveRecord::Base
   has_many :invites, through: :topic_invites, source: :invite
   has_many :topic_status_updates, dependent: :destroy
 
-  has_one :warning
+  has_one :user_warning
   has_one :first_post, -> {where post_number: 1}, class_name: Post
+
+  has_one :topic_embed, dependent: :destroy
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -883,9 +890,15 @@ SQL
   end
 
   def self.relative_url(id, slug, post_number=nil)
-    url = "#{Discourse.base_uri}/t/#{slug}/#{id}"
+    url = "#{Discourse.base_uri}/t/"
+    url << "#{slug}/" if slug.present?
+    url << id.to_s
     url << "/#{post_number}" if post_number.to_i > 1
     url
+  end
+
+  def slugless_url(post_number=nil)
+    Topic.relative_url(id, nil, post_number)
   end
 
   def relative_url(post_number=nil)
@@ -1172,6 +1185,15 @@ SQL
     private_topic = TopicConverter.new(self, user).convert_to_private_message
     add_small_action(user, "private_topic") if private_topic
     private_topic
+  end
+
+  def pm_with_non_human_user?
+    Topic.private_messages
+      .joins("LEFT JOIN topic_allowed_groups ON topics.id = topic_allowed_groups.topic_id")
+      .where("topic_allowed_groups.topic_id IS NULL")
+      .where("topics.id = ?", self.id)
+      .where("(SELECT COUNT(*) FROM topic_allowed_users WHERE topic_allowed_users.topic_id = ? AND topic_allowed_users.user_id > 0) = 1", self.id)
+      .exists?
   end
 
   private

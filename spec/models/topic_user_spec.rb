@@ -72,7 +72,7 @@ describe TopicUser do
     guardian = Guardian.new(u)
     TopicCreator.create(u, guardian, title: "this is my topic title")
   }
-  let(:topic_user) { TopicUser.get(topic,user) }
+  let(:topic_user) { TopicUser.get(topic, user) }
   let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
 
   let(:post) { Fabricate(:post, topic: topic, user: user) }
@@ -99,6 +99,18 @@ describe TopicUser do
   end
 
   describe 'notifications' do
+    it 'should trigger the right DiscourseEvent' do
+      begin
+        called = false
+        DiscourseEvent.on(:topic_notification_level_changed) { called = true }
+
+        TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        expect(called).to eq(true)
+      ensure
+        DiscourseEvent.off(:topic_notification_level_changed) { called = true }
+      end
+    end
 
     it 'should be set to tracking if auto_track_topics is enabled' do
       user.user_option.update_column(:auto_track_topics_after_msecs, 0)
@@ -236,6 +248,50 @@ describe TopicUser do
         post_creator.create
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
         expect(topic_new_user.notifications_reason_id).to eq(TopicUser.notification_reasons[:created_post])
+      end
+
+      it 'should update tracking state when you reply' do
+        new_user.user_option.update_column(:notification_level_when_replying, 3)
+        post_creator.create
+        TopicUser.exec_sql("UPDATE topic_users set notification_level=2
+                       WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
+        TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:watching])
+
+        tu = TopicUser.find_by(user_id: topic_new_user.user_id, topic_id: topic_new_user.topic_id)
+        expect(tu.notification_level).to eq(TopicUser.notification_levels[:watching])
+      end
+
+      it 'should not update tracking state when you reply' do
+        new_user.user_option.update_column(:notification_level_when_replying, 3)
+        post_creator.create
+        TopicUser.exec_sql("UPDATE topic_users set notification_level=3
+                       WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
+        TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:tracking])
+
+        tu = TopicUser.find_by(user_id: topic_new_user.user_id, topic_id: topic_new_user.topic_id)
+        expect(tu.notification_level).to eq(TopicUser.notification_levels[:watching])
+      end
+
+      it 'should not update tracking state when state manually set to normal you reply' do
+        new_user.user_option.update_column(:notification_level_when_replying, 3)
+        post_creator.create
+        TopicUser.exec_sql("UPDATE topic_users set notification_level=1
+                       WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
+        TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:tracking])
+
+        tu = TopicUser.find_by(user_id: topic_new_user.user_id, topic_id: topic_new_user.topic_id)
+        expect(tu.notification_level).to eq(TopicUser.notification_levels[:regular])
+      end
+
+      it 'should not update tracking state when state manually set to muted you reply' do
+        new_user.user_option.update_column(:notification_level_when_replying, 3)
+        post_creator.create
+        TopicUser.exec_sql("UPDATE topic_users set notification_level=0
+                       WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: topic_new_user.topic_id, user_id: topic_new_user.user_id)
+        TopicUser.auto_notification(topic_new_user.user_id, topic_new_user.topic_id, TopicUser.notification_reasons[:created_post], TopicUser.notification_levels[:tracking])
+
+        tu = TopicUser.find_by(user_id: topic_new_user.user_id, topic_id: topic_new_user.topic_id)
+        expect(tu.notification_level).to eq(TopicUser.notification_levels[:muted])
       end
 
       it 'should not automatically track topics you reply to and have set state manually' do

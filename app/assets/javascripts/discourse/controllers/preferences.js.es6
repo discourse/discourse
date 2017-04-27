@@ -1,11 +1,22 @@
 import { setting } from 'discourse/lib/computed';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import { cook } from 'discourse/lib/text';
 import { NotificationLevels } from 'discourse/lib/notification-levels';
+import { listThemes, selectDefaultTheme, previewTheme } from 'discourse/lib/theme-selector';
 
 export default Ember.Controller.extend(CanCheckEmails, {
+
+  userSelectableThemes: function(){
+    return listThemes(this.site);
+  }.property(),
+
+  @observes("selectedTheme")
+  themeKeyChanged() {
+    let key = this.get("selectedTheme");
+    previewTheme(key);
+  },
 
   @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")
   selectedCategories(watched, tracked, muted) {
@@ -113,7 +124,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
                        { name: I18n.t('user.auto_track_options.after_10_minutes'), value: 600000 }],
 
   notificationLevelsForReplying: [{ name: I18n.t('topic.notifications.watching.title'), value: NotificationLevels.WATCHING },
-                                  { name: I18n.t('topic.notifications.tracking.title'), value: NotificationLevels.TRACKING }],
+                                  { name: I18n.t('topic.notifications.tracking.title'), value: NotificationLevels.TRACKING },
+                                  { name: I18n.t('topic.notifications.regular.title'), value: NotificationLevels.REGULAR }],
 
 
   considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
@@ -162,6 +174,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
           Discourse.User.currentProp('name', model.get('name'));
         }
         model.set('bio_cooked', cook(model.get('bio_raw')));
+        selectDefaultTheme(this.get('selectedTheme'));
         this.set('saved', true);
       }).catch(popupAjaxError);
     },

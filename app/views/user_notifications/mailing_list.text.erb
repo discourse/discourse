@@ -4,28 +4,30 @@
 <%- if @new_topic_posts.keys.present? -%>
   ### <%= t 'user_notifications.mailing_list.new_topics' %>
   <%- @new_topic_posts.keys.each do |topic| %>
-    <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
+    <%= mailing_list_topic_text(topic) %>
   <%- end -%>
 <%- end -%>
 
 <%- if @existing_topic_posts.keys.present? -%>
   ### <%= t 'user_notifications.mailing_list.new_topics' %>
   <%- @existing_topic_posts.keys.each do |topic| -%>
-    <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
+    <%= mailing_list_topic_text(topic) %>
     <%= @existing_topic_posts[topic].length %>
   <%- end -%>
 <%- end -%>
 
 --------------------------------------------------------------------------------
 
-<%- @posts_by_topic.keys.each do |topic| %>
-  ### <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
+<%- unless SiteSetting.private_email? %>
+  <%- @posts_by_topic.keys.each do |topic| %>
+    ### <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
 
-  <%- @posts_by_topic[topic].each do |post| -%>
-    <%= post.user.name || post.user.username %> - <%= post.created_at %>
---------------------------------------------------------------------------------
-    <%= post.raw %>
+    <%- @posts_by_topic[topic].each do |post| -%>
+      <%= post.user.name || post.user.username %> - <%= post.created_at %>
+  --------------------------------------------------------------------------------
+      <%= post.raw %>
 
-    
-  <%- end -%>
+
+    <%- end -%>
+  <%- end %>
 <%- end %>

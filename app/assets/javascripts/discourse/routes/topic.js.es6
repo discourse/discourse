@@ -19,7 +19,7 @@ const TopicRoute = Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor('topic');
     if (model) {
-      const result = model.get('title'),
+      const result = model.get('unicode_title') ? model.get('unicode_title') : model.get('title'),
             cat = model.get('category');
 
       // Only display uncategorized in the title tag if it was renamed
@@ -54,7 +54,7 @@ const TopicRoute = Discourse.Route.extend({
       const model = this.modelFor('topic');
       model.set('topic_status_update', Ember.Object.create(model.get('topic_status_update')));
       showModal('edit-topic-status-update', { model });
-      this.controllerFor('modal').set('modalClass', 'topic-close-modal');
+      this.controllerFor('modal').set('modalClass', 'edit-topic-status-update-modal');
     },
 
     showChangeTimestamp() {

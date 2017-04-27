@@ -30,7 +30,6 @@ class Autospec::ReloadCss
       [:desktop, :mobile].each do |style|
         s = DiscourseStylesheets.new(style)
         s.compile
-        s.ensure_digestless_file
         paths << "public" + s.stylesheet_relpath_no_digest
       end
       ActiveRecord::Base.clear_active_connections!

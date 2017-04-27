@@ -143,12 +143,14 @@ export default Em.Component.extend({
     matchRegEx = matchRegEx || replaceRegEx;
     const match = this.filterBlocks(matchRegEx);
 
+    let val = this.get(key);
+
     if (match.length !== 0) {
       const userInput = match[0].replace(replaceRegEx, '');
-      if (this.get(key) !== userInput) {
+      if (val !== userInput) {
         this.set(key, userInput);
       }
-    } else if(this.get(key).length !== 0) {
+    } else if(val && val.length !== 0) {
       this.set(key, '');
     }
   },

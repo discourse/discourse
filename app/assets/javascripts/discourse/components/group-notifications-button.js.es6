@@ -6,6 +6,6 @@ export default NotificationsButton.extend({
   i18nPrefix: 'groups.notifications',
 
   clicked(id) {
-    this.get('group').setNotification(id);
+    this.get('group').setNotification(id, this.get('user.id'));
   }
 });

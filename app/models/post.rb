@@ -400,9 +400,11 @@ class Post < ActiveRecord::Base
     "#{Discourse.base_url}#{url}"
   end
 
-  def url
+  def url(opts=nil)
+    opts ||= {}
+
     if topic
-      Post.url(topic.slug, topic.id, post_number)
+      Post.url(topic.slug, topic.id, post_number, opts)
     else
       "/404"
     end
@@ -412,8 +414,13 @@ class Post < ActiveRecord::Base
     "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.create_key_for(user, self)}"
   end
 
-  def self.url(slug, topic_id, post_number)
-    "/t/#{slug}/#{topic_id}/#{post_number}"
+  def self.url(slug, topic_id, post_number, opts=nil)
+    opts ||= {}
+
+    result = "/t/"
+    result << "#{slug}/" unless !!opts[:without_slug]
+
+    "#{result}#{topic_id}/#{post_number}"
   end
 
   def self.urls(post_ids)

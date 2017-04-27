@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <meta name="discourse_theme_key" content="<%= theme_key %>">
     <%= render partial: "layouts/head" %>
-    <%= render partial: "common/special_font_face" %>
-    <%= render partial: "common/discourse_stylesheet" %>
     <%= discourse_csrf_tags %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
@@ -22,26 +21,26 @@
       window.EmberENV['FORCE_JQUERY'] = true;
     </script>
 
-    <%= script "locales/#{I18n.locale}" %>
-    <%= script "ember_jquery" %>
-    <%= script "preload-store" %>
-    <%= script "vendor" %>
-    <%= script "pretty-text-bundle" %>
-    <%= script "application" %>
+    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script "ember_jquery" %>
+    <%= preload_script "preload-store" %>
+    <%= preload_script "vendor" %>
+    <%= preload_script "pretty-text-bundle" %>
+    <%= preload_script "application" %>
     <%- if allow_plugins? %>
-    <%= script "plugin" %>
+    <%= preload_script "plugin" %>
     <%- end %>
     <%- if allow_third_party_plugins? %>
-    <%= script "plugin-third-party" %>
+    <%= preload_script "plugin-third-party" %>
     <%- end %>
 
     <%- if staff? %>
       <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>
-      <%= script "admin" %>
+      <%= preload_script "admin" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
-      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
+      <%= raw theme_lookup("head_tag") %>
     <%- end %>
 
     <%= render_google_universal_analytics_code %>
@@ -51,7 +50,12 @@
         <meta name="apple-itunes-app" content="app-id=1173672076">
     <%- end %>
 
+    <%= render partial: "common/discourse_stylesheet" %>
+    <%= render partial: "common/special_font_face" %>
+
     <%= yield :head %>
+
+    <%= raw build_plugin_html 'before-head-close' %>
   </head>
 
   <body class="<%= body_classes %>">
@@ -82,7 +86,7 @@
     </noscript>
 
     <%- unless customization_disabled? || loading_admin? %>
-      <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
+      <%= theme_lookup("header") %>
     <%- end %>
 
     <section id='main'>
@@ -118,7 +122,8 @@
     <%= render_google_analytics_code %>
 
     <%- unless customization_disabled? %>
-      <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
+      <%= raw theme_lookup("body_tag") %>
     <%- end %>
+    <%= raw build_plugin_html 'before-body-close' %>
   </body>
 </html>

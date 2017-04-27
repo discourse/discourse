@@ -1,6 +1,7 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import showModal from 'discourse/lib/show-modal';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { currentThemeKey } from 'discourse/lib/theme-selector';
 
 export default RestrictedUserRoute.extend({
   model() {
@@ -11,7 +12,8 @@ export default RestrictedUserRoute.extend({
     controller.reset();
     controller.setProperties({
       model: user,
-      newNameInput: user.get('name')
+      newNameInput: user.get('name'),
+      selectedTheme: $.cookie('theme_key') || currentThemeKey()
     });
   },
 

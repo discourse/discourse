@@ -7,9 +7,19 @@ class TopicConverter
     @user = user
   end
 
-  def convert_to_public_topic
+  def convert_to_public_topic(category_id = nil)
     Topic.transaction do
-      @topic.category_id = SiteSetting.allow_uncategorized_topics ? SiteSetting.uncategorized_category_id : Category.where(read_restricted: false).first.id
+      @topic.category_id =
+        if category_id
+          category_id
+        elsif SiteSetting.allow_uncategorized_topics
+          SiteSetting.uncategorized_category_id
+        else
+          Category.where(read_restricted: false)
+            .where.not(id: SiteSetting.uncategorized_category_id)
+            .first.id
+        end
+
       @topic.archetype = Archetype.default
       @topic.save
       update_user_stats

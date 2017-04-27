@@ -101,6 +101,7 @@ he:
           other: "אחרי %{count} שנים"
       previous_month: 'חודש קודם'
       next_month: 'חודש הבא'
+      placeholder: בחרו תאריך
     share:
       topic: 'שתפו קישור לנושא זה'
       post: 'פוסט #%{postNumber}'
@@ -143,6 +144,8 @@ he:
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, לא תשלח."
     bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו תמצות יומי במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
     bootstrap_mode_disabled: "מצב איתחול-ראשוני יכובה ב 24 השעות הקרובות."
+    themes:
+      default_description: "ברירת מחדל"
     s3:
       regions:
         us_east_1: "מזרח ארה\"ב (צפון וירג'יניה)"
@@ -150,6 +153,7 @@ he:
         us_west_2: "מערב ארה\"ב (ארגון)"
         us_gov_west_1: "AWS GovCloud (ארה״ב)"
         eu_west_1: "האיחוד האירופי (אירלנד)"
+        eu_west_2: "אירופה (לונדון)"
         eu_central_1: "האיחוד האירופי (פרנקפורט)"
         ap_southeast_1: "אסיה הפסיפית (סינגפור)"
         ap_southeast_2: "אסיה הפסיפית (סידני)"
@@ -386,6 +390,7 @@ he:
       posts: "פוסטים"
       mentions: "אזכורים"
       messages: "הודעות"
+      notification_level: "ברירת מחדל של רמת התראות להודעות קבוצה"
       alias_levels:
         title: "מי יכולים לשלוח מסרים ו@לאזכר בקבוצה זו?"
         nobody: "אף אחד"
@@ -570,6 +575,7 @@ he:
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
       api_approved: "אושרו:"
+      theme: "תמה"
       staff_counters:
         flags_given: "דגלים שעוזרים"
         flagged_posts: "פסטים מדוגלים"
@@ -1081,15 +1087,6 @@ he:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
       admin_options_title: "אפשרויות צוות אופציונליות לנושא זה"
-      auto_close:
-        label: "מועד סגירה אוטומטית של נושא:"
-        error: "הזינו בבקשה ערך תקין."
-        based_on_last_post: "לא לסגור עד שהפוסט האחרון בנושא זה יהיה לפחות בגיל זה."
-        all:
-          examples: 'הזינו מספר שעות (24), שעה מדוייקת (17:30) או חותמת זמן (2013-11-22 14:00).'
-        limited:
-          units: "(# מספר שעות)"
-          examples: 'הזינו מספר שעות (24).'
     notifications:
       title: "התראות אודות אזכור @שם, תגובות לפוסטים ולנושאים שלכם, הודעות, וכד'"
       none: "לא ניתן לטעון כעת התראות."
@@ -1343,12 +1340,18 @@ he:
       topic_status_update:
         title: "קביעת שעון עצר לנושא"
         save: "קביעת שעון עצר"
-        time: "זמן:"
+        num_of_hours: "מספר שעות:"
+        remove: "הסרת שעון עצר"
         publish_to: "פרסום ל:"
+        when: "מתי:"
       auto_update_input:
-        limited:
-          units: "(# שעות)"
-          examples: 'הכניסו מספר שעות (24).'
+        later_today: "בהמשך היום"
+        tomorrow: "מחר"
+        later_this_week: "בהמשך השבוע"
+        this_weekend: "בסוף שבוע זה"
+        next_week: "בשבוע הבא"
+        pick_date_and_time: "בחרו תאריך ושעה"
+        set_based_on_last_post: "סגירה מבוססת על הפוסט האחרון"
       publish_to_category:
         title: "תזמון פרסום"
       temp_open:
@@ -1359,7 +1362,14 @@ he:
         title: "סגירה זמנית"
       auto_close:
         title: "סגירה אוטומטית של נושא"
+        label: "שעות סגירת שעות אוטומטית:"
         error: "אנא הכניסו ערך תקין."
+        based_on_last_post: "אל תסגרו עד שהפוסט האחרון בנושא הוא לפחות בגיל זה."
+      status_update_notice:
+        auto_open: "נושא זה ייפתח אוטומטית %{timeLeft}."
+        auto_close: "נושא זו ייסגר אוטומטית %{timeLeft}."
+        auto_publish_to_category: "נושא זה יפורסם ל-<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "נושא זה ייסגר %{duration} אחרי התגובה האחרונה."
       auto_close_title: 'הגדרות סגירה אוטומטית'
       auto_close_immediate:
         one: "הפוסט האחרון בנושא הוא כבר בן שעה, אז הנושא ייסגר מיידית."
@@ -1390,10 +1400,10 @@ he:
           '3_2': 'תקבלו התראות כיוון שאתם עוקבים אחרי הנושא הזה.'
           '3_1': 'תקבלו התראות כיוון שאתם יצרתם את הנושא הזה.'
           '3': 'תקבלו התראות כיוון שאתם עוקבים אחרי הנושא זה.'
-          '2_8': 'תקבלו התראות כיוון שאתם עוקבים אחר קטגוריה זו.'
-          '2_4': 'תקבלו התראות כיוון שפרסמתם תגובה לנושא זה.'
-          '2_2': 'תקבלו התראות כיוון שאתם עוקבים אחרי הנושא הזה.'
-          '2': 'תקבלו התראות כיוון ש<a href="/users/{{username}}/preferences">קראתם את הנושא הזה</a>.'
+          '2_8': 'תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר קטגוריה זו.'
+          '2_4': 'תראו ספירה של תגובות חדשות כיוון שפרסמתם תגובה לנושא זה.'
+          '2_2': 'תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר נושא זה:'
+          '2': 'אתם תראו ספירה של תגובות חדשות כיוון ש<a href="/u/{{username}}/preferences">קראתם נושא זה</a>.'
           '1_2': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלכם או ישיב לכם.'
           '1': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלכם או ישיב לכם.'
           '0_7': 'אתם מתעלמים מכל ההתראות בקטגוריה זו.'
@@ -1429,7 +1439,7 @@ he:
         open: "פתיחת נושא"
         close: "סגירת נושא"
         multi_select: "בחרו פוסטים..."
-        auto_close: "סגירה אוטומטית..."
+        timed_update: "קביעת שעון עצר נושא..."
         pin: "נעיצת נושא..."
         unpin: "שחרור נעיצת נושא..."
         unarchive: "הוצאת נושא מארכיון"
@@ -2546,36 +2556,22 @@ he:
       customize:
         title: "התאמה אישית"
         long_title: "התאמה של האתר"
-        css: "CSS"
-        header: "כותרת"
-        top: "למעלה"
-        footer: "כותרת תחתית"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "קוד HTML שיוכנס לפני התגית </head>"
-        body_tag:
-          text: "</body>"
-          title: "קוד HTML שיוכנס לפני התגית </body>"
-        override_default: "אל תכלול את ה-Stylesheet הסטנדרטי"
-        enabled: "מאופשר?"
         preview: "תצוגה מקדימה"
-        undo_preview: "הסרת התצוגה המקדימה"
-        rescue_preview: "ברירת מחדל סגנונית"
-        explain_preview: "הצג את האתר על פי גיליון הסגנונות המותאם הזה"
-        explain_undo_preview: "חזרה לגיליון הסגנונות המותאם המופעל כרגע"
-        explain_rescue_preview: "צפיה באתר עם גליון הסגנונות העיצובי של ברירת המחדל"
+        explain_preview: "צפו באתר עם סכמה זו"
         save: "שמור"
         new: "חדש"
         new_style: "סגנון חדש"
         import: "יבוא"
-        import_title: "בחרו קובץ או הדביקו טקסט"
         delete: "מחק"
-        delete_confirm: "מחק את ההתאמה הזו?"
+        delete_confirm: "למחוק תמה זאת?"
         about: "שינוי סגנונות CSS וכותרות HTML באתר. הוספת התאמות כדי להתחיל לערוך."
         color: "צבע"
         opacity: "שקיפות"
         copy: "העתק"
+        copy_to_clipboard: "העתקה ללוח"
+        copied_to_clipboard: "הועתק ללוח"
+        copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
+        theme_owner: "לא ניתן לעריכה, שייך ל:"
         email_templates:
           title: "תבניות דואר אלקטרוני"
           subject: "נושא"
@@ -2584,13 +2580,69 @@ he:
           none_selected: "בחרו תבנית דואר אלקטרוני לעריכה."
           revert: "ביטול שינויים"
           revert_confirm: "האם ברצונכם לבטל את השינויים?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "התאמת CSS ו-HTML"
+        theme:
+          import_theme: "ייבוא תמה"
+          customize_desc: "התאמה אישית:"
+          title: "תמות"
+          long_title: "התאמת צבעית, CSS ותכני HTML של האתר שלכם"
+          edit: "עריכה"
+          edit_confirm: "זוהי תמה מרוחקת, אם אתם עורכים CSS/HTML השינויים שלכם יימחקו בפעם הבאה שתעדכנו את התמה."
+          common: "משותף"
+          desktop: "מחשב-שולחני"
+          mobile: "נייד"
+          preview: "תצוגה מקדימה"
+          is_default: "תמה מאופשרת כברירת מחדל"
+          user_selectable: "תמה ניתנת לבחירה על ידי משתמשים"
+          color_scheme: "סכמת צבעים"
+          color_scheme_select: "בחירת צבעים לשימוש על ידי תמה"
+          custom_sections: "אזורים מותאמים אישית:"
+          theme_components: "רכיבי התמה"
+          child_themes_check: "תמה כוללת תמות בנות אחרות"
+          css_html: "CSS/HTML מותאמים"
+          edit_css_html: "עריכת CSS/HTML"
+          edit_css_html_help: "לא ערכתם אף CSS או HTML"
+          import_web_tip: "מאגר שמכיל תמה"
+          import_file_tip: "קובץ .dcstyle.json שמכיל תמה"
+          about_theme: "אודות התמה"
+          license: "רישיון"
+          component_of: "התמה היא רכיב של:"
+          update_to_latest: "עדכון לגרסה אחרונה"
+          check_for_updates: "בדיקת עדכונים"
+          updating: "מעדכנים..."
+          up_to_date: "התמה מעודכנת, נבדקה לאחרונה ב:"
+          add: "הוספה"
+          commits_behind:
+            one: "התמה נמצאת 1 עדכונים מאחור!"
+            other: "התמה נמצאת {{count}} עדכונים מאחור!"
+          scss:
+            text: "CSS"
+            title: "עריכת CSS מותאם, אנחנו מקבלים כל סגנון CSS ו SCSS תקני"
+          header:
+            text: "כותרת"
+            title: "הכניסו HTML להצגה מעל הכותרת"
+          after_header:
+            text: "אחרי הכותרת"
+            title: "הכניסו HTML להצגה בכל הדפים אחרי הכותרת"
+          footer:
+            text: "תחתית"
+            title: "הכניסו HTML להצגה בתחתית הדף"
+          embedded_scss:
+            text: "CSS משולב"
+            title: "הכניסו CSS מותאם לשליחה עם הגרסה המשולבת של ההערות"
+          head_tag:
+            text: "</head>"
+            title: "HTML שיוכנס לפני התג </head>"
+          body_tag:
+            text: "</body>"
+            title: "HTML שיוכנס לפני התג </body> "
         colors:
+          select_base:
+            title: "בחרו סכמת צבעים בסיסית"
+            description: "סכמת בסיס:"
           title: "צבעים"
+          edit: "עריכת סכמות צבעים"
           long_title: "סכמת צבעים"
-          about: "סכמת צבעים מאפשרת לך לשנות את הצבעים שבשימוש האתר ללא כתיבת קוד CSS. בחרו או הוסיפו סכימה אחת כדי להתחיל."
+          about: "שינוי הצבעים בהם נעשה שימוש על ידי התמות שלכם. יצירת סכמת צבעים חדשה כדי להתחיל."
           new_name: "סכמת צבעים חדשה"
           copy_name_prefix: "העתק של"
           delete_confirm: "מחק את סכמת הצבעים הזאת?"
@@ -2729,8 +2781,8 @@ he:
             change_trust_level: "שנוי רמת אמון"
             change_username: "שינוי שם משתמש/ת"
             change_site_setting: "שנוי הגדרות אתר"
-            change_site_customization: "שנוי התאמת אתר"
-            delete_site_customization: "מחק התאמת אתר"
+            change_theme: "שינוי תמה"
+            delete_theme: "מחיקת תמה"
             change_site_text: "שינוי טקסט אתר"
             suspend_user: "השעה משתמש"
             unsuspend_user: "בטל השהיית משתמש"
@@ -2865,8 +2917,6 @@ he:
         blocked: "חסום?"
         staged: "מועמד?"
         show_admin_profile: "מנהל ראשי"
-        edit_title: "ערוך כותרת"
-        save_title: "שמור כותרת"
         refresh_browsers: "הכרח רענון דפדפן"
         refresh_browsers_message: "ההודעה נשלחה לכל הלקוחות!"
         show_public_profile: "הצג פרופיל פומבי"
@@ -2877,6 +2927,7 @@ he:
         logged_out: "המשתמש/ת התנתקו בכל המכשירים"
         revoke_admin: 'שלול ניהול ראשי'
         grant_admin: 'הענקת ניהול'
+        grant_admin_confirm: "שלחנו אליכם מייל כדי לוודא את האדמיניסטרטור החדש. בבקשה פיתחו אותו ועיקבו אחר ההוראות."
         revoke_moderation: 'שללו הנחיה'
         grant_moderation: 'הענקת הנחיה'
         unblock: 'ביטול חסימה'

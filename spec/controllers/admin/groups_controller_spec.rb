@@ -42,7 +42,8 @@ describe Admin::GroupsController do
         "bio_cooked"=>nil,
         "public"=>false,
         "allow_membership_requests"=>false,
-        "full_name"=>group.full_name
+        "full_name"=>group.full_name,
+        "default_notification_level"=>3
       }])
 
     end
@@ -68,6 +69,11 @@ describe Admin::GroupsController do
       expect(user2.primary_group).to eq(group)
       expect(user2.title).to eq("WAT")
       expect(user2.trust_level).to eq(4)
+
+      # verify JSON response
+      json = ::JSON.parse(response.body)
+      expect(json['message']).to eq("2 users have been added to the group.")
+      expect(json['users_not_added'][0]).to eq("doesnt_exist")
     end
   end
 

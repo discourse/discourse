@@ -118,9 +118,12 @@ vi:
         enabled: 'được hiển thị lúc %{when}'
         disabled: 'bỏ hiển thị lúc %{when}'
     topic_admin_menu: "Lựa chọn quản lí chủ đề."
+    wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
     bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có trust level 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}."
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị tắt trong 24 giờ tới."
+    themes:
+      default_description: "Mặc định"
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -336,7 +339,6 @@ vi:
       automatic_group: Nhóm tự động
       closed_group: Nhóm riêng
       is_group_user: "Bạn là một thành viên của nhóm này"
-      allow_membership_requests: "Cho phép người dùng gửi thư xin gia nhập cho người đứng đầu nhóm (Yêu cầu mọi người phải có quyền nhắc tới nhóm)"
       membership: "Thành viên"
       name: "Tên"
       user_count: "Số lượng thành viên"
@@ -512,7 +514,9 @@ vi:
       watched_categories: "Xem"
       tracked_categories: "Theo dõi"
       watched_first_post_categories: "Xem bài viết đầu tiên"
+      watched_first_post_categories_instructions: "Bạn sẽ nhận được thông báo khi có ai đó đăng chủ đề mới trong thư mục này."
       watched_first_post_tags: "Xem bài viết đầu tiên"
+      watched_first_post_tags_instructions: "Bạn sẽ nhận được thông báo khi có ai đó đăng chủ đề mới có chứa thẻ này."
       muted_categories: "Im lặng"
       muted_categories_instructions: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong các chuyên mục này, và chúng sẽ không hiển thị mới nhất"
       delete_account: "Xoá Tài khoản của tôi"
@@ -531,6 +535,7 @@ vi:
       revoke_access: "Lấy lại quyền"
       undo_revoke_access: "Cấp lại quyền"
       api_approved: "Chấp thuận:"
+      theme: "Giao diện"
       staff_counters:
         flags_given: "cờ hữu ích"
         flagged_posts: "bài viết gắn cờ"
@@ -554,11 +559,14 @@ vi:
         error: "(lỗi)"
         action: "Gửi lại mật khẩu tới email"
         set_password: "Nhập Mật khẩu"
+        choose_new: "Chọn một mật khẩu mới"
+        choose: "Chọn một mật khẩu"
       change_about:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
       change_username:
         title: "Thay Username"
+        confirm: "Nếu bạn thay đổi tên đăng nhập, tất cả những liên kết người khác nhắc đến bạn @name sẽ bị lỗi. Bạn chắc chắn muốn thay đổi chứ?"
         taken: "Xin lỗi, đã có username này."
         error: "Có lỗi trong khi thay đổi username của bạn."
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự  là chữ cái và chữ số. "
@@ -606,6 +614,7 @@ vi:
         short_instructions: "Mọi người có thể nhắc tới bạn bằng @{{username}}"
         available: "Tên đăng nhập của bạn có sẵn"
         not_available: "Chưa có sẵn. Thử {{suggestion}}?"
+        not_available_no_suggestion: "Không sẵn có"
         too_short: "Tên đăng nhập của bạn quá ngắn"
         too_long: "Tên đăng nhập của bạn quá dài"
         checking: "Đang kiểm tra username sẵn sàng để sử dụng...."
@@ -639,12 +648,14 @@ vi:
         always: "luôn luôn"
         never: "không"
       email_digests:
+        title: "Khi tôi không ghé thăm,  hãy gửi cho tôi email tóm tắt về các chủ đề nhiều người quan tâm nhất và các câu trả lời."
         every_30_minutes: "mỗi 30 phút"
         every_hour: "hàng giờ"
         daily: "hàng ngày"
         every_three_days: "ba ngày một"
         weekly: "hàng tuần"
         every_two_weeks: "hai tuần một"
+      include_tl0_in_digests: "Bao gồm nội dung của những thành viên mới trong email tóm tắt."
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       email_direct: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
       email_private_messages: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
@@ -890,12 +901,23 @@ vi:
       github:
         title: "với GitHub"
         message: "Chứng thực với GitHub (chắc chắn chặn popup không bật)"
+    invites:
+      accept_title: "Lời mời"
+      welcome_to: "Chào mừng bạn đến với %{site_name}!"
+      invited_by: "Bạn đã được mời bởi:"
+      your_email: "Địa chỉ email của bạn là <b>%{email}</b>."
+      accept_invite: "Chấp nhận lời mời"
+      password_label: "Thiết lập mật khẩu (Không bắt buộc)"
+    password_reset:
+      continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:
       google: "Google"
       twitter: "Twitter"
       win10: "Win10"
     category_page_style:
       categories_only: "Chỉ chuyên mục"
+      categories_with_featured_topics: "Các chuyên mục và chủ đề nổi bật"
+      categories_and_latest_topics: "Các chuyên mục và chủ đề mới"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -975,15 +997,6 @@ vi:
       yourself_confirm:
         title: "Bạn có quên chưa thêm người nhận?"
       admin_options_title: "Tùy chọn quản trị viên cho chủ đề này"
-      auto_close:
-        label: "Thời gian tự khóa chủ đề:"
-        error: "Vui lòng nhập một giá trị hợp lệ."
-        based_on_last_post: "Không đóng cho đến khi bài viết cuối cùng trong chủ đề này trở thành bài cũ"
-        all:
-          examples: 'Nhập giờ (định dạng 24h), thời gian chính xác ( vd: 17:30) hoặc thời gian kèm ngày tháng (2013-11-22 14:00).'
-        limited:
-          units: "(# của giờ)"
-          examples: 'Nhập số giờ ( theo định dạng 24h)'
     notifications:
       title: "thông báo của @name nhắc đến, trả lời bài của bạn và chủ đề, tin nhắn, vv"
       none: "Không thể tải các thông báo tại thời điểm này."
@@ -1049,6 +1062,7 @@ vi:
       sort_by: "Sắp xếp theo"
       relevance: "Độ phù hợp"
       latest_post: "Bài viết mới nhất"
+      latest_topic: "Chủ đề mới"
       most_viewed: "Xem nhiều nhất"
       most_liked: "Like nhiều nhất"
       select_all: "Chọn tất cả"
@@ -1202,11 +1216,7 @@ vi:
       jump_reply_up: nhảy đến những trả lời trước đó
       jump_reply_down: nhảy tới những trả lời sau đó
       deleted: "Chủ đề này đã bị xóa"
-      auto_close_notice: "Chủ đề này sẽ tự động đóng %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Chủ đề này sẽ đóng %{duration} sau trả lời cuối cùng."
       auto_close_title: 'Tự động-Đóng các Cài đặt'
-      auto_close_save: "Lưu"
-      auto_close_remove: "Đừng Tự Động-Đóng Chủ Đề Này"
       timeline:
         back: "Quay lại"
       progress:
@@ -1230,7 +1240,6 @@ vi:
           '2_8': 'Bạn sẽ nhận được thông báo bởi vì bạn đang theo dõi chuyên mục này.'
           '2_4': 'Bạn sẽ nhận được các thông báo bởi vì bạn đã đăng một trả lời vào chủ đề này'
           '2_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang theo dõi chủ đề này.'
-          '2': 'Bạn sẽ nhận được các thông báo bởi vì bạn <a href="/users/{{username}}/preferences"> đọc chủ đề này </a>'
           '1_2': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
           '1': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
           '0_7': 'Bạn đang bỏ qua tất cả các thông báo trong chuyên mục này'
@@ -1266,7 +1275,6 @@ vi:
         open: "Mở Chủ Đề"
         close: "Đóng Chủ Đề"
         multi_select: "Chọn Bài Viết..."
-        auto_close: "Tự Động Đóng..."
         pin: "Ghim Chủ Đề..."
         unpin: "Bỏ-Ghim Chủ Đề..."
         unarchive: "Chủ đề Không Lưu Trữ"
@@ -2085,32 +2093,12 @@ vi:
       customize:
         title: "Tùy biến"
         long_title: "Tùy biến trang"
-        css: "CSS"
-        header: "Header"
-        top: "Trên"
-        footer: "Footer"
-        embedded_css: "Nhúng CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML sẻ thêm trước thẻ </head>"
-        body_tag:
-          text: "</body>"
-          title: "HTML sẽ thêm trước thẻ </body>"
-        override_default: "Không bao gồm style sheet chuẩn"
-        enabled: "Cho phép?"
         preview: "xem trước"
-        undo_preview: "xóa xem trước"
-        rescue_preview: "default style"
-        explain_preview: "Xem website với stylesheet tùy chỉnh"
-        explain_undo_preview: "Quay trở lại với kiểu tùy chỉnh stylesheet hiện tại"
-        explain_rescue_preview: "Xem website với stylesheet mặc định"
         save: "Lưu"
         new: "Mới"
         new_style: "Style mới"
         import: "Nhập"
-        import_title: "Chọn một file hoặc paste chữ."
         delete: "Xóa"
-        delete_confirm: "Xóa tùy biến này?"
         about: "Chỉnh sửa CSS  và HTML header trên trang. Thêm tùy biến để bắt đầu."
         color: "Màu sắc"
         opacity: "Độ mờ"
@@ -2123,13 +2111,9 @@ vi:
           none_selected: "Chọn email template để bắt đầu chỉnh sửa."
           revert: "Hoàn nguyên thay đổi"
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Tùy biến CSS và HTML"
         colors:
           title: "Màu sắc"
           long_title: "Bảng màu"
-          about: "Chỉnh "
           new_name: "Bản màu mới"
           copy_name_prefix: "Bản sao của"
           delete_confirm: "Xóa bảng màu này?"
@@ -2263,8 +2247,6 @@ vi:
             change_trust_level: "thay đổi cấp tin cậy"
             change_username: "thay đổi username"
             change_site_setting: "thay đổi cấu hình trang"
-            change_site_customization: "thay đổi tùy biến trang"
-            delete_site_customization: "xóa tùy biến trang"
             change_site_text: "thay đổi chữ trên website"
             suspend_user: "tạm khóa thành viên"
             unsuspend_user: "hủy tạm khóa thành viên"
@@ -2383,8 +2365,6 @@ vi:
         blocked: "Đã khóa?"
         staged: "Cấp bậc?"
         show_admin_profile: "Quản trị"
-        edit_title: "Sửa Tiêu đề"
-        save_title: "Lưu Tiêu đề"
         refresh_browsers: "Bắt buộc làm mới trình duyệt"
         refresh_browsers_message: "Tin nhắn đã gửi cho tất cả người dùng!"
         show_public_profile: "Hiển thị hồ sơ công khai"

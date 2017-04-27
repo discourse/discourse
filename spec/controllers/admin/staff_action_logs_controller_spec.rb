@@ -8,15 +8,35 @@ describe Admin::StaffActionLogsController do
   let!(:user) { log_in(:admin) }
 
   context '.index' do
-    before do
+
+    it 'works' do
       xhr :get, :index
+      expect(response).to be_success
+      expect(::JSON.parse(response.body)).to be_a(Array)
     end
+  end
 
-    subject { response }
-    it { is_expected.to be_success }
+  context '.diff' do
+    it 'can generate diffs for theme changes' do
+      theme = Theme.new(user_id: -1, name: 'bob')
+      theme.set_field(:mobile, :scss, 'body {.up}')
+      theme.set_field(:common, :scss, 'omit-dupe')
 
-    it 'returns JSON' do
-      expect(::JSON.parse(subject.body)).to be_a(Array)
+      original_json = ThemeSerializer.new(theme, root: false).to_json
+
+      theme.set_field(:mobile, :scss, 'body {.down}')
+
+      record = StaffActionLogger.new(Discourse.system_user)
+        .log_theme_change(original_json, theme)
+
+      xhr :get, :diff, id: record.id
+      expect(response).to be_success
+
+      parsed = JSON.parse(response.body)
+      expect(parsed["side_by_side"]).to include("up")
+      expect(parsed["side_by_side"]).to include("down")
+
+      expect(parsed["side_by_side"]).not_to include("omit-dupe")
     end
   end
 end

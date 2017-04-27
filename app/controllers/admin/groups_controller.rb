@@ -24,13 +24,22 @@ class Admin::GroupsController < Admin::AdminController
 
   def bulk_perform
     group = Group.find(params[:group_id].to_i)
+    users_added = 0
     if group.present?
       users = (params[:users] || []).map {|u| u.downcase}
-      user_ids = User.where("username_lower in (:users) OR email IN (:users)", users: users).pluck(:id)
-      group.bulk_add(user_ids) if user_ids.present?
+      valid_emails = {}
+      valid_usernames = {}
+      valid_users = User.where("username_lower IN (:users) OR email IN (:users)", users: users).pluck(:id, :username_lower, :email)
+      valid_users.map! do |id, username_lower, email|
+        valid_emails[email] = valid_usernames[username_lower] = id
+        id
+      end
+      invalid_users = users.reject! { |u| valid_emails[u] || valid_usernames[u] }
+      group.bulk_add(valid_users) if valid_users.present?
+      users_added = valid_users.count
     end
 
-    render json: success_json
+    render json: { success: true, message: I18n.t('groups.success.bulk_add', users_added: users_added), users_not_added: invalid_users }
   end
 
   def create
@@ -70,6 +79,10 @@ class Admin::GroupsController < Admin::AdminController
     group.public = group_params[:public] if group_params[:public]
     group.bio_raw = group_params[:bio_raw] if group_params[:bio_raw]
     group.full_name = group_params[:full_name] if group_params[:full_name]
+
+    if group_params.key?(:default_notification_level)
+      group.default_notification_level = group_params[:default_notification_level]
+    end
 
     if group_params[:allow_membership_requests]
       group.allow_membership_requests = group_params[:allow_membership_requests]
@@ -150,7 +163,8 @@ class Admin::GroupsController < Admin::AdminController
       :name, :alias_level, :visible, :automatic_membership_email_domains,
       :automatic_membership_retroactive, :title, :primary_group,
       :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
-      :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name
+      :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name,
+      :default_notification_level
     )
   end
 end

@@ -21,9 +21,21 @@ describe IntegerSettingValidator do
 
       it "returns true if value is a valid integer" do
         expect(validator.valid_value?(1)).to eq(true)
-        expect(validator.valid_value?(-1)).to eq(true)
         expect(validator.valid_value?('1')).to eq(true)
-        expect(validator.valid_value?('-1')).to eq(true)
+      end
+
+      it "defaults min to 0" do
+        expect(validator.valid_value?(-1)).to eq(false)
+        expect(validator.valid_value?('-1')).to eq(false)
+        expect(validator.valid_value?(0)).to eq(true)
+        expect(validator.valid_value?('0')).to eq(true)
+      end
+
+      it "defaults max to 20000" do
+        expect(validator.valid_value?(20001)).to eq(false)
+        expect(validator.valid_value?('20001')).to eq(false)
+        expect(validator.valid_value?(20000)).to eq(true)
+        expect(validator.valid_value?('20000')).to eq(true)
       end
     end
 
@@ -83,6 +95,15 @@ describe IntegerSettingValidator do
       it "returns false if value is out of range" do
         expect(validator.valid_value?(4)).to eq(false)
         expect(validator.valid_value?(-2)).to eq(false)
+      end
+    end
+
+    context "when setting is hidden" do
+      subject(:validator) { described_class.new(hidden: true) }
+
+      it "does not impose default validations" do
+        expect(validator.valid_value?(-1)).to eq(true)
+        expect(validator.valid_value?(20001)).to eq(true)
       end
     end
   end

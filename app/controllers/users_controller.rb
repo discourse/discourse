@@ -36,7 +36,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
+    return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
       { include_inactive: current_user.try(:staff?) },
@@ -307,7 +307,7 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+    if User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
 
@@ -744,7 +744,7 @@ class UsersController < ApplicationController
 
     result = {}
 
-    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
+    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
       result[info] = @user.send(info)
     end
 

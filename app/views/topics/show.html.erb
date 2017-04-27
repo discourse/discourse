@@ -100,7 +100,7 @@
   <% end %>
 <% end %>
 
-<% content_for(:title) { "#{@topic_view.page_title}" } %>
+<% content_for(:title) { "#{gsub_emoji_to_unicode(@topic_view.page_title)}" } %>
 
 <% if @topic_view.print %>
   <% content_for :after_body do %>

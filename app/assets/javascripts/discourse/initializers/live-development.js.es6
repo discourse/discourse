@@ -1,4 +1,45 @@
 import DiscourseURL from 'discourse/lib/url';
+import { currentThemeKey } from 'discourse/lib/theme-selector';
+
+export function refreshCSS(node, hash, newHref, options) {
+
+  let $orig = $(node);
+
+  if ($orig.data('reloading')) {
+
+    if (options && options.force) {
+      clearTimeout($orig.data('timeout'));
+      $orig.data("copy").remove();
+    } else {
+      return;
+    }
+  }
+
+  if (!$orig.data('orig')) {
+    $orig.data('orig', node.href);
+  }
+
+  $orig.data('reloading', true);
+
+  const orig = $(node).data('orig');
+
+  let reloaded = $orig.clone(true);
+  if (hash) {
+    reloaded[0].href = orig + (orig.indexOf('?') >= 0 ? "&hash=" : "?hash=") + hash;
+  } else {
+    reloaded[0].href = newHref;
+  }
+
+  $orig.after(reloaded);
+
+  let timeout = setTimeout(()=>{
+    $orig.remove();
+    reloaded.data('reloading', false);
+  }, 2000);
+
+  $orig.data("timeout", timeout);
+  $orig.data("copy", reloaded);
+}
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -47,18 +88,17 @@ export default {
           // Refresh if necessary
           document.location.reload(true);
         } else {
+          let themeKey = currentThemeKey();
+
           $('link').each(function() {
-            // TODO: stop bundling css in DEV please
-            if (true || (this.href.match(me.name) && me.hash)) {
-              if (!$(this).data('orig')) {
-                $(this).data('orig', this.href);
+            if (me.hasOwnProperty('theme_key') && me.new_href) {
+              let target = $(this).data('target');
+              if (me.theme_key === themeKey && target === me.target) {
+                refreshCSS(this, null, me.new_href);
               }
-              const orig = $(this).data('orig');
-              if (!me.hash) {
-                window.__uniq = window.__uniq || 1;
-                me.hash = window.__uniq++;
-              }
-              this.href = orig + (orig.indexOf('?') >= 0 ? "&hash=" : "?hash=") + me.hash;
+            }
+            else if (this.href.match(me.name) && (me.hash || me.new_href)) {
+              refreshCSS(this, me.hash, me.new_href);
             }
           });
         }

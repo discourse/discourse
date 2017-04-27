@@ -1,7 +1,7 @@
 require "digest"
 require_dependency "new_post_manager"
 require_dependency "post_action_creator"
-require_dependency "email/html_cleaner"
+require_dependency "html_to_markdown"
 
 module Email
 
@@ -188,17 +188,21 @@ module Email
         text = fix_charset(@mail)
       end
 
-      if html.present? && (SiteSetting.incoming_email_prefer_html || text.blank?)
-        html = Email::HtmlCleaner.new(html).output_html
-        html = trim_discourse_markers(html)
-        html, elided = EmailReplyTrimmer.trim(html, true)
-        return [html, elided]
+      text, elided_text = if text.present?
+        text = trim_discourse_markers(text)
+        EmailReplyTrimmer.trim(text, true)
       end
 
-      if text.present?
-        text = trim_discourse_markers(text)
-        text, elided = EmailReplyTrimmer.trim(text, true)
-        return [text, elided]
+      markdown, elided_markdown = if html.present?
+        markdown = HtmlToMarkdown.new(html).to_markdown
+        markdown = trim_discourse_markers(markdown)
+        EmailReplyTrimmer.trim(markdown, true)
+      end
+
+      if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
+        return [markdown, elided_markdown]
+      else
+        return [text, elided_text]
       end
     end
 
@@ -553,7 +557,7 @@ module Email
     def create_post_with_attachments(options={})
       # deal with attachments
       attachments.each do |attachment|
-        tmp = Tempfile.new("discourse-email-attachment")
+        tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }

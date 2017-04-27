@@ -68,9 +68,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 
-        if attributes["alt"]
+        if !attributes["alt"].blank?
           characters("[#{attributes["alt"]}]")
-        elsif attributes["title"]
+        elsif !attributes["title"].blank?
           characters("[#{attributes["title"]}]")
         else
           characters("[#{I18n.t 'excerpt_image'}]")
@@ -85,7 +85,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         end
 
       when "aside"
-        @in_quote = true unless @keep_onebox_source
+        attributes = Hash[*attributes.flatten]
+
+        unless @keep_onebox_source && attributes['class'].include?('onebox')
+          @in_quote = true
+        end
       when 'article'
         if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
           @in_quote = true

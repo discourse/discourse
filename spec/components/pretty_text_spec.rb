@@ -124,12 +124,28 @@ HTML
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100)).to eq("[image]")
       end
 
-      it "should keep alt tags" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100)).to eq("[car]")
+      context 'alt tags' do
+        it "should keep alt tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>", 100)).to eq("[car]")
+        end
+
+        describe 'when alt tag is empty' do
+          it "should not keep alt tags" do
+            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq("[#{I18n.t('excerpt_image')}]")
+          end
+        end
       end
 
-      it "should keep title tags" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100)).to eq("[car]")
+      context 'title tags' do
+        it "should keep title tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100)).to eq("[car]")
+        end
+
+        describe 'when title tag is empty' do
+          it "should not keep title tags" do
+            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq("[#{I18n.t('excerpt_image')}]")
+          end
+        end
       end
 
       it "should convert images to markdown if the option is set" do
@@ -273,15 +289,23 @@ HTML
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
-    it "should have an option to preserver onebox source" do
-      onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
-      expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
+    context 'option ot preserve onebox source' do
+      it "should return the right excerpt" do
+        onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
+        expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
 
-      expect(PrettyText.excerpt(onebox, 100, keep_onebox_source: true))
-        .to eq(expected)
+        expect(PrettyText.excerpt(onebox, 100, keep_onebox_source: true))
+          .to eq(expected)
 
-      expect(PrettyText.excerpt("#{onebox}\n  \n \n \n\n\n #{onebox}", 100, keep_onebox_source: true))
-        .to eq("#{expected}\n\n#{expected}")
+        expect(PrettyText.excerpt("#{onebox}\n  \n \n \n\n\n #{onebox}", 100, keep_onebox_source: true))
+          .to eq("#{expected}\n\n#{expected}")
+      end
+
+      it 'should continue to strip quotes' do
+        expect(PrettyText.excerpt(
+          "<aside class='quote'><p>a</p><p>b</p></aside>boom", 100, keep_onebox_source: true
+        )).to eq("boom")
+      end
     end
 
   end

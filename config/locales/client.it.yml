@@ -135,6 +135,9 @@ it:
       visible:
         enabled: 'listato %{when}'
         disabled: 'delistato %{when}'
+      banner:
+        enabled: 'lo ha reso un annuncio il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall''utente. '
+        disabled: 'ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina.'
     topic_admin_menu: "azioni amministrative sull'argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
@@ -363,7 +366,6 @@ it:
       automatic_group: Gruppo Automatico
       closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
-      allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo (il gruppo deve essere menzionabile da chiunque)"
       membership: "Iscrizione"
       name: "Nome"
       user_count: "Numero di Membri"
@@ -773,7 +775,7 @@ it:
           one: "<i class='fa fa-heart'></i> ricevuto"
           other: "<i class='fa fa-heart'></i> ricevuti"
         days_visited:
-          one: "Giorno visitato"
+          one: "giorno di frequenza"
           other: "giorni di frequenza"
         posts_read:
           one: "messaggio letto"
@@ -1060,15 +1062,6 @@ it:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
-      auto_close:
-        label: "Tempo per auto-chiusura argomento:"
-        error: "Inserisci un valore valido."
-        based_on_last_post: "Non chiudere finché l'ultimo messaggio dell'argomento non è almeno altrettanto vecchio."
-        all:
-          examples: 'Inserisci un numero di ore (24), un orario assoluto (17:30) o un timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(n° di ore)"
-          examples: 'Inserisci il numero di ore (24).'
     notifications:
       title: "notifiche di menzioni @nome, risposte ai tuoi messaggi e argomenti ecc."
       none: "Impossibile caricare le notifiche al momento."
@@ -1311,11 +1304,7 @@ it:
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato cancellato"
-      auto_close_notice: "Questo argomento si chiuderà automaticamente %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Questo argomento si chiuderà %{duration} dopo l'ultima risposta."
       auto_close_title: 'Impostazioni di auto-chiusura'
-      auto_close_save: "Salva"
-      auto_close_remove: "Non chiudere automaticamente questo argomento"
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento ha già 1 ora, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento ha già %{count} ore, per cui l'argomento verrà chiuso immediatamente."
@@ -1348,7 +1337,6 @@ it:
           '2_8': 'Riceverai notifiche perché stai seguendo questa categoria.'
           '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
           '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
-          '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
           '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
@@ -1384,7 +1372,6 @@ it:
         open: "Apri Argomento"
         close: "Chiudi Argomento"
         multi_select: "Seleziona Messaggi..."
-        auto_close: "Chiudi Automaticamente..."
         pin: "Appunta Argomento..."
         unpin: "Spunta Argomento..."
         unarchive: "De-archivia Argomento"
@@ -2459,32 +2446,12 @@ it:
       customize:
         title: "Personalizza"
         long_title: "Personalizzazioni Sito"
-        css: "CSS"
-        header: "Intestazione"
-        top: "Alto"
-        footer: "Fondo pagina"
-        embedded_css: "CSS incorporato"
-        head_tag:
-          text: "</head>"
-          title: "HTML da inserire prima del tag </head>"
-        body_tag:
-          text: "</body>"
-          title: "HTML da inserire prima del tag </body>"
-        override_default: "Non includere fogli di stile standard"
-        enabled: "Attivo?"
         preview: "anteprima"
-        undo_preview: "rimuovi anteprima"
-        rescue_preview: "stile default"
-        explain_preview: "Visualizza il sito con questo foglio di stile personalizzato"
-        explain_undo_preview: "Torna al foglio di stile personalizzato attualmente attivo."
-        explain_rescue_preview: "Visualizza il sito con il foglio di stile predefinito"
         save: "Salva"
         new: "Nuovo"
         new_style: "Nuovo Stile"
         import: "Importare"
-        import_title: "Seleziona un file o incolla del testo"
         delete: "Cancella"
-        delete_confirm: "Cancella questa personalizzazione?"
         about: "Modifica i fogli di stile CSS e le intestazioni HTML del sito. Aggiungi una personalizzazione per iniziare."
         color: "Colore"
         opacity: "Opacità"
@@ -2497,13 +2464,9 @@ it:
           none_selected: "Scegli un modello di e-mail per iniziare la modifica."
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Personalizzazioni CSS e HTML"
         colors:
           title: "Colori"
           long_title: "Combinazioni Colori"
-          about: "Modifica i colori utilizzati sul sito senza scrivere CSS. Aggiungi una combinazione per iniziare."
           new_name: "Nuova Combinazione Colori"
           copy_name_prefix: "Copia di"
           delete_confirm: "Eliminare questa combinazione di colori?"
@@ -2642,8 +2605,6 @@ it:
             change_trust_level: "cambia livello esperienza"
             change_username: "cambia nome utente"
             change_site_setting: "modifica le impostazioni del sito"
-            change_site_customization: "modifica la personalizzazione del sito"
-            delete_site_customization: "cancella la personalizzazione del sito"
             change_site_text: "cambia il testo del sito"
             suspend_user: "utente sospeso"
             unsuspend_user: "utente riattivato"
@@ -2778,8 +2739,6 @@ it:
         blocked: "Bloccato?"
         staged: "Temporaneo?"
         show_admin_profile: "Amministratore"
-        edit_title: "Modifica Titolo"
-        save_title: "Salva Titolo"
         refresh_browsers: "Forza l'aggiornamento del browser"
         refresh_browsers_message: "Messaggio inviato a tutti i client!"
         show_public_profile: "Mostra Profilo Pubblico"

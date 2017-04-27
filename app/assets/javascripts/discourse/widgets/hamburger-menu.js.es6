@@ -163,22 +163,22 @@ export default createWidget('hamburger-menu', {
 
     const prioritizeFaq = this.currentUser && !this.currentUser.read_faq;
     if (prioritizeFaq) {
-      results.push(this.attach('menu-links', { heading: true, contents: () => {
+      results.push(this.attach('menu-links', { name: 'faq-link', heading: true, contents: () => {
         return this.attach('priority-faq-link', { href: faqUrl });
       }}));
     }
 
     if (currentUser && currentUser.staff) {
-      results.push(this.attach('menu-links', { contents: () => {
+      results.push(this.attach('menu-links', { name: 'admin-links', contents: () => {
         const extraLinks = flatten(applyDecorators(this, 'admin-links', this.attrs, this.state));
         return this.adminLinks().concat(extraLinks);
       }}));
     }
 
-    results.push(this.attach('menu-links', { contents: () => this.generalLinks() }));
+    results.push(this.attach('menu-links', {name: 'general-links', contents: () => this.generalLinks() }));
     results.push(this.listCategories());
     results.push(h('hr'));
-    results.push(this.attach('menu-links', { omitRule: true, contents: () => this.footerLinks(prioritizeFaq, faqUrl) }));
+    results.push(this.attach('menu-links', {name: 'footer-links', omitRule: true, contents: () => this.footerLinks(prioritizeFaq, faqUrl) }));
 
     return results;
   },

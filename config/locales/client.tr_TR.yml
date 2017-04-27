@@ -336,7 +336,6 @@ tr_TR:
       automatic_group: Otomatik Grup
       closed_group: Kapanmış Grup
       is_group_user: "Bu grubun bir üyesisiniz."
-      allow_membership_requests: "Kullanıcıların Grup başlarına üyelik istekleri göndermelerine izin ver ( Herkesin grupta birbirleri hakkında bahsetme özelliğinin açık olması gerekmektedir.)"
       membership: "Üyelik"
       name: "İsim"
       user_count: "Grup Sayısı"
@@ -1025,15 +1024,6 @@ tr_TR:
         title: "Alıcıları eklemeyi unuttun mu?"
         body: "Bu ileti şu an sadece sana gönderiliyor!"
       admin_options_title: "Bu konu için isteğe bağlı görevli ayarları"
-      auto_close:
-        label: "Başlığı otomatik kapatma zamanı:"
-        error: "Lütfen geçerli bir değer giriniz."
-        based_on_last_post: "Başlıktaki son gönderi de en az bu kadar eskiyinceye kadar kapatmayın."
-        all:
-          examples: 'Saat sayısı (24), kesin zaman (17:30) ya da zaman damgası (2013-11-22 14:00) girin.'
-        limited:
-          units: "(saat sayısı)"
-          examples: 'Saat sayısını giriniz (24).'
     notifications:
       title: "@isim bahsedilişleri, gönderileriniz ve konularınıza verilen cevaplar, iletilerle vb. ilgili bildiriler"
       none: "Şu an için bildirimler yüklenemiyor."
@@ -1265,11 +1255,7 @@ tr_TR:
       jump_reply_up: Daha önceki cevaba geç
       jump_reply_down: Daha sonraki cevaba geç
       deleted: "Konu silindi "
-      auto_close_notice: "Bu konu %{timeLeft} otomatik olarak kapanacak."
-      auto_close_notice_based_on_last_post: "Bu konu son cevaptan %{duration} sonra kapanacak."
       auto_close_title: 'Otomatik Kapatma Ayarları'
-      auto_close_save: "Kaydet"
-      auto_close_remove: "Bu Konuyu Otomatik Olarak Kapatma"
       auto_close_immediate:
         other: "Konudaki son gönderi zaten %{count} saat eski, bu yüzden konu hemen kapatılacak."
       timeline:
@@ -1301,7 +1287,6 @@ tr_TR:
           '2_8': 'Be kategoriyi takip ettiğiniz için bildirimlerini alacaksınız.'
           '2_4': 'Bu konuya cevap yazdığınız için bildirimlerini alacaksınız.'
           '2_2': 'Bu konuyu takip ettiğiniz için bildirimlerini alacaksınız.'
-          '2': '<a href="/users/{{username}}/preferences">Bu konuyu okuduğunuz için</a> bildirimlerini alacaksınız.'
           '1_2': 'Birisi @isminizden bahsederse ya da size cevap verirse bildirim alacaksınız.'
           '1': 'Birisi @isminizden bahsederse veya size cevap verirse bildirim alacaksınız.'
           '0_7': 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
@@ -1337,7 +1322,6 @@ tr_TR:
         open: "Konuyu Aç"
         close: "Konuyu Kapat"
         multi_select: "Gönderileri Seç..."
-        auto_close: "Otomatik Kapat..."
         pin: "Başa Tuttur..."
         unpin: "Baştan Kaldır..."
         unarchive: "Konuyu Arşivden Kaldır"
@@ -2366,32 +2350,12 @@ tr_TR:
       customize:
         title: "Özelleştir"
         long_title: "Site Özelleştirmeleri"
-        css: "CSS"
-        header: "Başlık"
-        top: "En Kısım"
-        footer: "Alt Kısım"
-        embedded_css: "Gömülü CSS"
-        head_tag:
-          text: "</head>"
-          title: "</head> etiketinden önce eklenecek HTML"
-        body_tag:
-          text: "</body>"
-          title: "</body> etiketinden önce eklenecek HTML"
-        override_default: "Standart biçim sayfasını eklemeyin"
-        enabled: "Etkin mi?"
         preview: "önizleme"
-        undo_preview: "önizlemeyi kaldır"
-        rescue_preview: "öntanımlı biçim"
-        explain_preview: "Websitesine bu özelleştirilmiş biçim sayfası ile bak"
-        explain_undo_preview: "Şu an etkin olan özelleştirilmiş biçim sayfasına geri dön"
-        explain_rescue_preview: "Websitesine varsayılan biçim sayfası ile bak"
         save: "Kaydet"
         new: "Yeni"
         new_style: "Yeni Biçim"
         import: "İçeri Aktar"
-        import_title: "Bir dosya seçin ya da kopyalayıp yapıştırın"
         delete: "Sil"
-        delete_confirm: "Bu özelleştirmeyi sil?"
         about: "Sitedeki CSS biçim sayfalarını ve HTML başlıklarını değiştir. Özelleştirme ekleyerek başla."
         color: "Renk"
         opacity: "Opaklık"
@@ -2404,13 +2368,9 @@ tr_TR:
           none_selected: "Düzenlemeye başlamak için bir e-posta şablonu seçin. "
           revert: "Değişiklikleri Geri Al"
           revert_confirm: "Değişikliklerinizi geri almak istediğinize emin misiniz?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS ve HTML Özelleştirmeleri"
         colors:
           title: "Renkler"
           long_title: "Renk Düzenleri"
-          about: "Sitede kullanılan renkleri CSS yazmadan değiştir. Renk düzeni ekleyerek başla."
           new_name: "Yeni Renk Düzeni"
           copy_name_prefix: "Kopyası"
           delete_confirm: "Bu renk düzenini sil?"
@@ -2549,8 +2509,6 @@ tr_TR:
             change_trust_level: "güven seviyesini değiştir"
             change_username: "kullanıcı adını değiştir"
             change_site_setting: "site ayarlarını değiştir"
-            change_site_customization: "websitesinin özelleştirmesini değiştir"
-            delete_site_customization: "websitesinin özelleştirmesini sil"
             change_site_text: "site metnini değiştir"
             suspend_user: "kullanıcıyı uzaklaştır"
             unsuspend_user: "kullanıcıyı uzaklaştırma"
@@ -2681,8 +2639,6 @@ tr_TR:
         blocked: "Engellendi mi?"
         staged: "Aşamalı?"
         show_admin_profile: "Yönetici"
-        edit_title: "Başlığı Düzenle"
-        save_title: "Başlığı Kaydet"
         refresh_browsers: "Tarayıcıyı sayfa yenilemesine zorla"
         refresh_browsers_message: "İleti tüm kullanıcılara gönderildi!"
         show_public_profile: "Herkese Açık Profili Görüntüle"

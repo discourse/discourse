@@ -33,10 +33,10 @@ export default function offsetCalculator(y) {
   }
 
 
-
   if (inter > ideal) {
     const bottom = $('#topic-bottom').offset().top;
     const switchPos = bottom - rawWinHeight;
+
     if (scrollTop > switchPos) {
       const p = Math.max(Math.min((scrollTop + inter - switchPos) / rawWinHeight, 1.0), 0.0);
       return ((1 - p) * ideal) + (p * inter);

@@ -39,7 +39,7 @@ const StaffActionLog = Discourse.Model.extend({
   }.property('action_name'),
 
   useCustomModalForDetails: function() {
-    return _.contains(['change_site_customization', 'delete_site_customization'], this.get('action_name'));
+    return _.contains(['change_theme', 'delete_theme'], this.get('action_name'));
   }.property('action_name')
 });
 

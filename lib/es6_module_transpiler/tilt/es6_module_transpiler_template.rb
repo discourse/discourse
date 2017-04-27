@@ -10,6 +10,15 @@ module Tilt
     @mutex = Mutex.new
     @ctx_init = Mutex.new
 
+    def self.call(input)
+      filename = input[:filename]
+      source = input[:data]
+      context = input[:environment].context_class.new(input)
+
+      result = new(filename){source}.render(context)
+      context.metadata.merge(data: result)
+    end
+
     def prepare
       # intentionally left empty
       # Tilt requires this method to be defined

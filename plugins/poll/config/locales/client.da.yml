@@ -67,4 +67,4 @@ da:
         poll_public:
           label: Vis hvem der stemte
         poll_options:
-          label: Indtast en afstemning pr. linje
+          label: Indtast en valgmulighed per linje

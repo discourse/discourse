@@ -157,7 +157,7 @@ describe Email::Receiver do
       expect(topic.posts.last.cooked).not_to match(/<br/)
 
       expect { process(:html_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a <b>HTML</b> reply ;)")
+      expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
 
       expect { process(:hebrew_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("שלום! מה שלומך היום?")
@@ -177,7 +177,7 @@ describe Email::Receiver do
     it "prefers html over text when site setting is enabled" do
       SiteSetting.incoming_email_prefer_html = true
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq('This is the <b>html</b> part.')
+      expect(topic.posts.last.raw).to eq('This is the **html** part.')
     end
 
     it "uses text when prefer_html site setting is enabled but no html is available" do
@@ -297,6 +297,8 @@ describe Email::Receiver do
     end
 
     it "supports attached images" do
+      SiteSetting.queue_jobs = true
+
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
 

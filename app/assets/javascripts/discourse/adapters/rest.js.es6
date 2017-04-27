@@ -1,7 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import { hashString } from 'discourse/lib/hash';
 
-const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host', 'web-hook', 'web-hook-event'];
+const ADMIN_MODELS = ['plugin', 'theme', 'embeddable-host', 'web-hook', 'web-hook-event'];
 
 export function Result(payload, responseJson) {
   this.payload = payload;
@@ -76,22 +76,38 @@ export default Ember.Object.extend({
     this.cached[this.storageKey(type,findArgs,opts)] = hydrated;
   },
 
+  jsonMode: false,
+
+  getPayload(method, data) {
+    let payload = {method, data};
+
+    if (this.jsonMode) {
+       payload.contentType = "application/json";
+       payload.data = JSON.stringify(data);
+    }
+
+    return payload;
+  },
+
   update(store, type, id, attrs) {
     const data = {};
     const typeField = Ember.String.underscore(type);
     data[typeField] = attrs;
-    return ajax(this.pathFor(store, type, id), { method: 'PUT', data }).then(function(json) {
-      return new Result(json[typeField], json);
-    });
+
+    return ajax(this.pathFor(store, type, id), this.getPayload('PUT', data))
+      .then(function(json) {
+          return new Result(json[typeField], json);
+      });
   },
 
   createRecord(store, type, attrs) {
     const data = {};
     const typeField = Ember.String.underscore(type);
     data[typeField] = attrs;
-    return ajax(this.pathFor(store, type), { method: 'POST', data }).then(function (json) {
-      return new Result(json[typeField], json);
-    });
+    return ajax(this.pathFor(store, type), this.getPayload('POST', data))
+      .then(function (json) {
+        return new Result(json[typeField], json);
+       });
   },
 
   destroyRecord(store, type, record) {

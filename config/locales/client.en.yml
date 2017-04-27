@@ -127,6 +127,7 @@ en:
           other: "%{count} years later"
       previous_month: 'Previous Month'
       next_month: 'Next Month'
+      placeholder: Pick a date
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -174,6 +175,9 @@ en:
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
 
+    themes:
+      default_description: "Default"
+
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -181,6 +185,7 @@ en:
         us_west_2: "US West (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Ireland)"
+        eu_west_2: "EU (London)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -441,6 +446,7 @@ en:
       posts: "Posts"
       mentions: "Mentions"
       messages: "Messages"
+      notification_level: "Default notification level for group messages"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"
@@ -633,6 +639,7 @@ en:
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      theme: "Theme"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -1287,6 +1294,7 @@ en:
       no_more_results: "No more results found."
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
+      results_page: "Search Results"
 
       context:
         user: "Search posts by @{{username}}"
@@ -1479,16 +1487,19 @@ en:
       topic_status_update:
         title: "Set Topic Timer"
         save: "Set Timer"
-        time: "Time:"
+        num_of_hours: "Number of hours:"
         remove: "Remove Timer"
         publish_to: "Publish To:"
+        when: "When:"
       auto_update_input:
-        limited:
-          units: "(# of hours)"
-          examples: 'Enter number of hours (24).'
-        all:
-          units: ""
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+        none: ""
+        later_today: "Later today"
+        tomorrow: "Tomorrow"
+        later_this_week: "Later this week"
+        this_weekend: "This weekend"
+        next_week: "Next week"
+        pick_date_and_time: "Pick date and time"
+        set_based_on_last_post: "Close based on last post"
       publish_to_category:
         title: "Schedule Publishing"
       temp_open:
@@ -1499,7 +1510,7 @@ en:
         title: "Close Temporarily"
       auto_close:
         title: "Auto-Close Topic"
-        label: "Auto-close topic time:"
+        label: "Auto-close topic hours:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
 
@@ -1541,10 +1552,10 @@ en:
           "3_2": 'You will receive notifications because you are watching this topic.'
           "3_1": 'You will receive notifications because you created this topic.'
           "3": 'You will receive notifications because you are watching this topic.'
-          "2_8": 'You will receive notifications because you are tracking this category.'
-          "2_4": 'You will receive notifications because you posted a reply to this topic.'
-          "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/u/{{username}}/preferences">read this topic</a>.'
+          "2_8": 'You will see a count of new replies because you are tracking this category.'
+          "2_4": 'You will see a count of new replies because you posted a reply to this topic.'
+          "2_2": 'You will see a count of new replies because you are tracking this topic.'
+          "2": 'You will see a count of new replies because you <a href="/u/{{username}}/preferences">read this topic</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
           "0_7": 'You are ignoring all notifications in this category.'
@@ -1721,7 +1732,7 @@ en:
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
 
       change_timestamp:
-        title: "Change Timestamp"
+        title: "Change Timestamp..."
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -2005,8 +2016,6 @@ en:
       security: "Security"
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
-      auto_close_label: "Auto-close topics after:"
-      auto_close_units: "hours"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
@@ -2592,6 +2601,7 @@ en:
         add_members: "Add members"
         custom: "Custom"
         bulk_complete: "The users have been added to the group."
+        bulk_complete_users_not_added: "These users were not added:"
         bulk: "Bulk Add to Group"
         bulk_paste: "Paste a list of usernames or emails, one per line:"
         bulk_select: "(select a group)"
@@ -2779,36 +2789,22 @@ en:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
-        css: "CSS"
-        header: "Header"
-        top: "Top"
-        footer: "Footer"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML that will be inserted before the </head> tag"
-        body_tag:
-          text: "</body>"
-          title: "HTML that will be inserted before the </body> tag"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
         preview: "preview"
-        undo_preview: "remove preview"
-        rescue_preview: "default style"
-        explain_preview: "See the site with this custom stylesheet"
-        explain_undo_preview: "Go back to the currently enabled custom stylesheet"
-        explain_rescue_preview: "See the site with the default stylesheet"
+        explain_preview: "See the site with this theme enabled"
         save: "Save"
         new: "New"
         new_style: "New Style"
         import: "Import"
-        import_title: "Select a file or paste text"
         delete: "Delete"
-        delete_confirm: "Delete this customization?"
+        delete_confirm: "Delete this theme?"
         about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
+        copy_to_clipboard: "Copy to Clipboard"
+        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard_error: "Error copying data to Clipboard"
+        theme_owner: "Not editable, owned by:"
         email_templates:
           title: "Email Templates"
           subject: "Subject"
@@ -2818,13 +2814,69 @@ en:
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
 
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS and HTML Customizations"
+        theme:
+          import_theme: "Import Theme"
+          customize_desc: "Customize:"
+          title: "Themes"
+          long_title: "Amend colors, CSS and HTML contents of your site"
+          edit: "Edit"
+          edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
+          common: "Common"
+          desktop: "Desktop"
+          mobile: "Mobile"
+          preview: "Preview"
+          is_default: "Theme is enabled by default"
+          user_selectable: "Theme can be selected by users"
+          color_scheme: "Color Scheme"
+          color_scheme_select: "Select colors to be used by theme"
+          custom_sections: "Custom sections:"
+          theme_components: "Theme Components"
+          child_themes_check: "Theme includes other child themes"
+          css_html: "Custom CSS/HTML"
+          edit_css_html: "Edit CSS/HTML"
+          edit_css_html_help: "You have not edited any CSS or HTML"
+          import_web_tip: "Repository containing theme"
+          import_file_tip: ".dcstyle.json file containing theme"
+          about_theme: "About Theme"
+          license: "License"
+          component_of: "Theme is a component of:"
+          update_to_latest: "Update to Latest"
+          check_for_updates: "Check for Updates"
+          updating: "Updating..."
+          up_to_date: "Theme is up-to-date, last checked:"
+          add: "Add"
+          commits_behind:
+            one: "Theme is 1 commit behind!"
+            other: "Theme is {{count}} commit behind!"
+          scss:
+            text: "CSS"
+            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+          header:
+            text: "Header"
+            title: "Enter HTML to display above site header"
+          after_header:
+            text: "After Header"
+            title: "Enter HTML to display on all pages after header"
+          footer:
+            text: "Footer"
+            title: "Enter HTML to display on page footer"
+          embedded_scss:
+            text: "Embedded CSS"
+            title: "Enter custom CSS to deliver with embedded version of comments"
+          head_tag:
+            text: "</head>"
+            title: "HTML that will be inserted before the </head> tag"
+          body_tag:
+            text: "</body>"
+            title: "HTML that will be inserted before the </body> tag"
         colors:
+          select_base:
+            title: "Select base color scheme"
+            description: "Base scheme:"
           title: "Colors"
+          edit: "Edit Color Schemes"
           long_title: "Color Schemes"
-          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
+          about: "Modify the colors used by your themes. Create a new color scheme to start."
           new_name: "New Color Scheme"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
@@ -2965,8 +3017,8 @@ en:
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
+            change_theme: "change theme"
+            delete_theme: "delete theme"
             change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"

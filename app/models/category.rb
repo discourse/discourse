@@ -1,5 +1,4 @@
 require_dependency 'distributed_cache'
-require_dependency 'sass/discourse_stylesheets'
 
 class Category < ActiveRecord::Base
 
@@ -389,8 +388,8 @@ SQL
       group = group.id if group.is_a?(Group)
 
       # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless group.is_a?(Fixnum)
-      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Fixnum)
+      group = Group[group.to_sym].id unless group.is_a?(Integer)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
 
       [group, permission]
     end
@@ -492,7 +491,7 @@ SQL
   end
 
   def publish_discourse_stylesheet
-    DiscourseStylesheets.cache.clear
+    Stylesheet::Manager.cache.clear
   end
 
   def index_search

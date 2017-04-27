@@ -132,12 +132,24 @@ class Badge < ActiveRecord::Base
     exec_sql <<-SQL.squish
       DELETE FROM user_badges
             USING user_badges ub
-       LEFT JOIN users u ON u.id = ub.user_id
-           WHERE u.id IS NULL
-           AND user_badges.id = ub.id
+        LEFT JOIN users u ON u.id = ub.user_id
+            WHERE u.id IS NULL
+              AND user_badges.id = ub.id
     SQL
 
-    Badge.find_each(&:reset_grant_count!)
+    exec_sql <<-SQL.squish
+      WITH X AS (
+          SELECT badge_id
+               , COUNT(user_id) users
+            FROM user_badges
+        GROUP BY badge_id
+      )
+      UPDATE badges
+         SET grant_count = X.users
+        FROM X
+       WHERE id = X.badge_id
+         AND grant_count <> X.users
+    SQL
   end
 
   def awarded_for_trust_level?

@@ -6,6 +6,10 @@ class Demon::Sidekiq < Demon::Base
     "sidekiq"
   end
 
+  def self.after_fork(&blk)
+    blk ? (@blk=blk) : @blk
+  end
+
   private
 
   def suppress_stdout
@@ -17,6 +21,8 @@ class Demon::Sidekiq < Demon::Base
   end
 
   def after_fork
+    Demon::Sidekiq.after_fork&.call
+
     STDERR.puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
     # CLI will close the logger, if we have one set we can be in big
@@ -25,8 +31,19 @@ class Demon::Sidekiq < Demon::Base
     # parent process is in charge of the file anyway.
     Sidekiq::Logging.logger = nil
     cli = Sidekiq::CLI.instance
-    cli.parse(["-c", GlobalSetting.sidekiq_workers.to_s, "-q", "critical,4", "-q", "default,2", "-q", "low"])
 
+    options = ["-c", GlobalSetting.sidekiq_workers.to_s]
+
+    [['critical', 4], ['default', 2], ['low', 1]].each do |queue_name, weight|
+      custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
+
+      if !custom_queue_hostname || custom_queue_hostname == `hostname`.strip
+        options << "-q"
+        options << "#{queue_name},#{weight}"
+      end
+    end
+
+    cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
     cli.run
   rescue => e

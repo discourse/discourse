@@ -8,8 +8,15 @@ module Jobs
       return if topic.blank?
 
       PostTimestampChanger.new(timestamp: Time.zone.now, topic: topic).change! do
-        topic.change_category_to_id(topic_status_update.category_id)
+        if topic.private_message?
+          topic = TopicConverter.new(topic, Discourse.system_user)
+            .convert_to_public_topic(topic_status_update.category_id)
+        else
+          topic.change_category_to_id(topic_status_update.category_id)
+        end
+
         topic.update_columns(visible: true)
+        topic_status_update.trash!(Discourse.system_user)
       end
 
       MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)

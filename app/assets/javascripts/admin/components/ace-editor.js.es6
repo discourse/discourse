@@ -7,10 +7,24 @@ export default Ember.Component.extend({
   _editor: null,
   _skipContentChangeEvent: null,
 
+  @observes('editorId')
+  editorIdChanged() {
+    if (this.get('autofocus')) {
+      this.send('focus');
+    }
+  },
+
   @observes('content')
   contentChanged() {
     if (this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setValue(this.get('content'));
+    }
+  },
+
+  @observes('mode')
+  modeChanged() {
+    if (this._editor && !this._skipContentChangeEvent) {
+      this._editor.getSession().setMode("ace/mode/" + this.get('mode'));
     }
   },
 
@@ -41,6 +55,7 @@ export default Ember.Component.extend({
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
+        editor.setOptions({fontSize: "14px"});
         editor.getSession().setMode("ace/mode/" + this.get('mode'));
         editor.on('change', () => {
           this._skipContentChangeEvent = true;
@@ -48,6 +63,7 @@ export default Ember.Component.extend({
           this._skipContentChangeEvent = false;
         });
         editor.$blockScrolling = Infinity;
+        editor.renderer.setScrollMargin(10,10);
 
         this.$().data('editor', editor);
         this._editor = editor;
@@ -55,7 +71,20 @@ export default Ember.Component.extend({
           // xxx: don't run during qunit tests
           this.appEvents.on('ace:resize', self, self.resize);
         }
+
+        if (this.get("autofocus")) {
+          this.send("focus");
+        }
       });
     });
+  },
+
+  actions: {
+    focus() {
+      if (this._editor) {
+        this._editor.focus();
+        this._editor.navigateFileEnd();
+      }
+    }
   }
 });

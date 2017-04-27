@@ -17,4 +17,5 @@ end
 #  live_slots_finish :integer
 #  started_at        :datetime         not null
 #  success           :boolean
+#  error             :text
 #

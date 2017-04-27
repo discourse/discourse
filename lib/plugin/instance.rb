@@ -238,6 +238,10 @@ class Plugin::Instance
     DiscoursePluginRegistry.custom_html.merge!(hash)
   end
 
+  def register_html_builder(name, &block)
+    DiscoursePluginRegistry.register_html_builder(name, &block)
+  end
+
   def register_asset(file, opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << [full_path, opts]

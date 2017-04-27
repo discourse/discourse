@@ -1,24 +1,24 @@
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
-Discourse is the 100% open source discussion platform built for the next decade of the Internet. It works as:
+Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
 
-- a mailing list
-- a discussion forum
-- a long-form chat room
+- mailing list
+- discussion forum
+- long-form chat room
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
 ## Screenshots
 
-<a href="https://bbs.boingboing.net"><img src="https://www.discourse.org/faq/14/boing-boing-discourse.png" width="720px"></a>
-<a href="https://twittercommunity.com/"><img src="https://www.discourse.org/faq/17/twitter-discourse.png" width="720px"></a>
-<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/17/how-to-geek-discourse.png" width="720px"></a>
-<a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/17/turtle-rock-discourse.png" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/17/nexus-7-2013-mobile-discourse.png" alt="Atom" width="430px"></a> &nbsp;
-<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/15/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
+<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://cloud.githubusercontent.com/assets/1385470/25397876/3fe6cdac-29c0-11e7-8a41-9d0c0279f5a3.png" width="720px"></a>
+<a href="https://twittercommunity.com/"><img src="https://cloud.githubusercontent.com/assets/1385470/25397920/71b24e4c-29c0-11e7-8bcf-7a47b888412e.png" width="720px"></a>
+<a href="http://discuss.howtogeek.com"><img src="https://cloud.githubusercontent.com/assets/1385470/25398049/f0995962-29c0-11e7-99d7-a3b9c4f0b357.png" width="720px"></a>
+<a href="https://talk.turtlerockstudios.com/"><img src="https://cloud.githubusercontent.com/assets/1385470/25398115/2d560d96-29c1-11e7-9a96-b0134a4fedff.png" width="720px"></a>
 
-Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
+<img src="https://www.discourse.org/a/img/about/mobile-devices-2x.jpg" alt="Mobile" width="414">
+
+Browse [lots more notable Discourse instances](https://www.discourse.org/customers).
 
 ## Development
 
@@ -38,12 +38,12 @@ If you're looking for business class hosting, see [discourse.org/buy](https://ww
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
-| Browsers | Tablets |  Smartphones |
+| Browsers | Tablets |  Phones |
 | -------- | ------- | ----------- |
-| Safari 6.1+| iPad 2+ |  iOS 7+ |
-| Google Chrome 23+ |  Android 4.3+ | Android 4.3+ |
-| Internet Explorer 11+ | Windows 8 | Windows Phone 8 |
-| Firefox 16+ | |
+| Safari 6.1+ | iPad 3+ |  iOS 8+ |
+| Google Chrome 32+ |  Android 4.3+ | Android 4.3+ |
+| Internet Explorer 11+ |  |  |
+| Firefox 27+ | | |
 
 ## Built With
 

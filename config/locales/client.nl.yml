@@ -101,6 +101,7 @@ nl:
           other: "%{count} jaar later"
       previous_month: 'Vorige maand'
       next_month: 'Volgende maand'
+      placeholder: Kies een datum
     share:
       topic: 'een koppeling naar dit topic delen'
       post: 'bericht #%{postNumber}'
@@ -143,6 +144,8 @@ nl:
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
     bootstrap_mode_enabled: "Om het lanceren van uw website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal %{min_users} gebruikers overschrijdt."
     bootstrap_mode_disabled: "De bootstrapmodus zal in de komende 24 uur worden uitgeschakeld."
+    themes:
+      default_description: "Standaard"
     s3:
       regions:
         us_east_1: "VS Oost (N. Virginia)"
@@ -150,6 +153,7 @@ nl:
         us_west_2: "VS West (Oregon)"
         us_gov_west_1: "AWS GovCloud (VS)"
         eu_west_1: "EU (Ierland)"
+        eu_west_2: "EU (Londen)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Azië Pacifisch (Singapore)"
         ap_southeast_2: "Azië Pacifisch (Sydney)"
@@ -366,7 +370,7 @@ nl:
       automatic_group: Automatische groep
       closed_group: Besloten groep
       is_group_user: "U bent een lid van deze groep"
-      allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen (Iedereen moet de groep hiervoor kunnen noemen)"
+      allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership: "Lidmaatschap"
       name: "Naam"
       user_count: "Aantal leden"
@@ -386,6 +390,7 @@ nl:
       posts: "Berichten"
       mentions: "Vermeldingen"
       messages: "Berichten"
+      notification_level: "Standaard meldingsniveau voor groepsberichten"
       alias_levels:
         title: "Wie kan deze groep een bericht sturen en taggen?"
         nobody: "Niemand"
@@ -435,7 +440,7 @@ nl:
       '13': "Inbox"
       '14': "In wachtrij"
     categories:
-      all: "alle categorieën"
+      all: "Alle categorieën"
       all_subcategories: "alle"
       no_subcategory: "geen"
       category: "Categorie"
@@ -564,11 +569,13 @@ nl:
       muted_users_instructions: "Alle meldingen van deze gebruikers onderdrukken"
       muted_topics_link: "Genegeerde topics tonen"
       watched_topics_link: "In de gaten gehouden topics tonen"
+      tracked_topics_link: "Gevolgde topics tonen"
       automatically_unpin_topics: "Topics automatisch losmaken als ik de onderkant bereik"
       apps: "Apps"
       revoke_access: "Toegang intrekken"
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
+      theme: "Thema"
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -657,7 +664,7 @@ nl:
         title: "Taal van interface"
         instructions: "Taal van de gebruikersinterface. Deze verandert zodra u de pagina opnieuw laadt."
         default: "(standaard)"
-        any: "elke"
+        any: "alle"
       password_confirmation:
         title: "Nogmaals het wachtwoord"
       last_posted: "Laatste bericht"
@@ -884,7 +891,7 @@ nl:
       enabled_description: "U bekijkt een samenvatting van dit topic: de meeste interessante berichten zoals bepaald door de gemeenschap."
       description: "Er zijn <b>{{replyCount}}</b> antwoorden."
       description_time: "Er zijn <b>{{replyCount}}</b> antwoorden met een geschatte leestijd van <b>{{readingTime}} minuten</b>."
-      enable: 'Samenvatting van dit topic maken'
+      enable: 'Dit topic samenvatten'
       disable: 'Alle berichten tonen'
     deleted_filter:
       enabled_description: "Dit topic bevat verwijderde berichten, die zijn verborgen."
@@ -938,6 +945,10 @@ nl:
       not_allowed_from_ip_address: "U kunt zich niet aanmelden vanaf dat IP-adres."
       admin_not_allowed_from_ip_address: "U kunt zich niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activeringsmail opnieuw te versturen."
+      resend_title: "Activeringsmail opnieuw versturen"
+      change_email: "E-mailadres wijzigen"
+      provide_new_email: "Geef een nieuw adres op en we sturen uw bevestigingsmail opnieuw."
+      submit_new_email: "E-mailadres bijwerken"
       sent_activation_email_again: "We hebben een nieuwe activeringsmail naar <b>{{currentEmail}}</b> gestuurd. Het kan een aantal minuten duren voor deze aankomt; controleer ook uw spammap."
       to_continue: "Meld u aan"
       preferences: "U dient aangemeld te zijn om uw gebruikersvoorkeuren te wijzigen."
@@ -1076,15 +1087,6 @@ nl:
         title: "Bent u ontvangers vergeten toe te voegen?"
         body: "Het bericht wordt nu alleen naar uzelf verstuurd!"
       admin_options_title: "Optionele stafinstellingen voor dit topic"
-      auto_close:
-        label: "Tijd waarna topic automatisch wordt gesloten:"
-        error: "Voer een geldige waarde in."
-        based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
-        all:
-          examples: 'Voer het aantal uur (24), een absolute tijd (17:30) of een tijdstempel (2013-11-22 14:00) in.'
-        limited:
-          units: "(# aantal uur)"
-          examples: 'Voer het aantal uur in (24).'
     notifications:
       title: "meldingen van @naam-vermeldingen, reacties op uw berichten en topics, berichten, etc."
       none: "Meldingen kunnen momenteel niet worden geladen."
@@ -1154,6 +1156,7 @@ nl:
       sort_by: "Sorteren op"
       relevance: "Relevantie"
       latest_post: "Nieuwste bericht"
+      latest_topic: "Nieuwste topic"
       most_viewed: "Meest bekeken"
       most_liked: "Meest geliket"
       select_all: "Alles selecteren"
@@ -1204,7 +1207,7 @@ nl:
           closed: gesloten zijn
           archived: gearchiveerd zijn
           noreplies: geen antwoorden bevatten
-          single_user: een enkele gebruiker bevatten
+          single_user: maar één gebruiker bevatten
         post:
           count:
             label: Minimaal berichtaantal
@@ -1323,7 +1326,7 @@ nl:
       options: "Topic-opties"
       show_links: "koppelingen binnen dit topic tonen"
       toggle_information: "topicdetails in-/uitschakelen"
-      read_more_in_category: "Wilt u meer lezen? Blader dan door andere topics in {{catLink}} of {{latestLink}}."
+      read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in {{catLink}} bladeren, of de {{latestLink}}."
       read_more: "Wilt u meer lezen? {{catLink}} of {{latestLink}}."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='/unread'>1 ongelezen</a> } other { zijn <a href='/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
@@ -1332,11 +1335,40 @@ nl:
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
-      auto_close_notice: "Dit topic wordt na %{timeLeft} automatisch gesloten."
-      auto_close_notice_based_on_last_post: "Dit topic wordt %{duration} na het laatste antwoord gesloten."
+      topic_status_update:
+        title: "Topictimer instellen"
+        save: "Timer instellen"
+        num_of_hours: "Aantal uren:"
+        remove: "Timer verwijderen"
+        publish_to: "Publiceren naar:"
+        when: "Wanneer:"
+      auto_update_input:
+        later_today: "Later vandaag"
+        tomorrow: "Morgen"
+        later_this_week: "Later deze week"
+        this_weekend: "Dit weekend"
+        next_week: "Volgende week"
+        pick_date_and_time: "Kies datum en tijd"
+        set_based_on_last_post: "Sluiten op basis van laatste bericht"
+      publish_to_category:
+        title: "Publicatie plannen"
+      temp_open:
+        title: "Tijdelijk openen"
+      auto_reopen:
+        title: "Topic automatisch openen"
+      temp_close:
+        title: "Tijdelijk sluiten"
+      auto_close:
+        title: "Topic automatisch sluiten"
+        label: "Tijden voor automatisch sluiten van topic:"
+        error: "Voer een geldige waarde in."
+        based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
+      status_update_notice:
+        auto_open: "Dit topic zal automatisch %{timeLeft} worden geopend."
+        auto_close: "Dit topic zal automatisch %{timeLeft} worden gesloten."
+        auto_publish_to_category: "Dit topic zal %{timeLeft} naar <a href=%{categoryUrl}>#%{categoryName}</a> worden gepubliceerd."
+        auto_close_based_on_last_post: "Dit topic zal %{duration} na het laatste antwoord worden gesloten."
       auto_close_title: 'Instellingen voor automatisch sluiten'
-      auto_close_save: "Opslaan"
-      auto_close_remove: "Dit topic niet automatisch sluiten"
       auto_close_immediate:
         one: "Het laatste bericht in dit topic is al 1 uur oud, dus het topic zal meteen worden gesloten."
         other: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic zal meteen worden gesloten."
@@ -1366,10 +1398,10 @@ nl:
           '3_2': 'U ontvangt meldingen, omdat u dit topic in de gaten houdt.'
           '3_1': 'U ontvangt meldingen, omdat u dit topic hebt aangemaakt.'
           '3': 'U ontvangt meldingen, omdat u dit topic in de gaten houdt.'
-          '2_8': 'U ontvangt meldingen, omdat u deze categorie volgt.'
-          '2_4': 'U ontvangt meldingen, omdat u een antwoord in dit topic hebt geplaatst.'
-          '2_2': 'U ontvangt meldingen, omdat u dit topic volgt.'
-          '2': 'U ontvangt meldingen, omdat u <a href="/users/{{username}}/preferences">dit topic hebt gelezen</a>.'
+          '2_8': 'U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt.'
+          '2_4': 'U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst.'
+          '2_2': 'U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt.'
+          '2': 'U ziet het aantal nieuwe antwoorden, omdat u <a href="/u/{{username}}/preferences">dit topic hebt gelezen</a>.'
           '1_2': 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           '1': 'U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt.'
           '0_7': 'U negeert alle meldingen in deze categorie.'
@@ -1405,7 +1437,7 @@ nl:
         open: "Topic openen"
         close: "Topic sluiten"
         multi_select: "Berichten selecteren..."
-        auto_close: "Automatisch sluiten..."
+        timed_update: "Topictimer instellen..."
         pin: "Topic vastmaken..."
         unpin: "Topic losmaken..."
         unarchive: "Topic dearchiveren"
@@ -2522,36 +2554,22 @@ nl:
       customize:
         title: "Aanpassen"
         long_title: "Websiteaanpassingen"
-        css: "CSS"
-        header: "Koptekst"
-        top: "Top"
-        footer: "Voettekst"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML die voor de </head>-tag wordt ingevoegd"
-        body_tag:
-          text: "</body>"
-          title: "HTML die voor de </body>-tag wordt ingevoegd"
-        override_default: "Standaardstylesheet uitsluiten"
-        enabled: "Ingeschakeld?"
         preview: "voorbeeld"
-        undo_preview: "voorbeeld verwijderen"
-        rescue_preview: "standaardstijl"
-        explain_preview: "De website bekijken met deze aangepaste stylesheet"
-        explain_undo_preview: "Terug naar de momenteel ingeschakelde aangepaste stylesheet"
-        explain_rescue_preview: "De website bekijken met de standaardstylesheet"
+        explain_preview: "De website bekijken met dit thema ingeschakeld"
         save: "Opslaan"
         new: "Nieuw"
         new_style: "Nieuwe stijl"
         import: "Importeren"
-        import_title: "Selecteer een bestand of plak tekst"
         delete: "Verwijderen"
-        delete_confirm: "Deze aanpassing verwijderen?"
+        delete_confirm: "Dit thema verwijderen?"
         about: "Pas CSS-stylesheets en HTML-kopteksten aan op de website. Voeg een aanpassing toe om te beginnen."
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
         copy: "Kopiëren"
+        copy_to_clipboard: "Kopiëren naar klembord"
+        copied_to_clipboard: "Gekopieerd naar klembord"
+        copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
+        theme_owner: "Niet bewerkbaar, eigendom van:"
         email_templates:
           title: "E-mailsjablonen"
           subject: "Onderwerp"
@@ -2560,13 +2578,69 @@ nl:
           none_selected: "Selecteer een e-mailsjabloon om met bewerken te beginnen."
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet u zeker dat u uw wijzigingen ongedaan wilt maken?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS- en HTML-aanpassingen"
+        theme:
+          import_theme: "Thema importeren"
+          customize_desc: "Aanpassen:"
+          title: "Thema's"
+          long_title: "Kleuren, CSS en HTML-inhoud van uw website aanpassen"
+          edit: "Bewerken"
+          edit_confirm: "Dit is een extern thema; als u CSS/HTML bewerkt, worden uw wijzigingen de volgende keer dat u het thema bijwerkt gewist."
+          common: "Algemeen"
+          desktop: "Desktop"
+          mobile: "Mobiel"
+          preview: "Voorbeeld"
+          is_default: "Thema is standaard ingeschakeld"
+          user_selectable: "Thema kan door gebruikers worden geselecteerd"
+          color_scheme: "Kleurenschema"
+          color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
+          custom_sections: "Aangepaste secties:"
+          theme_components: "Themaonderdelen"
+          child_themes_check: "Thema bevat andere onderliggende thema's"
+          css_html: "Aangepaste CSS/HTML"
+          edit_css_html: "CSS/HTML bewerken"
+          edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
+          import_web_tip: "Repository die thema bevat"
+          import_file_tip: ".dcstyle.json-bestand dat thema bevat"
+          about_theme: "Over thema"
+          license: "Licentie"
+          component_of: "Thema is een onderdeel van:"
+          update_to_latest: "Bijwerken naar nieuwste"
+          check_for_updates: "Controleren op updates"
+          updating: "Bijwerken..."
+          up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
+          add: "Toevoegen"
+          commits_behind:
+            one: "Thema loopt 1 doorvoering achter!"
+            other: "Thema loopt {{count}} doorvoeringen achter!"
+          scss:
+            text: "CSS"
+            title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"
+          header:
+            text: "Koptekst"
+            title: "Voer HTML in voor weergave boven websitekoptekst"
+          after_header:
+            text: "Na koptekst"
+            title: "Voer HTML in voor weergave op alle pagina's na koptekst"
+          footer:
+            text: "Voettekst"
+            title: "Voer HTML in voor weergave op paginavoettekst"
+          embedded_scss:
+            text: "Embedded CSS"
+            title: "Voer aangepaste CSS in om met embedded versie van opmerkingen te leveren"
+          head_tag:
+            text: "</head>"
+            title: "HTML die voor de </head>-tag wordt ingevoegd"
+          body_tag:
+            text: "</body>"
+            title: "HTML die voor de </body>-tag wordt ingevoegd"
         colors:
+          select_base:
+            title: "Basiskleurenschema selecteren"
+            description: "Basisschema:"
           title: "Kleuren"
+          edit: "Kleurenschema's bewerken"
           long_title: "Kleurenschema's"
-          about: "Met kleurenschema's kunt u de kleuren op de website aanpassen zonder CSS te hoeven gebruiken. Voeg een schema toe om te beginnen."
+          about: "De door uw thema's gebruikte kleuren aanpassen. Maak een nieuw kleurenschema aan om te beginnen."
           new_name: "Nieuw kleurenschema"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenschema verwijderen?"
@@ -2705,8 +2779,8 @@ nl:
             change_trust_level: "vertrouwensniveau wijzigen"
             change_username: "gebruikersnaam wijzigen"
             change_site_setting: "website-instelling wijzigen"
-            change_site_customization: "website-aanpassing wijzigen"
-            delete_site_customization: "website-aanpassing verwijderen"
+            change_theme: "thema wijzigen"
+            delete_theme: "thema verwijderen"
             change_site_text: "tekst van website wijzigen"
             suspend_user: "gebruiker schorsen"
             unsuspend_user: "schorsing opheffen"
@@ -2841,8 +2915,6 @@ nl:
         blocked: "Geblokkeerd?"
         staged: "Staged?"
         show_admin_profile: "Beheerder"
-        edit_title: "Titel bewerken"
-        save_title: "Titel opslaan"
         refresh_browsers: "Vernieuwen in browser forceren"
         refresh_browsers_message: "Bericht verstuurd aan alle gebruikers!"
         show_public_profile: "Openbaar profiel tonen"
@@ -2853,6 +2925,7 @@ nl:
         logged_out: "Gebruiker is op alle apparaten afgemeld"
         revoke_admin: 'Beheerdersrechten intrekken'
         grant_admin: 'Beheerdersrechten toekennen'
+        grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe beheerder te verifiëren. Open deze en volg de instructies."
         revoke_moderation: 'Moderatierechten intrekken'
         grant_moderation: 'Moderatierechten toekennen'
         unblock: 'Deblokkeren'

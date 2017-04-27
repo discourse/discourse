@@ -1,47 +1,92 @@
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
+import {
+  FORMAT,
+  PICK_DATE_AND_TIME,
+  SET_BASED_ON_LAST_POST
+} from "discourse/components/auto-update-input-selector";
 
 export default Ember.Component.extend({
-  limited: false,
+  selection: null,
+  date: null,
+  time: null,
+  isCustom: Ember.computed.equal('selection', PICK_DATE_AND_TIME),
+  isBasedOnLastPost: Ember.computed.equal('selection', SET_BASED_ON_LAST_POST),
 
-  didInsertElement() {
+  init() {
     this._super();
-    this._updateInputValid();
-  },
 
-  @computed("limited")
-  inputUnitsKey(limited) {
-    return limited ? "topic.auto_update_input.limited.units" : "topic.auto_update_input.all.units";
-  },
+    const input = this.get('input');
 
-  @computed("limited")
-  inputExamplesKey(limited) {
-    return limited ? "topic.auto_update_input.limited.examples" : "topic.auto_update_input.all.examples";
-  },
-
-  @observes("input", "limited")
-  _updateInputValid() {
-    this.set(
-      "inputValid", this._isInputValid(this.get("input"), this.get("limited"))
-    );
-  },
-
-  _isInputValid(input, limited) {
-    const t = (input || "").toString().trim();
-
-    if (t.length === 0) {
-      return true;
-      // "empty" is always valid
-    } else if (limited) {
-      // only # of hours in limited mode
-      return t.match(/^(\d+\.)?\d+$/);
-    } else {
-      if (t.match(/^\d{4}-\d{1,2}-\d{1,2}(?: \d{1,2}:\d{2}(\s?[AP]M)?){0,1}$/i)) {
-        // timestamp must be in the future
-        return moment(t).isAfter();
+    if (input) {
+      if (this.get('basedOnLastPost')) {
+        this.set('selection', SET_BASED_ON_LAST_POST);
       } else {
-        // either # of hours or absolute time
-        return (t.match(/^(\d+\.)?\d+$/) || t.match(/^\d{1,2}:\d{2}(\s?[AP]M)?$/i)) !== null;
+        this.set('selection', PICK_DATE_AND_TIME);
+        const datetime = moment(input);
+        this.set('date', datetime.toDate());
+        this.set('time', datetime.format("HH:mm"));
+        this._updateInput();
       }
     }
-  }
+  },
+
+  @observes("date", "time")
+  _updateInput() {
+    const date = moment(this.get('date')).format("YYYY-MM-DD");
+    const time = (this.get('time') && ` ${this.get('time')}`) || '';
+    this.set('input', moment(`${date}${time}`).format(FORMAT));
+  },
+
+  @observes("isBasedOnLastPost")
+  _updateBasedOnLastPost() {
+    this.set('basedOnLastPost', this.get('isBasedOnLastPost'));
+  },
+
+  @computed("input", "isBasedOnLastPost")
+  duration(input, isBasedOnLastPost) {
+    const now = moment();
+
+    if (isBasedOnLastPost) {
+      return parseFloat(input);
+    } else {
+      return moment(input) - now;
+    }
+  },
+
+  @computed("input", "isBasedOnLastPost")
+  executeAt(input, isBasedOnLastPost) {
+    if (isBasedOnLastPost) {
+      return moment().add(input, 'hours').format(FORMAT);
+    } else {
+      return input;
+    }
+  },
+
+  @computed("statusType", "input", "isCustom", "date", "time", "willCloseImmediately")
+  showTopicStatusInfo(statusType, input, isCustom, date, time, willCloseImmediately) {
+    if (!statusType || willCloseImmediately) return false;
+
+    if (isCustom) {
+      return date || time;
+    } else {
+      return input;
+    }
+  },
+
+  @computed('isBasedOnLastPost', 'input', 'lastPostedAt')
+  willCloseImmediately(isBasedOnLastPost, input, lastPostedAt) {
+    if (isBasedOnLastPost && input) {
+      let closeDate = moment(lastPostedAt);
+      closeDate = closeDate.add(input, 'hours');
+      return closeDate < moment();
+    }
+  },
+
+  @computed('isBasedOnLastPost', 'lastPostedAt')
+  willCloseI18n(isBasedOnLastPost, lastPostedAt) {
+    if (isBasedOnLastPost) {
+      const diff = Math.round((new Date() - new Date(lastPostedAt)) / (1000*60*60));
+      return I18n.t('topic.auto_close_immediate', { count: diff });
+    }
+  },
 });

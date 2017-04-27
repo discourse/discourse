@@ -106,32 +106,16 @@ class ImportScripts::Base
     raise NotImplementedError
   end
 
-  def post_id_from_imported_post_id(import_id)
-    @lookup.post_id_from_imported_post_id(import_id)
-  end
-
-  def topic_lookup_from_imported_post_id(import_id)
-    @lookup.topic_lookup_from_imported_post_id(import_id)
-  end
-
-  def group_id_from_imported_group_id(import_id)
-    @lookup.group_id_from_imported_group_id(import_id)
-  end
-
-  def find_group_by_import_id(import_id)
-    @lookup.find_group_by_import_id(import_id)
-  end
-
-  def user_id_from_imported_user_id(import_id)
-    @lookup.user_id_from_imported_user_id(import_id)
-  end
-
-  def find_user_by_import_id(import_id)
-    @lookup.find_user_by_import_id(import_id)
-  end
-
-  def category_id_from_imported_category_id(import_id)
-    @lookup.category_id_from_imported_category_id(import_id)
+  %i{ post_id_from_imported_post_id
+      topic_lookup_from_imported_post_id
+      group_id_from_imported_group_id
+      find_group_by_import_id
+      user_id_from_imported_user_id
+      find_user_by_import_id
+      category_id_from_imported_category_id
+      add_group add_user add_category add_topic add_post
+  }.each do |method_name|
+    delegate method_name, to: :@lookup
   end
 
   def create_admin(opts={})
@@ -165,14 +149,14 @@ class ImportScripts::Base
     results.each do |result|
       g = yield(result)
 
-      if @lookup.group_id_from_imported_group_id(g[:id])
+      if group_id_from_imported_group_id(g[:id])
         skipped += 1
       else
         new_group = create_group(g, g[:id])
         created_group(new_group)
 
         if new_group.valid?
-          @lookup.add_group(g[:id].to_s, new_group)
+          add_group(g[:id].to_s, new_group)
           created += 1
         else
           failed += 1
@@ -247,14 +231,14 @@ class ImportScripts::Base
       else
         import_id = u[:id]
 
-        if @lookup.user_id_from_imported_user_id(import_id)
+        if user_id_from_imported_user_id(import_id)
           skipped += 1
         elsif u[:email].present?
           new_user = create_user(u, import_id)
           created_user(new_user)
 
           if new_user && new_user.valid? && new_user.user_profile && new_user.user_profile.valid?
-            @lookup.add_user(import_id.to_s, new_user)
+            add_user(import_id.to_s, new_user)
             created += 1
           else
             failed += 1
@@ -375,7 +359,7 @@ class ImportScripts::Base
       params = yield(c)
 
       # block returns nil to skip
-      if params.nil? || @lookup.category_id_from_imported_category_id(params[:id])
+      if params.nil? || category_id_from_imported_category_id(params[:id])
         skipped += 1
       else
         # Basic massaging on the category name
@@ -422,7 +406,7 @@ class ImportScripts::Base
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
 
-    @lookup.add_category(import_id, new_category)
+    add_category(import_id, new_category)
 
     post_create_action.try(:call, new_category)
 
@@ -453,14 +437,14 @@ class ImportScripts::Base
       else
         import_id = params.delete(:id).to_s
 
-        if @lookup.post_id_from_imported_post_id(import_id)
+        if post_id_from_imported_post_id(import_id)
           skipped += 1 # already imported this post
         else
           begin
             new_post = create_post(params, import_id)
             if new_post.is_a?(Post)
-              @lookup.add_post(import_id, new_post)
-              @lookup.add_topic(new_post)
+              add_post(import_id, new_post)
+              add_topic(new_post)
 
               created_post(new_post)
 
@@ -533,8 +517,8 @@ class ImportScripts::Base
       if params.nil?
         skipped += 1
       else
-        user.id = @lookup.user_id_from_imported_user_id(params[:user_id])
-        post.id = @lookup.post_id_from_imported_post_id(params[:post_id])
+        user.id = user_id_from_imported_user_id(params[:user_id])
+        post.id = post_id_from_imported_post_id(params[:post_id])
 
         if user.id.nil? || post.id.nil?
           skipped += 1

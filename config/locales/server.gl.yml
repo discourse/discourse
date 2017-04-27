@@ -421,7 +421,6 @@ gl:
     disagreed: "Grazas por comunicárnolo. Estamos botándolle un ollo."
     deferred: "Grazas por comunicárnolo. Estamos botándolle un ollo."
     deferred_and_deleted: "Grazas por comunicárnolo. Xa eliminamos a publicación."
-  temporarily_closed_due_to_flags: "Este tema está pechado temporalmente polo gran número de denuncias da comunidade."
   system_messages:
     welcome_user:
       subject_template: "Benvido/a a %{site_name}!"

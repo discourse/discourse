@@ -16,7 +16,7 @@ RSpec.describe "Managing custom emojis" do
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg")
           })
-        end.first
+        end.find{|m| m.channel == "/uploads/emoji"}
 
         expect(message.channel).to eq("/uploads/emoji")
         expect(message.data["errors"]).to eq([I18n.t('upload.images.size_not_found')])
@@ -32,7 +32,7 @@ RSpec.describe "Managing custom emojis" do
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
           })
-        end.first
+        end.find{|m| m.channel == "/uploads/emoji"}
 
         expect(message.channel).to eq("/uploads/emoji")
 
@@ -50,7 +50,7 @@ RSpec.describe "Managing custom emojis" do
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
           })
-        end.first
+        end.find{|m| m.channel == "/uploads/emoji"}
 
         custom_emoji = CustomEmoji.last
         upload = custom_emoji.upload

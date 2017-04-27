@@ -362,7 +362,6 @@ et:
       automatic_group: Automaatne grupp
       closed_group: Suletud grupp
       is_group_user: "Oled selle grupi liige"
-      allow_membership_requests: "Luba kasutajatel saata grupi omanikele liikmelisuse taotlusi (eeldab, et igaüks saab gruppi mainida)"
       membership: "Liikmelisus"
       name: "Nimi"
       user_count: "Liikmete arv"
@@ -1071,15 +1070,6 @@ et:
         title: "Kas unustasid saajad lisada?"
         body: "Hetkel saadetakse see sõnum vaid sulle endale!"
       admin_options_title: "Meeskonna valikulised sätted selle teema jaoks"
-      auto_close:
-        label: "Teema automaatse sulgemise aeg:"
-        error: "Palun sisesta lubatav väärtus."
-        based_on_last_post: "Ära sule enne, kui selle teema viimane postitus on vähemalt nii vana."
-        all:
-          examples: 'Sisesta tundide arv (24), absoluutne aeg (17:30) või ajatempel (2013-11-22 14:00).'
-        limited:
-          units: "(tundide arv)"
-          examples: 'Sisesta tundide arv (24).'
     notifications:
       title: "teavitused @name mainimiste, oma postitustele ja teemadele vastamiste, sõnumite, jne kohta"
       none: "Hetkel ei saa teavitusi laadida."
@@ -1325,11 +1315,7 @@ et:
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
-      auto_close_notice: "See teema sulgub %{timeLeft} pärast ise."
-      auto_close_notice_based_on_last_post: "See teema sulgub %{duration} peale viimast vastust."
       auto_close_title: 'Automaatse sulgumise sätted'
-      auto_close_save: "Salvesta"
-      auto_close_remove: "Ära lase sel teemal automaatselt sulguda"
       auto_close_immediate:
         one: "Viimane postitus selles teemas on juba 1 tund aega vana, seega sulgub see teema nüüd."
         other: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
@@ -1362,7 +1348,6 @@ et:
           '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda foorumit.'
           '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
           '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          '2': 'Sulle saabuvad teavitused kuna <a href="/users/{{username}}/preferences">luges seda teemat</a>.'
           '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
           '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
           '0_7': 'Eirad kõiki teavitusi selles foorumis.'
@@ -1398,7 +1383,6 @@ et:
         open: "Ava teema"
         close: "Sulge teema"
         multi_select: "Vali postitused..."
-        auto_close: "Sulge automaatselt..."
         pin: "Tõsta teema esile..."
         unpin: "Eemalda teema esiletõstmine..."
         unarchive: "Taasta teema arhiivist"
@@ -2490,32 +2474,12 @@ et:
       customize:
         title: "Kohanda"
         long_title: "Saidi kohandused"
-        css: "CSS"
-        header: "Päis"
-        top: "Ülemine"
-        footer: "Jalus"
-        embedded_css: "Sängitatud CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML, mida lisatakse enne </head> silti"
-        body_tag:
-          text: "</body>"
-          title: "HTML, mida lisatakse enne </body> silti"
-        override_default: "Ära standardset laadilehte kaasa"
-        enabled: "Sisse lülitatud?"
         preview: "eelvaade"
-        undo_preview: "eemalda eelvaade"
-        rescue_preview: "vaikelaad"
-        explain_preview: "Vaata saiti selle kohandatud laadilehega"
-        explain_undo_preview: "Pöördu tagasi hetkel aktiivse kohandatud laadilehe juurde"
-        explain_rescue_preview: "Vaata saiti vaikimisi laadilehega"
         save: "Salvesta"
         new: "Uus"
         new_style: "Uus stiil"
         import: "Impordi"
-        import_title: "Vali fail või kleebi tekst"
         delete: "Kustuta"
-        delete_confirm: "Kustutan selle kohanduse?"
         about: "Muuda saidi CSS laadilehed ja HTML päised. Alustamiseks lisa kohandus."
         color: "Värv"
         opacity: "Läbipaistvus"
@@ -2528,13 +2492,9 @@ et:
           none_selected: "Redigeerimise alustamiseks vali meili mall."
           revert: "Loobu muudatustest"
           revert_confirm: "Oled kindel, et soovid oma muudatustest loobuda?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS and HTML modifikatsioonid"
         colors:
           title: "Värvid"
           long_title: "Värvistikud"
-          about: "Muuda saidil kasutatavaid värve ilma CSS-i kirjutamata. Alustamiseks lisa uus värvistik."
           new_name: "Uus värvistik"
           copy_name_prefix: "Koopia sellest"
           delete_confirm: "Kustutan selle värvistiku?"
@@ -2673,8 +2633,6 @@ et:
             change_trust_level: "muuda usaldustaset"
             change_username: "muuda kasutajanime"
             change_site_setting: "muuda saidi sätet"
-            change_site_customization: "muuda saidi kohandusi"
-            delete_site_customization: "kustuta saidi kohandused"
             change_site_text: "muuda saidi teksti"
             suspend_user: "peata kasutaja"
             unsuspend_user: "taasluba kasutaja"
@@ -2809,8 +2767,6 @@ et:
         blocked: "Blokeeritud?"
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
-        edit_title: "Muuda tiitlit"
-        save_title: "Salvesta tiitel"
         refresh_browsers: "Sunni brauserit värskendama"
         refresh_browsers_message: "Sõnum saadetud kõigile klientidele!"
         show_public_profile: "Näita avalikku profiili"

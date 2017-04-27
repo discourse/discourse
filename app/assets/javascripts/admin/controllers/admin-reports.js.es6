@@ -4,7 +4,7 @@ import Report from 'admin/models/report';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  queryParams: ["mode", "start-date", "end-date", "category-id", "group-id"],
+  queryParams: ["mode", "start_date", "end_date", "category_id", "group_id"],
   viewMode: 'graph',
   viewingTable: Em.computed.equal('viewMode', 'table'),
   viewingGraph: Em.computed.equal('viewMode', 'graph'),
@@ -28,7 +28,15 @@ export default Ember.Controller.extend({
 
   @computed('model.type')
   showCategoryOptions(modelType) {
-    return !modelType.match(/_private_messages$/) && !modelType.match(/^page_view_/);
+    return [
+      'topics',
+      'posts',
+      'time_to_first_response_total',
+      'topics_with_no_response',
+      'flags',
+      'likes',
+      'bookmarks'
+    ].includes(modelType);
   },
 
   @computed('model.type')
@@ -42,13 +50,13 @@ export default Ember.Controller.extend({
       this.set("refreshing", true);
 
       this.setProperties({
-        'start-date': this.get('startDate'),
-        'end-date': this.get('endDate'),
-        'category-id': this.get('categoryId'),
+        'start_date': this.get('startDate'),
+        'end_date': this.get('endDate'),
+        'category_id': this.get('categoryId'),
       });
 
       if (this.get('groupId')){
-        this.set('group-id', this.get('groupId'));
+        this.set('group_id', this.get('groupId'));
       }
 
       q = Report.find(this.get("model.type"), this.get("startDate"), this.get("endDate"), this.get("categoryId"), this.get("groupId"));

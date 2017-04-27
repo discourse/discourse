@@ -47,7 +47,10 @@ describe UserNotifications do
       user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:always])
       expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(2)
 
+      SiteSetting.private_email = true
+      expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(0)
     end
+
   end
 
   describe ".signup" do
@@ -151,6 +154,15 @@ describe UserNotifications do
         whisper = Fabricate(:post, topic: old_topic, created_at: 1.hour.ago, raw: "This is secret", post_type: Post.types[:whisper])
         expect(subject.html_part.body.to_s).to include old_topic.title
         expect(subject.html_part.body.to_s).to include whisper.cooked
+      end
+
+      it "hides details for private email" do
+        SiteSetting.private_email = true
+
+        expect(subject.html_part.body.to_s).not_to include(topic.title)
+        expect(subject.html_part.body.to_s).not_to include(topic.slug)
+        expect(subject.text_part.body.to_s).not_to include(topic.title)
+        expect(subject.text_part.body.to_s).not_to include(topic.slug)
       end
     end
   end
@@ -291,8 +303,6 @@ describe UserNotifications do
 
       expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
 
-
-
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
       SiteSetting.prioritize_username_in_ux = false
@@ -323,6 +333,21 @@ describe UserNotifications do
       mail_html = mail.html_part.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
+    end
+
+    it "doesn't include details when private_email is enabled" do
+      SiteSetting.private_email = true
+      mail = UserNotifications.user_replied(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.html_part.to_s).to_not include(response.raw)
+      expect(mail.html_part.to_s).to_not include(topic.url)
+      expect(mail.text_part.to_s).to_not include(response.raw)
+      expect(mail.text_part.to_s).to_not include(topic.url)
     end
   end
 
@@ -360,6 +385,19 @@ describe UserNotifications do
       tu = TopicUser.get(post.topic_id, response.user)
       expect(tu.last_emailed_post_number).to eq(response.post_number)
     end
+
+    it "doesn't include details when private_email is enabled" do
+      SiteSetting.private_email = true
+      mail = UserNotifications.user_posted(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.html_part.to_s).to_not include(response.raw)
+      expect(mail.text_part.to_s).to_not include(response.raw)
+    end
   end
 
   describe '.user_private_message' do
@@ -396,6 +434,21 @@ describe UserNotifications do
       # side effect, topic user is updated with post number
       tu = TopicUser.get(topic.id, response.user)
       expect(tu.last_emailed_post_number).to eq(response.post_number)
+    end
+
+    it "doesn't include details when private_email is enabled" do
+      SiteSetting.private_email = true
+      mail = UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.html_part.to_s).to_not include(response.raw)
+      expect(mail.html_part.to_s).to_not include(topic.url)
+      expect(mail.text_part.to_s).to_not include(response.raw)
+      expect(mail.text_part.to_s).to_not include(topic.url)
     end
   end
 
@@ -445,6 +498,28 @@ describe UserNotifications do
     context "reply_by_email" do
       it "doesn't support reply by email" do
         expects_build_with(Not(has_entry(:allow_reply_by_email, true)))
+      end
+    end
+  end
+
+  shared_examples "respect for private_email" do
+    context "private_email" do
+      it "doesn't support reply by email" do
+        SiteSetting.private_email = true
+        mailer = UserNotifications.send(
+          mail_type,
+          user,
+          notification_type: Notification.types[notification.notification_type],
+          notification_data_hash: notification.data_hash,
+          post: notification.post
+        )
+        message = mailer.message
+
+        topic = notification.post.topic
+        expect(message.html_part.body.to_s).not_to include(topic.title)
+        expect(message.html_part.body.to_s).not_to include(topic.slug)
+        expect(message.text_part.body.to_s).not_to include(topic.title)
+        expect(message.text_part.body.to_s).not_to include(topic.slug)
       end
     end
   end
@@ -546,6 +621,7 @@ describe UserNotifications do
   describe "user mentioned email" do
     include_examples "notification email building" do
       let(:notification_type) { :mentioned }
+      include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
     end
@@ -554,6 +630,7 @@ describe UserNotifications do
   describe "user replied" do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
+      include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
     end
@@ -562,6 +639,7 @@ describe UserNotifications do
   describe "user quoted" do
     include_examples "notification email building" do
       let(:notification_type) { :quoted }
+      include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
     end
@@ -570,6 +648,7 @@ describe UserNotifications do
   describe "user posted" do
     include_examples "notification email building" do
       let(:notification_type) { :posted }
+      include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
     end
@@ -578,6 +657,7 @@ describe UserNotifications do
   describe "user invited to a private message" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_private_message }
+      include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
     end
@@ -586,6 +666,7 @@ describe UserNotifications do
   describe "user invited to a topic" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
+      include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
     end
@@ -594,6 +675,7 @@ describe UserNotifications do
   describe "watching first post" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
+      include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
     end

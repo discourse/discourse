@@ -136,6 +136,10 @@ export default class PostCooked {
         div.html(result.cooked);
         div.highlight(originalText, {caseSensitive: true, element: 'span', className: 'highlighted'});
         $blockQuote.showHtml(div, 'fast', finished);
+      }).catch((e) => {
+        if (e.jqXHR.status === 404) {
+          $blockQuote.showHtml($("<div class='expanded-quote'><i class='fa fa-trash-o'></i></div>"), 'fast', finished);
+        }
       });
     } else {
       // Hide expanded quote

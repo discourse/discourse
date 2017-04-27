@@ -415,7 +415,6 @@ pl_PL:
       automatic_group: Automatyczna grupa
       closed_group: Zamknięta grupa
       is_group_user: "Jesteś członkiem tej grupy"
-      allow_membership_requests: "Pozwalaj użytkownikom wysyłać prośby o członkostwo do właścicieli grup (Wymagane jest aby wszyscy mogli wspominać grupę)"
       membership: "Członkostwo"
       name: "Nazwa"
       user_count: "Ilość użytkowników"
@@ -1153,15 +1152,6 @@ pl_PL:
         title: "Nie zapomniałeś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
-      auto_close:
-        label: "Automatycznie zamykaj tematy po:"
-        error: "Podaj poprawną wartość."
-        based_on_last_post: "Nie zamykaj tematu dopóki od ostatniego wpisu nie upłynie przynajmniej tyle czasu."
-        all:
-          examples: 'Podaj godzinę  (17:30), liczbę godzin (24) lub konkretną datę i czas (2013-11-22 14:00).'
-        limited:
-          units: "(# godzin)"
-          examples: 'Podaj liczbę godzin (24).'
     notifications:
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
@@ -1430,11 +1420,7 @@ pl_PL:
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
-      auto_close_notice: "Ten temat zostanie automatycznie zamknięty %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Ten temat zostanie automatycznie zamknięty %{duration} po ostatniej odpowiedzi."
       auto_close_title: 'Ustawienia automatycznego zamykania'
-      auto_close_save: "Zapisz"
-      auto_close_remove: "Nie zamykaj automatycznie tego tematu"
       auto_close_immediate:
         one: "Ostatni wpis w tym temacie został zamieszczony 1 godzinę temu, więc zostanie on natychmiastowo zamknięty."
         few: "Ostatni wpis w tym temacie został zamieszczony %{hours} godzin temu, więc zostanie on natychmiastowo zamknięty."
@@ -1468,7 +1454,6 @@ pl_PL:
           '2_8': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz tę kategorię.'
           '2_4': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
           '2_2': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
-          '2': 'Będziesz otrzymywać powiadomienia, ponieważ <a href="/users/{{username}}/preferences">ten temat został uznany za przeczytany</a>.'
           '1_2': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '1': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
@@ -1504,7 +1489,6 @@ pl_PL:
         open: "Otwórz temat"
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
-        auto_close: "Zamknij automatycznie…"
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
@@ -2722,32 +2706,12 @@ pl_PL:
       customize:
         title: "Wygląd"
         long_title: "Personalizacja strony"
-        css: "CSS"
-        header: "Nagłówki"
-        top: "Nagłówek"
-        footer: "Stopka"
-        embedded_css: "Osadzony CSS"
-        head_tag:
-          text: "</head>"
-          title: "Kod HTML, który zostanie umieszczony przed tagiem </head>"
-        body_tag:
-          text: "</body>"
-          title: "Kod HTML, który zostanie umieszczony przed tagiem </body>."
-        override_default: "Nie dołączaj standardowego arkusza stylów"
-        enabled: "Włączone?"
         preview: "podgląd"
-        undo_preview: "usuń podgląd"
-        rescue_preview: " domyślny styl"
-        explain_preview: "Podejrzyj witrynę z użyciem tego sylesheet'u"
-        explain_undo_preview: "Wróć do aktualnie aktywnego schematu styli"
-        explain_rescue_preview: "Zobacz stronę z domyślnym stylem"
         save: "Zapisz"
         new: "Nowy"
         new_style: "Nowy styl"
         import: "Import"
-        import_title: "Wybierz plik lub wklej tekst"
         delete: "Usuń"
-        delete_confirm: "Usunąć tę personalizację?"
         about: "Zmień arkusze stylów CSS i nagłówki HTML w witrynie. Dodaj własne ustawienie aby rozpocząć."
         color: "Kolor"
         opacity: "Widoczność"
@@ -2760,13 +2724,9 @@ pl_PL:
           none_selected: "Aby rozpocząć edycję, wybierz szablon wiadomości e-mail. "
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
-        css_html:
-          title: "CSS, HTML"
-          long_title: "Personalizacja kodu CSS i HTML"
         colors:
           title: "Kolory"
           long_title: "Schematy kolorów"
-          about: "Zmień kolory strony bez modyfikacji CSS. Dodaj nowy schemat kolorów, aby rozpocząć."
           new_name: "Nowy schemat kolorów"
           copy_name_prefix: "Kopia"
           delete_confirm: "Usunąć ten schemat kolorów?"
@@ -2905,8 +2865,6 @@ pl_PL:
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
-            change_site_customization: "modyfikacja personalizacji serwisu"
-            delete_site_customization: "usunięcie personalizacji strony"
             change_site_text: "zmiana tekstu serwisu"
             suspend_user: "zawieszenie użytkownika"
             unsuspend_user: "odwieszenie użytkownika"
@@ -3049,8 +3007,6 @@ pl_PL:
         blocked: "Zablokowany?"
         staged: "Wystawiony?"
         show_admin_profile: "Admin"
-        edit_title: "Edytuj tytuł"
-        save_title: "Zapisz tytuł"
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
         refresh_browsers_message: "Wiadomość wysłana do wszystkich klientów!"
         show_public_profile: "Pokaż profil publiczny"
