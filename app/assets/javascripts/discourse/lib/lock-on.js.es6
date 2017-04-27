@@ -35,7 +35,7 @@ export default class LockOn {
     const selected = $(this.selector);
     if (selected && selected.offset && selected.offset()) {
       const result = selected.offset().top;
-      return result - Math.round(scrollTopFor(result));
+      return result - (Math.round(scrollTopFor(result)) * 0.9);
     }
   }
 
