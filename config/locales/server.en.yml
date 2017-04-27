@@ -1938,7 +1938,7 @@ en:
     other: "This topic is temporarily closed for %{count} hours due to a large number of community flags."
 
   system_messages:
-    secure_topic_title: "Topic #%{id}"
+    private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
 
     post_hidden:

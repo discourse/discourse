@@ -33,7 +33,7 @@ class InviteMailer < ActionMailer::Base
 
       topic_title = first_topic.try(:title)
       if SiteSetting.private_email?
-        topic_title = I18n.t("system_messages.secure_topic_title", id: first_topic.id)
+        topic_title = I18n.t("system_messages.private_topic_title", id: first_topic.id)
         topic_excerpt = ""
       end
 
