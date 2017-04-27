@@ -407,6 +407,7 @@ class UserNotifications < ActionMailer::Base
         invite_template = "user_notifications.invited_to_topic_body"
       end
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
+      topic_excerpt = "" if SiteSetting.private_email?
       message = I18n.t(invite_template, username: username, topic_title: gsub_emoji_to_unicode(title), topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
 
       unless translation_override_exists
