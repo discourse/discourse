@@ -30,9 +30,9 @@ class Admin::GroupsController < Admin::AdminController
       valid_emails = {}
       valid_usernames = {}
       valid_users = User.where("username_lower IN (:users) OR email IN (:users)", users: users).pluck(:id, :username_lower, :email)
-      valid_users.each do |vu|
-        valid_emails[vu[1]] = valid_usernames[vu[2]] = vu[0]
-        vu.slice!(1..2)
+      valid_users.map! do |id, username_lower, email|
+        valid_emails[email] = valid_usernames[username_lower] = id
+        id
       end
       invalid_users = users.reject! { |u| valid_emails[u] || valid_usernames[u] }
       valid_users.flatten!
