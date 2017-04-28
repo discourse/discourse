@@ -7,7 +7,7 @@ class HtmlToMarkdown
   end
 
   def initialize(html)
-    @doc = Nokogiri::HTML.fragment(html)
+    @doc = Nokogiri::HTML(html)
     remove_whitespaces!
   end
 
