@@ -1,5 +1,4 @@
 import { ajax } from 'discourse/lib/ajax';
-import { refreshCSS } from 'discourse/initializers/live-development';
 const keySelector = 'meta[name=discourse_theme_key]';
 
 export function currentThemeKey() {
@@ -20,6 +19,46 @@ export function selectDefaultTheme(key) {
   } else {
     $.cookie('theme_key', null, {path: '/', expires: 1});
   }
+}
+
+export function refreshCSS(node, hash, newHref, options) {
+
+  let $orig = $(node);
+
+  if ($orig.data('reloading')) {
+
+    if (options && options.force) {
+      clearTimeout($orig.data('timeout'));
+      $orig.data("copy").remove();
+    } else {
+      return;
+    }
+  }
+
+  if (!$orig.data('orig')) {
+    $orig.data('orig', node.href);
+  }
+
+  $orig.data('reloading', true);
+
+  const orig = $(node).data('orig');
+
+  let reloaded = $orig.clone(true);
+  if (hash) {
+    reloaded[0].href = orig + (orig.indexOf('?') >= 0 ? "&hash=" : "?hash=") + hash;
+  } else {
+    reloaded[0].href = newHref;
+  }
+
+  $orig.after(reloaded);
+
+  let timeout = setTimeout(()=>{
+    $orig.remove();
+    reloaded.data('reloading', false);
+  }, 2000);
+
+  $orig.data("timeout", timeout);
+  $orig.data("copy", reloaded);
 }
 
 export function previewTheme(key) {
