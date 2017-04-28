@@ -142,6 +142,10 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>")).to eq("- A list item with a blockquote:\n\n  > This is a **blockquote**\n  > inside a list item.")
   end
 
+  it "supports html document" do
+    expect(html_to_markdown("<html><body>Hello<div>World</div></body></html>")).to eq("Hello\nWorld")
+  end
+
   it "handles <p>" do
     expect(html_to_markdown("<p>1st paragraph</p><p>2nd paragraph</p>")).to eq("1st paragraph\n\n2nd paragraph")
   end
