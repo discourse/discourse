@@ -194,7 +194,7 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        markdown = HtmlToMarkdown.new(html).to_markdown
+        markdown = HtmlToMarkdown.new(html, keep_img_tags: true).to_markdown
         markdown = trim_discourse_markers(markdown)
         EmailReplyTrimmer.trim(markdown, true)
       end

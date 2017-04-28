@@ -6,7 +6,8 @@ class HtmlToMarkdown
     def initialize(name, head="", body="", opened=false, markdown=""); super; end
   end
 
-  def initialize(html)
+  def initialize(html, opts={})
+    @opts = opts || {}
     @doc = Nokogiri::HTML(html)
     remove_whitespaces!
   end
@@ -133,8 +134,12 @@ class HtmlToMarkdown
   end
 
   def visit_img(node)
-    title = node["alt"].presence || node["title"].presence
-    @stack[-1].markdown << "![#{title}](#{node["src"]})"
+    if @opts[:keep_img_tags]
+      @stack[-1].markdown << node.to_html
+    else
+      title = node["alt"].presence || node["title"].presence
+      @stack[-1].markdown << "![#{title}](#{node["src"]})"
+    end
   end
 
   def visit_a(node)

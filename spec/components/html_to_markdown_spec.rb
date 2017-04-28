@@ -31,8 +31,14 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<a href="https://www.discourse.org">Discourse</a>})).to eq("[Discourse](https://www.discourse.org)")
   end
 
+  HTML_WITH_IMG ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
+
   it "converts <img>" do
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">})).to eq("![Discourse Logo](https://www.discourse.org/logo.svg)")
+    expect(html_to_markdown(HTML_WITH_IMG)).to eq("![Discourse Logo](https://www.discourse.org/logo.svg)")
+  end
+
+  it "keeps <img> with 'keep_img_tags'" do
+    expect(HtmlToMarkdown.new(HTML_WITH_IMG, keep_img_tags: true).to_markdown).to eq(HTML_WITH_IMG)
   end
 
   (1..6).each do |n|
