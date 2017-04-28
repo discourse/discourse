@@ -34,7 +34,7 @@ class Badge < ActiveRecord::Base
   NiceShare = 21
   GoodShare = 22
   GreatShare = 23
-  OneYearAnniversary = 24
+  Anniversary = 24
 
   Promoter = 25
   Campaigner = 26
