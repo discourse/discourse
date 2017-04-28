@@ -37,6 +37,7 @@ class BadgeGranter
                                        post_id: @post_id,
                                        seq: seq)
 
+      return unless SiteSetting.enable_badges
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
