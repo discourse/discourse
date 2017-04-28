@@ -489,6 +489,7 @@ class UserNotifications < ActionMailer::Base
   private
 
   def build_summary_for(user)
+    @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title # used by I18n
     @user            = user
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
