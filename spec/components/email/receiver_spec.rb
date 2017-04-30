@@ -158,7 +158,9 @@ describe Email::Receiver do
 
       expect { process(:html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
+    end
 
+    it "handles different encodings correctly" do
       expect { process(:hebrew_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("שלום! מה שלומך היום?")
 
@@ -167,6 +169,10 @@ describe Email::Receiver do
 
       expect { process(:reply_with_weird_encoding) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a reply with a weird encoding.")
+
+      expect { process(:reply_with_8bit_encoding) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("hab vergessen kritische zeichen einzufügen:\näöüÄÖÜß")
+
     end
 
     it "prefers text over html" do
