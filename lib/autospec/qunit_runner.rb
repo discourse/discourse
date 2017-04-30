@@ -9,17 +9,17 @@ module Autospec
     def watchers; WATCHERS; end
 
     # Discourse specific
-    watch(%r{^app/assets/javascripts/discourse/(.+)\.js$}) { |m| "test/javascripts/#{m[1]}_test.js" }
-    watch(%r{^app/assets/javascripts/admin/(.+)\.js$})     { |m| "test/javascripts/admin/#{m[1]}_test.js" }
-    watch(%r{^test/javascripts/.+\.js$})
+    watch(%r{^app/assets/javascripts/discourse/(.+)\.js.es6$}) { |m| "test/javascripts/#{m[1]}_test.js.es6" }
+    watch(%r{^app/assets/javascripts/admin/(.+)\.js.es6$})     { |m| "test/javascripts/admin/#{m[1]}_test.js.es6" }
+    watch(%r{^test/javascripts/.+\.js.es6$})
 
     RELOADERS = Set.new
     def self.reload(pattern); RELOADERS << pattern; end
     def reloaders; RELOADERS; end
 
     # Discourse specific
-    reload(%r{^test/javascripts/fixtures/.+_fixtures\.js$})
-    reload(%r{^test/javascripts/(helpers|mixins)/.+\.js$})
+    reload(%r{^test/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
+    reload(%r{^test/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
     reload("test/javascripts/test_helper.js")
 
     require "socket"
@@ -137,6 +137,7 @@ module Autospec
     end
 
     def try_to_find_module_name(file)
+      file,_ = file.split(/:\d+$/)
       return unless File.exists?(file)
       File.open(file, "r").each_line do |line|
         if m = /module\(['"]([^'"]+)/i.match(line)
