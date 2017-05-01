@@ -2741,8 +2741,6 @@ el:
     error: "Σφάλμα!"
     email_input: "Email διαχειριστή"
     submit_button: "Αποστολή Email"
-  discourse_hub:
-    access_token_problem: "Πες σε ένα διαχειριστή: Παρακαλώ ανανεώστε τις ρυθμίσεις ιστοτόπου για να συμπερι΄λάβετε το σωστό discourse_org_access_key."
   performance_report:
     initial_post_raw: Αυτό το θέμα περιλαμβάνει καθημερινές αναφορές απόδοσης για τη σελίδα σας.
     initial_topic_title: Εκθέσεις απόδοσης ιστοσελίδας

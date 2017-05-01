@@ -2834,8 +2834,6 @@ de:
     error: "Fehler!"
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
-  discourse_hub:
-    access_token_problem: "Gib das hier an einen Administrator weiter: Bitte aktualisieren Sie die Siteneinstellungen für den korrekten discourse_org_access_key."
   performance_report:
     initial_post_raw: Dieser Beitrag enthält tägliche Leistungsberichte deiner Site.
     initial_topic_title: Berichte zur Websitegeschwindigkeit

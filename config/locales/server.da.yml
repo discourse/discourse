@@ -1463,8 +1463,6 @@ da:
     error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
-  discourse_hub:
-    access_token_problem: "Fortæl en admin: Venligst opdater indstillingerne så de inkluderer den korrekte  discourse_org_access_key."
   performance_report:
     initial_post_raw: Dette emne inkluderer daglige præstationsrapporter for dit site.
     initial_topic_title: Website præstationsrapport

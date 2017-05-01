@@ -2054,8 +2054,6 @@ pl_PL:
     error: "Błąd!"
     email_input: "Email administratora. "
     submit_button: "Wyślij Email. "
-  discourse_hub:
-    access_token_problem: "Powiedz administratorowi tej witryny: Zaktualizuj na poprawne ustawienia discourse_org_access_key."
   performance_report:
     initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
     initial_topic_title: 'Testy wydajności witryny. '

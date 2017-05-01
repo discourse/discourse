@@ -2597,8 +2597,6 @@ zh_TW:
     error: "錯誤"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
-  discourse_hub:
-    access_token_problem: "告訴管理員：請更新站點設置，應使用正確的 discourse_org_access_key。"
   performance_report:
     initial_post_raw: 這個主題將用來展示網站每日性能報告。
     initial_topic_title: 網站效能報表

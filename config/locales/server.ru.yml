@@ -1653,8 +1653,6 @@ ru:
     error: "Ошибка!"
     email_input: "Email Администратора"
     submit_button: "отправить письмо"
-  discourse_hub:
-    access_token_problem: "Пожалуйста, обновите настройки сайта, чтобы задать верный discourse_org_access_key."
   performance_report:
     initial_post_raw: Эта тема содержит ежедневные отчеты активности форума.
     initial_topic_title: Отчеты активности форума

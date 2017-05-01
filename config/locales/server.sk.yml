@@ -1418,8 +1418,6 @@ sk:
     error: "Chyba !"
     email_input: "Email administrátora"
     submit_button: "Poslať email"
-  discourse_hub:
-    access_token_problem: "Povedzte administrátorovi: Prosím aktualizujte nastavenia stránky, aby obsahovali správny discourse_org_access_key."
   performance_report:
     initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
     initial_topic_title: Reporty rýchlosti stránok

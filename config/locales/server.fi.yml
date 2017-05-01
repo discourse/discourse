@@ -2847,8 +2847,6 @@ fi:
     error: "Virhe!"
     email_input: "Ylläpitäjän sähköpostiosoite"
     submit_button: "Lähetä sähköposti"
-  discourse_hub:
-    access_token_problem: "Kerro ylläpitäjälle: päivitä toimiva discourse_org_access_key."
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit

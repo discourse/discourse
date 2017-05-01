@@ -2475,8 +2475,6 @@ zh_CN:
     error: "错误！"
     email_input: "管理员邮件"
     submit_button: "发送邮件"
-  discourse_hub:
-    access_token_problem: "告诉管理员：请更新站点设置，应使用正确的 discourse_org_access_key。"
   performance_report:
     initial_post_raw: 这个主题将用来展示网站每日性能报告。
     initial_topic_title: 网站性能报告

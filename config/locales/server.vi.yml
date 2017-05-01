@@ -1605,8 +1605,6 @@ vi:
     error: "Lỗi!"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
-  discourse_hub:
-    access_token_problem: "Dành cho admin: Hãy cập nhật đúng discourse_org_access_key trong thiết lập website."
   performance_report:
     initial_post_raw: Chủ đề này bao gồm các báo cáo hiệu suất hàng ngày của website.
     initial_topic_title: Báo cáo hiệu suất website

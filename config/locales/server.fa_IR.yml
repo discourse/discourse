@@ -1115,8 +1115,6 @@ fa_IR:
     error: "خطا!"
     email_input: "ایمیل مدیر "
     submit_button: "ارسال ایمیل "
-  discourse_hub:
-    access_token_problem: "به یکی از مدیران بگویید: لطفا تنظیمات سایت را به‌روزرسانی نمایید تا شامل discourse_org_access_key صحیح باشد."
   performance_report:
     initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
     initial_topic_title: گزارش عملکرد وب‌سایت

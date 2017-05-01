@@ -2898,8 +2898,6 @@ es:
     error: "¡Error!"
     email_input: "Email de admin"
     submit_button: "Enviar email"
-  discourse_hub:
-    access_token_problem: "Avisa a un admin: Por favor actualiza los ajustes del sitio para incluir la discourse_org_access_key correctamente."
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio
