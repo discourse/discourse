@@ -25,7 +25,7 @@ widgetTest('basics', {
   }
 });
 
-widgetTest('basics - minmized', {
+widgetTest('basics - minimized', {
   template: '{{mount-widget widget="home-logo" args=args}}',
   setup() {
     this.siteSettings.logo_url = bigLogo;
