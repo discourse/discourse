@@ -448,11 +448,18 @@ export default RestModel.extend({
     return this._identityMap[id];
   },
 
-  loadPost(postId){
+  loadPost(postId) {
     const url = "/posts/" + postId;
     const store = this.store;
+    const existing = this._identityMap[postId];
 
-    return ajax(url).then(p => this.storePost(store.createRecord('post', p)));
+    return ajax(url).then(p => {
+      if (existing) {
+        p.cooked = existing.cooked;
+      }
+
+      return this.storePost(store.createRecord('post', p));
+    });
   },
 
   /**
