@@ -1060,8 +1060,6 @@ ko:
     error: "에러!"
     email_input: "관리자 이메일"
     submit_button: "이메일 보내기"
-  discourse_hub:
-    access_token_problem: "관리자에게 말하기: 제발 웹사이트 설정 업데이트해서 맞는 discourse_org_access_key를 포함하게 해주세요."
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고

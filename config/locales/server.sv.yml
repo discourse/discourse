@@ -2154,8 +2154,6 @@ sv:
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
-  discourse_hub:
-    access_token_problem: "Berätta för en administratör: Var vänlig och uppdatera webbplatsinställningarna för att inkludera den korrekta discourse_org_access_key."
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen

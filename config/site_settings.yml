@@ -356,12 +356,6 @@ users:
     min: 1
     max: 10
   block_common_passwords: true
-  enforce_global_nicknames:
-    default: false
-    hidden: true
-  discourse_org_access_key:
-    default: ''
-    hidden: true
   username_change_period: 3
   email_editable: true
   logout_redirect:

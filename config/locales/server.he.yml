@@ -2891,8 +2891,6 @@ he:
     error: "שגיאה!"
     email_input: "מייל של המנהל"
     submit_button: "שלח מייל"
-  discourse_hub:
-    access_token_problem: "תגיד לאדמין שיעדכן את הגדרות האתר שיכללו את המזהה discourse_org_access_key הנכון."
   performance_report:
     initial_post_raw: 'נושא זה כולל דוחות פעילות יומיים עבור האתר שלך. '
     initial_topic_title: דוחות פעילות לאתר

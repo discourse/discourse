@@ -2411,8 +2411,6 @@ fr:
     error: "Erreur !"
     email_input: "Courriel de l'administrateur"
     submit_button: "Envoyer un courriel"
-  discourse_hub:
-    access_token_problem: "En informer un administrateur : Veuillez mettre à jour les paramètres du site afin de renseigner une clé discourse_org_access_key correcte."
   performance_report:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site

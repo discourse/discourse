@@ -381,8 +381,6 @@ class UsersController < ApplicationController
       success: false,
       message: I18n.t("login.something_already_taken")
     }
-  rescue RestClient::Forbidden
-    render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
   end
 
   def get_honeypot_value

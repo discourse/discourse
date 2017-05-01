@@ -1728,8 +1728,6 @@ pt_BR:
     error: "Erro!"
     email_input: "Email do Administrador"
     submit_button: "Enviar Email"
-  discourse_hub:
-    access_token_problem: "Diga para um administrador: Por favor atualize as configurações do site para incluir a correta discourse_org_access_key."
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
     initial_topic_title: Relatórios de performance do Site

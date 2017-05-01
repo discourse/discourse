@@ -1196,8 +1196,6 @@ ja:
     error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
-  discourse_hub:
-    access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート

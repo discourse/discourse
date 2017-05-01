@@ -2408,8 +2408,6 @@ pt:
     error: "Erro!"
     email_input: "Email Administração"
     submit_button: "Enviar Email"
-  discourse_hub:
-    access_token_problem: "Dizer a um administrador: Por favor atualize as configurações do sítio para incluir a discourse_org_access_key correta."
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio

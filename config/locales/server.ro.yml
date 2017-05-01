@@ -2500,8 +2500,6 @@ ro:
     error: "Eroare!"
     email_input: "Email Admin"
     submit_button: "Trimite email"
-  discourse_hub:
-    access_token_problem: "Spune-i unui admin: Te rog actualizează setările site-ului pentru a include discourse_org_access_key ."
   performance_report:
     initial_post_raw: Acest subiect include rapoarte zilnice de performanță referitoare la site-ul tău.
     initial_topic_title: Rapoarte de performanță website

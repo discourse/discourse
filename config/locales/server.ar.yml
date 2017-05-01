@@ -1766,8 +1766,6 @@ ar:
     error: "خطأ!"
     email_input: "مدير البريد الإيكتروني"
     submit_button: "أرسل البريد الإلكتروني"
-  discourse_hub:
-    access_token_problem: "أخبر المدير : أرجوك قم بتحديث إعدادات الموقع لإضافة مفتاح الدخول الصحيح لـ ديسكورس"
   performance_report:
     initial_post_raw: 'هذا الموضوع يحتوي على معلومات الاداء اليومي للموقع '
     initial_topic_title: التبليغ عن اداء الموقع

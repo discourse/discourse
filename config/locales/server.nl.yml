@@ -1604,8 +1604,6 @@ nl:
     error: "Fout!"
     email_input: "E-mailadres van beheerder"
     submit_button: "E-mail versturen"
-  discourse_hub:
-    access_token_problem: "Licht een admin in: Gelieve de site instellingen bijwerken met de juiste discourse_org_access_key."
   performance_report:
     initial_post_raw: Dit topic bevat dagelijkse prestatierapporten voor uw website.
     initial_topic_title: Performancerapportages van de website

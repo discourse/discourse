@@ -1793,8 +1793,6 @@ tr_TR:
     error: "Hata!"
     email_input: "Yönetici e-postası"
     submit_button: "E-posta Gönder"
-  discourse_hub:
-    access_token_problem: "Admin'e iletin: Lütfen doğru discourse_org_access_key içerecek şekilde site ayarlarını güncelleyin."
   performance_report:
     initial_post_raw: Bu konu siteniz hakkında günlük performans raporlarını içerir.
     initial_topic_title: Site performansı raporları

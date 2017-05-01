@@ -3340,9 +3340,6 @@ en:
     email_input: "Admin Email"
     submit_button: "Send Email"
 
-  discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
-
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
