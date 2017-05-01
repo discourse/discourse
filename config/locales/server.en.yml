@@ -1710,8 +1710,8 @@ en:
 
   flags_reminder:
     flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. Please review them."
-      other: "Flags were submitted over %{count} hours ago. Please review them."
+      one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
+      other: "Flags were submitted over %{count} hours ago. [Please review them](/admin/flags)."
     subject_template:
       one: "1 flag waiting to be handled"
       other: "%{count} flags waiting to be handled"
