@@ -145,7 +145,7 @@ class Autospec::Manager
     # try focus tag
     if failed_specs.length > 0
       filename,_ = failed_specs[0].split(":")
-      if filename && File.exist?(filename)
+      if filename && File.exist?(filename) && !File.directory?(filename)
         spec = File.read(filename)
         start,_ =  spec.split(/\S*#focus\S*$/)
         if start.length < spec.length
