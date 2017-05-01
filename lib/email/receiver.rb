@@ -217,6 +217,13 @@ module Email
       encodings = ["UTF-8", "ISO-8859-1"]
       encodings.unshift(mail_part.charset) if mail_part.charset.present?
 
+      # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so
+      # always try UTF-8 first
+      if mail_part.content_transfer_encoding == "8bit"
+        encodings.delete("UTF-8")
+        encodings.unshift("UTF-8")
+      end
+
       encodings.uniq.each do |encoding|
         fixed = try_to_encode(string, encoding)
         return fixed if fixed.present?
