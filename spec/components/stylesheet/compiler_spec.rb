@@ -16,6 +16,13 @@ describe Stylesheet::Compiler do
     expect(css).to include("url('/foo.png')")
     expect(css).not_to include('asset-url')
   end
+
+  it "supports image-url" do
+    css,_map = Stylesheet::Compiler.compile(".body{background-image: image-url('foo.png');}","test.scss")
+
+    expect(css).to include("url('/images/foo.png')")
+    expect(css).not_to include('image-url')
+  end
 end
 
 
