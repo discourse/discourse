@@ -324,6 +324,8 @@ Discourse::Application.routes.draw do
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
     get "#{root_path}/account-created/" => "users#account_created"
+    get "#{root_path}/account-created/resent" => "users#account_created"
+    get "#{root_path}/account-created/edit-email" => "users#account_created"
     get({ "#{root_path}/password-reset/:token" => "users#password_reset" }.merge(index == 1 ? { as: :password_reset_token } : {}))
     get "#{root_path}/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
     put "#{root_path}/password-reset/:token" => "users#password_reset"

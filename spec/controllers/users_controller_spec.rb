@@ -482,6 +482,7 @@ describe UsersController do
 
         # should save user_created_message in session
         expect(session["user_created_message"]).to be_present
+        expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
       end
 
       context "and 'must approve users' site setting is enabled" do
@@ -591,6 +592,7 @@ describe UsersController do
 
         # should save user_created_message in session
         expect(session["user_created_message"]).to be_present
+        expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
       end
 
       it "shows the 'active' message" do
@@ -676,6 +678,7 @@ describe UsersController do
 
         # should not change the session
         expect(session["user_created_message"]).to be_blank
+        expect(session[SessionController::ACTIVATE_USER_KEY]).to be_blank
       end
     end
 
@@ -720,6 +723,7 @@ describe UsersController do
 
         # should not change the session
         expect(session["user_created_message"]).to be_blank
+        expect(session[SessionController::ACTIVATE_USER_KEY]).to be_blank
       end
     end
 
@@ -1872,74 +1876,165 @@ describe UsersController do
 
   describe '.update_activation_email' do
 
-    it "raises an error with an invalid username" do
-      xhr :put, :update_activation_email, {
-        username: 'eviltrout',
-        password: 'invalid-password',
-        email: 'updatedemail@example.com'
-      }
-      expect(response).to_not be_success
+    context "with a session variable" do
+
+      it "raises an error with an invalid session value" do
+        session[SessionController::ACTIVATE_USER_KEY] = 1234
+        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error for an active user" do
+        user = Fabricate(:walter_white)
+        session[SessionController::ACTIVATE_USER_KEY] = user.id
+        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error when logged in" do
+        moderator = log_in(:moderator)
+        session[SessionController::ACTIVATE_USER_KEY] = moderator.id
+        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error when the new email is taken" do
+        active_user = Fabricate(:user)
+        user = Fabricate(:inactive_user)
+        session[SessionController::ACTIVATE_USER_KEY] = user.id
+        xhr :put, :update_activation_email, { email: active_user.email }
+        expect(response).to_not be_success
+      end
+
+      it "can be updated" do
+        user = Fabricate(:inactive_user)
+        token = user.email_tokens.first
+
+        session[SessionController::ACTIVATE_USER_KEY] = user.id
+        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+
+        expect(response).to be_success
+
+        user.reload
+        expect(user.email).to eq('updatedemail@example.com')
+        expect(user.email_tokens.where(email: 'updatedemail@example.com', expired: false)).to be_present
+
+        token.reload
+        expect(token.expired?).to eq(true)
+      end
     end
 
-    it "raises an error with an invalid password" do
-      xhr :put, :update_activation_email, {
-        username: Fabricate(:inactive_user).username,
-        password: 'invalid-password',
-        email: 'updatedemail@example.com'
-      }
-      expect(response).to_not be_success
+    context "with a username and password" do
+      it "raises an error with an invalid username" do
+        xhr :put, :update_activation_email, {
+          username: 'eviltrout',
+          password: 'invalid-password',
+          email: 'updatedemail@example.com'
+        }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error with an invalid password" do
+        xhr :put, :update_activation_email, {
+          username: Fabricate(:inactive_user).username,
+          password: 'invalid-password',
+          email: 'updatedemail@example.com'
+        }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error for an active user" do
+        xhr :put, :update_activation_email, {
+          username: Fabricate(:walter_white).username,
+          password: 'letscook',
+          email: 'updatedemail@example.com'
+        }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error when logged in" do
+        log_in(:moderator)
+
+        xhr :put, :update_activation_email, {
+          username: Fabricate(:inactive_user).username,
+          password: 'qwerqwer123',
+          email: 'updatedemail@example.com'
+        }
+        expect(response).to_not be_success
+      end
+
+      it "raises an error when the new email is taken" do
+        user = Fabricate(:user)
+
+        xhr :put, :update_activation_email, {
+          username: Fabricate(:inactive_user).username,
+          password: 'qwerqwer123',
+          email: user.email
+        }
+        expect(response).to_not be_success
+      end
+
+      it "can be updated" do
+        user = Fabricate(:inactive_user)
+        token = user.email_tokens.first
+
+        xhr :put, :update_activation_email, {
+          username: user.username,
+          password: 'qwerqwer123',
+          email: 'updatedemail@example.com'
+        }
+
+        expect(response).to be_success
+
+        user.reload
+        expect(user.email).to eq('updatedemail@example.com')
+        expect(user.email_tokens.where(email: 'updatedemail@example.com', expired: false)).to be_present
+
+        token.reload
+        expect(token.expired?).to eq(true)
+      end
     end
 
-    it "raises an error for an active user" do
-      xhr :put, :update_activation_email, {
-        username: Fabricate(:walter_white).username,
-        password: 'letscook',
-        email: 'updatedemail@example.com'
-      }
-      expect(response).to_not be_success
+  end
+
+  context "account_created" do
+
+    it "returns a message when no session is present" do
+      get :account_created
+      created = assigns(:account_created)
+      expect(created).to be_present
+      expect(created[:message]).to eq(I18n.t('activation.missing_session'))
+      expect(created[:email]).to be_blank
+      expect(created[:username]).to be_blank
     end
 
-    it "raises an error when logged in" do
-      log_in(:moderator)
+    context "when the user account is created" do
+      before do
+        session['user_created_message'] = "Donuts"
+      end
 
-      xhr :put, :update_activation_email, {
-        username: Fabricate(:inactive_user).username,
-        password: 'qwerqwer123',
-        email: 'updatedemail@example.com'
-      }
-      expect(response).to_not be_success
+      it "returns the message when set in the session" do
+        get :account_created
+        created = assigns(:account_created)
+        expect(created).to be_present
+        expect(created[:message]).to eq('Donuts')
+        expect(created[:email]).to be_blank
+        expect(created[:username]).to be_blank
+      end
+
+      it "includes user information when the session variable is present " do
+        user = Fabricate(:user, active: false)
+        session[SessionController::ACTIVATE_USER_KEY] = user.id
+
+        get :account_created
+        created = assigns(:account_created)
+        expect(created).to be_present
+        expect(created[:message]).to eq('Donuts')
+        expect(created[:email]).to eq(user.email)
+        expect(created[:username]).to eq(user.username)
+      end
     end
 
-    it "raises an error when the new email is taken" do
-      user = Fabricate(:user)
-
-      xhr :put, :update_activation_email, {
-        username: Fabricate(:inactive_user).username,
-        password: 'qwerqwer123',
-        email: user.email
-      }
-      expect(response).to_not be_success
-    end
-
-    it "can be updated" do
-      user = Fabricate(:inactive_user)
-      token = user.email_tokens.first
-
-      xhr :put, :update_activation_email, {
-        username: user.username,
-        password: 'qwerqwer123',
-        email: 'updatedemail@example.com'
-      }
-
-      expect(response).to be_success
-
-      user.reload
-      expect(user.email).to eq('updatedemail@example.com')
-      expect(user.email_tokens.where(email: 'updatedemail@example.com', expired: false)).to be_present
-
-      token.reload
-      expect(token.expired?).to eq(true)
-    end
   end
 
 end
