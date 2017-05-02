@@ -2346,13 +2346,11 @@ en:
       title: "You're a New User of the Month!"
       subject_template: "You're a New User of the Month!"
       text_body_template: |
-        Congratulations, you've been awarded the **New User of the Month award for %{month_year}**. :trophy:
+        Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
-        You've quickly become a valuable member of our community and everyone is really enjoying your posts.
+        This award is only granted to two new users per month, and it will be permanently visible on [your user page](/my/badges).
 
-        This award will be permanently visible as a badge on [your user page](/my/badges).
-
-        Thanks, and keep up the great work!
+        You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
