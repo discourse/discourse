@@ -194,7 +194,7 @@ class Admin::ThemesController < Admin::AdminController
       return unless fields = theme_params[:theme_fields]
 
       fields.each do |field|
-        @theme.set_field(field[:target], field[:name], field[:value])
+        @theme.set_field(target: field[:target], name: field[:name], value: field[:value], type_id: field[:type_id])
       end
     end
 

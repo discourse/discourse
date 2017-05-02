@@ -26,9 +26,9 @@ describe Theme do
   it 'can support child themes' do
     child = Theme.new(name: '2', user_id: user.id)
 
-    child.set_field(:common, "header", "World")
-    child.set_field(:desktop, "header", "Desktop")
-    child.set_field(:mobile, "header", "Mobile")
+    child.set_field(target: :common, name: "header", value: "World")
+    child.set_field(target: :desktop, name: "header", value: "Desktop")
+    child.set_field(target: :mobile, name: "header", value: "Mobile")
 
     child.save!
 
@@ -36,15 +36,15 @@ describe Theme do
     expect(Theme.lookup_field(child.key, "mobile", :header)).to eq("World\nMobile")
 
 
-    child.set_field(:common, "header", "Worldie")
+    child.set_field(target: :common, name: "header", value: "Worldie")
     child.save!
 
     expect(Theme.lookup_field(child.key, :mobile, :header)).to eq("Worldie\nMobile")
 
     parent = Theme.new(name: '1', user_id: user.id)
 
-    parent.set_field(:common, "header", "Common Parent")
-    parent.set_field(:mobile, "header", "Mobile Parent")
+    parent.set_field(target: :common, name: "header", value: "Common Parent")
+    parent.set_field(target: :mobile, name: "header", value: "Mobile Parent")
 
     parent.save!
 
@@ -68,7 +68,7 @@ describe Theme do
 
   it 'should correct bad html in body_tag_baked and head_tag_baked' do
     theme = Theme.new(user_id: -1, name: "test")
-    theme.set_field(:common, "head_tag", "<b>I am bold")
+    theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
     theme.save!
 
     expect(Theme.lookup_field(theme.key, :desktop, "head_tag")).to eq("<b>I am bold</b>")
@@ -84,7 +84,7 @@ describe Theme do
     </script>
 HTML
     theme = Theme.new(user_id: -1, name: "test")
-    theme.set_field(:common, "header", with_template)
+    theme.set_field(target: :common, name: "header", value: with_template)
     theme.save!
 
     baked = Theme.lookup_field(theme.key, :mobile, "header")
@@ -96,7 +96,7 @@ HTML
   it 'should create body_tag_baked on demand if needed' do
 
     theme = Theme.new(user_id: -1, name: "test")
-    theme.set_field(:common, :body_tag, "<b>test")
+    theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
 
     ThemeField.update_all(value_baked: nil)
@@ -106,7 +106,7 @@ HTML
 
   context "plugin api" do
     def transpile(html)
-      f = ThemeField.create!(target: Theme.targets[:mobile], theme_id: -1, name: "after_header", value: html)
+      f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: -1, name: "after_header", value: html)
       f.value_baked
     end
 
@@ -134,6 +134,20 @@ HTML
       transpiled = transpile(html)
       expect(transpiled).to match(/text\/discourse-js-error/)
       expect(transpiled).to match(/read-only/)
+    end
+  end
+
+  context 'theme vars' do
+    it 'can generate scss based off theme vars' do
+      theme = Theme.new(name: 'theme', user_id: -1)
+      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
+      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
+      theme.set_field(target: :common, name: :content, value: 'Sam\'s Test', type: :theme_var)
+      theme.save
+
+      scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include("red")
+      expect(scss).to include('"Sam\'s Test"')
     end
   end
 

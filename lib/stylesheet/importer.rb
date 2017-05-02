@@ -39,6 +39,11 @@ module Stylesheet
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
+      theme&.theme_fields&.where(type_id: ThemeField.theme_var_type_ids)&.each do |field|
+        escaped = field.value.gsub('"', "\\22")
+        escaped.gsub!("\n", "\\A")
+        contents << "$#{field.name}: unquote(\"#{escaped}\");\n"
+      end
       Import.new("theme_variable.scss", source: contents)
     end
 
@@ -105,7 +110,10 @@ COMMENT
     end
 
     def theme
-      @theme ||= Theme.find(@theme_id)
+      unless @theme
+        @theme = (@theme_id && Theme.find(@theme_id)) || :nil
+      end
+      @theme == :nil ? nil : @theme
     end
 
     def apply_cdn(url)

@@ -9,7 +9,7 @@ describe ThemeField do
    badJavaScript(;
 </script>
 HTML
-    field = ThemeField.create!(theme_id: 1, target: 0, name: "header", value: html)
+    field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     expect(field.error).not_to eq(nil)
     field.value = ""
     field.save!
@@ -18,7 +18,7 @@ HTML
 
   it "correctly generates errors for transpiled css" do
     css = "body {"
-    field = ThemeField.create!(theme_id: 1, target: 0, name: "scss", value: css)
+    field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: css)
     field.reload
     expect(field.error).not_to eq(nil)
     field.value = "body {color: blue};"
