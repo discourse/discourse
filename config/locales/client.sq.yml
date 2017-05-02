@@ -1217,9 +1217,6 @@ sq:
           '3_2': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
           '3_1': 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
           '3': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
-          '2_8': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
-          '2_4': 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
-          '2_2': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
           '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
@@ -1358,7 +1355,6 @@ sq:
         label: "Autori i ri i postimeve"
         placeholder: "emri i përdoruesit të autorit"
       change_timestamp:
-        title: "Ndrysho Datën"
         action: "ndrysho datën"
         invalid_timestamp: "Data nuk mund të jetë në të ardhmen."
         error: "Hasëm në një gabim gjatë ndryshimit të datës së temës. "
@@ -1596,8 +1592,6 @@ sq:
       security: "Siguria"
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Imazhet"
-      auto_close_label: "Mbylle automatikisht temën pas:"
-      auto_close_units: "orë"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       email_in_disabled: "Postimi i temave të reja me email është çaktivizuar në Rregullimet e faqes. Për të aktivizuar postimet e temave të reja me email,"

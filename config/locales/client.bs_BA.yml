@@ -1238,7 +1238,6 @@ bs_BA:
       jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
       topic_status_update:
-        time: "Vrijeme:"
         remove: "Ukloni tajmer"
       temp_open:
         title: "Privremeno otvori"
@@ -1248,7 +1247,6 @@ bs_BA:
         title: "Privremeno zatvori"
       auto_close:
         title: "Automatski zatvori temu"
-        label: "Vrijeme automatskog zatvaranja teme:"
         error: "Molim unesite ispravnu vrijednost."
       auto_close_title: 'Auto-Close Settings'
       timeline:
@@ -1277,9 +1275,6 @@ bs_BA:
           '3_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
           '3_1': 'Dobijat ćete notifikacije zato što ste kreirali ovu temu.'
           '3': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
-          '2_8': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
-          '2_4': 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
-          '2_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
           '1_2': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
           '1': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
           '0_7': 'Ignorišete sve notifikacije u ovoj kategoriji.'
@@ -1415,7 +1410,6 @@ bs_BA:
         placeholder: "username of new owner"
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
       change_timestamp:
-        title: "Izmijeni vrijeme"
         action: "izmijeni vrijeme"
         invalid_timestamp: "Vrijeme ne može biti u budućnosti."
         error: "Došlo je do greške prilikom izmjene vremena teme."
@@ -1544,8 +1538,6 @@ bs_BA:
       already_used: 'This color has been used by another category'
       security: "Security"
       images: "Images"
-      auto_close_label: "Auto-close topics after:"
-      auto_close_units: "hours"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "

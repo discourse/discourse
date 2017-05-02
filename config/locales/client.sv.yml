@@ -1326,15 +1326,8 @@ sv:
       deleted: "Ämnet har raderats"
       topic_status_update:
         save: "Ställ in timer"
-        time: "Tid:"
         remove: "Ta bort timer:"
         publish_to: "Publicera till:"
-      auto_update_input:
-        limited:
-          units: "(antal timmar)"
-          examples: 'Ange antal timmar (24).'
-        all:
-          examples: 'Ange antal timmar (24), klockslag (17:30) eller tidsstämpel (2013-11-22 14:00).'
       publish_to_category:
         title: "Schemalägg publicering"
       temp_open:
@@ -1345,7 +1338,6 @@ sv:
         title: "Stäng tillfälligt"
       auto_close:
         title: "Stäng ämne automatiskt"
-        label: "Stäng automatiskt ämnet efter:"
         error: "Vänligen ange ett giltigt värde."
         based_on_last_post: "Stäng inte förrän det sista inlägget i ämnet är åtminstone så här gammalt."
       status_update_notice:
@@ -1383,10 +1375,6 @@ sv:
           '3_2': 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
           '3_1': 'Du kommer ta emot notifikationer för att du skapade detta ämne.'
           '3': 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
-          '2_8': 'Du kommer att få notifikationer eftersom du följer denna kategori.'
-          '2_4': 'Du kommer att ta emot notifikationer för att du postade ett svar till detta ämne.'
-          '2_2': 'Du kommer att ta emot notifikationer för att du följer detta ämne.'
-          '2': 'Du kommer att ta emot notifikationer för att du <a href="/u/{{username}}/preferences">läste detta ämne</a>.'
           '1_2': 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
           '1': 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
           '0_7': 'Du ignorerar alla notifikationer i den här kategorin.'
@@ -1542,7 +1530,6 @@ sv:
           other: "Vänligen välj ny ägare till de {{count}} inläggen av <b>{{old_user}}</b>."
         instructions_warn: "Notera att inga notifieringar om detta inlägg kommer överföras till den nya användaren retroaktivt.<br>Varning: Just nu överförs inga inläggskritiska data till den nya användaren. Använd med försiktighet. "
       change_timestamp:
-        title: "Ändra tidsstämpeln "
         action: "ändra tidsstämpeln"
         invalid_timestamp: "Tidsstämpeln kan inte sättas till ett framtida datum."
         error: "Ett fel uppstod vid ändringen av ämnets tidsstämpel."
@@ -1805,8 +1792,6 @@ sv:
       security: "Säkerhet"
       special_warning: "Varning: Den här kategorin är en förbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin, ta bort den istället för att återanvända den."
       images: "Bilder"
-      auto_close_label: "Stäng automatiskt ämnet efter:"
-      auto_close_units: "timmar"
       email_in: "Egenvald inkommande e-postadress:"
       email_in_allow_strangers: "Acceptera e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är avaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post,"

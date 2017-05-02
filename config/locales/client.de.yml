@@ -1352,9 +1352,6 @@ de:
           '3_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
           '3_1': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast.'
           '3': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
-          '2_8': 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
-          '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
-          '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
@@ -1510,7 +1507,6 @@ de:
           other: "Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>."
         instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
       change_timestamp:
-        title: "Erstelldatum ändern"
         action: "Erstelldatum ändern"
         invalid_timestamp: "Das Erstelldatum kann nicht in der Zukunft liegen."
         error: "Beim Ändern des Erstelldatums des Themas ist ein Fehler aufgetreten."
@@ -1776,8 +1772,6 @@ de:
       security: "Sicherheit"
       special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
       images: "Bilder"
-      auto_close_label: "Themen automatisch schließen nach:"
-      auto_close_units: "Stunden"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"

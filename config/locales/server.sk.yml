@@ -1018,7 +1018,6 @@ sk:
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
     embed_whitelist_selector: "CSS prepínač na elementy, ktoré sú povolené pri vkladaní."
     embed_blacklist_selector: "CSS prepínač na elementy, ktoré sú vymazané pri vkladaní."
-    notify_about_flags_after: "Ak existujú príznaky ktoré neboli vyriešené po uvedenom počte hodín, pošli email na contact_email. Pre vypnutie nastavte 0."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: Vymazať návrhy staršie ako (n) dní.
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom sťahovať prílohy. VAROVANIE: toto nastavenie zneprístupní akékoľvek neobrázkové súbory na stánkach uložené ako prílohy."

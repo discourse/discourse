@@ -915,7 +915,6 @@ tr_TR:
     auto_block_first_post_regex: "Eğer eşleşirse kullanıcının ilk gönderisinin engellenmesi ve onaylanma kuyruğuna gitmesine neden olan harf büyüklüğü duyarsız düzenli ifade. Örnek: reklam|a[bc]a düzenli ifadesi reklam, aba ya da aca içeren ilk gönderilerin engellenmesi ve onaylanma kuyruğuna gitmesine neden olacaktır. Sadece ilk gönderiler için geçerlidir."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
     reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Gelen e-postalarda metin yerine HTML kullan. Bir ihtimal biçim hatalarına neden olabilir!"
     disable_emails: "Discourse'un herhangi bir e-posta göndermesine izin verme"
     strip_images_from_short_emails: "2800 Byte boyutundan küçük e-postalardan resimleri çıkar"
     short_email_length: "Kısa e-postanın uzunluğu, Byte olarak"
@@ -987,7 +986,6 @@ tr_TR:
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     embed_whitelist_selector: "Yerleştirmelerde kullanılmasına izin verilen öğeler için CSS seçicisi."
     embed_blacklist_selector: "Yerleştirmelerden çıkartılmış öğeler için CSS seçicisi."
-    notify_about_flags_after: "Bu kadar saat geçmesine rağmen hala ilgilenilmemiş bildirimler varsa, contact_email adresine e-posta gönder. Devre dışı bırakmak için 0 girin. "
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, yöneticiden yeni konular oluşturmasını isteyen bir uyarı iletisi göster. "
     delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"

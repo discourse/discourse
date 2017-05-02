@@ -1115,7 +1115,6 @@ ro:
     reply_by_email_enabled: "Activează răspunsurile către subiecte prin email."
     reply_by_email_address: "șablon pentru răspuns prin email de intrare, de exemplu: %{reply_key}@reply.example.com sau răspunsuri+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Listă de șabloane alternative pentru adresele de email primite cu răspunsuri prin email. Exemplu: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Folosește HTML în loc de text pentru emailurile primite. Poate provoca probleme neașteptate de formatare!"
     disable_emails: "Oprește Discourse să trimite absolut orice fel de emailuri"
     strip_images_from_short_emails: "Scoate imaginile din emailurile care au mai puțin de 2800 de Bytes"
     short_email_length: "Lungime de email scurt în Bytes"
@@ -1217,7 +1216,6 @@ ro:
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
     embed_whitelist_selector: "Selector CSS pentru elementele ce sunt permise în încorporări."
     embed_blacklist_selector: "Selector CSS pentru elementele ce sunt șterse din încorporări"
-    notify_about_flags_after: "Dacă sunt marcaje ce nu au fost aranjate după atâtea ore, trimite un email către email-ul de contact . Setează la 0 pentru a dezactiva."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
     delete_drafts_older_than_n_days: șterge drafturile mai vechi de (n) zile.
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"

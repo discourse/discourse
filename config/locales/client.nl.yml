@@ -1170,6 +1170,7 @@ nl:
       no_more_results: "Geen resultaten meer gevonden."
       searching: "Zoeken..."
       post_format: "#{{post_number}} door {{username}}"
+      results_page: "Zoek resultaten"
       context:
         user: "Berichten van @{{username}} doorzoeken"
         category: "De categorie #{{category}} doorzoeken"
@@ -1558,7 +1559,7 @@ nl:
           other: "Kies de nieuwe eigenaar van de {{count}} berichten door <b>{{old_user}}</b>."
         instructions_warn: "Let er op dat meldingen over dit bericht niet met terugwerkende kracht aan de nieuwe gebruiker worden overgedragen. <br>Waarschuwing: momenteel worden geen berichtafhankelijke gegevens aan de nieuwe gebruiker overgedragen. Wees dus voorzichtig met het gebruik hiervan."
       change_timestamp:
-        title: "Tijdstempel wijzigen"
+        title: "Wijzig datum en tijd"
         action: "tijdstempel wijzigen"
         invalid_timestamp: "Tijdstempel kan niet in de toekomst liggen."
         error: "Er is een fout opgetreden bij het wijzigen van de tijdstempel van het topic."
@@ -1824,8 +1825,6 @@ nl:
       security: "Beveiliging"
       special_warning: "Waarschuwing: deze categorie is een vooraf aangemaakte categorie en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       images: "Afbeeldingen"
-      auto_close_label: "Topics automatisch sluiten na:"
-      auto_close_units: "uur"
       email_in: "Aangepast adres voor inkomende e-mail:"
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
@@ -2373,6 +2372,7 @@ nl:
         add_members: "Leden toevoegen"
         custom: "Aangepast"
         bulk_complete: "De gebruikers zijn aan de groep toegevoegd."
+        bulk_complete_users_not_added: "Deze gebruikers zijn niet toegevoegd (zorg ervoor dat ze een account hebben)"
         bulk: "Bulk toevoegen aan groep"
         bulk_paste: "Plak een lijst van gebruikersnamen of e-mailadressen, één per regel:"
         bulk_select: "(selecteer een groep)"

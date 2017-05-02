@@ -101,6 +101,7 @@ fr:
           other: "%{count} années plus tard"
       previous_month: 'Mois précédent'
       next_month: 'Mois suivant'
+      placeholder: Sélectionner une date
     share:
       topic: 'partager ce sujet'
       post: 'message #%{postNumber}'
@@ -143,6 +144,8 @@ fr:
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confirance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque le nombre d'utilisateurs dépassera %{min_users}."
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
+    themes:
+      default_description: "Par défaut"
     s3:
       regions:
         us_east_1: "États-Unis est (Virginie)"
@@ -150,6 +153,7 @@ fr:
         us_west_2: "États-Unis ouest (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "UE (Irlande)"
+        eu_west_2: "UE (Londres)"
         eu_central_1: "UE (Francfort)"
         ap_southeast_1: "Asie-Pacifique (Singapour)"
         ap_southeast_2: "Asie-Pacifique (Sydney)"
@@ -386,6 +390,7 @@ fr:
       posts: "Messages"
       mentions: "Mentions"
       messages: "Messages"
+      notification_level: "Niveau de notification par défaut pour les messages de groupe"
       alias_levels:
         title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
@@ -570,6 +575,7 @@ fr:
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
+      theme: "Thème"
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -1332,15 +1338,18 @@ fr:
       topic_status_update:
         title: "Planifier une action"
         save: "Planifier"
-        time: "Heure :"
+        num_of_hours: "Nombre d'heures :"
         remove: "Supprimer la planification"
         publish_to: "Publier dans :"
+        when: "Quand :"
       auto_update_input:
-        limited:
-          units: "(# d'heures)"
-          examples: 'Saisir le nombre d''heures (24).'
-        all:
-          examples: 'Entrez un nombre d''heures (24), une heure absolue (17:30) ou une date (2013-11-22 14:00).'
+        later_today: "Plus tard aujourd'hui"
+        tomorrow: "Demain"
+        later_this_week: "Plus tard cette semaine"
+        this_weekend: "Ce weekend"
+        next_week: "Semaine prochaine"
+        pick_date_and_time: "Sélectionner une date et heure"
+        set_based_on_last_post: "Fermer par rapport au dernier message"
       publish_to_category:
         title: "Publier"
       temp_open:
@@ -1351,7 +1360,7 @@ fr:
         title: "Fermer temporairement"
       auto_close:
         title: "Fermer automatiquement le sujet"
-        label: "Heure de fermeture automatique:"
+        label: "Heures de fermeture automatique du sujet :"
         error: "Veuillez entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
       status_update_notice:
@@ -1389,10 +1398,10 @@ fr:
           '3_2': 'Vous recevrez des notifications car vous surveillez ce sujet.'
           '3_1': 'Vous recevrez des notifications car vous avez créé ce sujet.'
           '3': 'Vous recevrez des notifications car vous surveillez ce sujet.'
-          '2_8': 'Vous recevrez des notifications parce que vous suivez cette catégorie.'
-          '2_4': 'Vous recevrez des notifications car vous avez écrit une réponse dans ce sujet.'
-          '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
-          '2': 'Vous recevrez des notifications car vous <a href="/u/{{username}}/preferences">avez lu ce sujet</a>.'
+          '2_8': 'Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie.'
+          '2_4': 'Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet.'
+          '2_2': 'Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet.'
+          '2': 'Vous verrez un compteur de nouvelles réponses car vous <a href="/u/{{username}}/preferences">avez lu ce sujet</a>.'
           '1_2': 'Vous serez notifié si quelqu''un mentionne votre @pseudo ou vous répond.'
           '1': 'Vous serez notifié si quelqu''un mentionne votre @pseudo ou vous répond.'
           '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
@@ -1549,7 +1558,6 @@ fr:
           other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
         instructions_warn: "Aucune notification à propos de ce message ne sera transférée rétroactivement au nouvel utilisateur. <br>Attention : actuellement, aucune donnée liée aux messages n'est transféré vers le nouvel utilisateur. À utiliser avec précaution."
       change_timestamp:
-        title: "Modifier la date/heure"
         action: "modifier la date/heure"
         invalid_timestamp: "La date/heure ne peut être dans le futur"
         error: "Il y a eu une erreur lors de la modification de la date/heure de ce sujet."
@@ -1815,8 +1823,6 @@ fr:
       security: "Sécurité"
       special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
       images: "Images"
-      auto_close_label: "Fermer automatiquement après :"
-      auto_close_units: "heures"
       email_in: "Adresse de courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
@@ -2546,15 +2552,21 @@ fr:
         title: "Personnaliser"
         long_title: "Personnalisations du site"
         preview: "prévisualiser"
+        explain_preview: "Voir le site avec ce thème activé"
         save: "Sauvegarder"
         new: "Nouveau"
         new_style: "Nouveau style"
         import: "Importer"
         delete: "Supprimer"
+        delete_confirm: "Suprimmer ce thème ?"
         about: "Modification des feuilles de styles et en-têtes de votre site. Ajouter un style personnalisé pour commencer."
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
+        copy_to_clipboard: "Copier dans le presse-papier"
+        copied_to_clipboard: "Copié dans le presse-papier"
+        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
+        theme_owner: "Non modifiable, appartient à :"
         email_templates:
           title: "Modèle de courriel"
           subject: "Objet"
@@ -2563,9 +2575,69 @@ fr:
           none_selected: "Choisissez un modèle de courriel pour commencer l'édition."
           revert: "Annuler les changements"
           revert_confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
+        theme:
+          import_theme: "Importer un thème"
+          customize_desc: "Personaliser :"
+          title: "Thèmes"
+          long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
+          edit: "Modifier"
+          edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
+          common: "Général"
+          desktop: "Bureau"
+          mobile: "Mobile"
+          preview: "Prévisualiser"
+          is_default: "Thème activé par défaut"
+          user_selectable: "Thème sélectionnable par les utilisateurs"
+          color_scheme: "Palette de couleurs"
+          color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
+          custom_sections: "Sections personnalisées :"
+          theme_components: "Composants du thème :"
+          child_themes_check: "Thème incluant d'autres thèmes"
+          css_html: "CSS/HTML personnalisé"
+          edit_css_html: "Modifier le CSS/HTML"
+          edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
+          import_web_tip: "Dépôt contenant le thème"
+          import_file_tip: "Fichier .dcstyle.json contenant le thème"
+          about_theme: "À propos du thème"
+          license: "Licence"
+          component_of: "Le thème est un composant de :"
+          update_to_latest: "Mettre à jour"
+          check_for_updates: "Vérifier les mises à jour"
+          updating: "Mise à jour…"
+          up_to_date: "Thème à jour, dernière vérification :"
+          add: "Ajouter"
+          commits_behind:
+            one: "Le thème est en retard de 1 commit !"
+            other: "Le thème est en retard de {{count}} commits !"
+          scss:
+            text: "CSS"
+            title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
+          header:
+            text: "Entête"
+            title: "Entrez du HTML à afficher au dessus de l'entête du site"
+          after_header:
+            text: "Après l'entête"
+            title: "Entrez du HTML à afficher sur toutes les pages après l'entête"
+          footer:
+            text: "Pied de page"
+            title: "Entrez du HTML à afficher de le pied de page"
+          embedded_scss:
+            text: "CSS intégré"
+            title: "Entrez du CSS personnalisé pour la version intégrée des commentaires"
+          head_tag:
+            text: "</head>"
+            title: "HTML qui sera inséré avant la balise </head>"
+          body_tag:
+            text: "</body>"
+            title: "HTML qui sera inséré avant la balise </body>"
         colors:
+          select_base:
+            title: "Sélectionner la palette de couleurs de base"
+            description: "Palette de base :"
           title: "Couleurs"
+          edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
+          about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
@@ -2704,6 +2776,8 @@ fr:
             change_trust_level: "modifier le niveau de confiance"
             change_username: "modifier pseudo"
             change_site_setting: "modifier les paramètres du site"
+            change_theme: "changer le thème"
+            delete_theme: "supprimer le thème"
             change_site_text: "modifier le texte du site"
             suspend_user: "suspendre l'utilisateur"
             unsuspend_user: "annuler la suspension de l'utilisateur"

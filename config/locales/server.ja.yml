@@ -823,7 +823,6 @@ ja:
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
     embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
-    notify_about_flags_after: "この数時間後に処理されていない通報がある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"

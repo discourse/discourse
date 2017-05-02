@@ -836,7 +836,7 @@ zh_CN:
       intro: "你好！:heart_eyes: 看起来你挺喜欢这样的讨论，可是你还没有注册账户。"
       value_prop: "当你创建账户后，我们可以准确地记录你的阅读进度，这样你能够在下一次访问时回到你上次阅读到的地方。你也可以选择接受新帖子的网页和邮件通知。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
     summary:
-      enabled_description: "你正在查看主题的精简摘要版本：一些社群公认有意思的帖子。"
+      enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
       description_time: "有 <b>{{replyCount}}</b> 个回复，大约要花 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
@@ -1292,9 +1292,6 @@ zh_CN:
           '3_2': '因为你正在监看该主题，你将会收到通知。'
           '3_1': '因为你创建了这个主题，你将会收到通知。'
           '3': '因为你正在监看该主题，你将会收到通知。'
-          '2_8': '因为你正在跟踪该分类，你将收到通知。'
-          '2_4': '因为你发布了对该主题的回复，你将会收到通知。'
-          '2_2': '因为你正在跟踪该主题，你将收到通知。'
           '1_2': '如果有人@你或回复你，将通知你。'
           '1': '如果有人@你或回复你，将通知你。'
           '0_7': '你将忽略关于该分类的所有通知。'
@@ -1444,7 +1441,6 @@ zh_CN:
           other: "请选择<b>{{old_user}}</b>创建的 {{count}} 个帖子的新作者。"
         instructions_warn: "要注意关于帖子的通知不会被转移给新作者。<br>警告：目前，与帖子关联的任何数据都不会转移至新用户。谨慎使用。"
       change_timestamp:
-        title: "修改时间"
         action: "修改时间"
         invalid_timestamp: "不能是未来的时间。"
         error: "更改主题时间时发生错误。"
@@ -1671,8 +1667,6 @@ zh_CN:
       security: "安全性"
       special_warning: "警告：这个分类是已经自动建立好的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       images: "图片"
-      auto_close_label: "该时间段后自动关闭主题："
-      auto_close_units: "小时"
       email_in: "自定义进站电子邮件地址："
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
@@ -1718,7 +1712,7 @@ zh_CN:
       sort_ascending: '升序'
       sort_descending: '降序'
     flagging:
-      title: '感谢你帮助我们建设文明社群！'
+      title: '感谢你帮助我们建设文明社区！'
       action: '标记帖子'
       take_action: "立即执行"
       notify_action: '消息'
@@ -1729,7 +1723,7 @@ zh_CN:
       ip_address_missing: "（N/A）"
       hidden_email_address: "（隐藏）"
       submit_tooltip: "提交私有标记"
-      take_action_tooltip: "立即采取标记到达限制值时的措施，而不是等待更多的社群标记"
+      take_action_tooltip: "立即采取标记到达限制值时的措施，而不是等待更多的社区标记"
       cant: "抱歉，现在你不能标记本帖。"
       notify_staff: '私下通知管理人员'
       formatted_name:
@@ -1746,7 +1740,7 @@ zh_CN:
         left:
           other: "剩余 {{count}}"
     flagging_topic:
-      title: "感谢你帮助我们建设文明社群！"
+      title: "感谢你帮助我们建设文明社区！"
       action: "标记帖子"
       notify_action: "消息"
     topic_map:
@@ -2966,7 +2960,7 @@ zh_CN:
       uploading: "上传中..."
       quit: "以后再说"
       staff_count:
-        other: "你的社群中有 %{count} 位工作人员。"
+        other: "你的社区中有 %{count} 位工作人员。"
       invites:
         add_user: "添加"
         none_added: "你还没有邀请任何工作人员。你确定要继续吗？"

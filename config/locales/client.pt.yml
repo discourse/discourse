@@ -415,6 +415,10 @@ pt:
           title: "Silenciado"
           description: "Não será notificado de nada relacionado com novos tópicos neste grupo."
       flair_url: "Imagem da Marca de Avatar"
+      flair_bg_color: "Cor de Fundo da Marca de Avatar"
+      flair_bg_color_placeholder: "(Opcional) Valor hexadecimal de cor"
+      flair_color: "Cor da Marca de Avatar"
+      flair_color_placeholder: "(Opcional) Valor hexadecimal de cor"
     user_action_groups:
       '1': "Gostos Dados"
       '2': "Gostos Recebidos"
@@ -563,6 +567,7 @@ pt:
       revoke_access: "Rescindir Acesso"
       undo_revoke_access: "Cancelar Rescissão de Acesso"
       api_approved: "Aprovado:"
+      theme: "Tema"
       staff_counters:
         flags_given: "denúncias úteis"
         flagged_posts: "publicações denunciadas"
@@ -642,6 +647,7 @@ pt:
         short_instructions: "Podem mencioná-lo como @{{username}}"
         available: "O seu nome de utilizador está disponível"
         not_available: "Não está disponível. Tente {{suggestion}}?"
+        not_available_no_suggestion: "Indisponível"
         too_short: "O seu nome de utilizador é demasiado curto"
         too_long: "O seu nome de utilizador é demasiado longo"
         checking: "A verificar a disponibilidade do nome de utilizador..."
@@ -1324,9 +1330,6 @@ pt:
           '3_2': 'Receberá notificações porque está a vigiar este tópico.'
           '3_1': 'Receberá notificações porque criou este tópico.'
           '3': 'Receberá notificações porque está a vigiar este tópico.'
-          '2_8': 'Receberá notificações porque está a seguir esta categoria.'
-          '2_4': 'Receberá notificações porque publicou uma resposta a este tópico.'
-          '2_2': 'Receberá notificações porque está a seguir este tópico.'
           '1_2': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
           '1': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
           '0_7': 'Está a ignorar todas as notificações nesta categoria.'
@@ -1481,7 +1484,6 @@ pt:
           other: "Por favor selecione o novo dono das {{count}} publicações de <b>{{old_user}}</b>."
         instructions_warn: "Note que quaisquer notificações relacionadas com esta publicação serão transferidas retroativamente para o novo utilizador. <br>Aviso: Atualmente nenhum dado dependente da publicação é transferido para o novo utilizador. Usar com cautela."
       change_timestamp:
-        title: "Alterar Selo Temporal"
         action: "alterar selo temporal"
         invalid_timestamp: "O selo temporal não pode ser no futuro."
         error: "Ocorreu um erro ao alterar o selo temporal do tópico."
@@ -1730,8 +1732,6 @@ pt:
       security: "Segurança"
       special_warning: "Aviso: Esta categoria é uma categoria pré-preenchida e as configurações de segurança não podem ser editadas. Se não deseja utilizar esta categoria, elimine-a em vez de lhe dar um novo propósito."
       images: "Imagens"
-      auto_close_label: "Fechar tópicos automaticamente depois de:"
-      auto_close_units: "horas"
       email_in: "Endereço de email personalizado para emails recebidos:"
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"

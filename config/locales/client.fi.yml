@@ -1559,7 +1559,6 @@ fi:
           other: "Valitse uusi omistaja {{count}} viestille käyttäjältä <b>{{old_user}}</b>."
         instructions_warn: "Huomaa, että viestin ilmoitukset eivät siirry uudelle käyttäjälle automaattisesti. <br> Varoitus: Tällä hetkellä mikään viestikohtainen data ei siirry uudelle käyttäjälle. Käytä varoen."
       change_timestamp:
-        title: "Muuta aikaleimaa"
         action: "muuta aikaleimaa"
         invalid_timestamp: "Aikaleima ei voi olla tulevaisuudessa."
         error: "Ketjun aikaleiman vaihtamisessa tapahtui virhe"
@@ -1825,8 +1824,6 @@ fi:
       security: "Turvallisuus"
       special_warning: "Varoitus: Tämä on valmiiksi luotu alue, ja sen turvallisuusasetuksia ei voi muuttaa. Jos et näe käyttöä alueelle, älä muuta sen tarkoitusta vaan poista se."
       images: "Kuvat"
-      auto_close_label: "Sulje ketjut automaattisesti tämän ajan jälkeen:"
-      auto_close_units: "tuntia"
       email_in: "Saapuvan postin sähköpostiosoite:"
       email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "

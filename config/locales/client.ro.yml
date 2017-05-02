@@ -1384,9 +1384,6 @@ ro:
           '3_2': 'Vei primi notificări deoarece urmărești activ acest subiect.'
           '3_1': 'Vei primi notificări deoarece ai creat acest subiect.'
           '3': 'Vei primi notificări deoarece urmărești activ acest subiect.'
-          '2_8': 'Vei primi notificări deoarece urmărești această categorie.'
-          '2_4': 'Vei primi notificări deoarece ai postat un răspuns în acest subiect.'
-          '2_2': 'Vei primi notificări fiindcă urmărești acest subiect.'
           '1_2': 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
           '1': 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
           '0_7': 'Ignori toate notificările din această categorie.'
@@ -1545,7 +1542,6 @@ ro:
           other: "Alege noul autor pentru cele {{count}} de mesaje postate de <b>{{old_user}}</b>."
         instructions_warn: "NB: nicio notificare ce privește această postare nu va fi transferabilă retroactiv către noul utilizator.<br>Avertisment: Acum, nicio informație ce depinde de postare nu va fi transferată noului utilizator. Folosește cu atenție."
       change_timestamp:
-        title: "Schimbă data publicării"
         action: "schimbă data publicării"
         invalid_timestamp: "Marcajul de timp nu poate fi în viitor."
         error: "A apărut o eroare la schimbarea marcajului de timp în subiect."
@@ -1817,8 +1813,6 @@ ro:
       security: "Securitate"
       special_warning: "Atenție: Această categorie este pre-instalată și setările de securitate nu pot fi editate. Dacă nu dorești să folosești această categorie, va trebui să o ștergi în loc să-i schimbi destinația."
       images: "Imagini"
-      auto_close_label: "Închide automat subiectele după:"
-      auto_close_units: "ore"
       email_in: "Adresa email de primire preferențială:"
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
       email_in_disabled: "Postarea subiectelor noi prin email este dezactivată din setările siteului. Pentru a activa postarea subiectelor noi prin email,"

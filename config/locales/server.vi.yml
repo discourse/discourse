@@ -957,7 +957,6 @@ vi:
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
     embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
-    notify_about_flags_after: "Nếu có các đánh dấu chưa được xử lý sau số giờ được thiết lập ở đây, gửi email đến contact_email. Đặt là 0 để vô hiệu hóa."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"

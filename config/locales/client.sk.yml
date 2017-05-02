@@ -1293,9 +1293,6 @@ sk:
           '3_2': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
           '3_1': 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
           '3': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
-          '2_8': 'Budete dostávať upozornenia, pretože pozorujete túto kategóriu.'
-          '2_4': 'Budete dostávať upozornenia, pretože ste zaslali odpoveď na túto tému.'
-          '2_2': 'Budete dostávať upozornenia, pretože pozorujete túto tému.'
           '1_2': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '1': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '0_7': 'Ignorujete všetky upozornenia v tejto kategórii.'
@@ -1452,7 +1449,6 @@ sk:
           other: "Prosím vyberte nového vlastníka {{count}}  príspevkov vytvorených <b>{{old_user}}</b>."
         instructions_warn: "Poznámka: Žiadne upozornenie o tomto príspevku nebude spätne zaslané novým používateľom<br>Upozornenie: Momentálne nie sú prenášané žiadne dáta vťahujúce sa k príspevku na nových užívateľov. Používajte opatrne."
       change_timestamp:
-        title: "Nastavte časovú značku"
         action: "nastavte časovú značku"
         invalid_timestamp: "Časová značka nemôže byť v budúcnosti. "
         error: "Nastala chyba pri zmene časovej značky témy."
@@ -1708,8 +1704,6 @@ sk:
       security: "Bezpečnosť"
       special_warning: "Upozornenie: Toto je preddefinovaná kategória a jej bezpečnostné nastavenia sa nedajú upraviť. Pokiaľ si neželáte použiť túto kategóriu, neupravujte ju, ale zmažte."
       images: "Obrázky"
-      auto_close_label: "Automaticky uzavrieť tému po:"
-      auto_close_units: "hodinách"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
       email_in_disabled: "Vkladanie nových tém cez email je zablokované v Nastaveniach stránky. Ak chcete povoliť vkladanie nových téme cez email,"

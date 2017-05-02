@@ -1334,9 +1334,6 @@ it:
           '3_2': 'Riceverai notifiche perché stai osservando questo argomento.'
           '3_1': 'Riceverai notifiche perché hai creato questo argomento.'
           '3': 'Riceverai notifiche perché stai osservando questo argomento.'
-          '2_8': 'Riceverai notifiche perché stai seguendo questa categoria.'
-          '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
-          '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
           '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
@@ -1491,7 +1488,6 @@ it:
           other: "Seleziona il nuovo proprietario dei {{count}} messaggi di <b>{{old_user}}</b>."
         instructions_warn: "Nota che ogni notifica circa questo messaggio non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: al momento nessun dato messaggio-dipendente è stato trasferito al nuovo utente. Usare con cautela."
       change_timestamp:
-        title: "Cambia Timestamp"
         action: "cambia timestamp"
         invalid_timestamp: "Il timestamp non può essere nel futuro."
         error: "Errore durante la modifica del timestamp dell'argomento."
@@ -1745,8 +1741,6 @@ it:
       security: "Sicurezza"
       special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       images: "Immagini"
-      auto_close_label: "Chiudi automaticamente l'argomento dopo:"
-      auto_close_units: "ore"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"

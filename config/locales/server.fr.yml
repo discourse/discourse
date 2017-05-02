@@ -1111,7 +1111,6 @@ fr:
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Utiliser le HTML au lieu du texte pour les courriels entrants. Peut causer des problèmes de formatage inattendus !"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
@@ -1219,7 +1218,6 @@ fr:
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
-    notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquan 0."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
@@ -1841,6 +1839,17 @@ fr:
         Des problèmes ont été reportés dans votre panel d'administration.
 
         [Merci de les étudier et les corriger](%{base_url}/admin).
+    new_user_of_the_month:
+      title: "Vous êtes un nouvel utilisateur du mois !"
+      subject_template: "Vous êtes un nouvel utilisateur du mois !"
+      text_body_template: |
+        Félicitations, vous avez été récompensé du prix du **nouvel utilisateur du mois de %{month_year}**. :trophy:
+
+        Vous êtes rapidement devenu un membre important de notre communauté et tout le monde apprécie vos messages.
+
+        Cette récompense sera en permanence visible comme un badge sur [votre page utulisateur](/my/badges).
+
+        Merci, et continuez ainsi !
   unsubscribe_link: |
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1888,6 +1897,7 @@ fr:
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Utilisateur invité au MP"
+      subject_template: "[%{email_prefix}] %{username} vous a invité dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -1895,6 +1905,7 @@ fr:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      subject_template: "[%{email_prefix}] %{username} vous a invité dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -1903,6 +1914,7 @@ fr:
         %{respond_instructions}
     user_invited_to_topic:
       title: "Utilisateur invité au sujet"
+      subject_template: "[%{email_prefix}] %{username} vous a invité dans « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
 
@@ -1911,6 +1923,7 @@ fr:
         %{respond_instructions}
     user_replied:
       title: "Utilisateur a répondu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1921,6 +1934,7 @@ fr:
         %{respond_instructions}
     user_replied_pm:
       title: "Utilisateur a répondu au MP"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1931,6 +1945,7 @@ fr:
         %{respond_instructions}
     user_quoted:
       title: "Utilisateur a cité"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1941,6 +1956,7 @@ fr:
         %{respond_instructions}
     user_linked:
       title: "Utilisateur lié"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1951,6 +1967,7 @@ fr:
         %{respond_instructions}
     user_mentioned:
       title: "Utilisateur a mentionné"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1960,6 +1977,7 @@ fr:
 
         %{respond_instructions}
     user_group_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1970,6 +1988,7 @@ fr:
         %{respond_instructions}
     user_posted:
       title: "Posté par l'utilisateur"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1979,6 +1998,7 @@ fr:
 
         %{respond_instructions}
     user_watching_first_post:
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1988,6 +2008,7 @@ fr:
 
         %{respond_instructions}
     user_posted_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2015,12 +2036,14 @@ fr:
       join_the_discussion: "Lire la suite"
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
+      subject_template: "[%{email_prefix}] Résumé"
       unsubscribe: "Ce résumé est envoyé depuis %{site_link} lorsque nous ne vous voyons plus depuis un moment. Pour se désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "résumé de %{site_name}"
       preheader: "Un bref résumé depuis votre dernière visite le %{last_seen_at}"
     mailing_list:
       why: "Toute l'activité sur %{site_link} le %{date}"
+      subject_template: "[%{email_prefix}] Résumé du %{date}"
       unsubscribe: "Ce résumé est envoyé quotidiennement car la liste de diffusion est activée. Pour se désabonner %{unsubscribe_link}."
       from: "%{site_name} résumé"
       new_topics: "Nouveaux sujets"
@@ -2029,6 +2052,7 @@ fr:
       back_to_top: "Aller en haut"
     forgot_password:
       title: "Mot de passe oublié"
+      subject_template: "[%{email_prefix}] Réinitialisation du mot de passe"
     set_password:
       title: "Définir le mot de passe"
     admin_login:
@@ -2100,6 +2124,8 @@ fr:
     no_echo_mailing_list_mode: "Notifications de la liste de diffusion désactivées pour les messages de l'utilisateur."
   color_schemes:
     base_theme_name: "Base"
+    default: "Palette claire"
+    dark: "Palette sombre"
   about: "À propos"
   guidelines: "Charte"
   privacy: "Confidentialité"
@@ -2397,6 +2423,7 @@ fr:
         Ce badge est accordé la première fois que vous ajoutez un Emoji à votre message :thumbsup:. Les Emoji vous permettent de transmettre de l'émotion dans vos messages, du bonheur :smiley: à la tristesse :anguished: en passant par la colère :angry: et tout le reste :sunglasses:. Il suffit de taper : (deux-points) ou d'appuyer sur le bouton de la barre d'outils Emoji dans l'éditeur et de choisir parmi des centaines de choix :ok_hand:
     first_mention:
       name: Première mention
+      description: A mentionné un utilisateur dans un message
       long_description: Ce badge est accordé la première fois que vous mentionnez le @pseudo de quelqu'un dans votre message. Chaque mention génère une notification à cette personne pour qu'elle soit informée de votre message. Il suffit de commencer à taper @ (arobase) pour mentionner un utilisateur ou, si autorisé, un groupe – c'est un moyen pratique de porter quelque chose à leur attention.
     first_onebox:
       name: Premier onebox
@@ -2404,8 +2431,14 @@ fr:
       long_description: Ce badge est accordé la première fois que vous publiez un lien seul sur une ligne, qui a ensuite été développé automatiquement dans un onebox avec un bref résumé du lien, un titre, et (le cas échéant) une image.
     first_reply_by_email:
       name: Première réponse par courriel
+      description: A répondu à un message par courriel
       long_description: |
         Ce badge est accordé la première fois que vous répondez à un message par courriel :e-mail:.
+    new_user_of_the_month:
+      name: "Nouvel utilisateur du mois"
+      description: Contributions remarquables durant leur premier mois
+      long_description: |
+        Ce badge est accordé pour féliciter deux nouveaux utilisateurs chaque mois pour leur excellente contribution mesurée par la fréquence à laquelle leurs messages reçoivent des J'aime et par qui.
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"
@@ -2435,6 +2468,7 @@ fr:
   safe_mode:
     title: "Activer le mode sans échec"
     description: "Le mode sans échec vous permet de tester votre site sans charger les extensions ou personnalisations."
+    no_customizations: "Désactiver le thème actuel"
     only_official: "Désactiver les extensions non officielles"
     no_plugins: "Désactiver toutes les extensions"
     enter: "Activer le mode sans échec"
@@ -2488,6 +2522,7 @@ fr:
             description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='/about' target='_blank'>À propos</a>."
           site_contact:
             label: "Messages automatiques"
+            description: "Tous les messages privés automatiques de Discourse seront envoyés par cet utilisateur comme le message de bienvenue envoyé à chaque nouvel utilisateur."
       corporate:
         title: "Organisation"
         description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."

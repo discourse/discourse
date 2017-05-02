@@ -1284,9 +1284,6 @@ tr_TR:
           '3_2': 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
           '3_1': 'Bu konuyu siz oluşturduğunuz için bildirimlerini alacaksınız.'
           '3': 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
-          '2_8': 'Be kategoriyi takip ettiğiniz için bildirimlerini alacaksınız.'
-          '2_4': 'Bu konuya cevap yazdığınız için bildirimlerini alacaksınız.'
-          '2_2': 'Bu konuyu takip ettiğiniz için bildirimlerini alacaksınız.'
           '1_2': 'Birisi @isminizden bahsederse ya da size cevap verirse bildirim alacaksınız.'
           '1': 'Birisi @isminizden bahsederse veya size cevap verirse bildirim alacaksınız.'
           '0_7': 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
@@ -1436,7 +1433,6 @@ tr_TR:
           other: "Lütfen <b>{{old_user}}</b> kullanıcısına ait {{count}} gönderinin yeni sahibini seçin."
         instructions_warn: "Bu gönderi ile ilgili geriye dönük biriken bildirimler yeni kullanıcıya aktarılmayacak.<br>Uyarı: Şu an, yeni kullanıcıya hiç bir gönderi-tabanlı ek bilgi aktarılmıyor. Dikkatli olun."
       change_timestamp:
-        title: "Zaman Bilgisini Değiştir"
         action: "Zaman Bilgisini Değiştir"
         invalid_timestamp: "Zaman bilgisi gelecekte olamaz."
         error: "Konunun zaman bilgisini değiştirirken bir hata oluştu."
@@ -1663,8 +1659,6 @@ tr_TR:
       security: "Güvenlik"
       special_warning: "Uyarı: Bu kategori önceden ayarlanmış bir kategoridir ve güvenlik ayarları değiştirilemez. Eğer bu kategoriyi kullanmak istemiyorsanız, başka bir amaçla kullanmak yerine silin."
       images: "Resimler"
-      auto_close_label: "Şu kadar süreden sonra konuları otomatik olarak kapat: "
-      auto_close_units: "saat"
       email_in: "Özel gelen e-posta adresi:"
       email_in_allow_strangers: "Hesabı olmayan, anonim kullanıcılardan e-posta kabul et"
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"

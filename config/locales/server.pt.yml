@@ -1034,7 +1034,6 @@ pt:
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
-    incoming_email_prefer_html: "Usar o HTML em vez de texto para email recebido. Poderá causar problemas de formatação!"
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
@@ -1133,7 +1132,6 @@ pt:
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
-    notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
