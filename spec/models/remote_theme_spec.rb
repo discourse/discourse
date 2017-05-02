@@ -67,7 +67,7 @@ JSON
 
       expect(@theme.theme_fields.length).to eq(3)
 
-      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target}-#{f.name}", f.value]}.flatten]
+      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
 
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq("body {color: red;}")
@@ -101,7 +101,7 @@ JSON
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
 
-      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target}-#{f.name}", f.value]}.flatten]
+      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
 
       expect(mapped["0-header"]).to eq("I AM UPDATED")
       expect(mapped["1-scss"]).to eq("body {color: red;}")

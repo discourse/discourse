@@ -1,8 +1,8 @@
 class ThemeFieldSerializer < ApplicationSerializer
-  attributes :name, :target, :value, :error
+  attributes :name, :target, :value, :error, :type_id
 
   def target
-    case object.target
+    case object.target_id
     when 0 then "common"
     when 1 then "desktop"
     when 2 then "mobile"

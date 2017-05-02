@@ -1,6 +1,9 @@
 require_dependency 'git_importer'
 
 class RemoteTheme < ActiveRecord::Base
+
+  ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
+
   has_one :theme
 
   def self.import_theme(url, user=Discourse.system_user)
@@ -44,7 +47,7 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     Theme.targets.keys.each do |target|
-      Theme::ALLOWED_FIELDS.each do |field|
+      ALLOWED_FIELDS.each do |field|
         lookup =
           if field == "scss"
             "#{target}.scss"
@@ -55,7 +58,7 @@ class RemoteTheme < ActiveRecord::Base
           end
 
         value = importer["#{target}/#{lookup}"]
-        theme.set_field(target.to_sym, field, value)
+        theme.set_field(target: target.to_sym, name: field, value: value)
       end
     end
 

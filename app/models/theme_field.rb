@@ -1,5 +1,17 @@
 class ThemeField < ActiveRecord::Base
 
+  def self.types
+    @types ||= Enum.new(html: 0,
+                        scss: 1,
+                        theme_upload_var: 2,
+                        theme_color_var: 3,
+                        theme_var: 4)
+  end
+
+  def self.theme_var_type_ids
+    @theme_var_type_ids ||= [2,3,4]
+  end
+
   COMPILER_VERSION = 5
 
   belongs_to :theme
@@ -60,13 +72,20 @@ COMPILED
     [doc.to_s, errors&.join("\n")]
   end
 
+  def self.guess_type(name)
+    if html_fields.include?(name.to_s)
+      types[:html]
+    elsif scss_fields.include?(name.to_s)
+      types[:scss]
+    end
+  end
 
   def self.html_fields
-    %w(body_tag head_tag header footer after_header)
+    @html_fields ||= %w(body_tag head_tag header footer after_header)
   end
 
   def self.scss_fields
-    %w(scss embedded_scss)
+    @scss_fields ||= %w(scss embedded_scss)
   end
 
 
@@ -105,7 +124,7 @@ COMPILED
   end
 
   def target_name
-    Theme.targets.invert[target].to_s
+    Theme.targets.invert[target_id].to_s
   end
 
   before_save do
@@ -132,16 +151,18 @@ end
 #
 #  id               :integer          not null, primary key
 #  theme_id         :integer          not null
-#  target           :integer          not null
-#  name             :string           not null
+#  target_id        :integer          not null
+#  name             :string(30)       not null
 #  value            :text             not null
 #  value_baked      :text
 #  created_at       :datetime
 #  updated_at       :datetime
 #  compiler_version :integer          default(0), not null
 #  error            :string
+#  upload_id        :integer
+#  type_id          :integer          default(0), not null
 #
 # Indexes
 #
-#  index_theme_fields_on_theme_id_and_target_and_name  (theme_id,target,name) UNIQUE
+#  theme_field_unique_index  (theme_id,target_id,type_id,name) UNIQUE
 #

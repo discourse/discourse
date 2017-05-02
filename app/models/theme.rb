@@ -4,8 +4,6 @@ require_dependency 'stylesheet/manager'
 
 class Theme < ActiveRecord::Base
 
-  ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
-
   @cache = DistributedCache.new('theme')
 
   belongs_to :color_scheme
@@ -206,13 +204,13 @@ class Theme < ActiveRecord::Base
     target = target.to_sym
 
     theme_ids = [self.id] + (included_themes.map(&:id) || [])
-    fields = ThemeField.where(target: [Theme.targets[target], Theme.targets[:common]])
+    fields = ThemeField.where(target_id: [Theme.targets[target], Theme.targets[:common]])
                        .where(name: name.to_s)
                        .includes(:theme)
                        .joins("JOIN (
                              SELECT #{theme_ids.map.with_index{|id,idx| "#{id} AS theme_id, #{idx} AS sort_column"}.join(" UNION ALL SELECT ")}
                             ) as X ON X.theme_id = theme_fields.theme_id")
-                       .order('sort_column, target')
+                       .order('sort_column, target_id')
     fields.each(&:ensure_baked!)
     fields
   end
@@ -229,13 +227,16 @@ class Theme < ActiveRecord::Base
     @changed_colors ||= []
   end
 
-  def set_field(target, name, value)
+  def set_field(target:, name:, value:, type: nil, type_id: nil)
     name = name.to_s
 
     target_id = Theme.targets[target.to_sym]
     raise "Unknown target #{target} passed to set field" unless target_id
 
-    field = theme_fields.find{|f| f.name==name && f.target == target_id}
+    type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name)
+    raise "Unknown type #{type} passed to set field" unless type_id
+
+    field = theme_fields.find{|f| f.name==name && f.target_id == target_id && f.type_id == type_id}
     if field
       if value.blank?
         theme_fields.delete field.destroy
@@ -246,7 +247,7 @@ class Theme < ActiveRecord::Base
         end
       end
     else
-      theme_fields.build(target: target_id, value: value, name: name) if value.present?
+      theme_fields.build(target_id: target_id, value: value, name: name, type_id: type_id) if value.present?
     end
   end
 

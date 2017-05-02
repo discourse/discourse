@@ -14,8 +14,8 @@ describe Admin::ThemesController do
     context ' .index' do
       it 'returns success' do
         theme = Theme.new(name: 'my name', user_id: -1)
-        theme.set_field(:common, :scss, '.body{color: black;}')
-        theme.set_field(:desktop, :after_header, '<b>test</b>')
+        theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
+        theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
 
         theme.remote_theme = RemoteTheme.new(
           remote_url: 'awesome.git',
@@ -71,7 +71,7 @@ describe Admin::ThemesController do
       it 'updates a theme' do
         #focus
         theme = Theme.new(name: 'my name', user_id: -1)
-        theme.set_field(:common, :scss, '.body{color: black;}')
+        theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
         theme.save
 
         child_theme = Theme.create(name: 'my name', user_id: -1)
