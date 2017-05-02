@@ -1,8 +1,7 @@
-{{#d-modal-body}}
-  {{{i18n 'login.not_activated' sentTo=sentTo}}}
-{{/d-modal-body}}
-
-<div class="modal-footer">
+<div class='ac-message'>
+  {{{accountCreated.message}}}
+</div>
+{{#if accountCreated.username}}
   {{activation-controls sendActivationEmail=(action "sendActivationEmail")
                         editActivationEmail=(action "editActivationEmail")}}
-</div>
+{{/if}}
