@@ -10,6 +10,7 @@ require_dependency 'letter_avatar'
 require_dependency 'distributed_cache'
 require_dependency 'global_path'
 require_dependency 'secure_session'
+require_dependency 'topic_query'
 
 class ApplicationController < ActionController::Base
   include CurrentUser

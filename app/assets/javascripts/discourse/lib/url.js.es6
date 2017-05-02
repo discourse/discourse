@@ -22,7 +22,12 @@ export function rewritePath(path) {
   const params = path.split("?");
 
   let result = params[0];
-  rewrites.forEach(rw => result = result.replace(rw.regexp, rw.replacement));
+  rewrites.forEach(rw => {
+    if (((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0))) {
+      return;
+    }
+    result = result.replace(rw.regexp, rw.replacement);
+  });
 
   if (params.length > 1) {
     result += `?${params[1]}`;
@@ -219,8 +224,8 @@ const DiscourseURL = Ember.Object.extend({
     return this.handleURL(path, opts);
   },
 
-  rewrite(regexp, replacement) {
-    rewrites.push({ regexp, replacement });
+  rewrite(regexp, replacement, opts) {
+    rewrites.push({ regexp, replacement, opts: opts || {} });
   },
 
   redirectTo(url) {

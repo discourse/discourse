@@ -534,8 +534,10 @@ class UsersController < ApplicationController
   def account_created
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
+    store_preloaded("accountCreated", MultiJson.dump(message: @message))
+
     expires_now
-    render layout: 'no_ember'
+    render "default/empty"
   end
 
   def activate_account

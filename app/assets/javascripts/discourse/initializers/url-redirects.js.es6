@@ -20,6 +20,8 @@ export default {
       DiscourseURL.rewrite(new RegExp(`^/u/${username}/?$`, "i"), `/u/${username}/activity`);
     }
 
-    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary");
+    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary", {
+      exceptions: ['/u/account-created']
+    });
   }
 };
