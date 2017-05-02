@@ -10,6 +10,7 @@ require_dependency 'discourse_tagging'
 require_dependency 'search'
 
 class Topic < ActiveRecord::Base
+  class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include HasCustomFields
@@ -722,7 +723,7 @@ SQL
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
-      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # Create a small action message
@@ -747,7 +748,7 @@ SQL
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
-      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # rate limit topic invite

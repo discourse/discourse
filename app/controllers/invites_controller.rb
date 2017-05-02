@@ -74,7 +74,7 @@ class InvitesController < ApplicationController
       else
         render json: failed_json, status: 422
       end
-    rescue => e
+    rescue Invite::UserExists => e
       render json: {errors: [e.message]}, status: 422
     end
   end

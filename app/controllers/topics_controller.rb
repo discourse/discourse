@@ -497,7 +497,7 @@ class TopicsController < ApplicationController
       else
         render json: failed_json, status: 422
       end
-    rescue => e
+    rescue Topic::UserExists => e
       render json: {errors: [e.message]}, status: 422
     end
   end
