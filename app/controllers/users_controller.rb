@@ -357,6 +357,7 @@ class UsersController < ApplicationController
 
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
+      session[SessionController::ACTIVATE_USER_KEY] = user.id
 
       render json: {
         success: true,
@@ -534,8 +535,16 @@ class UsersController < ApplicationController
   def account_created
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
-    store_preloaded("accountCreated", MultiJson.dump(message: @message))
+    @account_created = { message: @message }
 
+    if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
+      if user = User.where(id: session_user_id.to_i).first
+        @account_created[:username] = user.username
+        @account_created[:email] = user.email
+      end
+    end
+
+    store_preloaded("accountCreated", MultiJson.dump(@account_created))
     expires_now
     render "default/empty"
   end
@@ -573,12 +582,17 @@ class UsersController < ApplicationController
   def update_activation_email
     RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
 
-    @user = User.find_by_username_or_email(params[:username])
+    if params[:username].present?
+      @user = User.find_by_username_or_email(params[:username])
+      raise Discourse::InvalidAccess.new unless @user.present?
+      raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
+    elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
+      @user = User.where(id: user_key.to_i).first
+    end
+
     raise Discourse::InvalidAccess.new unless @user.present?
     raise Discourse::InvalidAccess.new if @user.active?
     raise Discourse::InvalidAccess.new if current_user.present?
-
-    raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
 
     User.transaction do
       @user.email = params[:email]
@@ -598,8 +612,9 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
     end
 
-    @user = User.find_by_username_or_email(params[:username].to_s)
-
+    if params[:username].present?
+      @user = User.find_by_username_or_email(params[:username].to_s)
+    end
     raise Discourse::NotFound unless @user
 
     if !current_user&.staff? &&
