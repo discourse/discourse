@@ -1044,7 +1044,6 @@ sv:
     auto_block_first_post_regex: "Skriftlägeskänsligt regex som om godkänt kommer att orsaka att första inlägget av en användare blockeras och skickas till kön för saker som behöver granskas. Exempel: raging|a[bc]a kommer att orsaka att alla inlägg som börjar med raging eller aba eller aca blockeras vid första försöket. Gäller endast användarens första inlägg. "
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %{reply_key}@svar.exempel.se eller svar+%{reply_key}@exempel.se"
-    incoming_email_prefer_html: "Använd HTML istället för texten för inkommande e-post. Kan orsaka oväntade formatteringsproblem!"
     disable_emails: "Förhindra Discourse från att skicka någon form av e-post"
     strip_images_from_short_emails: "Rensa bilder från e-post som har mindre storlek än 2800 bytes."
     short_email_length: "Kort e-postlängd i bytes."
@@ -1144,7 +1143,6 @@ sv:
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
     embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar."
-    notify_about_flags_after: "Skicka ett e-postmeddelande till contact_email om det finns flaggor som inte har hanterats efter så här många timmar. Ange 0 för att inaktivera."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"

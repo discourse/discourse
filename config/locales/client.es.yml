@@ -1329,14 +1329,7 @@ es:
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido borrado"
       topic_status_update:
-        time: "Tiempo:"
         publish_to: "Publicar a:"
-      auto_update_input:
-        limited:
-          units: "(número de horas)"
-          examples: 'Introduce las horas (24).'
-        all:
-          examples: 'Introduce el número de horas (24), hora absoluta (17:30) o timestamp (2013-11-22 14:00).'
       publish_to_category:
         title: "Programar publicación"
       temp_open:
@@ -1384,10 +1377,6 @@ es:
           '3_2': 'Recibirás notificaciones porque estás vigilando este tema.'
           '3_1': 'Recibirás notificaciones porque creaste este tema.'
           '3': 'Recibirás notificaciones porque estás vigilando este tema.'
-          '2_8': 'Recibirás notificaciones porque estás siguiendo esta categoría.'
-          '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
-          '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
-          '2': 'Recibirás notificaciones porque has <a href="/u/{{username}}/preferences">leído este tema</a>.'
           '1_2': 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
           '1': 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
@@ -1543,7 +1532,6 @@ es:
           other: "Por favor escoge el nuevo dueño de los {{count}} posts de <b>{{old_user}}</b>."
         instructions_warn: "Ten en cuenta que las notificaciones sobre este post no serán transferidas al nuevo usuario de forma retroactiva.<br>Aviso: actualmente, los datos que no dependen del post son transferidos al nuevo usuario. Usar con precaución."
       change_timestamp:
-        title: "Cambiar Timestamp"
         action: "cambiar timestamp"
         invalid_timestamp: "El Timestamp no puede ser futuro"
         error: "Hubo un error cambiando el timestamp de este tema."
@@ -1809,8 +1797,6 @@ es:
       security: "Seguridad"
       special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no pueden ser editadas. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       images: "Imágenes"
-      auto_close_label: "Cerrar automaticamente los temas después de:"
-      auto_close_units: "horas"
       email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
@@ -2564,7 +2550,6 @@ es:
           user_selectable: "Tema seleccionable por los usuarios"
           color_scheme: "Paleta de color"
           color_scheme_select: "Colores a utilizar por el tema:"
-          included_themes: "Temas incluidos"
           child_themes_check: "El tema incluye otros temas"
           css_html: "CSS/HTML personalizado"
           edit_css_html: "Editar CSS/HTML"

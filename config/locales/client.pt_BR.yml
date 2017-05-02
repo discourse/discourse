@@ -1355,9 +1355,6 @@ pt_BR:
           '3_2': 'Você receberá notificações porque está observando este tópico.'
           '3_1': 'Você receberá notificações porque criou este tópico.'
           '3': 'Você receberá notificações porque você está observando este tópico.'
-          '2_8': 'Você receberá notificações porque você está monitorando essa categoria.'
-          '2_4': 'Você receberá notificações porque postou uma resposta neste tópico.'
-          '2_2': 'Você receberá notificações porque está monitorando este tópico.'
           '1_2': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '1': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '0_7': 'Você está ignorando todas as notificações nessa categoria.'
@@ -1513,7 +1510,6 @@ pt_BR:
           other: "Por favor, escolha o novo autor dessas {{count}} mensagens que eram de <b>{{old_user}}</b>."
         instructions_warn: "Note que qualquer notificação sobre esta mensagem não irá ser transferida para o novo usuário retroativamente.<br>Alerta: Atualmente, nenhum dado dependente da mensagem será transferido para o novo usuário. Use com cuidado."
       change_timestamp:
-        title: "Alterar Horário"
         action: "alterar horário"
         invalid_timestamp: "Horário não pode ser no futuro."
         error: "Ocorreu um erro alterando o horário do tópico."
@@ -1779,8 +1775,6 @@ pt_BR:
       security: "Segurança"
       special_warning: "Atenção: Esta categoria é uma categoria padrão e as configurações de segurança e não podem ser editadas. Se você não quer usar esta categoria, apague-a ao invés de reaproveitá-la."
       images: "Imagens"
-      auto_close_label: "Fechar automaticamente tópicos depois de:"
-      auto_close_units: "horas"
       email_in: "Endereço de e-mail personalizado de entrada:"
       email_in_allow_strangers: "Aceitar emails de usuários anônimos sem cont"
       email_in_disabled: "Postar novos tópicos via email está desabilitado nas Configurações do Site. Para habilitar respostas em novos tópicos via email,"

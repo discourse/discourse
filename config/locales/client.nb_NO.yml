@@ -101,6 +101,7 @@ nb_NO:
           other: "%{count} år senere"
       previous_month: 'Forrige måned'
       next_month: 'Neste måned'
+      placeholder: Velg en dato
     share:
       topic: 'del en lenke til dette emnet'
       post: 'innlegg #%{postNumber}'
@@ -389,6 +390,7 @@ nb_NO:
       posts: "Innlegg"
       mentions: "Omtalelser"
       messages: "Meldinger"
+      notification_level: "Forvalgt merknadsnivå for gruppemeldinger"
       alias_levels:
         title: "Hvem kan sende meldinger til og @nevne denne gruppen?"
         nobody: "Ingen"
@@ -1168,6 +1170,7 @@ nb_NO:
       no_more_results: "Ingen flere resultater funnet."
       searching: "Søker…"
       post_format: "#{{post_number}} av {{username}}"
+      results_page: "Søkeresultater"
       context:
         user: "Søk i innleggene av @{{username}}"
         category: "Søk i kategorien #{{category}}"
@@ -1336,15 +1339,18 @@ nb_NO:
       topic_status_update:
         title: "Sett emneutløp"
         save: "Sett utløp"
-        time: "Tid:"
+        num_of_hours: "Antall timer:"
         remove: "Fjern utløp"
         publish_to: "Publiser til:"
+        when: "Når:"
       auto_update_input:
-        limited:
-          units: "(# timer)"
-          examples: 'Før inn antall timer (24).'
-        all:
-          examples: 'Før inn antall timer (24), absolutt tid (17:30) eller tidsstempel (2013-11-22 14:00).'
+        later_today: "Senere i dag"
+        tomorrow: "I morgen"
+        later_this_week: "Senere denne uken"
+        this_weekend: "Denne uken"
+        next_week: "Neste uke"
+        pick_date_and_time: "Velg dato og tid"
+        set_based_on_last_post: "Lukk basert på siste post"
       publish_to_category:
         title: "Planlegg publisering"
       temp_open:
@@ -1355,7 +1361,7 @@ nb_NO:
         title: "Lukk midlertidig"
       auto_close:
         title: "Auto-lukk emne"
-        label: "Tid for auto-lukking av emne:"
+        label: "Tidsbolk for autolukking av emne:"
         error: "Skriv inn en gyldig verdi."
         based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
       status_update_notice:
@@ -1393,10 +1399,10 @@ nb_NO:
           '3_2': 'Du vil motta varsler fordi du følger dette emnet.'
           '3_1': 'Du vil motta varsler fordi du opprettet dette emnet.'
           '3': 'Du vil motta varsler fordi du følger dette emnet.'
-          '2_8': 'Du vil motta varsler fordi du overvåker denne kategorien.'
-          '2_4': 'Du vil motta varsler fordi du svarte på dette emnet.'
-          '2_2': 'Du vil motta varsler fordi du overvåker dette emnet.'
-          '2': 'Du vil motta varsler fordi du <a href="/u/{{username}}/preferences">leste dette emnet</a>.'
+          '2_8': 'Du vil se antall nye svar fordi du følger denne kategorien.'
+          '2_4': 'Du vil se antall nye svar fordi du skrev et svar til dette emnet.'
+          '2_2': 'Du vil se antall nye svar fordi du følger dette emnet.'
+          '2': 'Du vil se antall nye svar fordi du <a href="/u/{{username}}/preferences">leste dette emnet</a>.'
           '1_2': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
           '1': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
           '0_7': 'Du ignorerer alle varsler i denne kategorien.'
@@ -1553,7 +1559,7 @@ nb_NO:
           other: "Velg den nye eieren til {{count}} innlegg av  <b>{{old_user}}</b>."
         instructions_warn: "Merk at ingen varsler om dette innlegget vil overføres til den nye eieren i etterkant.<br>Advarsel: For øyeblikket blir ingen innleggsavhengige data overført til den nye brukeren. Bruk med omhu."
       change_timestamp:
-        title: "Endre tidsstempel"
+        title: "Endre tidsstempel…"
         action: "endre tidsstempel"
         invalid_timestamp: "Tidsstempel kan ikke være i framtiden."
         error: "Det oppstod en feil ved endring av tidsstempel for emnet."
@@ -1819,8 +1825,6 @@ nb_NO:
       security: "Sikkerhet"
       special_warning: "Advarsel: Denne kategorien er en forhåndsbestemt kategori og dens sikkerhetsinnstillinger kan ikke endres. Hvis du ikke vil bruke denne kategorien, slett den i stedet for å bruke den til noe annet."
       images: "Bilder"
-      auto_close_label: "Lukk emner automatisk etter:"
-      auto_close_units: "timer"
       email_in: "Egendefinert innkommende e-postadresse:"
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
       email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
@@ -2368,6 +2372,7 @@ nb_NO:
         add_members: "Legg til medlemmer"
         custom: "Egendefinert"
         bulk_complete: "Brukeren er lagt til i gruppen."
+        bulk_complete_users_not_added: "Disse brukerne ble ikke lagt til (forsikre deg om at de har kontoer):"
         bulk: "Legg flere til i gruppe"
         bulk_paste: "Lim inn en liste med brukernavn eller e-postadresser, en per linje:"
         bulk_select: "(velg en gruppe)"
@@ -2561,6 +2566,10 @@ nb_NO:
         color: "Farge"
         opacity: "Opacity"
         copy: "Kopier"
+        copy_to_clipboard: "Kopier til utklippstavle"
+        copied_to_clipboard: "Kopiert til utklippstavle"
+        copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
+        theme_owner: "Kan ikke endres, eid av:"
         email_templates:
           title: "E-postmaler"
           subject: "Emne"
@@ -2585,7 +2594,7 @@ nb_NO:
           color_scheme: "Fargepalett"
           color_scheme_select: "Velg farger å bruke i drakten"
           custom_sections: "Egendefinerte valg:"
-          included_themes: "Inkluderte drakter"
+          theme_components: "Drakt-komponenter"
           child_themes_check: "Drakten inneholder andre underdrakter"
           css_html: "Egendefinert CSS/HTML"
           edit_css_html: "Rediger CSS/HTML"
@@ -2594,6 +2603,7 @@ nb_NO:
           import_file_tip: ".dcstyle.json-fil inneholdende drakt"
           about_theme: "Om drakt"
           license: "Lisens"
+          component_of: "Drakten er en del av:"
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"

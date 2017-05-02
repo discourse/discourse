@@ -95,6 +95,8 @@ cs:
       max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
       max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
       default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
+  invite:
+    user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='/u/%{username}/summary'>je veden u tohoto účtu!</a>"
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
@@ -125,8 +127,12 @@ cs:
       other: "%{count} reakcí"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   no_mentions_allowed_newuser: "Bohužel, noví uživatelé nemohou zmiňovat ostatní uživatele."
+  no_images_allowed: "Bohužel, noví uživatelé nemohou vkládat obrázky do příspěvků."
+  no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
+  no_links_allowed: "Bohužel, noví uživatelé nemohou vkládat odkazy do příspěvků."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
+  not_accepting_pms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
   next_page: "další strana →"
@@ -144,6 +150,9 @@ cs:
   rss_description:
     latest: "Poslední témata"
     hot: "Populární témata"
+    posts: "Poslední příspěveky"
+    group_posts: "Poslední příspěvky z @{group_name}"
+    user_posts: "Poslední příspěvky od @{username}"
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
   excerpt_image: "obrázek"
   groups:
@@ -241,6 +250,8 @@ cs:
       title: "člen"
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
+    by_type:
+      pms_per_day: "Odeslal jsi maximum povolených zpráv za den. Další můžeš odeslat za {time_left}."
     hours:
       one: "1 hodina"
       few: "%{count} hodiny"
@@ -625,9 +636,12 @@ cs:
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     username_change_period: "Počet dní od registrace za kolik si uživatel může změnit svoje uživatelské jméno (0 pokud chcete změnu uživatelského jména úplně zakázat)."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
+    digest_topics: "Maximální počet populárních témat zařazených do email přehledu."
+    digest_posts: "Maximální počet populárních příspěvků zařazených do email přehledu."
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     errors:
       invalid_email: "Neplatná emailová adresa."
       invalid_integer: "Hodnota musí být celé číslo."
@@ -703,7 +717,24 @@ cs:
       description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
     digest:
+      why: "Krátký souhrn z webu %{site_link} od poslední návštěvy v %{last_seen_at}"
+      since_last_visit: "Od poslední návštěvy"
+      new_topics: "Nová témata"
+      unread_messages: "Nepřečtené zprávy"
+      new_posts: "Nové příspěvky"
+      popular_topics: "Populární témata"
+      join_the_discussion: "Číst dále"
+      popular_posts: "Populární příspěvky"
+      subject_template: "[%{email_prefix}] Přehled"
+      unsubscribe: "Přehled zaslán z webu %{site_link}, protože jsi jej již nějaký čas nenavštívil. Pro zrušení zasílání %{unsubscribe_link}."
       click_here: "klikněte zde"
+      from: "%{site_name} - přehled"
+      preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
+    mailing_list:
+      subject_template: "[%{site_name}] Přehled z %{date}"
+      unsubscribe: "Přehled je zasílán denně, protože je zapnut režim emailové konference. Pro zrušení zasílání %{unsubscribe_link}."
+      from: "%{site_name} - přehled"
+      new_topics: "Nová témata"
     account_created:
       title: "Účet vytvořen"
     signup_after_approval:
@@ -760,6 +791,8 @@ cs:
       name: První "to se mi líbí"
     first_share:
       name: První sdílení
+    popular_link:
+      name: Populární odkaz
     admired:
       name: Obdivovaný
   admin_login:

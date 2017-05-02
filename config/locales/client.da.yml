@@ -1305,12 +1305,6 @@ da:
       deleted: "Emnet er blevet slettet"
       topic_status_update:
         publish_to: "Udgiv I:"
-      auto_update_input:
-        limited:
-          units: "(# timer)"
-          examples: 'Indtast antal timer (24).'
-        all:
-          examples: 'Indtast et antal timer (24), et bestemt tidspunkt (17:30) eller et tidsstempel (2013-11-22 14:00).'
       publish_to_category:
         title: "Planlæg Udgivelse"
       temp_open:
@@ -1358,10 +1352,6 @@ da:
           '3_2': 'Du får notifikationer fordi du overvåger dette emne.'
           '3_1': 'Du får notifikationer fordi du oprettede dette emne.'
           '3': 'Du får notifikationer fordi du overvåger dette emne.'
-          '2_8': 'Du får notifikationer fordi du følger dette kategori.'
-          '2_4': 'Du får notifikationer fordi du har besvaret dette emne.'
-          '2_2': 'Du får notifikationer fordi du følger dette emne.'
-          '2': 'Du modtager notifikationer, fordi du <a href="/u/{{username}}/preferences">læste dette emne</a>.'
           '1_2': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
           '1': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
           '0_7': 'Du ignorerer alle notifikationer i denne kategori.'
@@ -1517,7 +1507,6 @@ da:
           other: "Vælg den nye ejer af {{count}} indlæg, oprindeligt skrevet af <b>{{old_user}}</b>."
         instructions_warn: "Bemærk at tidligere notifikationer på dette emne vil ikke blive overført til den nye bruger.\n<br>Advarsel: På nuværende tidspunkt, vil ingen data der er afhængig af dette indlæg blive overført til den nye bruger. Brug forsigtigt."
       change_timestamp:
-        title: "Ret tidsstempel"
         action: "ret tidsstempel"
         invalid_timestamp: "Tidsstempel kan ikke være i fremtiden"
         error: "Der opstod en fejl under rettelsen af tidsstemplet for dette emne."
@@ -1776,8 +1765,6 @@ da:
       security: "Sikkerhed"
       special_warning: "Advarsel: Denne kategori er forud-seedet og sikkerhedsindstillingerne kan ikke redigeres. Hvis du ikke ønsker at bruge denne kategori, bør du slette den snarere end at genbruge den til et andet formål."
       images: "Billeder"
-      auto_close_label: "Luk automatisk emner efter:"
-      auto_close_units: "timer"
       email_in: "Brugerindstillet ingående email adresse:"
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
       email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"

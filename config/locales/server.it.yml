@@ -1073,7 +1073,6 @@ it:
     embed_by_username: "Nome utente Discourse dell'utente che crea gli argomenti incorporati."
     embed_truncate: "Tronca i messaggi incorporati."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
-    notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     enable_emoji: "Attiva gli emoji"
     default_other_disable_jump_reply: "Per default non saltare al messaggio dell'utente dopo la sua risposta."

@@ -1068,9 +1068,6 @@ gl:
           '3_2': 'Recibirás notificacións porque estás vendo este tema.'
           '3_1': 'Recibirás notificacións por ser o creador deste tema.'
           '3': 'Recibirás notificacións porque estás vendo este tema.'
-          '2_8': 'Recibirás notificacións porque segues esta categoría.'
-          '2_4': 'Recibirás notificacións porque publicaches unha resposta neste tema.'
-          '2_2': 'Recibirás notificacións porque segues este tema.'
           '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '0_7': 'Estás ignorando todas as notificacións desta categoría.'
@@ -1212,7 +1209,6 @@ gl:
           other: "Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>."
         instructions_warn: "Decátate que ningunha notificación sobre esta publicación se transferirá retroactivamente ao novo usuario.<br>Aviso: actualmente, non se transfire ao novo usuario ningún dato relacionado cunha publicación. Usa isto con tino."
       change_timestamp:
-        title: "Cambiar a marca data/hora"
         action: "cambiar a marca data/hora"
         invalid_timestamp: "A marca data/hora non pode ser no futuro."
         error: "Produciuse un erro cambiando a marca data/hora do tema."
@@ -1442,8 +1438,6 @@ gl:
       security: "Seguranza"
       special_warning: "Aviso: esta categoría ten axustes predeterminados e as opcións de seguranza non se poden modificar. Se non queres usala, elimínaa no canto de reciclala."
       images: "Imaxes"
-      auto_close_label: "Pechar automaticamente os temas despois de:"
-      auto_close_units: "horas"
       email_in: "Personalizar enderezos de correos-e entrantes:"
       email_in_allow_strangers: "Aceptar correos-e de usuarios anónimos sen contas"
       email_in_disabled: "A publicación de novos temas vía correo-e está desactivada nos axustes do sitio. Para activala,"

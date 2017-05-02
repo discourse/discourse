@@ -1147,7 +1147,6 @@ he:
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "השתמשו ב HTML במקום בטקסט בשביל מייל נכנס. עלול ליצור בעיות עיצוב לא-צפויות!"
     disable_emails: "מנעו מ-Discourse ממשלוח דוא\"ל כלשהו"
     strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בתים"
     short_email_length: "אורכו של דוא\"ל קצר בבתים (Bytes)"

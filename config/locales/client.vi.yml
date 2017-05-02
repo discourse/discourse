@@ -1237,9 +1237,6 @@ vi:
           '3_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
           '3_1': 'Bạn sẽ được nhận thông báo bởi bạn đã tạo chủ để này.'
           '3': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
-          '2_8': 'Bạn sẽ nhận được thông báo bởi vì bạn đang theo dõi chuyên mục này.'
-          '2_4': 'Bạn sẽ nhận được các thông báo bởi vì bạn đã đăng một trả lời vào chủ đề này'
-          '2_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang theo dõi chủ đề này.'
           '1_2': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
           '1': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
           '0_7': 'Bạn đang bỏ qua tất cả các thông báo trong chuyên mục này'
@@ -1378,7 +1375,6 @@ vi:
           other: "Hãy chọn chủ sở hữu mới cho {{count}} bài viết của <b>{{old_user}}</b>."
         instructions_warn: "Lưu ý rằng bất kỳ thông báo nào về bài viết này sẽ không được chuyển giao cho thành viên mới trở về trước.<br>Cảnh báo: Hiện không có dữ liệu bài viết phụ thuộc được chuyển giao cho thành viên mới. Hãy thận trọng!"
       change_timestamp:
-        title: "Đổi Timestamp"
         action: "đổi timestamp"
         invalid_timestamp: "Timestamp không thể trong tương lai."
         error: "Có lỗi khi thay đổi timestamp của chủ đề."
@@ -1592,8 +1588,6 @@ vi:
       security: "Bảo mật"
       special_warning: "Cảnh báo: Đây là chuyên mục có sẵn nên bạn không thể chỉnh sửa các thiết lập bảo mật. Nếu bạn muốn sử dụng chuyên mục này, hãy xóa nó thay vì tái sử dụng."
       images: "Hình ảnh"
-      auto_close_label: "Tự động khóa chủ đề sau:"
-      auto_close_units: "giờ"
       email_in: "Tùy chỉnh địa chỉ nhận thư điện tử "
       email_in_allow_strangers: "Nhận thư điện tử từ người gửi vô danh không tài khoản"
       email_in_disabled: "Tạo chủ đề mới thông qua email đã được tắt trong thiết lập. Để bật tính năng này, "

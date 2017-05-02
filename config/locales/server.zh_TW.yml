@@ -1068,7 +1068,6 @@ zh_TW:
     reply_by_email_enabled: "啟用通過電郵回覆。"
     reply_by_email_address: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "對進站郵件優先使用 HTML 而不是純文字檔案。可能導致格式問題。"
     disable_emails: "禁止 Discourse 發送任何郵件"
     strip_images_from_short_emails: "郵件小於 2800 位元組時去除圖片"
     short_email_length: "短郵件地址長度（以比特作為單位）"
@@ -1174,7 +1173,6 @@ zh_TW:
     embed_username_required: "創建主題需要用戶名。"
     embed_whitelist_selector: "在 embeds 頁面允許 CSS 元素選擇器"
     embed_blacklist_selector: "在 embeds 頁面移除 CSS 元件選擇器"
-    notify_about_flags_after: "如果有標記沒有在設定小時後處理，發送一封郵件給 contact_email。設為 0 將禁用。"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用戶數下限（0 為禁用）。"

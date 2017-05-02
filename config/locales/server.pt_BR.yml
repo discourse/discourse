@@ -1120,7 +1120,6 @@ pt_BR:
     embed_username_required: "Nome de usuário para criação do tópico é obrigatório."
     embed_whitelist_selector: "Seletor CSS para os elementos que são permitidos em embeds."
     embed_blacklist_selector: "Selector CSS para elementos que são removidos dos embeds."
-    notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."

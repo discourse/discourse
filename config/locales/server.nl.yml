@@ -1162,7 +1162,6 @@ nl:
     embed_username_required: "De gebruikersnaam om topics aan te maken is vereist."
     embed_whitelist_selector: "CSS-selector voor de elementen die zijn toegestaan in invoegberichten."
     embed_blacklist_selector: "CSS-selector voor de elementen die zijn verwijderd uit invoegberichten."
-    notify_about_flags_after: "Als er vlaggen zijn die nog niet zijn afgehandeld na dit aantal uren, stuur dan een e-mail naar de contact_email. Zet op 0 om uit te schakelen."
     show_create_topics_notice: "Als de site minder dan 5 publieke topics heeft, toon dan een melding waarin admins gevraagd wordt om een aantal topics te creëren."
     delete_drafts_older_than_n_days: Verwijder concepten ouder dan (n) dagen.
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen mogen downloaden. WAARSCHUWING: hierdoor zullen website onderdelen, anders dan afbeeldingen, die zijn gepost als bijlage niet langer werken."

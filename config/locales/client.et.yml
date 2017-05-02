@@ -1345,9 +1345,6 @@ et:
           '3_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
           '3_1': 'Sulle saabuvad teavitused kuna lõid selle teema.'
           '3': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda foorumit.'
-          '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
-          '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
           '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
           '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
           '0_7': 'Eirad kõiki teavitusi selles foorumis.'
@@ -1503,7 +1500,6 @@ et:
           other: "Palun vali <b>{{old_user}}</b> {{count}} postitusele uus omanik."
         instructions_warn: "Pane tähele, et ühtegi teavitust selle postituse kohta ei kanta uuele kasutajale üle tagasiulatuvalt.<br>Hoiatus: Hetkel ei kanta uuele kasutajale üle mingeid postitustest sõltuvaid andmeid. Kasuta ettevaatlikult."
       change_timestamp:
-        title: "Muuda ajatemplit"
         action: "muuda ajatemplit"
         invalid_timestamp: "Ajatempel ei saa olla tulevikus."
         error: "Teema ajatempli muutmisel tekkis viga."
@@ -1758,8 +1754,6 @@ et:
       security: "Turve"
       special_warning: "Hoiatus: See on eelseadistatud foorum mille turvasätteid muuta ei saa. Kui Sa seda foorumit kasutada ei soovi, kustuta see ümberkohandamise asemel."
       images: "Pildid"
-      auto_close_label: "Sulge teema automaatselt peale:"
-      auto_close_units: "tundi"
       email_in: "Sissetuleva meili individuaalne aadress:"
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
       email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"

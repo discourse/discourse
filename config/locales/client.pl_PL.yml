@@ -1451,9 +1451,6 @@ pl_PL:
           '3_2': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
           '3_1': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem tego tematu.'
           '3': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
-          '2_8': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz tę kategorię.'
-          '2_4': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
-          '2_2': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
           '1_2': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '1': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
@@ -1621,7 +1618,6 @@ pl_PL:
           other: "Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>."
         instructions_warn: "Przeszłe powiadomienia dla tego wpisu nie zostaną przypisane do nowego użytkownika. <br>Uwaga: Aktualnie, żadne dane uzależnione od wpisu nie są przenoszone do nowego użytkownika. Zachowaj ostrożność."
       change_timestamp:
-        title: "Zmień znacznik czasu"
         action: "zmień znacznik czasu"
         invalid_timestamp: "Znacznik czasu nie może wskazywać na przyszłość."
         error: "Wystąpił błąd podczas zmiany znacznika czasu tego tematu."
@@ -1941,8 +1937,6 @@ pl_PL:
       security: "Bezpieczeństwo"
       special_warning: "Uwaga: Ta kategoria jest generowana automatycznie i jej ustawienia bezpieczeństwa nie mogą być edytowane. Jeśli nie zamierzasz jej używać, skasuj ją, zamiast zmieniać jej przeznaczenie."
       images: "Obrazy"
-      auto_close_label: "Automatycznie zamykaj tematy po:"
-      auto_close_units: "godzin"
       email_in: "Dedykowany adres email kategorii:"
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "

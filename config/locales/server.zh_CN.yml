@@ -219,17 +219,17 @@ zh_CN:
 
       - 选择恰当的词句以便别人能找到你的主题。若想要给主题分组，选择一个分类。
 
-      更多的帮助信息，[请查看我们的社群准则](/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
+      更多的帮助信息，[请查看我们的社区准则](/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
     new-reply: |
       欢迎来到%{site_name} &mdash; **感谢你的贡献！**
 
       - 你的回复是否以某种方式改善了讨论？
 
-      - 请给予其他社群成员同等的尊重。
+      - 请给予其他社区成员同等的尊重。
 
       - 欢迎有建设性的批评，但是请批判观点，而不是人身攻击。
 
-      欲查看更多，[请查看我们的社群准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
+      欲查看更多，[请查看我们的社区准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
     avatar: |
       ### 想更改你的头像吗?
 
@@ -322,7 +322,7 @@ zh_CN:
 
       置顶主题的第一段是访客在主页看到的欢迎消息。这很重要！
 
-      **编辑**它作为社群的简要介绍：
+      **编辑**它作为社区的简要介绍：
 
       - 什么人想参与？
       - 他们能在这找到什么？
@@ -350,7 +350,7 @@ zh_CN:
 
       这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
 
-      感谢成为社群的重要一员！
+      感谢成为社区的重要一员！
 
       （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
 
@@ -496,7 +496,7 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不当内容'
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
+      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
       long_form: '标记为不当内容'
     notify_user:
       title: '给@{{username}}发送一条消息'
@@ -536,17 +536,17 @@ zh_CN:
       long_form: '标记为垃圾'
     inappropriate:
       title: '不当内容'
-      description: '此主题内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
+      description: '此主题内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
       long_form: '标记为不当内容'
     notify_moderators:
       title: "其他内容"
-      description: '此帖需要版主依据<a href="/guidelines">社群准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
+      description: '此帖需要版主依据<a href="/guidelines">社区准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
       long_form: '标记为需版主注意'
       email_title: '“{title}”主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/messages">查看你的消息</a>。</p>'
-    user_must_edit: '<p>你的帖子已经被社群标记并被临时隐藏。</p>'
+    you_must_edit: '<p>你的帖子被社区成员标记了。请<a href="/my/messages">查看你的消息</a>。</p>'
+    user_must_edit: '<p>你的帖子已经被社区标记并被临时隐藏。</p>'
   archetypes:
     regular:
       title: "常规主题"
@@ -1065,7 +1065,6 @@ zh_CN:
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "对进站邮件优先使用 HTML 而不是纯文本。可能导致格式问题。"
     disable_emails: "禁止 Discourse 发送任何邮件"
     strip_images_from_short_emails: "忽略邮件中小于 2800 字节的图片"
     short_email_length: "短邮件地址长度（以比特作为单位）"
@@ -1171,7 +1170,6 @@ zh_CN:
     embed_username_required: "创建主题需要用户名。"
     embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器。"
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器。"
-    notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
     delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用户数下限（0 为禁用）。"
@@ -1404,7 +1402,7 @@ zh_CN:
 
       - 我们强烈建议你**发送测试邮件至 [mail-tester.com][mt]**，这样可以检查上述设置是否正确。
 
-      （最简单的方法是在 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 和 [Mailjet][mj]注册免费账户，他们的免费账户对一个小社群是足够的。不过你仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
+      （最简单的方法是在 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 和 [Mailjet][mj]注册免费账户，他们的免费账户对一个小社区是足够的。不过你仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
 
       我们衷心希望你成功完成邮件发送测试！
 
@@ -1458,10 +1456,10 @@ zh_CN:
 
       新用户的帖子等待被编辑或审核。[审核通过或者拒绝](%{base_url}/queued-posts)。
   flag_reasons:
-    off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社群成员们感觉它不适合处于这个主题中。"
-    inappropriate: "你的帖子被标记为 **不恰当**：社群成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社群准则](/guidelines)。"
-    spam: "你的帖子被标记为 **广告**：社群成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
-    notify_moderators: "你的帖子被标记为 **需要版主关注**：社群成员认为帖子需要管理人员介入。"
+    off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社区成员们感觉它不适合处于这个主题中。"
+    inappropriate: "你的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](/guidelines)。"
+    spam: "你的帖子被标记为 **广告**：社区成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
+    notify_moderators: "你的帖子被标记为 **需要版主关注**：社区成员认为帖子需要管理人员介入。"
   flags_dispositions:
     agreed: "谢谢你的消息。我们认为这是个问题。我们正在进行处理。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
@@ -1470,7 +1468,7 @@ zh_CN:
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   system_messages:
     post_hidden:
-      subject_template: "帖子因社群标记隐藏"
+      subject_template: "帖子因社区标记隐藏"
       text_body_template: |
         你好，
 
@@ -1480,11 +1478,11 @@ zh_CN:
 
         %{flag_reason}
 
-        你的帖子是因为被多个社群成员标记才被隐藏的，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它将重新被显示。**
+        你的帖子是因为被多个社区成员标记才被隐藏的，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它将重新被显示。**
 
-        然而，如果帖子再次被社群成员标记并隐藏，它将被隐藏至版主处理后——并且可能导致进一步的措施，如封禁帐号。
+        然而，如果帖子再次被社区成员标记并隐藏，它将被隐藏至版主处理后——并且可能导致进一步的措施，如封禁帐号。
 
-        想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
+        想了解更多，请查看我们的[社区指引](%{base_url}/guidelines)。
     welcome_user:
       title: "欢迎用户"
       subject_template: "欢迎来到 %{site_name}！"
@@ -1695,21 +1693,21 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是%{site_name}自动发出的邮件。你的帖子因社群标记而被临时隐藏。
+        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时隐藏。
 
         出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
 
-        要查看更多指引，请参考我们的[社群指引](%{base_url}/guidelines)。
+        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
       subject_template: "新账户被暂时封禁"
       text_body_template: |
         你好，
 
-        这是%{site_name}自动发出的邮件。你的帐户因大量社群标记而被暂停使用。
+        这是%{site_name}自动发出的邮件。你的帐户因大量社区标记而被暂停使用。
 
         出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
 
-        要查看更多指引，请参考我们的[社群指引](%{base_url}/guidelines)。
+        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     blocked_by_staff:
       subject_template: "账户被暂时封禁"
       text_body_template: |
@@ -1719,9 +1717,9 @@ zh_CN:
 
         请继续浏览，但在管理人员审核通过前，你的账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
 
-        要查看更多指引，请参考我们的[社群指引](%{base_url}/guidelines)。
+        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     user_automatically_blocked:
-      subject_template: "新用户%{username}因社群标记而被封禁"
+      subject_template: "新用户%{username}因社区标记而被封禁"
       text_body_template: |
         这是自动发出的邮件。
 
@@ -2264,44 +2262,44 @@ zh_CN:
         该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但是编辑他们总是一个好办法——你可以改进你的帖子、修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
     basic_user:
       name: 初级用户
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社区功能
       long_description: |
-        该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消；并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
+        该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 成员
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、群组消息和更多的赞
       long_description: |
-        该徽章授予给达到用户等级 2 的你。感谢你在社群待了几周，真正融入到了社群中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
+        该徽章授予给达到用户等级 2 的你。感谢你在社区待了几周，真正融入到了社区中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
     regular:
       name: 活跃用户
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞
       long_description: |
-        该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社群。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社群。你现在可以社群待了几周，真正融入到了社群中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
+        该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社区。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社区。你现在可以社区待了几周，真正融入到了社区中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
     leader:
       name: 资深
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局编辑、固定、锁定、存档、分割、合并和更多的赞
       long_description: |
-        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社群的领导力量，你用你的行动和言辞为社群树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、锁定、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
+        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社区的领导力量，你用你的行动和言辞为社区树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、锁定、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
     welcome:
       name: 欢迎
       description: 得到一个赞
       long_description: |
-        该徽章授予给帖子收到了第一个赞的成员。恭喜，有社群成员发现你发表的内容有意思、酷炫或者有用！
+        该徽章授予给帖子收到了第一个赞的成员。恭喜，有社区成员发现你发表的内容有意思、酷炫或者有用！
     autobiographer:
       name: 自传作者
       description: 已填写用户<a href="/my/preferences">资料</a>信息
       long_description: |
-        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的你。让社群成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社群。让我们一起努力！
+        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的你。让社区成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社区。让我们一起努力！
     anniversary:
       name: 年度纪念日
       description: 一年活跃用户，至少发了一个帖子
       long_description: |
-        该徽章授予给在社群注册一年并超至少发布了一个帖子的你。感谢你的持续关注和对我们社群的贡献！我们希望你继续参与我们的社群。
+        该徽章授予给在社区注册一年并超至少发布了一个帖子的你。感谢你的持续关注和对我们社区的贡献！我们希望你继续参与我们的社区。
     nice_post:
       name: 不错的回复
       description: 回复被赞了 10 次
       long_description: |
-        该徽章授予给回复被赞了 10 次的你。你的回复给社群成员们留下了印象，并且你推动了讨论的进程！
+        该徽章授予给回复被赞了 10 次的你。你的回复给社区成员们留下了印象，并且你推动了讨论的进程！
     good_post:
       name: 很好的回复
       description: 回复被赞了 25 次
@@ -2311,69 +2309,69 @@ zh_CN:
       name: 精彩的回复
       description: 回复被赞了 50 次
       long_description: |
-        该徽章授予给回复被赞了 50 次的你。哇！你的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社群都喜欢它。
+        该徽章授予给回复被赞了 50 次的你。哇！你的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社区都喜欢它。
     nice_topic:
       name: 不错的主题
       description: 主题被赞了 10 次
       long_description: |
-        该徽章授予给主题获得 10 个赞的你。嗨，你开启了一个社群成员觉得有意思的讨论！
+        该徽章授予给主题获得 10 个赞的你。嗨，你开启了一个社区成员觉得有意思的讨论！
     good_topic:
       name: 很好的主题
       description: 主题被赞了 25 次
       long_description: |
-        该徽章授予给主题获得 25 个赞的你。你开启了一个有意义的主题，整个社群都在积极响应，而且大家喜欢你的主题！
+        该徽章授予给主题获得 25 个赞的你。你开启了一个有意义的主题，整个社区都在积极响应，而且大家喜欢你的主题！
     great_topic:
       name: 精彩的主题
       description: 主题被赞了 50 次
       long_description: |
-        该徽章授予给主题获得 50 个赞的你。你开启了一个引人入胜的主题，整个社群都沉浸于讨论之中。
+        该徽章授予给主题获得 50 个赞的你。你开启了一个引人入胜的主题，整个社区都沉浸于讨论之中。
     nice_share:
       name: 不错的分享
       description: 分享了一个有 25 个独立访问者的帖子
       long_description: |
-        该徽章授予给分享链接给 25 个其他访客的你。感谢你广而告之我们的讨论，和对这个社群的帮助。
+        该徽章授予给分享链接给 25 个其他访客的你。感谢你广而告之我们的讨论，和对这个社区的帮助。
     good_share:
       name: 很棒的分享
       description: 分享了一个有 300 个独立访问者的帖子
       long_description: |
-        该徽章授予给分享链接给 300 个其他访客的你。干得漂亮！你把一个有意思的讨论介绍给了许多新的朋友，并且帮助社群前进了一步。
+        该徽章授予给分享链接给 300 个其他访客的你。干得漂亮！你把一个有意思的讨论介绍给了许多新的朋友，并且帮助社区前进了一步。
     great_share:
       name: 精彩的分享
       description: 分享了一个有 1000 个独立访问者的帖子
       long_description: |+
-        该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
+        该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社区前进了一大步！
 
     first_like:
       name: 首次赞
       description: 已赞过了一个帖子
       long_description: |
-        该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社群成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
+        该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社区成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
     first_flag:
       name: 首次标记
       description: 已标记过了一个帖子
       long_description: |
-        该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社群保持健康、合宜的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题，你也可用标记功能发送<b>私信</b>给该成员。如果你发现了问题，:flag_black: 标记吧！
+        该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社区保持健康、合宜的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题，你也可用标记功能发送<b>私信</b>给该成员。如果你发现了问题，:flag_black: 标记吧！
     promoter:
       name: 推广者
       description: 已邀请了 1 个用户
       long_description: |
-        该徽章授予给邀请他人加入社群的你。你曾使用了用户页面的邀请按钮或主题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
+        该徽章授予给邀请他人加入社区的你。你曾使用了用户页面的邀请按钮或主题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
     campaigner:
       name: 活动家
       description: 已邀请了 3 个初级用户
       long_description: |+
-        该徽章授予给邀请了 3 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
+        该徽章授予给邀请了 3 人加入社区的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
 
     champion:
       name: 外交官
       description: 已邀请了 5 个成员
       long_description: |
-        该徽章授予给邀请了 5 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢你帮助社群成长，社群因此变得更多元了！
+        该徽章授予给邀请了 5 人加入社区的你，你的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢你帮助社区成长，社区因此变得更多元了！
     first_share:
       name: 首次分享
       description: 已分享了一个帖子
       long_description: |
-        该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
+        该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社区增长。
     first_link:
       name: 首个链接
       description: 已链接了另一个主题
@@ -2386,9 +2384,9 @@ zh_CN:
         该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的段落将把主题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
     read_guidelines:
       name: 阅读指引
-      description: 阅读<a href="/guidelines">社群指引</a>
+      description: 阅读<a href="/guidelines">社区指引</a>
       long_description: |
-        该徽章授予给<a href="/guidelines">阅读了社群指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社群。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
+        该徽章授予给<a href="/guidelines">阅读了社区指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社区。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
     reader:
       name: 读者
       description: 阅读了有至少 100 个回复的主题中的所有回复
@@ -2413,17 +2411,17 @@ zh_CN:
       name: 感谢
       description: 有 20 个帖子都被赞了 1 次
       long_description: |
-        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的你。社群感谢你对讨论的贡献！
+        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的你。社区感谢你对讨论的贡献！
     respected:
       name: 尊敬
       description: 有 100 个帖子都被赞了 2 次
       long_description: |
-        该徽章授予给 100 个不同的帖子都收到了至少 2 个赞的你。社群越来越尊重你在讨论中的贡献了。
+        该徽章授予给 100 个不同的帖子都收到了至少 2 个赞的你。社区越来越尊重你在讨论中的贡献了。
     admired:
       name: 敬仰
       description: 有 300 个帖子都被赞了 5 次
       long_description: |
-        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社群敬仰你在讨论中频繁和高质量的贡献。
+        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社区敬仰你在讨论中频繁和高质量的贡献。
     out_of_love:
       name: 热情
       description: 1 天内赞了 50 次
@@ -2438,7 +2436,7 @@ zh_CN:
       name: 狂热
       description: 20 天都赞过 50 次
       long_description: |
-        该徽章授予给 20 天赞过 50 次的你。哇！你为社群成员们树立了一个令人鼓舞的模范！
+        该徽章授予给 20 天赞过 50 次的你。哇！你为社区成员们树立了一个令人鼓舞的模范！
     thank_you:
       name: 感谢你
       description: 有 20 个被赞的帖子，给出过 10 个赞
@@ -2509,43 +2507,43 @@ zh_CN:
         title: "欢迎来到 Discourse！"
         fields:
           default_locale:
-            description: "你的社群主要使用什么语言？"
+            description: "你的社区主要使用什么语言？"
       forum_title:
         title: "名字"
-        description: "名字就像远方可见的路标一样，访客“首先”将看到这个社群的名字。你起的名字和标题怎样描述了你的社群？"
+        description: "名字就像远方可见的路标一样，访客“首先”将看到这个社区的名字。你起的名字和标题怎样描述了你的社区？"
         fields:
           title:
-            label: "你社群的名字"
+            label: "你社区的名字"
             placeholder: "小明的论坛"
           site_description:
-            label: "用一句简短的话描述你的社群"
+            label: "用一句简短的话描述你的社区"
             placeholder: "小明和他的朋友讨论酷东西的论坛"
       introduction:
         title: "介绍"
         fields:
           welcome:
             label: "欢迎主题"
-            description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社群？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
+            description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社区？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
             one_paragraph: "请限制你的欢迎消息至一段话。"
       privacy:
         title: "访问"
-        description: "<p>你的社群是对所有人公开开放吗？还是需要邀请/审批？你可以先做一些设置工作，以后再对所有人开放.</p> <p>你同样也可以从主题或用户个人资料页面来发送邀请。</p>"
+        description: "<p>你的社区是对所有人公开开放吗？还是需要邀请/审批？你可以先做一些设置工作，以后再对所有人开放.</p> <p>你同样也可以从主题或用户个人资料页面来发送邀请。</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "公开"
-                description: "任何人都可访问社群，可以创建账户"
+                description: "任何人都可访问社区，可以创建账户"
               restricted:
                 label: "私密"
-                description: "只有我邀请或审核通过的人可以访问社群"
+                description: "只有我邀请或审核通过的人可以访问社区"
       contact:
         title: "联系"
         fields:
           contact_email:
             label: "邮件"
             placeholder: "name@example.com"
-            description: "社群的负责人或小组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
+            description: "社区的负责人或小组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
           contact_url:
             label: "网页"
             placeholder: "http://www.example.com/contact-us"
@@ -2607,7 +2605,7 @@ zh_CN:
         description: "你想使用哪种样式的表情符号？你可以以后在\"管理员/定制/表情符号（Emoji）\"界面增加更多定制的表情符号。"
       invites:
         title: "邀请管理人员"
-        description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社群。"
+        description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社区。"
       finished:
         title: "你的 Discourse 已经准备就绪！"
         description: |
