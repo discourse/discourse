@@ -152,6 +152,9 @@ module Autospec
         if m = /moduleForWidget\(['"]([^"']+)/i.match(line)
           return "widget:#{m[1]}"
         end
+        if m = /acceptance\(['"]([^"']+)/i.match(line)
+          return "Acceptance: #{m[1]}"
+        end
       end
     end
 

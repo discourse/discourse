@@ -66,10 +66,17 @@ class Autospec::Manager
     Autospec::QunitRunner.new
   end
 
-  def ensure_all_specs_will_run
+  def ensure_all_specs_will_run(current_runner=nil)
     puts "@@@@@@@@@@@@ ensure_all_specs_will_run" if @debug
+
+    @queue.reject!{|_,s,_| s == "spec"}
+
+    if current_runner
+      @queue.concat [['spec', 'spec', current_runner]]
+    end
+
     @runners.each do |runner|
-      @queue << ['spec', 'spec', runner] unless @queue.any? { |_, s, r| s == "spec" && r == runner }
+      @queue.concat [['spec', 'spec', runner]] unless @queue.any? { |_, s, r| s == "spec" && r == runner }
     end
   end
 
@@ -126,7 +133,7 @@ class Autospec::Manager
       has_failed = true
       if result > 0
         focus_on_failed_tests(current)
-        ensure_all_specs_will_run
+        ensure_all_specs_will_run(runner)
       end
     end
 
@@ -186,7 +193,11 @@ class Autospec::Manager
         # process_change can aquire a mutex and block
         # the acceptor
         Thread.new do
-          process_change([[file,line]])
+          if file =~ /(es6|js)$/
+            process_change([[file]])
+          else
+            process_change([[file,line]])
+          end
         end
         "OK"
       end
@@ -290,6 +301,9 @@ class Autospec::Manager
         else
           @queue.unshift([file, spec, runner])
         end
+
+        # push run all specs to end of queue in correct order
+        ensure_all_specs_will_run(runner)
       end
       puts "@@@@@@@@@@@@ specs queued" if @debug
       puts "@@@@@@@@@@@@ #{@queue}" if @debug
