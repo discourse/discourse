@@ -225,8 +225,7 @@ describe Jobs::UserEmail do
       context 'max_emails_per_day_per_user limit is reached' do
         before do
           SiteSetting.max_emails_per_day_per_user = 2
-          user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
-          user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+          2.times { Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email) }
         end
 
         it "does not send notification if limit is reached" do

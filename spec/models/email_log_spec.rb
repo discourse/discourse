@@ -14,7 +14,7 @@ describe EmailLog do
       user = post.user
 
       # skipped emails do not matter
-      user.email_logs.create(email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id, skipped: true)
+      Fabricate(:email_log, user: user, email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id, skipped: true)
 
 
       ran = EmailLog.unique_email_per_post(post, user) do
@@ -23,7 +23,7 @@ describe EmailLog do
 
       expect(ran).to eq(true)
 
-      user.email_logs.create(email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id)
+      Fabricate(:email_log, user: user, email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id)
 
       ran = EmailLog.unique_email_per_post(post, user) do
         true
@@ -45,7 +45,7 @@ describe EmailLog do
 
       it "doesn't update last_emailed_at if skipped is true" do
         expect {
-          user.email_logs.create(email_type: 'blah', to_address: user.email, skipped: true)
+          Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, skipped: true)
           user.reload
         }.to_not change { user.last_emailed_at }
       end
@@ -55,20 +55,20 @@ describe EmailLog do
   describe '#reached_max_emails?' do
     before do
       SiteSetting.max_emails_per_day_per_user = 2
-      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, skipped: true)
-      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
-      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, created_at: 3.days.ago)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id, skipped: true)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id, created_at: 3.days.ago)
     end
 
     it "tracks when max emails are reached" do
       expect(EmailLog.reached_max_emails?(user)).to eq(false)
 
-      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id)
       expect(EmailLog.reached_max_emails?(user)).to eq(true)
     end
 
     it "returns false for critical email" do
-      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, user_id: user.id)
       expect(EmailLog.reached_max_emails?(user, 'forgot_password')).to eq(false)
       expect(EmailLog.reached_max_emails?(user, 'confirm_new_email')).to eq(false)
     end
@@ -76,8 +76,8 @@ describe EmailLog do
 
   describe '#count_per_day' do
     it "counts sent emails" do
-      user.email_logs.create(email_type: 'blah', to_address: user.email)
-      user.email_logs.create(email_type: 'blah', to_address: user.email, skipped: true)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email)
+      Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email, skipped: true)
       expect(described_class.count_per_day(1.day.ago, Time.now).first[1]).to eq 1
     end
   end
