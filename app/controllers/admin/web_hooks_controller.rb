@@ -100,7 +100,7 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def ping
-    Jobs.enqueue(:emit_web_hook_event, web_hook_id: @web_hook.id, event_type: 'ping')
+    Jobs.enqueue(:emit_web_hook_event, web_hook_id: @web_hook.id, event_type: 'ping', event_name: 'ping')
     render json: success_json
   end
 
