@@ -1,3 +1,6 @@
 //= depend_on 'client.fr.yml'
 //= require locales/i18n
 <%= JsLocaleHelper.output_locale(:fr) %>
+I18n.pluralizationRules['fr'] = function (n) {
+   return "other";
+};
