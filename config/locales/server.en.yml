@@ -2772,6 +2772,9 @@ en:
     base_theme_name: "Base"
     default: "Light Scheme"
     dark: "Dark Scheme"
+    default_theme_name: "Default"
+    dark_theme_name: "Dark"
+    light_theme_name: "Light"
 
   about: "About"
   guidelines: "Guidelines"

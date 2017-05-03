@@ -155,17 +155,14 @@ describe Wizard::StepUpdater do
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
-
-
         theme = Theme.find_by(key: SiteSetting.default_theme_key)
-        expect(theme.color_scheme_id).to eq(color_scheme.id)
-
+        expect(theme.color_scheme.base_scheme_id).to eq('dark')
       end
     end
 
     context "without an existing scheme" do
       it "creates the scheme" do
-        updater = wizard.create_updater('colors', base_scheme_id: 'dark')
+        updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
@@ -176,6 +173,8 @@ describe Wizard::StepUpdater do
 
         theme = Theme.find_by(key: SiteSetting.default_theme_key)
         expect(theme.color_scheme_id).to eq(color_scheme.id)
+
+        expect(Theme.where(user_selectable: true).count).to eq(2)
       end
     end
   end

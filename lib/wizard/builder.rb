@@ -114,8 +114,8 @@ class Wizard
       end
 
       @wizard.append_step('colors') do |step|
-        scheme_id = ColorScheme.where(via_wizard: true).pluck(:base_scheme_id)&.first
-        scheme_id ||= 'default'
+        default_theme = Theme.find_by(key: SiteSetting.default_theme_key)
+        scheme_id = default_theme&.color_scheme&.base_scheme_id || 'default'
 
         themes = step.add_field(id: 'base_scheme_id', type: 'dropdown', required: true, value: scheme_id)
         ColorScheme.base_color_scheme_colors.each do |t|
@@ -128,37 +128,28 @@ class Wizard
         step.on_update do |updater|
           scheme_name = updater.fields[:base_scheme_id]
 
-          theme = ColorScheme.base_color_schemes.find{|s| s.base_scheme_id == scheme_name}
+          theme = nil
 
-          colors = []
-          theme.colors.each do |color|
-            colors << {name: color.name, hex: color.hex }
-          end
+          if scheme_name == "dark"
+            scheme = ColorScheme.find_by(base_scheme_id: 'dark', via_wizard: true)
 
-          attrs = {
-            name: I18n.t("wizard.step.colors.fields.theme_id.choices.#{scheme_name}.label"),
-            colors: colors,
-            base_scheme_id: scheme_name
-          }
+            name = I18n.t("wizard.step.colors.fields.theme_id.choices.dark.label")
+            scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: "dark")
 
-          scheme = ColorScheme.where(via_wizard: true).first
-          if scheme.present?
-            attrs[:colors] = colors
-            revisor = ColorSchemeRevisor.new(scheme, attrs)
-            revisor.revise
+            theme = Theme.find_by(color_scheme_id: scheme.id)
+            name = I18n.t('color_schemes.dark_theme_name')
+            theme ||= Theme.create(name: name, color_scheme_id: scheme.id)
           else
-            attrs[:via_wizard] = true
-            scheme = ColorScheme.new(attrs)
-            scheme.save!
+
+            themes = Theme.where(color_scheme_id: nil).order(:id).to_a
+            theme = themes.find(&:default?)
+            theme ||= themes.first
+
+            name = I18n.t('color_schemes.light_theme_name')
+            theme ||= Theme.create(name: name)
           end
 
-          default_theme = Theme.find_by(key: SiteSetting.default_theme_key)
-          unless default_theme
-            default_theme = Theme.new(name: "Default Theme", user_id: -1)
-          end
-          default_theme.color_scheme_id = scheme.id
-          default_theme.save!
-          SiteSetting.default_theme_key = default_theme.key
+          theme.set_default!
         end
       end
 

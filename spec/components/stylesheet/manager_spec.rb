@@ -4,6 +4,7 @@ require 'stylesheet/compiler'
 describe Stylesheet::Manager do
 
   it 'does not crash for missing theme' do
+    Theme.clear_default!
     link = Stylesheet::Manager.stylesheet_link_tag(:embedded_theme)
     expect(link).to eq("")
 

@@ -12,7 +12,11 @@ describe Admin::ThemesController do
     end
 
     context ' .index' do
-      it 'returns success' do
+      it 'correctly returns themes' do
+
+        ColorScheme.destroy_all
+        Theme.destroy_all
+
         theme = Theme.new(name: 'my name', user_id: -1)
         theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
         theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
