@@ -190,6 +190,5 @@ gem 'sassc', require: false
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
-  gem 'php_serialize'
   gem 'redcarpet'
 end
