@@ -1,0 +1,11 @@
+hu_HU:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Szavazati lehetőségek"
+  poll:
+    must_contain_poll_options: "tartalmaznia kell egy listát a szavazati lehetőségekről"
+    cannot_have_modified_options: "nem lehet módosítani az első öt perc után. Vedd fel a kapcsolatot egy moderátorral, amennyiben meg szeretnéd változtatni őket."
+    cannot_add_or_remove_options: "csak szerkeszteni lehet, hozzáadni vagy kitörölni nem. Amennyiben hozzá szeretnél adni, vagy letörölni lehetőségeket, le kell zárnod ezt a témát és egy újjat kell indítanod."
+    prefix: "Szavazás"
+    closed_prefix: "Lezárt szavazás"
