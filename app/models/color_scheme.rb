@@ -112,15 +112,8 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.lookup_hex_for_name(name)
-    Discourse.plugin_themes.each do |pt|
-      if pt.color_scheme
-        found = pt.color_scheme[name.to_sym]
-        return found if found
-      end
-    end
-
-    # Can't use `where` here because base doesn't allow it
-    (base).colors.find {|c| c.name == name }.try(:hex) || :nil
+    enabled_color_scheme = Theme.where(key: SiteSetting.default_theme_key).first&.color_scheme
+    (enabled_color_scheme || base).colors.find {|c| c.name == name }.try(:hex) || :nil
   end
 
   def self.hex_for_name(name)

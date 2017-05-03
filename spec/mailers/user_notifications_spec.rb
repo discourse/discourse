@@ -244,6 +244,26 @@ describe UserNotifications do
         expect(html).to_not include hidden.raw
         expect(html).to_not include user_deleted.raw
       end
+
+      it "uses theme color" do
+        cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
+          Fabricate(:color_scheme_color, name: 'header_primary',  hex: 'F0F0F0'),
+          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
+          Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
+        ])
+        theme = Theme.create!(
+          name: 'my name',
+          user_id: Fabricate(:admin).id,
+          user_selectable: true,
+          color_scheme_id: cs.id
+        )
+        theme.set_default!
+
+        html = subject.html_part.body.to_s
+        expect(html).to include 'F0F0F0'
+        expect(html).to include '1E1E1E'
+        expect(html).to include '858585'
+      end
     end
 
   end
