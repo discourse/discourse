@@ -1,0 +1,50 @@
+<div class="control-group category-notifications">
+
+  <label class="control-label">{{i18n 'user.categories_settings'}}</label>
+
+  <div class="controls category-controls">
+    <label><span class="icon fa fa-exclamation-circle watching"></span> {{i18n 'user.watched_categories'}}</label>
+    {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
+  </div>
+  <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
+  <div class="controls">
+    <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
+  </div>
+
+  <div class="controls category-controls">
+    <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_categories'}}</label>
+    {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
+  </div>
+  <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
+  <div class="controls">
+    <a href="{{unbound model.trackingTopicsPath}}">{{i18n 'user.tracked_topics_link'}}</a>
+  </div>
+
+  <div class="controls category-controls">
+    <label><span class="icon fa fa-dot-circle-o watching-first-post"></span> {{i18n 'user.watched_first_post_categories'}}</label>
+    {{category-selector categories=model.watchedFirstPostCategories}}
+  </div>
+  <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
+
+  <div class="controls category-controls">
+    <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_categories'}}</label>
+    {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
+  </div>
+  <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
+  <div class="controls">
+    <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+  </div>
+
+</div>
+
+{{plugin-outlet name="user-preferences-categories"}}
+
+<br/>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+<div class="control-group save-button">
+  <div class="controls">
+    {{partial 'user/preferences/save-button'}}
+  </div>
+</div>

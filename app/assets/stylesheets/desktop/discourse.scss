@@ -101,6 +101,36 @@ body {
   }
 }
 
+body {
+  .form-vertical input, .form-vertical textarea, .form-vertical select,  .form-vertical .input-prepend, .form-vertical .input-append {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+
+  .form-vertical {
+    .control-group {
+      margin-bottom: 24px;
+      &:before {
+        display: table;
+        content: "";
+      }
+      &:after {
+        display: table;
+        content: "";
+        clear: both;
+      }
+    }
+    .control-label {
+      font-weight: bold;
+      font-size: 1.2em;
+      line-height: 2;
+    }
+    .controls {
+      margin-left: 0;
+    }
+  }
+}
+
 /* bootstrap carryover */
 
 

@@ -102,7 +102,7 @@ h2#site-text-logo
 }
 
 .mobile-view .mobile-nav {
-  &.messages-nav, &.notifications-nav, &.activity-nav {
+  &.messages-nav, &.notifications-nav, &.activity-nav, &.preferences-nav {
     position: absolute;
     right: 0px;
     top: -55px;
@@ -187,4 +187,34 @@ h2.recent-topics-title {
 
 .page-not-found-search h2 {
   font-size: 1.2em;
+}
+
+
+
+.form-vertical {
+  input, textarea, select, .input-prepend, .input-append {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+
+  .control-group {
+    margin-bottom: 12px;
+    &:before {
+      display: table;
+      content: "";
+    }
+    &:after {
+      display: table;
+      content: "";
+      clear: both;
+    }
+  }
+  .control-label {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 2;
+  }
+  .controls {
+    margin-left: 0;
+  }
 }

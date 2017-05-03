@@ -1,0 +1,27 @@
+{{#if model.userApiKeys}}
+<div class="control-group apps">
+  <label class="control-label">{{i18n 'user.apps'}}</label>
+  <div class="controls">
+    {{#each model.userApiKeys as |key|}}
+    <div>
+      <span>{{key.application_name}}</span>
+      {{#if key.revoked}}
+        {{d-button action="undoRevokeApiKey" actionParam=key class="btn" label="user.undo_revoke_access"}}
+      {{else}}
+        {{d-button action="revokeApiKey" actionParam=key class="btn" label="user.revoke_access"}}
+      {{/if}}
+      <p>
+        <ul>
+          {{#each key.scopes as |scope|}}
+          <li>{{scope}}</li>
+          {{/each}}
+        </ul>
+      </p>
+      <p><span>{{i18n "user.api_approved"}}</span> {{bound-date key.created_at}}</p>
+    </div>
+    {{/each}}
+  </div>
+</div>
+{{/if}}
+
+{{plugin-outlet name="user-preferences-apps"}}

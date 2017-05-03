@@ -660,6 +660,16 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
+      preferences_nav:
+        account: "Account"
+        profile: "Profile"
+        emails: "Emails"
+        notifications: "Notifications"
+        categories: "Categories"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Apps"
+
       change_password:
         success: "(email sent)"
         in_progress: "(sending email)"
