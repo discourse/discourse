@@ -143,9 +143,14 @@ class HtmlToMarkdown
   end
 
   def visit_a(node)
-    @stack[-1].markdown << "["
-    traverse(node)
-    @stack[-1].markdown << "](#{node["href"]})"
+    href = node["href"]
+    if href.present? && (href.start_with?("http") || href.start_with?("www."))
+      @stack[-1].markdown << "["
+      traverse(node)
+      @stack[-1].markdown << "](#{href})"
+    else
+      traverse(node)
+    end
   end
 
   def visit_tt(node)
