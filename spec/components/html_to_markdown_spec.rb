@@ -21,6 +21,10 @@ describe HtmlToMarkdown do
     )).to eq("Hello,\n\nThis is the 1st paragraph.\n\nThis is another paragraph")
   end
 
+  it "skips hidden tags" do
+    expect(html_to_markdown(%Q{<p>Hello <span style="display: none">cruel </span>World!</p>})).to eq("Hello World!")
+  end
+
   it "converts <strong>" do
     expect(html_to_markdown("<strong>Strong</strong>")).to eq("**Strong**")
     expect(html_to_markdown("<strong>Str*ng</strong>")).to eq("__Str*ng__")

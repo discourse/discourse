@@ -37,6 +37,8 @@ class HtmlToMarkdown
   end
 
   def visit(node)
+    return if node["style"] && node["style"][/display[[:space:]]*:[[:space:]]*none/]
+
     if node.description&.block? && node.parent&.description&.block? && @stack[-1].markdown.size > 0
       block = @stack[-1].dup
       @markdown << format_block
