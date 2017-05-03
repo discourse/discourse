@@ -7,6 +7,20 @@ describe HtmlToMarkdown do
     HtmlToMarkdown.new(html).to_markdown
   end
 
+  it "remove whitespaces" do
+    expect(html_to_markdown(<<-HTML
+      <div dir="auto">Hello,
+        <div dir="auto"><br></div>
+        <div dir="auto">&nbsp; &nbsp; This is the 1st paragraph.&nbsp; &nbsp; </div>
+        <div dir="auto"><br></div>
+        <div dir="auto">
+          &nbsp; &nbsp; &nbsp; &nbsp; This is another paragraph
+        </div>
+      </div>
+    HTML
+    )).to eq("Hello,\n\nThis is the 1st paragraph.\n\nThis is another paragraph")
+  end
+
   it "converts <strong>" do
     expect(html_to_markdown("<strong>Strong</strong>")).to eq("**Strong**")
     expect(html_to_markdown("<strong>Str*ng</strong>")).to eq("__Str*ng__")
