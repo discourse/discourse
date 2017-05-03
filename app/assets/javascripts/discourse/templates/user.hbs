@@ -184,6 +184,7 @@
       {{#if model.can_edit}}
         <li>{{#link-to 'preferences'}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}
+      {{plugin-outlet "user-profile-tabs" tagName="li"}}
     {{/mobile-nav}}
 
     <div class='user-table'>
