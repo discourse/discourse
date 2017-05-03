@@ -20,21 +20,21 @@
     <td>
       <h4 style="padding: 0 25px; margin: 10px 0;"><%= t('user_notifications.mailing_list.new_topics') %></h3>
       <ul>
-        <% @new_topic_posts.each do |topic, posts| %>
-          <%= mailing_list_topic(topic, posts.length) %>
+        <% @new_topics.each do |topic| %>
+          <%= mailing_list_topic(topic, topic.posts.length) %>
         <% end %>
       </ul>
       <h4 style="padding: 0 25px; margin: 10px 0;"><%= t('user_notifications.mailing_list.topic_updates') %></h3>
       <ul>
-        <% @existing_topic_posts.each do |topic, posts| %>
-          <%= mailing_list_topic(topic, posts.length) %>
+        <% @existing_topics.each do |topic| %>
+          <%= mailing_list_topic(topic, topic.posts.length) %>
         <% end %>
       </ul>
     </td>
   </tr>
 </table>
 <table style='width: 100%; background: #eee;' cellspacing='0' cellpadding='0'>
-  <% @posts_by_topic.each do |topic, posts| %>
+  <% @topics.each do |topic| %>
     <tr>
       <td>
         <h3 style='padding: 20px 20px 10px; margin: 0;'>
@@ -45,7 +45,7 @@
     <%- unless SiteSetting.private_email? %>
       <tr>
         <td style='border-left: 20px solid #eee; border-right: 20px solid #eee; border-bottom: 10px solid #eee; padding: 10px 10px; background: #fff;'>
-          <% posts.each do |post| %>
+          <% topic.posts.each do |post| %>
             <div>
               <img style="float: left; width: 20px; padding-right: 5px;" src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
               <p style="font-size: 15px; color: #888">
