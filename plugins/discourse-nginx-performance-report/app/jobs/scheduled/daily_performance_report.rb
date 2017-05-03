@@ -10,7 +10,7 @@ module Jobs
 
         report_data =
           if result.strip.empty?
-            <<~TEXT
+            <<-TEXT
             Report is only available in latest image, please run:
 
             ```text
