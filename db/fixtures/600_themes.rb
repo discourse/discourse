@@ -3,7 +3,7 @@ if !Theme.exists?
   STDERR.puts "> Seeding dark and light themes"
 
   name = I18n.t("wizard.step.colors.fields.theme_id.choices.dark.label")
-  dark_scheme = ColorScheme.where.find_by(base_scheme_id: "dark")
+  dark_scheme = ColorScheme.find_by(base_scheme_id: "dark")
   dark_scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: "dark")
 
   name = I18n.t('color_schemes.dark_theme_name')
