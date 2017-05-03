@@ -37,7 +37,7 @@ class HtmlToMarkdown
   end
 
   def visit(node)
-    return if node["style"] && node["style"][/display[[:space:]]*:[[:space:]]*none/]
+    return if node["style"] && node["style"][/display\s*:\s*none/]
 
     if node.description&.block? && node.parent&.description&.block? && @stack[-1].markdown.size > 0
       block = @stack[-1].dup
@@ -136,7 +136,7 @@ class HtmlToMarkdown
   end
 
   def visit_img(node)
-    if is_valid_url?(node["src"])
+    if is_valid_url?(node["src"]) && is_visible_img?(node)
       if @opts[:keep_img_tags]
         @stack[-1].markdown << node.to_html
       else
@@ -208,6 +208,13 @@ class HtmlToMarkdown
 
   def is_valid_url?(url)
     url.present? && (url.start_with?("http") || url.start_with?("www."))
+  end
+
+  def is_visible_img?(img)
+    return false if img["width"].present? && img["width"].to_i == 0
+    return false if img["height"].present? && img["height"].to_i == 0
+    return false if img["style"].present? && img["style"][/(width|height)\s*:\s*0/]
+    true
   end
 
 end
