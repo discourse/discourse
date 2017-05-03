@@ -228,7 +228,7 @@ module Email
 
       @fragment.css('[href]').each do |element|
         href = element['href']
-        if href =~ /^\/\/#{host}/
+        if href.start_with?("\/\/#{host}")
           element['href'] = "#{scheme}:#{href}"
         end
       end
@@ -260,8 +260,8 @@ module Email
 
     def strip_classes_and_ids
       @fragment.css('*').each do |element|
-        element.delete('class')
-        element.delete('id')
+        element.delete('class'.freeze)
+        element.delete('id'.freeze)
       end
     end
 
