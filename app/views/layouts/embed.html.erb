@@ -63,6 +63,19 @@
             }
           }
 
+          // Set html class
+          var params = location.href.split('?');
+          if ( params.length > 1 ) {
+            params = params[1].split('&');
+            for ( p in params ) {
+              var param = params[p].split('=');
+              if( param[0] == 'embed_class' ){
+                document.documentElement.className = param[1];
+              }
+            }
+          }
+
+
         };
 
       })();
