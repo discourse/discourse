@@ -35,6 +35,8 @@
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
 </div>
 
+{{plugin-outlet name="user-preferences-notifications"}}
+
 <br/>
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}

@@ -12,6 +12,7 @@
     {{#if model.userApiKeys}}
       <li class='no-glyph nav-apps'>{{#link-to 'preferences.apps'}}{{i18n 'user.preferences_nav.apps'}}{{/link-to}}</li>
     {{/if}}
+    {{plugin-outlet name="user-preferences-nav"}}
   {{/mobile-nav}}
 {{/d-section}}
 
