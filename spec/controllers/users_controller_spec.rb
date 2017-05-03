@@ -2008,6 +2008,12 @@ describe UsersController do
       expect(created[:username]).to be_blank
     end
 
+    it "redirects when the user is logged in" do
+      log_in(:user)
+      get :account_created
+      expect(response).to be_redirect
+    end
+
     context "when the user account is created" do
       before do
         session['user_created_message'] = "Donuts"
