@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class='badge-set-title {{if hiddenSetTitle 'hidden' ''}}'>
-      {{ partial 'user/badge-title' }}
+      {{badge-title selectableUserBadges=selectableUserBadges user=user }}
       <button></button>
     </div>
   </div>
