@@ -15,10 +15,10 @@ class HtmlToMarkdown
   def remove_whitespaces!
     @doc.traverse do |node|
       if node.is_a? Nokogiri::XML::Text
-        node.content = node.content.lstrip if node.previous_element&.description&.block?
-        node.content = node.content.lstrip if node.previous_element.nil? && node.parent.description&.block?
-        node.content = node.content.rstrip if node.next_element&.description&.block?
-        node.content = node.content.rstrip if node.next_element.nil? && node.parent.description&.block?
+        node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element&.description&.block?
+        node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && node.parent.description&.block?
+        node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element&.description&.block?
+        node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element.nil? && node.parent.description&.block?
         node.remove if node.content.empty?
       end
     end
