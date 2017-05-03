@@ -1,6 +1,17 @@
 require_dependency 'distributed_mutex'
 
 class EmailLog < ActiveRecord::Base
+  CRITICAL_EMAIL_TYPES ||= Set.new %w{
+    account_created
+    admin_login
+    confirm_new_email
+    confirm_old_email
+    forgot_password
+    notify_old_email
+    signup
+    signup_after_approval
+  }
+
   belongs_to :user
   belongs_to :post
   belongs_to :topic
@@ -29,7 +40,7 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.reached_max_emails?(user, email_type=nil)
-    return false if SiteSetting.max_emails_per_day_per_user == 0 || email_type == 'forgot_password'
+    return false if SiteSetting.max_emails_per_day_per_user == 0 || CRITICAL_EMAIL_TYPES.include?(email_type)
 
     count = sent.where('created_at > ?', 1.day.ago)
                 .where(user_id: user.id)

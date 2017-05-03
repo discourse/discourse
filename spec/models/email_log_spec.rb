@@ -67,9 +67,10 @@ describe EmailLog do
       expect(EmailLog.reached_max_emails?(user)).to eq(true)
     end
 
-    it "returns false for forgot_password email" do
+    it "returns false for critical email" do
       user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
       expect(EmailLog.reached_max_emails?(user, 'forgot_password')).to eq(false)
+      expect(EmailLog.reached_max_emails?(user, 'confirm_new_email')).to eq(false)
     end
   end
 
