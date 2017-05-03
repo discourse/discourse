@@ -20,11 +20,27 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
+    let originalModel;
+    if (PreloadStore.get("badge")) {
+      originalModel = PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
+    } else {
+      originalModel = Badge.findById(params.id);
+    };
+    let userBadgeModel = UserBadge.findByUsername(this.modelFor('user').get('username'));
+
+    const promises = {
+      originalModel: originalModel,
+      userBadgeModel: userBadgeModel
+    }
+
+    return rsvp.hash(promises);
+    /*
     if (PreloadStore.get("badge")) {
       return PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
     } else {
       return Badge.findById(params.id);
     }
+    */
   },
 
   afterModel(model, transition) {
@@ -43,7 +59,8 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    controller.set("model", model);
+    controller.set("model", model.originalModel);
+    controller.set("userBadgeModel", model.userBadgeModel);
     controller.set("userBadges", this.userBadges);
   }
 });

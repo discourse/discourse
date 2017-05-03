@@ -1,12 +1,17 @@
 import UserBadge from 'discourse/models/user-badge';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import BadgeSelectController from "discourse/mixins/badge-select-controller";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(BadgeSelectController, {
   queryParams: ['username'],
   noMoreBadges: false,
   userBadges: null,
   application: Ember.inject.controller(),
   hiddenSetTitle: true,
+
+  filteredList: function() {
+    return this.get('userBadgeModel').filterBy('badge.allow_title', true);
+  }.property('userBadgeModel'),
 
   @computed('username')
   user(username) {
