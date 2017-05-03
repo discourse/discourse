@@ -222,15 +222,22 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
-      it "does not send notification if limit is reached" do
-        SiteSetting.max_emails_per_day_per_user = 2
+      context 'max_emails_per_day_per_user limit is reached' do
+        before do
+          SiteSetting.max_emails_per_day_per_user = 2
+          user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+          user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+        end
 
-        user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
-        user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+        it "does not send notification if limit is reached" do
+          Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+        end
 
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
-
-        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+        it "sends forgot password email" do
+          Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, notification_id: notification.id, post_id: post.id)
+          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(0)
+        end
       end
 
       it "does not send notification if bounce threshold is reached" do
