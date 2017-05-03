@@ -16,6 +16,8 @@ const SERVER_SIDE_ONLY = [
   /^\/raw\/\d+/,
   /\.rss$/,
   /\.json$/,
+  /^\/viewtopic.php/,
+  /^\/viewforum.php/,
 ];
 
 export function rewritePath(path) {
