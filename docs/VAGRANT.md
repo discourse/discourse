@@ -49,7 +49,7 @@ vagrant ssh
 
 The discourse code is found in the /vagrant directory in the image.
 
-**Note to Windows users**: You cannot run ```vagrant ssh``` from a cmd prompt; you'll receive the error message:
+**Note to Windows users**: You cannot run ```vagrant ssh``` from a cmd prompt unless you already have `ssh` in your path provided by some other program installation (such as git). If you don't have `ssh` installed, you'll receive the error message:
 
 ```
 `vagrant ssh` isn't available on the Windows platform. You are still able
