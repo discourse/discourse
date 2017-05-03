@@ -185,7 +185,7 @@ class Notification < ActiveRecord::Base
         end
       end.take(count)
     else
-      []
+      Notification.none
     end
 
   end
