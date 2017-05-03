@@ -30,7 +30,6 @@ $user_card_background: $secondary;
   .card-content {
     padding: 12px 12px 0 12px;
     background: rgba($user_card_background, .85);
-    margin-top: 80px;
 
     &:after {
       content: '';
@@ -45,10 +44,6 @@ $user_card_background: $secondary;
 
   &.no-bg {
     min-height: 50px;
-
-    .card-content {
-      margin-top: 0;
-    }
   }
 
   .avatar-placeholder {
