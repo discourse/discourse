@@ -71,6 +71,13 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<img src="foo.bar">})).to eq("")
   end
 
+  it "skips hidden <img>" do
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" width=0>})).to eq("")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height="0">})).to eq("")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" style="width: 0">})).to eq("")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" style="height:0px">})).to eq("")
+  end
+
   (1..6).each do |n|
     it "converts <h#{n}>" do
       expect(html_to_markdown("<h#{n}>Header #{n}</h#{n}>")).to eq("#" * n + " Header #{n}")
