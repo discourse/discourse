@@ -126,6 +126,8 @@ Options:
 
 Do you want...
 
+* Lets Encrypt support for your Discourse install [Configure Lets Encrypt] (https://meta.discourse.org/t/setting-up-lets-encrypt-cert-with-discourse-docker/40709)
+
 * Users to log in *only* via your pre-existing website's registration system? [Configure Single-Sign-On](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045).
 
 - Users to log in via [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), or  [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)?
