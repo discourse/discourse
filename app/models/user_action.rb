@@ -265,7 +265,7 @@ SQL
 
         action
 
-      rescue ActiveRecord::RecordNotUnique
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::StatementInvalid
         # can happen, don't care already logged
         raise ActiveRecord::Rollback
       end
