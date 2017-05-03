@@ -20,7 +20,7 @@ module MemoryDiagnostics
 
     require 'objspace'
     diff = diff.map do |id|
-      ObjectSpace._id2ref(id) rescue nil
+      WeakRef.new(ObjectSpace._id2ref(id)) rescue nil
     end
     diff.compact!
 
@@ -31,8 +31,8 @@ module MemoryDiagnostics
     summary = {}
     diff.each do |obj|
       begin
-        summary[obj.class] ||= 0
-        summary[obj.class] += 1
+        summary[obj.__getobj__.class] ||= 0
+        summary[obj.__getobj__.class] += 1
       rescue
         # don't care
       end
