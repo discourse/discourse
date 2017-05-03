@@ -61,6 +61,12 @@ describe HtmlToMarkdown do
     expect(HtmlToMarkdown.new(HTML_WITH_IMG, keep_img_tags: true).to_markdown).to eq(HTML_WITH_IMG)
   end
 
+  it "removes empty & invalid <img>" do
+    expect(html_to_markdown(%Q{<img>})).to eq("")
+    expect(html_to_markdown(%Q{<img src="">})).to eq("")
+    expect(html_to_markdown(%Q{<img src="foo.bar">})).to eq("")
+  end
+
   (1..6).each do |n|
     it "converts <h#{n}>" do
       expect(html_to_markdown("<h#{n}>Header #{n}</h#{n}>")).to eq("#" * n + " Header #{n}")

@@ -134,20 +134,21 @@ class HtmlToMarkdown
   end
 
   def visit_img(node)
-    if @opts[:keep_img_tags]
-      @stack[-1].markdown << node.to_html
-    else
-      title = node["alt"].presence || node["title"].presence
-      @stack[-1].markdown << "![#{title}](#{node["src"]})"
+    if is_valid_url?(node["src"])
+      if @opts[:keep_img_tags]
+        @stack[-1].markdown << node.to_html
+      else
+        title = node["alt"].presence || node["title"].presence
+        @stack[-1].markdown << "![#{title}](#{node["src"]})"
+      end
     end
   end
 
   def visit_a(node)
-    href = node["href"]
-    if href.present? && (href.start_with?("http") || href.start_with?("www."))
+    if is_valid_url?(node["href"])
       @stack[-1].markdown << "["
       traverse(node)
-      @stack[-1].markdown << "](#{href})"
+      @stack[-1].markdown << "](#{node["href"]})"
     else
       traverse(node)
     end
@@ -201,6 +202,10 @@ class HtmlToMarkdown
     end
     @stack.pop
     (lines + [""]).join("\n")
+  end
+
+  def is_valid_url?(url)
+    url.present? && (url.start_with?("http") || url.start_with?("www."))
   end
 
 end
