@@ -7,11 +7,26 @@
 
   <div class='show-badge-details'>
     {{badge-card badge=model size="large" count=userBadges.grant_count}}
-    <div class='badge-grant-info'>
+    <div class='badge-grant-info {{if hiddenSetTitle '' 'hidden'}}'>
       <div>
         {{#if model.allow_title}}
           <div class='grant-info-item'>
             {{i18n 'badges.allow_title'}}
+
+            {{#if userBadges}}
+	            {{#each userBadges as |ub|}}
+	              {{d-button
+	                  class='btn btn-small pad-left no-text'
+	                  action='showSetUserTitle'
+	                  icon='pencil'
+	              }}
+
+	              {{#if model.allow_title }}
+	                {{#link-to 'preferences.badgeTitle' ub.user class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+	              {{/if}}
+	            {{/each}}
+          	{{/if}}
+
           </div>
         {{/if}}
         {{#if model.multiple_grant}}
@@ -20,6 +35,10 @@
           </div>
         {{/if}}
       </div>
+    </div>
+    <div class='badge-set-title {{if hiddenSetTitle 'hidden' ''}}'>
+      {{ partial 'user/badge-title' }}
+      <button></button>
     </div>
   </div>
 

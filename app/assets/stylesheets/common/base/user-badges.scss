@@ -228,6 +228,9 @@
     display: flex;
     align-items: center;
     margin-left: 1em;
+    &.hidden {
+      display: none;
+    }
   }
   .grant-info-item {
     margin-bottom: 1em;
