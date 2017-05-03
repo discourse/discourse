@@ -5,6 +5,11 @@ export default Ember.Component.extend({
   size: 'medium',
   classNameBindings: [':badge-card', 'size', 'badge.slug'],
 
+  @computed('badge.url', 'badge.has_badge')
+  url(url, hasBadge) {
+    return hasBadge ? `${url}?username=${this.currentUser.get('username_lower')}` : url;
+  },
+
   @computed('count', 'badge.grant_count')
   displayCount(count, grantCount) {
     if (count == null) { return grantCount; }
