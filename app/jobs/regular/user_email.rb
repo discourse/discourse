@@ -56,17 +56,6 @@ module Jobs
       quoted
     }
 
-    CRITICAL_EMAIL_TYPES ||= Set.new %w{
-      account_created
-      admin_login
-      confirm_new_email
-      confirm_old_email
-      forgot_password
-      notify_old_email
-      signup
-      signup_after_approval
-    }
-
     def message_for_email(user, post, type, notification, notification_type=nil, notification_data_hash=nil, email_token=nil, to_address=nil)
       set_skip_context(type, user.id, to_address || user.email, post.try(:id))
 
@@ -125,7 +114,7 @@ module Jobs
         return skip_message(I18n.t('email_log.exceeded_emails_limit'))
       end
 
-      if !CRITICAL_EMAIL_TYPES.include?(type.to_s) && user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+      if !EmailLog::CRITICAL_EMAIL_TYPES.include?(type.to_s) && user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
         return skip_message(I18n.t('email_log.exceeded_bounces_limit'))
       end
 

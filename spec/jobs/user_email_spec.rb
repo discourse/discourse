@@ -234,7 +234,7 @@ describe Jobs::UserEmail do
           expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
         end
 
-        it "sends forgot password email" do
+        it "sends critical email" do
           Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, notification_id: notification.id, post_id: post.id)
           expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(0)
         end
