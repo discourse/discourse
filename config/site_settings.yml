@@ -1034,6 +1034,8 @@ developer:
   wizard_enabled:
     default: true
     hidden: true
+  clean_up_redis_keys:
+    default: true
 
 embedding:
   feed_polling_enabled:
