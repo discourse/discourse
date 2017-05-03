@@ -150,7 +150,7 @@ GEM
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
-    mail (2.6.4)
+    mail (2.6.5)
       mime-types (>= 1.16, < 4)
     memory_profiler (0.9.7)
     message_bus (2.0.2)
