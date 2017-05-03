@@ -1,0 +1,48 @@
+<div class="control-group notifications">
+  <div class="controls controls-dropdown">
+    <label>{{i18n 'user.new_topic_duration.label'}}</label>
+    {{combo-box valueAttribute="value" content=considerNewTopicOptions value=model.user_option.new_topic_duration_minutes}}
+  </div>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n 'user.auto_track_topics'}}</label>
+    {{combo-box valueAttribute="value" content=autoTrackDurations value=model.user_option.auto_track_topics_after_msecs}}
+  </div>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n 'user.notification_level_when_replying'}}</label>
+    {{combo-box valueAttribute="value" content=notificationLevelsForReplying value=model.user_option.notification_level_when_replying}}
+  </div>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n 'user.like_notification_frequency.title'}}</label>
+    {{combo-box valueAttribute="value" content=likeNotificationFrequencies value=model.user_option.like_notification_frequency}}
+  </div>
+</div>
+
+<div class="control-group desktop-notifications">
+  <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
+  {{desktop-notification-config}}
+  <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
+</div>
+
+<div class="control-group muting">
+  <label class="control-label">{{i18n 'user.users'}}</label>
+  <div class="controls category-controls">
+    <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_users'}}</label>
+    {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+  </div>
+  <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
+</div>
+
+{{plugin-outlet name="user-preferences-notifications"}}
+
+<br/>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+<div class="control-group save-button">
+  <div class="controls">
+    {{partial 'user/preferences/save-button'}}
+  </div>
+</div>

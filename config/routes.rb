@@ -349,6 +349,14 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
     get({ "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: USERNAME_ROUTE_FORMAT } }.merge(index == 1 ? { as: :email_preferences } : {}))
     get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/profile" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/notifications" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/categories" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
     put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/preferences/about-me" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/preferences/badge_title" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}

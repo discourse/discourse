@@ -201,8 +201,9 @@ const User = RestModel.extend({
     return Discourse.User.create(this.getProperties(Object.keys(this)));
   },
 
-  save() {
-    const data = this.getProperties(
+  save(fields) {
+
+    let userFields = [
       'bio_raw',
       'website',
       'location',
@@ -217,43 +218,55 @@ const User = RestModel.extend({
       'tracked_tags',
       'watched_tags',
       'watching_first_post_tags',
-      'date_of_birth');
+      'date_of_birth'
+    ];
 
-    ['email_always',
-     'mailing_list_mode',
-     'mailing_list_mode_frequency',
-     'external_links_in_new_tab',
-     'email_digests',
-     'email_direct',
-     'email_in_reply_to',
-     'email_private_messages',
-     'email_previous_replies',
-     'dynamic_favicon',
-     'enable_quoting',
-     'disable_jump_reply',
-     'automatically_unpin_topics',
-     'digest_after_minutes',
-     'new_topic_duration_minutes',
-     'auto_track_topics_after_msecs',
-     'notification_level_when_replying',
-     'like_notification_frequency',
-     'include_tl0_in_digests'
-    ].forEach(s => {
+    const data = this.getProperties(fields ? _.intersection(userFields, fields) : userFields);
+
+    let userOptionFields = [
+      'email_always',
+      'mailing_list_mode',
+      'mailing_list_mode_frequency',
+      'external_links_in_new_tab',
+      'email_digests',
+      'email_direct',
+      'email_in_reply_to',
+      'email_private_messages',
+      'email_previous_replies',
+      'dynamic_favicon',
+      'enable_quoting',
+      'disable_jump_reply',
+      'automatically_unpin_topics',
+      'digest_after_minutes',
+      'new_topic_duration_minutes',
+      'auto_track_topics_after_msecs',
+      'notification_level_when_replying',
+      'like_notification_frequency',
+      'include_tl0_in_digests'
+    ];
+
+    if (fields) {
+      userOptionFields = _.intersection(userOptionFields, fields);
+    }
+
+    userOptionFields.forEach(s => {
       data[s] = this.get(`user_option.${s}`);
     });
 
     var updatedState = {};
 
     ['muted','watched','tracked','watched_first_post'].forEach(s => {
-      let prop = s === "watched_first_post" ? "watchedFirstPostCategories" : s + "Categories";
-      let cats = this.get(prop);
-      if (cats) {
-        let cat_ids = cats.map(c => c.get('id'));
-        updatedState[s + '_category_ids'] = cat_ids;
+      if (fields === undefined || fields.includes(s + '_category_ids')) {
+        let prop = s === "watched_first_post" ? "watchedFirstPostCategories" : s + "Categories";
+        let cats = this.get(prop);
+        if (cats) {
+          let cat_ids = cats.map(c => c.get('id'));
+          updatedState[s + '_category_ids'] = cat_ids;
 
-        // HACK: denote lack of categories
-        if (cats.length === 0) { cat_ids = [-1]; }
-        data[s + '_category_ids'] = cat_ids;
+          // HACK: denote lack of categories
+          if (cats.length === 0) { cat_ids = [-1]; }
+          data[s + '_category_ids'] = cat_ids;
+        }
       }
     });
 

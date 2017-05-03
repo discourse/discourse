@@ -1,0 +1,63 @@
+<div class="control-group pref-username">
+  <label class="control-label">{{i18n 'user.username.title'}}</label>
+  <div class="controls">
+    <span class='static'>{{model.username}}</span>
+    {{#if model.can_edit_username}}
+      {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+    {{/if}}
+  </div>
+  <div class='instructions'>
+    {{{i18n 'user.username.short_instructions' username=model.username}}}
+  </div>
+</div>
+
+{{#if canCheckEmails}}
+  <div class="control-group pref-email">
+    <label class="control-label">{{i18n 'user.email.title'}}</label>
+    {{#if model.email}}
+      <div class="controls">
+        <span class='static'>{{model.email}}</span>
+        {{#if model.can_edit_email}}
+          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+        {{/if}}
+      </div>
+      <div class='instructions'>
+        {{i18n 'user.email.instructions'}}
+      </div>
+    {{else}}
+      <div class="controls">
+        {{d-button action="checkEmail" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if canChangePassword}}
+<div class="control-group pref-password">
+  <label class="control-label">{{i18n 'user.password.title'}}</label>
+  <div class="controls">
+    <a href {{action "changePassword"}} class='btn'>
+      {{fa-icon "envelope"}}
+      {{#if model.no_password}}
+        {{i18n 'user.change_password.set_password'}}
+      {{else}}
+        {{i18n 'user.change_password.action'}}
+      {{/if}}
+    </a>
+    {{passwordProgress}}
+  </div>
+</div>
+{{/if}}
+
+{{plugin-outlet name="user-preferences-account"}}
+
+<br/>
+
+{{#if model.canDeleteAccount}}
+  <div class="control-group delete-account">
+    <br/>
+    <div class="controls">
+      {{d-button action="delete" disabled=deleteDisabled class="btn-danger" icon="trash-o" label="user.delete_account"}}
+    </div>
+  </div>
+{{/if}}
