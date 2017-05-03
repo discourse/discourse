@@ -122,6 +122,12 @@ Options:
     --docker-args              Extra arguments to pass when running docker
 ```
 
+### For example
+
+Stopping discourse
+
+    sudo ./launcher stop app
+
 ### Add More Discourse Features
 
 Do you want...
