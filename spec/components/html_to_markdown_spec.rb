@@ -31,6 +31,12 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<a href="https://www.discourse.org">Discourse</a>})).to eq("[Discourse](https://www.discourse.org)")
   end
 
+  it "removes empty & invalid <a>" do
+    expect(html_to_markdown(%Q{<a>Discourse</a>})).to eq("Discourse")
+    expect(html_to_markdown(%Q{<a href="">Discourse</a>})).to eq("Discourse")
+    expect(html_to_markdown(%Q{<a href="foo.bar">Discourse</a>})).to eq("Discourse")
+  end
+
   HTML_WITH_IMG ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
 
   it "converts <img>" do
