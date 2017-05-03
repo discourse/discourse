@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   noMoreBadges: false,
   userBadges: null,
   application: Ember.inject.controller(),
+  hiddenSetTitle: true,
 
   @computed('username')
   user(username) {
@@ -17,6 +18,11 @@ export default Ember.Controller.extend({
   @computed('username', 'model.grant_count', 'userBadges.grant_count')
   grantCount(username, modelCount, userCount) {
     return username ? userCount : modelCount;
+  },
+
+  @computed("model.has_title_badges")
+  canSelectTitle(hasTitleBadges) {
+    return this.siteSettings.enable_badges && hasTitleBadges;
   },
 
   actions: {
@@ -39,6 +45,9 @@ export default Ember.Controller.extend({
       }).finally(()=>{
         this.set('loadingMore', false);
       });
+    },
+    showSetUserTitle() {
+      return this.toggleProperty('hiddenSetTitle');
     }
   },
 

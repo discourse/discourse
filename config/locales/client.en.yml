@@ -1286,6 +1286,7 @@ en:
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
       topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge_allow_title: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p><p class='badge-allow-title'><span>This badge can be use as </span>title</p>"
 
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
