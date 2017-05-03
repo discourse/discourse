@@ -10,15 +10,37 @@ test("update some fields", () => {
     ok(exists('.user-preferences'), 'it shows the preferences');
   });
 
+  const savePreferences = () => {
+    click('.save-user');
+    ok(!exists('.saved-user'), "it hasn't been saved yet");
+    andThen(() => {
+      ok(exists('.saved-user'), 'it displays the saved message');
+    });
+  };
+
   click(".preferences-nav .nav-profile a");
-
   fillIn("#edit-location", "Westeros");
+  savePreferences();
 
-  click('.save-user');
-  ok(!exists('.saved-user'), "it hasn't been saved yet");
-  andThen(() => {
-    ok(exists('.saved-user'), 'it displays the saved message');
-  });
+  click(".preferences-nav .nav-emails a");
+  click(".pref-activity-summary input[type=checkbox]");
+  savePreferences();
+
+  click(".preferences-nav .nav-notifications a");
+  selectDropdown('.control-group.notifications select.combobox', 1440);
+  savePreferences();
+
+  click(".preferences-nav .nav-categories a");
+  fillIn('.category-controls .category-selector', 'faq');
+  savePreferences();
+
+  ok(!exists('.preferences-nav .nav-tags a'), "tags tab isn't there when tags are disabled");
+
+  click(".preferences-nav .nav-interface a");
+  click('.control-group.other input[type=checkbox]:first');
+  savePreferences();
+
+  ok(!exists('.preferences-nav .nav-apps a'), "apps tab isn't there when you have no authorized apps");
 });
 
 test("username", () => {
