@@ -136,7 +136,7 @@ class HtmlToMarkdown
   end
 
   def visit_img(node)
-    if is_valid_url?(node["src"]) && is_visible_img?(node)
+    if is_valid_src?(node["src"]) && is_visible_img?(node)
       if @opts[:keep_img_tags]
         @stack[-1].markdown << node.to_html
       else
@@ -147,7 +147,7 @@ class HtmlToMarkdown
   end
 
   def visit_a(node)
-    if is_valid_url?(node["href"])
+    if is_valid_href?(node["href"])
       @stack[-1].markdown << "["
       traverse(node)
       @stack[-1].markdown << "](#{node["href"]})"
@@ -206,14 +206,20 @@ class HtmlToMarkdown
     (lines + [""]).join("\n")
   end
 
-  def is_valid_url?(url)
-    url.present? && (url.start_with?("http") || url.start_with?("www."))
+  def is_valid_href?(href)
+    href.present? && (href.start_with?("http") || href.start_with?("www."))
+  end
+
+  def is_valid_src?(src)
+    return false if src.blank?
+    return true  if @opts[:keep_cid_imgs] && src.start_with?("cid:")
+    src.start_with?("http") || src.start_with?("www.")
   end
 
   def is_visible_img?(img)
-    return false if img["width"].present? && img["width"].to_i == 0
+    return false if img["width"].present?  && img["width"].to_i == 0
     return false if img["height"].present? && img["height"].to_i == 0
-    return false if img["style"].present? && img["style"][/(width|height)\s*:\s*0/]
+    return false if img["style"].present?  && img["style"][/(width|height)\s*:\s*0/]
     true
   end
 
