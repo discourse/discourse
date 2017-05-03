@@ -193,4 +193,10 @@ describe Upload do
     end
   end
 
+  describe '.generate_digest' do
+    it "should return the right digest" do
+      expect(Upload.generate_digest(image.path)).to eq('bc975735dfc6409c1c2aa5ebf2239949bcbdbd65')
+    end
+  end
+
 end
