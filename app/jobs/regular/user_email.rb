@@ -121,7 +121,7 @@ module Jobs
       email_args[:email_token] = email_token  if email_token.present?
       email_args[:new_email]   = user.email   if type.to_s == "notify_old_email"
 
-      if EmailLog.reached_max_emails?(user)
+      if EmailLog.reached_max_emails?(user, type.to_s)
         return skip_message(I18n.t('email_log.exceeded_emails_limit'))
       end
 

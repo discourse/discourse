@@ -53,17 +53,23 @@ describe EmailLog do
   end
 
   describe '#reached_max_emails?' do
-    it "tracks when max emails are reached" do
+    before do
       SiteSetting.max_emails_per_day_per_user = 2
       user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, skipped: true)
       user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
       user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, created_at: 3.days.ago)
+    end
 
+    it "tracks when max emails are reached" do
       expect(EmailLog.reached_max_emails?(user)).to eq(false)
 
       user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
-
       expect(EmailLog.reached_max_emails?(user)).to eq(true)
+    end
+
+    it "returns false for forgot_password email" do
+      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+      expect(EmailLog.reached_max_emails?(user, 'forgot_password')).to eq(false)
     end
   end
 

@@ -28,12 +28,12 @@ class EmailLog < ActiveRecord::Base
     end
   end
 
-  def self.reached_max_emails?(user)
-    return false if SiteSetting.max_emails_per_day_per_user == 0
+  def self.reached_max_emails?(user, email_type=nil)
+    return false if SiteSetting.max_emails_per_day_per_user == 0 || email_type == 'forgot_password'
 
     count = sent.where('created_at > ?', 1.day.ago)
-        .where(user_id: user.id)
-        .count
+                .where(user_id: user.id)
+                .count
 
     count >= SiteSetting.max_emails_per_day_per_user
   end
