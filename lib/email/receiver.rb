@@ -194,7 +194,7 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        markdown = HtmlToMarkdown.new(html, keep_img_tags: true).to_markdown
+        markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
         markdown = trim_discourse_markers(markdown)
         EmailReplyTrimmer.trim(markdown, true)
       end
@@ -573,8 +573,14 @@ module Email
           upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size, opts)
           if upload && upload.errors.empty?
             # try to inline images
-            if attachment.content_type.start_with?("image/") && options[:raw][/\[image: .+ \d+\]/]
-              options[:raw].sub!(/\[image: .+ \d+\]/, attachment_markdown(upload))
+            if attachment.content_type.start_with?("image/")
+              if options[:raw][attachment.url]
+                options[:raw].sub!(attachment.url, upload.url)
+              elsif options[:raw][/\[image:.*?\d+[^\]]*\]/i]
+                options[:raw].sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+              else
+                options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
+              end
             else
               options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
             end
