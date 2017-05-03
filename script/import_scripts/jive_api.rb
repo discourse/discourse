@@ -1,6 +1,5 @@
 require "nokogiri"
 require "htmlentities"
-require_relative "./../../lib/html_to_markdown.rb"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::JiveApi < ImportScripts::Base
@@ -21,6 +20,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
     import_users
     import_discussions
     import_posts
+    import_bookmarks
 
     mark_topics_as_solved
   end
@@ -54,7 +54,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
     puts "", "importing discussions & questions..."
 
     start_index = 0
-    fields = "fields=published,contentID,author.id,content.text,subject,viewCount,question,-resources,-author.resources"
+    fields = "fields=published,contentID,author.id,content.text,subject,viewCount,likeCount,question,-resources,-author.resources"
     filter = "&filter=creationDate(null,2017-01-01T00:00:00Z)"
 
     loop do
@@ -66,7 +66,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
           title: @htmlentities.decode(discussion["subject"]),
           raw: process_raw(discussion["content"]["text"]),
           user_id: user_id_from_imported_user_id(discussion["author"]["id"]) || Discourse::SYSTEM_USER_ID,
-          # category: discussion["question"] ? 5 : 21,
+          category: discussion["question"] ? 5 : 21,
           views: discussion["viewCount"],
           custom_fields: { import_id: discussion["contentID"] },
         }
@@ -74,7 +74,10 @@ class ImportScripts::JiveApi < ImportScripts::Base
         post_id = post_id_from_imported_post_id(topic[:id])
         parent_post = post_id ? Post.unscoped.find_by(id: post_id) : create_post(topic, topic[:id])
 
-        import_comments(discussion["contentID"], parent_post.topic_id) if parent_post
+        if parent_post&.id && parent_post&.topic_id
+          import_likes(discussion["contentID"], parent_post.id, parent_post.topic_id) if discussion["likeCount"].to_i > 0
+          import_comments(discussion["contentID"], parent_post.topic_id)
+        end
       end
 
       break if discussions["list"].size < POST_COUNT || discussions["links"].blank? || discussions["links"]["next"].blank?
@@ -82,9 +85,26 @@ class ImportScripts::JiveApi < ImportScripts::Base
     end
   end
 
+  def import_likes(discussion_id, post_id, topic_id)
+    start_index = 0
+    fields = "fields=id"
+
+    loop do
+      likes = get("contents/#{discussion_id}/likes?&count=#{USER_COUNT}&startIndex=#{start_index}", true)
+      likes["list"].each do |like|
+        next unless user_id = user_id_from_imported_user_id(like["id"])
+        next if PostAction.exists?(user_id: user_id, post_id: post_id, post_action_type_id: PostActionType.types[:like])
+        PostAction.act(User.find(user_id), Post.find(post_id), PostActionType.types[:like])
+      end
+
+      break if likes["list"].size < USER_COUNT || likes["links"].blank? || likes["links"]["next"].blank?
+      break unless start_index = likes["links"]["next"][/startIndex=(\d+)/, 1]
+    end
+  end
+
   def import_comments(discussion_id, topic_id)
     start_index = 0
-    fields = "fields=published,author.id,content.text,parent,answer,-resources,-author.resources"
+    fields = "fields=published,author.id,content.text,parent,answer,likeCount,-resources,-author.resources"
 
     loop do
       comments = get("messages/contents/#{discussion_id}?#{fields}&hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}")
@@ -107,7 +127,9 @@ class ImportScripts::JiveApi < ImportScripts::Base
           end
         end
 
-        create_post(post, post[:id])
+        if created_post = create_post(post, post[:id])
+          import_likes(discussion_id, created_post.id, topic_id) if comment["likeCount"].to_i > 0
+        end
       end
 
       break if comments["list"].size < POST_COUNT || comments["links"].blank? || comments["links"]["next"].blank?
@@ -137,7 +159,9 @@ class ImportScripts::JiveApi < ImportScripts::Base
           custom_fields: { import_id: post["contentID"], import_permalink: post["permalink"] },
         }
 
-        create_post(pp, pp[:id])
+        if created_post = create_post(pp, pp[:id])
+          import_likes(pp[:id], created_post.id, created_post.topic_id)
+        end
       end
 
       break if posts["list"].size < POST_COUNT || posts["links"].blank? || posts["links"]["next"].blank?
@@ -154,6 +178,27 @@ class ImportScripts::JiveApi < ImportScripts::Base
     post
   end
 
+  def import_bookmarks
+    puts "", "importing bookmarks..."
+
+    start_index = 0
+    fields = "fields=author.id,favoriteObject.id,-resources,-author.resources,-favoriteObject.resources"
+    filter = "&filter=creationDate(null,2017-01-01T00:00:00Z)"
+
+    loop do
+      favorites = get("contents?#{fields}&filter=type(favorite)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}")
+      favorites["list"].each do |favorite|
+        next unless user_id = user_id_from_imported_user_id(favorite["author"]["id"])
+        next unless post_id = post_id_from_imported_post_id(favorite["favoriteObject"]["id"])
+        next if PostAction.exists?(user_id: user_id, post_id: post_id, post_action_type_id: PostActionType.types[:bookmark])
+        PostAction.act(User.find(user_id), Post.find(post_id), PostActionType.types[:bookmark])
+      end
+
+      break if favorites["list"].size < POST_COUNT || favorites["links"].blank? || favorites["links"]["next"].blank?
+      break unless start_index = favorites["links"]["next"][/startIndex=(\d+)/, 1]
+    end
+  end
+
   def process_raw(raw)
     doc = Nokogiri::HTML.fragment(raw)
 
@@ -167,17 +212,17 @@ class ImportScripts::JiveApi < ImportScripts::Base
     doc.css("a.jive-link-profile-small").each { |a| a.replace("@#{a.content}") }
 
     # fix links
-    # doc.css("a[href]").each do |a|
-    #   if a["href"]["#{@base_uri}/docs/DOC-"]
-    #     a["href"] = a["href"][/#{Regexp.escape(@base_uri)}\/docs\/DOC-\d+/]
-    #   elsif a["href"][@base_uri]
-    #     a.replace(a.inner_html)
-    #   end
-    # end
+    doc.css("a[href]").each do |a|
+      if a["href"]["#{@base_uri}/docs/DOC-"]
+        a["href"] = a["href"][/#{Regexp.escape(@base_uri)}\/docs\/DOC-\d+/]
+      elsif a["href"][@base_uri]
+        a.replace(a.inner_html)
+      end
+    end
 
     html = doc.at(".jive-rendered-content").to_html
 
-    HtmlToMarkdown.new(html).to_markdown
+    HtmlToMarkdown.new(html, keep_img_tags: true).to_markdown
   end
 
   def mark_topics_as_solved
