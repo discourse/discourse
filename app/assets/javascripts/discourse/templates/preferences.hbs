@@ -1,8 +1,41 @@
-{{#d-section pageClass="user-preferences" class="user-content user-preferences"}}
+{{#d-section pageClass="user-preferences" class="user-navigation"}}
+
+  {{#mobile-nav class='user-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
+    <li class="noGlyph">
+      <a href="#general">
+        {{i18n 'category.general'}}
+      </a>
+    </li>
+    <li class="noGlyph">
+      <a href="#interface">
+        {{i18n 'user.interface'}}
+      </a>
+    </li>
+    <li class="noGlyph">
+      <a href="#bio">
+        {{i18n 'user.bio'}}
+      </a>
+    </li>
+    <li class="noGlyph">
+      <a href="#notifications">
+        {{i18n 'user.notifications'}}
+      </a>
+    </li>
+    <li class="noGlyph">
+      <a href="#forum">
+        {{i18n 'user.forum_behaviour'}}
+      </a>
+    </li>
+  {{/mobile-nav}}
+{{/d-section}}
+
+{{#d-section pageClass="user-preferences" class="user-right user-preferences"}}
 
   {{plugin-outlet name="above-user-preferences"}}
 
   <form class="form-horizontal">
+
+    <a name="general"></a>
 
     <div class="control-group save-button" id='save-button-top'>
       <div class="controls">
@@ -87,6 +120,8 @@
     </div>
     {{/if}}
 
+    <a name="interface"></a>
+
     <div class="control-group pref-avatar">
       <label class="control-label">{{i18n 'user.avatar.title'}}</label>
       <div class="controls">
@@ -132,6 +167,8 @@
       </div>
     {{/if}}
 
+    <a name="bio"></a>
+
     {{#if canChangeBio}}
     <div class="control-group pref-bio">
       <label class="control-label">{{i18n 'user.bio'}}</label>
@@ -169,6 +206,8 @@
         {{#link-to "preferences.card-badge" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
       </div>
     </div>
+
+    <a name="notifications"></a>
 
     <div class="control-group pref-email-settings">
       <label class="control-label">{{i18n 'user.email_settings'}}</label>
@@ -252,6 +291,8 @@
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.user_option.disable_jump_reply}}
       {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
     </div>
+
+    <a name="forum"></a>
 
     <div class="control-group category">
       <label class="control-label">{{i18n 'user.categories_settings'}}</label>

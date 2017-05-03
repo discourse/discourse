@@ -561,6 +561,8 @@ en:
       expand_profile: "Expand"
       bookmarks: "Bookmarks"
       bio: "About me"
+      interface: "Interface"
+      forum_behaviour: "Forum Behaviour"
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
