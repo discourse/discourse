@@ -302,14 +302,22 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
     end
 
-    it "supports attached images" do
+    it "supports attached images in TEXT part" do
       SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/Before\s+<img.+\s+After/m)
+      expect(topic.posts.last.raw).to match(/Before\s+<img.+>\s+After/)
+    end
+
+    it "supports attached images in HTML part" do
+      SiteSetting.queue_jobs = true
+      SiteSetting.incoming_email_prefer_html = true
+
+      expect { process(:inline_image) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to match(/\*\*Before\*\*\s+<img.+>\s+\*After\*/)
     end
 
     it "supports attachments" do
