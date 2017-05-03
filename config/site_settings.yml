@@ -481,7 +481,9 @@ posting:
     default: true
     client: true
   editing_grace_period: 300
-  post_edit_time_limit: 86400
+  post_edit_time_limit: 
+    default: 86400
+    max: 525600
   edit_history_visible_to_public:
     client: true
     default: true
