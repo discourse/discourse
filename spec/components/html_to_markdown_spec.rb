@@ -3,8 +3,8 @@ require 'html_to_markdown'
 
 describe HtmlToMarkdown do
 
-  def html_to_markdown(html)
-    HtmlToMarkdown.new(html).to_markdown
+  def html_to_markdown(html, opts={})
+    HtmlToMarkdown.new(html, opts).to_markdown
   end
 
   it "remove whitespaces" do
@@ -55,20 +55,26 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<a href="foo.bar">Discourse</a>})).to eq("Discourse")
   end
 
-  HTML_WITH_IMG ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
+  HTML_WITH_IMG     ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
+  HTML_WITH_CID_IMG ||= %Q{<img src="cid:ii_1525434659ddb4cb" alt="Discourse Logo">}
 
   it "converts <img>" do
     expect(html_to_markdown(HTML_WITH_IMG)).to eq("![Discourse Logo](https://www.discourse.org/logo.svg)")
   end
 
   it "keeps <img> with 'keep_img_tags'" do
-    expect(HtmlToMarkdown.new(HTML_WITH_IMG, keep_img_tags: true).to_markdown).to eq(HTML_WITH_IMG)
+    expect(html_to_markdown(HTML_WITH_IMG, keep_img_tags: true)).to eq(HTML_WITH_IMG)
   end
 
   it "removes empty & invalid <img>" do
     expect(html_to_markdown(%Q{<img>})).to eq("")
     expect(html_to_markdown(%Q{<img src="">})).to eq("")
     expect(html_to_markdown(%Q{<img src="foo.bar">})).to eq("")
+  end
+
+  it "keeps <img> with src='cid:' whith 'keep_cid_imgs'" do
+    expect(html_to_markdown(HTML_WITH_CID_IMG, keep_cid_imgs: true)).to eq("![Discourse Logo](cid:ii_1525434659ddb4cb)")
+    expect(html_to_markdown(HTML_WITH_CID_IMG, keep_img_tags: true, keep_cid_imgs: true)).to eq("<img src=\"cid:ii_1525434659ddb4cb\" alt=\"Discourse Logo\">")
   end
 
   it "skips hidden <img>" do
