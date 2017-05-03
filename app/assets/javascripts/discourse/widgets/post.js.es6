@@ -25,9 +25,9 @@ export function avatarImg(wanted, attrs) {
 }
 
 export function avatarFor(wanted, attrs) {
-  return h('a', {
+  return h('span', {
     className: `trigger-user-card ${attrs.className || ''}`,
-    attributes: { href: attrs.url, 'data-user-card': attrs.username }
+    attributes: { 'data-user-card': attrs.username }
   }, avatarImg(wanted, attrs));
 }
 

@@ -133,14 +133,14 @@ widgetTest('like count button', {
     click('button.like-count');
     andThen(() => {
       assert.ok(this.$('.who-liked').length === 1);
-      assert.ok(this.$('.who-liked a.trigger-user-card').length === 1);
+      assert.ok(this.$('.who-liked span.trigger-user-card').length === 1);
     });
 
     // toggle it off
     click('button.like-count');
     andThen(() => {
       assert.ok(this.$('.who-liked').length === 0);
-      assert.ok(this.$('.who-liked a.trigger-user-card').length === 0);
+      assert.ok(this.$('.who-liked span.trigger-user-card').length === 0);
     });
   }
 });
