@@ -77,8 +77,6 @@ class Post < ActiveRecord::Base
 
     q.order('posts.created_at ASC')
   }
-  scope :mailing_list_new_topics, ->(user, since) { for_mailing_list(user, since).where('topics.created_at > ?', since) }
-  scope :mailing_list_updates,    ->(user, since) { for_mailing_list(user, since).where('topics.created_at <= ?', since) }
 
   delegate :username, to: :user
 

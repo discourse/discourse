@@ -80,10 +80,21 @@ class UserNotifications < ActionMailer::Base
     @since = opts[:since] || 1.day.ago
     @since_formatted = short_date(@since)
 
-    @new_topic_posts      = Post.mailing_list_new_topics(user, @since).group_by(&:topic) || {}
-    @existing_topic_posts = Post.mailing_list_updates(user, @since).group_by(&:topic) || {}
-    @posts_by_topic       = @new_topic_posts.merge @existing_topic_posts
-    return unless @posts_by_topic.present?
+    topics = Topic
+      .joins(:posts)
+      .includes(:posts)
+      .for_digest(user, 100.years.ago)
+      .where("posts.created_at > ?", @since)
+
+    unless user.staff?
+      topics = topics.where("posts.post_type <> ?", Post.types[:whisper])
+    end
+
+    @new_topics = topics.where("topics.created_at > ?", @since).uniq
+    @existing_topics = topics.where("topics.created_at <= ?", @since).uniq
+    @topics = topics.uniq
+
+    return if @topics.empty?
 
     build_summary_for(user)
     opts = {
@@ -93,6 +104,7 @@ class UserNotifications < ActionMailer::Base
       add_unsubscribe_link: true,
       unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
     }
+
     apply_notification_styles(build_email(@user.email, opts))
   end
 
