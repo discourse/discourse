@@ -128,6 +128,10 @@
   .posts {
     width: 65px;
   }
+  .category {
+    min-width: 80px;
+    text-align: center;
+  }
 
   .post-actions {
     clear: both;
@@ -147,7 +151,7 @@
     }
   }
   .activity {
-    width: 60px;
+    width: 65px;
     &:lang(zh_CN) {
       width: 80px;
     }
