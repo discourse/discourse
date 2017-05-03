@@ -59,8 +59,8 @@ createWidget('search-context', {
 
     if (!attrs.contextEnabled) {
       result.push(this.attach('link', { href: attrs.url,
-                                        label: 'show_help',
-                                        className: 'show-help' }));
+                                        label: 'open_advanced_search',
+                                        className: 'open-advanced-search' }));
     }
 
     result.push(h('div.clearfix'));

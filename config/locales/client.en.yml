@@ -208,7 +208,7 @@ en:
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "show more"
-    show_help: "options"
+    open_advanced_search: "Advanced Search"
     links: "Links"
     links_lowercase:
       one: "link"

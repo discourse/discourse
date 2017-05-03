@@ -17,7 +17,7 @@ test("search", (assert) => {
     assert.ok(exists('.search-menu .results ul li'), 'it shows results');
   });
 
-  click('.show-help');
+  click('.open-advanced-search');
 
   andThen(() => {
     assert.equal(find('.full-page-search').val(), 'dev', 'it shows the search term');
