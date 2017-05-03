@@ -533,6 +533,8 @@ class UsersController < ApplicationController
   end
 
   def account_created
+    return redirect_to("/") if current_user.present?
+
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
     @account_created = { message: @message }
