@@ -7,7 +7,7 @@ export default Ember.Component.extend({
 
   @computed('badge.url', 'filterUser')
   url(badgeUrl, filterUser) {
-    return (filterUser) ?
+    return (filterUser && this.currentUser) ?
       `${badgeUrl}?username=${this.currentUser.get('username_lower')}` :
       badgeUrl;
   },
