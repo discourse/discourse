@@ -148,7 +148,11 @@ module Email
         result['X-Discourse-Reply-Key'] = reply_key
         result['Reply-To'] = reply_by_email_address
       else
-        result['Reply-To'] = from_value
+      	if SiteSetting.email_reply_to.present?
+        	result['Reply-To'] = SiteSetting.email_reply_to
+        else 
+        	result['Reply-To'] = from_value
+        end
       end
 
       result.merge(MessageBuilder.custom_headers(SiteSetting.email_custom_headers))
