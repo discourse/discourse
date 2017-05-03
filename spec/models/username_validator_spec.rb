@@ -14,4 +14,27 @@ describe UsernameValidator do
       expect(UsernameValidator.new('not valid.name').valid_format?).to eq false
     end
   end
+
+  context ".perform_validation" do
+    subject { described_class.perform_validation(user, 'name') }
+
+    context "with a valid username" do
+      let(:user) { Fabricate(:user, name: 'valid_name') }
+      it 'returns nil' do
+        expect(subject).to eq nil
+      end
+
+      it 'does not add errors to the passed in user' do
+        expect(user.errors.messages).to eq({:email=>[]})
+      end
+    end
+
+    context "with an invalid username" do
+      let(:user) { Fabricate(:user, name: 'invalid name') }
+      it 'adds errors to the passed in user' do
+        expect(subject).to eq ["must only include numbers, letters and underscores"]
+        expect(user.errors.messages).to eq({:email=>[], :name=>["must only include numbers, letters and underscores"]})
+      end
+    end
+  end
 end
