@@ -68,8 +68,8 @@ const Topic = RestModel.extend({
   }.property('bumped_at', 'createdAt'),
 
   bumpedAtTitle: function() {
-    return I18n.t('first_post') + ": " + longDate(this.get('createdAt')) + "\n" +
-           I18n.t('last_post') + ": " + longDate(this.get('bumpedAt'));
+    return I18n.t('first_post') + " " + longDate(this.get('createdAt')) + "\n" +
+           I18n.t('last_post') + " " + longDate(this.get('bumpedAt'));
   }.property('bumpedAt'),
 
   createdAt: function() {

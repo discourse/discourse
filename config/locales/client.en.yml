@@ -967,10 +967,10 @@ en:
     week_desc: 'topics created in the last 7 days'
     day: 'day'
 
-    first_post: First post
+    first_post: "First post:"
     mute: Mute
     unmute: Unmute
-    last_post: Last post
+    last_post: "Last post:"
     last_reply_lowercase: last reply
     replies_lowercase:
       one: reply
