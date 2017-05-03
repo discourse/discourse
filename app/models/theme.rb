@@ -83,6 +83,10 @@ class Theme < ActiveRecord::Base
     Theme.expire_site_cache!
   end
 
+  def default?
+    SiteSetting.default_theme_key == key
+  end
+
   def self.lookup_field(key, target, field)
     return if key.blank?
 

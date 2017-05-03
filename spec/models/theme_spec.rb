@@ -152,6 +152,8 @@ HTML
   end
 
   it 'correctly caches theme keys' do
+    Theme.destroy_all
+
     theme = Theme.create!(name: "bob", user_id: -1)
 
     expect(Theme.theme_keys).to eq(Set.new([theme.key]))
