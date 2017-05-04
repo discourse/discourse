@@ -93,7 +93,7 @@ export default Ember.Component.extend({
       return true;
     });
 
-    $html.on('click.discoure-share-link', '[data-share-url]', e => {
+    $html.on('click.discoure-share-link', 'button[data-share-url]', e => {
       // if they want to open in a new tab, let it so
       if (wantsNewWindow(e)) { return true; }
 
