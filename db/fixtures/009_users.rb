@@ -49,7 +49,7 @@ ColumnDropper.drop(
       last_redirected_to_top_at
       auth_token
       auth_token_updated_at ],
-  on_remove: ->(){
+  on_drop: ->(){
     STDERR.puts 'Removing superflous users columns!'
   }
 )

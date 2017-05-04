@@ -1,5 +1,5 @@
 class ColumnDropper
-  def self.drop(table:, after_migration:, columns:, delay: nil, on_remove: nil)
+  def self.drop(table:, after_migration:, columns:, delay: nil, on_drop: nil)
     raise ArgumentError.new("Invalid table name passed to drop #{table}") if table =~ /[^a-z0-9_]/i
 
     columns.each do |column|
@@ -27,7 +27,7 @@ SQL
                                         columns: columns,
                                         delay: "#{delay.to_i || 0} seconds",
                                         after_migration: after_migration).to_a.length > 0
-        on_remove&.call
+        on_drop&.call
 
         columns.each do |column|
           # safe cause it is protected on method entry, can not be passed in params

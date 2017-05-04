@@ -30,7 +30,7 @@ describe ColumnDropper do
       after_migration: name,
       columns: ['junk'],
       delay: 20.minutes,
-      on_remove: ->(){dropped_proc_called = true}
+      on_drop: ->(){dropped_proc_called = true}
     )
 
     expect(has_column?('topics', 'junk')).to eq(true)
@@ -41,7 +41,7 @@ describe ColumnDropper do
       after_migration: name,
       columns: ['junk'],
       delay: 10.minutes,
-      on_remove: ->(){dropped_proc_called = true}
+      on_drop: ->(){dropped_proc_called = true}
     )
 
     expect(has_column?('topics', 'junk')).to eq(false)
