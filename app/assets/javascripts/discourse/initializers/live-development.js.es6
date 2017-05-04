@@ -7,22 +7,6 @@ export default {
   initialize(container) {
     const messageBus = container.lookup('message-bus:main');
 
-    // subscribe to any site customizations that are loaded
-    $('link.custom-css').each(function() {
-      const split = this.href.split("/"),
-          id = split[split.length - 1].split(".css")[0],
-          self = this;
-
-      return messageBus.subscribe("/file-change/" + id, function(data) {
-        if (!$(self).data('orig')) {
-          $(self).data('orig', self.href);
-        }
-        const orig = $(self).data('orig');
-
-        self.href = orig.replace(/v=.*/, "v=" + data);
-      });
-    });
-
     // Custom header changes
     $('header.custom').each(function() {
       const header = $(this);
