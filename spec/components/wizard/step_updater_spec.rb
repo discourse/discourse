@@ -160,6 +160,38 @@ describe Wizard::StepUpdater do
       end
     end
 
+    context "without an existing theme" do
+      before do
+        Theme.delete_all
+      end
+
+      context 'dark theme' do
+        it "creates the theme" do
+          updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
+
+          expect { updater.update }.to change { Theme.count }.by(1)
+
+          theme = Theme.last
+
+          expect(theme.user_id).to eq(wizard.user.id)
+          expect(theme.color_scheme.base_scheme_id).to eq('dark')
+        end
+      end
+
+      context 'light theme' do
+        it "creates the theme" do
+          updater = wizard.create_updater('colors', allow_dark_light_selection: true)
+
+          expect { updater.update }.to change { Theme.count }.by(1)
+
+          theme = Theme.last
+
+          expect(theme.user_id).to eq(wizard.user.id)
+          expect(theme.color_scheme).to eq(nil)
+        end
+      end
+    end
+
     context "without an existing scheme" do
       it "creates the scheme" do
         updater = wizard.create_updater('colors', base_scheme_id: 'dark', allow_dark_light_selection: true)
