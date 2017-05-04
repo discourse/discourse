@@ -117,6 +117,8 @@ class UserAvatarsController < ApplicationController
     else
       render_blank
     end
+  rescue OpenURI::HTTPError
+    render_blank
   end
 
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
