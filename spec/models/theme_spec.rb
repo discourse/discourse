@@ -23,6 +23,21 @@ describe Theme do
     expect(s.key).not_to eq(nil)
   end
 
+  it 'can properly clean up color schemes' do
+    theme = Theme.create!(name: 'bob', user_id: -1)
+    scheme = ColorScheme.create!(theme_id: theme.id, name: 'test')
+    scheme2 = ColorScheme.create!(theme_id: theme.id, name: 'test2')
+
+    Theme.create!(name: 'bob', user_id: -1, color_scheme_id: scheme2.id)
+
+    theme.destroy!
+    scheme2.reload
+
+    expect(scheme2).not_to eq(nil)
+    expect(scheme2.theme_id).to eq(nil)
+    expect(ColorScheme.find_by(id: scheme.id)).to eq(nil)
+  end
+
   it 'can support child themes' do
     child = Theme.new(name: '2', user_id: user.id)
 

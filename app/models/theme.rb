@@ -44,6 +44,18 @@ class Theme < ActiveRecord::Base
     if SiteSetting.default_theme_key == self.key
       Theme.clear_default!
     end
+
+    if self.id
+
+      ColorScheme
+        .where(theme_id: self.id)
+        .where("id NOT IN (SELECT color_scheme_id FROM themes where color_scheme_id IS NOT NULL)")
+               .destroy_all
+
+      ColorScheme
+        .where(theme_id: self.id)
+        .update_all(theme_id: nil)
+    end
   end
 
   after_commit ->(theme) do
