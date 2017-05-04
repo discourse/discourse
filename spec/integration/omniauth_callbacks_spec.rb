@@ -16,6 +16,13 @@ RSpec.describe "OmniAuth Callbacks" do
       SiteSetting.enable_google_oauth2_logins = true
     end
 
+    context "without an `omniauth.auth` env" do
+      it "should return a 404" do
+        get "/auth/eviltrout/callback"
+        expect(response).not_to be_success
+      end
+    end
+
     describe 'when user has been verified' do
       before do
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
