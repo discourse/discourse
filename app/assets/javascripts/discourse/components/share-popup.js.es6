@@ -39,7 +39,7 @@ export default Ember.Component.extend({
     } else {
       const $linkForTouch = $('#share-link .share-for-touch a');
       $linkForTouch.attr('href', link);
-      $linkForTouch.html(link);
+      $linkForTouch.text(link);
       const range = window.document.createRange();
       range.selectNode($linkForTouch[0]);
       window.getSelection().addRange(range);
