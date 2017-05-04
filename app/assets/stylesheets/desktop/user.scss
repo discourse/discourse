@@ -68,8 +68,8 @@
     }
   }
 
-  .category-notifications .controls, .tag-notifications .controls {
-    select {
+  .notifications, .category-notifications, .tag-notifications, .user-custom-preferences-outlet {
+    .controls select {
       width: 280px;
     }
   }
