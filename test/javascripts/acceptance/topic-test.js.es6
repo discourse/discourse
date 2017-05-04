@@ -21,6 +21,11 @@ test("Share Popup", () => {
   fillIn('.d-editor-input', '<h2><div data-share-url="something">Click</button><h2>');
 
   click('#reply-control .btn.create');
+
+  andThen(() => {
+    ok(find('.topic-post:last .cooked').text().trim() === 'Click', 'displays the right content');
+  });
+
   click('h2 div[data-share-url]');
 
   andThen(() => {
