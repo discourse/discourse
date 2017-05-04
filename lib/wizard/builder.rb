@@ -138,15 +138,14 @@ class Wizard
 
             theme = Theme.find_by(color_scheme_id: scheme.id)
             name = I18n.t('color_schemes.dark_theme_name')
-            theme ||= Theme.create(name: name, color_scheme_id: scheme.id)
+            theme ||= Theme.create(name: name, color_scheme_id: scheme.id, user_id: @wizard.user.id)
           else
-
             themes = Theme.where(color_scheme_id: nil).order(:id).to_a
             theme = themes.find(&:default?)
             theme ||= themes.first
 
             name = I18n.t('color_schemes.light_theme_name')
-            theme ||= Theme.create(name: name)
+            theme ||= Theme.create(name: name, user_id: @wizard.user.id)
           end
 
           theme.set_default!
