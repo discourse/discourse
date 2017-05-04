@@ -92,88 +92,88 @@ Adding Support for a new URL
 
   2. Create new onebox engine
 
-    ``` ruby
-    # in lib/onebox/engine/name_onebox.rb
+     ``` ruby
+     # in lib/onebox/engine/name_onebox.rb
 
-    module Onebox
-      module Engine
-        class NameOnebox
-          include LayoutSupport
-          include HTML
+     module Onebox
+       module Engine
+         class NameOnebox
+           include LayoutSupport
+           include HTML
 
-          private
+           private
 
-          def data
-            {
-              url: @url,
-              name: raw.css("h1").inner_text,
-              image: raw.css("#main-image").first["src"],
-              description: raw.css("#postBodyPS").inner_text
-            }
-          end
-        end
-      end
-    end
-    ```
+           def data
+             {
+               url: @url,
+               name: raw.css("h1").inner_text,
+               image: raw.css("#main-image").first["src"],
+               description: raw.css("#postBodyPS").inner_text
+             }
+           end
+         end
+       end
+     end
+     ```
 
   3. Create new onebox spec using [FakeWeb](https://github.com/chrisk/fakeweb)
 
-    ``` ruby
-    # in spec/lib/onebox/engine/name_spec.rb
-    require "spec_helper"
+     ``` ruby
+     # in spec/lib/onebox/engine/name_spec.rb
+     require "spec_helper"
 
-    describe Onebox::Engine::NameOnebox do
-      let(:link) { "http://example.com" }
-      let(:html) { described_class.new(link).to_html }
+     describe Onebox::Engine::NameOnebox do
+       let(:link) { "http://example.com" }
+       let(:html) { described_class.new(link).to_html }
 
-      before do
-        fake(link, response("name.response"))
-      end
+       before do
+         fake(link, response("name.response"))
+       end
 
-      it "has the video's title" do
-        expect(html).to include("title")
-      end
+       it "has the video's title" do
+         expect(html).to include("title")
+       end
 
-      it "has the video's still shot" do
-        expect(html).to include("photo.jpg")
-      end
+       it "has the video's still shot" do
+         expect(html).to include("photo.jpg")
+       end
 
-      it "has the video's description" do
-        expect(html).to include("description")
-      end
+       it "has the video's description" do
+         expect(html).to include("description")
+       end
 
-      it "has the URL to the resource" do
-        expect(html).to include(link)
-      end
-    end
-    ```
+       it "has the URL to the resource" do
+         expect(html).to include(link)
+       end
+     end
+     ```
 
   4. Create new mustache template
 
-    ``` html
-    # in templates/name.mustache
-    <div class="onebox">
-      <a href="{{url}}">
-        <h1>{{name}}</h1>
-        <h2 class="host">example.com</h2>
-        <img src="{{image}}" />
-        <p>{{description}}</p>
-      </a>
-    </div>
-    ```
+     ``` html
+     # in templates/name.mustache
+     <div class="onebox">
+       <a href="{{url}}">
+         <h1>{{name}}</h1>
+         <h2 class="host">example.com</h2>
+         <img src="{{image}}" />
+         <p>{{description}}</p>
+       </a>
+     </div>
+     ```
 
   5. Create new fixture from HTML response for your FakeWeb request(s)
 
-    ``` bash
-    curl --output spec/fixtures/oneboxname.response -L -X -GET http://example.com
-    ```
+     ``` bash
+     curl --output spec/fixtures/oneboxname.response -L -X -GET http://example.com
+     ```
 
   6. Require in Engine module
 
-    ``` ruby
-    # in lib/onebox/engine.rb
-    require_relative "engine/name_onebox"
-    ```
+     ``` ruby
+     # in lib/onebox/engine.rb
+     require_relative "engine/name_onebox"
+     ```
 
 
 Whitelisted Generic Onebox caveats
