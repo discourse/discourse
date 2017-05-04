@@ -18,6 +18,9 @@ test("update some fields", () => {
     });
   };
 
+  fillIn(".pref-name input[type=text]", "Jon Snow");
+  savePreferences();
+
   click(".preferences-nav .nav-profile a");
   fillIn("#edit-location", "Westeros");
   savePreferences();

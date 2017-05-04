@@ -11,6 +11,22 @@
   </div>
 </div>
 
+{{#if canEditName}}
+  <div class="control-group pref-name">
+    <label class="control-label">{{i18n 'user.name.title'}}</label>
+    <div class="controls">
+      {{#if model.can_edit_name}}
+        {{text-field value=newNameInput classNames="input-xxlarge"}}
+      {{else}}
+        <span class='static'>{{model.name}}</span>
+      {{/if}}
+    </div>
+    <div class='instructions'>
+      {{nameInstructions}}
+    </div>
+  </div>
+{{/if}}
+
 {{#if canCheckEmails}}
   <div class="control-group pref-email">
     <label class="control-label">{{i18n 'user.email.title'}}</label>
@@ -49,9 +65,39 @@
 </div>
 {{/if}}
 
+<div class="control-group pref-avatar">
+  <label class="control-label">{{i18n 'user.avatar.title'}}</label>
+  <div class="controls">
+    {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
+    {{bound-avatar model "huge"}}
+    {{#unless siteSettings.sso_overrides_avatar}}
+      {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
+    {{/unless}}
+  </div>
+</div>
+
+{{#if canSelectTitle}}
+  <div class="control-group pref-title">
+    <label class="control-label">{{i18n 'user.title.title'}}</label>
+    <div class="controls">
+      <span class="static">{{model.title}}</span>
+      {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+    </div>
+  </div>
+{{/if}}
+
 {{plugin-outlet name="user-preferences-account"}}
 
 <br/>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+<div class="control-group save-button">
+  <div class="controls">
+    {{partial 'user/preferences/save-button'}}
+  </div>
+</div>
+
 
 {{#if model.canDeleteAccount}}
   <div class="control-group delete-account">

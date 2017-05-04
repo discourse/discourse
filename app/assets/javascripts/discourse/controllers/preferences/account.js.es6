@@ -1,8 +1,16 @@
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
+import { setting } from 'discourse/lib/computed';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController, {
+
+  saveAttrNames: ['name'],
+
+  canEditName: setting('enable_names'),
+
+  newNameInput: null,
 
   passwordProgress: null,
 
@@ -16,11 +24,33 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
   },
 
   @computed()
+  nameInstructions() {
+    return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+  },
+
+  @computed("model.has_title_badges")
+  canSelectTitle(hasTitleBadges) {
+    return this.siteSettings.enable_badges && hasTitleBadges;
+  },
+
+  @computed()
   canChangePassword() {
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
   },
 
   actions: {
+    save() {
+      this.set('saved', false);
+
+      const model = this.get('model');
+
+      model.set('name', this.get('newNameInput'));
+
+      return model.save(this.get('saveAttrNames')).then(() => {
+        this.set('saved', true);
+      }).catch(popupAjaxError);
+    },
+
     changePassword() {
       if (!this.get('passwordProgress')) {
         this.set('passwordProgress', I18n.t("user.change_password.in_progress"));
