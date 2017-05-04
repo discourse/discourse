@@ -54,7 +54,7 @@ before_install:
   - eslint test/javascripts
 
 before_script:
-  - bash -c "if [ '$QUNIT_RUN' == '0' ]; then bundle exec rake db:create db:migrate; fi"
+  - bundle exec rake db:create db:migrate
 
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
