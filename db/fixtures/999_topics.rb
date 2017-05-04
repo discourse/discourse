@@ -78,7 +78,7 @@ ColumnDropper.drop(
     illegal_count
     notify_user_count
   },
-  on_remove: ->(){
+  on_drop: ->(){
     STDERR.puts "Removing superflous topic columns!"
   }
 )

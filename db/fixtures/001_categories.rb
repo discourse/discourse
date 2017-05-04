@@ -30,7 +30,7 @@ ColumnDropper.drop(
   table: 'categories',
   after_migration: 'AddUploadsToCategories',
   columns: ['logo_url', 'background_url'],
-  on_remove: ->(){
+  on_drop: ->(){
     STDERR.puts 'Removing superflous categories columns!'
   }
 )
