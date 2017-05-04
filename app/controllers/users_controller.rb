@@ -548,7 +548,11 @@ class UsersController < ApplicationController
 
     store_preloaded("accountCreated", MultiJson.dump(@account_created))
     expires_now
-    render "default/empty"
+
+    respond_to do |format|
+      format.html { render "default/empty" }
+      format.json { render json: success_json }
+    end
   end
 
   def activate_account
