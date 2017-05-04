@@ -1,13 +1,11 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
-import { setting } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { cook } from 'discourse/lib/text';
 
 export default Ember.Controller.extend(PreferencesTabController, {
 
   saveAttrNames: [
-    'name',
     'bio_raw',
     'website',
     'location',
@@ -17,20 +15,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
     'card_background',
     'date_of_birth'
   ],
-
-  canEditName: setting('enable_names'),
-
-  newNameInput: null,
-
-  @computed()
-  nameInstructions() {
-    return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
-  },
-
-  @computed("model.has_title_badges")
-  canSelectTitle(hasTitleBadges) {
-    return this.siteSettings.enable_badges && hasTitleBadges;
-  },
 
   @computed("model.user_fields.@each.value")
   userFields() {
