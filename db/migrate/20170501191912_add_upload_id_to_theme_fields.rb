@@ -2,6 +2,11 @@ class AddUploadIdToThemeFields < ActiveRecord::Migration
   def up
     remove_index :theme_fields, [:theme_id, :target, :name]
     rename_column :theme_fields, :target, :target_id
+
+    # we need a throwaway column here to keep running
+    add_column :theme_fields, :target, :integer
+    execute "UPDATE theme_fields SET target = target_id"
+
     change_column :theme_fields, :name, :string, null: false, limit: 30
 
     add_column :theme_fields, :upload_id, :integer
@@ -12,6 +17,7 @@ class AddUploadIdToThemeFields < ActiveRecord::Migration
   end
 
   def down
+    remove_column :theme_fields, :target
     execute 'drop index theme_field_unique_index'
     rename_column :theme_fields, :target_id, :target
     remove_column :theme_fields, :upload_id
