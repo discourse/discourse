@@ -639,7 +639,6 @@ SQL
 
   def add_moderator_post(user, text, opts=nil)
     opts ||= {}
-    new_post = nil
     creator = PostCreator.new(user,
                               raw: text,
                               post_type: opts[:post_type] || Post.types[:moderator_action],
