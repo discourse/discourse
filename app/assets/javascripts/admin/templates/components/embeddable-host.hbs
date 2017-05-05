@@ -2,6 +2,9 @@
   <td>
     {{input value=buffered.host placeholder="example.com" enter="save" class="host-name"}}
   </td>
+	<td>
+    {{input value=buffered.class_name placeholder="class" enter="save" class="class-name"}}
+	</td>
   <td>
     {{input value=buffered.path_whitelist placeholder="/blog/.*" enter="save" class="path-whitelist"}}
   </td>
@@ -14,6 +17,7 @@
   </td>
 {{else}}
   <td>{{host.host}}</td>
+  <td>{{host.class_name}}</td>
   <td>{{host.path_whitelist}}</td>
   <td>{{category-badge host.category}}</td>
   <td>
