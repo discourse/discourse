@@ -95,7 +95,7 @@ class Emoji
     CustomEmoji.order(:name).all.each do |emoji|
       result << Emoji.new.tap do |e|
         e.name = emoji.name
-        e.url = emoji.upload.url
+        e.url = emoji.upload&.url
       end
     end
 
