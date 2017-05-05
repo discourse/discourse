@@ -2663,7 +2663,7 @@ en:
         event_type_missing: "You need to set up at least one event type."
         content_type: "Content Type"
         secret: "Secret"
-        event_chooser: "Which events would you like to trigger this webhook?"
+        event_chooser: "Which events should trigger this webhook?"
         wildcard_event: "Send me everything."
         individual_event: "Select individual events."
         verify_certificate: "Check TLS certificate of payload url"
