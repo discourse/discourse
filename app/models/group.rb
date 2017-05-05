@@ -114,8 +114,8 @@ class Group < ActiveRecord::Base
 
     incoming_email.split("|").each do |email|
       escaped = Rack::Utils.escape_html(email)
-      self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: escaped))
       if !Email.is_valid?(email)
+        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: escaped))
       elsif group = Group.where.not(id: self.id).find_by_email(email)
         self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_group', email: escaped, group_name: Rack::Utils.escape_html(group.name)))
       elsif category = Category.find_by_email(email)
