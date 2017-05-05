@@ -315,6 +315,17 @@ describe PostMover do
 
       end
 
+      context "moving from a deleted topic" do
+        before do
+          topic.trash!
+        end
+
+        it "adds a moderator post at the location of the first moved post" do
+          topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+          expect(topic.posts).to include(a_moderator_post(post_number: 2, sort_order: 2))
+        end
+      end
+
       context "to an existing topic with a deleted post" do
         let!(:destination_topic) { Fabricate(:topic, user: user ) }
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }

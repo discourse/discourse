@@ -599,18 +599,14 @@ describe Topic do
       expect(topic.reload.moderator_posts_count).to eq(1)
     end
 
-    context "when moderator post fails to be created" do
-      before do
-        user.toggle!(:blocked)
-      end
+    it "creates a moderator post ignoring validations" do
+      user.toggle!(:blocked)
+      mod_post = topic.add_moderator_post(
+        user,
+        "Moderator did something. http://discourse.org",
+      )
 
-      it "should not increment moderator_posts_count" do
-        expect(topic.moderator_posts_count).to eq(0)
-
-        topic.add_moderator_post(user, "winter is never coming")
-
-        expect(topic.moderator_posts_count).to eq(0)
-      end
+      expect(mod_post).to be_present
     end
   end
 
