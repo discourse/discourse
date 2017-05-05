@@ -64,6 +64,12 @@ describe PostMover do
         topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
         expect(topic.posts).to include(a_moderator_post(post_number: 2, sort_order: 2))
       end
+
+      it "adds a moderator post even if it doesn't meet length requirements" do
+        SiteSetting.stubs(:min_post_length).returns(999)
+        topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+        expect(topic.reload.posts).to include(a_moderator_post)
+      end
     end
 
     context "errors" do

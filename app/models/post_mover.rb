@@ -157,7 +157,7 @@ class PostMover
 
     # We want to insert the moderator post where the previous posts were
     # in the stream, not at the end.
-    moderator_post.update_attributes!(post_number: @first_post_number_moved, sort_order: @first_post_number_moved) if @first_post_number_moved.present?
+    moderator_post.update_columns(post_number: @first_post_number_moved, sort_order: @first_post_number_moved) if @first_post_number_moved.present?
   end
 
   def posts
