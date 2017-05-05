@@ -650,13 +650,13 @@ SQL
                               skip_validations: true,
                               custom_fields: opts[:custom_fields])
 
-    if (new_post = creator.create) && new_post.present?
-      increment!(:moderator_posts_count) if new_post.persisted?
+    new_post = creator.create
 
-      # Grab any links that are present
-      TopicLink.extract_from(new_post)
-      QuotedPost.extract_from(new_post)
-    end
+    increment!(:moderator_posts_count) if new_post.persisted?
+
+    # Grab any links that are present
+    TopicLink.extract_from(new_post)
+    QuotedPost.extract_from(new_post)
 
     new_post
   end
