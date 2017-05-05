@@ -75,39 +75,6 @@ class UserNotifications < ActionMailer::Base
     end
   end
 
-  # This is the "mailing list summary email"
-  def mailing_list(user, opts={})
-    @since = opts[:since] || 1.day.ago
-    @since_formatted = short_date(@since)
-
-    topics = Topic
-      .joins(:posts)
-      .includes(:posts)
-      .for_digest(user, 100.years.ago)
-      .where("posts.created_at > ?", @since)
-
-    unless user.staff?
-      topics = topics.where("posts.post_type <> ?", Post.types[:whisper])
-    end
-
-    @new_topics = topics.where("topics.created_at > ?", @since).uniq
-    @existing_topics = topics.where("topics.created_at <= ?", @since).uniq
-    @topics = topics.uniq
-
-    return if @topics.empty?
-
-    build_summary_for(user)
-    opts = {
-      from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
-      subject: I18n.t('user_notifications.mailing_list.subject_template', email_prefix: @email_prefix, date: @date),
-      mailing_list_mode: true,
-      add_unsubscribe_link: true,
-      unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
-    }
-
-    apply_notification_styles(build_email(@user.email, opts))
-  end
-
   def digest(user, opts={})
     build_summary_for(user)
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
