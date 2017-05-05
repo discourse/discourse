@@ -79,11 +79,6 @@ describe Jobs::NotifyMailingListSubscribers do
         include_examples "no emails"
       end
 
-      context "to an user who has frequency set to 'daily'" do
-        before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 0) }
-        include_examples "no emails"
-      end
-
       context "to an user who has frequency set to 'always'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 1) }
         include_examples "one email"
