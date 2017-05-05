@@ -10,8 +10,8 @@ export default Ember.Controller.extend(BadgeSelectController, {
   hiddenSetTitle: true,
 
   filteredList: function() {
-    return this.get('userBadgeModel').filterBy('badge.allow_title', true);
-  }.property('userBadgeModel'),
+    return this.get('userBadgesAll').filterBy('badge.allow_title', true);
+  }.property('userBadgesAll'),
 
   @computed('username')
   user(username) {
@@ -51,7 +51,8 @@ export default Ember.Controller.extend(BadgeSelectController, {
         this.set('loadingMore', false);
       });
     },
-    showSetUserTitle() {
+
+    toggleSetUserTitle() {
       return this.toggleProperty('hiddenSetTitle');
     }
   },

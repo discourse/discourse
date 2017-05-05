@@ -20,35 +20,30 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    let originalModel;
-    if (PreloadStore.get("badge")) {
-      originalModel = PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
-    } else {
-      originalModel = Badge.findById(params.id);
-    };
-    let userBadgeModel = UserBadge.findByUsername(this.modelFor('user').get('username'));
-
-    const promises = {
-      originalModel: originalModel,
-      userBadgeModel: userBadgeModel
-    }
-
-    return rsvp.hash(promises);
-    /*
     if (PreloadStore.get("badge")) {
       return PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
     } else {
       return Badge.findById(params.id);
     }
-    */
   },
 
   afterModel(model, transition) {
-    const username = transition.queryParams && transition.queryParams.username;
+  	const username = transition.queryParams && transition.queryParams.username;
 
-    return UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
-      this.userBadges = userBadges;
+  	const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
+      this.userBadgesGrant = userBadges;
     });
+
+  	const userBadgesAll = UserBadge.findByUsername(username).then(userBadges => {
+      this.userBadgesAll = userBadges;
+    });
+
+    const promises = {
+	    userBadgesGrant,
+	    userBadgesAll
+	  };
+
+	  return Ember.RSVP.hash(promises);
   },
 
   titleToken() {
@@ -58,9 +53,10 @@ export default Discourse.Route.extend({
     }
   },
 
+
   setupController(controller, model) {
-    controller.set("model", model.originalModel);
-    controller.set("userBadgeModel", model.userBadgeModel);
-    controller.set("userBadges", this.userBadges);
+    controller.set("model", model);
+    controller.set("userBadges", this.userBadgesGrant);
+    controller.set("userBadgesAll", this.userBadgesAll);
   }
 });
