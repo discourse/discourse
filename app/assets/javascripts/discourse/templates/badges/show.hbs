@@ -12,21 +12,17 @@
         {{#if model.allow_title}}
           <div class='grant-info-item'>
             {{i18n 'badges.allow_title'}}
-
             {{#if userBadges}}
 	            {{#each userBadges as |ub|}}
-	              {{d-button
-	                  class='btn btn-small pad-left no-text'
-	                  action='showSetUserTitle'
-	                  icon='pencil'
-	              }}
-
 	              {{#if model.allow_title }}
-	                {{#link-to 'preferences.badgeTitle' ub.user class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+	                {{d-button
+	                    class='btn btn-small pad-left no-text'
+	                    action='toggleSetUserTitle'
+	                    icon='pencil'
+	                }}
 	              {{/if}}
 	            {{/each}}
-          	{{/if}}
-
+	          {{/if}}
           </div>
         {{/if}}
         {{#if model.multiple_grant}}
@@ -37,8 +33,8 @@
       </div>
     </div>
     <div class='badge-set-title {{if hiddenSetTitle 'hidden' ''}}'>
-      {{badge-title selectableUserBadges=selectableUserBadges user=user }}
-      <button></button>
+      {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+      <button class='btn btn-default close-btn' {{action "toggleSetUserTitle"}}>{{i18n 'close'}}</button>
     </div>
   </div>
 

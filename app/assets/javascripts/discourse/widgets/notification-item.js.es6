@@ -91,7 +91,7 @@ createWidget('notification-item', {
       }
     }
 
-    if (notificationType === GRANTED_BADGE && !data.badge_title) {
+    if (notificationType === GRANTED_BADGE && data.badge_title) {
       return I18n.t('notifications.granted_badge_allow_title', {description, username});
     }
 
