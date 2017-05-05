@@ -590,14 +590,11 @@ describe Topic do
     it 'creates a moderator post' do
       mod_post = topic.add_moderator_post(
         moderator,
-        "Moderator did something. http://discourse.org",
-        post_number: 999
+        "Moderator did something. http://discourse.org"
       )
 
       expect(mod_post).to be_present
       expect(mod_post.post_type).to eq(Post.types[:moderator_action])
-      expect(mod_post.post_number).to eq(999)
-      expect(mod_post.sort_order).to eq(999)
       expect(topic.topic_links.count).to eq(1)
       expect(topic.reload.moderator_posts_count).to eq(1)
     end

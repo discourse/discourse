@@ -146,15 +146,20 @@ class PostMover
   def create_moderator_post_in_original_topic
     move_type_str = PostMover.move_types[@move_type].to_s
 
-    original_topic.add_moderator_post(
+    moderator_post = original_topic.add_moderator_post(
       user,
       I18n.t("move_posts.#{move_type_str}_moderator_post",
              count: post_ids.count,
              topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})"),
       post_type: Post.types[:small_action],
-      action_code: "split_topic",
-      post_number: @first_post_number_moved
+      action_code: "split_topic"
     )
+
+    return unless moderator_post
+
+    # We want to insert the moderator post where the previous posts were
+    # in the stream, not at the end.
+    moderator_post.update_attributes!(post_number: @first_post_number_moved, sort_order: @first_post_number_moved) if @first_post_number_moved.present?
   end
 
   def posts
