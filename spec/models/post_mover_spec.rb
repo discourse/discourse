@@ -268,7 +268,6 @@ describe PostMover do
 
           # Check out the original topic
           topic.reload
-          expect(topic.posts_count).to eq(2)
           expect(topic.highest_post_number).to eq(3)
           expect(topic.featured_user1_id).to be_blank
           expect(topic.like_count).to eq(0)
