@@ -745,6 +745,20 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
+    context 'with an existing email' do
+      email = 'leo@m.ca'
+      let(:first_create_params) { {username: 'LeoMcA', email: email, password: '$up3r$3cure'} }
+      let(:second_create_params) { {username: 'notLeo', email: email, password: '$up3r$3cure2'} }
+
+      it 'should fail' do
+        expect { xhr :post, :create, first_create_params }.to change { User.count }.by(1)
+
+        xhr :post, :create, second_create_params
+        json = JSON::parse(response.body)
+        expect(json["message"]).to eq("Primary email is invalid")
+      end
+    end
+
     context 'when an Exception is raised' do
       [ ActiveRecord::StatementInvalid,
         RestClient::Forbidden ].each do |exception|
