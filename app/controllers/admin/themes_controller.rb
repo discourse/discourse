@@ -17,7 +17,7 @@ class Admin::ThemesController < Admin::AdminController
 
       @theme = Theme.new(name: theme["name"], user_id: current_user.id)
       theme["theme_fields"]&.each do |field|
-        @theme.set_field(field["target"], field["name"], field["value"])
+        @theme.set_field(target: field["target"], name: field["name"], value: field["value"])
       end
 
       if @theme.save

@@ -11,6 +11,26 @@ describe Admin::ThemesController do
       @user = log_in(:admin)
     end
 
+    context '.import' do
+      let(:theme_file) do
+        ActionDispatch::Http::UploadedFile.new({
+          filename: 'sam-s-simple-theme.dcstyle.json',
+          tempfile: file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json")
+        })
+      end
+
+      it 'imports a theme' do
+        xhr :post, :import, theme: theme_file
+        expect(response).to be_success
+
+        json = ::JSON.parse(response.body)
+
+        expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
+        expect(json["theme"]["theme_fields"].length).to eq(2)
+        expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+    end
+
     context ' .index' do
       it 'correctly returns themes' do
 
