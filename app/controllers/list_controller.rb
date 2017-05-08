@@ -110,10 +110,13 @@ class ListController < ApplicationController
   end
 
   def category_default
-    if @category.default_view == 'top'
+    view_method = @category.default_view
+    view_method = 'latest' unless %w(latest top).include?(view_method)
+
+    if view_method == 'top'
       top(category: @category.id)
     else
-      self.send(@category.default_view || 'latest')
+      self.send(view_method)
     end
   end
 
