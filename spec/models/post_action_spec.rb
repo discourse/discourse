@@ -147,6 +147,12 @@ describe PostAction do
       expect(PostAction.flagged_posts_count).to eq(0)
     end
 
+    it "should ignore flags on non-human users" do
+      post = create_post(user: Discourse.system_user)
+      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
+      expect(PostAction.flagged_posts_count).to eq(0)
+    end
+
     it "should ignore validated flags" do
       post = create_post
 

@@ -114,6 +114,7 @@ module FlagQuery
                              .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
                              .joins("INNER JOIN topics ON topics.id = posts.topic_id")
                              .joins("LEFT JOIN users ON users.id = posts.user_id")
+                             .where("posts.user_id > 0")
 
     if filter == "old"
       post_actions.where("post_actions.disagreed_at IS NOT NULL OR
