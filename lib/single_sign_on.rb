@@ -43,6 +43,8 @@ class SingleSignOn
       sso.send("#{k}=", val)
     end
 
+    sso.register_nonce(decoded_hash['return_path'])
+
     decoded_hash.each do |k,v|
       if field = k[/^custom\.(.+)$/, 1]
         sso.custom_fields[field] = v
