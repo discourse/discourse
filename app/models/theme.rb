@@ -243,7 +243,7 @@ class Theme < ActiveRecord::Base
     @changed_colors ||= []
   end
 
-  def set_field(target:, name:, value:, type: nil, type_id: nil)
+  def set_field(target:, name:, value: nil, type: nil, type_id: nil, upload_id: nil)
     name = name.to_s
 
     target_id = Theme.targets[target.to_sym]
@@ -251,6 +251,12 @@ class Theme < ActiveRecord::Base
 
     type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name)
     raise "Unknown type #{type} passed to set field" unless type_id
+
+    if upload_id && !value
+      value = ""
+    end
+
+    raise "Missing value for theme field" unless value
 
     field = theme_fields.find{|f| f.name==name && f.target_id == target_id && f.type_id == type_id}
     if field
@@ -263,7 +269,7 @@ class Theme < ActiveRecord::Base
         end
       end
     else
-      theme_fields.build(target_id: target_id, value: value, name: name, type_id: type_id) if value.present?
+      theme_fields.build(target_id: target_id, value: value, name: name, type_id: type_id, upload_id: upload_id) if value.present? || upload_id.present?
     end
   end
 

@@ -1,7 +1,9 @@
 require_dependency 'stylesheet/common'
+require_dependency 'global_path'
 
 module Stylesheet
   class Importer < SassC::Importer
+    include GlobalPath
 
     @special_imports = {}
 
@@ -40,9 +42,16 @@ module Stylesheet
         contents << "$#{n}: ##{hex} !default;\n"
       end
       theme&.theme_fields&.where(type_id: ThemeField.theme_var_type_ids)&.each do |field|
-        escaped = field.value.gsub('"', "\\22")
-        escaped.gsub!("\n", "\\A")
-        contents << "$#{field.name}: unquote(\"#{escaped}\");\n"
+        if field.type_id == ThemeField.types[:theme_upload_var]
+          if upload = field.upload
+            url = upload_cdn_path(upload.url)
+            contents << "$#{field.name}: unquote(\"#{url}\");\n"
+          end
+        else
+          escaped = field.value.gsub('"', "\\22")
+          escaped.gsub!("\n", "\\A")
+          contents << "$#{field.name}: unquote(\"#{escaped}\");\n"
+        end
       end
       Import.new("theme_variable.scss", source: contents)
     end

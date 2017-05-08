@@ -164,6 +164,28 @@ HTML
       expect(scss).to include("red")
       expect(scss).to include('"Sam\'s Test"')
     end
+
+    let :image do
+      file_from_fixtures("logo.png")
+    end
+
+    it 'can handle uploads based of ThemeField' do
+      theme = Theme.new(name: 'theme', user_id: -1)
+      upload = Upload.create_for(-1, image, "logo.png", File.size(image))
+      theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
+      theme.set_field(target: :common, name: :scss, value: 'body {background-image: url($logo)}')
+      theme.save!
+
+      # make sure we do not nuke it
+      freeze_time (SiteSetting.clean_orphan_uploads_grace_period_hours + 1).hours.from_now
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      expect(Upload.where(id: upload.id)).to be_exist
+
+
+      scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include(upload.url)
+    end
   end
 
   it 'correctly caches theme keys' do
