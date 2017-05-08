@@ -18,13 +18,6 @@ const TopicDetails = RestModel.extend({
       });
     }
 
-    if (details.suggested_topics) {
-      const store = this.store;
-      details.suggested_topics = details.suggested_topics.map(function (st) {
-        return store.createRecord('topic', st);
-      });
-    }
-
     if (details.participants) {
       details.participants = details.participants.map(function (p) {
         p.topic = topic;

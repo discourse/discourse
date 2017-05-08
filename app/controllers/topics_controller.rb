@@ -133,6 +133,13 @@ class TopicsController < ApplicationController
     raise ex
   end
 
+  def suggested_topics
+    render_serialized(
+      TopicView.new(params[:topic_id], current_user).suggested_topics.topics,
+      SuggestedTopicSerializer
+    )
+  end
+
   def unsubscribe
     if current_user.blank?
       cookies[:destination_url] = request.fullpath

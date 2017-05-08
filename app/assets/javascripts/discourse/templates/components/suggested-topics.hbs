@@ -1,0 +1,17 @@
+{{#conditional-loading-spinner condition=loading}}
+  {{#if suggestedTopics.length}}
+    <div id="suggested-topics">
+      <h3>{{{suggestedTitle}}}</h3>
+      <div class="topics">
+        {{#if isPrivateMessage}}
+          {{basic-topic-list hideCategory="true"
+                             showPosters="true"
+                             topics=suggestedTopics}}
+        {{else}}
+          {{basic-topic-list topics=suggestedTopics}}
+        {{/if}}
+      </div>
+      <h3>{{{browseMoreMessage}}}</h3>
+    </div>
+  {{/if}}
+{{/conditional-loading-spinner}}

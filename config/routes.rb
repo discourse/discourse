@@ -610,6 +610,7 @@ Discourse::Application.routes.draw do
   put "t/:topic_id/recover" => "topics#recover", constraints: {topic_id: /\d+/}
   get "t/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
   get "t/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
+  get "t/:topic_id/suggested_topics" => "topics#suggested_topics", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id.rss" => "topics#feed", format: :rss, constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id" => "topics#show", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}

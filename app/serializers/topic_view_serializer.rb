@@ -93,12 +93,6 @@ class TopicViewSerializer < ApplicationSerializer
       end
     end
 
-    if object.suggested_topics.try(:topics).present?
-      result[:suggested_topics] = object.suggested_topics.topics.map do |topic|
-        SuggestedTopicSerializer.new(topic, scope: scope, root: false)
-      end
-    end
-
     if object.links.present?
       result[:links] = object.links.map do |user|
         TopicLinkSerializer.new(user, scope: scope, root: false)

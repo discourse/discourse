@@ -468,6 +468,14 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.get('id')}/convert-topic/${type}`, {type: 'PUT'}).then(() => {
       window.location.reload();
     }).catch(popupAjaxError);
+  },
+
+  fetchSuggestedTopics() {
+    return ajax(`/t/${this.get('id')}/suggested_topics`).then(topics => {
+      return topics.map(topic => {
+        return this.store.createRecord('topic', topic);
+      });
+    });
   }
 });
 
