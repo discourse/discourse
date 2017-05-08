@@ -18,7 +18,7 @@ task 'posts:fix_letter_avatars' => :environment do
   rebaked = 0
   total = search.count
 
-  search.find_each do |post|
+  find_each_with_recent(search) do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
   end
@@ -52,7 +52,7 @@ task 'posts:rebake_match', [:pattern, :type, :delay] => [:environment] do |_,arg
   rebaked = 0
   total = search.count
 
-  search.find_each do |post|
+  find_each_with_recent(search) do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
     sleep(delay) if delay
@@ -76,7 +76,7 @@ def rebake_posts(opts = {})
   total = Post.count
   rebaked = 0
 
-  Post.find_each do |post|
+  find_each_with_recent(Post) do |post|
     rebake_post(post, opts)
     print_status(rebaked += 1, total)
   end
@@ -165,4 +165,17 @@ task 'posts:delete_word', [:find] => [:environment] do |_,args|
   puts "Processing"
   total = remap_posts(find)
   puts "", "#{total} posts updated!", ""
+end
+
+def find_each_with_recent(given_scope, recent_date: 6.months.ago)
+  scopes = [
+    given_scope.where("created_at > ?", recent_date),
+    given_scope.where("created_at <= ?", recent_date)
+  ]
+
+  scopes.each do |scope|
+    scope.find_each do |record|
+      yield(record)
+    end
+  end
 end
