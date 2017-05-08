@@ -57,6 +57,7 @@ class PostAction < ActiveRecord::Base
                                     .joins(post: :topic)
                                     .where('posts.deleted_at' => nil)
                                     .where('topics.deleted_at' => nil)
+                                    .where('posts.user_id > 0')
                                     .count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)

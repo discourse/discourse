@@ -6,6 +6,17 @@ describe FlagQuery do
   let(:codinghorror) { Fabricate(:coding_horror) }
 
   describe "flagged_posts_report" do
+    it "does not return flags on system posts" do
+      admin = Fabricate(:admin)
+      post = create_post(user: Discourse.system_user)
+      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      posts, topics, users = FlagQuery.flagged_posts_report(admin, "")
+
+      expect(posts).to be_blank
+      expect(topics).to be_blank
+      expect(users).to be_blank
+    end
+
     it "operates correctly" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
