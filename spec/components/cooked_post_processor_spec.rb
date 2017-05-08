@@ -310,6 +310,12 @@ describe CookedPostProcessor do
       expect(cpp.get_size_from_attributes(img)).to eq([33, 100])
     end
 
+    it "doesn't raise an error with a weird url" do
+      img = { 'src' => nil, 'height' => 100}
+      SiteSetting.stubs(:crawl_images?).returns(true)
+      expect(cpp.get_size_from_attributes(img)).to be_nil
+    end
+
   end
 
   context ".get_size_from_image_sizes" do
