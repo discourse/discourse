@@ -505,4 +505,27 @@ describe SiteSettingExtension do
     end
   end
 
+  describe 'overrider' do
+    let(:overrider) do
+      CustomKlass = Class.new do
+        def self.override(current_value)
+          false
+        end
+
+        def self.prevent_override
+          raise Discourse::InvalidParameters.new
+        end
+      end
+    end
+
+    it 'should override the value' do
+      overrider
+      settings.setting(:can_do, true, overrider: 'CustomKlass')
+      settings.refresh!
+
+      expect(settings.can_do).to eq(false)
+      expect { settings.can_do = true }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
 end

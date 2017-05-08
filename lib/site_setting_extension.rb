@@ -89,6 +89,10 @@ module SiteSettingExtension
     @validators ||= {}
   end
 
+  def overriders
+    @overriders ||= {}
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
@@ -136,11 +140,15 @@ module SiteSettingExtension
         previews[name] = opts[:preview]
       end
 
-      opts[:validator] = opts[:validator].try(:constantize)
+      opts[:validator] = opts[:validator]&.constantize
       type = opts[:type] || get_data_type(name, defaults[name])
 
       if validator_type = opts[:validator] || validator_for(type)
         validators[name] = { class: validator_type, opts: opts }
+      end
+
+      if opts[:overrider] = opts[:overrider]&.constantize
+        overriders[name] = opts[:overrider]
       end
 
       current[name] = current_value
@@ -477,12 +485,20 @@ module SiteSettingExtension
     clean_name = name.to_s.sub("?", "").to_sym
 
     define_singleton_method clean_name do
-      c = @containers[provider.current_site]
-      if c
-        c[name]
-      else
-        refresh!
-        current[name]
+      current_value =
+        if c = @containers[provider.current_site]
+          c[name]
+        else
+          refresh!
+          current[name]
+        end
+
+      begin
+        overrider = overriders[name]
+        overrider ? overrider.override(current_value) : current_value
+      rescue => e
+        Rails.logger.error("#{e.class}: #{e.backtrace.join("\n")}")
+        current_value
       end
     end
 
@@ -491,6 +507,8 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}=" do |val|
+      overrider = overriders[name]
+      overrider.prevent_override if overrider
       add_override!(name, val)
     end
   end
