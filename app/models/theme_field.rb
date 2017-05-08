@@ -1,5 +1,7 @@
 class ThemeField < ActiveRecord::Base
 
+  belongs_to :upload
+
   def self.types
     @types ||= Enum.new(html: 0,
                         scss: 1,
