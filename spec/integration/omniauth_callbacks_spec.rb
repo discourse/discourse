@@ -19,7 +19,7 @@ RSpec.describe "OmniAuth Callbacks" do
     context "without an `omniauth.auth` env" do
       it "should return a 404" do
         get "/auth/eviltrout/callback"
-        expect(response).not_to be_success
+        expect(response.code).to eq("404")
       end
     end
 
