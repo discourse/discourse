@@ -2,6 +2,7 @@ class EmbedController < ApplicationController
   skip_before_filter :check_xhr, :preload_json, :verify_authenticity_token
 
   before_filter :ensure_embeddable, except: [ :info ]
+  before_filter :get_embeddable_css_class, except: [ :info ]
   before_filter :ensure_api_request, only: [ :info ]
 
   layout 'embed'
@@ -91,6 +92,12 @@ class EmbedController < ApplicationController
   end
 
   private
+
+    def get_embeddable_css_class
+      @embeddable_css_class = ""
+      embeddable_host = EmbeddableHost.record_for_url(request.referer)
+      @embeddable_css_class = " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? and embeddable_host.class_name.present?
+    end
 
     def ensure_api_request
       raise Discourse::InvalidAccess.new('api key not set') if !is_api?
