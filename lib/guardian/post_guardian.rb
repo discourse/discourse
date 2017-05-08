@@ -106,7 +106,7 @@ module PostGuardian
     end
 
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
-      return true
+      return can_create_post?(post.topic)
     end
 
     if @user.trust_level < SiteSetting.min_trust_to_edit_post
