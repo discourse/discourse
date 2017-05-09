@@ -282,21 +282,7 @@ const Topic = RestModel.extend({
         }
 
         return [];
-      }).catch(error => {
-        let showGenericError = true;
-        if (error && error.responseText) {
-          try {
-            bootbox.alert($.parseJSON(error.responseText).errors);
-            showGenericError = false;
-          } catch(e) { }
-        }
-
-        if (showGenericError) {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-
-        throw error;
-      }).finally(() => this.set('bookmarking', false));
+      }).catch(popupAjaxError).finally(() => this.set('bookmarking', false));
     };
 
     const unbookmarkedPosts = [];
