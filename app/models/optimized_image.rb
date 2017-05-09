@@ -65,12 +65,8 @@ class OptimizedImage < ActiveRecord::Base
             if url.present?
               thumbnail.url = url
               thumbnail.save
-            else
-              Rails.logger.error("Failed to store optimized image #{width}x#{height} for #{upload.url}")
             end
           end
-        else
-          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
         end
 
         # close && remove temp file
