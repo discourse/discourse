@@ -82,9 +82,8 @@ class UserAvatar < ActiveRecord::Base
       end
     end
 
-  rescue => e
+  rescue
     # skip saving, we are not connected to the net
-    Rails.logger.warn "#{e}: Failed to download external avatar: #{avatar_url}, user id #{ user.id }"
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
