@@ -83,6 +83,7 @@ vi:
           other: "còn %{count} năm"
       previous_month: 'Tháng trước'
       next_month: 'Tháng sau'
+      placeholder: Chọn một ngày
     share:
       topic: 'chia sẻ chủ đề này'
       post: 'đăng #%{postNumber}'
@@ -117,6 +118,9 @@ vi:
       visible:
         enabled: 'được hiển thị lúc %{when}'
         disabled: 'bỏ hiển thị lúc %{when}'
+      banner:
+        enabled: 'chọn đây làm banner %{when}. Nó sẽ xuất hiện tại đầu mỗi trang cho đến khi bị ẩn đi bởi người dùng,'
+        disabled: 'xoá banner này %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang.'
     topic_admin_menu: "Lựa chọn quản lí chủ đề."
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
@@ -131,6 +135,7 @@ vi:
         us_west_2: "US West (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Ireland)"
+        eu_west_2: "EU (London)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -237,16 +242,16 @@ vi:
     switch_to_anon: "Vào chế độ Ẩn danh"
     switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
-      close: "Xóa banner này."
+      close: "Ẩn banner này."
       edit: "Sửa banner này >>"
     choose_topic:
       none_found: "Không tìm thấy chủ đề nào"
       title:
         search: "Tìm kiếm chủ đề dựa vào tên, url hoặc id:"
-        placeholder: "viết tiêu đề của chủ đề thảo luận ở đây"
+        placeholder: "viết chủ đề của chủ đề thảo luận ở đây"
     queue:
-      topic: "Chủ đề"
-      approve: 'Phê duyệt'
+      topic: "Chủ đề:"
+      approve: 'Duyệt'
       reject: 'Từ chối'
       delete_user: 'Xóa tài khoản'
       title: "Cần phê duyệt"
@@ -265,7 +270,7 @@ vi:
           other: "Bạn có <strong>{{count}}</strong> bài viết đang chờ xử lý."
         ok: "OK"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> đăng <a href='{{topicUrl}}'>chủ đề</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> đã đăng <a href='{{topicUrl}}'>chủ đề</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Bạn</a> đã đăng <a href='{{topicUrl}}'>chủ đề</a>"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> đã trả lời tới <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>Bạn</a> đã trả lời tới <a href='{{postUrl}}'>{{post_number}}</a>"
@@ -339,6 +344,7 @@ vi:
       automatic_group: Nhóm tự động
       closed_group: Nhóm riêng
       is_group_user: "Bạn là một thành viên của nhóm này"
+      allow_membership_requests: "Cho phép người dùng gửi đơn xin gia nhập nhóm đến người quản lí nhóm."
       membership: "Thành viên"
       name: "Tên"
       user_count: "Số lượng thành viên"
@@ -384,6 +390,7 @@ vi:
           title: "Im lặng"
           description: "Bạn sẽ không bao giờ được thông báo về bất cứ chủ đề mới nào trong nhóm này"
       flair_url: "Ảnh đại diện"
+      flair_url_placeholder: "(Tuỳ chọn) Link đến hình ảnh hoặc lớp Font Awesome"
       flair_bg_color: "Màu nền ảnh đại diện"
       flair_bg_color_placeholder: "(Tuỳ chọn) Giá trị mã màu Hexa"
       flair_color: "Màu ảnh đại diện"
@@ -553,6 +560,13 @@ vi:
         move_to_archive: "Lưu trữ"
         failed_to_move: "Lỗi khi chuyển các tin nhắn đã chọn (có thể do lỗi mạng)"
         select_all: "Chọn tất cả"
+      preferences_nav:
+        account: "Tài khoản"
+        profile: "Hồ sơ"
+        emails: "Email"
+        notifications: "Thông báo"
+        tags: "Thẻ"
+        apps: "Ứng dụng"
       change_password:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"
@@ -710,9 +724,12 @@ vi:
         account_age_days: "Thời gian của tài khoản theo ngày"
         create: "Gửi một lời mời"
         generate_link: "Chép liên kết Mời"
+        link_generated: "Link mời đã được tạo thành công !"
+        valid_for: "Link mời chỉ có hiệu lực với địa chỉ email: %{email}"
         bulk_invite:
           text: "Mời hàng loạt bằng file"
           success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
+          error: "Xin lỗi, file phải ở định dạng CSV."
       password:
         title: "Mật khẩu"
         too_short: "Mật khẩu của bạn quá ngắn."
@@ -876,6 +893,10 @@ vi:
       not_allowed_from_ip_address: "Bạn không thể đăng nhập từ địa chỉ IP này"
       admin_not_allowed_from_ip_address: "Bạn không thể đăng nhập với quyền quản trị từ địa chỉ IP đó."
       resend_activation_email: "Bấm đây để gửi lại email kích hoạt"
+      resend_title: "Gửi lại email kích hoạt"
+      change_email: "Đổi địa chỉ email"
+      provide_new_email: "Cung cấp địa chỉ mới của bạn và chúng tôi sẽ gửi lại email xác nhận."
+      submit_new_email: "Cập nhật địa chỉ email"
       sent_activation_email_again: "Chúng tôi gửi email kích hoạt tới cho bạn ở <b>{{currentEmail}}</b>. Nó sẽ mất vài phút để đến; bạn nhớ check cả hồm thư spam nhe. "
       to_continue: "Vui lòng đăng nhập"
       preferences: "Bạn cần phải đăng nhập để thay đổi cài đặt tài khoản."
@@ -968,6 +989,7 @@ vi:
       bold_label: "B"
       bold_title: "In đậm"
       bold_text: "chữ in đậm"
+      italic_label: "I"
       italic_title: "Nhấn mạnh"
       italic_text: "văn bản nhấn mạnh"
       link_title: "Liên kết"
@@ -1075,6 +1097,7 @@ vi:
       no_more_results: "Không tìm thấy kết quả"
       searching: "Đang tìm ..."
       post_format: "#{{post_number}} bởi {{username}}"
+      results_page: "Kết quả tìm kiếm"
       context:
         user: "Tìm bài viết của @{{username}}"
         topic: "Tìm trong chủ đề này"
@@ -1098,6 +1121,9 @@ vi:
           bookmarks: Tôi đã đánh dấu
           pinned: được gim
           unpinned: không được gim
+          seen: Tôi đã đọc
+          unseen: Tôi chưa đọc
+          wiki: là wiki
         statuses:
           open: mở
           closed: bị đóng
@@ -1139,6 +1165,7 @@ vi:
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
           other: "Bạn đã chọn <b>{{count}}</b> chủ đề"
+        choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
       none:
         unread: "Bạn không có chủ đề nào chưa đọc."
         new: "Bạn không có chủ đề mới nào."
@@ -1216,6 +1243,22 @@ vi:
       jump_reply_up: nhảy đến những trả lời trước đó
       jump_reply_down: nhảy tới những trả lời sau đó
       deleted: "Chủ đề này đã bị xóa"
+      topic_status_update:
+        num_of_hours: "Số giờ:"
+        remove: "Xoá bộ đếm"
+        when: "Khi:"
+      auto_update_input:
+        tomorrow: "Ngày mai"
+        this_weekend: "Cuối tuần này"
+        next_week: "Tuần tới"
+        pick_date_and_time: "Chọn ngày và giờ"
+      temp_close:
+        title: "Tạm đóng"
+      auto_close:
+        error: "Hãy nhập giá trị hợp lệ."
+      status_update_notice:
+        auto_open: "Chủ đề này sẽ tự động mở trong %{timeLeft}."
+        auto_close: "Chủ đề này sẽ tự đóng trong %{timeLeft}."
       auto_close_title: 'Tự động-Đóng các Cài đặt'
       timeline:
         back: "Quay lại"
@@ -1286,6 +1329,8 @@ vi:
         pin_globally: "Ghim Chủ Đề Tổng Thể"
         make_banner: "Banner chủ đề"
         remove_banner: "Bỏ banner chủ đề"
+      reply:
+        title: 'Trả lời'
       clear_pin:
         title: "Xóa ghim"
         help: "Xóa trạng thái ghim của chủ đề này để nó không còn xuất hiện trên cùng danh sách chủ đề của bạn"
@@ -1536,6 +1581,8 @@ vi:
           hide: "Ẩn sửa đổi"
           show: "Hiện sửa đổi"
           revert: "Hoàn nguyên sửa đổi"
+          edit_wiki: "Sửa wiki"
+          edit_post: "Sửa bài đăng"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1547,6 +1594,14 @@ vi:
           side_by_side_markdown:
             title: "Hiển thị nguyên bản với các điểm khác biệt cạnh nhau"
             button: 'Thô'
+      raw_email:
+        displays:
+          raw:
+            button: 'Thô'
+          text_part:
+            button: 'Văn bản'
+          html_part:
+            button: 'HTML'
     category:
       can: 'can&hellip;'
       none: '(không danh mục)'

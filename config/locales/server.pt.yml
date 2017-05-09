@@ -850,7 +850,6 @@ pt:
     force_hostname: "PROGRAMADOR APENAS! AVISO! Especifique um nome de servidor no URL. Deixe em branco para utilizar o valor por defeito."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
-    invite_only: "O registo público está desativado, todos os novos utilizadores devem ser explicitamente convidados por outros membros ou pelo pessoal."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
@@ -1333,9 +1332,6 @@ pt:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
   flags_reminder:
-    flags_were_submitted:
-      one: "Uma denúncia foi submetida há 1 hora atrás. Por favor reveja-a. "
-      other: "Denúncias foram submetidas há %{count} horas atrás. Por favor reveja-as."
     subject_template:
       one: "1 sinalização à espera de ser tratada"
       other: "%{count} sinalizações à espera de serem tratadas"

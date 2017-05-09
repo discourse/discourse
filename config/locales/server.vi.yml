@@ -720,7 +720,6 @@ vi:
     force_hostname: "DEVELOPER ONLY! LƯU Ý! Chỉ rõ hostname trong URL. Để trống là mặc định."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
     invite_passthrough_hours: "Bao lâu người dùng có thể sử dụng mã lời mời trước đó để đăng nhập, theo giờ"
-    invite_only: "Đăng ký tự do đã khóa, tất cả người dùng phải được mời bởi những thành viên khác hoặc nhân viên."
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
     min_password_length: "Chiều dài mật khẩu tối thiểu."
     min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
@@ -1098,8 +1097,6 @@ vi:
       blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
       max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
   flags_reminder:
-    flags_were_submitted:
-      other: "Đánh dấu đã được gửi %{count} giờ qua, xin hãy xem xét."
     subject_template:
       other: "%{count} đánh dấu đang đợi xử lý"
   unsubscribe_mailer:

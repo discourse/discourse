@@ -101,6 +101,7 @@ da:
           other: "%{count} år senere"
       previous_month: 'Forrige måned'
       next_month: 'Næste måned'
+      placeholder: Vælg en dato
     share:
       topic: 'del et link til dette emne'
       post: 'indlæg #%{postNumber}'
@@ -139,9 +140,12 @@ da:
         enabled: 'lavede dette til et banner %{when}. Emnet bliver vist på toppen af alle sider indtil det bliver lukket af brugeren.'
         disabled: 'fjernede banneret %{when}. Det vil ikke længere vises i toppen af alle sider.'
     topic_admin_menu: "administrationshandlinger på emne"
+    wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     bootstrap_mode_enabled: "For at gøre det nemmere at lancere dit nye website, er du i bootstrap tilstand. Alle nye brugere vil blive tildelt niveau 1 og daglige email updateringer vil være slået til. Dette vil blive automatisk slået fra når total antal brugere overskrider %{min_users} brugere."
     bootstrap_mode_disabled: "Bootstrap tilstand vil blive deaktiveret indenfor de næste 24 timer."
+    themes:
+      default_description: "Standard"
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -149,6 +153,7 @@ da:
         us_west_2: "US West (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Irland)"
+        eu_west_2: "EU (London)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asien (Singapore)"
         ap_southeast_2: "Asien (Sydney)"
@@ -336,6 +341,7 @@ da:
         when: "Når"
         action: "Handling"
         acting_user: "Fungerende bruger"
+        target_user: "Målbruger"
         subject: "Emne"
         details: "Detaljer"
         from: "Fra"
@@ -384,6 +390,7 @@ da:
       posts: "Indlæg"
       mentions: "Omtaler"
       messages: "Beskeder"
+      notification_level: "Standard notifikationsniveau for gruppebeskeder"
       alias_levels:
         title: "Hvem kan sende beskeder til og @nævne denne gruppe?"
         nobody: "Ingen"
@@ -410,11 +417,15 @@ da:
         muted:
           title: "Tavs"
           description: "Du får aldrig beskeder om nye emner i denne gruppe."
+      flair_url: "Avatar Flair-billede"
       flair_url_placeholder: "(Valgfrit) Billed-URL eller Font Awesome klasse"
+      flair_bg_color: "Avatar Flair-baggrundsfarve"
       flair_bg_color_placeholder: "(Valgfrit) Hex farveværdi"
+      flair_color: "Avatar Flair-farve"
       flair_color_placeholder: "(Valgfrit) Hex farveværdi"
       flair_preview_icon: "Forhåndsvisning af ikonet"
       flair_preview_image: "Forhåndsvisning af billede"
+      flair_note: "Bemærk: Flair vil kun blive vist for en brugers primære gruppe."
     user_action_groups:
       '1': "Likes givet"
       '2': "Likes modtaget"
@@ -564,6 +575,7 @@ da:
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Revider tilbagekald adgang"
       api_approved: "Godkendt:"
+      theme: "Tema"
       staff_counters:
         flags_given: "hjælpsomme markeringer"
         flagged_posts: "markerede indlæg"
@@ -581,6 +593,15 @@ da:
         move_to_archive: "Arkiv"
         failed_to_move: "Kunne ikke flytte valgt beskeder (måske problemer med netværket)"
         select_all: "Vælg alle"
+      preferences_nav:
+        account: "Konto"
+        profile: "Profil"
+        emails: "E-mail"
+        notifications: "Notifikationer"
+        categories: "Kategorier"
+        tags: "Tags"
+        interface: "Grænseflade"
+        apps: "Apps"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -652,6 +673,7 @@ da:
         title: "sprog"
         instructions: "Brugerinterface sprog. Det skifter når de reloader siden."
         default: "(standard)"
+        any: "alle"
       password_confirmation:
         title: "Gentag adgangskode"
       last_posted: "Sidste indlæg"
@@ -844,6 +866,8 @@ da:
     too_few_topics_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøgende har brug for samtaler at læse og svare på."
     too_few_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
     logs_error_rate_notice:
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nåede grænse for konfiguration af sitet på %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overskred grænse for konfiguration af sitet på %{siteSettingRate}."
       rate:
         one: "1 fejl/%{duration}"
         other: "%{count} fejl/%{duration}"
@@ -896,6 +920,7 @@ da:
     trust_level: 'Tillidsniveau'
     search_hint: 'brugernavn, email eller IP adresse'
     create_account:
+      disclaimer: "Gennem din tilmelding accepterer du <a href='{{privacy_link}}'>fortrolighedspolitikken</a> og <a href='{{tos_link}}'>servicevilkårene</a>."
       title: "Opret konto"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
     forgot_password:
@@ -931,11 +956,13 @@ da:
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
       resend_title: "Gensend Aktiverings-e-mail"
       change_email: "Skift e-mailadresse"
+      provide_new_email: "Angiv en ny adresse og vi fremsender din bekræftelses-e-mail påny. "
       submit_new_email: "Opdater e-mailadresse"
       sent_activation_email_again: "Vi har sendt endnu en aktiverings-e-mail til dig på <b>{{currentEmail}}</b>. Det kan tage nogen få minutter før den når frem; kontrollér også din spam-mappe."
       to_continue: "Log venligst ind"
       preferences: "Du skal være logget ind for at ændre præferencer."
       forgot: "Jeg kan ikke huske min kontos detaljer"
+      not_approved: "Din konto er endnu ikke blevet godkendt. Du får besked via e-mail når du kan logge ind."
       google:
         title: "med Google"
         message: "Logger ind med Google (kontrollér at pop-op-blokering ikke er aktiv)"
@@ -961,6 +988,7 @@ da:
       accept_title: "Invitation"
       welcome_to: "Velkommen til %{site_name}!"
       invited_by: "Du blev inviteret af:"
+      social_login_available: "Du vil også kunne logge ind med enhvert socialt login med brug af denne e-mail."
       your_email: "E-mail-adressen knyttet til kontoen er <b>%{email}</b>."
       accept_invite: "Accepter Invitation"
       success: "Din konto er blevet oprettet, og du er nu logget ind."
@@ -999,6 +1027,10 @@ da:
       group_mentioned:
         one: "Ved at nævne {{group}} sender du en notifikation til <a href='{{group_link}}'>1 person</a> - vil du fortsætte?"
         other: "Ved at nævne {{group}} sender du en notifikation til <a href='{{group_link}}'>{{count}} personer</a> - vil du fortsætte?"
+      cannot_see_mention:
+        category: "Du nævnte {{username}}, men de vil ikke blive notificeret fordi de ikke har adgang til denne kategori. Du vil være nødt til at tilføje dem til en gruppe, der har adgang til kategori."
+        private: "Du nævnte {{username}}, men de vil ikke blive notificeret fordi de ikke er i stand til at se denne personlige besked. Du vil være nødt til at invitere dem til denne personlige besked."
+      duplicate_link: "Det ser ud til, at dit link til <b>{{domain}}</b> allerede var indsendt i emnet af <b>@{{username}}</b> i <a href='{{post_url}}'>et svar {{ago}}</a> – er du sikker på at du vil indsende det igen?"
       error:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
@@ -1020,6 +1052,7 @@ da:
       title_or_link_placeholder: "Skriv titlen eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
       show_edit_reason: "(tilføj en begrundelse for ændringen)"
+      topic_featured_link_placeholder: "Indtast link som vises med titel."
       reply_placeholder: "Skriv her. Brug Markdown, BBCode eller HTML til at formattere. Træk eller indsæt billeder."
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer."
@@ -1077,6 +1110,9 @@ da:
       edited: "<i title='redigeret' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} og 1 mere</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}</p>"
       private_message: "<i title='privat besked' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='privat besked' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='inviteret til emne' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1143,6 +1179,7 @@ da:
       no_more_results: "Ikke flere resultater."
       searching: "Søger…"
       post_format: "#{{post_number}} af {{username}}"
+      results_page: "Søgeresultater"
       context:
         user: "Søg i indlæg fra @{{username}}"
         category: "Søg i #{{category}} kategorien"
@@ -1161,6 +1198,8 @@ da:
         with_tags:
           label: Med Tags
         filters:
+          label: Returnér kun emner/indlæg som...
+          likes: Jeg syntes om
           posted: Jeg skrev i
           watching: Jeg overvåger
           tracking: Jeg følger
@@ -1173,12 +1212,15 @@ da:
           unseen: Jeg har ikke læst
           wiki: er wiki
         statuses:
+          label: Hvor emner
           open: er åbne
           closed: er lukkede
           archived: er arkiverede
           noreplies: har ingen svar
           single_user: indeholder en enkelt bruger
         post:
+          count:
+            label: Minimum for antal indlæg
           time:
             label: Sendt
             before: før
@@ -1304,7 +1346,20 @@ da:
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
       topic_status_update:
+        title: "Angiv timerfunktion for emne"
+        save: "Indstil timerfunktion"
+        num_of_hours: "Antal timer:"
+        remove: "Fjern timerfunktion"
         publish_to: "Udgiv I:"
+        when: "Hvornår:"
+      auto_update_input:
+        later_today: "Senere i dag"
+        tomorrow: "I morgen"
+        later_this_week: "Senere på ugen"
+        this_weekend: "Denne weekend"
+        next_week: "Næste uge"
+        pick_date_and_time: "Vælg dato og tid"
+        set_based_on_last_post: "Luk baseret på seneste indlæg"
       publish_to_category:
         title: "Planlæg Udgivelse"
       temp_open:
@@ -1315,6 +1370,7 @@ da:
         title: "Luk Midlertidigt"
       auto_close:
         title: "Luk Automatisk Emnet"
+        label: "Auto-luk emne, timer:"
         error: "Indtast venligst en gyldig værdi."
         based_on_last_post: "Luk ikke før det seneste indlæg i emnet er mindst så gammel."
       status_update_notice:
@@ -1352,6 +1408,10 @@ da:
           '3_2': 'Du får notifikationer fordi du overvåger dette emne.'
           '3_1': 'Du får notifikationer fordi du oprettede dette emne.'
           '3': 'Du får notifikationer fordi du overvåger dette emne.'
+          '2_8': 'Du vil se antallet af nye svar, fordi du følger denne kategori.'
+          '2_4': 'Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne.'
+          '2_2': 'Du vil se antallet af nye svar, fordi du følger dette emne.'
+          '2': 'Du vil se antallet af nye svar, fordi du <a href="/u/{{username}}/preferences">læste dette emne</a>.'
           '1_2': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
           '1': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
           '0_7': 'Du ignorerer alle notifikationer i denne kategori.'
@@ -1387,6 +1447,7 @@ da:
         open: "Åbn emne"
         close: "Luk emne"
         multi_select: "Vælg indlæg..."
+        timed_update: "Indstil timerfunktion for emne..."
         pin: "Fastgør Emne..."
         unpin: "Fjern fastgøring af Emne..."
         unarchive: "Gendan emne fra arkiv"
@@ -1507,6 +1568,7 @@ da:
           other: "Vælg den nye ejer af {{count}} indlæg, oprindeligt skrevet af <b>{{old_user}}</b>."
         instructions_warn: "Bemærk at tidligere notifikationer på dette emne vil ikke blive overført til den nye bruger.\n<br>Advarsel: På nuværende tidspunkt, vil ingen data der er afhængig af dette indlæg blive overført til den nye bruger. Brug forsigtigt."
       change_timestamp:
+        title: "Tilpas tidsstempel..."
         action: "ret tidsstempel"
         invalid_timestamp: "Tidsstempel kan ikke være i fremtiden"
         error: "Der opstod en fejl under rettelsen af tidsstemplet for dette emne."
@@ -1565,6 +1627,7 @@ da:
         file_too_large: "Beklager, filen du prøver at uploade er for stor (den maksimale størrelse er {{max_size_kb}}kb). Du kan evt. uploade filen til en fildelings service og dele linket her."
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
         too_many_dragged_and_dropped_files: "Beklager, du kan maksimalt uploade 10 filer ad gangen"
+        upload_not_authorized: "Beklager, filen som du forsøger at uploade, er ikke tiladt (tilladte filendelser: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
         attachment_download_requires_login: "Beklager, du skal være logget på for at downloade vedhæftede filer."
@@ -1715,11 +1778,17 @@ da:
             button: 'HTML'
           side_by_side_markdown:
             title: "Vis forskellen på den rå kildekode side om side"
+            button: 'Rå'
       raw_email:
         displays:
+          raw:
+            title: "Vis den rå e-mail"
+            button: 'Rå'
           text_part:
+            title: "Vis tekstdelen af e-mailen..."
             button: 'Tekst'
           html_part:
+            title: "Vis html-delen af e-mailen"
             button: 'HTML'
     category:
       can: 'kan&hellip; '
@@ -1770,7 +1839,14 @@ da:
       email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
       email_in_disabled_click: 'aktiver "email ind" indstilligen.'
       suppress_from_homepage: "Undertryk denne kategori fra hjemmesiden"
+      show_subcategory_list: "Vis oversigt med subkategorier ovenover emner i denne kategori."
+      num_featured_topics: "Antal emner som skal vises på siden med kategorier:"
+      subcategory_num_featured_topics: "Antal af fremhævede emner på siden for den overordnede kategori:"
       all_topics_wiki: "Gør som standard nye emner til wikis"
+      subcategory_list_style: "Oversigtsform for subkategori"
+      sort_order: "Emneoversigt - sortér efter:"
+      default_view: "Standard emneoversigt:"
+      default_top_period: "Standardperiode for top:"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
       add_permission: "Tilføj tilladelse"
@@ -1799,6 +1875,7 @@ da:
       sort_options:
         default: "standard"
         likes: "Likes"
+        op_likes: "\"Synes om\" for oprindeligt indlæg"
         views: "Visninger"
         posts: "Indlæg"
         activity: "Aktivitet"
@@ -2032,9 +2109,11 @@ da:
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log ud'
       actions:
         title: 'Handlinger'
+        bookmark_topic: '<b>f</b> Slå bogmærk emne til/fra'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Fastgør/Frigør emne'
         share_topic: '<b>shift</b>+<b>s</b> Del emne'
         share_post: '<b>s</b> Del indlæg'
+        reply_as_new_topic: '<b>t</b> Svar med et linket emne'
         reply_topic: '<b>shift</b>+<b>r</b> Besvar emne'
         reply_post: '<b>r</b> Besvar indlæg'
         quote_post: '<b>q</b> Citer indlæg'
@@ -2044,6 +2123,7 @@ da:
         edit: '<b>e</b> Redigér indlæg'
         delete: '<b>d</b> Slet indlæg'
         mark_muted: 'Ignorer emnet'
+        mark_regular: '<b>m</b>, <b>r</b> Almindeligt (standard) emne'
         mark_tracking: '<b>m</b>, <b>t</b> Følg emne'
         mark_watching: '<b>m</b>, <b>w</b> Hold øje med emne'
         print: '<b>ctrl</b>+<b>p</b> Print emne'
@@ -2119,15 +2199,20 @@ da:
           title: "Følger"
           description: "Du vil automatisk følge alle emner i dette tag. Et antal af ulæste og nye indlæg vil vises ved siden af emnet."
         regular:
+          title: "Almindeligt"
           description: "Du vil blive notificeret if nogen nævner dit You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Lydløs"
+          description: "Du vil ikke modtage beskeder af nogen slags vedrørende nye emner i dette tag, og de vil ikke fremgå i din fane med ulæste."
       groups:
         title: "Tag grupper"
         about: "Tilføj tags til grupper for nemmere håndtering."
         new: "Ny gruppe"
         tags_label: "Tags i denne gruppe:"
+        parent_tag_label: "Overordnede tag:"
         parent_tag_placeholder: "Valgfrit"
+        parent_tag_description: "Tags fra denne gruppe kan ikke bruges medmindre det overordnede tag er tilstede."
+        one_per_topic_label: "Begræns ét tag per emne fra denne gruppe"
         new_name: "Ny tag gruppe"
         save: "Gem"
         delete: "Slet"
@@ -2159,6 +2244,8 @@ da:
       custom_message_placeholder: "Skriv en personlig besked"
       custom_message_template_forum: "Hej, du burde tilmelde dig dette forum!"
       custom_message_template_topic: "Hej, jeg tænkte du måske ville synes om dette emne!"
+    safe_mode:
+      enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -2193,6 +2280,8 @@ da:
         backups: "backups"
         traffic_short: "Trafik"
         traffic: "Applikation web forespørgsler"
+        page_views: "Sidevisninger"
+        page_views_short: "Sidevisninger"
         show_traffic_report: "Vist detaljeret trafik rapport"
         reports:
           today: "I dag"
@@ -2292,6 +2381,7 @@ da:
         add_members: "Tilføj medlemmer"
         custom: "Brugerdefineret"
         bulk_complete: "Brugerne er tilføjet gruppen."
+        bulk_complete_users_not_added: "Disse brugere blev ikke tilføjet (sørg for at sikre, at de har en konto):"
         bulk: "Tilføj mange brugere til gruppe"
         bulk_paste: "Indsæt en liste brugerne eller emails, én per linje:"
         bulk_select: "(vælg en gruppe)"
@@ -2304,6 +2394,8 @@ da:
         add_owners: Tilføj ejere
         incoming_email: "Brugerdefineret indkommende email"
         incoming_email_placeholder: "indtast email"
+        none_selected: "Vælg en gruppe for at komme i gang"
+        no_custom_groups: "Opret en ny brugerdefineret gruppe"
       api:
         generate_master: "Generér API-nøgle"
         none: "Der er ingen aktive API-nøgler i øjeblikket."
@@ -2321,21 +2413,73 @@ da:
       web_hooks:
         title: "Webhooks"
         none: "Der er ingen webhooks i øjeblikket"
+        instruction: "Webhooks lader Discourse notificere eksterne tjenester når visse events forekommer på dit site. Når en webhook udløses, så sendes der en POST-forespørgsel til URL-adresserne som er angivet."
+        detailed_instruction: "En POST-forespørgsel vil blive sendt til den angivne URL når valgt event forekommer."
         new: "Ny Webhook"
         create: "Opret"
         save: "Gem"
         destroy: "Slet"
         description: "Beskrivelse"
+        controls: "Kontrolfunktioner"
+        go_back: "Tilbage til oversigt"
+        payload_url: "Payload-URL"
+        payload_url_placeholder: "https://example.com/sendmodtag"
+        warn_local_payload_url: "Det ser ud til, at du forsøger at konfigurere webhook'en til en lokal URL. Events som leveres til en lokal adresse kan forårsage bivirkninger eller uventet adfærd. Fortsæt?"
+        secret_invalid: "Hemmelighed må ikke indeholde mellemrumstegn."
+        secret_too_short: "Hemmeligheden bør have mindst 12 tegn."
+        secret_placeholder: "En valgfri tekststreng, der bruges til at oprette signatur"
+        event_type_missing: "Du er nødt til at konfigurere mindst én eventtype."
         content_type: "Indholdstype"
         secret: "Hemmelig"
+        event_chooser: "Hvilke events ønsker du skal udløse denne webhook?"
         wildcard_event: "Send mig alt"
         individual_event: "Vælg individuelle events"
+        verify_certificate: "Tjek TLS-certificatet for payload-URL'en"
         active: "Aktiv"
+        active_notice: "Vi vil levere detaljer om eventet når det sker."
+        categories_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne kategorier. Lad stå tom for at udløse webhook for alle kategorier."
+        categories_filter: "Udløste kategorier"
+        groups_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne grupper. Lad stå tom for at udløse webhook for alle grupper."
+        groups_filter: "Udløste grupper"
+        delete_confirm: "Slet denne webhook?"
+        topic_event:
+          name: "Emne-event"
+          details: "Når der er et nyt emne, revideret, ændret eller slettet."
+        post_event:
+          name: "Send event"
+          details: "Når der er et nyt svar, redigering, sletning eller gendannelse."
+        user_event:
+          name: "Bruger-event"
+          details: "Når en bruger oprettes, godkendes eller opdateres."
         delivery_status:
+          title: "Leveringsstatus"
           inactive: "Inaktiv"
+          failed: "Mislykkedes"
+          successful: "Gennemført"
         events:
+          none: "Der er ingen relaterede events."
+          redeliver: "Genfremsend"
+          incoming:
+            one: "Der er et nyt event."
+            other: "Der er {{count}} nye events."
+          completed_in:
+            one: "Fuldført på 1 sekund."
+            other: "Fuldført på {{count}} sekunder."
+          request: "Forespørgsel"
+          response: "Svar"
+          redeliver_confirm: "Er du sikker på at du vil genfremsende det samme payload?"
+          headers: "Sidehoveder"
+          payload: "Payload"
+          body: "Brødtekst"
+          go_list: "Gå til oversigt"
+          go_details: "Redigér webhook"
+          go_events: "Gå til events"
           ping: "Ping"
+          status: "Statuskode"
+          event_id: "ID"
           timestamp: "Oprettet"
+          completion: "Tid for fuldførelse"
+          actions: "Handlinger"
       plugins:
         title: "Plugins"
         installed: "Installerede Plugins"
@@ -2387,6 +2531,8 @@ da:
             without_uploads: "Ja (inkluder ikke filer)"
           download:
             label: "Download"
+            title: "Send e-mail med downloadlink"
+            alert: "Et link til download af denne backup er blevet e-mailet til dig."
           destroy:
             title: "Sletter backuppen"
             confirm: "Er du sikker på du vil fjerne denne backup?"
@@ -2418,15 +2564,21 @@ da:
         title: "Tilpasning"
         long_title: "Tilpasning af site"
         preview: "forhåndsvisning"
+        explain_preview: "Se sitet med dette tema slået til"
         save: "Gem"
         new: "Ny"
         new_style: "Ny style"
         import: "Importer"
         delete: "Slet"
+        delete_confirm: "Slet dette tema?"
         about: "Modificer CSS stylesheets og HTML headere på sitet. Tilføj en tilpasning for at starte."
         color: "Farve"
         opacity: "Gennemsigtighed"
         copy: "Kopier"
+        copy_to_clipboard: "Kopiér til udklipsholder"
+        copied_to_clipboard: "Kopierede til udklipsholder"
+        copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
+        theme_owner: "Kan ikke redigeres, ejes af:"
         email_templates:
           title: "Email-skabeloner"
           subject: "Emne"
@@ -2435,9 +2587,69 @@ da:
           none_selected: "Vælg en email-skabelon for at begynde at redigere."
           revert: "Rul ændringer tilbage"
           revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
+        theme:
+          import_theme: "Importér tema"
+          customize_desc: "Tilpas:"
+          title: "Temaer"
+          long_title: "Tilpas farver, CSS og HTML-indholdet for dit site"
+          edit: "Redigér"
+          edit_confirm: "Dette er et fjerntbeliggende tema - hvis du redigerer CSS/HTML, så vil dine ændringer blive slettet næste gang du opdaterer temaet."
+          common: "Normal"
+          desktop: "Desktop"
+          mobile: "Mobil"
+          preview: "Forhåndsvisning"
+          is_default: "Tema er slået til som standard"
+          user_selectable: "Tema kan vælges af brugerne"
+          color_scheme: "Farveskema"
+          color_scheme_select: "Vælg farver som temaet skal anvende"
+          custom_sections: "Tilpassede sektioner:"
+          theme_components: "Temakomponenter"
+          child_themes_check: "Tema inkluderer andre underordnede temaer"
+          css_html: "Tilpasset CSS/HTML"
+          edit_css_html: "Redigér CSS/HTML"
+          edit_css_html_help: "Du har ikke redigeret i hverken CSS eller HTML"
+          import_web_tip: "Depot som har temaet"
+          import_file_tip: "Tema som indeholder filen .dcstyle.json"
+          about_theme: "Om temaet"
+          license: "Licens"
+          component_of: "Temaet er et komponent fra:"
+          update_to_latest: "Opdatér til seneste"
+          check_for_updates: "Tjek efter opdateringer"
+          updating: "Opdaterer..."
+          up_to_date: "Tema er opdateret, senest tjekket:"
+          add: "Tilføj"
+          commits_behind:
+            one: "Temaet er 1 integrering bagud!"
+            other: "Temaet er {{count}} integreringer bagud!"
+          scss:
+            text: "CSS"
+            title: "Angiv tilpasset CSS - vi accepterer alle gyldige CSS og SCSS-former"
+          header:
+            text: "Sidehoved"
+            title: "Angiv HTML som skal vises over sitets sidehoved"
+          after_header:
+            text: "Efter sidehoved"
+            title: "Angiv HTML som skal vises på alle sider efter sidehoved"
+          footer:
+            text: "Sidefod"
+            title: "Angiv HTML som skal vises i sidefod"
+          embedded_scss:
+            text: "Indlejret CSS"
+            title: "Angiv tilpasset CSS som leveres med indlejret version af kommentarer"
+          head_tag:
+            text: "</head>"
+            title: "HTML som vil blive sat ind før tagget </head>"
+          body_tag:
+            text: "</body>"
+            title: "HTML som vil blive sat ind før tagget </body>"
         colors:
+          select_base:
+            title: "Vælg grundlæggende farveskema"
+            description: "Grundlæggende skema:"
           title: "Farver"
+          edit: "Redigér farveskemaer"
           long_title: "Farve temaer"
+          about: "Tilpas farverne som dit tema gør brug af. Opret et nyt farveskema for at starte."
           new_name: "Nyt farve tema"
           copy_name_prefix: "Kopi af"
           delete_confirm: "Slet dette farvetema?"
@@ -2499,11 +2711,14 @@ da:
         delivery_method: "Leveringsmetode"
         preview_digest_desc: "Forhåndsvis indholdet af de opsamlings-emails der sendes til inaktive brugere"
         refresh: "Opdatér"
+        send_digest_label: "Send dette resultat til:"
         send_digest: "Send"
+        sending_email: "Sender e-mail..."
         format: "Format"
         html: "html"
         text: "text"
         last_seen_user: "Sidst sete bruge:"
+        no_result: "Ingen resultater for sammenfatning."
         reply_key: "Svarnøgle"
         skipped_reason: "Begrundelse"
         incoming_emails:
@@ -2573,6 +2788,8 @@ da:
             change_trust_level: "skift tillidsniveau"
             change_username: "skift brugernavn"
             change_site_setting: "skift indstillinger for site"
+            change_theme: "skift tema"
+            delete_theme: "slet tema"
             change_site_text: "skift tekst for site"
             suspend_user: "suspendér user"
             unsuspend_user: "ophæv suspendering af bruger"
@@ -2601,6 +2818,7 @@ da:
             unlock_trust_level: "lås tillidsniveau op"
             activate_user: "Aktivér bruger"
             deactivate_user: "Deaktivér bruger"
+            change_readonly_mode: "skift skrivebeskyttet tilstand"
             backup_download: "download backup"
             backup_destroy: "slet backup"
         screened_emails:
@@ -2716,6 +2934,7 @@ da:
         logged_out: "Bruger er logget ud på alle enheder"
         revoke_admin: 'Fratag admin'
         grant_admin: 'Tildel admin'
+        grant_admin_confirm: "Vi har sendt dig en e-mail for at bekræfte den ny administrator. Åbn den venligst og følg instrukserne."
         revoke_moderation: 'Fratag moderation'
         grant_moderation: 'Tildel moderation'
         unblock: 'Ophæv blokering'
@@ -2984,6 +3203,7 @@ da:
         sample: "Tilføj denne HTML til dit site for at oprette og indlejre emner fra discourse. Erstat <b>REPLACE_ME</b> med den kanoniske URL for den side du indlejrer den på,"
         title: "Indlejring"
         host: "Tilladte servere"
+        path_whitelist: "Sti for hvidliste"
         edit: "redigér"
         category: "Opret i kategorien"
         add_host: "Tilføj server"
@@ -3020,6 +3240,7 @@ da:
           filter: "Søg (URL eller ekstern URL)"
   wizard_js:
     wizard:
+      done: "Færdig"
       back: "Tilbage"
       next: "Næste"
       step: "%{current} af %{total}"

@@ -899,7 +899,6 @@ pt_BR:
     force_hostname: "Se você quiser especificar um hostname na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
-    invite_only: "Cadastro público está desabilitado, todos os novos usuários devem ser explicitamente convidados por outros membros ou equipe."
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
     min_password_length: "Comprimento mínimo da senha."
     min_admin_password_length: "Tamanho de senha mínima para Administradores."

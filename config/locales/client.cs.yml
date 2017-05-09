@@ -734,7 +734,7 @@ cs:
         create: "Poslat pozvánku"
         generate_link: "Zkopírovat odkaz na pozvánku"
         bulk_invite:
-          none: "Nikoho jsi zatím nepozval. Odešli individuální pozvánky, případně <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrej CSV soubor</a>a pozvi tak několik lidí najednou."
+          none: "Nikoho jsi zatím nepozval. Odešli individuální pozvánky, případně <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrej CSV soubor</a> a pozvi tak několik lidí najednou."
           text: "Hromadné pozvání s pomocí souboru"
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
       password:

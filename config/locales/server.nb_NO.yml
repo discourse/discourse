@@ -32,6 +32,8 @@ nb_NO:
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet av forfatter"
+  themes:
+    bad_color_scheme: "Kan ikke oppdatere drakt, ugyldig fargepalett"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -258,6 +260,7 @@ nb_NO:
               same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
               same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
               same_as_current: "er det samme som nåværende passord."
+              unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
             ip_address:
               signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
         color_scheme_color:

@@ -999,7 +999,6 @@ pl_PL:
     force_hostname: "OSTRZEŻENIE! Tylko dla Developera! Określ nazwę hosta w adresie URL. Pozostaw domyślnie puste."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_passthrough_hours: "Jak długo użytkownik może użyć poprzednio wykorzystanego klucza zaproszenia by się zalogować, w godzinach"
-    invite_only: "Publiczna rejestracja jest wyłączona: wszyscy nowi użytkownicy muszą zostać zaproszeni przez innych użytkowników lub zespół."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
     min_username_length: "Minimalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy krótsze niż ta, twój serwis się uszkodzi!"
     max_username_length: "Maksymalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy dłuższe niż ta, twój serwis się uszkodzi!"

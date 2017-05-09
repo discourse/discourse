@@ -101,6 +101,7 @@ it:
           other: "%{count} anni dopo"
       previous_month: 'Mese Precedente'
       next_month: 'Mese Successivo'
+      placeholder: Seleziona una data
     share:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
@@ -143,6 +144,8 @@ it:
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
     bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
+    themes:
+      default_description: "Default"
     s3:
       regions:
         us_east_1: "Stati Uniti Est (Virginia del Nord)"
@@ -150,6 +153,7 @@ it:
         us_west_2: "Stati Uniti Ovest (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "Europa (Irlanda)"
+        eu_west_2: "EU (Londra)"
         eu_central_1: "Europa (Francoforte)"
         ap_southeast_1: "Asia Pacifico (Singapore)"
         ap_southeast_2: "Asia Pacifico (Sidney)"
@@ -1488,7 +1492,8 @@ it:
           other: "Seleziona il nuovo proprietario dei {{count}} messaggi di <b>{{old_user}}</b>."
         instructions_warn: "Nota che ogni notifica circa questo messaggio non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: al momento nessun dato messaggio-dipendente è stato trasferito al nuovo utente. Usare con cautela."
       change_timestamp:
-        action: "cambia timestamp"
+        title: "Cambia Marca Temporale..."
+        action: "cambia marca temporale"
         invalid_timestamp: "Il timestamp non può essere nel futuro."
         error: "Errore durante la modifica del timestamp dell'argomento."
         instructions: "Seleziona il nuovo timestamp per l'argomento. I messaggi nell'argomento saranno aggiornati in modo che abbiano lo stesso intervallo temporale."
@@ -2458,6 +2463,17 @@ it:
           none_selected: "Scegli un modello di e-mail per iniziare la modifica."
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
+        theme:
+          import_theme: "Importa Tema"
+          customize_desc: "Personalizza:"
+          title: "Temi"
+          long_title: "Modifica i colori, i CSS e il contenuto HTML del tuo sito"
+          edit: "Modifica"
+          edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
+          common: "Condiviso"
+          desktop: "Desktop"
+          mobile: "Mobile"
+          preview: "Anteprima"
         colors:
           title: "Colori"
           long_title: "Combinazioni Colori"

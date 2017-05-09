@@ -593,6 +593,15 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
         select_all: "Tout sélectionner"
+      preferences_nav:
+        account: "Compte"
+        profile: "Profil"
+        emails: "Courriels"
+        notifications: "Notifications"
+        categories: "Catégories"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Applications"
       change_password:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
@@ -1170,6 +1179,7 @@ fr:
       no_more_results: "Aucun résultat supplémentaire."
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
+      results_page: "Résultats de votre recherche"
       context:
         user: "Chercher dans les messages de @{{username}}"
         category: "Rechercher dans la catégorie #{{category}}"
@@ -1558,6 +1568,7 @@ fr:
           other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
         instructions_warn: "Aucune notification à propos de ce message ne sera transférée rétroactivement au nouvel utilisateur. <br>Attention : actuellement, aucune donnée liée aux messages n'est transféré vers le nouvel utilisateur. À utiliser avec précaution."
       change_timestamp:
+        title: "Modifier la date/heure…"
         action: "modifier la date/heure"
         invalid_timestamp: "La date/heure ne peut être dans le futur"
         error: "Il y a eu une erreur lors de la modification de la date/heure de ce sujet."
@@ -2370,6 +2381,7 @@ fr:
         add_members: "Ajouter des membres"
         custom: "Personnalisé"
         bulk_complete: "Les utilisateurs ont été ajoutés au groupe"
+        bulk_complete_users_not_added: "Ces utilisateurs n'ont pas été ajoutés (vérifiez qu'ils ont un compte):"
         bulk: "Ajouter au groupe en masse"
         bulk_paste: "Coller une liste de pseudo ou courriel, un par ligne :"
         bulk_select: "(sélectionner un groupe)"

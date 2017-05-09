@@ -876,7 +876,6 @@ zh_CN:
     force_hostname: "仅限开发者设定！警告！指定 URL 里的主机名。留空为默认"
     invite_expiry_days: "多少天以内用户的邀请码是有效的"
     invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
-    invite_only: "公开注册已禁用，新用户必须被其他成员或管理人员邀请。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
     min_password_length: "最小密码长度。"
     min_admin_password_length: "管理员最短密码长度"
@@ -1364,8 +1363,6 @@ zh_CN:
     website:
       domain_not_allowed: "网站无效。允许的域名有：%{domains}"
   flags_reminder:
-    flags_were_submitted:
-      other: "这些标记在过去 %{count} 小时内被提交。请审核他们。"
     subject_template:
       other: "%{count} 个标记需要被处理"
   unsubscribe_mailer:
