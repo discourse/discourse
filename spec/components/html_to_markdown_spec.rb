@@ -219,4 +219,9 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("<style>* { margin: 0 }</style>")).to eq("")
   end
 
+  it "handles divs within spans" do
+    html = "<div>1st paragraph<span><div>2nd paragraph</div></span></div>"
+    expect(html_to_markdown(html)).to eq("1st paragraph\n2nd paragraph")
+  end
+
 end
