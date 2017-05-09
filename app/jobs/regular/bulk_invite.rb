@@ -85,7 +85,7 @@ module Jobs
       begin
         Invite.invite_by_email(email, @current_user, topic, group_ids)
       rescue => e
-        log "Error inviting '#{email}' -- #{e}"
+        log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
         @sent -= 1
         @failed += 1
       end
