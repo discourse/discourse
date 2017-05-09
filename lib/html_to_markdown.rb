@@ -8,8 +8,20 @@ class HtmlToMarkdown
 
   def initialize(html, opts={})
     @opts = opts || {}
-    @doc = Nokogiri::HTML(html)
+    @doc = fix_span_elements(Nokogiri::HTML(html))
+
     remove_whitespaces!
+  end
+
+
+  # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
+  def fix_span_elements(node)
+    if node.name == 'span' && node.at('div')
+      node.swap(node.children)
+    end
+
+    node.children.each {|c| fix_span_elements(c)}
+    node
   end
 
   def remove_whitespaces!
@@ -33,7 +45,7 @@ class HtmlToMarkdown
   end
 
   def traverse(node)
-    node.children.each { |node| visit(node) }
+    node.children.each { |n| visit(n) }
   end
 
   def visit(node)
@@ -197,6 +209,7 @@ class HtmlToMarkdown
   end
 
   def format_block
+
     lines = @stack[-1].markdown.each_line.map do |line|
       prefix = @stack.map { |b| b.opened ? b.body : b.head }.join
       @stack.each { |b| b.opened = true }
