@@ -29,7 +29,7 @@ module Jobs
     end
 
     def read_csv_file(csv_path)
-      CSV.foreach(csv_path, encoding: "iso-8859-1:UTF-8") do |csv_info|
+      CSV.foreach(csv_path, encoding: "bom|utf-8") do |csv_info|
         if csv_info[0]
           if (EmailValidator.email_regex =~ csv_info[0])
             # email is valid
