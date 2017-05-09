@@ -1275,6 +1275,72 @@ describe Topic do
         end
       end
     end
+
+    describe "private status type" do
+      let(:topic) { Fabricate(:topic) }
+      let(:reminder) { Fabricate(:topic_status_update, user: admin, topic: topic, status_type: TopicStatusUpdate.types[:reminder]) }
+      let(:other_admin) { Fabricate(:admin) }
+
+      it "lets two users set have their own record" do
+        reminder
+        expect {
+          topic.set_or_create_status_update(TopicStatusUpdate.types[:reminder], 2, by_user: other_admin)
+        }.to change { TopicStatusUpdate.count }.by(1)
+      end
+
+      it "can update a user's existing record" do
+        Timecop.freeze(now) do
+          reminder
+          expect {
+            topic.set_or_create_status_update(TopicStatusUpdate.types[:reminder], 11, by_user: admin)
+          }.to_not change { TopicStatusUpdate.count }
+          reminder.reload
+          expect(reminder.execute_at).to eq(11.hours.from_now)
+        end
+      end
+    end
+  end
+
+  describe 'topic_status_update' do
+    let(:topic) { Fabricate(:topic) }
+    let(:admin) { Fabricate(:admin) }
+
+    let(:close) { Fabricate(:topic_status_update, execute_at: 24.hours.from_now, status_type: TopicStatusUpdate.types[:close]) }
+    let(:reminder) { Fabricate(:topic_status_update, execute_at: 2.hours.from_now, status_type: TopicStatusUpdate.types[:reminder], user: admin) }
+
+    it "returns nil if there aren't any" do
+      expect(topic.topic_status_update).to eq(nil)
+    end
+
+    it "returns the next one to execute" do
+      later  = Fabricate(:topic_status_update, execute_at: 24.hours.from_now, status_type: TopicStatusUpdate.types[:close])
+      sooner = Fabricate(:topic_status_update, execute_at: 8.hours.from_now, status_type: TopicStatusUpdate.types[:open])
+      topic.topic_status_updates = [later, sooner]
+      expect(topic.topic_status_update&.id).to eq(sooner.id)
+    end
+
+    it "doesn't return deleted topic status updates" do
+      topic.topic_status_updates = [close]
+      close.trash!(Discourse.system_user)
+      expect(topic.topic_status_update).to eq(nil)
+    end
+
+    it "without arguments, doesn't return updates targeted to a user" do
+      topic.topic_status_updates = [reminder, close]
+      expect(topic.topic_status_update&.id).to eq(close.id)
+    end
+
+    it "with user argument, returns your own scheduled update" do
+      other_admin = Fabricate(:admin)
+      other_reminder = Fabricate(:topic_status_update,
+        execute_at: 5.minutes.from_now,
+        status_type: TopicStatusUpdate.types[:reminder],
+        user: other_admin
+      )
+      topic.topic_status_updates = [other_reminder, reminder]
+      expect(topic.topic_status_update(admin)&.id).to eq(reminder.id)
+      expect(topic.topic_status_update(other_admin)&.id).to eq(other_reminder.id)
+    end
   end
 
   describe 'for_digest' do

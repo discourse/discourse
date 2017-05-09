@@ -9,7 +9,8 @@ class TopicStatusUpdate < ActiveRecord::Base
   validates :topic_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
-  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }
+  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }, if: :public_type?
+  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at, :user_id] }, if: :private_type?
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :ensure_update_will_happen
@@ -35,8 +36,17 @@ class TopicStatusUpdate < ActiveRecord::Base
     @types ||= Enum.new(
       close: 1,
       open: 2,
-      publish_to_category: 3
+      publish_to_category: 3,
+      reminder: 4
     )
+  end
+
+  def self.public_types
+    @_public_types ||= types.except(:reminder)
+  end
+
+  def self.private_types
+    @_private_types ||= types.only(:reminder)
   end
 
   def self.ensure_consistency!
@@ -58,6 +68,14 @@ class TopicStatusUpdate < ActiveRecord::Base
     end
   end
 
+  def public_type?
+    !!self.class.public_types[self.status_type]
+  end
+
+  def private_type?
+    !!self.class.private_types[self.status_type]
+  end
+
   private
 
     def ensure_update_will_happen
@@ -75,6 +93,10 @@ class TopicStatusUpdate < ActiveRecord::Base
 
     def cancel_auto_publish_to_category_job
       Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_status_update_id: id)
+    end
+
+    def cancel_auto_reminder_job
+      Jobs.cancel_scheduled_job(:topic_reminder, topic_status_update_id: id)
     end
 
     def schedule_auto_open_job(time)
@@ -103,6 +125,10 @@ class TopicStatusUpdate < ActiveRecord::Base
 
     def publishing_to_category?
       self.status_type.to_i == TopicStatusUpdate.types[:publish_to_category]
+    end
+
+    def schedule_auto_reminder_job(time)
+      Jobs.enqueue_at(time, :topic_reminder, topic_status_update_id: id)
     end
 end
 

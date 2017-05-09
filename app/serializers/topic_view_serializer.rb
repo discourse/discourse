@@ -251,7 +251,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   def topic_status_update
     TopicStatusUpdateSerializer.new(
-      object.topic.topic_status_update, root: false
+      object.topic.topic_status_update(object.guardian.user), root: false
     )
   end
 
