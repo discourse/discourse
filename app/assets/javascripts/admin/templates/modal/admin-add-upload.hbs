@@ -1,0 +1,12 @@
+{{#d-modal-body class='upload-selector' title="admin.customize.theme.add_upload"}}
+    <div class="inputs">
+      <input id="name" placeholder={{i18n 'admin.customize.theme.upload_name'}} value={{name}}><br>
+      <input onchange={{action "updateName"}} type="file" id="file-input" accept='*'><br>
+      <span class="description">{{i18n 'admin.customize.theme.upload_file_tip'}}</span>
+    </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="upload" disabled=loading class='btn btn-primary' icon='upload' label='admin.customize.theme.upload'}}
+  <a href {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+</div>

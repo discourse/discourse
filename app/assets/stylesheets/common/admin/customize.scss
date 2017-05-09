@@ -187,5 +187,21 @@
     font-size: 0.8em;
     margin-top: 8px;
   }
+
+  .removable-list {
+    list-style: none;
+    margin-left: 0;
+    li {
+      display: table-row;
+      .first {
+        padding-right: 8px;
+        padding-bottom: 10px;
+        min-width: 100px;
+      }
+      .first, .second {
+        display: table-cell;
+      }
+    }
+  }
 }
 

@@ -51,7 +51,6 @@
 
   <h3>{{i18n "admin.customize.theme.css_html"}}</h3>
   {{#if hasEditedFields}}
-
   <p>{{i18n "admin.customize.theme.custom_sections"}}</p>
   <ul>
   {{#each editedDescriptions as |desc|}}
@@ -87,6 +86,21 @@
     {{/if}}
   </p>
 
+
+  <h3>{{i18n "admin.customize.theme.uploads"}}</h3>
+  {{#if model.uploads}}
+    <ul class='removable-list'>
+      {{#each model.uploads as |upload|}}
+      <li><span class='first'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>{{d-button action="removeUpload" actionParam=upload class="second btn-small cancel-edit" icon="times"}}</li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>{{i18n "admin.customize.theme.no_uploads"}}</p>
+  {{/if}}
+  <p>
+    {{#d-button action="addUploadModal" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
+  </p>
+
   {{#if availableChildThemes}}
     <h3>{{i18n "admin.customize.theme.theme_components"}}</h3>
     {{#unless model.childThemes.length}}
@@ -97,9 +111,9 @@
       </label>
     </p>
     {{else}}
-    <ul>
+    <ul class='removable-list'>
       {{#each model.childThemes as |child|}}
-      <li>{{#link-to 'adminCustomizeThemes.show' child replace=true}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit" icon="times"}}</li>
+      <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='first'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit second" icon="times"}}</li>
       {{/each}}
     </ul>
     {{/unless}}
