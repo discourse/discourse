@@ -92,7 +92,7 @@ export default {
     const topic = this.currentTopic();
     // BIG hack, need a cleaner way
     if (topic && $('.posts-wrapper').length > 0) {
-      topic.toggleBookmark();
+      this.container.lookup('controller:topic').send('toggleBookmark');
     } else {
       this.sendToTopicListItemView('toggleBookmark');
     }
