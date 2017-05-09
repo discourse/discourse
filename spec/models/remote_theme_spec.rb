@@ -9,7 +9,7 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && mkdir desktop mobile common`
+      `cd #{repo_dir} && mkdir desktop mobile common assets`
       files.each do |name, data|
         File.write("#{repo_dir}/#{name}", data)
         `cd #{repo_dir} && git add #{name}`
@@ -26,6 +26,17 @@ describe RemoteTheme do
           "name": "awesome theme",
           "about_url": "https://www.site.com/about",
           "license_url": "https://www.site.com/license",
+          "assets": {
+            "font": "assets/awesome.woff2"
+          },
+          "fields": {
+            "color": {
+              "target": "desktop",
+              "value": "#FEF",
+              "type": "color"
+            },
+            "name": "sam"
+          },
           "color_schemes": {
             "Amazing": {
               "love": "#{options[:love]}"
@@ -35,13 +46,18 @@ describe RemoteTheme do
 JSON
     end
 
+    let :scss_data do
+      "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
+    end
+
     let :initial_repo do
       setup_git_repo(
         "about.json" => about_json,
-        "desktop/desktop.scss" => "body {color: red;}",
+        "desktop/desktop.scss" => scss_data,
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
+        "assets/awesome.woff2" => "FAKE FONT",
       )
     end
 
@@ -65,13 +81,19 @@ JSON
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
 
-      expect(@theme.theme_fields.length).to eq(3)
+      expect(@theme.theme_fields.length).to eq(6)
 
       mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
 
       expect(mapped["0-header"]).to eq("I AM HEADER")
-      expect(mapped["1-scss"]).to eq("body {color: red;}")
+      expect(mapped["1-scss"]).to eq(scss_data)
       expect(mapped["0-embedded_scss"]).to eq("EMBED")
+
+      expect(mapped["1-color"]).to eq("#FEF")
+      expect(mapped["0-font"]).to eq("")
+      expect(mapped["0-name"]).to eq("sam")
+
+      expect(mapped.length).to eq(6)
 
       expect(remote.remote_updated_at).to eq(time)
 
@@ -104,7 +126,7 @@ JSON
       mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
 
       expect(mapped["0-header"]).to eq("I AM UPDATED")
-      expect(mapped["1-scss"]).to eq("body {color: red;}")
+      expect(mapped["1-scss"]).to eq(scss_data)
       expect(remote.remote_updated_at).to eq(time)
 
     end

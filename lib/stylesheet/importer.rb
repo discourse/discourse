@@ -41,7 +41,9 @@ module Stylesheet
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
-      theme&.theme_fields&.where(type_id: ThemeField.theme_var_type_ids)&.each do |field|
+      theme&.theme_fields&.each do |field|
+        next unless ThemeField.theme_var_type_ids.include?(field.type_id)
+
         if field.type_id == ThemeField.types[:theme_upload_var]
           if upload = field.upload
             url = upload_cdn_path(upload.url)
@@ -84,8 +86,13 @@ module Stylesheet
     end
 
     def initialize(options)
+      @theme = options[:theme]
       @theme_id = options[:theme_id]
       @theme_field = options[:theme_field]
+      if @theme && !@theme_id
+        # make up an id so other stuff does not bail out
+        @theme_id = @theme.id || -1
+      end
     end
 
     def import_files(files)

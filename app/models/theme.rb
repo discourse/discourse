@@ -252,19 +252,16 @@ class Theme < ActiveRecord::Base
     type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name)
     raise "Unknown type #{type} passed to set field" unless type_id
 
-    if upload_id && !value
-      value = ""
-    end
-
-    raise "Missing value for theme field" unless value
+    value ||= ""
 
     field = theme_fields.find{|f| f.name==name && f.target_id == target_id && f.type_id == type_id}
     if field
-      if value.blank?
+      if value.blank? && !upload_id
         theme_fields.delete field.destroy
       else
-        if field.value != value
+        if field.value != value || field.upload_id != upload_id
           field.value = value
+          field.upload_id = upload_id
           changed_fields << field
         end
       end

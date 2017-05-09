@@ -8,6 +8,22 @@ class Admin::ThemesController < Admin::AdminController
     redirect_to path("/"), flash: {preview_theme_key: @theme.key}
   end
 
+  def upload_asset
+    path = params[:file].path
+    File.open(path) do |file|
+      upload = Upload.create_for(current_user.id,
+                                 file,
+                                 params[:original_filename] || File.basename(path),
+                                 File.size(path),
+                                 for_theme: true)
+      if upload.errors.count > 0
+        render json: upload.errors, status: :unprocessable_entity
+      else
+        render json: {upload_id: upload.id}, status: :created
+      end
+    end
+  end
+
   def import
 
     @theme = nil
@@ -184,7 +200,7 @@ class Admin::ThemesController < Admin::AdminController
                     :color_scheme_id,
                     :default,
                     :user_selectable,
-                    theme_fields: [:name, :target, :value],
+                    theme_fields: [:name, :target, :value, :upload_id, :type_id],
                     child_theme_ids: [])
         end
     end
@@ -194,7 +210,13 @@ class Admin::ThemesController < Admin::AdminController
       return unless fields = theme_params[:theme_fields]
 
       fields.each do |field|
-        @theme.set_field(target: field[:target], name: field[:name], value: field[:value], type_id: field[:type_id])
+        @theme.set_field(
+          target: field[:target],
+          name: field[:name],
+          value: field[:value],
+          type_id: field[:type_id],
+          upload_id: field[:upload_id]
+        )
       end
     end
 

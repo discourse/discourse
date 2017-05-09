@@ -713,6 +713,9 @@ files:
     default: 40
     min: 5
     max: 150
+  theme_authorized_extensions:
+    default: 'jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf'
+    type: list
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'

@@ -1,6 +1,9 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { url } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import showModal from 'discourse/lib/show-modal';
+
+const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
 
@@ -96,6 +99,16 @@ export default Ember.Controller.extend({
         });
     },
 
+    addUploadModal() {
+      showModal('admin-add-upload', {admin: true, name: ''});
+    },
+
+    addUpload(info) {
+      let model = this.get("model");
+      model.setField('common', info.name, '', info.upload_id, THEME_UPLOAD_VAR);
+      model.saveChanges('theme_fields').catch(e => popupAjaxError(e));
+    },
+
     cancelChangeScheme() {
       this.set("colorSchemeId", this.get("model.color_scheme_id"));
     },
@@ -152,6 +165,10 @@ export default Ember.Controller.extend({
       let themeId = parseInt(this.get("selectedChildThemeId"));
       let theme = this.get("allThemes").findBy("id", themeId);
       this.get("model").addChildTheme(theme);
+    },
+
+    removeUpload(upload) {
+      this.get("model").removeField(upload);
     },
 
     removeChildTheme(theme) {

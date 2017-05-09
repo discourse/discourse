@@ -112,7 +112,9 @@ COMPILED
       begin
         Stylesheet::Compiler.compile("@import \"theme_variables\"; @import \"theme_field\";",
                                      "theme.scss",
-                                     theme_field: self.value.dup)
+                                     theme_field: self.value.dup,
+                                     theme: self.theme
+                                    )
         self.error = nil unless error.nil?
       rescue SassC::SyntaxError => e
         self.error = e.message

@@ -15,6 +15,7 @@ class Upload < ActiveRecord::Base
   has_many :optimized_images, dependent: :destroy
 
   attr_accessor :is_attachment_for_group_message
+  attr_accessor :for_theme
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -38,7 +39,7 @@ class Upload < ActiveRecord::Base
       crop: crop
     }
 
-    if thumbnail = OptimizedImage.create_for(self, width, height, opts)
+    if _thumbnail = OptimizedImage.create_for(self, width, height, opts)
       self.width = width
       self.height = height
       save(validate: false)
@@ -99,6 +100,7 @@ class Upload < ActiveRecord::Base
   #   - origin (url)
   #   - image_type ("avatar", "profile_background", "card_background", "custom_emoji")
   #   - is_attachment_for_group_message (boolean)
+  #   - for_theme (boolean)
   def self.create_for(user_id, file, filename, filesize, options = {})
     upload = Upload.new
 
@@ -194,6 +196,10 @@ class Upload < ActiveRecord::Base
 
       if options[:is_attachment_for_group_message]
         upload.is_attachment_for_group_message = true
+      end
+
+      if options[:for_theme]
+        upload.for_theme = true
       end
 
       if is_dimensionless_image?(filename, upload.width, upload.height)

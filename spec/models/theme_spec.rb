@@ -182,6 +182,9 @@ HTML
 
       expect(Upload.where(id: upload.id)).to be_exist
 
+      # no error for theme field
+      theme.reload
+      expect(theme.theme_fields.find_by(name: :scss).error).to eq(nil)
 
       scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include(upload.url)

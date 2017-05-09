@@ -1,6 +1,8 @@
 import RestModel from 'discourse/models/rest';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
+const THEME_UPLOAD_VAR = 2;
+
 const Theme = RestModel.extend({
 
   @computed('theme_fields')
@@ -14,10 +16,24 @@ const Theme = RestModel.extend({
     let hash = {};
     if (fields) {
       fields.forEach(field=>{
-        hash[field.target + " " + field.name] = field;
+        if (!field.type_id || field.type_id < THEME_UPLOAD_VAR) {
+          hash[this.getKey(field)] = field;
+        }
       });
     }
     return hash;
+  },
+
+  @computed('theme_fields', 'theme_fields.@each')
+  uploads(fields) {
+    if (!fields) {
+      return [];
+    }
+    return fields.filter((f)=> f.target === 'common' && f.type_id === THEME_UPLOAD_VAR);
+  },
+
+  getKey(field){
+    return field.target + " " + field.name;
   },
 
   hasEdited(target, name){
@@ -31,30 +47,56 @@ const Theme = RestModel.extend({
 
   getError(target, name) {
     let themeFields = this.get("themeFields");
-    let key = target + " " + name;
+    let key = this.getKey({target,name});
     let field = themeFields[key];
     return field ? field.error : "";
   },
 
   getField(target, name) {
     let themeFields = this.get("themeFields");
-    let key = target + " " + name;
+    let key = this.getKey({target, name})
     let field = themeFields[key];
     return field ? field.value : "";
   },
 
-  setField(target, name, value) {
+  removeField(field) {
     this.set("changed", true);
 
+    field.upload_id = null;
+    field.value = null;
+
+    return this.saveChanges("theme_fields");
+  },
+
+  setField(target, name, value, upload_id, type_id) {
+    this.set("changed", true);
     let themeFields = this.get("themeFields");
-    let key = target + " " + name;
-    let field = themeFields[key];
-    if (!field) {
-      field = {name, target, value};
+    let field = {name, target, value, upload_id, type_id};
+
+    // slow path for uploads and so on
+    if (type_id && type_id > 1) {
+      let fields = this.get("theme_fields");
+      let existing = fields.find((f) =>
+          f.target === target &&
+          f.name === name &&
+          f.type_id === type_id);
+      if (existing) {
+        existing.value = value;
+        existing.upload_id = upload_id;
+      } else {
+        fields.push(field);
+      }
+      return;
+    }
+
+    // fast path
+    let key = this.getKey({target,name});
+    let existingField = themeFields[key];
+    if (!existingField) {
       this.theme_fields.push(field);
       themeFields[key] = field;
     } else {
-      field.value = value;
+      existingField.value = value;
     }
   },
 
