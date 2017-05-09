@@ -582,19 +582,3 @@ html[dir="rtl"] .select2-search-choice-close {
     height: 100px;
     overflow: scroll;
 }
-
-/* Retina-ize icons */
-
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 2dppx)  {
-  .select2-search input,
-  .select2-search-choice-close,
-  .select2-container .select2-choice abbr,
-  .select2-container .select2-choice .select2-arrow b {
-    background: asset-url('select2x2.png') no-repeat !important;
-    background-size: 60px 40px !important;
-  }
-
-  .select2-search input {
-    background-position: 100% -21px !important;
-  }
-}
