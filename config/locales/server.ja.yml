@@ -629,7 +629,6 @@ ja:
     force_hostname: "開発者用! 警告! URL 内のホスト名を指定。空欄でデフォルト値を利用。"
     invite_expiry_days: "招待キーの有効期間 (日)"
     invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
-    invite_only: "パブリックなユーザー登録を無効化し、全てのユーザは他のメンバーかスタッフの招待を必要とする"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"

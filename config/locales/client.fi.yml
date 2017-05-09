@@ -818,7 +818,7 @@ fi:
         title: "Profiilikuva"
         header_title: "profiili, viestit, kirjanmerkit ja asetukset"
       title:
-        title: "Otsikko"
+        title: "Titteli"
       filters:
         all: "Kaikki"
       stream:
@@ -1171,6 +1171,7 @@ fi:
       no_more_results: "Enempää tuloksia ei löytynyt."
       searching: "Etsitään ..."
       post_format: "#{{post_number}} käyttäjältä {{username}}"
+      results_page: "Hakutulokset"
       context:
         user: "Etsi @{{username}} viestejä"
         category: "Etsi alueelta #{{category}}"
@@ -1559,6 +1560,7 @@ fi:
           other: "Valitse uusi omistaja {{count}} viestille käyttäjältä <b>{{old_user}}</b>."
         instructions_warn: "Huomaa, että viestin ilmoitukset eivät siirry uudelle käyttäjälle automaattisesti. <br> Varoitus: Tällä hetkellä mikään viestikohtainen data ei siirry uudelle käyttäjälle. Käytä varoen."
       change_timestamp:
+        title: "Muuta aikaleimaa..."
         action: "muuta aikaleimaa"
         invalid_timestamp: "Aikaleima ei voi olla tulevaisuudessa."
         error: "Ketjun aikaleiman vaihtamisessa tapahtui virhe"
@@ -2371,6 +2373,7 @@ fi:
         add_members: "Lisää jäseniä"
         custom: "Mukautetut"
         bulk_complete: "Käyttäjät on lisätty ryhmään."
+        bulk_complete_users_not_added: "Näitä käyttäjiä ei lisätty (varmista, että tilit ovat olemassa):"
         bulk: "Lisää ryhmään useita"
         bulk_paste: "Liitä lista käyttäjänimistä tai sähköpostiosoitteista, yksi per rivi:"
         bulk_select: "(valitse ryhmä)"
@@ -2615,7 +2618,14 @@ fi:
             title: "Lisää mukautettua CSS:ää, hyväksymme käyvät CSS- ja SCSS-tyylit"
           header:
             text: "Ylätunniste"
+          head_tag:
+            text: "</head>"
+          body_tag:
+            text: "</body>"
         colors:
+          select_base:
+            title: "Valitse perusvärimalli"
+            description: "Perusvärimalli:"
           title: "Värit"
           edit: "Muokkaa värimalleja"
           long_title: "Värimallit"
@@ -2785,7 +2795,7 @@ fi:
             renamed_tag: "uudelleen nimetty tunniste"
             revoke_email: "peru sähköpostiosoite"
             lock_trust_level: "lukitse luottamustaso"
-            unlock_trust_level: "poista luottamustason lukitus"
+            unlock_trust_level: "vapauta luottamustaso"
             activate_user: "aktivoi käyttäjä"
             deactivate_user: "poista käyttäjätili käytöstä"
             change_readonly_mode: "muuta vain luku -tilaa"
@@ -2976,9 +2986,9 @@ fi:
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustaso 3 vaatimukset"
         trust_level_locked_tip: "luottamustaso on lukittu, järjestelmä ei ylennä tai alenna käyttäjää"
-        trust_level_unlocked_tip: "luottamustaso on lukitsematon, järjestelmä voi ylentää tai alentaa käyttäjän"
+        trust_level_unlocked_tip: "luottamustaso vapautettu, järjestelmä voi ylentää tai alentaa käyttäjän"
         lock_trust_level: "Lukitse luottamustaso"
-        unlock_trust_level: "Avaa luottamustason lukitus"
+        unlock_trust_level: "Vapauta luottamustaso"
         tl3_requirements:
           title: "Vaatimukset luottamustasolle 3."
           table_title:

@@ -635,7 +635,6 @@ sq:
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."

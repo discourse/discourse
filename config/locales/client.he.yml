@@ -593,6 +593,15 @@ he:
         move_to_archive: "ארכיון"
         failed_to_move: "בעיה בהעברת ההודעות שנבחרו (אולי יש תקלה בהתחברות?)"
         select_all: "בחרו הכל"
+      preferences_nav:
+        account: "חשבון"
+        profile: "פרופיל"
+        emails: "כתובות דוא״ל"
+        notifications: "התראות"
+        categories: "קטגוריות"
+        tags: "תגיות"
+        interface: "מנשק"
+        apps: "יישומים"
       change_password:
         success: "(דואר אלקטרוני נשלח)"
         in_progress: "(שולח דואר אלקטרוני)"
@@ -1170,6 +1179,7 @@ he:
       no_more_results: "לא נמצאו עוד תוצאות."
       searching: "מחפש ..."
       post_format: "#{{post_number}} מאת {{username}}"
+      results_page: "תוצאות חיפוש"
       context:
         user: "חיפוש פוסטים לפי @{{username}}"
         category: "חפשו את הקטגוריה #{{category}}"
@@ -1560,6 +1570,7 @@ he:
           other: "אנא בחרו את הבעלים החדש של {{count}} הפוסטים מאת <b>{{old_user}}</b>."
         instructions_warn: "יש לשים לב שהתראות על פוסט זה יועברו למשתמש החדש רטרואקטיבית.<br>זהירות: כרגע, שום מידע תלוי-פוסט אינו מועבר למשתמש החדש. השתמשו בזהירות."
       change_timestamp:
+        title: "שינוי חותמת זמן..."
         action: "שינוי חותמת זמן"
         invalid_timestamp: "חותמת זמן לא יכולה להיות בעתיד."
         error: "היתה שגיאה בשינוי חותמת הזמן של הנושא."
@@ -2372,6 +2383,7 @@ he:
         add_members: "הוספת חברים וחברות"
         custom: "מותאם"
         bulk_complete: "המשתמשים התווספו לקבוצה."
+        bulk_complete_users_not_added: "משתמשים אלו לא נוספו (וודאו שיש להם חשבון):"
         bulk: "הוספה מרוכזת לקבוצה"
         bulk_paste: "הדביקו רשימה של שמות משתמשים או כתובות אימייל, אחת בכל שורה:"
         bulk_select: "(בחר קבוצה)"

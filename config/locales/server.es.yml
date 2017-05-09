@@ -954,7 +954,6 @@ es:
     force_hostname: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para usar el valor por defecto"
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
-    invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por otros miembros de la comunidad o por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: si tienes usuarios o grupos con mayor cantidad de caracteres que ésta, tu sitio se romperá."
@@ -1437,7 +1436,6 @@ es:
     incorrect_username_email_or_password: "Nombre de usuario, dirección de correo o contraseña incorrectos"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
-    activate_email: "<p>¡Ya casi has terminado! Te hemos enviado un correo a <b>%{email}</b>. Por favor, sigue las instrucciones en tu email para activar tu cuenta.</p><p>Si no llega, comprueba tu buzón de correo basura, intenta iniciar sesión de nuevo para que te enviemos otro correo de activación o para cambiar el correo de activación.</p>"
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un email de activación. Por favor, sigue las instrucciones en el email para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
@@ -1483,9 +1481,6 @@ es:
     website:
       domain_not_allowed: "El sitio web no es válido. Los dominios permitidos son: %{domains}"
   flags_reminder:
-    flags_were_submitted:
-      one: "Hay reportes enviados hace 1 hora. Por favor, revísalos."
-      other: "Hay reportes enviados hace %{count} horas. Por favor, revísalos."
     subject_template:
       one: "1 reporte esperando ser atendidos."
       other: "%{count} reportes esperando ser atendidos."
@@ -2073,14 +2068,6 @@ es:
     new_user_of_the_month:
       title: "¡Eres un usuario nuevo del mes!"
       subject_template: "¡Eres un usuario nuevo del mes!"
-      text_body_template: |
-        Enhorabuena, has ganado el distintivo **Premio al nuevo usuario del mes de %{month_year}**. :trophy:
-
-        Te has convertido rápidamente en un valioso miembro de nuestra comunidad y estamos disfrutando con tus posts.
-
-        Este premio será visible para siempre como un distintivo en tu [página de usuario](/my/badges).
-
-        Gracias, ¡y sigue así!
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

@@ -564,6 +564,15 @@ fa_IR:
         move_to_archive: "بایگانی"
         failed_to_move: "انتقال پیام‌های انتخاب شده با اشکال مواجه شد (شاید اتصال شما در دسترس نیست)"
         select_all: "انتخاب همه"
+      preferences_nav:
+        account: "حساب کاربری"
+        profile: "پروفایل"
+        emails: "ایمیل‌ها"
+        notifications: "اطلاعیه‌ها"
+        categories: "دسته‌بندی‌ها"
+        tags: "برچسب‌‌ها"
+        interface: "رابط"
+        apps: "برنامه‌ها"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"

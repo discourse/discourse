@@ -863,7 +863,6 @@ sv:
     force_hostname: "ENDAST UTVECKLARE! VARNING! Specifiera ett värdnamn i URL:en. Lämna tom för standard."
     invite_expiry_days: "Hur länge användarinbjudningsnycklar är giltiga, i dagar"
     invite_passthrough_hours: "Hur länge en användare kan använda en tidigare utlöst inbjudningsnyckel för att logga in, i timmar"
-    invite_only: "Allmän registrering är avstängt, alla nya användare måste vara explicit inbjudna av andra medlemmar eller personal."
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
     min_username_length: "Minsta längd på användarnamnet. Varning: om någon existerande användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
     max_username_length: "Längsta användarnamn. Varning: om någon existerande användare eller grupp har ett namn längre än detta, er sida kommer att gå sönder."
@@ -1336,9 +1335,6 @@ sv:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
   flags_reminder:
-    flags_were_submitted:
-      one: "Flaggor insändes för mer än en timme sedan. Var god och granska den. "
-      other: "Flaggor insändes för mer än %{count} timmar sedan. Var god och granska dem. "
     subject_template:
       one: "1 flagga väntar på att bli hanterad"
       other: "%{count} flaggor väntar på att bli hanterade"

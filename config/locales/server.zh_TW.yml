@@ -880,7 +880,6 @@ zh_TW:
     force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
-    invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_username_length: "最短用戶名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
     max_username_length: "最長用戶名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"
@@ -1367,8 +1366,6 @@ zh_TW:
     website:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
   flags_reminder:
-    flags_were_submitted:
-      other: "這些標記在過去 %{count} 小時內被提交。請審核他們。"
     subject_template:
       other: "%{count} 個標記需要被處理"
   unsubscribe_mailer:

@@ -801,7 +801,6 @@ sk:
     force_hostname: "POZOR! LEN PRE VÝVOJÁROV! V URL zadajte hostname. Ak chcete použiť predvolené, nechajte políčko prázdne."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
     invite_passthrough_hours: "Ako dlho môže používateľ používať získaný pozývací kľúč na prihlasovanie, v hodinách"
-    invite_only: "Verejná registrácia je vypnutá, všetci noví používatelia musia byť explicitne pozvaní ostatnými členmi alebo obsluhou."
     login_required: "Požadovať prihlásenie pre čítanie obshau tejto stránky, zakáž anonymný prístup. "
     min_password_length: "Minimálna dĺžka hesla."
     min_admin_password_length: "Minimálna dĺžka hesla pre Administrátora."

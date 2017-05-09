@@ -213,6 +213,8 @@ fr:
   queue:
     delete_reason: "Supprimé depuis la liste des messages en attente de validation"
   groups:
+    success:
+      bulk_add: "%{users_added} utilisateurs ont bien été ajoutés au groupe."
     errors:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
       member_already_exist: "« %{username} » est déjà membre de ce groupe."
@@ -921,7 +923,6 @@ fr:
     force_hostname: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Voulez-vous spécifier un nom d'hôte dans l'URL ? Sinon, laisser vide par défaut."
     invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides"
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
-    invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent explicitement être invités par les membres ou l'équipe du forum."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
     min_password_length: "Longueur minimale du mot de passe."
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
@@ -1446,9 +1447,6 @@ fr:
     website:
       domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
   flags_reminder:
-    flags_were_submitted:
-      one: "Un signalement a été soumis il y a plus d'une heure. Veuillez la passer en revue."
-      other: "Des signalements ont été soumis il y a plus de %{count} heures. Veuillez les passer en revue."
     subject_template:
       one: "un signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement."
@@ -1464,7 +1462,11 @@ fr:
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
+  admin_confirmation_mailer:
+    title: "Confirmation de l'Administrateur"
+    subject_template: "[%{site_name}] Confirmer votre nouveau compte"
   test_mailer:
+    title: "Envoyer un courriel de test"
     text_body_template: |
       Ceci est un courriel de test de
 
@@ -1507,6 +1509,7 @@ fr:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
     text_body_template: |+
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
 
@@ -1520,6 +1523,7 @@ fr:
       - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
 
   new_version_mailer_with_notes:
+    subject_template: "[%{email_prefix}] mise à jour disponible"
     text_body_template: |
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
 
@@ -1552,6 +1556,8 @@ fr:
     deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   system_messages:
+    private_topic_title: "Topic #%{id}"
+    contents_hidden: "Veuillez visiter le post pour voir son contenu."
     post_hidden:
       title: "Message caché"
       subject_template: "Message caché suite à des signalements de la communauté"
@@ -1571,6 +1577,7 @@ fr:
         Afin d'être guidé, merci de vous référer à notre [charte](%{base_url}/guidelines).
 
     welcome_user:
+      title: "Bienvenue Utilisateur"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir rejoint %{site_name} et bienvenue !
@@ -1644,6 +1651,7 @@ fr:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "Export CVS réussi"
       subject_template: "Exportation des données terminée"
     csv_export_failed:
       subject_template: "Échec de l'exportation des données "
@@ -1654,6 +1662,7 @@ fr:
 
         Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse de courriel. Si vous pensez qu'il s'agit d'une erreur, contacter un responsable.
     email_reject_user_not_found:
+      subject_template: "[%{site_name}] Problème de courriel -- L'utilisateur est introuvable"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -1842,14 +1851,6 @@ fr:
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur du mois !"
       subject_template: "Vous êtes un nouvel utilisateur du mois !"
-      text_body_template: |
-        Félicitations, vous avez été récompensé du prix du **nouvel utilisateur du mois de %{month_year}**. :trophy:
-
-        Vous êtes rapidement devenu un membre important de notre communauté et tout le monde apprécie vos messages.
-
-        Cette récompense sera en permanence visible comme un badge sur [votre page utulisateur](/my/badges).
-
-        Merci, et continuez ainsi !
   unsubscribe_link: |
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2008,6 +2009,7 @@ fr:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "Utilisateur a posté un PM"
       subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2057,6 +2059,8 @@ fr:
       title: "Définir le mot de passe"
     admin_login:
       title: "Identifiant Administrateur"
+    confirm_new_email:
+      title: "Confirmer votre nouvelle adresse courriel"
     notify_old_email:
       text_body_template: |
         Ceci est un message automatique pour vous informer que votre adresse courriel pour
@@ -2126,6 +2130,9 @@ fr:
     base_theme_name: "Base"
     default: "Palette claire"
     dark: "Palette sombre"
+    default_theme_name: "Par défaut"
+    dark_theme_name: "Sombre"
+    light_theme_name: "Clair"
   about: "À propos"
   guidelines: "Charte"
   privacy: "Confidentialité"
@@ -2439,6 +2446,7 @@ fr:
       description: Contributions remarquables durant leur premier mois
       long_description: |
         Ce badge est accordé pour féliciter deux nouveaux utilisateurs chaque mois pour leur excellente contribution mesurée par la fréquence à laquelle leurs messages reçoivent des J'aime et par qui.
+    badge_title_metadata: "%{display_name} badge sur %{site_title}"
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"

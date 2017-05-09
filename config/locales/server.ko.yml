@@ -628,7 +628,6 @@ ko:
     force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
     invite_expiry_days: "사용자 초대키 유효 기간, 일"
     invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
-    invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."

@@ -750,7 +750,6 @@ tr_TR:
     force_hostname: "SADECE YAZILIMCILAR İÇİN! DİKKAT! URL'de bir bilgisayar adı belirleyin. Öntanımlı için boş bırakın."
     invite_expiry_days: "Kullanıcı davet anahtarlarının geçerlilik süresi, gün olarak"
     invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
-    invite_only: "Herkese açık kayıt sistemi devre dışı bırakıldı, tüm yeni kullanıcıların bir üye ya da görevli tarafından davet edilmesi gerekir. "
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
     min_password_length: "Parolanın en az uzunluğu."
     min_admin_password_length: "Yönetici için parolanın en az uzunluğu."
@@ -1145,8 +1144,6 @@ tr_TR:
       blocked: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor."
       max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen sınır aşıldı.) Bir görevli ile iletişime geçin."
   flags_reminder:
-    flags_were_submitted:
-      other: "Bildirimler %{count} saat önce gönderilmiş. Lütfen inceleyin."
     subject_template:
       other: "İlgilenilmesi gereken %{count} bildirim var"
   unsubscribe_mailer:

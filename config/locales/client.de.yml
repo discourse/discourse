@@ -101,6 +101,7 @@ de:
           other: "%{count} Jahre später"
       previous_month: 'Vormonat'
       next_month: 'Nächster Monat'
+      placeholder: Datum auswählen
     share:
       topic: 'Teile einen Link zu diesem Thema'
       post: 'Beitrag #%{postNumber}'
@@ -143,6 +144,8 @@ de:
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} Benutzer angemeldet haben."
     bootstrap_mode_disabled: "Der Starthilfe-Modus wird innerhalb der nächsten 24 Stunden deaktiviert."
+    themes:
+      default_description: "Standard"
     s3:
       regions:
         us_east_1: "USA Ost (Nord-Virginia)"
@@ -150,6 +153,7 @@ de:
         us_west_2: "USA West (Oregon)"
         us_gov_west_1: "AWS GovCloud (USA)"
         eu_west_1: "EU (Irland)"
+        eu_west_2: "EU (London)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asien-Pazifik (Singapur)"
         ap_southeast_2: "Asien-Pazifik (Sydney)"
@@ -366,6 +370,7 @@ de:
       automatic_group: Automatische Gruppe
       closed_group: Geschlossene Gruppe
       is_group_user: "Du bist ein Mitglied in dieser Gruppe."
+      allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppen-Eigentümer zu senden."
       membership: "Mitgliedschaft"
       name: "Name"
       user_count: "Anzahl der Mitglieder"
@@ -385,6 +390,7 @@ de:
       posts: "Beiträge"
       mentions: "Erwähnungen"
       messages: "Nachrichten"
+      notification_level: "Standard-Benachrichtigungsstufe für Gruppen-Nachrichten"
       alias_levels:
         title: "Wer kann diese Gruppe kontaktieren und per @Gruppenname erwähnen?"
         nobody: "Niemand"
@@ -563,11 +569,13 @@ de:
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
       muted_topics_link: "Zeige stummgeschaltete Themen"
       watched_topics_link: "Zeige beobachtete Themen"
+      tracked_topics_link: "Zeige verfolgte Themen"
       automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
       apps: "Apps"
       revoke_access: "Entziehe Zugriffsrecht"
       undo_revoke_access: "Entziehe Zugriffsrecht widerrufen"
       api_approved: "Genehmigt:"
+      theme: "Design"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -585,6 +593,15 @@ de:
         move_to_archive: "Archivieren"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
         select_all: "Alle auswählen"
+      preferences_nav:
+        account: "Konto"
+        profile: "Profil"
+        emails: "E-Mails"
+        notifications: "Benachrichtigungen"
+        categories: "Kategorien"
+        tags: "Schlagwörter"
+        interface: "Oberfläche"
+        apps: "Apps"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -937,6 +954,10 @@ de:
       not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht anmelden."
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
+      resend_title: "Aktivierungsmail erneut senden"
+      change_email: "E-Mail-Adresse ändern"
+      provide_new_email: "Gib’ eine neue Adresse an und wir senden deine Bestätigungsmail erneut."
+      submit_new_email: "E-Mail-Adresse aktualisieren"
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
       to_continue: "Melde dich bitte an"
       preferences: "Du musst angemeldet sein, um deine Benutzereinstellungen bearbeiten zu können."
@@ -1144,6 +1165,7 @@ de:
       sort_by: "Sortieren nach"
       relevance: "Relevanz"
       latest_post: "letzter Beitrag"
+      latest_topic: "Neuestes Thema"
       most_viewed: "Anzahl der Aufrufe"
       most_liked: "Anzahl der Likes"
       select_all: "Alle auswählen"
@@ -1157,6 +1179,7 @@ de:
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       searching: "Suche …"
       post_format: "#{{post_number}} von {{username}}"
+      results_page: "Suchergebnisse"
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie #{{category}} durchsuchen"
@@ -1322,6 +1345,39 @@ de:
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
+      topic_status_update:
+        title: "Setzte die Themen-Stoppuhr"
+        save: "Stoppuhr setzen"
+        num_of_hours: "Stunden:"
+        remove: "Stoppuhr löschen"
+        publish_to: "Veröffentlichen in:"
+        when: "Wann:"
+      auto_update_input:
+        later_today: "Im Laufe des Tages"
+        tomorrow: "Morgen"
+        later_this_week: "Später in dieser Woche"
+        this_weekend: "Dieses Wochenende"
+        next_week: "Nächste Woche"
+        pick_date_and_time: "Datum und Zeit wählen"
+        set_based_on_last_post: "Schließen basierend auf dem letzten Beitrag"
+      publish_to_category:
+        title: "Veröffentlichung planen"
+      temp_open:
+        title: "Vorübergehend öffnen"
+      auto_reopen:
+        title: "Thema automatisch öffnen"
+      temp_close:
+        title: "Vorübergehend schließen"
+      auto_close:
+        title: "Thema automatisch schließen"
+        label: "Thema automatisch schließen (Stunden):"
+        error: "Bitte gib einen gültigen Wert ein."
+        based_on_last_post: "Nicht schließen, bevor der letzte Beitrag in dem Thema mindestens so alt ist."
+      status_update_notice:
+        auto_open: "Dieses Thema wird automatisch geöffnet %{timeLeft}."
+        auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
+        auto_publish_to_category: "Dieses Thema wird in <a href=%{categoryUrl}>#%{categoryName}</a> veröffentlicht %{timeLeft}."
+        auto_close_based_on_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
       auto_close_title: 'Automatisches Schließen'
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits eine Stunde alt. Das Thema wird daher sofort geschlossen."
@@ -1352,6 +1408,10 @@ de:
           '3_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
           '3_1': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast.'
           '3': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
+          '2_8': 'Du wirst eine Anzahl neuer Antworten sehen, weil du diese Kategorie verfolgst.'
+          '2_4': 'Du wirst eine Anzahl neuer Antworten sehen, weil du einen Beitrag in diesem Thema geschrieben hast.'
+          '2_2': 'Du wirst eine Anzahl neuer Antworten sehen, weil du dieses Thema verfolgst.'
+          '2': 'Du wirst eine Anzahl neuer Antworten sehen, weil du <a href="/u/{{username}}/preferences">dieses Thema gelesen hast</a>.'
           '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
@@ -1387,6 +1447,7 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen..."
+        timed_update: "Themen-Timer setzen…"
         pin: "Thema anheften..."
         unpin: "Thema loslösen..."
         unarchive: "Thema aus Archiv holen"
@@ -1507,6 +1568,7 @@ de:
           other: "Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>."
         instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
       change_timestamp:
+        title: "Zeitstempel ändern…"
         action: "Erstelldatum ändern"
         invalid_timestamp: "Das Erstelldatum kann nicht in der Zukunft liegen."
         error: "Beim Ändern des Erstelldatums des Themas ist ein Fehler aufgetreten."
@@ -2315,6 +2377,7 @@ de:
         add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
         bulk_complete: "Die Benutzer wurden der Gruppe hinzugefügt."
+        bulk_complete_users_not_added: "Diese Benutzer wurden nicht hinzugefügt (stelle sicher, dass sie ein Konto haben):"
         bulk: "Mehrere der Gruppe hinzufügen"
         bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein (ein Eintrag je Zeile):"
         bulk_select: "(wähle eine Gruppe aus)"
@@ -2497,15 +2560,21 @@ de:
         title: "Anpassen"
         long_title: "Anpassungen"
         preview: "Vorschau"
+        explain_preview: "Seite mit diesem Theme anschauen"
         save: "Speichern"
         new: "Neu"
         new_style: "Neuer Style"
         import: "Importieren"
         delete: "Löschen"
+        delete_confirm: "Dieses Theme löschen?"
         about: "Ändere die Stylesheets (CSS) und den HTML-Header auf der Website. Füge eine Anpassung hinzu, um zu starten."
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
+        copy_to_clipboard: "In Zwischenablage kopieren"
+        copied_to_clipboard: "Wurde in Zwischenablage kopiert"
+        copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
+        theme_owner: "Nicht bearbeitbar, Eigentümer:"
         email_templates:
           title: "E-Mail-Vorlagen"
           subject: "Betreff"
@@ -2514,9 +2583,69 @@ de:
           none_selected: "Wähle eine E-Mail-Vorlage aus, um diese zu bearbeiten."
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
+        theme:
+          import_theme: "Design importieren"
+          customize_desc: "Anpassen:"
+          title: "Designs"
+          long_title: "Farben, CSS und HTML-Inhalte deiner Seite erweitern"
+          edit: "Bearbeiten"
+          edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
+          common: "Gemeinsam"
+          desktop: "Desktop"
+          mobile: "Mobil"
+          preview: "Vorschau"
+          is_default: "Theme ist standardmäßig aktiviert"
+          user_selectable: "Theme kann von Benutzern ausgewählt werden"
+          color_scheme: "Farbschema"
+          color_scheme_select: "Wähle Farben für dieses Theme"
+          custom_sections: "Benutzerdefinierte Abschnitte:"
+          theme_components: "Theme-Komponenten"
+          child_themes_check: "Theme beinhaltet andere Kinder-Themes"
+          css_html: "Benutzerdefiniertes CSS/HTML"
+          edit_css_html: "Bearbeite CSS/HTML"
+          edit_css_html_help: "Du hast kein CSS oder HTML bearbeitet"
+          import_web_tip: "Repository mit dem Theme"
+          import_file_tip: ".dcstyle.json Datei mit dem Theme"
+          about_theme: "Über das Theme"
+          license: "Lizenz"
+          component_of: "Theme ist eine Komponente von:"
+          update_to_latest: "Aktualisieren auf neueste Version"
+          check_for_updates: "Nach Aktualisierungen suchen"
+          updating: "Wird aktualisiert..."
+          up_to_date: "Theme ist aktuell, zuletzt geprüft:"
+          add: "Hinzufügen"
+          commits_behind:
+            one: "Theme ist 1 Commit hinterher!"
+            other: "Theme ist {{count}} Commits hinterher!"
+          scss:
+            text: "CSS"
+            title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"
+          header:
+            text: "Kopfzeile"
+            title: "Gib HTML ein, das oberhalb der Seiten-Kopfzeile angezeigt wird"
+          after_header:
+            text: "Nach der Kopfzeile"
+            title: "Gib HTML ein, das auf allen Seiten unterhalb der Seiten-Kopfzeile angezeigt wird"
+          footer:
+            text: "Fußzeile"
+            title: "Gib HTML ein, das in der Seiten-Fußzeile angezeigt wird"
+          embedded_scss:
+            text: "Eingebettetes CSS"
+            title: "Gib benutzerdefiniertes CSS ein, das mit eingebetten Versionen von Kommentaren übermittelt wird"
+          head_tag:
+            text: "</head>"
+            title: "HTML, das vor dem </head>-Befehl eingefügt wird"
+          body_tag:
+            text: "</body>"
+            title: "HTML, das vor dem </body>-Befehl eingefügt wird"
         colors:
+          select_base:
+            title: "Wähle Basis-Farbschema"
+            description: "Basis-Schema:"
           title: "Farben"
+          edit: "Farbschemas bearbeiten"
           long_title: "Farbschemata"
+          about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Erstelle ein neues Farbschema um loszulegen."
           new_name: "Neues Farbschema"
           copy_name_prefix: "Kopie von"
           delete_confirm: "Dieses Farbschema löschen?"
@@ -2655,6 +2784,8 @@ de:
             change_trust_level: "Vertrauensstufe ändern"
             change_username: "Benutzernamen ändern"
             change_site_setting: "Einstellungen ändern"
+            change_theme: "Theme wechseln"
+            delete_theme: "Theme löschen"
             change_site_text: "Text ändern"
             suspend_user: "Benutzer sperren"
             unsuspend_user: "Benutzer entsperren"
@@ -2799,6 +2930,7 @@ de:
         logged_out: "Der Benutzer wurde auf allen Geräten abgemeldet"
         revoke_admin: 'Administrationsrechte entziehen'
         grant_admin: 'Administrationsrechte vergeben'
+        grant_admin_confirm: "Wir haben dir eine E-Mail geschickt, um den neuen Administrator zu überprüfen. Bitte öffne sie und folge den Anweisungen."
         revoke_moderation: 'Moderationsrechte entziehen'
         grant_moderation: 'Moderationsrechte vergeben'
         unblock: 'Blockierung aufheben'

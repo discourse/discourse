@@ -930,7 +930,6 @@ ro:
     force_hostname: "PENTRU DEVELOPER! ATENȚIE! Specifică un nume de gazdă în URL. Lasă liber pentru cel implicit."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     invite_passthrough_hours: "Cât timp un utilizator poate folosi o cheie de invitație acceptată anterior pentru autentificare, în ore"
-    invite_only: "Înregistrarea publică este dezactivată, toți utilizatorii noi trebuie să fie exclusiv invitați de un alt membru sau de personalul site-ului."
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
     min_password_length: "Lungimea minimă a parolei."
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."
@@ -1428,10 +1427,6 @@ ro:
       blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
       max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
   flags_reminder:
-    flags_were_submitted:
-      one: "Au fost trimise marcaje de avertizare acum mai bine de o oră. Te rugăm, trece-le în revistă. "
-      few: "Au fost trimise marcaje de avertizare acum mai bine de %{count}  ore. Te rugăm, trece-le în revistă. "
-      other: "Au fost trimise marcaje de avertizare acum mai bine de %{count} de ore. Te rugăm, trece-le în revistă. "
     subject_template:
       one: "un marcaj de avertizare așteptând să fie gestionat"
       few: "%{count}  marcaje de avertizare așteptând să fie gestionate"

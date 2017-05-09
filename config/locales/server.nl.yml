@@ -937,7 +937,6 @@ nl:
     force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
     invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
-    invite_only: "Openbare registratie is uitgeschakeld, alle nieuwe gebruikers moeten expliciet worden uitgenodigd door andere leden of personeel."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
     min_password_length: "Minimum lengte wachtwoord."
     min_admin_password_length: "Minimale wachtwoordlengte voor de beheerder."

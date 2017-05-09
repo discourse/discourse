@@ -213,6 +213,8 @@ fi:
   queue:
     delete_reason: "Poistettu moderointijonon kautta"
   groups:
+    success:
+      bulk_add: "%{users_added} käyttäjää lisättiin ryhmään."
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
       member_already_exist: "'%{username}' on jo ryhmän jäsen."
@@ -958,7 +960,7 @@ fi:
     force_hostname: "VAIN KEHITTÄJILLE! VAROITUS! Määrittele isäntänimi URL:ssa. Jätä tyhjäksi käyttääksesi oletusarvoa."
     invite_expiry_days: "Kuinka monta päivää käyttäjäkutsujen avaimet ovat voimassa"
     invite_passthrough_hours: "Kuinka pitkään käyttäjä voi käyttää vastatun kutsun avainta kirjautuakseen sisään, tunneissa"
-    invite_only: "Julkinen rekisteröityminen on otettu pois käytöstä, uuden tilin luominen vaatii kutsun muilta käyttäjiltä tai henkilökunnalta."
+    invite_only: "Julkinen rekisteröityminen ei ole käytössä, uuden tilin luominen vaatii kutsun henkilökunnalta."
     login_required: "Vaadi kirjautumista sivuston lukemiseen, epää anonyymi pääsy."
     min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä lyhyempi nimi, sivustosi hajoaa!"
     max_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä pidempi nimi, sivustosi hajoaa!"
@@ -1150,6 +1152,7 @@ fi:
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
+    incoming_email_prefer_html: "Käytä HTMLää tekstin sijaan saapuville sähköposteille."
     disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
     short_email_length: "Lyhyen sähköpostin pituus tavuissa"
@@ -1173,6 +1176,7 @@ fi:
     attachment_filename_blacklist: "Lista avainsanoja, jota käytetään liitteiden estämisessä niiden tiedostonimen perusteella."
     enable_forwarded_emails: "[BETA] Salli käyttäjän luoda ketju välittämällä saapunut sähköpostiviesti."
     always_show_trimmed_content: "Näytä kaikkialla saapuvien sähköpostien karsitut osat. VAROITUS: voi paljastaa sähköpostiosoitteita."
+    private_email: "Älä laita sähköposteihin viestien tai ketjujen sisältöä yksityisyyssyistä."
     manual_polling_enabled: "Työnnä sähköpostit käyttäen sähköpostivastausten APIa."
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
@@ -1255,6 +1259,7 @@ fi:
     embed_username_required: "Käyttäjänimi vaaditaan ketjun luomiseksi."
     embed_whitelist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä."
     embed_blacklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä."
+    notify_about_flags_after: "Jos liputusta ei ole käsitelty näin monessa tunnissa, lähetä yksityisviesti henkilökunnalle. Aseta 0 ottaaksesi pois käytöstä."
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, huomauta ylläpitäjiä ketjujen luonnista."
     delete_drafts_older_than_n_days: Poista yli (n) päivää vanhat luonnokset.
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
@@ -1436,7 +1441,6 @@ fi:
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
     wait_approval: "Kiitos kirjautumisesta. Ilmoitamme, kun tilisi on hyväksytty."
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
-    activate_email: "<p>Melkein valmista! Lähetimme sähköpostin osoitteeseen <b>%{email}</b>. Aktivoi käyttäjätilisi seuraamalla viestin ohjeita.</p><p>Jos viesti ei tullut perille, tarkista roskapostikansiosi - tai yritä kirjautua sisään, jolloin voit lähettää aktivointiviestin uudelleen tai muuttaa sähköpostiosoitetta.</p>"
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
@@ -1483,8 +1487,8 @@ fi:
       domain_not_allowed: "Verkkosivu ei kelpaa. Sallitus verkkotunnukset ovat: %{domains}"
   flags_reminder:
     flags_were_submitted:
-      one: "Viestejä liputettiin yli tunti sitten. Tarkasta liputukset."
-      other: "Viestejä liputettiin yli %{count} tuntia sitten. Tarkasta liputukset."
+      one: "Viestejä liputettiin yli tunti sitten. [Tarkastele niitä](/admin/flags)."
+      other: "Viestejä liputettiin yli %{count} tuntia sitten. [Tarkastele niitä](/admin/flags)."
     subject_template:
       one: "Yksi liputus odottaa käsittelyä"
       other: "%{count} liputusta odottaa käsittelyä"
@@ -1695,6 +1699,8 @@ fi:
     one: "Ketju on suljettu väliaikaisesti 1 tunnin ajan suuren lippumäärän vuoksi."
     other: "Ketju on suljettu väliaikaisesti %{count} tunnin ajan suuren lippumäärän vuoksi."
   system_messages:
+    private_topic_title: "Ketju #%{id}"
+    contents_hidden: "Käy lukemassa viesti, jotta näet sen sisällön."
     post_hidden:
       title: "Viesti piilotettu"
       subject_template: "Yhteisön piiloon liputtama viesti"
@@ -2063,13 +2069,11 @@ fi:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"
       text_body_template: |
-        Onneksi olkoon, sinulle myönnettiin Kuukauden tulokas -palkinto %{month_year}** :trophy:
+        Onneksi olkoon, olet ansainnut Kuukauden tulokas -palkinnon %{month_year}** :trophy:
 
-        Sinusta on äkkiä tullut tärkeä osa yhteisöä, ja kaikki todella pitävät viesteistäsi.
+        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](/my/badges).
 
-        Palkinto näkyy pysyvästi ansiomerkkinä [käyttäjäsivullasi](/my/badges).
-
-        Kiitos - jatka samaa rataa!
+        Sinusta on äkkiä tullut tärkeä osa yhteisöä. Kiitos kun liityit, ja jatka samaa rataa!
   unsubscribe_link: |
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

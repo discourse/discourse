@@ -102,7 +102,7 @@ ar:
           many: "%{count}س"
           other: "%{count}س"
         date_month: "[في] D MMM"
-        date_year: "MMM YYYY"
+        date_year: "[في] MMM YYYY"
       medium:
         x_minutes:
           zero: "أقل من دقيقة"
@@ -681,6 +681,7 @@ ar:
       revoke_access: "توقيف صلاحيات الوصول"
       undo_revoke_access: "رفع توقيف صلاحيات الوصول"
       api_approved: "موافق عليه:"
+      theme: "السّم"
       staff_counters:
         deleted_posts: "حذف جميع المشاركات"
         suspensions: "موقوف"
@@ -776,7 +777,7 @@ ar:
         title: "أعد كتابة كلمة السّرّ"
       last_posted: "آخر مشاركة"
       last_emailed: "أخر مراسلة"
-      last_seen: "آخر تواجد مُنذ "
+      last_seen: "كان هنا"
       created: "انضم"
       log_out: "اخرج"
       location: "الموقع"
@@ -1044,8 +1045,8 @@ ar:
       remove_allowed_user: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
       remove_allowed_group: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
     email: 'البريد الإلكتروني'
-    username: 'إسم المستخدم'
-    last_seen: 'شوهدت'
+    username: 'اسم المستخدم'
+    last_seen: 'كان هنا'
     created: 'مكتوبة'
     created_lowercase: 'الإنشاء'
     trust_level: 'مستوى التقة'
@@ -1481,7 +1482,7 @@ ar:
       toggle_information: "أظهر/أخف تفاصيل الموضوع"
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في {{catLink}} أو {{latestLink}}."
       read_more: "أتريد قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
-      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='/unread'># موضوع غير مقروء</a>}}{BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='/unread'># موضوع غير مقروء</a>}} {BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تصفّح كل الأقسام
       view_latest_topics: اعرض أحدث المواضيع
       suggest_create_topic: لمَ لا تكتب موضوعًا؟
@@ -1519,6 +1520,7 @@ ar:
           '3_2': 'ستصلك إشعارات لأنك تراقب هذا الموضوع.'
           '3_1': 'ستصلك إشعارات لأنك أنشأت هذا الموضوع.'
           '3': 'ستصلك إشعارات لأنك تراقب هذا الموضوع.'
+          '2': 'سترى عدد الرّدود الجديدة لأنّك <a href="/u/{{username}}/preferences">قرأت هذا الموضوع</a>.'
           '1_2': 'سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك.'
           '1': 'سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك.'
           '0_7': 'لن يصلك أي إشعار يخص هذا القسم بناء على طلبك.'
@@ -1570,7 +1572,8 @@ ar:
         make_banner: "موضوع دعائي"
         remove_banner: "إزالة موضوع دعائي"
       reply:
-        title: 'إضافة رد'
+        title: 'رُدّ'
+        help: 'اكتب ردًّا على هذه الموضوع'
       clear_pin:
         title: "إلغاء التثبيت"
         help: "إلغاء تثبيت الموضوع حتى لا يظهر في أعلى القائمة"
@@ -1634,7 +1637,7 @@ ar:
         username_placeholder: "اسم المستخدم"
         action: 'أرسل دعوة'
         help: 'ادعُ الغير إلى هذا الموضوع عبر البريد الإلكترونيّ أو الإشعارات'
-        to_forum: "سيتم ارسال رسالة بريد الكتروني ﻷصدقائك للمشاركة في الموقع , هذه العملية لا تتطلب تسجيل الدخول ."
+        to_forum: "سنُرسل بريدًا يتيح لصديقك الانضمام مباشرةً بنقر رابط ما، الولوج غير مطلوب."
         sso_enabled: "أدخل اسم مَن تريد دعوته إلى هذا الموضوع."
         to_topic_blank: "أدخل اسم مَن تريد دعوته إلى هذا الموضوع أو بريده."
         to_topic_email: "لقد أدخلت عنوان بريد إلكترونيّ. سنرسل بريدًا يحتوي دعوة تتيح لصديقك الرّد مباشرة على هذا الموضوع."
@@ -2320,7 +2323,7 @@ ar:
     keyboard_shortcuts_help:
       title: 'اختصارات لوحة المفاتيح'
       jump_to:
-        title: 'الانتقال إلى'
+        title: 'الانتقال'
         home: '<b>g</b>، <b>h</b> الرّئيسيّة'
         latest: '<b>g</b>، <b>l</b> الأخيرة'
         new: '<b>g</b>، <b>n</b> الجديد'
@@ -2483,7 +2486,7 @@ ar:
           bookmarks: "لايوجد المزيد من المواضيع في المفضلة"
           search: "لا نتائج بحث أخرى."
     invite:
-      custom_message: "اجعل دعوتك اكثر خصوصية  بكتابة"
+      custom_message: "اجعل دعوتك شخصيّة أكثر بكتابة"
       custom_message_link: "رسالة مخصصة"
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المنتدى!"
@@ -2800,6 +2803,7 @@ ar:
         new_style: "تصميم جديد"
         import: "استيراد"
         delete: "حذف"
+        delete_confirm: "أأحذف هذه السّمة؟"
         copy: "نسخ"
         email_templates:
           title: "قالب البريد الالكتروني "

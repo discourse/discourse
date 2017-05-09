@@ -27,11 +27,15 @@ it:
   topics: "Argomenti"
   posts: "messaggi"
   loading: "Caricamento"
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, si consiglia di abilitare JavaScript'
   log_in: "Connetti"
   purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
   remove_posts_deleted_by_author: "Cancellato dall'autore"
+  themes:
+    bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
+    other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
   emails:
     incoming:
       default_subject: "L'argomento necessita di un titolo"
@@ -883,7 +887,6 @@ it:
     force_hostname: "SOLO PER SVILUPPATORI! ATTENZIONE! Specifica un hostname nella URL. Lascia vuoto per usare il default."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
     invite_passthrough_hours: "Per quanto tempo un utente può usare una chiave d'invito per connettersi, espresso in ore"
-    invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere invitati esplicitamente da altri membri o dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_password_length: "Minima lunghezza della password."
     min_admin_password_length: "Lunghezza minima password Amministratore."
