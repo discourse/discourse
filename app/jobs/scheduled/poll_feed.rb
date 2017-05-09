@@ -70,7 +70,7 @@ module Jobs
 
       def fetch_rss
         SimpleRSS.parse open(@feed_url, allow_redirections: :all)
-      rescue OpenURI::HTTPError
+      rescue OpenURI::HTTPError, SimpleRSSError
         nil
       end
 
