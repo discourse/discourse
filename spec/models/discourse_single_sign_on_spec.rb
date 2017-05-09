@@ -79,18 +79,24 @@ describe DiscourseSingleSignOn do
   end
 
   it "unstaged users" do
+    SiteSetting.sso_overrides_name = true
+
     email = "staged@user.com"
     Fabricate(:user, staged: true, email: email)
 
     sso = DiscourseSingleSignOn.new
     sso.username = "staged"
-    sso.name = "Staged User"
+    sso.name = "Bob O'Bob"
     sso.email = email
     sso.external_id = "B"
     user = sso.lookup_or_create_user(ip_address)
 
+    user.reload
+
     expect(user).to_not be_nil
     expect(user.staged).to be(false)
+
+    expect(user.name).to eq("Bob O'Bob")
   end
 
   it "can set admin and moderator" do
