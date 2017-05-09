@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
   actions: {
     resetNew() {
       ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
-        this.setEach('read', true);
+        this.get('model').forEach(n => n.set('read', true));
       });
     },
 
