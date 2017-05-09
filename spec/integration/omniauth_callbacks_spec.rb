@@ -8,6 +8,7 @@ RSpec.describe "OmniAuth Callbacks" do
   end
 
   after do
+    Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
     OmniAuth.config.test_mode = false
   end
 
