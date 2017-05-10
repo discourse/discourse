@@ -8,6 +8,21 @@ describe ColorScheme do
     {name: '$secondary_background_color', hex: '888888'}
   ]}
 
+  it "correctly invalidates theme css when changed" do
+    scheme = ColorScheme.create_from_base(name: 'Bob')
+    theme = Theme.new(name: 'Amazing Theme', color_scheme_id: scheme.id, user_id: -1)
+    theme.set_field(name: :scss, target: :desktop, value: '.bob {color: $primary;}')
+    theme.save!
+
+    href = Stylesheet::Manager.stylesheet_href(:desktop_theme, theme.key)
+
+    ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'bbb' }])
+
+    href2 = Stylesheet::Manager.stylesheet_href(:desktop_theme, theme.key)
+
+    expect(href).not_to eq(href2)
+  end
+
   describe "new" do
     it "can take colors" do
       c = ColorScheme.new(valid_params)
@@ -27,7 +42,7 @@ describe ColorScheme do
                     Fabricate(:color_scheme_color, name: 'third_one', hex: base_colors[:third_one])]) }
 
     before do
-      described_class.stubs(:base).returns(base)
+       ColorScheme.stubs(:base).returns(base)
     end
 
     it "creates a new color scheme" do
