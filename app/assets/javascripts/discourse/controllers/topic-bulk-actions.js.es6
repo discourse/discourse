@@ -26,6 +26,19 @@ export default Ember.Controller.extend(ModalFunctionality, {
   categoryId: Ember.computed.alias('model.category.id'),
 
   onShow() {
+    let showRelistButton = false;
+    const topics = this.get('model.topics');
+    for (let t = 0; t < topics.length; t++) {
+      if (!topics[t].visible) {
+        showRelistButton = true;
+        break;
+      }
+    }
+    if (showRelistButton && !_buttons[9]) {
+      addBulkButton('relistTopics', 'relist_topics');
+    } else if (!showRelistButton && _buttons[9]) {
+      _buttons.splice(9, 1);
+    }
     this.set('modal.modalClass', 'topic-bulk-actions-modal small');
 
     const buttonRows = [];
@@ -124,6 +137,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     unlistTopics() {
       this.forEachPerformed({type: 'unlist'}, t => t.set('visible', false));
+    },
+
+    relistTopics() {
+      this.forEachPerformed({type: 'relist'}, t => t.set('visible', true));
     },
 
     changeCategory() {
