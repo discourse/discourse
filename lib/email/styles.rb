@@ -186,10 +186,7 @@ module Email
     def to_html
       strip_classes_and_ids
       replace_relative_urls
-      @fragment.to_html.tap do |result|
-        result.gsub!(/\[email-indent\]/, "<div style='margin-left: 15px'>")
-        result.gsub!(/\[\/email-indent\]/, "</div>")
-      end
+      @fragment.to_html
     end
 
     def strip_avatars_and_emojis
