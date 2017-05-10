@@ -28,7 +28,6 @@ describe Admin::ThemesController do
         expect(upload.id).not_to be_nil
         expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
       end
-
     end
 
     context '.import' do
