@@ -168,7 +168,14 @@ export default Ember.Controller.extend({
     },
 
     removeUpload(upload) {
-      this.get("model").removeField(upload);
+      return bootbox.confirm(
+          I18n.t("admin.customize.theme.delete_upload_confirm"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"), result => {
+            if (result) {
+              this.get("model").removeField(upload);
+            }
+      });
     },
 
     removeChildTheme(theme) {

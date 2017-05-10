@@ -91,7 +91,12 @@
   {{#if model.uploads}}
     <ul class='removable-list'>
       {{#each model.uploads as |upload|}}
-      <li><span class='first'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>{{d-button action="removeUpload" actionParam=upload class="second btn-small cancel-edit" icon="times"}}</li>
+      <li>
+        <span class='col'>${{upload.name}}: <a href={{upload.url}} target='_blank'>{{upload.filename}}</a></span>
+        <span class='col'>
+          {{d-button action="removeUpload" actionParam=upload class="second btn-small cancel-edit" icon="times"}}
+        </span>
+      </li>
       {{/each}}
     </ul>
   {{else}}
@@ -113,7 +118,7 @@
     {{else}}
     <ul class='removable-list'>
       {{#each model.childThemes as |child|}}
-      <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='first'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit second" icon="times"}}</li>
+      <li>{{#link-to 'adminCustomizeThemes.show' child replace=true class='col'}}{{child.name}}{{/link-to}} {{d-button action="removeChildTheme" actionParam=child class="btn-small cancel-edit col" icon="times"}}</li>
       {{/each}}
     </ul>
     {{/unless}}
