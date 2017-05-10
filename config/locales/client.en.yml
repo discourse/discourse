@@ -2342,8 +2342,8 @@ en:
       granted_on: "Granted %{date}"
       others_count: "Others with this badge (%{count})"
       title: Badges
-      allow_title: "available title"
-      multiple_grant: "awarded multiple times"
+      allow_title: "You can use this badge as a title"
+      multiple_grant: "You can earn this multiple times"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"

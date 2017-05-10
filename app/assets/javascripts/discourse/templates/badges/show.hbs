@@ -9,12 +9,16 @@
     {{badge-card badge=model size="large" count=userBadges.grant_count}}
     <div class='badge-grant-info'>
       <div>
-        <div class='grant-info-item'>
-          {{check-mark checked=model.allow_title}} {{i18n 'badges.allow_title'}}
-        </div>
-        <div class='grant-info-item'>
-          {{check-mark checked=model.multiple_grant}} {{i18n 'badges.multiple_grant'}}
-        </div>
+        {{#if model.allow_title}}
+          <div class='grant-info-item'>
+            {{i18n 'badges.allow_title'}}
+          </div>
+        {{/if}}
+        {{#if model.multiple_grant}}
+          <div class='grant-info-item'>
+            {{i18n 'badges.multiple_grant'}}
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>
