@@ -81,7 +81,7 @@ class UserAvatar < ActiveRecord::Base
       end
     end
 
-  rescue
+  rescue Net::ReadTimeout
     # skip saving, we are not connected to the net
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
