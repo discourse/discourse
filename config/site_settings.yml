@@ -481,7 +481,7 @@ posting:
     default: true
     client: true
   editing_grace_period: 300
-  post_edit_time_limit: 
+  post_edit_time_limit:
     default: 86400
     max: 525600
   edit_history_visible_to_public:
@@ -794,8 +794,7 @@ files:
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
   allow_all_attachments_for_group_messages: false
-  convert_pasted_images_to_hq_jpg: true
-  convert_pasted_images_quality:
+  png_to_jpg_quality:
     default: 95
     min: 1
     max: 100

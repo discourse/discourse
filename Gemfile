@@ -61,8 +61,7 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
-# while we sort out https://github.com/sdsykes/fastimage/pull/46
-gem 'discourse_fastimage', '2.0.3', require: 'fastimage'
+gem 'fastimage', '2.1.0'
 gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false

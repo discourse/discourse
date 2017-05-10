@@ -171,7 +171,7 @@ HTML
 
     it 'can handle uploads based of ThemeField' do
       theme = Theme.new(name: 'theme', user_id: -1)
-      upload = Upload.create_for(-1, image, "logo.png", File.size(image))
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
       theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
       theme.set_field(target: :common, name: :scss, value: 'body {background-image: url($logo)}')
       theme.save!

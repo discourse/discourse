@@ -1,3 +1,5 @@
+require_dependency 'upload_creator'
+
 module Jobs
   class MigrateCustomEmojis < Jobs::Onceoff
     def execute_onceoff(args)
@@ -7,13 +9,11 @@ module Jobs
         name = File.basename(path, File.extname(path))
 
         File.open(path) do |file|
-          upload = Upload.create_for(
-            Discourse.system_user.id,
+          upload = UploadCreator.new(
             file,
             File.basename(path),
-            file.size,
-            image_type: 'custom_emoji'
-          )
+            type: 'custom_emoji'
+          ).create_for(Discourse.system_user.id)
 
           if upload.persisted?
             custom_emoji = CustomEmoji.new(name: name, upload: upload)

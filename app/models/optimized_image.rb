@@ -178,7 +178,7 @@ class OptimizedImage < ActiveRecord::Base
       #{from}[0]
       -gravity center
       -background transparent
-      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -resize #{dimensions}
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }

@@ -1179,8 +1179,7 @@ en:
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
-    convert_pasted_images_to_hq_jpg: "Convert pasted images to high-quality JPG files."
-    convert_pasted_images_quality: "Quality of the converted JPG file (1 is lowest quality, 100 is best quality)."
+    png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
@@ -2721,12 +2720,15 @@ en:
 
   deleted: 'deleted'
 
+  image: "image"
+
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     file_missing: "Sorry, you must provide a file to upload."
+    empty: "Sorry, but the file you provided is empty."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:

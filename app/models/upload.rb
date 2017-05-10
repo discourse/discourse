@@ -1,5 +1,4 @@
 require "digest/sha1"
-require_dependency "image_sizer"
 require_dependency "file_helper"
 require_dependency "url_helper"
 require_dependency "db_helper"
@@ -21,6 +20,9 @@ class Upload < ActiveRecord::Base
   validates_presence_of :original_filename
 
   validates_with ::Validators::UploadValidator
+
+  CROPPED_TYPES ||= %w{avatar card_background custom_emoji profile_background}
+  UPLOAD_TYPES  ||= CROPPED_TYPES + %w{composer}
 
   def thumbnail(width = self.width, height = self.height)
     optimized_images.find_by(width: width, height: height)
@@ -57,196 +59,8 @@ class Upload < ActiveRecord::Base
     File.extname(original_filename)
   end
 
-  # list of image types that will be cropped
-  CROPPED_IMAGE_TYPES ||= %w{
-    avatar
-    profile_background
-    card_background
-    custom_emoji
-  }
-
-  WHITELISTED_SVG_ELEMENTS ||= %w{
-    circle
-    clippath
-    defs
-    ellipse
-    g
-    line
-    linearGradient
-    path
-    polygon
-    polyline
-    radialGradient
-    rect
-    stop
-    svg
-    text
-    textpath
-    tref
-    tspan
-    use
-  }
-
   def self.generate_digest(path)
     Digest::SHA1.file(path).hexdigest
-  end
-
-  def self.svg_whitelist_xpath
-    @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
-  end
-
-  # options
-  #   - content_type
-  #   - origin (url)
-  #   - image_type ("avatar", "profile_background", "card_background", "custom_emoji")
-  #   - is_attachment_for_group_message (boolean)
-  #   - for_theme (boolean)
-  def self.create_for(user_id, file, filename, filesize, options = {})
-    upload = Upload.new
-
-    DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
-      # do some work on images
-      if FileHelper.is_image?(filename) && is_actual_image?(file)
-        # retrieve image info
-        w, h = FastImage.size(file) || [0, 0]
-
-        if filename[/\.svg$/i]
-          # whitelist svg elements
-          doc = Nokogiri::XML(file)
-          doc.xpath(svg_whitelist_xpath).remove
-          File.write(file.path, doc.to_s)
-          file.rewind
-        else
-          if w * h >= SiteSetting.max_image_megapixels * 1_000_000
-            upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels))
-            return upload
-          end
-
-          # fix orientation first
-          fix_image_orientation(file.path) if should_optimize?(file.path, [w, h])
-        end
-
-        # default size
-        width, height = ImageSizer.resize(w, h)
-
-        # make sure we're at the beginning of the file (both FastImage and Nokogiri move the pointer)
-        file.rewind
-
-        # crop images depending on their type
-        if CROPPED_IMAGE_TYPES.include?(options[:image_type])
-          allow_animation = SiteSetting.allow_animated_thumbnails
-          max_pixel_ratio = Discourse::PIXEL_RATIOS.max
-
-          case options[:image_type]
-          when "avatar"
-            allow_animation = SiteSetting.allow_animated_avatars
-            width = height = Discourse.avatar_sizes.max
-            OptimizedImage.resize(file.path, file.path, width, height, filename: filename, allow_animation: allow_animation)
-          when "profile_background"
-            max_width = 850 * max_pixel_ratio
-            width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
-            OptimizedImage.downsize(file.path, file.path, "#{width}x#{height}", filename: filename, allow_animation: allow_animation)
-          when "card_background"
-            max_width = 590 * max_pixel_ratio
-            width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
-            OptimizedImage.downsize(file.path, file.path, "#{width}x#{height}", filename: filename, allow_animation: allow_animation)
-          when "custom_emoji"
-            OptimizedImage.downsize(file.path, file.path, "100x100", filename: filename, allow_animation: allow_animation)
-          end
-        end
-
-        # optimize image (except GIFs, SVGs and large PNGs)
-        if should_optimize?(file.path, [w, h])
-          begin
-            ImageOptim.new.optimize_image!(file.path)
-          rescue ImageOptim::Worker::TimeoutExceeded
-            # Don't optimize if it takes too long
-            Rails.logger.warn("ImageOptim timed out while optimizing #{filename}")
-          end
-          # update the file size
-          filesize = File.size(file.path)
-        end
-      end
-
-      # compute the sha of the file
-      sha1 = Upload.generate_digest(file)
-
-      # do we already have that upload?
-      upload = find_by(sha1: sha1)
-
-      # make sure the previous upload has not failed
-      if upload && (upload.url.blank? || is_dimensionless_image?(filename, upload.width, upload.height))
-        upload.destroy
-        upload = nil
-      end
-
-      # return the previous upload if any
-      return upload unless upload.nil?
-
-      # create the upload otherwise
-      upload = Upload.new
-      upload.user_id           = user_id
-      upload.original_filename = filename
-      upload.filesize          = filesize
-      upload.sha1              = sha1
-      upload.url               = ""
-      upload.width             = width
-      upload.height            = height
-      upload.origin            = options[:origin][0...1000] if options[:origin]
-
-      if options[:is_attachment_for_group_message]
-        upload.is_attachment_for_group_message = true
-      end
-
-      if options[:for_theme]
-        upload.for_theme = true
-      end
-
-      if is_dimensionless_image?(filename, upload.width, upload.height)
-        upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-        return upload
-      end
-
-      return upload unless upload.save
-
-      # store the file and update its url
-      File.open(file.path) do |f|
-        url = Discourse.store.store_upload(f, upload, options[:content_type])
-        if url.present?
-          upload.url = url
-          upload.save
-        else
-          upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
-        end
-      end
-
-      upload
-    end
-  end
-
-  def self.is_actual_image?(file)
-    # due to ImageMagick CVE-2016–3714, use FastImage to check the magic bytes
-    # cf. https://meta.discourse.org/t/imagemagick-cve-2016-3714/43624
-    FastImage.size(file, raise_on_failure: true)
-  rescue
-    false
-  end
-
-  LARGE_PNG_SIZE ||= 3.megabytes
-
-  def self.should_optimize?(path, dimensions = nil)
-    # don't optimize GIFs or SVGs
-    return false if path =~ /\.(gif|svg)$/i
-    return true  if path !~ /\.png$/i
-
-    dimensions ||= (FastImage.size(path) || [0, 0])
-    w, h = dimensions
-    # don't optimize large PNGs
-    w > 0 && h > 0 && w * h < LARGE_PNG_SIZE
-  end
-
-  def self.is_dimensionless_image?(filename, width, height)
-    FileHelper.is_image?(filename) && (width.blank? || width == 0 || height.blank? || height == 0)
   end
 
   def self.get_from_url(url)
@@ -261,10 +75,6 @@ class Upload < ActiveRecord::Base
     url = uri.path if uri.try(:scheme)
 
     Upload.find_by(url: url)
-  end
-
-  def self.fix_image_orientation(path)
-    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
   end
 
   def self.migrate_to_new_scheme(limit=nil)
