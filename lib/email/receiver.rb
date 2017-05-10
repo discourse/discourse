@@ -2,6 +2,7 @@ require "digest"
 require_dependency "new_post_manager"
 require_dependency "post_action_creator"
 require_dependency "html_to_markdown"
+require_dependency "upload_creator"
 
 module Email
 
@@ -570,7 +571,7 @@ module Email
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
           opts = { is_attachment_for_group_message: options[:is_group_message] }
-          upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size, opts)
+          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(options[:user].id)
           if upload && upload.errors.empty?
             # try to inline images
             if attachment.content_type.start_with?("image/")

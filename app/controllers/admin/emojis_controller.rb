@@ -1,3 +1,5 @@
+require_dependency 'upload_creator'
+
 class Admin::EmojisController < Admin::AdminController
 
   def index
@@ -14,13 +16,11 @@ class Admin::EmojisController < Admin::AdminController
                  .gsub(/_{2,}/, '_')
                  .downcase
 
-      upload = Upload.create_for(
-        current_user.id,
+      upload = UploadCreator.new(
         file.tempfile,
         file.original_filename,
-        File.size(file.tempfile.path),
-        image_type: 'custom_emoji'
-      )
+        type: 'custom_emoji'
+      ).create_for(current_user.id)
 
       data =
         if upload.persisted?

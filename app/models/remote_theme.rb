@@ -1,4 +1,5 @@
 require_dependency 'git_importer'
+require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
 
@@ -50,7 +51,7 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        upload = Upload.create_for(theme.user_id, File.open(path), File.basename(relative_path), File.size(path), for_theme: true)
+        upload = UploadCreator.new(File.open(path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
         theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
       end
     end
