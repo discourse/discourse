@@ -1044,6 +1044,11 @@ embedding:
   feed_polling_url:
     default: ''
     hidden: true
+  feed_polling_frequency_mins:
+    min: 5
+    max: 180
+    default: 60
+    hidden: true
   embed_by_username:
     default: ''
     type: username
