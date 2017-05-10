@@ -193,15 +193,21 @@
     margin-left: 0;
     li {
       display: table-row;
-      .first {
-        padding-right: 8px;
+      .col:first-child {
+        padding-right: 10px;
         padding-bottom: 10px;
-        min-width: 100px;
+        min-width: 80px;
       }
-      .first, .second {
+      .col {
         display: table-cell;
       }
     }
+  }
+}
+
+.add-upload-modal {
+  label {
+    margin-top: 20px;
   }
 }
 

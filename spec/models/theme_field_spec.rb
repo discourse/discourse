@@ -27,4 +27,5 @@ HTML
 
     expect(field.error).to eq(nil)
   end
+
 end

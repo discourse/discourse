@@ -22,9 +22,9 @@ describe Admin::ThemesController do
       end
 
       it 'can create a theme upload' do
-        xhr :post, :upload_asset, file: upload, original_filename: 'wooof.woff2'
+        xhr :post, :upload_asset, file: upload
         expect(response.status).to eq(201)
-        upload = Upload.find_by(original_filename: "wooof.woff2")
+        upload = Upload.find_by(original_filename: "test.woff2")
         expect(upload.id).not_to be_nil
         expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
       end

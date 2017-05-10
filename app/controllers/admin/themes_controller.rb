@@ -13,7 +13,7 @@ class Admin::ThemesController < Admin::AdminController
     File.open(path) do |file|
       upload = Upload.create_for(current_user.id,
                                  file,
-                                 params[:original_filename] || File.basename(path),
+                                 params[:file]&.original_filename || File.basename(path),
                                  File.size(path),
                                  for_theme: true)
       if upload.errors.count > 0
