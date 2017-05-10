@@ -26,7 +26,7 @@ describe AdminUserIndexQuery do
       query = ::AdminUserIndexQuery.new({ order: "trust_level" })
       expect(query.find_users_query.to_sql).to match("trust_level DESC")
     end
-    
+
     it "allows custom ordering asc" do
       query = ::AdminUserIndexQuery.new({ order: "trust_level", ascending: true })
       expect(query.find_users_query.to_sql).to match("trust_level ASC" )
@@ -40,6 +40,30 @@ describe AdminUserIndexQuery do
     it "allows custom ordering and direction for stats" do
       query = ::AdminUserIndexQuery.new({ order: "topics_viewed", ascending: true })
       expect(query.find_users_query.to_sql).to match("topics_entered ASC")
+    end
+
+  end
+
+  describe "limit" do
+    it "allows custom limit via argument" do
+      query = ::AdminUserIndexQuery.new({})
+      expect(query.find_users(99).to_sql).to match("LIMIT 99")
+    end
+
+    it "allows custom limit via params" do
+      query = ::AdminUserIndexQuery.new({ limit: 99 })
+      expect(query.find_users().to_sql).to match("LIMIT 99")
+    end
+
+    it "prefers limit arg to param" do
+      query = ::AdminUserIndexQuery.new({ limit: 99 })
+      expect(query.find_users(50).to_sql).to match("LIMIT 50")
+    end
+
+    it "limit param can't be injected" do
+      query = ::AdminUserIndexQuery.new({ limit: "wat, no" })
+      expect(query.find_users_query.to_sql).not_to match("wat, no")
+      expect(query.find_users_query.to_sql).to match("LIMIT 100")
     end
   end
 

@@ -24,7 +24,20 @@ class AdminUserIndexQuery
     'read_time' => 'user_stats.time_read'
   }
 
-  def find_users(limit=100)
+  # To keep backward compatibility, the default 'limit' value is 100 if neither
+  # an explicit limit argument or a param[:limit] value are available.  If an
+  # explicit argument is passed, that takes precedence over the param[:limit]
+  # value.  (We use zero as a sentinel value here, because a limit of zero
+  # never makes sense: "find the first 0 users that match"?)
+  def find_users(limit=0)
+    if limit == 0
+      limit = params[:limit].to_i
+    end
+
+    if limit <= 0
+      limit = 100
+    end
+
     find_users_query.limit(limit)
   end
 
