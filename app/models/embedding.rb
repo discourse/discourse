@@ -13,6 +13,7 @@ class Embedding < OpenStruct
        embed_classname_whitelist
        feed_polling_enabled
        feed_polling_url
+       feed_polling_frequency_mins
        embed_username_key_from_feed)
   end
 

@@ -8,13 +8,14 @@ require 'open-uri'
 
 module Jobs
   class PollFeed < Jobs::Scheduled
-    every 1.hour
+    every 5.minutes
 
     sidekiq_options retry: false
 
     def execute(args)
       poll_feed if SiteSetting.feed_polling_enabled? &&
-                   SiteSetting.feed_polling_url.present?
+                   SiteSetting.feed_polling_url.present? &&
+                   not_polled_recently?
     end
 
     def feed_key
@@ -27,6 +28,15 @@ module Jobs
     end
 
     private
+
+    def not_polled_recently?
+      $redis.set(
+        'feed-polled-recently',
+        "1",
+        ex: SiteSetting.feed_polling_frequency_mins.minutes - 10.seconds,
+        nx: true
+      )
+    end
 
     def import_topics(feed_topics)
       feed_topics.each do |topic|
