@@ -15,8 +15,8 @@ export default Discourse.Route.extend({
         f = '';
 
     if (params.additional_tags) {
-      this.set("additionalTags", params.additional_tags.split('/').map((t) => {
-        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(t) }).id;
+      this.set("additionalTags", _.compact(params.additional_tags.split('/')).map((t) => {
+        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(t) });
       }));
     } else {
       this.set('additionalTags', null);
@@ -65,7 +65,7 @@ export default Discourse.Route.extend({
 
       this.set('category', category);
     } else if (this.get("additionalTags")) {
-      params.filter = `tags/intersection/${tag_id}/${this.get('additionalTags').join('/')}`;
+      params.filter = `tags/intersection/${tag_id}/${_.pluck(this.get('additionalTags'), 'id').join('/')}`;
       this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
@@ -132,13 +132,14 @@ export default Discourse.Route.extend({
         // Pre-fill the tags input field
         if (controller.get('model.id')) {
           var c = self.controllerFor('composer').get('model');
-          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTags')));
+          c.set('tags', _.flatten([controller.get('model.id')], _.pluck(controller.get('additionalTags'), 'id')));
         }
       });
     },
 
     didTransition() {
       this.controllerFor("tags.show")._showFooter();
+      this.set('additionalTags', null);
       return true;
     }
   }
