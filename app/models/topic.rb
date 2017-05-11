@@ -952,8 +952,25 @@ SQL
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
-  def topic_status_update
-    @topic_status_update ||= topic_status_updates.where('deleted_at IS NULL').first
+  def topic_status_update(user=nil)
+    if user.nil?
+      @topic_status_update ||= topic_status_updates
+        .where('deleted_at IS NULL')
+        .where.not(status_type: TopicStatusUpdate.private_types.values)
+        .order('execute_at ASC')
+        .first
+    else
+      topic_status_updates
+        .where('deleted_at IS NULL')
+        .where(
+          "status_type IN (?) OR (status_type IN (?) and user_id = ?)",
+          TopicStatusUpdate.public_types.values,
+          TopicStatusUpdate.private_types.values,
+          user.is_a?(User) ? user.id : user
+        )
+        .order('execute_at ASC')
+        .first
+    end
   end
 
   # Valid arguments for the time:
@@ -969,10 +986,12 @@ SQL
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
   def set_or_create_status_update(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    topic_status_update = TopicStatusUpdate.find_or_initialize_by(
-      status_type: status_type,
-      topic: self
-    )
+
+    topic_status_update = if by_user.nil? || TopicStatusUpdate.public_types.values.include?(status_type)
+      TopicStatusUpdate.find_or_initialize_by(status_type: status_type, topic: self)
+    else
+      TopicStatusUpdate.find_or_initialize_by(status_type: status_type, topic: self, user: by_user)
+    end
 
     if time.blank?
       topic_status_update.trash!(trashed_by: by_user || Discourse.system_user)
