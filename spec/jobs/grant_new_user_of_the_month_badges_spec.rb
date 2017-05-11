@@ -24,6 +24,45 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_present
   end
 
+  it "does nothing if badges are disabled" do
+    SiteSetting.enable_badges = false
+
+    user = Fabricate(:user, created_at: 1.week.ago)
+    p = Fabricate(:post, user: user)
+    Fabricate(:post, user: user)
+
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostAction.act(old_user, p, PostActionType.types[:like])
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostAction.act(old_user, p, PostActionType.types[:like])
+
+    SystemMessage.any_instance.expects(:create).never
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
+    expect(badge).to be_blank
+  end
+
+  it "does nothing if the badge is disabled" do
+    Badge.find(Badge::NewUserOfTheMonth).update_column(:enabled, false)
+
+    user = Fabricate(:user, created_at: 1.week.ago)
+    p = Fabricate(:post, user: user)
+    Fabricate(:post, user: user)
+
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostAction.act(old_user, p, PostActionType.types[:like])
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostAction.act(old_user, p, PostActionType.types[:like])
+
+    SystemMessage.any_instance.expects(:create).never
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
+    expect(badge).to be_blank
+  end
+
+
   it "does nothing if it's been awarded recently" do
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
     BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0)
