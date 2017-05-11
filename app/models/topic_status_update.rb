@@ -35,7 +35,8 @@ class TopicStatusUpdate < ActiveRecord::Base
     @types ||= Enum.new(
       close: 1,
       open: 2,
-      publish_to_category: 3
+      publish_to_category: 3,
+      delete: 4
     )
   end
 
@@ -77,6 +78,10 @@ class TopicStatusUpdate < ActiveRecord::Base
       Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_status_update_id: id)
     end
 
+    def cancel_auto_delete_job
+      Jobs.cancel_scheduled_job(:delete_topic, topic_status_update_id: id)
+    end
+
     def schedule_auto_open_job(time)
       return unless topic
       topic.update_status('closed', true, user) if !topic.closed
@@ -103,6 +108,10 @@ class TopicStatusUpdate < ActiveRecord::Base
 
     def publishing_to_category?
       self.status_type.to_i == TopicStatusUpdate.types[:publish_to_category]
+    end
+
+    def schedule_auto_delete_job(time)
+      Jobs.enqueue_at(time, :delete_topic, topic_status_update_id: id)
     end
 end
 

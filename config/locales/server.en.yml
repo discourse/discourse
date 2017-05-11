@@ -1656,6 +1656,7 @@ en:
     pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now listed. It will be displayed in topic lists."
     visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+    auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
