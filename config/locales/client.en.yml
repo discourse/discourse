@@ -840,6 +840,7 @@ en:
         rescinded: "Invite removed"
         reinvite: "Resend Invite"
         reinvite_all: "Resend all Invites"
+        reinvite_all_confirm: "Are you sure you want to resend all invites?"
         reinvited: "Invite re-sent"
         reinvited_all: "All Invites re-sent!"
         time_read: "Read Time"
