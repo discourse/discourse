@@ -233,11 +233,11 @@ class UploadCreator
   end
 
   def max_image_size
-    @@max_image_size ||= SiteSetting.max_image_size_kb.kilobytes
+    @max_image_size ||= SiteSetting.max_image_size_kb.kilobytes
   end
 
   def max_image_pixels
-    @@max_image_pixels ||= SiteSetting.max_image_megapixels * 1_000_000
+    @max_image_pixels ||= SiteSetting.max_image_megapixels * 1_000_000
   end
 
   def pixels
@@ -245,7 +245,7 @@ class UploadCreator
   end
 
   def allow_animation
-    @@allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
+    @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
   end
 
   def svg_whitelist_xpath
