@@ -298,7 +298,7 @@ describe Email::Receiver do
 
     it "adds the 'elided' part of the original message for public replies when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
-      expect { process(:original_message) }.to change { topic.posts.count }
+      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
     end
 
@@ -472,9 +472,9 @@ describe Email::Receiver do
       SiteSetting.always_show_trimmed_content = true
 
       user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:forwarded_email_to_category) }.to change(Topic, :count) # Topic created
+      expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
 
-      new_post, = *Post.last(1)
+      new_post, = Post.last
       expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?","<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>","Discoursing much today?")
     end
 
