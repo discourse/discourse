@@ -22,6 +22,7 @@ class TopicsController < ApplicationController
                                           :clear_pin,
                                           :re_pin,
                                           :status_update,
+                                          :timer,
                                           :bulk,
                                           :reset_new,
                                           :change_post_owners,
@@ -275,8 +276,8 @@ class TopicsController < ApplicationController
     @topic.update_status(status, enabled, current_user, until: params[:until])
 
     render json: success_json.merge!(
-      topic_status_update: TopicStatusUpdateSerializer.new(
-        TopicStatusUpdate.find_by(topic: @topic), root: false
+      topic_status_update: TopicTimerSerializer.new(
+        TopicTimer.find_by(topic: @topic), root: false
       )
     )
   end
@@ -289,13 +290,13 @@ class TopicsController < ApplicationController
     toggle_mute
   end
 
-  def status_update
+  def timer
     params.permit(:time, :timezone_offset, :based_on_last_post, :category_id)
     params.require(:status_type)
 
     status_type =
       begin
-        TopicStatusUpdate.types.fetch(params[:status_type].to_sym)
+        TopicTimer.types.fetch(params[:status_type].to_sym)
       rescue
         invalid_param(:status_type)
       end
@@ -311,7 +312,7 @@ class TopicsController < ApplicationController
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
 
-    topic_status_update = topic.set_or_create_status_update(
+    topic_status_update = topic.set_or_create_timer(
       status_type,
       params[:time],
       options

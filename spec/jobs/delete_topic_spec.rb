@@ -5,7 +5,7 @@ describe Jobs::DeleteTopic do
 
   let(:topic) do
     Fabricate(:topic,
-      topic_status_updates: [Fabricate(:topic_status_update, user: admin)]
+      topic_timers: [Fabricate(:topic_timer, user: admin)]
     )
   end
 
@@ -18,7 +18,7 @@ describe Jobs::DeleteTopic do
   it "can close a topic" do
     first_post
     Timecop.freeze(2.hours.from_now) do
-      described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
+      described_class.new.execute(topic_timer_id: topic.topic_timer.id)
       expect(topic.reload).to be_trashed
       expect(first_post.reload).to be_trashed
     end
@@ -29,17 +29,17 @@ describe Jobs::DeleteTopic do
     topic.trash!
     Timecop.freeze(2.hours.from_now) do
       Topic.any_instance.expects(:trash!).never
-      described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
+      described_class.new.execute(topic_timer_id: topic.topic_timer.id)
     end
   end
 
   it "should do nothing if it's too early" do
     t = Fabricate(:topic,
-      topic_status_updates: [Fabricate(:topic_status_update, user: admin, execute_at: 5.hours.from_now)]
+      topic_timers: [Fabricate(:topic_timer, user: admin, execute_at: 5.hours.from_now)]
     )
     create_post(topic: t)
     Timecop.freeze(4.hours.from_now) do
-      described_class.new.execute(topic_status_update_id: t.topic_status_update.id)
+      described_class.new.execute(topic_timer_id: t.topic_timer.id)
       expect(t.reload).to_not be_trashed
     end
   end
@@ -47,14 +47,14 @@ describe Jobs::DeleteTopic do
   describe "user isn't authorized to delete topics" do
     let(:topic) {
       Fabricate(:topic,
-        topic_status_updates: [Fabricate(:topic_status_update, user: Fabricate(:user))]
+        topic_timers: [Fabricate(:topic_timer, user: Fabricate(:user))]
       )
     }
 
     it "shouldn't delete the topic" do
       create_post(topic: topic)
       Timecop.freeze(2.hours.from_now) do
-        described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
+        described_class.new.execute(topic_timer_id: topic.topic_timer.id)
         expect(topic.reload).to_not be_trashed
       end
     end

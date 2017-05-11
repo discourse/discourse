@@ -7,9 +7,9 @@ RSpec.describe "Managing a topic's status update", type: :request do
   context 'when a user is not logged in' do
     it 'should return the right response' do
       expect do
-        post "/t/#{topic.id}/status_update.json",
+        post "/t/#{topic.id}/timer.json",
           time: '24',
-          status_type: TopicStatusUpdate.types[1]
+          status_type: TopicTimer.types[1]
       end.to raise_error(Discourse::NotLoggedIn)
     end
   end
@@ -18,9 +18,9 @@ RSpec.describe "Managing a topic's status update", type: :request do
     it 'should return the right response' do
       sign_in(user)
 
-      post "/t/#{topic.id}/status_update.json",
+      post "/t/#{topic.id}/timer.json",
         time: '24',
-        status_type: TopicStatusUpdate.types[1]
+        status_type: TopicTimer.types[1]
 
       expect(response.status).to eq(403)
       expect(JSON.parse(response.body)["error_type"]).to eq('invalid_access')
@@ -37,13 +37,13 @@ RSpec.describe "Managing a topic's status update", type: :request do
     it 'should be able to create a topic status update' do
       time = 24
 
-      post "/t/#{topic.id}/status_update.json",
+      post "/t/#{topic.id}/timer.json",
         time: 24,
-        status_type: TopicStatusUpdate.types[1]
+        status_type: TopicTimer.types[1]
 
       expect(response).to be_success
 
-      topic_status_update = TopicStatusUpdate.last
+      topic_status_update = TopicTimer.last
 
       expect(topic_status_update.topic).to eq(topic)
 
@@ -60,11 +60,11 @@ RSpec.describe "Managing a topic's status update", type: :request do
     end
 
     it 'should be able to delete a topic status update' do
-      topic.update!(topic_status_updates: [Fabricate(:topic_status_update)])
+      topic.update!(topic_timers: [Fabricate(:topic_timer)])
 
-      post "/t/#{topic.id}/status_update.json",
+      post "/t/#{topic.id}/timer.json",
         time: nil,
-        status_type: TopicStatusUpdate.types[1]
+        status_type: TopicTimer.types[1]
 
       expect(response).to be_success
       expect(topic.reload.topic_status_update).to eq(nil)
@@ -80,14 +80,14 @@ RSpec.describe "Managing a topic's status update", type: :request do
       it 'should be able to create the topic status update' do
         SiteSetting.queue_jobs = true
 
-        post "/t/#{topic.id}/status_update.json",
+        post "/t/#{topic.id}/timer.json",
           time: 24,
-          status_type: TopicStatusUpdate.types[3],
+          status_type: TopicTimer.types[3],
           category_id: topic.category_id
 
         expect(response).to be_success
 
-        topic_status_update = TopicStatusUpdate.last
+        topic_status_update = TopicTimer.last
 
         expect(topic_status_update.topic).to eq(topic)
 
@@ -95,7 +95,7 @@ RSpec.describe "Managing a topic's status update", type: :request do
           .to be_within(1.second).of(24.hours.from_now)
 
         expect(topic_status_update.status_type)
-          .to eq(TopicStatusUpdate.types[:publish_to_category])
+          .to eq(TopicTimer.types[:publish_to_category])
 
         json = JSON.parse(response.body)
 
@@ -106,7 +106,7 @@ RSpec.describe "Managing a topic's status update", type: :request do
     describe 'invalid status type' do
       it 'should raise the right error' do
         expect do
-          post "/t/#{topic.id}/status_update.json",
+          post "/t/#{topic.id}/timer.json",
             time: 10,
             status_type: 'something'
         end.to raise_error(Discourse::InvalidParameters)

@@ -1,4 +1,4 @@
-class TopicStatusUpdateSerializer < ApplicationSerializer
+class TopicTimerSerializer < ApplicationSerializer
   attributes :id,
              :execute_at,
              :duration,
@@ -7,6 +7,6 @@ class TopicStatusUpdateSerializer < ApplicationSerializer
              :category_id
 
   def status_type
-    TopicStatusUpdate.types[object.status_type]
+    TopicTimer.types[object.status_type]
   end
 end

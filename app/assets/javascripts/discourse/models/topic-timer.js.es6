@@ -1,9 +1,9 @@
 import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 
-const TopicStatusUpdate = RestModel.extend({});
+const TopicTimer = RestModel.extend({});
 
-TopicStatusUpdate.reopenClass({
+TopicTimer.reopenClass({
   updateStatus(topicId, time, basedOnLastPost, statusType, categoryId) {
     let data = {
       time: time,
@@ -15,11 +15,11 @@ TopicStatusUpdate.reopenClass({
     if (categoryId) data.category_id = categoryId;
 
     return ajax({
-      url: `/t/${topicId}/status_update`,
+      url: `/t/${topicId}/timer`,
       type: 'POST',
       data
     });
   }
 });
 
-export default TopicStatusUpdate;
+export default TopicTimer;

@@ -521,8 +521,8 @@ SQL
       )
     )
 
-    topic.set_or_create_status_update(
-      TopicStatusUpdate.types[:open],
+    topic.set_or_create_timer(
+      TopicTimer.types[:open],
       SiteSetting.num_hours_to_close_topic,
       by_user: Discourse.system_user
     )

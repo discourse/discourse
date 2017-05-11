@@ -1,4 +1,4 @@
-class TopicStatusUpdate < ActiveRecord::Base
+class TopicTimer < ActiveRecord::Base
   include Trashable
 
   belongs_to :user
@@ -41,12 +41,12 @@ class TopicStatusUpdate < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    TopicStatusUpdate.where("topic_status_updates.execute_at < ?", Time.zone.now)
-      .find_each do |topic_status_update|
+    TopicTimer.where("topic_timers.execute_at < ?", Time.zone.now)
+      .find_each do |topic_timer|
 
-      topic_status_update.send(
-        "schedule_auto_#{self.types[topic_status_update.status_type]}_job",
-        topic_status_update.execute_at
+      topic_timer.send(
+        "schedule_auto_#{self.types[topic_timer.status_type]}_job",
+        topic_timer.execute_at
       )
     end
   end
@@ -64,22 +64,22 @@ class TopicStatusUpdate < ActiveRecord::Base
     def ensure_update_will_happen
       if created_at && (execute_at < created_at)
         errors.add(:execute_at, I18n.t(
-          'activerecord.errors.models.topic_status_update.attributes.execute_at.in_the_past'
+          'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
         ))
       end
     end
 
     def cancel_auto_close_job
-      Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_status_update_id: id)
+      Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
     end
     alias_method :cancel_auto_open_job, :cancel_auto_close_job
 
     def cancel_auto_publish_to_category_job
-      Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_status_update_id: id)
+      Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_timer_id: id)
     end
 
     def cancel_auto_delete_job
-      Jobs.cancel_scheduled_job(:delete_topic, topic_status_update_id: id)
+      Jobs.cancel_scheduled_job(:delete_topic, topic_timer_id: id)
     end
 
     def schedule_auto_open_job(time)
@@ -87,7 +87,7 @@ class TopicStatusUpdate < ActiveRecord::Base
       topic.update_status('closed', true, user) if !topic.closed
 
       Jobs.enqueue_at(time, :toggle_topic_closed,
-        topic_status_update_id: id,
+        topic_timer_id: id,
         state: false
       )
     end
@@ -97,27 +97,27 @@ class TopicStatusUpdate < ActiveRecord::Base
       topic.update_status('closed', false, user) if topic.closed
 
       Jobs.enqueue_at(time, :toggle_topic_closed,
-        topic_status_update_id: id,
+        topic_timer_id: id,
         state: true
       )
     end
 
     def schedule_auto_publish_to_category_job(time)
-      Jobs.enqueue_at(time, :publish_topic_to_category, topic_status_update_id: id)
+      Jobs.enqueue_at(time, :publish_topic_to_category, topic_timer_id: id)
     end
 
     def publishing_to_category?
-      self.status_type.to_i == TopicStatusUpdate.types[:publish_to_category]
+      self.status_type.to_i == TopicTimer.types[:publish_to_category]
     end
 
     def schedule_auto_delete_job(time)
-      Jobs.enqueue_at(time, :delete_topic, topic_status_update_id: id)
+      Jobs.enqueue_at(time, :delete_topic, topic_timer_id: id)
     end
 end
 
 # == Schema Information
 #
-# Table name: topic_status_updates
+# Table name: topic_timers
 #
 #  id                 :integer          not null, primary key
 #  execute_at         :datetime         not null

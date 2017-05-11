@@ -413,8 +413,8 @@ describe TopicsController do
       end
 
       it 'should update the status of the topic correctly' do
-        @topic = Fabricate(:topic, user: @user, closed: true, topic_status_updates: [
-          Fabricate(:topic_status_update, status_type: TopicStatusUpdate.types[:open])
+        @topic = Fabricate(:topic, user: @user, closed: true, topic_timers: [
+          Fabricate(:topic_timer, status_type: TopicTimer.types[:open])
         ])
 
         xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
