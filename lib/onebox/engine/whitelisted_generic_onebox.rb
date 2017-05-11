@@ -61,6 +61,8 @@ module Onebox
           forbes.com
           foxnews.com
           funnyordie.com
+          gfycat.com
+          gifs.com
           groupon.com
           howtogeek.com
           huffingtonpost.ca
@@ -102,6 +104,7 @@ module Onebox
           speakerdeck.com
           spotify.com
           squidoo.com
+          streamable.com
           techcrunch.com
           ted.com
           thefreedictionary.com
