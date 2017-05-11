@@ -159,50 +159,64 @@ describe Search do
 
     it 'searches correctly' do
 
-       expect do
-         Search.execute('mars', type_filter: 'private_messages')
-       end.to raise_error(Discourse::InvalidAccess)
+      expect do
+       Search.execute('mars', type_filter: 'private_messages')
+      end.to raise_error(Discourse::InvalidAccess)
 
-       TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
-       TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
+      TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
+      TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
 
-       results = Search.execute('mars',
-                                type_filter: 'private_messages',
-                                guardian: Guardian.new(reply.user))
+      results = Search.execute('mars',
+                              type_filter: 'private_messages',
+                              guardian: Guardian.new(reply.user))
 
-       expect(results.posts.length).to eq(1)
-
-
-       results = Search.execute('mars',
-                                search_context: topic,
-                                guardian: Guardian.new(reply.user))
-
-       expect(results.posts.length).to eq(1)
-
-       # does not leak out
-       results = Search.execute('mars',
-                                type_filter: 'private_messages',
-                                guardian: Guardian.new(Fabricate(:user)))
-
-       expect(results.posts.length).to eq(0)
-
-       Fabricate(:topic, category_id: nil, archetype: 'private_message')
-       Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+      expect(results.posts.length).to eq(1)
 
 
-       # admin can search everything with correct context
-       results = Search.execute('mars',
-                                type_filter: 'private_messages',
-                                search_context: post.user,
-                                guardian: Guardian.new(Fabricate(:admin)))
+      results = Search.execute('mars',
+                              search_context: topic,
+                              guardian: Guardian.new(reply.user))
 
-       expect(results.posts.length).to eq(1)
+      expect(results.posts.length).to eq(1)
 
-       results = Search.execute('mars in:private',
-                                search_context: post.user,
-                                guardian: Guardian.new(post.user))
+      # does not leak out
+      results = Search.execute('mars',
+                              type_filter: 'private_messages',
+                              guardian: Guardian.new(Fabricate(:user)))
 
-       expect(results.posts.length).to eq(1)
+      expect(results.posts.length).to eq(0)
+
+      Fabricate(:topic, category_id: nil, archetype: 'private_message')
+      Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+
+
+      # admin can search everything with correct context
+      results = Search.execute('mars',
+                              type_filter: 'private_messages',
+                              search_context: post.user,
+                              guardian: Guardian.new(Fabricate(:admin)))
+
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('mars in:private',
+                              search_context: post.user,
+                              guardian: Guardian.new(post.user))
+
+      expect(results.posts.length).to eq(1)
+
+      # can search group PMs as well as non admin
+      #
+      user = Fabricate(:user)
+      group = Fabricate.build(:group)
+      group.add(user)
+      group.save!
+
+      TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
+
+      results = Search.execute('mars in:private',
+                              guardian: Guardian.new(user))
+
+      expect(results.posts.length).to eq(1)
 
     end
 
