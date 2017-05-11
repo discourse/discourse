@@ -60,6 +60,10 @@
     &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
     cursor: not-allowed;
   }
+
+  i.fa {
+    opacity: 0.7;
+  }
 }
 
 // Primary button

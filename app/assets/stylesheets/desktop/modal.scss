@@ -146,6 +146,18 @@
     height: 400px;
     max-height: 400px;
   }
+
+  .bulk-buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    .btn {
+      width: 22%;
+      margin-bottom: 1em;
+      margin-right: 1em;
+    }
+  }
+
 }
 .tabbed-modal {
   .modal-body {
