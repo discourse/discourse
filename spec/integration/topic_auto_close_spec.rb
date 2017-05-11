@@ -46,14 +46,14 @@ describe Topic do
         it 'should schedule the topic to auto-close' do
           topic
 
-          topic_status_update = TopicStatusUpdate.last
+          topic_status_update = TopicTimer.last
 
           expect(topic_status_update.topic).to eq(topic)
           expect(topic.topic_status_update.execute_at).to be_within_one_second_of(2.hours.from_now)
 
           args = job_klass.jobs.last['args'].first
 
-          expect(args["topic_status_update_id"]).to eq(topic.topic_status_update.id)
+          expect(args["topic_timer_id"]).to eq(topic.topic_status_update.id)
           expect(args["state"]).to eq(true)
         end
 
@@ -64,7 +64,7 @@ describe Topic do
           it 'should schedule the topic to auto-close' do
             staff_topic
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
 
             expect(topic_status_update.topic).to eq(staff_topic)
             expect(topic_status_update.execute_at).to be_within_one_second_of(2.hours.from_now)
@@ -72,7 +72,7 @@ describe Topic do
 
             args = job_klass.jobs.last['args'].first
 
-            expect(args["topic_status_update_id"]).to eq(topic_status_update.id)
+            expect(args["topic_timer_id"]).to eq(topic_status_update.id)
             expect(args["state"]).to eq(true)
           end
 
@@ -95,7 +95,7 @@ describe Topic do
           it 'should schedule the topic to auto-close' do
             regular_user_topic
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
 
             expect(topic_status_update.topic).to eq(regular_user_topic)
             expect(topic_status_update.execute_at).to be_within_one_second_of(2.hours.from_now)
@@ -103,7 +103,7 @@ describe Topic do
 
             args = job_klass.jobs.last['args'].first
 
-            expect(args["topic_status_update_id"]).to eq(topic_status_update.id)
+            expect(args["topic_timer_id"]).to eq(topic_status_update.id)
             expect(args["state"]).to eq(true)
           end
         end

@@ -17,7 +17,7 @@ describe TopicStatusUpdater do
       title: "hello world title",
     )
     # TODO needed so counts sync up, PostCreator really should not give back out-of-date Topic
-    post.topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '10')
+    post.topic.set_or_create_timer(TopicTimer.types[:close], '10')
     post.topic.reload
 
     TopicStatusUpdater.new(post.topic, admin).update!("autoclosed", true)
@@ -30,7 +30,7 @@ describe TopicStatusUpdater do
 
   it "adds an autoclosed message" do
     topic = create_topic
-    topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '10')
+    topic.set_or_create_timer(TopicTimer.types[:close], '10')
 
     TopicStatusUpdater.new(topic, admin).update!("autoclosed", true)
 
@@ -44,8 +44,8 @@ describe TopicStatusUpdater do
     topic = create_topic
     Fabricate(:post, topic: topic)
 
-    topic.set_or_create_status_update(
-      TopicStatusUpdate.types[:close], '10', based_on_last_post: true
+    topic.set_or_create_timer(
+      TopicTimer.types[:close], '10', based_on_last_post: true
     )
 
     TopicStatusUpdater.new(topic, admin).update!("autoclosed", true)

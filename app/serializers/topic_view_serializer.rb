@@ -60,7 +60,7 @@ class TopicViewSerializer < ApplicationSerializer
              :message_archived,
              :tags,
              :featured_link,
-             :topic_status_update,
+             :topic_timer,
              :unicode_title
 
   # TODO: Split off into proper object / serializer
@@ -249,9 +249,9 @@ class TopicViewSerializer < ApplicationSerializer
     SiteSetting.tagging_enabled
   end
 
-  def topic_status_update
-    TopicStatusUpdateSerializer.new(
-      object.topic.topic_status_update, root: false
+  def topic_timer
+    TopicTimerSerializer.new(
+      object.topic.topic_timer, root: false
     )
   end
 

@@ -1,6 +1,6 @@
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import Combobox from 'discourse-common/components/combo-box';
-import { CLOSE_STATUS_TYPE } from 'discourse/controllers/edit-topic-status-update';
+import { CLOSE_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
 
 const LATER_TODAY = 'later_today';
 const TOMORROW = 'tomorrow';

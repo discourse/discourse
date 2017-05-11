@@ -5,9 +5,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
   let(:another_category) { Fabricate(:category) }
 
   let(:topic) do
-    Fabricate(:topic, category: category, topic_status_updates: [
-      Fabricate(:topic_status_update,
-        status_type: TopicStatusUpdate.types[:publish_to_category],
+    Fabricate(:topic, category: category, topic_timers: [
+      Fabricate(:topic_timer,
+        status_type: TopicTimer.types[:publish_to_category],
         category_id: another_category.id
       )
     ])
@@ -17,9 +17,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
     SiteSetting.queue_jobs = true
   end
 
-  describe 'when topic_status_update_id is invalid' do
+  describe 'when topic_timer_id is invalid' do
     it 'should raise the right error' do
-      expect { described_class.new.execute(topic_status_update_id: -1) }
+      expect { described_class.new.execute(topic_timer_id: -1) }
         .to raise_error(Discourse::InvalidParameters)
     end
   end
@@ -29,7 +29,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
       Timecop.travel(1.hour.ago) { topic }
       topic.trash!
 
-      described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
+      described_class.new.execute(topic_timer_id: topic.topic_timer.id)
 
       topic.reload
       expect(topic.category).to eq(category)
@@ -41,13 +41,13 @@ RSpec.describe Jobs::PublishTopicToCategory do
     Timecop.travel(1.hour.ago) { topic.update!(visible: false) }
 
     message = MessageBus.track_publish do
-      described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
+      described_class.new.execute(topic_timer_id: topic.topic_timer.id)
     end.first
 
     topic.reload
     expect(topic.category).to eq(another_category)
     expect(topic.visible).to eq(true)
-    expect(TopicStatusUpdate.find_by(id: topic.topic_status_update.id)).to eq(nil)
+    expect(TopicTimer.find_by(id: topic.topic_timer.id)).to eq(nil)
 
     %w{created_at bumped_at updated_at last_posted_at}.each do |attribute|
       expect(topic.public_send(attribute)).to be_within(1.second).of(Time.zone.now)
@@ -68,7 +68,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
     it 'should publish the topic to the new category' do
       message = MessageBus.track_publish do
-        described_class.new.execute(topic_status_update_id: topic.topic_status_update.id)
+        described_class.new.execute(topic_timer_id: topic.topic_timer.id)
       end.last
 
       topic.reload

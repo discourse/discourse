@@ -496,11 +496,11 @@ describe PostAction do
 
       expect(topic.reload.closed).to eq(true)
 
-      topic_status_update = TopicStatusUpdate.last
+      topic_status_update = TopicTimer.last
 
       expect(topic_status_update.topic).to eq(topic)
       expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
-      expect(topic_status_update.status_type).to eq(TopicStatusUpdate.types[:open])
+      expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
     end
 
   end

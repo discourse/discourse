@@ -401,7 +401,7 @@ en:
           attributes:
             name:
               taken: is already in use by another emoji
-        topic_status_update:
+        topic_timer:
           attributes:
             execute_at:
               in_the_past: "must be in the future."
