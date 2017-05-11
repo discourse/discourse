@@ -33,7 +33,8 @@ export default Ember.Component.extend({
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
 
-      if ($(range.endContainer).closest('.cooked').length === 0) return;
+      const withinCooked = range.startContainer.parentNode.closest('.cooked');
+      if (!withinCooked || withinCooked.length === 0) return;
 
       const $ancestor = $(range.commonAncestorContainer);
 
