@@ -225,6 +225,12 @@ describe PostMover do
           expect(topic.closed).to eq(true)
         end
 
+        it "moving all posts will create a 'topic is closed' moderator post" do
+          new_topic = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], title: "new testing topic name", category_id: category.id)
+
+          expect(topic.posts).to include(have_attributes(post_type: Post.types[:small_action], action_code: "closed.enabled"))
+        end
+
         it 'does not move posts that do not belong to the existing topic' do
           new_topic = topic.move_posts(
             user, [p2.id, p3.id, p5.id], title: 'Logan is a pretty good movie'
@@ -341,6 +347,18 @@ describe PostMover do
           expect(new_post.post_actions.size).to eq(1)
         end
 
+      end
+
+      context "moving from a deleted topic" do
+        before do
+          topic.trash!
+        end
+
+        it "adds a moderator post at the location of the first moved post" do
+          topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+
+          expect(topic.posts).to include(have_attributes(post_type: Post.types[:small_action], action_code: "split_topic", post_number: 2, sort_order: 2))
+        end
       end
 
       context "to an existing topic with a deleted post" do
