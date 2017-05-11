@@ -8,6 +8,7 @@ module Jobs
 
     def execute(args)
       badge = Badge.find(Badge::NewUserOfTheMonth)
+      return unless SiteSetting.enable_badges? and badge.enabled?
 
       # Don't award it if a month hasn't gone by
       return if UserBadge.where("badge_id = ? AND granted_at >= ?",
