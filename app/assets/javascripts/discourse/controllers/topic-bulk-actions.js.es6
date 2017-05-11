@@ -4,31 +4,37 @@ const _buttons = [];
 
 const alwaysTrue = () => true;
 
-function addBulkButton(action, key, icon, buttonVisible) {
-  _buttons.push({
+function addBulkButton(action, key, opts) {
+  opts = opts || {};
+
+  const btn = {
     action,
     label: `topics.bulk.${key}`,
-    icon,
-    buttonVisible: buttonVisible || alwaysTrue
-  });
+    icon: opts.icon,
+    buttonVisible: opts.buttonVisible || alwaysTrue,
+    class: opts.class
+  };
+
+  _buttons.push(btn);
 }
 
 // Default buttons
-addBulkButton('showChangeCategory', 'change_category', 'pencil');
-addBulkButton('deleteTopics', 'delete', 'trash');
-addBulkButton('closeTopics', 'close_topics', 'lock');
-addBulkButton('archiveTopics', 'archive_topics', 'folder');
-addBulkButton('showNotificationLevel', 'notification_level', 'circle-o');
-addBulkButton('resetRead', 'reset_read', 'backward');
-addBulkButton('unlistTopics', 'unlist_topics', 'eye-slash', topics => {
-  return topics.some(t => t.visible);
+addBulkButton('showChangeCategory', 'change_category', {icon: 'pencil'});
+addBulkButton('closeTopics', 'close_topics', {icon: 'lock'});
+addBulkButton('archiveTopics', 'archive_topics', {icon: 'folder'});
+addBulkButton('showNotificationLevel', 'notification_level', {icon: 'circle-o'});
+addBulkButton('resetRead', 'reset_read', {icon: 'backward'});
+addBulkButton('unlistTopics', 'unlist_topics', {
+  icon: 'eye-slash',
+  buttonVisible: topics => topics.some(t => t.visible)
 });
-addBulkButton('relistTopics', 'relist_topics', 'eye', topics => {
-  return topics.some(t => !t.visible);
+addBulkButton('relistTopics', 'relist_topics', {
+  icon: 'eye',
+  buttonVisible: topics => topics.some(t => !t.visible)
 });
-
-addBulkButton('showTagTopics', 'change_tags', 'tag');
-addBulkButton('showAppendTagTopics', 'append_tags', 'tag');
+addBulkButton('showTagTopics', 'change_tags', {icon: 'tag'});
+addBulkButton('showAppendTagTopics', 'append_tags', {icon: 'tag'});
+addBulkButton('deleteTopics', 'delete', {icon: 'trash', class: 'btn-danger'});
 
 // Modal for performing bulk actions on topics
 export default Ember.Controller.extend(ModalFunctionality, {
