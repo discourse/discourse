@@ -62,6 +62,8 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootsnap (0.2.13)
+      msgpack (~> 1.0)
     builder (3.2.3)
     bullet (5.4.2)
       activesupport (>= 3.0.0)
@@ -398,6 +400,7 @@ DEPENDENCIES
   barber
   better_errors
   binding_of_caller
+  bootsnap
   bullet
   byebug
   certified
