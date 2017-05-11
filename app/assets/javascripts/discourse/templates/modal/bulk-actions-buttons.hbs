@@ -1,7 +1,5 @@
-{{#each buttonRows as |row|}}
-  <p>
-    {{#each row as |button|}}
-      {{d-button action=button.action label=button.label}}
-    {{/each}}
-  </p>
-{{/each}}
+<div class='bulk-buttons'>
+  {{#each buttons as |button|}}
+    {{d-button action=button.action label=button.label icon=button.icon}}
+  {{/each}}
+</div>

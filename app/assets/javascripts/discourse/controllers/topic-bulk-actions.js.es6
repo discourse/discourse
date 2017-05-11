@@ -2,51 +2,47 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
 const _buttons = [];
 
-function addBulkButton(action, key) {
-  _buttons.push({ action: action, label: "topics.bulk." + key });
+const alwaysTrue = () => true;
+
+function addBulkButton(action, key, icon, buttonVisible) {
+  _buttons.push({
+    action,
+    label: `topics.bulk.${key}`,
+    icon,
+    buttonVisible: buttonVisible || alwaysTrue
+  });
 }
 
 // Default buttons
-addBulkButton('showChangeCategory', 'change_category');
-addBulkButton('deleteTopics', 'delete');
-addBulkButton('closeTopics', 'close_topics');
-addBulkButton('archiveTopics', 'archive_topics');
-addBulkButton('showNotificationLevel', 'notification_level');
-addBulkButton('resetRead', 'reset_read');
-addBulkButton('unlistTopics', 'unlist_topics');
-addBulkButton('showTagTopics', 'change_tags');
-addBulkButton('showAppendTagTopics', 'append_tags');
+addBulkButton('showChangeCategory', 'change_category', 'pencil');
+addBulkButton('deleteTopics', 'delete', 'trash');
+addBulkButton('closeTopics', 'close_topics', 'lock');
+addBulkButton('archiveTopics', 'archive_topics', 'folder');
+addBulkButton('showNotificationLevel', 'notification_level', 'circle-o');
+addBulkButton('resetRead', 'reset_read', 'backward');
+addBulkButton('unlistTopics', 'unlist_topics', 'eye-slash', topics => {
+  return topics.some(t => t.visible);
+});
+addBulkButton('relistTopics', 'relist_topics', 'eye', topics => {
+  return topics.some(t => !t.visible);
+});
+
+addBulkButton('showTagTopics', 'change_tags', 'tag');
+addBulkButton('showAppendTagTopics', 'append_tags', 'tag');
 
 // Modal for performing bulk actions on topics
 export default Ember.Controller.extend(ModalFunctionality, {
   tags: null,
-  buttonRows: null,
 
   emptyTags: Ember.computed.empty('tags'),
   categoryId: Ember.computed.alias('model.category.id'),
 
   onShow() {
-    const showRelistButton = this.get('model.topics').some(t => !t.visible);
-    const relistButtonIndex = _buttons.findIndex(b => b.action === 'relistTopics');
-    if (showRelistButton && relistButtonIndex === -1) {
-      addBulkButton('relistTopics', 'relist_topics');
-    } else if (!showRelistButton && relistButtonIndex !== -1) {
-      _buttons.splice(relistButtonIndex, 1);
-    }
+    const topics = this.get('model.topics');
+    // const relistButtonIndex = _buttons.findIndex(b => b.action === 'relistTopics');
+
+    this.set('buttons', _buttons.filter(b => b.buttonVisible(topics)));
     this.set('modal.modalClass', 'topic-bulk-actions-modal small');
-
-    const buttonRows = [];
-    let row = [];
-    _buttons.forEach(function(b) {
-      row.push(b);
-      if (row.length === 4) {
-        buttonRows.push(row);
-        row = [];
-      }
-    });
-    if (row.length) { buttonRows.push(row); }
-
-    this.set('buttonRows', buttonRows);
     this.send('changeBulkTemplate', 'modal/bulk-actions-buttons');
   },
 
