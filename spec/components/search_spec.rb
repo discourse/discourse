@@ -198,6 +198,12 @@ describe Search do
 
        expect(results.posts.length).to eq(1)
 
+       results = Search.execute('mars in:private',
+                                search_context: post.user,
+                                guardian: Guardian.new(post.user))
+
+       expect(results.posts.length).to eq(1)
+
     end
 
   end
