@@ -1524,12 +1524,15 @@ en:
         label: "Auto-close topic hours:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
+      auto_delete:
+        title: "Auto-Delete Topic"
 
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."
         auto_close: "This topic will automatically close %{timeLeft}."
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
+        auto_delete: "This topic will be automatically deleted %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."

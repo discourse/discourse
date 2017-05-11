@@ -6,6 +6,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 export const CLOSE_STATUS_TYPE = 'close';
 const OPEN_STATUS_TYPE = 'open';
 const PUBLISH_TO_CATEGORY_STATUS_TYPE = 'publish_to_category';
+const DELETE_STATUS_TYPE = 'delete';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
@@ -14,14 +15,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
   selection: Ember.computed.alias('model.topic_status_update.status_type'),
   autoOpen: Ember.computed.equal('selection', OPEN_STATUS_TYPE),
   autoClose: Ember.computed.equal('selection', CLOSE_STATUS_TYPE),
+  autoDelete: Ember.computed.equal('selection', DELETE_STATUS_TYPE),
   publishToCategory: Ember.computed.equal('selection', PUBLISH_TO_CATEGORY_STATUS_TYPE),
+
+  showTimeOnly: Ember.computed.or('autoOpen', 'autoDelete'),
 
   @computed("model.closed")
   statusUpdates(closed) {
     return [
       { id: CLOSE_STATUS_TYPE, name: I18n.t(closed ? 'topic.temp_open.title' : 'topic.auto_close.title'), },
       { id: OPEN_STATUS_TYPE, name: I18n.t(closed ? 'topic.auto_reopen.title' : 'topic.temp_close.title') },
-      { id: PUBLISH_TO_CATEGORY_STATUS_TYPE, name: I18n.t('topic.publish_to_category.title') }
+      { id: PUBLISH_TO_CATEGORY_STATUS_TYPE, name: I18n.t('topic.publish_to_category.title') },
+      { id: DELETE_STATUS_TYPE, name: I18n.t('topic.auto_delete.title') }
     ];
   },
 
