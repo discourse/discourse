@@ -12,7 +12,10 @@ const _registry = {};
 let _dirty = {};
 
 export function keyDirty(key, options) {
-  _dirty[key] = options || {};
+  options = options || {};
+  options.dirty = true;
+
+  _dirty[key] = options;
 }
 
 export function renderedKey(key) {
@@ -194,14 +197,17 @@ export default class Widget {
     }
 
     if (prev) {
-      const dirtyOpts = _dirty[prev.key] || {};
+      const dirtyOpts = _dirty[prev.key] || { dirty: false };
+
       if (prev.shadowTree) {
         this.shadowTree = true;
-        if (!dirtyOpts && !_dirty['*']) {
+        if (!dirtyOpts.dirty && !_dirty['*']) {
           return prev.vnode;
         }
       }
-      renderedKey(prev.key);
+      if (prev.key) {
+        renderedKey(prev.key);
+      }
 
       const refreshAction = dirtyOpts.onRefresh;
       if (refreshAction) {
