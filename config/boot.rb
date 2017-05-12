@@ -22,6 +22,6 @@ if ENV['RAILS_ENV'] != 'production'
     autoload_paths_cache: true,        # Should we optimize ActiveSupport autoloads with cache?
     disable_trace:        false,       # Sets `RubyVM::InstructionSequence.compile_option = { trace_instruction: false }`
     compile_cache_iseq:   is_mac,      # Should compile Ruby code into ISeq cache?
-    compile_cache_yaml:   is_mac      # Should compile YAML into a cache?
+    compile_cache_yaml:   false        # Should compile YAML into a cache?
   )
 end
