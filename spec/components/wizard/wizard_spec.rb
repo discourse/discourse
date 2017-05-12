@@ -120,6 +120,23 @@ describe Wizard do
       expect(build_simple(admin).requires_completion?).to eq(false)
     end
 
+    it "its false when the wizard is bypassed" do
+      SiteSetting.bypass_wizard_check = true
+      admin = Fabricate(:admin)
+      expect(build_simple(admin).requires_completion?).to eq(false)
+    end
+
+    it "its automatically bypasses after you reach topic limit" do
+      Fabricate(:topic)
+      admin = Fabricate(:admin)
+      wizard = build_simple(admin)
+
+      wizard.max_topics_to_require_completion = Topic.count-1
+
+      expect(wizard.requires_completion?).to eq(false)
+      expect(SiteSetting.bypass_wizard_check).to eq(true)
+    end
+
     it "it's true for the first admin who logs in" do
       admin = Fabricate(:admin)
       second_admin = Fabricate(:admin)
