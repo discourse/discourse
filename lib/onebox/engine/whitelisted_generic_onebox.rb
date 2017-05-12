@@ -56,7 +56,6 @@ module Onebox
           espn.go.com
           etsy.com
           findery.com
-          flickr.com
           folksy.com
           forbes.com
           foxnews.com
