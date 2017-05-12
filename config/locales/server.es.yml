@@ -828,7 +828,7 @@ es:
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
     default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
-    set_locale_from_accept_language_header: "Establece el lenguaje de la interfaz para usuarios anónimos desde el lenguaje declarado por su navegador web. (EXPERIMENTAL, no funciona con caché anónimo)"
+    set_locale_from_accept_language_header: "Establece el lenguaje de la interfaz a partir del lenguaje declarado por el navegador web. La preferencia de usuario, si habilitada, tiene precedencia (EXPERIMENTAL, no funciona con caché anónimo)"
     min_post_length: "Extensión mínima de los posts, en número de caracteres"
     min_first_post_length: "Extensión mínima permitida en el primer mensaje (cuerpo del tema) en caracteres"
     min_private_message_post_length: "Extensión mínima de los posts en los mensajes, en número de caracteres"

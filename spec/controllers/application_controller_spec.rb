@@ -133,9 +133,11 @@ describe TopicsController do
 
   describe "set_locale" do
     context "allow_user_locale disabled" do
-      context "accept-language header differs from default locale" do
+      before { SiteSetting.stubs(:allow_user_locale).returns(false) }
+
+      context "set_locale_from_accept_language_header disabled" do
         before do
-          SiteSetting.stubs(:allow_user_locale).returns(false)
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(false)
           SiteSetting.stubs(:default_locale).returns("en")
           set_accept_language("fr")
         end
@@ -159,6 +161,33 @@ describe TopicsController do
           end
         end
       end
+
+      context "set_locale_from_accept_language_header enabled" do
+        before do
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("fr")
+        end
+
+        context "with an anonymous user" do
+          it "uses the headers locale" do
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+
+        context "with a logged in user" do
+          it "it uses the headers locale" do
+            user = Fabricate(:user, locale: :es)
+            log_in_user(user)
+
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+      end
     end
 
     context "set_locale_from_accept_language_header enabled" do
@@ -179,13 +208,28 @@ describe TopicsController do
         end
 
         context "with a logged in user" do
-          it "uses the user's preferred locale" do
-            user = Fabricate(:user, locale: :fr)
-            log_in_user(user)
+          context "and user's preferred locale set" do
+            let(:user) { Fabricate(:user, locale: :es) }
 
-            get :show, {topic_id: topic.id}
+            it "uses the user's preferred locale" do
+              log_in_user(user)
 
-            expect(I18n.locale).to eq(:fr)
+              get :show, {topic_id: topic.id}
+
+              expect(I18n.locale).to eq(:es)
+            end
+          end
+
+          context "and user's preferred locale unset" do
+            let(:user) { Fabricate(:user, locale: nil) }
+
+            it "uses the locale from the headers" do
+              log_in_user(user)
+
+              get :show, {topic_id: topic.id}
+
+              expect(I18n.locale).to eq(:fr)
+            end
           end
         end
       end
