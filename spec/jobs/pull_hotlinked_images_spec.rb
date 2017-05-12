@@ -13,7 +13,7 @@ describe Jobs::PullHotlinkedImages do
   it 'replaces image src' do
     post = Fabricate(:post, raw: "<img src='http://wiki.mozilla.org/images/2/2e/Longcat1.png'>")
 
-    Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+    Jobs::PullHotl.inkedImages.new.execute(post_id: post.id)
     post.reload
 
     expect(post.raw).to match(/^<img src='\/uploads/)
