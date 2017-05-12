@@ -76,7 +76,7 @@ Development Preview Interface
 =============================
 
 The onebox gem comes with a development server for previewing the results
-of your changes. You can run it by running `rake server` after checking
+of your changes. You can run it by running `bundle exec rake server` after checking
 out the project. You can then try out URLs.
 
 The server doesn't reload code changes automatically (PRs accepted!) so
