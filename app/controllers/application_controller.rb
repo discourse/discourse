@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
 
+  attr_reader :theme_key
+
   serialization_scope :guardian
 
   protect_from_forgery
@@ -265,12 +267,15 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key] || cookies[:theme_key] || session[:theme_key]
+    theme_key = flash[:preview_theme_key] || current_user&.user_option&.theme_key
+
+    # TODO 2018: delete this, old cookie cleanup code
+    if cookies[:theme_key]
+      cookies.delete(:theme_key)
+    end
 
     if theme_key && !guardian.allow_theme?(theme_key)
       theme_key = nil
-      cookies[:theme_key] = nil
-      session[:theme_key] = nil
     end
 
     theme_key ||= SiteSetting.default_theme_key

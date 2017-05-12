@@ -242,7 +242,8 @@ const User = RestModel.extend({
       'auto_track_topics_after_msecs',
       'notification_level_when_replying',
       'like_notification_frequency',
-      'include_tl0_in_digests'
+      'include_tl0_in_digests',
+      'theme_key'
     ];
 
     if (fields) {

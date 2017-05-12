@@ -33,7 +33,8 @@ class UserUpdater
     :email_previous_replies,
     :email_in_reply_to,
     :like_notification_frequency,
-    :include_tl0_in_digests
+    :include_tl0_in_digests,
+    :theme_key
   ]
 
   def initialize(actor, user)

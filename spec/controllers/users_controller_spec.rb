@@ -1221,13 +1221,17 @@ describe UsersController do
           expect(user.custom_fields['test']).to eq 'it'
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username,user3.username].sort
 
+          theme = Theme.create(name: "test", user_selectable: true, user_id: -1)
+
           put :update,
                 username: user.username,
-                muted_usernames: ""
+                muted_usernames: "",
+                theme_key: theme.key
 
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
+          expect(user.user_option.theme_key).to eq(theme.key)
 
         end
 

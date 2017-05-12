@@ -2,7 +2,6 @@ import PreferencesTabController from "discourse/mixins/preferences-tab-controlle
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import { listThemes, previewTheme } from 'discourse/lib/theme-selector';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import { selectDefaultTheme } from 'discourse/lib/theme-selector';
 
 export default Ember.Controller.extend(PreferencesTabController, {
 
@@ -12,7 +11,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
     'dynamic_favicon',
     'enable_quoting',
     'disable_jump_reply',
-    'automatically_unpin_topics'
+    'automatically_unpin_topics',
+    'theme_key'
   ],
 
   preferencesController: Ember.inject.controller('preferences'),
@@ -26,10 +26,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return listThemes(this.site);
   }.property(),
 
-  @observes("selectedTheme")
+  @observes("model.user_option.theme_key")
   themeKeyChanged() {
-    let key = this.get("selectedTheme");
-    this.get('preferencesController').set('selectedTheme', key);
+    let key = this.get("model.user_option.theme_key");
     previewTheme(key);
   },
 
@@ -38,7 +37,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
       this.set('saved', false);
       return this.get('model').save(this.get('saveAttrNames')).then(() => {
         this.set('saved', true);
-        selectDefaultTheme(this.get('selectedTheme'));
       }).catch(popupAjaxError);
     }
   }

@@ -2,7 +2,7 @@
 <div class="control-group theme">
   <label class="control-label">{{i18n 'user.theme'}}</label>
   <div class="controls">
-    {{combo-box content=userSelectableThemes value=selectedTheme}}
+    {{combo-box content=userSelectableThemes value=model.user_option.theme_key}}
   </div>
 </div>
 {{/if}}
