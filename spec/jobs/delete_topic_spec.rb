@@ -15,12 +15,14 @@ describe Jobs::DeleteTopic do
     SiteSetting.queue_jobs = true
   end
 
-  it "can close a topic" do
+  it "can delete a topic" do
     first_post
+
     Timecop.freeze(2.hours.from_now) do
       described_class.new.execute(topic_timer_id: topic.topic_timer.id)
       expect(topic.reload).to be_trashed
       expect(first_post.reload).to be_trashed
+      expect(topic.reload.topic_timer).to eq(nil)
     end
   end
 

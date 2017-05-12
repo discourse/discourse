@@ -397,6 +397,7 @@ class Topic < ActiveRecord::Base
 
   def reload(options=nil)
     @post_numbers = nil
+    @topic_timer = nil
     super(options)
   end
 
@@ -953,7 +954,7 @@ SQL
   end
 
   def topic_timer
-    @topic_timer ||= topic_timers.where('deleted_at IS NULL').first
+    @topic_timer ||= topic_timers.first
   end
 
   def topic_status_update
