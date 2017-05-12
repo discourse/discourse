@@ -26,6 +26,11 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return listThemes(this.site);
   }.property(),
 
+  @computed("userSelectableThemes")
+  showThemeSelector(themes) {
+    return themes && themes.length > 1;
+  },
+
   @observes("model.user_option.theme_key")
   themeKeyChanged() {
     let key = this.get("model.user_option.theme_key");
