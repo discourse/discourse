@@ -1,5 +1,3 @@
-import { currentUser } from "helpers/qunit-helpers";
-
 moduleFor('component:group-membership-button');
 
 test('canJoinGroup', function() {
