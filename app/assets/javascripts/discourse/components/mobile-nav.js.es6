@@ -35,21 +35,24 @@ export default Ember.Component.extend({
     this._updateSelectedHtml();
   },
 
-  @on('didInsertElement')
-  _bindClick() {
-    this.$().on("click.mobile-nav", 'ul li', () => {
-      this.set('expanded', false);
-    });
-  },
-
-  @on('willDestroyElement')
-  _unbindClick() {
-    this.$().off("click.mobile-nav", 'ul li');
-  },
-
   actions: {
     toggleExpanded(){
       this.toggleProperty('expanded');
+
+      Em.run.next(()=>{
+        if (this.get('expanded')) {
+          $(window)
+            .off("click.mobile-nav")
+            .on("click.mobile-nav", (e) => {
+              let expander = this.$('.expander');
+              expander = expander && expander[0];
+              if ($(e.target)[0] !== expander) {
+                this.set('expanded', false);
+                $(window).off("click.mobile-nav");
+              }
+          });
+        }
+      });
     }
   }
 });
