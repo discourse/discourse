@@ -103,7 +103,5 @@ $input-width: 220px;
 button#login-link, button#new-account-link
 {
   background: transparent;
-  padding-left: 0;
-  margin-left: 20px;
   color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
 }
