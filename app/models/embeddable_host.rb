@@ -57,5 +57,5 @@ end
 #  created_at     :datetime
 #  updated_at     :datetime
 #  path_whitelist :string
-#  class_name	  :string
+#  class_name     :string
 #

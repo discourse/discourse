@@ -133,6 +133,6 @@ end
 #
 # Indexes
 #
-#  idx_topic_id_status_type_deleted_at    (topic_id,status_type) UNIQUE
-#  index_topic_status_updates_on_user_id  (user_id)
+#  idx_topic_id_status_type_deleted_at  (topic_id,status_type) UNIQUE
+#  index_topic_timers_on_user_id        (user_id)
 #
