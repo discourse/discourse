@@ -9,7 +9,7 @@ if (system.args.length !== 2) {
   phantom.exit(1);
 }
 
-var TIMEOUT = 15000;
+var TIMEOUT = 25000;
 var page = require("webpage").create();
 
 page.viewportSize = {
