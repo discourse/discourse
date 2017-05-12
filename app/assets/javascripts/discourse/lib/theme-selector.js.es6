@@ -13,14 +13,6 @@ export function currentThemeKey() {
   return themeKey;
 }
 
-export function selectDefaultTheme(key) {
-  if (key) {
-    $.cookie('theme_key', key, {path: '/', expires: 9999});
-  } else {
-    $.cookie('theme_key', null, {path: '/', expires: 1});
-  }
-}
-
 export function refreshCSS(node, hash, newHref, options) {
 
   let $orig = $(node);

@@ -17,6 +17,22 @@ describe TopicsController do
     request.env['HTTP_ACCEPT_LANGUAGE'] = locale
   end
 
+  describe "themes" do
+    it "selects the theme the user has selected" do
+      theme = Theme.create!(user_id: -1, name: 'bob', user_selectable: true)
+      user = log_in
+      user.user_option.update_columns(theme_key: theme.key)
+
+      get :show, id: 666
+      expect(controller.theme_key).to eq(theme.key)
+
+      theme.update_columns(user_selectable: false)
+
+      get :show, id: 666
+      expect(controller.theme_key).not_to eq(theme.key)
+    end
+  end
+
   it "doesn't store an incoming link when there's no referer" do
     expect {
       get :show, id: topic.id
@@ -32,20 +48,19 @@ describe TopicsController do
     render_views
 
     context "when the SiteSetting is disabled" do
-      before do
-        SiteSetting.stubs(:enable_escaped_fragments?).returns(false)
-      end
 
       it "uses the application layout even with an escaped fragment param" do
+        SiteSetting.enable_escaped_fragments = false
         get :show, {'topic_id' => topic.id, 'slug' => topic.slug, '_escaped_fragment_' => 'true'}
         expect(response).to render_template(layout: 'application')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
+
     end
 
     context "when the SiteSetting is enabled" do
       before do
-        SiteSetting.stubs(:enable_escaped_fragments?).returns(true)
+        SiteSetting.enable_escaped_fragments = true
       end
 
       it "uses the application layout when there's no param" do
