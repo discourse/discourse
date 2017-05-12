@@ -228,8 +228,6 @@ export default Ember.Controller.extend({
       if (topic.get('posts_count') === 1) { return; }
 
       const post = this.get('model.post');
-      if (post && post.get('user_id') !== this.currentUser.id) { return; }
-
       const $links = $('a[href]', $preview);
       $links.each((idx, l) => {
         const href = $(l).prop('href');
