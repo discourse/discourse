@@ -1,25 +1,3 @@
-{{#if siteSettings.allow_profile_backgrounds}}
-  <div class="control-group pref-profile-bg">
-    <label class="control-label">{{i18n 'user.change_profile_background.title'}}</label>
-    <div class="controls">
-      {{image-uploader imageUrl=model.profile_background type="profile_background"}}
-    </div>
-    <div class='instructions'>
-      {{i18n 'user.change_profile_background.instructions'}}
-    </div>
-  </div>
-
-  <div class="control-group pref-profile-bg">
-    <label class="control-label">{{i18n 'user.change_card_background.title'}}</label>
-    <div class="controls">
-      {{image-uploader imageUrl=model.card_background type="card_background"}}
-    </div>
-    <div class='instructions'>
-      {{i18n 'user.change_card_background.instructions'}}
-    </div>
-  </div>
-{{/if}}
-
 {{#if canChangeBio}}
 <div class="control-group pref-bio">
   <label class="control-label">{{i18n 'user.bio'}}</label>
@@ -49,6 +27,28 @@
   </div>
 {{/each}}
 <div class='clearfix'></div>
+
+{{#if siteSettings.allow_profile_backgrounds}}
+  <div class="control-group pref-profile-bg">
+    <label class="control-label">{{i18n 'user.change_profile_background.title'}}</label>
+    <div class="controls">
+      {{image-uploader imageUrl=model.profile_background type="profile_background"}}
+    </div>
+    <div class='instructions'>
+      {{i18n 'user.change_profile_background.instructions'}}
+    </div>
+  </div>
+
+  <div class="control-group pref-profile-bg">
+    <label class="control-label">{{i18n 'user.change_card_background.title'}}</label>
+    <div class="controls">
+      {{image-uploader imageUrl=model.card_background type="card_background"}}
+    </div>
+    <div class='instructions'>
+      {{i18n 'user.change_card_background.instructions'}}
+    </div>
+  </div>
+{{/if}}
 
 <div class="control-group pref-card-badge">
   <label class="control-label">{{i18n 'user.card_badge.title'}}</label>
