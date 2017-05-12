@@ -18,24 +18,6 @@ test('canJoinGroup', function() {
   equal(this.subject().get("canJoinGroup"), true, "can't join group when not logged in");
 });
 
-test('canRequestMembership', function() {
-  this.subject().setProperties({
-    model: { allow_membership_requests: false, alias_level: 0 }
-  });
-
-  equal(this.subject().get('canRequestMembership'), false);
-
-  this.subject().setProperties({
-    currentUser: currentUser(), model: { allow_membership_requests: true, alias_level: 99 }
-  });
-
-  equal(this.subject().get('canRequestMembership'), true);
-
-  this.subject().set("model.alias_level", 0);
-
-  equal(this.subject().get('canRequestMembership'), false);
-});
-
 test('userIsGroupUser', function() {
   this.subject().setProperties({
     model: { is_group_user: true }
