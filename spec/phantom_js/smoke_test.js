@@ -143,6 +143,14 @@ var runTests = function() {
     return $(".topic-list tbody tr").length;
   });
 
+  execAsync("go to categories page", 500, function(){
+    window.location = "/categories";
+  });
+
+  test("can see categories on the page", function() {
+    return $('.category-list').length;
+  });
+
   execAsync("navigate to 1st topic", 500, function() {
     $(".main-link a.title:first").click();
   });
