@@ -58,6 +58,7 @@ const controllerOpts = {
       // Lesson learned: Don't call `loading` yourself.
       this.set('discovery.loading', true);
 
+      this.topicTrackingState.resetTracking();
       this.store.findFiltered('topicList', {filter}).then(list => {
         const TopicList = require('discourse/models/topic-list').default;
         TopicList.hideUniformCategory(list, this.get('category'));
