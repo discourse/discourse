@@ -423,7 +423,6 @@ id:
       mailing_list_mode:
         label: "mode milis"
         enabled: "Aktifkan mode milis"
-        daily: "mengirim pembaharuan harian"
         individual: "Kirim email untuk setiap pesan baru"
         few_per_day: "Kirim saya surel untuk setiap postingan baru (sekitar 2 per hari)"
       watched_categories: "Dilihat"

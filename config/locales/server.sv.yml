@@ -1831,14 +1831,6 @@ sv:
       unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
       from: "%{site_name} sammanfattning"
-    mailing_list:
-      why: "All aktivitet på %{site_link} den %{date}"
-      unsubscribe: "Den här sammanfattningen skickas dagligen eftersom att utskicksläge är aktiverat. För att säga upp dig {unsubscribe_link}."
-      from: "%{site_name} sammanfattning"
-      new_topics: "Nya ämnen"
-      topic_updates: "Uppdatering av ämnen"
-      view_this_topic: "Se det här ämnet"
-      back_to_top: "Tillbaka till början"
     forgot_password:
       title: "Glömt lösenord"
     set_password:

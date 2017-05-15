@@ -557,7 +557,6 @@ ro:
         instructions: |
           " Această setare nu ține cont de setarea de la sumarul activităților.<br />
           Subiectele setate pe silențios și categoriile nu sunt incluse în aceste emailuri."
-        daily: "Trimite actualizări zilnice"
         individual: "Trimite un email pentru fiecare postare nouă"
         individual_no_echo: "Trimite un email pentru fiecare postare nouă în afară de postările mele"
         many_per_day: "Trimite câte un email pentru pentru fiecare nouă postare (aproximativ {{dailyEmailEstimate}} pe zi)"

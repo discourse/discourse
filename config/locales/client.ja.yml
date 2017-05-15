@@ -425,7 +425,6 @@ ja:
         instructions: |
           この設定は、アクティビティの情報機能を無効化します。<br />
           ミュートしているトピックやカテゴリはこれらのメールには含まれません。
-        daily: "デイリーアップデートを送る"
         individual: "新しい投稿がある場合にメールで送る"
       watched_categories: "ウォッチ中"
       tracked_categories: "追跡中"

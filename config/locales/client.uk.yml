@@ -350,7 +350,6 @@ uk:
       suspended_reason: "Причина: "
       github_profile: "Github"
       mailing_list_mode:
-        daily: "Надсилати щоденні оновлення"
         individual: "Надсилати всі нові дописи мені електронною поштою"
       watched_tags: "Відслідковувані"
       tracked_tags: "Відстежувані"

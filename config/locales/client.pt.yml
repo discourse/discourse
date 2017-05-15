@@ -529,7 +529,6 @@ pt:
         instructions: |
           Esta configuração sobrepõe o sumário de actividade.<br />
           Tópicos e categorias silenciados não são incluídos nestes correios electrónicos.
-        daily: "Enviar actualizações diárias"
         individual: "Enviar um email por cada nova publicação"
         individual_no_echo: "Enviar um email por cada nova publicação excepto as minhas"
         many_per_day: "Mandar-me um email por cada nova publicação (cerca de {{dailyEmailEstimate}} por dia)"

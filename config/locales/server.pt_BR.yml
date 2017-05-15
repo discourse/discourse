@@ -1496,13 +1496,6 @@ pt_BR:
       click_here: "clique aqui"
       from: "resumo do site %{site_name} "
       preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"
-    mailing_list:
-      unsubscribe: "Este resumo está sendo enviado diariamente devido à configuração de \"lista de email\" estar habilitada. Para deixar de receber estas mensagens, clique em  %{unsubscribe_link}."
-      from: "Resumo das discussões do site %{site_name}"
-      new_topics: "Novos tópicos"
-      topic_updates: "Atualizações do tópico"
-      view_this_topic: "Ver esse tópico"
-      back_to_top: "Voltar ao topo"
     confirm_new_email:
       title: "Confirmar novo e-mail"
     notify_old_email:

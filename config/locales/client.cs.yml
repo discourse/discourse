@@ -522,7 +522,6 @@ cs:
         instructions: |
           Toto nastavení deaktivuje souhrn aktivit.<br/>
           Ztlumená témata a kategorie nejsou zahrnuté v těchto emailech.
-        daily: "Denně posílat aktuality"
         individual: "Upozornit emailem na každý nový příspěvek"
         individual_no_echo: "Upozornit emailem na každý nový příspěvek kromě mých vlastních"
         many_per_day: "Upozornit emailem na každý nový příspěvek (asi {{dailyEmailEstimate}} každý den)"

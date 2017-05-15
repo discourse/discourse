@@ -497,7 +497,6 @@ tr_TR:
         instructions: |
           Bu ayar etkinlik özetini geçersiz kılacaktır.<br />
           Susturulmuş konular ve kategoriler bu e-postalarda yer almaz.
-        daily: "Günlük güncellemeleri gönder"
         individual: "Her yeni gönderi için bir e-posta gönder"
         individual_no_echo: "Benim gönderilerim haricindeki her gönderi için mail gönder"
         many_per_day: "Her yeni gönderi için bir e-posta gönder (günde yaklaşık {{dailyEmailEstimate}})."

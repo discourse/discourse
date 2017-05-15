@@ -2055,14 +2055,6 @@ zh_TW:
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
-    mailing_list:
-      why: "%{date}%{site_link}上的所有情況"
-      unsubscribe: "這是每日摘要郵件。站點啟用了郵件列表模式，點擊連結 %{unsubscribe_link} 退訂。"
-      from: "%{site_name}的摘要"
-      new_topics: "近期主題"
-      topic_updates: "主題更新"
-      view_this_topic: "查看此主題"
-      back_to_top: "回到頂部"
     forgot_password:
       title: "忘記密碼"
     set_password:

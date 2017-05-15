@@ -536,7 +536,6 @@ nl:
         instructions: |
           Deze instelling overschrijft de activiteitsamenvatting.<br />
           Genegeerde topics en categorieën zijn niet in deze e-mails inbegrepen.
-        daily: "Dagelijkse updates verzenden"
         individual: "Een e-mail voor elk nieuw bericht verzenden"
         individual_no_echo: "Een e-mail voor elk nieuw bericht verzenden, behalve die van mezelf"
         many_per_day: "Mij een e-mail voor elk nieuw bericht sturen (ongeveer {{dailyEmailEstimate}} per dag)"
@@ -593,6 +592,15 @@ nl:
         move_to_archive: "Archiveren"
         failed_to_move: "Het verplaatsen van geselecteerde berichten is niet gelukt (misschien is uw netwerkverbinding verbroken)"
         select_all: "Alles selecteren"
+      preferences_nav:
+        account: "Account"
+        profile: "Profiel"
+        emails: "E-mails"
+        notifications: "Meldingen"
+        categories: "Categorieën"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Apps"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail wordt verzonden)"
@@ -1170,7 +1178,7 @@ nl:
       no_more_results: "Geen resultaten meer gevonden."
       searching: "Zoeken..."
       post_format: "#{{post_number}} door {{username}}"
-      results_page: "Zoek resultaten"
+      results_page: "Zoekresultaten"
       context:
         user: "Berichten van @{{username}} doorzoeken"
         category: "De categorie #{{category}} doorzoeken"
@@ -1559,7 +1567,7 @@ nl:
           other: "Kies de nieuwe eigenaar van de {{count}} berichten door <b>{{old_user}}</b>."
         instructions_warn: "Let er op dat meldingen over dit bericht niet met terugwerkende kracht aan de nieuwe gebruiker worden overgedragen. <br>Waarschuwing: momenteel worden geen berichtafhankelijke gegevens aan de nieuwe gebruiker overgedragen. Wees dus voorzichtig met het gebruik hiervan."
       change_timestamp:
-        title: "Wijzig datum en tijd"
+        title: "Tijdstempel wijzigen..."
         action: "tijdstempel wijzigen"
         invalid_timestamp: "Tijdstempel kan niet in de toekomst liggen."
         error: "Er is een fout opgetreden bij het wijzigen van de tijdstempel van het topic."
@@ -2372,7 +2380,7 @@ nl:
         add_members: "Leden toevoegen"
         custom: "Aangepast"
         bulk_complete: "De gebruikers zijn aan de groep toegevoegd."
-        bulk_complete_users_not_added: "Deze gebruikers zijn niet toegevoegd (zorg ervoor dat ze een account hebben)"
+        bulk_complete_users_not_added: "Deze gebruikers zijn niet toegevoegd (controleer of ze een account hebben):"
         bulk: "Bulk toevoegen aan groep"
         bulk_paste: "Plak een lijst van gebruikersnamen of e-mailadressen, één per regel:"
         bulk_select: "(selecteer een groep)"
@@ -2422,7 +2430,7 @@ nl:
         event_type_missing: "U dient minstens één gebeurtenistype in te stellen."
         content_type: "Inhoudstype"
         secret: "Geheim"
-        event_chooser: "Welke gebeurtenissen wilt u deze webhook laten activeren?"
+        event_chooser: "Welke gebeurtenissen moeten deze webhook activeren?"
         wildcard_event: "Alles sturen"
         individual_event: "Afzonderlijke gebeurtenissen selecteren"
         verify_certificate: "TLS-certificaat van payload-URL controleren"
@@ -2950,9 +2958,9 @@ nl:
         time_read: "Leestijd"
         anonymize: "Gebruiker anonimiseren"
         anonymize_confirm: "Weet u ZEKER dat u deze account wilt anonimiseren? Hierdoor worden de gebruikersnaam en het e-mailadres gewijzigd, en alle profielgegevens opnieuw ingesteld."
-        anonymize_yes: "Ja, deze account anonimiseren"
+        anonymize_yes: "Ja, anonimiseer dit account"
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van de account."
-        delete: "Gebruiker verwijderen"
+        delete: "Verwijder gebruiker"
         delete_forbidden_because_staff: "Beheerders en moderators kunnen niet worden verwijderd."
         delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderators verwijderen."
         delete_forbidden:
@@ -2964,7 +2972,7 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan 1 bericht heeft geplaatst. (delete_all_posts_max)"
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
-        delete_confirm: "Weet u ZEKER dat u deze gebruiker wilt verwijderen? Dit is definitief!"
+        delete_confirm: "Weet je ZEKER dat je deze gebruiker wil verwijderen? Dit is definitief!"
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
         deleted: "De gebruiker is verwijderd."
@@ -2974,12 +2982,12 @@ nl:
         send_activation_email_failed: "Er is een probleem opgetreden bij het versturen van de activeringsmail. %{error}"
         activate: "Account activeren"
         activate_failed: "Er is een probleem opgetreden bij het activeren van de gebruiker."
-        deactivate_account: "Account deactiveren"
+        deactivate_account: "Deactiveer account"
         deactivate_failed: "Er is een probleem opgetreden bij het deactiveren van de gebruiker."
         unblock_failed: 'Er is een probleem opgetreden bij het deblokkeren van de gebruiker.'
         block_failed: 'Er is een probleem opgetreden bij het blokkeren van de gebruiker.'
         block_confirm: 'Weet u zeker dat u deze gebruiker wilt blokkeren? De gebruiker zal dan geen nieuwe topics of berichten kunnen plaatsen.'
-        block_accept: 'Ja, deze gebruiker blokkeren'
+        block_accept: 'Ja, blokkeer deze gebruiker'
         bounce_score: "Bouncescore"
         reset_bounce_score:
           label: "Terugzetten"
@@ -2993,7 +3001,7 @@ nl:
           some: "Er zijn onlangs enkele bounceberichten van dat e-mailadres ontvangen."
           threshold_reached: "Er zijn te veel bounceberichten van dat e-mailadres ontvangen."
         trust_level_change_failed: "Er is een probleem opgetreden bij het wijzigen van het vertrouwensniveau van de gebruiker."
-        suspend_modal_title: "Gebruiker schorsen"
+        suspend_modal_title: "Schors gebruiker"
         trust_level_2_users: "Gebruikers met vertrouwensniveau 2"
         trust_level_3_requirements: "Vereisten voor vertrouwensniveau 3"
         trust_level_locked_tip: "vertrouwensniveau is vergrendeld; het systeem zal geen gebruikers promoveren of degraderen"
@@ -3009,7 +3017,7 @@ nl:
           requirement_heading: "Vereiste"
           visits: "Bezoeken"
           days: "dagen"
-          topics_replied_to: "Beantwoorde topics"
+          topics_replied_to: "Topics waarin gereageerd is"
           topics_viewed: "Bekeken topics"
           topics_viewed_all_time: "Bekeken topics (sinds begin)"
           posts_read: "Gelezen berichten"
@@ -3045,7 +3053,7 @@ nl:
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
-        cancel: "Annuleren"
+        cancel: "Annuleer"
         delete_confirm: "Weet u zeker dat u dat gebruikersveld wilt verwijderen?"
         options: "Opties"
         required:
@@ -3072,7 +3080,7 @@ nl:
         description: "U kunt alle tekst op uw forum aanpassen. Begin door hieronder te zoeken:"
         search: "Zoek de tekst die u wilt bewerken"
         title: 'Tekstinhoud'
-        edit: 'bewerken'
+        edit: 'bewerk'
         revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet u zeker dat u uw wijzigingen ongedaan wilt maken?"
         go_back: "Terug naar Zoeken"
@@ -3084,7 +3092,7 @@ nl:
         reset: 'standaardinstellingen'
         none: 'geen'
         no_results: "Geen resultaten gevonden."
-        clear_filter: "Wissen"
+        clear_filter: "Wis"
         add_url: "URL toevoegen"
         add_host: "host toevoegen"
         categories:
@@ -3106,12 +3114,12 @@ nl:
           legal: "Juridisch"
           user_api: 'Gebruikers-API'
           uncategorized: 'Overige'
-          backups: "Back-ups"
-          login: "Aanmelding"
-          plugins: "Plug-ins"
+          backups: "Backups"
+          login: "Gebruikersnaam"
+          plugins: "Plugins"
           user_preferences: "Gebruikersvoorkeuren"
           tags: "Tags"
-          search: "Zoeken"
+          search: "Zoek"
           groups: "Groepen"
       badges:
         title: Badges
@@ -3129,8 +3137,8 @@ nl:
         granted_by: Toegekend door
         granted_at: Toegekend op
         reason_help: (een link naar een bericht of topic)
-        save: Opslaan
-        delete: Verwijderen
+        save: Bewaar
+        delete: Verwijder
         delete_confirm: Weet u zeker dat u deze badge wilt verwijderen?
         revoke: Intrekken
         reason: Reden
@@ -3195,23 +3203,23 @@ nl:
         title: "Embedden"
         host: "Toegestane hosts"
         path_whitelist: "Toegestane paden"
-        edit: "bewerken"
+        edit: "wijzig"
         category: "Bericht naar categorie"
         add_host: "Host toevoegen"
         settings: "Embeddingsinstellingen"
         feed_settings: "Feedinstellingen"
-        feed_description: "Door een RSS/ATOM-feed voor uw website beschikbaar te stellen, kan het importeren van uw content door Discourse worden verbeterd."
+        feed_description: "Een RSS- of ATOM-feed van je site kan de import van content naar Discourse verbeteren."
         crawling_settings: "Crawlerinstellingen"
-        crawling_description: "Als Discourse topics voor uw berichten maakt en er geen RSS/ATOM-feed aanwezig is, zal Discourse proberen uw content vanuit uw HTML te parsen. Omdat het soms een uitdaging is om uw content af te leiden, bieden we de mogelijkheid voor het opgeven van CSS-regels om het afleiden makkelijker te maken."
+        crawling_description: "Als Discourse topics maakt voor je berichten, zonder dat er gebruik gemaakt wordt van de RSS/ATOM feed, dan zal Discourse proberen je content vanuit je HTML te parsen. Soms kan het complex zijn om je content af te leiden, daarom voorziet Discourse in de mogelijkheid voor het specificeren van CSS-regels om het afleiden gemakkelijker te maken."
         embed_by_username: "Gebruikersnaam voor het maken van topics"
-        embed_post_limit: "Maximale aantal berichten om te embedden"
-        embed_username_key_from_feed: "Sleutel om Discourse-gebruikersnaam uit feed te halen"
+        embed_post_limit: "Maximum aantal berichten op te embedden"
+        embed_username_key_from_feed: "Sleutel om Discourse-gebruikersnaam uit de feed te halen"
         embed_title_scrubber: "Reguliere expressie voor het afleiden van de titels van berichten"
         embed_truncate: "Embedde berichten inkorten"
         embed_whitelist_selector: "CSS-selector voor elementen die bij embedding worden toegestaan"
         embed_blacklist_selector: "CSS-selector voor elementen die bij embedding worden verwijderd"
         embed_classname_whitelist: "Toegestane CSS-klassenamen"
-        feed_polling_enabled: "Berichten importeren via RSS/ATOM"
+        feed_polling_enabled: "Importeer berichten via RSS/ATOM"
         feed_polling_url: "URL van RSS/ATOM-feed voor crawlen"
         save: "Embeddingsinstellingen opslaan"
       permalink:
@@ -3224,7 +3232,7 @@ nl:
         category_id: "Categorie-ID"
         category_title: "Categorie"
         external_url: "Externe URL"
-        delete_confirm: Weet u zeker dat u deze permalink wilt verwijderen?
+        delete_confirm: Weet je zeker dat je deze permalink wil verwijderen?
         form:
           label: "Nieuw:"
           add: "Toevoegen"
@@ -3240,10 +3248,10 @@ nl:
       quit: "Misschien later"
       staff_count:
         one: "Uw gemeenschap heeft 1 staflid."
-        other: "Uw gemeenschap heeft %{count} stafleden."
+        other: "Jouw community heeft %{count} stafleden."
       invites:
         add_user: "toevoegen"
-        none_added: "U hebt geen stafleden uitgenodigd. Weet u zeker dat u wilt doorgaan?"
+        none_added: "Je hebt geen stafleden uitgenodigd. Weet je zeker dat je verder wilt gaan?"
         roles:
           admin: "Beheerder"
           moderator: "Moderator"

@@ -530,7 +530,6 @@ es:
         instructions: |
           Esta opción sobreescribe el resumen de actividad.<br />
           Los temas y categorías silenciadas no se incluyen en estos emails.
-        daily: "Enviar actualizaciones diariamente"
         individual: "Enviar un email por cada nuevo post"
         individual_no_echo: "Envíame un email por cada nuevo post excepto los publicados por mí"
         many_per_day: "Enviarme un email por cada nuevo post (unos {{dailyEmailEstimate}} por día)"
