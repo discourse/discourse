@@ -295,7 +295,7 @@ class Topic < ActiveRecord::Base
   def self.fancy_title(title)
     escaped = ERB::Util.html_escape(title)
     return unless escaped
-    HtmlPrettify.render(escaped)
+    Emoji.unicode_unescape(HtmlPrettify.render(escaped))
   end
 
   def fancy_title

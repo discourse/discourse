@@ -146,6 +146,16 @@ class Emoji
     @unicode_replacements
   end
 
+  def self.unicode_unescape(string)
+    string.each_char.map do |c|
+      if str = unicode_replacements[c]
+        ":#{str}:"
+      else
+        c
+      end
+    end.join
+  end
+
   def self.lookup_unicode(name)
     @reverse_map ||= begin
       map = {}
