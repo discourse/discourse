@@ -267,12 +267,18 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key] || current_user&.user_option&.theme_key
+    theme_key = flash[:preview_theme_key]
 
-    # TODO 2018: delete this, old cookie cleanup code
-    if cookies[:theme_key]
-      cookies.delete(:theme_key)
+    user_option = current_user&.user_option
+
+    unless theme_key
+      key, seq = cookies[:theme_key]&.split(",")
+      if key && seq && seq.to_i == user_option&.theme_key_seq
+        theme_key = key
+      end
     end
+
+    theme_key ||= user_option&.theme_key
 
     if theme_key && !guardian.allow_theme?(theme_key)
       theme_key = nil

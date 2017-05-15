@@ -581,6 +581,7 @@ en:
       first_notification: "Your first notification! Select it to begin."
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
+      theme_default_on_all_devices: "Make this my default theme on all my devices"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
