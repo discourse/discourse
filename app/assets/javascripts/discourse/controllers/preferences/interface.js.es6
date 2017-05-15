@@ -1,6 +1,6 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
-import { listThemes, previewTheme, setLocalTheme } from 'discourse/lib/theme-selector';
+import { currentThemeKey, listThemes, previewTheme, setLocalTheme } from 'discourse/lib/theme-selector';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend(PreferencesTabController, {
@@ -31,6 +31,11 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
 
+  @computed()
+  themeKey() {
+    return currentThemeKey();
+  },
+
   userSelectableThemes: function(){
     return listThemes(this.site);
   }.property(),
@@ -40,9 +45,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return themes && themes.length > 1;
   },
 
-  @observes("model.user_option.theme_key")
+  @observes("themeKey")
   themeKeyChanged() {
-    let key = this.get("model.user_option.theme_key");
+    let key = this.get("themeKey");
     previewTheme(key);
   },
 
@@ -50,12 +55,15 @@ export default Ember.Controller.extend(PreferencesTabController, {
     save() {
       this.set('saved', false);
       const makeThemeDefault = this.get("makeThemeDefault");
+      if (makeThemeDefault) {
+        this.set('model.user_option.theme_key', this.get('themeKey'));
+      }
 
       return this.get('model').save(this.get('saveAttrNames')).then(() => {
         this.set('saved', true);
 
         if (!makeThemeDefault) {
-          setLocalTheme(this.get('model.user_option.theme_key'), this.get('model.user_option.theme_key_seq'));
+          setLocalTheme(this.get('themeKey'), this.get('model.user_option.theme_key_seq'));
         }
 
       }).catch(popupAjaxError);
