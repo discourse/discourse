@@ -536,7 +536,6 @@ da:
         instructions: |
           Denne indstillilng har indflydelse på opsummeringen af aktiviteter.<br />
           Fravalgte / 'muted' emner og kategorier fer ikke inkluderet i disse mails.
-        daily: "Send daglige opdateringer"
         individual: "Send en email for hvert nyt indlæg"
         individual_no_echo: "Send en e-mail for hver nyt indlæg bortset fra mine egne"
         many_per_day: "Send mig en email for hvert nyt indlæg (omkring {{dailyEmailEstimate}} per dag)"
@@ -2431,7 +2430,6 @@ da:
         event_type_missing: "Du er nødt til at konfigurere mindst én eventtype."
         content_type: "Indholdstype"
         secret: "Hemmelig"
-        event_chooser: "Hvilke events ønsker du skal udløse denne webhook?"
         wildcard_event: "Send mig alt"
         individual_event: "Vælg individuelle events"
         verify_certificate: "Tjek TLS-certificatet for payload-URL'en"

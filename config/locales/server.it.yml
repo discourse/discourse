@@ -1422,12 +1422,6 @@ it:
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
-    mailing_list:
-      from: "%{site_name} riepilogo"
-      new_topics: "Nuovi argomenti"
-      topic_updates: "Aggiornamenti argomento"
-      view_this_topic: "Vedi questo argomento"
-      back_to_top: "Torna in cima"
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
   page_not_found:

@@ -527,7 +527,6 @@ bs_BA:
         instructions: |
           Ova Postavka nadvladava postavku Sažetak aktivnosti.<br />
           Isključene teme (Muted topics) i kategorije nisu uključeni u ovim e-mailovima.
-        daily: "Šalji dnevne promjene."
         individual: "Šalji e-mail za svaku novu objavu"
         individual_no_echo: "Šalji e-mail za svaki novu objavu izuzev vlastite"
         many_per_day: "Pošalji mi e-mail za svaku novu objavu (od prilike {{dailyEmailEstimate}} puta po danu)"

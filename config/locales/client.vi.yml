@@ -506,7 +506,6 @@ vi:
         instructions: |
           Cài đặt này ghi đè tổng quan về hoạt động<br />
           Topic bị đánh dấu im lặng và chuyên mục sẽ không bao gồm trong thư
-        daily: "Gửi cập nhật hàng ngày"
         individual: "Gửi email cho mỗi bài viết mới."
         individual_no_echo: "Gửi email cho mỗi bài viết mới trừ bài viết của tôi"
         many_per_day: "Gửi email cho tôi về mỗi bài viết mới (khoảng {{dailyEmailEstimate}} thư một ngày)"

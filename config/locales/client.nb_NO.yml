@@ -536,7 +536,6 @@ nb_NO:
         instructions: |
           Denne innstillingen overstyrer oppsummeringen av aktivitet.<br />
           Ignorerte emner og kategorier blir ikke inkludert i disse e-postene.
-        daily: "Send daglige oppdateringer"
         individual: "Send en e-post for hvert nye innlegg"
         individual_no_echo: "Send en e-post for hvert nye innlegg bortsett fra mine egne"
         many_per_day: "Send meg en e-post for hvert nye innlegg (rundt {{dailyEmailEstimate}} per deg)"

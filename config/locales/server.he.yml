@@ -1811,13 +1811,11 @@ he:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
       text_body_template: |
-        ההזמנה הקבוצתית שלך עובדה,  %{sent} הזמנות נשלחו עם %{failed} תקלה/ות.
-
-        רישום המערכת:
+        קובץ המשתמשים שלכם מעובד כעת, נשלחו %{sent} הזמנות עם %{failed} שגיאה(ות).
 
         הנה היומן:
-        ```
 
+        ```text
         %{logs}
         ```
     csv_export_succeeded:
@@ -2272,15 +2270,6 @@ he:
       click_here: "לחצו כאן"
       from: "סיכום %{site_name}"
       preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
-    mailing_list:
-      why: "כל הפעילות ב-%{site_link} ל-%{date}"
-      subject_template: "[%{email_prefix}] סיכום ל %{date}"
-      unsubscribe: "סיכום זה נשלח מידי יום כיוון שמאופשר מצב של רשימת תפוצה. כדי לבטל את המנוי %{unsubscribe_link}."
-      from: "סיכום %{site_name} "
-      new_topics: "נושאים חדשים"
-      topic_updates: "עדכוני נושאים"
-      view_this_topic: "צפו בנושא זה"
-      back_to_top: "חזרה למעלה"
     forgot_password:
       title: "שכח/ה סיסמה"
       subject_template: "[%{email_prefix}] איפוס סיסמה"

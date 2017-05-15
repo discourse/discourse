@@ -524,7 +524,6 @@ sk:
         instructions: |
           Toto nastavenie nahradí Zhrnutie aktivíť.<br />
           Stíšené témy a kategórie nie sú v týchto emailoch zahrnuté.
-        daily: "Posielať denné aktualizácie"
         individual: "Pošli email pri každom novom príspevku"
         many_per_day: "Pošli mi email pri každom novom príspevku (cca {{dailyEmailEstimate}} denne)"
         few_per_day: "Pošli mi email pri každom novom príspevku (cca 2 denne)"

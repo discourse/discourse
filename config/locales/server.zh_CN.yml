@@ -1932,15 +1932,6 @@ zh_CN:
       click_here: "点击此处"
       from: "%{site_name}的摘要"
       preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"
-    mailing_list:
-      why: "%{date}%{site_link}上的所有情况"
-      subject_template: "[%{email_prefix}] %{date}摘要"
-      unsubscribe: "这是每日摘要邮件。站点启用了邮件列表模式，点击链接 %{unsubscribe_link} 退订。"
-      from: "%{site_name}的摘要"
-      new_topics: "近期主题"
-      topic_updates: "主题更新"
-      view_this_topic: "查看此主题"
-      back_to_top: "回到顶部"
     forgot_password:
       title: "忘记密码"
     set_password:
@@ -1964,8 +1955,32 @@ zh_CN:
     signup_after_approval:
       title: "在审批之后注册"
       subject_template: "你已经被 %{site_name} 论坛批准加入了！"
+      text_body_template: |
+        欢迎来到 %{site_name}!
+
+        管理人员批准了你在%{site_name}的帐号.
+
+        点击下面链接确认并激活你的新帐号:
+        %{base_url}/u/activate-account/%{email_token}
+
+        如果以上链接无法点击, 请将它复制并粘贴到你的浏览器的地址栏.
+
+        %{new_user_tips}
+
+        我们相信任何时候[讨论应该文明](%{base_url}/guidelines) .
+
+        享受你的时光!
+
+        (作为新用户，如果你需要与[管理人员](%{base_url}/about)沟通, 请回复这个消息.)
     signup:
       title: "注册"
+      text_body_template: |
+        欢迎来到 %{site_name}！
+
+        点击下面链接确认并激活你的新帐号：
+        %{base_url}/u/activate-account/%{email_token}
+
+        如果以上链接无法点击，请将它复制并粘贴到你的浏览器的地址栏。
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"

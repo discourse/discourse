@@ -537,7 +537,6 @@ fi:
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
 
-        daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
         individual_no_echo: "Lähetä sähköposti jokaisesta uudesta viestistä lukuun ottamatta omiani"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
@@ -594,6 +593,15 @@ fi:
         move_to_archive: "Arkisto"
         failed_to_move: "Viestien siirto epäonnistui (vika saattaa olla internetyhteydessäsi)"
         select_all: "Valitse kaikki"
+      preferences_nav:
+        account: "Tili"
+        profile: "Profiili"
+        emails: "Sähköpostit"
+        notifications: "Ilmoitukset"
+        categories: "Alueet"
+        tags: "Tunnisteet"
+        interface: "Käyttöliittymä"
+        apps: "Sovellukset"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(lähettää sähköpostia)"
@@ -2423,7 +2431,7 @@ fi:
         event_type_missing: "Ainakin yksi tapahtumatyyppi täytyy asettaa."
         content_type: "Sisällön tyyppi"
         secret: "Salausavain"
-        event_chooser: "Minkä tapahtumien haluat laukaisevan tämän webhookin?"
+        event_chooser: "Minkä tapahtumien tulisi laukaista tämä webhook?"
         wildcard_event: "Lähetä kaikesta."
         individual_event: "Valitse tietyt tapahtumat."
         verify_certificate: "Tarkasta tietosisällön URL:in TLS-sertifikaatti"
@@ -2618,10 +2626,21 @@ fi:
             title: "Lisää mukautettua CSS:ää, hyväksymme käyvät CSS- ja SCSS-tyylit"
           header:
             text: "Ylätunniste"
+            title: "Lisää HTML:ää, joka näytetään sivuston headerin yläpuolella"
+          after_header:
+            text: "Headerin jälkeen"
+            title: "Lisää HTML:ää, joka näytetään sivuston headerin jälkeen"
+          footer:
+            text: "Footer"
+            title: "Lisää HTML:ää, joka näytetään sivuston footerissa"
+          embedded_scss:
+            text: "Upotettu CSS"
           head_tag:
             text: "</head>"
+            title: "HTML, joka sijoitetaan ennen </head>-symbolia"
           body_tag:
             text: "</body>"
+            title: "HTML, joka sijoitetaan ennen </body>-symbolia"
         colors:
           select_base:
             title: "Valitse perusvärimalli"
@@ -3183,6 +3202,7 @@ fi:
         sample: "Käytä alla olevaa HTML-koodia sivustollasi luodaksesi ja upottaaksesi discourse ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
         title: "Upottaminen"
         host: "Sallitut isännät"
+        path_whitelist: "Sallitut polut"
         edit: "muokkaa"
         category: "Julkaise alueelle"
         add_host: "Lisää isäntä"

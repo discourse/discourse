@@ -497,7 +497,6 @@ zh_TW:
         instructions: |
           此設置將覆蓋活動摘要。<br />
           靜音主題和分類不包含在這些郵件中。
-        daily: "發送每日更新"
         individual: "每當有新文章時，寄給我郵件通知"
         individual_no_echo: "每當有新文章時，寄給我郵件通知（除了我自己的文章）"
         many_per_day: "每當有新文章時，寄給我郵件通知（每天約有  {{dailyEmailEstimate}}  封）。"

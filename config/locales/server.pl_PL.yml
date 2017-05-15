@@ -117,6 +117,7 @@ pl_PL:
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
   invite:
     not_found: "Link do zaproszenia nie istnieje. Skontaktuj się z administratorem strony"
+    user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='/u/%{username}/summary'>obecnie posiada konto!"
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
     error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
@@ -221,6 +222,8 @@ pl_PL:
   queue:
     delete_reason: "Skasowany z poziomu kolejki moderacji."
   groups:
+    success:
+      bulk_add: "%{users_added} użytkowników zostało dodanych do grupy"
     errors:
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
       member_already_exist: "'%{username}' należy już do tej grupy."
@@ -603,6 +606,9 @@ pl_PL:
     missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
     activated: "Przepraszamy, to konto zostało już aktywowane."
     admin_confirm:
+      title: "Potwierdź konto administratora"
+      description: "Czy jesteś pewny, że chcesz nadać użytkownikowi <b>%{target_username}</b> uprawnienia administratora?"
+      complete: "<b>%{target_username}</b> jest teraz administratorem."
       back_to: "Wróć do %{title}"
   post_action_types:
     off_topic:
@@ -999,6 +1005,7 @@ pl_PL:
     force_hostname: "OSTRZEŻENIE! Tylko dla Developera! Określ nazwę hosta w adresie URL. Pozostaw domyślnie puste."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_passthrough_hours: "Jak długo użytkownik może użyć poprzednio wykorzystanego klucza zaproszenia by się zalogować, w godzinach"
+    invite_only: "Rejestracja jest wyłączona. Nowi użytkownicy muszą zostać zaproszeni przez administrację."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
     min_username_length: "Minimalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy krótsze niż ta, twój serwis się uszkodzi!"
     max_username_length: "Maksymalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy dłuższe niż ta, twój serwis się uszkodzi!"
@@ -1810,13 +1817,6 @@ pl_PL:
       click_here: "kliknij tutaj"
       from: "%{site_name} podsumowanie"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
-    mailing_list:
-      why: "Cała aktywność w %{site_link} dla %{date}"
-      from: "%{site_name} podsumowanie"
-      new_topics: "Nowe tematy"
-      topic_updates: "Aktualizacje tematu"
-      view_this_topic: "Zobacz ten temat"
-      back_to_top: "Powrót do góry"
     forgot_password:
       title: "Zapomniane hasło"
     set_password:

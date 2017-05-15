@@ -745,13 +745,6 @@ et:
       text_body_template: |2
 
         %{message}
-    mailing_list:
-      why: "Saidi %{site_link} kõik toimingud päeval %{date}"
-      from: "%{site_name} kokkuvõte"
-      new_topics: "Uued teemad"
-      topic_updates: "eemade uuendused"
-      view_this_topic: "Vaata seda teemat"
-      back_to_top: "Tagasi üles"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:

@@ -1882,14 +1882,6 @@ pt:
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
-    mailing_list:
-      why: "Toda a atividade em %{site_link} em %{date}"
-      unsubscribe: "Este resumo é enviado diariamente devido ao modo de lista de distribuição estar ativado. Para anular a subscrição %{unsubscribe_link}."
-      from: "resumo de %{site_name}"
-      new_topics: "Novos tópicos"
-      topic_updates: "Atualizações de tópico"
-      view_this_topic: "Ver este tópico"
-      back_to_top: "Voltar ao topo"
     notify_old_email:
       text_body_template: |
         Isto é uma mensagem automática para o informar que o seu endereço de email para

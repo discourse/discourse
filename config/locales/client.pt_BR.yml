@@ -27,7 +27,7 @@ pt_BR:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      timeline_date: "MMM AAAA"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -101,6 +101,7 @@ pt_BR:
           other: "%{count} anos depois"
       previous_month: 'Mês Anterior'
       next_month: 'Mês Seguinte'
+      placeholder: Escolha uma data
     share:
       topic: 'compartilhe o link desse tópico'
       post: 'mensagem #%{postNumber}'
@@ -136,13 +137,15 @@ pt_BR:
         enabled: 'listou %{when}'
         disabled: 'desalistou %{when}'
       banner:
-        enabled: 'tornou isso um banner %{when}. Isso será mostrado no todo de todas as páginas até que seja descartado pelo usuário.'
+        enabled: 'tornou isso um banner %{when}. Isso será mostrado no topo de todas as páginas até que seja descartado pelo usuário.'
         disabled: 'removeu esse banner %{when}. Ele não vai mais aparecer no topo de todas as páginas.'
     topic_admin_menu: "ações administrativas do tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
     bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo site, você esta no modo de inicialização. A todos os novos usuários, será concedido o nível de confiança 1 e eles terão o resumo diário de atualizações por email ativado. Isso será automaticamente desativado quando a contagem total de usuários exceder %{min_users} usuários."
     bootstrap_mode_disabled: "O modo de inicialização será desativado nas próximas 24 horas."
+    themes:
+      default_description: "Padrão"
     s3:
       regions:
         us_east_1: "Leste dos EUA (N. da Virgínia)"
@@ -150,6 +153,7 @@ pt_BR:
         us_west_2: "Leste dos EUA (Oregon)"
         us_gov_west_1: "AWS GovCloud (EUA)"
         eu_west_1: "EU (Irlanda)"
+        eu_west_2: "UE (Londres)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Ásia Pacífico (Singapura)"
         ap_southeast_2: "Ásia Pacífico (Sidney)"
@@ -366,6 +370,7 @@ pt_BR:
       automatic_group: Grupo Automático
       closed_group: Grupo Fechado
       is_group_user: "Você é membro deste grupo"
+      allow_membership_requests: "Permitir usuários enviar pedidos de adesão a proprietários de grupos"
       membership: "Adesão"
       name: "Nom"
       user_count: "Número de Membros"
@@ -385,6 +390,7 @@ pt_BR:
       posts: "Mensagens"
       mentions: "Menções"
       messages: "Mensagens"
+      notification_level: "Nível de notificação padrão para mensagens de grupo"
       alias_levels:
         title: "Quem pode enviar mensagem e @mention a este grupo?"
         nobody: "Ninguém"
@@ -530,7 +536,6 @@ pt_BR:
         instructions: |
           Essa opção sobrepõe o sumário de atividades.<br />
           Tópicos e categorias silenciados não são incluídos nesses emails.
-        daily: "Enviar atualizações diárias"
         individual: "Enviar email para cada postagem nova"
         individual_no_echo: "Mande um email para todas as novas publicações, exceto as minhas"
         many_per_day: "Me envie um email para cada nova postagem (aproximadamente {{dailyEmailEstimate}} por dia)"
@@ -568,6 +573,7 @@ pt_BR:
       revoke_access: "Revogar Acesso"
       undo_revoke_access: "Desfazer a Revogação de Acesso"
       api_approved: "Aprovada:"
+      theme: "Tema"
       staff_counters:
         flags_given: "sinalizadas úteis"
         flagged_posts: "posts sinalizados"
@@ -585,6 +591,15 @@ pt_BR:
         move_to_archive: "Arquivar"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez você esteja sem conexão com a rede)"
         select_all: "Selecionar Tudo"
+      preferences_nav:
+        account: "Conta"
+        profile: "Perfil"
+        emails: "Emails"
+        notifications: "Notificações"
+        categories: "Categorias"
+        tags: "Etiquetas"
+        interface: "Interface"
+        apps: "Aplicativos"
       change_password:
         success: "(email enviado)"
         in_progress: "(enviando email)"
@@ -939,6 +954,7 @@ pt_BR:
       resend_activation_email: "Clique aqui para enviar o email de ativação novamente."
       resend_title: "Reenviar E-mail de Ativação"
       change_email: "Trocar Endereço de E-mail"
+      provide_new_email: "Digite um novo e-mail e nós re-enviaremos seu e-mail de confirmação"
       submit_new_email: "Atualizar Endereço de E-mail"
       sent_activation_email_again: "Nós enviamos mais um email de ativação para você no endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spams."
       to_continue: "Por favor efetue o login"
@@ -1147,6 +1163,7 @@ pt_BR:
       sort_by: "Ordenar por"
       relevance: "Relevância"
       latest_post: "Última Mensagem"
+      latest_topic: "Último Tópico"
       most_viewed: "Mais Visto"
       most_liked: "Mais Curtido"
       select_all: "Selecionar Todos"
@@ -1160,6 +1177,7 @@ pt_BR:
       no_more_results: "Sem mais resultados encontrados."
       searching: "Procurando..."
       post_format: "#{{post_number}} por {{username}}"
+      results_page: "Resultados da pesquisa"
       context:
         user: "Procurar respostas de @{{username}}"
         category: "Procurar a categoria #{{category}}"
@@ -1325,6 +1343,34 @@ pt_BR:
       jump_reply_up: pular para a resposta mais recente
       jump_reply_down: pular para a resposta mais antiga
       deleted: "Este tópico foi apagado"
+      topic_status_update:
+        num_of_hours: "Número de horas:"
+        remove: "Remover contador"
+        publish_to: "Publicar para:"
+        when: "Quando:"
+      auto_update_input:
+        later_today: "Mais tarde hoje"
+        tomorrow: "Amanhã"
+        later_this_week: "Mais tarde esta semana"
+        this_weekend: "Este fim de semana"
+        next_week: "Próxima semana"
+        pick_date_and_time: "Escolha uma data e uma hora"
+        set_based_on_last_post: "Fechar baseado na última postagem"
+      publish_to_category:
+        title: "Agendar publicação"
+      temp_open:
+        title: "Aberto temporariamente"
+      auto_reopen:
+        title: "Abrir tópico automaticamente"
+      temp_close:
+        title: "Fechar temporariamente"
+      auto_close:
+        title: "Fechar tópico automaticamente"
+        label: "Horas para fechar tópico automaticamente:"
+        error: "Por favor insira um valor válido."
+      status_update_notice:
+        auto_open: "Este tópico irá abrir automaticamente em %{timeLeft}"
+        auto_close: "Este tópico irá fechar automaticamente em %{timeLeft}"
       auto_close_title: 'Configurações para fechar automaticamente'
       auto_close_immediate:
         one: "A última publicação no tópico já tem 1 hora, portanto ele será fechado imediatamente."
@@ -2512,6 +2558,8 @@ pt_BR:
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
+        copy_to_clipboard: "Copiar para área de transferência"
+        copied_to_clipboard: "Copiado para área de transferência"
         email_templates:
           title: "Modelos de E-mail"
           subject: "Assunto"
@@ -2520,6 +2568,16 @@ pt_BR:
           none_selected: "Selecione um modelo de e-mail para iniciar a edição."
           revert: "Reverter Alterações"
           revert_confirm: "Tem certeza de que deseja reverter as alterações?"
+        theme:
+          edit: "Editar"
+          desktop: "Desktop"
+          mobile: "Mobile"
+          preview: "Prévia"
+          color_scheme_select: "Selecione as cores a serem usadas pelo tema"
+          edit_css_html: "Editar CSS/HTML"
+          add: "Adicionar"
+          scss:
+            text: "CSS"
         colors:
           title: "Cores"
           long_title: "Esquema de Cores"
@@ -2661,6 +2719,8 @@ pt_BR:
             change_trust_level: "modificou nível de confiança"
             change_username: "mudar nome de usuário"
             change_site_setting: "alterar configurações do site"
+            change_theme: "trocar tema"
+            delete_theme: "deletar tema"
             change_site_text: "alterar texto do site"
             suspend_user: "suspender usuário"
             unsuspend_user: "readmitir usuário"
@@ -2805,6 +2865,7 @@ pt_BR:
         logged_out: "Usuário foi desconectado em todos os dipositivos"
         revoke_admin: 'Revogar Admin'
         grant_admin: 'Conceder Admin'
+        grant_admin_confirm: "Nós o enviamos um email para verificar o novo administrador. Por favor abra-o e siga as instruções."
         revoke_moderation: 'Revogar Moderação'
         grant_moderation: 'Conceder Moderação'
         unblock: 'Desbloquear'
