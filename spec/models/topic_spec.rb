@@ -257,9 +257,14 @@ describe Topic do
     let(:topic_bold) { build_topic_with_title("Topic with <b>bold</b> text in its title" ) }
     let(:topic_image) { build_topic_with_title("Topic with <img src='something'> image in its title" ) }
     let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title" ) }
+    let(:topic_emoji) { build_topic_with_title("I 💖 candy alot") }
 
     it "escapes script contents" do
       expect(topic_script.fancy_title).to eq("Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title")
+    end
+
+    it "expands emojis" do
+      expect(topic_emoji.fancy_title).to eq("I :sparkling_heart: candy alot")
     end
 
     it "escapes bold contents" do
