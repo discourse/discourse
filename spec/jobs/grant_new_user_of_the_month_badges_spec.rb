@@ -149,6 +149,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       PostAction.act(u4, p, PostActionType.types[:like])
       PostAction.act(um, p, PostActionType.types[:like])
       PostAction.act(ua, p, PostActionType.types[:like])
+      PostAction.act(Discourse.system_user, p, PostActionType.types[:like])
       expect(granter.scores[user.id]).to eq(4.425)
 
       # It goes down the more they post
