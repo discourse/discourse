@@ -14,10 +14,17 @@ module Jobs
     end
 
     def execute(args)
+      puts "============="
+      puts "start"
+      puts "============="
       return unless SiteSetting.download_remote_images_to_local?
 
       post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) unless post_id.present?
+
+      puts "============="
+      puts "Finding post..."
+      puts "============="
 
       post = Post.find_by(id: post_id)
       return unless post.present?
@@ -26,28 +33,66 @@ module Jobs
       start_raw = raw.dup
       downloaded_urls = {}
 
+      puts "============="
+      puts "Extracting images"
+      puts "#{post.cooked}"
+      puts "============="
+
       extract_images_from(post.cooked).each do |image|
+        puts "============="
+        puts "Image"
+        puts "#{image}"
+        puts "============="
+
         src = original_src = image['src']
         src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
+          puts "============="
+          puts "Is valid image url"
+          puts "============="
+
           hotlinked = nil
           begin
             # have we already downloaded that file?
             unless downloaded_urls.include?(src)
+              puts "============="
+              puts "downloading url"
+              puts "============="
+
               begin
+                puts "============="
+                puts "start downlading"
+                puts "============="
                 hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked", true)
+                puts "============="
+                puts "finish downlading"
+                puts "============="
               rescue Discourse::InvalidParameters
+                puts "============="
+                puts "Invalid!"
+                puts "============="
               end
+
+              puts "============="
+              puts "hotlinked: #{hotlinked}"
+              puts "============="
+
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
                   upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
                   downloaded_urls[src] = upload.url
                 else
+                  puts "============="
+                  puts "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}"
+                  puts "============="
                   Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                 end
               else
+                puts "============="
+                puts "There was an error while downloading '#{src}' locally for post: #{post_id}"
+                puts "============="
                 Rails.logger.error("There was an error while downloading '#{src}' locally for post: #{post_id}")
               end
             end
@@ -74,6 +119,9 @@ module Jobs
               raw.gsub!(/^#{escaped_src}(\s?)$/) { "<img src='#{url}'>#{$1}" }
             end
           rescue => e
+            puts "============="
+            puts "Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n")
+            puts "============="
             Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           ensure
             # close & delete the temp file
@@ -84,6 +132,9 @@ module Jobs
       end
 
       post.reload
+      puts "============="
+      puts raw
+      puts "============="
       if start_raw == post.raw && raw != post.raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
         # we never want that job to bump the topic
