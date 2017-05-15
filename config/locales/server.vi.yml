@@ -720,7 +720,6 @@ vi:
     force_hostname: "DEVELOPER ONLY! LƯU Ý! Chỉ rõ hostname trong URL. Để trống là mặc định."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
     invite_passthrough_hours: "Bao lâu người dùng có thể sử dụng mã lời mời trước đó để đăng nhập, theo giờ"
-    invite_only: "Đăng ký tự do đã khóa, tất cả người dùng phải được mời bởi những thành viên khác hoặc nhân viên."
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
     min_password_length: "Chiều dài mật khẩu tối thiểu."
     min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
@@ -957,7 +956,6 @@ vi:
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
     embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
-    notify_about_flags_after: "Nếu có các đánh dấu chưa được xử lý sau số giờ được thiết lập ở đây, gửi email đến contact_email. Đặt là 0 để vô hiệu hóa."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"
@@ -1099,8 +1097,6 @@ vi:
       blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
       max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
   flags_reminder:
-    flags_were_submitted:
-      other: "Đánh dấu đã được gửi %{count} giờ qua, xin hãy xem xét."
     subject_template:
       other: "%{count} đánh dấu đang đợi xử lý"
   unsubscribe_mailer:
@@ -1338,10 +1334,6 @@ vi:
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
       click_here: "bấm vào đây"
-    mailing_list:
-      new_topics: "Chủ đề mới"
-      view_this_topic: "Xem chủ đề này"
-      back_to_top: "Trở lên trên"
     notify_old_email:
       text_body_template: |
         Đây là tin nhắn tự động để thông báo rằng địa chỉ email của bạn trên %{site_name} đã được thay đổi. Nếu điều này là không đúng, xin hãy liên hệ với BQT.
@@ -1605,8 +1597,6 @@ vi:
     error: "Lỗi!"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
-  discourse_hub:
-    access_token_problem: "Dành cho admin: Hãy cập nhật đúng discourse_org_access_key trong thiết lập website."
   performance_report:
     initial_post_raw: Chủ đề này bao gồm các báo cáo hiệu suất hàng ngày của website.
     initial_topic_title: Báo cáo hiệu suất website

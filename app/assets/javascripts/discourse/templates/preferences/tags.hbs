@@ -1,0 +1,43 @@
+{{#if siteSettings.tagging_enabled}}
+<div class="control-group tag-notifications">
+
+  <label class="control-label">{{i18n 'user.tag_settings'}}</label>
+
+  <div class="controls tag-controls">
+    <label><span class="icon fa fa-exclamation-circle watching"></span> {{i18n 'user.watched_tags'}}</label>
+    {{tag-chooser tags=model.watched_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+  </div>
+  <div class="instructions">{{i18n 'user.watched_tags_instructions'}}</div>
+
+  <div class="controls tag-controls">
+    <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_tags'}}</label>
+    {{tag-chooser tags=model.tracked_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+  </div>
+  <div class="instructions">{{i18n 'user.tracked_tags_instructions'}}</div>
+
+  <div class="controls tag-controls">
+    <label><span class="icon fa fa-dot-circle-o watching-first-post"></span> {{i18n 'user.watched_first_post_tags'}}</label>
+    {{tag-chooser tags=model.watching_first_post_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+  </div>
+  <div class="instructions">{{i18n 'user.watched_first_post_tags_instructions'}}</div>
+
+  <div class="controls tag-controls">
+    <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_tags'}}</label>
+    {{tag-chooser tags=model.muted_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+  </div>
+  <div class="instructions">{{i18n 'user.muted_tags_instructions'}}</div>
+
+</div>
+
+{{plugin-outlet name="user-preferences-tags"}}
+
+<br/>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+<div class="control-group save-button">
+  <div class="controls">
+    {{partial 'user/preferences/save-button'}}
+  </div>
+</div>
+{{/if}}

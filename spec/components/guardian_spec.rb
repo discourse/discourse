@@ -1050,6 +1050,19 @@ describe Guardian do
         expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
       end
 
+      it "returns false if a wiki but the user can't create a post" do
+        c = Fabricate(:category)
+        c.set_permissions(:everyone => :readonly)
+        c.save
+
+        topic = Fabricate(:topic, category: c)
+        post = Fabricate(:post, topic: topic)
+        post.wiki = true
+
+        user = Fabricate(:user)
+        expect(Guardian.new(user).can_edit?(post)).to eq(false)
+      end
+
       it 'returns true as a moderator' do
         expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
       end

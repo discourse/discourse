@@ -5,4 +5,8 @@ class ColorSchemeSerializer < ApplicationSerializer
   def theme_name
     object.theme&.name
   end
+
+  def theme_id
+    object.theme&.id
+  end
 end

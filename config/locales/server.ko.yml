@@ -628,7 +628,6 @@ ko:
     force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
     invite_expiry_days: "사용자 초대키 유효 기간, 일"
     invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
-    invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
@@ -811,7 +810,6 @@ ko:
     embed_post_limit: "글 개수가 최대치입니다."
     embed_whitelist_selector: "embed에서 보여져야 할 DOM element 선택하는 CSS 셀렉터"
     embed_blacklist_selector: "embed에서 지워져야 할 DOM element 선택하는 CSS 셀렉터"
-    notify_about_flags_after: "이 시간동안 처리되지 않은 신고가 들어와 있으면, contact_email 주소로 이메일을 보냅니다. 0으로 넣으면 비활성화됩니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
@@ -1060,8 +1058,6 @@ ko:
     error: "에러!"
     email_input: "관리자 이메일"
     submit_button: "이메일 보내기"
-  discourse_hub:
-    access_token_problem: "관리자에게 말하기: 제발 웹사이트 설정 업데이트해서 맞는 discourse_org_access_key를 포함하게 해주세요."
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고

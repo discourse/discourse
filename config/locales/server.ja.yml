@@ -629,7 +629,6 @@ ja:
     force_hostname: "開発者用! 警告! URL 内のホスト名を指定。空欄でデフォルト値を利用。"
     invite_expiry_days: "招待キーの有効期間 (日)"
     invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
-    invite_only: "パブリックなユーザー登録を無効化し、全てのユーザは他のメンバーかスタッフの招待を必要とする"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
@@ -823,7 +822,6 @@ ja:
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
     embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
-    notify_about_flags_after: "この数時間後に処理されていない通報がある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
@@ -1019,8 +1017,6 @@ ja:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
-    mailing_list:
-      new_topics: "新着トピック"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
   page_not_found:
@@ -1196,8 +1192,6 @@ ja:
     error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
-  discourse_hub:
-    access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート

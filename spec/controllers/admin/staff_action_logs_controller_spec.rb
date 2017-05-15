@@ -19,12 +19,12 @@ describe Admin::StaffActionLogsController do
   context '.diff' do
     it 'can generate diffs for theme changes' do
       theme = Theme.new(user_id: -1, name: 'bob')
-      theme.set_field(:mobile, :scss, 'body {.up}')
-      theme.set_field(:common, :scss, 'omit-dupe')
+      theme.set_field(target: :mobile, name: :scss, value: 'body {.up}')
+      theme.set_field(target: :common, name: :scss, value: 'omit-dupe')
 
       original_json = ThemeSerializer.new(theme, root: false).to_json
 
-      theme.set_field(:mobile, :scss, 'body {.down}')
+      theme.set_field(target: :mobile, name: :scss, value: 'body {.down}')
 
       record = StaffActionLogger.new(Discourse.system_user)
         .log_theme_change(original_json, theme)

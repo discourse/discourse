@@ -40,6 +40,7 @@ module Stylesheet
                                  source_map_file: source_map_file,
                                  source_map_contents: true,
                                  theme_id: options[:theme_id],
+                                 theme: options[:theme],
                                  theme_field: options[:theme_field],
                                  load_paths: [ASSET_ROOT])
 

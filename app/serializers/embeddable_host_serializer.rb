@@ -1,6 +1,6 @@
 class EmbeddableHostSerializer < ApplicationSerializer
 
-  TO_SERIALIZE = [:id, :host, :path_whitelist, :category_id]
+  TO_SERIALIZE = [:id, :host, :path_whitelist, :class_name, :category_id]
 
   attributes *TO_SERIALIZE
 

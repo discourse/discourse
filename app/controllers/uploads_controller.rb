@@ -1,3 +1,5 @@
+require_dependency 'upload_creator'
+
 class UploadsController < ApplicationController
   before_filter :ensure_logged_in, except: [:show]
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
@@ -5,26 +7,25 @@ class UploadsController < ApplicationController
   def create
     type = params.require(:type)
 
-    raise Discourse::InvalidAccess.new unless type =~ /^[a-z\-\_]{1,100}$/
+    raise Discourse::InvalidAccess.new unless Upload::UPLOAD_TYPES.include?(type)
 
-    file = params[:file] || params[:files].try(:first)
-    url = params[:url]
-    client_id = params[:client_id]
-    synchronous = (current_user.staff? || is_api?) && params[:synchronous]
-
-    if type == "avatar"
-      if SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
-        return render json: failed_json, status: 422
-      end
+    if type == "avatar" && (SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
+      return render json: failed_json, status: 422
     end
 
-    if synchronous
-      data = create_upload(type, file, url)
+    url  = params[:url]
+    file = params[:file] || params[:files]&.first
+
+    if params[:synchronous] && (current_user.staff? || is_api?)
+      data = create_upload(file, url, type)
       render json: data.as_json
     else
       Scheduler::Defer.later("Create Upload") do
-        data = create_upload(type, file, url)
-        MessageBus.publish("/uploads/#{type}", data.as_json, client_ids: [client_id])
+        begin
+          data = create_upload(file, url, type)
+        ensure
+          MessageBus.publish("/uploads/#{type}", (data || {}).as_json, client_ids: [params[:client_id]])
+        end
       end
       render json: success_json
     end
@@ -58,86 +59,31 @@ class UploadsController < ApplicationController
     render nothing: true, status: 404
   end
 
-  def create_upload(type, file, url)
-    begin
-      maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-
-      # ensure we have a file
-      if file.nil?
-        # API can provide a URL
-        if url.present? && is_api?
-          tempfile = FileHelper.download(url, maximum_upload_size, "discourse-upload-#{type}") rescue nil
-          filename = File.basename(URI.parse(url).path)
-        end
-      else
-        tempfile = file.tempfile
-        filename = file.original_filename
-        content_type = file.content_type
+  def create_upload(file, url, type)
+    if file.nil?
+      if url.present? && is_api?
+        maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+        tempfile = FileHelper.download(url, maximum_upload_size, "discourse-upload-#{type}") rescue nil
+        filename = File.basename(URI.parse(url).path)
       end
-
-      return { errors: I18n.t("upload.file_missing") } if tempfile.nil?
-
-      # convert pasted images to HQ jpegs
-      if filename == "image.png" && SiteSetting.convert_pasted_images_to_hq_jpg
-        jpeg_path = "#{File.dirname(tempfile.path)}/image.jpg"
-        OptimizedImage.ensure_safe_paths!(tempfile.path, jpeg_path)
-
-        Discourse::Utils.execute_command('convert', tempfile.path, '-quality', SiteSetting.convert_pasted_images_quality.to_s, jpeg_path)
-        # only change the format of the image when JPG is at least 5% smaller
-        if File.size(jpeg_path) < File.size(tempfile.path) * 0.95
-          filename = "image.jpg"
-          content_type = "image/jpeg"
-          tempfile = File.open(jpeg_path)
-        else
-          File.delete(jpeg_path) rescue nil
-        end
-      end
-
-      # allow users to upload large images that will be automatically reduced to allowed size
-      max_image_size_kb = SiteSetting.max_image_size_kb.kilobytes
-      if max_image_size_kb > 0 && FileHelper.is_image?(filename)
-        if File.size(tempfile.path) >= max_image_size_kb && Upload.should_optimize?(tempfile.path)
-          attempt = 2
-          allow_animation = type == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
-          while attempt > 0
-            downsized_size = File.size(tempfile.path)
-            break if downsized_size < max_image_size_kb
-            image_info = FastImage.new(tempfile.path) rescue nil
-            w, h = *(image_info.try(:size) || [0, 0])
-            break if w == 0 || h == 0
-            downsize_ratio = best_downsize_ratio(downsized_size, max_image_size_kb)
-            dimensions = "#{(w * downsize_ratio).floor}x#{(h * downsize_ratio).floor}"
-            OptimizedImage.downsize(tempfile.path, tempfile.path, dimensions, filename: filename, allow_animation: allow_animation)
-            attempt -= 1
-          end
-        end
-      end
-
-      upload = Upload.create_for(current_user.id, tempfile, filename, File.size(tempfile.path), content_type: content_type, image_type: type)
-
-      if upload.errors.empty? && current_user.admin?
-        retain_hours = params[:retain_hours].to_i
-        upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
-      end
-
-      if upload.errors.empty? && FileHelper.is_image?(filename)
-        Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type, user_id: params[:user_id])
-      end
-
-      upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
-    ensure
-      tempfile.try(:close!) rescue nil
-    end
-  end
-
-  def best_downsize_ratio(downsized_size, max_image_size)
-    if downsized_size / 9 > max_image_size
-      0.3
-    elsif downsized_size / 3 > max_image_size
-      0.6
     else
-      0.8
+      tempfile = file.tempfile
+      filename = file.original_filename
+      content_type = file.content_type
     end
+
+    return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
+
+    upload = UploadCreator.new(tempfile, filename, type: type, content_type: content_type).create_for(current_user.id)
+
+    if upload.errors.empty? && current_user.admin?
+      retain_hours = params[:retain_hours].to_i
+      upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
+    end
+
+    upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
+  ensure
+    tempfile&.close! rescue nil
   end
 
 end

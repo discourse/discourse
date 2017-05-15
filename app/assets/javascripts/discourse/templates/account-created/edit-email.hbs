@@ -1,0 +1,11 @@
+<div class='ac-message'>
+  {{activation-email-form email=newEmail}}
+</div>
+
+<div class='activation-controls'>
+  {{d-button action="changeEmail"
+             label="login.submit_new_email"
+             disabled=submitDisabled
+             class="btn-primary"}}
+  {{d-button action=(action "cancel") label="cancel" class="edit-cancel"}}
+</div>

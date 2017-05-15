@@ -37,7 +37,7 @@ class SocketServer
     socket = nil
     begin
       socket = server.accept
-    rescue IOError
+    rescue IOError, Errno::EPIPE
       # socket was shut down or something catastrophic like that happened
       return false
     end
@@ -61,7 +61,7 @@ class SocketServer
     end
 
     true
-  rescue IOError => e
+  rescue IOError, Errno::EPIPE
     # nothing to do here, case its normal on shutdown
   rescue => e
     Rails.logger.warn("Failed to handle connection in stats socket #{e}")

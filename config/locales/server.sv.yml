@@ -863,7 +863,6 @@ sv:
     force_hostname: "ENDAST UTVECKLARE! VARNING! Specifiera ett värdnamn i URL:en. Lämna tom för standard."
     invite_expiry_days: "Hur länge användarinbjudningsnycklar är giltiga, i dagar"
     invite_passthrough_hours: "Hur länge en användare kan använda en tidigare utlöst inbjudningsnyckel för att logga in, i timmar"
-    invite_only: "Allmän registrering är avstängt, alla nya användare måste vara explicit inbjudna av andra medlemmar eller personal."
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
     min_username_length: "Minsta längd på användarnamnet. Varning: om någon existerande användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
     max_username_length: "Längsta användarnamn. Varning: om någon existerande användare eller grupp har ett namn längre än detta, er sida kommer att gå sönder."
@@ -1044,7 +1043,6 @@ sv:
     auto_block_first_post_regex: "Skriftlägeskänsligt regex som om godkänt kommer att orsaka att första inlägget av en användare blockeras och skickas till kön för saker som behöver granskas. Exempel: raging|a[bc]a kommer att orsaka att alla inlägg som börjar med raging eller aba eller aca blockeras vid första försöket. Gäller endast användarens första inlägg. "
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %{reply_key}@svar.exempel.se eller svar+%{reply_key}@exempel.se"
-    incoming_email_prefer_html: "Använd HTML istället för texten för inkommande e-post. Kan orsaka oväntade formatteringsproblem!"
     disable_emails: "Förhindra Discourse från att skicka någon form av e-post"
     strip_images_from_short_emails: "Rensa bilder från e-post som har mindre storlek än 2800 bytes."
     short_email_length: "Kort e-postlängd i bytes."
@@ -1144,7 +1142,6 @@ sv:
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
     embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar."
-    notify_about_flags_after: "Skicka ett e-postmeddelande till contact_email om det finns flaggor som inte har hanterats efter så här många timmar. Ange 0 för att inaktivera."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
@@ -1338,9 +1335,6 @@ sv:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
   flags_reminder:
-    flags_were_submitted:
-      one: "Flaggor insändes för mer än en timme sedan. Var god och granska den. "
-      other: "Flaggor insändes för mer än %{count} timmar sedan. Var god och granska dem. "
     subject_template:
       one: "1 flagga väntar på att bli hanterad"
       other: "%{count} flaggor väntar på att bli hanterade"
@@ -1837,14 +1831,6 @@ sv:
       unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
       from: "%{site_name} sammanfattning"
-    mailing_list:
-      why: "All aktivitet på %{site_link} den %{date}"
-      unsubscribe: "Den här sammanfattningen skickas dagligen eftersom att utskicksläge är aktiverat. För att säga upp dig {unsubscribe_link}."
-      from: "%{site_name} sammanfattning"
-      new_topics: "Nya ämnen"
-      topic_updates: "Uppdatering av ämnen"
-      view_this_topic: "Se det här ämnet"
-      back_to_top: "Tillbaka till början"
     forgot_password:
       title: "Glömt lösenord"
     set_password:
@@ -2154,8 +2140,6 @@ sv:
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
-  discourse_hub:
-    access_token_problem: "Berätta för en administratör: Var vänlig och uppdatera webbplatsinställningarna för att inkludera den korrekta discourse_org_access_key."
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen

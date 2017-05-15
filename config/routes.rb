@@ -189,6 +189,7 @@ Discourse::Application.routes.draw do
 
     resources :themes, constraints: AdminConstraint.new
     post "themes/import" => "themes#import"
+    post "themes/upload_asset" => "themes#upload_asset"
     get "themes/:id/preview" => "themes#preview"
 
     scope "/customize", constraints: AdminConstraint.new do
@@ -200,9 +201,9 @@ Discourse::Application.routes.draw do
 
       # They have periods in their URLs often:
       get 'site_texts'          => 'site_texts#index'
-      get 'site_texts/(:id)'    => 'site_texts#show',   constraints: { id: /[\w.\-]+/i }
-      put 'site_texts/(:id)'    => 'site_texts#update', constraints: { id: /[\w.\-]+/i }
-      delete 'site_texts/(:id)' => 'site_texts#revert', constraints: { id: /[\w.\-]+/i }
+      get 'site_texts/(:id)'    => 'site_texts#show',   constraints: { id: /[\w.\-\+]+/i }
+      put 'site_texts/(:id)'    => 'site_texts#update', constraints: { id: /[\w.\-\+]+/i }
+      delete 'site_texts/(:id)' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
 
       get 'email_templates'          => 'email_templates#index'
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
@@ -323,7 +324,11 @@ Discourse::Application.routes.draw do
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
-    get "#{root_path}/account-created/" => "users#account_created"
+
+    get({ "#{root_path}/account-created/" => "users#account_created" }.merge(index == 1 ? { as: :users_account_created } : {as: :old_account_created}))
+
+    get "#{root_path}/account-created/resent" => "users#account_created"
+    get "#{root_path}/account-created/edit-email" => "users#account_created"
     get({ "#{root_path}/password-reset/:token" => "users#password_reset" }.merge(index == 1 ? { as: :password_reset_token } : {}))
     get "#{root_path}/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
     put "#{root_path}/password-reset/:token" => "users#password_reset"
@@ -347,6 +352,14 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
     get({ "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: USERNAME_ROUTE_FORMAT } }.merge(index == 1 ? { as: :email_preferences } : {}))
     get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/profile" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/notifications" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/categories" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+    get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
     put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/preferences/about-me" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
     get "#{root_path}/:username/preferences/badge_title" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -592,7 +605,7 @@ Discourse::Application.routes.draw do
   put "t/:topic_id/re-pin" => "topics#re_pin", constraints: {topic_id: /\d+/}
   put "t/:topic_id/mute" => "topics#mute", constraints: {topic_id: /\d+/}
   put "t/:topic_id/unmute" => "topics#unmute", constraints: {topic_id: /\d+/}
-  post "t/:topic_id/status_update" => "topics#status_update", constraints: {topic_id: /\d+/}
+  post "t/:topic_id/timer" => "topics#timer", constraints: {topic_id: /\d+/}
   put "t/:topic_id/make-banner" => "topics#make_banner", constraints: {topic_id: /\d+/}
   put "t/:topic_id/remove-banner" => "topics#remove_banner", constraints: {topic_id: /\d+/}
   put "t/:topic_id/remove-allowed-user" => "topics#remove_allowed_user", constraints: {topic_id: /\d+/}

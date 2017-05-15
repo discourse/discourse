@@ -954,7 +954,6 @@ es:
     force_hostname: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para usar el valor por defecto"
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
-    invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por otros miembros de la comunidad o por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: si tienes usuarios o grupos con mayor cantidad de caracteres que ésta, tu sitio se romperá."
@@ -1147,7 +1146,6 @@ es:
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Usar el HTML en vez del texto del email entrante. ¡Podría causar errores de formato inesperados!"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
@@ -1255,7 +1253,6 @@ es:
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     embed_whitelist_selector: "Selector CSS para los elementos que están permitidos en los embebidos."
     embed_blacklist_selector: "Selector CSS para los elementos que están eliminados desde los embebidos."
-    notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al contact_email. Deshabilita esta opción introduciendo el valor 0."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
     bootstrap_mode_min_users: "Mínimo número de usuarios requerido para desactivar el modo bootstrap (pon 0 para desactivar esta opción)"
@@ -1439,7 +1436,6 @@ es:
     incorrect_username_email_or_password: "Nombre de usuario, dirección de correo o contraseña incorrectos"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
-    activate_email: "<p>¡Ya casi has terminado! Te hemos enviado un correo a <b>%{email}</b>. Por favor, sigue las instrucciones en tu email para activar tu cuenta.</p><p>Si no llega, comprueba tu buzón de correo basura, intenta iniciar sesión de nuevo para que te enviemos otro correo de activación o para cambiar el correo de activación.</p>"
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un email de activación. Por favor, sigue las instrucciones en el email para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
@@ -1485,9 +1481,6 @@ es:
     website:
       domain_not_allowed: "El sitio web no es válido. Los dominios permitidos son: %{domains}"
   flags_reminder:
-    flags_were_submitted:
-      one: "Hay reportes enviados hace 1 hora. Por favor, revísalos."
-      other: "Hay reportes enviados hace %{count} horas. Por favor, revísalos."
     subject_template:
       one: "1 reporte esperando ser atendidos."
       other: "%{count} reportes esperando ser atendidos."
@@ -2075,14 +2068,6 @@ es:
     new_user_of_the_month:
       title: "¡Eres un usuario nuevo del mes!"
       subject_template: "¡Eres un usuario nuevo del mes!"
-      text_body_template: |
-        Enhorabuena, has ganado el distintivo **Premio al nuevo usuario del mes de %{month_year}**. :trophy:
-
-        Te has convertido rápidamente en un valioso miembro de nuestra comunidad y estamos disfrutando con tus posts.
-
-        Este premio será visible para siempre como un distintivo en tu [página de usuario](/my/badges).
-
-        Gracias, ¡y sigue así!
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2279,15 +2264,6 @@ es:
       click_here: "clic aquí"
       from: "resumen de %{site_name}"
       preheader: "Un corto resumen desde tu última visita el %{last_seen_at}"
-    mailing_list:
-      why: "Actividad en %{site_link} a %{date}"
-      subject_template: "[%{email_prefix}] Resumen del %{date}"
-      unsubscribe: "Este resumen se envía diariamente dado que el modo lista de correo está activado. Puedes darte de baja %{unsubscribe_link}."
-      from: "%{site_name} resumen"
-      new_topics: "Nuevos temas"
-      topic_updates: "Actualizaciones del tema"
-      view_this_topic: "Visita este tema"
-      back_to_top: "Volver al inicio"
     forgot_password:
       title: "Olvidé la Contraseña"
       subject_template: "[%{email_prefix}] Reestablecimiento de contraseña"
@@ -2898,8 +2874,6 @@ es:
     error: "¡Error!"
     email_input: "Email de admin"
     submit_button: "Enviar email"
-  discourse_hub:
-    access_token_problem: "Avisa a un admin: Por favor actualiza los ajustes del sitio para incluir la discourse_org_access_key correctamente."
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio

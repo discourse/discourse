@@ -537,7 +537,6 @@ fi:
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
 
-        daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
         individual_no_echo: "Lähetä sähköposti jokaisesta uudesta viestistä lukuun ottamatta omiani"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
@@ -594,6 +593,15 @@ fi:
         move_to_archive: "Arkisto"
         failed_to_move: "Viestien siirto epäonnistui (vika saattaa olla internetyhteydessäsi)"
         select_all: "Valitse kaikki"
+      preferences_nav:
+        account: "Tili"
+        profile: "Profiili"
+        emails: "Sähköpostit"
+        notifications: "Ilmoitukset"
+        categories: "Alueet"
+        tags: "Tunnisteet"
+        interface: "Käyttöliittymä"
+        apps: "Sovellukset"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(lähettää sähköpostia)"
@@ -818,7 +826,7 @@ fi:
         title: "Profiilikuva"
         header_title: "profiili, viestit, kirjanmerkit ja asetukset"
       title:
-        title: "Otsikko"
+        title: "Titteli"
       filters:
         all: "Kaikki"
       stream:
@@ -1171,6 +1179,7 @@ fi:
       no_more_results: "Enempää tuloksia ei löytynyt."
       searching: "Etsitään ..."
       post_format: "#{{post_number}} käyttäjältä {{username}}"
+      results_page: "Hakutulokset"
       context:
         user: "Etsi @{{username}} viestejä"
         category: "Etsi alueelta #{{category}}"
@@ -1559,7 +1568,7 @@ fi:
           other: "Valitse uusi omistaja {{count}} viestille käyttäjältä <b>{{old_user}}</b>."
         instructions_warn: "Huomaa, että viestin ilmoitukset eivät siirry uudelle käyttäjälle automaattisesti. <br> Varoitus: Tällä hetkellä mikään viestikohtainen data ei siirry uudelle käyttäjälle. Käytä varoen."
       change_timestamp:
-        title: "Muuta aikaleimaa"
+        title: "Muuta aikaleimaa..."
         action: "muuta aikaleimaa"
         invalid_timestamp: "Aikaleima ei voi olla tulevaisuudessa."
         error: "Ketjun aikaleiman vaihtamisessa tapahtui virhe"
@@ -1825,8 +1834,6 @@ fi:
       security: "Turvallisuus"
       special_warning: "Varoitus: Tämä on valmiiksi luotu alue, ja sen turvallisuusasetuksia ei voi muuttaa. Jos et näe käyttöä alueelle, älä muuta sen tarkoitusta vaan poista se."
       images: "Kuvat"
-      auto_close_label: "Sulje ketjut automaattisesti tämän ajan jälkeen:"
-      auto_close_units: "tuntia"
       email_in: "Saapuvan postin sähköpostiosoite:"
       email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
@@ -2374,6 +2381,7 @@ fi:
         add_members: "Lisää jäseniä"
         custom: "Mukautetut"
         bulk_complete: "Käyttäjät on lisätty ryhmään."
+        bulk_complete_users_not_added: "Näitä käyttäjiä ei lisätty (varmista, että tilit ovat olemassa):"
         bulk: "Lisää ryhmään useita"
         bulk_paste: "Liitä lista käyttäjänimistä tai sähköpostiosoitteista, yksi per rivi:"
         bulk_select: "(valitse ryhmä)"
@@ -2423,7 +2431,7 @@ fi:
         event_type_missing: "Ainakin yksi tapahtumatyyppi täytyy asettaa."
         content_type: "Sisällön tyyppi"
         secret: "Salausavain"
-        event_chooser: "Minkä tapahtumien haluat laukaisevan tämän webhookin?"
+        event_chooser: "Minkä tapahtumien tulisi laukaista tämä webhook?"
         wildcard_event: "Lähetä kaikesta."
         individual_event: "Valitse tietyt tapahtumat."
         verify_certificate: "Tarkasta tietosisällön URL:in TLS-sertifikaatti"
@@ -2618,7 +2626,25 @@ fi:
             title: "Lisää mukautettua CSS:ää, hyväksymme käyvät CSS- ja SCSS-tyylit"
           header:
             text: "Ylätunniste"
+            title: "Lisää HTML:ää, joka näytetään sivuston headerin yläpuolella"
+          after_header:
+            text: "Headerin jälkeen"
+            title: "Lisää HTML:ää, joka näytetään sivuston headerin jälkeen"
+          footer:
+            text: "Footer"
+            title: "Lisää HTML:ää, joka näytetään sivuston footerissa"
+          embedded_scss:
+            text: "Upotettu CSS"
+          head_tag:
+            text: "</head>"
+            title: "HTML, joka sijoitetaan ennen </head>-symbolia"
+          body_tag:
+            text: "</body>"
+            title: "HTML, joka sijoitetaan ennen </body>-symbolia"
         colors:
+          select_base:
+            title: "Valitse perusvärimalli"
+            description: "Perusvärimalli:"
           title: "Värit"
           edit: "Muokkaa värimalleja"
           long_title: "Värimallit"
@@ -2788,7 +2814,7 @@ fi:
             renamed_tag: "uudelleen nimetty tunniste"
             revoke_email: "peru sähköpostiosoite"
             lock_trust_level: "lukitse luottamustaso"
-            unlock_trust_level: "poista luottamustason lukitus"
+            unlock_trust_level: "vapauta luottamustaso"
             activate_user: "aktivoi käyttäjä"
             deactivate_user: "poista käyttäjätili käytöstä"
             change_readonly_mode: "muuta vain luku -tilaa"
@@ -2979,9 +3005,9 @@ fi:
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustaso 3 vaatimukset"
         trust_level_locked_tip: "luottamustaso on lukittu, järjestelmä ei ylennä tai alenna käyttäjää"
-        trust_level_unlocked_tip: "luottamustaso on lukitsematon, järjestelmä voi ylentää tai alentaa käyttäjän"
+        trust_level_unlocked_tip: "luottamustaso vapautettu, järjestelmä voi ylentää tai alentaa käyttäjän"
         lock_trust_level: "Lukitse luottamustaso"
-        unlock_trust_level: "Avaa luottamustason lukitus"
+        unlock_trust_level: "Vapauta luottamustaso"
         tl3_requirements:
           title: "Vaatimukset luottamustasolle 3."
           table_title:
@@ -3176,6 +3202,7 @@ fi:
         sample: "Käytä alla olevaa HTML-koodia sivustollasi luodaksesi ja upottaaksesi discourse ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
         title: "Upottaminen"
         host: "Sallitut isännät"
+        path_whitelist: "Sallitut polut"
         edit: "muokkaa"
         category: "Julkaise alueelle"
         add_host: "Lisää isäntä"

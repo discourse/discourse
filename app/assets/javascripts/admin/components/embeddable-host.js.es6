@@ -30,7 +30,7 @@ export default Ember.Component.extend(bufferedProperty('host'), {
     save() {
       if (this.get('cantSave')) { return; }
 
-      const props = this.get('buffered').getProperties('host', 'path_whitelist');
+      const props = this.get('buffered').getProperties('host', 'path_whitelist', 'class_name');
       props.category_id = this.get('categoryId');
 
       const host = this.get('host');

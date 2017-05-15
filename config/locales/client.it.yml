@@ -101,6 +101,7 @@ it:
           other: "%{count} anni dopo"
       previous_month: 'Mese Precedente'
       next_month: 'Mese Successivo'
+      placeholder: Seleziona una data
     share:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
@@ -143,6 +144,8 @@ it:
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
     bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
+    themes:
+      default_description: "Default"
     s3:
       regions:
         us_east_1: "Stati Uniti Est (Virginia del Nord)"
@@ -150,6 +153,7 @@ it:
         us_west_2: "Stati Uniti Ovest (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "Europa (Irlanda)"
+        eu_west_2: "EU (Londra)"
         eu_central_1: "Europa (Francoforte)"
         ap_southeast_1: "Asia Pacifico (Singapore)"
         ap_southeast_2: "Asia Pacifico (Sidney)"
@@ -530,7 +534,6 @@ it:
         instructions: |
           Questa impostazione modifica il riassunto attività.<br />
           Gli argomenti e le categorie silenziate non sono incluse in queste email.
-        daily: "Invia aggiornamenti giornalieri"
         individual: "Invia una email per ogni nuovo messaggio"
         individual_no_echo: "Invia una email per ogni nuovo messaggio, eccetto per i miei"
         many_per_day: "Inviamo una email per ogni nuovo messaggio (circa {{dailyEmailEstimate}} al giorno)"
@@ -1334,9 +1337,6 @@ it:
           '3_2': 'Riceverai notifiche perché stai osservando questo argomento.'
           '3_1': 'Riceverai notifiche perché hai creato questo argomento.'
           '3': 'Riceverai notifiche perché stai osservando questo argomento.'
-          '2_8': 'Riceverai notifiche perché stai seguendo questa categoria.'
-          '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
-          '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
           '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
@@ -1491,8 +1491,8 @@ it:
           other: "Seleziona il nuovo proprietario dei {{count}} messaggi di <b>{{old_user}}</b>."
         instructions_warn: "Nota che ogni notifica circa questo messaggio non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: al momento nessun dato messaggio-dipendente è stato trasferito al nuovo utente. Usare con cautela."
       change_timestamp:
-        title: "Cambia Timestamp"
-        action: "cambia timestamp"
+        title: "Cambia Marca Temporale..."
+        action: "cambia marca temporale"
         invalid_timestamp: "Il timestamp non può essere nel futuro."
         error: "Errore durante la modifica del timestamp dell'argomento."
         instructions: "Seleziona il nuovo timestamp per l'argomento. I messaggi nell'argomento saranno aggiornati in modo che abbiano lo stesso intervallo temporale."
@@ -1745,8 +1745,6 @@ it:
       security: "Sicurezza"
       special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       images: "Immagini"
-      auto_close_label: "Chiudi automaticamente l'argomento dopo:"
-      auto_close_units: "ore"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
@@ -2320,7 +2318,6 @@ it:
         event_type_missing: "Devi impostare almeno un tipo di evento."
         content_type: "Tipo Contenuto"
         secret: "Chiave segreta"
-        event_chooser: "Quali eventi vuoi che attivino questo webhook?"
         wildcard_event: "Inviami tutto."
         individual_event: "Seleziona eventi singoli."
         verify_certificate: "Verifica il certificato TLS della URL payload"
@@ -2464,6 +2461,17 @@ it:
           none_selected: "Scegli un modello di e-mail per iniziare la modifica."
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
+        theme:
+          import_theme: "Importa Tema"
+          customize_desc: "Personalizza:"
+          title: "Temi"
+          long_title: "Modifica i colori, i CSS e il contenuto HTML del tuo sito"
+          edit: "Modifica"
+          edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
+          common: "Condiviso"
+          desktop: "Desktop"
+          mobile: "Mobile"
+          preview: "Anteprima"
         colors:
           title: "Colori"
           long_title: "Combinazioni Colori"

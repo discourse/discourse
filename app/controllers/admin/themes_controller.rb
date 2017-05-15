@@ -1,3 +1,5 @@
+require_dependency 'upload_creator'
+
 class Admin::ThemesController < Admin::AdminController
 
   skip_before_filter :check_xhr, only: [:show, :preview]
@@ -5,11 +7,23 @@ class Admin::ThemesController < Admin::AdminController
   def preview
     @theme = Theme.find(params[:id])
 
-    redirect_to path("/"), flash: {preview_theme_key: @theme.key}
+    redirect_to path("/"), flash: { preview_theme_key: @theme.key }
+  end
+
+  def upload_asset
+    path = params[:file].path
+    File.open(path) do |file|
+      filename = params[:file]&.original_filename || File.basename(path)
+      upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
+      if upload.errors.count > 0
+        render json: upload.errors, status: :unprocessable_entity
+      else
+        render json: { upload_id: upload.id }, status: :created
+      end
+    end
   end
 
   def import
-
     @theme = nil
     if params[:theme]
       json = JSON::parse(params[:theme].read)
@@ -17,7 +31,7 @@ class Admin::ThemesController < Admin::AdminController
 
       @theme = Theme.new(name: theme["name"], user_id: current_user.id)
       theme["theme_fields"]&.each do |field|
-        @theme.set_field(field["target"], field["name"], field["value"])
+        @theme.set_field(target: field["target"], name: field["name"], value: field["value"])
       end
 
       if @theme.save
@@ -32,7 +46,6 @@ class Admin::ThemesController < Admin::AdminController
     else
       render json: @theme.errors, status: :unprocessable_entity
     end
-
   end
 
   def index
@@ -184,17 +197,22 @@ class Admin::ThemesController < Admin::AdminController
                     :color_scheme_id,
                     :default,
                     :user_selectable,
-                    theme_fields: [:name, :target, :value],
+                    theme_fields: [:name, :target, :value, :upload_id, :type_id],
                     child_theme_ids: [])
         end
     end
 
     def set_fields
-
       return unless fields = theme_params[:theme_fields]
 
       fields.each do |field|
-        @theme.set_field(field[:target], field[:name], field[:value])
+        @theme.set_field(
+          target: field[:target],
+          name: field[:name],
+          value: field[:value],
+          type_id: field[:type_id],
+          upload_id: field[:upload_id]
+        )
       end
     end
 

@@ -850,7 +850,6 @@ pt:
     force_hostname: "PROGRAMADOR APENAS! AVISO! Especifique um nome de servidor no URL. Deixe em branco para utilizar o valor por defeito."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
-    invite_only: "O registo público está desativado, todos os novos utilizadores devem ser explicitamente convidados por outros membros ou pelo pessoal."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
@@ -1034,7 +1033,6 @@ pt:
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
-    incoming_email_prefer_html: "Usar o HTML em vez de texto para email recebido. Poderá causar problemas de formatação!"
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
@@ -1133,7 +1131,6 @@ pt:
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
-    notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
@@ -1335,9 +1332,6 @@ pt:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
   flags_reminder:
-    flags_were_submitted:
-      one: "Uma denúncia foi submetida há 1 hora atrás. Por favor reveja-a. "
-      other: "Denúncias foram submetidas há %{count} horas atrás. Por favor reveja-as."
     subject_template:
       one: "1 sinalização à espera de ser tratada"
       other: "%{count} sinalizações à espera de serem tratadas"
@@ -1888,14 +1882,6 @@ pt:
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
-    mailing_list:
-      why: "Toda a atividade em %{site_link} em %{date}"
-      unsubscribe: "Este resumo é enviado diariamente devido ao modo de lista de distribuição estar ativado. Para anular a subscrição %{unsubscribe_link}."
-      from: "resumo de %{site_name}"
-      new_topics: "Novos tópicos"
-      topic_updates: "Atualizações de tópico"
-      view_this_topic: "Ver este tópico"
-      back_to_top: "Voltar ao topo"
     notify_old_email:
       text_body_template: |
         Isto é uma mensagem automática para o informar que o seu endereço de email para
@@ -2408,8 +2394,6 @@ pt:
     error: "Erro!"
     email_input: "Email Administração"
     submit_button: "Enviar Email"
-  discourse_hub:
-    access_token_problem: "Dizer a um administrador: Por favor atualize as configurações do sítio para incluir a discourse_org_access_key correta."
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio

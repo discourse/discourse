@@ -374,21 +374,21 @@ class BulkImport::Base
     raw.gsub!(/\[\/?MP3\]/i, "")
 
     # [FONT=blah] and [COLOR=blah]
-    raw.gsub!(/\[FONT=.*?\](.*?)\[\/FONT\]/im, "\1")
-    raw.gsub!(/\[COLOR=.*?\](.*?)\[\/COLOR\]/im, "\1")
+    raw.gsub!(/\[FONT=.*?\](.*?)\[\/FONT\]/im, "\\1")
+    raw.gsub!(/\[COLOR=.*?\](.*?)\[\/COLOR\]/im, "\\1")
 
-    raw.gsub!(/\[SIZE=.*?\](.*?)\[\/SIZE\]/im, "\1")
-    raw.gsub!(/\[H=.*?\](.*?)\[\/H\]/im, "\1")
+    raw.gsub!(/\[SIZE=.*?\](.*?)\[\/SIZE\]/im, "\\1")
+    raw.gsub!(/\[H=.*?\](.*?)\[\/H\]/im, "\\1")
 
     # [CENTER]...[/CENTER]
-    raw.gsub!(/\[CENTER\](.*?)\[\/CENTER\]/im, "\1")
+    raw.gsub!(/\[CENTER\](.*?)\[\/CENTER\]/im, "\\1")
 
     # [INDENT]...[/INDENT]
-    raw.gsub!(/\[INDENT\](.*?)\[\/INDENT\]/im, "\1")
-    raw.gsub!(/\[TABLE\](.*?)\[\/TABLE\]/im, "\1")
-    raw.gsub!(/\[TR\](.*?)\[\/TR\]/im, "\1")
-    raw.gsub!(/\[TD\](.*?)\[\/TD\]/im, "\1")
-    raw.gsub!(/\[TD="?.*?"?\](.*?)\[\/TD\]/im, "\1")
+    raw.gsub!(/\[INDENT\](.*?)\[\/INDENT\]/im, "\\1")
+    raw.gsub!(/\[TABLE\](.*?)\[\/TABLE\]/im, "\\1")
+    raw.gsub!(/\[TR\](.*?)\[\/TR\]/im, "\\1")
+    raw.gsub!(/\[TD\](.*?)\[\/TD\]/im, "\\1")
+    raw.gsub!(/\[TD="?.*?"?\](.*?)\[\/TD\]/im, "\\1")
 
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { |quote|

@@ -269,12 +269,12 @@ describe PostCreator do
 
         it "doesn't update topic's auto close when it's not based on last post" do
           Timecop.freeze do
-            topic = Fabricate(:topic).set_or_create_status_update(TopicStatusUpdate.types[:close], 12)
+            topic = Fabricate(:topic).set_or_create_timer(TopicTimer.types[:close], 12)
 
             PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
             topic.reload
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
             expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
             expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
           end
@@ -283,7 +283,7 @@ describe PostCreator do
         it "updates topic's auto close date when it's based on last post" do
           Timecop.freeze do
             topic = Fabricate(:topic,
-              topic_status_updates: [Fabricate(:topic_status_update,
+              topic_timers: [Fabricate(:topic_timer,
                 based_on_last_post: true,
                 execute_at: Time.zone.now - 12.hours,
                 created_at: Time.zone.now - 24.hours
@@ -294,7 +294,7 @@ describe PostCreator do
 
             PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
             expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
             expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
           end
@@ -362,7 +362,7 @@ describe PostCreator do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         expect {
           PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create!
-        }.to_not change { TopicStatusUpdate.count }
+        }.to_not change { TopicTimer.count }
       end
     end
   end

@@ -635,7 +635,6 @@ sq:
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
@@ -827,7 +826,6 @@ sq:
     embed_post_limit: "Maximum number of posts to embed."
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
@@ -1196,13 +1194,6 @@ sq:
       unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
-    mailing_list:
-      unsubscribe: "Përmbledhja dërgohet përditë, duke qënë se faqja është në formatin \"mailing list\". %{unsubscribe_link} për t'u çabonuar."
-      from: "%{site_name} përmbledhje"
-      new_topics: "Tema të reja"
-      topic_updates: "Tema të azhornuara"
-      view_this_topic: "Shiko këtë temë"
-      back_to_top: "Kthehu sipër"
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për
@@ -1623,8 +1614,6 @@ sq:
     error: "Error!"
     email_input: "Admin Email"
     submit_button: "Dërgo Email"
-  discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes

@@ -66,7 +66,7 @@ class Admin::BadgesController < Admin::AdminController
     if errors.present?
       render_json_error errors
     else
-      render_serialized(badge, BadgeSerializer, root: "badge")
+      render_serialized(badge, AdminBadgeSerializer, root: "badge")
     end
   end
 
@@ -78,7 +78,7 @@ class Admin::BadgesController < Admin::AdminController
     if errors.present?
       render_json_error errors
     else
-      render_serialized(badge, BadgeSerializer, root: "badge")
+      render_serialized(badge, AdminBadgeSerializer, root: "badge")
     end
   end
 

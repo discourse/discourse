@@ -256,15 +256,16 @@ end
 end
 
 Badge.seed do |b|
-  b.id = Badge::OneYearAnniversary
+  b.id = Badge::Anniversary
   b.name = "Anniversary"
   b.default_icon = "fa-clock-o"
   b.badge_type_id = BadgeType::Silver
-  b.query = BadgeQueries::OneYearAnniversary
   b.default_badge_grouping_id = BadgeGrouping::Community
+  b.query = nil
   b.trigger = Badge::Trigger::None
   b.auto_revoke = false
   b.system = true
+  b.multiple_grant = true
 end
 
 [

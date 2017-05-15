@@ -1,4 +1,5 @@
 require_dependency 'letter_avatar'
+require_dependency 'upload_creator'
 
 class UserAvatar < ActiveRecord::Base
   belongs_to :user
@@ -20,7 +21,7 @@ class UserAvatar < ActiveRecord::Base
         max = Discourse.avatar_sizes.max
         gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
         tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
-        upload = Upload.create_for(user_id, tempfile, 'gravatar.png', File.size(tempfile.path), origin: gravatar_url, image_type: "avatar")
+        upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
 
         if gravatar_upload_id != upload.id
           gravatar_upload.try(:destroy!) rescue nil
@@ -31,7 +32,6 @@ class UserAvatar < ActiveRecord::Base
         save!
       rescue SocketError
         # skip saving, we are not connected to the net
-        Rails.logger.warn "Failed to download gravatar, socket error - user id #{user_id}"
       ensure
         tempfile.try(:close!)
       end
@@ -66,7 +66,7 @@ class UserAvatar < ActiveRecord::Base
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind
 
-    upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), origin: avatar_url, image_type: "avatar")
+    upload = UploadCreator.new(tempfile, "external-avatar." + ext, origin: avatar_url, type: "avatar").create_for(user.id)
 
     user.create_user_avatar unless user.user_avatar
 
@@ -82,9 +82,8 @@ class UserAvatar < ActiveRecord::Base
       end
     end
 
-  rescue => e
+  rescue Net::ReadTimeout
     # skip saving, we are not connected to the net
-    Rails.logger.warn "#{e}: Failed to download external avatar: #{avatar_url}, user id #{ user.id }"
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end

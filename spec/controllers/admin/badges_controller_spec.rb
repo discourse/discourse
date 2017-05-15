@@ -26,6 +26,19 @@ describe Admin::BadgesController do
       end
     end
 
+    describe '.create' do
+      render_views
+
+      it 'can create badges correctly' do
+        SiteSetting.enable_badge_sql = true
+        result = xhr :post, :create, name: 'test', query: 'select 1 as user_id, null as granted_at', badge_type_id: 1
+        json = JSON.parse(result.body)
+        expect(result.status).to eq(200)
+        expect(json["badge"]["name"]).to eq('test')
+        expect(json["badge"]["query"]).to eq('select 1 as user_id, null as granted_at')
+      end
+    end
+
     context '.save_badge_groupings' do
 
       it 'can save badge groupings' do

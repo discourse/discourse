@@ -101,8 +101,8 @@ ar:
           few: "%{count}س"
           many: "%{count}س"
           other: "%{count}س"
-        date_month: "D MMM"
-        date_year: "MMM YYYY"
+        date_month: "[في] D MMM"
+        date_year: "[في] MMM YYYY"
       medium:
         x_minutes:
           zero: "أقل من دقيقة"
@@ -172,6 +172,7 @@ ar:
           other: "بعد %{count}  سنة"
       previous_month: 'الشهر السابق'
       next_month: 'الشهر التالي'
+      placeholder: انتقِ تاريخًا
     share:
       topic: 'شارك رابط هذا الموضوع'
       post: 'المشاركة رقم %{postNumber}'
@@ -181,9 +182,9 @@ ar:
       google+: 'شارك هذا الرابط في جوجل+'
       email: 'شارك هذا الرابط في بريد إلكتروني'
     action_codes:
-      public_topic: "جعل هذا الموضوع عامًّا في %{when}"
-      private_topic: "جعل هذا الموضوع خاصًّا في %{when}"
-      split_topic: "قسم هذا الموضوع في %{when}"
+      public_topic: "جعل هذا الموضوع عامًّا %{when}"
+      private_topic: "جعل هذا الموضوع خاصًّا %{when}"
+      split_topic: "قسَم هذا الموضوع %{when}"
       invited_user: "دعى %{who} %{when}"
       invited_group: "دعى %{who} %{when}"
       removed_user: "أزال %{who} %{when}"
@@ -451,7 +452,7 @@ ar:
         title: "طلب العضوية"
         body: "أود تسجيل العضوية في المجموعة @%{groupName}"
       name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
-      public: "السماح للأعضاء للإنضمام / ترك المجموعة (يطبق على المجموعات الظاهرة)"
+      public: "اسمح للأعضاء بحريّة الانضمام إلى المجموعة أو تركها (يجب أن تكون المجموعة مرئيّة)"
       empty:
         posts: "لا مشاركات من أعضاء هذه المجموعة."
         members: "لا أعضاء في هذه المجموعة."
@@ -477,12 +478,12 @@ ar:
         title: "المجموعات"
         empty: "لا توجد مجموعات ظاهرة"
       title:
-        zero: "مجموعات"
-        one: "مجموعات"
-        two: "مجموعات"
-        few: "مجموعات"
-        many: "مجموعات"
-        other: "مجموعات"
+        zero: "المجموعة"
+        one: "المجموعة"
+        two: "المجموعتان"
+        few: "المجموعات"
+        many: "المجموعات"
+        other: "المجموعات"
       activity: "النّشاط"
       members: "الأعضاء"
       topics: "المواضيع"
@@ -642,7 +643,6 @@ ar:
         instructions: |
           يمحي هذا الإعداد إعداد "ملخص النشاط".<br />
           هذه الرسائل لا تشمل المواضيع والفئات المكتومة.
-        daily: "أرسل تحديثات يومية"
         individual: "أرسل لي بريدا لكل مشاركة جديدة"
         individual_no_echo: "أرسل بريدًا لكلّ مشاركة جديدة عدا مشاركاتي"
         many_per_day: "أرسل لي بريدا لكل مشاركة جديدة (تقريبا {{dailyEmailEstimate}} يوميا)"
@@ -680,6 +680,7 @@ ar:
       revoke_access: "توقيف صلاحيات الوصول"
       undo_revoke_access: "رفع توقيف صلاحيات الوصول"
       api_approved: "موافق عليه:"
+      theme: "السّم"
       staff_counters:
         deleted_posts: "حذف جميع المشاركات"
         suspensions: "موقوف"
@@ -772,10 +773,10 @@ ar:
         default: "(الافتراضية)"
         any: "أي"
       password_confirmation:
-        title: "اعد كلمة المرور"
+        title: "أعد كتابة كلمة السّرّ"
       last_posted: "آخر مشاركة"
       last_emailed: "أخر مراسلة"
-      last_seen: "آخر تواجد مُنذ "
+      last_seen: "كان هنا"
       created: "انضم"
       log_out: "اخرج"
       location: "الموقع"
@@ -1043,8 +1044,8 @@ ar:
       remove_allowed_user: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
       remove_allowed_group: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
     email: 'البريد الإلكتروني'
-    username: 'إسم المستخدم'
-    last_seen: 'شوهدت'
+    username: 'اسم المستخدم'
+    last_seen: 'كان هنا'
     created: 'مكتوبة'
     created_lowercase: 'الإنشاء'
     trust_level: 'مستوى التقة'
@@ -1480,7 +1481,7 @@ ar:
       toggle_information: "أظهر/أخف تفاصيل الموضوع"
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في {{catLink}} أو {{latestLink}}."
       read_more: "أتريد قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
-      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='/unread'># موضوع غير مقروء</a>}}{BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='/unread'># موضوع غير مقروء</a>}} {BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تصفّح كل الأقسام
       view_latest_topics: اعرض أحدث المواضيع
       suggest_create_topic: لمَ لا تكتب موضوعًا؟
@@ -1518,9 +1519,7 @@ ar:
           '3_2': 'ستصلك إشعارات لأنك تراقب هذا الموضوع.'
           '3_1': 'ستصلك إشعارات لأنك أنشأت هذا الموضوع.'
           '3': 'ستصلك إشعارات لأنك تراقب هذا الموضوع.'
-          '2_8': 'ستصلك إشعارات لأنك تتابع هذا القسم.'
-          '2_4': 'ستصلك إشعارات لأنك نشرت ردا في هذا الموضوع.'
-          '2_2': 'ستصلك إشعارات لأنك تتابع هذا الموضوع.'
+          '2': 'سترى عدد الرّدود الجديدة لأنّك <a href="/u/{{username}}/preferences">قرأت هذا الموضوع</a>.'
           '1_2': 'سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك.'
           '1': 'سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك.'
           '0_7': 'لن يصلك أي إشعار يخص هذا القسم بناء على طلبك.'
@@ -1572,7 +1571,8 @@ ar:
         make_banner: "موضوع دعائي"
         remove_banner: "إزالة موضوع دعائي"
       reply:
-        title: 'إضافة رد'
+        title: 'رُدّ'
+        help: 'اكتب ردًّا على هذه الموضوع'
       clear_pin:
         title: "إلغاء التثبيت"
         help: "إلغاء تثبيت الموضوع حتى لا يظهر في أعلى القائمة"
@@ -1636,7 +1636,7 @@ ar:
         username_placeholder: "اسم المستخدم"
         action: 'أرسل دعوة'
         help: 'ادعُ الغير إلى هذا الموضوع عبر البريد الإلكترونيّ أو الإشعارات'
-        to_forum: "سيتم ارسال رسالة بريد الكتروني ﻷصدقائك للمشاركة في الموقع , هذه العملية لا تتطلب تسجيل الدخول ."
+        to_forum: "سنُرسل بريدًا يتيح لصديقك الانضمام مباشرةً بنقر رابط ما، الولوج غير مطلوب."
         sso_enabled: "أدخل اسم مَن تريد دعوته إلى هذا الموضوع."
         to_topic_blank: "أدخل اسم مَن تريد دعوته إلى هذا الموضوع أو بريده."
         to_topic_email: "لقد أدخلت عنوان بريد إلكترونيّ. سنرسل بريدًا يحتوي دعوة تتيح لصديقك الرّد مباشرة على هذا الموضوع."
@@ -1698,7 +1698,6 @@ ar:
           other: "الرجاء اختيار المالك الجديد لـ {{count}} مشاركة نُشرت بواسطة <b>{{old_user}}</b>."
         instructions_warn: "ملاحطة لن يتم نقل الاشعارت القديمة  للمشاركة  للمسخدم الجديد <br>تحذير: اي بيانات تتعلق بالمشاركة هذه لن يتم نقلها للمستخدم الجديد. استعملها بحذر."
       change_timestamp:
-        title: "غيّر الختم الزّمنيّ"
         action: "غيّر الختم الزّمنيّ"
         invalid_timestamp: "لا يمكن أن يكون الختم الزمنيّ مستقبليّ."
         error: "حدث عطل أثناء تغيير ختم الموضوع الزّمنيّ."
@@ -2025,7 +2024,7 @@ ar:
       tags_allowed_tags: "ما يمكن استخدامه من وسوم في هذه الفئة فقط:"
       tags_allowed_tag_groups: "مجموعات العلامات الوصفية التي تستخدم فقط في هذا القسم:"
       tags_placeholder: "(اختياري) قائمة العلامات الوصفية المسموح بها"
-      tag_groups_placeholder: "(اختياري) قائمة مجموعات العلامات الوصفية المسموح بها"
+      tag_groups_placeholder: "(اختياريّ) قائمة مجموعات الوسوم المسموح بها"
       delete: 'احذف القسم'
       create: 'قسم جديد'
       create_long: 'أنشء قسم جديدة'
@@ -2053,8 +2052,6 @@ ar:
       security: "الأمن"
       special_warning: "تحذير: هذه الفئة هي فئة قبل التصنيف وإعدادات الحماية لا يمكن تعديلها. إذا لم تكن تريد استخدام هذه الفئة، احذفها بدلا من تطويعها لأغراض أخرى."
       images: "الصور"
-      auto_close_label: "الإغلاق التلقائي للمواضيع بعد:"
-      auto_close_units: "ساعات"
       email_in: "تعيين بريد إلكتروني خاص:"
       email_in_allow_strangers: "قبول بريد إلكتروني من مستخدمين لا يملكون حسابات"
       email_in_disabled: "عُطّل إرسال المشاركات عبر البريد الإلكترونيّ من إعدادات الموقع. لتفعيل نشر المشاركات الجديدة عبر البريد،"
@@ -2325,7 +2322,7 @@ ar:
     keyboard_shortcuts_help:
       title: 'اختصارات لوحة المفاتيح'
       jump_to:
-        title: 'الانتقال إلى'
+        title: 'الانتقال'
         home: '<b>g</b>، <b>h</b> الرّئيسيّة'
         latest: '<b>g</b>، <b>l</b> الأخيرة'
         new: '<b>g</b>، <b>n</b> الجديد'
@@ -2488,7 +2485,7 @@ ar:
           bookmarks: "لايوجد المزيد من المواضيع في المفضلة"
           search: "لا نتائج بحث أخرى."
     invite:
-      custom_message: "اجعل دعوتك اكثر خصوصية  بكتابة"
+      custom_message: "اجعل دعوتك شخصيّة أكثر بكتابة"
       custom_message_link: "رسالة مخصصة"
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المنتدى!"
@@ -2805,6 +2802,7 @@ ar:
         new_style: "تصميم جديد"
         import: "استيراد"
         delete: "حذف"
+        delete_confirm: "أأحذف هذه السّمة؟"
         copy: "نسخ"
         email_templates:
           title: "قالب البريد الالكتروني "

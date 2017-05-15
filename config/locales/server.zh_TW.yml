@@ -880,7 +880,6 @@ zh_TW:
     force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
-    invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_username_length: "最短用戶名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
     max_username_length: "最長用戶名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"
@@ -1068,7 +1067,6 @@ zh_TW:
     reply_by_email_enabled: "啟用通過電郵回覆。"
     reply_by_email_address: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "對進站郵件優先使用 HTML 而不是純文字檔案。可能導致格式問題。"
     disable_emails: "禁止 Discourse 發送任何郵件"
     strip_images_from_short_emails: "郵件小於 2800 位元組時去除圖片"
     short_email_length: "短郵件地址長度（以比特作為單位）"
@@ -1174,7 +1172,6 @@ zh_TW:
     embed_username_required: "創建主題需要用戶名。"
     embed_whitelist_selector: "在 embeds 頁面允許 CSS 元素選擇器"
     embed_blacklist_selector: "在 embeds 頁面移除 CSS 元件選擇器"
-    notify_about_flags_after: "如果有標記沒有在設定小時後處理，發送一封郵件給 contact_email。設為 0 將禁用。"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用戶數下限（0 為禁用）。"
@@ -1369,8 +1366,6 @@ zh_TW:
     website:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
   flags_reminder:
-    flags_were_submitted:
-      other: "這些標記在過去 %{count} 小時內被提交。請審核他們。"
     subject_template:
       other: "%{count} 個標記需要被處理"
   unsubscribe_mailer:
@@ -2060,14 +2055,6 @@ zh_TW:
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
-    mailing_list:
-      why: "%{date}%{site_link}上的所有情況"
-      unsubscribe: "這是每日摘要郵件。站點啟用了郵件列表模式，點擊連結 %{unsubscribe_link} 退訂。"
-      from: "%{site_name}的摘要"
-      new_topics: "近期主題"
-      topic_updates: "主題更新"
-      view_this_topic: "查看此主題"
-      back_to_top: "回到頂部"
     forgot_password:
       title: "忘記密碼"
     set_password:
@@ -2597,8 +2584,6 @@ zh_TW:
     error: "錯誤"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
-  discourse_hub:
-    access_token_problem: "告訴管理員：請更新站點設置，應使用正確的 discourse_org_access_key。"
   performance_report:
     initial_post_raw: 這個主題將用來展示網站每日性能報告。
     initial_topic_title: 網站效能報表

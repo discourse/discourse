@@ -162,7 +162,7 @@ describe Invite do
 
     it "works" do
       # doesn't create an invite
-      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(StandardError)
+      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(Invite::UserExists)
 
       # gives the user permission to access the topic
       expect(topic.allowed_users.include?(coding_horror)).to eq(true)

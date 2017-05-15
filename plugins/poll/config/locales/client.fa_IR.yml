@@ -39,7 +39,7 @@ fa_IR:
         confirm: "آیا از باز کردن این نظرسنجی اطمینان دارید ؟ "
       close:
         title: "نظرسنجی را ببند"
-        label: "بسته "
+        label: "بستن"
         confirm: "آیا از بستن این نظرسنجی اطمینان دارید ؟ "
       error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."
       error_while_casting_votes: "متاسفانه در ثبت رای شما خطایی رخ داده است."
@@ -52,8 +52,8 @@ fa_IR:
           invalid_values: مقدار حداقل می بایست کمتر از مقدار حداکثر باشد.
         poll_type:
           label: نوع
-          regular: یک انتخاب
-          multiple: چند انتخاب
+          regular: یک انتخابی
+          multiple: چند انتخابی
           number: امتیاز عددی
         poll_config:
           max: بیشترین
