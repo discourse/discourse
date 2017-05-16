@@ -946,7 +946,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           this._scrollToPost(data.post_number);
         }
       }
-    });
+    }, this.get('model.message_bus_last_id'));
   },
 
   _scrollToPost: debounce(function(postNumber) {
