@@ -698,6 +698,9 @@ SQL
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
+        # we can not remove ourselves cause then we will end up adding
+        # ourselves in add_small_action
+        removed_by = Discourse.system_user if user.id == removed_by.id
         add_small_action(removed_by, "removed_user", user.username)
         return true
       end
