@@ -1979,8 +1979,6 @@ en:
 
         Enjoy your stay!
 
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
-
     welcome_invite:
       title: "Welcome Invite"
       subject_template: "Welcome to %{site_name}!"
@@ -1996,8 +1994,6 @@ en:
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
-
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
         [prefs]: %{user_preferences_url}
 
@@ -2688,8 +2684,6 @@ en:
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
-
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     signup:
       title: "Signup"
