@@ -18,7 +18,7 @@ describe Jobs::ToggleTopicClosed do
 
     Timecop.travel(1.hour.from_now) do
       described_class.new.execute(
-        topic_timer_id: topic.topic_timer.id,
+        topic_timer_id: topic.public_topic_timer.id,
         state: true
       )
 
@@ -35,7 +35,7 @@ describe Jobs::ToggleTopicClosed do
 
     Timecop.travel(1.hour.from_now) do
       described_class.new.execute(
-        topic_timer_id: topic.topic_timer.id,
+        topic_timer_id: topic.public_topic_timer.id,
         state: false
       )
 
@@ -54,7 +54,7 @@ describe Jobs::ToggleTopicClosed do
       Topic.any_instance.expects(:update_status).never
 
       described_class.new.execute(
-        topic_timer_id: topic.topic_timer.id,
+        topic_timer_id: topic.public_topic_timer.id,
         state: true
       )
     end
@@ -69,7 +69,7 @@ describe Jobs::ToggleTopicClosed do
 
     it 'should not do anything' do
       described_class.new.execute(
-        topic_timer_id: topic.topic_timer.id,
+        topic_timer_id: topic.public_topic_timer.id,
         state: false
       )
 

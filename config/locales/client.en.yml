@@ -1240,6 +1240,7 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
 
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
@@ -1527,6 +1528,8 @@ en:
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
       auto_delete:
         title: "Auto-Delete Topic"
+      reminder:
+        title: "Remind Me"
 
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."
@@ -1534,6 +1537,7 @@ en:
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
         auto_delete: "This topic will be automatically deleted %{timeLeft}."
+        auto_reminder: "You will be reminded about this topic %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
