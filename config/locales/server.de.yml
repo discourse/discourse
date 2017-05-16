@@ -2274,15 +2274,6 @@ de:
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
-    mailing_list:
-      why: "Alle Aktivitäten auf %{site_link} am %{date}"
-      subject_template: "[%{email_prefix}] Zusammenfassung für den %{date}"
-      unsubscribe: "Diese Zusammenfassung wird täglich gesendet, weil der Mailinglisten-Modus aktiviret ist. Zum Abmelden %{unsubscribe_link}."
-      from: "%{site_name} Zusammenfassung"
-      new_topics: "Neue Themen"
-      topic_updates: "Thema-Neuigkeiten"
-      view_this_topic: "Thema anzeigen"
-      back_to_top: "Zurück nach oben"
     forgot_password:
       title: "Passwort vergessen"
       subject_template: "[%{email_prefix}] Passwort zurücksetzen"

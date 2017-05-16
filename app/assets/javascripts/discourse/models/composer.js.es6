@@ -169,7 +169,10 @@ const Composer = RestModel.extend({
       const postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
         I18n.t("post.post_number", { number: postNumber }) + "</a>";
-      topicLink = "<a href='" + (topic.get('url')) + "'> " + escapeExpression(topic.get('title')) + "</a>";
+
+      let title = topic.get('fancy_title') || escapeExpression(topic.get('title'));
+
+      topicLink = "<a href='" + (topic.get('url')) + "'> " + title + "</a>";
       usernameLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" + this.get('post.username') + "</a>";
     }
 

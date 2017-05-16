@@ -534,7 +534,6 @@ it:
         instructions: |
           Questa impostazione modifica il riassunto attività.<br />
           Gli argomenti e le categorie silenziate non sono incluse in queste email.
-        daily: "Invia aggiornamenti giornalieri"
         individual: "Invia una email per ogni nuovo messaggio"
         individual_no_echo: "Invia una email per ogni nuovo messaggio, eccetto per i miei"
         many_per_day: "Inviamo una email per ogni nuovo messaggio (circa {{dailyEmailEstimate}} al giorno)"
@@ -2319,7 +2318,6 @@ it:
         event_type_missing: "Devi impostare almeno un tipo di evento."
         content_type: "Tipo Contenuto"
         secret: "Chiave segreta"
-        event_chooser: "Quali eventi vuoi che attivino questo webhook?"
         wildcard_event: "Inviami tutto."
         individual_event: "Seleziona eventi singoli."
         verify_certificate: "Verifica il certificato TLS della URL payload"

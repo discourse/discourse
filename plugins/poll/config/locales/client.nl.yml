@@ -36,24 +36,24 @@ nl:
         title: "De pollresultaten weergeven"
         label: "Resultaten tonen"
       hide-results:
-        title: "Terug naar uw stemmen"
+        title: "Terug naar je stemmen"
         label: "Resultaten verbergen"
       open:
         title: "De poll openen"
         label: "Openen"
-        confirm: "Weet u zeker dat u deze poll wilt openen?"
+        confirm: "Weet je zeker dat je deze poll wil openen?"
       close:
         title: "De poll sluiten"
         label: "Sluiten"
-        confirm: "Weet u zeker dat u deze poll wilt sluiten?"
+        confirm: "Weet je zeker dat je deze poll wil sluiten?"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
-      error_while_casting_votes: "Sorry, er is een fout opgetreden bij uitbrengen van uw stemmen."
-      error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
+      error_while_casting_votes: "Sorry, er is een fout opgetreden bij uitbrengen van je stemmen."
+      error_while_fetching_voters: "Sorry, er is iets misgegaan bij het weergeven van de stemmers."
       ui_builder:
         title: Poll aanmaken
         insert: Poll invoegen
         help:
-          options_count: Voer minstens 2 opties in
+          options_count: Geef ten minste 2 opties
           invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
         poll_type:
           label: Type
@@ -65,6 +65,6 @@ nl:
           min: Min
           step: Stap
         poll_public:
-          label: Tonen wie er heeft gestemd
+          label: Laat zien wie gestemd heeft
         poll_options:
-          label: Voer één polloptie per regel in
+          label: Geef één polloptie per regel op

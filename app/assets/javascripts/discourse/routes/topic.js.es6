@@ -189,7 +189,6 @@ const TopicRoute = Discourse.Route.extend({
     postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
-    topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
     this.screenTrack.stop();
 
@@ -216,7 +215,6 @@ const TopicRoute = Discourse.Route.extend({
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');
-    controller.subscribe();
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get('id'), controller);

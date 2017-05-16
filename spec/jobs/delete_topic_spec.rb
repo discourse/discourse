@@ -19,10 +19,10 @@ describe Jobs::DeleteTopic do
     first_post
 
     Timecop.freeze(2.hours.from_now) do
-      described_class.new.execute(topic_timer_id: topic.topic_timer.id)
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
       expect(topic.reload).to be_trashed
       expect(first_post.reload).to be_trashed
-      expect(topic.reload.topic_timer).to eq(nil)
+      expect(topic.reload.public_topic_timer).to eq(nil)
     end
   end
 
@@ -31,7 +31,7 @@ describe Jobs::DeleteTopic do
     topic.trash!
     Timecop.freeze(2.hours.from_now) do
       Topic.any_instance.expects(:trash!).never
-      described_class.new.execute(topic_timer_id: topic.topic_timer.id)
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
     end
   end
 
@@ -41,7 +41,7 @@ describe Jobs::DeleteTopic do
     )
     create_post(topic: t)
     Timecop.freeze(4.hours.from_now) do
-      described_class.new.execute(topic_timer_id: t.topic_timer.id)
+      described_class.new.execute(topic_timer_id: t.public_topic_timer.id)
       expect(t.reload).to_not be_trashed
     end
   end
@@ -56,7 +56,7 @@ describe Jobs::DeleteTopic do
     it "shouldn't delete the topic" do
       create_post(topic: topic)
       Timecop.freeze(2.hours.from_now) do
-        described_class.new.execute(topic_timer_id: topic.topic_timer.id)
+        described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
         expect(topic.reload).to_not be_trashed
       end
     end

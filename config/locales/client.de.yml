@@ -536,7 +536,6 @@ de:
         instructions: |
           Diese Einstellung überschreibt die Aktivitäts-Übersicht.<br />
           Stummgeschaltete Themen und Kategorien werden in diese E-Mails nicht eingeschlossen.
-        daily: "Aktualisierungen täglich senden"
         individual: "Für jeden Beitrag eine E-Mail senden"
         individual_no_echo: "Sende für alle fremden Beträge eine Email"
         many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)"

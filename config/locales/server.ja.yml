@@ -1017,8 +1017,6 @@ ja:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
-    mailing_list:
-      new_topics: "新着トピック"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
   page_not_found:

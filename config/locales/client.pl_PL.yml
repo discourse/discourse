@@ -137,6 +137,7 @@ pl_PL:
           other: "%{count} lat później"
       previous_month: 'Poprzedni miesiąc'
       next_month: 'Następny miesiąc'
+      placeholder: Wybierz datę
     share:
       topic: 'udostępnij odnośnik do tego tematu'
       post: 'wpis #%{postNumber}'
@@ -171,11 +172,16 @@ pl_PL:
       visible:
         enabled: 'wylistowanie %{when}'
         disabled: 'odlistowanie %{when}'
+      banner:
+        enabled: 'Ten temat został ustawiony jako baner. Będzie widoczny na górze każdej strony, dopóki nie zostanie zamknięty przez użytkownika.'
+        disabled: 'Baner został usunięty. Nie będzie więcej widoczny na górze każdej strony.'
     topic_admin_menu: "akcje administratora"
     wizard_required: "Witaj na Twoim nowym Discourse! Zacznij od <a href='%{url}' data-auto-route='true'>kreatora konfiguracji</a> ✨"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojego nowego serwisu, znajdujesz się w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają 1. poziom zaufania i będą otrzymywać codzienne podsumowania drogą mailową. To się zmieni, gdy liczba użytkowników przekroczy liczbę %{min_users}."
     bootstrap_mode_disabled: "Tryb Bootstrap zostanie wyłączony w ciągu najbliższych 24 godzin."
+    themes:
+      default_description: "Domyślny"
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -183,6 +189,7 @@ pl_PL:
         us_west_2: "US West (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Irlandia)"
+        eu_west_2: "EU (Londyn)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -415,6 +422,7 @@ pl_PL:
       automatic_group: Automatyczna grupa
       closed_group: Zamknięta grupa
       is_group_user: "Jesteś członkiem tej grupy"
+      allow_membership_requests: "Zezwól użytkownikom na wysyłanie zaproszeń do właścicieli grupy."
       membership: "Członkostwo"
       name: "Nazwa"
       user_count: "Ilość użytkowników"
@@ -436,6 +444,7 @@ pl_PL:
       posts: "Wpisów"
       mentions: "Wzmianki"
       messages: "Wiadomości"
+      notification_level: "Domyślny poziom powiadomień dla wiadomości grupy."
       alias_levels:
         title: "Kto może wysyłać wiadomości i używać @aliasu tej grupy?"
         nobody: "Nikt"
@@ -584,7 +593,6 @@ pl_PL:
         enabled: "Włącz tryb listy mailingowej"
         instructions: |
           To ustawienie  nadpisuje podsumowanie aktywności. <br />
-        daily: "Wyślij codzienne aktualizacje"
         individual: "Wyślij e-mail dla każdego nowego postu"
         individual_no_echo: "Wysyłaj emaile dla każdego nowego postu oprócz mojego"
         many_per_day: "Wyślij mi e-mail dla każdego nowego posta (około {{dailyEmailEstimate}} na dzień)"
@@ -623,6 +631,7 @@ pl_PL:
       revoke_access: "Zablokuj dostęp"
       undo_revoke_access: "Cofnij zablokowanie dostępu"
       api_approved: "Zatwierdzony:"
+      theme: "Motyw"
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -640,6 +649,15 @@ pl_PL:
         move_to_archive: "Archiwum"
         failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
         select_all: "Zaznacz wszystko"
+      preferences_nav:
+        account: "Konto"
+        profile: "Profil"
+        emails: "Wiadomości"
+        notifications: "Powiadomienia"
+        categories: "Kategorie"
+        tags: "Tagi"
+        interface: "Interfejs"
+        apps: "Aplikacje"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -1013,7 +1031,10 @@ pl_PL:
       not_allowed_from_ip_address: "Nie możesz się zalogować z tego adresu IP."
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
+      resend_title: "Wyślij ponownie Email aktywacyjny"
       change_email: "Zmień Adres Email"
+      provide_new_email: "Wprowadź nowy adres Email. Wyślemy na niego mail potwierdzający."
+      submit_new_email: "Zaktualizuj adres Email"
       sent_activation_email_again: "Wysłaliśmy do ciebie kolejny email z aktywacją konta na <b>{{currentEmail}}</b>. Zanim dotrze, może minąć kilka minut; pamiętaj, żeby sprawdzić folder ze spamem."
       to_continue: "Zaloguj się"
       preferences: "Musisz się zalogować, aby zmieniać swoje ustawienia."
@@ -1225,6 +1246,7 @@ pl_PL:
       sort_by: "Sortuj po"
       relevance: "Trafność"
       latest_post: "Aktualne wpisy"
+      latest_topic: "Najnowszy wątek"
       most_viewed: "Popularne"
       most_liked: "Najbardziej lajkowane"
       select_all: "Zaznacz wszystkie"
@@ -1240,6 +1262,7 @@ pl_PL:
       no_more_results: "Nie znaleziono więcej wyników."
       searching: "Szukam…"
       post_format: "#{{post_number}} za {{username}}"
+      results_page: "Wyniki wyszukiwania"
       context:
         user: "Szukaj wpisów @{{username}}"
         category: "Szukaj w kategorii #{{category}}"
@@ -1420,6 +1443,33 @@ pl_PL:
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
+      topic_status_update:
+        title: "Ustaw ważność wątku"
+        save: "Ustaw czasd"
+        num_of_hours: "Liczba godzin:"
+        remove: "Usuń czas"
+        publish_to: "Opublikuj do:"
+        when: "Kiedy:"
+      auto_update_input:
+        tomorrow: "Jutro"
+        pick_date_and_time: "Wybierz datę i czas"
+      publish_to_category:
+        title: "Zaplanuj publikację"
+      temp_open:
+        title: "Otwórz tymczasowo"
+      auto_reopen:
+        title: "Automatycznie otwórz wątek"
+      temp_close:
+        title: "Zamknij tymczasowo"
+      auto_close:
+        title: "Automatycznie zamknij wątek"
+        label: "Godziny automatycznego zamknięcia:"
+        error: "Wprowadź poprawną wartość."
+      status_update_notice:
+        auto_open: "Ten wątek zostanie automatycznie otwarty po %{timeLeft}."
+        auto_close: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
+        auto_publish_to_category: "Wątek zostanie opublikowany w <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "Ten watek zostanie automatycznie zamknięty po %{count} minutach od ostatniego wpisu."
       auto_close_title: 'Ustawienia automatycznego zamykania'
       auto_close_immediate:
         one: "Ostatni wpis w tym temacie został zamieszczony 1 godzinę temu, więc zostanie on natychmiastowo zamknięty."
@@ -1451,6 +1501,10 @@ pl_PL:
           '3_2': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
           '3_1': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem tego tematu.'
           '3': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
+          '2_8': 'Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku.'
+          '2_4': 'Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś się w tym wątku.'
+          '2_2': 'Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek.'
+          '2': 'Widzisz ilość nowych odpowiedzi, ponieważ przeczytałeś <a href="/u/{{username}}/preferences">ten wątek</a>.'
           '1_2': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '1': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
@@ -1486,6 +1540,7 @@ pl_PL:
         open: "Otwórz temat"
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
+        timed_update: "Ustaw ważność wątku..."
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
@@ -1618,6 +1673,7 @@ pl_PL:
           other: "Wybierz nowego właściciela dla {{count}} wpisów autorstwa <b>{{old_user}}</b>."
         instructions_warn: "Przeszłe powiadomienia dla tego wpisu nie zostaną przypisane do nowego użytkownika. <br>Uwaga: Aktualnie, żadne dane uzależnione od wpisu nie są przenoszone do nowego użytkownika. Zachowaj ostrożność."
       change_timestamp:
+        title: "zmień znacznik czasu"
         action: "zmień znacznik czasu"
         invalid_timestamp: "Znacznik czasu nie może wskazywać na przyszłość."
         error: "Wystąpił błąd podczas zmiany znacznika czasu tego tematu."
@@ -1944,7 +2000,11 @@ pl_PL:
       suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
       num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
+      subcategory_num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       all_topics_wiki: "Stwórz nowe tematy domyślnie jako wiki"
+      subcategory_list_style: "Styl listy podkategorii:"
+      sort_order: "Sortuj listę wątków po:"
+      default_view: "Domyślna lista wątków:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"
@@ -2517,6 +2577,7 @@ pl_PL:
         add_members: "Dodaj członków"
         custom: "Niestandardowe"
         bulk_complete: "Użytkownicy zostali dodani do wskazanej grupy."
+        bulk_complete_users_not_added: "Podani użytkownicy nie mogą zostać dodani (Sprawdź, czy stworzyli konto):"
         bulk: "Dodaj więcej do grupy"
         bulk_paste: "Podaj listę nazw użytkowników lub adresów e-mail,  każdy w oddzielnej linii:"
         bulk_select: "(wybierz grupę)"
@@ -2701,15 +2762,20 @@ pl_PL:
         title: "Wygląd"
         long_title: "Personalizacja strony"
         preview: "podgląd"
+        explain_preview: "Zobacz tą stronę z włączonym stylem"
         save: "Zapisz"
         new: "Nowy"
         new_style: "Nowy styl"
         import: "Import"
         delete: "Usuń"
+        delete_confirm: "Usunąć ten motyw?"
         about: "Zmień arkusze stylów CSS i nagłówki HTML w witrynie. Dodaj własne ustawienie aby rozpocząć."
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Kopiuj"
+        copy_to_clipboard: "Skopiuj do schowka"
+        copied_to_clipboard: "Tekst skopiowany do schowka."
+        copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
         email_templates:
           title: "Szablony email"
           subject: "Temat"
@@ -2718,9 +2784,53 @@ pl_PL:
           none_selected: "Aby rozpocząć edycję, wybierz szablon wiadomości e-mail. "
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
+        theme:
+          import_theme: "Importuj motyw"
+          customize_desc: "Personalizacja:"
+          title: "Motywy"
+          edit: "Edytuj"
+          edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
+          desktop: "Komputer"
+          mobile: "Mobilnie"
+          preview: "Podgląd"
+          is_default: "Motyw ustawiony jako domyślny"
+          user_selectable: "Motyw może być ustawiany przez użytkowników"
+          color_scheme: "Schemat kolorów"
+          color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
+          theme_components: "Komponenty motywu"
+          css_html: "Własny CSS/HTML"
+          edit_css_html: "Edytuj CSS/HTML"
+          edit_css_html_help: "Nie modyfikowałeś CSS ani HTML"
+          about_theme: "O motywie"
+          license: "Licencja"
+          check_for_updates: "Sprawdź dostępność aktualizacji"
+          updating: "Trwa proces aktualizacji..."
+          up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
+          add: "Dodaj"
+          scss:
+            text: "CSS"
+          header:
+            text: "Nagłówek"
+          after_header:
+            text: "Po nagłówku"
+          footer:
+            text: "Stopka"
+          embedded_scss:
+            text: "Osadzony CSS"
+          head_tag:
+            text: "</head>"
+            title: "HTML, który zostanie umieszczony przed tagiem </head>"
+          body_tag:
+            text: "</body>"
+            title: "HTML, który zostanie umieszczony przed tagiem </body>"
         colors:
+          select_base:
+            title: "Wybierz podstawowy schemat kolorów"
+            description: "Podstawowy schemat:"
           title: "Kolory"
+          edit: "Edytuj schemat kolorów"
           long_title: "Schematy kolorów"
+          about: "Modyfikuj kolory użyte w Twoim motywie. Stwórz nowy schemat kolorów, aby rozpocząć."
           new_name: "Nowy schemat kolorów"
           copy_name_prefix: "Kopia"
           delete_confirm: "Usunąć ten schemat kolorów?"
@@ -2859,6 +2969,8 @@ pl_PL:
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
+            change_theme: "Zmień motyw"
+            delete_theme: "Usuń motyw"
             change_site_text: "zmiana tekstu serwisu"
             suspend_user: "zawieszenie użytkownika"
             unsuspend_user: "odwieszenie użytkownika"
@@ -3011,6 +3123,7 @@ pl_PL:
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
         revoke_admin: 'Odbierz status admina'
         grant_admin: 'Przyznaj status admina'
+        grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: 'Odbierz status moderatora'
         grant_moderation: 'Przyznaj status moderatora'
         unblock: 'Odblokuj'

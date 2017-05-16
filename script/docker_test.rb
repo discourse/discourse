@@ -10,6 +10,7 @@ unless ENV['NO_UPDATE']
   checkout = ENV['COMMIT_HASH'] || "HEAD"
   run_or_fail("git checkout #{checkout}")
   run_or_fail("bundle")
+  run_or_fail("bundle-audit check --update")
 end
 
 run_or_fail("bundle exec rake docker:test")

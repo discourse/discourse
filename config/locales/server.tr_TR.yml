@@ -1493,13 +1493,6 @@ tr_TR:
       click_here: "buraya tıklayın"
       from: "%{site_name} özeti"
       preheader: "%{last_seen_at} tarihindeki ziyaretinizden bu yana olanların kısa bir özeti"
-    mailing_list:
-      unsubscribe: "Bu günlük e-posta size %{site_link} topluluğundan duyuru listesi modunu etkin yaptığınız için gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
-      from: "%{site_name} özeti"
-      new_topics: "Yeni konular"
-      topic_updates: "Konu güncellemeleri"
-      view_this_topic: "Bu konuyu görüntüle"
-      back_to_top: "Başa dön"
     notify_old_email:
       text_body_template: |
         Bu %{site_name} forumunda kullandığınız e-posta adresinizin değiştiğini

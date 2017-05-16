@@ -2149,14 +2149,6 @@ el:
       click_here: "κάνε κλικ εδώ"
       from: "%{site_name} περίληψη"
       preheader: "Μία σύντομη περίληψη από την τελευταία σου επίσκεψη στο %{last_seen_at}"
-    mailing_list:
-      why: "Όλες οι δραστηριότητες στο %{site_link} για %{date}"
-      unsubscribe: "Αυτή η περίληψη στέλνεται καθημερινά εξαιτίας της ενεργοποίησης τηε λειτουργίας συμπερίληψης στη λίστα μηνυμάτων. Για να διαγραφείς %{unsubscribe_link}."
-      from: "%{site_name} περίληψη"
-      new_topics: "Καινούρια νήματα"
-      topic_updates: "Ενημερώσεις νήματος"
-      view_this_topic: "Δες αυτό το νήμα"
-      back_to_top: "Πίσω στην κορυφή"
     forgot_password:
       title: "Ξέχασα τον κωδικό πρόσβασης"
     set_password:

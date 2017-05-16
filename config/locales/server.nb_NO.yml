@@ -875,12 +875,6 @@ nb_NO:
       click_here: "trykk her"
       from: "%{site_name} oppsummering"
       preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
-    mailing_list:
-      unsubscribe: "Denne oppsummeringen sendes daglig fordi e-postlistemodus er aktivert. For å melde deg deg av %{unsubscribe_link}."
-      from: "%{site_name}-oppsummering"
-      new_topics: "Nye emner"
-      view_this_topic: "Vis dette emnet"
-      back_to_top: "Tilbake til toppen"
   page_not_found:
     title: "Oisann! Den siden finnes ikke eller er privat."
     popular_topics: "Populært"

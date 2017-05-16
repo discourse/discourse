@@ -536,7 +536,6 @@ fr:
         instructions: |
           Ce réglage outrepasse le résumé d'activités.<br />
           Les sujets et catégories passés en silencieux ne sont pas inclus dans ces courriels.
-        daily: "Envoyer des informations quotidiennes"
         individual: "Envoyer un courriel pour chaque nouveau message"
         individual_no_echo: "Envoyer un courriel pour chaque nouveau message sauf les miens"
         many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)"
