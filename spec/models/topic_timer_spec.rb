@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe TopicTimer, type: :model do
   let(:topic_timer) { Fabricate(:topic_timer) }
   let(:topic) { Fabricate(:topic) }
+  let(:admin) { Fabricate(:admin) }
 
   before do
     Jobs::ToggleTopicClosed.jobs.clear
@@ -10,12 +11,26 @@ RSpec.describe TopicTimer, type: :model do
 
   context "validations" do
     describe '#status_type' do
-      it 'should ensure that only one active topic status update exists' do
+      it 'should ensure that only one active public topic status update exists' do
         topic_timer.update!(topic: topic)
         Fabricate(:topic_timer, deleted_at: Time.zone.now, topic: topic)
 
         expect { Fabricate(:topic_timer, topic: topic) }
           .to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it 'should ensure that only one active private topic timer exists per user' do
+        Fabricate(:topic_timer, topic: topic, user: admin, status_type: TopicTimer.types[:reminder])
+
+        expect { Fabricate(:topic_timer, topic: topic, user: admin, status_type: TopicTimer.types[:reminder]) }
+          .to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it 'should allow users to have their own private topic timer' do
+        Fabricate(:topic_timer, topic: topic, user: admin, status_type: TopicTimer.types[:reminder])
+        expect {
+          Fabricate(:topic_timer, topic: topic, user: Fabricate(:admin), status_type: TopicTimer.types[:reminder])
+        }.to_not raise_error
       end
     end
 
@@ -204,6 +219,27 @@ RSpec.describe TopicTimer, type: :model do
         end
       end
     end
+
+    describe 'public_type' do
+      [:close, :open, :delete].each do |public_type|
+        it "is true for #{public_type}" do
+          timer = Fabricate(:topic_timer, status_type: described_class.types[public_type])
+          expect(timer.public_type).to eq(true)
+        end
+      end
+
+      it "is true for publish_to_category" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:publish_to_category], category: Fabricate(:category))
+        expect(timer.public_type).to eq(true)
+      end
+
+      described_class.private_types.keys.each do |private_type|
+        it "is false for #{private_type}" do
+          timer = Fabricate(:topic_timer, status_type: described_class.types[private_type])
+          expect(timer.public_type).to be_falsey
+        end
+      end
+    end
   end
 
   describe '.ensure_consistency!' do
@@ -243,6 +279,20 @@ RSpec.describe TopicTimer, type: :model do
 
       expect(job_args["topic_timer_id"]).to eq(open_topic_timer.id)
       expect(job_args["state"]).to eq(false)
+    end
+
+    it "should enqueue remind me jobs that have been missed" do
+      reminder = Fabricate(:topic_timer,
+        status_type: described_class.types[:reminder],
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour
+      )
+
+      expect { described_class.ensure_consistency! }
+        .to change { Jobs::TopicReminder.jobs.count }.by(1)
+
+      job_args = Jobs::TopicReminder.jobs.first["args"].first
+      expect(job_args["topic_timer_id"]).to eq(reminder.id)
     end
   end
 end

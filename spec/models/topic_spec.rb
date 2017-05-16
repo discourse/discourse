@@ -1253,7 +1253,7 @@ describe Topic do
     it 'updates topic status update execute_at if it was already set to close' do
       Timecop.freeze(now) do
         closing_topic.set_or_create_timer(TopicTimer.types[:close], 48)
-        expect(closing_topic.reload.topic_status_update.execute_at).to eq(2.days.from_now)
+        expect(closing_topic.reload.public_topic_timer.execute_at).to eq(2.days.from_now)
       end
     end
 
@@ -1277,6 +1277,30 @@ describe Topic do
         Timecop.travel(3.hours.from_now) do
           TopicTimer.ensure_consistency!
           expect(topic.reload.closed).to eq(true)
+        end
+      end
+    end
+
+    describe "private status type" do
+      let(:topic) { Fabricate(:topic) }
+      let(:reminder) { Fabricate(:topic_timer, user: admin, topic: topic, status_type: TopicTimer.types[:reminder]) }
+      let(:other_admin) { Fabricate(:admin) }
+
+      it "lets two users have their own record" do
+        reminder
+        expect {
+          topic.set_or_create_timer(TopicTimer.types[:reminder], 2, by_user: other_admin)
+        }.to change { TopicTimer.count }.by(1)
+      end
+
+      it "can update a user's existing record" do
+        Timecop.freeze(now) do
+          reminder
+          expect {
+            topic.set_or_create_timer(TopicTimer.types[:reminder], 11, by_user: admin)
+          }.to_not change { TopicTimer.count }
+          reminder.reload
+          expect(reminder.execute_at).to eq(11.hours.from_now)
         end
       end
     end

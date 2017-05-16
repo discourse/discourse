@@ -7,6 +7,7 @@ export const CLOSE_STATUS_TYPE = 'close';
 const OPEN_STATUS_TYPE = 'open';
 const PUBLISH_TO_CATEGORY_STATUS_TYPE = 'publish_to_category';
 const DELETE_STATUS_TYPE = 'delete';
+const REMINDER_TYPE = 'reminder';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
@@ -17,8 +18,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   autoClose: Ember.computed.equal('selection', CLOSE_STATUS_TYPE),
   autoDelete: Ember.computed.equal('selection', DELETE_STATUS_TYPE),
   publishToCategory: Ember.computed.equal('selection', PUBLISH_TO_CATEGORY_STATUS_TYPE),
+  reminder: Ember.computed.equal('selection', REMINDER_TYPE),
 
-  showTimeOnly: Ember.computed.or('autoOpen', 'autoDelete'),
+  showTimeOnly: Ember.computed.or('autoOpen', 'autoDelete', 'reminder'),
 
   @computed("model.closed")
   timerTypes(closed) {
@@ -26,7 +28,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       { id: CLOSE_STATUS_TYPE, name: I18n.t(closed ? 'topic.temp_open.title' : 'topic.auto_close.title'), },
       { id: OPEN_STATUS_TYPE, name: I18n.t(closed ? 'topic.auto_reopen.title' : 'topic.temp_close.title') },
       { id: PUBLISH_TO_CATEGORY_STATUS_TYPE, name: I18n.t('topic.publish_to_category.title') },
-      { id: DELETE_STATUS_TYPE, name: I18n.t('topic.auto_delete.title') }
+      { id: DELETE_STATUS_TYPE, name: I18n.t('topic.auto_delete.title') },
+      { id: REMINDER_TYPE, name: I18n.t('topic.reminder.title') }
     ];
   },
 
