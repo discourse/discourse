@@ -700,7 +700,7 @@ SQL
         topic_user.destroy
         # we can not remove ourselves cause then we will end up adding
         # ourselves in add_small_action
-        removed_by = Discourse.system_user if user.id == removed_by.id
+        removed_by = Discourse.system_user if user.id == removed_by&.id
         add_small_action(removed_by, "removed_user", user.username)
         return true
       end
