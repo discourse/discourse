@@ -253,6 +253,28 @@ describe DiscourseSingleSignOn do
       expect(user.active).to eq(false)
     end
 
+    it 'deactivates accounts that have updated email address' do
+
+      SiteSetting.sso_overrides_email = true
+      sso.require_activation = true
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(false)
+
+      old_email = user.email
+
+      user.update_columns(active: true)
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+
+      user.update_columns(email: 'xXx@themovie.com')
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.email).to eq(old_email)
+      expect(user.active).to eq(false)
+
+    end
+
   end
 
   context 'welcome emails' do
@@ -267,13 +289,13 @@ describe DiscourseSingleSignOn do
 
     it "sends a welcome email by default" do
       User.any_instance.expects(:enqueue_welcome_message).once
-      user = sso.lookup_or_create_user(ip_address)
+      _user = sso.lookup_or_create_user(ip_address)
     end
 
     it "suppresses the welcome email when asked to" do
       User.any_instance.expects(:enqueue_welcome_message).never
       sso.suppress_welcome_message = true
-      user = sso.lookup_or_create_user(ip_address)
+      _user = sso.lookup_or_create_user(ip_address)
     end
   end
 
