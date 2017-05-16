@@ -526,7 +526,6 @@ sv:
         instructions: |
           Den här inställningen åsidosätter aktivitetssummeringen.<br />
           Tystade ämnen och kategorier är inte inkluderade i de här e-postmeddelandena.
-        daily: "Skicka dagliga uppdateringar"
         individual: "Skicka ett e-postmeddelande för varje nytt inlägg."
         individual_no_echo: "Jag vill ha ett mail när nya poster publiceras"
         many_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär {{dailyEmailEstimate}} per dag)"

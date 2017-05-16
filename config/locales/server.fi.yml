@@ -1441,6 +1441,7 @@ fi:
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
     wait_approval: "Kiitos kirjautumisesta. Ilmoitamme, kun tilisi on hyväksytty."
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
+    activate_email: "<p>Melkein valmista! Lähetimme sähköpostin osoitteeseen <b>%{email}</b>. Aktivoi käyttäjätilisi seuraamalla viestin ohjeita.</p><p>Jos viesti ei tullut perille, tarkista roskapostikansiosi.</p>"
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
@@ -1809,11 +1810,11 @@ fi:
       title: "Massakutsun lähetys epäonnistui"
       subject_template: "Massakutsun käsittelyssä tapahtui virhe"
       text_body_template: |
-        Massakutsutiedostosi on käsitelty, %{sent} kutsua lähetettiin joista %{failed} virhe(ttä).
+        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, joista %{failed} virhe(ttä).
 
         Tässä on loki:
 
-        ```
+        ```text
         %{logs}
         ```
     csv_export_succeeded:
@@ -2270,15 +2271,6 @@ fi:
       click_here: "klikkaa tästä"
       from: "%{site_name} kooste"
       preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
-    mailing_list:
-      why: "Kaikki toiminta sivustolla [%{site_name}] ajalla %{date}"
-      subject_template: "[%{email_prefix}] Kooste ajalle %{date}"
-      unsubscribe: "Tämä kooste lähetettiin, koska postituslistatila on otettu käyttöön. Peruaksesi tilauksen %{unsubscribe_link}."
-      from: "%{site_name} kooste"
-      new_topics: "Uudet ketjut"
-      topic_updates: "Päivittyneet ketjut"
-      view_this_topic: "Katsele tätä ketjua"
-      back_to_top: "Takaisin alkuun"
     forgot_password:
       title: "Unohtunut salasana"
       subject_template: "[%{email_prefix}] Salasanan uusiminen"
@@ -2428,6 +2420,9 @@ fi:
     base_theme_name: "Pohja"
     default: "Vaalea värimalli"
     dark: "Tumma värimalli"
+    default_theme_name: "Oletus"
+    dark_theme_name: "Tumma"
+    light_theme_name: "Vaalea"
   about: "Tietoja"
   guidelines: "Ohjeet"
   privacy: "Yksityisyys"

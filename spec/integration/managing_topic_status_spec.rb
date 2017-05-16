@@ -67,7 +67,7 @@ RSpec.describe "Managing a topic's status update", type: :request do
         status_type: TopicTimer.types[1]
 
       expect(response).to be_success
-      expect(topic.reload.topic_status_update).to eq(nil)
+      expect(topic.reload.public_topic_timer).to eq(nil)
 
       json = JSON.parse(response.body)
 

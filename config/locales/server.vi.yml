@@ -1334,10 +1334,6 @@ vi:
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
       click_here: "bấm vào đây"
-    mailing_list:
-      new_topics: "Chủ đề mới"
-      view_this_topic: "Xem chủ đề này"
-      back_to_top: "Trở lên trên"
     notify_old_email:
       text_body_template: |
         Đây là tin nhắn tự động để thông báo rằng địa chỉ email của bạn trên %{site_name} đã được thay đổi. Nếu điều này là không đúng, xin hãy liên hệ với BQT.

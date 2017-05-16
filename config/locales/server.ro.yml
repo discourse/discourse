@@ -1976,14 +1976,6 @@ ro:
       click_here: "click aici"
       from: "%{site_name} rezumat"
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
-    mailing_list:
-      why: "Toată activitatea de pe %{site_link} pentru data de %{date}"
-      unsubscribe: "Acest rezumat este trimis zilnic pentru că modul mailing list este activat. Pentru dezabonare dă click pe %{unsubscribe_link}"
-      from: "%{site_name} rezumat"
-      new_topics: "Subiecte noi"
-      topic_updates: "Actualizări la subiect"
-      view_this_topic: "Vizualizează acest subiect"
-      back_to_top: "Înapoi sus"
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.

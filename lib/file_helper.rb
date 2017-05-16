@@ -7,6 +7,7 @@ class FileHelper
   end
 
   def self.download(url, max_file_size, tmp_file_name, follow_redirect=false, read_timeout=5)
+    url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
     uri = parse_url(url)

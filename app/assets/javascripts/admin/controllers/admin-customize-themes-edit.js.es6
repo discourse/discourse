@@ -150,6 +150,9 @@ export default Ember.Controller.extend({
 
     toggleMaximize: function() {
       this.toggleProperty('maximized');
+      Em.run.next(()=>{
+        this.appEvents.trigger('ace:resize');
+      });
     }
   }
 

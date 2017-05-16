@@ -2264,15 +2264,6 @@ es:
       click_here: "clic aquí"
       from: "resumen de %{site_name}"
       preheader: "Un corto resumen desde tu última visita el %{last_seen_at}"
-    mailing_list:
-      why: "Actividad en %{site_link} a %{date}"
-      subject_template: "[%{email_prefix}] Resumen del %{date}"
-      unsubscribe: "Este resumen se envía diariamente dado que el modo lista de correo está activado. Puedes darte de baja %{unsubscribe_link}."
-      from: "%{site_name} resumen"
-      new_topics: "Nuevos temas"
-      topic_updates: "Actualizaciones del tema"
-      view_this_topic: "Visita este tema"
-      back_to_top: "Volver al inicio"
     forgot_password:
       title: "Olvidé la Contraseña"
       subject_template: "[%{email_prefix}] Reestablecimiento de contraseña"

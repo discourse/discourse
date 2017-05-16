@@ -140,6 +140,7 @@ group :test, :development do
   gem 'spork-rails'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
+  gem "bundler-audit", require: false
 end
 
 group :development do

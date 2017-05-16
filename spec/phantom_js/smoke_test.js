@@ -9,7 +9,7 @@ if (system.args.length !== 2) {
   phantom.exit(1);
 }
 
-var TIMEOUT = 15000;
+var TIMEOUT = 25000;
 var page = require("webpage").create();
 
 page.viewportSize = {
@@ -141,6 +141,14 @@ var runTests = function() {
 
   test("at least one topic shows up", function() {
     return $(".topic-list tbody tr").length;
+  });
+
+  execAsync("go to categories page", 500, function(){
+    window.location = "/categories";
+  });
+
+  test("can see categories on the page", function() {
+    return $('.category-list').length;
   });
 
   execAsync("navigate to 1st topic", 500, function() {

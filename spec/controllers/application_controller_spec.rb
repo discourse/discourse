@@ -18,8 +18,15 @@ describe TopicsController do
   end
 
   describe "themes" do
+    let :theme do
+      Theme.create!(user_id: -1, name: 'bob', user_selectable: true)
+    end
+
+    let :theme2 do
+      Theme.create!(user_id: -1, name: 'bobbob', user_selectable: true)
+    end
+
     it "selects the theme the user has selected" do
-      theme = Theme.create!(user_id: -1, name: 'bob', user_selectable: true)
       user = log_in
       user.user_option.update_columns(theme_key: theme.key)
 
@@ -30,6 +37,26 @@ describe TopicsController do
 
       get :show, id: 666
       expect(controller.theme_key).not_to eq(theme.key)
+    end
+
+    it "can be overridden with a cookie" do
+      user = log_in
+      user.user_option.update_columns(theme_key: theme.key)
+
+      cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq}"
+
+      get :show, id: 666
+      expect(controller.theme_key).to eq(theme2.key)
+
+    end
+
+    it "cookie can fail back to user if out of sync" do
+      user = log_in
+      user.user_option.update_columns(theme_key: theme.key)
+      cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq-1}"
+
+      get :show, id: 666
+      expect(controller.theme_key).to eq(theme.key)
     end
   end
 

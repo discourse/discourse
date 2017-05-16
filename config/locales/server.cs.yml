@@ -730,11 +730,6 @@ cs:
       click_here: "klikněte zde"
       from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
-    mailing_list:
-      subject_template: "[%{site_name}] Přehled z %{date}"
-      unsubscribe: "Přehled je zasílán denně, protože je zapnut režim emailové konference. Pro zrušení zasílání %{unsubscribe_link}."
-      from: "%{site_name} - přehled"
-      new_topics: "Nová témata"
     account_created:
       title: "Účet vytvořen"
     signup_after_approval:

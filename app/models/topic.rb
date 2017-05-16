@@ -215,7 +215,7 @@ class Topic < ActiveRecord::Base
     if !@ignore_category_auto_close &&
        self.category &&
        self.category.auto_close_hours &&
-       !topic_timer&.execute_at
+       !public_topic_timer&.execute_at
 
       self.set_or_create_timer(
         TopicTimer.types[:close],
@@ -295,7 +295,7 @@ class Topic < ActiveRecord::Base
   def self.fancy_title(title)
     escaped = ERB::Util.html_escape(title)
     return unless escaped
-    HtmlPrettify.render(escaped)
+    Emoji.unicode_unescape(HtmlPrettify.render(escaped))
   end
 
   def fancy_title
@@ -698,6 +698,9 @@ SQL
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
+        # we can not remove ourselves cause then we will end up adding
+        # ourselves in add_small_action
+        removed_by = Discourse.system_user if user.id == removed_by&.id
         add_small_action(removed_by, "removed_user", user.username)
         return true
       end
@@ -953,12 +956,8 @@ SQL
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
-  def topic_timer
-    @topic_timer ||= topic_timers.first
-  end
-
-  def topic_status_update
-    topic_timer # will be used to filter timers unrelated to topic status
+  def public_topic_timer
+    topic_timers.where(deleted_at: nil, public_type: true).first
   end
 
   # Valid arguments for the time:
@@ -974,10 +973,11 @@ SQL
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
   def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    topic_timer = TopicTimer.find_or_initialize_by(
-      status_type: status_type,
-      topic: self
-    )
+    topic_timer = if TopicTimer.public_types[status_type]
+      TopicTimer.find_or_initialize_by( status_type: status_type, topic: self )
+    else
+      TopicTimer.find_or_initialize_by( status_type: status_type, topic: self, user: by_user )
+    end
 
     if time.blank?
       topic_timer.trash!(trashed_by: by_user || Discourse.system_user)

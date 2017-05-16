@@ -9,13 +9,15 @@ class TopicTimer < ActiveRecord::Base
   validates :topic_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
-  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }
+  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }, if: :public_type?
+  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at, :user_id] }, if: :private_type?
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :ensure_update_will_happen
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
+    self.public_type = self.public_type?
 
     if (execute_at_changed? && !execute_at_was.nil?) || user_id_changed?
       self.send("cancel_auto_#{self.class.types[status_type]}_job")
@@ -36,8 +38,17 @@ class TopicTimer < ActiveRecord::Base
       close: 1,
       open: 2,
       publish_to_category: 3,
-      delete: 4
+      delete: 4,
+      reminder: 5
     )
+  end
+
+  def self.public_types
+    @_public_types ||= types.except(:reminder)
+  end
+
+  def self.private_types
+    @_private_types ||= types.only(:reminder)
   end
 
   def self.ensure_consistency!
@@ -57,6 +68,14 @@ class TopicTimer < ActiveRecord::Base
     else
       0
     end
+  end
+
+  def public_type?
+    !!self.class.public_types[self.status_type]
+  end
+
+  def private_type?
+    !!self.class.private_types[self.status_type]
   end
 
   private
@@ -80,6 +99,10 @@ class TopicTimer < ActiveRecord::Base
 
     def cancel_auto_delete_job
       Jobs.cancel_scheduled_job(:delete_topic, topic_timer_id: id)
+    end
+
+    def cancel_auto_reminder_job
+      Jobs.cancel_scheduled_job(:topic_reminder, topic_timer_id: id)
     end
 
     def schedule_auto_open_job(time)
@@ -112,6 +135,10 @@ class TopicTimer < ActiveRecord::Base
 
     def schedule_auto_delete_job(time)
       Jobs.enqueue_at(time, :delete_topic, topic_timer_id: id)
+    end
+
+    def schedule_auto_reminder_job(time)
+      Jobs.enqueue_at(time, :topic_reminder, topic_timer_id: id)
     end
 end
 

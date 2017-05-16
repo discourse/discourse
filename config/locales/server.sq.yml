@@ -1194,13 +1194,6 @@ sq:
       unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
-    mailing_list:
-      unsubscribe: "Përmbledhja dërgohet përditë, duke qënë se faqja është në formatin \"mailing list\". %{unsubscribe_link} për t'u çabonuar."
-      from: "%{site_name} përmbledhje"
-      new_topics: "Tema të reja"
-      topic_updates: "Tema të azhornuara"
-      view_this_topic: "Shiko këtë temë"
-      back_to_top: "Kthehu sipër"
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për

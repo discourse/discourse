@@ -19,7 +19,8 @@ class UserOptionSerializer < ApplicationSerializer
              :email_in_reply_to,
              :like_notification_frequency,
              :include_tl0_in_digests,
-             :theme_key
+             :theme_key,
+             :theme_key_seq
 
 
   def auto_track_topics_after_msecs

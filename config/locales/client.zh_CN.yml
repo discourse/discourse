@@ -497,7 +497,6 @@ zh_CN:
         instructions: |
           此设置将覆盖活动摘要。<br />
           静音主题和分类不包含在这些邮件中。
-        daily: "发送每日更新"
         individual: "为每个新帖发送一封邮件通知"
         individual_no_echo: "为每个除了我发表的新帖发送一封邮件通知"
         many_per_day: "为每个新帖给我发送邮件 (大约每天 {{dailyEmailEstimate}} 封)"

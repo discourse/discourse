@@ -526,7 +526,6 @@ et:
         instructions: |
           See säte tõrjub tegevuste kokkuvõtte välja.<br />
           Vaigistatud teemad ja foorumid ei kajastu nendes meilides.
-        daily: "Saada igapäevased kokkuvõtted"
         individual: "Saada meil iga uue postituse kohta"
         individual_no_echo: "Saada meil iga uue postituse kohta, v.a. enda omad"
         many_per_day: "Saada mulle meil iga uue postituse kohta (umbes {{dailyEmailEstimate}} meili päevas)"
