@@ -16,7 +16,7 @@ class Admin::ThemesController < Admin::AdminController
       filename = params[:file]&.original_filename || File.basename(path)
       upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
       if upload.errors.count > 0
-        render json: upload.errors, status: :unprocessable_entity
+        render_json_error upload
       else
         render json: { upload_id: upload.id }, status: :created
       end
