@@ -2367,8 +2367,8 @@ en:
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
-      one: "To protect your inbox, we’ve temporarily put email notifications on hold for today, as the maximum of %{count} per day was reached."
-      other: "To protect your inbox, we’ve temporarily put email notifications on hold for today, as the maximum of %{count} per day was reached."
+      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
     unsubscribe:
       title: "Unsubscribe"
