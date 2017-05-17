@@ -114,7 +114,7 @@ class HtmlToMarkdown
 
   def visit_li(node)
     parent = @stack.reverse.find { |n| n.name[/ul|ol|menu/] }
-    prefix = parent.name == "ol" ? "1. " : "- "
+    prefix = parent&.name == "ol" ? "1. " : "- "
     @stack << Block.new("li", prefix, "  ")
     traverse(node)
     @markdown << format_block
@@ -209,7 +209,6 @@ class HtmlToMarkdown
   end
 
   def format_block
-
     lines = @stack[-1].markdown.each_line.map do |line|
       prefix = @stack.map { |b| b.opened ? b.body : b.head }.join
       @stack.each { |b| b.opened = true }
