@@ -397,7 +397,7 @@ class Topic < ActiveRecord::Base
 
   def reload(options=nil)
     @post_numbers = nil
-    @topic_timer = nil
+    @public_topic_timer = nil
     super(options)
   end
 
@@ -957,7 +957,7 @@ SQL
   end
 
   def public_topic_timer
-    topic_timers.where(deleted_at: nil, public_type: true).first
+    @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
 
   # Valid arguments for the time:
@@ -973,11 +973,9 @@ SQL
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
   def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    topic_timer = if TopicTimer.public_types[status_type]
-      TopicTimer.find_or_initialize_by( status_type: status_type, topic: self )
-    else
-      TopicTimer.find_or_initialize_by( status_type: status_type, topic: self, user: by_user )
-    end
+    topic_timer_options = { status_type: status_type, topic: self }
+    topic_timer_options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
+    topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
 
     if time.blank?
       topic_timer.trash!(trashed_by: by_user || Discourse.system_user)
@@ -1004,12 +1002,7 @@ SQL
       is_timestamp = time.is_a?(String)
       now = utc.now
 
-      if is_timestamp && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(time.strip)
-        # a time of day in client's time zone, like "15:00"
-        topic_timer.execute_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
-        topic_timer.execute_at += timezone_offset * 60 if timezone_offset
-        topic_timer.execute_at += 1.day if topic_timer.execute_at < now
-      elsif is_timestamp && time.include?("-") && timestamp = utc.parse(time)
+      if is_timestamp && time.include?("-") && timestamp = utc.parse(time)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
         topic_timer.execute_at += timezone_offset * 60 if timezone_offset
