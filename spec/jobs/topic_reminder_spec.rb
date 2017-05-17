@@ -50,5 +50,5 @@ describe Jobs::TopicReminder do
       }.to_not change { Notification.count }
     end
   end
-
+  
 end

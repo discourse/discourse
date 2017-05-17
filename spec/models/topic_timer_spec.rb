@@ -27,10 +27,13 @@ RSpec.describe TopicTimer, type: :model do
       end
 
       it 'should allow users to have their own private topic timer' do
-        Fabricate(:topic_timer, topic: topic, user: admin, status_type: TopicTimer.types[:reminder])
-        expect {
-          Fabricate(:topic_timer, topic: topic, user: Fabricate(:admin), status_type: TopicTimer.types[:reminder])
-        }.to_not raise_error
+        expect do
+          Fabricate(:topic_timer,
+            topic: topic,
+            user: Fabricate(:admin),
+            status_type: TopicTimer.types[:reminder]
+          )
+        end.to_not raise_error
       end
     end
 
@@ -220,7 +223,7 @@ RSpec.describe TopicTimer, type: :model do
       end
     end
 
-    describe 'public_type' do
+    describe '#public_type' do
       [:close, :open, :delete].each do |public_type|
         it "is true for #{public_type}" do
           timer = Fabricate(:topic_timer, status_type: described_class.types[public_type])

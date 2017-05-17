@@ -1154,34 +1154,6 @@ describe Topic do
       end
     end
 
-    it "can take a time later in the day" do
-      Timecop.freeze(now) do
-        topic.set_or_create_timer(TopicTimer.types[:close], '13:00', {by_user: admin})
-        expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,20,13,0))
-      end
-    end
-
-    it "can take a time later in the day, with timezone offset" do
-      Timecop.freeze(now) do
-        topic.set_or_create_timer(TopicTimer.types[:close], '13:00', {by_user: admin, timezone_offset: 240})
-        expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,20,17,0))
-      end
-    end
-
-    it "can take a time for the next day" do
-      Timecop.freeze(now) do
-        topic.set_or_create_timer(TopicTimer.types[:close], '5:00', {by_user: admin})
-        expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,21,5,0))
-      end
-    end
-
-    it "can take a time for the next day, with timezone offset" do
-      Timecop.freeze(now) do
-        topic.set_or_create_timer(TopicTimer.types[:close], '1:00', {by_user: admin, timezone_offset: 240})
-        expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,21,5,0))
-      end
-    end
-
     it "can take a timestamp for a future time" do
       Timecop.freeze(now) do
         topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', {by_user: admin})
