@@ -38,6 +38,11 @@ export default MountWidget.extend(Docking, {
     this.queueRerender(() => this.queueDockCheck());
   },
 
+  @observes('topic.details.notification_level')
+  _queueRerender() {
+    this.queueRerender();
+  },
+
   dockCheck(info) {
     const mainOffset = $('#main').offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;

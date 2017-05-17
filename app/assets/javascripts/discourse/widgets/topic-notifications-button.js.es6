@@ -91,9 +91,7 @@ export default createWidget('topic-notifications-button', {
   topicNotificationsButtonChanged(msg) {
     switch(msg.type) {
       case 'notification':
-        if (this.attrs.topic.get('details.notification_level') !== msg.id) {
-          this.notificationLevelChanged(msg.id);
-        }
+        this.notificationLevelChanged(msg.id);
         break;
     }
   }
