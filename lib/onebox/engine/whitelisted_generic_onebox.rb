@@ -205,7 +205,7 @@ module Onebox
 
           d[:description] ||= d[:summary]
           if !Onebox::Helpers.blank?(d[:description])
-            d[:description] = html_entities.decode(Onebox::Helpers.truncate(d[:description].strip, 250))
+            d[:description] = html_entities.decode(Sanitize.fragment(Onebox::Helpers.truncate(d[:description].strip, 250)))
           end
 
           if !Onebox::Helpers.blank?(d[:domain])
