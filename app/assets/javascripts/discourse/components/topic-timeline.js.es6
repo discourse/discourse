@@ -14,6 +14,7 @@ export default MountWidget.extend(Docking, {
       topic: this.get('topic'),
       topicTrackingState: this.topicTrackingState,
       enteredIndex: this.get('enteredIndex'),
+      dockAt: this.dockAt,
       dockBottom: this.dockBottom,
       mobileView: this.get('site.mobileView')
     };
