@@ -15,9 +15,19 @@ task "smoke:test" do
   require 'open-uri'
   require 'net/http'
 
-  res = Net::HTTP.get_response(URI.parse(url))
-  if res.code != "200"
-    raise "TRIVIAL GET FAILED WITH #{res.code}"
+  uri = URI(url)
+  request = Net::HTTP::Get.new(uri)
+
+  if ENV["AUTH_USER"] && ENV["AUTH_PASSWORD"]
+    request.basic_auth(ENV['AUTH_USER'], ENV['AUTH_PASSWORD'])
+  end
+
+  response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+    http.request(request)
+  end
+
+  if response.code != "200"
+    raise "TRIVIAL GET FAILED WITH #{response.code}"
   end
 
   results = ""
