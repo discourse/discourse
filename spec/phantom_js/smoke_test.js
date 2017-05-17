@@ -12,6 +12,11 @@ if (system.args.length !== 2) {
 var TIMEOUT = 25000;
 var page = require("webpage").create();
 
+if (system.env["AUTH_USER"] && system.env["AUTH_PASSWORD"]) {
+  page.settings.userName = system.env["AUTH_USER"];
+  page.settings.password = system.env["AUTH_PASSWORD"];
+}
+
 page.viewportSize = {
   width: 1366,
   height: 768
@@ -137,6 +142,10 @@ var runTests = function() {
 
   test("expect a log in button", function() {
     return $(".login-button").text().trim() === "Log In";
+  });
+
+  execAsync("go to latest page", 500, function(){
+    window.location = "/latest";
   });
 
   test("at least one topic shows up", function() {
