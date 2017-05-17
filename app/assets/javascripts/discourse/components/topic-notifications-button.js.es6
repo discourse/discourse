@@ -15,5 +15,6 @@ export default MountWidget.extend({
 
   didInsertElement() {
     this._super();
+    this.dispatch('topic-notifications-button:changed', 'topic-notifications-button');
   }
 });
