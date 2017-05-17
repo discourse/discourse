@@ -405,8 +405,8 @@ describe UserNotifications do
 
     # WARNING: you reached the limit of 100 email notifications per day. Further emails will be suppressed.
     # Consider watching less topics or disabling mailing list mode.
-    expect(mail.html_part.to_s).to match("WARNING: ")
-    expect(mail.body.to_s).to match("WARNING: ")
+    expect(mail.html_part.to_s).to match("To protect your inbox")
+    expect(mail.body.to_s).to match("To protect your inbox")
   end
 
   def expects_build_with(condition)
