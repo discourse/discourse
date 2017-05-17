@@ -39,12 +39,16 @@ module Email
 
     def process!
       return if is_blacklisted?
-      @from_email, @from_display_name = parse_from_field(@mail)
-      @incoming_email = find_or_create_incoming_email
-      process_internal
-    rescue => e
-      @incoming_email.update_columns(error: e.to_s) if @incoming_email
-      raise
+      DistributedMutex.synchronize(@message_id) do
+        begin
+          @from_email, @from_display_name = parse_from_field(@mail)
+          @incoming_email = find_or_create_incoming_email
+          process_internal
+        rescue => e
+          @incoming_email.update_columns(error: e.to_s) if @incoming_email
+          raise
+        end
+      end
     end
 
     def is_blacklisted?
