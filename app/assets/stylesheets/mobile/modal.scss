@@ -34,14 +34,14 @@
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
-  padding: 10px 0 10px 10px;
-  width: 95%;
+  padding: 10px;
 }
 
 // we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
-  padding-right: 0;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 .modal-footer .btn + .btn {
