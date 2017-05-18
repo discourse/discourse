@@ -1306,7 +1306,7 @@ nl:
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
     wait_approval: "Bedankt voor het registreren. We laten u weten wanneer uw account is goedgekeurd."
     active: "Uw account is geactiveerd en gereed voor gebruik."
-    activate_email: "<p>U bent er bijna! We hebben een activeringsmail naar<b>%{email}</b> gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, contoleer dan uw spammap.</p>"
+    activate_email: "<p>U bent er bijna! We hebben een activeringsmail naar <b>%{email}</b> gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, contoleer dan uw spammap.</p>"
     not_activated: "U kunt zich nog niet aanmelden. We hebben u een activeringsmail gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren."
     not_allowed_from_ip_address: "U kunt zich niet als %{username} aanmelden vanaf dat IP-adres."
     admin_not_allowed_from_ip_address: "U kunt zich niet als beheerder aanmelden vanaf dat IP-adres."
