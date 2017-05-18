@@ -311,7 +311,7 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).find_by_email(params[:email].strip.downcase)
+    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
       user_params.each { |k, v| user.send("#{k}=", v) }
       user.staged = false
     else
@@ -491,7 +491,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.includes(:primary_email).where(user_emails: { email: params[:email] }, admin: true).human_users.first
+      user = User.with_email(params[:email]).where(admin: true).human_users.first
       if user
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)

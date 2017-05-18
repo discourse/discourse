@@ -125,6 +125,8 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
+  scope :with_email, -> email { includes(:primary_email).where(user_emails: { email: email }) }
+
   scope :human_users, -> { where('users.id > 0') }
 
   # excluding fake users like the system user or anonymous users
