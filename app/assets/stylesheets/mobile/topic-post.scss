@@ -58,38 +58,40 @@ button.like-count {
   padding: 8px 4px;
 }
 
-button {
-  border: none;
-  font-size: 1.214em;
-  padding: 8px 10px;
-  vertical-align: top;
-  background: transparent;
-  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
-  float: left;
-  &.hidden {
-    display: none;
-  }
-  &.admin {
-    position: relative;
-  }
-  &.expand-post {
-    margin:10px 0 10px 0;
-  }
-  &.has-like {color: $love;}
+.topic-post {
+  button {
+    border: none;
+    font-size: 1.214em;
+    padding: 8px 10px;
+    vertical-align: top;
+    background: transparent;
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    float: left;
+    &.hidden {
+      display: none;
+    }
+    &.admin {
+      position: relative;
+    }
+    &.expand-post {
+      margin:10px 0 10px 0;
+    }
+    &.has-like {color: $love;}
 
-  .read-icon {
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f02e";
-    }
-    &.unseen {
+    .read-icon {
       &:before {
-        content: "\f097";
+        font-family: "FontAwesome";
+        content: "\f02e";
       }
-    }
-    &.bookmarked {
-      &:before {
-        color: $tertiary;
+      &.unseen {
+        &:before {
+          content: "\f097";
+        }
+      }
+      &.bookmarked {
+        &:before {
+          color: $tertiary;
+        }
       }
     }
   }

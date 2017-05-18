@@ -45,6 +45,9 @@
 
 .topic-status-info {
   margin-left: 10px;
+  h3 {
+    margin: 0;
+  }
 }
 
 .docked #topic-progress {
@@ -193,4 +196,16 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 .topic-timeline {
   .start-date { font-size: 110%; padding: 5px; }
   .now-date { font-size: 110%; padding: 5px; }
+}
+
+.edit-topic-timer-modal {
+  .auto-update-input {
+    .alert-info {
+      margin: 0 -10px -10px -10px;
+      padding: 10px;
+    }
+  }
+  .btn.pull-right {
+    margin-right: 0;
+  }
 }
