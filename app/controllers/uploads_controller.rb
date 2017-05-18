@@ -5,9 +5,8 @@ class UploadsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
-    type = params.require(:type)
-
-    raise Discourse::InvalidAccess.new unless Upload::UPLOAD_TYPES.include?(type)
+    # 50 characters ought to be enough for the upload type
+    type = params.require(:type).parameterize("_")[0..50]
 
     if type == "avatar" && (SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
       return render json: failed_json, status: 422
