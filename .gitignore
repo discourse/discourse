@@ -10,6 +10,8 @@ dump.rdb
 
 bin/*
 
+data/
+
 .sass-cache/*
 public/csv/*
 public/plugins/*
