@@ -55,7 +55,7 @@ class UploadsController < ApplicationController
   protected
 
   def render_404
-    render nothing: true, status: 404
+    raise Discourse::NotFound
   end
 
   def create_upload(file, url, type)
