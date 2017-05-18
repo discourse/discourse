@@ -110,7 +110,7 @@ function run() {
         });
       } else if (action.exec) {
         console.log("EXEC: " + action.desc);
-        page.evaluate(action.exec);
+        page.evaluate(action.exec, system);
         performNextAction();
       } else if (action.execAsync) {
         console.log("EXEC ASYNC: " + action.desc + " - " + action.delay + "ms");
@@ -186,9 +186,9 @@ var runTests = function() {
     return $(".login-modal").length;
   });
 
-  exec("type in credentials & log in", function() {
-    $("#login-account-name").val("smoke_user").trigger("change");
-    $("#login-account-password").val("P4ssw0rd").trigger("change");
+  exec("type in credentials & log in", function(system) {
+    $("#login-account-name").val(system.env['DISCOURSE_USERNAME'] || 'smoke_user').trigger("change");
+    $("#login-account-password").val(system.env["DISCOURSE_PASSWORD"] || 'P4ssw0rd').trigger("change");
     $(".login-modal .btn-primary").click();
   });
 
