@@ -29,6 +29,9 @@
        if (!window.opener) {
          localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
          window.location.href = '<%= Discourse.base_url.html_safe %>?authComplete=true';
+       } else if (window.opener == null){
+         localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
+         window.location.href = '<%= Discourse.base_url.html_safe %>';         
        } else {
          window.opener.Discourse.authenticationComplete(authResult);
          window.close();
