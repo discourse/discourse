@@ -160,6 +160,13 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
     end
 
+    it "doesn't process email with same message-id more than once" do
+      expect do
+        process(:text_reply)
+        process(:text_reply)
+      end.to change { topic.posts.count }.by(1)
+    end
+
     it "handles different encodings correctly" do
       expect { process(:hebrew_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("שלום! מה שלומך היום?")
