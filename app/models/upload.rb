@@ -22,7 +22,7 @@ class Upload < ActiveRecord::Base
   validates_with ::Validators::UploadValidator
 
   CROPPED_TYPES ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
-  UPLOAD_TYPES  ||= CROPPED_TYPES + %w{composer category_logo category_background}.each(&:freeze)
+  UPLOAD_TYPES  ||= CROPPED_TYPES + %w{composer category_logo category_background wizard_logo_url wizard_logo_small_url wizard_favicon_url wizard_apple_touch_icon_url}.each(&:freeze)
 
   def thumbnail(width = self.width, height = self.height)
     optimized_images.find_by(width: width, height: height)
