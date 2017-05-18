@@ -31,7 +31,7 @@ class SingleSignOn
       end
     end
 
-    decoded = Base64.decode64(parsed["sso"])
+    decoded = Base64.strict_decode64(parsed["sso"])
     decoded_hash = Rack::Utils.parse_query(decoded)
 
     ACCESSORS.each do |k|
@@ -78,7 +78,7 @@ class SingleSignOn
   end
 
   def payload
-    payload = Base64.encode64(unsigned_payload)
+    payload = Base64.strict_encode64(unsigned_payload)
     "sso=#{CGI::escape(payload)}&sig=#{sign(payload)}"
   end
 
