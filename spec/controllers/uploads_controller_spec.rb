@@ -33,18 +33,13 @@ describe UploadsController do
         })
       end
 
-      it 'fails if type is invalid' do
-        xhr :post, :create, file: logo, type: "invalid type cause has space"
-        expect(response.status).to eq 403
+      it 'expects a type' do
+        expect { xhr :post, :create, file: logo }.to raise_error(ActionController::ParameterMissing)
+      end
 
-        xhr :post, :create, file: logo, type: "\\invalid"
-        expect(response.status).to eq 403
-
-        xhr :post, :create, file: logo, type: "invalid."
-        expect(response.status).to eq 403
-
-        xhr :post, :create, file: logo, type: "toolong"*100
-        expect(response.status).to eq 403
+      it 'parameterize the type' do
+        subject.expects(:create_upload).with(logo, nil, "super_long_type_with_charssuper_long_type_with_char")
+        xhr :post, :create, file: logo, type: "super \# long \//\\ type with \\. $%^&*( chars" * 5
       end
 
       it 'is successful with an image' do
