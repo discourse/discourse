@@ -335,7 +335,7 @@ export default function() {
     this.delete('/admin/badges/:id', success);
 
     this.get('/onebox', request => {
-      if (request.queryParams.url === 'http://www.example.com/has-title.html') {
+      if (request.queryParams.url.startsWith('http://www.example.com/has-title')) {
         return [
           200,
           {"Content-Type": "application/html"},
