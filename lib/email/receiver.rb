@@ -41,8 +41,9 @@ module Email
       return if is_blacklisted?
       DistributedMutex.synchronize(@message_id) do
         begin
+          return if IncomingEmail.exists?(message_id: @message_id)
           @from_email, @from_display_name = parse_from_field(@mail)
-          @incoming_email = find_or_create_incoming_email
+          @incoming_email = create_incoming_email
           process_internal
         rescue => e
           @incoming_email.update_columns(error: e.to_s) if @incoming_email
@@ -56,14 +57,15 @@ module Email
       Regexp.new(SiteSetting.ignore_by_title) =~ @mail.subject
     end
 
-    def find_or_create_incoming_email
-      IncomingEmail.find_or_create_by(message_id: @message_id) do |ie|
-        ie.raw = @raw_email
-        ie.subject = subject
-        ie.from_address = @from_email
-        ie.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
-        ie.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
-      end
+    def create_incoming_email
+      IncomingEmail.create(
+        message_id: @message_id,
+        raw: @raw_email,
+        subject: subject,
+        from_address: @from_email,
+        to_addresses: @mail.to&.map(&:downcase)&.join(";"),
+        cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
+      )
     end
 
     def process_internal
