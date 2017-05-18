@@ -3,7 +3,8 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Composer topic featured links", {
   loggedIn: true,
   settings: {
-    topic_featured_link_enabled: true
+    topic_featured_link_enabled: true,
+    max_topic_title_length: 80
   }
 });
 
@@ -50,5 +51,16 @@ test("ignore internal links", () => {
     equal(find('.d-editor-preview').html().trim().indexOf('onebox'), -1, "onebox preview doesn't show");
     equal(find('.d-editor-input').val().length, 0, "link isn't put into the post");
     equal(find('.title-input input').val(), title, "title is unchanged");
+  });
+});
+
+test("link is longer than max title length", () => {
+  visit("/");
+  click('#create-topic');
+  fillIn('#reply-title', "http://www.example.com/has-title-and-a-url-that-is-more-than-80-characters-because-thats-good-for-seo-i-guess.html");
+  andThen(() => {
+    ok(find('.d-editor-preview').html().trim().indexOf('onebox') > 0, "it pastes the link into the body and previews it");
+    ok(exists('.d-editor-textarea-wrapper .popup-tip.good'), 'the body is now good');
+    equal(find('.title-input input').val(), "An interesting article", "title is from the oneboxed article");
   });
 });
