@@ -21,6 +21,9 @@ input {
   box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 }
+input[type=radio], input[type=checkbox] {
+  box-shadow: none;
+}
 
 #reply-control {
   // used for upload link
