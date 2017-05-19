@@ -248,6 +248,12 @@
   h2 {
     margin: 20px 0 10px;
   }
+  .show-more.has-topics {
+    top: 0;
+    .alert {
+      padding: 12px 35px 12px 14px;
+    }
+  }
 }
 
 .category-dropdown-menu {
