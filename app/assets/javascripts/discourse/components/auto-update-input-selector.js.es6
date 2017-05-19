@@ -7,6 +7,7 @@ const TOMORROW = 'tomorrow';
 const LATER_THIS_WEEK = 'later_this_week';
 const THIS_WEEKEND = 'this_weekend';
 const NEXT_WEEK = 'next_week';
+const NEXT_MONTH = 'next_month';
 export const PICK_DATE_AND_TIME = 'pick_date_and_time';
 export const SET_BASED_ON_LAST_POST = 'set_based_on_last_post';
 
@@ -54,6 +55,13 @@ export default Combobox.extend({
       selections.push({
         id: NEXT_WEEK,
         name: I18n.t('topic.auto_update_input.next_week')
+      });
+    }
+
+    if (moment().endOf('month').date() !== now.date()) {
+      selections.push({
+        id: NEXT_MONTH,
+        name: I18n.t('topic.auto_update_input.next_month')
       });
     }
 
@@ -111,6 +119,8 @@ export default Combobox.extend({
     if (time) {
       if (state.id === LATER_TODAY) {
         time = time.format('h a');
+      } else if (state.id === NEXT_MONTH) {
+        time = time.format('MMM D, h a');
       } else {
         time = time.format('ddd, h a');
       }
@@ -155,6 +165,10 @@ export default Combobox.extend({
         break;
       case NEXT_WEEK:
         time = time.add(1, 'week').day(1).hour(timeOfDay).minute(0);
+        icon = 'briefcase';
+        break;
+      case NEXT_MONTH:
+        time = time.add(1, 'month').startOf('month').hour(timeOfDay).minute(0);
         icon = 'briefcase';
         break;
       case PICK_DATE_AND_TIME:
