@@ -120,7 +120,7 @@ export default Combobox.extend({
       if (state.id === LATER_TODAY) {
         time = time.format('h a');
       } else if (state.id === NEXT_MONTH) {
-        time = time.format('MMM D, h a');
+        time = time.format('MMM D');
       } else {
         time = time.format('ddd, h a');
       }
