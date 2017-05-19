@@ -639,40 +639,48 @@ en:
     off_topic:
       title: 'Off-Topic'
       description: 'This post is not relevant to the current discussion as defined by the title and first post, and should probably be moved elsewhere.'
+      short_description: 'Not relevant to the discussion'
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
       description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
+      short_description: 'This is an advertisement'
       long_form: 'flagged this as spam'
       email_title: '"%{title}" was flagged as spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriate'
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
+      short_description: 'A violation of <a href="/guidelines">our community guidelines</a>'
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Send @{{username}} a message'
       description: 'I want to talk to this person directly and privately about their post.'
+      short_description: 'I want to talk to this person directly and privately about their post.'
       long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Something Else"
       description: 'This post requires staff attention for another reason not listed above.'
+      short_description: 'Requires staff attention for another reason'
       long_form: 'flagged this for staff attention'
       email_title: 'A post in "%{title}" requires staff attention'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bookmark'
       description: 'Bookmark this post'
+      short_description: 'Bookmark this post'
       long_form: 'bookmarked this post'
     like:
       title: 'Like'
       description: 'Like this post'
+      short_description: 'Like this post'
       long_form: 'liked this'
     vote:
       title: 'Vote'
       description: 'Vote for this post'
+      short_description: 'Vote for this post'
       long_form: 'voted for this post'
 
   user_activity:
