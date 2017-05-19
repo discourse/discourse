@@ -197,7 +197,8 @@ var runTests = function() {
   });
 
   exec("go home", function() {
-    $('#site-logo').click();
+    if ($('#site-logo').length()) $('#site-logo').click();
+    if ($('#site-text-logo').length()) $('#site-text-logo').click();
   });
 
   test("it shows a topic list", function() {
