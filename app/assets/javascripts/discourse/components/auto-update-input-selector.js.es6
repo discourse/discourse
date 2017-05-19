@@ -110,9 +110,9 @@ export default Combobox.extend({
 
     if (time) {
       if (state.id === LATER_TODAY) {
-        time = time.format('hh:mm a');
+        time = time.format('h a');
       } else {
-        time = time.format('ddd, hh:mm a');
+        time = time.format('ddd, h a');
       }
     }
 
