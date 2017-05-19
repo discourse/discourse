@@ -476,6 +476,17 @@ describe PostsController do
             expect(PostAction.find_by(id: post_action.id)).to eq(nil)
           end
         end
+
+        describe "when post has been deleted" do
+          it "should still be able to remove a bookmark" do
+            post = post_action.post
+            post.trash!
+
+            xhr :put, :bookmark, post_id: post.id
+
+            expect(PostAction.find_by(id: post_action.id)).to eq(nil)
+          end
+        end
       end
 
     end
