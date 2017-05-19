@@ -53,11 +53,6 @@ nav.post-controls {
   margin-left: 10px;
 }
 
-button.like-count {
-  font-size: 1em;
-  padding: 8px 4px;
-}
-
 .topic-post {
   button {
     border: none;
@@ -94,6 +89,11 @@ button.like-count {
         }
       }
     }
+  }
+
+  button.like-count {
+    font-size: 1em;
+    padding: 8px 4px;
   }
 }
 
