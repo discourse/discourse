@@ -330,42 +330,71 @@ describe Guardian do
   end
 
   describe 'can_invite_to?' do
-    let(:group) { Fabricate(:group) }
-    let(:category) { Fabricate(:category, read_restricted: true) }
-    let(:topic) { Fabricate(:topic) }
-    let(:private_topic) { Fabricate(:topic, category: category) }
-    let(:user) { topic.user }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
-    let(:private_category)  { Fabricate(:private_category, group: group) }
-    let(:group_private_topic) { Fabricate(:topic, category: private_category) }
-    let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
 
-    it 'handles invitation correctly' do
-      expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
-      expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
-      expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-      expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+    describe "regular topics" do
+      let(:group) { Fabricate(:group) }
+      let(:category) { Fabricate(:category, read_restricted: true) }
+      let(:topic) { Fabricate(:topic) }
+      let(:private_topic) { Fabricate(:topic, category: category) }
+      let(:user) { topic.user }
+      let(:moderator) { Fabricate(:moderator) }
+      let(:admin) { Fabricate(:admin) }
+      let(:private_category)  { Fabricate(:private_category, group: group) }
+      let(:group_private_topic) { Fabricate(:topic, category: private_category) }
+      let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
+      let(:pm) { Fabricate(:topic) }
 
-      SiteSetting.max_invites_per_day = 0
+      it 'handles invitation correctly' do
+        expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
+        expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
 
-      expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
-      # staff should be immune to max_invites_per_day setting
-      expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
+        SiteSetting.max_invites_per_day = 0
+
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        # staff should be immune to max_invites_per_day setting
+        expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
+      end
+
+      it 'returns false for normal user on private topic' do
+        expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
+      end
+
+      it 'returns true for admin on private topic' do
+        expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
+      end
+
+      it 'returns true for a group owner' do
+        expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
+      end
     end
 
-    it 'returns false for normal user on private topic' do
-      expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
-    end
+    describe "private messages" do
+      let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      let!(:pm) { Fabricate(:private_message_topic, user: user) }
+      let(:admin) { Fabricate(:admin) }
 
-    it 'returns true for admin on private topic' do
-      expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
-    end
+      context "when private messages are disabled" do
+        it "allows an admin to invite to the pm" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_truthy
+        end
+      end
 
-    it 'returns true for a group owner' do
-      expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
+      context "when private messages are disabled" do
+        before do
+          SiteSetting.enable_private_messages = false
+        end
+
+        it "doesn't allow a regular user to invite" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+      end
     end
   end
+
 
   describe 'can_invite_via_email?' do
     it 'returns true for all (tl2 and above) users when sso is disabled, local logins are enabled, user approval is not required' do
