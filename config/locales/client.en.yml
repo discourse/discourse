@@ -1511,6 +1511,7 @@ en:
         later_this_week: "Later this week"
         this_weekend: "This weekend"
         next_week: "Next week"
+        next_month: "Next month"
         pick_date_and_time: "Pick date and time"
         set_based_on_last_post: "Close based on last post"
       publish_to_category:
