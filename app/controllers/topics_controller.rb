@@ -183,6 +183,10 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.permit(:post_ids)
 
+    posts = Post.where(id: params[:post_ids])
+
+    posts.each { |post| guardian.ensure_can_see_post!(post) }
+
     @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
     render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
   end
