@@ -2,7 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 function exportEntityByType(type, entity, args) {
   return ajax("/export_csv/export_entity.json", {
     method: 'POST',
-    data: {entity_type: type, entity, args}
+    data: {entity, args}
   });
 }
 
