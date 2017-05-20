@@ -149,7 +149,7 @@ export default Combobox.extend({
     switch(selection) {
       case LATER_TODAY:
         time = time.hour(18).minute(0);
-        icon = 'desktop';
+        icon = 'moon-o';
         break;
       case TOMORROW:
         time = time.add(1, 'day').hour(timeOfDay).minute(0);
