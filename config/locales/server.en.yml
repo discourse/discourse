@@ -643,8 +643,8 @@ en:
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
-      description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
-      short_description: 'This is an advertisement'
+      description: 'This post is an advertisement, or vandalism. It is not useful or relevant to the current topic.'
+      short_description: 'This is an advertisement or vandalism'
       long_form: 'flagged this as spam'
       email_title: '"%{title}" was flagged as spam'
       email_body: "%{link}\n\n%{message}"
