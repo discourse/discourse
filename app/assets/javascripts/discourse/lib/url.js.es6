@@ -155,12 +155,27 @@ const DiscourseURL = Ember.Object.extend({
     It contains the logic necessary to route within a topic using replaceState to
     keep the history intact.
   **/
+
+  isInternalPathButNotEmber: function(path){
+   /*
+   RSSwhitelist = ["posts.rss", "support.rss", "bug.rss", "feature.rss", "dev.rss", "ux.rss", "installation.rss",
+   "meta.rss", "marketplace.rss", "hosting.rss", "howto.rss", "plugin.rss", "praise.rss", "blog.rss", "faq.rss", "releases.rss"];
+
+   This array contains some of the .rss routes on Discourse, several of them are categories, and the method is
+   extracting the .rss route and verifying if the indexOf is >= to zero.
+   */
+
+   let pathStripped =  path.split("/").pop();
+   return path.indexOf(pathStripped) >= 0;
+
+  },
+
   routeTo(path, opts) {
     opts = opts || {};
 
     if (Em.isEmpty(path)) { return; }
 
-    if (Discourse.get('requiresRefresh')) {
+    if (Discourse.get('requiresRefresh') || this.isInternalPathButNotEmber(path)) {
       document.location.href = Discourse.getURL(path);
       return;
     }
