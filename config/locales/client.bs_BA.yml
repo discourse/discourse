@@ -966,7 +966,6 @@ bs_BA:
       cannot_see_mention:
         category: "Spomenuli ste {{username}} ali isti neće biti obavješteni zbog toga što nemaju pristup ovoj kategoriji. Morate ih dodati u Grupu koja ima pristup ka ovoj kategoriji."
         private: "Spomenuli ste {{username}} ali isti neće biti obaviješteni zbog toga što nisu u mogućnosti da vide ovu personalnu poruku. Morate ih prvobitno pozvati u ovu PP tj. Personalnu poruku."
-      duplicate_link: "Izgleda da je vaš link ka <b>{{domain}}</b> već objavljen u temi od strane <b>@{{username}}</b> u <a href='{{post_url}}'>odgovoru {{ago}}</a> – da li ste sigurni da želite isti ponovo objaviti?"
       error:
         title_missing: "Naslov je obavezan"
         title_too_short: "Naslov mora biti najmanje {{min}} karaktera"
@@ -1164,10 +1163,8 @@ bs_BA:
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Change Category"
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
-        notification_level: "Change Notification Level"
         choose_new_category: "Izaberi novu kategoriju za temu:"
         choose_new_tags: "Odaberi nove tagove za ove teme:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
@@ -1673,8 +1670,6 @@ bs_BA:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
-    badges:
-      multiple_grant: "nagrađen više puta"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:

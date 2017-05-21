@@ -824,8 +824,6 @@ tr_TR:
     external_system_avatars_enabled: "Dışsal sistem avatarları hizmeti kullan."
     default_opengraph_image_url: "Öntanımlı opengraph imajının URL'si."
     allow_all_attachments_for_group_messages: "Grup iletileri için tüm e-posta eklentilerine izin ver."
-    convert_pasted_images_to_hq_jpg: "Yapıştırılan resimleri yüksek kaliteli JPG dosyalarına dönüştür."
-    convert_pasted_images_quality: "Dönüştürülen JPG dosyasının kalitesi (1 en düşük kalite, 100 en iyi kalite)"
     enable_flash_video_onebox: "Kutularda swf ve flv (Adobe Flash) yerleştirmelerine izin ver. UYARI: güvenlik açıkları doğurabilir"
     default_invitee_trust_level: "Davet edilen kullanıcılar için öntanımlı güven seviyesi (0-4)."
     default_trust_level: "Tüm yeni kullanıcılar için öntanımlı güven seviyesi (0-4). DİKKAT! Bu ayarı değiştirmeniz ciddi seviyede istenmeyen gönderi riski doğurabilir."
@@ -1261,18 +1259,6 @@ tr_TR:
       text_body_template: "Toplu davet dosyanız işlendi, %{sent} davetiye gönderildi. "
     bulk_invite_failed:
       subject_template: "Toplu davet gönderiminde hata oluştu"
-      text_body_template: |
-        Toplu davet dosyanız işlendi, %{sent} davetiye %{failed} hata(lar) ile gönderildi.
-
-
-        Kayıtları aşağıda bulabilirsiniz:
-
-
-        ```
-
-        %{logs}
-
-        ```
     csv_export_succeeded:
       subject_template: "Dışarı veri aktarımı tamamlandı"
     csv_export_failed:

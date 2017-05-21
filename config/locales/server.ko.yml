@@ -953,14 +953,6 @@ ko:
       text_body_template: "대량 사용자 초대가 진행되어 %{sent}개의 초대장을 보냈습니다."
     bulk_invite_failed:
       subject_template: "대량 사용자 초대 중 오류가 났습니다."
-      text_body_template: |
-        대량 유저 초대 파일이 처리됐습니다. %{sent}개의 초대장이 보내졌고 %{failed}개의 에러 (전송안됨)가 났습니다.
-
-        로그:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "데이터 추출이 완료되었습니다."
     csv_export_failed:

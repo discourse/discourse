@@ -754,6 +754,7 @@ he:
         rescinded: "הזמנה הוסרה"
         reinvite: "משלוח חוזר של הזמנה"
         reinvite_all: "שלח מחדש את כל ההזמנות"
+        reinvite_all_confirm: "האם אתם בטוחים שאתם מעוניינים לשלוח מחדש את כל ההזמנות?"
         reinvited: "ההזמנה נשלחה שוב"
         reinvited_all: "כל ההזמנות נשלחו מחדש!"
         time_read: "זמן קריאה"
@@ -1029,7 +1030,6 @@ he:
       cannot_see_mention:
         category: "הזכרתם את {{username}} אבל הוא/היא לא יקבלו התראה כיוון שאין להם גישה לקטגוריה זו. תצטרכו להוסיף אותם לקבוצה שיש לה גישה לקטגוריה הזו."
         private: "הזכרתם את {{username}} אבל הוא/היא לא יקבלו התראה כיוון שהם לא יכולים לראות את ההודעה הפרטית הזו. תצטרכו להזמין אותם להודעה פרטית זו."
-      duplicate_link: "נראה שהקישור שלכם ל <b>{{domain}}</b> כבר פורסם בנושא זה על ידי <b>@{{username}}</b> ב <a href='{{post_url}}'>תגובה {{ago}}</a> - האם אתם בטוחים שאתם מעוניינים לפרסם אותו שוב?"
       error:
         title_missing: "יש להזין כותרת."
         title_too_short: "על הכותרת להיות באורך {{min}} תווים לפחות."
@@ -1235,6 +1235,7 @@ he:
         select_all: "בחרו הכל"
         clear_all: "נקו הכל"
         unlist_topics: "הסרת נושאים"
+        relist_topics: "רשימה מחדש של נושאים"
         reset_read: "איפוס נקראו"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"
@@ -1245,10 +1246,10 @@ he:
         dismiss_new: "ביטול חדשים"
         toggle: "החלף קבוצה מסומנת של נושאים"
         actions: "מקבץ פעולות"
-        change_category: "שינוי קטגוריה"
+        change_category: "קביעת קטגוריה"
         close_topics: "סגירת נושאים"
         archive_topics: "ארכוב נושאים"
-        notification_level: "שינוי רמת התראה"
+        notification_level: "התראות"
         choose_new_category: "בחרו את הקטגוריה עבור הנושאים:"
         selected:
           one: "בחרתם נושא <b>אחד</b>."
@@ -1374,11 +1375,14 @@ he:
         label: "שעות סגירת שעות אוטומטית:"
         error: "אנא הכניסו ערך תקין."
         based_on_last_post: "אל תסגרו עד שהפוסט האחרון בנושא הוא לפחות בגיל זה."
+      auto_delete:
+        title: "מחיקה-אוטומטית של נושא"
       status_update_notice:
         auto_open: "נושא זה ייפתח אוטומטית %{timeLeft}."
         auto_close: "נושא זו ייסגר אוטומטית %{timeLeft}."
         auto_publish_to_category: "נושא זה יפורסם ל-<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "נושא זה ייסגר %{duration} אחרי התגובה האחרונה."
+        auto_delete: "נושא זה יימחק אוטומטית %{timeLeft}."
       auto_close_title: 'הגדרות סגירה אוטומטית'
       auto_close_immediate:
         one: "הפוסט האחרון בנושא הוא כבר בן שעה, אז הנושא ייסגר מיידית."
@@ -2135,8 +2139,8 @@ he:
       granted_on: "הוענק לפני %{date}"
       others_count: "אחרים עם עיטור זה (%{count})"
       title: עיטורים
-      allow_title: "כותרת פנויה"
-      multiple_grant: "ניתן מספר פעמים"
+      allow_title: "אתם יכולים להשתמש בעיטור זה ככותרת"
+      multiple_grant: "אתם יכולים לזכות בזאת מספר פעמים"
       badge_count:
         one: "1 עיטורים"
         other: "%{count} עיטורים"
@@ -2605,10 +2609,15 @@ he:
           color_scheme_select: "בחירת צבעים לשימוש על ידי תמה"
           custom_sections: "אזורים מותאמים אישית:"
           theme_components: "רכיבי התמה"
+          uploads: "העלאות"
+          add_upload: "הוספת העלאה"
+          variable_name: "שם משתנה SCSS:"
+          upload: "העלאה"
           child_themes_check: "תמה כוללת תמות בנות אחרות"
           css_html: "CSS/HTML מותאמים"
           edit_css_html: "עריכת CSS/HTML"
           edit_css_html_help: "לא ערכתם אף CSS או HTML"
+          delete_upload_confirm: "למחוק העלאה זו? (תמת CSS עלולה להפסיק לעבוד!)"
           import_web_tip: "מאגר שמכיל תמה"
           import_file_tip: "קובץ .dcstyle.json שמכיל תמה"
           about_theme: "אודות התמה"
@@ -3204,6 +3213,7 @@ he:
         sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> ב URL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
+        class_name: "שם מחלקה"
         path_whitelist: "רשימה לבנה של נתיבים"
         edit: "ערוך"
         category: "פרסם לקטגוריה"
@@ -3222,7 +3232,8 @@ he:
         embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
         embed_classname_whitelist: "שמות מחלקות CSS מאושרות"
         feed_polling_enabled: "יבוא פרסומים דרך RSS/ATOM"
-        feed_polling_url: "URL של RSS/ATOM לזחילה"
+        feed_polling_url: "URL של תזרים RSS/ATOM לזחילה"
+        feed_polling_frequency_mins: "תדירות משיכת תזרים (בדקות)"
         save: "שמור הגדרות הטמעה"
       permalink:
         title: "קישורים קבועים"

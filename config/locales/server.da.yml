@@ -347,10 +347,6 @@ da:
           attributes:
             name:
               taken: er allerede i brug af en anden emoji
-        topic_status_update:
-          attributes:
-            execute_at:
-              in_the_past: "skal være i fremtiden."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig”-feltet på din profil er pt. tomt, <a href='/u/%{username_lower}/preferences/about-me'>ønsker du at udfylde det?</a></div>"

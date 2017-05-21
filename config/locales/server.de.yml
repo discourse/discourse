@@ -346,10 +346,6 @@ de:
           attributes:
             name:
               taken: wird schon von einem anderen Emoji verwendet
-        topic_status_update:
-          attributes:
-            execute_at:
-              in_the_past: "muss in der Zukunft liegen."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das „Über mich“-Feld in deinem Profil ist aktuell leer, <a href='/u/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
@@ -1055,8 +1051,6 @@ de:
     default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
     twitter_summary_large_image_url: "URL des Bildes, das standardmäßig in Twitter-Cards angezeigt wird (sollte mindestens 280 Pixel breit und 150 Pixel hoch sein)."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
-    convert_pasted_images_to_hq_jpg: "Konvertiert eingefügte Bilder in JPG-Dateien mit hoher Qualität."
-    convert_pasted_images_quality: "Qualität der umgewandelten JPG Datei (1 ist die niedrigste, 100 die beste Qualität)."
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam-Aufkommen führen!"
@@ -1814,14 +1808,6 @@ de:
     bulk_invite_failed:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
-      text_body_template: |
-        Deine Masseneinladungs-Datei wurde verarbeitet, insgesamt wurden %{sent} Einladungen verschickt und dabei traten %{failed} Fehler auf.
-
-        Dies ist das Fehlerprotokoll:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV-Export erfolgreich"
       subject_template: "Datenexport abgeschlossen"

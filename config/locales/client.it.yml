@@ -1000,7 +1000,6 @@ it:
       cannot_see_mention:
         category: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
         private: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
-      duplicate_link: "Sembra che il collegamento a <b>{{domain}}</b> sia già stato pubblicato nell'argomento di <b>@{{username}}</b> in <a href='{{post_url}}'>una risposta {{ago}}</a> – sei sicuro di volerlo pubblicare ancora?"
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -1211,10 +1210,8 @@ it:
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
-        change_category: "Cambia Categoria"
         close_topics: "Chiudi Argomenti"
         archive_topics: "Archivia Argomenti"
-        notification_level: "Cambia Livello Notifiche"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
           one: "Hai selezionato <b>1</b> argomento."
@@ -2025,8 +2022,6 @@ it:
       granted_on: "Assegnata %{date}"
       others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
-      allow_title: "titolo disponibile"
-      multiple_grant: "assegnato più volte"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} Distintivi"

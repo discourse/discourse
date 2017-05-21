@@ -986,7 +986,6 @@ cs:
         one: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>1 člověka</a> – jste si jistý/á?"
         few: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>{{count}} lidi</a> – jste si jistý/á?"
         other: "Zmíněním {{group}}, upozorníš <a href='{{group_link}}'>{{count}} lidí</a> – jste si jistý/á?"
-      duplicate_link: "Zdá se, že tvůj odkaz na <b>{{domain}}</b> byl již v tomto tématu použit uživatelem  <b>@{{username}}</b> v <a href='{{post_url}}'>odpověď {{ago}}</a> – určitě jej chceš uvést znova?"
       error:
         title_missing: "Název musí být vyplněn"
         title_too_short: "Název musí být dlouhý alespoň {{min}} znaků"
@@ -1202,10 +1201,8 @@ cs:
         dismiss_new: "Odbýt nová"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
-        change_category: "Změnit kategorii"
         close_topics: "Zavřít téma"
         archive_topics: "Archivovat témata"
-        notification_level: "Změnit úroveň upozornění"
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
           one: "Vybrali jste <b>1</b> téma."
@@ -2057,7 +2054,6 @@ cs:
       granted_on: "Získán %{date}"
       others_count: "Ostatní s tímto odznakem (%{count})"
       title: Odznaky
-      allow_title: "dostupný nadpis"
       badge_count:
         one: "1 odznak"
         few: "%{count} odznaky"

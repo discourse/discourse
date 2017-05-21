@@ -1009,7 +1009,6 @@ sv:
       cannot_see_mention:
         category: "Du nämnde {{username}} men hen kommer inte få någon notifikation för hen har inte tillgång till denna kategori. Du behöver lägga till hen till en grupp som har tillgång till den här kategorin."
         private: "Du nämnde {{username}} men hen kommer inte få någon notifikation eftersom hen inte kan se detta personliga meddelande. Du behöver bjuda in hen till detta PM."
-      duplicate_link: "Det ser ut som att din länk till <b>{{domain}}</b> redan har delats i ämnet av <b>@{{username}}</b> i <a href='{{post_url}}'>ett svar {{ago}} sedan</a> – är du säker på att du vill dela den igen?"
       error:
         title_missing: "Du måste ange en rubrik"
         title_too_short: "Rubriken måste vara minst {{min}} tecken lång."
@@ -1224,10 +1223,8 @@ sv:
         dismiss_new: "Avfärda Nya"
         toggle: "växla val av flertalet ämnen"
         actions: "Massändringar"
-        change_category: "Ändra kategori"
         close_topics: "Stäng ämnen"
         archive_topics: "Arkivera ämnen"
-        notification_level: "Ändra notifieringsnivå"
         choose_new_category: "Välj den nya kategorin för ämnena:"
         selected:
           one: "Du har markerat <b>1</b> ämne."
@@ -2087,8 +2084,6 @@ sv:
       granted_on: "Utfärdad %{date}"
       others_count: "Andra med den här utmärkelsen (%{count})"
       title: Utmärkelser
-      allow_title: "tillgänglig rubrik"
-      multiple_grant: "tilldelad flera gånger"
       badge_count:
         one: "1 Utmärkelse"
         other: "%{count} Utmärkelser"
@@ -2382,7 +2377,6 @@ sv:
         event_type_missing: "Du behöver sätta upp åtminstone en händelse."
         content_type: "Innehållstyp"
         secret: "Hemlighet"
-        event_chooser: "Vilka event vill du ska utlösa den här webhooken?"
         wildcard_event: "Skicka mig allt."
         individual_event: "Välj enskilda event."
         verify_certificate: "Kontrollera TLS-certifikatet för försändelse-URL:en"

@@ -735,9 +735,7 @@ uk:
         dismiss_new: "Dismiss New"
         toggle: "перемикач масової дії над темами"
         actions: "Масові дії"
-        change_category: "Змінити категорію"
         close_topics: "Закрити теми"
-        notification_level: "Change Notification Level"
       none:
         unread: "У Вас немає непрочитаних тем."
         new: "У Вас немає нових тем."

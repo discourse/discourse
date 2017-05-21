@@ -967,8 +967,6 @@ zh_CN:
     default_opengraph_image_url: "opengraph图像的缺省URL。"
     twitter_summary_large_image_url: "默认 Twitter summary 卡片的 URL（需要至少宽 280px 和高 150px）。"
     allow_all_attachments_for_group_messages: "允许群组消息中包含任何邮件附件。"
-    convert_pasted_images_to_hq_jpg: "将粘贴图片转为高质量 JPG 文件。"
-    convert_pasted_images_quality: "转换过的 JPG 文件质量（1 是最低，100 最高质量）。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -1549,14 +1547,6 @@ zh_CN:
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量邀请完成，并有一些错误"
-      text_body_template: |
-        批量邀请已经完成，发出了 %{sent} 个邀请并且 %{failed} 个失败。
-
-        查看日志：
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "成功导致CSV格式"
       subject_template: "数据导出完成"

@@ -501,7 +501,6 @@ sq:
       github_profile: "Github"
       email_activity_summary: "Përmbledhja e aktivitetit"
       mailing_list_mode:
-        daily: "Dërgo njoftime të përditshme"
         individual: "Dërgo një email për çdo postim të ri"
         many_per_day: "Më dërgo një email për çdo postim të ri (rreth {{dailyEmailEstimate}} në ditë)"
         few_per_day: "Më dërgo një email për çdo postim të ri (rreth 2 në ditë)"
@@ -982,7 +981,6 @@ sq:
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
-      duplicate_link: "Lidhja drejt <b>{{domain}}</b> duket sikur u postua më par¨´nga <b>@{{username}}</b> në <a href='{{post_url}}'>këtë përgjigje {{ago}}</a> – a doni ta postoni sërish?"
       error:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
@@ -1167,10 +1165,8 @@ sq:
         dismiss_new: "Hiq të Rejat"
         toggle: "toggle bulk selection of topics"
         actions: "Veprime në masë"
-        change_category: "Ndrysho kategori"
         close_topics: "Mbyll temat"
         archive_topics: "Arkivo temat"
-        notification_level: "Ndrysho nivelin e njoftimeve"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
         selected:
           one: "Keni zgjedhur <b>1</b> temë."
@@ -1919,8 +1915,6 @@ sq:
       granted_on: "Atribuar më %{date}"
       others_count: "Të tjerë me këtë stemë (%{count})"
       title: Stemat
-      allow_title: "titulli i disponueshëm"
-      multiple_grant: "akorduar disa herë"
       badge_count:
         one: "1 stemë"
         other: "%{count} stema"

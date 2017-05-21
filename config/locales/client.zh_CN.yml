@@ -962,7 +962,6 @@ zh_CN:
       cannot_see_mention:
         category: "你提到了{{userrname}}，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
         private: "你提到了{{userrname}}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
-      duplicate_link: "似乎你的链接 <b>{{domain}}</b> 在<a href='{{post_url}}'>{{ago}}</a>已经由<b>@{{username}}</b>回复了 － 确定再次提交吗？"
       error:
         title_missing: "标题为空"
         title_too_short: "标题过短，至少 {{min}} 个字"
@@ -1171,10 +1170,8 @@ zh_CN:
         dismiss_new: "设为已读"
         toggle: "切换至批量选择"
         actions: "批量操作"
-        change_category: "更改分类"
         close_topics: "关闭主题"
         archive_topics: "存档主题"
-        notification_level: "更改通知等级"
         choose_new_category: "选择新分类："
         selected:
           other: "已选择 <b>{{count}}</b>个主题"
@@ -1938,8 +1935,6 @@ zh_CN:
       granted_on: "授予于%{date}"
       others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
-      allow_title: "能用作头衔"
-      multiple_grant: "能被授予多次"
       badge_count:
         other: "%{count} Badges"
       more_badges:
@@ -2224,7 +2219,6 @@ zh_CN:
         event_type_missing: "你必须设置一个事件类型。"
         content_type: "内容格式"
         secret: "密钥"
-        event_chooser: "你想要 webhook 发送哪些事件？"
         wildcard_event: "发送任何事件。"
         individual_event: "选择各个事件。"
         verify_certificate: "检查 Payload URL 的 TLS 证书"

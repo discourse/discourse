@@ -992,7 +992,6 @@ pt:
       cannot_see_mention:
         category: "Mencionou {{username}}  mas este não será notificado porque não têm acesso a esta categoria. Terá de os adicionar a um grupo que tenho acesso a esta categoria."
         private: "Mencionou {{username}} mas estes não serão notificados porque não conseguem ver esta mensagem privada.  Terá de os convidar para esta MP."
-      duplicate_link: "Parce que a tua ligação a <b>{{domain}}</b> já foi publicada neste tópico por <b>@{{username}}</b>  nesta <a href='{{post_url}}'>resposta {{ago}}</a> – tens a certeza de que a queres publicar outra vez?"
       error:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} caracteres."
@@ -1203,10 +1202,8 @@ pt:
         dismiss_new: "Marcar Visto Novos"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
-        change_category: "Mudar Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar tópicos"
-        notification_level: "Mudar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
           one: "Selecionou  <b>1</b> tópico."
@@ -2014,8 +2011,6 @@ pt:
       granted_on: "Concedido %{date}"
       others_count: "Outros com este distintivo (%{count})"
       title: Distintivos
-      allow_title: "título disponivel"
-      multiple_grant: "atribuido multiplas vezes"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} Distintivos"
@@ -2305,7 +2300,6 @@ pt:
         event_type_missing: "Tem de configurar pelo menos um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
-        event_chooser: "Que eventos gostaria que este webhook despoletasse?"
         wildcard_event: "Enviar-me tudo."
         individual_event: "Selecionar eventos individuais."
         verify_certificate: "Verificar certificado TLS do url de carga"

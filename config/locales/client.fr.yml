@@ -754,6 +754,7 @@ fr:
         rescinded: "Invitation annulée"
         reinvite: "Renvoyer l'invitation"
         reinvite_all: "Renvoyer toutes les invitations"
+        reinvite_all_confirm: "Êtes-vous sûr de renvoyer toutes les invitations ?"
         reinvited: "Invitation renvoyée"
         reinvited_all: "Invitations renvoyées !"
         time_read: "Temps de lecture"
@@ -1029,7 +1030,6 @@ fr:
       cannot_see_mention:
         category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message privé. Vous devez inviter cet utilisateur à la discussion."
-      duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été partagé par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse {{ago}}</a> – êtes vous sûr de vouloir le partager à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -1245,10 +1245,8 @@ fr:
         dismiss_new: "Ignorer les nouveaux"
         toggle: "activer la sélection multiple de sujets"
         actions: "Actions sur la sélection"
-        change_category: "Modifier la catégorie"
         close_topics: "Fermer les sujets"
         archive_topics: "Archiver les sujets"
-        notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour les sujets :"
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
@@ -2133,8 +2131,6 @@ fr:
       granted_on: "Accordé le %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
-      allow_title: "titre disponible"
-      multiple_grant: "attribué plusieurs fois"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"

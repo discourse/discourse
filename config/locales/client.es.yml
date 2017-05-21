@@ -101,6 +101,7 @@ es:
           other: "%{count} años después"
       previous_month: 'Mes anterior'
       next_month: 'Próximo mes'
+      placeholder: Elige una fecha
     share:
       topic: 'comparte un enlace a este tema'
       post: 'post #%{postNumber}'
@@ -135,6 +136,9 @@ es:
       visible:
         enabled: 'listado %{when}'
         disabled: 'quitado de la lista, invisible %{when}'
+      banner:
+        enabled: 'hizo de esto un banner %{when}. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario.'
+        disabled: 'eliminado este banner %{when}. Ya no aparecerá en la parte superior de cada página.'
     topic_admin_menu: "acciones de administrador para el tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
@@ -366,6 +370,7 @@ es:
       automatic_group: Grupo automático
       closed_group: Grupo cerrado
       is_group_user: "Eres miembro de este grupo"
+      allow_membership_requests: "Permitir que los usuarios envíen solicitudes de membresía a los propietarios de grupos"
       membership: "Membresía"
       name: "Nombre"
       user_count: "Número de miembros"
@@ -385,6 +390,7 @@ es:
       posts: "Posts"
       mentions: "Menciones"
       messages: "Mensajes"
+      notification_level: "Nivel de notificación predeterminado para mensajes de grupo"
       alias_levels:
         title: "¿Quién puede emviar mensajes y @mencionar a este grupo?"
         nobody: "Nadie"
@@ -562,6 +568,7 @@ es:
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
       muted_topics_link: "Mostrar temas silenciados"
       watched_topics_link: "Mostrar temas vigilados"
+      tracked_topics_link: "Mostrar temas seguidos"
       automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
       apps: "Apps"
       revoke_access: "Revocar acceso"
@@ -585,6 +592,15 @@ es:
         move_to_archive: "Archivar"
         failed_to_move: "No se han podido mover los mensajes seleccionados (puede haber problemas de conexión)"
         select_all: "Seleccionar todo"
+      preferences_nav:
+        account: "Cuenta"
+        profile: "Perfil"
+        emails: "Emails"
+        notifications: "Notificaciones"
+        categories: "Categorías"
+        tags: "Etiquetas"
+        interface: "Interfaz"
+        apps: "Apps"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -738,6 +754,7 @@ es:
         rescinded: "Invitación eliminada"
         reinvite: "Reenviar Invitación"
         reinvite_all: "Reenviar todas las invitaciones"
+        reinvite_all_confirm: "¿Estás seguro que quieres reenviar todas las invitaciones?"
         reinvited: "Invitación reenviada"
         reinvited_all: "¡Todas las invitaciones han sido reenviadas!"
         time_read: "Tiempo de Lectura"
@@ -1013,7 +1030,7 @@ es:
       cannot_see_mention:
         category: "Mencionaste a {{username}} pero no será notificado porque no tiene acceso a esta categoría. Necesitarás añadirlo a un grupo para que tenga acceso a esta categoría."
         private: "Mencionaste a {{username}} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
-      duplicate_link: "Parece que tu enlace a <b>{{domain}}</b> ha sido ya publicado en el tema por <b>@{{username}}</b> en <a href='{{post_url}}'>un post {{ago}}</a> – ¿seguro que quieres publicarlo de nuevo?"
+      duplicate_link: "Parece que el enlace a <b>{{domain}}</b> ya ha sido publicado en el tema por <b>@{{username}}</b> en <a href='{{post_url}}'>una respuesta hace {{ago}}</a> – ¿Estás seguro de que quieres publicarlo de nuevo?"
       error:
         title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
@@ -1162,6 +1179,7 @@ es:
       no_more_results: "No se encontraron más resultados."
       searching: "Buscando ..."
       post_format: "#{{post_number}} por {{username}}"
+      results_page: "Resultados de la Búsqueda"
       context:
         user: "Buscar posts por @{{username}}"
         category: "Buscar la categoría #{{category}}"
@@ -1218,6 +1236,7 @@ es:
         select_all: "Seleccionar todos"
         clear_all: "Desmarcar todos"
         unlist_topics: "Hacer invisibles"
+        relist_topics: "Listar de nuevo los Temas"
         reset_read: "Restablecer leídos"
         delete: "Eliminar temas"
         dismiss: "Descartar"
@@ -1228,10 +1247,10 @@ es:
         dismiss_new: "Ignorar nuevos"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
-        change_category: "Cambiar categoría"
+        change_category: "Añadir Categoría"
         close_topics: "Cerrar temas"
         archive_topics: "Archivar temas"
-        notification_level: "Cambiar el Nivel de Notificación"
+        notification_level: "Notificaciones"
         choose_new_category: "Elige una nueva categoría para los temas:"
         selected:
           one: "Has seleccionado <b>1</b> tema."
@@ -1328,7 +1347,20 @@ es:
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido borrado"
       topic_status_update:
+        title: "Establecer Temporizador al Tema"
+        save: "Establecer Temporizador"
+        num_of_hours: "Número de horas:"
+        remove: "Quitar Temporizador"
         publish_to: "Publicar a:"
+        when: "Cuando:"
+      auto_update_input:
+        later_today: "Hoy, más tarde"
+        tomorrow: "Mañana"
+        later_this_week: "Esta semana, más tarde"
+        this_weekend: "Este fin de semana"
+        next_week: "Próxima semana"
+        pick_date_and_time: "Elegir fecha y hora"
+        set_based_on_last_post: "Cerrar basándose en el último mensaje"
       publish_to_category:
         title: "Programar publicación"
       temp_open:
@@ -1339,13 +1371,17 @@ es:
         title: "Cerrar temporalmente"
       auto_close:
         title: "Cerrar tema automáticamente"
+        label: "Hora del cierre automático del tema:"
         error: "Por favor, introduce un valor válido."
         based_on_last_post: "No cerrar hasta que el último post en el tema sea al menos así de antiguo."
+      auto_delete:
+        title: "Eliminar Automáticamente el Tema"
       status_update_notice:
         auto_open: "Este tema se abrirá automáticamente %{timeLeft}."
         auto_close: "Este tema se cerrará automáticamente %{timeLeft}."
         auto_publish_to_category: "Este tema será publicado en <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Este tema se cerrará %{duration} después de la última respuesta."
+        auto_delete: "Este tema se eliminará automáticamente %{timeLeft}."
       auto_close_title: 'Configuración de auto-cerrado'
       auto_close_immediate:
         one: "El último post se publicó hace 1 hora, por lo que el tema se cerrará inmediatamente."
@@ -1376,6 +1412,10 @@ es:
           '3_2': 'Recibirás notificaciones porque estás vigilando este tema.'
           '3_1': 'Recibirás notificaciones porque creaste este tema.'
           '3': 'Recibirás notificaciones porque estás vigilando este tema.'
+          '2_8': 'Verás un contador de nuevas respuestas porque estás siguiendo esta categoría.'
+          '2_4': 'Verás un contador de nuevas respuestas porque has publicado una respuesta al tema.'
+          '2_2': 'Verás un contador de nuevas respuestas porque estás siguiendo este tema.'
+          '2': 'Verás un contador de nuevas respuestas porque has <a href="/u/{{username}}/preferences">leído este tema</a>.'
           '1_2': 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
           '1': 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
@@ -1411,6 +1451,7 @@ es:
         open: "Abrir tema"
         close: "Cerrar tema"
         multi_select: "Seleccionar posts..."
+        timed_update: "Establecer Temporizador al Tema..."
         pin: "Destacar tema..."
         unpin: "Dejar de destacar..."
         unarchive: "Desarchivar Tema"
@@ -1531,6 +1572,7 @@ es:
           other: "Por favor escoge el nuevo dueño de los {{count}} posts de <b>{{old_user}}</b>."
         instructions_warn: "Ten en cuenta que las notificaciones sobre este post no serán transferidas al nuevo usuario de forma retroactiva.<br>Aviso: actualmente, los datos que no dependen del post son transferidos al nuevo usuario. Usar con precaución."
       change_timestamp:
+        title: "Cambiar Fecha y Hora..."
         action: "cambiar timestamp"
         invalid_timestamp: "El Timestamp no puede ser futuro"
         error: "Hubo un error cambiando el timestamp de este tema."
@@ -1806,6 +1848,9 @@ es:
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página superior de categorías:"
       all_topics_wiki: "Hacer todos los temas wiki por defecto"
       subcategory_list_style: "Estilo de la lista de subcategorías:"
+      sort_order: "Ordenar la Lista de Temas por:"
+      default_view: "Lista de Temas por defecto:"
+      default_top_period: "Periodo Máximo por Defecto:"
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
@@ -2093,8 +2138,8 @@ es:
       granted_on: "Concedido hace: %{date}"
       others_count: "Otras personas con este distintivo (%{count})"
       title: Distintivos
-      allow_title: "título disponible"
-      multiple_grant: "puede ser concedido varias veces"
+      allow_title: "Puedes usar esta insignia como título"
+      multiple_grant: "Puedes ganar esto varias veces"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} distintivos"
@@ -2340,6 +2385,7 @@ es:
         add_members: "Añadir miembros"
         custom: "Personalizado"
         bulk_complete: "Los usuarios han sido añadidos al grupo."
+        bulk_complete_users_not_added: "Estos usuarios no se agregaron (asegúrate de que tienen una cuenta):"
         bulk: "Añadir al grupo en masa"
         bulk_paste: "Pega una lista de nombres de usuario o emails, uno por línea:"
         bulk_select: "(selecciona un grupo)"
@@ -2389,7 +2435,7 @@ es:
         event_type_missing: "Necesitas establecer al menos un tipo de evento."
         content_type: "Tipo de contenido"
         secret: "Secret"
-        event_chooser: "¿Qué eventos te gustaría que dispararan este webhook?"
+        event_chooser: "¿Qué eventos deberían desencadenar este webhook?"
         wildcard_event: "Envíame todo."
         individual_event: "Seleccionar eventos individuales."
         verify_certificate: "Comprobar certificado TLS de la payload url"
@@ -2522,15 +2568,21 @@ es:
         title: "Personalizar"
         long_title: "Personalizaciones del sitio"
         preview: "vista previa"
+        explain_preview: "Ver el sitio con este tema activado"
         save: "Guardar"
         new: "Nuevo"
         new_style: "Nuevo Estilo"
         import: "Importar"
         delete: "Eliminar"
+        delete_confirm: "¿Eliminar este tema?"
         about: "Modifica hojas de estilo CSS y cabeceras HTML en el sitio. Añade una personalización para empezar."
         color: "Color"
         opacity: "Opacidad"
         copy: "Copiar"
+        copy_to_clipboard: "Copiar al Portapapeles"
+        copied_to_clipboard: "Copiado al Portapapeles"
+        copy_to_clipboard_error: "Error al copiar los datos al Portapapeles"
+        theme_owner: "No se puede editar, propiedad de:"
         email_templates:
           title: "Diseño del email"
           subject: "Título del email"
@@ -2540,7 +2592,12 @@ es:
           revert: "Revertir los cambios"
           revert_confirm: "¿Estás seguro de querer revertir los cambios?"
         theme:
+          import_theme: "Importar Tema"
+          customize_desc: "Personalizar:"
+          title: "Temas"
+          long_title: "Modifique los colores, los CSS y los contenidos HTML de su sitio"
           edit: "Editar"
+          edit_confirm: "Este es un tema remoto, si editas el CSS/HTML tus cambios se borrarán la próxima vez que actualices el tema."
           common: "Común"
           desktop: "Ordenador"
           mobile: "Móvil"
@@ -2549,13 +2606,24 @@ es:
           user_selectable: "Tema seleccionable por los usuarios"
           color_scheme: "Paleta de color"
           color_scheme_select: "Colores a utilizar por el tema:"
+          custom_sections: "Secciones personalizadas:"
+          theme_components: "Componentes del Tema"
+          uploads: "Subidas"
+          no_uploads: "Puedes subir elementos asociados al tema, como fuentes e imágenes"
+          add_upload: "Añadir Subida"
+          upload_file_tip: "Elige un recurso para cargarlo (png, woff2, etc...)"
+          variable_name: "Nombre de la variable SCSS:"
+          upload: "Subir"
           child_themes_check: "El tema incluye otros temas"
           css_html: "CSS/HTML personalizado"
           edit_css_html: "Editar CSS/HTML"
           edit_css_html_help: "No se ha editado ningún CSS ni HTML"
+          delete_upload_confirm: "Eliminar esta subida? (El CSS del tema puede dejar de funcionar!)"
           import_web_tip: "Repositorio que contiene el tema"
+          import_file_tip: "Archivo .dcstyle.json que contiene el tema"
           about_theme: "Sobre el tem"
           license: "Licencia"
+          component_of: "El tema es un componente de:"
           update_to_latest: "Actualizar a la última versión"
           check_for_updates: "Comprobar actualizaciones"
           updating: "Actualizando..."
@@ -2569,9 +2637,30 @@ es:
             title: "Introducir CSS personalizado, se acepta tanto CSS como SCSS"
           header:
             text: "Header"
+            title: "Introduce HTML para mostrarlo por encima del encabezado del sitio"
+          after_header:
+            text: "Después del Encabezado"
+            title: "Introduce HTML para mostrarlo por debajo del encabezado del sitio"
+          footer:
+            text: "Pie de página"
+            title: "Introduce HTML para mostrarlo en el pie de página"
+          embedded_scss:
+            text: "CSS incrustado"
+            title: "Introduce el CSS personalizado para presentarlo en la versión incrustada de los comentarios"
+          head_tag:
+            text: "</head>"
+            title: "HTML que se insertará antes de la etiqueta </head>"
+          body_tag:
+            text: "</body>"
+            title: "HTML que se insertará antes de la etiqueta </body>"
         colors:
+          select_base:
+            title: "Selecciona la combinación de colores básica"
+            description: "Combinación básica:"
           title: "Colores"
+          edit: "Editar Combinaciones de Colores"
           long_title: "Esquemas de color"
+          about: "Modifica los colores utilizados por tus temas. Crea una nueva combinación de colores para empezar."
           new_name: "Nuevo esquema de color"
           copy_name_prefix: "Copia de"
           delete_confirm: "¿Eliminar este esquema de color?"
@@ -3125,6 +3214,7 @@ es:
         sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde quieres insertar."
         title: "Insertado"
         host: "Hosts Permitidos"
+        class_name: "Nombre de la Clase"
         path_whitelist: "Lista blanca de rutas"
         edit: "editar"
         category: "Publicar a Categoría"

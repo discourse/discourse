@@ -976,14 +976,6 @@ ja:
       text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
     bulk_invite_failed:
       subject_template: "ユーザの一括招待中にエラーが発生しました"
-      text_body_template: |
-        一括ユーザ招待が処理され、%{sent} 通の招待メールが送信され、%{failed}個のエラーが発生しました
-
-        ログ:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "データのダウンロード準備が完了しました"
     csv_export_failed:

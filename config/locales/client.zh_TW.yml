@@ -962,7 +962,6 @@ zh_TW:
       cannot_see_mention:
         category: "你提到了{{userrname}}，然而他們不能訪問該分類，所以他們不會被通知。你需要把他們加入到能訪問該分類的群組中。"
         private: "你提到了{{userrname}}，然而他們不能訪問該私信，所以他們不會被通知。你需要邀請他們至私信中。"
-      duplicate_link: "似乎你的連結 <b>{{domain}}</b> 在<a href='{{post_url}}'>{{ago}}</a>已經由<b>@{{username}}</b>回覆了 － 確定再次提交嗎？"
       error:
         title_missing: "標題為必填欄位"
         title_too_short: "標題必須至少 {{min}} 個字"
@@ -1171,10 +1170,8 @@ zh_TW:
         dismiss_new: "設定新文章為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
-        change_category: "改變分類"
         close_topics: "關閉討論話題"
         archive_topics: "已封存的討論話題"
-        notification_level: "改變通知等級"
         choose_new_category: "為主題選擇新類別："
         selected:
           other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
@@ -1939,8 +1936,6 @@ zh_TW:
       granted_on: "授予於%{date}"
       others_count: "其他有該徽章的人（%{count}）"
       title: 徽章
-      allow_title: "能用作頭銜"
-      multiple_grant: "能被授予多次"
       badge_count:
         other: "%{count} 徽章"
       more_badges:
@@ -2225,7 +2220,6 @@ zh_TW:
         event_type_missing: "你必須設置一個事件類型。"
         content_type: "內容格式"
         secret: "密鑰"
-        event_chooser: "你想要 webhook 發送哪些事件？"
         wildcard_event: "發送任何事件。"
         individual_event: "選擇各個事件。"
         verify_certificate: "檢查 Payload URL 的 TLS 證書"
