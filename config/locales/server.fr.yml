@@ -346,10 +346,6 @@ fr:
           attributes:
             name:
               taken: est déjà utilisé pas un autre emoji
-        topic_status_update:
-          attributes:
-            execute_at:
-              in_the_past: "doit être dans le futur"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
@@ -1051,8 +1047,6 @@ fr:
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
     twitter_summary_large_image_url: "URL de l'image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280px en largeur et 150px en hauteur). "
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
-    convert_pasted_images_to_hq_jpg: "Convertir les images copiées en fichier JPEG haute qualité."
-    convert_pasted_images_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 100 est la meilleure)."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."

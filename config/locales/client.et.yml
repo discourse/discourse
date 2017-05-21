@@ -1003,7 +1003,6 @@ et:
       cannot_see_mention:
         category: "Mainisid kasutajat {{username}} kuid teda ei teavitata, kuna tal puudub juurdepääs siia foorumisse. Lisa ta gruppi, kellel on siia foorumisse ligipääs."
         private: "Mainisid kasutajat {{username}} kuid teda ei teavitata, kuna tal puudub juurdepääs käesoleva privaatsõnumi juurde. Kutsu ta seda privaatsõnumit vaatama."
-      duplicate_link: "Näib, et sinu viide <b>{{domain}}</b> oli juba postitatud teemasse kasutaja <b>@{{username}}</b> poolt postituse <a href='{{post_url}}'>vastuses {{ago}}</a> – oled kindel, et soovid selle uuesti postitada?"
       error:
         title_missing: "Pealkiri on kohustuslik"
         title_too_short: "Pealkiri peab olema vähemalt {{min}} sümbolit pikk"
@@ -1215,10 +1214,8 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
-        change_category: "Muuda foorumit"
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
-        notification_level: "Muuda Teavituste Taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
           one: "Märkisid ära <b>1</b> teema."
@@ -2043,8 +2040,6 @@ et:
       granted_on: "Märgistatud %{date}"
       others_count: "Teised selle märgisega (%{count})"
       title: Märgised
-      allow_title: "saadaval tiitel"
-      multiple_grant: "määratud mitmeid kordi"
       badge_count:
         one: "1 märgis"
         other: "%{count} märgist"
@@ -2337,7 +2332,6 @@ et:
         event_type_missing: "Pead seadistama vähemalt ühe sündmuse liigi."
         content_type: "Sisutüüp"
         secret: "Salavõti"
-        event_chooser: "Millised sündmused peaksid selle veebihaagi käivitama?"
         wildcard_event: "Saada mulle kõik."
         individual_event: "Vali üksikud sündmused."
         verify_certificate: "Kontrolli kasuliku lasti URL-i TLS sertifikaati"

@@ -1157,7 +1157,6 @@ ar:
         few: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} أشخاص</a>. أمتأكّد؟"
         many: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} شخصًا</a>. أمتأكّد؟"
         other: "الإشارة إلى {{group}} تعني إخطار <a href='{{group_link}}'>{{count}} شخص</a>. أمتأكّد؟"
-      duplicate_link: "يبدو أن الرابط المشير إلى <b>{{domain}}</b> قد نشره <b>@{{username}}</b> في الموضوع في <a href='{{post_url}}'>رد له {{ago}}</a> – أمتأكد من نشره مجددا؟"
       error:
         title_missing: "العنوان مطلوب"
         title_too_short: "العنوان يجب أن يكون اكثر  {{min}} حرف"
@@ -1360,10 +1359,8 @@ ar:
         dismiss_new: "أزل الجديد"
         toggle: "إيقاف/تشغيل الاختيار المتعدد للمواضيع"
         actions: "عمليات تنفذ دفعة واحدة"
-        change_category: "تغيير التصنيف"
         close_topics: "إغلاق المواضيع"
         archive_topics: "أرشفة المواضيع"
-        notification_level: "غيّر مستوى الإشعار"
         choose_new_category: "اختر القسم الجديد للمواضيع:"
         selected:
           zero: "لم تحدد شيئا."
@@ -2375,8 +2372,6 @@ ar:
       granted_on: "ممنوح في  %{date}"
       others_count: "اخرون بنفس الدرع (%{count})"
       title: الشارات
-      allow_title: "عنوان متوفر"
-      multiple_grant: "يمكن منحه عدة مرات. "
       badge_count:
         zero: "لا شارات"
         one: "شارة واحدة"

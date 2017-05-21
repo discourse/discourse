@@ -986,8 +986,6 @@ pt_BR:
     default_opengraph_image_url: "URL da imagem opengraph padrão."
     twitter_summary_large_image_url: "URL da imagem do cartão de resumo padrão do Twitter (deve ter pelo menos 280px de largura e pelo menos 150px de altura)."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
-    convert_pasted_images_to_hq_jpg: "Converte imagens coladas para arquivos JPG de alta qualidade."
-    convert_pasted_images_quality: "Qualidade dos arquivos JPG convertidos (1 para a qualidade mais baixa, 100 para a mais alta)."
     enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
@@ -1304,14 +1302,6 @@ pt_BR:
       text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
     bulk_invite_failed:
       subject_template: "Seus convites não forma enviados, contate os moderadores."
-      text_body_template: |
-        Seu arquivo de convite de usuários em massa foi processado, %{sent} convites enviados com %{failed} erro(s).
-
-        Aqui está o log:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Exportação de dados completada"
     csv_export_failed:

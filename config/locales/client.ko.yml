@@ -1001,10 +1001,8 @@ ko:
         dismiss_new: "새글 제거"
         toggle: "주제 복수 선택"
         actions: "일괄 적용"
-        change_category: "카테고리 변경"
         close_topics: "주제 닫기"
         archive_topics: "주제 보관하기"
-        notification_level: "알림 설정 변경"
         choose_new_category: "주제의 새로운 카테고리를 선택"
         selected:
           other: "<b>{{count}}</b>개의 주제가 선택되었습니다."

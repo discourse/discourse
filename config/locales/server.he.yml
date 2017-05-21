@@ -343,10 +343,10 @@ he:
           attributes:
             name:
               taken: כבר בשימוש על ידי אמוג'י אחר
-        topic_status_update:
+        topic_timer:
           attributes:
             execute_at:
-              in_the_past: "חייב להיות בעתיד."
+              in_the_past: "חייב להיות בעתיד"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
@@ -1051,8 +1051,7 @@ he:
     default_opengraph_image_url: "URL ברירת המחדל של תמונת opengraph."
     twitter_summary_large_image_url: "URL של תמונה מסיכום ברירת המחדל מטוויטר (צריכה להיות ברוחב לפחות 280 פיקסלים ובגובה של לפחות 150 פיקסלים)."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
-    convert_pasted_images_to_hq_jpg: "המירו תמונות מודבקות לקבצי JPG באיכות גבוהה."
-    convert_pasted_images_quality: "איכות של קובץ ה JPG המומר (1 זו האיכות הנמוכה ביותר, 100 הטובה ביותר)."
+    png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 לניטרול)."
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) ב Oneboxes. אזהרה: עלול להביא לבעיות אבטחה באתר."
     default_invitee_trust_level: "ברירת מחדל של רמת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "רמת אמון (0-4) לכל המשתמשים החדשים. אזהרה! שינוי של משתנה זה שם אתכם בסיכון רציני לספאם."
@@ -1110,6 +1109,7 @@ he:
     max_image_size_kb: "גודל קובץ מקסימלי להעלאה בקילו-בתים (kB). ערך זה חייב להיות מוגדר גם ב-nginx (client_max_body_size) / apache או בפרוקסי."
     max_attachment_size_kb: "הגודל המקסימלי בקילו-בתים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
+    theme_authorized_extensions: "רשימת סיומות קבצים שמורשות עבור העלאת תמות (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפוסט."
     max_image_megapixels: "מספר מקסימלי מותר של מגה-פיקסלים לתמונה."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
@@ -1247,10 +1247,11 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כולל הדגשת כללי תחביר (syntax). (אזהרה: הכללת שפות רבות מידי עשויה להשפיע על הביצועים) ראו: https://highlightjs.org/static/demo/ להדגמה."
-    feed_polling_enabled: "הטמעה בלבד: האם להטמיע פידים של RSS/ATOM כפוסטים."
-    feed_polling_url: "הטמעה בלבד: URL של פיד RSS/ATOM להטמעה."
+    feed_polling_enabled: "הטמעה בלבד: האם להטמיע תזרימים של RSS/ATOM כפוסטים."
+    feed_polling_url: "הטמעה בלבד: URL של תזרים RSS/ATOM להטמעה."
+    feed_polling_frequency_mins: "שילוב בלבד: תדירות משיכה"
     embed_by_username: "שם המשתמש של המשתמש/ת שיוצר את הנושאים המוטמעים."
-    embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
+    embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהתזרים."
     embed_title_scrubber: "ביטויים רגולריים כדי לנקות כותרות מוטמעות."
     embed_truncate: "חיתוך הפוסטים המוטמעים."
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
@@ -1437,6 +1438,7 @@ he:
     pinned_globally_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יא יופיע יותר בראש הקטגוריה שלו."
     visible_enabled: "נושא זה כרגע רשום. הוא יוצג ברשימות נושאים."
     visible_disabled: "נושא זה כרגע אינו רשום. הוא לא יוצג יותר ברשימת נושאים כלשהי. הדרך היחידה להגיע לנושא זה היא דרך קישור ישיר."
+    auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
     not_approved: "חשבונך טרם אושר. יישלח אליך דואר אלקטרוני כשהוא יהיה מוכן להתחברות."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
@@ -2379,12 +2381,14 @@ he:
     title: "תנאי השימוש"
     signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="/tos" target="_blank">תנאי השירות</a>.'
   deleted: 'נמחק'
+  image: "תמונה"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "מצטערים, הקובץ שאתם מנסים להעלות לא מורשה (סיומות מורשות: %{authorized_extensions})."
     pasted_image_filename: "תמונה שהודבקה"
     store_failure: "נכשלה שמירת העלאה #%{upload_id} עבור משתמש #%{user_id}."
     file_missing: "סליחה, עליך לספק קובץ להעלות."
+    empty: "מצטערים, אבל הקובץ שסיפקתם ריק"
     attachments:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
     images:

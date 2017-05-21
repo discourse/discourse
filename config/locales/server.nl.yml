@@ -346,10 +346,6 @@ nl:
           attributes:
             name:
               taken: wordt al door een andere emoji gebruikt
-        topic_status_update:
-          attributes:
-            execute_at:
-              in_the_past: "moet in de toekomst liggen."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg; <a href='/u/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
@@ -1306,7 +1302,7 @@ nl:
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
     wait_approval: "Bedankt voor het registreren. We laten u weten wanneer uw account is goedgekeurd."
     active: "Uw account is geactiveerd en gereed voor gebruik."
-    activate_email: "<p>U bent er bijna! We hebben een activeringsmail naar <b>%{email}</b> gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, contoleer dan uw spammap.</p>"
+    activate_email: "<p>U bent er bijna! We hebben een activeringsmail naar<b>%{email}</b> gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, contoleer dan uw spammap.</p>"
     not_activated: "U kunt zich nog niet aanmelden. We hebben u een activeringsmail gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren."
     not_allowed_from_ip_address: "U kunt zich niet als %{username} aanmelden vanaf dat IP-adres."
     admin_not_allowed_from_ip_address: "U kunt zich niet als beheerder aanmelden vanaf dat IP-adres."
@@ -1391,14 +1387,6 @@ nl:
     bulk_invite_failed:
       title: "Groepsuitnodiging Mislukt"
       subject_template: "Massale uitnodiging aan gebruikers verwerkt, met fouten"
-      text_body_template: |
-        Je bestand met gebruikers uitnodigingen is verwerkt, %{sent} uitnodigingen zijn verzonden met %{failed} fout(en).
-
-        Verslag:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV Export Geslaagd"
       subject_template: "Export succesvol afgerond."

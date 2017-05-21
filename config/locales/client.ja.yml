@@ -930,10 +930,8 @@ ja:
         dismiss_new: "既読にする"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
-        change_category: "カテゴリを変更"
         close_topics: "トピックをクローズする"
         archive_topics: "アーカイブトピック"
-        notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択してください"
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
@@ -1574,8 +1572,6 @@ ja:
     badges:
       granted_on: "%{date}にゲット!"
       title: バッジ
-      allow_title: "タイトルに使える"
-      multiple_grant: "何回もゲット出来る"
       badge_count:
         other: "%{count}個のバッジ"
     tagging:

@@ -1028,7 +1028,6 @@ pt_BR:
       cannot_see_mention:
         category: "Você mencionou {{username}}, porém ele(a) não será notificado(a), pois não tem acesso a essa categoria. Você deverá adicioná-lo(a) ao grupo que tem acesso à categoria."
         private: "Você mencionou {{username}}, porém ele(a) não será notificado(a), pois não pode ver essa mensagem pessoal. Você deverá convidá-lo(a) para essa MP."
-      duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado no tópico por <b>@{{username}}</b> em <a href='{{post_url}}'>uma resposta {{ago}}</a> – tem certeza que deseja postá-lo novamente?"
       error:
         title_missing: "Título é obrigatório"
         title_too_short: "O título tem que ter no mínimo {{min}} caracteres"
@@ -1244,10 +1243,8 @@ pt_BR:
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
-        change_category: "Mudar Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar Tópicos"
-        notification_level: "Modificar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
           one: "Você selecionou <b>1</b> tópico."
@@ -2120,8 +2117,6 @@ pt_BR:
       granted_on: "Concedido em %{date}"
       others_count: "Outros com esse emblema (%{count})"
       title: Emblemas
-      allow_title: "título disponível"
-      multiple_grant: "concedido várias vezes"
       badge_count:
         one: "1 Emblema"
         other: "%{count} Emblemas"
@@ -2416,7 +2411,6 @@ pt_BR:
         event_type_missing: "Você deve configurar apenas um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
-        event_chooser: "Que eventos devem desencadear esse webhook?"
         wildcard_event: "Envie-me tudo."
         individual_event: "Selecionar eventos individuais."
         verify_certificate: "Verificar o certificado TLS da URL do payload"

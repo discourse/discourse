@@ -1029,7 +1029,6 @@ de:
       cannot_see_mention:
         category: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu die Zugriff auf diese Kategorie hat."
         private: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser PM ein."
-      duplicate_link: "Es sieht so aus als wäre dein Link zu <b>{{domain}}</b> in dem Thema bereits von <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> geteilt worden – möchtest du ihn wirklich erneut teilen? "
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -1245,10 +1244,8 @@ de:
         dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
-        change_category: "Kategorie ändern"
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
-        notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
@@ -2129,8 +2126,6 @@ de:
       granted_on: "Verliehen %{date}"
       others_count: "Andere mit diesem Abzeichen (%{count})"
       title: Abzeichen
-      allow_title: "kann als Titel verwendet werden"
-      multiple_grant: "kann mehrfach verliehen werden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"

@@ -957,7 +957,6 @@ tr_TR:
       cannot_see_mention:
         category: "{{username}}  adlı kullanıcıdan bahsettiniz fakat Ona bildirim gönderilmeyecek çünkü bu kategoriye ulaşma izni yok. Bunun gerçekleşmesi için kişi bu gruba eklemeniz gerekmektedir."
         private: "{{username}} adlı kullanıcıdan bahsettiniz fakat Ona bildirim gönderilmeyecek çünkü bu kişisel mesaja ulaşma izni yok. Bunun gerçekleşmesi için kişiyi bu PM'ye eklemeniz gerekmektedir."
-      duplicate_link: "Görünüşe göre <b>{{domain}}</b> alan adına bağlanan bağlantınız <b>@{{username}}</b> tarafından <a href='{{post_url}}'>a cevabı içerisinde {{ago}} yayınlanmış görünüyor. </a> – tekrar yayınlamak istediğinize emin misiniz?"
       error:
         title_missing: "Başlık gerekli"
         title_too_short: "Başlık en az {{min}} karakter olmalı"
@@ -1166,10 +1165,8 @@ tr_TR:
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu Eylemler"
-        change_category: "Kategoriyi Değiştir"
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
-        notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
@@ -1929,8 +1926,6 @@ tr_TR:
       granted_on: "%{date} tarihinde verildi"
       others_count: "Bu rozete sahip diğer kişiler (%{count})"
       title: Rozetler
-      allow_title: "uygun başlık"
-      multiple_grant: "birden fazla ödüllendirilmiş"
       badge_count:
         other: "%{count} Rozet"
       more_badges:
@@ -2215,7 +2210,6 @@ tr_TR:
         event_type_missing: "En az bir olay tipi ayarlamalısınız."
         content_type: "İçerik Türü"
         secret: "Gizli"
-        event_chooser: "Bu web kancasını tetikleyecek olayların neler olmasını isterdiniz?"
         wildcard_event: "Bana her şeyi gönder."
         individual_event: "Belirli olayları seç"
         verify_certificate: "Veri yükü URL'inin TLS sertifikasını kontrol edin."

@@ -1146,14 +1146,6 @@ vi:
       text_body_template: "File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi."
     bulk_invite_failed:
       subject_template: "Có lỗi khi thực hiện mời thành viên hàng loạt"
-      text_body_template: |
-        File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi kèm với %{failed} lỗi.
-
-        Đây là nhật ký:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Xuất dữ liệu hoàn tất"
     csv_export_failed:

@@ -1029,7 +1029,6 @@ nl:
       cannot_see_mention:
         category: "U hebt {{username}} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij geen toegang heeft tot deze categorie. U dient de gebruiker toe te voegen aan een groep die toegang heeft tot deze categorie."
         private: "U hebt {{username}} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij dit persoonlijke bericht niet kan zien. U dient de gebruiker voor dit PB uit te nodigen."
-      duplicate_link: "Het lijkt erop dat uw koppeling naar <b>{{domain}}</b> al in het topic is genoemd door <b>@{{username}}</b> in <a href='{{post_url}}'>een bericht van {{ago}}</a> – weet u zeker dat u deze opnieuw wilt plaatsen?"
       error:
         title_missing: "Titel is vereist"
         title_too_short: "Titel moet minstens {{min}} tekens bevatten"
@@ -1245,10 +1244,8 @@ nl:
         dismiss_new: "Nieuwe berichten negeren"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
-        change_category: "Categorie wijzigen"
         close_topics: "Topics sluiten"
         archive_topics: "Topics archiveren"
-        notification_level: "Meldingsniveau wijzigen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
         selected:
           one: "U hebt <b>1</b> topic geselecteerd."
@@ -2133,8 +2130,6 @@ nl:
       granted_on: "Toegekend op %{date}"
       others_count: "Anderen met deze badge (%{count})"
       title: Badges
-      allow_title: "beschikbare titel"
-      multiple_grant: "meerdere malen toegekend"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"

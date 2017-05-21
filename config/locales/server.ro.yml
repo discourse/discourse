@@ -311,10 +311,6 @@ ro:
           attributes:
             name:
               taken: este deja folosit de un alt emoji
-        topic_status_update:
-          attributes:
-            execute_at:
-              in_the_past: "trebuie să fie în viitor."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} încă nu a introdus nimic în câmpul Despre mine din profilul său</div>"
@@ -1018,8 +1014,6 @@ ro:
     default_opengraph_image_url: "URL-ul pentru imaginea implicită pentru Open Graph"
     twitter_summary_large_image_url: "URL-ul pentru imaginea implicită pentru imaginea card cu rezumatul Twitter (trebuie să aibă minim 280px lățime și 150px înălțime)."
     allow_all_attachments_for_group_messages: "Permite toate atașamentele de email pentru mesajele de grup."
-    convert_pasted_images_to_hq_jpg: "Convertiți imaginile lipite în fișiere JPG de înaltă calitate."
-    convert_pasted_images_quality: "Calitatea fișierului JPG convertit (1 este cea mai slabă calitate, 100 este cea mai bună calitate)."
     enable_flash_video_onebox: "Activează încastrarea adreselor swf și flv (Adobe Flash) în onebox. ATENȚIE: poate aduce riscuri de securitate."
     default_invitee_trust_level: "Nivelul de încredere implicit (0-4) pentru utilizatorii invitați."
     default_trust_level: "Nivelul de încredere implicit (0-4) pentru toți noii utilizatori. ATENȚIE! Schimbarea acestui parametru crește serios riscul de spam."
@@ -1607,14 +1601,6 @@ ro:
       text_body_template: "Fișierul tău de invitații multiple a fost procesat, %{sent} (de) invitații trimise."
     bulk_invite_failed:
       subject_template: "Invitația multiplă a fost procesată cu erori"
-      text_body_template: |
-        Fișierul tău de invitații multiple a fost procesat, %{sent} (de) invitații trimise cu %{failed} (de) erori.
-
-        Aici este raportul:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Exportul datelor s-a terminat"
     csv_export_failed:

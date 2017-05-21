@@ -960,10 +960,8 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        change_category: "Cambiar categoría"
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
-        notification_level: "Cambiar o nivel de notificación"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
           one: "Seleccionaches <b>un</b> tema."
