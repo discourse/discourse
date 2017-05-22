@@ -55,9 +55,12 @@ $input-width: 220px;
         font-weight: normal;
         float: auto;
       }
-      p {
+      .instructions {
         color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         margin: 0;
+        font-size: 0.929em;
+        font-weight: normal;
+        line-height: 18px;
       }
     }
     clear: both;

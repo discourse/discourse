@@ -383,8 +383,10 @@ class PostsController < ApplicationController
       PostAction.act(current_user, post, PostActionType.types[:bookmark])
     else
       post_action = PostAction.find_by(post_id: params[:post_id], user_id: current_user.id)
-      post = post_action&.post
       raise Discourse::NotFound unless post_action
+
+      post = Post.with_deleted.find_by(id: post_action&.post_id)
+      raise Discourse::NotFound unless post
 
       PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
     end

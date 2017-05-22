@@ -37,7 +37,13 @@ a#new-account-link { white-space:nowrap; }
 
 a#forgot-password-link {clear: left; float: left; }
 
-.btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
+.login-modal, .create-account {
+  .btn-primary {
+    margin-bottom: 10px;
+    font-size: 15;
+    float: left;
+  }
+}
 
 
 $label-width: 85px;

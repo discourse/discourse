@@ -12,8 +12,8 @@
     {{/if}}
 
     {{#if showAdminControls}}
-      {{d-button action="deleteTag" label="tagging.delete_tag" icon="trash-o" class="admin-tag btn-danger"}}
-      {{d-button action="renameTag" actionParam=tag label="tagging.rename_tag" icon="pencil" class="admin-tag"}}
+      {{d-button action="deleteTag" icon="trash-o" class="admin-tag btn-danger"}}
+      {{d-button action="renameTag" actionParam=tag icon="pencil" class="admin-tag"}}
     {{else}}
       {{#if canCreateTopic}}
         <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>

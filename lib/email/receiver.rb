@@ -2,6 +2,7 @@ require "digest"
 require_dependency "new_post_manager"
 require_dependency "post_action_creator"
 require_dependency "html_to_markdown"
+require_dependency "upload_creator"
 
 module Email
 
@@ -38,12 +39,17 @@ module Email
 
     def process!
       return if is_blacklisted?
-      @from_email, @from_display_name = parse_from_field(@mail)
-      @incoming_email = find_or_create_incoming_email
-      process_internal
-    rescue => e
-      @incoming_email.update_columns(error: e.to_s) if @incoming_email
-      raise
+      DistributedMutex.synchronize(@message_id) do
+        begin
+          return if IncomingEmail.exists?(message_id: @message_id)
+          @from_email, @from_display_name = parse_from_field(@mail)
+          @incoming_email = create_incoming_email
+          process_internal
+        rescue => e
+          @incoming_email.update_columns(error: e.to_s) if @incoming_email
+          raise
+        end
+      end
     end
 
     def is_blacklisted?
@@ -51,14 +57,15 @@ module Email
       Regexp.new(SiteSetting.ignore_by_title) =~ @mail.subject
     end
 
-    def find_or_create_incoming_email
-      IncomingEmail.find_or_create_by(message_id: @message_id) do |ie|
-        ie.raw = @raw_email
-        ie.subject = subject
-        ie.from_address = @from_email
-        ie.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
-        ie.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
-      end
+    def create_incoming_email
+      IncomingEmail.create(
+        message_id: @message_id,
+        raw: @raw_email,
+        subject: subject,
+        from_address: @from_email,
+        to_addresses: @mail.to&.map(&:downcase)&.join(";"),
+        cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
+      )
     end
 
     def process_internal
@@ -194,7 +201,7 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        markdown = HtmlToMarkdown.new(html).to_markdown
+        markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
         markdown = trim_discourse_markers(markdown)
         EmailReplyTrimmer.trim(markdown, true)
       end
@@ -216,6 +223,13 @@ module Email
       # common encodings
       encodings = ["UTF-8", "ISO-8859-1"]
       encodings.unshift(mail_part.charset) if mail_part.charset.present?
+
+      # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so
+      # always try UTF-8 first
+      if mail_part.content_transfer_encoding == "8bit"
+        encodings.delete("UTF-8")
+        encodings.unshift("UTF-8")
+      end
 
       encodings.uniq.each do |encoding|
         fixed = try_to_encode(string, encoding)
@@ -564,11 +578,17 @@ module Email
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
           opts = { is_attachment_for_group_message: options[:is_group_message] }
-          upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size, opts)
+          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(options[:user].id)
           if upload && upload.errors.empty?
             # try to inline images
-            if attachment.content_type.start_with?("image/") && options[:raw][/\[image: .+ \d+\]/]
-              options[:raw].sub!(/\[image: .+ \d+\]/, attachment_markdown(upload))
+            if attachment.content_type.start_with?("image/")
+              if options[:raw][attachment.url]
+                options[:raw].sub!(attachment.url, upload.url)
+              elsif options[:raw][/\[image:.*?\d+[^\]]*\]/i]
+                options[:raw].sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+              else
+                options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
+              end
             else
               options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
             end

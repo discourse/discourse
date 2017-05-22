@@ -65,12 +65,8 @@ class OptimizedImage < ActiveRecord::Base
             if url.present?
               thumbnail.url = url
               thumbnail.save
-            else
-              Rails.logger.error("Failed to store optimized image #{width}x#{height} for #{upload.url}")
             end
           end
-        else
-          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
         end
 
         # close && remove temp file
@@ -182,7 +178,7 @@ class OptimizedImage < ActiveRecord::Base
       #{from}[0]
       -gravity center
       -background transparent
-      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -resize #{dimensions}
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }

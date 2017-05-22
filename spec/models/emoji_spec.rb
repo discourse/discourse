@@ -15,4 +15,17 @@ describe Emoji do
     expect(Emoji.replacement_code('robin')).to be_nil
   end
 
+  describe '.load_custom' do
+    describe 'when a custom emoji has an invalid upload_id' do
+      it 'should return the custom emoji without a URL' do
+        CustomEmoji.create!(name: 'test', upload_id: -1)
+
+        emoji = Emoji.load_custom.first
+
+        expect(emoji.name).to eq('test')
+        expect(emoji.url).to eq(nil)
+      end
+    end
+  end
+
 end

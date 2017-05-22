@@ -10,6 +10,7 @@ require_dependency 'discourse_tagging'
 require_dependency 'search'
 
 class Topic < ActiveRecord::Base
+  class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include HasCustomFields
@@ -120,7 +121,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
-  has_many :topic_status_updates, dependent: :destroy
+  has_many :topic_timers, dependent: :destroy
 
   has_one :user_warning
   has_one :first_post, -> {where post_number: 1}, class_name: Post
@@ -214,10 +215,10 @@ class Topic < ActiveRecord::Base
     if !@ignore_category_auto_close &&
        self.category &&
        self.category.auto_close_hours &&
-       !topic_status_update&.execute_at
+       !public_topic_timer&.execute_at
 
-      self.set_or_create_status_update(
-        TopicStatusUpdate.types[:close],
+      self.set_or_create_timer(
+        TopicTimer.types[:close],
         self.category.auto_close_hours,
         based_on_last_post: self.category.auto_close_based_on_last_post
       )
@@ -294,7 +295,7 @@ class Topic < ActiveRecord::Base
   def self.fancy_title(title)
     escaped = ERB::Util.html_escape(title)
     return unless escaped
-    HtmlPrettify.render(escaped)
+    Emoji.unicode_unescape(HtmlPrettify.render(escaped))
   end
 
   def fancy_title
@@ -396,6 +397,7 @@ class Topic < ActiveRecord::Base
 
   def reload(options=nil)
     @post_numbers = nil
+    @public_topic_timer = nil
     super(options)
   end
 
@@ -696,6 +698,9 @@ SQL
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
+        # we can not remove ourselves cause then we will end up adding
+        # ourselves in add_small_action
+        removed_by = Discourse.system_user if user.id == removed_by&.id
         add_small_action(removed_by, "removed_user", user.username)
         return true
       end
@@ -722,7 +727,7 @@ SQL
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
-      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # Create a small action message
@@ -747,7 +752,7 @@ SQL
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
-      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # rate limit topic invite
@@ -951,8 +956,8 @@ SQL
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
-  def topic_status_update
-    @topic_status_update ||= topic_status_updates.where('deleted_at IS NULL').first
+  def public_topic_timer
+    @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
 
   # Valid arguments for the time:
@@ -967,70 +972,64 @@ SQL
   #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_status_update(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    topic_status_update = TopicStatusUpdate.find_or_initialize_by(
-      status_type: status_type,
-      topic: self
-    )
+  def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
+    topic_timer_options = { status_type: status_type, topic: self }
+    topic_timer_options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
+    topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
 
     if time.blank?
-      topic_status_update.trash!(trashed_by: by_user || Discourse.system_user)
+      topic_timer.trash!(trashed_by: by_user || Discourse.system_user)
       return
     end
 
     time_now = Time.zone.now
-    topic_status_update.based_on_last_post = !based_on_last_post.blank?
+    topic_timer.based_on_last_post = !based_on_last_post.blank?
 
-    if status_type == TopicStatusUpdate.types[:publish_to_category]
-      topic_status_update.category = Category.find_by(id: category_id)
+    if status_type == TopicTimer.types[:publish_to_category]
+      topic_timer.category = Category.find_by(id: category_id)
     end
 
-    if topic_status_update.based_on_last_post
+    if topic_timer.based_on_last_post
       num_hours = time.to_f
 
       if num_hours > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-        topic_status_update.execute_at = last_post_created_at + num_hours.hours
-        topic_status_update.created_at = last_post_created_at
+        topic_timer.execute_at = last_post_created_at + num_hours.hours
+        topic_timer.created_at = last_post_created_at
       end
     else
       utc = Time.find_zone("UTC")
       is_timestamp = time.is_a?(String)
       now = utc.now
 
-      if is_timestamp && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(time.strip)
-        # a time of day in client's time zone, like "15:00"
-        topic_status_update.execute_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
-        topic_status_update.execute_at += timezone_offset * 60 if timezone_offset
-        topic_status_update.execute_at += 1.day if topic_status_update.execute_at < now
-      elsif is_timestamp && time.include?("-") && timestamp = utc.parse(time)
+      if is_timestamp && time.include?("-") && timestamp = utc.parse(time)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
-        topic_status_update.execute_at = timestamp
-        topic_status_update.execute_at += timezone_offset * 60 if timezone_offset
-        topic_status_update.errors.add(:execute_at, :invalid) if timestamp < now
+        topic_timer.execute_at = timestamp
+        topic_timer.execute_at += timezone_offset * 60 if timezone_offset
+        topic_timer.errors.add(:execute_at, :invalid) if timestamp < now
       else
         num_hours = time.to_f
 
         if num_hours > 0
-          topic_status_update.execute_at = num_hours.hours.from_now
+          topic_timer.execute_at = num_hours.hours.from_now
         end
       end
     end
 
-    if topic_status_update.execute_at
+    if topic_timer.execute_at
       if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
-        topic_status_update.user = by_user
+        topic_timer.user = by_user
       else
-        topic_status_update.user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
+        topic_timer.user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
       end
 
       if self.persisted?
-        topic_status_update.save!
+        topic_timer.save!
       else
-        self.topic_status_updates << topic_status_update
+        self.topic_timers << topic_timer
       end
 
-      topic_status_update
+      topic_timer
     end
   end
 

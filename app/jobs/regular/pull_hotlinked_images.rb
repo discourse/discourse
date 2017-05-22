@@ -1,5 +1,6 @@
 require_dependency 'url_helper'
 require_dependency 'file_helper'
+require_dependency 'upload_creator'
 
 module Jobs
 
@@ -41,7 +42,7 @@ module Jobs
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
-                  upload = Upload.create_for(post.user_id, hotlinked, filename, File.size(hotlinked.path), { origin: src })
+                  upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
                   downloaded_urls[src] = upload.url
                 else
                   Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")

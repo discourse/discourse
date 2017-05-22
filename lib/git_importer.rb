@@ -35,15 +35,24 @@ class GitImporter
     FileUtils.rm_rf(@temp_folder)
   end
 
-  def [](value)
-    fullpath = "#{@temp_folder}/#{value}"
+  def real_path(relative)
+    fullpath = "#{@temp_folder}/#{relative}"
     return nil unless File.exist?(fullpath)
 
     # careful to handle symlinks here, don't want to expose random data
     fullpath = Pathname.new(fullpath).realpath.to_s
+
     if fullpath && fullpath.start_with?(@temp_folder)
-      File.read(fullpath)
+      fullpath
+    else
+      nil
     end
+  end
+
+  def [](value)
+    fullpath = real_path(value)
+    return nil unless fullpath
+    File.read(fullpath)
   end
 
 end

@@ -1,7 +1,9 @@
 require_dependency 'stylesheet/common'
+require_dependency 'global_path'
 
 module Stylesheet
   class Importer < SassC::Importer
+    include GlobalPath
 
     @special_imports = {}
 
@@ -39,6 +41,20 @@ module Stylesheet
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
+      theme&.theme_fields&.each do |field|
+        next unless ThemeField.theme_var_type_ids.include?(field.type_id)
+
+        if field.type_id == ThemeField.types[:theme_upload_var]
+          if upload = field.upload
+            url = upload_cdn_path(upload.url)
+            contents << "$#{field.name}: unquote(\"#{url}\");\n"
+          end
+        else
+          escaped = field.value.gsub('"', "\\22")
+          escaped.gsub!("\n", "\\A")
+          contents << "$#{field.name}: unquote(\"#{escaped}\");\n"
+        end
+      end
       Import.new("theme_variable.scss", source: contents)
     end
 
@@ -70,8 +86,13 @@ module Stylesheet
     end
 
     def initialize(options)
+      @theme = options[:theme]
       @theme_id = options[:theme_id]
       @theme_field = options[:theme_field]
+      if @theme && !@theme_id
+        # make up an id so other stuff does not bail out
+        @theme_id = @theme.id || -1
+      end
     end
 
     def import_files(files)
@@ -105,7 +126,10 @@ COMMENT
     end
 
     def theme
-      @theme ||= Theme.find(@theme_id)
+      unless @theme
+        @theme = (@theme_id && Theme.find(@theme_id)) || :nil
+      end
+      @theme == :nil ? nil : @theme
     end
 
     def apply_cdn(url)

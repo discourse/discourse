@@ -59,6 +59,18 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS = 1200
 
+  scope :private_posts_for_user, ->(user) {
+    where("posts.topic_id IN (SELECT topic_id
+             FROM topic_allowed_users
+             WHERE user_id = :user_id
+             UNION ALL
+             SELECT tg.topic_id
+             FROM topic_allowed_groups tg
+             JOIN group_users gu ON gu.user_id = :user_id AND
+                                      gu.group_id = tg.group_id)",
+                                              user_id: user.id)
+  }
+
   scope :by_newest, -> { order('created_at desc, id desc') }
   scope :by_post_number, -> { order('post_number ASC') }
   scope :with_user, -> { includes(:user) }
@@ -77,8 +89,6 @@ class Post < ActiveRecord::Base
 
     q.order('posts.created_at ASC')
   }
-  scope :mailing_list_new_topics, ->(user, since) { for_mailing_list(user, since).where('topics.created_at > ?', since) }
-  scope :mailing_list_updates,    ->(user, since) { for_mailing_list(user, since).where('topics.created_at <= ?', since) }
 
   delegate :username, to: :user
 

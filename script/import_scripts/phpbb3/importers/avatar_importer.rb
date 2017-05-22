@@ -75,7 +75,6 @@ module ImportScripts::PhpBB3
         if avatar_file.size <= max_image_size_kb
           return avatar_file
         else
-          Rails.logger.error("Failed to download remote avatar: #{url} - Image is larger than #{max_image_size_kb} KB")
           return nil
         end
       end

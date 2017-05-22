@@ -52,9 +52,9 @@ const TopicRoute = Discourse.Route.extend({
 
     showTopicStatusUpdate() {
       const model = this.modelFor('topic');
-      model.set('topic_status_update', Ember.Object.create(model.get('topic_status_update')));
-      showModal('edit-topic-status-update', { model });
-      this.controllerFor('modal').set('modalClass', 'edit-topic-status-update-modal');
+      model.set('topic_timer', Ember.Object.create(model.get('topic_timer')));
+      showModal('edit-topic-timer', { model });
+      this.controllerFor('modal').set('modalClass', 'edit-topic-timer-modal');
     },
 
     showChangeTimestamp() {
@@ -189,7 +189,6 @@ const TopicRoute = Discourse.Route.extend({
     postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
-    topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
     this.screenTrack.stop();
 
@@ -216,7 +215,6 @@ const TopicRoute = Discourse.Route.extend({
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');
-    controller.subscribe();
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get('id'), controller);

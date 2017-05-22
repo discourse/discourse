@@ -8,11 +8,6 @@ export default Ember.Component.extend({
     return publicGroup;
   },
 
-  @computed('model.allow_membership_requests', 'model.alias_level')
-  canRequestMembership(allowMembershipRequests, aliasLevel) {
-    return allowMembershipRequests && aliasLevel === 99;
-  },
-
   @computed("model.is_group_user", "model.id", "groupUserIds")
   userIsGroupUser(isGroupUser, groupId, groupUserIds) {
     if (isGroupUser !== undefined) {

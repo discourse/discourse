@@ -153,14 +153,14 @@ describe StaffActionLogger do
     it "logs updated site customizations" do
       old_json = ThemeSerializer.new(theme, root:false).to_json
 
-      theme.set_field(:common, :scss, "body{margin: 10px;}")
+      theme.set_field(target: :common, name: :scss, value: "body{margin: 10px;}")
 
       log_record = logger.log_theme_change(old_json, theme)
 
       expect(log_record.previous_value).to be_present
 
       json = ::JSON.parse(log_record.new_value)
-      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}"}])
+      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1}])
     end
   end
 
@@ -171,14 +171,14 @@ describe StaffActionLogger do
 
     it "creates a new UserHistory record" do
       theme = Theme.new(name: 'Banana')
-      theme.set_field(:common, :scss, "body{margin: 10px;}")
+      theme.set_field(target: :common, name: :scss, value: "body{margin: 10px;}")
 
       log_record = logger.log_theme_destroy(theme)
       expect(log_record.previous_value).to be_present
       expect(log_record.new_value).to eq(nil)
       json = ::JSON.parse(log_record.previous_value)
 
-      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}"}])
+      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1}])
     end
   end
 

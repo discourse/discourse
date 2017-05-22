@@ -143,7 +143,7 @@ def migrate_from_s3
           if filename = guess_filename(url, post.raw)
             puts "FILENAME: #{filename}"
             file = FileHelper.download("http:#{url}", 20.megabytes, "from_s3", true)
-            if upload = Upload.create_for(post.user_id || -1, file, filename, File.size(file))
+            if upload = UploadCreator.new(file, filename, File.size(file)).create_for(post.user_id || -1)
               post.raw = post.raw.gsub(/(https?:)?#{Regexp.escape(url)}/, upload.url)
               post.save
               post.rebake!
@@ -433,7 +433,7 @@ def recover_from_tombstone
 
             if File.exists?(tombstone_path)
               File.open(tombstone_path) do |file|
-                new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+                new_upload = UploadCreator.new(file, File.basename(url), File.size(file)).create_for(Discourse::SYSTEM_USER_ID)
 
                 if new_upload.persisted?
                   printf "Restored into #{new_upload.url}\n"

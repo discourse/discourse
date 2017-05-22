@@ -75,27 +75,6 @@ class UserNotifications < ActionMailer::Base
     end
   end
 
-  # This is the "mailing list summary email"
-  def mailing_list(user, opts={})
-    @since = opts[:since] || 1.day.ago
-    @since_formatted = short_date(@since)
-
-    @new_topic_posts      = Post.mailing_list_new_topics(user, @since).group_by(&:topic) || {}
-    @existing_topic_posts = Post.mailing_list_updates(user, @since).group_by(&:topic) || {}
-    @posts_by_topic       = @new_topic_posts.merge @existing_topic_posts
-    return unless @posts_by_topic.present?
-
-    build_summary_for(user)
-    opts = {
-      from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
-      subject: I18n.t('user_notifications.mailing_list.subject_template', email_prefix: @email_prefix, date: @date),
-      mailing_list_mode: true,
-      add_unsubscribe_link: true,
-      unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
-    }
-    apply_notification_styles(build_email(@user.email, opts))
-  end
-
   def digest(user, opts={})
     build_summary_for(user)
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
@@ -273,12 +252,10 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by=false)
-    result = "[email-indent]\n"
-    result << "#{post.raw}\n\n"
+    result = "#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
-    result << "[/email-indent]\n"
     result
   end
 
@@ -489,6 +466,7 @@ class UserNotifications < ActionMailer::Base
   private
 
   def build_summary_for(user)
+    @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title # used by I18n
     @user            = user
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url

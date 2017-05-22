@@ -53,45 +53,47 @@ nav.post-controls {
   margin-left: 10px;
 }
 
-button.like-count {
-  font-size: 1em;
-  padding: 8px 4px;
-}
-
-button {
-  border: none;
-  font-size: 1.214em;
-  padding: 8px 10px;
-  vertical-align: top;
-  background: transparent;
-  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
-  float: left;
-  &.hidden {
-    display: none;
-  }
-  &.admin {
-    position: relative;
-  }
-  &.expand-post {
-    margin:10px 0 10px 0;
-  }
-  &.has-like {color: $love;}
-
-  .read-icon {
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f02e";
+.topic-post {
+  button {
+    border: none;
+    font-size: 1.214em;
+    padding: 8px 10px;
+    vertical-align: top;
+    background: transparent;
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    float: left;
+    &.hidden {
+      display: none;
     }
-    &.unseen {
+    &.admin {
+      position: relative;
+    }
+    &.expand-post {
+      margin:10px 0 10px 0;
+    }
+    &.has-like {color: $love;}
+
+    .read-icon {
       &:before {
-        content: "\f097";
+        font-family: "FontAwesome";
+        content: "\f02e";
+      }
+      &.unseen {
+        &:before {
+          content: "\f097";
+        }
+      }
+      &.bookmarked {
+        &:before {
+          color: $tertiary;
+        }
       }
     }
-    &.bookmarked {
-      &:before {
-        color: $tertiary;
-      }
-    }
+  }
+
+  button.like-count {
+    font-size: 1em;
+    padding: 8px 4px;
   }
 }
 
@@ -555,11 +557,6 @@ span.highlighted {
   button {
     margin-right: 7px;
   }
-}
-
-.gap.jagged-border {
-  margin-left: -10px;
-  margin-right: -10px;
 }
 
 .popup-menu {

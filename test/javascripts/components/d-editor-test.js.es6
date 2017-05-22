@@ -62,6 +62,19 @@ function testCase(title, testFunc) {
   });
 }
 
+function composerTestCase(title, testFunc) {
+  componentTest(title, {
+    template: '{{d-editor value=value composerEvents=true}}',
+    setup() {
+      this.set('value', 'hello world.');
+    },
+    test(assert) {
+      const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+      testFunc.call(this, assert, textarea);
+    }
+  });
+}
+
 testCase(`selecting the space before a word`, function(assert, textarea) {
   textarea.selectionStart = 5;
   textarea.selectionEnd = 7;
@@ -760,8 +773,19 @@ componentTest('emoji', {
   }
 });
 
-testCase("replace-text event", function(assert) {
+testCase("replace-text event by default", function(assert) {
+  this.set('value', "red green blue");
 
+  andThen(() => {
+    this.container.lookup('app-events:main').trigger('composer:replace-text', 'green', 'yellow');
+  });
+
+  andThen(() => {
+    assert.equal(this.get('value'), 'red green blue');
+  });
+});
+
+composerTestCase("replace-text event for composer", function(assert) {
   this.set('value', "red green blue");
 
   andThen(() => {
@@ -772,6 +796,7 @@ testCase("replace-text event", function(assert) {
     assert.equal(this.get('value'), 'red yellow blue');
   });
 });
+
 
 (() => {
   // Tests to check cursor/selection after replace-text event.
@@ -849,7 +874,7 @@ testCase("replace-text event", function(assert) {
 
   for (let i = 0; i < CASES.length; i++) {
     const CASE = CASES[i];
-    testCase(`replace-text event: ${CASE.description}`, function(assert, textarea) {
+    composerTestCase(`replace-text event: ${CASE.description}`, function(assert, textarea) {
       this.set('value', BEFORE);
       setSelection(textarea, CASE.before);
       andThen(() => {

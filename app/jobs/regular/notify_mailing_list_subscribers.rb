@@ -10,8 +10,7 @@ module Jobs
       post_id = args[:post_id]
       post = post_id ? Post.with_deleted.find_by(id: post_id) : nil
 
-      raise Discourse::InvalidParameters.new(:post_id) unless post
-      return if post.trashed? || post.user_deleted? || !post.topic
+      return if !post || post.trashed? || post.user_deleted? || !post.topic
 
       users =
           User.activated.not_blocked.not_suspended.real
@@ -33,7 +32,7 @@ module Jobs
                      WHERE cu.category_id = ? AND cu.user_id = users.id AND cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
 
-      users.each do |user|
+      users.find_each do |user|
         if Guardian.new(user).can_see?(post)
           if EmailLog.reached_max_emails?(user)
             skip(user.email, user.id, post.id, I18n.t('email_log.exceeded_emails_limit'))

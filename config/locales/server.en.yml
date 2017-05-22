@@ -401,7 +401,7 @@ en:
           attributes:
             name:
               taken: is already in use by another emoji
-        topic_status_update:
+        topic_timer:
           attributes:
             execute_at:
               in_the_past: "must be in the future."
@@ -639,40 +639,48 @@ en:
     off_topic:
       title: 'Off-Topic'
       description: 'This post is not relevant to the current discussion as defined by the title and first post, and should probably be moved elsewhere.'
+      short_description: 'Not relevant to the discussion'
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
-      description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
+      description: 'This post is an advertisement, or vandalism. It is not useful or relevant to the current topic.'
+      short_description: 'This is an advertisement or vandalism'
       long_form: 'flagged this as spam'
       email_title: '"%{title}" was flagged as spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriate'
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
+      short_description: 'A violation of <a href="/guidelines">our community guidelines</a>'
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Send @{{username}} a message'
       description: 'I want to talk to this person directly and privately about their post.'
+      short_description: 'I want to talk to this person directly and privately about their post.'
       long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Something Else"
       description: 'This post requires staff attention for another reason not listed above.'
+      short_description: 'Requires staff attention for another reason'
       long_form: 'flagged this for staff attention'
       email_title: 'A post in "%{title}" requires staff attention'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bookmark'
       description: 'Bookmark this post'
+      short_description: 'Bookmark this post'
       long_form: 'bookmarked this post'
     like:
       title: 'Like'
       description: 'Like this post'
+      short_description: 'Like this post'
       long_form: 'liked this'
     vote:
       title: 'Vote'
       description: 'Vote for this post'
+      short_description: 'Vote for this post'
       long_form: 'voted for this post'
 
   user_activity:
@@ -1058,7 +1066,7 @@ en:
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
 
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
+    invite_only: "Public registration is disabled, all new users must be explicitly invited by staff."
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
@@ -1179,8 +1187,7 @@ en:
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
-    convert_pasted_images_to_hq_jpg: "Convert pasted images to high-quality JPG files."
-    convert_pasted_images_quality: "Quality of the converted JPG file (1 is lowest quality, 100 is best quality)."
+    png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
@@ -1255,6 +1262,7 @@ en:
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
+    theme_authorized_extensions: "A list of file extensions allowed for theme uploads (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
     max_image_megapixels: "Maximum number of megapixels allowed for an image."
@@ -1440,6 +1448,7 @@ en:
 
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
+    feed_polling_frequency_mins: "EMBEDDING ONLY: Frequency of polling"
     embed_by_username: "Discourse username of the user who creates the embedded topics."
     embed_username_key_from_feed: "Key to pull discourse username from feed."
     embed_title_scrubber: "Regular expression for scrubbing embeddable titles."
@@ -1655,13 +1664,14 @@ en:
     pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now listed. It will be displayed in topic lists."
     visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+    auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
-    activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail or to input a new email address.</p>"
+    activate_email: "<p>You’re almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
@@ -1710,8 +1720,8 @@ en:
 
   flags_reminder:
     flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. Please review them."
-      other: "Flags were submitted over %{count} hours ago. Please review them."
+      one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
+      other: "Flags were submitted over %{count} hours ago. [Please review them](/admin/flags)."
     subject_template:
       one: "1 flag waiting to be handled"
       other: "%{count} flags waiting to be handled"
@@ -1977,8 +1987,6 @@ en:
 
         Enjoy your stay!
 
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
-
     welcome_invite:
       title: "Welcome Invite"
       subject_template: "Welcome to %{site_name}!"
@@ -1994,8 +2002,6 @@ en:
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
-
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
         [prefs]: %{user_preferences_url}
 
@@ -2062,7 +2068,7 @@ en:
 
         Here's the log:
 
-        ```
+        ```text
         %{logs}
         ```
 
@@ -2346,13 +2352,11 @@ en:
       title: "You're a New User of the Month!"
       subject_template: "You're a New User of the Month!"
       text_body_template: |
-        Congratulations, you've been awarded the **New User of the Month award for %{month_year}**. :trophy:
+        Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
-        You've quickly become a valuable member of our community and everyone is really enjoying your posts.
+        This award is only granted to two new users per month, and it will be permanently visible on [your user page](/my/badges).
 
-        This award will be permanently visible as a badge on [your user page](/my/badges).
-
-        Thanks, and keep up the great work!
+        You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -2371,8 +2375,8 @@ en:
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
-      one: "WARNING: you reached the limit of daily emails. Further email notifications will be suppressed."
-      other: "WARNING: you reached the limit of %{count} daily emails. Further email notifications will be suppressed."
+      one: "Heads up: We send a maximum of 1 daily email. Check the site to see the ones that might be held back."
+      other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
     unsubscribe:
       title: "Unsubscribe"
@@ -2596,15 +2600,6 @@ en:
           above_footer: ''
           below_footer: ''
 
-    mailing_list:
-      why: "All activity on %{site_link} for %{date}"
-      subject_template: "[%{email_prefix}] Summary for %{date}"
-      unsubscribe: "This summary is sent daily due to mailing list mode being enabled. To unsubscribe %{unsubscribe_link}."
-      from: "%{site_name} summary"
-      new_topics: "New topics"
-      topic_updates: "Topic updates"
-      view_this_topic: "View this topic"
-      back_to_top: "Back to top"
     forgot_password:
       title: "Forgot Password"
       subject_template: "[%{email_prefix}] Password reset"
@@ -2698,8 +2693,6 @@ en:
 
         Enjoy your stay!
 
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
-
     signup:
       title: "Signup"
       subject_template: "[%{email_prefix}] Confirm your new account"
@@ -2730,12 +2723,15 @@ en:
 
   deleted: 'deleted'
 
+  image: "image"
+
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     file_missing: "Sorry, you must provide a file to upload."
+    empty: "Sorry, but the file you provided is empty."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
@@ -2774,6 +2770,9 @@ en:
     base_theme_name: "Base"
     default: "Light Scheme"
     dark: "Dark Scheme"
+    default_theme_name: "Default"
+    dark_theme_name: "Dark"
+    light_theme_name: "Light"
 
   about: "About"
   guidelines: "Guidelines"
@@ -3339,9 +3338,6 @@ en:
     error: "Error!"
     email_input: "Admin Email"
     submit_button: "Send Email"
-
-  discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
 
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.

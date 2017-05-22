@@ -10,12 +10,15 @@ require_dependency 'letter_avatar'
 require_dependency 'distributed_cache'
 require_dependency 'global_path'
 require_dependency 'secure_session'
+require_dependency 'topic_query'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
   include GlobalPath
+
+  attr_reader :theme_key
 
   serialization_scope :guardian
 
@@ -264,12 +267,21 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key] || cookies[:theme_key] || session[:theme_key]
+    theme_key = flash[:preview_theme_key]
+
+    user_option = current_user&.user_option
+
+    unless theme_key
+      key, seq = cookies[:theme_key]&.split(",")
+      if key && seq && seq.to_i == user_option&.theme_key_seq
+        theme_key = key
+      end
+    end
+
+    theme_key ||= user_option&.theme_key
 
     if theme_key && !guardian.allow_theme?(theme_key)
       theme_key = nil
-      cookies[:theme_key] = nil
-      session[:theme_key] = nil
     end
 
     theme_key ||= SiteSetting.default_theme_key

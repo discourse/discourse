@@ -174,12 +174,12 @@
           {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
             {{#if loadedAllPosts}}
 
-              {{topic-status-info
-                  statusType=model.topic_status_update.status_type
-                  executeAt=model.topic_status_update.execute_at
-                  basedOnLastPost=model.topic_status_update.based_on_last_post
-                  duration=model.topic_status_update.duration
-                  categoryId=model.topic_status_update.category_id}}
+              {{topic-timer-info
+                  statusType=model.topic_timer.status_type
+                  executeAt=model.topic_timer.execute_at
+                  basedOnLastPost=model.topic_timer.based_on_last_post
+                  duration=model.topic_timer.duration
+                  categoryId=model.topic_timer.category_id}}
 
               {{#if session.showSignupCta}}
                 {{! replace "Log In to Reply" with the infobox }}

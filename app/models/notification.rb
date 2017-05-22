@@ -52,7 +52,8 @@ class Notification < ActiveRecord::Base
                         custom: 14,
                         group_mentioned: 15,
                         group_message_summary: 16,
-                        watching_first_post: 17
+                        watching_first_post: 17,
+                        topic_reminder: 18
                        )
   end
 

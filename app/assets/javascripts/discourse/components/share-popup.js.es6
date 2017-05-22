@@ -39,7 +39,7 @@ export default Ember.Component.extend({
     } else {
       const $linkForTouch = $('#share-link .share-for-touch a');
       $linkForTouch.attr('href', link);
-      $linkForTouch.html(link);
+      $linkForTouch.text(link);
       const range = window.document.createRange();
       range.selectNode($linkForTouch[0]);
       window.getSelection().addRange(range);
@@ -93,7 +93,7 @@ export default Ember.Component.extend({
       return true;
     });
 
-    $html.on('click.discoure-share-link', '[data-share-url]', e => {
+    $html.on('click.discourse-share-link', 'button[data-share-url], .post-info .post-date[data-share-url]', e => {
       // if they want to open in a new tab, let it so
       if (wantsNewWindow(e)) { return true; }
 
@@ -121,7 +121,7 @@ export default Ember.Component.extend({
 
   willDestroyElement() {
     this._super();
-    $('html').off('click.discoure-share-link')
+    $('html').off('click.discourse-share-link')
              .off('mousedown.outside-share-link')
              .off('keydown.share-view');
   },

@@ -899,7 +899,6 @@ pt_BR:
     force_hostname: "Se você quiser especificar um hostname na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
-    invite_only: "Cadastro público está desabilitado, todos os novos usuários devem ser explicitamente convidados por outros membros ou equipe."
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
     min_password_length: "Comprimento mínimo da senha."
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
@@ -987,8 +986,6 @@ pt_BR:
     default_opengraph_image_url: "URL da imagem opengraph padrão."
     twitter_summary_large_image_url: "URL da imagem do cartão de resumo padrão do Twitter (deve ter pelo menos 280px de largura e pelo menos 150px de altura)."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
-    convert_pasted_images_to_hq_jpg: "Converte imagens coladas para arquivos JPG de alta qualidade."
-    convert_pasted_images_quality: "Qualidade dos arquivos JPG convertidos (1 para a qualidade mais baixa, 100 para a mais alta)."
     enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
@@ -1120,7 +1117,6 @@ pt_BR:
     embed_username_required: "Nome de usuário para criação do tópico é obrigatório."
     embed_whitelist_selector: "Seletor CSS para os elementos que são permitidos em embeds."
     embed_blacklist_selector: "Selector CSS para elementos que são removidos dos embeds."
-    notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
@@ -1306,14 +1302,6 @@ pt_BR:
       text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
     bulk_invite_failed:
       subject_template: "Seus convites não forma enviados, contate os moderadores."
-      text_body_template: |
-        Seu arquivo de convite de usuários em massa foi processado, %{sent} convites enviados com %{failed} erro(s).
-
-        Aqui está o log:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Exportação de dados completada"
     csv_export_failed:
@@ -1498,13 +1486,6 @@ pt_BR:
       click_here: "clique aqui"
       from: "resumo do site %{site_name} "
       preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"
-    mailing_list:
-      unsubscribe: "Este resumo está sendo enviado diariamente devido à configuração de \"lista de email\" estar habilitada. Para deixar de receber estas mensagens, clique em  %{unsubscribe_link}."
-      from: "Resumo das discussões do site %{site_name}"
-      new_topics: "Novos tópicos"
-      topic_updates: "Atualizações do tópico"
-      view_this_topic: "Ver esse tópico"
-      back_to_top: "Voltar ao topo"
     confirm_new_email:
       title: "Confirmar novo e-mail"
     notify_old_email:
@@ -1728,8 +1709,6 @@ pt_BR:
     error: "Erro!"
     email_input: "Email do Administrador"
     submit_button: "Enviar Email"
-  discourse_hub:
-    access_token_problem: "Diga para um administrador: Por favor atualize as configurações do site para incluir a correta discourse_org_access_key."
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
     initial_topic_title: Relatórios de performance do Site

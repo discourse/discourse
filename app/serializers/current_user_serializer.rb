@@ -3,7 +3,6 @@ require_dependency 'new_post_manager'
 class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,
-             :total_unread_notifications,
              :unread_notifications,
              :unread_private_messages,
              :read_first_notification?,

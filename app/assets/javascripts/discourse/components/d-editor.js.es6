@@ -246,15 +246,19 @@ export default Ember.Component.extend({
       }
     });
 
-    this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
-    this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
+    if (this.get('composerEvents')) {
+      this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
+      this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
+    }
     this._mouseTrap = mouseTrap;
   },
 
   @on('willDestroyElement')
   _shutDown() {
-    this.appEvents.off('composer:insert-text');
-    this.appEvents.off('composer:replace-text');
+    if (this.get('composerEvents')) {
+      this.appEvents.off('composer:insert-text');
+      this.appEvents.off('composer:replace-text');
+    }
 
     const mouseTrap = this._mouseTrap;
     Object.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));

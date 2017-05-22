@@ -144,7 +144,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     file.write(picture["filedata"].encode("ASCII-8BIT").force_encoding("UTF-8"))
     file.rewind
 
-    upload = Upload.create_for(imported_user.id, file, picture["filename"], file.size)
+    upload = UploadCreator.new(file, picture["filename"]).create_for(imported_user.id)
 
     return if !upload.persisted?
 
@@ -173,7 +173,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     file.write(background["filedata"].encode("ASCII-8BIT").force_encoding("UTF-8"))
     file.rewind
 
-    upload = Upload.create_for(imported_user.id, file, background["filename"], file.size)
+    upload = UploadCreator.new(file, background["filename"]).create_for(imported_user.id)
 
     return if !upload.persisted?
 
@@ -807,7 +807,7 @@ SQL
 
           if image
             File.open(image) do |file|
-              upload = Upload.create_for(user_id, file, "image." + (image =~ /.png$/ ? "png": "jpg"), File.size(image))
+              upload = UploadCreator.new(file, "image." + (image.ends_with?(".png") ? "png" : "jpg")).create_for(user_id)
               l["src"] = upload.url
             end
           else

@@ -526,7 +526,6 @@ et:
         instructions: |
           See säte tõrjub tegevuste kokkuvõtte välja.<br />
           Vaigistatud teemad ja foorumid ei kajastu nendes meilides.
-        daily: "Saada igapäevased kokkuvõtted"
         individual: "Saada meil iga uue postituse kohta"
         individual_no_echo: "Saada meil iga uue postituse kohta, v.a. enda omad"
         many_per_day: "Saada mulle meil iga uue postituse kohta (umbes {{dailyEmailEstimate}} meili päevas)"
@@ -1004,7 +1003,6 @@ et:
       cannot_see_mention:
         category: "Mainisid kasutajat {{username}} kuid teda ei teavitata, kuna tal puudub juurdepääs siia foorumisse. Lisa ta gruppi, kellel on siia foorumisse ligipääs."
         private: "Mainisid kasutajat {{username}} kuid teda ei teavitata, kuna tal puudub juurdepääs käesoleva privaatsõnumi juurde. Kutsu ta seda privaatsõnumit vaatama."
-      duplicate_link: "Näib, et sinu viide <b>{{domain}}</b> oli juba postitatud teemasse kasutaja <b>@{{username}}</b> poolt postituse <a href='{{post_url}}'>vastuses {{ago}}</a> – oled kindel, et soovid selle uuesti postitada?"
       error:
         title_missing: "Pealkiri on kohustuslik"
         title_too_short: "Pealkiri peab olema vähemalt {{min}} sümbolit pikk"
@@ -1216,10 +1214,8 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
-        change_category: "Muuda foorumit"
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
-        notification_level: "Muuda Teavituste Taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
           one: "Märkisid ära <b>1</b> teema."
@@ -1345,9 +1341,6 @@ et:
           '3_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
           '3_1': 'Sulle saabuvad teavitused kuna lõid selle teema.'
           '3': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda foorumit.'
-          '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
-          '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
           '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
           '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
           '0_7': 'Eirad kõiki teavitusi selles foorumis.'
@@ -1503,7 +1496,6 @@ et:
           other: "Palun vali <b>{{old_user}}</b> {{count}} postitusele uus omanik."
         instructions_warn: "Pane tähele, et ühtegi teavitust selle postituse kohta ei kanta uuele kasutajale üle tagasiulatuvalt.<br>Hoiatus: Hetkel ei kanta uuele kasutajale üle mingeid postitustest sõltuvaid andmeid. Kasuta ettevaatlikult."
       change_timestamp:
-        title: "Muuda ajatemplit"
         action: "muuda ajatemplit"
         invalid_timestamp: "Ajatempel ei saa olla tulevikus."
         error: "Teema ajatempli muutmisel tekkis viga."
@@ -1758,8 +1750,6 @@ et:
       security: "Turve"
       special_warning: "Hoiatus: See on eelseadistatud foorum mille turvasätteid muuta ei saa. Kui Sa seda foorumit kasutada ei soovi, kustuta see ümberkohandamise asemel."
       images: "Pildid"
-      auto_close_label: "Sulge teema automaatselt peale:"
-      auto_close_units: "tundi"
       email_in: "Sissetuleva meili individuaalne aadress:"
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
       email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"
@@ -2050,8 +2040,6 @@ et:
       granted_on: "Märgistatud %{date}"
       others_count: "Teised selle märgisega (%{count})"
       title: Märgised
-      allow_title: "saadaval tiitel"
-      multiple_grant: "määratud mitmeid kordi"
       badge_count:
         one: "1 märgis"
         other: "%{count} märgist"
@@ -2344,7 +2332,6 @@ et:
         event_type_missing: "Pead seadistama vähemalt ühe sündmuse liigi."
         content_type: "Sisutüüp"
         secret: "Salavõti"
-        event_chooser: "Millised sündmused peaksid selle veebihaagi käivitama?"
         wildcard_event: "Saada mulle kõik."
         individual_event: "Vali üksikud sündmused."
         verify_certificate: "Kontrolli kasuliku lasti URL-i TLS sertifikaati"

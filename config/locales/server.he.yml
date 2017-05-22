@@ -213,6 +213,8 @@ he:
   queue:
     delete_reason: "נמחק באמצעות בקרה על תור הפוסטים"
   groups:
+    success:
+      bulk_add: "%{users_added} משתמשים נוספו לקבוצה."
     errors:
       can_not_modify_automatic: "אינכם יכולים לערוך קבוצה אוטומטית"
       member_already_exist: "'%{username}' כבר חבר/ה בקבוצה זו."
@@ -341,10 +343,10 @@ he:
           attributes:
             name:
               taken: כבר בשימוש על ידי אמוג'י אחר
-        topic_status_update:
+        topic_timer:
           attributes:
             execute_at:
-              in_the_past: "חייב להיות בעתיד."
+              in_the_past: "חייב להיות בעתיד"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
@@ -954,7 +956,7 @@ he:
     force_hostname: "מ-פ-ת-ח-י-ם ב-ל-ב-ד! א-ז-ה-ר-ה! הגדירו שם שרת ב URL. השאירו ריק בשביל ברירת המחדל."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_passthrough_hours: "כמה זמן, בשעות, יכולים משתמשים לעשות שימוש בהזמנה שנשלחה כדי להתחבר "
-    invite_only: "הרשמה פומבית מנוטרלת, כל המשתמשים החדשים חייבים להיות מוזמנים על ידי חברים אחרים באתר."
+    invite_only: "הרשמה פומבית מנוטרלת, כל המשתמשים החדשים חייבים להיות מוזמנים על ידי הצוות."
     login_required: "דרשו הזדהות לקריאת תוכן באתר זה, אל תאפשרו גישה אנונימית."
     min_username_length: "אורך שמות משתמשים מינימלי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שם קצר יותר, האתר שלכם ישבר!"
     max_username_length: "אורך שמות משתמשים מקסימלי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שמות ארוכים יותר, האתר שלכם ישבר!"
@@ -1049,8 +1051,7 @@ he:
     default_opengraph_image_url: "URL ברירת המחדל של תמונת opengraph."
     twitter_summary_large_image_url: "URL של תמונה מסיכום ברירת המחדל מטוויטר (צריכה להיות ברוחב לפחות 280 פיקסלים ובגובה של לפחות 150 פיקסלים)."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
-    convert_pasted_images_to_hq_jpg: "המירו תמונות מודבקות לקבצי JPG באיכות גבוהה."
-    convert_pasted_images_quality: "איכות של קובץ ה JPG המומר (1 זו האיכות הנמוכה ביותר, 100 הטובה ביותר)."
+    png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 לניטרול)."
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) ב Oneboxes. אזהרה: עלול להביא לבעיות אבטחה באתר."
     default_invitee_trust_level: "ברירת מחדל של רמת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "רמת אמון (0-4) לכל המשתמשים החדשים. אזהרה! שינוי של משתנה זה שם אתכם בסיכון רציני לספאם."
@@ -1108,6 +1109,7 @@ he:
     max_image_size_kb: "גודל קובץ מקסימלי להעלאה בקילו-בתים (kB). ערך זה חייב להיות מוגדר גם ב-nginx (client_max_body_size) / apache או בפרוקסי."
     max_attachment_size_kb: "הגודל המקסימלי בקילו-בתים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
+    theme_authorized_extensions: "רשימת סיומות קבצים שמורשות עבור העלאת תמות (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפוסט."
     max_image_megapixels: "מספר מקסימלי מותר של מגה-פיקסלים לתמונה."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
@@ -1147,7 +1149,7 @@ he:
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "השתמשו ב HTML במקום בטקסט בשביל מייל נכנס. עלול ליצור בעיות עיצוב לא-צפויות!"
+    incoming_email_prefer_html: "השתמשו ב HTML במקום טקסט למייל נכנס."
     disable_emails: "מנעו מ-Discourse ממשלוח דוא\"ל כלשהו"
     strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בתים"
     short_email_length: "אורכו של דוא\"ל קצר בבתים (Bytes)"
@@ -1171,6 +1173,7 @@ he:
     attachment_filename_blacklist: "רשימת מילות מפתח לרשימה שחורה של שמות קבצים מצורפים."
     enable_forwarded_emails: "[בטא] אפשרו למשתמשים ליצור נושא על ידי העברת מייל."
     always_show_trimmed_content: "תמיד הציגו חלק מקוצר של מיילים נכנסים. אזהרה: עלול לחשוף כתובות מייל."
+    private_email: "לא לכלול תוכן מפוסטים או נושאים במיילים לשיפור הפרטיות."
     manual_polling_enabled: "דחיפת מיילים באמצעות ה API לתגובות מייל."
     pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
@@ -1244,10 +1247,11 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כולל הדגשת כללי תחביר (syntax). (אזהרה: הכללת שפות רבות מידי עשויה להשפיע על הביצועים) ראו: https://highlightjs.org/static/demo/ להדגמה."
-    feed_polling_enabled: "הטמעה בלבד: האם להטמיע פידים של RSS/ATOM כפוסטים."
-    feed_polling_url: "הטמעה בלבד: URL של פיד RSS/ATOM להטמעה."
+    feed_polling_enabled: "הטמעה בלבד: האם להטמיע תזרימים של RSS/ATOM כפוסטים."
+    feed_polling_url: "הטמעה בלבד: URL של תזרים RSS/ATOM להטמעה."
+    feed_polling_frequency_mins: "שילוב בלבד: תדירות משיכה"
     embed_by_username: "שם המשתמש של המשתמש/ת שיוצר את הנושאים המוטמעים."
-    embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
+    embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהתזרים."
     embed_title_scrubber: "ביטויים רגולריים כדי לנקות כותרות מוטמעות."
     embed_truncate: "חיתוך הפוסטים המוטמעים."
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
@@ -1434,12 +1438,13 @@ he:
     pinned_globally_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יא יופיע יותר בראש הקטגוריה שלו."
     visible_enabled: "נושא זה כרגע רשום. הוא יוצג ברשימות נושאים."
     visible_disabled: "נושא זה כרגע אינו רשום. הוא לא יוצג יותר ברשימת נושאים כלשהי. הדרך היחידה להגיע לנושא זה היא דרך קישור ישיר."
+    auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
     not_approved: "חשבונך טרם אושר. יישלח אליך דואר אלקטרוני כשהוא יהיה מוכן להתחברות."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
-    activate_email: "<p>כמעט סיימתם! שלחנו מייל הפעלה ל-<b>%{email}</b>. בבקשה עיקבו אחרי ההוראות במייל כדי להפעיל את החשבון שלכם.</p><p>אם הוא לא מגיע, בידקו בתיקיית הספאם, או נסו להתחבר שוב כדי לשלוח עוד מייל הפעלה או להכניס כתובת מייל אחרת.</p>"
+    activate_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     not_activated: "אינכם יכולים להתחבר עדיין. שלחנו לכם הודעת דואר אלקטרוני לאישור. בבקשה עיקבו אחר ההוראות במייל כדי להפעיל את חשבונכם."
     not_allowed_from_ip_address: "אינכם יכולים להתחבר כ-%{username}  מכתובת IP זו. "
     admin_not_allowed_from_ip_address: "אינכם יכולים להתחבר כמנהלי מערכת מכתובת IP זו."
@@ -1486,8 +1491,8 @@ he:
       domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
   flags_reminder:
     flags_were_submitted:
-      one: "דגלים נשלחו לפני למעלה משעה. אנא סיקרו אותם."
-      other: "דגלים נשלחו לפני יותר מ %{count} שעות. אנא סיקרו אותם."
+      one: "דגלים נרשמו לפני יותר משעה. [אנא סיקרו אותם](/admin/flags)."
+      other: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](/admin/flags)."
     subject_template:
       one: "דגל אחד ממתין לטיפול"
       other: "%{count} דגלים ממתינים לטיפול"
@@ -1698,6 +1703,8 @@ he:
     one: "נושא זה סגור זמנית לשעה 1 עקב מספר רב של דגלי קהילה."
     other: "נושא זה סגור זמנית ל-%{count} שעות עקב מספר רב של דגלי קהילה."
   system_messages:
+    private_topic_title: "נושא #%{id}"
+    contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."
     post_hidden:
       title: "פוסט חבוי"
       subject_template: "פוסט הוסתר על ידי דגלים של הקהילה"
@@ -1806,13 +1813,11 @@ he:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
       text_body_template: |
-        ההזמנה הקבוצתית שלך עובדה,  %{sent} הזמנות נשלחו עם %{failed} תקלה/ות.
-
-        רישום המערכת:
+        קובץ המשתמשים שלכם מעובד כעת, נשלחו %{sent} הזמנות עם %{failed} שגיאה(ות).
 
         הנה היומן:
-        ```
 
+        ```text
         %{logs}
         ```
     csv_export_succeeded:
@@ -2066,13 +2071,11 @@ he:
       title: "אתם המשתמשים החדשים של החודש!"
       subject_template: "אתם המשתמשים החדשים של החודש!"
       text_body_template: |
-        ברכותינו, הוענק לכם **פרס המשתמש החדש של החודש עבור %{month_year}**. :trophy:
+        ברכות, זכיתם ב-**פרס המשתמש החדש של החודש עבור %{month_year}**. :trophy:
 
-        הפכתם במהרה לחברים מוערכים בקהילה שלנו וכולם ממש נהנים מהפוסטים שלכם.
+        פרס זה ניתן רק לשני משתמשים חדשים בכל חודש, והוא תמיד ייראה ב[דף המשתמש/ת שלכם](/my/badges).
 
-        פרס זה יוצג בקביעות כעיטור ב[דף המשתמש שלכם](/my/badges).
-
-        תודה, והמשיכו עם העבודה המעולה!
+        הפכתם במהרה לחברים מוערכים בקהילה שלנו. תודה שהצטרפתם, והמשיכו בעבודה הנהדרת!
   unsubscribe_link: |
     כדי להפסיק את המיילים האלו, [לחצו כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2269,15 +2272,6 @@ he:
       click_here: "לחצו כאן"
       from: "סיכום %{site_name}"
       preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
-    mailing_list:
-      why: "כל הפעילות ב-%{site_link} ל-%{date}"
-      subject_template: "[%{email_prefix}] סיכום ל %{date}"
-      unsubscribe: "סיכום זה נשלח מידי יום כיוון שמאופשר מצב של רשימת תפוצה. כדי לבטל את המנוי %{unsubscribe_link}."
-      from: "סיכום %{site_name} "
-      new_topics: "נושאים חדשים"
-      topic_updates: "עדכוני נושאים"
-      view_this_topic: "צפו בנושא זה"
-      back_to_top: "חזרה למעלה"
     forgot_password:
       title: "שכח/ה סיסמה"
       subject_template: "[%{email_prefix}] איפוס סיסמה"
@@ -2387,12 +2381,14 @@ he:
     title: "תנאי השימוש"
     signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="/tos" target="_blank">תנאי השירות</a>.'
   deleted: 'נמחק'
+  image: "תמונה"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "מצטערים, הקובץ שאתם מנסים להעלות לא מורשה (סיומות מורשות: %{authorized_extensions})."
     pasted_image_filename: "תמונה שהודבקה"
     store_failure: "נכשלה שמירת העלאה #%{upload_id} עבור משתמש #%{user_id}."
     file_missing: "סליחה, עליך לספק קובץ להעלות."
+    empty: "מצטערים, אבל הקובץ שסיפקתם ריק"
     attachments:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
     images:
@@ -2427,6 +2423,9 @@ he:
     base_theme_name: "בסיס"
     default: "סכמה בהירה"
     dark: "סכמה כהה"
+    default_theme_name: "בררת מחדל"
+    dark_theme_name: "כהה"
+    light_theme_name: "בהיר"
   about: "אודות"
   guidelines: "קווים מנחים"
   privacy: "פרטיות"
@@ -2891,8 +2890,6 @@ he:
     error: "שגיאה!"
     email_input: "מייל של המנהל"
     submit_button: "שלח מייל"
-  discourse_hub:
-    access_token_problem: "תגיד לאדמין שיעדכן את הגדרות האתר שיכללו את המזהה discourse_org_access_key הנכון."
   performance_report:
     initial_post_raw: 'נושא זה כולל דוחות פעילות יומיים עבור האתר שלך. '
     initial_topic_title: דוחות פעילות לאתר

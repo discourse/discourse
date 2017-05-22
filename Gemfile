@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 #source 'http://production.cf.rubygems.org'
 
 # does not install in linux ATM, so hack this for now
-# gem 'bootsnap', require: false
+gem 'bootsnap', require: false
 
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
@@ -61,8 +61,7 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
-# while we sort out https://github.com/sdsykes/fastimage/pull/46
-gem 'discourse_fastimage', '2.0.3', require: 'fastimage'
+gem 'fastimage', '2.1.0'
 gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
@@ -190,6 +189,5 @@ gem 'sassc', require: false
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
-  gem 'php_serialize'
   gem 'redcarpet'
 end

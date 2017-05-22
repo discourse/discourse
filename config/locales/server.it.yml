@@ -27,11 +27,15 @@ it:
   topics: "Argomenti"
   posts: "messaggi"
   loading: "Caricamento"
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, si consiglia di abilitare JavaScript'
   log_in: "Connetti"
   purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
   remove_posts_deleted_by_author: "Cancellato dall'autore"
+  themes:
+    bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
+    other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
   emails:
     incoming:
       default_subject: "L'argomento necessita di un titolo"
@@ -883,7 +887,6 @@ it:
     force_hostname: "SOLO PER SVILUPPATORI! ATTENZIONE! Specifica un hostname nella URL. Lascia vuoto per usare il default."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
     invite_passthrough_hours: "Per quanto tempo un utente può usare una chiave d'invito per connettersi, espresso in ore"
-    invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere invitati esplicitamente da altri membri o dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_password_length: "Minima lunghezza della password."
     min_admin_password_length: "Lunghezza minima password Amministratore."
@@ -1073,7 +1076,6 @@ it:
     embed_by_username: "Nome utente Discourse dell'utente che crea gli argomenti incorporati."
     embed_truncate: "Tronca i messaggi incorporati."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
-    notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     enable_emoji: "Attiva gli emoji"
     default_other_disable_jump_reply: "Per default non saltare al messaggio dell'utente dopo la sua risposta."
@@ -1420,12 +1422,6 @@ it:
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
-    mailing_list:
-      from: "%{site_name} riepilogo"
-      new_topics: "Nuovi argomenti"
-      topic_updates: "Aggiornamenti argomento"
-      view_this_topic: "Vedi questo argomento"
-      back_to_top: "Torna in cima"
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
   page_not_found:

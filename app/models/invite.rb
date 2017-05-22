@@ -1,6 +1,7 @@
 require_dependency 'rate_limiter'
 
 class Invite < ActiveRecord::Base
+  class UserExists < StandardError; end
   include RateLimiter::OnCreateRecord
   include Trashable
 
@@ -103,7 +104,7 @@ class Invite < ActiveRecord::Base
 
     if user
       extend_permissions(topic, user, invited_by) if topic
-      raise StandardError.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
+      raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
     end
 
     invite = Invite.with_deleted

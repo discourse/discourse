@@ -101,7 +101,7 @@ class ImportScripts::Sfn < ImportScripts::Base
             avatar.write(user["avatar"].encode("ASCII-8BIT").force_encoding("UTF-8"))
             avatar.rewind
 
-            upload = Upload.create_for(newuser.id, avatar, "avatar.jpg", avatar.size)
+            upload = UploadCreator.new(avatar, "avatar.jpg").create_for(newuser.id)
             if upload.persisted?
               newuser.create_user_avatar
               newuser.user_avatar.update(custom_upload_id: upload.id)

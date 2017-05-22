@@ -497,7 +497,6 @@ tr_TR:
         instructions: |
           Bu ayar etkinlik özetini geçersiz kılacaktır.<br />
           Susturulmuş konular ve kategoriler bu e-postalarda yer almaz.
-        daily: "Günlük güncellemeleri gönder"
         individual: "Her yeni gönderi için bir e-posta gönder"
         individual_no_echo: "Benim gönderilerim haricindeki her gönderi için mail gönder"
         many_per_day: "Her yeni gönderi için bir e-posta gönder (günde yaklaşık {{dailyEmailEstimate}})."
@@ -958,7 +957,6 @@ tr_TR:
       cannot_see_mention:
         category: "{{username}}  adlı kullanıcıdan bahsettiniz fakat Ona bildirim gönderilmeyecek çünkü bu kategoriye ulaşma izni yok. Bunun gerçekleşmesi için kişi bu gruba eklemeniz gerekmektedir."
         private: "{{username}} adlı kullanıcıdan bahsettiniz fakat Ona bildirim gönderilmeyecek çünkü bu kişisel mesaja ulaşma izni yok. Bunun gerçekleşmesi için kişiyi bu PM'ye eklemeniz gerekmektedir."
-      duplicate_link: "Görünüşe göre <b>{{domain}}</b> alan adına bağlanan bağlantınız <b>@{{username}}</b> tarafından <a href='{{post_url}}'>a cevabı içerisinde {{ago}} yayınlanmış görünüyor. </a> – tekrar yayınlamak istediğinize emin misiniz?"
       error:
         title_missing: "Başlık gerekli"
         title_too_short: "Başlık en az {{min}} karakter olmalı"
@@ -1167,10 +1165,8 @@ tr_TR:
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu Eylemler"
-        change_category: "Kategoriyi Değiştir"
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
-        notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
@@ -1284,9 +1280,6 @@ tr_TR:
           '3_2': 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
           '3_1': 'Bu konuyu siz oluşturduğunuz için bildirimlerini alacaksınız.'
           '3': 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
-          '2_8': 'Be kategoriyi takip ettiğiniz için bildirimlerini alacaksınız.'
-          '2_4': 'Bu konuya cevap yazdığınız için bildirimlerini alacaksınız.'
-          '2_2': 'Bu konuyu takip ettiğiniz için bildirimlerini alacaksınız.'
           '1_2': 'Birisi @isminizden bahsederse ya da size cevap verirse bildirim alacaksınız.'
           '1': 'Birisi @isminizden bahsederse veya size cevap verirse bildirim alacaksınız.'
           '0_7': 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
@@ -1436,7 +1429,6 @@ tr_TR:
           other: "Lütfen <b>{{old_user}}</b> kullanıcısına ait {{count}} gönderinin yeni sahibini seçin."
         instructions_warn: "Bu gönderi ile ilgili geriye dönük biriken bildirimler yeni kullanıcıya aktarılmayacak.<br>Uyarı: Şu an, yeni kullanıcıya hiç bir gönderi-tabanlı ek bilgi aktarılmıyor. Dikkatli olun."
       change_timestamp:
-        title: "Zaman Bilgisini Değiştir"
         action: "Zaman Bilgisini Değiştir"
         invalid_timestamp: "Zaman bilgisi gelecekte olamaz."
         error: "Konunun zaman bilgisini değiştirirken bir hata oluştu."
@@ -1663,8 +1655,6 @@ tr_TR:
       security: "Güvenlik"
       special_warning: "Uyarı: Bu kategori önceden ayarlanmış bir kategoridir ve güvenlik ayarları değiştirilemez. Eğer bu kategoriyi kullanmak istemiyorsanız, başka bir amaçla kullanmak yerine silin."
       images: "Resimler"
-      auto_close_label: "Şu kadar süreden sonra konuları otomatik olarak kapat: "
-      auto_close_units: "saat"
       email_in: "Özel gelen e-posta adresi:"
       email_in_allow_strangers: "Hesabı olmayan, anonim kullanıcılardan e-posta kabul et"
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
@@ -1936,8 +1926,6 @@ tr_TR:
       granted_on: "%{date} tarihinde verildi"
       others_count: "Bu rozete sahip diğer kişiler (%{count})"
       title: Rozetler
-      allow_title: "uygun başlık"
-      multiple_grant: "birden fazla ödüllendirilmiş"
       badge_count:
         other: "%{count} Rozet"
       more_badges:
@@ -2222,7 +2210,6 @@ tr_TR:
         event_type_missing: "En az bir olay tipi ayarlamalısınız."
         content_type: "İçerik Türü"
         secret: "Gizli"
-        event_chooser: "Bu web kancasını tetikleyecek olayların neler olmasını isterdiniz?"
         wildcard_event: "Bana her şeyi gönder."
         individual_event: "Belirli olayları seç"
         verify_certificate: "Veri yükü URL'inin TLS sertifikasını kontrol edin."

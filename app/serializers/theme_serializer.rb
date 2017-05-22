@@ -1,8 +1,28 @@
 class ThemeFieldSerializer < ApplicationSerializer
-  attributes :name, :target, :value, :error
+  attributes :name, :target, :value, :error, :type_id, :upload_id, :url, :filename
+
+  def include_url?
+    object.upload
+  end
+
+  def include_upload_id?
+    object.upload
+  end
+
+  def include_filename?
+    object.upload
+  end
+
+  def url
+    object.upload&.url
+  end
+
+  def filename
+    object.upload&.original_filename
+  end
 
   def target
-    case object.target
+    case object.target_id
     when 0 then "common"
     when 1 then "desktop"
     when 2 then "mobile"

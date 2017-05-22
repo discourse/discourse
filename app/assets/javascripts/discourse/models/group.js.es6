@@ -94,6 +94,10 @@ const Group = RestModel.extend({
     });
   },
 
+  @computed("display_name", "name")
+  displayName(groupDisplayName, name) {
+    return groupDisplayName || name;
+  },
 
   @computed('flair_bg_color')
   flairBackgroundHexColor() {

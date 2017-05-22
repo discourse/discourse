@@ -60,8 +60,9 @@ class TopicViewSerializer < ApplicationSerializer
              :message_archived,
              :tags,
              :featured_link,
-             :topic_status_update,
-             :unicode_title
+             :topic_timer,
+             :unicode_title,
+             :message_bus_last_id
 
   # TODO: Split off into proper object / serializer
   def details
@@ -123,6 +124,10 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_reply_as_new_topic] = true if scope.can_reply_as_new_topic?(object.topic)
     result[:can_flag_topic] = actions_summary.any? { |a| a[:can_act] }
     result
+  end
+
+  def message_bus_last_id
+    object.message_bus_last_id
   end
 
   def chunk_size
@@ -249,9 +254,9 @@ class TopicViewSerializer < ApplicationSerializer
     SiteSetting.tagging_enabled
   end
 
-  def topic_status_update
-    TopicStatusUpdateSerializer.new(
-      object.topic.topic_status_update, root: false
+  def topic_timer
+    TopicTimerSerializer.new(
+      object.topic.public_topic_timer, root: false
     )
   end
 

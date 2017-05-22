@@ -581,6 +581,7 @@ en:
       first_notification: "Your first notification! Select it to begin."
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
+      theme_default_on_all_devices: "Make this my default theme on all my devices"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -599,7 +600,6 @@ en:
         instructions: |
           This setting overrides the activity summary.<br />
           Muted topics and categories are not included in these emails.
-        daily: "Send daily updates"
         individual: "Send an email for every new post"
         individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
@@ -659,6 +659,16 @@ en:
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
+
+      preferences_nav:
+        account: "Account"
+        profile: "Profile"
+        emails: "Emails"
+        notifications: "Notifications"
+        categories: "Categories"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Apps"
 
       change_password:
         success: "(email sent)"
@@ -831,6 +841,7 @@ en:
         rescinded: "Invite removed"
         reinvite: "Resend Invite"
         reinvite_all: "Resend all Invites"
+        reinvite_all_confirm: "Are you sure you want to resend all invites?"
         reinvited: "Invite re-sent"
         reinvited_all: "All Invites re-sent!"
         time_read: "Read Time"
@@ -1133,7 +1144,7 @@ en:
       cannot_see_mention:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
-      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
+      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}} ago</a> – are you sure you want to post it again?"
 
       error:
         title_missing: "Title is required"
@@ -1229,6 +1240,7 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
 
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
@@ -1355,6 +1367,7 @@ en:
         select_all: "Select All"
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
+        relist_topics: "Relist Topics"
         reset_read: "Reset Read"
         delete: "Delete Topics"
         dismiss: "Dismiss"
@@ -1365,10 +1378,10 @@ en:
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Change Category"
+        change_category: "Set Category"
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
-        notification_level: "Change Notification Level"
+        notification_level: "Notifications"
         choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>1</b> topic."
@@ -1498,6 +1511,7 @@ en:
         later_this_week: "Later this week"
         this_weekend: "This weekend"
         next_week: "Next week"
+        next_month: "Next month"
         pick_date_and_time: "Pick date and time"
         set_based_on_last_post: "Close based on last post"
       publish_to_category:
@@ -1513,12 +1527,18 @@ en:
         label: "Auto-close topic hours:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
+      auto_delete:
+        title: "Auto-Delete Topic"
+      reminder:
+        title: "Remind Me"
 
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."
         auto_close: "This topic will automatically close %{timeLeft}."
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
+        auto_delete: "This topic will be automatically deleted %{timeLeft}."
+        auto_reminder: "You will be reminded about this topic %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
@@ -2333,8 +2353,8 @@ en:
       granted_on: "Granted %{date}"
       others_count: "Others with this badge (%{count})"
       title: Badges
-      allow_title: "available title"
-      multiple_grant: "awarded multiple times"
+      allow_title: "You can use this badge as a title"
+      multiple_grant: "You can earn this multiple times"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"
@@ -2601,7 +2621,7 @@ en:
         add_members: "Add members"
         custom: "Custom"
         bulk_complete: "The users have been added to the group."
-        bulk_complete_users_not_added: "These users were not added:"
+        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
         bulk: "Bulk Add to Group"
         bulk_paste: "Paste a list of usernames or emails, one per line:"
         bulk_select: "(select a group)"
@@ -2653,7 +2673,7 @@ en:
         event_type_missing: "You need to set up at least one event type."
         content_type: "Content Type"
         secret: "Secret"
-        event_chooser: "Which events would you like to trigger this webhook?"
+        event_chooser: "Which events should trigger this webhook?"
         wildcard_event: "Send me everything."
         individual_event: "Select individual events."
         verify_certificate: "Check TLS certificate of payload url"
@@ -2831,10 +2851,17 @@ en:
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
+          uploads: "Uploads"
+          no_uploads: "You can upload assets associated with your theme such as fonts and images"
+          add_upload: "Add Upload"
+          upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
+          variable_name: "SCSS var name:"
+          upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
           edit_css_html: "Edit CSS/HTML"
           edit_css_html_help: "You have not edited any CSS or HTML"
+          delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
           import_file_tip: ".dcstyle.json file containing theme"
           about_theme: "About Theme"
@@ -3444,6 +3471,7 @@ en:
         sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
+        class_name: "Class Name"
         path_whitelist: "Path Whitelist"
         edit: "edit"
         category: "Post to Category"
@@ -3464,6 +3492,7 @@ en:
         embed_classname_whitelist: "Allowed CSS class names"
         feed_polling_enabled: "Import posts via RSS/ATOM"
         feed_polling_url: "URL of RSS/ATOM feed to crawl"
+        feed_polling_frequency_mins: "Frequency of feed polling (in minutes)"
         save: "Save Embedding Settings"
 
       permalink:

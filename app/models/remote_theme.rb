@@ -1,6 +1,10 @@
 require_dependency 'git_importer'
+require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
+
+  ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
+
   has_one :theme
 
   def self.import_theme(url, user=Discourse.system_user)
@@ -43,8 +47,36 @@ class RemoteTheme < ActiveRecord::Base
       importer.import!
     end
 
+    theme_info = JSON.parse(importer["about.json"])
+
+    theme_info["assets"]&.each do |name, relative_path|
+      if path = importer.real_path(relative_path)
+        upload = UploadCreator.new(File.open(path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
+        theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
+      end
+    end
+
+    theme_info["fields"]&.each do |name, info|
+      unless Hash === info
+        info = {
+          "target" => :common,
+          "type" => :theme_var,
+          "value" => info
+        }
+      end
+
+      if info["type"] == "color"
+        info["type"] = :theme_color_var
+      end
+
+      theme.set_field(target: info["target"] || :common,
+                        name: name,
+                        value: info["value"],
+                        type: info["type"] || :theme_var)
+    end
+
     Theme.targets.keys.each do |target|
-      Theme::ALLOWED_FIELDS.each do |field|
+      ALLOWED_FIELDS.each do |field|
         lookup =
           if field == "scss"
             "#{target}.scss"
@@ -55,11 +87,10 @@ class RemoteTheme < ActiveRecord::Base
           end
 
         value = importer["#{target}/#{lookup}"]
-        theme.set_field(target.to_sym, field, value)
+        theme.set_field(target: target.to_sym, name: field, value: value)
       end
     end
 
-    theme_info = JSON.parse(importer["about.json"])
     self.license_url ||= theme_info["license_url"]
     self.about_url ||= theme_info["about_url"]
     self.remote_updated_at = Time.zone.now
