@@ -132,12 +132,8 @@ COMMENT
       @theme == :nil ? nil : @theme
     end
 
-    def apply_cdn(url)
-      "#{GlobalSetting.cdn_url}#{url}"
-    end
-
     def category_css(category)
-      "body.category-#{category.full_slug} { background-image: url(#{apply_cdn(category.uploaded_background.url)}) }\n"
+      "body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
     end
 
     def imports(asset, parent_path)
