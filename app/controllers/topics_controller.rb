@@ -558,8 +558,10 @@ class TopicsController < ApplicationController
     guardian.ensure_can_change_post_timestamps!
 
     begin
-      PostTimestampChanger.new( topic_id: params[:topic_id].to_i,
-                                timestamp: params[:timestamp].to_i ).change!
+      TopicTimestampChanger.new(
+        topic_id: params[:topic_id].to_i,
+        timestamp: params[:timestamp].to_i
+      ).change!
 
       render json: success_json
     rescue ActiveRecord::RecordInvalid
