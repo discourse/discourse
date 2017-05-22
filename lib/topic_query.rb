@@ -787,10 +787,12 @@ class TopicQuery
     end
 
     def base_messages
-      Topic
+      query = Topic
         .where('topics.archetype = ?', Archetype.private_message)
         .joins("LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i}")
-        .order('topics.bumped_at DESC')
+
+      query = query.includes(:tags) if SiteSetting.tagging_enabled
+      query.order('topics.bumped_at DESC')
     end
 
     def random_suggested(topic, count, excluded_topic_ids=[])
