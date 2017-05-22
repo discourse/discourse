@@ -29,6 +29,13 @@ Spork.prefork do
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
   Dir[Rails.root.join("spec/fabricators/*.rb")].each {|f| require f}
 
+  # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
+  if ENV['LOAD_PLUGINS'] == "1"
+    Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each do |f|
+      require f
+    end
+  end
+
   # let's not run seed_fu every test
   SeedFu.quiet = true if SeedFu.respond_to? :quiet
 
