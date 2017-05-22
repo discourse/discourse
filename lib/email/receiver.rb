@@ -461,17 +461,16 @@ module Email
       true
     end
 
-    def self.reply_by_email_address_regex
-      @reply_by_email_address_regex ||= begin
-        reply_addresses = [
-           SiteSetting.reply_by_email_address,
-          *(SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
-        ]
-        escaped_reply_addresses = reply_addresses.select(&:present?)
-                                                 .map { |a| Regexp.escape(a) }
-                                                 .map { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})") }
-        Regexp.new(escaped_reply_addresses.join("|"))
-      end
+    def self.reply_by_email_address_regex(extract_reply_key=true)
+      reply_addresses = [SiteSetting.reply_by_email_address]
+      reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
+
+      reply_addresses.flatten!
+      reply_addresses.select!(&:present?)
+      reply_addresses.map! { |a| Regexp.escape(a) }
+      reply_addresses.map! { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})") }
+
+      /#{reply_addresses.join("|")}/
     end
 
     def group_incoming_emails_regex
@@ -529,9 +528,7 @@ module Email
     end
 
     def post_action_for(body)
-      if likes.include?(body.strip.downcase)
-        PostActionType.types[:like]
-      end
+      PostActionType.types[:like] if likes.include?(body.strip.downcase)
     end
 
     def create_topic(options={})
