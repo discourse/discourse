@@ -46,7 +46,6 @@ class FinalDestination
     return @uri if head.status == 405
 
     if head.status == 200
-      @uri = nil unless FinalDestination.header_for(head, 'content-type') =~ /text\/html/
       @status = :resolved
       return @uri
     end
