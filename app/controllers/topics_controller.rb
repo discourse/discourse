@@ -560,11 +560,11 @@ class TopicsController < ApplicationController
     begin
       TopicTimestampChanger.new(
         topic_id: params[:topic_id].to_i,
-        timestamp: params[:timestamp].to_i
+        timestamp: params[:timestamp].to_f
       ).change!
 
       render json: success_json
-    rescue ActiveRecord::RecordInvalid
+    rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError
       render json: failed_json, status: 422
     end
   end
