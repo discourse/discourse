@@ -18,14 +18,6 @@ describe FinalDestination do
     }
   end
 
-  before do
-    WebMock.reset!
-  end
-
-  after do
-    WebMock.reset!
-  end
-
   let(:doc_response) do
     { body: "<html>document</html>",
       headers: { "Content-Type" => "text/html" } }
