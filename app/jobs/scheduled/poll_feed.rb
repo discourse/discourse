@@ -19,7 +19,7 @@ module Jobs
     end
 
     def feed_key
-      @feed_key ||= "feed-modified:#{Digest::SHA1.hexdigest(SiteSetting.feed_polling_url)}"
+      "feed-modified:#{Digest::SHA1.hexdigest(SiteSetting.feed_polling_url)}"
     end
 
     def poll_feed
