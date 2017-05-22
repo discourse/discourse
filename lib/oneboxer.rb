@@ -1,4 +1,6 @@
-require_dependency "#{Rails.root}/lib/onebox/discourse_onebox_sanitize_config"
+require_dependency "onebox/discourse_onebox_sanitize_config"
+require_dependency 'final_destination'
+
 Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
@@ -140,8 +142,9 @@ module Oneboxer
     end
 
     def self.onebox_raw(url)
+
       Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-        uri = URI(url) rescue nil
+        uri = FinalDestination.new(url).resolve
         return blank_onebox if uri.blank? || SiteSetting.onebox_domains_blacklist.include?(uri.hostname)
         options = { cache: {}, max_width: 695, sanitize_config: Sanitize::Config::DISCOURSE_ONEBOX }
         r = Onebox.preview(url, options)
