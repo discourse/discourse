@@ -28,6 +28,7 @@ module Jobs
       uri = URI(url)
       return if uri.blank? || uri.host.blank?
       return unless ['https', 'http'].include?(uri.scheme)
+      return unless [80, 443].include?(uri.port)
 
       headers = CrawlTopicLink.request_headers(uri)
       head = Excon.head(url, read_timeout: 20, headers: headers)
