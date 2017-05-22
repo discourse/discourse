@@ -46,16 +46,6 @@ describe TopicList do
     end
   end
 
-  context "DiscourseTagging enabled" do
-    before do
-      SiteSetting.tagging_enabled = true
-    end
-
-    it "should add tags to preloaded custom fields" do
-      expect(topic_list.preloaded_custom_fields).to include(DiscourseTagging::TAGS_FIELD_NAME)
-    end
-  end
-
   describe '#tags' do
     it 'should return the right tags' do
       tag = Fabricate(:tag, topics: [topic])
