@@ -31,9 +31,8 @@ Spork.prefork do
 
   # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
   if ENV['LOAD_PLUGINS'] == "1"
-    Dir[Rails.root.join("plugins/**")].each do |plugin|
-      helper = "#{plugin}/spec/plugin_helper.rb"
-      require helper if File.exists?(helper)
+    Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each do |f|
+      require f
     end
   end
 
