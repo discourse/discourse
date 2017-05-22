@@ -84,10 +84,15 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
   end
 
   describe 'to_html' do
+    after(:each) do
+      Onebox.options = Onebox::DEFAULTS
+    end
+
+    let(:original_link) { "http://www.dailymail.co.uk/pages/live/articles/news/news.html?in_article_id=479146&in_page_id=1770" }
+    let(:redirect_link) { 'http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html' }
+
     before do
       described_class.whitelist = %w(dailymail.co.uk discourse.org)
-      original_link = "http://www.dailymail.co.uk/pages/live/articles/news/news.html?in_article_id=479146&in_page_id=1770"
-      redirect_link = 'http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html'
       FakeWeb.register_uri(
         :get,
         original_link,
@@ -95,13 +100,18 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
         location: redirect_link
       )
       fake(redirect_link, response('dailymail'))
-      onebox = described_class.new(original_link)
-      @html = onebox.to_html
     end
-    let(:html) { @html }
 
     it "follows redirects and includes the summary" do
-      expect(html).to include("It was the most chilling image of the week")
+      Onebox.options = { redirect_limit: 2 }
+      onebox = described_class.new(original_link)
+      expect(onebox.to_html).to include("It was the most chilling image of the week")
+    end
+
+    it "recives an error with too many redirects" do
+      Onebox.options = { redirect_limit: 1 }
+      onebox = described_class.new(original_link)
+      expect(onebox.to_html).to be_nil
     end
   end
 
