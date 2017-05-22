@@ -7,7 +7,7 @@ module Jobs
       topic = topic_timer.topic
       return if topic.blank?
 
-      PostTimestampChanger.new(timestamp: Time.zone.now, topic: topic).change! do
+      TopicTimestampChanger.new(timestamp: Time.zone.now, topic: topic).change! do
         if topic.private_message?
           topic = TopicConverter.new(topic, Discourse.system_user)
             .convert_to_public_topic(topic_timer.category_id)

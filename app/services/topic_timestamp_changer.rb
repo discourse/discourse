@@ -1,4 +1,4 @@
-class PostTimestampChanger
+class TopicTimestampChanger
   def initialize(params)
     @topic = params[:topic] || Topic.with_deleted.find(params[:topic_id])
     @posts = @topic.posts
@@ -9,12 +9,14 @@ class PostTimestampChanger
   def change!
     ActiveRecord::Base.transaction do
       last_posted_at = @timestamp
+      now = Time.zone.now
 
       @posts.each do |post|
         if post.is_first_post?
           update_post(post, @timestamp)
         else
           new_created_at = Time.at(post.created_at.to_f + @time_difference)
+          new_created_at = now if new_created_at > now
           last_posted_at = new_created_at if new_created_at > last_posted_at
           update_post(post, new_created_at)
         end

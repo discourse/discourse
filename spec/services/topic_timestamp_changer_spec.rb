@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PostTimestampChanger do
+describe TopicTimestampChanger do
   describe "change!" do
     let(:old_timestamp) { Time.zone.now }
     let(:new_timestamp) { old_timestamp + 1.day }
@@ -9,25 +9,31 @@ describe PostTimestampChanger do
     let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }
     let(:params) { { topic_id: topic.id, timestamp: new_timestamp.to_f } }
 
-    it 'changes the timestamp of the topic and opening post' do
-      PostTimestampChanger.new(params).change!
+    context 'new timestamp is in the future' do
+      let(:new_timestamp) { old_timestamp + 2.day }
 
-      topic.reload
-      [:created_at, :updated_at, :bumped_at].each do |column|
-        expect(topic.public_send(column)).to be_within_one_second_of(new_timestamp)
+      it 'changes the timestamp of the topic and opening post' do
+        Timecop.freeze do
+          TopicTimestampChanger.new(params).change!
+
+          topic.reload
+          [:created_at, :updated_at, :bumped_at].each do |column|
+            expect(topic.public_send(column)).to be_within_one_second_of(new_timestamp)
+          end
+
+          p1.reload
+          [:created_at, :updated_at].each do |column|
+            expect(p1.public_send(column)).to be_within_one_second_of(new_timestamp)
+          end
+
+          expect(topic.last_posted_at).to be_within_one_second_of(p2.reload.created_at)
+        end
       end
-
-      p1.reload
-      [:created_at, :updated_at].each do |column|
-        expect(p1.public_send(column)).to be_within_one_second_of(new_timestamp)
-      end
-
-      expect(topic.last_posted_at).to be_within_one_second_of(p2.reload.created_at)
     end
 
     describe 'predated timestamp' do
       it 'updates the timestamp of posts in the topic with the time difference applied' do
-        PostTimestampChanger.new(params).change!
+        TopicTimestampChanger.new(params).change!
 
         p2.reload
         [:created_at, :updated_at].each do |column|
@@ -40,7 +46,7 @@ describe PostTimestampChanger do
       let(:new_timestamp) { old_timestamp - 1.day }
 
       it 'updates the timestamp of posts in the topic with the time difference applied' do
-        PostTimestampChanger.new(params).change!
+        TopicTimestampChanger.new(params).change!
 
         p2.reload
         [:created_at, :updated_at].each do |column|
@@ -53,7 +59,7 @@ describe PostTimestampChanger do
       $redis.set AdminDashboardData.stats_cache_key, "X"
       $redis.set About.stats_cache_key, "X"
 
-      PostTimestampChanger.new(params).change!
+      TopicTimestampChanger.new(params).change!
 
       expect($redis.get(AdminDashboardData.stats_cache_key)).to eq(nil)
       expect($redis.get(About.stats_cache_key)).to eq(nil)
