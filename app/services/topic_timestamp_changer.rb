@@ -1,8 +1,14 @@
-class PostTimestampChanger
-  def initialize(params)
-    @topic = params[:topic] || Topic.with_deleted.find(params[:topic_id])
+class TopicTimestampChanger
+  class InvalidTimestampError < StandardError; end
+
+  def initialize(timestamp:, topic: nil, topic_id: nil)
+    @topic = topic || Topic.with_deleted.find(topic_id)
     @posts = @topic.posts
-    @timestamp = Time.at(params[:timestamp])
+    @current_timestamp = Time.zone.now
+    @timestamp = Time.zone.at(timestamp)
+
+    raise InvalidTimestampError if @timestamp.to_f > @current_timestamp.to_f
+
     @time_difference = calculate_time_difference
   end
 
@@ -15,6 +21,7 @@ class PostTimestampChanger
           update_post(post, @timestamp)
         else
           new_created_at = Time.at(post.created_at.to_f + @time_difference)
+          new_created_at = @current_timestamp if new_created_at > @current_timestamp
           last_posted_at = new_created_at if new_created_at > last_posted_at
           update_post(post, new_created_at)
         end
