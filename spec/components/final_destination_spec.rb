@@ -19,8 +19,11 @@ describe FinalDestination do
   end
 
   before do
-    FinalDestination.stubs(:lookup_ip) do |host|
-    end
+    WebMock.reset!
+  end
+
+  after do
+    WebMock.reset!
   end
 
   let(:doc_response) do
