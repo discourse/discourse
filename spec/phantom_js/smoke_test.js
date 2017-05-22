@@ -140,8 +140,8 @@ function run() {
 
 var runTests = function() {
 
-  test("expect a log in button", function() {
-    return $(".login-button").text().trim() === "Log In";
+  test("expect a log in button in the header", function() {
+    return $("header .login-button").length;
   });
 
   execAsync("go to latest page", 500, function(){
