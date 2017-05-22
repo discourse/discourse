@@ -26,7 +26,7 @@ module Jobs
     end
 
     def badge
-      @badge ||= Badge.find(Badge::FirstEmoji)
+      Badge.find(Badge::FirstEmoji)
     end
 
   end

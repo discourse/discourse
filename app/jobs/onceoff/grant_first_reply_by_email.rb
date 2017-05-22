@@ -25,7 +25,7 @@ module Jobs
     end
 
     def badge
-      @badge ||= Badge.find(Badge::FirstReplyByEmail)
+      Badge.find(Badge::FirstReplyByEmail)
     end
 
   end
