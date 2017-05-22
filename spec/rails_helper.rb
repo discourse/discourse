@@ -124,7 +124,12 @@ Spork.prefork do
       Discourse.clear_readonly!
 
       I18n.locale = :en
+      Excon.defaults[:mock] = true
+    end
+
+    config.after(:each) do
       WebMock.reset!
+      Excon.stubs.clear
     end
 
     class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
