@@ -947,8 +947,6 @@ sv:
     external_system_avatars_enabled: "Använd externa system för avatar-tjänster."
     default_opengraph_image_url: "URL för standard opengraphbilden."
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
-    convert_pasted_images_to_hq_jpg: "Konvertera inklistrade bilder till högkvalitativa JPG-filer."
-    convert_pasted_images_quality: "Kvaliten av den konverterade JPG filen (1 är den lägsta kvaliten, 100 är den bästa kvaliten)."
     enable_flash_video_onebox: "Aktivera inbäddning av swf- och fic- (Adobe Flash) länkar i onebox:ar. VARNING: det kan introducera säkerhetsrisker."
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
     default_trust_level: "Förvald förtroendenivå (0-4) för alla nya användare. VARNING! En ändring av detta sätter dig i stor risk för skräppost."
@@ -1431,14 +1429,6 @@ sv:
     bulk_invite_failed:
       title: "Mängd invitationerna misslyckades"
       subject_template: "Massrekrytering av användare genererade fel"
-      text_body_template: |
-        Din massrekrytering av användare behandlades, %{sent} inbjudningar skickades med %{failed} fel.
-
-        Här är loggen:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV exporten lyckades"
       subject_template: "Dataexport lyckades"

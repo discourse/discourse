@@ -5,10 +5,12 @@ class UploadCreator
 
   TYPES_CONVERTED_TO_JPEG ||= %i{bmp png}
 
+  TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
+
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse g line linearGradient path polygon polyline
     radialGradient rect stop svg text textpath tref tspan use
-  }
+  }.each(&:freeze)
 
   # Available options
   #  - type (string)
@@ -177,7 +179,7 @@ class UploadCreator
   end
 
   def should_crop?
-    Upload::CROPPED_TYPES.include?(@opts[:type])
+    TYPES_TO_CROP.include?(@opts[:type])
   end
 
   def crop!

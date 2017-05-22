@@ -123,7 +123,7 @@ export default Ember.Component.extend({
       }
       this.afterRender();
 
-      renderedKey('*');
+      Ember.run.scheduleOnce('afterRender', () => renderedKey('*'));
       if (this.profileWidget) {
         console.log(new Date().getTime() - t0);
       }

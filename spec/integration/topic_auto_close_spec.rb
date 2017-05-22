@@ -16,7 +16,7 @@ describe Topic do
       let(:category) { nil }
 
       it 'should not schedule the topic to auto-close' do
-        expect(topic.topic_status_update).to eq(nil)
+        expect(topic.public_topic_timer).to eq(nil)
         expect(job_klass.jobs).to eq([])
       end
     end
@@ -25,7 +25,7 @@ describe Topic do
       let(:category) { Fabricate(:category, auto_close_hours: nil) }
 
       it 'should not schedule the topic to auto-close' do
-        expect(topic.topic_status_update).to eq(nil)
+        expect(topic.public_topic_timer).to eq(nil)
         expect(job_klass.jobs).to eq([])
       end
     end
@@ -49,11 +49,11 @@ describe Topic do
           topic_status_update = TopicTimer.last
 
           expect(topic_status_update.topic).to eq(topic)
-          expect(topic.topic_status_update.execute_at).to be_within_one_second_of(2.hours.from_now)
+          expect(topic.public_topic_timer.execute_at).to be_within_one_second_of(2.hours.from_now)
 
           args = job_klass.jobs.last['args'].first
 
-          expect(args["topic_timer_id"]).to eq(topic.topic_status_update.id)
+          expect(args["topic_timer_id"]).to eq(topic.public_topic_timer.id)
           expect(args["state"]).to eq(true)
         end
 
@@ -79,7 +79,7 @@ describe Topic do
           context 'topic is closed manually' do
             it 'should remove the schedule to auto-close the topic' do
               Timecop.freeze do
-                topic_timer_id = staff_topic.topic_timer.id
+                topic_timer_id = staff_topic.public_topic_timer.id
 
                 staff_topic.update_status('closed', true, admin)
 

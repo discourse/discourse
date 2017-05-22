@@ -2,7 +2,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def update!(status, enabled, opts={})
     status = Status.new(status, enabled)
 
-    @topic_status_update = topic.topic_status_update
+    @topic_status_update = topic.public_topic_timer
 
     updated = nil
     Topic.transaction do

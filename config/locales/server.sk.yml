@@ -1211,14 +1211,6 @@ sk:
       text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
     bulk_invite_failed:
       subject_template: "Zpracovanie pozvania viacerých používateľov dopadlo s chybami"
-      text_body_template: |
-        Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok s %{failed} chybou(chybami).
-
-        Tu je záznam:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Export dát kompletný"
     csv_export_failed:

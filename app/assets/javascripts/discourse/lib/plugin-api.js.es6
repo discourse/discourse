@@ -28,7 +28,6 @@ class PluginApi {
   constructor(version, container) {
     this.version = version;
     this.container = container;
-    this._currentUser = container.lookup('current-user:main');
     this.h = h;
   }
 
@@ -37,7 +36,7 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
   **/
   getCurrentUser() {
-    return this._currentUser;
+    return this.container.lookup('current-user:main');
   }
 
   /**

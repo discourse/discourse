@@ -624,10 +624,8 @@ te:
         dismiss_new: "కొత్తవి తుడువు"
         toggle: "విషయాల బహుళ ఎంపికలు అటుఇటుచేయి"
         actions: "బహుళ చర్యలు"
-        change_category: "వర్గం మార్చు"
         close_topics: "విషయాలు మూయు"
         archive_topics: "విషయాలు కట్టకట్టు"
-        notification_level: "ప్రకటన స్థాయి మార్చు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
           one: "మీరు <b>1</b>  విషయం ఎంచుకున్నారు."

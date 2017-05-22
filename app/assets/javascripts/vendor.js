@@ -33,7 +33,7 @@
 //= require show-html.js
 //= require break_string
 //= require buffered-proxy
-//= require jquery.autoellipsis-1.0.10.min.js
+//= require jquery.autoellipsis-1.0.10
 //= require virtual-dom
 //= require virtual-dom-amd
 //= require highlight.js

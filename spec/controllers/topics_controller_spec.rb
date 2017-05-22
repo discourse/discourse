@@ -1134,9 +1134,21 @@ describe TopicsController do
         xhr :put, :make_banner, topic_id: topic.id
         expect(response).to be_success
       end
-
     end
+  end
 
+  describe 'remove_allowed_user' do
+    it 'admin can be removed from a pm' do
+
+      admin = log_in :admin
+      user = Fabricate(:user)
+      pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username, admin.username])
+
+      xhr :put, :remove_allowed_user, topic_id: pm.topic_id, username: admin.username
+
+      expect(response.status).to eq(200)
+      expect(TopicAllowedUser.where(topic_id: pm.topic_id, user_id: admin.id).first).to eq(nil)
+    end
   end
 
   describe 'remove_banner' do

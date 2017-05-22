@@ -61,7 +61,8 @@ class TopicViewSerializer < ApplicationSerializer
              :tags,
              :featured_link,
              :topic_timer,
-             :unicode_title
+             :unicode_title,
+             :message_bus_last_id
 
   # TODO: Split off into proper object / serializer
   def details
@@ -123,6 +124,10 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_reply_as_new_topic] = true if scope.can_reply_as_new_topic?(object.topic)
     result[:can_flag_topic] = actions_summary.any? { |a| a[:can_act] }
     result
+  end
+
+  def message_bus_last_id
+    object.message_bus_last_id
   end
 
   def chunk_size
@@ -251,7 +256,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   def topic_timer
     TopicTimerSerializer.new(
-      object.topic.topic_timer, root: false
+      object.topic.public_topic_timer, root: false
     )
   end
 

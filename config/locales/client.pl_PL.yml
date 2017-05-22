@@ -1107,7 +1107,6 @@ pl_PL:
       cannot_see_mention:
         category: "Wspomniałeś o {{username}} lecz nie zostaną oni powiadomieni ponieważ nie mają dostępu do tej kategorii. Dodaj ich do grupy która ma dostęp do tej kategorii."
         private: "Wspomniałeś o {{username}} lecz nie zostaną powiadomieni ponieważ nie mogą odczytać tej wiadomości . Będziesz musiał ich zaprosić do odczytania tej wiadomości "
-      duplicate_link: "Wyglądan na to, że Twój link do <b>{{domain}}</b> został już użyty w tym temacie przez <b>@{{username}}</b> w <a href='{{post_url}}'>odpowiedzi {{ago}}</a> – czy jesteś pewien, że chcesz go użyć ponownie ?"
       error:
         title_missing: "tytuł jest wymagany"
         title_too_short: "tytuł musi zawierać co najmniej {{min}} znaków"
@@ -1329,10 +1328,8 @@ pl_PL:
         dismiss_new: "Wyczyść nowe"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
-        change_category: "Zmień kategorię"
         close_topics: "Zamknij wpisy"
         archive_topics: "Zarchiwizuj tematy"
-        notification_level: "Poziom powiadomień o zmianach"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
         selected:
           one: "Zaznaczono <b>1</b> temat."
@@ -2314,8 +2311,6 @@ pl_PL:
       granted_on: "Przyznano %{date}"
       others_count: "Inni użytkownicy z tą odznaką (%{count})"
       title: Odznaki
-      allow_title: "dostępny tytuł"
-      multiple_grant: "przyznana wielokrotnie"
       badge_count:
         one: "1 odznaka"
         few: "%{count} odznak"
@@ -2627,7 +2622,6 @@ pl_PL:
         event_type_missing: "Musisz ustawić co najmniej jeden typ wydarzenia."
         content_type: "Typ zawartości "
         secret: "Tajemnica"
-        event_chooser: "Które wydarzenia chcesz wywołać ten webhook'iem?"
         wildcard_event: "Wysyłaj mi wszystko."
         individual_event: "Wybierz indywidualne zdarzenia"
         verify_certificate: "Sprawdź certyfikat TLS zawarty w url"

@@ -390,7 +390,7 @@ class PostCreator
   end
 
   def update_topic_auto_close
-    topic_timer = @topic.topic_timer
+    topic_timer = @topic.public_topic_timer
 
     if topic_timer &&
        topic_timer.based_on_last_post &&

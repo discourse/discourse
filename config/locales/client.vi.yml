@@ -1157,10 +1157,8 @@ vi:
         dismiss_new: "Bỏ "
         toggle: "chuyển sang chọn chủ đề theo lô"
         actions: "Hành động theo lô"
-        change_category: "Chuyển chuyên mục"
         close_topics: "Đóng các chủ đề"
         archive_topics: "Chủ đề Lưu trữ"
-        notification_level: "Thay đổi cấp độ thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
           other: "Bạn đã chọn <b>{{count}}</b> chủ đề"
@@ -1859,8 +1857,6 @@ vi:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
       title: Huy hiệu
-      allow_title: "tiêu đề khả dụng"
-      multiple_grant: "được tặng thưởng nhiều lần"
       badge_count:
         other: "%{count} huy hiệu"
       none: "<none>"

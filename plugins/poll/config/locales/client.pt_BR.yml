@@ -54,6 +54,7 @@ pt_BR:
         insert: Inserir resposta
         help:
           options_count: Enquetes devem ter no mínimo 2 opções
+          invalid_values: O menor valor valor deve ser menor que o valor máximo.
         poll_type:
           label: Tipo
           regular: Única escolha

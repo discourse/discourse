@@ -1067,8 +1067,6 @@ ar:
     external_system_avatars_enabled: "استخدم خدمات الهه النظام الخارجي "
     default_opengraph_image_url: "عنوان رابط صورة ال اوبن جراف الثابتة"
     allow_all_attachments_for_group_messages: "اسمح بجميع ملحقات البريد  للرسائل الجماعيه "
-    convert_pasted_images_to_hq_jpg: "حوّل الصّور الملصقة إلى ملفّات JPG عالية الجودة."
-    convert_pasted_images_quality: "جودة ملفّات JPG المحوّلة (1 هي أدنى جودة، 100 هي أفضل جودة)."
     enable_flash_video_onebox: "فعّل تضمين روابط swf وflv (أدوبي فلاش) في الصّناديق. تحذير: قد يتسبّب بمخاطر أمنيّة."
     default_invitee_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين."
     default_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين.تحذير! التغيرات ستضعك تحت خطر البريد الغير هام."
@@ -1476,14 +1474,6 @@ ar:
       text_body_template: "ملف دعوة العضو الجماعية الخاص بك تمت معالجته، %{sent} دعوات مرسلة."
     bulk_invite_failed:
       subject_template: "دعوة العضو الجماعية تمت مع وجود أخطاء"
-      text_body_template: |
-        تمت معالجة ملف دعوات العضو , وتدعو %{sent} بالبريد مع %{failed} error(s).
-
-        هنا السجل
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "اكتمل تصدير البيانات"
     csv_export_failed:

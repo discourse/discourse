@@ -181,6 +181,10 @@ describe HtmlToMarkdown do
     )).to eq("- Fruits\n  - 🍏\n  - 🍐\n  - 🍌\n- Vegetables\n  - 🍆\n  - 🍅\n  - 🍄")
   end
 
+  it "supports bare <li>" do
+    expect(html_to_markdown("<li>I'm alone</li>")).to eq("- I'm alone")
+  end
+
   it "supports <pre>" do
     expect(html_to_markdown("<pre>var foo = 'bar';</pre>")).to eq("```\nvar foo = 'bar';\n```")
     expect(html_to_markdown("<pre><code>var foo = 'bar';</code></pre>")).to eq("```\nvar foo = 'bar';\n```")

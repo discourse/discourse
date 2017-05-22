@@ -140,11 +140,13 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
-
   def primary_group
+    group = Group.find(params[:primary_group_id].to_i)
     guardian.ensure_can_change_primary_group!(@user)
-    @user.primary_group_id = params[:primary_group_id]
-    @user.save!
+    if group.users.include?(@user)
+      @user.primary_group_id = params[:primary_group_id]
+      @user.save!
+    end
     render nothing: true
   end
 

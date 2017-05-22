@@ -1032,7 +1032,6 @@ ro:
       cannot_see_mention:
         category: "Ai menționat utilizatorii: {{username}}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
         private: "Ai menționat utilizatorii:  {{username}}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
-      duplicate_link: "Se pare că link-ul tău către <b>{{domain}}</b> a fost deja postat în cadrul subiectului de către <b>@{{username}}</b> în <a href='{{post_url}}'> un răspuns {{ago}} în urmă</a> – eși sigur că vrei să îl postezi din nou?"
       error:
         title_missing: "Trebuie un titlu"
         title_too_short: "Titlul trebuie să aibă minim {{min}} (de) caractere"
@@ -1247,10 +1246,8 @@ ro:
         dismiss_new: "Anulează cele noi"
         toggle: "activează selecția multiplă a subiectelor"
         actions: "Acțiuni multiple"
-        change_category: "Schimbă categoria"
         close_topics: "Închide subiectele"
         archive_topics: "Arhivează subiectele"
-        notification_level: "Schimbă nivelul de notificări"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
         selected:
           one: "Ai selectat <b>un</b> subiect."
@@ -2111,8 +2108,6 @@ ro:
       granted_on: "Acordat acum %{date}"
       others_count: "Numărul celorlalți care au acest ecuson (%{count})"
       title: Ecusoane
-      allow_title: "titlu disponibil"
-      multiple_grant: "acordat de mai multe ori"
       badge_count:
         one: "%{count} ecuson"
         few: "%{count} ecusoane"
@@ -2410,7 +2405,6 @@ ro:
         event_type_missing: "Va trebui să setezi cel puțin un tip de evenimente."
         content_type: "Tip conținut"
         secret: "Secret"
-        event_chooser: "Ce evenimente vrei să declanșeze acest webhook?"
         wildcard_event: "Trimite-mi orice."
         individual_event: "Selectează evenimente individuale."
         verify_certificate: "Verifică certificatul TSL al URL-ului încărcăturii"

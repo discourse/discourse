@@ -343,7 +343,7 @@ describe Category do
 
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
-      expect(category.topic.topic_status_update).to eq(nil)
+      expect(category.topic.public_topic_timer).to eq(nil)
     end
 
     describe "creating a new category with the same slug" do

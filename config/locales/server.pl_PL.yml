@@ -345,10 +345,6 @@ pl_PL:
           attributes:
             payload_url:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://. Puste pole jest niedozwolone."
-        topic_status_update:
-          attributes:
-            execute_at:
-              in_the_past: "musi wskazywać na przyszłość."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
@@ -430,7 +426,6 @@ pl_PL:
       title: "zwyczajny"
     leader:
       title: "lider"
-    change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
   rate_limiter:
     slow_down: "Powtórzyłeś to działanie zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Liczba wykonań tej czynności w ciągu dnia jest ograniczona. Odczekaj %{time_left} przed ponowną próbą."
@@ -859,7 +854,6 @@ pl_PL:
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
     queue_size_warning: 'Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
-    google_oauth2_config_warning: 'Serwis umożliwia rejestrację i logowanie poprzez Google OAuth2 (enable_google_oauth2_logins), ale ''client id'' oraz ''client secret'' nie są jeszcze ustawione. Przejdź do <a href="/admin/site_settings">Ustawień</a> i wprowadź te wartości. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     github_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą GitHuba (enable_github_logins), ale id klienta i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
@@ -1077,8 +1071,6 @@ pl_PL:
     avatar_sizes: "Lista automatycznie wygenerowanych rozmiarów awatarów."
     external_system_avatars_enabled: "Użyj zewnętrzny system awatarów."
     external_system_avatars_url: "Adres URL zewnętrznego dostawcy awatarów. Dozwolone podstawienia: {username} {first_letter} {color} {size}"
-    convert_pasted_images_to_hq_jpg: "Konwertuj wklejone obrazy do wysokiej jakości plików JPG."
-    convert_pasted_images_quality: "Jakość konwertowanego pliku JPG (1 to najniższa jakość, 100 to najlepsza jakość)."
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
     default_trust_level: "Domyślny poziom zaufania (0-4) dla wszystkich nowych użytkowników. Zmienianie tego  narażą na ryzyko sporej ilości Spamu."
     tl1_requires_topics_entered: "Jak wiele tematów musi odwiedzić nowy użytkownik, przed promocją na 1-szy poziom zaufania."
@@ -1582,16 +1574,6 @@ pl_PL:
     bulk_invite_failed:
       title: "Zaproszenia hurtowe Nieudane"
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |+
-        Plik z zaproszeniami został przetworzony -- wysłanych: %{sent}, błędów: %{failed}.
-
-        Dziennik operacji:
-
-        ```
-        %{logs}
-        ```
-
-
     csv_export_succeeded:
       title: "Eksport CSV udany "
       subject_template: "Zakończono eksport danych"

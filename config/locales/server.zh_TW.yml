@@ -970,8 +970,6 @@ zh_TW:
     default_opengraph_image_url: "opengraph圖像的預設URL。"
     twitter_summary_large_image_url: "預設 Twitter summary 卡片的 URL（需要至少寬 280px 和高 150px）。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
-    convert_pasted_images_to_hq_jpg: "將粘貼圖片轉為高質量 JPG 檔案。"
-    convert_pasted_images_quality: "轉換過的 JPG 檔案質量（1 是最低，100 最高質量）。"
     enable_flash_video_onebox: "在 Onebox 啟用嵌入 swf 和 flv (Adobe Flash) 的鏈接。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設信任等級（0-4）。警告！改變此項將提高廣告氾濫的風險。"
@@ -1638,14 +1636,6 @@ zh_TW:
     bulk_invite_failed:
       title: "批量邀請失敗"
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
-      text_body_template: |
-        批量邀請已經完成，發出了 %{sent} 個邀請並且 %{failed} 個失敗。
-
-        查看日誌：
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "資料匯出完成"

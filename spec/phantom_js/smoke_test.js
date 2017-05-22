@@ -12,6 +12,11 @@ if (system.args.length !== 2) {
 var TIMEOUT = 25000;
 var page = require("webpage").create();
 
+if (system.env["AUTH_USER"] && system.env["AUTH_PASSWORD"]) {
+  page.settings.userName = system.env["AUTH_USER"];
+  page.settings.password = system.env["AUTH_PASSWORD"];
+}
+
 page.viewportSize = {
   width: 1366,
   height: 768
@@ -105,7 +110,7 @@ function run() {
         });
       } else if (action.exec) {
         console.log("EXEC: " + action.desc);
-        page.evaluate(action.exec);
+        page.evaluate(action.exec, system);
         performNextAction();
       } else if (action.execAsync) {
         console.log("EXEC ASYNC: " + action.desc + " - " + action.delay + "ms");
@@ -135,8 +140,12 @@ function run() {
 
 var runTests = function() {
 
-  test("expect a log in button", function() {
-    return $(".login-button").text().trim() === "Log In";
+  test("expect a log in button in the header", function() {
+    return $("header .login-button").length;
+  });
+
+  execAsync("go to latest page", 500, function(){
+    window.location = "/latest";
   });
 
   test("at least one topic shows up", function() {
@@ -177,9 +186,9 @@ var runTests = function() {
     return $(".login-modal").length;
   });
 
-  exec("type in credentials & log in", function() {
-    $("#login-account-name").val("smoke_user").trigger("change");
-    $("#login-account-password").val("P4ssw0rd").trigger("change");
+  exec("type in credentials & log in", function(system) {
+    $("#login-account-name").val(system.env['DISCOURSE_USERNAME'] || 'smoke_user').trigger("change");
+    $("#login-account-password").val(system.env["DISCOURSE_PASSWORD"] || 'P4ssw0rd').trigger("change");
     $(".login-modal .btn-primary").click();
   });
 
@@ -188,7 +197,8 @@ var runTests = function() {
   });
 
   exec("go home", function() {
-    $('#site-logo').click();
+    if ($('#site-logo').length) $('#site-logo').click();
+    if ($('#site-text-logo').length) $('#site-text-logo').click();
   });
 
   test("it shows a topic list", function() {

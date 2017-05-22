@@ -2,11 +2,33 @@ require "nokogiri"
 require "htmlentities"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+# https://developers.jivesoftware.com/api/v3/cloud/rest/index.html
+
 class ImportScripts::JiveApi < ImportScripts::Base
 
   USER_COUNT ||= 1000
   POST_COUNT ||= 100
   STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
+
+  TO_IMPORT ||= [
+    # Announcement & News
+    { jive_object: { type: 37, id: 1004 }, filters: { created_after: 1.year.ago, type: "post" }, category_id: 7 },
+    # Questions & Answers / General Discussions
+    { jive_object: { type: 14, id: 2006 }, filters: { created_after: 6.months.ago, type: "discussion" }, category: Proc.new { |c| c["question"] ? 5 : 21 } },
+    # Anywhere beta
+    { jive_object: { type: 14, id: 2052 }, filters: { created_after: 6.months.ago, type: "discussion" }, category_id: 22 },
+    # Tips & Tricks
+    { jive_object: { type: 37, id: 1284 }, filters: { type: "post" }, category_id: 6 },
+    { jive_object: { type: 37, id: 1319 }, filters: { type: "post" }, category_id: 6 },
+    { jive_object: { type: 37, id: 1177 }, filters: { type: "post" }, category_id: 6 },
+    { jive_object: { type: 37, id: 1165 }, filters: { type: "post" }, category_id: 6 },
+    # Ambassadors
+    { jive_object: { type: 700, id: 1001 }, filters: { type: "discussion" }, authenticated: true, category_id: 8 },
+    # Experts
+    { jive_object: { type: 700, id: 1034 }, filters: { type: "discussion" }, authenticated: true, category_id: 15 },
+    # Feature Requests
+    { jive_object: { type: 14, id: 2015 }, filters: { type: "idea" }, category_id: 31 },
+  ]
 
   def initialize
     super
@@ -17,12 +39,28 @@ class ImportScripts::JiveApi < ImportScripts::Base
   end
 
   def execute
+    update_existing_users
     import_users
-    import_discussions
-    import_posts
+    import_contents
     import_bookmarks
-
     mark_topics_as_solved
+  end
+
+  def update_existing_users
+    puts "", "updating existing users..."
+
+    # we just need to do this once
+    return if User.human_users.limit(101).count > 100
+
+    User.human_users.find_each do |user|
+      people = get("people/email/#{user.email}?fields=initialLogin,-resources", true)
+      if people && people["initialLogin"].present?
+        created_at = DateTime.parse(people["initialLogin"])
+        if user.created_at > created_at
+          user.update_columns(created_at: created_at)
+        end
+      end
+    end
   end
 
   def import_users
@@ -50,47 +88,72 @@ class ImportScripts::JiveApi < ImportScripts::Base
     end
   end
 
-  def import_discussions
-    puts "", "importing discussions & questions..."
+  def import_contents
+    puts "", "importing contents..."
+
+    TO_IMPORT.each do |to_import|
+      puts Time.now
+      entity = to_import[:jive_object]
+      places = get("places?fields=placeID,name,-resources&filter=entityDescriptor(#{entity[:type]},#{entity[:id]})", to_import[:authenticated])
+      import_place_contents(places["list"][0], to_import) if places && places["list"].present?
+    end
+  end
+
+  def import_place_contents(place, to_import)
+    puts "", "importing contents for '#{place["name"]}'..."
 
     start_index = 0
-    fields = "fields=published,contentID,author.id,content.text,subject,viewCount,likeCount,question,-resources,-author.resources"
-    filter = "&filter=creationDate(null,2017-01-01T00:00:00Z)"
+
+    filters = "filter=status(published)"
+    if to_import[:filters]
+      filters << "&filter=type(#{to_import[:filters][:type]})" if to_import[:filters][:type].present?
+      filters << "&filter=creationDate(null,#{to_import[:filters][:created_after].strftime("%Y-%m-%dT%TZ")})" if to_import[:filters][:created_after].present?
+    end
 
     loop do
-      discussions = get("contents?#{fields}&filter=status(published)&filter=type(discussion)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}")
-      discussions["list"].each do |discussion|
+      contents = get("places/#{place["placeID"]}/contents?#{filters}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      contents["list"].each do |content|
+        custom_fields = { import_id: content["contentID"] }
+        custom_fields[:import_permalink] = content["permalink"] if content["permalink"].present?
+
         topic = {
-          id: discussion["contentID"],
-          created_at: discussion["published"],
-          title: @htmlentities.decode(discussion["subject"]),
-          raw: process_raw(discussion["content"]["text"]),
-          user_id: user_id_from_imported_user_id(discussion["author"]["id"]) || Discourse::SYSTEM_USER_ID,
-          category: discussion["question"] ? 5 : 21,
-          views: discussion["viewCount"],
-          custom_fields: { import_id: discussion["contentID"] },
+          id: content["contentID"],
+          created_at: content["published"],
+          title: @htmlentities.decode(content["subject"]),
+          raw: process_raw(content["content"]["text"]),
+          user_id: user_id_from_imported_user_id(content["author"]["id"]) || Discourse::SYSTEM_USER_ID,
+          views: content["viewCount"],
+          custom_fields: custom_fields,
         }
+
+        if to_import[:category]
+          topic[:category] = to_import[:category].call(content)
+        else
+          topic[:category] = to_import[:category_id]
+        end
 
         post_id = post_id_from_imported_post_id(topic[:id])
         parent_post = post_id ? Post.unscoped.find_by(id: post_id) : create_post(topic, topic[:id])
 
         if parent_post&.id && parent_post&.topic_id
-          import_likes(discussion["contentID"], parent_post.id, parent_post.topic_id) if discussion["likeCount"].to_i > 0
-          import_comments(discussion["contentID"], parent_post.topic_id)
+          import_likes(content["contentID"], parent_post.id) if content["likeCount"].to_i > 0
+          if content["replyCount"].to_i > 0
+            import_comments(content["contentID"], parent_post.topic_id, to_import) if content["resources"]["comments"].present?
+            import_messages(content["contentID"], parent_post.topic_id, to_import) if content["resources"]["messages"].present?
+          end
         end
       end
 
-      break if discussions["list"].size < POST_COUNT || discussions["links"].blank? || discussions["links"]["next"].blank?
-      break unless start_index = discussions["links"]["next"][/startIndex=(\d+)/, 1]
+      break if contents["list"].size < POST_COUNT || contents["links"].blank? || contents["links"]["next"].blank?
+      break unless start_index = contents["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
 
-  def import_likes(discussion_id, post_id, topic_id)
+  def import_likes(content_id, post_id)
     start_index = 0
-    fields = "fields=id"
 
     loop do
-      likes = get("contents/#{discussion_id}/likes?&count=#{USER_COUNT}&startIndex=#{start_index}", true)
+      likes = get("contents/#{content_id}/likes?&count=#{USER_COUNT}&startIndex=#{start_index}", true)
       likes["list"].each do |like|
         next unless user_id = user_id_from_imported_user_id(like["id"])
         next if PostAction.exists?(user_id: user_id, post_id: post_id, post_action_type_id: PostActionType.types[:like])
@@ -102,12 +165,11 @@ class ImportScripts::JiveApi < ImportScripts::Base
     end
   end
 
-  def import_comments(discussion_id, topic_id)
+  def import_comments(content_id, topic_id, to_import)
     start_index = 0
-    fields = "fields=published,author.id,content.text,parent,answer,likeCount,-resources,-author.resources"
 
     loop do
-      comments = get("messages/contents/#{discussion_id}?#{fields}&hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}")
+      comments = get("contents/#{content_id}/comments?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
       comments["list"].each do |comment|
         next if post_id_from_imported_post_id(comment["id"])
 
@@ -119,16 +181,15 @@ class ImportScripts::JiveApi < ImportScripts::Base
           raw: process_raw(comment["content"]["text"]),
           custom_fields: { import_id: comment["id"] },
         }
-        post[:custom_fields][:is_accepted_answer] = true if comment["answer"]
 
-        if parent_post_id = comment["parent"][/\/messages\/(\d+)/, 1]
+        if (parent_post_id = comment["parentID"]).to_i > 0
           if parent = topic_lookup_from_imported_post_id(parent_post_id)
             post[:reply_to_post_number] = parent[:post_number]
           end
         end
 
         if created_post = create_post(post, post[:id])
-          import_likes(discussion_id, created_post.id, topic_id) if comment["likeCount"].to_i > 0
+          import_likes(content_id, created_post.id) if comment["likeCount"].to_i > 0
         end
       end
 
@@ -137,35 +198,37 @@ class ImportScripts::JiveApi < ImportScripts::Base
     end
   end
 
-  def import_posts
-    puts "", "importing blog posts..."
-
+  def import_messages(content_id, topic_id, to_import)
     start_index = 0
-    fields = "fields=published,contentID,author.id,content.text,subject,viewCount,permalink,-resources,-author.resources"
-    filter = "&filter=creationDate(null,2016-05-01T00:00:00Z)"
 
     loop do
-      posts = get("contents?#{fields}&filter=status(published)&filter=type(post)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}")
-      posts["list"].each do |post|
-        next if post_id_from_imported_post_id(post["contentID"])
-        pp = {
-          id: post["contentID"],
-          created_at: post["published"],
-          title: @htmlentities.decode(post["subject"]),
-          raw: process_raw(post["content"]["text"]),
-          user_id: user_id_from_imported_user_id(post["author"]["id"]) || Discourse::SYSTEM_USER_ID,
-          category: 7,
-          views: post["viewCount"],
-          custom_fields: { import_id: post["contentID"], import_permalink: post["permalink"] },
-        }
+      messages = get("messages/contents/#{content_id}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      messages["list"].each do |message|
+        next if post_id_from_imported_post_id(message["id"])
 
-        if created_post = create_post(pp, pp[:id])
-          import_likes(pp[:id], created_post.id, created_post.topic_id)
+        post = {
+          id: message["id"],
+          created_at: message["published"],
+          topic_id: topic_id,
+          user_id: user_id_from_imported_user_id(message["author"]["id"]) || Discourse::SYSTEM_USER_ID,
+          raw: process_raw(message["content"]["text"]),
+          custom_fields: { import_id: message["id"] },
+        }
+        post[:custom_fields][:is_accepted_answer] = true if message["answer"]
+
+        if (parent_post_id = message["parentID"].to_i) > 0
+          if parent = topic_lookup_from_imported_post_id(parent_post_id)
+            post[:reply_to_post_number] = parent[:post_number]
+          end
+        end
+
+        if created_post = create_post(post, post[:id])
+          import_likes(content_id, created_post.id) if message["likeCount"].to_i > 0
         end
       end
 
-      break if posts["list"].size < POST_COUNT || posts["links"].blank? || posts["links"]["next"].blank?
-      break unless start_index = posts["links"]["next"][/startIndex=(\d+)/, 1]
+      break if messages["list"].size < POST_COUNT || messages["links"].blank? || messages["links"]["next"].blank?
+      break unless start_index = messages["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
 
@@ -183,7 +246,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
 
     start_index = 0
     fields = "fields=author.id,favoriteObject.id,-resources,-author.resources,-favoriteObject.resources"
-    filter = "&filter=creationDate(null,2017-01-01T00:00:00Z)"
+    filter = "&filter=creationDate(null,2016-01-01T00:00:00Z)"
 
     loop do
       favorites = get("contents?#{fields}&filter=type(favorite)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}")
@@ -241,10 +304,10 @@ class ImportScripts::JiveApi < ImportScripts::Base
     tries ||= 3
 
     command = ["curl", "--silent"]
-    command << "--user \"#{@username}:#{@password}\"" if authenticated
+    command << "--user \"#{@username}:#{@password}\"" if !!authenticated
     command << "\"#{@base_uri}/api/core/v3/#{query}\""
 
-    puts command.join(" ")
+    puts command.join(" ") if ENV["VERBOSE"] == "1"
 
     JSON.parse `#{command.join(" ")}`
   rescue

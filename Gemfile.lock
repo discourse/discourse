@@ -174,7 +174,7 @@ GEM
     multipart-post (2.0.0)
     mustache (1.0.5)
     netrc (0.11.0)
-    nokogiri (1.7.1)
+    nokogiri (1.7.2)
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.10)
       nokogiri
@@ -214,7 +214,7 @@ GEM
     omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.5)
+    onebox (1.8.6)
       fast_blank (>= 1.0.0)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
@@ -238,8 +238,8 @@ GEM
     public_suffix (2.0.5)
     puma (3.6.0)
     r2 (0.2.6)
-    rack (1.6.5)
-    rack-mini-profiler (0.10.2)
+    rack (1.6.8)
+    rack-mini-profiler (0.10.4)
       rack (>= 1.2.0)
     rack-openid (1.3.1)
       rack (>= 1.1.0)

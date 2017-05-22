@@ -1029,7 +1029,6 @@ nb_NO:
       cannot_see_mention:
         category: "Du nevnte {{username}}, men de vil ikke ikke bli varslet fordi de ikke hara tilgang til denne kategorien. Du må legge dem til en gruppe som har tilgang til denne kategorien."
         private: "Du nevnte {{username}}, men de vil ikke bli varslet fordi de ikke kan se denne samtalen. Du må invitere dem til samtalen."
-      duplicate_link: "Det ser ut til at <b>{{domain}}</b> allerede finnes som innlegg om emnet av <b>@{{username}}</b> i <a href='{{post_url}}'>et svar {{ago}}</a> – er du sikker på at du vil gjenta det?"
       error:
         title_missing: "Tittel er påkrevd"
         title_too_short: "Tittel må være på minst {{min}} tegn"
@@ -1245,10 +1244,8 @@ nb_NO:
         dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"
-        change_category: "Endre Kategori"
         close_topics: "Lukk Emner"
         archive_topics: "Arkiverte emner"
-        notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
         selected:
           one: "Du har valgt <b>1</b> emne."
@@ -2133,8 +2130,6 @@ nb_NO:
       granted_on: "Tildelt %{date}"
       others_count: "(%{count}) andre har dette merket"
       title: Merker
-      allow_title: "tilgjengelig tittel"
-      multiple_grant: "tildelt flere ganger"
       badge_count:
         one: "Étt merke"
         other: "%{count} Merker"
@@ -2430,7 +2425,6 @@ nb_NO:
         event_type_missing: "Du må sette opp minst en type hendelse."
         content_type: "Content Type"
         secret: "Delt hemmelighet"
-        event_chooser: "Hvilke hendelser skal utløse denne webhooken?"
         wildcard_event: "Send meg alt"
         individual_event: "Velg hendelser enkeltvis."
         verify_certificate: "Kontroller TLSs-sertifikat til payload url"
