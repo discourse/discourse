@@ -57,7 +57,6 @@ describe FinalDestination do
         expect(final.redirected?).to eq(false)
         expect(final.status).to eq(:resolved)
       end
-
     end
 
     context "underscores in URLs" do
