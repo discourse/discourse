@@ -10,9 +10,12 @@ describe FinalDestination do
         when 'eviltrout.com' then '52.84.143.152'
         when 'codinghorror.com' then '91.146.108.148'
         when 'discourse.org' then '104.25.152.10'
+        when 'some_thing.example.com' then '104.25.152.10'
         when 'private-host.com' then '192.168.10.1'
         when 'internal-ipv6.com' then '2001:abc:de:01:3:3d0:6a65:c2bf'
         else
+          as_ip = IPAddr.new(host) rescue nil
+          raise "couldn't lookup #{host}" if as_ip.nil?
           host
         end
       end
@@ -51,6 +54,20 @@ describe FinalDestination do
       it "returns the final url" do
         final = FinalDestination.new('https://eviltrout.com', opts)
         expect(final.resolve.to_s).to eq('https://eviltrout.com')
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+
+    end
+
+    context "underscores in URLs" do
+      before do
+        Excon.stub({ method: :head, hostname: 'some_thing.example.com' }, doc_response)
+      end
+
+      it "doesn't raise errors with underscores in urls" do
+        final = FinalDestination.new('https://some_thing.example.com', opts)
+        expect(final.resolve.to_s).to eq('https://some_thing.example.com')
         expect(final.redirected?).to eq(false)
         expect(final.status).to eq(:resolved)
       end

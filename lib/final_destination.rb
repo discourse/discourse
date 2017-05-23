@@ -62,7 +62,7 @@ class FinalDestination
   end
 
   def validate_uri
-    validate_uri_format && is_public?
+    validate_uri_format && is_dest_valid?
   end
 
   def validate_uri_format
@@ -73,6 +73,10 @@ class FinalDestination
 
     # Disallow IP based crawling
     (IPAddr.new(@uri.hostname) rescue nil).nil?
+  end
+
+  def is_dest_valid?
+    is_public?
   end
 
   def is_public?
@@ -116,4 +120,5 @@ class FinalDestination
     end
     header[1] if header
   end
+
 end
