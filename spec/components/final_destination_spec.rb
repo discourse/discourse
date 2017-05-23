@@ -123,6 +123,11 @@ describe FinalDestination do
       expect(fd('ftp://eviltrout.com').validate_uri_format).to eq(false)
     end
 
+    it "doesn't support IP urls" do
+      expect(fd('http://104.25.152.10').validate_uri_format).to eq(false)
+      expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').validate_uri_format).to eq(false)
+    end
+
     it "returns false for schemeless URL" do
       expect(fd('eviltrout.com').validate_uri_format).to eq(false)
     end
