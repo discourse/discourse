@@ -890,6 +890,10 @@ security:
   use_admin_ip_whitelist:
     default: false
     client: true
+  blacklist_ip_blocks:
+    default: ''
+    type: list
+    shadowed_by_global: true
 
 onebox:
   enable_flash_video_onebox: false

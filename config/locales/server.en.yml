@@ -1029,6 +1029,7 @@ en:
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
+    blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
