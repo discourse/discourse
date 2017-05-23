@@ -164,38 +164,38 @@ describe FinalDestination do
     end
   end
 
-  describe ".is_public" do
+  describe ".is_dest_valid" do
     it "returns false for a valid ipv4" do
-      expect(fd("https://52.84.143.67").is_public?).to eq(true)
-      expect(fd("https://104.25.153.10").is_public?).to eq(true)
+      expect(fd("https://52.84.143.67").is_dest_valid?).to eq(true)
+      expect(fd("https://104.25.153.10").is_dest_valid?).to eq(true)
     end
 
     it "returns false for private ipv4" do
-      expect(fd("https://127.0.0.1").is_public?).to eq(false)
-      expect(fd("https://192.168.1.3").is_public?).to eq(false)
-      expect(fd("https://10.0.0.5").is_public?).to eq(false)
-      expect(fd("https://172.16.0.1").is_public?).to eq(false)
+      expect(fd("https://127.0.0.1").is_dest_valid?).to eq(false)
+      expect(fd("https://192.168.1.3").is_dest_valid?).to eq(false)
+      expect(fd("https://10.0.0.5").is_dest_valid?).to eq(false)
+      expect(fd("https://172.16.0.1").is_dest_valid?).to eq(false)
     end
 
     it "returns false for IPV6 via site settings" do
       SiteSetting.blacklist_ip_blocks = '2001:abc:de::/48|2002:abc:de::/48'
-      expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').is_public?).to eq(false)
-      expect(fd('https://[2002:abc:de:01:0:3f0:6a65:c2bf]').is_public?).to eq(false)
-      expect(fd('https://internal-ipv6.com').is_public?).to eq(false)
-      expect(fd('https://[2003:abc:de:01:0:3f0:6a65:c2bf]').is_public?).to eq(true)
+      expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(false)
+      expect(fd('https://[2002:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(false)
+      expect(fd('https://internal-ipv6.com').is_dest_valid?).to eq(false)
+      expect(fd('https://[2003:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(true)
     end
 
     it "ignores invalid ranges" do
       SiteSetting.blacklist_ip_blocks = '2001:abc:de::/48|eviltrout'
-      expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').is_public?).to eq(false)
+      expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(false)
     end
 
     it "returns true for public ipv6" do
-      expect(fd("https://[2001:470:1:3a8::251]").is_public?).to eq(true)
+      expect(fd("https://[2001:470:1:3a8::251]").is_dest_valid?).to eq(true)
     end
 
     it "returns true for private ipv6" do
-      expect(fd("https://[fdd7:b450:d4d1:6b44::1]").is_public?).to eq(false)
+      expect(fd("https://[fdd7:b450:d4d1:6b44::1]").is_dest_valid?).to eq(false)
     end
   end
 
