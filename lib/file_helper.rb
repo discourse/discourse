@@ -11,7 +11,8 @@ class FileHelper
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = FinalDestination.new(url).resolve
+    # uri = FinalDestination.new(url).resolve
+    uri = URI.parse(url)
     extension = File.extname(uri.path)
     tmp = Tempfile.new([tmp_file_name, extension])
 
