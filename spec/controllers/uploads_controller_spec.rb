@@ -74,7 +74,7 @@ describe UploadsController do
         controller.stubs(:is_api?).returns(true)
 
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
-
+        Excon.stub({ method: :head, hostname: 'example.com' }, {})
         stub_request(:get, "http://example.com/image.png").to_return(body: File.read('spec/fixtures/images/logo.png'))
 
         xhr :post, :create, url: 'http://example.com/image.png', type: "avatar", synchronous: true
@@ -183,7 +183,7 @@ describe UploadsController do
 
     it "handles file without extension" do
       SiteSetting.authorized_extensions = "*"
-      upload = Fabricate(:upload, original_filename: "image_file", sha1: sha)
+      Fabricate(:upload, original_filename: "image_file", sha1: sha)
       controller.stubs(:render)
       controller.expects(:send_file)
 

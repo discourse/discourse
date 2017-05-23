@@ -1,4 +1,5 @@
 require "open-uri"
+require "final_destination"
 
 class FileHelper
 
@@ -10,7 +11,7 @@ class FileHelper
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = parse_url(url)
+    uri = FinalDestination.new(url).resolve
     extension = File.extname(uri.path)
     tmp = Tempfile.new([tmp_file_name, extension])
 
@@ -34,17 +35,6 @@ class FileHelper
 
   def self.images_regexp
     @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
-  end
-
-  # HACK to support underscores in URLs
-  # cf. http://stackoverflow.com/a/18938253/11983
-  def self.parse_url(url)
-    URI.parse(url)
-  rescue URI::InvalidURIError
-    host = url.match(".+\:\/\/([^\/]+)")[1]
-    uri = URI.parse(url.sub(host, 'valid-host'))
-    uri.instance_variable_set("@host", host)
-    uri
   end
 
 end
