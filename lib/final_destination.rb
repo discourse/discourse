@@ -68,14 +68,11 @@ class FinalDestination
   def validate_uri_format
     return false unless @uri
     return false unless ['https', 'http'].include?(@uri.scheme)
+    return false if @uri.scheme == 'http' && @uri.port != 80
+    return false if @uri.scheme == 'https' && @uri.port != 443
 
-    if @uri.scheme == 'http'
-      return @uri.port == 80
-    elsif @uri.scheme == 'https'
-      return @uri.port == 443
-    end
-
-    false
+    # Disallow IP based crawling
+    (IPAddr.new(@uri.hostname) rescue nil).nil?
   end
 
   def is_public?
