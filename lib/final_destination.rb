@@ -7,7 +7,7 @@ class FinalDestination
 
   attr_reader :status
 
-  def initialize(url, opts = nil)
+  def initialize(url, opts=nil)
     @uri = URI(url) rescue nil
     @opts = opts || {}
     @opts[:max_redirects] ||= 5
@@ -85,9 +85,8 @@ class FinalDestination
     return false unless address_s
 
     address = IPAddr.new(address_s)
-    private_match = FinalDestination.private_ranges.any? {|r| r === address }
 
-    if private_match
+    if private_ranges.any? {|r| r === address }
       @status = :invalid_address
       return false
     end
@@ -95,7 +94,12 @@ class FinalDestination
     true
   end
 
-  def self.private_ranges
+  def private_ranges
+    FinalDestination.standard_private_ranges +
+      SiteSetting.blacklist_ip_blocks.split('|').map {|r| IPAddr.new(r) rescue nil }.compact
+  end
+
+  def self.standard_private_ranges
     @private_ranges ||= [
       IPAddr.new('127.0.0.1'),
       IPAddr.new('172.16.0.0/12'),
