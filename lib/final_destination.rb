@@ -77,6 +77,15 @@ class FinalDestination
   end
 
   def is_dest_valid?
+
+    # CDNs are always allowed
+    return true if SiteSetting.s3_cdn_url.present? &&
+      @uri.hostname == URI(SiteSetting.s3_cdn_url).hostname
+
+    global_cdn = GlobalSetting.try(:cdn_url)
+    return true if global_cdn.present? &&
+      @uri.hostname == URI(global_cdn).hostname
+
     return false unless @uri && @uri.host
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
