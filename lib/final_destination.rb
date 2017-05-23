@@ -1,6 +1,7 @@
 require "socket"
 require "ipaddr"
 require 'excon'
+require 'rate_limiter'
 
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
@@ -76,10 +77,6 @@ class FinalDestination
   end
 
   def is_dest_valid?
-    is_public?
-  end
-
-  def is_public?
     return false unless @uri && @uri.host
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
@@ -92,7 +89,12 @@ class FinalDestination
       return false
     end
 
+    # Rate limit how often this IP can be crawled
+    RateLimiter.new(nil, "crawl-destination-ip:#{address_s}", 100, 1.hour).performed!
+
     true
+  rescue RateLimiter::LimitExceeded
+    false
   end
 
   def private_ranges
