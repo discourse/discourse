@@ -96,7 +96,7 @@ module DiscourseNarrativeBot
     }
 
     def self.can_start?(user)
-      return true if user.staff?
+      return true if user.staff? || !SiteSetting.enable_badges
       user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
     end
 

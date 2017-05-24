@@ -33,6 +33,13 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         expect(described_class.can_start?(user)).to eq(true)
       end
     end
+
+    describe 'when badges are disabled' do
+      it 'should return true' do
+        SiteSetting.enable_badges = false
+        expect(described_class.can_start?(user)).to eq(true)
+      end
+    end
   end
 
   describe '#notify_timeout' do
