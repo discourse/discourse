@@ -338,7 +338,7 @@ class Search
     end
   end
 
-  advanced_filter(/^\#([a-zA-Z0-9\-:=]+)/) do |posts,match|
+  advanced_filter(/^\#([a-zA-Zа-яА-Я0-9\-:=]+)/) do |posts,match|
 
     exact = true
 
@@ -397,7 +397,7 @@ class Search
     end
   end
 
-  advanced_filter(/^\@([a-zA-Z0-9_\-.]+)/) do |posts,match|
+  advanced_filter(/^\@([a-zA-Zа-яА-Я0-9_\-.]+)/) do |posts,match|
     user_id = User.where(staged: false).where(username_lower: match.downcase).pluck(:id).first
     if user_id
       posts.where("posts.user_id = #{user_id}")
@@ -422,7 +422,7 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
+  advanced_filter(/tags?:([a-zA-Zа-яА-Я0-9,\-_]+)/) do |posts, match|
     tags = match.split(",")
 
     posts.where("topics.id IN (
