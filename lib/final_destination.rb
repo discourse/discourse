@@ -99,7 +99,9 @@ class FinalDestination
     end
 
     # Rate limit how often this IP can be crawled
-    RateLimiter.new(nil, "crawl-destination-ip:#{address_s}", 100, 1.hour).performed!
+    unless @opts[:skip_rate_limit]
+      RateLimiter.new(nil, "crawl-destination-ip:#{address_s}", 100, 1.hour).performed!
+    end
 
     true
   rescue RateLimiter::LimitExceeded

@@ -7,11 +7,21 @@ class FileHelper
     filename =~ images_regexp
   end
 
-  def self.download(url, max_file_size:, tmp_file_name:, follow_redirect: false, read_timeout: 5)
+  def self.download(url,
+                    max_file_size:,
+                    tmp_file_name:,
+                    follow_redirect: false,
+                    read_timeout: 5,
+                    skip_rate_limit: false)
+
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = FinalDestination.new(url, max_redirects: follow_redirect ? 5 : 1).resolve
+    uri = FinalDestination.new(
+      url,
+      max_redirects: follow_redirect ? 5 : 1,
+      skip_rate_limit: skip_rate_limit
+    ).resolve
     return unless uri.present?
 
     extension = File.extname(uri.path)
