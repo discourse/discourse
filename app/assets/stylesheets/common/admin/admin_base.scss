@@ -746,16 +746,25 @@ section.details {
   .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
   .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
 
+  .flagged-post-avatar {
+    margin-right: 10px;
+  }
+
   .excerpt {
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
     h3 {
-      max-height: 1.2em;
-      overflow: hidden;
       margin-top: 0;
       margin-bottom: 5px;
     }
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  tr.message td {
+    padding-left: 60px;
   }
 
   .flagged-posts { background: $danger; }
@@ -1827,6 +1836,20 @@ table#user-badges {
   width: 300px;
   left: -100%;
 }
+
+.mobile-view .admin-flags {
+  .flaggers {
+    padding: 2px;
+    .avatar {
+      padding: 0;
+    }
+  }
+  tr.message td {
+    padding-left: 8px;
+  }
+}
+
+
 
 .cboxcontainer {
   display: inline-block;
