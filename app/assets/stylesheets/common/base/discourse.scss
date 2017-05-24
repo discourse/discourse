@@ -193,6 +193,11 @@ body {
   }
 }
 
+.flex-center-align {
+  display: flex;
+  align-items: center;
+}
+
 .unread-private-messages {
   color: $secondary;
   background: $success;

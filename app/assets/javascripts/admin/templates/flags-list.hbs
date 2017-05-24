@@ -3,7 +3,6 @@
     <table class="admin-flags">
       <thead>
         <tr>
-          <th class='user'></th>
           <th class='excerpt'></th>
           <th class='flaggers'>{{i18n 'admin.flags.flagged_by'}}</th>
           <th class='flaggers'>{{#if adminOldFlagsView}}{{i18n 'admin.flags.resolved_by'}}{{/if}}</th>
@@ -13,30 +12,42 @@
         {{#each content as |flaggedPost|}}
           <tr class={{flaggedPost.extraClasses}}>
 
-            <td class='user'>
-              {{#if flaggedPost.postAuthorFlagged}}
-                {{#if flaggedPost.user}}
-                  {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="large"}}{{/link-to}}
-                  {{#if flaggedPost.wasEdited}}<i class="fa fa-pencil" title="{{i18n 'admin.flags.was_edited'}}"></i>{{/if}}
-                {{/if}}
-              {{/if}}
-              {{#if adminActiveFlagsView}}
-                {{#if flaggedPost.previous_flags_count}}
-                  <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
-                {{/if}}
-              {{/if}}
-            </td>
-
             <td class='excerpt'>
-              <h3>
-                {{#if flaggedPost.topic.isPrivateMessage}}
-                  <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+
+              <div class="flex-center-align">
+                <div class="flagged-post-avatar">
+                  {{#if flaggedPost.postAuthorFlagged}}
+                    {{#if flaggedPost.user}}
+                      {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="large"}}{{/link-to}}
+                      {{#if flaggedPost.wasEdited}}<i class="fa fa-pencil" title="{{i18n 'admin.flags.was_edited'}}"></i>{{/if}}
+                    {{/if}}
+                  {{/if}}
+                  {{#if adminActiveFlagsView}}
+                    {{#if flaggedPost.previous_flags_count}}
+                      <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
+                    {{/if}}
+                  {{/if}}
+                </div>
+                <div class="topic-excerpt">
+                  <h3>
+                    {{#if flaggedPost.topic.isPrivateMessage}}
+                      <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                    {{/if}}
+                    {{topic-status topic=flaggedPost.topic}}
+                    <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
+                  </h3>
+                  {{#unless site.mobileView}}
+                    {{#if flaggedPost.postAuthorFlagged}}
+                      <p>{{{flaggedPost.excerpt}}}</p>
+                    {{/if}}
+                  {{/unless}}
+                </div>
+              </div>
+
+              {{#if site.mobileView}}
+                {{#if flaggedPost.postAuthorFlagged}}
+                  <p>{{{flaggedPost.excerpt}}}</p>
                 {{/if}}
-                {{topic-status topic=flaggedPost.topic}}
-                <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
-              </h3>
-              {{#if flaggedPost.postAuthorFlagged}}
-                <p>{{{flaggedPost.excerpt}}}</p>
               {{/if}}
             </td>
 
@@ -104,7 +115,6 @@
 
           {{#each flaggedPost.conversations as |c|}}
             <tr class='message'>
-              <td></td>
               <td colspan="3">
                 <div>
                   {{#if c.response}}
@@ -130,7 +140,7 @@
 
           {{#unless adminOldFlagsView}}
             <tr>
-              <td colspan="4" class="action">
+              <td colspan="3" class="action">
                 {{#if adminActiveFlagsView}}
                   <button title='{{i18n 'admin.flags.agree_title'}}' class='btn' {{action "showAgreeFlagModal" flaggedPost}}><i class="fa fa-thumbs-o-up"></i>{{i18n 'admin.flags.agree'}}&hellip;</button>
                   {{#if flaggedPost.postHidden}}
