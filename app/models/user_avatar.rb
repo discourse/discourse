@@ -20,7 +20,11 @@ class UserAvatar < ActiveRecord::Base
 
         max = Discourse.avatar_sizes.max
         gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
-        tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
+        tempfile = FileHelper.download(
+          gravatar_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "gravatar"
+        )
         if tempfile
           upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
 
@@ -63,7 +67,12 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.import_url_for_user(avatar_url, user, options=nil)
-    tempfile = FileHelper.download(avatar_url, SiteSetting.max_image_size_kb.kilobytes, "sso-avatar", true)
+    tempfile = FileHelper.download(
+      avatar_url,
+      max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+      tmp_file_name: "sso-avatar",
+      follow_redirect: true
+    )
 
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind

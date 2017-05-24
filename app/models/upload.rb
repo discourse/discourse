@@ -93,7 +93,12 @@ class Upload < ActiveRecord::Base
           # download if external
           if external
             url = SiteSetting.scheme + ":" + previous_url
-            file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
+            file = FileHelper.download(
+              url,
+              max_file_size: max_file_size_kb,
+              tmp_file_name: "discourse",
+              follow_redirect: true
+            ) rescue nil
             path = file.path
           else
             path = local_store.path_for(upload)

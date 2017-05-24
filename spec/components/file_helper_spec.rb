@@ -13,12 +13,20 @@ describe FileHelper do
 
   describe "download" do
     it "returns a file with the image" do
-      tmpfile = FileHelper.download(url, 10000, 'trouttmp')
+      tmpfile = FileHelper.download(
+        url,
+        max_file_size: 10000,
+        tmp_file_name: 'trouttmp'
+      )
       expect(tmpfile.read[0..5]).to eq("GIF89a")
     end
 
     it "works with a protocol relative url" do
-      tmpfile = FileHelper.download("//eviltrout.com/trout.png", 10000, 'trouttmp')
+      tmpfile = FileHelper.download(
+        "//eviltrout.com/trout.png",
+        max_file_size: 10000,
+        tmp_file_name: 'trouttmp'
+      )
       expect(tmpfile.read[0..5]).to eq("GIF89a")
     end
   end

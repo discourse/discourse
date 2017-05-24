@@ -142,7 +142,12 @@ def migrate_from_s3
           puts "UPLOAD URL: #{url}"
           if filename = guess_filename(url, post.raw)
             puts "FILENAME: #{filename}"
-            file = FileHelper.download("http:#{url}", 20.megabytes, "from_s3", true)
+            file = FileHelper.download(
+              "http:#{url}",
+              max_file_size: 20.megabytes,
+              tmp_file_name: "from_s3",
+              follow_redirect: true
+            )
             if upload = UploadCreator.new(file, filename, File.size(file)).create_for(post.user_id || -1)
               post.raw = post.raw.gsub(/(https?:)?#{Regexp.escape(url)}/, upload.url)
               post.save
@@ -510,7 +515,12 @@ def regenerate_missing_optimized
         if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
           # try to fix it by redownloading it
           begin
-            downloaded = FileHelper.download(upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
+            downloaded = FileHelper.download(
+              upload.origin,
+              max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+              tmp_file_name: "discourse-missing",
+              follow_redirect: true
+            ) rescue nil
             if downloaded && downloaded.size > 0
               FileUtils.mkdir_p(File.dirname(original))
               File.open(original, "wb") { |f| f.write(downloaded.read) }

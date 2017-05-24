@@ -134,7 +134,13 @@ class UserAvatarsController < ApplicationController
 
     unless File.exist? path
       FileUtils.mkdir_p PROXY_PATH
-      tmp = FileHelper.download(url, 1.megabyte, filename, true, 10)
+      tmp = FileHelper.download(
+        url,
+        max_file_size: 1.megabyte,
+        tmp_file_name: filename,
+        follow_redirect: true,
+        read_timeout: 10
+      )
       FileUtils.mv tmp.path, path
     end
 
