@@ -49,6 +49,7 @@ module Autospec
 
     def run(specs)
       puts "Running Qunit: #{specs}"
+      Demon::RailsAutospec.ensure_running
 
       abort
 
