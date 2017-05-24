@@ -36,6 +36,12 @@ module Onebox
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
 
+        headers ||= {}
+
+        if Onebox.options.user_agent && !headers['User-Agent']
+          headers['User-Agent'] = Onebox.options.user_agent
+        end
+
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now
 

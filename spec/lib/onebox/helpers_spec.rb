@@ -42,4 +42,32 @@ RSpec.describe Onebox::Helpers do
     end
   end
 
+  describe "user_agent" do
+    before do
+      fake("http://example.com/some-resource", :body => 'test')
+    end
+
+    context "default" do
+      it "has the Ruby user agent" do
+        described_class.fetch_response('http://example.com/some-resource')
+        expect(FakeWeb.last_request.to_hash['user-agent'][0]).to eq("Ruby")
+      end
+    end
+
+    context "Custom option" do
+      after(:each) do
+        Onebox.options = Onebox::DEFAULTS
+      end
+
+      before do
+        Onebox.options = { user_agent: "EvilTroutBot v0.1" }
+      end
+
+      it "has the custom user agent" do
+        described_class.fetch_response('http://example.com/some-resource')
+        expect(FakeWeb.last_request.to_hash['user-agent'][0]).to eq("EvilTroutBot v0.1")
+      end
+    end
+  end
+
 end
