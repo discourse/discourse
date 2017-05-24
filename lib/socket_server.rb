@@ -16,7 +16,8 @@ class SocketServer
   end
 
   def stop
-    @server.close if @server
+    @server&.close rescue nil
+    FileUtils.rm_f(@socket_path)
     @server = nil
     @blk = nil
   end
@@ -26,9 +27,14 @@ class SocketServer
   def new_accept_thread
     server = @server
     Thread.new do
-      done = false
-      while !done
-        done = !accept_connection(server)
+      begin
+        done = false
+        while !done
+          done = !accept_connection(server)
+        end
+      ensure
+        self.stop
+        Rails.logger.info("Cleaned up socket server at #{@socket_path}")
       end
     end
   end
