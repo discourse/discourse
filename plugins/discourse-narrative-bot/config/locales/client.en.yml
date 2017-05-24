@@ -1,0 +1,6 @@
+en:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Start the new user tutorial for all new users"
+        welcome_message: "Send all new users a welcome message with a quick start guide"
