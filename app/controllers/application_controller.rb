@@ -273,7 +273,7 @@ class ApplicationController < ActionController::Base
 
     unless theme_key
       key, seq = cookies[:theme_key]&.split(",")
-      if key && seq && seq.to_i == user_option&.theme_key_seq
+      if key && seq && seq.to_i == user_option&.theme_key_seq.to_i
         theme_key = key
       end
     end
