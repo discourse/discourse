@@ -68,7 +68,12 @@ module FileStore
         if !file
           max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
           url = SiteSetting.scheme + ":" + upload.url
-          file = FileHelper.download(url, max_file_size_kb, "discourse-download", true)
+          file = FileHelper.download(
+            url,
+            max_file_size: max_file_size_kb,
+            tmp_file_name: "discourse-download",
+            follow_redirect: true
+          )
           cache_file(file, filename)
         end
 

@@ -36,7 +36,12 @@ module Jobs
             # have we already downloaded that file?
             unless downloaded_urls.include?(src)
               begin
-                hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked", true)
+                hotlinked = FileHelper.download(
+                  src,
+                  max_file_size: @max_size,
+                  tmp_file_name: "discourse-hotlinked",
+                  follow_redirect: true
+                )
               rescue Discourse::InvalidParameters
               end
               if hotlinked
