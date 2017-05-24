@@ -21,12 +21,14 @@ class UserAvatar < ActiveRecord::Base
         max = Discourse.avatar_sizes.max
         gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
         tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
-        upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
+        if tempfile
+          upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
 
-        if gravatar_upload_id != upload.id
-          gravatar_upload.try(:destroy!) rescue nil
-          self.gravatar_upload = upload
-          save!
+          if gravatar_upload_id != upload.id
+            gravatar_upload.try(:destroy!) rescue nil
+            self.gravatar_upload = upload
+            save!
+          end
         end
       rescue OpenURI::HTTPError
         save!
