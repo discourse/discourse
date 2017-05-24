@@ -253,6 +253,9 @@ describe Search do
         results = Search.execute('posting', search_context: post1.topic)
         expect(results.posts.map(&:id)).to eq([post1.id, post2.id, post3.id, post4.id])
 
+        results = Search.execute('posting l', search_context: post1.topic)
+        expect(results.posts.map(&:id)).to eq([post4.id, post3.id, post2.id, post1.id])
+
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
         expect(results.posts.length).to eq(4)
@@ -633,6 +636,8 @@ describe Search do
 
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute('sam l').posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute('l sam').posts.map(&:id)).to eq([post2.id, post1.id])
     end
 
     it 'can order by topic creation' do
