@@ -32,6 +32,18 @@ source_file = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.en.y
 source_lang = en
 type = YML
 
+[discourse-org.narrativeclientenyml]
+file_filter = plugins/discourse-narrative-bot/config/locales/client.<lang>.yml
+source_file = plugins/discourse-narrative-bot/config/locales/client.en.yml
+source_lang = en
+type = YML
+
+[discourse-org.narrativeserverenyml]
+file_filter = plugins/discourse-narrative-bot/config/locales/server.<lang>.yml
+source_file = plugins/discourse-narrative-bot/config/locales/server.en.yml
+source_lang = en
+type = YML
+
 [discourse-org.403html]
 file_filter = public/403.<lang>.html
 source_file = public/403.html
