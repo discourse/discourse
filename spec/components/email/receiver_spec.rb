@@ -309,6 +309,12 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
     end
 
+    it "doesn't include the 'elided' part of the original message when always_show_trimmed_content is disabled" do
+      SiteSetting.always_show_trimmed_content = false
+      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect(topic.posts.last.raw).to eq("This is a reply :)")
+    end
+
     it "adds the 'elided' part of the original message for public replies when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
       expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
