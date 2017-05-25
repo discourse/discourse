@@ -23,6 +23,7 @@ class CookedPostProcessor
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
+    @previous_doc = Nokogiri::HTML::fragment(@previous_cooked)
     @has_oneboxes = analyzer.found_oneboxes?
     @size_cache = {}
   end
@@ -54,6 +55,12 @@ class CookedPostProcessor
     upload_ids = Set.new
 
     @doc.css("a/@href", "img/@src").each do |media|
+      if upload = Upload.get_from_url(media.value)
+        upload_ids << upload.id
+      end
+    end
+
+    @previous_doc.css(".onebox a/@href", ".onebox img/@src").each do |media|
       if upload = Upload.get_from_url(media.value)
         upload_ids << upload.id
       end
@@ -105,7 +112,7 @@ class CookedPostProcessor
   end
 
   def oneboxed_images
-    @doc.css(".onebox-result img, .onebox img")
+    @doc.css(".onebox-body img, .onebox img")
   end
 
   def limit_size!(img)

@@ -95,11 +95,43 @@ module Jobs
         options = { bypass_bump: true }
         post.revise(Discourse.system_user, changes, options)
       end
+
+      cooked = post.cooked.dup
+      orig_cooked = cooked.dup
+
+      extract_images_from(cooked).each do |image|
+        src = image['src']
+        src = "http:" + src if src.start_with?("//")
+        if is_valid_image_url(src)
+          if downloaded_urls[src].present?
+            url = downloaded_urls[src]
+            escaped_src = Regexp.escape(src)
+            # HTML tag - <img src="http://...">
+            cooked.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
+          end
+        end
+      end
+
+      if cooked != orig_cooked
+
+        if orig_cooked.present? && cooked.blank?
+          # TODO suicide if needed, let's gather a few here first
+          Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\ncooked: #{cooked}\npost id: #{post.id}")
+        else
+          post.update_columns(cooked: cooked, updated_at: Time.zone.now)
+          post.publish_change_to_clients! :revised
+        end
+      end
+
     end
 
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
-      doc.css("img[src]") - doc.css(".onebox-result img") - doc.css("img.avatar")
+      images = doc.css("img[src]") - doc.css("img.avatar")
+      doc.css(".onebox-body img").each do |image|
+        images -= image if image['src'].start_with?("https://")
+      end
+      images
     end
 
     def is_valid_image_url(src)
