@@ -4,11 +4,11 @@ class AddUnreadTrackingColumns < ActiveRecord::Migration
     add_column :topics, :last_unread_at, :datetime, null: false, default: "epoch"
 
     execute <<SQL
-    UPDATE topics SET last_unread_at = (
+    UPDATE topics SET last_unread_at = COALESCE((
       SELECT MAX(created_at)
       FROM posts
       WHERE topics.id = posts.topic_id
-    )
+    ), current_timestamp)
 SQL
 
     execute <<SQL
