@@ -568,40 +568,48 @@ fi:
     off_topic:
       title: 'Se eksyy aiheesta'
       description: 'Tämä viesti ei ole relevantti tässä ketjussa, jonka määrittelee ketjun otsikko ja aloitusviesti, ja pitäisi todennäköisesti siirtää toiselle alueelle.'
+      short_description: 'Ei liity aiheeseen'
       long_form: 'liputti tämän eksyvän aiheesta'
     spam:
       title: 'Roskaposti'
-      description: 'Tämä viesti on mainos. Se ei ole hyödyllinen tai relevantti tässä ketjussa, vaan luonteeltaan mainostamista.'
+      description: 'Viesti on mainos tai häiriköintiä. Se on hyödytön ja epäolennainen tähän ketjuun.'
+      short_description: 'On mainos tai häiriköintiä'
       long_form: 'liputti tämän roskapostiksi'
       email_title: '"%{title}" liputettiin roskapostiksi'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Sopimaton'
       description: 'Tämän viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
+      short_description: '<a href="/guidelines">Palstan sääntöjen</a> vastainen'
       long_form: 'liputti tämän sopimattomaksi'
     notify_user:
       title: 'Lähetä käyttäjälle @{{username}} viesti.'
       description: 'Haluan keskustella tästä viestistä kirjoittajan kanssa kahden kesken.'
+      short_description: 'Haluan keskustella viestistä kirjoittajan kanssa suoraan kahden kesken.'
       long_form: 'lähetä käyttäjälle viesti'
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Jotain muuta"
       description: 'Valvojan tulee huomioida tämä viesti muusta kuin yllä listatusta syystä.'
+      short_description: 'Henkilökunnan tulisi huomioida muusta syystä'
       long_form: 'liputti tämän valvojien nähtäväksi'
       email_title: 'Valvojien tulisi huomioida viesti ketjussa "%{title}" '
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Kirjanmerkki'
       description: 'Lisää viesti kirjanmerkkeihin'
+      short_description: 'Lisää viesti kirjanmerkkeihin'
       long_form: 'viesti lisätty kirjanmerkkeihin'
     like:
       title: 'Tykkää'
       description: 'Tykkää tästä viestistä'
+      short_description: 'Tykkää viestistä'
       long_form: 'tykkäsi tästä'
     vote:
       title: 'Äänestä'
       description: 'Äänestä tätä viestiä'
+      short_description: 'Äänestä viestiä'
       long_form: 'viestiä äänestetty'
   user_activity:
     no_bookmarks:
@@ -1729,32 +1737,28 @@ fi:
       title: "Tervetuloa käyttäjä"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
-        Kiitos liittymisestä sivustolle %{site_name}, ja tervetuloa!
+        Kiitos kun liityit %{site_name} ja tervetuloa!
 
         %{new_user_tips}
 
-        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
+        Vaalimme [sivistynyttä yhteisökäyttäytymistä](%{base_url}/guidelines) tilanteessa kuin tilanteessa.
 
         Toivottavasti viihdyt!
-
-        (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     welcome_invite:
       title: "Tervetuloa kutsuttu"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
-        Kiitos kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
+        Kiitos kun liityit %{site_name} ja tervetuloa!
 
-        - Loimme sinulle käyttäjätilin **%{username}**. [Käyttäjäasetuksissa][prefs] voit muuttaa nimeäsi ja salasanaasi.
+        - Loimme sinulle uuden tunnuksen **%{username}**. Muuta nimeäsi tai käyttäjätunnustasi [käyttäjäasetuksissasi][prefs].
 
-        - Kun kirjaudut sisään, **käytä samaa sähköpostiosoitetta kuin johon kutsu saapui** — muuten emme voi tietää oletko se sinä!
+        - Kun kirjaudut sisään, **käytä samaa sähköpostiosoitetta kuin kutsuttaessa** — muuten emme tunnistua sinua sinuksi!
 
         %{new_user_tips}
 
-        Uskomme [sivistyneeseen yhteisökäyttäytymiseen](%{base_url}/guidelines) aina.
+        Vaalimme [sivistynyttä yhteisökäyttäytymistä](%{base_url}/guidelines) tilanteessa kuin tilanteessa.
 
         Toivottavasti viihdyt!
-
-        (Jos sinulla on asiaa [henkilökunnalle](%{base_url}/about) uutena käyttäjänä, vastaa vain tähän viestiin.)
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
@@ -2340,22 +2344,18 @@ fi:
       title: "Liity hyväksynnän jälkeen"
       subject_template: "Sinut on hyväksytty sivustolle %{site_name}!"
       text_body_template: |
-        Tervetuloa sivustolle %{site_name}!
+        Kiitos kun liityit %{site_name} ja tervetuloa!
 
-        Henkilökunnan edustaja on hyväksynyt tilisi sivustolla %{site_name}.
+        Henkilökunnan jäsen hyväksyi tunnuksesi sivustolla %{site_name}.
 
-        Vahvista ja aktivoi uusi tilisi klikkaamalla linkkiä:
+        Vahvista ja aktivoi uusi tunnuksesi klikkaamalla linkkiä:
         %{base_url}/u/activate-account/%{email_token}
-
-        Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
 
         %{new_user_tips}
 
-        Me uskomme [sivistyneeseen kanssakäyntiin](%{base_url}/guidelines).
+        Vaalimme [sivistynyttä yhteisökäyttäytymistä](%{base_url}/guidelines) tilanteessa kuin tilanteessa.
 
         Toivottavasti viihdyt!
-
-        (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     signup:
       title: "Liity"
       subject_template: "[%{email_prefix}] Vahvista uusi käyttäjätilisi"

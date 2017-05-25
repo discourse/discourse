@@ -563,40 +563,48 @@ he:
     off_topic:
       title: 'אוף-טופיק'
       description: 'פוסט זה אינו רלוונטי לדיון הנוכחי כפי שהוגדר בכותרת ובפרסום הראשון, ולכן כנראה שעליו לעבור למקום אחר.'
+      short_description: 'לא רלוונטי לדיון'
       long_form: 'דוגלל כאוף-טופיק'
     spam:
       title: 'ספאם'
-      description: 'הפוסט הזה הוא פרסמות. הוא לא מועיל או רלוונטי לנושא הנוכחי, אלא קידומי באופיו.'
+      description: 'פוסט זה הוא פרסומת, או ונדליזם. הוא לא תורם או רלוונטי לנושא הנוכחי.'
+      short_description: 'זוהי פרסומת או ונדליזם'
       long_form: 'דוגלל כספאם'
       email_title: '"%{title}" סומן כספאם'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'לא ראוי'
       description: 'פוסט זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines">כללי הקהילה</a>.'
+      short_description: 'הפרה של <a href="/guidelines">כללי הקהילה שלנו</a>'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
       title: 'שלחו הודעה ל @{{username}}'
       description: 'אנו מעוניינים לדבר עם אדם זה ישירות ובפרטיות בנוגע לפוסט שלו.'
+      short_description: 'אני רוצה לדבר עם אדם זה ישירות ובאופן פרטי בנוגע לפוסט שלהם.'
       long_form: 'הודעה נשלחה למשתמש/ת'
       email_title: 'הפוסט שלכם ב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
       description: 'פוסט זה דורש את תשומת לב הצוות מסיבה שאינה מצויינת למעלה.'
+      short_description: 'דורש תשומת לב של הצוות מסיבה אחרת'
       long_form: 'דוגל לטיפול על ידי הצוות'
       email_title: 'פוסט ב"%{title}" דורש תשומת לב של הצוות'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'סימנייה'
       description: 'סמנו פוסט זה עם סימנייה'
+      short_description: 'סמנו פוסט זה'
       long_form: 'פוסט זה סומן עם סימנייה'
     like:
       title: 'לייק'
       description: 'תנו לייק לפוסט זה'
+      short_description: 'אהבו פוסט זה'
       long_form: 'נתתי לזה לייק'
     vote:
       title: 'הצבע'
       description: 'הצביעו לפוסט זה'
+      short_description: 'הצביעו עבור פוסט זה'
       long_form: 'הצבעתם לפוסט זה'
   user_activity:
     no_bookmarks:
@@ -1731,34 +1739,16 @@ he:
       title: "ברוכים הבאים למשתמש/ת"
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
-        תודה שהצטרפתם ל %{site_name}!
+        תודה שהצטרפתם ל-%{site_name}, וברוכים הבאים!
 
         %{new_user_tips}
 
-        אנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל זמן.
+        אנחנו מאמינים ב-[התנהגות קהילתית מתורבתת](%{base_url}/guidlines) בכל עת.
 
-        תהנו!
-
-        (אם ברצונכם לתקשר עם [מנהל האתר](%{base_url}/about) כמשתמשים חדשים, השיבו להודעה הזו.)
+        תהנו מהשהייה!
     welcome_invite:
       title: "הזמנת ברוכים הבאים"
       subject_template: "ברוכים הבאים ל %{site_name}!"
-      text_body_template: |
-        תודה שקיבלתם את ההזמנה שלכם ל %{site_name} -- ברוכים הבאים!
-
-        - יצרנו חשבון חדש **%{username}** בשבילכם. שנו את שימכם או את הסיסמה על ידי ביקור ב[פרופיל שלכם][prefs].
-
-        - כאשר אתם מתחברים, אנא **השתמשו באותו חשבון מייל מההזמנה המקורית** — אחרת לא נוכל לדעת שאלו אתם!
-
-        %{new_user_tips}
-
-        אנו מאמינים ומאמינות ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל זמן.
-
-        תהנו!
-
-        (אם ברצונכם לתקשר עם [מנהלי האתר](%{base_url}/about) כמשתמשים חדשים, השיבו להודעה זו.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."
@@ -2089,8 +2079,8 @@ he:
   user_notifications:
     previous_discussion: "תגובות קודמות"
     reached_limit:
-      one: "א-ז-ה-ר-ה: הגעתם לגבול של מיילים יומיים. הודעות מייל נוספות לא יישלחו."
-      other: "א-ז-ה-ר-ה: הגעתם לגבול של %{count} מיילים יומיים. הודעות מייל נוספות לא יישלחו."
+      one: "שימו לב: אנחנו שולחים לכל היותר מייל 1 יומי. בידקו באתר כדי לראות את אלו שעלולים להשאר מאחור."
+      other: "שימו לב: אנחנו שולחים לכל היותר %{count} מיילים יומיים. בידקו באתר כדי לראות את אלו שעלולים להשאר מאחור. נ.ב: תודה שאתם פופולאריים!"
     in_reply_to: "בתגובה ל"
     unsubscribe:
       title: "ביטול מנוי"

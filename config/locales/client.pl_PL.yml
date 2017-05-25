@@ -2039,6 +2039,10 @@ pl_PL:
         created: "Utworzony"
       sort_ascending: 'Rosnąco'
       sort_descending: 'Malejąco'
+      subcategory_list_styles:
+        rows: "Rzędy"
+        rows_with_featured_topics: "Rzędy z wybranymi tematami"
+        boxes_with_featured_topics: "Ramki z wybranymi tematami"
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
       action: 'Oflaguj wpis'
@@ -2792,23 +2796,35 @@ pl_PL:
           color_scheme: "Schemat kolorów"
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
           theme_components: "Komponenty motywu"
+          no_uploads: "Możesz załadować zasoby do swojego motywu np. fonty lub obrazy"
           css_html: "Własny CSS/HTML"
           edit_css_html: "Edytuj CSS/HTML"
           edit_css_html_help: "Nie modyfikowałeś CSS ani HTML"
+          delete_upload_confirm: "Czy usunąć ten plik? (CSS motywu może przestać działać!)"
           about_theme: "O motywie"
           license: "Licencja"
+          update_to_latest: "Aktualizuj do najnowszego"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           add: "Dodaj"
+          commits_behind:
+            one: "Motyw jest nieaktualny - dostępna 1 poprawka!"
+            few: "Motyw jest nieaktualny - dostępne {{count}} poprawki!"
+            many: "Motyw jest nieaktualny - dostępne {{count}} poprawek!"
+            other: "Motyw jest nieaktualny - dostępne {{count}} poprawek!"
           scss:
             text: "CSS"
+            title: "Wstaw własny CSS, przyjmujemy wszystkie prawidłowe style CSS i SCSS"
           header:
             text: "Nagłówek"
+            title: "Wstaw kod HTML do wyświetlenia powyżej nagłówka"
           after_header:
             text: "Po nagłówku"
+            title: "Wstaw kod HTML do wyświetlenia po nagłówku"
           footer:
             text: "Stopka"
+            title: "Wstaw kod HTML do wyświetlenia w stopce strony"
           embedded_scss:
             text: "Osadzony CSS"
           head_tag:

@@ -518,6 +518,7 @@ de:
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
+      theme_default_on_all_devices: "Übernehme dieses Theme für alle meine Geräte."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -754,6 +755,7 @@ de:
         rescinded: "Einladung zurückgenommen"
         reinvite: "Einladung erneut senden"
         reinvite_all: "Alle Einladungen erneut senden"
+        reinvite_all_confirm: "Bist Du dir sicher alle Einladungen nochmals zu senden?"
         reinvited: "Einladung erneut gesendet"
         reinvited_all: "Alle Einladungen erneut gesendet!"
         time_read: "Lesezeit"
@@ -1354,6 +1356,7 @@ de:
         later_this_week: "Später in dieser Woche"
         this_weekend: "Dieses Wochenende"
         next_week: "Nächste Woche"
+        next_month: "Nächster Monat"
         pick_date_and_time: "Datum und Zeit wählen"
         set_based_on_last_post: "Schließen basierend auf dem letzten Beitrag"
       publish_to_category:
@@ -1369,6 +1372,10 @@ de:
         label: "Thema automatisch schließen (Stunden):"
         error: "Bitte gib einen gültigen Wert ein."
         based_on_last_post: "Nicht schließen, bevor der letzte Beitrag in dem Thema mindestens so alt ist."
+      auto_delete:
+        title: "Thema automatisch löschen"
+      reminder:
+        title: "Erinnere mich"
       status_update_notice:
         auto_open: "Dieses Thema wird automatisch geöffnet %{timeLeft}."
         auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
@@ -2126,6 +2133,7 @@ de:
       granted_on: "Verliehen %{date}"
       others_count: "Andere mit diesem Abzeichen (%{count})"
       title: Abzeichen
+      allow_title: "Du kannst dieses Abzeichen als Titel verwenden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"

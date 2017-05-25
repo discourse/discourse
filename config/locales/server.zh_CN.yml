@@ -27,6 +27,7 @@ zh_CN:
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
+  powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
   log_in: "登录"
   purge_reason: "自动删除废弃，停用账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被停用。"
@@ -320,7 +321,7 @@ zh_CN:
     title: "欢迎来到 Discourse"
     body: |2
 
-      置顶主题的第一段是访客在主页看到的欢迎消息。这很重要！
+      置顶主题的第一段是访客在主页看到的欢迎私信。这很重要！
 
       **编辑**它作为社区的简要介绍：
 
@@ -396,7 +397,7 @@ zh_CN:
       delete_post: "你正在快速地删除帖子。请等 %{time_left}之后再试。"
       public_group_membership: "你加入/离开群组的速度太快了，请等待%{time_left}之后再试。"
       topics_per_day: "你今天新主题的数量已经到达上限，请等待%{time_left}之后再试。"
-      pms_per_day: "你今天的消息数量已经到达上限，请等待%{time_left}之后再试。"
+      pms_per_day: "你今天的私信数量已经到达上限，请等待%{time_left}之后再试。"
       create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
       create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
       live_post_counts: "你请求帖子数量的速度太快了，请等待%{time_left}之后再试。"
@@ -499,9 +500,9 @@ zh_CN:
       description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社区准则</a>。'
       long_form: '标记为不当内容'
     notify_user:
-      title: '给@{{username}}发送一条消息'
+      title: '给@{{username}}发送一条私信'
       description: '我想与此人私下交流他们的帖子。'
-      long_form: '以发送消息给用户'
+      long_form: '以发送私信给用户'
       email_title: '你在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -545,7 +546,7 @@ zh_CN:
       email_title: '“{title}”主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社区成员标记了。请<a href="/my/messages">查看你的消息</a>。</p>'
+    you_must_edit: '<p>你的帖子被社区成员标记了。请<a href="/my/messages">查看你的私信</a>。</p>'
     user_must_edit: '<p>你的帖子已经被社区标记并被临时隐藏。</p>'
   archetypes:
     regular:
@@ -633,23 +634,23 @@ zh_CN:
     user_to_user_private_messages:
       title: "用户至用户"
       xaxis: "天"
-      yaxis: "消息数"
+      yaxis: "私信数"
     system_private_messages:
       title: "系统"
       xaxis: "天"
-      yaxis: "消息数"
+      yaxis: "私信数"
     moderator_warning_private_messages:
       title: "版主警告"
       xaxis: "天"
-      yaxis: "消息数"
+      yaxis: "私信数"
     notify_moderators_private_messages:
       title: "版主通知"
       xaxis: "天"
-      yaxis: "消息数"
+      yaxis: "私信数"
     notify_user_private_messages:
       title: "用户通知"
       xaxis: "天"
-      yaxis: "消息数"
+      yaxis: "私信数"
     top_referrers:
       title: "最高引用"
       xaxis: "用户"
@@ -741,7 +742,7 @@ zh_CN:
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
-    missing_mailgun_api_key: "服务器设置使用 Mailgun 发送邮件，但并未设置验证 webhook 消息的 API 密钥。"
+    missing_mailgun_api_key: "服务器设置使用 Mailgun 发送邮件，但并未设置验证 webhook 私信的 API 密钥。"
     bad_favicon_url: "网站图标无法载入。检查<a href='/admin/site_settings'>站点设置</a>中的 favicon_url。"
     poll_pop3_timeout: "至 POP3 服务器的连接超时。无法获取进站邮件。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
     poll_pop3_auth_error: "至 POP3 服务器的连接验证失败。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>。"
@@ -754,13 +755,13 @@ zh_CN:
     set_locale_from_accept_language_header: "为未登录用户按照他们的浏览器发送的请求头部设置界面语言。（实验性，无法和匿名缓存共同使用）"
     min_post_length: "帖子允许的最少字符数"
     min_first_post_length: "第一帖（主题内容）允许的最少字符数"
-    min_private_message_post_length: "消息允许的最小字符数"
+    min_private_message_post_length: "私信允许的最小字符数"
     max_post_length: "帖子允许的最大字符数"
     topic_featured_link_enabled: "允许发链接帖。"
     show_topic_featured_link_in_digest: "在摘要邮件中显示主题特色链接。"
     min_topic_title_length: "标题允许的最少字符数"
     max_topic_title_length: "标题允许的最大字符数"
-    min_private_message_title_length: "消息标题允许的最小字符数"
+    min_private_message_title_length: "私信标题允许的最小字符数"
     min_search_term_length: "搜索条件允许的最少字符数"
     search_tokenize_chinese_japanese_korean: "在非中/日/韩语站点强制切割中/日/韩语搜索分词"
     search_prefer_recent_posts: "如果搜索大型论坛较慢，这个选项将优先尝试最新的帖子"
@@ -810,7 +811,7 @@ zh_CN:
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     summary_max_results: "“概括主题”返回的最大帖子数量"
-    enable_private_messages: "允许信任等级1（可以另外选择发送消息的信任等级）的用户创建消息和回复消息。注意：管理人员不受限制。"
+    enable_private_messages: "允许信任等级1（可以另外选择发送私信的信任等级）的用户创建私信和回复私信。注意：管理人员不受限制。"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
@@ -828,7 +829,7 @@ zh_CN:
     num_users_to_block_new_user: "如果新用户的帖子被不同用户 num_spam_flags_to_block_new_user 次标记为垃圾信息，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
     num_tl3_flags_to_block_new_user: "如果新用户的帖子被 num_tl3_users_to_block_new_user 个不同的信任等级3的用户标记，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
     num_tl3_users_to_block_new_user: "如果新用户的帖子被不同的信任等级3的用户标记 num_tl3_flags_to_block_new_user 次，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
-    notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个消息给所有管理员。"
+    notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个私信给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     allow_html_tables: "允许在输入 Markdown 文本时使用表格 HTML 标签。标签 TABLE、THEAD、TD、TR、TH 将被允许使用，即白名单这些标签（需要重置所有包含表格的老帖子的 HTML）"
@@ -850,8 +851,8 @@ zh_CN:
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
     share_links: "决定分享对话框中出现的按钮及显示顺序。"
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
-    site_contact_username: "论坛给用户自动发送消息时使用的用户名；如果留空将使用默认的系统账户。"
-    send_welcome_message: "给所有用户发送快速开始指导的消息"
+    site_contact_username: "论坛给用户自动发送私信时使用的用户名；如果留空将使用默认的系统账户。"
+    send_welcome_message: "给所有用户发送快速开始指导的私信"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
     suppress_reply_directly_above: "当一个帖子只有一个回复时，不显示回复到该贴的回复。"
     suppress_reply_when_quoting: "当帖子引用回复时，不显示可展开的回复到某贴的标记。"
@@ -939,7 +940,7 @@ zh_CN:
     max_bookmarks_per_day: "每个用户每天能做书签数量的最大值。"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值。"
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
-    max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
+    max_private_messages_per_day: "每个用户每天能发私信数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登陆次数。"
@@ -966,7 +967,7 @@ zh_CN:
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "opengraph图像的缺省URL。"
     twitter_summary_large_image_url: "默认 Twitter summary 卡片的 URL（需要至少宽 280px 和高 150px）。"
-    allow_all_attachments_for_group_messages: "允许群组消息中包含任何邮件附件。"
+    allow_all_attachments_for_group_messages: "允许群组私信中包含任何邮件附件。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -998,7 +999,7 @@ zh_CN:
     min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
     min_trust_to_edit_post: "能编辑帖子的最小信任等级。"
     min_trust_to_allow_self_wiki: "用户将自己的帖子设置为维基模式的最低信任等级。"
-    min_trust_to_send_messages: "发送消息所需的最低信任等级。"
+    min_trust_to_send_messages: "发送私信所需的最低信任等级。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
     newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量。"
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
@@ -1008,7 +1009,7 @@ zh_CN:
     max_users_notified_per_group_mention: "当群组被提及时，接受提醒的最大用户数 ( 超过阈值后将不发送提醒 )"
     create_thumbnails: "为太大而无法恰当地显示在帖子里的图片创建 lightbox 缩略图。"
     email_time_window_mins: "等待多少（n）分钟才给用户发送通知电子邮件，好让他们有机会自己来编辑和完善他们的帖子。"
-    private_email_time_window_seconds: "等待多少（n）秒再给用户发送通知电子邮件，这可以让用户有时间来编辑和完善他们的消息。"
+    private_email_time_window_seconds: "等待多少（n）秒再给用户发送通知电子邮件，这可以让用户有时间来编辑和完善他们的私信。"
     email_posts_context: "在通知邮件中包含的作为上下文的回复数量。"
     flush_timings_secs: "向服务器刷新时间数据的频率，以秒为单位。"
     title_max_word_length: "在主题的标题中，允许的词语长度的最大字符数。"
@@ -1075,7 +1076,7 @@ zh_CN:
     auto_generated_whitelist: "不会被检查是否是自动生成内容的邮件地址列表。例如：foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "阻止被检测为自动生成的进站邮件。"
     ignore_by_title: "使用正则表达式根据标题忽略进站邮件。"
-    mailgun_api_key: "用以验证 webhook 消息的 Mailgun 密钥 API。"
+    mailgun_api_key: "用以验证 webhook 私信的 Mailgun 密钥 API。"
     soft_bounce_score: "当碰到临时拒信时，增加用户的累计退信分值。"
     hard_bounce_score: "当碰到永久拒信时，增加用户的累计退信分值。"
     bounce_score_threshold: "停止发送邮件给用户的累计退信分值。"
@@ -1136,7 +1137,7 @@ zh_CN:
     sequential_replies_threshold: "在被提醒回复了太多连续的回复前，用户在主题中可以连续回复的帖子的数量。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
-    disable_avatar_education_message: "禁用更改头像操作的教育消息。"
+    disable_avatar_education_message: "禁用更改头像操作的教育私信。"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
     permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式+使用 \\1 等字符串来访问捕获内容"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
@@ -1179,12 +1180,12 @@ zh_CN:
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
     approve_new_topics_unless_trust_level: "低于该信任等级的用户的新帖子需要被审核"
     notify_about_queued_posts_after: "如果帖子在设定的小时数后仍在等候处理，发送一封邮件至 contact_email。设为 0 将禁用这些邮件。"
-    auto_close_messages_post_count: "消息中贴子数上限，达到后自动关闭消息（0 为禁用）"
+    auto_close_messages_post_count: "私信中贴子数上限，达到后自动关闭私信（0 为禁用）"
     auto_close_topics_post_count: "主题中贴子数上限，达到后自动关闭主题 ( 0 为禁用 )"
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
-    default_email_private_messages: "默认在有人发消息给用户时发送一封邮件通知。"
+    default_email_private_messages: "默认在有人发私信给用户时发送一封邮件通知。"
     default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
     default_email_mailing_list_mode_frequency: "邮件列表模式下，用户收到邮件的默认频率。"
@@ -1199,7 +1200,7 @@ zh_CN:
     default_other_enable_quoting: "默认在高亮选择文字时启用引用回复"
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
     default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
-    default_other_like_notification_frequency: "默认通知用户赞的消息"
+    default_other_like_notification_frequency: "默认通知用户赞的私信"
     default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "分类列表默认跟踪。"
     default_categories_tracking: "分类列表默认追踪。"
@@ -1290,7 +1291,7 @@ zh_CN:
     closed_enabled: "该主题现已关闭，不再允许新的回复。"
     closed_disabled: "本主题已开放，可以发表新的回复。"
     autoclosed_message_max_posts:
-      other: "消息中回复已经达到上限 %{count}，自动锁定。"
+      other: "私信中回复已经达到上限 %{count}，自动锁定。"
     autoclosed_topic_max_posts:
       other: "主题中回复已经达到上限 %{count}，自动关闭。"
     autoclosed_enabled_days:
@@ -1385,7 +1386,7 @@ zh_CN:
 
       - 确定你在站点设置中为 `notification email` 设置了正确的地址。**这是系统发送邮件里的“发自”地址，并需要你的域名配置正确以供相关验证。**。
 
-      - 学习使用邮件客户端查看电子邮件源代码，这样你可以通过查看邮件头部来排查重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
+      - 学习使用邮件客户端查看电子邮件源代码，这样你可以通过查看邮件头部来排查重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始私信”来查看。
 
       - **重要：** 你的 ISP 是否对你发送邮件的域名和 IP 作了反向 DNS 解析？你可以在此[测试你的反向枚举指针（PTR）记录][2]。如果你的 ISP 没有设置正确的反向 DNS 记录，那么很可能你的任何电子邮件都不会被成功发送。
 
@@ -1393,7 +1394,7 @@ zh_CN:
 
       - 你域名的[域名密钥身份识别邮件（DKIM）记录][3]设置是否正确？这将显著提高邮件分发的成功率。在此[测试你的 DKIM 记录][7]。
 
-      - 如果你自己运行邮件服务器，检查确认你发送电子邮件的服务器 IP [不在任何邮件黑名单中][4]。验证你的 DNS 记录的 HELO 消息中设置了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒收你的邮件。
+      - 如果你自己运行邮件服务器，检查确认你发送电子邮件的服务器 IP [不在任何邮件黑名单中][4]。验证你的 DNS 记录的 HELO 私信中设置了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒收你的邮件。
 
       - 我们强烈建议你**发送测试邮件至 [mail-tester.com][mt]**，这样可以检查上述设置是否正确。
 
@@ -1456,9 +1457,9 @@ zh_CN:
     spam: "你的帖子被标记为 **广告**：社区成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
     notify_moderators: "你的帖子被标记为 **需要版主关注**：社区成员认为帖子需要管理人员介入。"
   flags_dispositions:
-    agreed: "谢谢你的消息。我们认为这是个问题。我们正在进行处理。"
+    agreed: "谢谢你的私信。我们认为这是个问题。我们正在进行处理。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
-    disagreed: "谢谢你的消息。我们正在进行处理。"
+    disagreed: "谢谢你的私信。我们正在进行处理。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   system_messages:
@@ -1625,7 +1626,7 @@ zh_CN:
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
-        可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，如果还不行，使用网站发表。
+        可能的原因是：复杂的格式、私信超长、私信太短。请再试一次，如果还不行，使用网站发表。
     email_reject_invalid_post_specified:
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
@@ -1764,20 +1765,18 @@ zh_CN:
   subject_pm: "[私信]"
   user_notifications:
     previous_discussion: "之前的回复"
-    reached_limit:
-      other: "警告：你达到了每日邮件限额（%{count}）。之后邮件通知将被禁用。"
     in_reply_to: "回复给"
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
     reply_by_email: "[访问主题](%{base_url}%{url})或者发邮件回复。"
-    reply_by_email_pm: "[访问消息](%{base_url}%{url})或者发邮件回复。"
+    reply_by_email_pm: "[访问私信](%{base_url}%{url})或者发邮件回复。"
     only_reply_by_email: "发邮件回复。"
     visit_link_to_respond: "[访问主题](%{base_url}%{url})以回复."
-    visit_link_to_respond_pm: "[访问消息](%{base_url}%{url})以回复."
+    visit_link_to_respond_pm: "[访问私信](%{base_url}%{url})以回复."
     posted_by: "%{username}发表于%{post_date}"
     invited_to_private_message_body: |
-      %{username} 邀请你至消息交流：
+      %{username} 邀请你至私信交流：
 
       > **%{topic_title}**
       >
@@ -2007,7 +2006,7 @@ zh_CN:
     post_user_deleted: "帖子的用户已被删除。"
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
     anonymous_user: "这是匿名用户"
-    suspended_not_pm: "用户被封禁，这不是消息"
+    suspended_not_pm: "用户被封禁，这不是私信"
     seen_recently: "用户最近活跃"
     post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"
     notification_already_read: "这封邮件中的通知已经被阅读了"
@@ -2017,7 +2016,7 @@ zh_CN:
     already_read: "用户已经阅读了主题"
     exceeded_emails_limit: "超过 max_emails_per_day_per_user"
     exceeded_bounces_limit: "超过 bounce_score_threshold"
-    message_blank: "消息为空"
+    message_blank: "私信为空"
     message_to_blank: "message.to 为空"
     text_part_body_blank: "text_part.body 为空"
     body_blank: "body 为空"
@@ -2266,12 +2265,12 @@ zh_CN:
       name: 初级用户
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社区功能
       long_description: |
-        该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
+        该徽章授予给用户等级达到 1 的成员。感谢你在社区里花了一些时间并且阅读了一些帖子，了解了我们的社区。你的新用户限制已经被取消；并且你已经被授予了所有基本的社区权限，必须个人私信、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 成员
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、群组消息和更多的赞
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、群组私信和更多的赞
       long_description: |
-        该徽章授予给达到用户等级 2 的你。感谢你在社区待了几周，真正融入到了社区中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
+        该徽章授予给达到用户等级 2 的你。感谢你在社区待了几周，真正融入到了社区中。你现在可以在你的用户页或者主题中邀请他人或者创建群组私信了。每天你也可以点更多次赞了。
     regular:
       name: 活跃用户
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞
@@ -2526,7 +2525,7 @@ zh_CN:
           welcome:
             label: "欢迎主题"
             description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社区？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
-            one_paragraph: "请限制你的欢迎消息至一段话。"
+            one_paragraph: "请限制你的欢迎私信至一段话。"
       privacy:
         title: "访问"
         description: "<p>你的社区是对所有人公开开放吗？还是需要邀请/审批？你可以先做一些设置工作，以后再对所有人开放.</p> <p>你同样也可以从主题或用户个人资料页面来发送邀请。</p>"
@@ -2551,7 +2550,7 @@ zh_CN:
             placeholder: "http://www.example.com/contact-us"
             description: "你或者你的组织平时用于联络的网页。将被显示在<a href='/about' target='_blank'>关于页面</a>中。"
           site_contact:
-            label: "自动消息"
+            label: "自动私信"
       corporate:
         title: "组织"
         fields:

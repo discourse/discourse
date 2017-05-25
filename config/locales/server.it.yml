@@ -194,6 +194,12 @@ it:
     latest: "Argomenti più recenti"
     hot: "Argomenti caldi"
     top: "Argomenti di punta"
+    top_all: "Argomenti di punta totali"
+    top_yearly: "Argomenti di punta annuali"
+    top_quarterly: "Argomenti di punta trimestrali"
+    top_monthly: "Argomenti di punta mensili"
+    top_weekly: "Argomenti di punta settimanali"
+    top_daily: "Argomenti di punta giornalieri"
     posts: "Ultimi messaggi"
     private_posts: "Ultimi messaggi privati"
     group_posts: "Ultimi messaggi da %{group_name}"
@@ -207,6 +213,8 @@ it:
   queue:
     delete_reason: "Cancellato attraverso la coda di moderazione"
   groups:
+    success:
+      bulk_add: "%{users_added}utentu sono stati aggiunti al gruppo. "
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist: "'%{username}' è già membro di questo gruppo."
@@ -270,6 +278,29 @@ it:
       Questo argomento è evidentemente importante per te &ndash; hai inviato più del %{percent}% delle risposte.
 
       Sei sicuro di lasciare anche agli altri abbastanza tempo per esprimere il loro punto di vista?
+    get_a_room: |+
+      ### Considera la risposta a più persone
+
+      Hai già risposto %{count}volte a @%{reply_username} in questo argomento.
+
+      Hai già considerato di rispondere ad *altre* persone nella stessa discussione? Una buona discussione coinvolge più voci e prospettive.
+
+      Se vuoi continuare più a lungo la conversazione con questa persona in particolare, [inviagli un messaggio privato](/u/%{reply_username}).
+
+    too_many_replies: |+
+      ### Hai raggiungo il limite di risposte per questo argomento
+
+      Spiacenti, ma i nuovi utenti hanno un limite temporaneo di  %{newuser_max_replies_per_topic} risposte nello stesso argomento.
+
+      Invece di aggiungere un'altra risposta, per favore considera di modificare le tue precedenti risposte o di visitare altri argomenti.
+
+    reviving_old_topic: |+
+      ### Resuscitare questo argomento?
+
+      L'ultima risposta a questo argomento è vecchia di %{days} giorni. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
+
+      Sei davvero sicuro di voler continuare questa vecchia conversazione?
+
   activerecord:
     attributes:
       category:
@@ -300,18 +331,31 @@ it:
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
               same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
               same_as_current: "è la stessa della tua password attuale."
+              unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         color_scheme_color:
           attributes:
             hex:
               invalid: "non è un colore valido"
+        post_reply:
+          base:
+            different_topic: "Il messaggio e la risposta devono appartenere allo stesso argomento."
         web_hook:
           attributes:
             payload_url:
               invalid: "La URL non è valida. La URL dovrebbe iniziare per http:// o https:// e nessuno spazio non è ammesso. "
+        custom_emoji:
+          attributes:
+            name:
+              taken: è già usato da un altro emoji
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "deve essere in data futura."
       <<: *errors
   user_profile:
+    no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/u/%{username_lower}/preferences/about-me'>vuoi compilarlo? </a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
@@ -391,6 +435,7 @@ it:
       pms_per_day: "Hai raggiunto il massimo numero di messaggi per oggi. Per favore attendi %{time_left} prima di riprovare."
       create_like: "Hai raggiunto il massimo numero di \"Mi piace\" per oggi. Per favore attendi %{time_left} prima di riprovare."
       create_bookmark: "Hai raggiunto il massimo numero di segnalibri per oggi. Per favore attendi %{time_left} prima di riprovare."
+      edit_post: "Hai raggiunto il massimo numero di modifiche per oggi. Per favore attendi %{time_left} prima di riprovare."
       live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Attendi %{time_left} prima di riprovare."
       unsubscribe_via_email: "Hai raggiunto il massimo numero di cancellazioni via email per oggi. Per favore aspetta %{time_left}  prima di riprovare ancora."
       topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti per oggi. Per favore aspetta %{time_left} prima di riprovare."
@@ -500,44 +545,59 @@ it:
     welcome_to: "Benvenuto su %{site_name}!"
     approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'email quando il tuo account sarà approvato!"
     missing_session: "Non siamo in grado di rilevare se il tuo account è stato creato o meno, per favore assicurati di avere i cookie abilitati."
+    activated: "Spiacenti, questo account è stato già attivato."
+    admin_confirm:
+      title: "Conferma Account Amministratore"
+      description: "Sei sicuro di volere che <b>%{target_username}</b> sia un amministratore?"
+      grant: "Assegna Accesso Amministratore"
+      complete: "<b>%{target_username}</b>è ora un amministratore."
+      back_to: "Torna a %{title}"
   post_action_types:
     off_topic:
       title: 'Fuori Tema'
       description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrà probabilmente essere spostato. '
+      short_description: 'Non pertinente alla discussione'
       long_form: 'segnalato come fuori tema'
     spam:
       title: 'Spam'
-      description: 'Questo messaggio è una pubblicità. Non è né utile né rilevante ai fini di questo argomento, ha bensì natura promozionale.'
+      description: 'Questo messaggio è una pubblicità o vandalismo. Non è né utile né pertinente ai fini di questo argomento.'
+      short_description: 'E'' pubblicità o vandalismo'
       long_form: 'segnalato come spam'
       email_title: '"%{title}" è stato segnalato come spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriato'
       description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
+      short_description: 'Una violazione delle </a>linee guida della nostra comunità </a>'
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Invia un messaggio a @{{username}}'
       description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio.'
+      short_description: 'Voglio parlare con questa persona direttamente e privatamente a proposito del suo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altro"
       description: 'Questo messaggio richiede attenzione da parte dello staff per altri motivi non elencati.'
+      short_description: 'Richiede l''attenzione dello staff per un''altra ragione'
       long_form: 'segnalato all''attenzione dello staff'
       email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Segnalibro'
       description: 'Messaggio nei segnalibri'
+      short_description: 'Aggiungi il messaggio ai segnalibri'
       long_form: 'Messaggio inserito nei segnalibri'
     like:
       title: 'Mi piace'
       description: 'Metti "Mi piace" a questo messaggio'
+      short_description: 'Metti "Mi piace" a questo messaggio'
       long_form: 'hanno messo "Mi piace"'
     vote:
       title: 'Vota'
       description: 'Vota questo messaggio'
+      short_description: 'Vota per questo messaggio'
       long_form: 'hai votato questo messaggio'
   user_activity:
     no_bookmarks:
@@ -1215,6 +1275,9 @@ it:
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
     deferred: "Grazie per averci informato. Stiamo provvedendo."
     deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
+  temporarily_closed_due_to_flags:
+    one: "Questo argomento resterà temporaneamente chiuso per 1 ora per via di un elevato numero di segnalazioni da parte della comunità. "
+    other: "Questo argomento resterà temporaneamente chiuso per %{count}ore per via di un elevato numero di segnalazioni da parte della comunità. "
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
