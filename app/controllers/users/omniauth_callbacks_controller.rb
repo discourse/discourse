@@ -54,7 +54,9 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     unless @origin.present?
-      @origin = Discourse.base_uri("/")
+      @origin = SiteSetting.login_required? ?
+        Discourse.base_uri("/login") :
+        Discourse.base_uri("/")
     end
 
     if @auth_result.failed?
