@@ -370,6 +370,7 @@ it:
       automatic_group: Gruppo Automatico
       closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
+      allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership: "Iscrizione"
       name: "Nome"
       user_count: "Numero di Membri"
@@ -516,6 +517,7 @@ it:
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
+      theme_default_on_all_devices: "Rendi questo il mio tema di default su tutti i miei dispositivi"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
       change: "cambia"
@@ -566,11 +568,13 @@ it:
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       muted_topics_link: "Mostra argomenti silenziati"
       watched_topics_link: "Mostra argomenti osservati"
+      tracked_topics_link: "Mostra gli argomenti seguiti"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       apps: "Applicazioni"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
+      theme: "Tema"
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -588,6 +592,15 @@ it:
         move_to_archive: "Archivia"
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
         select_all: "Seleziona Tutti"
+      preferences_nav:
+        account: "Account"
+        profile: "Profilo"
+        emails: "Email"
+        notifications: "Notifiche"
+        categories: "Categorie"
+        tags: "Etichette"
+        interface: "Interfaccia"
+        apps: "App"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -963,6 +976,8 @@ it:
       github:
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
+    invites:
+      welcome_to: "Benvenuto su %{site_name}!"
     password_reset:
       continue: "Procedi su %{site_name}"
     emoji_set:
@@ -1304,6 +1319,17 @@ it:
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato cancellato"
+      auto_update_input:
+        set_based_on_last_post: "Chiudi in base all'ultimo messaggio"
+      temp_close:
+        title: "Chiudi Temporaneamente"
+      auto_close:
+        title: "Chiudi Automaticamente"
+        label: "Ore per la chiusura automatica:"
+        based_on_last_post: "Non chiudere finché l'ultimo messaggio nell'argomento non ha questa anzianità."
+      status_update_notice:
+        auto_close: "Questo argomento si chiuderà automaticamente in %{timeLeft}."
+        auto_close_based_on_last_post: "Questo argomento si chiuderà %{duration}dopo l'ultima risposta."
       auto_close_title: 'Impostazioni di auto-chiusura'
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento ha già 1 ora, per cui l'argomento verrà chiuso immediatamente."
@@ -2022,6 +2048,7 @@ it:
       granted_on: "Assegnata %{date}"
       others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
+      allow_title: "Puoi usare questo distintivo come qualifica"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} Distintivi"
@@ -2467,6 +2494,13 @@ it:
           desktop: "Desktop"
           mobile: "Mobile"
           preview: "Anteprima"
+          scss:
+            text: "CSS"
+          head_tag:
+            text: "</head>"
+            title: "HTML che sarà inserito prima del tag </head> "
+          body_tag:
+            text: "</body>"
         colors:
           title: "Colori"
           long_title: "Combinazioni Colori"
@@ -2608,6 +2642,8 @@ it:
             change_trust_level: "cambia livello esperienza"
             change_username: "cambia nome utente"
             change_site_setting: "modifica le impostazioni del sito"
+            change_theme: "modifica tema"
+            delete_theme: "cancella tema"
             change_site_text: "cambia il testo del sito"
             suspend_user: "utente sospeso"
             unsuspend_user: "utente riattivato"

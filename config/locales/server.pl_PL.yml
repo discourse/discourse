@@ -1518,6 +1518,14 @@ pl_PL:
     welcome_user:
       title: "Witaj Użytkowniku"
       subject_template: "Witaj na %{site_name}!"
+      text_body_template: |
+        Dziękujemy za rejestrację na %{site_name} i witamy!
+
+        %{new_user_tips}
+
+        Staramy się budować społeczność opartą o [cywilizowaną dyskusję](%{base_url}/guidelines).
+
+        Miłego użytkowania!
     welcome_invite:
       title: "Zaproszenie powitalne"
       subject_template: "Witaj na %{site_name}!"
@@ -1577,6 +1585,14 @@ pl_PL:
     csv_export_succeeded:
       title: "Eksport CSV udany "
       subject_template: "Zakończono eksport danych"
+      text_body_template: |
+        Eksport danych zakończył się sukcesem! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Powyższy link będzie aktywny przez 48 godzin.
+
+        Dane są skompresowane do archiwum gzip. Jeśli archiwum nie rozpakowuje się samo gdy je otwierasz, użyj narzędzi zalecanych tutaj: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "Eksport CSV nieudany "
       subject_template: "Nieudany eksport danych"
