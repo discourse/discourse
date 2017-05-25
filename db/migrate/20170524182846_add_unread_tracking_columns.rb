@@ -28,7 +28,7 @@ SQL
 
     # we need this function for performance reasons
     execute <<SQL
-    CREATE FUNCTION first_unread_topic_for(user_id int)
+    CREATE OR REPLACE FUNCTION first_unread_topic_for(user_id int)
     RETURNS timestamp AS
     $$
     SELECT COALESCE(first_topic_unread_at, 'epoch'::timestamp)
