@@ -20,8 +20,8 @@ SQL
                                                                 THEN topics.highest_staff_post_number
                                                                 ELSE topics.highest_post_number
                                                                END
-        AND topics.deleted_at IS NULL AND topics.archetype <> 'private_message'
-    ), 'epoch')
+        AND topics.deleted_at IS NULL
+    ), current_timestamp)
 SQL
 
     add_index :topics, [:last_unread_at]
