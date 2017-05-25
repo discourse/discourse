@@ -89,7 +89,11 @@ class TopicEmbed < ActiveRecord::Base
     embed_classname_whitelist = SiteSetting.embed_classname_whitelist if SiteSetting.embed_classname_whitelist.present?
 
     response = FetchResponse.new
-    html = open(URI.encode(url), allow_redirections: :safe).read
+    begin
+      html = open(URI.encode(url), allow_redirections: :safe).read
+    rescue OpenURI::HTTPError
+      return
+    end
 
     raw_doc = Nokogiri::HTML(html)
     auth_element = raw_doc.at('meta[@name="author"]')
