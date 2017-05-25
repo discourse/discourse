@@ -2,14 +2,40 @@ require 'rails_helper'
 
 describe UserStat do
 
-  it { is_expected.to belong_to :user }
-
   it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)
     expect(user.user_stat).to be_present
 
     # It populates the `new_since` field by default
     expect(user.user_stat.new_since).to be_present
+  end
+
+  context "#update_first_topic_unread_at" do
+    it "updates date correctly for staff" do
+      now = Time.zone.now
+
+      admin = Fabricate(:admin)
+      topic = Fabricate(:topic,
+                          highest_staff_post_number: 7,
+                          highest_post_number: 1,
+                          last_unread_at: now
+                       )
+
+      UserStat.update_first_topic_unread_at!
+
+      admin.reload
+
+      expect(admin.user_stat.first_topic_unread_at).to_not be_within(5.years).of(now)
+
+      TopicUser.change(admin.id, topic.id, last_read_post_number: 1,
+                                           notification_level: NotificationLevels.all[:tracking])
+
+      UserStat.update_first_topic_unread_at!
+
+      admin.reload
+
+      expect(admin.user_stat.first_topic_unread_at).to be_within(1.second).of(now)
+    end
   end
 
   context '#update_view_counts' do

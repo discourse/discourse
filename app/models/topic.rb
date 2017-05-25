@@ -541,6 +541,10 @@ SQL
   def self.reset_highest(topic_id)
     result = exec_sql "UPDATE topics
                         SET
+                        last_unread_at = (
+                          SELECT MAX(created_at) FROM posts
+                          WHERE topic_id = :topic_id
+                        ),
                         highest_staff_post_number = (
                             SELECT COALESCE(MAX(post_number), 0) FROM posts
                             WHERE topic_id = :topic_id AND

@@ -46,11 +46,6 @@ class TopicUser < ActiveRecord::Base
           notification_level: notification_level,
           notifications_reason_id: reason
         )
-
-        MessageBus.publish("/topic/#{topic_id}", {
-          notification_level_change: notification_level,
-          notifications_reason_id: reason
-        }, user_ids: [user_id])
       end
     end
 
@@ -139,21 +134,37 @@ SQL
       end
 
       if attrs[:notification_level]
-        MessageBus.publish(
-          "/topic/#{topic_id}",
-          { notification_level_change: attrs[:notification_level] },
-          user_ids: [user_id]
-        )
-
-        DiscourseEvent.trigger(:topic_notification_level_changed,
-          attrs[:notification_level],
-          user_id,
-          topic_id
-        )
+        notification_level_change(user_id, topic_id, attrs[:notification_level], attrs[:notifications_reason_id])
       end
 
     rescue ActiveRecord::RecordNotUnique
       # In case of a race condition to insert, do nothing
+    end
+
+    def notification_level_change(user_id, topic_id, notification_level, reason_id)
+      message = { notification_level_change: notification_level }
+      message[:notifications_reason_id] = reason_id if reason_id
+      MessageBus.publish("/topic/#{topic_id}", message, user_ids: [user_id])
+
+      if notification_level && notification_level >= notification_levels[:tracking]
+        sql = <<SQL
+        UPDATE user_stats us
+        SET first_topic_unread_at = t.last_unread_at
+        FROM topics t
+        WHERE t.id = :topic_id AND
+          t.last_unread_at < us.first_topic_unread_at AND
+          us.user_id = :user_id
+SQL
+        exec_sql(sql, topic_id: topic_id, user_id: user_id)
+      end
+
+
+      DiscourseEvent.trigger(:topic_notification_level_changed,
+        notification_level,
+        user_id,
+        topic_id
+      )
+
     end
 
     def create_missing_record(user_id, topic_id, attrs)
@@ -297,7 +308,7 @@ SQL
         end
 
         if before != after
-          MessageBus.publish("/topic/#{topic_id}", { notification_level_change: after }, user_ids: [user.id])
+          notification_level_change(user.id, topic_id, after, nil)
         end
       end
 
@@ -328,7 +339,7 @@ SQL
           end
         end
 
-        MessageBus.publish("/topic/#{topic_id}", { notification_level_change: args[:new_status] }, user_ids: [user.id])
+        notification_level_change(user.id, topic_id, args[:new_status], nil)
       end
     end
 

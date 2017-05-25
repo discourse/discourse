@@ -1,6 +1,17 @@
 require 'rails_helper'
 
 describe TopicUser do
+  let :watching do
+    TopicUser.notification_levels[:watching]
+  end
+
+  let :regular do
+    TopicUser.notification_levels[:regular]
+  end
+
+  let :tracking do
+    TopicUser.notification_levels[:tracking]
+  end
 
   describe "#unwatch_categories!" do
     it "correctly unwatches categories" do
@@ -10,9 +21,6 @@ describe TopicUser do
       tracked_topic = Fabricate(:topic)
 
       user = op_topic.user
-      watching = TopicUser.notification_levels[:watching]
-      regular = TopicUser.notification_levels[:regular]
-      tracking = TopicUser.notification_levels[:tracking]
 
       TopicUser.change(user.id, op_topic, notification_level: watching)
       TopicUser.change(user.id, another_topic, notification_level: watching)
@@ -28,6 +36,36 @@ describe TopicUser do
       expect(TopicUser.get(tracked_topic, user).notification_level).to eq(tracking)
     end
 
+  end
+
+  describe "first unread" do
+    it "correctly update first unread as needed" do
+      time1 = 3.days.ago
+      time2 = 2.days.ago
+      time3 = 1.days.ago
+
+      topic1 = Fabricate(:topic, last_unread_at: time1)
+      topic2 = Fabricate(:topic, last_unread_at: time2)
+      topic3 = Fabricate(:topic, last_unread_at: time3)
+
+      user = Fabricate(:user)
+      user.user_stat.update_columns(first_topic_unread_at: Time.zone.now)
+
+      TopicUser.change(user.id, topic3, notification_level: tracking)
+
+      user.user_stat.reload
+      expect(user.user_stat.first_topic_unread_at).to be_within(1.second).of(time3)
+
+      TopicUser.change(user.id, topic2, notification_level: watching)
+
+      user.user_stat.reload
+      expect(user.user_stat.first_topic_unread_at).to be_within(1.second).of(time2)
+
+      TopicUser.change(user.id, topic1, notification_level: regular)
+
+      user.user_stat.reload
+      expect(user.user_stat.first_topic_unread_at).to be_within(1.second).of(time2)
+    end
   end
 
   describe '#notification_levels' do
