@@ -537,12 +537,16 @@ class UsersController < ApplicationController
 
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
-    @account_created = { message: @message }
+    @account_created = {
+      message: @message,
+      show_controls: false
+    }
 
     if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
+        @account_created[:show_controls] = true
       end
     end
 
@@ -618,6 +622,8 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
     end
 
+    raise Discourse::InvalidAccess.new if SiteSetting.must_approve_users?
+
     if params[:username].present?
       @user = User.find_by_username_or_email(params[:username].to_s)
     end
@@ -626,7 +632,7 @@ class UsersController < ApplicationController
     if !current_user&.staff? &&
         @user.id != session[SessionController::ACTIVATE_USER_KEY]
 
-      raise Discourse::InvalidAccess
+      raise Discourse::InvalidAccess.new
     end
 
     session.delete(SessionController::ACTIVATE_USER_KEY)
