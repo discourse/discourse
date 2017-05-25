@@ -554,8 +554,9 @@ class ApplicationController < ActionController::Base
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && is_api?)
 
-      # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
+        flash.keep
+
         if SiteSetting.enable_sso?
           # save original URL in a session so we can redirect after login
           session[:destination_url] = destination_url
