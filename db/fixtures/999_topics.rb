@@ -69,14 +69,27 @@ end
 # run this later, cause we need to make sure new application controller resilience is in place first
 
 ColumnDropper.drop(
+  table: 'user_stats',
+  after_migration: 'DropUnreadTrackingColumns',
+  columns: %w{
+    first_topic_unread_at
+  },
+  on_drop: ->(){
+    STDERR.puts "Removing superflous user stats columns!"
+    ActiveRecord::Base.exec_sql "DROP FUNCTION IF EXISTS first_unread_topic_for(int)"
+  }
+)
+
+ColumnDropper.drop(
   table: 'topics',
-  after_migration: 'AddTopicColumnsBack',
+  after_migration: 'DropUnreadTrackingColumns',
   columns: %w{
     inappropriate_count
     bookmark_count
     off_topic_count
     illegal_count
     notify_user_count
+    last_unread_at
   },
   on_drop: ->(){
     STDERR.puts "Removing superflous topic columns!"

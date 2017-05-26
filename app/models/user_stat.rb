@@ -81,30 +81,6 @@ class UserStat < ActiveRecord::Base
     update_columns(reset_bounce_score_after: nil, bounce_score: 0)
   end
 
-  def self.update_first_topic_unread_at!
-
-    exec_sql <<SQL
-    UPDATE user_stats us
-    SET first_topic_unread_at = COALESCE(X.first_unread_at, current_timestamp)
-    FROM
-    (
-      SELECT u.id user_id, MIN(last_unread_at) first_unread_at
-      FROM users u
-      JOIN topic_users tu ON tu.user_id = u.id
-      JOIN topics t ON t.id = tu.topic_id
-      WHERE notification_level > 1 AND last_read_post_number < CASE WHEN moderator OR admin
-                                                                THEN t.highest_staff_post_number
-                                                                ELSE t.highest_post_number
-                                                               END
-        AND t.deleted_at IS NULL
-      GROUP BY u.id
-    ) X
-    WHERE X.user_id = us.user_id AND X.first_unread_at <> first_topic_unread_at
-SQL
-
-    nil
-  end
-
   protected
 
   def trigger_badges

@@ -411,12 +411,9 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
 
-      expect(topic.last_unread_at).to eq(whisper_reply.created_at)
-
       topic.update_columns(highest_staff_post_number:0,
                            highest_post_number:0,
                            posts_count: 0,
-                           last_unread_at: 1.year.ago,
                            last_posted_at: 1.year.ago)
 
       Topic.reset_highest(topic.id)
@@ -426,7 +423,6 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.last_posted_at).to eq(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
-      expect(topic.last_unread_at).to eq(whisper_reply.created_at)
     end
   end
 

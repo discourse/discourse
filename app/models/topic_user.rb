@@ -146,19 +146,6 @@ SQL
       message[:notifications_reason_id] = reason_id if reason_id
       MessageBus.publish("/topic/#{topic_id}", message, user_ids: [user_id])
 
-      if notification_level && notification_level >= notification_levels[:tracking]
-        sql = <<SQL
-        UPDATE user_stats us
-        SET first_topic_unread_at = t.last_unread_at
-        FROM topics t
-        WHERE t.id = :topic_id AND
-          t.last_unread_at < us.first_topic_unread_at AND
-          us.user_id = :user_id
-SQL
-        exec_sql(sql, topic_id: topic_id, user_id: user_id)
-      end
-
-
       DiscourseEvent.trigger(:topic_notification_level_changed,
         notification_level,
         user_id,
