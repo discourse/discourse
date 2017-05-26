@@ -95,11 +95,6 @@ module DiscourseNarrativeBot
       }
     }
 
-    def self.can_start?(user)
-      return true if user.staff? || !SiteSetting.enable_badges
-      user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
-    end
-
     def self.reset_trigger
       I18n.t('discourse_narrative_bot.advanced_user_narrative.reset_trigger')
     end

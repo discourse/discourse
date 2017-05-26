@@ -25,23 +25,6 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 
-  describe '.can_start?' do
-    describe 'when user is a moderator' do
-      it 'should return true' do
-        user.update!(moderator: true)
-
-        expect(described_class.can_start?(user)).to eq(true)
-      end
-    end
-
-    describe 'when badges are disabled' do
-      it 'should return true' do
-        SiteSetting.enable_badges = false
-        expect(described_class.can_start?(user)).to eq(true)
-      end
-    end
-  end
-
   describe '#notify_timeout' do
     before do
       narrative.set_data(user,
