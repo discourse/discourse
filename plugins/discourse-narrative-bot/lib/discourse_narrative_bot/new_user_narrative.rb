@@ -40,7 +40,7 @@ module DiscourseNarrativeBot
       tutorial_emoji: {
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
-          I18n.t("#{I18N_KEY}.mention.instructions", discobot_username: self.class.discobot_user.username)
+          I18n.t("#{I18N_KEY}.mention.instructions", discobot_username: self.discobot_user.username)
         },
         reply: {
           action: :reply_to_emoji
@@ -148,7 +148,7 @@ module DiscourseNarrativeBot
       RAW
 
       PostRevisor.new(post, topic).revise!(
-        self.class.discobot_user,
+        self.discobot_user,
         { raw: raw },
         { skip_validations: true, force_new_version: true }
       )
@@ -201,7 +201,7 @@ module DiscourseNarrativeBot
 
     def missing_bookmark
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == self.class.discobot_user.id
+      return if @post.user_id == self.discobot_user.id
 
       fake_delay
       enqueue_timeout_job(@user)
@@ -211,7 +211,7 @@ module DiscourseNarrativeBot
 
     def reply_to_bookmark
       return unless valid_topic?(@post.topic_id)
-      return unless @post.user_id == self.class.discobot_user.id
+      return unless @post.user_id == self.discobot_user.id
 
       raw = <<~RAW
         #{I18n.t("#{I18N_KEY}.bookmark.reply", profile_page_url: url_helpers(:user_url, username: @user.username))}
@@ -434,7 +434,7 @@ module DiscourseNarrativeBot
           reply_to(@post, I18n.t(
             "#{I18N_KEY}.mention.not_found",
             username: @user.username,
-            discobot_username: self.class.discobot_user.username
+            discobot_username: self.discobot_user.username
           ))
         end
 
@@ -496,7 +496,7 @@ module DiscourseNarrativeBot
           username: @user.username,
           base_url: Discourse.base_url,
           certificate: certificate,
-          discobot_username: self.class.discobot_user.username,
+          discobot_username: self.discobot_user.username,
           advanced_trigger: AdvancedUserNarrative.reset_trigger
         ),
         topic_id: @data[:topic_id]
@@ -504,7 +504,7 @@ module DiscourseNarrativeBot
     end
 
     def like_post(post)
-      PostAction.act(self.class.discobot_user, post, PostActionType.types[:like])
+      PostAction.act(self.discobot_user, post, PostActionType.types[:like])
     end
 
     def welcome_topic

@@ -136,7 +136,7 @@ module DiscourseNarrativeBot
           help_message
         elsif hint
           message = I18n.t(self.class.i18n_key('random_mention.reply'),
-            discobot_username: self.class.discobot_user.username,
+            discobot_username: self.discobot_user.username,
             help_trigger: self.class.help_trigger
           )
 
@@ -172,7 +172,7 @@ module DiscourseNarrativeBot
         tracks << AdvancedUserNarrative.reset_trigger
       end
 
-      discobot_username = self.class.discobot_user.username
+      discobot_username = self.discobot_user.username
 
       message = I18n.t(
         self.class.i18n_key('random_mention.tracks'),
@@ -227,7 +227,7 @@ module DiscourseNarrativeBot
       if pm_to_bot?(@post)
         post_raw = @post.raw
 
-        post_raw.match(/^@#{self.class.discobot_user.username} #{self.class.skip_trigger}/i) ||
+        post_raw.match(/^@#{self.discobot_user.username} #{self.class.skip_trigger}/i) ||
           post_raw.strip == self.class.skip_trigger
       else
         false
@@ -235,7 +235,7 @@ module DiscourseNarrativeBot
     end
 
     def match_trigger?(trigger)
-      discobot_username = self.class.discobot_user.username
+      discobot_username = self.discobot_user.username
       regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}", 'i')
       match = @post.cooked.match(regexp)
 
@@ -248,13 +248,13 @@ module DiscourseNarrativeBot
 
     def like_user_post
       if @post.raw.match(/thank/i)
-        PostAction.act(self.class.discobot_user, @post, PostActionType.types[:like])
+        PostAction.act(self.discobot_user, @post, PostActionType.types[:like])
       end
     end
 
     def bot_mentioned?
       @bot_mentioned ||= PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(
-        self.class.discobot_user.username
+        self.discobot_user.username
       )
     end
 

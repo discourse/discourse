@@ -1,11 +1,7 @@
 module DiscourseNarrativeBot
   module Actions
-    extend ActiveSupport::Concern
-
-    included do
-      def self.discobot_user
-        @discobot ||= User.find(-2)
-      end
+    def discobot_user
+      @discobot ||= User.find(-2)
     end
 
     private
@@ -18,11 +14,11 @@ module DiscourseNarrativeBot
           reply_to_post_number: post.post_number
         }
 
-        new_post = PostCreator.create!(self.class.discobot_user, default_opts.merge(opts))
+        new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
         reset_rate_limits(post) if new_post
         new_post
       else
-        PostCreator.create!(self.class.discobot_user, { raw: raw }.merge(opts))
+        PostCreator.create!(self.discobot_user, { raw: raw }.merge(opts))
       end
     end
 
@@ -64,7 +60,7 @@ module DiscourseNarrativeBot
       valid = false
 
       doc.css(".mention").each do |mention|
-        valid = true if mention.text == "@#{self.class.discobot_user.username}"
+        valid = true if mention.text == "@#{self.discobot_user.username}"
       end
 
       valid

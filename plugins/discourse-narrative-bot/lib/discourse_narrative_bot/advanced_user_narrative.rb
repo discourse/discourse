@@ -124,7 +124,7 @@ module DiscourseNarrativeBot
       post = PostCreator.create!(@user, {
         raw: I18n.t(
           "#{I18N_KEY}.edit.bot_created_post_raw",
-          discobot_username: self.class.discobot_user.username
+          discobot_username: self.discobot_user.username
         ),
         topic_id: data[:topic_id],
         skip_bot: true
@@ -140,7 +140,7 @@ module DiscourseNarrativeBot
       post = PostCreator.create!(@user, {
         raw: I18n.t(
           "#{I18N_KEY}.recover.deleted_post_raw",
-          discobot_username: self.class.discobot_user.username
+          discobot_username: self.discobot_user.username
         ),
         topic_id: data[:topic_id],
         skip_bot: true
@@ -223,7 +223,7 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       RAW
 
-      PostCreator.create!(self.class.discobot_user,
+      PostCreator.create!(self.discobot_user,
         raw: raw,
         topic_id: @topic_id
       )
@@ -248,7 +248,7 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       RAW
 
-      PostCreator.create!(self.class.discobot_user,
+      PostCreator.create!(self.discobot_user,
         raw: raw,
         topic_id: @post.topic_id
       )
@@ -306,7 +306,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(self.class.discobot_user,
+      post = PostCreator.create!(self.discobot_user,
         raw: raw,
         topic_id: @topic_id
       )
