@@ -731,7 +731,7 @@ class TopicQuery
 
     def new_messages(params)
 
-      TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), 10.years.ago)
+      TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
                 .limit(params[:count])
 
     end
