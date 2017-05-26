@@ -86,6 +86,8 @@ Spork.prefork do
 
       require_dependency 'site_settings/local_process_provider'
       SiteSetting.provider = SiteSettings::LocalProcessProvider.new
+
+      WebMock.disable_net_connect!
     end
 
     class DiscourseMockRedis < MockRedis
@@ -124,7 +126,6 @@ Spork.prefork do
       Discourse.clear_readonly!
 
       I18n.locale = :en
-      WebMock.reset!
     end
 
     class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider

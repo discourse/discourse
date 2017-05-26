@@ -522,10 +522,8 @@ describe DiscourseNarrativeBot::TrackSelector do
 
         describe 'when a quote is requested' do
           it 'should create the right reply' do
-            Excon.stub({ method: :get, hostname: 'api.forismatic.com' },
-              status: 200,
-              body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}"
-            )
+            stub_request(:get, "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote").
+              to_return(status: 200, body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}")
 
             ['@discobot quote', 'hello @discobot quote there'].each do |raw|
               post.update!(raw: raw)

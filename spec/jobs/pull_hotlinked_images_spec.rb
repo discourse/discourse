@@ -6,7 +6,7 @@ describe Jobs::PullHotlinkedImages do
   before do
     png = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
     stub_request(:get, "http://wiki.mozilla.org/images/2/2e/Longcat1.png").to_return(body: png)
-    Excon.stub({ method: :head, hostname: 'wiki.mozilla.org' }, {})
+    stub_request(:head, "http://wiki.mozilla.org/images/2/2e/Longcat1.png")
     SiteSetting.download_remote_images_to_local = true
     FastImage.expects(:size).returns([100, 100]).at_least_once
   end
