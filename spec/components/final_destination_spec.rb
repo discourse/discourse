@@ -28,7 +28,10 @@ describe FinalDestination do
   end
 
   def redirect_response(from, dest)
-    Excon.stub({ method: :head, hostname: from }, { status: 302, headers: { "Location" => dest } })
+    stub_request(:head, from).to_return(
+      status: 302,
+      headers: { "Location" => dest }
+    )
   end
 
   def fd(url)
@@ -48,7 +51,7 @@ describe FinalDestination do
 
     context "without redirects" do
       before do
-        Excon.stub({ method: :head, hostname: 'eviltrout.com' }, doc_response)
+        stub_request(:head, "https://eviltrout.com").to_return(doc_response)
       end
 
       it "returns the final url" do
@@ -74,9 +77,9 @@ describe FinalDestination do
 
     context "with a couple of redirects" do
       before do
-        redirect_response("eviltrout.com", "https://codinghorror.com/blog")
-        redirect_response("codinghorror.com", "https://discourse.org")
-        Excon.stub({ method: :head, hostname: 'discourse.org' }, doc_response)
+        redirect_response("https://eviltrout.com", "https://codinghorror.com/blog")
+        redirect_response("https://codinghorror.com/blog", "https://discourse.org")
+        stub_request(:head, "https://discourse.org").to_return(doc_response)
       end
 
       it "returns the final url" do
@@ -89,9 +92,9 @@ describe FinalDestination do
 
     context "with too many redirects" do
       before do
-        redirect_response("eviltrout.com", "https://codinghorror.com/blog")
-        redirect_response("codinghorror.com", "https://discourse.org")
-        Excon.stub({ method: :head, hostname: 'discourse.org' }, doc_response)
+        redirect_response("https://eviltrout.com", "https://codinghorror.com/blog")
+        redirect_response("https://codinghorror.com/blog", "https://discourse.org")
+        stub_request(:head, "https://discourse.org").to_return(doc_response)
       end
 
       it "returns the final url" do
@@ -104,8 +107,8 @@ describe FinalDestination do
 
     context "with a redirect to an internal IP" do
       before do
-        redirect_response("eviltrout.com", "https://private-host.com")
-        Excon.stub({ method: :head, hostname: 'private-host.com' }, doc_response)
+        redirect_response("https://eviltrout.com", "https://private-host.com")
+        stub_request(:head, "https://private-host.com").to_return(doc_response)
       end
 
       it "returns the final url" do
