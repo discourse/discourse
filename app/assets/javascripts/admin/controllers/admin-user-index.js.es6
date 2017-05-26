@@ -3,6 +3,7 @@ import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
 import { userPath } from 'discourse/lib/url';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   editingUsername: false,
@@ -33,6 +34,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
     return [];
   }.property('model.user_fields.[]'),
+
+  @computed('model.username_lower')
+  preferencesPath(username) {
+    return userPath(`${username}/preferences`);
+  },
 
   actions: {
 

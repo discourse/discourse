@@ -3254,6 +3254,8 @@ en:
         reset_bounce_score:
           label: "Reset"
           title: "Reset bounce score back to 0"
+        visit_profile: "Visit <a href='%{url}'>this user's preferences page</a> to edit their profile"
+
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
