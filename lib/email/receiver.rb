@@ -28,6 +28,9 @@ module Email
     class InvalidPostAction            < ProcessingError; end
 
     attr_reader :incoming_email
+    attr_reader :raw_email
+    attr_reader :mail
+    attr_reader :message_id
 
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
@@ -241,7 +244,7 @@ module Email
 
     def try_to_encode(string, encoding)
       encoded = string.encode("UTF-8", encoding)
-      encoded.present? && encoded.valid_encoding? ? encoded : nil
+      !encoded.nil? && encoded.valid_encoding? ? encoded : nil
     rescue Encoding::InvalidByteSequenceError,
            Encoding::UndefinedConversionError,
            Encoding::ConverterNotFoundError
@@ -622,10 +625,7 @@ module Email
 
       # only add elided part in messages
       if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
-        options[:raw] << "\n\n" << "<details class='elided'>" << "\n"
-        options[:raw] << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
-        options[:raw] << options[:elided] << "\n"
-        options[:raw] << "</details>" << "\n"
+        options[:raw] << Email::Receiver.elided_html(options[:elided])
       end
 
       user = options.delete(:user)
@@ -641,6 +641,14 @@ module Email
       end
 
       result.post
+    end
+
+    def self.elided_html(elided)
+      html =  "\n\n" << "<details class='elided'>" << "\n"
+      html << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
+      html << elided << "\n"
+      html << "</details>" << "\n"
+      html
     end
 
     def add_other_addresses(topic, sender)

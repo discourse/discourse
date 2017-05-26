@@ -190,4 +190,5 @@ gem 'sassc', require: false
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
+  gem 'sqlite3', '~> 1.3.13'
 end
