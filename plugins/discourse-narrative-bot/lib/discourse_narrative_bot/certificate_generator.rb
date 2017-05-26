@@ -3,6 +3,7 @@ module DiscourseNarrativeBot
     def initialize(user, date)
       @user = user
       @date = I18n.l(Date.parse(date), format: :date_only)
+      @discobot_user = User.find(-2)
     end
 
     def new_user_track
@@ -454,7 +455,7 @@ module DiscourseNarrativeBot
             #{I18n.t('discourse_narrative_bot.new_user_narrative.cert_title')}
           </text>
           <text transform="translate(386.926 316.44)" font-size="18" fill="#020403" font-family="Tangerine, Tangerine">
-            #{NewUserNarrative.discobot_user.username}
+            #{@discobot_user.username}
           </text>
           <text transform="translate(98.126 317.35)" font-size="18" fill="#020403" font-family="Tangerine, Tangerine">
             #{@date}
@@ -532,7 +533,7 @@ module DiscourseNarrativeBot
           <image clip-path="url(#clipCircle)" height="38px" width="38px" xlink:href="data:image/png;base64,#{Base64.strict_encode64(URI(avatar_url).open('rb', redirect: true, allow_redirections: :all).read)}"/>
         </g>
         <text transform="matrix(1.0705 0 0 1 544.2073 388.3629)" fill="#020403" font-family="'Tangerine'" font-size="24.9219px">
-          #{AdvancedUserNarrative.discobot_user.username}
+          #{@discobot_user.username}
         </text>
         <text x="#{width / 2}" y="270" text-anchor="middle" fill="#020403" font-family="'Tangerine'" font-size="34.8841px">
           #{name}
