@@ -21,7 +21,7 @@ describe DiscourseNarrativeBot::TrackSelector do
       discobot_username: discobot_username,
       default_track: DiscourseNarrativeBot::NewUserNarrative.reset_trigger,
       reset_trigger: described_class.reset_trigger,
-      tracks: DiscourseNarrativeBot::NewUserNarrative.reset_trigger
+      tracks: "#{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}, #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
     )}
 
     #{I18n.t(
@@ -175,37 +175,6 @@ describe DiscourseNarrativeBot::TrackSelector do
 
                   expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
                     .to eq("tutorial_formatting")
-              end
-            end
-          end
-
-          context 'start/reset advanced track' do
-            before do
-              post.update!(
-                raw: "@#{discobot_user.username} #{described_class.reset_trigger} #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
-              )
-            end
-
-            context 'when new user track has not been completed' do
-              it 'should not start the track' do
-                described_class.new(:reply, user, post_id: post.id).select
-
-                expect(DiscourseNarrativeBot::Store.get(user.id)['track'])
-                  .to eq(DiscourseNarrativeBot::NewUserNarrative.to_s)
-              end
-            end
-
-            context 'when new user track has been completed' do
-              it 'should start the track' do
-                BadgeGranter.grant(
-                  Badge.find_by(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME),
-                  user
-                )
-
-                described_class.new(:reply, user, post_id: post.id).select
-
-                expect(DiscourseNarrativeBot::Store.get(user.id)['track'])
-                  .to eq(DiscourseNarrativeBot::AdvancedUserNarrative.to_s)
               end
             end
           end

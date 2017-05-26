@@ -113,7 +113,6 @@ module DiscourseNarrativeBot
     end
 
     def selected_track(klass)
-      return if klass.respond_to?(:can_start?) && !klass.can_start?(@user)
       post_raw = @post.raw
       trigger = "#{self.class.reset_trigger} #{klass.reset_trigger}"
 
@@ -164,14 +163,6 @@ module DiscourseNarrativeBot
     end
 
     def help_message
-      tracks = [NewUserNarrative.reset_trigger]
-
-      if @user.staff? ||
-         @user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?
-
-        tracks << AdvancedUserNarrative.reset_trigger
-      end
-
       discobot_username = self.discobot_user.username
 
       message = I18n.t(
@@ -179,7 +170,7 @@ module DiscourseNarrativeBot
         discobot_username: discobot_username,
         reset_trigger: self.class.reset_trigger,
         default_track: NewUserNarrative.reset_trigger,
-        tracks: tracks.join(', ')
+        tracks: [NewUserNarrative.reset_trigger, AdvancedUserNarrative.reset_trigger].join(', ')
       )
 
       message << "\n\n#{I18n.t(self.class.i18n_key('random_mention.bot_actions'),
