@@ -1,3 +1,5 @@
+require_dependency 'distributed_mutex'
+
 class PostAlerter
 
   def self.post_created(post)
@@ -222,20 +224,22 @@ class PostAlerter
 
     notification_type = Notification.types[:group_message_summary]
 
-    Notification.where(notification_type: notification_type, user_id: user.id).each do |n|
-      n.destroy if n.data_hash[:group_id] == stat[:group_id]
-    end
+    DistributedMutex.synchronize("group_message_notify_#{user.id}") do
+      Notification.where(notification_type: notification_type, user_id: user.id).each do |n|
+        n.destroy if n.data_hash[:group_id] == stat[:group_id]
+      end
 
-    Notification.create(
-      notification_type: notification_type,
-      user_id: user.id,
-      data: {
-        group_id: stat[:group_id],
-        group_name: stat[:group_name],
-        inbox_count: stat[:inbox_count],
-        username: user.username_lower
-      }.to_json
-    )
+      Notification.create(
+        notification_type: notification_type,
+        user_id: user.id,
+        data: {
+          group_id: stat[:group_id],
+          group_name: stat[:group_name],
+          inbox_count: stat[:inbox_count],
+          username: user.username_lower
+        }.to_json
+      )
+    end
 
     # TODO decide if it makes sense to also publish a desktop notification
   end
