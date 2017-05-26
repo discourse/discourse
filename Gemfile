@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 #source 'http://production.cf.rubygems.org'
 
 # does not install in linux ATM, so hack this for now
-gem 'bootsnap', '0.3.0.pre', require: false
+gem 'bootsnap', require: false
 
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
