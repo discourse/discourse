@@ -230,7 +230,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       it 'should create the right reply' do
-        post.update!(user: described_class.discobot_user)
+        post.update!(user: discobot_user)
         narrative.expects(:enqueue_timeout_job).with(user)
 
         narrative.input(:bookmark, user, post: post)
@@ -402,7 +402,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           post_action = PostAction.last
 
           expect(post_action.post_action_type_id).to eq(PostActionType.types[:like])
-          expect(post_action.user).to eq(described_class.discobot_user)
+          expect(post_action.user).to eq(discobot_user)
           expect(post_action.post).to eq(new_post)
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
         end
@@ -456,7 +456,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         post_action = PostAction.last
 
         expect(post_action.post_action_type_id).to eq(PostActionType.types[:like])
-        expect(post_action.user).to eq(described_class.discobot_user)
+        expect(post_action.user).to eq(discobot_user)
         expect(post_action.post).to eq(new_post)
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
       end
@@ -728,7 +728,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
     end
 
     describe 'flag tutorial' do
-      let(:post) { Fabricate(:post, user: described_class.discobot_user, topic: topic) }
+      let(:post) { Fabricate(:post, user: discobot_user, topic: topic) }
       let(:flag) { Fabricate(:flag, post: post, user: user) }
       let(:other_post) { Fabricate(:post, user: user, topic: topic) }
 
@@ -833,7 +833,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe 'when post contain the right answer' do
-        let(:post) { Fabricate(:post, user: described_class.discobot_user, topic: topic) }
+        let(:post) { Fabricate(:post, user: discobot_user, topic: topic) }
         let(:flag) { Fabricate(:flag, post: post, user: user) }
 
         before do
