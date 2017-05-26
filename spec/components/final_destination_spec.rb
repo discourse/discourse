@@ -23,8 +23,10 @@ describe FinalDestination do
   end
 
   let(:doc_response) do
-    { body: "<html>document</html>",
-      headers: { "Content-Type" => "text/html" } }
+    {
+      status: 200,
+      headers: { "Content-Type" => "text/html" }
+    }
   end
 
   def redirect_response(from, dest)
@@ -64,7 +66,7 @@ describe FinalDestination do
 
     context "underscores in URLs" do
       before do
-        Excon.stub({ method: :head, hostname: 'some_thing.example.com' }, doc_response)
+        stub_request(:head, 'https://some_thing.example.com').to_return(doc_response)
       end
 
       it "doesn't raise errors with underscores in urls" do

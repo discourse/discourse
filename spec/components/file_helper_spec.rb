@@ -7,7 +7,7 @@ describe FileHelper do
   let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
 
   before do
-    Excon.stub({ method: :head, hostname: 'eviltrout.com' }, {})
+    stub_request(:any, /https:\/\/eviltrout.com/)
     stub_request(:get, url).to_return(body: png)
   end
 
