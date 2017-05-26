@@ -75,6 +75,8 @@ class UserAvatar < ActiveRecord::Base
       follow_redirect: true
     )
 
+    return unless tempfile
+
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind
 
