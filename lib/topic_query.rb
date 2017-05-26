@@ -294,7 +294,6 @@ class TopicQuery
 
     list
         .where("tu.last_read_post_number < topics.#{col_name}")
-        .where("topics.last_unread_at >= first_unread_topic_for(?)", user_id)
         .where("COALESCE(tu.notification_level, :regular) >= :tracking",
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end

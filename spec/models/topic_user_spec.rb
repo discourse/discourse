@@ -38,36 +38,6 @@ describe TopicUser do
 
   end
 
-  describe "first unread" do
-    it "correctly update first unread as needed" do
-      time1 = 3.days.ago
-      time2 = 2.days.ago
-      time3 = 1.days.ago
-
-      topic1 = Fabricate(:topic, last_unread_at: time1)
-      topic2 = Fabricate(:topic, last_unread_at: time2)
-      topic3 = Fabricate(:topic, last_unread_at: time3)
-
-      user = Fabricate(:user)
-      user.user_stat.update_columns(first_topic_unread_at: Time.zone.now)
-
-      TopicUser.change(user.id, topic3, notification_level: tracking)
-
-      user.user_stat.reload
-      expect(user.user_stat.first_topic_unread_at).to be_within(1.second).of(time3)
-
-      TopicUser.change(user.id, topic2, notification_level: watching)
-
-      user.user_stat.reload
-      expect(user.user_stat.first_topic_unread_at).to be_within(1.second).of(time2)
-
-      TopicUser.change(user.id, topic1, notification_level: regular)
-
-      user.user_stat.reload
-      expect(user.user_stat.first_topic_unread_at).to be_within(1.second).of(time2)
-    end
-  end
-
   describe '#notification_levels' do
     context "verify enum sequence" do
       before do
