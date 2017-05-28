@@ -65,7 +65,7 @@ module DiscourseTagging
     term = opts[:term]
     if term.present?
       term.downcase!
-      term.gsub!(/[^a-z0-9\p{Alnum}\.\-\_]*/, '')
+      term.gsub!(/[^\p{Alnum}\.\-\_]*/, '')
       term.gsub!("_", "\\_")
       query = query.where('tags.name like ?', "%#{term}%")
     end
