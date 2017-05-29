@@ -14,9 +14,9 @@
 
       {{#if successMessage}}
         <p>{{successMessage}}</p>
-      {{else}}        
+      {{else}}
 
-        <p>{{{yourEmailMessage}}} 
+        <p>{{{yourEmailMessage}}}
         {{#if externalAuthsEnabled}}
              {{i18n 'invites.social_login_available'}}
         {{/if}}
@@ -24,14 +24,17 @@
 
         <form>
           <label>{{i18n 'user.username.title'}}</label>
-
           <div class="input username-input">
             {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
             &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
           </div>
 
-          <label>{{i18n 'invites.password_label'}}</label>
+          <label>{{nameLabel}}</label>
+          <div class="input name-input">
+            {{input value=accountName id="new-account-name" name="name"}}
+          </div>
 
+          <label>{{i18n 'invites.password_label'}}</label>
           <div class="input password-input">
             {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
             &nbsp;{{input-tip validation=passwordValidation}}
@@ -39,7 +42,7 @@
 
           <div class="instructions">
             <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
-          </div>         
+          </div>
 
           <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
 
