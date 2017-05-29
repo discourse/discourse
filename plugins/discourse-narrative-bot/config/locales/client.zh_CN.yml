@@ -1,1 +1,6 @@
-zh_CN: {}
+zh_CN:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "给所有新用户启动新用户向导"
+        welcome_message: "给所有新用户发送快速开始指南，作为欢迎消息"

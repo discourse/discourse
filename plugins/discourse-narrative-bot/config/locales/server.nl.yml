@@ -1,1 +1,22 @@
-nl: {}
+nl:
+  discourse_narrative_bot:
+    quote:
+      trigger: "quote"
+      '1':
+        author: "Albert Einstein"
+      '2':
+        author: "Mahatma Gandhi"
+      '3':
+        author: "Dr Seuss"
+      '4':
+        author: "Charles-Guillaume Étienne"
+      '5':
+        author: "Theodore Roosevelt"
+      '6':
+        author: "De moeder van Forrest Gump"
+      '7':
+        author: "Neil Armstrong"
+      '8':
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"

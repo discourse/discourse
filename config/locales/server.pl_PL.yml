@@ -612,7 +612,6 @@ pl_PL:
       long_form: 'oflagowano jako nie-na-temat'
     spam:
       title: 'Spam'
-      description: 'Ten wpis jest reklamą. Jest nieprzydatny i bez związku z obecnym tematem, ma naturę promocyjną.'
       long_form: 'oflagowano jako spam'
       email_title: '%{title}" został oznaczony jako spam'
       email_body: "%{link}\n\n%{message}"
@@ -1646,11 +1645,6 @@ pl_PL:
   subject_pm: "[PW] "
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
-    reached_limit:
-      one: "OSTRZEŻENIE: przekroczyłeś dzienny limit emaili. Dalsze powiadomienia email zostaną stłumione."
-      few: "OSTRZEŻENIE: przekroczyłeś dzienny limit równy kilku emailom. Dalsze powiadomienia email zostaną stłumione."
-      many: "OSTRZEŻENIE: przekroczyłeś dzienny limit emaili. Dalsze powiadomienia email zostaną stłumione."
-      other: "OSTRZEŻENIE: przekroczyłeś dzienny limit równy %{count} emailom. Dalsze powiadomienia email zostaną stłumione."
     in_reply_to: "W odpowiedzi do"
     unsubscribe:
       title: "Wypisz"

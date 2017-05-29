@@ -1,1 +1,16 @@
-fa_IR: {}
+fa_IR:
+  discourse_narrative_bot:
+    quote:
+      '9':
+        author: "بروس لی"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      answers:
+        '9': "بله"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: 'شروع'
+    new_user_narrative:
+      reset_trigger: "کاربر جدید"

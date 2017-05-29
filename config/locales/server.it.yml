@@ -1130,7 +1130,6 @@ it:
     suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     global_notice: "Mostra a tutti i visitatori un avviso con striscione globale URGENTE, EMERGENZA, lascia vuoto per nasconderlo (HTML consentito)."
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
-    invites_per_page: "Inviti predefiniti mostrati nella pagina utente."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
     default_code_lang: "Ai blocchi di codice GitHub viene applicata l'evidenziazione della sintassi del linguaggio di programmazione di default (lang-auto, ruby, python ecc.)"
     embed_by_username: "Nome utente Discourse dell'utente che crea gli argomenti incorporati."
@@ -1297,14 +1296,6 @@ it:
         Per ulteriori informazioni, puoi far riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: |
-        Grazie per esserti unito a %{site_name}, e benvenuto!
-
-        %{new_user_tips}
-
-        Noi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre. Buona permanenza!
-
-        (Se desideri comunicare con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.)
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
     backup_succeeded:
@@ -1628,6 +1619,7 @@ it:
                 label: "Pubblico"
               restricted:
                 label: "Privato"
+                description: "Solo le persone che ho invitato o approvato possono accedere a questa comunità"
       contact:
         title: "Contatto"
         fields:

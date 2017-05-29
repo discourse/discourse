@@ -518,6 +518,7 @@ fr:
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
+      theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -1245,8 +1246,10 @@ fr:
         dismiss_new: "Ignorer les nouveaux"
         toggle: "activer la sélection multiple de sujets"
         actions: "Actions sur la sélection"
+        change_category: "Définir la catégorie"
         close_topics: "Fermer les sujets"
         archive_topics: "Archiver les sujets"
+        notification_level: "Notifications"
         choose_new_category: "Choisissez la nouvelle catégorie pour les sujets :"
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
@@ -1355,6 +1358,7 @@ fr:
         later_this_week: "Plus tard cette semaine"
         this_weekend: "Ce weekend"
         next_week: "Semaine prochaine"
+        next_month: "Mois prochai"
         pick_date_and_time: "Sélectionner une date et heure"
         set_based_on_last_post: "Fermer par rapport au dernier message"
       publish_to_category:
@@ -1370,11 +1374,17 @@ fr:
         label: "Heures de fermeture automatique du sujet :"
         error: "Veuillez entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
+      auto_delete:
+        title: "Auto-suppression du sujet"
+      reminder:
+        title: "Me rappeler"
       status_update_notice:
         auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
         auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
+        auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}"
+        auto_reminder: "Vous serez rappelé sur ce sujet %{timeLeft}"
       auto_close_title: 'Paramètres de fermeture automatique'
       auto_close_immediate:
         one: "Le dernier message dans ce sujet est déjà vieux de 1 heure donc le sujet sera immédiatement fermé."
@@ -2131,6 +2141,8 @@ fr:
       granted_on: "Accordé le %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
+      allow_title: "Vous pouvez utiliser ce badge comme titre"
+      multiple_grant: "Vous pouvez le gagner de multiples fois"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"
@@ -2599,10 +2611,14 @@ fr:
           color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
           custom_sections: "Sections personnalisées :"
           theme_components: "Composants du thème :"
+          uploads: "Uploads"
+          variable_name: "Nom de variable SCSS:"
+          upload: "Upload"
           child_themes_check: "Thème incluant d'autres thèmes"
           css_html: "CSS/HTML personnalisé"
           edit_css_html: "Modifier le CSS/HTML"
           edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
+          delete_upload_confirm: "Supprimer cet upload? (Le thème CSS pourrait ne plus fonctionner!)"
           import_web_tip: "Dépôt contenant le thème"
           import_file_tip: "Fichier .dcstyle.json contenant le thème"
           about_theme: "À propos du thème"
@@ -3198,6 +3214,7 @@ fr:
         sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
+        class_name: "Nom de classe"
         path_whitelist: "Chemins autorisés"
         edit: "modifier"
         category: "Écrire dans la catégorie"

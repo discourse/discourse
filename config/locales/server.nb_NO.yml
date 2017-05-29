@@ -455,7 +455,6 @@ nb_NO:
       long_form: 'markerte dette som urelevant'
     spam:
       title: 'Spam'
-      description: 'Dette innlegget er reklame. Det er ikke nyttig eller relevant til emnet men av promoterende karakter.'
       long_form: 'markerte dette som spam'
       email_title: '"%{title}" ble rapportert som spam'
       email_body: "%{link}\n\n%{message}"

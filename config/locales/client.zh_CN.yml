@@ -990,6 +990,7 @@ zh_CN:
       cannot_see_mention:
         category: "你提到了{{userrname}}，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
         private: "你提到了{{userrname}}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
+      duplicate_link: "好像<b>@{{username}}</b>在<a href='{{post_url}}'>{{ago}}</a>中前的回复中已经发了你的链接 <b>{{domain}}</b> － 你想再次发表链接吗？"
       error:
         title_missing: "标题为空"
         title_too_short: "标题过短，至少 {{min}} 个字"
@@ -1311,6 +1312,30 @@ zh_CN:
         next_month: "下个月"
         pick_date_and_time: "选择日期和时间"
         set_based_on_last_post: "按照最新帖子关闭"
+      publish_to_category:
+        title: "计划发布"
+      temp_open:
+        title: "临时开启"
+      auto_reopen:
+        title: "自动开启主题"
+      temp_close:
+        title: "临时关闭"
+      auto_close:
+        title: "自动关闭主题"
+        label: "自动关闭于几小时后："
+        error: "请输入一个有效值。"
+        based_on_last_post: "最后回复发布之后的多少时间内不自动关闭主题。"
+      auto_delete:
+        title: "自动删除主题"
+      reminder:
+        title: "提醒我"
+      status_update_notice:
+        auto_open: "本主题将在%{timeLeft}自动开启。"
+        auto_close: "本主题将在%{timeLeft}自动关闭。"
+        auto_publish_to_category: "主题%{timeLeft}将发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
+        auto_close_based_on_last_post: "主题在%{duration}内没有新回复后将被关闭。"
+        auto_delete: "主题在%{timeLeft}后将被自动删除。"
+        auto_reminder: "你将在%{timeLeft}后收到该主题的提醒。"
       auto_close_title: '自动关闭设置'
       auto_close_immediate:
         other: "主题中的最后一帖是 %{hours} 小时前发出的，所以主题将会立即关闭。"
@@ -1340,6 +1365,10 @@ zh_CN:
           '3_2': '因为你正在监看该主题，你将会收到通知。'
           '3_1': '因为你创建了这个主题，你将会收到通知。'
           '3': '因为你正在监看该主题，你将会收到通知。'
+          '2_8': '因为你追踪了该分类，所以你会看到新回复的数量。'
+          '2_4': '因为你回复过该主题，所以你会看到新回复的数量。'
+          '2_2': '因为你追踪了该主题，所以你会看到新回复的数量。'
+          '2': '因为你<a href="/u/{{username}}/preferences">读过该主题</a>，所以你会看到新回复的数量。'
           '1_2': '如果有人@你或回复你，将通知你。'
           '1': '如果有人@你或回复你，将通知你。'
           '0_7': '你将忽略关于该分类的所有通知。'
@@ -1375,6 +1404,7 @@ zh_CN:
         open: "打开主题"
         close: "关闭主题"
         multi_select: "选择帖子..."
+        timed_update: "设置主题计时器..."
         pin: "置顶主题..."
         unpin: "取消置顶主题..."
         unarchive: "取消存档主题"
@@ -1489,6 +1519,7 @@ zh_CN:
           other: "请选择<b>{{old_user}}</b>创建的 {{count}} 个帖子的新作者。"
         instructions_warn: "要注意关于帖子的通知不会被转移给新作者。<br>警告：目前，与帖子关联的任何数据都不会转移至新用户。谨慎使用。"
       change_timestamp:
+        title: "修改时间"
         action: "修改时间"
         invalid_timestamp: "不能是未来的时间。"
         error: "更改主题时间时发生错误。"
@@ -1671,6 +1702,18 @@ zh_CN:
             button: 'HTML'
           side_by_side_markdown:
             title: "并排显示源码，分开标示增加和删除的内容"
+            button: '原始'
+      raw_email:
+        displays:
+          raw:
+            title: "显示原始邮件地址"
+            button: '原始'
+          text_part:
+            title: "显示邮件的文字部分"
+            button: '文字'
+          html_part:
+            title: "显示邮件的 HTML 部分"
+            button: 'HTML'
     category:
       can: '能够&hellip; '
       none: '（未分类）'
@@ -1721,7 +1764,13 @@ zh_CN:
       email_in_disabled_click: '启用“邮件发表”设置。'
       suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
+      num_featured_topics: "分类页面上显示的主题数量："
+      subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
       all_topics_wiki: "默认将新主题设为维基主题"
+      subcategory_list_style: "子分类列表样式："
+      sort_order: "列表样式，按排序："
+      default_view: "默认主题列表："
+      default_top_period: "默认热门时长："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
@@ -1759,6 +1808,11 @@ zh_CN:
         created: "创建"
       sort_ascending: '升序'
       sort_descending: '降序'
+      subcategory_list_styles:
+        rows: "行"
+        rows_with_featured_topics: "有推荐主题的行"
+        boxes: "盒子"
+        boxes_with_featured_topics: "有推荐主题的盒子"
     flagging:
       title: '感谢你帮助我们建设文明社区！'
       action: '标记帖子'
@@ -1851,6 +1905,7 @@ zh_CN:
     history: "历史"
     changed_by: "由 {{author}}"
     raw_email:
+      title: "进站邮件"
       not_available: "不可用！"
     categories_list: "分类列表"
     filters:
@@ -1987,6 +2042,8 @@ zh_CN:
       granted_on: "授予于%{date}"
       others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
+      allow_title: "你可以将该徽章设为头衔"
+      multiple_grant: "可多次赢得"
       badge_count:
         other: "%{count} Badges"
       more_badges:
@@ -2224,6 +2281,7 @@ zh_CN:
         add_members: "添加成员"
         custom: "定制"
         bulk_complete: "用户已被添加到群组。"
+        bulk_complete_users_not_added: "这些用户还没有被添加（请确保他们已经有账户了）："
         bulk: "批量添加到群组"
         bulk_paste: "粘贴用户名邮件列表，一行一个："
         bulk_select: "( 选择一个群组 )"
@@ -2236,6 +2294,8 @@ zh_CN:
         add_owners: 添加所有者
         incoming_email: "自定义进站电子邮件地址"
         incoming_email_placeholder: "输入邮箱地址"
+        none_selected: "选择一个小组以开始"
+        no_custom_groups: "创建一个自定义小组"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"
@@ -2271,6 +2331,7 @@ zh_CN:
         event_type_missing: "你必须设置一个事件类型。"
         content_type: "内容格式"
         secret: "密钥"
+        event_chooser: "哪些事件可以触发该 webhook？"
         wildcard_event: "发送任何事件。"
         individual_event: "选择各个事件。"
         verify_certificate: "检查 Payload URL 的 TLS 证书"
@@ -2368,6 +2429,8 @@ zh_CN:
             without_uploads: "是（不包括文件）"
           download:
             label: "下载"
+            title: "发送含下载链接的邮件"
+            alert: "包含下载备份链接的邮件已经发送给你了。\b"
           destroy:
             title: "删除备份"
             confirm: "你确定要删除该备份吗？"
@@ -2399,15 +2462,21 @@ zh_CN:
         title: "定制"
         long_title: "站点定制"
         preview: "预览"
+        explain_preview: "看看站点应用该主题后的样子"
         save: "保存"
         new: "新建"
         new_style: "新样式"
         import: "导入"
         delete: "删除"
+        delete_confirm: "删除该主题？"
         about: "修改站点的 CSS 样式表和 HTML 头部。添加一个自定义方案开始。"
         color: "颜色"
         opacity: "透明度"
         copy: "复制"
+        copy_to_clipboard: "复制到剪贴板"
+        copied_to_clipboard: "已复制到剪贴板"
+        copy_to_clipboard_error: "复制到剪贴板时出错"
+        theme_owner: "禁止编辑，拥有者："
         email_templates:
           title: "邮件模板"
           subject: "主题"
@@ -2417,6 +2486,35 @@ zh_CN:
           revert: "撤销更变"
           revert_confirm: "你确定要撤销你的更变吗？"
         theme:
+          import_theme: "导入主题"
+          customize_desc: "定制："
+          title: "主题"
+          long_title: "修改你站点的色彩、CSS 和 HTML"
+          edit: "编辑"
+          edit_confirm: "这是一个远程主题。如果你编辑了 CSS/HTML，在下一次更新该主题后这些自定义项目将会被删除。"
+          common: "通用"
+          desktop: "桌面"
+          mobile: "移动"
+          preview: "预览"
+          is_default: "主题默认启用"
+          user_selectable: "用户可选择主题"
+          color_scheme: "色彩方案"
+          color_scheme_select: "选择主题使用的颜色"
+          custom_sections: "自定义段落："
+          theme_components: "主题组件"
+          uploads: "上传"
+          no_uploads: "你可以上传与主题相关的组件，例如字体和图片"
+          add_upload: "添加上传"
+          upload_file_tip: "选择资源上传（png、woff2，其他...）"
+          variable_name: "SCSS 变量名："
+          upload: "上传"
+          child_themes_check: "主题包括其他子类主题"
+          css_html: "自定义 CSS/HTML"
+          edit_css_html: "编辑 CSS/HTML"
+          edit_css_html_help: "你还未编辑任何 CSS 或 HTML"
+          delete_upload_confirm: "删除这个上传？（主题 CSS 可能会出问题！）"
+          import_web_tip: "目录包含主题"
+          import_file_tip: ".dcstyle.json 文件包含主题"
           about_theme: "关于主题"
           license: "许可证"
           component_of: "主题是其组件："
@@ -2436,6 +2534,18 @@ zh_CN:
           after_header:
             text: "添加头部"
             title: "输入显示在所有页面的头部之后的 HTML"
+          footer:
+            text: "尾部"
+            title: "输入显示在页面尾部后的 HTML"
+          embedded_scss:
+            text: "嵌入使用的 CSS"
+            title: "输入用于嵌入评论的自定义 CSS "
+          head_tag:
+            text: "</head>"
+            title: "将在 </head> 标签前插入的 HTML"
+          body_tag:
+            text: "</body>"
+            title: "将在 </body> 标签前插入的 HTML"
         colors:
           select_base:
             title: "选择基础颜色方案"
@@ -2443,6 +2553,7 @@ zh_CN:
           title: "颜色"
           edit: "修改颜色方案"
           long_title: "颜色方案"
+          about: "修改你主题使用的颜色。创建新的色彩方案以开始。"
           new_name: "新的颜色方案"
           copy_name_prefix: "复制于"
           delete_confirm: "删除这个颜色方案？"
@@ -2779,6 +2890,7 @@ zh_CN:
         reset_bounce_score:
           label: "重置"
           title: "重置累计退信分值为 0"
+        visit_profile: "访问<a href='%{url}'>用户设置页面</a>编辑他们的个人页"
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
@@ -3007,6 +3119,7 @@ zh_CN:
         embed_classname_whitelist: "允许 CSS class 名称"
         feed_polling_enabled: "通过 RSS/ATOM 导入帖子"
         feed_polling_url: "用于抓取的 RSS/ATOM 流的 URL"
+        feed_polling_frequency_mins: "消息轮询频率（分钟）"
         save: "保存嵌入设置"
       permalink:
         title: "永久链接"

@@ -327,7 +327,6 @@ sq:
       long_form: 'sinjalizoi këtë postim si jashtë teme'
     spam:
       title: 'Spam'
-      description: 'Ky postim është një njoftim reklamues. Nuk është i vlefshëm dhe nuk ka lidhje me temën e tanishme, por ka natyrë promovuese.'
       long_form: 'sinjalizoi këtë postim si spam'
       email_title: '"%{title}" u sinjalizua si spam'
       email_body: "%{link}\n\n%{message}"
@@ -813,7 +812,6 @@ sq:
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
-    invites_per_page: "Default invites shown on the user page."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
@@ -979,16 +977,6 @@ sq:
         Për udhëzime të mëtejshme, shikoni [rregullat e komunitetit](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
-      text_body_template: |
-        Faleminderit që iu bashkuat %{site_name}, dhe mirësevini!
-
-        %{new_user_tips}
-
-        Ne besojmë në [sjelljen e qytetëruar të komunitetit](%{base_url}/guidelines) kurdoherë.
-
-        Shijojeni qëndrimin tuaj!
-
-        (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
     welcome_invite:
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:

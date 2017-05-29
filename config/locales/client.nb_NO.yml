@@ -518,6 +518,7 @@ nb_NO:
       first_notification: "Ditt første varsel! Velg det for å komme i gang."
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
       dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleser ikonet"
+      theme_default_on_all_devices: "Gjør dette til forvalgt drakt på alle mine enheter"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       change: "Endre"
@@ -754,6 +755,7 @@ nb_NO:
         rescinded: "Invitasjon fjernet"
         reinvite: "Send invitasjon igjen"
         reinvite_all: "Send alle invitasjoner på nytt"
+        reinvite_all_confirm: "Er du sikker på at du vil sende ut alle invitasjoner igjen?"
         reinvited: "Invitasjon sendt igjen"
         reinvited_all: "Alle invitasjoner sendt på nytt!"
         time_read: "Lesetid"
@@ -1244,8 +1246,10 @@ nb_NO:
         dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"
+        change_category: "Velg kategori"
         close_topics: "Lukk Emner"
         archive_topics: "Arkiverte emner"
+        notification_level: "Varsler"
         choose_new_category: "Velg den nye kategorien for emnene:"
         selected:
           one: "Du har valgt <b>1</b> emne."
@@ -1354,6 +1358,7 @@ nb_NO:
         later_this_week: "Senere denne uken"
         this_weekend: "Denne uken"
         next_week: "Neste uke"
+        next_month: "Neste måned"
         pick_date_and_time: "Velg dato og tid"
         set_based_on_last_post: "Lukk basert på siste post"
       publish_to_category:
@@ -1369,11 +1374,17 @@ nb_NO:
         label: "Tidsbolk for autolukking av emne:"
         error: "Skriv inn en gyldig verdi."
         based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
+      auto_delete:
+        title: "Auto-slett emne"
+      reminder:
+        title: "Påminn meg"
       status_update_notice:
         auto_open: "Dette emnet vil automatisk åpnes %{timeLeft}."
         auto_close: "Dette emnet vil automatisk lukkes %{timeLeft}."
         auto_publish_to_category: "Dette emnet vil bli publisert til <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Dette emnet vil bli lukket %{duration} etter det siste innlegget."
+        auto_delete: "Dette emnet vil automatisk slettes %{timeLeft}."
+        auto_reminder: "Du vil bli påminnet om dette emnet %{timeLeft}."
       auto_close_title: 'Auto-lukk innstillinger'
       auto_close_immediate:
         one: "Det siste innlegget i emnet er allerede en time gammelt, så emnet vil stenges umiddelbart."
@@ -2130,6 +2141,8 @@ nb_NO:
       granted_on: "Tildelt %{date}"
       others_count: "(%{count}) andre har dette merket"
       title: Merker
+      allow_title: "Du kan bruke dette merket som tittel"
+      multiple_grant: "Du kan oppnå dette flere ganger"
       badge_count:
         one: "Étt merke"
         other: "%{count} Merker"
@@ -2597,10 +2610,15 @@ nb_NO:
           color_scheme_select: "Velg farger å bruke i drakten"
           custom_sections: "Egendefinerte valg:"
           theme_components: "Drakt-komponenter"
+          uploads: "Opplastinger"
+          add_upload: "Legg til opplasting"
+          variable_name: "Variabelnavn for SCSS:"
+          upload: "Last opp"
           child_themes_check: "Drakten inneholder andre underdrakter"
           css_html: "Egendefinert CSS/HTML"
           edit_css_html: "Rediger CSS/HTML"
           edit_css_html_help: "Du har ikke redigert noe CSS eller HTML"
+          delete_upload_confirm: "Slett denne opplastingen? (Draktens CSS kan slutte å virke!)"
           import_web_tip: "Pakkebrønn inneholdende drakt"
           import_file_tip: ".dcstyle.json-fil inneholdende drakt"
           about_theme: "Om drakt"
@@ -2986,6 +3004,7 @@ nb_NO:
         reset_bounce_score:
           label: "Tilbakestill"
           title: "Sett antall tilbakesendinger tilbake til 0"
+        visit_profile: "Besøk <a href='%{url}'>denne brukerinnstillingssiden</a> for å redigere profilen deres"
         deactivate_explanation: "En deaktivert bruker må re-validere sin e-post."
         suspended_explanation: "En bannlyst bruker kan ikke logge inn."
         block_explanation: "En blokkert bruker kan ikke poste eller starte emner."
@@ -3196,6 +3215,7 @@ nb_NO:
         sample: "Bruk følgende HTML-kode på siden din for å bygge inn Discourse-emner. Erstatt <b>ERSTATT_MEG</b> med kanonisk nettadresse fra siden du bygger den inn i."
         title: "Innbygging"
         host: "Tillatte verter"
+        class_name: "Klassenavn"
         path_whitelist: "Tillatte stier"
         edit: "rediger"
         category: "Legg til innlegg i kategori"

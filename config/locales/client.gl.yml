@@ -101,6 +101,7 @@ gl:
           other: "%{count} anos despois"
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
+      placeholder: Escolla unha data
     share:
       topic: 'compartir unha ligazón a este tema'
       post: 'publicación %{postNumber}'

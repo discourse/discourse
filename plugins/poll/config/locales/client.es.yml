@@ -20,14 +20,14 @@ es:
       multiple:
         help:
           at_least_min_options:
-            one: "Elige al menos <strong>1</strong> opción"
-            other: "Elige al menos <strong>%{count}</strong> opciones"
+            one: "Escoge al menos <strong>1</strong> opción"
+            other: "Escoge al menos <strong>%{count}</strong> opciones"
           up_to_max_options:
-            one: "Elige <strong>1</strong> opción"
-            other: "Elige hasta <strong>%{count}</strong> opciones"
+            one: "Escoge <strong>1</strong> opción"
+            other: "Escoge hasta <strong>%{count}</strong> opciones"
           x_options:
-            one: "Elige <strong>1</strong> opción"
-            other: "Elige <strong>%{count}</strong> opciones"
+            one: "Escoge <strong>1</strong> opción"
+            other: "Escoge <strong>%{count}</strong> opciones"
           between_min_and_max_options: "Elige entre <strong>%{min}</strong> y <strong>%{max}</strong> opciones"
       cast-votes:
         title: "Votar"
@@ -39,21 +39,21 @@ es:
         title: "Volver a los votos"
         label: "Ocultar resultados"
       open:
-        title: "Abrir encuesta"
+        title: "Abrir la encuesta"
         label: "Abrir"
         confirm: "¿Seguro que quieres abrir esta encuesta?"
       close:
         title: "Cerrar la encuesta"
         label: "Cerrar"
         confirm: "¿Seguro que quieres cerrar esta encuesta?"
-      error_while_toggling_status: "Lo sentimos, hubo un error al cambiar el estado de esta encuesta."
-      error_while_casting_votes: "Lo sentimos, hubo un error al registrar tus votos."
-      error_while_fetching_voters: "Lo sentimos, hubo un error al mostrar los votantes."
+      error_while_toggling_status: "Lo sentimos, ha ocurrido un error al cambiar el estado de esta encuesta."
+      error_while_casting_votes: "Lo sentimos, ha ocurrido un error al registrar tus votos."
+      error_while_fetching_voters: "Lo sentimos, ha ocurrido un error al mostrar los votantes."
       ui_builder:
-        title: Crear Encuesta
-        insert: Insertar Encuesta
+        title: Crear encuesta
+        insert: Insertar encuesta
         help:
-          options_count: Introducir al menos 2 opciones
+          options_count: Introduce al menos 2 opciones
           invalid_values: El valor mínimo debe ser menor que el valor máximo.
         poll_type:
           label: Tipo
@@ -67,4 +67,4 @@ es:
         poll_public:
           label: Mostrar quién votó
         poll_options:
-          label: Introducir una opción de la encuesta por línea
+          label: Introduce una opción de la encuesta por línea

@@ -424,16 +424,6 @@ gl:
   system_messages:
     welcome_user:
       subject_template: "Benvido/a a %{site_name}!"
-      text_body_template: |
-        Grazas por unirte %{site_name}, e benvido/a!
-
-        %{new_user_tips}
-
-        Cremos nun [comportamento civilizado da comunidade](%{base_url}/guidelines) en todo momento.
-
-        Goza da túa estancia!
-
-        (Se precisas comunicarte cos [membros do equipo](%{base_url}/about) como novo usuario responde a esta mensaxe.)
     welcome_invite:
       subject_template: "Benvido/a a %{site_name}!"
     backup_succeeded:
