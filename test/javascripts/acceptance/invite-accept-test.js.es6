@@ -1,7 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
 import PreloadStore from 'preload-store';
 
-acceptance("Invite Accept");
+acceptance("Invite Accept", {
+  settings: {
+    full_name_required: true
+  }
+});
 
 test("Invite Acceptance Page", () => {
   PreloadStore.store('invite_info', {
@@ -14,7 +18,13 @@ test("Invite Acceptance Page", () => {
   andThen(() => {
     ok(exists("#new-account-username"), "shows the username input");
     equal(find("#new-account-username").val(), "invited", "username is prefilled");
+    ok(exists("#new-account-name"), "shows the name input");
     ok(exists("#new-account-password"), "shows the password input");
+    ok(exists('.invites-show .btn-primary:disabled'), 'submit is disabled because name is not filled');
+  });
+
+  fillIn("#new-account-name", 'John Doe');
+  andThen(() => {
     not(exists('.invites-show .btn-primary:disabled'), 'submit is enabled');
   });
 
