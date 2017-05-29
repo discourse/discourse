@@ -1099,6 +1099,8 @@ en:
       your_email: "Your account email address is <b>%{email}</b>."
       accept_invite: "Accept Invitation"
       success: "Your account has been created and you're now logged in."
+      name_label: "Name"
+      name_label_optional: "Name (optional)"
       password_label: "Set Password (optional)"
 
     password_reset:

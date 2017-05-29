@@ -40,7 +40,7 @@ export default Ember.Mixin.create({
     }
 
     // If too short
-    if (accountUsername.length < Discourse.SiteSettings.min_username_length) {
+    if (accountUsername.length < this.siteSettings.min_username_length) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.username.too_short')
