@@ -1,1 +1,42 @@
-id: {}
+id:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Aktifkan Discourse Narrative Bot'
+    disable_discourse_narrative_bot_welcome_post: "Matikan kiriman selamat datang dari Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Nama Pengguna yang diabaikan oleh Discourse Narrative Bot"
+    discourse_narrative_bot_disable_public_replies: "Matikan balasan publik oleh Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Ketik kiriman selamat datang yang akan dikirim oleh Discourse Narrative Bot"
+  badges:
+    certified:
+      name: Tersertifikasi
+      description: "Telah menyelesaikan panduan pengguna baru kami"
+  discourse_narrative_bot:
+    quote:
+      '1':
+        author: "Albert Einstein"
+      '2':
+        author: "Mahatma Gandhi"
+      '3':
+        author: "Dr Seuss"
+      '4':
+        author: "Charles-Guillaume Étienne"
+      '5':
+        author: "Theodore Roosevelt"
+      '6':
+        author: "Forrest Gump’s Mom"
+      '7':
+        author: "Neil Armstrong"
+      '8':
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"
+      '10':
+        author: "Napoleon Hill"
+    magic_8_ball:
+      answers:
+        '9': "Ya"
+    track_selector:
+      reset_trigger: 'mulai'
+      skip_trigger: 'lewati'
+    advanced_user_narrative:
+      recover:
+        deleted_post_raw: 'Kenapa @%{discobot_username} menghapus kiriman saya? :anguished:'

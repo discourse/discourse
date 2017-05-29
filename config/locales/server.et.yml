@@ -490,7 +490,6 @@ et:
       long_form: 'tähistasin selle kui teemavälise'
     spam:
       title: 'Spämm'
-      description: 'See postitus on reklaam. Käesoleva vestlusega seoses ei ole see ei kasulik ega asjakohane vaid pigem millegi reklaamimine.'
       long_form: 'tähistasin selle kui spämmi'
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"

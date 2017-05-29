@@ -566,7 +566,6 @@ nl:
       long_form: 'heeft dit als off-topic gemarkeerd'
     spam:
       title: 'Spam'
-      description: 'Dit bericht is een advertentie. Het is niet nuttig of relevant voor het huidige topic, maar promotioneel van aard.'
       long_form: 'heeft dit als spam gemarkeerd'
       email_title: '''%{title}'' is als spam gemarkeerd'
       email_body: "%{link}\n\n%{message}"
@@ -1148,7 +1147,6 @@ nl:
     enable_names: "Toon de volledige naam van de gebruiker op hun profiel, gebruikerskaart en e-mails. Scahkel uit om volledige naam overal te verbergen."
     display_name_on_posts: "Laat de volledige naam van een gebruiker bij zijn berichten zien, na de @gebruikersnaam"
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt zal een tijdsgat worden getoond in het topic."
-    invites_per_page: "Standaard uitnodigingen getoond op de gebruikerspagina."
     short_progress_text_threshold: "Als het aantal berichten in een topic meer is dan dit aantal zal de voortgangsbalk alleen het nummer van het huidige bericht tonen. Als je de breedte van de voortgangsbalk verandert, moet je dit getal misschien ook aanpassen."
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Wanneer iemand begint met antwoorden op een topic waar het laatste antwoord ouder is dan dit aantal dagen, zal er een waarschuwing worden weergegeven. Kan worden uitsgechakeld door op 0 te zetten."

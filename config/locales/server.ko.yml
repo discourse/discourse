@@ -333,7 +333,6 @@ ko:
       long_form: '오프 글타래으로 신고하기'
     spam:
       title: '스팸'
-      description: '이 글은 광고성으로 판단되어집니다. 이 글은 현재 대화에서 유용하지도, 관련되지 않습니다.'
       long_form: '스팸으로 신고하기'
       email_title: '"%{title}" 스팸으로 지목됨'
       email_body: "%{link}\n\n%{message}"
@@ -797,7 +796,6 @@ ko:
     enable_names: "사용자의 실명을 프로필, 사용자카드, 이메일에서 표시함. 실명을 표시하지 않으려면 체크를 해제하세요."
     display_name_on_posts: "글에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     show_time_gap_days: "두 글의 일차를 보여주기 위해 두 글이 떨어져 있어야 할 일수"
-    invites_per_page: "사용자 페이지에 방문자를 표시합니다."
     short_progress_text_threshold: "글타래의 글 개수가 이 값을 넘어서면, 글 프로그래스바는 오직 현재 글 넘버만 보여준다. 만약 글 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야합니다."
     default_code_lang: "기본 programming language syntax highlighting은 GitHub code blocks이 적용된다. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
@@ -928,16 +926,6 @@ ko:
   system_messages:
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-      text_body_template: |
-        %{site_name}에 가입해주셔서 감사합니다, 환영합니다!
-
-        %{new_user_tips}
-
-        우리는 [문화시민의 커뮤니티 활동지침](%{base_url}/guidelines)을 항상 따릅니다.
-
-        커뮤니티를 즐겨주세요!
-
-        (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기 주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
     backup_succeeded:

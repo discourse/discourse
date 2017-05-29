@@ -1,1 +1,49 @@
-pt_BR: {}
+pt_BR:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Habilitar o Robô de Narrativas do Discourse'
+    disable_discourse_narrative_bot_welcome_post: "Desabilitar a mensagem de boas vindas do Robô de Narrativas do Discourse"
+    discourse_narrative_bot_ignored_usernames: "Nomes de Usuário que o Robô de Narrativas do Discourse deve ignorar"
+    discourse_narrative_bot_disable_public_replies: "Desabilitar respostas públicas do Robô de Narrativas do Discourse"
+    discourse_narrative_bot_welcome_post_type: "Tipo de mensagem de boas vindas que o Robô de Narrativas do Discourse deve enviar"
+  badges:
+    certified:
+      name: Certificado
+      description: "Completou o nosso tutorial de \"Novo Usuário\""
+      long_description: |
+        Este emblema é adquirido após finalizar com sucesso o tutorial interativo da nova interface de usuário. Você tomou a iniciativa de aprender as ferramentas básicas de discussão, e agora você está certificado!
+    licensed:
+      name: Licenciado
+      description: "Completou nosso tutorial \"Usuário Avançado\""
+      long_description: |
+        Este emblema é adquirido após finalizar com sucesso o tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão -e agora você está totalmente licenciado!
+  discourse_narrative_bot:
+    dice:
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "citação"
+      '1':
+        author: "Albert Einstein"
+      '2':
+        quote: "Você deve ser a mudança que quer ver no mundo."
+        author: "Mahatma Gandhi"
+      '3':
+        author: "Dr Seuss"
+      '4':
+        quote: "Se você quer que algo seja feito corretamente, faça você mesmo."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        author: "Theodore Roosevelt"
+      '6':
+        author: "Mãe do Forrest Gump"
+      '7':
+        author: "Neil Armstrong"
+      '8':
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"
+      '10':
+        author: "Napoleon Hill"
+    magic_8_ball:
+      result: |-
+        > :crystal_ball: %{result}

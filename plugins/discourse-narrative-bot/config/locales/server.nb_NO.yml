@@ -1,1 +1,23 @@
-nb_NO: {}
+nb_NO:
+  discourse_narrative_bot:
+    quote:
+      trigger: "sitat"
+      '1':
+        author: "Albert Einstein"
+      '2':
+        author: "Mahatma Gandhi"
+      '5':
+        author: "Theodore Roosevelt"
+    magic_8_ball:
+      answers:
+        '9': "Ja"
+        '12': "Spør igjen senere"
+    track_selector:
+      reset_trigger: 'start'
+      skip_trigger: 'hopp over'
+      help_trigger: 'vis hjelp'
+    advanced_user_narrative:
+      reset_trigger: 'avansert bruker'
+      details:
+        reply: |-
+          Bra jobbet — ditt _detaljarbeid_ er beundringsverdig!

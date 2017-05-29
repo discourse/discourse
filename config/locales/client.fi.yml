@@ -1032,7 +1032,7 @@ fi:
       cannot_see_mention:
         category: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
         private: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet tulee kutsua tähän yksityiskeskusteluun."
-      duplicate_link: "Näyttää siltä, että <b>@{{username}}</b> on jo lähettänyt saman linkin kohteeseen <b>{{domain}}</b> ketjun <a href='{{post_url}}'>aiemmassa viestissä {{ago}}</a> – oletko varma, että haluat lähettää sen uudestaan?"
+      duplicate_link: "Näyttää siltä, että <b>@{{username}}</b> linkitti jo samaan kohteeseen <b>{{domain}}</b> ketjun <a href='{{post_url}}'>aiemmassa viestissä {{ago}}</a> – oletko varma, että haluat lähettää sen uudestaan?"
       error:
         title_missing: "Otsikko on pakollinen"
         title_too_short: "Otsikon täytyy olla vähintään {{min}} merkkiä pitkä"

@@ -74,14 +74,14 @@ es:
       greater_than_or_equal_to: debe ser igual o más grande que %{count}
       has_already_been_used: "ya se está utilizando"
       inclusion: no está incluido en la lista
-      invalid: no es válido
+      invalid: es inválido
       is_invalid: "parece poco claro, es una oración completa?"
       contains_censored_words: "contiene las siguientes palabras censuradas: %{censored_words}"
       matches_censored_pattern: "contiene las siguientes palabras que coinciden con el regexp de censuras: %{censored_words}"
       less_than: debe ser menor que %{count}
       less_than_or_equal_to: debe ser menor o igual que %{count}
       not_a_number: no es un número
-      not_an_integer: debe ser un valor entero
+      not_an_integer: debe ser un número entero
       odd: debe ser impar
       record_invalid: 'Error en la validación: %{errors}'
       restrict_dependent_destroy:
@@ -116,14 +116,14 @@ es:
     user_exists: "No hace falta invitar a <b>%{email}</b>, ¡ya <a href='/u/%{username}/summary'>tiene una cuenta</a>!"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
-    error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo más tarde de nuevo."
+    error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo de nuevo más tarde."
   topic_invite:
     user_exists: "Lo sentimos, ese usuario ya ha sido invitado. Solo se puede invitar una vez a un usuario a un tema."
   backup:
-    operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
-    backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
+    operation_already_running: "Actualmente ya se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
+    backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser un .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
-    invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son a-z 0-9 . - _."
+    invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son: a-z 0-9 . - _."
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
@@ -151,15 +151,15 @@ es:
     replies:
       one: "1 respuesta"
       other: "%{count} respuestas"
-  no_mentions_allowed: "Lo sentimos, pero no puedes mencionar a otros usuarios."
+  no_mentions_allowed: "Lo sentimos, no puedes mencionar a otros usuarios."
   too_many_mentions:
     one: "Lo sentimos, solo puedes mencionar a un usuario en un post."
-    other: "Lo sentimos, pero solo puedes mencionar a %{count} usuarios en un post."
-  no_mentions_allowed_newuser: "Lo sentimos, pero los usuarios nuevos no pueden mencionar a otros usuarios."
+    other: "Lo sentimos, solo puedes mencionar a %{count} usuarios en un post."
+  no_mentions_allowed_newuser: "Lo sentimos, los usuarios nuevos no pueden mencionar a otros usuarios."
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post."
-    other: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post."
-  no_images_allowed: "Lo sentimos, pero los usuarios nuevos no pueden poner imágenes en los mensajes."
+    other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post."
+  no_images_allowed: "Lo sentimos, los usuarios nuevos no pueden poner imágenes en los mensajes."
   too_many_images:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden poner una imagen por post."
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} imágenes en un post."
@@ -567,40 +567,48 @@ es:
     off_topic:
       title: 'Off-Topic'
       description: 'Este post se desvía demasiado o no es relevante para el tema en cuestión (definido por el título del tema y su primer post), probablemente debería ser movido a otro hilo.'
+      short_description: 'No tiene relación con el tema'
       long_form: 'reportado como off-topic'
     spam:
       title: 'Spam'
-      description: 'Este post es un anuncio publicitario. No es útil ni relevante para este tema, sino de naturaleza promocional.'
+      description: 'Este post es un anuncio o vandalismo. No es útil ni relevante para el tema actual.'
+      short_description: 'Es un anuncio o vandalismo.'
       long_form: 'reportado como spam'
       email_title: '"%{title}" fue reportado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropiado'
       description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="/guidelines">nuestras directrices de comunidad</a>.'
+      short_description: 'Una violación de <a href="/guidelines">nuestras directrices de la comunidad</a>'
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Enviar un mensaje a @{{username}}'
       description: 'Quiero hablar con esta persona de forma directa y privada sobre su mensaje.'
+      short_description: 'Quiero hablar con esta persona de forma directa y privada sobre su mensaje.'
       long_form: 'usuario notificado vía mensaje'
       email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Notificar a los moderadores"
       description: 'Este mensaje requiere la atención del equipo de moderación por una razón no especificada arriba.'
+      short_description: 'Requiere la atención de un moderador por otra razón'
       long_form: 'reportó esto'
       email_title: 'Un mensaje en "%{title}" requiere atención del staf'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Marcador'
       description: 'Marca este post'
+      short_description: 'Añade a marcadores este post'
       long_form: 'Post marcado'
     like:
       title: 'Like'
       description: 'Te gusta este post'
+      short_description: 'Me gusta este post'
       long_form: 'Te gusta esto'
     vote:
       title: 'Vota'
       description: 'Vota por este post'
+      short_description: 'Votar este post'
       long_form: 'Votado para este post'
   user_activity:
     no_bookmarks:
@@ -1245,7 +1253,6 @@ es:
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
-    invites_per_page: "Número de invitaciones por defecto mostradas en la página de perfil del usuario."
     short_progress_text_threshold: "Después de que un número de posts en un tema alcance esta cifra, la barra de progreso sólo mostrará el número del post actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
@@ -1733,42 +1740,25 @@ es:
         Sin embargo, si el mensaje es ocultado por la comunidad una segunda vez, seguirá ocultado hasta que el staff lo revise – y se podrían tomar medidas incluida la posible suspensión de tu cuenta.
 
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Para unos trucos sobre cómo empezar como usuario, echa un vistazo a esta [entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Conforme vayas participando, te iremos conociendo, y tus limitaciones como nuevo usuario serán levantadas. Con el tiempo, ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar y mantener la comunidad unida.
     welcome_user:
       title: "Bienvenido Usuario"
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
-        ¡Gracias por unirte a %{site_name}! ¡Te damos la bienvenida!
+        Gracias por unirte a %{site_name}, ¡te damos la bienvenida!
 
         %{new_user_tips}
 
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
+        Creemos en una [comunidad civilizada](%{base_url}/guidelines) en todo momento.
 
         ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     welcome_invite:
       title: "Bienvenido Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
-
-        Hemos creado automáticamente una nueva cuenta para ti: **%{username}**. Puedes cambiar tu nombre de usuario en cualquier momento visitando [tu perfil][prefs].
-
-        Para iniciar sesión en adelante:
-
-        1. Usa siempre la **misma dirección de correo** en la que recibiste tu invitación original. ¡De otra manera no seremos capaces de reconocer que eres tú!
-
-        2. Crea una contraseña unica para [tu perfil de usuario][prefs], y úsala para iniciar sesión.
-
-        %{new_user_tips}
-
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
-
-        ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte por privado con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Copia de seguridad completada con éxito"
       subject_template: "La copia de seguridad se completo exitosamente"
@@ -2077,6 +2067,12 @@ es:
     new_user_of_the_month:
       title: "¡Eres un usuario nuevo del mes!"
       subject_template: "¡Eres un usuario nuevo del mes!"
+      text_body_template: |
+        Enhorabuena, has ganado el **premio al nuevo usuario del mes de %{month_year}** . :trophy:
+
+        Este distintivo solo se le concede a dos usuarios nuevos al mes, y será visible para siempre en [tu perfil](/my/badges).
+
+        Has conseguido ser un miembro valioso de nuestra comunidad. Gracias por unirte, ¡y sigue así!
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2090,8 +2086,8 @@ es:
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
-      one: "ADVERTENCIA: has superado el límite diario de emails. Las próximas notificaciones de emails serán suprimidas."
-      other: "ADVERTENCIA: has superado el límite de %{count} emails diarios. Las próximas notificaciones de emails serán suprimidas."
+      one: "Un apunte: enviamos como mucho 1 email diario. Comprueba la página para ver si hay alguna cosa de la  que no te hayas enterado."
+      other: "Un apunte: enviamos como mucho %{count} emails diarios. Comprueba la página para ver si hay alguna cosa de la que no te hayas enterado."
     in_reply_to: "En respuesta a"
     unsubscribe:
       title: "Darse de baja"
@@ -2343,23 +2339,6 @@ es:
     signup_after_approval:
       title: "Entra después de ser aprobado"
       subject_template: "¡Tu solicitud ha sido aprobada en %{site_name}!"
-      text_body_template: |
-        ¡Te damos la bienvenida a %{site_name}!
-
-        Un miembro del staff ha aprobado tu cuenta de %{site_name}.
-
-        Haz clic en el siguiente enlace para confirmar y activar tu nueva cuenta:
-        %{base_url}/u/activate-account/%{email_token}
-
-        Si el enlace de arriba no funciona, prueba a copiarlo y pegarlo en la barra de direcciones de tu navegador de internet.
-
-        %{new_user_tips}
-
-        Creemos en una [comunidad con comportamiento civilizado](%{base_url}/guidelines) en todo momento.
-
-        ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte con algún [miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     signup:
       title: "Registrate"
       subject_template: "[%{email_prefix}] Confirma tu nueva cuenta"
@@ -2425,6 +2404,7 @@ es:
     no_echo_mailing_list_mode: "Modo lista de correo desactivado para los post del usuario"
   color_schemes:
     base_theme_name: "Base"
+    default_theme_name: "Por defecto"
     dark_theme_name: "Oscuro"
     light_theme_name: "Claro"
   about: "Acerca de"
@@ -3023,7 +3003,7 @@ es:
         title: "Invitar staff"
         description: "¡Ya casi está! Invita algunos miembros del staff para ayudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar conversaciones</a> con temas interesantes y respuestas para dar tu comunidad por empezadas."
       finished:
-        title: "Tu foro de Discourse está listo!"
+        title: "¡Tu foro de Discourse está listo!"
         description: |
           <p>Si alguna vez quieres cambiar alguno de estos ajustes, visita <a href='/admin' target='_blank'>tu sección de administrador</a>; la puedes encontrar el lado del icono de una llave inglesa en el menú de la página..</p>
           <p>Diviértete, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>

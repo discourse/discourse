@@ -482,7 +482,6 @@ sv:
       long_form: 'flagga detta som orelevant'
     spam:
       title: 'Spam'
-      description: 'Detta inlägg är en annons. Den bidrar inte till eller är inte relevant för det aktuella ämnet, utan är marknadsföring.'
       long_form: 'flagga detta som spam'
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
@@ -1124,7 +1123,6 @@ sv:
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
-    invites_per_page: "Standardinbjudningar som visas på användarsidan."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
     default_code_lang: "Standardspråk för syntaxmarkering som appliceras på kodblock från GitHub (lang-auto, ruby, python etc)."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
@@ -1397,16 +1395,6 @@ sv:
     welcome_user:
       title: "Välkommen Användare"
       subject_template: "Välkommen till %{site_name}!"
-      text_body_template: |
-        Tack för att du gått med i %{site_name}, och välkommen!
-
-        %{new_user_tips}
-
-        Vi tror på ett [civiliserat beteende](%{base_url}/guidelines) vid alla tillfällen.
-
-        Njut av din vistelse!
-
-        (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande)
     welcome_invite:
       title: "Välkomst invitation"
       subject_template: "Välkommen till %{site_name}!"
@@ -1654,9 +1642,6 @@ sv:
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Föregående Svar"
-    reached_limit:
-      one: "VARNING: du har nått den övre gränsen för dagliga e-postmeddelanden. Ytterligare e-postnotifikationer kommer att undertryckas. "
-      other: "VARNING: du har nått den övre gränsen av %{count} dagliga e-postmeddelanden. Ytterligare e-postnotifikationer kommer att undertryckas. "
     in_reply_to: "Som svar till:"
     unsubscribe:
       title: "Unsubscribe"

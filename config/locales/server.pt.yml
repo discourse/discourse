@@ -463,7 +463,6 @@ pt:
       long_form: 'sinalizou isto como fora de contexto'
     spam:
       title: 'Spam'
-      description: 'Esta mensagem é publicidade. Não é útil nem relevante para o tópico atual, mas apenas de natureza promocional.'
       long_form: 'sinalizou isto como spam'
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
@@ -1112,7 +1111,6 @@ pt:
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
-    invites_per_page: "Convites por defeito exibidos na página do utilizador."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
     default_code_lang: "Linguagem de programação por defeito a aplicar no destaque da sintaxe em blocos de código GitHub (lang-auto, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
@@ -1450,16 +1448,6 @@ pt:
         Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
-      text_body_template: |
-        Obrigado por se juntar a %{site_name}, e bem-vindo!
-
-        %{new_user_tips}
-
-        Nós acreditamos no [comportamento civilizado da comunidade](%{base_url}/guidelines) em qualquer altura.
-
-        Desfrute da sua estadia!
-
-        (Se precisar de comunicar com [membros do pessoal](%{base_url}/about) como um novo utilizador, simplesmente responda a esta mensagem.)
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
     backup_succeeded:
@@ -1713,9 +1701,6 @@ pt:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
-    reached_limit:
-      one: "AVISO: atingiu o número máximo de emails por dia. Próximas notificações será suprimidas."
-      other: "AVISO: atingiu o número máximo de %{count} emails por dia. Próximas notificações será suprimidas."
     in_reply_to: "Em Resposta A"
     unsubscribe:
       title: "Cancelar a Subscrição"

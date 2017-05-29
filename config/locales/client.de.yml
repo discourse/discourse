@@ -1031,6 +1031,7 @@ de:
       cannot_see_mention:
         category: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu die Zugriff auf diese Kategorie hat."
         private: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser PM ein."
+      duplicate_link: "Es sieht so aus als wäre dein Link auf <b>{{domain}}</b> in dem Thema bereits geschrieben worden von  <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> – bist du sicher, dass du ihn noch einmal schreiben möchtest?"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -1120,6 +1121,7 @@ de:
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Neues Thema</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> Eine Nachricht in deinem {{group_name}} Postfach</p>"
@@ -1236,6 +1238,7 @@ de:
         select_all: "Wähle alle aus"
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
+        relist_topics: "Themen neu auflisten"
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
@@ -1246,8 +1249,10 @@ de:
         dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
+        change_category: "Kategorie auswählen"
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
+        notification_level: "Benachrichtigungen"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
@@ -1381,6 +1386,8 @@ de:
         auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
         auto_publish_to_category: "Dieses Thema wird in <a href=%{categoryUrl}>#%{categoryName}</a> veröffentlicht %{timeLeft}."
         auto_close_based_on_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
+        auto_delete: "Dieses Thema wird automatisch gelöscht %{timeLeft}."
+        auto_reminder: "Du wirst über dieses Thema erinnert %{timeLeft}."
       auto_close_title: 'Automatisches Schließen'
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits eine Stunde alt. Das Thema wird daher sofort geschlossen."
@@ -2134,6 +2141,7 @@ de:
       others_count: "Andere mit diesem Abzeichen (%{count})"
       title: Abzeichen
       allow_title: "Du kannst dieses Abzeichen als Titel verwenden"
+      multiple_grant: "Du kannst dieses Abzeichen mehrmals verliehen bekommen"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"
@@ -2602,10 +2610,17 @@ de:
           color_scheme_select: "Wähle Farben für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"
           theme_components: "Theme-Komponenten"
+          uploads: "Uploads"
+          no_uploads: "Du kannst Medieninhalte hochladen, die zu deinem Theme gehören, wie etwa Schriftarten und Bilder."
+          add_upload: "Upload hinzufügen"
+          upload_file_tip: "Wähle einen hochzuladenen Medieninhalt aus (png, woff2, usw.)"
+          variable_name: "SCSS Variablen-Name:"
+          upload: "Hochladen"
           child_themes_check: "Theme beinhaltet andere Kinder-Themes"
           css_html: "Benutzerdefiniertes CSS/HTML"
           edit_css_html: "Bearbeite CSS/HTML"
           edit_css_html_help: "Du hast kein CSS oder HTML bearbeitet"
+          delete_upload_confirm: "Upload löschen? (Theme-CSS funktioniert eventuell nicht mehr!)"
           import_web_tip: "Repository mit dem Theme"
           import_file_tip: ".dcstyle.json Datei mit dem Theme"
           about_theme: "Über das Theme"
@@ -3201,6 +3216,7 @@ de:
         sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
+        class_name: "Klassenname"
         path_whitelist: "Pfad Whitelist"
         edit: "bearbeiten"
         category: "In Kategorie Beitrag schreiben"
@@ -3220,6 +3236,7 @@ de:
         embed_classname_whitelist: "Erlaubte CSS-Klassen"
         feed_polling_enabled: "Beiträge über RSS/ATOM importieren"
         feed_polling_url: "URL des RSS/ATOM Feeds für den Import"
+        feed_polling_frequency_mins: "Häufigkeit der Feed-Abfrage (in Minuten)"
         save: "Einbettungseinstellungen speichern"
       permalink:
         title: "Permanentlinks"

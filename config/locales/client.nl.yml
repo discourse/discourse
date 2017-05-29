@@ -518,6 +518,7 @@ nl:
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       disable_jump_reply: "Niet naar mijn bericht gaan nadat ik antwoord"
       dynamic_favicon: "Aantal nieuwe / bijgewerkte topics tonen in browserpictogram"
+      theme_default_on_all_devices: "Maak dit mijn standaard thema op al mijn devices"
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
       enable_quoting: "Antwoord-met-citaat voor geselecteerde tekst inschakelen"
       change: "wijzigen"
@@ -754,6 +755,7 @@ nl:
         rescinded: "Uitnodiging verwijderd"
         reinvite: "Uitnodiging opnieuw versturen"
         reinvite_all: "Alle uitnodigingen opnieuw versturen"
+        reinvite_all_confirm: "Weet u zeker dat u alle uitnodigingen opnieuw wilt versturen?"
         reinvited: "Uitnodiging opnieuw verstuurd"
         reinvited_all: "Alle uitnodigingen zijn opnieuw verstuurd!"
         time_read: "Leestijd"
@@ -948,7 +950,7 @@ nl:
       authenticating: "Authenticeren..."
       awaiting_activation: "Uw account wacht op activering; gebruik de koppeling 'Wachtwoord vergeten' om een nieuwe activeringsmail te ontvangen."
       awaiting_approval: "Uw account is nog niet door een staflid goedgekeurd. U ontvangt een e-mail zodra dat is gebeurd."
-      requires_invite: "Sorry. toegang tot dit forum werkt alleen via uitnodiging."
+      requires_invite: "Sorry, toegang tot dit forum werkt alleen via uitnodiging."
       not_activated: "U kunt zich nog niet aanmelden. We hebben een activeringsmail naar <b>{{sentTo}}</b> gestuurd. Volg de instructies in dat e-mailbericht om uw account te activeren."
       not_allowed_from_ip_address: "U kunt zich niet aanmelden vanaf dat IP-adres."
       admin_not_allowed_from_ip_address: "U kunt zich niet aanmelden als beheerder vanaf dat IP-adres."
@@ -1029,6 +1031,7 @@ nl:
       cannot_see_mention:
         category: "U hebt {{username}} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij geen toegang heeft tot deze categorie. U dient de gebruiker toe te voegen aan een groep die toegang heeft tot deze categorie."
         private: "U hebt {{username}} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij dit persoonlijke bericht niet kan zien. U dient de gebruiker voor dit PB uit te nodigen."
+      duplicate_link: "Het lijkt erop dat uw link naar <b>{{domain}}</b> al in het topic gepost is door <b>@{{username}}</b> in <a href='{{post_url}}'>een antwoord op {{ago}}</a> – weet u zeker dat u het opnieuw wilt posten?"
       error:
         title_missing: "Titel is vereist"
         title_too_short: "Titel moet minstens {{min}} tekens bevatten"
@@ -1118,6 +1121,7 @@ nl:
       moved_post: "<i title='bericht verplaatst' class='fa fa-sign-out'></i><p><span>{{username}}</span> heeft {{description}} verplaatst</p>"
       linked: "<i title='bericht gekoppeld' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge toegekend' class='fa fa-certificate'></i><p>'{{description}}' ontvangen</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='nieuw topic' class='fa fa-dot-circle-o'></i><p><span>Nieuw topic</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='berichten in groepspostvak' class='fa fa-group'></i><p> {{count}} bericht in uw Postvak IN voor {{group_name}}</p>"
@@ -1234,6 +1238,7 @@ nl:
         select_all: "Alles selecteren"
         clear_all: "Alles wissen"
         unlist_topics: "Topics onzichtbaar maken"
+        relist_topics: "Topics opnieuw weergeven"
         reset_read: "Markeren als ongelezen"
         delete: "Topics verwijderen"
         dismiss: "Negeren"
@@ -1244,8 +1249,10 @@ nl:
         dismiss_new: "Nieuwe berichten negeren"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
+        change_category: "Categorie wijzigen"
         close_topics: "Topics sluiten"
         archive_topics: "Topics archiveren"
+        notification_level: "Meldingen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
         selected:
           one: "U hebt <b>1</b> topic geselecteerd."
@@ -1354,6 +1361,7 @@ nl:
         later_this_week: "Later deze week"
         this_weekend: "Dit weekend"
         next_week: "Volgende week"
+        next_month: "Volgende maand"
         pick_date_and_time: "Kies datum en tijd"
         set_based_on_last_post: "Sluiten op basis van laatste bericht"
       publish_to_category:
@@ -1369,11 +1377,17 @@ nl:
         label: "Tijden voor automatisch sluiten van topic:"
         error: "Voer een geldige waarde in."
         based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
+      auto_delete:
+        title: "Topic automatisch verwijderen"
+      reminder:
+        title: "Herinner mij"
       status_update_notice:
         auto_open: "Dit topic zal automatisch %{timeLeft} worden geopend."
         auto_close: "Dit topic zal automatisch %{timeLeft} worden gesloten."
         auto_publish_to_category: "Dit topic zal %{timeLeft} naar <a href=%{categoryUrl}>#%{categoryName}</a> worden gepubliceerd."
         auto_close_based_on_last_post: "Dit topic zal %{duration} na het laatste antwoord worden gesloten."
+        auto_delete: "Dit topic zal %{timeLeft} automatisch verwijderd worden."
+        auto_reminder: "U zult %{timeLeft} aan dit topic herinnerd worden."
       auto_close_title: 'Instellingen voor automatisch sluiten'
       auto_close_immediate:
         one: "Het laatste bericht in dit topic is al 1 uur oud, dus het topic zal meteen worden gesloten."
@@ -2130,6 +2144,8 @@ nl:
       granted_on: "Toegekend op %{date}"
       others_count: "Anderen met deze badge (%{count})"
       title: Badges
+      allow_title: "U kunt deze badge als een titel gebruiken"
+      multiple_grant: "U kunt dit meerdere keren verdienen"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"
@@ -2598,10 +2614,17 @@ nl:
           color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
           custom_sections: "Aangepaste secties:"
           theme_components: "Themaonderdelen"
+          uploads: "Uploads"
+          no_uploads: "U kunt aan uw thema gerelateerde assets uploaden zoals fonts en afbeeldingen"
+          add_upload: "Upload toevoegen"
+          upload_file_tip: "Kies een asset om te uploaden (png, woff2, etc...)"
+          variable_name: "SCSS variabele naam:"
+          upload: "Upload"
           child_themes_check: "Thema bevat andere onderliggende thema's"
           css_html: "Aangepaste CSS/HTML"
           edit_css_html: "CSS/HTML bewerken"
           edit_css_html_help: "U hebt geen CSS of HTML bewerkt"
+          delete_upload_confirm: "Deze upload verwijderen? (Thema CSS zou kunnen stoppen met werken!)"
           import_web_tip: "Repository die thema bevat"
           import_file_tip: ".dcstyle.json-bestand dat thema bevat"
           about_theme: "Over thema"
@@ -3197,6 +3220,7 @@ nl:
         sample: "Gebruik de volgende HTML-code in uw website om Discourse-topics te maken en te embedden. Vervang <b>REPLACE_ME</b> door de canonieke URL van de pagina waarin u het topic wilt embedden."
         title: "Embedden"
         host: "Toegestane hosts"
+        class_name: "Class naam"
         path_whitelist: "Toegestane paden"
         edit: "wijzig"
         category: "Bericht naar categorie"
@@ -3216,6 +3240,7 @@ nl:
         embed_classname_whitelist: "Toegestane CSS-klassenamen"
         feed_polling_enabled: "Importeer berichten via RSS/ATOM"
         feed_polling_url: "URL van RSS/ATOM-feed voor crawlen"
+        feed_polling_frequency_mins: "Hoe vaak feed verversen (in minuten)"
         save: "Embeddingsinstellingen opslaan"
       permalink:
         title: "Permalinks"

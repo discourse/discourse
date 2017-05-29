@@ -1,1 +1,34 @@
-ru: {}
+ru:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Включить дискуссионный бот'
+    disable_discourse_narrative_bot_welcome_post: "Отключить приветственный пост от бота"
+    discourse_narrative_bot_ignored_usernames: "Имена пользователей, которые следует игнорировать"
+    discourse_narrative_bot_disable_public_replies: "Отключить общедоступные ответы в боте."
+    discourse_narrative_bot_welcome_post_type: "Тип приветственного сообщения, которое бот должен отправить"
+  badges:
+    certified:
+      name: Проверенный
+      long_description: |
+        Этот значок выдается при успешном завершении интерактивного учебника для нового пользователя. Вы успешно прошли обучение основных инструментов обсуждения, и теперь вы сертифицированы!
+    licensed:
+      name: Лицензированный
+  discourse_narrative_bot:
+    dice:
+      invalid: |-
+        Извините, даже математически невозможно бросить эту комбинацию костей. :confounded:
+    quote:
+      '1':
+        quote: "В середине каждой трудности - возможность"
+    new_user_narrative:
+      certificate:
+        alt: 'Свидетельство о достижении'
+    advanced_user_narrative:
+      reset_trigger: 'продвинутый пользователь'
+      cert_title: "В знак признания успешного завершения расширенного руководства пользователя"
+      title: ':arrow_up: Расширенные функции пользователя'
+      edit:
+        bot_created_post_raw: "@%{discobot_username} безусловно, самый лучший бот, которого я знаю :wink:"
+      recover:
+        deleted_post_raw: 'Почему @%{discobot_username} удалил моё сообщение? :anguished:'
+      certificate:
+        alt: 'Свидетельство о прогрессе для опытных пользователей'

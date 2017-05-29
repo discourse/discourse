@@ -492,7 +492,6 @@ zh_TW:
       long_form: '投訴為離題內容'
     spam:
       title: '垃圾內容'
-      description: '此文章內容為廣告，與當前討論話題無關，只有促銷資訊。'
       long_form: '投訴為垃圾內容'
       email_title: '“%{title}”被標記為垃圾'
       email_body: "%{link}\n\n%{message}"
@@ -1153,7 +1152,6 @@ zh_TW:
     enable_names: "在用戶的個人信息、用戶卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在用戶的帖子中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個帖子發表間隔多天，在主題中顯示時間間隔提示。"
-    invites_per_page: "默認在用戶頁顯示的邀請。"
     short_progress_text_threshold: "在主題中的帖子數超過這個設定後，進度條將只顯示當前的帖子數。如果你更改了進度條的寬度，你需要修改這個值。"
     default_code_lang: "預設語法高亮語言，使用 GitHub 代碼塊（lang-auto、ruby、python或者其他等等。）"
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
@@ -1557,32 +1555,9 @@ zh_TW:
     welcome_user:
       title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"
-      text_body_template: |+
-        感謝你加入%{site_name}，歡迎討論！
-
-        %{new_user_tips}
-
-        我們相信始終相信[公民社群守則](%{base_url}/guidelines) 。好好享受你在論壇的時光！
-
-        （如果身為新的使用者你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
-
     welcome_invite:
       title: "歡迎邀請"
       subject_template: "歡迎來到 %{site_name}！"
-      text_body_template: |
-        感謝你接受邀請加入 %{site_name} — 歡迎！
-
-        - 我們已為你建立 **%{username}** 帳號。請到 [偏好設定][prefs] 頁面修改帳號名稱或密碼。
-
-        - 請使用與你的邀請信件 **相同的 email 信箱登入**，不然我們就不知道你來了！
-
-        %{new_user_tips}
-
-        我們始終相信[社群參與指南守則](%{base_url}/guidelines) 。好好享受你在論壇的時光！
-
-        （身為新的使用者，如果你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "備份成功"
       subject_template: "備份成功完成"
@@ -1875,8 +1850,6 @@ zh_TW:
   subject_pm: "[私訊]"
   user_notifications:
     previous_discussion: "之前的回覆"
-    reached_limit:
-      other: "警告：你達到了每日郵件限額（%{count}）。之後郵件通知將被禁用。"
     in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"

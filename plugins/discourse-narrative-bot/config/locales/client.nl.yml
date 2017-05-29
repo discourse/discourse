@@ -1,1 +1,5 @@
-nl: {}
+nl:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Start de nieuwe gebruikerstutorial voor alle nieuwe gebruikers"

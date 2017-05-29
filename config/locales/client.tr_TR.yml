@@ -551,6 +551,8 @@ tr_TR:
         move_to_archive: " Arşiv"
         failed_to_move: "Seçilen iletileri taşımak başarısız oldu (muhtemelen ağınız çöktü)"
         select_all: "Tümünü seç"
+      preferences_nav:
+        interface: "Arayüz"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta yollanıyor)"
