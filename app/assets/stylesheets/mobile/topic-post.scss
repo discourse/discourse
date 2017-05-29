@@ -313,7 +313,6 @@ a.star {
 
 #topic-footer-buttons {
   @include clearfix;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 20px 0 0 0;
   .fa-bookmark.bookmarked { color: $tertiary; }
 
