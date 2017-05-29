@@ -44,7 +44,9 @@
 }
 
 .topic-status-info {
-  margin-left: 10px;
+  padding-left: 10px;
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  padding-top: 10px;
   h3 {
     margin: 0;
   }
