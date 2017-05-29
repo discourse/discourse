@@ -180,7 +180,7 @@ en:
         instructions: |-
           Here’s a picture of a unicorn:
 
-          <img src="/images/unicorn.jpg" width="520" height="381">
+          <img src="/images/unicorn.png" width="520" height="520">
 
           If you like it (and who wouldn’t!) go ahead and press the like :heart: button below this post to let me know.
 

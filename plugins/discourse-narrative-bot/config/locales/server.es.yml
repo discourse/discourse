@@ -174,7 +174,7 @@ es:
         instructions: |-
           Aquí hay una imagen de un unicornio:
 
-          <img src="/images/unicorn.jpg" width="520" height="381">
+          <img src="/images/unicorn.png" width="520" height="520">
 
           Si te gusta (a quién no!) por favor presiona sobre el botón :heart: "me gusta" que está debajo del post para hacerme saber que te gusta.
 

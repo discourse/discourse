@@ -179,7 +179,7 @@ fi:
         instructions: |-
           Tämä on kuva yksisarvisesta:
 
-          <img src="/images/unicorn.jpg" width="520" height="381">
+          <img src="/images/unicorn.png" width="520" height="520">
 
           Jos pidit siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla tykkää-nappia :heart: tämän viestin alla.
 
