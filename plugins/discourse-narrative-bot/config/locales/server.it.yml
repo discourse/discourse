@@ -173,7 +173,7 @@ it:
         instructions: |-
           Ecco l'immagine di un unicorno:
 
-          <img src="/images/unicorn.jpg" width="520" height="381">
+          <img src="/images/unicorn.png" width="520" height="520">
 
           Se ti piace (e a chi non piacerebbe!) vai avanti e premi il pulsante mi piace :heart: sotto questo messaggio per farmelo sapere.
 
