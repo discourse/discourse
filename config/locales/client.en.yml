@@ -1340,6 +1340,7 @@ en:
           seen: I've read
           unseen: I've not read
           wiki: are wiki
+          all_tags: Contains all tags
         statuses:
           label: Where topics
           open: are open
