@@ -1,4 +1,4 @@
-es_ES:
+es:
   site_settings:
     discourse_narrative_bot_enabled: 'Habilitar Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Deshabilitar el post de bienvenida por Discourse Narrative Bot"
