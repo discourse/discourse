@@ -549,12 +549,20 @@ section.details {
   padding: 5px;
   clear: both;
   text-align: right;
+  @media (max-width: $mobile-breakpoint) {
+    .btn {
+      margin: 2px;
+    }
+  }
 }
 
 .display-row.associations .value {
   width: 750px;
   @media (max-width: $mobile-breakpoint) {
-    width: 100%;
+    width: 75%;
+    float: right;
+    text-align: left;
+    margin-left: 0;
   }
 }
 
@@ -580,11 +588,22 @@ section.details {
     width: 17.65765%;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0;
+      line-height: 20px;
+      margin-top: 5px;
+    }
   }
   .value {
     width: 250px;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
+    }
   }
   .long-value {
     width: 800px;
@@ -602,10 +621,13 @@ section.details {
     float: left;
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
-      width: 100%;
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
     }
     .btn {
-      margin-right: 5px;
+      margin: 2px 5px 2px 0;
     }
   }
 }
