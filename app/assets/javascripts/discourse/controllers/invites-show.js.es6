@@ -4,9 +4,10 @@ import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
+import NameValidation from "discourse/mixins/name-validation";
 import { findAll as findLoginMethods }  from 'discourse/models/login-method';
 
-export default Ember.Controller.extend(PasswordValidation, UsernameValidation, {
+export default Ember.Controller.extend(PasswordValidation, UsernameValidation, NameValidation, {
   invitedBy: Ember.computed.alias('model.invited_by'),
   email: Ember.computed.alias('model.email'),
   accountUsername: Ember.computed.alias('model.username'),
@@ -20,6 +21,11 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, {
     return I18n.t('invites.welcome_to', {site_name: this.siteSettings.title});
   },
 
+  @computed
+  nameLabel() {
+    return I18n.t(this.siteSettings.full_name_required ? 'invites.name_label' : 'invites.name_label_optional');
+  },
+
   @computed('email')
   yourEmailMessage(email) {
     return I18n.t('invites.your_email', {email: email});
@@ -30,9 +36,9 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, {
     return findLoginMethods(this.siteSettings, this.capabilities, this.site.isMobileDevice).length > 0;
   },
 
-  @computed('usernameValidation.failed', 'passwordValidation.failed')
-  submitDisabled(usernameFailed, passwordFailed) {
-    return usernameFailed || passwordFailed;
+  @computed('usernameValidation.failed', 'passwordValidation.failed', 'nameValidation.failed')
+  submitDisabled(usernameFailed, passwordFailed, nameFailed) {
+    return usernameFailed || passwordFailed || nameFailed;
   },
 
   actions: {
@@ -42,6 +48,7 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, {
         type: 'PUT',
         data: {
           username: this.get('accountUsername'),
+          name: this.get('accountName'),
           password: this.get('accountPassword')
         }
       }).then(result => {
