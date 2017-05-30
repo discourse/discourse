@@ -42,6 +42,7 @@ config/discourse.conf
 /tmp
 /logfile
 log/
+bootsnap-load-path-cache
 
 # Ignore plugins except for the bundled ones.
 /plugins/*
