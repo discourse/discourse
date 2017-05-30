@@ -542,6 +542,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       } else {
         selectedReplies.removeObject(post);
       }
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     deleteSelected() {
