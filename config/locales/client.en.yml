@@ -3025,8 +3025,9 @@ en:
           block: "block"
           do_nothing: "do nothing"
         staff_actions:
+          all: "all"
+          filter: "Filter:"
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -3079,6 +3080,8 @@ en:
             change_readonly_mode: "change readonly mode"
             backup_download: "download backup"
             backup_destroy: "destroy backup"
+            reviewed_post: "reviewed post"
+            custom_staff: "plugin custom action"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
