@@ -34,7 +34,8 @@ class TopicViewSerializer < ApplicationSerializer
                         :word_count,
                         :deleted_at,
                         :pending_posts_count,
-                        :user_id
+                        :user_id,
+                        :pm_with_non_human_user?
 
   attributes :draft,
              :draft_key,
@@ -59,8 +60,9 @@ class TopicViewSerializer < ApplicationSerializer
              :message_archived,
              :tags,
              :featured_link,
-             :topic_status_update,
-             :unicode_title
+             :topic_timer,
+             :unicode_title,
+             :message_bus_last_id
 
   # TODO: Split off into proper object / serializer
   def details
@@ -71,7 +73,7 @@ class TopicViewSerializer < ApplicationSerializer
       last_poster: BasicUserSerializer.new(topic.last_poster, scope: scope, root: false)
     }
 
-    if object.topic.private_message?
+    if private_message?(topic)
       allowed_user_ids = Set.new
 
       result[:allowed_groups] = object.topic.allowed_groups.map do |group|
@@ -124,12 +126,16 @@ class TopicViewSerializer < ApplicationSerializer
     result
   end
 
+  def message_bus_last_id
+    object.message_bus_last_id
+  end
+
   def chunk_size
     object.chunk_size
   end
 
   def is_warning
-    object.topic.private_message? && object.topic.subtype == TopicSubtype.moderator_warning
+    private_message?(object.topic) && object.topic.subtype == TopicSubtype.moderator_warning
   end
 
   def include_is_warning?
@@ -149,7 +155,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_message_archived?
-    object.topic.private_message?
+    private_message?(object.topic)
   end
 
   def message_archived
@@ -248,9 +254,9 @@ class TopicViewSerializer < ApplicationSerializer
     SiteSetting.tagging_enabled
   end
 
-  def topic_status_update
-    TopicStatusUpdateSerializer.new(
-      object.topic.topic_status_update, root: false
+  def topic_timer
+    TopicTimerSerializer.new(
+      object.topic.public_topic_timer, root: false
     )
   end
 
@@ -273,5 +279,15 @@ class TopicViewSerializer < ApplicationSerializer
   def unicode_title
     gsub_emoji_to_unicode(object.topic.title)
   end
+
+  def include_pm_with_non_human_user?
+    private_message?(object.topic)
+  end
+
+  private
+
+    def private_message?(topic)
+      @private_message ||= topic.private_message?
+    end
 
 end

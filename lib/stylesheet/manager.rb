@@ -19,6 +19,13 @@ class Stylesheet::Manager
     cache.hash.keys.select{|k| k =~ /theme/}.each{|k|cache.delete(k)}
   end
 
+  def self.stylesheet_href(target = :desktop, theme_key = :missing)
+    href = stylesheet_link_tag(target, 'all', theme_key)
+    if href
+      href.split(/["']/)[1]
+    end
+  end
+
   def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_key = :missing)
 
     target = target.to_sym
@@ -34,11 +41,14 @@ class Stylesheet::Manager
 
     @lock.synchronize do
       builder = self.new(target, theme_key)
-      builder.compile unless File.exists?(builder.stylesheet_fullpath)
-      builder.ensure_digestless_file
-      tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}" rel="preload"/>]
-      cache[cache_key] = tag
+      if builder.is_theme? && !builder.theme
+        tag = ""
+      else
+        builder.compile unless File.exists?(builder.stylesheet_fullpath)
+        tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
+      end
 
+      cache[cache_key] = tag
       tag.dup.html_safe
     end
   end
@@ -119,7 +129,12 @@ class Stylesheet::Manager
       )
     rescue SassC::SyntaxError => e
       Rails.logger.error "Failed to compile #{@target} stylesheet: #{e.message}"
-      [Stylesheet::Compiler.error_as_css(e, "#{@target} stylesheet"), nil]
+      if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
+        # no special errors for theme, handled in theme editor
+        ["", nil]
+      else
+        [Stylesheet::Compiler.error_as_css(e, "#{@target} stylesheet"), nil]
+      end
     end
 
     FileUtils.mkdir_p(cache_fullpath)
@@ -140,13 +155,6 @@ class Stylesheet::Manager
       Rails.logger.warn "Completely unexpected error adding item to cache #{e}"
     end
     css
-  end
-
-  def ensure_digestless_file
-    # file without digest is only for auto-reloading css in dev env
-    unless Rails.env.production? || (File.exist?(stylesheet_fullpath_no_digest) && File.mtime(stylesheet_fullpath) == File.mtime(stylesheet_fullpath_no_digest))
-      FileUtils.cp(stylesheet_fullpath, stylesheet_fullpath_no_digest)
-    end
   end
 
   def self.cache_fullpath
@@ -178,15 +186,7 @@ class Stylesheet::Manager
   end
 
   def stylesheet_path
-    if Rails.env.development?
-      if @target.to_s =~ /theme/
-        stylesheet_relpath
-      else
-        stylesheet_relpath_no_digest
-      end
-    else
-      stylesheet_cdnpath
-    end
+    stylesheet_cdnpath
   end
 
   def root_path
@@ -251,7 +251,7 @@ class Stylesheet::Manager
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest scss.to_s
+    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s)
   end
 
   def color_scheme_digest

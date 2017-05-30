@@ -8,6 +8,10 @@ Fabricator(:upload) do
   url { sequence(:url) { |n| "/uploads/default/#{n}/1234567890123456.png" } }
 end
 
+Fabricator(:upload_s3, from: :upload) do
+  url { sequence(:url) { |n| "#{Discourse.store.absolute_base_url}/uploads/default/#{n}/1234567890123456.png" } }
+end
+
 Fabricator(:attachment, from: :upload) do
   id 42
   user

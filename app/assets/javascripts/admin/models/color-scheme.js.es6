@@ -18,6 +18,15 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     });
   },
 
+  schemeJson(){
+    let buffer = [];
+    _.each(this.get('colors'), (c) => {
+      buffer.push(`  "${c.get('name')}": "${c.get('hex')}"`);
+    });
+
+    return [`"${this.get("name")}": {`, buffer.join(",\n"), "}"].join("\n");
+  },
+
   copy: function() {
     var newScheme = ColorScheme.create({name: this.get('name'), can_edit: true, colors: Em.A()});
     _.each(this.get('colors'), function(c){

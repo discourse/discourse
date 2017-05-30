@@ -7,4 +7,17 @@
   padding: 20px;
   width: 550px;
   margin: 0 auto;
+
+  .account-created {
+    .ac-message {
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .activation-controls {
+      button {
+        margin-right: 0.5em;
+      }
+    }
+  }
 }

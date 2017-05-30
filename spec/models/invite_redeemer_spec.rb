@@ -43,7 +43,6 @@ describe InviteRedeemer do
       SiteSetting.must_approve_users = true
       inviter = invite.invited_by
       inviter.admin = true
-      Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_entries(username: username))
       user = invite_redeemer.redeem
 
       expect(user.name).to eq(name)

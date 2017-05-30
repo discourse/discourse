@@ -24,6 +24,7 @@ describe UserAvatarsController do
       SiteSetting.s3_upload_bucket = "test"
       SiteSetting.s3_cdn_url = "http://cdn.com"
 
+      stub_request(:head, "http://cdn.com/something/else")
       stub_request(:get, "http://cdn.com/something/else").to_return(body: 'image')
 
       GlobalSetting.expects(:cdn_url).returns("http://awesome.com/boom")

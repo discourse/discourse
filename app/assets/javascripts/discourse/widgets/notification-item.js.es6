@@ -59,6 +59,10 @@ createWidget('notification-item', {
     const badgeName = data.badge_name;
     if (badgeName) { return escapeExpression(badgeName); }
 
+    if (this.attrs.fancy_title) {
+      return this.attrs.fancy_title;
+    }
+
     const title = data.topic_title;
     return Ember.isEmpty(title) ? "" : escapeExpression(title);
   },

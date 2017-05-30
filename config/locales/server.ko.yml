@@ -26,7 +26,6 @@ ko:
   topics: "글타래"
   posts: "글"
   loading: "로딩중"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "로그인"
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
@@ -334,7 +333,6 @@ ko:
       long_form: '오프 글타래으로 신고하기'
     spam:
       title: '스팸'
-      description: '이 글은 광고성으로 판단되어집니다. 이 글은 현재 대화에서 유용하지도, 관련되지 않습니다.'
       long_form: '스팸으로 신고하기'
       email_title: '"%{title}" 스팸으로 지목됨'
       email_body: "%{link}\n\n%{message}"
@@ -629,7 +627,6 @@ ko:
     force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
     invite_expiry_days: "사용자 초대키 유효 기간, 일"
     invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
-    invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
@@ -799,7 +796,6 @@ ko:
     enable_names: "사용자의 실명을 프로필, 사용자카드, 이메일에서 표시함. 실명을 표시하지 않으려면 체크를 해제하세요."
     display_name_on_posts: "글에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     show_time_gap_days: "두 글의 일차를 보여주기 위해 두 글이 떨어져 있어야 할 일수"
-    invites_per_page: "사용자 페이지에 방문자를 표시합니다."
     short_progress_text_threshold: "글타래의 글 개수가 이 값을 넘어서면, 글 프로그래스바는 오직 현재 글 넘버만 보여준다. 만약 글 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야합니다."
     default_code_lang: "기본 programming language syntax highlighting은 GitHub code blocks이 적용된다. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
@@ -812,7 +808,6 @@ ko:
     embed_post_limit: "글 개수가 최대치입니다."
     embed_whitelist_selector: "embed에서 보여져야 할 DOM element 선택하는 CSS 셀렉터"
     embed_blacklist_selector: "embed에서 지워져야 할 DOM element 선택하는 CSS 셀렉터"
-    notify_about_flags_after: "이 시간동안 처리되지 않은 신고가 들어와 있으면, contact_email 주소로 이메일을 보냅니다. 0으로 넣으면 비활성화됩니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
@@ -931,16 +926,6 @@ ko:
   system_messages:
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-      text_body_template: |
-        %{site_name}에 가입해주셔서 감사합니다, 환영합니다!
-
-        %{new_user_tips}
-
-        우리는 [문화시민의 커뮤니티 활동지침](%{base_url}/guidelines)을 항상 따릅니다.
-
-        커뮤니티를 즐겨주세요!
-
-        (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기 주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
     backup_succeeded:
@@ -956,14 +941,6 @@ ko:
       text_body_template: "대량 사용자 초대가 진행되어 %{sent}개의 초대장을 보냈습니다."
     bulk_invite_failed:
       subject_template: "대량 사용자 초대 중 오류가 났습니다."
-      text_body_template: |
-        대량 유저 초대 파일이 처리됐습니다. %{sent}개의 초대장이 보내졌고 %{failed}개의 에러 (전송안됨)가 났습니다.
-
-        로그:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "데이터 추출이 완료되었습니다."
     csv_export_failed:
@@ -1061,8 +1038,6 @@ ko:
     error: "에러!"
     email_input: "관리자 이메일"
     submit_button: "이메일 보내기"
-  discourse_hub:
-    access_token_problem: "관리자에게 말하기: 제발 웹사이트 설정 업데이트해서 맞는 discourse_org_access_key를 포함하게 해주세요."
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고

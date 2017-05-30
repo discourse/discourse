@@ -3,12 +3,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action="sendActivationEmail"
-             label="login.resend_title"
-             icon="envelope"
-             class="btn-primary resend"}}
-  {{d-button action="editActivationEmail"
-             label="login.change_email"
-             icon="pencil"
-             class="edit-email"}}
+  {{activation-controls sendActivationEmail=(action "sendActivationEmail")
+                        editActivationEmail=(action "editActivationEmail")}}
 </div>

@@ -6,9 +6,10 @@ import { emailValid } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
+import NameValidation from "discourse/mixins/name-validation";
 import { userPath } from 'discourse/lib/url';
 
-export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, UsernameValidation, {
+export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, UsernameValidation, NameValidation, {
   login: Ember.inject.controller(),
 
   complete: false,
@@ -84,15 +85,6 @@ export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, U
   nameInstructions: function() {
     return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
   }.property(),
-
-  // Validate the name.
-  nameValidation: function() {
-    if (Discourse.SiteSettings.full_name_required && Ember.isEmpty(this.get('accountName'))) {
-      return InputValidation.create({ failed: true });
-    }
-
-    return InputValidation.create({ok: true});
-  }.property('accountName'),
 
   // Check the email address
   emailValidation: function() {

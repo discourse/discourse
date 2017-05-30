@@ -1,5 +1,5 @@
 # Some sanity checking so we don't count on an unindexed column on boot
-if User.limit(20).count < 20 && User.where(admin: true).count == 1
+if User.limit(20).count < 20 && User.where(admin: true).human_users.count == 0
   notice =
     if GlobalSetting.developer_emails.blank?
       "Congratulations, you installed Discourse! Unfortunately, no administrator emails were defined during setup, so finalizing the configuration <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>may be difficult</a>."

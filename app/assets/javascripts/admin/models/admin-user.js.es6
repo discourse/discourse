@@ -71,7 +71,12 @@ const AdminUser = Discourse.User.extend({
   groupRemoved(groupId) {
     return ajax("/admin/users/" + this.get('id') + "/groups/" + groupId, {
       type: 'DELETE'
-    }).then(() => this.set('groups.[]', this.get('groups').rejectBy("id", groupId)));
+    }).then(() => {
+      this.set('groups.[]', this.get('groups').rejectBy("id", groupId));
+      if (this.get('primary_group_id') === groupId) {
+        this.set('primary_group_id', null);
+      }
+    });
   },
 
   revokeApiKey() {

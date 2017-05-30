@@ -61,7 +61,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
     add_user_to_groups
     send_welcome_message
     notify_invitee
-    send_password_instructions
     delete_duplicate_invites
   end
 
@@ -117,12 +116,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
   def approve_account_if_needed
     if get_existing_user
       invited_user.approve(invite.invited_by_id, false)
-    end
-  end
-
-  def send_password_instructions
-    if !SiteSetting.enable_sso && SiteSetting.enable_local_logins && !invited_user.has_password?
-      Jobs.enqueue(:invite_password_instructions_email, username: invited_user.username)
     end
   end
 

@@ -2,44 +2,53 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
 const _buttons = [];
 
-function addBulkButton(action, key) {
-  _buttons.push({ action: action, label: "topics.bulk." + key });
+const alwaysTrue = () => true;
+
+function addBulkButton(action, key, opts) {
+  opts = opts || {};
+
+  const btn = {
+    action,
+    label: `topics.bulk.${key}`,
+    icon: opts.icon,
+    buttonVisible: opts.buttonVisible || alwaysTrue,
+    class: opts.class
+  };
+
+  _buttons.push(btn);
 }
 
 // Default buttons
-addBulkButton('showChangeCategory', 'change_category');
-addBulkButton('deleteTopics', 'delete');
-addBulkButton('closeTopics', 'close_topics');
-addBulkButton('archiveTopics', 'archive_topics');
-addBulkButton('showNotificationLevel', 'notification_level');
-addBulkButton('resetRead', 'reset_read');
-addBulkButton('unlistTopics', 'unlist_topics');
-addBulkButton('showTagTopics', 'change_tags');
-addBulkButton('showAppendTagTopics', 'append_tags');
+addBulkButton('showChangeCategory', 'change_category', {icon: 'pencil'});
+addBulkButton('closeTopics', 'close_topics', {icon: 'lock'});
+addBulkButton('archiveTopics', 'archive_topics', {icon: 'folder'});
+addBulkButton('showNotificationLevel', 'notification_level', {icon: 'circle-o'});
+addBulkButton('resetRead', 'reset_read', {icon: 'backward'});
+addBulkButton('unlistTopics', 'unlist_topics', {
+  icon: 'eye-slash',
+  buttonVisible: topics => topics.some(t => t.visible)
+});
+addBulkButton('relistTopics', 'relist_topics', {
+  icon: 'eye',
+  buttonVisible: topics => topics.some(t => !t.visible)
+});
+addBulkButton('showTagTopics', 'change_tags', {icon: 'tag'});
+addBulkButton('showAppendTagTopics', 'append_tags', {icon: 'tag'});
+addBulkButton('deleteTopics', 'delete', {icon: 'trash', class: 'btn-danger'});
 
 // Modal for performing bulk actions on topics
 export default Ember.Controller.extend(ModalFunctionality, {
   tags: null,
-  buttonRows: null,
 
   emptyTags: Ember.computed.empty('tags'),
   categoryId: Ember.computed.alias('model.category.id'),
 
   onShow() {
+    const topics = this.get('model.topics');
+    // const relistButtonIndex = _buttons.findIndex(b => b.action === 'relistTopics');
+
+    this.set('buttons', _buttons.filter(b => b.buttonVisible(topics)));
     this.set('modal.modalClass', 'topic-bulk-actions-modal small');
-
-    const buttonRows = [];
-    let row = [];
-    _buttons.forEach(function(b) {
-      row.push(b);
-      if (row.length === 4) {
-        buttonRows.push(row);
-        row = [];
-      }
-    });
-    if (row.length) { buttonRows.push(row); }
-
-    this.set('buttonRows', buttonRows);
     this.send('changeBulkTemplate', 'modal/bulk-actions-buttons');
   },
 
@@ -124,6 +133,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     unlistTopics() {
       this.forEachPerformed({type: 'unlist'}, t => t.set('visible', false));
+    },
+
+    relistTopics() {
+      this.forEachPerformed({type: 'relist'}, t => t.set('visible', true));
     },
 
     changeCategory() {

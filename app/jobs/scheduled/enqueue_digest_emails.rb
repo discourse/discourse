@@ -5,10 +5,9 @@ module Jobs
     every 30.minutes
 
     def execute(args)
-      unless SiteSetting.disable_digest_emails?
-        target_user_ids.each do |user_id|
-          Jobs.enqueue(:user_email, type: :digest, user_id: user_id)
-        end
+      return if SiteSetting.disable_digest_emails? || SiteSetting.private_email?
+      target_user_ids.each do |user_id|
+        Jobs.enqueue(:user_email, type: :digest, user_id: user_id)
       end
     end
 

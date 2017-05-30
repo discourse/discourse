@@ -9,22 +9,33 @@ describe Admin::StaffActionLogsController do
 
   context '.index' do
 
-    it 'works' do
-      xhr :get, :index
+    it 'generates logs' do
+
+      topic = Fabricate(:topic)
+      _record = StaffActionLogger.new(Discourse.system_user).log_topic_deletion(topic)
+
+      xhr :get, :index, action_id: UserHistory.actions[:delete_topic]
+
+      json = JSON.parse(response.body)
       expect(response).to be_success
-      expect(::JSON.parse(response.body)).to be_a(Array)
+
+      expect(json["staff_action_logs"].length).to eq(1)
+      expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
+
+      expect(json["user_history_actions"]).to include({"id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic'})
+
     end
   end
 
   context '.diff' do
     it 'can generate diffs for theme changes' do
       theme = Theme.new(user_id: -1, name: 'bob')
-      theme.set_field(:mobile, :scss, 'body {.up}')
-      theme.set_field(:common, :scss, 'omit-dupe')
+      theme.set_field(target: :mobile, name: :scss, value: 'body {.up}')
+      theme.set_field(target: :common, name: :scss, value: 'omit-dupe')
 
       original_json = ThemeSerializer.new(theme, root: false).to_json
 
-      theme.set_field(:mobile, :scss, 'body {.down}')
+      theme.set_field(target: :mobile, name: :scss, value: 'body {.down}')
 
       record = StaffActionLogger.new(Discourse.system_user)
         .log_theme_change(original_json, theme)

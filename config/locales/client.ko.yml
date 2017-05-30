@@ -1001,10 +1001,8 @@ ko:
         dismiss_new: "새글 제거"
         toggle: "주제 복수 선택"
         actions: "일괄 적용"
-        change_category: "카테고리 변경"
         close_topics: "주제 닫기"
         archive_topics: "주제 보관하기"
-        notification_level: "알림 설정 변경"
         choose_new_category: "주제의 새로운 카테고리를 선택"
         selected:
           other: "<b>{{count}}</b>개의 주제가 선택되었습니다."
@@ -1102,9 +1100,6 @@ ko:
           '3_2': '이 주제를 보고있어서 알림을 받게 됩니다.'
           '3_1': '이 주제를 생성하여서 알림을 받게 됩니다.'
           '3': '이 주제를 보고있어서 알림을 받게 됩니다.'
-          '2_8': '이 주제를 추적하고 있어서 알림을 받게 됩니다.'
-          '2_4': '이 주제에 답글을 게시하여서 알림을 받게 됩니다.'
-          '2_2': '이 주제를 추적하고 있어서 알림을 받게 됩니다.'
           '1_2': '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '1': '누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '0_7': '이 주제에 관한 모든 알림을 무시하고 있습니다.'
@@ -1239,7 +1234,6 @@ ko:
           other: "<b>{{old_user}}</b>(이)가 작성한 글의 새로운 작성자를 선택해주세요."
         instructions_warn: "이 글에 대한 알림이 새 사용자에게 자동으로 이전되지 않습니다.\n<br>경고: 글과 연관된 데이터가 새로운 사용자로 이전되지 않습니다. 주의해서 사용하세요."
       change_timestamp:
-        title: "타임스탬프 변경"
         action: "타임스탬프 변경"
         invalid_timestamp: "타임스탬프는 미래값으로 할 수 없습니다."
         error: "주제의 시간을 변경하는 중 오류가 발생하였습니다."
@@ -1440,8 +1434,6 @@ ko:
       already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
       security: "보안"
       images: "이미지"
-      auto_close_label: "주제 자동 닫기 :"
-      auto_close_units: "시간"
       email_in: "incoming 메일 주소 수정"
       email_in_allow_strangers: "계정이 없는 익명 유저들에게 이메일을 받습니다."
       email_in_disabled: "이메일로 새 주제 작성하기 기능이 비활성화되어 있습니다. 사이트 설정에서 '이메일로 새 주제 작성하기'를 활성화 해주세요."
@@ -1846,32 +1838,12 @@ ko:
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
-        css: "CSS"
-        header: "헤더"
-        top: "Top"
-        footer: "푸터(하단영역)"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "</head> 태그 전에 들어갈 HTML"
-        body_tag:
-          text: "</body>"
-          title: "</body> 태그 전에 들어갈 HTML"
-        override_default: "표준 스타일 시트를 포함하지 마십시오"
-        enabled: "사용가능?"
         preview: "미리 보기"
-        undo_preview: "미리보기 삭제"
-        rescue_preview: "기본 스타일"
-        explain_preview: "이 커스텀 스타일시트를 적용한 상태로 사이트를 봅니다."
-        explain_undo_preview: "현재 적용되어 있는 커스톰 스타일시트로 돌아갑니다."
-        explain_rescue_preview: "기본 스타일시트를 적용한 상태로 사이트를 봅니다."
         save: "저장"
         new: "새 사용자 지정"
         new_style: "새로운 스타일"
         import: "가져오기"
-        import_title: "파일을 선택하거나 텍스트를 붙여넣으세요"
         delete: "삭제"
-        delete_confirm: "이 정의를 삭제 하시겠습니까?"
         about: "사이트 Customization은 사이트의 스타일시트와 해더를 수정할 수 있게 해줍니다. 새로운 것을 추가하거나 기존 것을 선택해서 편집하세요."
         color: "색"
         opacity: "투명도"
@@ -1884,13 +1856,9 @@ ko:
           none_selected: "편집하려는 이메일 템플릿을 선택하세요."
           revert: "변경사항 취소"
           revert_confirm: "정말로 변경사항을 되돌리시겠습니까?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS, HTML 사용자 정의"
         colors:
           title: "색상"
           long_title: "색상 Schemes"
-          about: "CSS 작성 없이 사이트에 사용되는 색을 수정합니다. 시작하려면 Scheme을 추가하세요."
           new_name: "새로운 색 조합"
           copy_name_prefix: "복사본"
           delete_confirm: "이 컬러 스키마를 제거합니까?"
@@ -2021,8 +1989,6 @@ ko:
             change_trust_level: "회원등급 변경"
             change_username: "아이디 변경"
             change_site_setting: "사이트 설정 변경"
-            change_site_customization: "사이트 커스텀화 변경"
-            delete_site_customization: "사이트 커스텀화 삭제"
             change_site_text: "site text 변경"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"

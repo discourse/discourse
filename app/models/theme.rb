@@ -4,8 +4,6 @@ require_dependency 'stylesheet/manager'
 
 class Theme < ActiveRecord::Base
 
-  ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
-
   @cache = DistributedCache.new('theme')
 
   belongs_to :color_scheme
@@ -46,6 +44,18 @@ class Theme < ActiveRecord::Base
     if SiteSetting.default_theme_key == self.key
       Theme.clear_default!
     end
+
+    if self.id
+
+      ColorScheme
+        .where(theme_id: self.id)
+        .where("id NOT IN (SELECT color_scheme_id FROM themes where color_scheme_id IS NOT NULL)")
+               .destroy_all
+
+      ColorScheme
+        .where(theme_id: self.id)
+        .update_all(theme_id: nil)
+    end
   end
 
   after_commit ->(theme) do
@@ -85,6 +95,10 @@ class Theme < ActiveRecord::Base
     Theme.expire_site_cache!
   end
 
+  def default?
+    SiteSetting.default_theme_key == key
+  end
+
   def self.lookup_field(key, target, field)
     return if key.blank?
 
@@ -116,7 +130,7 @@ class Theme < ActiveRecord::Base
 
   def notify_scheme_change(clear_manager_cache=true)
     Stylesheet::Manager.cache.clear if clear_manager_cache
-    message = refresh_message_for_targets(["desktop", "mobile", "admin"], self.color_scheme_id, self, Rails.env.development?)
+    message = refresh_message_for_targets(["desktop", "mobile", "admin"], self)
     MessageBus.publish('/file-change', message)
   end
 
@@ -126,23 +140,19 @@ class Theme < ActiveRecord::Base
     themes = [self] + dependant_themes
 
     message = themes.map do |theme|
-      refresh_message_for_targets([:mobile_theme,:desktop_theme], theme.id, theme)
+      refresh_message_for_targets([:mobile_theme,:desktop_theme], theme)
     end.compact.flatten
     MessageBus.publish('/file-change', message)
   end
 
-  def refresh_message_for_targets(targets, id, theme, add_cache_breaker=false)
+  def refresh_message_for_targets(targets, theme)
     targets.map do |target|
-      link = Stylesheet::Manager.stylesheet_link_tag(target.to_sym, 'all', theme.key)
-      if link
-        href = link.split(/["']/)[1]
-        if add_cache_breaker
-          href << (href.include?("?") ? "&" : "?")
-          href << SecureRandom.hex
-        end
+      href = Stylesheet::Manager.stylesheet_href(target.to_sym, theme.key)
+      if href
         {
-          name: "/stylesheets/#{target}#{id ? "_#{id}": ""}",
-          new_href: href
+          target: target,
+          new_href: href,
+          theme_key: theme.key
         }
       end
     end
@@ -210,13 +220,13 @@ class Theme < ActiveRecord::Base
     target = target.to_sym
 
     theme_ids = [self.id] + (included_themes.map(&:id) || [])
-    fields = ThemeField.where(target: [Theme.targets[target], Theme.targets[:common]])
+    fields = ThemeField.where(target_id: [Theme.targets[target], Theme.targets[:common]])
                        .where(name: name.to_s)
                        .includes(:theme)
                        .joins("JOIN (
                              SELECT #{theme_ids.map.with_index{|id,idx| "#{id} AS theme_id, #{idx} AS sort_column"}.join(" UNION ALL SELECT ")}
                             ) as X ON X.theme_id = theme_fields.theme_id")
-                       .order('sort_column, target')
+                       .order('sort_column, target_id')
     fields.each(&:ensure_baked!)
     fields
   end
@@ -233,24 +243,30 @@ class Theme < ActiveRecord::Base
     @changed_colors ||= []
   end
 
-  def set_field(target, name, value)
+  def set_field(target:, name:, value: nil, type: nil, type_id: nil, upload_id: nil)
     name = name.to_s
 
     target_id = Theme.targets[target.to_sym]
     raise "Unknown target #{target} passed to set field" unless target_id
 
-    field = theme_fields.find{|f| f.name==name && f.target == target_id}
+    type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name)
+    raise "Unknown type #{type} passed to set field" unless type_id
+
+    value ||= ""
+
+    field = theme_fields.find{|f| f.name==name && f.target_id == target_id && f.type_id == type_id}
     if field
-      if value.blank?
+      if value.blank? && !upload_id
         theme_fields.delete field.destroy
       else
-        if field.value != value
+        if field.value != value || field.upload_id != upload_id
           field.value = value
+          field.upload_id = upload_id
           changed_fields << field
         end
       end
     else
-      theme_fields.build(target: target_id, value: value, name: name) if value.present?
+      theme_fields.build(target_id: target_id, value: value, name: name, type_id: type_id, upload_id: upload_id) if value.present? || upload_id.present?
     end
   end
 

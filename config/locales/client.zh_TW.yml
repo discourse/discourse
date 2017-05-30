@@ -497,7 +497,6 @@ zh_TW:
         instructions: |
           此設置將覆蓋活動摘要。<br />
           靜音主題和分類不包含在這些郵件中。
-        daily: "發送每日更新"
         individual: "每當有新文章時，寄給我郵件通知"
         individual_no_echo: "每當有新文章時，寄給我郵件通知（除了我自己的文章）"
         many_per_day: "每當有新文章時，寄給我郵件通知（每天約有  {{dailyEmailEstimate}}  封）。"
@@ -963,7 +962,6 @@ zh_TW:
       cannot_see_mention:
         category: "你提到了{{userrname}}，然而他們不能訪問該分類，所以他們不會被通知。你需要把他們加入到能訪問該分類的群組中。"
         private: "你提到了{{userrname}}，然而他們不能訪問該私信，所以他們不會被通知。你需要邀請他們至私信中。"
-      duplicate_link: "似乎你的連結 <b>{{domain}}</b> 在<a href='{{post_url}}'>{{ago}}</a>已經由<b>@{{username}}</b>回覆了 － 確定再次提交嗎？"
       error:
         title_missing: "標題為必填欄位"
         title_too_short: "標題必須至少 {{min}} 個字"
@@ -1172,10 +1170,8 @@ zh_TW:
         dismiss_new: "設定新文章為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
-        change_category: "改變分類"
         close_topics: "關閉討論話題"
         archive_topics: "已封存的討論話題"
-        notification_level: "改變通知等級"
         choose_new_category: "為主題選擇新類別："
         selected:
           other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
@@ -1292,9 +1288,6 @@ zh_TW:
           '3_2': '你將收到關於此討論話題的通知，因為你正在關注此討論話題。'
           '3_1': '你將收到關於此討論話題的通知，因為你建立了此討論話題。'
           '3': '你將收到關於此討論話題的通知，因為你正在關注此討論話題。'
-          '2_8': '你將會收到通知，因為你在追蹤此分類。'
-          '2_4': '你將收到關於此討論話題的通知，因為你回覆了此討論話題。'
-          '2_2': '你將收到關於此討論話題的通知，因為你正在追蹤此討論話題。'
           '1_2': '如果有人@你或回覆你，將通知你。'
           '1': '如果有人@你或回覆你，將通知你。'
           '0_7': '你正忽略此分類中的所有通知。'
@@ -1444,7 +1437,6 @@ zh_TW:
           other: "請選擇一位新用戶作為此 {{count}} 篇由 <b>{{old_user}}</b> 撰寫之文章的擁有者。"
         instructions_warn: "注意，關於此篇文章的舊通知，並不會移轉到新用戶。<br>警告：目前所有與文章相關的資料都不會移轉至新用戶，請謹慎使用。"
       change_timestamp:
-        title: "變更時間戳記"
         action: "變更時間戳記"
         invalid_timestamp: "時間戳記不能為將來的時刻。"
         error: "更改主題時間時發生錯誤。"
@@ -1672,8 +1664,6 @@ zh_TW:
       security: "安全性"
       special_warning: "警告：這個分類是已經自動建立好的分類，它的安全設置不能被更改。如果你不想要使用這個分類，直接刪除它，而不是另作他用。"
       images: "圖片"
-      auto_close_label: "自動關閉討論話題的期限:"
-      auto_close_units: "小時"
       email_in: "自訂外來電郵地址:"
       email_in_allow_strangers: "接受非用戶的電郵"
       email_in_disabled: "\"用電子郵件張貼新的討論話題\"功能已被關閉。若要使用此功能，"
@@ -1946,8 +1936,6 @@ zh_TW:
       granted_on: "授予於%{date}"
       others_count: "其他有該徽章的人（%{count}）"
       title: 徽章
-      allow_title: "能用作頭銜"
-      multiple_grant: "能被授予多次"
       badge_count:
         other: "%{count} 徽章"
       more_badges:
@@ -2232,7 +2220,6 @@ zh_TW:
         event_type_missing: "你必須設置一個事件類型。"
         content_type: "內容格式"
         secret: "密鑰"
-        event_chooser: "你想要 webhook 發送哪些事件？"
         wildcard_event: "發送任何事件。"
         individual_event: "選擇各個事件。"
         verify_certificate: "檢查 Payload URL 的 TLS 證書"
@@ -2360,32 +2347,12 @@ zh_TW:
       customize:
         title: "客製化"
         long_title: "網站客製化"
-        css: "CSS"
-        header: "標頭"
-        top: "精選"
-        footer: "頁尾"
-        embedded_css: "內嵌 CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML 將會置於 </head> 之前"
-        body_tag:
-          text: "</body>"
-          title: "HTML 將會置於 </body> 之前"
-        override_default: "不要保含標準樣式"
-        enabled: "已啟用?"
         preview: "預覽"
-        undo_preview: "移除預覽"
-        rescue_preview: "預設風格"
-        explain_preview: "以此自訂樣式預覽網頁"
-        explain_undo_preview: "還原現時的自訂樣式"
-        explain_rescue_preview: "以預設樣式預覽網頁"
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
         import: "匯入"
-        import_title: "選取檔案或貼上文本"
         delete: "刪除"
-        delete_confirm: "刪除此樣式？"
         about: "修改網站的 CSS 和 HTML headers。請新增一個自定樣式來開始使用。"
         color: "顏色"
         opacity: "不透明度"
@@ -2398,13 +2365,9 @@ zh_TW:
           none_selected: "選擇一個電子郵件範本開始編輯"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS 與 HTML 客製化"
         colors:
           title: "顏色"
           long_title: "顏色樣式"
-          about: "不需撰寫 CSS 即可修改網站的顏色。請新增一項方案來開始使用。"
           new_name: "新的配色樣式"
           copy_name_prefix: "複製於"
           delete_confirm: "刪除此顏色樣式？"
@@ -2543,8 +2506,6 @@ zh_TW:
             change_trust_level: "修改信任等級"
             change_username: "修改用戶名稱"
             change_site_setting: "修改網站設定"
-            change_site_customization: "修改網站客製化"
-            delete_site_customization: "刪除網站客製化"
             change_site_text: "更改站點文字"
             suspend_user: "將用戶停權"
             unsuspend_user: "恢復用戶權限"

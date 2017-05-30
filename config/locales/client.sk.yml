@@ -119,6 +119,7 @@ sk:
           other: "%{count} rokov neskôr"
       previous_month: 'Predchádzajúci mesiac'
       next_month: 'Nasledujúci mesiac'
+      placeholder: Zvoľte dátum
     share:
       topic: 'zdieľaj odkaz na túto tému'
       post: 'príspevok #%{postNumber}'
@@ -524,7 +525,6 @@ sk:
         instructions: |
           Toto nastavenie nahradí Zhrnutie aktivíť.<br />
           Stíšené témy a kategórie nie sú v týchto emailoch zahrnuté.
-        daily: "Posielať denné aktualizácie"
         individual: "Pošli email pri každom novom príspevku"
         many_per_day: "Pošli mi email pri každom novom príspevku (cca {{dailyEmailEstimate}} denne)"
         few_per_day: "Pošli mi email pri každom novom príspevku (cca 2 denne)"
@@ -1164,10 +1164,8 @@ sk:
         dismiss_new: "Zahodiť. Nová"
         toggle: "prepnuť hromadne vybrané témy"
         actions: "Hromadné akcie"
-        change_category: "Zmeň kategóriu"
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
-        notification_level: "Zmeň úroveň upozorňovania"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
           one: "Označíli ste <b>1</b> tému."
@@ -1293,9 +1291,6 @@ sk:
           '3_2': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
           '3_1': 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
           '3': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
-          '2_8': 'Budete dostávať upozornenia, pretože pozorujete túto kategóriu.'
-          '2_4': 'Budete dostávať upozornenia, pretože ste zaslali odpoveď na túto tému.'
-          '2_2': 'Budete dostávať upozornenia, pretože pozorujete túto tému.'
           '1_2': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '1': 'Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie.'
           '0_7': 'Ignorujete všetky upozornenia v tejto kategórii.'
@@ -1452,7 +1447,6 @@ sk:
           other: "Prosím vyberte nového vlastníka {{count}}  príspevkov vytvorených <b>{{old_user}}</b>."
         instructions_warn: "Poznámka: Žiadne upozornenie o tomto príspevku nebude spätne zaslané novým používateľom<br>Upozornenie: Momentálne nie sú prenášané žiadne dáta vťahujúce sa k príspevku na nových užívateľov. Používajte opatrne."
       change_timestamp:
-        title: "Nastavte časovú značku"
         action: "nastavte časovú značku"
         invalid_timestamp: "Časová značka nemôže byť v budúcnosti. "
         error: "Nastala chyba pri zmene časovej značky témy."
@@ -1708,8 +1702,6 @@ sk:
       security: "Bezpečnosť"
       special_warning: "Upozornenie: Toto je preddefinovaná kategória a jej bezpečnostné nastavenia sa nedajú upraviť. Pokiaľ si neželáte použiť túto kategóriu, neupravujte ju, ale zmažte."
       images: "Obrázky"
-      auto_close_label: "Automaticky uzavrieť tému po:"
-      auto_close_units: "hodinách"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
       email_in_disabled: "Vkladanie nových tém cez email je zablokované v Nastaveniach stránky. Ak chcete povoliť vkladanie nových téme cez email,"
@@ -1988,7 +1980,6 @@ sk:
       granted_on: "Udelený dňa %{date}"
       others_count: "Ostatní s týmto odznakom (%{count})"
       title: Odznaky
-      allow_title: "dostupný názov"
       granted:
         one: "1 udelený"
         few: "%{count} udelené"
@@ -2318,32 +2309,12 @@ sk:
       customize:
         title: "Upraviť"
         long_title: "Úpravy webu"
-        css: "CSS"
-        header: "Hlavička"
-        top: "Vrch"
-        footer: "Päta"
-        embedded_css: "Vnorené CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML, ktoré bude vložené pred </body> tag"
-        body_tag:
-          text: "</body>"
-          title: "HTML, ktoré bude vložené pred </body> tag"
-        override_default: "Nevkladať štandardné štýly"
-        enabled: "Povolené?"
         preview: "náhľad"
-        undo_preview: "zmazať náhľad"
-        rescue_preview: "predvolený štýl"
-        explain_preview: "Nastaviť na stránke vlastné štýly"
-        explain_undo_preview: "Vrátiť sa k akruálnym vlastným štýlom"
-        explain_rescue_preview: "Nastavit na stránke štandardné štýly"
         save: "Uložiť"
         new: "Nový"
         new_style: "Nový štýl"
         import: "Import"
-        import_title: "Vyberte súbor alebo vložte text"
         delete: "Odstrániť"
-        delete_confirm: "Zmazať túto úpravu?"
         about: "Upraviť CSS štýly a HTML hlavičky na stránke. Začnite pridaním úpravy."
         color: "Farba"
         opacity: "Nepriesvitnosť"
@@ -2356,13 +2327,9 @@ sk:
           none_selected: "Vyberte šablénu emailu pre začatie úpravy."
           revert: "Vrátiť zmeny"
           revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Úpravy CSS a HTML"
         colors:
           title: "Farby"
           long_title: "Farebné schémy"
-          about: "Upravte farby použité na stránke bez použitia CSS. Začnite pridaním schémy."
           new_name: "Nová farebná schéma"
           copy_name_prefix: "Kópia"
           delete_confirm: "Zmazať túto farebnú schému?"
@@ -2493,8 +2460,6 @@ sk:
             change_trust_level: "zmeniť stupeň dôvery"
             change_username: "zmeniť používateľské meno"
             change_site_setting: "zmeniť nastavenia webu"
-            change_site_customization: "zmeniť úpravy webu"
-            delete_site_customization: "zmazať úpravy webu"
             change_site_text: "zmeniť text stránky"
             suspend_user: "zruš práva používateľovi"
             unsuspend_user: "obnov práva používateľovi"

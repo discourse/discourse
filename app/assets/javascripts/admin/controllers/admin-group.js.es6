@@ -22,9 +22,9 @@ export default Ember.Controller.extend({
     ];
   }.property(),
 
-  @computed('model.visible', 'model.public', 'model.alias_level')
+  @computed('model.visible', 'model.public')
   disableMembershipRequestSetting(visible, publicGroup) {
-    return !visible || publicGroup || !this.get('model.canEveryoneMention');
+    return !visible || publicGroup;
   },
 
   @computed('model.visible', 'model.allow_membership_requests')

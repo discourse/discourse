@@ -11,11 +11,54 @@ describe Admin::ThemesController do
       @user = log_in(:admin)
     end
 
+    context '.upload_asset' do
+      render_views
+
+      let(:upload) do
+        ActionDispatch::Http::UploadedFile.new({
+          filename: 'test.woff2',
+          tempfile: file_from_fixtures("fake.woff2", "woff2")
+        })
+      end
+
+      it 'can create a theme upload' do
+        xhr :post, :upload_asset, file: upload
+        expect(response.status).to eq(201)
+        upload = Upload.find_by(original_filename: "test.woff2")
+        expect(upload.id).not_to be_nil
+        expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
+      end
+    end
+
+    context '.import' do
+      let(:theme_file) do
+        ActionDispatch::Http::UploadedFile.new({
+          filename: 'sam-s-simple-theme.dcstyle.json',
+          tempfile: file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json")
+        })
+      end
+
+      it 'imports a theme' do
+        xhr :post, :import, theme: theme_file
+        expect(response).to be_success
+
+        json = ::JSON.parse(response.body)
+
+        expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
+        expect(json["theme"]["theme_fields"].length).to eq(2)
+        expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+    end
+
     context ' .index' do
-      it 'returns success' do
+      it 'correctly returns themes' do
+
+        ColorScheme.destroy_all
+        Theme.destroy_all
+
         theme = Theme.new(name: 'my name', user_id: -1)
-        theme.set_field(:common, :scss, '.body{color: black;}')
-        theme.set_field(:desktop, :after_header, '<b>test</b>')
+        theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
+        theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
 
         theme.remote_theme = RemoteTheme.new(
           remote_url: 'awesome.git',
@@ -69,12 +112,13 @@ describe Admin::ThemesController do
       end
 
       it 'updates a theme' do
-        #focus
         theme = Theme.new(name: 'my name', user_id: -1)
-        theme.set_field(:common, :scss, '.body{color: black;}')
+        theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
         theme.save
 
         child_theme = Theme.create(name: 'my name', user_id: -1)
+
+        upload = Fabricate(:upload)
 
         xhr :put, :update, id: theme.id,
             theme: {
@@ -82,17 +126,21 @@ describe Admin::ThemesController do
           name: 'my test name',
           theme_fields: [
             { name: 'scss', target: 'common', value: '' },
-            { name: 'scss', target: 'desktop', value: 'body{color: blue;}' }
+            { name: 'scss', target: 'desktop', value: 'body{color: blue;}' },
+            { name: 'bob', target: 'common', value: '', type_id: 2, upload_id: upload.id },
           ]
         }
         expect(response).to be_success
 
         json = ::JSON.parse(response.body)
 
-        fields = json["theme"]["theme_fields"]
+        fields = json["theme"]["theme_fields"].sort{|a,b| a["value"] <=> b["value"]}
 
-        expect(fields.first["value"]).to eq('body{color: blue;}')
-        expect(fields.length).to eq(1)
+        expect(fields[0]["value"]).to eq('')
+        expect(fields[0]["upload_id"]).to eq(upload.id)
+        expect(fields[1]["value"]).to eq('body{color: blue;}')
+
+        expect(fields.length).to eq(2)
 
         expect(json["theme"]["child_themes"].length).to eq(1)
 

@@ -6,8 +6,6 @@
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <meta name="discourse_theme_key" content="<%= theme_key %>">
     <%= render partial: "layouts/head" %>
-    <%= render partial: "common/special_font_face" %>
-    <%= render partial: "common/discourse_stylesheet" %>
     <%= discourse_csrf_tags %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
@@ -52,7 +50,12 @@
         <meta name="apple-itunes-app" content="app-id=1173672076">
     <%- end %>
 
+    <%= render partial: "common/discourse_stylesheet" %>
+    <%= render partial: "common/special_font_face" %>
+
     <%= yield :head %>
+
+    <%= raw build_plugin_html 'before-head-close' %>
   </head>
 
   <body class="<%= body_classes %>">
@@ -121,5 +124,6 @@
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>
     <%- end %>
+    <%= raw build_plugin_html 'before-body-close' %>
   </body>
 </html>

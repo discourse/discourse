@@ -3,7 +3,6 @@ class FlaggedUserSerializer < BasicUserSerializer
              :can_be_deleted,
              :post_count,
              :topic_count,
-             :email,
              :ip_address
 
   def can_delete_all_posts

@@ -52,13 +52,9 @@ describe Jobs::EmitWebHookEvent do
   end
 
   describe '.web_hook_request' do
-    before(:all) { Excon.defaults[:mock] = true }
-    after(:all) { Excon.defaults[:mock] = false }
-    after(:each) { Excon.stubs.clear }
-
     it 'creates delivery event record' do
-      Excon.stub({ url: "https://meta.discourse.org/webhook_listener" },
-                 { body: 'OK', status: 200 })
+      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+        .to_return(body: 'OK', status: 200)
 
       expect do
         subject.execute(web_hook_id: post_hook.id, event_type: 'post', post_id: post.id)
@@ -72,8 +68,8 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'sets up proper request headers' do
-      Excon.stub({ url: "https://meta.discourse.org/webhook_listener" },
-                 { headers: { test: 'string' }, body: 'OK', status: 200 })
+      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+        .to_return(headers: { test: 'string' }, body: 'OK', status: 200)
 
       subject.execute(web_hook_id: post_hook.id, event_type: 'ping', event_name: 'ping')
       event = WebHookEvent.last
@@ -86,7 +82,7 @@ describe Jobs::EmitWebHookEvent do
       expect(headers['X-Discourse-Event-Signature']).to eq('sha256=162f107f6b5022353274eb1a7197885cfd35744d8d08e5bcea025d309386b7d6')
       expect(event.payload).to eq(MultiJson.dump({ping: 'OK'}))
       expect(event.status).to eq(200)
-      expect(MultiJson.load(event.response_headers)['test']).to eq('string')
+      expect(MultiJson.load(event.response_headers)['Test']).to eq('string')
       expect(event.response_body).to eq('OK')
     end
   end

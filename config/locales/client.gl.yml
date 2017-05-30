@@ -101,6 +101,7 @@ gl:
           other: "%{count} anos despois"
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
+      placeholder: Escolla unha data
     share:
       topic: 'compartir unha ligazón a este tema'
       post: 'publicación %{postNumber}'
@@ -960,10 +961,8 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        change_category: "Cambiar categoría"
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
-        notification_level: "Cambiar o nivel de notificación"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
           one: "Seleccionaches <b>un</b> tema."
@@ -1068,9 +1067,6 @@ gl:
           '3_2': 'Recibirás notificacións porque estás vendo este tema.'
           '3_1': 'Recibirás notificacións por ser o creador deste tema.'
           '3': 'Recibirás notificacións porque estás vendo este tema.'
-          '2_8': 'Recibirás notificacións porque segues esta categoría.'
-          '2_4': 'Recibirás notificacións porque publicaches unha resposta neste tema.'
-          '2_2': 'Recibirás notificacións porque segues este tema.'
           '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '0_7': 'Estás ignorando todas as notificacións desta categoría.'
@@ -1212,7 +1208,6 @@ gl:
           other: "Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>."
         instructions_warn: "Decátate que ningunha notificación sobre esta publicación se transferirá retroactivamente ao novo usuario.<br>Aviso: actualmente, non se transfire ao novo usuario ningún dato relacionado cunha publicación. Usa isto con tino."
       change_timestamp:
-        title: "Cambiar a marca data/hora"
         action: "cambiar a marca data/hora"
         invalid_timestamp: "A marca data/hora non pode ser no futuro."
         error: "Produciuse un erro cambiando a marca data/hora do tema."
@@ -1442,8 +1437,6 @@ gl:
       security: "Seguranza"
       special_warning: "Aviso: esta categoría ten axustes predeterminados e as opcións de seguranza non se poden modificar. Se non queres usala, elimínaa no canto de reciclala."
       images: "Imaxes"
-      auto_close_label: "Pechar automaticamente os temas despois de:"
-      auto_close_units: "horas"
       email_in: "Personalizar enderezos de correos-e entrantes:"
       email_in_allow_strangers: "Aceptar correos-e de usuarios anónimos sen contas"
       email_in_disabled: "A publicación de novos temas vía correo-e está desactivada nos axustes do sitio. Para activala,"
@@ -1862,32 +1855,12 @@ gl:
       customize:
         title: "Personalizar"
         long_title: "Personalización do sitio"
-        css: "CSS"
-        header: "Cabeceira"
-        top: "Destacados"
-        footer: "Pé de páxina"
-        embedded_css: "CSS encaixado"
-        head_tag:
-          text: "</head>"
-          title: "HTML que se inserirá antes da etiqueta </head>"
-        body_tag:
-          text: "</body>"
-          title: "HTML que se inserirá antes da etiqueta </body>"
-        override_default: "Non incluír folla de estilo estándar"
-        enabled: "Activado?"
         preview: "previsualizar"
-        undo_preview: "eliminar previsualización"
-        rescue_preview: "estilo predeterminado"
-        explain_preview: "Ver o sitio con esta folla de estilo personalizada"
-        explain_undo_preview: "Volver á folla de estilo personalizada activada actualmente"
-        explain_rescue_preview: "Ver o sitio coa folla de estilo predeterminada"
         save: "Gardar"
         new: "Novo"
         new_style: "Novo estilo"
         import: "Importar"
-        import_title: "Seleccionar un ficheiro ou pegar un texto"
         delete: "Eliminar"
-        delete_confirm: "Queres eliminar esta personalización?"
         about: "Modificar as follas de estilo CSS e as cabeceiras HTML do sitio. Engadir unha personalización para comezar."
         color: "Cor"
         opacity: "Opacidade"
@@ -1900,13 +1873,9 @@ gl:
           none_selected: "Selecciona un modelo de correo-e para comezar a edición."
           revert: "Reverter os cambios"
           revert_confirm: "Confirmas a reversión dos cambios?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Personalizacións do CSS e do HTML"
         colors:
           title: "Cores"
           long_title: "Esquemas de cor"
-          about: "Modifica as cores usadas no sitio sen ter que escribir en CSS. Engade un esquema para comezar."
           new_name: "Novo esquema de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Queres eliminar este esquema de cor?"
@@ -2039,8 +2008,6 @@ gl:
             change_trust_level: "cambiar nivel de confianza"
             change_username: "cambiar nome do usuario"
             change_site_setting: "cambiar axuste do sitio"
-            change_site_customization: "cambiar a personalización do sitio"
-            delete_site_customization: "eliminar a personalización do sitio"
             change_site_text: "cambiar o texto do sitio"
             suspend_user: "suspender usuario"
             unsuspend_user: "non suspender usuario"

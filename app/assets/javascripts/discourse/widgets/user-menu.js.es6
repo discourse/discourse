@@ -72,7 +72,7 @@ createWidget('user-menu-links', {
     glyphs.push({ label: 'user.preferences',
                   className: 'user-preferences-link',
                   icon: 'gear',
-                  href: `${path}/preferences` });
+                  href: `${path}/preferences/account` });
 
     return h('ul.menu-links-row', [
              links.map(l => h('li', this.attach('link', l))),

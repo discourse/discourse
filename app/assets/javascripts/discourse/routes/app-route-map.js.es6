@@ -64,6 +64,10 @@ export default function() {
   // User routes
   this.route('users', { resetNamespace: true, path: '/u' });
   this.route('password-reset', { path: '/u/password-reset/:token' });
+  this.route('account-created', { path: '/u/account-created' }, function() {
+    this.route('resent');
+    this.route('edit-email');
+  });
   this.route('user', { path: '/u/:username', resetNamespace: true }, function() {
     this.route('summary');
     this.route('userActivity', { path: '/activity', resetNamespace: true }, function() {
@@ -93,6 +97,15 @@ export default function() {
     });
 
     this.route('preferences', { resetNamespace: true }, function() {
+      this.route('account');
+      this.route('profile');
+      this.route('emails');
+      this.route('notifications');
+      this.route('categories');
+      this.route('tags');
+      this.route('interface');
+      this.route('apps');
+
       this.route('username');
       this.route('email');
       this.route('about', { path: '/about-me' });

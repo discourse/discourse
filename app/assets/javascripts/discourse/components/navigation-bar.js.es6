@@ -13,7 +13,8 @@ export default Ember.Component.extend({
   },
 
   @computed("filterMode", "navItems")
-  selectedNavItem(filterMode, navItems){
+  selectedNavItem(filterMode, navItems) {
+    if (filterMode.indexOf("top/") === 0) { filterMode = "top"; }
     var item = navItems.find(i => i.get('filterMode').indexOf(filterMode) === 0);
     return item || navItems[0];
   },

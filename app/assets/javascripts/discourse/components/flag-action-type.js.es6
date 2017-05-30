@@ -26,6 +26,11 @@ export default Ember.Component.extend({
   showDescription: Em.computed.not('showMessageInput'),
   isNotifyUser: Em.computed.equal('flag.name_key', 'notify_user'),
 
+  @computed('flag.description', 'flag.short_description')
+  description(long_description, short_description) {
+    return this.site.mobileView ? short_description : long_description;
+  },
+
   @computed('message.length')
   customMessageLengthClasses(messageLength) {
     return (messageLength < Discourse.SiteSettings.min_private_message_post_length) ? "too-short" : "ok";

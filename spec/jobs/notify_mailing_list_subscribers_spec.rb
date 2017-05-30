@@ -32,9 +32,8 @@ describe Jobs::NotifyMailingListSubscribers do
     before { SiteSetting.disable_mailing_list_mode = false }
 
     context "with an invalid post_id" do
-      it "throws an error" do
-        expect { Jobs::NotifyMailingListSubscribers.new.execute(post_id: -1) }.to raise_error(Discourse::InvalidParameters)
-      end
+      before { post.update(deleted_at: Time.now) }
+      include_examples "no emails"
     end
 
     context "with a deleted post" do
@@ -76,11 +75,6 @@ describe Jobs::NotifyMailingListSubscribers do
 
       context "to an user who has disabled mailing list mode" do
         before { mailing_list_user.user_option.update(mailing_list_mode: false) }
-        include_examples "no emails"
-      end
-
-      context "to an user who has frequency set to 'daily'" do
-        before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 0) }
         include_examples "no emails"
       end
 

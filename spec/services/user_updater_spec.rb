@@ -66,6 +66,10 @@ describe UserUpdater do
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
 
+      theme = Theme.create!(user_id: -1, name: "test", user_selectable: true)
+
+      seq = user.user_option.theme_key_seq
+
       val = updater.update(bio_raw: 'my new bio',
                      email_always: 'true',
                      mailing_list_mode: true,
@@ -74,7 +78,8 @@ describe UserUpdater do
                      auto_track_topics_after_msecs: 101,
                      notification_level_when_replying: 3,
                      email_in_reply_to: false,
-                     date_of_birth: date_of_birth
+                     date_of_birth: date_of_birth,
+                     theme_key: theme.key
                     )
       expect(val).to be_truthy
 
@@ -88,6 +93,8 @@ describe UserUpdater do
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
       expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
+      expect(user.user_option.theme_key).to eq theme.key
+      expect(user.user_option.theme_key_seq).to eq(seq+1)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 

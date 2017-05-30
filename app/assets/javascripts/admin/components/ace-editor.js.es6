@@ -37,6 +37,9 @@ export default Ember.Component.extend({
       // xxx: don't run during qunit tests
       this.appEvents.off('ace:resize', this, this.resize);
     }
+
+    $(window).off('ace:resize');
+
   }.on('willDestroyElement'),
 
   resize() {
@@ -63,12 +66,18 @@ export default Ember.Component.extend({
           this._skipContentChangeEvent = false;
         });
         editor.$blockScrolling = Infinity;
+        editor.renderer.setScrollMargin(10,10);
 
         this.$().data('editor', editor);
         this._editor = editor;
+
+        $(window).off('ace:resize').on('ace:resize', ()=>{
+          this.appEvents.trigger('ace:resize');
+        });
+
         if (this.appEvents) {
           // xxx: don't run during qunit tests
-          this.appEvents.on('ace:resize', self, self.resize);
+          this.appEvents.on('ace:resize', ()=>this.resize());
         }
 
         if (this.get("autofocus")) {

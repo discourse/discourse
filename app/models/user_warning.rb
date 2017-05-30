@@ -6,7 +6,7 @@ end
 
 # == Schema Information
 #
-# Table name: warnings
+# Table name: user_warnings
 #
 #  id            :integer          not null, primary key
 #  topic_id      :integer          not null
@@ -17,6 +17,6 @@ end
 #
 # Indexes
 #
-#  index_warnings_on_topic_id  (topic_id) UNIQUE
-#  index_warnings_on_user_id   (user_id)
+#  index_user_warnings_on_topic_id  (topic_id) UNIQUE
+#  index_user_warnings_on_user_id   (user_id)
 #

@@ -57,6 +57,7 @@ class PostAction < ActiveRecord::Base
                                     .joins(post: :topic)
                                     .where('posts.deleted_at' => nil)
                                     .where('topics.deleted_at' => nil)
+                                    .where('posts.user_id > 0')
                                     .count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)
@@ -520,8 +521,8 @@ SQL
       )
     )
 
-    topic.set_or_create_status_update(
-      TopicStatusUpdate.types[:open],
+    topic.set_or_create_timer(
+      TopicTimer.types[:open],
       SiteSetting.num_hours_to_close_topic,
       by_user: Discourse.system_user
     )

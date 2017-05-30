@@ -269,12 +269,12 @@ describe PostCreator do
 
         it "doesn't update topic's auto close when it's not based on last post" do
           Timecop.freeze do
-            topic = Fabricate(:topic).set_or_create_status_update(TopicStatusUpdate.types[:close], 12)
+            topic = Fabricate(:topic).set_or_create_timer(TopicTimer.types[:close], 12)
 
             PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
             topic.reload
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
             expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
             expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
           end
@@ -283,7 +283,7 @@ describe PostCreator do
         it "updates topic's auto close date when it's based on last post" do
           Timecop.freeze do
             topic = Fabricate(:topic,
-              topic_status_updates: [Fabricate(:topic_status_update,
+              topic_timers: [Fabricate(:topic_timer,
                 based_on_last_post: true,
                 execute_at: Time.zone.now - 12.hours,
                 created_at: Time.zone.now - 24.hours
@@ -294,7 +294,7 @@ describe PostCreator do
 
             PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
             expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
             expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
           end
@@ -362,7 +362,7 @@ describe PostCreator do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         expect {
           PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create!
-        }.to_not change { TopicStatusUpdate.count }
+        }.to_not change { TopicTimer.count }
       end
     end
   end
@@ -395,6 +395,9 @@ describe PostCreator do
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
 
+      # date is not precise enough in db
+      whisper_reply.reload
+
 
       first.reload
       # does not leak into the OP
@@ -408,7 +411,10 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
 
-      topic.update_columns(highest_staff_post_number:0, highest_post_number:0, posts_count: 0, last_posted_at: 1.year.ago)
+      topic.update_columns(highest_staff_post_number:0,
+                           highest_post_number:0,
+                           posts_count: 0,
+                           last_posted_at: 1.year.ago)
 
       Topic.reset_highest(topic.id)
 
@@ -898,6 +904,23 @@ describe PostCreator do
       )
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
       expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
+    end
+
+    it "topic notification level is normal based on preference" do
+      user.user_option.notification_level_when_replying = 1
+
+      admin = Fabricate(:admin)
+      topic = PostCreator.create(admin,
+                                 title: "this is the title of a topic created by an admin for tracking notification",
+                                 raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
+      )
+
+      post = PostCreator.create(user,
+                                topic_id: topic.topic_id,
+                                raw: "this is a reply to set the tracking state to normal ;)"
+      )
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+      expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:regular])
     end
   end
 

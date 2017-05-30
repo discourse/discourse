@@ -43,7 +43,7 @@ export default function(topic, params){
     buffer = "<div class='discourse-tags'>";
     if (tags) {
       for(let i=0; i<tags.length; i++){
-        buffer += renderTag(tags[i]);
+        buffer += renderTag(tags[i]) + ' ';
       }
     }
 

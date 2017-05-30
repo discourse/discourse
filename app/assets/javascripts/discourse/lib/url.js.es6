@@ -22,7 +22,12 @@ export function rewritePath(path) {
   const params = path.split("?");
 
   let result = params[0];
-  rewrites.forEach(rw => result = result.replace(rw.regexp, rw.replacement));
+  rewrites.forEach(rw => {
+    if (((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0))) {
+      return;
+    }
+    result = result.replace(rw.regexp, rw.replacement);
+  });
 
   if (params.length > 1) {
     result += `?${params[1]}`;
@@ -219,8 +224,8 @@ const DiscourseURL = Ember.Object.extend({
     return this.handleURL(path, opts);
   },
 
-  rewrite(regexp, replacement) {
-    rewrites.push({ regexp, replacement });
+  rewrite(regexp, replacement, opts) {
+    rewrites.push({ regexp, replacement, opts: opts || {} });
   },
 
   redirectTo(url) {
@@ -269,18 +274,17 @@ const DiscourseURL = Ember.Object.extend({
 
         if (newMatches[3]) { opts.nearPost = newMatches[3]; }
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
-        const closest = opts.nearPost || 1;
 
         opts.cancelSummary = true;
 
         postStream.refresh(opts).then(() => {
+          const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
 
           this.appEvents.trigger('post:highlight', closest);
-        }).then(() => {
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen
           };

@@ -3,11 +3,11 @@ import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import { relativeAge } from 'discourse/lib/formatter';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { escapeExpression } from 'discourse/lib/utilities';
 import { emojiUnescape } from 'discourse/lib/text';
+import { shortDate } from 'discourse/lib/formatter';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -228,8 +228,6 @@ export default Ember.Controller.extend({
       if (topic.get('posts_count') === 1) { return; }
 
       const post = this.get('model.post');
-      if (post && post.get('user_id') !== this.currentUser.id) { return; }
-
       const $links = $('a[href]', $preview);
       $links.each((idx, l) => {
         const href = $(l).prop('href');
@@ -241,7 +239,7 @@ export default Ember.Controller.extend({
               domain: info.domain,
               username: info.username,
               post_url: topic.urlForPostNumber(info.post_number),
-              ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' })
+              ago: shortDate(info.posted_at)
             });
             this.appEvents.trigger('composer-messages:create', {
               extraClass: 'custom-body',
@@ -695,15 +693,21 @@ export default Ember.Controller.extend({
 
     return new Ember.RSVP.Promise(function (resolve) {
       if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
-        bootbox.confirm(I18n.t("post.abandon.confirm"), I18n.t("post.abandon.no_value"),
-            I18n.t("post.abandon.yes_value"), function(result) {
-          if (result) {
-            self.destroyDraft();
-            self.get('model').clearState();
-            self.close();
-            resolve();
+        bootbox.dialog(I18n.t("post.abandon.confirm"), [
+          { label: I18n.t("post.abandon.no_value") },
+          {
+            label: I18n.t("post.abandon.yes_value"),
+            'class': 'btn-danger',
+            callback(result) {
+              if (result) {
+                self.destroyDraft();
+                self.get('model').clearState();
+                self.close();
+                resolve();
+              }
+            }
           }
-        });
+        ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         self.destroyDraft();

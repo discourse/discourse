@@ -162,7 +162,7 @@ describe Invite do
 
     it "works" do
       # doesn't create an invite
-      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(StandardError)
+      expect { topic.invite_by_email(topic.user, coding_horror.email) }.to raise_error(Invite::UserExists)
 
       # gives the user permission to access the topic
       expect(topic.allowed_users.include?(coding_horror)).to eq(true)
@@ -209,33 +209,6 @@ describe Invite do
         invite.redeem
         used_invite = Invite.find_by(id: redeemed_invite.id)
         expect(used_invite).not_to be_nil
-      end
-
-    end
-
-    context 'enqueues a job to email "set password" instructions' do
-
-      it 'does not enqueue an email if sso is enabled' do
-        SiteSetting.stubs(:enable_sso).returns(true)
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        invite.redeem
-      end
-
-      it 'does not enqueue an email if local login is disabled' do
-        SiteSetting.stubs(:enable_local_logins).returns(false)
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        invite.redeem
-      end
-
-      it 'does not enqueue an email if the user has already set password' do
-        Fabricate(:user, email: invite.email, password_hash: "7af7805c9ee3697ed1a83d5e3cb5a3a431d140933a87fdcdc5a42aeef9337f81")
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-        invite.redeem
-      end
-
-      it 'enqueues an email if all conditions are satisfied' do
-        Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username))
-        invite.redeem
       end
 
     end

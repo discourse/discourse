@@ -26,7 +26,7 @@ describe AdminUserIndexQuery do
       query = ::AdminUserIndexQuery.new({ order: "trust_level" })
       expect(query.find_users_query.to_sql).to match("trust_level DESC")
     end
-    
+
     it "allows custom ordering asc" do
       query = ::AdminUserIndexQuery.new({ order: "trust_level", ascending: true })
       expect(query.find_users_query.to_sql).to match("trust_level ASC" )
@@ -40,6 +40,28 @@ describe AdminUserIndexQuery do
     it "allows custom ordering and direction for stats" do
       query = ::AdminUserIndexQuery.new({ order: "topics_viewed", ascending: true })
       expect(query.find_users_query.to_sql).to match("topics_entered ASC")
+    end
+  end
+
+  describe "pagination" do
+    it "defaults to the first page" do
+      query = ::AdminUserIndexQuery.new({})
+      expect(query.find_users.to_sql).to match("OFFSET 0")
+    end
+
+    it "offsets by 100 by default for page 2" do
+      query = ::AdminUserIndexQuery.new({ page: "2"})
+      expect(query.find_users.to_sql).to match("OFFSET 100")
+    end
+
+    it "offsets by limit for page 2" do
+      query = ::AdminUserIndexQuery.new({ page: "2"})
+      expect(query.find_users(10).to_sql).to match("OFFSET 10")
+    end
+
+    it "ignores negative pages" do
+      query = ::AdminUserIndexQuery.new({ page: "-2" })
+      expect(query.find_users.to_sql).to match("OFFSET 0")
     end
   end
 

@@ -63,6 +63,11 @@ class DiscoursePluginRegistry
     def html_builders
       @html_builders ||= {}
     end
+
+    def vendored_pretty_text
+      @vendored_pretty_text ||= Set.new
+    end
+
   end
 
   def register_js(filename, options={})
@@ -107,6 +112,8 @@ class DiscoursePluginRegistry
     if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
+      elsif opts == :vendored_pretty_text
+        self.vendored_pretty_text << asset
       else
         self.javascripts << asset
       end
@@ -120,7 +127,6 @@ class DiscoursePluginRegistry
       else
         self.stylesheets << asset
       end
-
     elsif asset =~ HANDLEBARS_REGEX
       self.handlebars << asset
     end
@@ -134,8 +140,8 @@ class DiscoursePluginRegistry
     html_builders[name] = block
   end
 
-  def self.build_html(name)
-    html_builders[name]&.call
+  def self.build_html(name, ctx=nil)
+    html_builders[name]&.call(ctx)
   end
 
   def javascripts
@@ -181,6 +187,7 @@ class DiscoursePluginRegistry
     serialized_current_user_fields
     asset_globs.clear
     html_builders.clear
+    vendored_pretty_text.clear
   end
 
   def self.setup(plugin_class)

@@ -413,8 +413,8 @@ describe TopicsController do
       end
 
       it 'should update the status of the topic correctly' do
-        @topic = Fabricate(:topic, user: @user, closed: true, topic_status_updates: [
-          Fabricate(:topic_status_update, status_type: TopicStatusUpdate.types[:open])
+        @topic = Fabricate(:topic, user: @user, closed: true, topic_timers: [
+          Fabricate(:topic_timer, status_type: TopicTimer.types[:open])
         ])
 
         xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
@@ -1134,9 +1134,21 @@ describe TopicsController do
         xhr :put, :make_banner, topic_id: topic.id
         expect(response).to be_success
       end
-
     end
+  end
 
+  describe 'remove_allowed_user' do
+    it 'admin can be removed from a pm' do
+
+      admin = log_in :admin
+      user = Fabricate(:user)
+      pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username, admin.username])
+
+      xhr :put, :remove_allowed_user, topic_id: pm.topic_id, username: admin.username
+
+      expect(response.status).to eq(200)
+      expect(TopicAllowedUser.where(topic_id: pm.topic_id, user_id: admin.id).first).to eq(nil)
+    end
   end
 
   describe 'remove_banner' do

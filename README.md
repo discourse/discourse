@@ -10,15 +10,15 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-<a href="https://bbs.boingboing.net"><img src="https://www.discourse.org/faq/14/boing-boing-discourse.png" width="720px"></a>
-<a href="https://twittercommunity.com/"><img src="https://www.discourse.org/faq/17/twitter-discourse.png" width="720px"></a>
-<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/17/how-to-geek-discourse.png" width="720px"></a>
-<a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/17/turtle-rock-discourse.png" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/17/nexus-7-2013-mobile-discourse.png" alt="Atom" width="430px"></a> &nbsp;
-<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/15/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
+<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://cloud.githubusercontent.com/assets/1385470/25397876/3fe6cdac-29c0-11e7-8a41-9d0c0279f5a3.png" width="720px"></a>
+<a href="https://twittercommunity.com/"><img src="https://cloud.githubusercontent.com/assets/1385470/25397920/71b24e4c-29c0-11e7-8bcf-7a47b888412e.png" width="720px"></a>
+<a href="http://discuss.howtogeek.com"><img src="https://cloud.githubusercontent.com/assets/1385470/25398049/f0995962-29c0-11e7-99d7-a3b9c4f0b357.png" width="720px"></a>
+<a href="https://talk.turtlerockstudios.com/"><img src="https://cloud.githubusercontent.com/assets/1385470/25398115/2d560d96-29c1-11e7-9a96-b0134a4fedff.png" width="720px"></a>
 
-Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
+<img src="https://www.discourse.org/a/img/about/mobile-devices-2x.jpg" alt="Mobile" width="414">
+
+Browse [lots more notable Discourse instances](https://www.discourse.org/customers).
 
 ## Development
 

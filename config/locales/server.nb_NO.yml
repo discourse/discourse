@@ -27,12 +27,13 @@ nb_NO:
   topics: "Emner"
   posts: "innlegg"
   loading: "Laster"
-  powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript påslått'
   log_in: "Logg inn"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet av forfatter"
+  themes:
+    bad_color_scheme: "Kan ikke oppdatere drakt, ugyldig fargepalett"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -259,6 +260,7 @@ nb_NO:
               same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
               same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
               same_as_current: "er det samme som nåværende passord."
+              unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
             ip_address:
               signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
         color_scheme_color:
@@ -453,7 +455,6 @@ nb_NO:
       long_form: 'markerte dette som urelevant'
     spam:
       title: 'Spam'
-      description: 'Dette innlegget er reklame. Det er ikke nyttig eller relevant til emnet men av promoterende karakter.'
       long_form: 'markerte dette som spam'
       email_title: '"%{title}" ble rapportert som spam'
       email_body: "%{link}\n\n%{message}"
@@ -873,12 +874,6 @@ nb_NO:
       click_here: "trykk her"
       from: "%{site_name} oppsummering"
       preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
-    mailing_list:
-      unsubscribe: "Denne oppsummeringen sendes daglig fordi e-postlistemodus er aktivert. For å melde deg deg av %{unsubscribe_link}."
-      from: "%{site_name}-oppsummering"
-      new_topics: "Nye emner"
-      view_this_topic: "Vis dette emnet"
-      back_to_top: "Tilbake til toppen"
   page_not_found:
     title: "Oisann! Den siden finnes ikke eller er privat."
     popular_topics: "Populært"
@@ -1046,11 +1041,25 @@ nb_NO:
     description: "Sikkerhetsmodus lar deg teste nettstedet ditt uten at tillegg eller tilpasninger lastes."
   wizard:
     step:
+      forum_title:
+        title: "Navn"
       contact:
         fields:
           contact_email:
             label: "E-post"
             placeholder: "navn@example.com"
+          contact_url:
+            label: "Nettside"
+            placeholder: "http://www.eksempel.no/kontakt-oss"
+          site_contact:
+            label: "Automatiserte meldinger"
+      corporate:
+        title: "Organisasjon"
+        fields:
+          company_short_name:
+            label: "Bedriftsnavn (kort)"
+      colors:
+        title: "Drakt"
       logos:
         title: "Logoer"
         fields:

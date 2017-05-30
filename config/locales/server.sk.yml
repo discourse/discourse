@@ -26,7 +26,6 @@ sk:
   topics: "Témy"
   posts: "príspevky"
   loading: "Načítava sa"
-  powered_by_html: 'Systém beží na <a href="http://www.discourse.org">Discourse</a>, najlepšie funguje so zapnutým JavaScriptom'
   log_in: "Prihlásenie"
   purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
@@ -476,7 +475,6 @@ sk:
       long_form: 'toto je označené ako "Mimo témy"'
     spam:
       title: 'Spam'
-      description: 'Tento príspevok je reklama. Nijako nesúvisí s danou témou, má propagačný charakter.'
       long_form: 'označiť toto ako spam'
       email_title: '"%{title}"  bol označený ako spam'
       email_body: "%{link}\n\n%{message}"
@@ -802,7 +800,6 @@ sk:
     force_hostname: "POZOR! LEN PRE VÝVOJÁROV! V URL zadajte hostname. Ak chcete použiť predvolené, nechajte políčko prázdne."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
     invite_passthrough_hours: "Ako dlho môže používateľ používať získaný pozývací kľúč na prihlasovanie, v hodinách"
-    invite_only: "Verejná registrácia je vypnutá, všetci noví používatelia musia byť explicitne pozvaní ostatnými členmi alebo obsluhou."
     login_required: "Požadovať prihlásenie pre čítanie obshau tejto stránky, zakáž anonymný prístup. "
     min_password_length: "Minimálna dĺžka hesla."
     min_admin_password_length: "Minimálna dĺžka hesla pre Administrátora."
@@ -1005,7 +1002,6 @@ sk:
     enable_names: "Na profile zobraziť plné používateľské meno, karty a emaily používateľa. Vypnite na schovanie plného mena všade."
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
-    invites_per_page: "Na stránke používateľa sú zobrazené štandardné pozvánky."
     short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
     default_code_lang: "Vysvietenie syntaxe pre štandardné programovacie jazyky, aplikované na GitHub bloky kódu (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Zobrazenie varovania, ak niekto začne odpovedať na tému, kde je posledná odpoveď staršia ako uvedený počet dní. Na vypnutie varozania zadajte 0."
@@ -1019,7 +1015,6 @@ sk:
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
     embed_whitelist_selector: "CSS prepínač na elementy, ktoré sú povolené pri vkladaní."
     embed_blacklist_selector: "CSS prepínač na elementy, ktoré sú vymazané pri vkladaní."
-    notify_about_flags_after: "Ak existujú príznaky ktoré neboli vyriešené po uvedenom počte hodín, pošli email na contact_email. Pre vypnutie nastavte 0."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: Vymazať návrhy staršie ako (n) dní.
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom sťahovať prílohy. VAROVANIE: toto nastavenie zneprístupní akékoľvek neobrázkové súbory na stánkach uložené ako prílohy."
@@ -1214,14 +1209,6 @@ sk:
       text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
     bulk_invite_failed:
       subject_template: "Zpracovanie pozvania viacerých používateľov dopadlo s chybami"
-      text_body_template: |
-        Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok s %{failed} chybou(chybami).
-
-        Tu je záznam:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Export dát kompletný"
     csv_export_failed:
@@ -1419,8 +1406,6 @@ sk:
     error: "Chyba !"
     email_input: "Email administrátora"
     submit_button: "Poslať email"
-  discourse_hub:
-    access_token_problem: "Povedzte administrátorovi: Prosím aktualizujte nastavenia stránky, aby obsahovali správny discourse_org_access_key."
   performance_report:
     initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
     initial_topic_title: Reporty rýchlosti stránok

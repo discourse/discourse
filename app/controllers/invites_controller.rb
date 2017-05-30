@@ -29,11 +29,13 @@ class InvitesController < ApplicationController
   end
 
   def perform_accept_invitation
+    params.require(:id)
+    params.permit(:username, :name, :password)
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
       begin
-        user = invite.redeem(username: params[:username], password: params[:password])
+        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password])
         if user.present?
           log_on_user(user)
           post_process_invite(user)
@@ -74,7 +76,7 @@ class InvitesController < ApplicationController
       else
         render json: failed_json, status: 422
       end
-    rescue => e
+    rescue Invite::UserExists => e
       render json: {errors: [e.message]}, status: 422
     end
   end
@@ -226,6 +228,8 @@ class InvitesController < ApplicationController
       if user.has_password?
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :signup, user_id: user.id, email_token: email_token.token)
+      elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+        Jobs.enqueue(:invite_password_instructions_email, username: user.username)
       end
     end
 

@@ -10,6 +10,7 @@ class GroupUser < ActiveRecord::Base
   after_save :set_primary_group
   after_destroy :remove_primary_group
 
+  before_create :set_notification_level
   after_save :grant_trust_level
 
   def self.notification_levels
@@ -17,6 +18,10 @@ class GroupUser < ActiveRecord::Base
   end
 
   protected
+
+  def set_notification_level
+    self.notification_level = group&.default_notification_level || 3
+  end
 
   def set_primary_group
     if group.primary_group

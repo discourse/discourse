@@ -117,23 +117,6 @@ SQL
         (:backfill OR u.id IN (:user_ids) )
 SQL
 
-  # member for a year + has posted at least once during that year
-  OneYearAnniversary = <<-SQL
-  SELECT u.id AS user_id, MIN(u.created_at + interval '1 year') AS granted_at
-    FROM users u
-    JOIN posts p ON p.user_id = u.id
-   WHERE u.id > 0
-     AND u.active
-     AND NOT u.blocked
-     AND u.created_at + interval '1 year' < now()
-     AND p.deleted_at IS NULL
-     AND NOT p.hidden
-     AND p.created_at + interval '1 year' > now()
-     AND (:backfill OR u.id IN (:user_ids))
-   GROUP BY u.id
-   HAVING COUNT(p.id) > 0
-SQL
-
   FirstMention = <<-SQL
   SELECT acting_user_id AS user_id, min(target_post_id) AS post_id, min(p.created_at) AS granted_at
   FROM user_actions

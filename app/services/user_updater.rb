@@ -33,7 +33,8 @@ class UserUpdater
     :email_previous_replies,
     :email_in_reply_to,
     :like_notification_frequency,
-    :include_tl0_in_digests
+    :include_tl0_in_digests,
+    :theme_key
   ]
 
   def initialize(actor, user)
@@ -74,6 +75,11 @@ class UserUpdater
     end
 
     save_options = false
+
+    # special handling for theme_key cause we need to bump a sequence number
+    if attributes.key?(:theme_key) && user.user_option.theme_key != attributes[:theme_key]
+      user.user_option.theme_key_seq += 1
+    end
 
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)

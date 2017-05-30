@@ -94,6 +94,10 @@ const Group = RestModel.extend({
     });
   },
 
+  @computed("display_name", "name")
+  displayName(groupDisplayName, name) {
+    return groupDisplayName || name;
+  },
 
   @computed('flair_bg_color')
   flairBackgroundHexColor() {
@@ -139,7 +143,8 @@ const Group = RestModel.extend({
       bio_raw: this.get('bio_raw'),
       public: this.get('public'),
       allow_membership_requests: this.get('allow_membership_requests'),
-      full_name: this.get('full_name')
+      full_name: this.get('full_name'),
+      default_notification_level: this.get('default_notification_level')
     };
   },
 
@@ -191,10 +196,10 @@ const Group = RestModel.extend({
     });
   },
 
-  setNotification(notification_level) {
+  setNotification(notification_level, userId) {
     this.set("group_user.notification_level", notification_level);
     return ajax(`/groups/${this.get("name")}/notifications`, {
-      data: { notification_level },
+      data: { notification_level, user_id: userId },
       type: "POST"
     });
   }

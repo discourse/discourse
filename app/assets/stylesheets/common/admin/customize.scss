@@ -6,12 +6,37 @@
       margin-bottom: 0;
     }
   }
+
+  .field-error {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
+    padding: 5px;
+  }
+
+  .edit-main-nav {
+    .nav-pills:after, .nav-pills:before {
+      display: inline;
+      content: "";
+    }
+    .show-overidden {
+      float: right;
+    }
+    margin-bottom: 10px;
+  }
+
   .admin-container {
     padding-left: 10px;
     padding-right: 10px;
   }
   .admin-footer {
     margin-top: 20px;
+  }
+  .select2-chosen, .color-schemes li {
+    .fa {
+      margin-right: 6px;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
   }
   .show-current-style {
     margin-left: 20px;
@@ -63,12 +88,21 @@
     }
 
     .nav.target {
+      li {
+        position: relative;
+      }
       margin-top: 15px;
       .fa {
         margin-left: 3px;
       }
+      li.mobile a {
+        padding-right: 25px;
+      }
       .fa-mobile {
-        font-size: 1.3em;
+        position: absolute;
+        right: 10px;
+        top: 3px;
+        font-size: 1.5em;
       }
     }
 
@@ -95,14 +129,8 @@
         bottom: 10px;
       }
       .ace-wrapper {
-        height: 100%;
+        height: calc(100% - 200px);
       }
-    }
-
-    .custom-ace-gutter {
-      width: 41px;
-      background-color: #ebebeb;
-      height: 15px;
     }
 
     .ace_editor {
@@ -158,6 +186,28 @@
     display: block;
     font-size: 0.8em;
     margin-top: 8px;
+  }
+
+  .removable-list {
+    list-style: none;
+    margin-left: 0;
+    li {
+      display: table-row;
+      .col:first-child {
+        padding-right: 10px;
+        padding-bottom: 10px;
+        min-width: 80px;
+      }
+      .col {
+        display: table-cell;
+      }
+    }
+  }
+}
+
+.add-upload-modal {
+  label {
+    margin-top: 20px;
   }
 }
 

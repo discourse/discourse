@@ -46,7 +46,7 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap { |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/**/*/**/plugin.rb"].sort.each do |path|
+      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
 
         # tagging is included in core, so don't load it
         next if path =~ /discourse-tagging/

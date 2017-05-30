@@ -7,15 +7,8 @@ describe StylesheetsController do
     StylesheetCache.destroy_all
     builder = Stylesheet::Manager.new('desktop_rtl', nil)
     builder.compile
-    builder.ensure_digestless_file
 
     digest = StylesheetCache.first.digest
-    StylesheetCache.destroy_all
-
-    # digestless
-    get :show, name: 'desktop_rtl'
-    expect(response).to be_success
-
     StylesheetCache.destroy_all
 
     get :show, name: "desktop_rtl_#{digest}"
@@ -27,9 +20,6 @@ describe StylesheetsController do
 
     # tmp folder destruction and cached
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
-
-    get :show, name: 'desktop_rtl'
-    expect(response).to be_success
 
     get :show, name: "desktop_rtl_#{digest}"
     expect(response).to be_success

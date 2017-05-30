@@ -31,6 +31,13 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed('watchForLink')
+  titleMaxLength() {
+    // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
+    // Validation will display a message if titles are too long.
+    return this.get('watchForLink') ? null : this.siteSettings.max_topic_title_length;
+  },
+
   @observes('composer.titleLength', 'watchForLink')
   _titleChanged() {
     if (this.get('composer.titleLength') === 0) { this.set('autoPosted', false); }
@@ -110,9 +117,9 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('composer.title')
-  isAbsoluteUrl() {
-    return this.get('composer.titleLength') > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(this.get('composer.title'));
+  @computed('composer.title', 'composer.titleLength')
+  isAbsoluteUrl(title, titleLength) {
+    return titleLength > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(title);
   },
 
   bodyIsDefault() {

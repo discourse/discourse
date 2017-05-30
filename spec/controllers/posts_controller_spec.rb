@@ -448,6 +448,12 @@ describe PostsController do
         let(:post_action) { PostAction.act(user, post, PostActionType.types[:bookmark]) }
         let(:admin) { Fabricate(:admin) }
 
+        it "returns the right response when post is not bookmarked" do
+          xhr :put, :bookmark, post_id: Fabricate(:post, user: user).id
+
+          expect(response.status).to eq(404)
+        end
+
         it 'should be able to remove a bookmark' do
           post_action
           xhr :put, :bookmark, post_id: post.id
@@ -464,6 +470,17 @@ describe PostsController do
             topic.remove_allowed_user(admin, user.username)
 
             expect(Guardian.new(user).can_see_post?(post.reload)).to eq(false)
+
+            xhr :put, :bookmark, post_id: post.id
+
+            expect(PostAction.find_by(id: post_action.id)).to eq(nil)
+          end
+        end
+
+        describe "when post has been deleted" do
+          it "should still be able to remove a bookmark" do
+            post = post_action.post
+            post.trash!
 
             xhr :put, :bookmark, post_id: post.id
 

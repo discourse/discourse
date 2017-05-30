@@ -27,7 +27,6 @@ et:
   topics: "Teemad"
   posts: "postitused"
   loading: "Laetakse"
-  powered_by_html: 'Ajamiks on <a href="http://www.discourse.org">Discourse</a>... vaadata JavaScript lubatuna'
   log_in: "Logi sisse"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
@@ -491,7 +490,6 @@ et:
       long_form: 'tähistasin selle kui teemavälise'
     spam:
       title: 'Spämm'
-      description: 'See postitus on reklaam. Käesoleva vestlusega seoses ei ole see ei kasulik ega asjakohane vaid pigem millegi reklaamimine.'
       long_form: 'tähistasin selle kui spämmi'
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
@@ -746,13 +744,6 @@ et:
       text_body_template: |2
 
         %{message}
-    mailing_list:
-      why: "Saidi %{site_link} kõik toimingud päeval %{date}"
-      from: "%{site_name} kokkuvõte"
-      new_topics: "Uued teemad"
-      topic_updates: "eemade uuendused"
-      view_this_topic: "Vaata seda teemat"
-      back_to_top: "Tagasi üles"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:
@@ -915,7 +906,6 @@ et:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
     title: "Sisene turvalisse režiimi"
-    no_customizations: "Keela kõik saidi kohandused"
     only_official: "Keela kõik mitteametlikud pluginad"
     no_plugins: "Keela kõik pluginad"
     enter: "Sisene turvalisse režiimi"

@@ -27,12 +27,15 @@ es:
   topics: "Temas"
   posts: "posts"
   loading: "Cargando"
-  powered_by_html: 'Funciona gracias a <a href="http://www.discourse.org">Discourse</a>, se ve mejor con JavaScript activado'
+  powered_by_html: 'Desarrollado por <a href="https://www.discourse.org">Discourse</a>, se visualiza mejor habilitando JavaScript'
   log_in: "Iniciar sesión"
   purge_reason: "Cuenta eliminada automáticamente al detectarse como abandonada, desactivada"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   anonymous: "Anónimos"
   remove_posts_deleted_by_author: "Eliminado por su autor"
+  themes:
+    bad_color_scheme: "No se puede actualizar el tema, la combinación de colores no es válida"
+    other_error: "Se ha producido un error al actualizar el tema"
   emails:
     incoming:
       default_subject: "Este tema necesita un título"
@@ -71,14 +74,14 @@ es:
       greater_than_or_equal_to: debe ser igual o más grande que %{count}
       has_already_been_used: "ya se está utilizando"
       inclusion: no está incluido en la lista
-      invalid: no es válido
+      invalid: es inválido
       is_invalid: "parece poco claro, es una oración completa?"
       contains_censored_words: "contiene las siguientes palabras censuradas: %{censored_words}"
       matches_censored_pattern: "contiene las siguientes palabras que coinciden con el regexp de censuras: %{censored_words}"
       less_than: debe ser menor que %{count}
       less_than_or_equal_to: debe ser menor o igual que %{count}
       not_a_number: no es un número
-      not_an_integer: debe ser un valor entero
+      not_an_integer: debe ser un número entero
       odd: debe ser impar
       record_invalid: 'Error en la validación: %{errors}'
       restrict_dependent_destroy:
@@ -113,14 +116,14 @@ es:
     user_exists: "No hace falta invitar a <b>%{email}</b>, ¡ya <a href='/u/%{username}/summary'>tiene una cuenta</a>!"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
-    error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo más tarde de nuevo."
+    error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo de nuevo más tarde."
   topic_invite:
     user_exists: "Lo sentimos, ese usuario ya ha sido invitado. Solo se puede invitar una vez a un usuario a un tema."
   backup:
-    operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
-    backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
+    operation_already_running: "Actualmente ya se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
+    backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser un .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
-    invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son a-z 0-9 . - _."
+    invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son: a-z 0-9 . - _."
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
@@ -148,15 +151,15 @@ es:
     replies:
       one: "1 respuesta"
       other: "%{count} respuestas"
-  no_mentions_allowed: "Lo sentimos, pero no puedes mencionar a otros usuarios."
+  no_mentions_allowed: "Lo sentimos, no puedes mencionar a otros usuarios."
   too_many_mentions:
     one: "Lo sentimos, solo puedes mencionar a un usuario en un post."
-    other: "Lo sentimos, pero solo puedes mencionar a %{count} usuarios en un post."
-  no_mentions_allowed_newuser: "Lo sentimos, pero los usuarios nuevos no pueden mencionar a otros usuarios."
+    other: "Lo sentimos, solo puedes mencionar a %{count} usuarios en un post."
+  no_mentions_allowed_newuser: "Lo sentimos, los usuarios nuevos no pueden mencionar a otros usuarios."
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post."
-    other: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post."
-  no_images_allowed: "Lo sentimos, pero los usuarios nuevos no pueden poner imágenes en los mensajes."
+    other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en un post."
+  no_images_allowed: "Lo sentimos, los usuarios nuevos no pueden poner imágenes en los mensajes."
   too_many_images:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden poner una imagen por post."
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} imágenes en un post."
@@ -210,6 +213,8 @@ es:
   queue:
     delete_reason: "Eliminado vía moderación"
   groups:
+    success:
+      bulk_add: "%{uUsers_added} usuarios han sido añadidos al grupo."
     errors:
       can_not_modify_automatic: "No se puede modificar un grupo automático"
       member_already_exist: "'%{username}' ya es miembro de este grupo."
@@ -341,7 +346,7 @@ es:
           attributes:
             name:
               taken: está siendo usado por otro emoji
-        topic_status_update:
+        topic_timer:
           attributes:
             execute_at:
               in_the_past: "debe ser en el futuro."
@@ -562,40 +567,48 @@ es:
     off_topic:
       title: 'Off-Topic'
       description: 'Este post se desvía demasiado o no es relevante para el tema en cuestión (definido por el título del tema y su primer post), probablemente debería ser movido a otro hilo.'
+      short_description: 'No tiene relación con el tema'
       long_form: 'reportado como off-topic'
     spam:
       title: 'Spam'
-      description: 'Este post es un anuncio publicitario. No es útil ni relevante para este tema, sino de naturaleza promocional.'
+      description: 'Este post es un anuncio o vandalismo. No es útil ni relevante para el tema actual.'
+      short_description: 'Es un anuncio o vandalismo.'
       long_form: 'reportado como spam'
       email_title: '"%{title}" fue reportado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropiado'
       description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="/guidelines">nuestras directrices de comunidad</a>.'
+      short_description: 'Una violación de <a href="/guidelines">nuestras directrices de la comunidad</a>'
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Enviar un mensaje a @{{username}}'
       description: 'Quiero hablar con esta persona de forma directa y privada sobre su mensaje.'
+      short_description: 'Quiero hablar con esta persona de forma directa y privada sobre su mensaje.'
       long_form: 'usuario notificado vía mensaje'
       email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Notificar a los moderadores"
       description: 'Este mensaje requiere la atención del equipo de moderación por una razón no especificada arriba.'
+      short_description: 'Requiere la atención de un moderador por otra razón'
       long_form: 'reportó esto'
       email_title: 'Un mensaje en "%{title}" requiere atención del staf'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Marcador'
       description: 'Marca este post'
+      short_description: 'Añade a marcadores este post'
       long_form: 'Post marcado'
     like:
       title: 'Like'
       description: 'Te gusta este post'
+      short_description: 'Me gusta este post'
       long_form: 'Te gusta esto'
     vote:
       title: 'Vota'
       description: 'Vota por este post'
+      short_description: 'Votar este post'
       long_form: 'Votado para este post'
   user_activity:
     no_bookmarks:
@@ -955,7 +968,7 @@ es:
     force_hostname: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para usar el valor por defecto"
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
-    invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por otros miembros de la comunidad o por el staff."
+    invite_only: "El registro público está desactivado, todos los nuevos usuarios deberán ser explícitamente invitados por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: si tienes usuarios o grupos con mayor cantidad de caracteres que ésta, tu sitio se romperá."
@@ -1050,8 +1063,7 @@ es:
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
     twitter_summary_large_image_url: "URL de la imagen por defecto para la tarjeta resumen de Twitter (debería ser al menos de 280px de ancho y 150 px de alto)."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
-    convert_pasted_images_to_hq_jpg: "Convertir imágenes pegadas en archivos JPG de alta calidad."
-    convert_pasted_images_quality: "Calidad del archivo JPG convertido  (1 es calidad mínima, 100 es máxima calidad)."
+    png_to_jpg_quality: "Calidad del archivo JPG convertido (1 es la calidad más baja, 99 es la mejor calidad, 100 para desactivarlo)."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
@@ -1109,6 +1121,7 @@ es:
     max_image_size_kb: "El tamaño máximo, en kB, para subir imágenes. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     max_attachment_size_kb: "El tamaño máximo, en kB, para adjuntar archivos. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir (usa \"*\" para habilitar todos los tipos de archivo)"
+    theme_authorized_extensions: "Lista de extensiones de archivo que están permitidas para subir temas (usa '*' para permitir todos los tipos de archivos)"
     max_similar_results: "Cuántos temas similares se mostrarán encima del editor cuando estés creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
     max_image_megapixels: "Máximo de megapíxeles permitidos por una imagen."
     title_prettify: "Prevenir errores comunes en el título, incluyendo \"todo mayúsculas\", primera letra minúscula, multiples signos ! o ?, . extra al final, etc."
@@ -1148,7 +1161,7 @@ es:
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Usar el HTML en vez del texto del email entrante. ¡Podría causar errores de formato inesperados!"
+    incoming_email_prefer_html: "Utiliza el HTML en lugar del texto para el correo entrante."
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
@@ -1172,6 +1185,7 @@ es:
     attachment_filename_blacklist: "Lista de palabras clave utilizadas para bloquear adjuntos basados en el nombre de archivo."
     enable_forwarded_emails: "[BETA] Permitir a los usuarios crear temas enviándolos por email."
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los emails entrantes. AVISO: podría revelar direcciones de correo."
+    private_email: "No incluyas contenido de publicaciones o temas en correos electrónicos para obtener mayor privacidad."
     manual_polling_enabled: "Lanza emails usando la API para las respuestas por email."
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
@@ -1239,7 +1253,6 @@ es:
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
-    invites_per_page: "Número de invitaciones por defecto mostradas en la página de perfil del usuario."
     short_progress_text_threshold: "Después de que un número de posts en un tema alcance esta cifra, la barra de progreso sólo mostrará el número del post actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
@@ -1256,7 +1269,7 @@ es:
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     embed_whitelist_selector: "Selector CSS para los elementos que están permitidos en los embebidos."
     embed_blacklist_selector: "Selector CSS para los elementos que están eliminados desde los embebidos."
-    notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al contact_email. Deshabilita esta opción introduciendo el valor 0."
+    notify_about_flags_after: "Si hay reportes de los que nadie se ha encargado aún después de muchas horas, enviar un mensaje privado al staff. Establece en 0 para desactivarlo."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
     bootstrap_mode_min_users: "Mínimo número de usuarios requerido para desactivar el modo bootstrap (pon 0 para desactivar esta opción)"
@@ -1435,12 +1448,13 @@ es:
     pinned_globally_disabled: "Este tema se ha dejado de destacar. Ya no aparecerá en primer lugar de su categoría."
     visible_enabled: "Este tema ahora es visible. Se mostrará en las listas de temas"
     visible_disabled: "Este tema ahora es invisible. Ya no se mostrará en ninguna lista de temas. La única forma de acceder a este tema es con un enlace directo."
+    auto_deleted_by_timer: "Eliminado automáticamente por temporizador."
   login:
     not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por email cuando todo esté listo para iniciar sesión."
     incorrect_username_email_or_password: "Nombre de usuario, dirección de correo o contraseña incorrectos"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
-    activate_email: "<p>¡Ya casi has terminado! Te hemos enviado un correo a <b>%{email}</b>. Por favor, sigue las instrucciones en tu email para activar tu cuenta.</p><p>Si no llega, comprueba tu buzón de correo basura, intenta iniciar sesión de nuevo para que te enviemos otro correo de activación o para cambiar el correo de activación.</p>"
+    activate_email: "<P>¡Casi has terminado! Hemos enviado un correo de activación a <b>%{email}</b>. Sigue las instrucciones del correo para activar la cuenta.</p> <p>Si no te ha llegado nada, comprueba la carpeta de spam.</p>"
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un email de activación. Por favor, sigue las instrucciones en el email para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
@@ -1487,8 +1501,8 @@ es:
       domain_not_allowed: "El sitio web no es válido. Los dominios permitidos son: %{domains}"
   flags_reminder:
     flags_were_submitted:
-      one: "Hay reportes enviados hace 1 hora. Por favor, revísalos."
-      other: "Hay reportes enviados hace %{count} horas. Por favor, revísalos."
+      one: "Reportes que fueron presentados hace más de 1 hora. [Favor revísalo] (/admin/flags)."
+      other: "Reportes que fueron presentados hace más de %{count} horas. [Favor revísalos] (/admin/flags)."
     subject_template:
       one: "1 reporte esperando ser atendidos."
       other: "%{count} reportes esperando ser atendidos."
@@ -1707,6 +1721,8 @@ es:
     one: "Este tema ha sido cerrado automáticamente durante 1 hora debido a un gran número de reportes de la comunidad."
     other: "Este tema ha sido cerrado automáticamente durante %{count} horas debido a un gran número de reportes de la comunidad."
   system_messages:
+    private_topic_title: "Tema #%{id}"
+    contents_hidden: "Por favor, visita el mensaje para ver su contenido."
     post_hidden:
       title: "Post oculto"
       subject_template: "Mensaje ocultado debido a varios reportes de la comnuidad"
@@ -1726,45 +1742,23 @@ es:
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Para unos trucos sobre cómo empezar como usuario, echa un vistazo a esta [entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        Conforme vayas participando por aquí, te iremos conociendo más, y tus limitaciones temporales como nuevo usuario serán levantadas. Con el tiempo ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar la comunidad juntos.
+        Conforme vayas participando, te iremos conociendo, y tus limitaciones como nuevo usuario serán levantadas. Con el tiempo, ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar y mantener la comunidad unida.
     welcome_user:
       title: "Bienvenido Usuario"
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
-        ¡Gracias por unirte a %{site_name}! ¡Te damos la bienvenida!
+        Gracias por unirte a %{site_name}, ¡te damos la bienvenida!
 
         %{new_user_tips}
 
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
+        Creemos en una [comunidad civilizada](%{base_url}/guidelines) en todo momento.
 
         ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     welcome_invite:
       title: "Bienvenido Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
-
-        Hemos creado automáticamente una nueva cuenta para ti: **%{username}**. Puedes cambiar tu nombre de usuario en cualquier momento visitando [tu perfil][prefs].
-
-        Para iniciar sesión en adelante:
-
-        1. Usa siempre la **misma dirección de correo** en la que recibiste tu invitación original. ¡De otra manera no seremos capaces de reconocer que eres tú!
-
-        2. Crea una contraseña unica para [tu perfil de usuario][prefs], y úsala para iniciar sesión.
-
-        %{new_user_tips}
-
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
-
-        ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte por privado con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Copia de seguridad completada con éxito"
       subject_template: "La copia de seguridad se completo exitosamente"
@@ -1819,14 +1813,6 @@ es:
     bulk_invite_failed:
       title: "Error en la invitación en masa"
       subject_template: "Invitación masiva procesada con algunos errores"
-      text_body_template: |
-        Tu archivo de invitación masiva ha sido procesada, se han enviado %{sent} invitaciones y se han producido %{failed} error(es).
-
-        Este es el registro:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "Exportación de datos en CSV completada con éxito"
       subject_template: "Exportación de datos completada"
@@ -2082,13 +2068,11 @@ es:
       title: "¡Eres un usuario nuevo del mes!"
       subject_template: "¡Eres un usuario nuevo del mes!"
       text_body_template: |
-        Enhorabuena, has ganado el distintivo **Premio al nuevo usuario del mes de %{month_year}**. :trophy:
+        Enhorabuena, has ganado el **premio al nuevo usuario del mes de %{month_year}** . :trophy:
 
-        Te has convertido rápidamente en un valioso miembro de nuestra comunidad y estamos disfrutando con tus posts.
+        Este distintivo solo se le concede a dos usuarios nuevos al mes, y será visible para siempre en [tu perfil](/my/badges).
 
-        Este premio será visible para siempre como un distintivo en tu [página de usuario](/my/badges).
-
-        Gracias, ¡y sigue así!
+        Has conseguido ser un miembro valioso de nuestra comunidad. Gracias por unirte, ¡y sigue así!
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2102,8 +2086,8 @@ es:
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
-      one: "ADVERTENCIA: has superado el límite diario de emails. Las próximas notificaciones de emails serán suprimidas."
-      other: "ADVERTENCIA: has superado el límite de %{count} emails diarios. Las próximas notificaciones de emails serán suprimidas."
+      one: "Un apunte: enviamos como mucho 1 email diario. Comprueba la página para ver si hay alguna cosa de la  que no te hayas enterado."
+      other: "Un apunte: enviamos como mucho %{count} emails diarios. Comprueba la página para ver si hay alguna cosa de la que no te hayas enterado."
     in_reply_to: "En respuesta a"
     unsubscribe:
       title: "Darse de baja"
@@ -2285,15 +2269,6 @@ es:
       click_here: "clic aquí"
       from: "resumen de %{site_name}"
       preheader: "Un corto resumen desde tu última visita el %{last_seen_at}"
-    mailing_list:
-      why: "Actividad en %{site_link} a %{date}"
-      subject_template: "[%{email_prefix}] Resumen del %{date}"
-      unsubscribe: "Este resumen se envía diariamente dado que el modo lista de correo está activado. Puedes darte de baja %{unsubscribe_link}."
-      from: "%{site_name} resumen"
-      new_topics: "Nuevos temas"
-      topic_updates: "Actualizaciones del tema"
-      view_this_topic: "Visita este tema"
-      back_to_top: "Volver al inicio"
     forgot_password:
       title: "Olvidé la Contraseña"
       subject_template: "[%{email_prefix}] Reestablecimiento de contraseña"
@@ -2364,23 +2339,6 @@ es:
     signup_after_approval:
       title: "Entra después de ser aprobado"
       subject_template: "¡Tu solicitud ha sido aprobada en %{site_name}!"
-      text_body_template: |
-        ¡Te damos la bienvenida a %{site_name}!
-
-        Un miembro del staff ha aprobado tu cuenta de %{site_name}.
-
-        Haz clic en el siguiente enlace para confirmar y activar tu nueva cuenta:
-        %{base_url}/u/activate-account/%{email_token}
-
-        Si el enlace de arriba no funciona, prueba a copiarlo y pegarlo en la barra de direcciones de tu navegador de internet.
-
-        %{new_user_tips}
-
-        Creemos en una [comunidad con comportamiento civilizado](%{base_url}/guidelines) en todo momento.
-
-        ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte con algún [miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     signup:
       title: "Registrate"
       subject_template: "[%{email_prefix}] Confirma tu nueva cuenta"
@@ -2406,12 +2364,14 @@ es:
     title: "Condiciones Generales de Uso"
     signup_form_message: 'He leído y acepto las <a href="/tos" target="_blank">Condiciones de Servicio</a>.'
   deleted: 'borrado'
+  image: "imagen"
   upload:
     edit_reason: "descargadas copias en local de imágenes"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está autorizado (extensiones autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagen pegada"
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
     file_missing: "Lo sentimos, debes incluir un archivo a subir."
+    empty: "Lo sentimos, pero el archivo que has proporcionado está vacío."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
@@ -2444,6 +2404,9 @@ es:
     no_echo_mailing_list_mode: "Modo lista de correo desactivado para los post del usuario"
   color_schemes:
     base_theme_name: "Base"
+    default_theme_name: "Por defecto"
+    dark_theme_name: "Oscuro"
+    light_theme_name: "Claro"
   about: "Acerca de"
   guidelines: "Directrices"
   privacy: "Privacidad"
@@ -2904,8 +2867,6 @@ es:
     error: "¡Error!"
     email_input: "Email de admin"
     submit_button: "Enviar email"
-  discourse_hub:
-    access_token_problem: "Avisa a un admin: Por favor actualiza los ajustes del sitio para incluir la discourse_org_access_key correctamente."
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio
@@ -2930,7 +2891,6 @@ es:
   safe_mode:
     title: "Activar modo seguro"
     description: "El modo seguro permite probar tu página sin cargar plugins o customizaciones."
-    no_customizations: "Desactivar todas las customizaciones"
     only_official: "Desactivar plugins no oficiale"
     no_plugins: "Desactivar todos los plugins"
     enter: "Activar modo seguro"
@@ -3043,7 +3003,7 @@ es:
         title: "Invitar staff"
         description: "¡Ya casi está! Invita algunos miembros del staff para ayudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar conversaciones</a> con temas interesantes y respuestas para dar tu comunidad por empezadas."
       finished:
-        title: "Tu foro de Discourse está listo!"
+        title: "¡Tu foro de Discourse está listo!"
         description: |
           <p>Si alguna vez quieres cambiar alguno de estos ajustes, visita <a href='/admin' target='_blank'>tu sección de administrador</a>; la puedes encontrar el lado del icono de una llave inglesa en el menú de la página..</p>
           <p>Diviértete, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>

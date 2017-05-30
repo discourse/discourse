@@ -27,7 +27,6 @@ sv:
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
-  powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript aktiverat'
   log_in: "Logga in"
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
   disable_remote_images_download_reason: "Nedladdning av externa bilder är inaktiverat eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
@@ -483,7 +482,6 @@ sv:
       long_form: 'flagga detta som orelevant'
     spam:
       title: 'Spam'
-      description: 'Detta inlägg är en annons. Den bidrar inte till eller är inte relevant för det aktuella ämnet, utan är marknadsföring.'
       long_form: 'flagga detta som spam'
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
@@ -864,7 +862,6 @@ sv:
     force_hostname: "ENDAST UTVECKLARE! VARNING! Specifiera ett värdnamn i URL:en. Lämna tom för standard."
     invite_expiry_days: "Hur länge användarinbjudningsnycklar är giltiga, i dagar"
     invite_passthrough_hours: "Hur länge en användare kan använda en tidigare utlöst inbjudningsnyckel för att logga in, i timmar"
-    invite_only: "Allmän registrering är avstängt, alla nya användare måste vara explicit inbjudna av andra medlemmar eller personal."
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
     min_username_length: "Minsta längd på användarnamnet. Varning: om någon existerande användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
     max_username_length: "Längsta användarnamn. Varning: om någon existerande användare eller grupp har ett namn längre än detta, er sida kommer att gå sönder."
@@ -949,8 +946,6 @@ sv:
     external_system_avatars_enabled: "Använd externa system för avatar-tjänster."
     default_opengraph_image_url: "URL för standard opengraphbilden."
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
-    convert_pasted_images_to_hq_jpg: "Konvertera inklistrade bilder till högkvalitativa JPG-filer."
-    convert_pasted_images_quality: "Kvaliten av den konverterade JPG filen (1 är den lägsta kvaliten, 100 är den bästa kvaliten)."
     enable_flash_video_onebox: "Aktivera inbäddning av swf- och fic- (Adobe Flash) länkar i onebox:ar. VARNING: det kan introducera säkerhetsrisker."
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
     default_trust_level: "Förvald förtroendenivå (0-4) för alla nya användare. VARNING! En ändring av detta sätter dig i stor risk för skräppost."
@@ -1045,7 +1040,6 @@ sv:
     auto_block_first_post_regex: "Skriftlägeskänsligt regex som om godkänt kommer att orsaka att första inlägget av en användare blockeras och skickas till kön för saker som behöver granskas. Exempel: raging|a[bc]a kommer att orsaka att alla inlägg som börjar med raging eller aba eller aca blockeras vid första försöket. Gäller endast användarens första inlägg. "
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %{reply_key}@svar.exempel.se eller svar+%{reply_key}@exempel.se"
-    incoming_email_prefer_html: "Använd HTML istället för texten för inkommande e-post. Kan orsaka oväntade formatteringsproblem!"
     disable_emails: "Förhindra Discourse från att skicka någon form av e-post"
     strip_images_from_short_emails: "Rensa bilder från e-post som har mindre storlek än 2800 bytes."
     short_email_length: "Kort e-postlängd i bytes."
@@ -1129,7 +1123,6 @@ sv:
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
-    invites_per_page: "Standardinbjudningar som visas på användarsidan."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
     default_code_lang: "Standardspråk för syntaxmarkering som appliceras på kodblock från GitHub (lang-auto, ruby, python etc)."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
@@ -1145,7 +1138,6 @@ sv:
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
     embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar."
-    notify_about_flags_after: "Skicka ett e-postmeddelande till contact_email om det finns flaggor som inte har hanterats efter så här många timmar. Ange 0 för att inaktivera."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
@@ -1339,9 +1331,6 @@ sv:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
   flags_reminder:
-    flags_were_submitted:
-      one: "Flaggor insändes för mer än en timme sedan. Var god och granska den. "
-      other: "Flaggor insändes för mer än %{count} timmar sedan. Var god och granska dem. "
     subject_template:
       one: "1 flagga väntar på att bli hanterad"
       other: "%{count} flaggor väntar på att bli hanterade"
@@ -1406,16 +1395,6 @@ sv:
     welcome_user:
       title: "Välkommen Användare"
       subject_template: "Välkommen till %{site_name}!"
-      text_body_template: |
-        Tack för att du gått med i %{site_name}, och välkommen!
-
-        %{new_user_tips}
-
-        Vi tror på ett [civiliserat beteende](%{base_url}/guidelines) vid alla tillfällen.
-
-        Njut av din vistelse!
-
-        (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande)
     welcome_invite:
       title: "Välkomst invitation"
       subject_template: "Välkommen till %{site_name}!"
@@ -1438,14 +1417,6 @@ sv:
     bulk_invite_failed:
       title: "Mängd invitationerna misslyckades"
       subject_template: "Massrekrytering av användare genererade fel"
-      text_body_template: |
-        Din massrekrytering av användare behandlades, %{sent} inbjudningar skickades med %{failed} fel.
-
-        Här är loggen:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV exporten lyckades"
       subject_template: "Dataexport lyckades"
@@ -1671,9 +1642,6 @@ sv:
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Föregående Svar"
-    reached_limit:
-      one: "VARNING: du har nått den övre gränsen för dagliga e-postmeddelanden. Ytterligare e-postnotifikationer kommer att undertryckas. "
-      other: "VARNING: du har nått den övre gränsen av %{count} dagliga e-postmeddelanden. Ytterligare e-postnotifikationer kommer att undertryckas. "
     in_reply_to: "Som svar till:"
     unsubscribe:
       title: "Unsubscribe"
@@ -1838,14 +1806,6 @@ sv:
       unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
       from: "%{site_name} sammanfattning"
-    mailing_list:
-      why: "All aktivitet på %{site_link} den %{date}"
-      unsubscribe: "Den här sammanfattningen skickas dagligen eftersom att utskicksläge är aktiverat. För att säga upp dig {unsubscribe_link}."
-      from: "%{site_name} sammanfattning"
-      new_topics: "Nya ämnen"
-      topic_updates: "Uppdatering av ämnen"
-      view_this_topic: "Se det här ämnet"
-      back_to_top: "Tillbaka till början"
     forgot_password:
       title: "Glömt lösenord"
     set_password:
@@ -2155,8 +2115,6 @@ sv:
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
-  discourse_hub:
-    access_token_problem: "Berätta för en administratör: Var vänlig och uppdatera webbplatsinställningarna för att inkludera den korrekta discourse_org_access_key."
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen
@@ -2178,7 +2136,6 @@ sv:
   safe_mode:
     title: "ange felsäkert läge"
     description: "I felsäkert läge kan du testa din webplats utan att ladda ner några plugins eller anpassade webplatser."
-    no_customizations: "Inaktivera alla webplats inställningar"
     only_official: "Inaktivera alla inofficiella plugins"
     no_plugins: "Inaktivera alla plugins"
     enter: "Starta felsäkert läge"

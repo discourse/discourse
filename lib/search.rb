@@ -474,7 +474,7 @@ class Search
           end
         end
 
-        if word == 'order:latest'
+        if word == 'order:latest' || word == 'l'
           @order = :latest
           nil
         elsif word == 'order:latest_topic'
@@ -610,7 +610,7 @@ class Search
          posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
          unless @guardian.is_admin?
-            posts = posts.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", @guardian.user.id)
+           posts = posts.private_posts_for_user(@guardian.user)
          end
       else
          posts = posts.where("topics.archetype <> ?", Archetype.private_message)
@@ -654,15 +654,7 @@ class Search
         if @search_context.is_a?(User)
 
           if opts[:private_messages]
-            posts = posts.where("topics.id IN (SELECT topic_id
-                                               FROM topic_allowed_users
-                                               WHERE user_id = :user_id
-                                               UNION ALL
-                                               SELECT tg.topic_id
-                                               FROM topic_allowed_groups tg
-                                               JOIN group_users gu ON gu.user_id = :user_id AND
-                                                                        gu.group_id = tg.group_id)",
-                                              user_id: @search_context.id)
+            posts = posts.private_posts_for_user(@search_context)
           else
             posts = posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -672,7 +664,7 @@ class Search
           posts = posts.where("topics.category_id in (?)", category_ids)
         elsif @search_context.is_a?(Topic)
           posts = posts.where("topics.id = #{@search_context.id}")
-                       .order("posts.post_number")
+                       .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         end
 
       end
@@ -681,7 +673,7 @@ class Search
         if opts[:aggregate_search]
           posts = posts.order("MAX(posts.created_at) DESC")
         else
-          posts = posts.order("posts.created_at DESC")
+          posts = posts.reorder("posts.created_at DESC")
         end
       elsif @order == :latest_topic
         if opts[:aggregate_search]
@@ -718,6 +710,7 @@ class Search
       else
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
       end
+
       posts.limit(limit)
     end
 

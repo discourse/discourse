@@ -12,7 +12,7 @@
         label="groups.join"
         disabled=updatingMembership}}
   {{/if}}
-{{else if canRequestMembership}}
+{{else if model.allow_membership_requests}}
   {{#if userIsGroupUser}}
     {{#if showMembershipStatus}}
       {{d-button

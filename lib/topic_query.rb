@@ -165,7 +165,7 @@ class TopicQuery
 
   def list_read
     create_list(:read, unordered: true) do |topics|
-      topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
+      topics.where('tu.last_visited_at IS NOT NULL').order('tu.last_visited_at DESC')
     end
   end
 
@@ -280,10 +280,20 @@ class TopicQuery
         .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def self.unread_filter(list, opts)
+  def self.unread_filter(list, user_id, opts)
+    # PERF note
+    # We use the function first_unread_topic_for here instead of joining
+    # the table to assist the PostgreSQL query planner
+    #
+    # We want the query planner to have the actual value of the first_unread_topic so
+    # it can pick an appropriate plan. If it does not have this upfront it will just assume
+    # that the value will be 1/3 of the way through the topic table which makes it use terrible
+    # indexes for the plan.
+    #
     col_name = opts[:staff] ? "highest_staff_post_number" : "highest_post_number"
 
-    list.where("tu.last_read_post_number < topics.#{col_name}")
+    list
+        .where("tu.last_read_post_number < topics.#{col_name}")
         .where("COALESCE(tu.notification_level, :regular) >= :tracking",
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
@@ -361,7 +371,10 @@ class TopicQuery
   end
 
   def unread_results(options={})
-    result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)), staff: @user.try(:staff?))
+    result = TopicQuery.unread_filter(
+        default_results(options.reverse_merge(:unordered => true)),
+        @user&.id,
+        staff: @user&.staff?)
     .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -718,13 +731,16 @@ class TopicQuery
 
     def new_messages(params)
 
-      TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), 10.years.ago)
+      TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
                 .limit(params[:count])
 
     end
 
     def unread_messages(params)
-      TopicQuery.unread_filter(messages_for_groups_or_user(params[:my_group_ids]), staff: @user.try(:staff?))
+      TopicQuery.unread_filter(
+        messages_for_groups_or_user(params[:my_group_ids]),
+        @user&.id,
+        staff: @user&.staff?)
                 .limit(params[:count])
     end
 
@@ -787,10 +803,12 @@ class TopicQuery
     end
 
     def base_messages
-      Topic
+      query = Topic
         .where('topics.archetype = ?', Archetype.private_message)
         .joins("LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i}")
-        .order('topics.bumped_at DESC')
+
+      query = query.includes(:tags) if SiteSetting.tagging_enabled
+      query.order('topics.bumped_at DESC')
     end
 
     def random_suggested(topic, count, excluded_topic_ids=[])

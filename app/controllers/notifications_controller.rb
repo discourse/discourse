@@ -8,7 +8,7 @@ class NotificationsController < ApplicationController
     user =
       if params[:username] && !params[:recent]
         user_record = User.find_by(username: params[:username].to_s)
-        raise Discourse::InvalidParameters.new(:username) if !user_record
+        raise Discourse::NotFound if !user_record
         user_record
       else
         current_user

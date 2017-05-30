@@ -35,7 +35,7 @@ export default class LockOn {
     const selected = $(this.selector);
     if (selected && selected.offset && selected.offset()) {
       const result = selected.offset().top;
-      return result - Math.round(scrollTopFor(result));
+      return result - (Math.round(scrollTopFor(result)) * 0.9);
     }
   }
 
@@ -76,7 +76,12 @@ export default class LockOn {
     }, 50);
 
     $('body,html').off(SCROLL_EVENTS).on(SCROLL_EVENTS, e => {
-      if ( e.which > 0 || e.type === "mousedown" || e.type === "mousewheel" || e.type === "touchmove") {
+      if ( e.which > 0 ||
+           e.type === "mousedown" ||
+           e.type === "mousewheel" ||
+           e.type === "touchmove" ||
+           e.type === "wheel"
+      ) {
         this.clearLock(interval);
       }
     });

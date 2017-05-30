@@ -49,13 +49,15 @@ def run(command, opt = nil)
       system(command, out: $stdout, err: :out)
     end
 
-  exit unless exit_status
+  abort("Command '#{command}' failed with exit status #{$?}") unless exit_status
 end
 
 begin
   require 'facter'
 rescue LoadError
   run "gem install facter"
+  # Facter requires CFPropertyList, but doesn't install it.
+  run "gem install CFPropertyList"
   puts "please rerun script"
   exit
 end
@@ -151,12 +153,12 @@ run("bundle exec ruby script/profile_db_generator.rb")
 puts "Getting api key"
 api_key = `bundle exec rake api_key:get`.split("\n")[-1]
 
-def bench(path)
+def bench(path, name)
   puts "Running apache bench warmup"
   add = ""
   add = "-c 3 " if @unicorn
   `ab #{add} -n 10 "http://127.0.0.1:#{@port}#{path}"`
-  puts "Benchmarking #{path}"
+  puts "Benchmarking #{name} @ #{path}"
   `ab -n #{@iterations} -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
@@ -212,7 +214,7 @@ begin
   results = {}
   @best_of.times do
     tests.each do |name, url|
-      results[name] = best_of(bench(url),results[name])
+      results[name] = best_of(bench(url, name),results[name])
     end
   end
 

@@ -93,9 +93,13 @@ export default Ember.Controller.extend({
 
     reinviteAll() {
       const self = this;
-      Invite.reinviteAll().then(function() {
-        self.set('reinvitedAll', true);
-      }).catch(popupAjaxError);
+      bootbox.confirm(I18n.t("user.invited.reinvite_all_confirm"), confirm => {
+        if (confirm) {
+          Invite.reinviteAll().then(function() {
+            self.set('reinvitedAll', true);
+          }).catch(popupAjaxError);
+        }
+      });
     },
 
     loadMore() {

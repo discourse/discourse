@@ -10,12 +10,15 @@ require_dependency 'letter_avatar'
 require_dependency 'distributed_cache'
 require_dependency 'global_path'
 require_dependency 'secure_session'
+require_dependency 'topic_query'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
   include GlobalPath
+
+  attr_reader :theme_key
 
   serialization_scope :guardian
 
@@ -264,12 +267,21 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key] || cookies[:theme_key] || session[:theme_key]
+    theme_key = flash[:preview_theme_key]
+
+    user_option = current_user&.user_option
+
+    unless theme_key
+      key, seq = cookies[:theme_key]&.split(",")
+      if key && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_key = key
+      end
+    end
+
+    theme_key ||= user_option&.theme_key
 
     if theme_key && !guardian.allow_theme?(theme_key)
       theme_key = nil
-      cookies[:theme_key] = nil
-      session[:theme_key] = nil
     end
 
     theme_key ||= SiteSetting.default_theme_key
@@ -435,7 +447,7 @@ class ApplicationController < ActionController::Base
       end
 
       DiscoursePluginRegistry.html_builders.each do |name, blk|
-        data[name] = blk.call
+        data[name] = blk.call(self)
       end
 
       MultiJson.dump(data)
@@ -542,8 +554,9 @@ class ApplicationController < ActionController::Base
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && is_api?)
 
-      # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
+        flash.keep
+
         if SiteSetting.enable_sso?
           # save original URL in a session so we can redirect after login
           session[:destination_url] = destination_url

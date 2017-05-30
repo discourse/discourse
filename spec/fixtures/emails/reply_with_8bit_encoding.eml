@@ -1,0 +1,12 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <43@foo.bar.mail>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+hab vergessen kritische zeichen einzufügen:
+äöüÄÖÜß
