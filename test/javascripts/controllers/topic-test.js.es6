@@ -101,7 +101,7 @@ test("Automating setting of allPostsSelected", function() {
 
 test("Select Replies when present", function() {
   var topic = buildTopic(),
-      tc = this.subject({ model: topic }),
+      tc = this.subject({ model: topic, appEvents: AppEvents.create() }),
       p1 = Discourse.Post.create({id: 1, post_number: 1, reply_count: 1}),
       p2 = Discourse.Post.create({id: 2, post_number: 2}),
       p3 = Discourse.Post.create({id: 2, post_number: 3, reply_to_post_number: 1});
