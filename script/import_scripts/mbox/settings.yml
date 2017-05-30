@@ -1,0 +1,9 @@
+# PostgreSQL mailing lists
+#data_dir: /data/import/postgres
+#split_regex: "^From .*@postgresql.org.*"
+
+# ruby-talk mailing list
+data_dir: /data/import/ruby-talk/news/gmane/comp/lang/ruby
+split_regex: ""
+
+default_trust_level: 1
