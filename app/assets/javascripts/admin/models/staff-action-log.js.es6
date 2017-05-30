@@ -57,10 +57,13 @@ StaffActionLog.reopenClass({
   },
 
   findAll: function(filters) {
-    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
-      return staff_actions.map(function(s) {
-        return StaffActionLog.create(s);
-      });
+    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then((data) => {
+      return {
+        staff_action_logs: data.staff_action_logs.map(function(s) {
+          return StaffActionLog.create(s);
+        }),
+        user_history_actions: data.user_history_actions
+      };
     });
   }
 });
