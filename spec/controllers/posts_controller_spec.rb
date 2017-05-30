@@ -935,6 +935,26 @@ describe PostsController do
 
     end
 
+    context "hidden revision" do
+      let(:walter_white) { log_in(:walter_white) }
+
+      it "works for latest revision" do
+        latest_revision_post = Fabricate(:post, version: 2, user: walter_white)
+        latest_post_revision = Fabricate(:post_revision, post: latest_revision_post, hidden: true)
+
+        xhr :get, :latest_revision, post_id: latest_post_revision.post_id
+        expect(response).to be_success
+      end
+
+      it "works for regular post revision" do
+        revision_post = Fabricate(:post, version: 3, user: walter_white)
+        post_revision = Fabricate(:post_revision, post: revision_post, hidden: true)
+
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        expect(response).to be_success
+      end
+    end
+
     context "deleted post" do
       let(:admin) { log_in(:admin) }
       let(:deleted_post) { Fabricate(:post, user: admin, version: 3) }

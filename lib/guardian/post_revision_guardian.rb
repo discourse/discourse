@@ -3,7 +3,7 @@ module PostRevisionGuardian
 
   def can_see_post_revision?(post_revision)
     return false unless post_revision
-    return false if post_revision.hidden && !can_view_hidden_post_revisions?
+    return false if post_revision.hidden && !can_view_hidden_post_revisions?(post_revision)
 
     can_view_edit_history?(post_revision.post)
   end
@@ -16,8 +16,9 @@ module PostRevisionGuardian
     is_staff?
   end
 
-  def can_view_hidden_post_revisions?
-    is_staff?
+  def can_view_hidden_post_revisions?(post_revision)
+    return false unless authenticated?
+    post_revision.post.user_id == @user.id || is_staff?
   end
 
 end

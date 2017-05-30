@@ -336,7 +336,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def version
-    scope.is_staff? ? object.version : object.public_version
+    (scope.is_staff? || yours) ? object.version : object.public_version
   end
 
   def include_action_code?
