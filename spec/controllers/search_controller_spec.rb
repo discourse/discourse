@@ -15,7 +15,7 @@ describe SearchController do
       expect(response).to be_success
       data = JSON.parse(response.body)
       expect(data['posts'][0]['id']).to eq(my_post.id)
-      expect(data['posts'][0]['blurb']).to eq('this is my really awesome post')
+      expect(data['posts'][0]['blurb']).to eq('this is my really <span class=search-highlight>awesome</span> post')
       expect(data['topics'][0]['id']).to eq(my_post.topic_id)
     end
   end

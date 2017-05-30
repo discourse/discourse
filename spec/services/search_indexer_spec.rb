@@ -10,7 +10,7 @@ describe SearchIndexer do
     SearchIndexer.update_posts_index(99, "你好世界", "", nil)
 
     raw_data = PostSearchData.where(post_id: 99).pluck(:raw_data)[0]
-    expect(raw_data.split(' ').length).to eq(2)
+    expect(raw_data.split(' ').length).to eq(1)
   end
 
   it 'correctly indexes a post' do

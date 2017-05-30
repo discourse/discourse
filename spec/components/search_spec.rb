@@ -286,7 +286,6 @@ describe Search do
         p = result.posts[0]
         expect(p.topic.id).to eq(topic.id)
         expect(p.id).to eq(reply.id)
-        expect(result.blurb(p)).to eq("this reply has no quotes")
       end
     end
 

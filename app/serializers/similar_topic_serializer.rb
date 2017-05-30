@@ -8,7 +8,7 @@ class SimilarTopicSerializer < ApplicationSerializer
   end
 
   def blurb
-    object.blurb
+    object.topic['blurb']
   end
 
   def url

@@ -14,12 +14,11 @@ class Search
                 :more_posts, :more_categories, :more_users,
                 :term, :search_context, :include_blurbs
 
-    def initialize(type_filter, term, search_context, include_blurbs, blurb_length)
+    def initialize(type_filter, term, search_context, include_blurbs)
       @type_filter = type_filter
       @term = term
       @search_context = search_context
       @include_blurbs = include_blurbs
-      @blurb_length = blurb_length || 200
       @posts = []
       @categories = []
       @users = []
@@ -31,10 +30,6 @@ class Search
         topic_lookup = TopicUser.lookup_for(user, topics)
         topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
       end
-    end
-
-    def blurb(post)
-      GroupedSearchResults.blurb_for(post.cooked, @term, @blurb_length)
     end
 
     def add(object)
