@@ -703,6 +703,28 @@ describe Search do
       expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post2.id])
       expect(Search.execute('green tags:plants').posts.size).to eq(0)
     end
+
+    context 'tags' do
+      let(:tag1) { Fabricate(:tag, name: 'lunch') }
+      let(:tag2) { Fabricate(:tag, name: 'eggs') }
+      let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
+      let(:topic2) { Fabricate(:topic, tags: [tag1]) }
+      let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
+      let!(:post1) { Fabricate(:post, topic: topic1)}
+      let!(:post2) { Fabricate(:post, topic: topic2)}
+      let!(:post3) { Fabricate(:post, topic: topic3)}
+
+      it 'can find posts with any tag from multiple tags' do
+        Fabricate(:post)
+
+        expect(Search.execute('tags:eggs|lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id].sort)
+      end
+
+      it 'can find posts which contains all provided tags' do
+        expect(Search.execute('tags:lunch,eggs').posts.map(&:id)).to eq([post3.id])
+      end
+    end
+
   end
 
   it 'can parse complex strings using ts_query helper' do
