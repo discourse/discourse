@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   classNameBindings: ['visible'],
   link: null,
   visible: null,
+  copied: null,
 
   @computed
   sources() {
@@ -28,6 +29,22 @@ export default Ember.Component.extend({
     return longDateNoYear(new Date(date));
   },
 
+  _copyUrl() {
+    if (!document.queryCommandSupported('copy')) return false;
+
+    if (this.capabilities.touch) {
+      $('#share-link .share-for-touch a').select();
+    } else {
+      $('#share-link input').select();
+    }
+
+    if (window.document.execCommand("copy")) {
+      this.set('copied', true);
+    } else {
+      this.set('copied', false);
+    }
+  },
+
   _focusUrl() {
     const link = this.get('link');
     if (!this.capabilities.touch) {
@@ -37,6 +54,7 @@ export default Ember.Component.extend({
       // Wait for the fade-in transition to finish before selecting the link:
       window.setTimeout(() => $linkInput.select().focus(), 160);
     } else {
+      window.getSelection().removeAllRanges();
       const $linkForTouch = $('#share-link .share-for-touch a');
       $linkForTouch.attr('href', link);
       $linkForTouch.text(link);
@@ -44,6 +62,8 @@ export default Ember.Component.extend({
       range.selectNode($linkForTouch[0]);
       window.getSelection().addRange(range);
     }
+
+    Ember.run.scheduleOnce('afterRender', this, this._copyUrl);
   },
 
   _showUrl($target, url) {
@@ -140,7 +160,8 @@ export default Ember.Component.extend({
         link: null,
         postNumber: null,
         postId: null,
-        visible: false
+        visible: false,
+        copied: false
       });
     },
 
