@@ -1988,7 +1988,6 @@ gl:
           do_nothing: "non facer nada"
         staff_actions:
           title: "Accións do equipo"
-          instructions: "Premer nos nomes dos usuarios e nas accións para filtrar a lista. Premer nas imaxes dos perfís para ir ás páxinas dos usuarios."
           clear_filters: "Amosar todo"
           staff_user: "Usuario do equipo"
           target_user: "Usuario obxectivo"

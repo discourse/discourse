@@ -2959,7 +2959,6 @@ pl_PL:
           do_nothing: "nic nie rób"
         staff_actions:
           title: "Działania obsługi"
-          instructions: "Klikając nazwę użytkownika i akcję możesz filtrować listę. Kliknij awatary aby przejść na stronę użytkownika."
           clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik obsługi"
           target_user: "Użytkownik będący Obiektem"

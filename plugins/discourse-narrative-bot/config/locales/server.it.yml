@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 it:
   site_settings:
     discourse_narrative_bot_enabled: 'Abilita Discourse Narrative Bot'
@@ -158,14 +165,6 @@ it:
 
           - https://it.wikipedia.org/wiki/Exotic_Shorthair
       images:
-        instructions: |-
-          Ecco l'immagine di un unicorno:
-
-          <img src="/images/unicorn.jpg" width="520" height="381">
-
-          Se ti piace (e a chi non piacerebbe!) vai avanti e premi il pulsante mi piace :heart: sotto questo messaggio per farmelo sapere.
-
-          Puoi **rispondere con un'immagine?** Qualsiasi immagine funzionerà! Trascinala e rilasciala, premi il pulsante carica, oppure copiala e incollala.
         reply: |-
           Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-

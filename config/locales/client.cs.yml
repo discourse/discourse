@@ -2569,7 +2569,6 @@ cs:
           do_nothing: "nedělat nic"
         staff_actions:
           title: "Akce redaktorů"
-          instructions: "Pro filtrování seznamu klikejte na uživatele a akce. Kliknutí na avatar otevře profil uživatele."
           clear_filters: "Zobrazit vše"
           staff_user: "Člen redakce"
           target_user: "Cílový uživatel"

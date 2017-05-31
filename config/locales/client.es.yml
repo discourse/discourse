@@ -2784,7 +2784,6 @@ es:
           do_nothing: "no hacer nada"
         staff_actions:
           title: "Acciones del staff"
-          instructions: "Clic en los usuarios y acciones para filtrar la lista. Clic en las imágenes de perfil para ir a páginas de usuario."
           clear_filters: "Mostrar todo"
           staff_user: "Usuario administrador"
           target_user: "Usuario enfocado"

@@ -2486,7 +2486,6 @@ zh_TW:
           do_nothing: "無動作"
         staff_actions:
           title: "工作人員動作"
-          instructions: "點擊使用者名稱會過濾列表，點擊使用者圖片則會連結至使用者頁面。"
           clear_filters: "全部顯示"
           staff_user: "工作人員用戶"
           target_user: "目標用戶"

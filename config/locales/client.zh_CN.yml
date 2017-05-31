@@ -953,6 +953,8 @@ zh_CN:
       your_email: "你的帐户邮箱地址是<b>%{email}</b>。"
       accept_invite: "接受邀请"
       success: "已创建您的帐号，您现在可以登录了。"
+      name_label: "昵称"
+      name_label_optional: "昵称（可选）"
       password_label: "设置密码(可选)"
     password_reset:
       continue: "转入到 %{site_name}"
@@ -2671,8 +2673,9 @@ zh_CN:
           block: "封禁"
           do_nothing: "无操作"
         staff_actions:
+          all: "全部"
+          filter: "过滤器："
           title: "管理人员操作"
-          instructions: "点击用户名和操作可以过滤列表。点击头像可以访问用户个人页面。"
           clear_filters: "显示全部"
           staff_user: "管理人员"
           target_user: "目标用户"
@@ -2725,6 +2728,8 @@ zh_CN:
             change_readonly_mode: "更改只读模式"
             backup_download: "下载备份文件"
             backup_destroy: "删除备份"
+            reviewed_post: "已审核的帖子"
+            custom_staff: "插件自定义操作"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"

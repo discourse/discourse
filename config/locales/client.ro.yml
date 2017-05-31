@@ -2675,7 +2675,6 @@ ro:
           do_nothing: "nu acționa"
         staff_actions:
           title: "Acțiunile membrilor echipei"
-          instructions: "Clic pe numele utilizatorului şi acţiuni pentru a filtra lista. Clic pe poza profilului pentru a vizita pagina utilizatorului."
           clear_filters: "Arată tot"
           staff_user: "Utilizator-membru al echipei"
           target_user: "Utilizator țintă"

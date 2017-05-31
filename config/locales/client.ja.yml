@@ -1935,7 +1935,6 @@ ja:
           do_nothing: "何もしない"
         staff_actions:
           title: "スタッフ操作"
-          instructions: "ユーザ名、アクションをクリックすると、リストはフィルタされます。プロフィール画像をクリックするとユーザページに遷移します"
           clear_filters: "すべて表示する"
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
