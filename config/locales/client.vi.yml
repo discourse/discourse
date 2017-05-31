@@ -2271,7 +2271,6 @@ vi:
           do_nothing: "không làm gì"
         staff_actions:
           title: "Staff Actions"
-          instructions: "Click username và thực hiện lọc danh sách, click ảnh hồ sơ để đến trang thành viên."
           clear_filters: "Hiện thị mọi thứ"
           staff_user: "Tài khoản Nhân viên"
           target_user: "Target User"

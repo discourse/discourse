@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 fi:
   site_settings:
     discourse_narrative_bot_enabled: 'Ota Discoursen opastava botti käyttöön'
@@ -5,6 +12,7 @@ fi:
     discourse_narrative_bot_ignored_usernames: "Käyttäjänimet, jotka botin tulisi jättää huomiotta"
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
     discourse_narrative_bot_welcome_post_type: "Minkätyyppisen tervetuloviestin botti lähettää"
+    discourse_narrative_bot_welcome_post_delay: "Odota (n) sekuntia ennen kuin botti lähettää tervetuloviestin."
   badges:
     certified:
       name: Tutkinto plakkarissa
@@ -167,9 +175,9 @@ fi:
 
           <img src="/images/unicorn.jpg" width="520" height="381">
 
-          Jos pidit siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla tykkää-nappia :heart: tämän viestin alla.
+          Jos pidät siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla tykkää-nappia :heart: tämän viestin alla.
 
-          Osaatkohan **vastata kuvalla?** Ihan mikä tahansa kuva kelpaa! Raahaa ja pudota, paina liitä-nappia tai vaikkapa kopioi ja liitä. Keinot ovat monet!
+          Osaatkohan **vastata kuvalla?** Ihan mikä tahansa kuva kelpaa! Raahaa ja pudota, paina liitä-nappia tai vaikkapa kopioi ja liitä.
         reply: |-
           Loistava kuva – Painoin tykkää-nappia :heart:, jotta tiedät että pidin siitä kovasti! :heart_eyes:
         like_not_found: |-

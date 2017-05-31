@@ -2345,7 +2345,6 @@ sq:
           do_nothing: "mos bëj asgjë"
         staff_actions:
           title: "Veprime Stafi"
-          instructions: "Kliko emrat e anëtarëve apo veprimet për të filtruar listën. Kliko foton e profilit për të shkuar tek faqla e anëtarit. "
           clear_filters: "Trego gjithshka"
           staff_user: "Anëtari i stafit"
           target_user: "Anëtari i prekur"

@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 de:
   site_settings:
     discourse_narrative_bot_enabled: 'Discourse Narrative Bot aktivieren'
@@ -162,14 +169,6 @@ de:
 
           - https://de.wikipedia.org/wiki/Hauskatze
       images:
-        instructions: |-
-          Hier ist ein Bild von einem Einhorn:
-
-          <img src="/images/unicorn.jpg" width="520" height="381">
-
-          Wenn du es magst (und wer tut das nicht!), leg los und drücke die Like-Schaltfläche :heart: unter diesem Beitrag, um es mich wissen zu lassen.
-
-          Kannst du **mit einem Bild antworten?** Egal welches Bild! Ziehe das Bild in den Browser, drücke die Upload-Schaltfläche, oder kopiere es in die Zwischenablage und füge es ein.
         reply: |-
           Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-

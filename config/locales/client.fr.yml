@@ -2779,7 +2779,6 @@ fr:
           do_nothing: "ne rien faire"
         staff_actions:
           title: "Actions des responsables"
-          instructions: "Cliquez sur les pseudos et les actions pour filtrer la liste. Cliquez sur les images de profil pour aller aux pages des utilisateurs."
           clear_filters: "Tout afficher"
           staff_user: "Responsable"
           target_user: "Utilisateur cible"

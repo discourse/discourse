@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 zh_CN:
   site_settings:
     discourse_narrative_bot_enabled: '启用 Discourse 代表机器人'
@@ -164,11 +171,11 @@ zh_CN:
           - https://en.wikipedia.org/wiki/Exotic_Shorthair
       images:
         instructions: |-
-          这是个独角兽的照片：
+          这是一只独角兽的照片：
 
-          <img src="/images/unicorn.jpg" width="520" height="381">
+          <img src="/images/unicorn.png" width="520" height="520">
 
-          如果你喜欢它（谁不呢），在帖子的下方赞 :heart: 一下。
+          如果你喜欢它（谁不呢！），在帖子的下方赞 :heart: 一下，这样我就知道你喜欢它了。
 
           你可以**用图片回复**吗？任何图片都行！拖进来后释放，点击上传按钮，或者复制粘贴都行。
         reply: |-
@@ -230,8 +237,7 @@ zh_CN:
           - 在编辑器中按下 emoji 按钮 <img src="/images/font-awesome-smile.png" width="16" height="16">，或者用你移动端的键盘
         reply: |-
           这是 :sparkles: **Emoji 精神!** :sparkles:
-        not_found: "啊，我没有在你的回复中看到任何 Emoji？\b哦不！ :sob:\n\n试试输入一个半角冒号<kbd>:</kbd>打开 emoji 选择器，然后输入你想要的几个字母，比如 `:bird`。\n\n或者，点击你编辑器里的 emoji 按钮<img src=\"/images/font-awesome-smile.png\" width=\"16\" height=\"16\">。\n\n（如果你正在用移动设备，你也可以试试直接在你的键盘里输入\
-          \ Emoji）"
+        not_found: "啊，我没有在你的回复中看到任何 Emoji？\b哦不！ :sob:\n\n试试输入一个半角冒号<kbd>:</kbd>打开 emoji 选择器，然后输入你想要的几个字母，比如 `:bird`。\n\n或者，点击你编辑器里的 emoji 按钮<img src=\"/images/font-awesome-smile.png\" width=\"16\" height=\"16\">。\n\n（如果你正在用移动设备，你也可以试试直接在你的键盘里输入 Emoji）"
       mention:
         instructions: |-
           有时你可能想要在回复别人的时候提醒另一个人。输入`@`然后是他们的用户名提及他们。

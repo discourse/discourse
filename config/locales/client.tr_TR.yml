@@ -2478,7 +2478,6 @@ tr_TR:
           do_nothing: "hiçbir şey yapma"
         staff_actions:
           title: "Görevli Eylemleri"
-          instructions: "Kullanıcı adları ve eylemlere tıklayarak listeyi süz. Profil resimlerine tıklayarak kullanıcı sayfalarına git."
           clear_filters: "Hepsini Göster"
           staff_user: "Görevli Kullanıcı"
           target_user: "Hedef Kullanıcı"

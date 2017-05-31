@@ -2785,7 +2785,6 @@ nl:
           do_nothing: "niets doen"
         staff_actions:
           title: "Stafacties"
-          instructions: "Klik op gebruikersnamen en acties om de lijst te filteren. Klik op profielafbeeldingen om naar gebruikerspagina's te gaan."
           clear_filters: "Alles tonen"
           staff_user: "Staflid"
           target_user: "Doelgebruiker"

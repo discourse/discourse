@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 id:
   site_settings:
     discourse_narrative_bot_enabled: 'Aktifkan Discourse Narrative Bot'
@@ -5,38 +12,417 @@ id:
     discourse_narrative_bot_ignored_usernames: "Nama Pengguna yang diabaikan oleh Discourse Narrative Bot"
     discourse_narrative_bot_disable_public_replies: "Matikan balasan publik oleh Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "Ketik kiriman selamat datang yang akan dikirim oleh Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_delay: "Tunggu (n) detik sebelum Discourse Narrative Bot mengirim pos selamat datang."
   badges:
     certified:
       name: Tersertifikasi
       description: "Telah menyelesaikan panduan pengguna baru kami"
+      long_description: |
+        Lencana ini diberikan atas keberhasilan menyelesaikan panduan interaktif pengguna baru. Anda telah bersedia mempelajari dasar penggunaan diskusi dalam forum, sekarang Anda telah tersertifikat menjadi anggota forum.
+    licensed:
+      name: Berlisensi
+      description: "Telah menyelesaikan panduan pengguna tingkat lanjutan kami"
+      long_description: |
+        Lencana ini diberikan atas keberhasilan menyelesaikan panduan interaktif pengguna anggota forum lanjutan. Anda telah ahli menggunakan fasilitas lanjutan dalam diskusi — sekarang Anda telah bersertifikat penuh menjadi anggota forum.
   discourse_narrative_bot:
+    bio: "Salam, saya bukan manusia asli. Saya adalah robot yang akan memandu Anda menggunakan forum ini. Untuk berkomunikasi dengan saya, kirimi saya pesan atau panggil **`@%{discobot_username}`** dimana saja."
+    timeout:
+      message: |-
+        Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.
+
+        - Untuk melanjutkan, balas saya kapan saja.
+
+        - Jika ingin melewatkan langkah ini, bilang `%{skip_trigger}`.
+
+        - Untuk mulai kembali, bilang `%{reset_trigger}`.
+
+        Jika Anda tidak ingin semuanya, tidak masalah. Saya hanya robot. Saya akan baik-baik saja. :sob:
+    dice:
+      trigger: "lempar"
+      invalid: |-
+        Maafkan saya,  secara matematis tidak mungkin untuk memutar kombinasi dadu. :confounded:
+      not_enough_dice: |-
+        Saya hanya punya %{num_of_dice} dadu. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Saya tahu!
+      out_of_range: |-
+        Apakah Anda tahu [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) untuk sebuah dadu seimbang matematis adalah 120?
+      results: |-
+        > :game_die: %{results}
     quote:
+      trigger: "kutipan"
       '1':
+        quote: "Setiap kesulitan ada kemudahan"
         author: "Albert Einstein"
       '2':
+        quote: "Kamu harus jadi agen perubahan agar dunia mengenalimu."
         author: "Mahatma Gandhi"
       '3':
+        quote: "Jangan menangis karena sudah selesai, tersenyumlah karena itu telah terjadi."
         author: "Dr Seuss"
       '4':
+        quote: "Jika kamu ingin sesuatu berjalan dengan benar, lakukan sendiri."
         author: "Charles-Guillaume Étienne"
       '5':
+        quote: "Percayalah kamu bisa dan kamu sudah menyelesaikannya separuh."
         author: "Theodore Roosevelt"
       '6':
+        quote: "Hidup ini seperti sekotak cokelat. Kamu tidak pernah tahu apa yang akan kamu dapati."
         author: "Forrest Gump’s Mom"
       '7':
+        quote: "Satu langkah kecil untuk satu orang, lompatan besar untuk umat manusia."
         author: "Neil Armstrong"
       '8':
+        quote: "Lakukan satu hal yang kamu takuti untuk satu hari."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Kesalahan selalu dimaafkan, jika seseorang mau berani mengakuinya."
         author: "Bruce Lee"
       '10':
+        quote: "Jika pikiran seseorang mau membayangi dan mempercayai sesuatu, hal itu akan tercapai."
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: 'nasib baik'
       answers:
+        '1': "Yakin begini"
+        '2': "Sudah diputuskan demikian"
+        '3': "Tidak pakai ragu-ragu"
+        '4': "Betul sekali"
+        '5': "Anda dapat percaya dengan itu"
+        '6': "Sesuai pandangan saya, ya"
+        '7': "Hampir yakin"
+        '8': "Tampaknya baik"
         '9': "Ya"
+        '10': "Tandanya iya"
+        '11': "Balasan tidak jelas coba lagi"
+        '12': "Nanti tanya lagi"
+        '13': "Sebaiknya nanti saja diberitahu"
+        '14': "Tidak bisa memprediksinya sekarang"
+        '15': "Konsentrasi dan tanya lagi"
+        '16': "Jangan memikirkan itu"
+        '17': "Balasan saya adalah tidak"
+        '18': "Sumber saya bilang tida"
+        '19': "Sepertinya tidak begitu bagus"
+        '20': "Ragu-ragu sekali"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: 'mulai'
       skip_trigger: 'lewati'
+      help_trigger: 'tampilkan bantuan'
+      random_mention:
+        reply: |-
+          Hei! Untuk tahu saya bisa melakukan apa, ketik `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Saat ini yang saya tahu saya bisa melakukan ini:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Mulai dengan salah satu petunjuk interaktif berikut ini: %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _Lakukan kebaikan apa saja tanpa pamrih, ingatlah kalau suatu hari seseorang mungkin melakukan yang sama kepada kamu_ &mdash; Princess Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Kamu mungkin bergantung padanya
+      do_not_understand:
+        first_response: |-
+          Hei, terima kasih balasannya!
+
+          Sayangnya, sebagai robot yang bodoh, saya tidak paham soal itu. :frowning:
+        track_response: Bisa dicoba lagi, atau jika ingin melewati ini, ketik `%{skip_trigger}`. Bisa juga jika ingin ulang dari awal, ketik `%{reset_trigger}`.
+        second_response: |-
+          Aduh maaf. Saya masih belum paham. :anguished:
+
+          Saya hanya robot, jika ingin berkomunikas dengan manusia asli, buka [our contact page](/about).
+
+          Sementara ini, saya akan mendampingi Anda.
+    new_user_narrative:
+      reset_trigger: "pengguna baru"
+      cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna baru."
+      hello:
+        title: ":robot: Salam!"
+        message: |-
+          Selamat datang %{title}! Terima kasih telah bergabung dengan kami.
+
+          - Saya hanyalah sebuah robot, tapi [our friendly staff](/about) siap membantu jika butuh bantuan manusia asli.
+
+          - Demi alasan keamanan, kami membatasi para anggota baru untuk sementara waktu. Anda akan mendapati fasilitas tambahan pengguna (and [badges](/badges)) begitu anda telah memiliki hak.
+
+          - Kami percaya [civilized community behavior](/guidelines) selamanya.
+      onebox:
+        instructions: |-
+          Selanjutnya, bisakah Anda membagikan salah satu tautan ini kepada saya? Balas dengan **a link on a line by itself**, otomatis tautan itu akan menjelaskan ringkasan yang menarik.
+
+          Untuk menyalin sebuah tautan, tekan dan tahan pada ponsel, atau klik kanan pada tetikus:
+
+          - https://en.wikipedia.org/wiki/Inherently_funny_word
+          - https://en.wikipedia.org/wiki/Death_by_coconut
+          - https://en.wikipedia.org/wiki/Calculator_spelling
+        reply: |-
+          Keren! Cara ini berlaku untuk semua <img src="/images/font-awesome-link.png" width="16" height="16"> tautan. Ingat, semuanya harus sebaris _all by itself_, tanpa ada sesuatu di depan atau di belakangnya.
+        not_found: |-
+          Maaf, Saya tidak bisa menemukan tautan dari balasan Anda! :cry:
+
+          Bisakan coba tautan di bawah ini, di barik tersendiri pada balasan berikutnya?
+
+          - https://en.wikipedia.org/wiki/Exotic_Shorthair
+      images:
+        instructions: |-
+          Ini adalah gambar kuda bertanduk unicorn:
+
+          <img src="/images/unicorn.png" width="520" height="520">
+
+          Agar saya tahu kalau Anda suka, (siapa yang tidak suka!) tekan tombol :heart: yang ada di bawah pos ini.
+
+          Bisakah Anda **reply with a picture?** Gambar apa saja bisa! Tarik dan taruh di sini, tekan tombol unggah atau upload, atau bisa juga salin rekan gambarnya ke sini.
+        reply: |-
+          Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:
+        like_not_found: |-
+          Apakah Anda lupa menyukai :heart: kiriman saya [post?](%{url}) :crying_cat_face:
+        not_found: |-
+          Sepertinya Anda tidak memasukkan sebuah gambar jadi saya pilihkan sebuah gambar yang sepertinya I’m _sure_ you Anda akan suka.
+
+          `%{image_url}`
+
+          Coba selanjutnya unggah gambar lagi, atau tempelkan tautannya dalam sebuah baris tersendiri!
+      formatting:
+        instructions: |-
+          Bisakah Anda menjadikan beberapa kata menjadi **bold** atau _italic_ dalam balasan Anda?
+
+          - Ketik `**bold**` atau `_italic_`
+
+          - atau, tekan tombol <kbd><b>B</b></kbd> atau <kbd><i>I</i></kbd> pada editor teks
+        reply: |-
+          Percobaan yang bagus! HTML dan BBCode juga bisa digunakan dalam format tulisan – untuk mempelajarinya, [lihat tutorial ini](http://commonmark.org/help) :nerd:
+        not_found: |-
+          Ampun deh, saya tidak menemukan format balasan yang sesuai. :pencil2:
+
+          Mau coba lagi? Gunakan tombol <kbd><b>B</b></kbd> untuk tebal atau <kbd><i>I</i></kbd> untuk miring yang ada di editor tulisan jika masih bingung.
+      quoting:
+        instructions: |-
+          Coba kutip komentar dalam balasan Anda? Jadi saya paham bagian mana yang dibalas.
+
+          > Jika ini kopi, tolong bawakan teh; tapi jika ini teh, tolong bawakan kopi.
+          >
+          > Salah satu kelebihan bicara sendiri yaitu kamu tahu setidaknya ada seseorang yang mendengar ucapanmu.
+          >
+          > Beberapa orang punya cara bicara, dan yang lainnya... tidak punya gaya bicara sendiri.
+
+          Pilih salah satu teks di atas &uarr; kutip kalimat yang diinginkan, dan tekan tombol **Quote** yang muncul saat tulisan dipilih – atau gunakan tombol **Reply** yang ada di setiap pos.
+
+          Di bawah kutipan, ketik satu atau dua kata atau kenapa kutipan itu dipilih, saya penasaran apa balasa Anda :thinking:
+        reply: |-
+          Pilihan yang bagus, Anda memilih kutipan favorit saya! :left_speech_bubble:
+        not_found: |-
+          Hmm, sepertinya Anda tidak mengutip salah satu kalimat saya di atas?
+
+          Pilih teks apa saja di pos di atas untuk memunculkan tombol <kbd>**Quote**</kbd>. Lalu tekan tombol **Reply** setelah memilih teks apa saja. Bisakah tolong dicoba lagi?
+      bookmark:
+        instructions: |-
+          Jika ingin tahu lebih banyak, pilih <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> di bawah ini dan <img src="/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  Jika dilakukan, akan ada :gift: nanti!
+        reply: |-
+          Hebat! Kelak Anda dapat mudah menemukan percakapan pribadi kapan saja, langsung dari [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Cukup pilih gambar profil Anda di pojok kanan atas &#8599;
+        not_found: |-
+          Aduh, Saya tidak meliha tanda baca dalam topik ini. Apakah Anda melihat tanda baca atau bookmark yang di bawah setiap pos? Pilih tampilkan lebih banyak <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> untuk melihat fasilitas lain yang dibutuhkan.
+      emoji:
+        instructions: |-
+          Anda telah melihat saya menggunakan gambar dalam balasan saya :blue_car::dash: gambar itu disebut [emoji](https://en.wikipedia.org/wiki/Emoji). Bisa tambahkan **add an emoji** pada balasan Anda? Pilih salah satu cara ini:
+
+          - Ketik `:) ;) :D :P :O`
+
+          - Ketik titik dua <kbd>:</kbd> lalu sebut nama emoji `:tada:`
+
+          - Tekan tombol emoji <img src="/images/font-awesome-smile.png" width="16" height="16"> di editor, atau pada papan ketik ponsel Anda.
+        reply: |-
+          Hebat :sparkles: _emojitastic!_ :sparkles:
+        not_found: |-
+          Uups, Sepertinya tidak ada emoji di balasan Anda? Tidak... :sob:
+
+          Cobalah ketik sebuah titik dua <kbd>:</kbd> untuk membuat pilihan emoji, lalu ketik satu kata yang diinginkan, seperti `:bird:`
+
+          Atau, pilih tombol emoji <img src="/images/font-awesome-smile.png" width="16" height="16"> di editor.
+
+          (Jika menggunakan ponsel, anda bisa langsung menggunakan dari papan ketik juga)
+      mention:
+        instructions: |-
+          Terkadang Anda perlu mendapatkan perhatian seseorang, walau Anda tidak membalas langsung komentar mereka. Gunakan `@` lalu ketik nama pengguna untuk memanggil mereka.
+
+          Bisakah coba panggil **`@%{discobot_username}`** dalam balasan selanjutnya?
+        reply: |-
+          _Apakah Anda memanggil nama saya!?_ :raised_hand: Saya yakin iya! :wave:  Baiklah, saya sudah hadir! Terima kasih sudah menyebut nama saya.  :ok_hand:
+        not_found: |-
+          Saya tidak melihat nama saya disebut :frowning: Bisa dicoba lagi menyebut `@%{discobot_username}`?
+
+          (Akhirnya, nama saya disebut _disco_, seperti tarian tahun 1970-an. Beneran [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          Kami berharap diskusi yang penuh keakraban, dan kami perlu bantuan Anda untuk [keep things civilized](%{guidelines_url}). Jika melihat sebuah masalah, tolong tandai secara rahasia dan biarkan penulis, atau [pengurus forum](%{about_url}), mengetahuinya.
+
+          >  :imp: Saya telah menulis sesuatu yang buruk di sini
+
+          Saya yakin Anda harus melakukan apa. Ayu **peringati pos ini** <img src="/images/font-awesome-flag.png" width="16" height="16"> karena kurang pantas!
+        reply: |-
+          [Pengurus forum](/groups/staff) akan mendapatkan pemberitahuan secara rahasia tentang peringatan ini. Jika beberapa orang lainnya melakukan yang sama, secara otomatis kiriman tersebut akan disembunyikan sebagai antisipasi. (Karena saya tidak menulis sesuatu yang tidak baik :angel:, saya bisa terus bediskusi dan menghapus peringatannya sekarang.)
+        not_found: |-
+          Tidak..., tulisan buruk saya belum ditandai. :worried: Bisakah Anda menandainya sebagai sesuatu yang kurang pantas dengan **flag** <img src="/images/font-awesome-flag.png" width="16" height="16">? Jangan lupa pilih tombol tampilkan lebih banyak <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> untuk melihat tindakan lain untuk setiap kiriman.
+      search:
+        instructions: |-
+          _psst_ … Ada kejutan dalam topik ini. Jika mau mengikuti tantangannya, **pilih tombol pencarian** <img src="/images/font-awesome-search.png" width="16" height="16"> yang ada di kanan atas &#8599; untuk melakukan pencarian.
+
+          Coba cari istilah "capy&#8203;bara" dalam topik ini
+        hidden_message: |-
+          Bagaimana Anda melewatkan capcaybara? :wink:
+
+          <img src="/images/capybara-eating.gif"/>
+
+          Apakah Anda sadar kalau sudah kembali ke diskusi awal? Beri makan si capcaybara yang kelaparan ini **ketik emotikon `:herb:`** dan otomatis Anda kembali ke diskusi paling bawah.
+        reply: |-
+          Ketemu juga :tada:
+
+          - Untuk pencarian lebih rinci, buka [halaman pencarian penuh](%{search_url}).
+
+          - Untuk berpindah ke komentar mana saja dalam diskusi yang panjang, coba kontrol linimasa topik yang ada di kanan (jika di ponsel ada di bawah).
+
+          - Jika menggunakan papan ketik fisik :keyboard:, tekan <kbd>?</kbd> untuk melihat pintasan mengetik yang bermanfaat.
+        not_found: |-
+          Hmm… sepertinya Anda mengalami kesulitan. Mohon maaf kalau begitu. Apakah sudah mencari <img src="/images/font-awesome-search.png" width="16" height="16"> untuk istilah **capy&#8203;bara**?
+      end:
+        message: |-
+          Terima kasih sudah bersedia saya temani @%{username}! Saya berikan ini untuk Anda, Anda pantas menerima ini:
+
+          %{certificate}
+
+          Panduan singkat ini telah selesai! Ayo mulai lihat [**topik diskusi terbaru forum ini**](/latest) atau lihat apa saja [**kategori diskusi**](/categories). :sunglasses:
+
+          (Jika ingin jumpa dengan saya lagi dan belajar lebih banyak, cukup ketik atau  panggil `@%{discobot_username}` kapan saja!)
+      certificate:
+        alt: 'Sertifikat Pencapaian'
     advanced_user_narrative:
+      reset_trigger: 'anggota lanjutan'
+      cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna lanjutan."
+      title: ':arrow_up: Fasilitas pengguna lanjutan'
+      start_message: |-
+        Sebagai _advanced_ user, sudahkah anda membuka [laman pengaturan anda](/my/preferences) @%{username}? Ada banyak pengaturan demi kenyamanan Anda berforum, seperti memilih tampilan forum warna gelap atau terang.
+
+        Sepertinya saya melantur, mari mulai!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} adalah robot keren yang ada sejauh ini :wink:"
+        instructions: |-
+          Setiap orang selalu membuat kesalahan. Jangan khawatir, Anda dapat selalu mengubah tulisan Anda nantinya!
+
+          Bisakah Anda mulai melakukan **edit** pos yang sebelumnya sudah Anda buat?
+        not_found: |-
+          Tampaknya Anda belum mengedit tulisan [pos](%{url}) yang saya buatkan untuk Anda. Bisa dicoba lagi?
+
+          Gunakan ikon <img src="/images/font-awesome-pencil.png" width="16" height="16"> untuk menampilkan editor tulisan.
+        reply: |-
+          Bagus sekali!
+
+          Mohon diingat, perubahan yang dilakukan setelah melewati 5 menit akan sebagai revisi tulisan secara publik, dan ikon pensil kecil akan muncul di kanan atas pos dengan jumlah revisi yang dilakukan.
+      delete:
+        instructions: |-
+          Jika Anda ingin menarik pos yang sudah dipublikasi, Anda bisa menghapusnya.
+
+          Ayo coba lakukan dan **hapus** pos yang mana saya dengan menggunakan perintah <img src="/images/font-awesome-trash.png" width="16" height="16"> **hapus**. Tapi jangan menghapus pos yang paling pertama!
+        not_found: |-
+          Saya tidak melihat pos yang dihapus? Ingat <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> tombol tampilkan lebih banyak akan membuka <img src="/images/font-awesome-trash.png" width="16" height="16"> tombol untuk menghapus.
+        reply: |-
+          Mantap! :boom:
+
+          Agar diskusi bisa terus berjalan, hapus segara komentar atau pos Anda sesegara mungkin. Pos akan terhapus dalam beberapa saat.
       recover:
-        deleted_post_raw: 'Kenapa @%{discobot_username} menghapus kiriman saya? :anguished:'
+        deleted_post_raw: 'Kenapa @%{discobot_username} menghapus pos saya? :anguished:'
+        instructions: |-
+          Oh tidak! Sepertinya secara tidak sengaja saya menghapus pos baru yang baru saya buat.
+
+          Bisakah Anda bantu saya dan <img src="/images/font-awesome-rotate-left.png" width="16" height="16"> **batal hapus** pos itu?
+        not_found: |-
+          Bingung? Ingat tampilkan lebih banyak <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> akan membuka <img src="/images/font-awesome-rotate-left.png" width="16" height="16"> tombol batal hapus.
+        reply: |-
+          Fiuh, itu yang saya maksud! Terima kasih sudah memperbaikinya :wink:
+
+          Ingat, Anda hanya memiliki waktu selama 24 jam untuk menghapus pos Anda.
+      category_hashtag:
+        instructions: |-
+          Apakah Anda tahu kalau bisa mengunjungi kategori atau label dalam pos? Contohnya, sudah melihat kategori %{category}?
+
+          Ketik `#` di tengah kalimat dan pilih kategori atau label yang diinginkan.
+        not_found: |-
+          Hmm, saya tidak melihat kategori yang dituliskan di sana. Ingat `#` tidak bisa muncul pada karakter awal. Bisakah Anda menyalin ini di balasan selanjutnya?
+
+          ```text
+          Saya membuat tautan kategori dengan #
+          ```
+        reply: |-
+          Hebat! Cara ini bisa digunakan pada categories _and_ tags, jika pelabelan diaktifkan.
+      change_topic_notification_level:
+        instructions: |-
+          Setiap topik memiliki tingkat pemberitahuan. Pengaturan awalnya adalah tingkat tertinggi, yakni 'watching', artinya surel pemberitahuan langsung dikirim setiap ada balasan baru. Tapi Anda bisa mengatur tingkat pemberitahuan untuk _topik_ apa_saja untuk 'watch', 'tracking' atau 'muted'.
+
+          Mari coba ubah tingkat pemberitahuan untuk topik ini. Di topik paling bawah, Anda akan menemukan sebuah tombol yang menyatakan kalau anda **menyimak** atau watching topik ini. Bisakah anda mengubahnya menjadi **tracking** atau mengikuti?
+        not_found: |-
+          Sepertinya Anda masih menyimak :eyes: topik ini! Jika kesulitan mencari tombolnya, tombol tingkat pengaturan ada di bawah topik.
+        reply: |-
+          Percobaan yang bagus! Semoga Anda tidak membuat senyap atau mute topik ini karena saya adalah robot yang suka bicara :grin:.
+
+          Ingat, saat membalas sebuah topik, atau membaca sebuah topik selama beberapa saat, secara otomatis tingkat pemberitahuan akan menjadi 'tracking'. Anda dapat mengubah pengaturan ini di [pengaturan pengguna Anda](/my/preferences).
+      poll:
+        instructions: |-
+          Tahukah Anda kalau Anda bisa menambahkan pemungutan suara di pos mana saja? Coba gunakan <img src="/images/font-awesome-gear.png" width="16" height="16"> roda gigi yang ada di editor tulis untuk **membuat pemungutan suara**.
+        not_found: |-
+          Aduh! Tampaknya tidak ada pemungutan suara dalam balasan Anda.
+
+          Gunakan <img src="/images/font-awesome-gear.png" width="16" height="16"> ikon roda gigi di editor, atau salin dan rekatkan pemungutan suara ini di balasan selanjutnya:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          Hei, survei yang bagus! Apakah saya pandai mengajarkan Anda?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          Kadang Anda ingin **menyembunyikan rincian** dalam balasan Anda:
+
+          - Saat Anda berdiskusi soal alur cerita sebuah film atau TV bisa saja itu dijadikan sebuah spoiler atau sesuatu yang disembunyikan.
+
+          - Jika pos Anda memiliki banyak pilihan rincian yang tampaknya akan terlalu banyak jika ditampilkan secara keseluruhan.
+
+          [details=Buka ini untuk melihat cara kerja spoiler!]
+          1. Pilih <img src="/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor.
+          2. Pilih "Hide Details" atau sembunyikan rincian.
+          3. Ubah ringkasan rinciannya dan tambahkan tulisan anda.
+          [/details]
+
+          Bisakah Anda menggunakan <img src="/images/font-awesome-gear.png" width="16" height="16"> roda gigi dalam editor untuk menambah bagian rincian untuk balasan selanjutnya?
+        not_found: |-
+          Kesulitan membuat spoiler? Coba masukkan teks di bawah ini untuk balasan selanjutnya:
+
+          ```text
+          [details=Buka ini untuk lebih jelasnya]
+          Ini adalah bagian isi spoile yang disembunyikan.
+          [/details]
+          ```
+        reply: |-
+          Bagus sekali — perhatian anda to _detail_ is sangat baik sekali!
+      end:
+        message: |-
+          Anda benar-benar seperti seorang pengguna _sesepuh forum_ :bow:
+
+          %{certificate}
+
+          Itulah yang saya tahu.
+
+          Saya undur diri! Jika kangen dan ingin berbicara dengan saya, panggil saya kapan saja :sunglasses:
+      certificate:
+        alt: 'Pencapaian Sertifikat Bukti Pengguna Lanjutan'
