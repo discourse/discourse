@@ -234,7 +234,7 @@ export default Em.Component.extend({
     const contain_all_tags = this.get('searchedTerms.special.all_tags');
 
     if (match.length !== 0) {
-      const join_char = contain_all_tags ? ',' : '|';
+      const join_char = contain_all_tags ? '+' : ',';
       const existingInput = _.isArray(tags) ? tags.join(join_char) : tags;
       const userInput = match[0].replace(REGEXP_TAGS_REPLACE, '');
 
@@ -376,7 +376,7 @@ export default Em.Component.extend({
     const contain_all_tags = this.get('searchedTerms.special.all_tags');
 
     if (tagFilter && tagFilter.length !== 0) {
-      const join_char = contain_all_tags ? ',' : '|';
+      const join_char = contain_all_tags ? '+' : ',';
       const tags = tagFilter.join(join_char);
 
       if (match.length !== 0) {

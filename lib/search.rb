@@ -445,20 +445,19 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_|]+)/) do |posts, match|
-    if match.include?(',')
-      tags = match.split(",")
+  advanced_filter(/tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
+    if match.include?('+')
+      tags = match.split('+')
 
-      # TODO use ts_query function
       posts.where("topics.id IN (
-      SELECT DISTINCT(tt.topic_id)
+      SELECT tt.topic_id
       FROM topic_tags tt, tags
       WHERE tt.tag_id = tags.id
       GROUP BY tt.topic_id
-      HAVING to_tsvector('simple',array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery('simple', ?)
+      HAVING to_tsvector(#{query_locale}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{query_locale}, ?)
       )", tags.join('&'))
     else
-      tags = match.split("|")
+      tags = match.split(",")
 
       posts.where("topics.id IN (
       SELECT DISTINCT(tt.topic_id)
