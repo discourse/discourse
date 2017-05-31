@@ -485,7 +485,7 @@ export default Ember.Controller.extend({
       if (this.get('model.action') === 'edit') {
         this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
         if (result.responseJson.post.post_number === 1) {
-          this.appEvents.trigger('header:show-topic', composer.get('topic'));
+          this.appEvents.trigger('header:update-topic', composer.get('topic'));
         }
       } else {
         this.appEvents.trigger('post-stream:refresh');
