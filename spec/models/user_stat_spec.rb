@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe UserStat do
 
-  it { is_expected.to belong_to :user }
-
   it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)
     expect(user.user_stat).to be_present

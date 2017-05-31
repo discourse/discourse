@@ -1,4 +1,5 @@
 import { CANCELLED_STATUS } from 'discourse/lib/autocomplete';
+import { userPath } from 'discourse/lib/url';
 
 var cache = {},
     cacheTopicId,
@@ -6,7 +7,7 @@ var cache = {},
     currentTerm,
     oldSearch;
 
-function performSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, resultsFn) {
+function performSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, group, resultsFn) {
   var cached = cache[term];
   if (cached) {
     resultsFn(cached);
@@ -14,11 +15,12 @@ function performSearch(term, topicId, includeGroups, includeMentionableGroups, a
   }
 
   // need to be able to cancel this
-  oldSearch = $.ajax(Discourse.getURL('/users/search/users'), {
+  oldSearch = $.ajax(userPath('search/users'), {
     data: { term: term,
             topic_id: topicId,
             include_groups: includeGroups,
             include_mentionable_groups: includeMentionableGroups,
+            group: group,
             topic_allowed_users: allowedUsers }
   });
 
@@ -59,7 +61,7 @@ function organizeResults(r, options) {
 
   if (r.groups) {
     r.groups.every(function(g) {
-      if (results.length > limit && options.term !== g.name) return false;
+      if (results.length > limit && options.term.toLowerCase() !== g.name.toLowerCase()) return false;
       if (exclude.indexOf(g.name) === -1) {
         groups.push(g);
         results.push(g);
@@ -79,7 +81,8 @@ export default function userSearch(options) {
       includeGroups = options.includeGroups,
       includeMentionableGroups = options.includeMentionableGroups,
       allowedUsers = options.allowedUsers,
-      topicId = options.topicId;
+      topicId = options.topicId,
+      group = options.group;
 
 
   if (oldSearch) {
@@ -105,10 +108,16 @@ export default function userSearch(options) {
       resolve(CANCELLED_STATUS);
     }, 5000);
 
-    debouncedSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, function(r) {
-      clearTimeout(clearPromise);
-      resolve(organizeResults(r, options));
-    });
+    debouncedSearch(term,
+        topicId,
+        includeGroups,
+        includeMentionableGroups,
+        allowedUsers,
+        group,
+        function(r) {
+          clearTimeout(clearPromise);
+          resolve(organizeResults(r, options));
+        });
 
   });
 }

@@ -1,0 +1,59 @@
+{{#if categories}}
+  <div class="category-list {{if showTopics 'with-topics'}}">
+    {{#each categories as |c|}}
+      <div class='category-list-item category' style={{border-color c.color}}>
+        <table class='topic-list'>
+          <tr>
+            <th class="main-link">
+              {{category-title-link category=c}}
+            </th>
+          </tr>
+
+          {{#if c.description_excerpt}}
+            <tr class="category-description">
+              <td colspan="3">
+                {{{c.description_excerpt}}}
+              </td>
+            </tr>
+          {{/if}}
+
+          {{#if showTopics}}
+            {{#each c.topics as |t|}}
+              {{mobile-category-topic topic=t}}
+            {{/each}}
+          {{/if}}
+
+          {{#if c.subcategories}}
+            <tr class="subcategories-list">
+              <td>
+                <div class='subcategories'>
+                  {{#each c.subcategories as |subcategory|}}
+                    {{category-link subcategory}}
+                  {{/each}}
+                </div>
+              </td>
+            </tr>
+          {{/if}}
+
+        </table>
+        <footer class="clearfix">
+
+          <figure title="{{i18n 'all_time_desc'}}">{{number c.topics_all_time}} <figcaption>{{i18n 'all_time'}}</figcaption></figure>
+
+          {{#if c.pickMonth}}
+          <figure title="{{i18n 'month_desc'}}">{{number c.topics_month}} <figcaption>{{i18n 'month'}}</figcaption></figure>
+          {{/if}}
+
+          {{#if c.pickWeek}}
+            <figure title="{{i18n 'week_desc'}}">{{number c.topics_week}} <figcaption>{{i18n 'week'}}</figcaption></figure>
+          {{/if}}
+
+          {{#if c.can_edit}}
+            <a href {{action "editCategory" c}} class='btn btn-small'>{{i18n 'category.edit'}}</a>
+          {{/if}}
+
+        </footer>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

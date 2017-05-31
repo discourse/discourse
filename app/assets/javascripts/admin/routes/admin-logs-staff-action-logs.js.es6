@@ -6,11 +6,6 @@ export default Discourse.Route.extend({
     this.render('admin/templates/logs/staff-action-logs', {into: 'adminLogs'});
   },
 
-  setupController: function(controller) {
-    controller.resetFilters();
-    controller.refresh();
-  },
-
   actions: {
     showDetailsModal(model) {
       showModal('admin-staff-action-log-details', { model, admin: true });
@@ -18,14 +13,9 @@ export default Discourse.Route.extend({
     },
 
     showCustomDetailsModal(model) {
-      const modalName = (model.action_name + '_details').replace(/\_/g, "-");
-
-      showModal(modalName, {
-        model,
-        admin: true,
-        templateName: 'site-customization-change'
-      });
-      this.controllerFor('modal').set('modalClass', 'tabbed-modal log-details-modal');
+      let modal = showModal('admin-theme-change', { model, admin: true});
+      this.controllerFor('modal').set('modalClass', 'history-modal');
+      modal.loadDiff();
     }
   }
 });

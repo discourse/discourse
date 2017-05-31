@@ -65,10 +65,6 @@ export function postUrl(slug, topicId, postNumber) {
   return url;
 }
 
-export function userUrl(username) {
-  return Discourse.getURL("/users/" + username.toLowerCase());
-}
-
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
@@ -104,6 +100,8 @@ export function selectedText() {
   $div.find(".clicks").remove();
   // replace emojis
   $div.find("img.emoji").replaceWith(function() { return this.title; });
+  // replace br with newlines
+  $div.find("br").replaceWith(() => "\n");
 
   return String($div.text()).trim();
 }
@@ -170,7 +168,7 @@ export function validateUploadedFiles(files, opts) {
 
   // CHROME ONLY: if the image was pasted, sets its name to a default one
   if (typeof Blob !== "undefined" && typeof File !== "undefined") {
-    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "image.png"; }
   }
 
   opts = opts || {};

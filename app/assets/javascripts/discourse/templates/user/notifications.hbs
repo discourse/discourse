@@ -21,7 +21,7 @@
   {{#if model}}
     {{d-button title='user.dismiss_notifications_tooltip'
                class='btn dismiss-notifications'
-               action="resetNew"
+               action=(action "resetNew")
                label='user.dismiss_notifications'
                icon='check'
                disabled=allNotificationsRead}}

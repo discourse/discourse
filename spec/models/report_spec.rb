@@ -209,5 +209,15 @@ describe Report do
       end
     end
   end
-end
 
+  describe 'posts counts' do
+    it "only counts regular posts" do
+      post = Fabricate(:post)
+      Fabricate(:moderator_post, topic: post.topic)
+      Fabricate.build(:post, post_type: Post.types[:whisper], topic: post.topic)
+      post.topic.add_small_action(Fabricate(:admin), "invited_group", 'coolkids')
+      r = Report.find('posts')
+      expect(r.total).to eq(1)
+    end
+  end
+end

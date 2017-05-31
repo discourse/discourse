@@ -8,18 +8,22 @@ describe Jobs::PollFeed do
     let(:url) { "http://eviltrout.com" }
     let(:embed_by_username) { "eviltrout" }
 
+    before do
+      $redis.del("feed-polled-recently")
+    end
+
     it "requires feed_polling_enabled?" do
-        SiteSetting.feed_polling_enabled = true
-        SiteSetting.feed_polling_url = nil
-        poller.expects(:poll_feed).never
-        poller.execute({})
+      SiteSetting.feed_polling_enabled = true
+      SiteSetting.feed_polling_url = nil
+      poller.expects(:poll_feed).never
+      poller.execute({})
     end
 
     it "requires feed_polling_url" do
-        SiteSetting.feed_polling_enabled = false
-        SiteSetting.feed_polling_url = nil
-        poller.expects(:poll_feed).never
-        poller.execute({})
+      SiteSetting.feed_polling_enabled = false
+      SiteSetting.feed_polling_url = nil
+      poller.expects(:poll_feed).never
+      poller.execute({})
     end
 
     it "delegates to poll_feed" do
@@ -28,6 +32,15 @@ describe Jobs::PollFeed do
       poller.expects(:poll_feed).once
       poller.execute({})
     end
+
+    it "won't poll if it has polled recently" do
+      SiteSetting.feed_polling_enabled = true
+      SiteSetting.feed_polling_url = url
+      poller.expects(:poll_feed).once
+      poller.execute({})
+      poller.execute({})
+    end
+
   end
 
 end

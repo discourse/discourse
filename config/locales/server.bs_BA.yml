@@ -27,14 +27,12 @@ bs_BA:
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
   purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anoniman"
   emails:
     incoming:
-      default_subject: "Dolazna poruka pošte %{email}"
       show_trimmed_content: "Prikaži skraćeni sadržaj"
   errors: &errors
     messages:
@@ -107,32 +105,6 @@ bs_BA:
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    sequential_replies: |
-      ### Consider replying to several posts at once
-
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
-
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
-
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
-    dominating_topic: |
-      ### Let others join the conversation
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      Are you sure you're providing adequate time for other people to share their points of view, too?
-    too_many_replies: |
-      ### You have reached the reply limit for this topic
-
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
-
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
-    reviving_old_topic: |
-      ### Revive this topic?
-
-      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
-
-      Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
       category:
@@ -158,7 +130,6 @@ bs_BA:
               invalid: "is not a valid color"
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
@@ -221,14 +192,11 @@ bs_BA:
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:
-    choose_new: "Odaberite novu šifru"
-    choose: "Molimo vas odaberite šifru"
     update: 'Obnovi Šifru'
     save: 'Namjesti Šifru'
     title: 'Resetuj Šifru'
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
-    continue: "Idi na %{site_name}"
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -246,7 +214,6 @@ bs_BA:
       long_form: 'opomeni kao ne-relevantno'
     spam:
       title: 'Spam'
-      description: 'Ovaj post je reklamnog karaktera i ne doprinosi razvoju teme jer je tu samo iz materijalnih razloga.'
       long_form: 'opomeni kao spam'
     inappropriate:
       title: 'Neprikladno'
@@ -304,6 +271,8 @@ bs_BA:
       title: "Users"
       xaxis: "Day"
       yaxis: "Number of new users"
+    profile_views:
+      xaxis: "Dan"
     topics:
       title: "Topics"
       xaxis: "Day"
@@ -371,6 +340,8 @@ bs_BA:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    page_view_anon_reqs:
+      xaxis: "Dan"
     time_to_first_response:
       yaxis: "Prosječno vrijeme (hours)"
   dashboard:
@@ -383,8 +354,6 @@ bs_BA:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
-    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -414,8 +383,6 @@ bs_BA:
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
-    show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
@@ -440,7 +407,6 @@ bs_BA:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
@@ -468,7 +434,6 @@ bs_BA:
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
@@ -605,7 +570,6 @@ bs_BA:
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
-    invites_per_page: "Default invites shown on the user page."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
@@ -618,9 +582,9 @@ bs_BA:
     embed_post_limit: "Maximum number of posts to embed."
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
+    enable_emoji: "Omogući smajlije"
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -665,7 +629,6 @@ bs_BA:
     incorrect_username_email_or_password: "Netačan nadimak, email ili šifra"
     wait_approval: "Hvala vam što ste se prijavili. We will notify you when your account has been approved."
     active: "Vaš nalog je aktivan i spreman za korišćenje."
-    activate_email: "<p>Skoro ste gotovi! Poslali smo email za aktivaciju na <b>%{email}</b>. Molimo vas da pratite upustva u emailu da bi ste aktivirali vaš nalog.</p><p>Ako email ne stigne, provjerite SPAM folder, ili se probajte ulogovat opet da bi poslali email za aktivaciju.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
     suspended: "You can't log in until %{date}."
@@ -691,32 +654,10 @@ bs_BA:
       blocked: "is not allowed."
   invite_mailer:
     subject_template: "%{invitee_name} vas poziva da pogledate '%{topic_title}' na sajtu %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vas poziva na diskusiju:
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      na
-
-      > %{site_title} -- %{site_description}
-
-      Ako ste zainteresovani, kliknite na link ispod:
-
-      %{invite_link}
-
-      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu, što vama kao zvanici daje mogućnost da odmah odgovorite na diskusiju.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
-  test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
-  new_version_mailer:
-    subject_template: "[%{site_name}] New Discourse version, update available"
-  new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] update available"
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
@@ -731,36 +672,8 @@ bs_BA:
   system_messages:
     welcome_user:
       subject_template: "Dobrodošli na %{site_name}!"
-      text_body_template: |
-        Hvala što ste se pridružili %{site_name}, dobrodošli!
-
-        %{new_user_tips}
-
-        Mi vjerujemo u [civilizovanu diskusiju](%{base_url}/guidelines) na svakom nivou u svako doba.
-
-        Uživajte!
-
-        (Ako trebate razgovarati s nekim od [članova osoblja](%{base_url}/about) kao novi korisnik, samo odgovorite na ovu poruku.)
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}!"
-      text_body_template: |
-        Hvala vam što ste primili pozivnicu na %{site_name} -- dobrodošli!
-
-        Mi smo automatski kreirali vaše korisničko ime: **%{username}**, ali možete ga promjeniti preko [tvoj profil][postavke].
-
-        Da se opet ulogujete:
-
-        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
     backup_failed:
@@ -774,33 +687,11 @@ bs_BA:
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
-      text_body_template: |
-        Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Data Export completed successfully"
-      text_body_template: |
-        The data export was successful.
-
-        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        <small>CSV file download link will expire after 48 hours.</small>
     csv_export_failed:
       subject_template: "Export failed"
       text_body_template: "The export has failed. Please check the logs."
-    email_reject_no_account:
-      subject_template: "Email issue -- No Account"
-    email_reject_empty:
-      subject_template: "Email issue -- No Content"
-    email_reject_reply_key:
-      subject_template: "Email issue -- Bad Reply Key"
-    email_error_notification:
-      subject_template: "Email issue -- POP authentication error"
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
@@ -819,71 +710,11 @@ bs_BA:
       title: "Odjavi se"
       description: "Niste zainteresovani za ove email-e? Nema problema! Kliknite ovdje da se odjavite:"
     posted_by: "Odgovoreno %{username} dana %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_quoted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_mentioned:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted:
-      subject_template: "[%{site_name}] %{topic_title}"
-    user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
       click_here: "klikni ovdje"
-    forgot_password:
-      subject_template: "[%{site_name}] Obnova Šifre"
-      text_body_template: |
-        Potražena je obnova šifre na [%{site_name}](%{base_url}).
-
-        Ako je niste vi zatražili ignirišite ovaj email.
-
-        Kliknite ovdje da resetujete vašu šifru:
-        %{base_url}/users/password-reset/%{email_token}
-    set_password:
-      subject_template: "[%{site_name}] Odredi Šifru"
-      text_body_template: |
-        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
-
-        If you did not make this request, you can safely ignore this email.
-
-        Click the following link to choose a password:
-        %{base_url}/users/password-reset/%{email_token}
-    account_created:
-      subject_template: "[%{site_name}] Vaš Novi Nalog"
-      text_body_template: |
-        Novi nalog je kreiran za vas na %{site_name}
-
-        Kliknite na link ispod da kreirate šifru za vaš nalog:
-        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Welcome to %{site_name}!
-
-        A staff member approved your account on %{site_name}.
-
-        Click the following link to confirm and activate your new account:
-        %{base_url}/users/activate-account/%{email_token}
-
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-    signup:
-      text_body_template: |
-        Dobrodošli na %{site_name}!
-
-        Kliknite na link ispod za aktovaciju vašeg naloga:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Ako link iznad ne može da se klikne onda ga kopirajte i ubacite u vaš internet pretraživač.
   page_not_found:
     popular_topics: "Popularne"
     recent_topics: "Nove"

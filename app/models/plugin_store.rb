@@ -42,7 +42,7 @@ class PluginStore
 
   def self.cast_value(type, value)
     case type
-    when "Fixnum" then value.to_i
+    when "Integer", "Fixnum" then value.to_i
     when "TrueClass", "FalseClass" then value == "true"
     when "JSON" then map_json(::JSON.parse(value))
     else value

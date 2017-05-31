@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe Group do
+  let(:admin) { Fabricate(:admin) }
+  let(:user) { Fabricate(:user) }
 
   describe '#builtin' do
     context "verify enum sequence" do
@@ -154,9 +156,42 @@ describe Group do
 
   end
 
-  it "makes sure the everyone group is not visible" do
-    g = Group.refresh_automatic_group!(:everyone)
-    expect(g.visible).to eq(false)
+  describe '.refresh_automatic_group!' do
+    it "makes sure the everyone group is not visible" do
+      g = Group.refresh_automatic_group!(:everyone)
+      expect(g.visible).to eq(false)
+    end
+
+    it "uses the localized name if name has not been taken" do
+      begin
+        default_locale = SiteSetting.default_locale
+        I18n.locale = SiteSetting.default_locale = 'de'
+
+        group = Group.refresh_automatic_group!(:staff)
+
+        expect(group.name).to_not eq('staff')
+        expect(group.name).to eq(I18n.t('groups.default_names.staff'))
+      ensure
+        I18n.locale = SiteSetting.default_locale = default_locale
+      end
+    end
+
+    it "does not use the localized name if name has already been taken" do
+      begin
+        default_locale = SiteSetting.default_locale
+        I18n.locale = SiteSetting.default_locale = 'de'
+
+        another_group = Fabricate(:group,
+          name: I18n.t('groups.default_names.staff').upcase
+        )
+
+        group = Group.refresh_automatic_group!(:staff)
+
+        expect(group.name).to eq('staff')
+      ensure
+        I18n.locale = SiteSetting.default_locale = default_locale
+      end
+    end
   end
 
   it "Correctly handles removal of primary group" do
@@ -375,4 +410,44 @@ describe Group do
     expect(group.bio_cooked).to include("unicorn.png")
   end
 
+  describe ".visible_groups" do
+    let(:group) { Fabricate(:group, visible: false) }
+    let(:group_2) { Fabricate(:group, visible: true) }
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+
+    before do
+      group
+      group_2
+    end
+
+    describe 'when user is an admin' do
+      it 'should return the right groups' do
+        expect(Group.visible_groups(admin).pluck(:id).sort)
+          .to eq([group.id, group_2.id].concat(Group::AUTO_GROUP_IDS.keys - [0]).sort)
+      end
+    end
+
+    describe 'when user is owner of a group' do
+      it 'should return the right groups' do
+        group.add_owner(user)
+
+        expect(Group.visible_groups(user).pluck(:id).sort)
+          .to eq([group.id, group_2.id])
+      end
+    end
+
+    describe 'when user is not the owner of any group' do
+      it 'should return the right groups' do
+        expect(Group.visible_groups(user).pluck(:id).sort)
+          .to eq([group_2.id])
+      end
+    end
+
+    describe 'user is nil' do
+      it 'should return the right groups' do
+        expect(Group.visible_groups(nil).pluck(:id).sort).to eq([group_2.id])
+      end
+    end
+  end
 end

@@ -190,6 +190,8 @@ describe User do
 
       it "has correct settings" do
         expect(subject.email_tokens).to be_present
+        expect(subject.user_stat).to be_present
+        expect(subject.user_profile).to be_present
         expect(subject.user_option.email_private_messages).to eq(true)
         expect(subject.user_option.email_direct).to eq(true)
       end
@@ -457,7 +459,7 @@ describe User do
     end
   end
 
-  context '.username_available?' do
+  describe '.username_available?' do
     it "returns true for a username that is available" do
       expect(User.username_available?('BruceWayne')).to eq(true)
     end
@@ -469,9 +471,33 @@ describe User do
     it 'returns false when a username is reserved' do
       SiteSetting.reserved_usernames = 'test|donkey'
 
-      expect(User.username_available?('donkey')).to eq(false)
-      expect(User.username_available?('DonKey')).to eq(false)
-      expect(User.username_available?('test')).to eq(false)
+      expect(User.username_available?('tESt')).to eq(false)
+    end
+  end
+
+  describe '.reserved_username?' do
+    it 'returns true when a username is reserved' do
+      SiteSetting.reserved_usernames = 'test|donkey'
+
+      expect(User.reserved_username?('donkey')).to eq(true)
+      expect(User.reserved_username?('DonKey')).to eq(true)
+      expect(User.reserved_username?('test')).to eq(true)
+    end
+
+    it 'should not allow usernames matched against an expession' do
+      SiteSetting.reserved_usernames = 'test)|*admin*|foo*|*bar|abc.def'
+
+      expect(User.reserved_username?('test')).to eq(false)
+      expect(User.reserved_username?('abc9def')).to eq(false)
+
+      expect(User.reserved_username?('admin')).to eq(true)
+      expect(User.reserved_username?('foo')).to eq(true)
+      expect(User.reserved_username?('bar')).to eq(true)
+
+      expect(User.reserved_username?('admi')).to eq(false)
+      expect(User.reserved_username?('bar.foo')).to eq(false)
+      expect(User.reserved_username?('foo.bar')).to eq(true)
+      expect(User.reserved_username?('baz.bar')).to eq(true)
     end
   end
 
@@ -592,21 +618,18 @@ describe User do
       @user.password = "ilovepasta"
       @user.save!
 
-      @user.auth_token = SecureRandom.hex(16)
-      @user.save!
-
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
-
       email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
 
-      old_token = @user.auth_token
+      UserAuthToken.generate!(user_id: @user.id)
+
       @user.password = "passwordT"
       @user.save!
 
       # must expire old token on password change
-      expect(@user.auth_token).to_not eq(old_token)
+      expect(@user.user_auth_tokens.count).to eq(0)
 
       email_token.reload
       expect(email_token.expired).to eq(true)
@@ -1132,6 +1155,7 @@ describe User do
   describe "refresh_avatar" do
     it "enqueues the update_gravatar job when automatically downloading gravatars" do
       SiteSetting.automatically_download_gravatars = true
+      SiteSetting.queue_jobs = true
 
       user = Fabricate(:user)
 
@@ -1183,9 +1207,38 @@ describe User do
 
   describe "automatic group membership" do
 
+    let!(:group) {
+      Fabricate(:group,
+        automatic_membership_email_domains: "bar.com|wat.com",
+        grant_trust_level: 1,
+        title: "bars and wats",
+        primary_group: true
+      )
+    }
+
+    it "doesn't automatically add inactive users" do
+      inactive_user = Fabricate(:user, active: false, email: "wat@wat.com")
+      group.reload
+      expect(group.users.include?(inactive_user)).to eq(false)
+    end
+
+    it "doesn't automatically add users with unconfirmed email" do
+      unconfirmed_email_user = Fabricate(:user, active: true, email: "wat@wat.com")
+      unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
+      group.reload
+      expect(group.users.include?(unconfirmed_email_user)).to eq(false)
+    end
+
+    it "doesn't automatically add staged users" do
+      staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
+      group.reload
+      expect(group.users.include?(staged_user)).to eq(false)
+    end
+
     it "is automatically added to a group when the email matches" do
-      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com")
-      user = Fabricate(:user, email: "foo@bar.com")
+      user = Fabricate(:user, active: true, email: "foo@bar.com")
+      email_token = user.email_tokens.create(email: user.email).token
+      EmailToken.confirm(email_token)
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1197,16 +1250,23 @@ describe User do
     end
 
     it "get attributes from the group" do
-      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com", grant_trust_level: 1, title: "bars and wats", primary_group: true)
-      user = Fabricate.build(:user, trust_level: 0, email: "foo@bar.com", password: "strongpassword4Uguys")
+      user = Fabricate.build(:user,
+        active: true,
+        trust_level: 0,
+        email: "foo@bar.com",
+        password: "strongpassword4Uguys"
+      )
+
       user.password_required!
-      expect(user.save).to eq(true)
+      user.save!
+      email_token = user.email_tokens.create(email: user.email).token
+      EmailToken.confirm(email_token)
       user.reload
+
       expect(user.title).to eq("bars and wats")
       expect(user.trust_level).to eq(1)
       expect(user.trust_level_locked).to eq(true)
     end
-
   end
 
   describe "number_of_flags_given" do
@@ -1376,9 +1436,17 @@ describe User do
       end
     end
 
-    describe 'when user is not trust level 0' do
+    describe 'when user is trust level 1' do
       it 'should return the right value' do
         user.update_attributes!(trust_level: TrustLevel[1])
+
+        expect(user.read_first_notification?).to eq(false)
+      end
+    end
+
+    describe 'when user is trust level 2' do
+      it 'should return the right value' do
+        user.update_attributes!(trust_level: TrustLevel[2])
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -1404,6 +1472,45 @@ describe User do
 
     it 'should display only 1 trust level badge' do
       expect(user.featured_user_badges.length).to eq(1)
+    end
+  end
+
+  describe ".clear_global_notice_if_needed" do
+
+    let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      SiteSetting.has_login_hint = true
+      SiteSetting.global_notice = "some notice"
+    end
+
+    it "doesn't clear the login hint when a regular user is saved" do
+      user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
+    end
+
+    it "doesn't clear the notice when a system user is saved" do
+      Discourse.system_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
+    end
+
+    it "clears the notice when the admin is saved" do
+      admin.save
+      expect(SiteSetting.has_login_hint).to eq(false)
+      expect(SiteSetting.global_notice).to eq("")
+    end
+
+  end
+
+  describe '.human_users' do
+    it 'should only return users with a positive primary key' do
+      Fabricate(:user, id: -2)
+      user = Fabricate(:user)
+
+      expect(User.human_users).to eq([user])
     end
   end
 end

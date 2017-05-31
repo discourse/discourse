@@ -18,12 +18,7 @@ class GroupsController < ApplicationController
     page_size = 30
     page = params[:page]&.to_i || 0
 
-    groups = Group.order(name: :asc).where(visible: true)
-
-    if !guardian.is_admin?
-      groups = groups.where(automatic: false)
-    end
-
+    groups = Group.visible_groups(current_user)
     count = groups.count
     groups = groups.offset(page * page_size).limit(page_size)
 
@@ -250,8 +245,13 @@ class GroupsController < ApplicationController
     group = find_group(:id)
     notification_level = params.require(:notification_level)
 
+    user_id = current_user.id
+    if guardian.is_staff?
+      user_id = params[:user_id] || user_id
+    end
+
     GroupUser.where(group_id: group.id)
-             .where(user_id: current_user.id)
+             .where(user_id: user_id)
              .update_all(notification_level: notification_level)
 
     render json: success_json

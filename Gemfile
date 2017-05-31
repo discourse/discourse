@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
 
+# does not install in linux ATM, so hack this for now
+gem 'bootsnap', require: false
+
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
 end
@@ -58,18 +61,16 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
-# while we sort out https://github.com/sdsykes/fastimage/pull/46
-gem 'discourse_fastimage', '2.0.3', require: 'fastimage'
+gem 'fastimage', '2.1.0'
 gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
 gem 'email_reply_trimmer', '0.1.6'
 
-# note: for image_optim to correctly work you need to follow
-# https://github.com/toy/image_optim
-# pinned due to https://github.com/toy/image_optim/pull/75, docker image must be upgraded to upgrade
-gem 'image_optim', '0.20.2'
+# TODO Use official image_optim gem once https://github.com/toy/image_optim/pull/149
+# is merged.
+gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -92,20 +93,16 @@ gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
-
+gem 'thor', require: false
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
-gem 'sass'
-gem 'sass-rails'
 gem 'sidekiq'
-gem 'sidekiq-statistic'
 
 # for sidekiq web
 gem 'sinatra', require: false
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'thin', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 
@@ -118,15 +115,18 @@ group :assets do
 end
 
 group :test do
+  gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
   gem 'timecop'
+  # TODO: Remove once we upgrade to Rails 5.
+  gem 'test_after_commit'
 end
 
 group :test, :development do
   gem 'rspec'
   gem 'mock_redis'
-  gem 'listen', '0.7.3', require: false
+  gem 'listen', require: false
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false
@@ -184,10 +184,11 @@ gem 'rmmseg-cpp', require: false
 
 gem 'logster'
 
-# perftools only works on 1.9 atm
-group :profile do
-  # travis refuses to install this, instead of fuffing, just avoid it for now
-  #
-  # if you need to profile, uncomment out this line
-  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19
+gem 'sassc', require: false
+
+
+if ENV["IMPORT"] == "1"
+  gem 'mysql2'
+  gem 'redcarpet'
+  gem 'sqlite3', '~> 1.3.13'
 end

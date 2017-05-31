@@ -19,7 +19,7 @@ export default createWidget('link', {
         return Discourse.getURL(router.router.generate.apply(router.router, params));
       }
     } else {
-      return attrs.href;
+      return Discourse.getURL(attrs.href);
     }
   },
 
@@ -79,7 +79,7 @@ export default createWidget('link', {
       e.preventDefault();
       return this.sendWidgetAction(this.attrs.action, this.attrs.actionParam);
     } else {
-      this.sendWidgetEvent('linkClicked');
+      this.sendWidgetEvent('linkClicked', this.attrs);
     }
 
     return DiscourseURL.routeToTag($(e.target).closest('a')[0]);

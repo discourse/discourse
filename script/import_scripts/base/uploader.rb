@@ -15,7 +15,7 @@ module ImportScripts
       src.close
       tmp.rewind
 
-      Upload.create_for(user_id, tmp, source_filename, tmp.size)
+      UploadCreator.new(tmp, source_filename).create_for(user_id)
     rescue => e
       Rails.logger.error("Failed to create upload: #{e}")
       nil

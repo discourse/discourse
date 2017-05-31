@@ -1,13 +1,13 @@
 <%- if rtl? %>
-  <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
-  <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
 <%- end %>
 
 <%- if staff? %>
-  <%= DiscourseStylesheets.stylesheet_link_tag(:admin) %>
+  <%= discourse_stylesheet_link_tag(:admin) %>
 <%- end %>
 
-<%- unless customization_disabled? %>
-  <%= SiteCustomization.custom_stylesheet(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
+<%- if theme_key %>
+  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>

@@ -1,8 +1,13 @@
 import { ajax } from 'discourse/lib/ajax';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
+import { userPath } from 'discourse/lib/url';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(CanCheckEmails, {
+  editingUsername: false,
+  editingName: false,
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,
@@ -30,6 +35,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return [];
   }.property('model.user_fields.[]'),
 
+  @computed('model.username_lower')
+  preferencesPath(username) {
+    return userPath(`${username}/preferences`);
+  },
+
   actions: {
 
     impersonate() { return this.get("model").impersonate(); },
@@ -54,23 +64,58 @@ export default Ember.Controller.extend(CanCheckEmails, {
     anonymize() { return this.get('model').anonymize(); },
     destroy() { return this.get('model').destroy(); },
 
+    toggleUsernameEdit() {
+      this.set('userUsernameValue', this.get('model.username'));
+      this.toggleProperty('editingUsername');
+    },
+
+    saveUsername() {
+      const oldUsername = this.get('model.username');
+      this.set('model.username', this.get('userUsernameValue'));
+
+      return ajax(`/users/${oldUsername.toLowerCase()}/preferences/username`, {
+        data: { new_username: this.get('userUsernameValue') },
+        type: 'PUT'
+      }).catch(e => {
+        this.set('model.username', oldUsername);
+        popupAjaxError(e);
+      }).finally(() => this.toggleProperty('editingUsername'));
+    },
+
+    toggleNameEdit() {
+      this.set('userNameValue', this.get('model.name'));
+      this.toggleProperty('editingName');
+    },
+
+    saveName() {
+      const oldName = this.get('model.name');
+      this.set('model.name', this.get('userNameValue'));
+
+      return ajax(userPath(`${this.get('model.username').toLowerCase()}.json`), {
+        data: { name: this.get('userNameValue') },
+        type: 'PUT'
+      }).catch(e => {
+        this.set('model.name', oldName);
+        popupAjaxError(e);
+      }).finally(() => this.toggleProperty('editingName'));
+    },
+
     toggleTitleEdit() {
       this.set('userTitleValue', this.get('model.title'));
       this.toggleProperty('editingTitle');
     },
 
     saveTitle() {
-      const self = this;
+      const prevTitle = this.get('userTitleValue');
 
-      return ajax(`/users/${this.get('model.username').toLowerCase()}.json`, {
+      this.set('model.title', this.get('userTitleValue'));
+      return ajax(userPath(`${this.get('model.username').toLowerCase()}.json`), {
         data: {title: this.get('userTitleValue')},
         type: 'PUT'
-      }).catch(function(e) {
-        bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
-      }).finally(function() {
-        self.set('model.title', self.get('userTitleValue'));
-        self.toggleProperty('editingTitle');
-      });
+      }).catch(e => {
+        this.set('model.title', prevTitle);
+        popupAjaxError(e);
+      }).finally(() => this.toggleProperty('editingTitle'));
     },
 
     generateApiKey() {

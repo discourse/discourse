@@ -12,6 +12,7 @@ import Post from 'discourse/models/post';
 import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import QuoteState from 'discourse/lib/quote-state';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -126,7 +127,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
 
   gotoInbox(name) {
-    var url = '/users/' + this.get('currentUser.username_lower') + '/messages';
+    let url = userPath(this.get('currentUser.username_lower') + '/messages');
     if (name) {
       url = url + '/group/' + name;
     }
@@ -158,10 +159,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     topicRouteAction(name, model) {
       return this.send(name, model);
-    },
-
-    openAutoClose() {
-      this.send('showAutoClose');
     },
 
     openFeatureTopic() {
@@ -313,6 +310,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const quoteState = this.get('quoteState');
       const postStream = this.get('model.postStream');
+      if (!postStream) return;
       const quotedPost = postStream.findLoadedPost(quoteState.postId);
       const quotedText = Quote.build(quotedPost, quoteState.buffer);
 
@@ -473,6 +471,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       DiscourseURL.routeTo(this.get('model.lastPostUrl'), { skipIfOnScreen: false });
     },
 
+    jumpUnread() {
+      this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
     selectAll() {
       const posts = this.get('model.postStream.posts');
       const selectedPosts = this.get('selectedPosts');
@@ -540,6 +542,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       } else {
         selectedReplies.removeObject(post);
       }
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     deleteSelected() {
@@ -586,7 +589,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleClosed() {
-      this.get('content').toggleStatus('closed');
+      const topic = this.get('content');
+
+      this.get('content').toggleStatus('closed').then(result => {
+        topic.set('topic_status_update', result.topic_status_update);
+      });
     },
 
     recoverTopic() {
@@ -656,11 +663,31 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       const quotedText = Quote.build(post, quoteState.buffer);
       quoteState.clear();
 
-      composerController.open({
-        action: Composer.CREATE_TOPIC,
-        draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
-        categoryId: this.get('model.category.id')
-      }).then(() => {
+      var options;
+      if (this.get('model.isPrivateMessage')) {
+        let users = this.get('model.details.allowed_users');
+        let groups = this.get('model.details.allowed_groups');
+
+        let usernames = [];
+        users.forEach(user => usernames.push(user.username));
+        groups.forEach(group => usernames.push(group.name));
+        usernames = usernames.join();
+
+        options = {
+          action: Composer.PRIVATE_MESSAGE,
+          archetypeId: 'private_message',
+          draftKey: Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY,
+          usernames: usernames
+        };
+      } else {
+        options = {
+          action: Composer.CREATE_TOPIC,
+          draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+          categoryId: this.get('model.category.id')
+        };
+      }
+
+      composerController.open(options).then(() => {
         return Em.isEmpty(quotedText) ? "" : quotedText;
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
@@ -842,7 +869,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     const refresh = (args) => this.appEvents.trigger('post-stream:refresh', args);
 
-    this.messageBus.subscribe("/topic/" + this.get('model.id'), data => {
+    this.messageBus.subscribe(`/topic/${this.get('model.id')}`, data => {
       const topic = this.get('model');
 
       if (data.notification_level_change) {
@@ -852,9 +879,24 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
 
       const postStream = this.get('model.postStream');
+
+      if (data.reload_topic) {
+        topic.reload().then(() => {
+          this.send('postChangedRoute', topic.get('post_number') || 1);
+          this.appEvents.trigger('header:update-topic', topic);
+          if (data.refresh_stream) postStream.refresh();
+        });
+
+        return;
+      }
+
       switch (data.type) {
         case "acted":
-          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id, refreshLikes: true }));
+          postStream.triggerChangedPost(
+            data.id,
+            data.updated_at,
+            { preserveCooked: true }
+          ).then(() => refresh({ id: data.id, refreshLikes: true }));
           break;
         case "revised":
         case "rebaked": {
@@ -889,29 +931,23 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
       }
 
-      if (data.reload_topic) {
-        topic.reload().then(() => {
-          this.send('postChangedRoute', topic.get('post_number') || 1);
-        });
-      } else {
-        if (topic.get('isPrivateMessage') &&
-            this.currentUser &&
-            this.currentUser.get('id') !== data.user_id &&
-            data.type === 'created') {
+      if (topic.get('isPrivateMessage') &&
+          this.currentUser &&
+          this.currentUser.get('id') !== data.user_id &&
+          data.type === 'created') {
 
-          const postNumber = data.post_number;
-          const notInPostStream = topic.get('highest_post_number') <= postNumber;
-          const postNumberDifference = postNumber - topic.get('currentPost');
+        const postNumber = data.post_number;
+        const notInPostStream = topic.get('highest_post_number') <= postNumber;
+        const postNumberDifference = postNumber - topic.get('currentPost');
 
-          if (notInPostStream &&
-            postNumberDifference > 0 &&
-            postNumberDifference < 7) {
+        if (notInPostStream &&
+          postNumberDifference > 0 &&
+          postNumberDifference < 7) {
 
-            this._scrollToPost(data.post_number);
-          }
+          this._scrollToPost(data.post_number);
         }
       }
-    });
+    }, this.get('model.message_bus_last_id'));
   },
 
   _scrollToPost: debounce(function(postNumber) {

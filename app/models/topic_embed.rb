@@ -1,10 +1,18 @@
 require_dependency 'nokogiri'
 
 class TopicEmbed < ActiveRecord::Base
+  include Trashable
+
   belongs_to :topic
   belongs_to :post
   validates_presence_of :embed_url
   validates_uniqueness_of :embed_url
+
+  before_validation(on: :create) do
+    unless (topic_embed = TopicEmbed.with_deleted.where('deleted_at IS NOT NULL AND embed_url = ?', embed_url).first).nil?
+      topic_embed.destroy!
+    end
+  end
 
   class FetchResponse
     attr_accessor :title, :body, :author
@@ -69,7 +77,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    original_uri = URI.parse(url)
+    original_uri = URI.parse(URI.encode(url))
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
       attributes: %w[href src class],
@@ -81,7 +89,11 @@ class TopicEmbed < ActiveRecord::Base
     embed_classname_whitelist = SiteSetting.embed_classname_whitelist if SiteSetting.embed_classname_whitelist.present?
 
     response = FetchResponse.new
-    html = open(url, allow_redirections: :safe).read
+    begin
+      html = open(URI.encode(url), allow_redirections: :safe).read
+    rescue OpenURI::HTTPError
+      return
+    end
 
     raw_doc = Nokogiri::HTML(html)
     auth_element = raw_doc.at('meta[@name="author"]')
@@ -107,7 +119,7 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(src)
+          uri = URI.parse(URI.encode(src))
           unless uri.host
             uri.scheme = original_uri.scheme
             uri.host = original_uri.host
@@ -145,7 +157,7 @@ class TopicEmbed < ActiveRecord::Base
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
-    uri = URI(url)
+    uri = URI(URI.encode(url))
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
@@ -203,13 +215,15 @@ end
 #
 # Table name: topic_embeds
 #
-#  id           :integer          not null, primary key
-#  topic_id     :integer          not null
-#  post_id      :integer          not null
-#  embed_url    :string(1000)     not null
-#  content_sha1 :string(40)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id            :integer          not null, primary key
+#  topic_id      :integer          not null
+#  post_id       :integer          not null
+#  embed_url     :string(1000)     not null
+#  content_sha1  :string(40)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  deleted_at    :datetime
+#  deleted_by_id :integer
 #
 # Indexes
 #

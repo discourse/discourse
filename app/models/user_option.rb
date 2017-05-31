@@ -149,14 +149,16 @@ end
 #  automatically_unpin_topics       :boolean          default(TRUE), not null
 #  digest_after_minutes             :integer
 #  auto_track_topics_after_msecs    :integer
-#  notification_level_when_replying :integer
 #  new_topic_duration_minutes       :integer
 #  last_redirected_to_top_at        :datetime
 #  email_previous_replies           :integer          default(2), not null
 #  email_in_reply_to                :boolean          default(TRUE), not null
 #  like_notification_frequency      :integer          default(1), not null
+#  mailing_list_mode_frequency      :integer          default(1), not null
 #  include_tl0_in_digests           :boolean          default(FALSE)
-#  mailing_list_mode_frequency      :integer          default(0), not null
+#  notification_level_when_replying :integer
+#  theme_key                        :string
+#  theme_key_seq                    :integer          default(0), not null
 #
 # Indexes
 #

@@ -9,6 +9,7 @@
 
 // Stuff we need to load first
 //= require ./discourse/lib/utilities
+//= require ./discourse/lib/page-visible
 //= require ./discourse/lib/ajax
 //= require ./discourse/lib/text
 //= require ./discourse/lib/hash
@@ -24,7 +25,7 @@
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter
 //= require ./discourse/lib/eyeline
-//= require ./discourse/mixins/scrolling
+//= require ./discourse/lib/show-modal
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/models/model
 //= require ./discourse/models/rest
@@ -33,6 +34,7 @@
 //= require ./discourse/models/permission-type
 //= require ./discourse/models/user-action-group
 //= require ./discourse/models/category
+//= require ./discourse/models/input-validation
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search
@@ -67,7 +69,6 @@
 //= require ./discourse/lib/emoji/groups
 //= require ./discourse/lib/emoji/toolbar
 //= require ./discourse/components/d-editor
-//= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track
 //= require ./discourse/routes/discourse
 //= require ./discourse/routes/build-topic-route

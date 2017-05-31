@@ -120,9 +120,6 @@ class HtmlPrettify < String
         unless in_pre
 
           t.gsub!("&#39;", "'")
-
-          t = process_escapes t
-
           t.gsub!("&quot;", '"')
 
           if do_dashes
@@ -176,22 +173,6 @@ class HtmlPrettify < String
 
   protected
 
-  # Return the string, with after processing the following backslash
-  # escape sequences. This is useful if you want to force a "dumb" quote
-  # or other character to appear.
-  #
-  # Escaped are:
-  #      \\    \"    \'    \.    \-    \`
-  #
-  def process_escapes(str)
-    str = str.gsub('\\\\', '&#92;')
-    str.gsub!('\"',   '&#34;')
-    str.gsub!("\\\'", '&#39;')
-    str.gsub!('\.',   '&#46;')
-    str.gsub!('\-',   '&#45;')
-    str.gsub!('\`',   '&#96;')
-    str
-  end
 
   # The string, with each instance of "<tt>--</tt>" translated to an
   # em-dash HTML entity.

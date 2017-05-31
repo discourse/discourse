@@ -39,7 +39,7 @@ const StaffActionLog = Discourse.Model.extend({
   }.property('action_name'),
 
   useCustomModalForDetails: function() {
-    return _.contains(['change_site_customization', 'delete_site_customization'], this.get('action_name'));
+    return _.contains(['change_theme', 'delete_theme'], this.get('action_name'));
   }.property('action_name')
 });
 
@@ -57,10 +57,13 @@ StaffActionLog.reopenClass({
   },
 
   findAll: function(filters) {
-    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
-      return staff_actions.map(function(s) {
-        return StaffActionLog.create(s);
-      });
+    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then((data) => {
+      return {
+        staff_action_logs: data.staff_action_logs.map(function(s) {
+          return StaffActionLog.create(s);
+        }),
+        user_history_actions: data.user_history_actions
+      };
     });
   }
 });

@@ -1,15 +1,11 @@
+
 module Jobs
   class CloseTopic < Jobs::Base
 
     def execute(args)
-      if topic = Topic.find_by(id: args[:topic_id])
-        closer = User.find_by(id: args[:user_id])
-        guardian = Guardian.new(closer)
-        unless guardian.can_close?(topic)
-          closer = Discourse.system_user
-        end
-        topic.auto_close(closer)
-      end
+      # This file is back temporarily to handle jobs that are enqueued
+      # far in the future that haven't been migrated to the ToggleTopicClosed
+      # job.
     end
 
   end

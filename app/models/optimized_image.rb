@@ -65,12 +65,8 @@ class OptimizedImage < ActiveRecord::Base
             if url.present?
               thumbnail.url = url
               thumbnail.save
-            else
-              Rails.logger.error("Failed to store optimized image #{width}x#{height} for #{upload.url}")
             end
           end
-        else
-          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
         end
 
         # close && remove temp file
@@ -182,7 +178,7 @@ class OptimizedImage < ActiveRecord::Base
       #{from}[0]
       -gravity center
       -background transparent
-      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -resize #{dimensions}
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }
@@ -215,8 +211,11 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.convert_with(instructions, to)
-    `#{instructions.join(" ")} &> /dev/null`
-    return false if $?.exitstatus != 0
+    begin
+      Discourse::Utils.execute_command(*instructions)
+    rescue
+      return false
+    end
 
     ImageOptim.new.optimize_image!(to)
     true
@@ -247,7 +246,12 @@ class OptimizedImage < ActiveRecord::Base
           # download if external
           if external
             url = SiteSetting.scheme + ":" + previous_url
-            file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
+            file = FileHelper.download(
+              url,
+              max_file_size: max_file_size_kb,
+              tmp_file_name: "discourse",
+              follow_redirect: true
+            ) rescue nil
             path = file.path
           else
             path = local_store.path_for(optimized_image)

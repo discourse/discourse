@@ -19,8 +19,8 @@ class UserHistory < ActiveRecord::Base
     @actions ||= Enum.new(delete_user: 1,
                           change_trust_level: 2,
                           change_site_setting: 3,
-                          change_site_customization: 4,
-                          delete_site_customization: 5,
+                          change_theme: 4,
+                          delete_theme: 5,
                           checked_for_custom_avatar: 6, # not used anymore
                           notified_about_avatar: 7,
                           notified_about_sequential_replies: 8,
@@ -61,7 +61,9 @@ class UserHistory < ActiveRecord::Base
                           activate_user: 43,
                           change_readonly_mode: 44,
                           backup_download: 45,
-                          backup_destroy: 46)
+                          backup_destroy: 46,
+                          notified_about_get_a_room: 47,
+                          change_name: 48)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -69,8 +71,8 @@ class UserHistory < ActiveRecord::Base
     @staff_actions ||= [:delete_user,
                         :change_trust_level,
                         :change_site_setting,
-                        :change_site_customization,
-                        :delete_site_customization,
+                        :change_theme,
+                        :delete_theme,
                         :change_site_text,
                         :suspend_user,
                         :unsuspend_user,
@@ -156,7 +158,7 @@ class UserHistory < ActiveRecord::Base
   end
 
   def new_value_is_json?
-    [UserHistory.actions[:change_site_customization], UserHistory.actions[:delete_site_customization]].include?(action)
+    [UserHistory.actions[:change_theme], UserHistory.actions[:delete_theme]].include?(action)
   end
 
   def previous_value_is_json?

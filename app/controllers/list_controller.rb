@@ -6,6 +6,7 @@ class ListController < ApplicationController
   skip_before_filter :check_xhr
 
   before_filter :set_category, only: [
+    :category_default,
     # filtered topics lists
     Discourse.filters.map { |f| :"category_#{f}" },
     Discourse.filters.map { |f| :"category_none_#{f}" },
@@ -29,6 +30,7 @@ class ListController < ApplicationController
     Discourse.anonymous_filters,
     Discourse.anonymous_filters.map { |f| "#{f}_feed" },
     # anonymous categorized filters
+    :category_default,
     Discourse.anonymous_filters.map { |f| :"category_#{f}" },
     Discourse.anonymous_filters.map { |f| :"category_none_#{f}" },
     Discourse.anonymous_filters.map { |f| :"parent_category_category_#{f}" },
@@ -44,6 +46,7 @@ class ListController < ApplicationController
     :parent_category_category_top,
     # top pages (ie. with a period)
     TopTopic.periods.map { |p| :"top_#{p}" },
+    TopTopic.periods.map { |p| :"top_#{p}_feed" },
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
     TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
@@ -76,8 +79,8 @@ class ListController < ApplicationController
         # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
           filter_title = I18n.t("js.filters.#{filter.to_s}.title", count: 0)
-          if list_opts[:category]
-            @title = I18n.t('js.filters.with_category', filter: filter_title, category: Category.find(list_opts[:category]).name)
+          if list_opts[:category] && @category
+            @title = I18n.t('js.filters.with_category', filter: filter_title, category: @category.name)
           else
             @title = I18n.t('js.filters.with_topics', filter: filter_title)
           end
@@ -106,17 +109,48 @@ class ListController < ApplicationController
     end
   end
 
-  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread, :private_messages_archive, :private_messages_group, :private_messages_group_archive].each do |action|
+  def category_default
+    view_method = @category.default_view
+    view_method = 'latest' unless %w(latest top).include?(view_method)
+
+    if view_method == 'top'
+      top(category: @category.id)
+    else
+      self.send(view_method)
+    end
+  end
+
+  def topics_by
+    list_opts = build_topic_list_options
+    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+    list = generate_list_for("topics_by", target_user, list_opts)
+    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
+    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    respond_with_list(list)
+  end
+
+  def self.generate_message_route(action)
     define_method("#{action}") do
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
-      guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
+      guardian.ensure_can_see_private_messages!(target_user.id)
       list = generate_list_for(action.to_s, target_user, list_opts)
-      url_prefix = "topics" unless action == :topics_by
+      url_prefix = "topics"
       list.more_topics_url = url_for(construct_url_with(:next, list_opts, url_prefix))
       list.prev_topics_url = url_for(construct_url_with(:prev, list_opts, url_prefix))
       respond_with_list(list)
     end
+  end
+
+  %i{
+    private_messages
+    private_messages_sent
+    private_messages_unread
+    private_messages_archive
+    private_messages_group
+    private_messages_group_archive
+  }.each do |action|
+    generate_message_route(action)
   end
 
   def latest_feed
@@ -138,7 +172,7 @@ class ListController < ApplicationController
     @link = "#{Discourse.base_url}/top"
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
-    @topic_list = TopicQuery.new(nil).list_top_for("monthly")
+    @topic_list = TopicQuery.new(nil).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
 
     render 'list', formats: [:rss]
   end
@@ -161,8 +195,8 @@ class ListController < ApplicationController
     target_user = fetch_user_from_params
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics"
-    @atom_link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics.rss"
+    @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
+    @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
     @topic_list = TopicQuery.new(nil, order: 'created').send("list_topics_by", target_user)
 
@@ -202,7 +236,7 @@ class ListController < ApplicationController
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
       list.prev_topics_url = construct_url_with(:prev, top_options)
-      @rss = "top"
+      @rss = "top_#{period}"
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title")
@@ -221,6 +255,19 @@ class ListController < ApplicationController
 
     define_method("parent_category_category_top_#{period}") do
       self.send("top_#{period}", category: @category.id)
+    end
+
+    # rss feed
+    define_method("top_#{period}_feed") do |options = nil|
+      discourse_expires_in 1.minute
+
+      @description = I18n.t("rss_description.top_#{period}")
+      @title = "#{SiteSetting.title} - #{@description}"
+      @link = "#{Discourse.base_url}/top/#{period}"
+      @atom_link = "#{Discourse.base_url}/top/#{period}.rss"
+      @topic_list = TopicQuery.new(nil).list_top_for(period)
+
+      render 'list', formats: [:rss]
     end
   end
 
@@ -274,30 +321,22 @@ class ListController < ApplicationController
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
+
+    if use_crawler_layout?
+      @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
+    end
   end
 
   def build_topic_list_options
-    options = {
-      page: params[:page],
-      topic_ids: param_to_integer_list(:topic_ids),
-      exclude_category_ids: params[:exclude_category_ids],
-      category: params[:category],
-      order: params[:order],
-      ascending: params[:ascending],
-      min_posts: params[:min_posts],
-      max_posts: params[:max_posts],
-      status: params[:status],
-      filter: params[:filter],
-      state: params[:state],
-      search: params[:search],
-      q: params[:q],
-      group_name: params[:group_name],
-      tags: params[:tags],
-      match_all_tags: params[:match_all_tags],
-      no_tags: params[:no_tags]
-    }
-    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
-    options[:slow_platform] = true if slow_platform?
+    options = {}
+    TopicQuery.public_valid_options.each do |key|
+      options[key] = params[key]
+    end
+
+    # hacky columns get special handling
+    options[:topic_ids] = param_to_integer_list(:topic_ids)
+    options[:no_subcategories] = options[:no_subcategories] == 'true'
+    options[:slow_platform] = slow_platform?
 
     options
   end
@@ -330,8 +369,15 @@ class ListController < ApplicationController
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_with_topics_for(previous_visit_at, category_id=nil)
-    best_periods_for(previous_visit_at).each do |period|
+  def self.best_period_for(previous_visit_at, category_id=nil)
+    default_period = ((category_id && Category.where(id: category_id).pluck(:default_top_period).first) ||
+          SiteSetting.top_page_default_timeframe).to_sym
+
+    best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
+  end
+
+  def self.best_period_with_topics_for(previous_visit_at, category_id=nil, default_period=SiteSetting.top_page_default_timeframe)
+    best_periods_for(previous_visit_at, default_period.to_sym).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
       top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
@@ -341,14 +387,8 @@ class ListController < ApplicationController
     false
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
-    best_period_with_topics_for(previous_visit_at, category_id) ||
-      SiteSetting.top_page_default_timeframe.to_sym
-  end
-
-  def self.best_periods_for(date)
+  def self.best_periods_for(date, default_period=:all)
     date ||= 1.year.ago
-    default_period = SiteSetting.top_page_default_timeframe.to_sym
     periods = []
     periods << default_period if :all     != default_period
     periods << :daily         if :daily   != default_period && date >   8.days.ago

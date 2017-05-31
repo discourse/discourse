@@ -9,7 +9,7 @@ describe UsernameChanger do
       let(:new_username) { "#{user.username}1234" }
 
       before do
-        @result = described_class.change(user, new_username)
+        @result = UsernameChanger.change(user, new_username)
       end
 
       it 'returns true' do
@@ -33,7 +33,7 @@ describe UsernameChanger do
       let(:username_lower_before_change) { user.username_lower }
 
       before do
-        @result = described_class.change(user, wrong_username)
+        @result = UsernameChanger.change(user, wrong_username)
       end
 
       it 'returns false' do
@@ -55,12 +55,17 @@ describe UsernameChanger do
       let!(:myself) { Fabricate(:user, username: 'hansolo') }
 
       it 'should return true' do
-        expect(described_class.change(myself, "HanSolo")).to eq(true)
+        expect(UsernameChanger.change(myself, "HanSolo")).to eq(true)
       end
 
       it 'should change the username' do
-        described_class.change(myself, "HanSolo")
+        UsernameChanger.change(myself, "HanSolo")
         expect(myself.reload.username).to eq('HanSolo')
+      end
+
+      it "logs the action" do
+        expect { UsernameChanger.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(1)
+        expect { UsernameChanger.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
       end
     end
 
@@ -71,17 +76,17 @@ describe UsernameChanger do
       end
 
       it 'should allow a shorter username than default' do
-        result = described_class.change(user, 'a' * @custom_min)
+        result = UsernameChanger.change(user, 'a' * @custom_min)
         expect(result).not_to eq(false)
       end
 
       it 'should not allow a shorter username than limit' do
-        result = described_class.change(user, 'a' * (@custom_min - 1))
+        result = UsernameChanger.change(user, 'a' * (@custom_min - 1))
         expect(result).to eq(false)
       end
 
       it 'should not allow a longer username than limit' do
-        result = described_class.change(user, 'a' * (User.username_length.end + 1))
+        result = UsernameChanger.change(user, 'a' * (User.username_length.end + 1))
         expect(result).to eq(false)
       end
     end

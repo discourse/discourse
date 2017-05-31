@@ -85,7 +85,7 @@ export default Discourse.Route.extend({
           if (confirmed) {
             Discourse.User.currentProp("hideReadOnlyAlert", true);
             backup.restore().then(function() {
-              self.controllerFor("adminBackupsLogs").clear();
+              self.controllerFor("adminBackupsLogs").get("logs").clear();
               self.controllerFor("adminBackups").set("model.isOperationRunning", true);
               self.transitionTo("admin.backups.logs");
             });

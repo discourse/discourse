@@ -160,6 +160,14 @@ test("Title length for private messages", function() {
   ok(composer.get('titleLengthValid'), "in the range is okay");
 });
 
+test("Post length for private messages with non human users", function() {
+  const composer = createComposer({
+    topic: Ember.Object.create({ pm_with_non_human_user: true })
+  });
+
+  equal(composer.get('minimumPostLength'), 1);
+});
+
 test('editingFirstPost', function() {
   const composer = createComposer();
   ok(!composer.get('editingFirstPost'), "it's false by default");

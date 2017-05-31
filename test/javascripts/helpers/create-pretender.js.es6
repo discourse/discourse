@@ -1,7 +1,7 @@
 import storePretender from 'helpers/store-pretender';
 import fixturePretender from 'helpers/fixture-pretender';
 
-function parsePostData(query) {
+export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
@@ -18,7 +18,7 @@ function parsePostData(query) {
 
   });
   return result;
-}
+};
 
 function response(code, obj) {
   if (typeof code === "object") {
@@ -63,17 +63,17 @@ export default function() {
       }] });
     });
 
-    this.get(`/users/eviltrout/emails.json`, () => {
+    this.get(`/u/eviltrout/emails.json`, () => {
       return response({ email: 'eviltrout@example.com' });
     });
 
-    this.get('/users/eviltrout.json', () => {
-      const json = fixturesByUrl['/users/eviltrout.json'];
+    this.get('/u/eviltrout.json', () => {
+      const json = fixturesByUrl['/u/eviltrout.json'];
       json.user.can_edit = loggedIn();
       return response(json);
     });
 
-    this.get('/users/eviltrout/summary.json', () => {
+    this.get('/u/eviltrout/summary.json', () => {
       return response({
         user_summary: {
           topics: [],
@@ -85,13 +85,13 @@ export default function() {
       });
     });
 
-    this.get('/users/eviltrout/invited_count.json', () => {
+    this.get('/u/eviltrout/invited_count.json', () => {
       return response({
         "counts": { "pending": 1, "redeemed": 0, "total": 0 }
       });
     });
 
-    this.get('/users/eviltrout/invited.json', () => {
+    this.get('/u/eviltrout/invited.json', () => {
       return response({ "invites": [ {id: 1} ] });
     });
 
@@ -113,11 +113,12 @@ export default function() {
       return response({});
     });
 
-    this.put('/users/eviltrout.json', () => response({ user: {} }));
+    this.put('/u/eviltrout.json', () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
     this.get("/t/9.json", () => response(fixturesByUrl['/t/9/1.json']));
+    this.get("/t/12.json", () => response(fixturesByUrl['/t/12/1.json']));
 
     this.get("/t/id_for/:slug", () => {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
@@ -133,7 +134,7 @@ export default function() {
     this.delete('/draft.json', success);
     this.post('/draft.json', success);
 
-    this.get('/users/:username/staff-info.json', () => response({}));
+    this.get('/u/:username/staff-info.json', () => response({}));
 
     this.get('/post_action_users', () => {
       return response({
@@ -194,12 +195,20 @@ export default function() {
                           current_email: '<small>current@example.com</small>' });
       }
 
+      if (data.password === 'not-activated-edit') {
+        return response({ error: "not active",
+                          reason: "not_activated",
+                          sent_to_email: 'eviltrout@example.com',
+                          current_email: 'current@example.com' });
+      }
+
       return response(400, {error: 'invalid login'});
     });
 
-    this.post('/users/action/send_activation_email', success);
+    this.post('/u/action/send_activation_email', success);
+    this.put('/u/update-activation-email', success);
 
-    this.get('/users/hp.json', function() {
+    this.get('/u/hp.json', function() {
       return response({"value":"32faff1b1ef1ac3","challenge":"61a3de0ccf086fb9604b76e884d75801"});
     });
 
@@ -207,14 +216,14 @@ export default function() {
       return response({"csrf":"mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs="});
     });
 
-    this.get('/users/check_username', function(request) {
+    this.get('/u/check_username', function(request) {
       if (request.queryParams.username === 'taken') {
         return response({available: false, suggestion: 'nottaken'});
       }
       return response({available: true});
     });
 
-    this.post('/users', () => response({success: true}));
+    this.post('/u', () => response({success: true}));
 
     this.get('/login.html', () => [200, {}, 'LOGIN PAGE']);
 
@@ -326,7 +335,8 @@ export default function() {
     this.delete('/admin/badges/:id', success);
 
     this.get('/onebox', request => {
-      if (request.queryParams.url === 'http://www.example.com/has-title.html') {
+      if (request.queryParams.url === 'http://www.example.com/has-title.html' ||
+          request.queryParams.url === 'http://www.example.com/has-title-and-a-url-that-is-more-than-80-characters-because-thats-good-for-seo-i-guess.html') {
         return [
           200,
           {"Content-Type": "application/html"},
@@ -339,6 +349,14 @@ export default function() {
           200,
           {"Content-Type": "application/html"},
           '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url.indexOf('/internal-page.html') > -1) {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
         ];
       }
 

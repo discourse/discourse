@@ -37,25 +37,20 @@ module Email
       @fragment.css('img').each do |img|
         next if img['class'] == 'site-logo'
 
-        if img['class'] == "emoji" || img['src'] =~ /(plugins|images)\/emoji/
-          img['width'] = 20
-          img['height'] = 20
+        if (img['class'] && img['class']['emoji']) || (img['src'] && img['src'][/\/_?emoji\//])
+          img['width'] = img['height'] = 20
         else
           # use dimensions of original iPhone screen for 'too big, let device rescale'
           if img['width'].to_i > 320 or img['height'].to_i > 480
-            img['width'] = 'auto'
-            img['height'] = 'auto'
+            img['width'] = img['height'] = 'auto'
           end
         end
 
-        # ensure all urls are absolute
-        if img['src'] =~ /^\/[^\/]/
-          img['src'] = "#{Discourse.base_url}#{img['src']}"
-        end
-
-        # ensure no schemaless urls
-        if img['src'] && img['src'].starts_with?("//")
-          img['src'] = "#{uri.scheme}:#{img['src']}"
+        if img['src']
+          # ensure all urls are absolute
+          img['src'] = "#{Discourse.base_url}#{img['src']}" if img['src'][/^\/[^\/]/]
+          # ensure no schemaless urls
+          img['src'] = "#{uri.scheme}:#{img['src']}" if img['src'][/^\/\//]
         end
       end
 
@@ -97,8 +92,8 @@ module Email
       style('.user-avatar img', nil, width: '45', height: '45')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('.rtl', 'direction: rtl;')
-      style('td.body', 'padding-top:5px;', colspan: "2")
-      style('.whisper td.body', 'font-style: italic; color: #9c9c9c;')
+      style('div.body', 'padding-top:5px;')
+      style('.whisper div.body', 'font-style: italic; color: #9c9c9c;')
       style('.lightbox-wrapper .meta', 'display: none')
       correct_first_body_margin
       correct_footer_style
@@ -191,20 +186,17 @@ module Email
     def to_html
       strip_classes_and_ids
       replace_relative_urls
-      @fragment.to_html.tap do |result|
-        result.gsub!(/\[email-indent\]/, "<div style='margin-left: 15px'>")
-        result.gsub!(/\[\/email-indent\]/, "</div>")
-      end
+      @fragment.to_html
     end
 
     def strip_avatars_and_emojis
       @fragment.search('img').each do |img|
-        if img['src'] =~ /_avatar/
+        if img['src'][/_avatar/]
           img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
         end
 
-        if img['title'] && (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
+        if img['title'] && img['src'][/\/_?emoji\//]
           img.add_previous_sibling(img['title'] || "emoji")
           img.remove
         end
@@ -233,7 +225,7 @@ module Email
 
       @fragment.css('[href]').each do |element|
         href = element['href']
-        if href =~ /^\/\/#{host}/
+        if href.start_with?("\/\/#{host}")
           element['href'] = "#{scheme}:#{href}"
         end
       end
@@ -265,8 +257,8 @@ module Email
 
     def strip_classes_and_ids
       @fragment.css('*').each do |element|
-        element.delete('class')
-        element.delete('id')
+        element.delete('class'.freeze)
+        element.delete('id'.freeze)
       end
     end
 

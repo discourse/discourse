@@ -9,11 +9,13 @@
 %>
 
 <% font_domain = "#{request.protocol}#{request.host_with_port}&2" %>
+<% woff2_url = "#{asset_path("fontawesome-webfont.woff2")}?#{font_domain}&v=4.7.0".html_safe %>
 
+<link rel="preload" href="<%=woff2_url%>" as="font" type="font/woff2" crossorigin />
 <style>
   @font-face {
     font-family: 'FontAwesome';
-    src: url('<%=asset_path "fontawesome-webfont.woff2" %>?<%= font_domain %>&v=4.5.0') format('woff2'),
-         url('<%=asset_path "fontawesome-webfont.woff" %>?<%= font_domain %>&v=4.5.0') format('woff');
+    src: url('<%=woff2_url %>') format('woff2'),
+         url('<%=asset_path "fontawesome-webfont.woff" %>?<%= font_domain %>&v=4.7.0') format('woff');
   }
 </style>

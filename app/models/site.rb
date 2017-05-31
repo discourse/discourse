@@ -43,9 +43,12 @@ class Site
         end
       end
 
-      allowed_topic_create_ids =
-        @guardian.anonymous? ? [] : Category.topic_create_allowed(@guardian).pluck(:id)
-      allowed_topic_create = Set.new(allowed_topic_create_ids)
+      allowed_topic_create = nil
+      unless @guardian.is_admin?
+        allowed_topic_create_ids =
+          @guardian.anonymous? ? [] : Category.topic_create_allowed(@guardian).pluck(:id)
+        allowed_topic_create = Set.new(allowed_topic_create_ids)
+      end
 
       by_id = {}
 
@@ -58,7 +61,7 @@ class Site
 
       categories.each do |category|
         category.notification_level = category_user[category.id] || regular
-        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category.id) || @guardian.is_admin?
         category.has_children = with_children.include?(category.id)
         by_id[category.id] = category
       end

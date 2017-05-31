@@ -141,7 +141,7 @@ aside.quote {
   color: dark-light-choose($secondary, $primary);
   padding: 10px;
   z-index: 401;
-  opacity: 0.8;
+  opacity: 0.9;
 
   &:before {
     font-family: "FontAwesome";
@@ -158,15 +158,17 @@ aside.quote {
   position: relative;
 }
 
-.topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair, .user-card-avatar .avatar-flair {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-repeat: no-repeat;
-  background-position: center;
-  position: absolute;
-  bottom: 0;
-  right: -6px;
+.topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster {
+  .avatar-flair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    bottom: 0;
+    right: -6px;
+  }
 }
 .topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair {
   background-size: 20px 20px;
@@ -197,6 +199,24 @@ aside.quote {
     font-size: 24px;
   }
 }
+.topic-map .poster .avatar-flair {
+  right: 0;
+  background-size: 12px 12px;
+  width: 16px;
+  height: 16px;
+  bottom: -3px;
+  &.rounded {
+    background-size: 12px 12px;
+    border-radius: 8px;
+    width: 16px;
+    height: 16px;
+    bottom: -2px;
+    right: 0;
+  }
+  .fa {
+    font-size: 14px;
+  }
+}
 .topic-avatar .poster-avatar-extra {
   display: none;
 }
@@ -220,16 +240,17 @@ aside.quote {
 }
 
 .post-info {
-  &.wiki, &.via-email, &.whisper {
+  &.via-email, &.whisper {
     margin-right: 5px;
     i.fa {
       font-size: 1em;
     }
   }
-  &.wiki {
-    cursor: pointer;
-    color: #408040;
+
+  .wiki {
+    color: green !important;
   }
+
   &.via-email {
     color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   }
@@ -279,39 +300,12 @@ blockquote > *:last-child {
 }
 
 .gap {
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 5px 0;
+  padding: 0.25em 0 0.5em 4.3em;
   color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
   cursor: pointer;
-  text-align: center;
-
-  &.jagged-border {
-    background-image:
-    linear-gradient(
-                    135deg,
-                    $secondary 50%, rgba(255,255,255,0) 50%
-    ),
-    linear-gradient(
-                    -135deg,
-                    $secondary 50%, rgba(255,255,255,0) 50%
-    ),
-    linear-gradient(
-                    45deg,
-                    $secondary 50%, rgba(255,255,255,0) 50%
-    ),
-    linear-gradient(
-                    -45deg,
-                    $secondary 50%, rgba(255,255,255,0) 50%
-    );
-    background-position:
-    top center, top center,
-    bottom center, bottom center;
-    background-size: .9em .9em;
-    background-repeat: repeat-x;
-    padding: 20px 0;
-    margin-bottom: 20px;
-  }
-
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.9em;
 }
 
 .who-liked {

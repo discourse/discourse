@@ -14,7 +14,6 @@ te:
   topics: "విషయాలు"
   posts: "టపాలు"
   loading: "లోడవుతోంది"
-  powered_by_html: ' <a href="http://www.discourse.org">డిస్కౌర్స్</a> చేత శక్తివంతం చేయబడింది, జావాస్క్రిప్ట్ చేతనం చేస్తే బాగా కనిపిస్తుంది. '
   log_in: "లాగిన్"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
   errors: &errors
@@ -270,14 +269,11 @@ te:
         one: "అటో ఇటో ఒక సంవత్సరం వెనుక"
         other: "అటోఇటో %{count} సంవత్సరాల ముందు"
   password_reset:
-    choose_new: "దయచేసి కొత్త సంకేతపదం ఎన్నుకోండి"
-    choose: "దయచేసి ఒక సంకేతపదం ఎన్నుకోండి"
     update: 'సంకేతపదం ఉన్నతీకరించండి'
     save: 'సంకేతపదం అమర్చండి'
     title: 'సంకేతపదం రీసెట్ చెయ్యండి'
     success: "మీరు విజయవంతంగా మీ సంకేతపదం మార్చారు ఇంకా ఇప్పుడు లాగిన్ అయ్యారు కూడా."
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
-    continue: "%{site_name} కు కొనసాగండి"
   change_email:
     confirmed: "మీ ఈమెయిల్ చిరునామా మారింది."
     please_continue: "%{site_name} కు కొనసాగండి"
@@ -295,7 +291,6 @@ te:
       long_form: 'దీన్ని విషయాంతరంగా కేతనించాము'
     spam:
       title: 'స్పాము'
-      description: 'ఈ టపా వాణిజ్య ప్రకటన. ప్రస్తుత విషయానికి ఉపయోగకరమైనది కాదు, సంబందించినదీ కాదు. కానీ మార్కెటింగు స్వభావితమైనది.'
       long_form: 'దీన్ని స్పాముగా కేతనించాము'
       email_title: '"%{title}" ప్పాముగా కేతనించాము'
       email_body: "%{link}\n\n%{message}"
@@ -474,7 +469,6 @@ te:
     post_edit_time_limit: "రచయిత వారు చేసిన టపా (n) నిమిషాల తర్వాత సవరించవచ్చు లేదా తొలగించవచ్చు. ఎప్పటికీ 0 అమర్చుము."
     max_image_width: "ఒక టపాలో థంబ్నైల్ గరిష్ట వెడల్పు"
     max_image_height: "ఒక టపాలో థంబ్నైల్ గరిష్ట ఎత్తు"
-    show_subcategory_list: "ఒక అంశం జాబితా వర్గంలో నమోదు చేసేటప్పుడు బదులుగా ఉపవర్గం జాబితా చూపించు."
     post_excerpt_maxlength: "ఒక టపా సంగ్రహం/సారాంశం గరిష్ట పొడవు."
     allow_moderators_to_create_categories: "మధ్యవర్తులు కొత్త వర్గాలు సృష్టించడానికి అనుమతించు"
     topics_per_period_in_top_summary: "అప్రమేయ అగ్ర విషయాల సారాంశంలో చూపే అగ్ర విషయాల సంఖ్య."
@@ -545,12 +539,8 @@ te:
       subject_template: "%{site_name} కు సుస్వాగతం!"
   user_notifications:
     previous_discussion: "గత జవాబులు"
-    user_replied:
-      subject_template: "[%{site_name}] %{topic_title}"
     digest:
       click_here: "ఇక్కడ క్లిక్ చేయండి"
-    account_created:
-      subject_template: "[%{site_name}] మీ కొత్త ఖాతా"
   page_not_found:
     popular_topics: "ప్రముఖ"
     recent_topics: "తాజా"

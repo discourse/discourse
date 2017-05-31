@@ -1,4 +1,4 @@
-.fa.muted {
+.fa.muted, .fa.watching-first-post {
   color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
 }
 .fa.tracking, .fa.watching {

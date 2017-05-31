@@ -37,7 +37,13 @@ a#new-account-link { white-space:nowrap; }
 
 a#forgot-password-link {clear: left; float: left; }
 
-.btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
+.login-modal, .create-account {
+  .btn-primary {
+    margin-bottom: 10px;
+    font-size: 15;
+    float: left;
+  }
+}
 
 
 $label-width: 85px;
@@ -82,5 +88,44 @@ $input-width: 184px;
     .controls {
       margin-left: $label-width;
     }
+  }
+}
+
+
+.password-reset, .invites-show {
+  margin-top: 30px;
+  .col-image {
+    padding-top: 12px;
+  }
+  .password-reset-img {
+    width: 50px;
+    height: 50px;
+  }
+  .col-form {
+    padding-left: 8px;
+  }
+  h2 {
+    margin-bottom: 12px;
+  }
+  .tip {
+    display: block;
+    margin: 6px 0;
+  }
+}
+
+.password-reset .tip {
+  max-width: 180px;
+}
+
+.discourse-touch .password-reset {
+  .instructions {
+    margin-bottom: 16px;
+  }
+}
+
+
+.invites-show {
+  .col-image {
+    display: none;
   }
 }

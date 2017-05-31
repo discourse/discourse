@@ -3,6 +3,8 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+@import "common/admin/customize";
+
 $mobile-breakpoint: 700px;
 
 // Change the box model for .admin-content
@@ -29,10 +31,32 @@ $mobile-breakpoint: 700px;
 
 .admin-contents table {
   width: 100%;
+  margin-top: 10px;
+
   tr {text-align: left;}
   td, th {padding: 8px;}
-  th {border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);}
-  td {border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%); border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);}
+  td {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+  th {
+    text-align: left;
+
+    &.sortable {
+      cursor: pointer;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: #e9e9e9;
+        background-color: lighten($primary, 80%);
+      }
+
+      i.fa-chevron-down,
+      i.fa-chevron-up {
+        margin-left: 0.5em;
+      }
+    }
+  }
   tr:hover { background-color: darken($secondary, 2.5%); }
   tr.selected { background-color: lighten($primary, 80%); }
   .filters input { margin-bottom: 0; }
@@ -525,10 +549,21 @@ section.details {
   padding: 5px;
   clear: both;
   text-align: right;
+  @media (max-width: $mobile-breakpoint) {
+    .btn {
+      margin: 2px;
+    }
+  }
 }
 
 .display-row.associations .value {
   width: 750px;
+  @media (max-width: $mobile-breakpoint) {
+    width: 75%;
+    float: right;
+    text-align: left;
+    margin-left: 0;
+  }
 }
 
 .display-row {
@@ -553,11 +588,22 @@ section.details {
     width: 17.65765%;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0;
+      line-height: 20px;
+      margin-top: 5px;
+    }
   }
   .value {
     width: 250px;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
+    }
   }
   .long-value {
     width: 800px;
@@ -574,8 +620,14 @@ section.details {
     width: 480px;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
+    }
     .btn {
-      margin-right: 5px;
+      margin: 2px 5px 2px 0;
     }
   }
 }
@@ -696,137 +748,9 @@ section.details {
     width: 100%;
     border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   }
-}
 
-// Customise area
-.customize {
-  .admin-footer {
-    margin-top: 20px;
-  }
-  .current-style.maximized {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100000;
-    background-color: white;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    .wrapper {
-      position: absolute;
-      top: 20px;
-      bottom: 10px;
-      left: 20px;
-      right: 20px;
-    }
-  }
-  .nav.nav-pills {
-    margin-left: 10px;
-  }
-  .content-list, .current-style {
-    float: left;
-  }
-  .content-list ul {
-    margin-bottom: 10px;
-  }
-  .current-style {
-    .nav.nav-pills{
-      position: relative;
-    }
-    .toggle-mobile {
-      position: absolute;
-      right: 35px;
-      font-size: 20px;
-    }
-    .toggle-maximize {
-      position: absolute;
-      right: -5px;
-    }
-    .delete-link {
-      margin-left: 15px;
-      margin-top: 5px;
-    }
-    .preview-link {
-      margin-left: 15px;
-    }
-    .export {
-      float: right;
-    }
-    padding-left: 10px;
-    width: 70%;
-    .style-name {
-      width: 350px;
-      height: 25px;
-      // Remove height to for `box-sizing: border-box`
-      height: auto;
-    }
-    .ace-wrapper {
-      position: relative;
-      height: 400px;
-      width: 100%;
-    }
-    &.maximized {
-      .admin-container {
-        position: absolute;
-        bottom: 50px;
-        top: 80px;
-        width: 100%;
-      }
-      .admin-footer {
-        position: absolute;
-        bottom: 10px;
-      }
-      .ace-wrapper {
-        height: 100%;
-      }
-    }
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-    .status-actions {
-      float: right;
-      margin-top: 7px;
-      span {
-        margin-right: 10px;
-      }
-    }
-    .buttons {
-      float: left;
-      width: 200px;
-      .saving {
-        padding: 5px 0 0 0;
-        margin-left: 10px;
-        width: 80px;
-        color: $primary;
-      }
-    }
-  }
-  .color-scheme {
-    .controls {
-      span, button, a {
-        margin-right: 10px;
-      }
-    }
-  }
-  .colors {
-    thead th       { border: none; }
-    td.hex         { width: 100px; }
-    td.actions     { width: 200px; }
-    .hex-input     { width: 80px; margin-bottom: 0; }
-    .hex           { text-align: center; }
-    .description   { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
-
-    .invalid .hex input {
-      background-color: white;
-      color: black;
-      border-color: $danger;
-    }
+  .content-list {
+    margin-right: 20px;
   }
 }
 
@@ -844,16 +768,25 @@ section.details {
   .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
   .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
 
+  .flagged-post-avatar {
+    margin-right: 10px;
+  }
+
   .excerpt {
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
     h3 {
-      max-height: 1.2em;
-      overflow: hidden;
       margin-top: 0;
       margin-bottom: 5px;
     }
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  tr.message td {
+    padding-left: 60px;
   }
 
   .flagged-posts { background: $danger; }
@@ -1370,10 +1303,6 @@ table.api-keys {
       margin-left: 6px;
     }
   }
-}
-
-.staff-action-logs-instructions {
-  margin: 0 0 10px 10px;
 }
 
 // Ember.ListView
@@ -1923,8 +1852,22 @@ table#user-badges {
 // Mobile specific style for Admin IP Lookup box
 .mobile-view .admin-contents .ip-lookup .location-box {
   width: 300px;
-  left: 20px;
+  left: -100%;
 }
+
+.mobile-view .admin-flags {
+  .flaggers {
+    padding: 2px;
+    .avatar {
+      padding: 0;
+    }
+  }
+  tr.message td {
+    padding-left: 8px;
+  }
+}
+
+
 
 .cboxcontainer {
   display: inline-block;
@@ -1944,6 +1887,12 @@ table#user-badges {
     background: $secondary;
   }
 }
+
+.inline-edit label {
+  display: inline-block;
+  margin-right: 20px;
+}
+
 .cbox0 { background: blend-primary-secondary(0%); }
 .cbox10 { background: blend-primary-secondary(10%); }
 .cbox20 { background: blend-primary-secondary(20%); }

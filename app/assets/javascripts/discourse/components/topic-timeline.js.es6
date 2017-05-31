@@ -2,7 +2,7 @@ import MountWidget from 'discourse/components/mount-widget';
 import Docking from 'discourse/mixins/docking';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
-const FIXED_POS = 85;
+const headerPadding = () => parseInt($('#main-outlet').css('padding-top')) + 3;
 
 export default MountWidget.extend(Docking, {
   widget: 'topic-timeline-container',
@@ -14,6 +14,7 @@ export default MountWidget.extend(Docking, {
       topic: this.get('topic'),
       topicTrackingState: this.topicTrackingState,
       enteredIndex: this.get('enteredIndex'),
+      dockAt: this.dockAt,
       dockBottom: this.dockBottom,
       mobileView: this.get('site.mobileView')
     };
@@ -27,8 +28,7 @@ export default MountWidget.extend(Docking, {
       attrs.fullScreen = true;
       attrs.addShowClass = this.get('addShowClass');
     } else {
-      attrs.dockAt = this.dockAt;
-      attrs.top = this.dockAt || FIXED_POS;
+      attrs.top = this.dockAt || headerPadding();
     }
 
     return attrs;
@@ -37,6 +37,11 @@ export default MountWidget.extend(Docking, {
   @observes('topic.highest_post_number', 'loading')
   newPostAdded() {
     this.queueRerender(() => this.queueDockCheck());
+  },
+
+  @observes('topic.details.notification_level')
+  _queueRerender() {
+    this.queueRerender();
   },
 
   dockCheck(info) {
@@ -49,7 +54,7 @@ export default MountWidget.extend(Docking, {
     const footerHeight = $('.timeline-footer-controls').outerHeight(true) || 0;
 
     const prev = this.dockAt;
-    const posTop = FIXED_POS + info.offset();
+    const posTop = headerPadding() + info.offset();
     const pos = posTop + timelineHeight;
 
     this.dockBottom = false;
@@ -79,6 +84,6 @@ export default MountWidget.extend(Docking, {
     }
 
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
-    this.dispatch('topic-notifications-button:keyboard-trigger', 'topic-notifications-button');
+    this.dispatch('topic-notifications-button:changed', 'topic-notifications-button');
   }
 });

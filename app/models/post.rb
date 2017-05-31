@@ -59,6 +59,18 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS = 1200
 
+  scope :private_posts_for_user, ->(user) {
+    where("posts.topic_id IN (SELECT topic_id
+             FROM topic_allowed_users
+             WHERE user_id = :user_id
+             UNION ALL
+             SELECT tg.topic_id
+             FROM topic_allowed_groups tg
+             JOIN group_users gu ON gu.user_id = :user_id AND
+                                      gu.group_id = tg.group_id)",
+                                              user_id: user.id)
+  }
+
   scope :by_newest, -> { order('created_at desc, id desc') }
   scope :by_post_number, -> { order('post_number ASC') }
   scope :with_user, -> { includes(:user) }
@@ -69,13 +81,14 @@ class Post < ActiveRecord::Base
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user))}
   scope :for_mailing_list, ->(user, since) {
-     created_since(since)
-    .joins(:topic)
-    .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
-    .order('posts.created_at ASC')
+    q = created_since(since)
+      .joins(:topic)
+      .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
+
+    q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
+
+    q.order('posts.created_at ASC')
   }
-  scope :mailing_list_new_topics, ->(user, since) { for_mailing_list(user, since).where('topics.created_at > ?', since) }
-  scope :mailing_list_updates,    ->(user, since) { for_mailing_list(user, since).where('topics.created_at <= ?', since) }
 
   delegate :username, to: :user
 
@@ -129,7 +142,8 @@ class Post < ActiveRecord::Base
       updated_at: Time.now,
       user_id: user_id,
       last_editor_id: last_editor_id,
-      type: type
+      type: type,
+      version: version
     }.merge(options)
 
     if Topic.visible_post_types.include?(post_type)
@@ -396,9 +410,11 @@ class Post < ActiveRecord::Base
     "#{Discourse.base_url}#{url}"
   end
 
-  def url
+  def url(opts=nil)
+    opts ||= {}
+
     if topic
-      Post.url(topic.slug, topic.id, post_number)
+      Post.url(topic.slug, topic.id, post_number, opts)
     else
       "/404"
     end
@@ -408,8 +424,13 @@ class Post < ActiveRecord::Base
     "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.create_key_for(user, self)}"
   end
 
-  def self.url(slug, topic_id, post_number)
-    "/t/#{slug}/#{topic_id}/#{post_number}"
+  def self.url(slug, topic_id, post_number, opts=nil)
+    opts ||= {}
+
+    result = "/t/"
+    result << "#{slug}/" unless !!opts[:without_slug]
+
+    "#{result}#{topic_id}/#{post_number}"
   end
 
   def self.urls(post_ids)
@@ -501,7 +522,7 @@ class Post < ActiveRecord::Base
                 SET avg_time = (x.gmean / 1000)
                 FROM (SELECT post_timings.topic_id,
                              post_timings.post_number,
-                             round(exp(avg(ln(msecs)))) AS gmean
+                             round(exp(avg(CASE WHEN msecs > 0 THEN ln(msecs) ELSE 0 END))) AS gmean
                       FROM post_timings
                       INNER JOIN posts AS p2
                         ON p2.post_number = post_timings.post_number

@@ -28,7 +28,7 @@ $base-font-size: 14px !default;
 $base-line-height: 19px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
-/* These files don't actually exist. They're injected by DiscourseSassImporter. */
+/* These files don't actually exist. They're injected by Stylesheet::Compiler. */
 @import "theme_variables";
 @import "plugins_variables";
 @import "common/foundation/math";

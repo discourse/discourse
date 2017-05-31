@@ -5,7 +5,8 @@ export default DatePicker.extend({
 
   _opts() {
     return {
-      defaultDate: new Date(),
+      defaultDate: new Date(this.get('defaultDate')) || new Date(),
+      setDefaultDate: !!this.get('defaultDate'),
       maxDate: new Date(),
     };
   }

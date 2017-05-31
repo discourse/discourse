@@ -48,6 +48,7 @@ const bindings = {
   'shift+p':         {handler: 'pinUnpinTopic'},
   'shift+r':         {handler: 'replyToTopic'},
   'shift+s':         {click: '#topic-footer-buttons button.share', anonymous: true}, // share topic
+  'shift+u':         {handler: 'goToUnreadPost'},
   'shift+z shift+z': {handler: 'logout'},
   't':               {postAction: 'replyAsNewTopic'},
   'u':               {handler: 'goBack', anonymous: true},
@@ -91,7 +92,7 @@ export default {
     const topic = this.currentTopic();
     // BIG hack, need a cleaner way
     if (topic && $('.posts-wrapper').length > 0) {
-      topic.toggleBookmark();
+      this.container.lookup('controller:topic').send('toggleBookmark');
     } else {
       this.sendToTopicListItemView('toggleBookmark');
     }
@@ -115,6 +116,10 @@ export default {
 
   goToLastPost() {
     this._jumpTo('jumpBottom');
+  },
+
+  goToUnreadPost() {
+    this._jumpTo('jumpUnread');
   },
 
   _jumpTo(direction) {
@@ -191,19 +196,19 @@ export default {
   },
 
   setTrackingToMuted(event) {
-    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 0, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 0, event});
   },
 
   setTrackingToRegular(event) {
-    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 1, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 1, event});
   },
 
   setTrackingToTracking(event) {
-    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 2, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 2, event});
   },
 
   setTrackingToWatching(event) {
-    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 3, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 3, event});
   },
 
   sendToTopicListItemView(action) {

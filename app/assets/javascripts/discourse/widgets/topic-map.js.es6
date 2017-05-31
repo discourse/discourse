@@ -27,11 +27,19 @@ createWidget('topic-map-show-links', {
 });
 
 createWidget('topic-participant', {
+  buildClasses(attrs) {
+    if (attrs.primary_group_name) { return `group-${attrs.primary_group_name}`; }
+  },
+
   html(attrs, state) {
     const linkContents = [avatarImg('medium', { username: attrs.username, template: attrs.avatar_template })];
 
     if (attrs.post_count > 2) {
       linkContents.push(h('span.post-count', attrs.post_count.toString()));
+    }
+
+    if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
+      linkContents.push(this.attach('avatar-flair', attrs));
     }
 
     return h('a.poster.trigger-user-card', {
@@ -151,8 +159,7 @@ createWidget('topic-map-expanded', {
         if (l.title && l.title.length) {
           const domain = l.domain;
           if (domain && domain.length) {
-            const s = domain.split('.');
-            host = h('span.domain', s[s.length-2] + "." + s[s.length-1]);
+            host = h('span.domain', domain);
           }
         }
 

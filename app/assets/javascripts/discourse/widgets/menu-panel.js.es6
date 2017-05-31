@@ -4,7 +4,11 @@ import { h } from 'virtual-dom';
 createWidget('menu-links', {
   html(attrs) {
     const links = [].concat(attrs.contents());
-    const liOpts = { className: attrs.heading ? 'heading' : '' };
+    const liOpts = {};
+
+    if (attrs.heading) {
+      liOpts.className = 'header';
+    }
 
     const result = [];
     result.push(h('ul.menu-links.columned', links.map(l => h('li', liOpts, l))));

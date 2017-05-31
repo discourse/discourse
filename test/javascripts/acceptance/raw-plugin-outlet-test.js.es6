@@ -1,6 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-const CONNECTOR = 'javascripts/raw-test/connectors/topic-list-tags/lala';
+const CONNECTOR = 'javascripts/raw-test/connectors/topic-list-before-status/lala';
 acceptance("Raw Plugin Outlet", {
   setup() {
     Discourse.RAW_TEMPLATES[CONNECTOR] = Handlebars.compile(
@@ -20,4 +20,3 @@ test("Renders the raw plugin outlet", assert => {
     assert.equal(find('.topic-lala:eq(0)').text(), '11557', 'it has the topic id');
   });
 });
-

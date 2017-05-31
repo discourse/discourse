@@ -1,32 +1,36 @@
-require_dependency 'sass/discourse_stylesheets'
 require_dependency 'distributed_cache'
 
 class ColorScheme < ActiveRecord::Base
 
-  def self.themes
+  CUSTOM_SCHEMES = {
+    dark: {
+      "primary" =>           'dddddd',
+      "secondary" =>         '222222',
+      "tertiary" =>          '0f82af',
+      "quaternary" =>        'c14924',
+      "header_background" => '111111',
+      "header_primary" =>    '333333',
+      "highlight" =>         'a87137',
+      "danger" =>            'e45735',
+      "success" =>           '1ca551',
+      "love" =>              'fa6c8d'
+    }
+  }
+
+  def self.base_color_scheme_colors
     base_with_hash = {}
     base_colors.each do |name, color|
-      base_with_hash[name] = "##{color}"
+      base_with_hash[name] = "#{color}"
     end
 
-    [
-      { id: 'default', colors: base_with_hash },
-      {
-        id: 'dark',
-        colors: {
-          "primary" =>           '#dddddd',
-          "secondary" =>         '#222222',
-          "tertiary" =>          '#0f82af',
-          "quaternary" =>        '#c14924',
-          "header_background" => '#111111',
-          "header_primary" =>    '#333333',
-          "highlight" =>         '#a87137',
-          "danger" =>            '#e45735',
-          "success" =>           '#1ca551',
-          "love" =>              '#fa6c8d'
-        }
-      }
+    list = [
+      { id: 'default', colors: base_with_hash }
     ]
+
+    CUSTOM_SCHEMES.each do |k,v|
+      list.push({id: k.to_s, colors: v})
+    end
+    list
   end
 
   def self.hex_cache
@@ -39,12 +43,16 @@ class ColorScheme < ActiveRecord::Base
 
   alias_method :colors, :color_scheme_colors
 
-  scope :current_version, ->{ where(versioned_id: nil) }
+  before_save do
+    if self.id
+      self.version += 1
+    end
+  end
 
-  after_destroy :destroy_versions
   after_save :publish_discourse_stylesheet
   after_save :dump_hex_cache
   after_destroy :dump_hex_cache
+  belongs_to :theme
 
   validates_associated :color_scheme_colors
 
@@ -64,13 +72,18 @@ class ColorScheme < ActiveRecord::Base
     @base_colors
   end
 
-  def self.enabled
-    current_version.find_by(enabled: true)
+  def self.base_color_schemes
+    base_color_scheme_colors.map do |hash|
+      scheme = new(name: I18n.t("color_schemes.#{hash[:id]}"), base_scheme_id: hash[:id])
+      scheme.colors = hash[:colors].map{|k,v| {name: k.to_s, hex: v.sub("#","")}}
+      scheme.is_base = true
+      scheme
+    end
   end
 
   def self.base
     return @base_color_scheme if @base_color_scheme
-    @base_color_scheme = new(name: I18n.t('color_schemes.base_theme_name'), enabled: false)
+    @base_color_scheme = new(name: I18n.t('color_schemes.base_theme_name'))
     @base_color_scheme.colors = base_colors.map { |name, hex| {name: name, hex: hex} }
     @base_color_scheme.is_base = true
     @base_color_scheme
@@ -79,28 +92,33 @@ class ColorScheme < ActiveRecord::Base
   # create_from_base will create a new ColorScheme that overrides Discourse's base color scheme with the given colors.
   def self.create_from_base(params)
     new_color_scheme = new(name: params[:name])
-    colors = base.colors_hashes
+    new_color_scheme.via_wizard = true if params[:via_wizard]
+    new_color_scheme.base_scheme_id = params[:base_scheme_id]
+
+    colors = CUSTOM_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
+      {name: name, hex: hex}
+    end if params[:base_scheme_id]
+    colors ||= base.colors_hashes
 
     # Override base values
     params[:colors].each do |name, hex|
       c = colors.find {|x| x[:name].to_s == name.to_s}
       c[:hex] = hex
-    end
+    end if params[:colors]
 
     new_color_scheme.colors = colors
     new_color_scheme.save
     new_color_scheme
   end
 
-  def self.hex_for_name(name)
-    val = begin
-      hex_cache[name] ||= begin
-        # Can't use `where` here because base doesn't allow it
-        (enabled || base).colors.find {|c| c.name == name }.try(:hex) || :nil
-      end
-    end
+  def self.lookup_hex_for_name(name)
+    enabled_color_scheme = Theme.where(key: SiteSetting.default_theme_key).first&.color_scheme
+    (enabled_color_scheme || base).colors.find {|c| c.name == name }.try(:hex) || :nil
+  end
 
-    val == :nil ? nil : val
+  def self.hex_for_name(name)
+    hex_cache[name] ||= lookup_hex_for_name(name)
+    hex_cache[name] == :nil ? nil : hex_cache[name]
   end
 
   def colors=(arr)
@@ -123,17 +141,39 @@ class ColorScheme < ActiveRecord::Base
     end
   end
 
-  def previous_version
-    ColorScheme.where(versioned_id: self.id).where('version < ?', self.version).order('version DESC').first
+  def base_colors
+    colors = nil
+    if base_scheme_id && base_scheme_id != "default"
+      colors = CUSTOM_SCHEMES[base_scheme_id.to_sym]
+    end
+    colors || ColorScheme.base_colors
   end
 
-  def destroy_versions
-    ColorScheme.where(versioned_id: self.id).destroy_all
+  def resolved_colors
+    resolved = ColorScheme.base_colors.dup
+    if base_scheme_id && base_scheme_id != "default"
+      if scheme = CUSTOM_SCHEMES[base_scheme_id.to_sym]
+        scheme.each do |name, value|
+          resolved[name] = value
+        end
+      end
+    end
+    colors.each do |c|
+      resolved[c.name] = c.hex
+    end
+    resolved
   end
 
   def publish_discourse_stylesheet
-    MessageBus.publish("/discourse_stylesheet", self.name)
-    DiscourseStylesheets.cache.clear
+    if self.id
+      themes = Theme.where(color_scheme_id: self.id).to_a
+      if themes.present?
+        Stylesheet::Manager.cache.clear
+        themes.each do |theme|
+          theme.notify_scheme_change(_clear_manager_cache = false)
+        end
+      end
+    end
   end
 
   def dump_hex_cache
@@ -146,13 +186,12 @@ end
 #
 # Table name: color_schemes
 #
-#  id           :integer          not null, primary key
-#  name         :string           not null
-#  enabled      :boolean          default(FALSE), not null
-#  versioned_id :integer
-#  version      :integer          default(1), not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  via_wizard   :boolean          default(FALSE), not null
-#  theme_id     :string
+#  id             :integer          not null, primary key
+#  name           :string           not null
+#  version        :integer          default(1), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  via_wizard     :boolean          default(FALSE), not null
+#  base_scheme_id :string
+#  theme_id       :integer
 #

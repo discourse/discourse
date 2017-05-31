@@ -5,6 +5,7 @@ import afterTransition from 'discourse/lib/after-transition';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
+import { userPath } from 'discourse/lib/url';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
@@ -84,7 +85,7 @@ export default Ember.Component.extend(CleansUp, {
   _show(username, $target) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      return true;
+      return false;
     }
 
     // XSS protection (should be encapsulated)
@@ -92,7 +93,7 @@ export default Ember.Component.extend(CleansUp, {
 
     // Don't show on mobile
     if (this.site.mobileView) {
-      DiscourseURL.routeTo(`/users/${username}`);
+      DiscourseURL.routeTo(userPath(username));
       return false;
     }
 
@@ -116,7 +117,6 @@ export default Ember.Component.extend(CleansUp, {
 
     const args = { stats: false };
     args.include_post_count_for = this.get('topic.id');
-    args.skip_track_visit = true;
 
     User.findByUsername(username, args).then(user => {
       if (user.topic_post_count) {

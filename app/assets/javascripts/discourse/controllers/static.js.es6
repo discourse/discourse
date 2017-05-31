@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
@@ -18,7 +19,7 @@ export default Ember.Controller.extend({
     markFaqRead() {
       const currentUser = this.currentUser;
       if (currentUser) {
-        ajax("/users/read-faq", { method: "POST" }).then(() => {
+        ajax(userPath("read-faq"), { method: "POST" }).then(() => {
           currentUser.set('read_faq', true);
         });
       }

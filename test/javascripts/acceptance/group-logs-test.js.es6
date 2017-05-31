@@ -18,9 +18,9 @@ acceptance("Group Logs", {
     // Workaround while awaiting https://github.com/tildeio/route-recognizer/issues/53
     server.get('/groups/snorlax/logs.json', request => { // eslint-disable-line no-undef
       if (request.queryParams["filters[action]"]) {
-        return response({"logs":[{"action":"change_group_setting","subject":"title","prev_value":null,"new_value":"Team Snorlax","created_at":"2016-12-12T08:27:46.408Z","acting_user":{"id":1,"username":"tgx","avatar_template":"/letter_avatar_proxy/v2/letter/t/ecae2f/{size}.png"},"target_user":null}],"all_loaded":true});
+        return response({"logs":[{"action":"change_group_setting","subject":"title","prev_value":null,"new_value":"Team Snorlax","created_at":"2016-12-12T08:27:46.408Z","acting_user":{"id":1,"username":"tgx","avatar_template":"/images/avatar.png"},"target_user":null}],"all_loaded":true});
       } else {
-        return response({"logs":[{"action":"change_group_setting","subject":"title","prev_value":null,"new_value":"Team Snorlax","created_at":"2016-12-12T08:27:46.408Z","acting_user":{"id":1,"username":"tgx","avatar_template":"/letter_avatar_proxy/v2/letter/t/ecae2f/{size}.png"},"target_user":null},{"action":"add_user_to_group","subject":null,"prev_value":null,"new_value":null,"created_at":"2016-12-12T08:27:27.725Z","acting_user":{"id":1,"username":"tgx","avatar_template":"/letter_avatar_proxy/v2/letter/t/ecae2f/{size}.png"},"target_user":{"id":1,"username":"tgx","avatar_template":"/letter_avatar_proxy/v2/letter/t/ecae2f/{size}.png"}}],"all_loaded":true});
+        return response({"logs":[{"action":"change_group_setting","subject":"title","prev_value":null,"new_value":"Team Snorlax","created_at":"2016-12-12T08:27:46.408Z","acting_user":{"id":1,"username":"tgx","avatar_template":"/images/avatar.png"},"target_user":null},{"action":"add_user_to_group","subject":null,"prev_value":null,"new_value":null,"created_at":"2016-12-12T08:27:27.725Z","acting_user":{"id":1,"username":"tgx","avatar_template":"/images/avatar.png"},"target_user":{"id":1,"username":"tgx","avatar_template":"/images/avatar.png"}}],"all_loaded":true});
       }
     });
   }

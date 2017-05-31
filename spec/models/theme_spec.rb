@@ -1,0 +1,220 @@
+require 'rails_helper'
+
+describe Theme do
+
+  before do
+    Theme.clear_cache!
+  end
+
+  let :user do
+    Fabricate(:user)
+  end
+
+  let :customization_params do
+    {name: 'my name', user_id: user.id, header: "my awesome header"}
+  end
+
+  let :customization do
+    Theme.create!(customization_params)
+  end
+
+  it 'should set default key when creating a new customization' do
+    s = Theme.create!(name: 'my name', user_id: user.id)
+    expect(s.key).not_to eq(nil)
+  end
+
+  it 'can properly clean up color schemes' do
+    theme = Theme.create!(name: 'bob', user_id: -1)
+    scheme = ColorScheme.create!(theme_id: theme.id, name: 'test')
+    scheme2 = ColorScheme.create!(theme_id: theme.id, name: 'test2')
+
+    Theme.create!(name: 'bob', user_id: -1, color_scheme_id: scheme2.id)
+
+    theme.destroy!
+    scheme2.reload
+
+    expect(scheme2).not_to eq(nil)
+    expect(scheme2.theme_id).to eq(nil)
+    expect(ColorScheme.find_by(id: scheme.id)).to eq(nil)
+  end
+
+  it 'can support child themes' do
+    child = Theme.new(name: '2', user_id: user.id)
+
+    child.set_field(target: :common, name: "header", value: "World")
+    child.set_field(target: :desktop, name: "header", value: "Desktop")
+    child.set_field(target: :mobile, name: "header", value: "Mobile")
+
+    child.save!
+
+    expect(Theme.lookup_field(child.key, :desktop, "header")).to eq("World\nDesktop")
+    expect(Theme.lookup_field(child.key, "mobile", :header)).to eq("World\nMobile")
+
+
+    child.set_field(target: :common, name: "header", value: "Worldie")
+    child.save!
+
+    expect(Theme.lookup_field(child.key, :mobile, :header)).to eq("Worldie\nMobile")
+
+    parent = Theme.new(name: '1', user_id: user.id)
+
+    parent.set_field(target: :common, name: "header", value: "Common Parent")
+    parent.set_field(target: :mobile, name: "header", value: "Mobile Parent")
+
+    parent.save!
+
+    parent.add_child_theme!(child)
+
+    expect(Theme.lookup_field(parent.key, :mobile, "header")).to eq("Common Parent\nMobile Parent\nWorldie\nMobile")
+
+  end
+
+  it 'can correctly find parent themes' do
+    grandchild = Theme.create!(name: 'grandchild', user_id: user.id)
+    child = Theme.create!(name: 'child', user_id: user.id)
+    theme = Theme.create!(name: 'theme', user_id: user.id)
+
+    theme.add_child_theme!(child)
+    child.add_child_theme!(grandchild)
+
+    expect(grandchild.dependant_themes.length).to eq(2)
+  end
+
+
+  it 'should correct bad html in body_tag_baked and head_tag_baked' do
+    theme = Theme.new(user_id: -1, name: "test")
+    theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
+    theme.save!
+
+    expect(Theme.lookup_field(theme.key, :desktop, "head_tag")).to eq("<b>I am bold</b>")
+  end
+
+  it 'should precompile fragments in body and head tags' do
+    with_template = <<HTML
+    <script type='text/x-handlebars' name='template'>
+      {{hello}}
+    </script>
+    <script type='text/x-handlebars' data-template-name='raw_template.raw'>
+      {{hello}}
+    </script>
+HTML
+    theme = Theme.new(user_id: -1, name: "test")
+    theme.set_field(target: :common, name: "header", value: with_template)
+    theme.save!
+
+    baked = Theme.lookup_field(theme.key, :mobile, "header")
+
+    expect(baked).to match(/HTMLBars/)
+    expect(baked).to match(/raw-handlebars/)
+  end
+
+  it 'should create body_tag_baked on demand if needed' do
+
+    theme = Theme.new(user_id: -1, name: "test")
+    theme.set_field(target: :common, name: :body_tag, value: "<b>test")
+    theme.save
+
+    ThemeField.update_all(value_baked: nil)
+
+    expect(Theme.lookup_field(theme.key, :desktop, :body_tag)).to match(/<b>test<\/b>/)
+  end
+
+  context "plugin api" do
+    def transpile(html)
+      f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: -1, name: "after_header", value: html)
+      f.value_baked
+    end
+
+    it "transpiles ES6 code" do
+      html = <<HTML
+        <script type='text/discourse-plugin' version='0.1'>
+          const x = 1;
+        </script>
+HTML
+
+      transpiled = transpile(html)
+      expect(transpiled).to match(/\<script\>/)
+      expect(transpiled).to match(/var x = 1;/)
+      expect(transpiled).to match(/_registerPluginCode\('0.1'/)
+    end
+
+    it "converts errors to a script type that is not evaluated" do
+      html = <<HTML
+        <script type='text/discourse-plugin' version='0.1'>
+          const x = 1;
+          x = 2;
+        </script>
+HTML
+
+      transpiled = transpile(html)
+      expect(transpiled).to match(/text\/discourse-js-error/)
+      expect(transpiled).to match(/read-only/)
+    end
+  end
+
+  context 'theme vars' do
+    it 'can generate scss based off theme vars' do
+      theme = Theme.new(name: 'theme', user_id: -1)
+      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
+      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
+      theme.set_field(target: :common, name: :content, value: 'Sam\'s Test', type: :theme_var)
+      theme.save
+
+      scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include("red")
+      expect(scss).to include('"Sam\'s Test"')
+    end
+
+    let :image do
+      file_from_fixtures("logo.png")
+    end
+
+    it 'can handle uploads based of ThemeField' do
+      theme = Theme.new(name: 'theme', user_id: -1)
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+      theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
+      theme.set_field(target: :common, name: :scss, value: 'body {background-image: url($logo)}')
+      theme.save!
+
+      # make sure we do not nuke it
+      freeze_time (SiteSetting.clean_orphan_uploads_grace_period_hours + 1).hours.from_now
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      expect(Upload.where(id: upload.id)).to be_exist
+
+      # no error for theme field
+      theme.reload
+      expect(theme.theme_fields.find_by(name: :scss).error).to eq(nil)
+
+      scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include(upload.url)
+    end
+  end
+
+  it 'correctly caches theme keys' do
+    Theme.destroy_all
+
+    theme = Theme.create!(name: "bob", user_id: -1)
+
+    expect(Theme.theme_keys).to eq(Set.new([theme.key]))
+    expect(Theme.user_theme_keys).to eq(Set.new([]))
+
+    theme.user_selectable = true
+    theme.save
+
+    expect(Theme.user_theme_keys).to eq(Set.new([theme.key]))
+
+    theme.user_selectable = false
+    theme.save
+
+    theme.set_default!
+    expect(Theme.user_theme_keys).to eq(Set.new([theme.key]))
+
+    theme.destroy
+
+    expect(Theme.theme_keys).to eq(Set.new([]))
+    expect(Theme.user_theme_keys).to eq(Set.new([]))
+  end
+
+
+end

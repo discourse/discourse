@@ -49,13 +49,53 @@ describe ListController do
   end
 
   describe 'RSS feeds' do
-
-    it 'renders RSS' do
+    it 'renders latest RSS' do
       get "latest_feed", format: :rss
       expect(response).to be_success
       expect(response.content_type).to eq('application/rss+xml')
     end
 
+    it 'renders top RSS' do
+      get "top_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders all time top RSS' do
+      get "top_all_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders yearly top RSS' do
+      get "top_yearly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders quarterly top RSS' do
+      get "top_quarterly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders monthly top RSS' do
+      get "top_monthly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders weekly top RSS' do
+      get "top_weekly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders daily top RSS' do
+      get "top_daily_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
   end
 
   context 'category' do
@@ -141,7 +181,6 @@ describe ListController do
 
           it { is_expected.not_to respond_with(:success) }
         end
-
       end
 
       describe 'feed' do
@@ -150,6 +189,37 @@ describe ListController do
           expect(response).to be_success
           expect(response.content_type).to eq('application/rss+xml')
         end
+      end
+
+      describe "category default views" do
+        it "has a top default view" do
+          category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
+          described_class.expects(:best_period_with_topics_for).with(anything, category.id, :monthly).returns(:monthly)
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
+        it "has a default view of nil" do
+          category.update_attributes!(default_view: nil)
+          described_class.expects(:best_period_for).never
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
+        it "has a default view of ''" do
+          category.update_attributes!(default_view: '')
+          described_class.expects(:best_period_for).never
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
+        it "has a default view of latest" do
+          category.update_attributes!(default_view: 'latest')
+          described_class.expects(:best_period_for).never
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
       end
     end
   end
@@ -229,62 +299,52 @@ describe ListController do
   describe "best_periods_for" do
 
     it "returns yearly for more than 180 days" do
-      SiteSetting.top_page_default_timeframe = 'all'
-      expect(ListController.best_periods_for(nil)).to eq([:yearly])
-      expect(ListController.best_periods_for(180.days.ago)).to eq([:yearly])
+      expect(ListController.best_periods_for(nil, :all)).to eq([:yearly])
+      expect(ListController.best_periods_for(180.days.ago, :all)).to eq([:yearly])
     end
 
     it "includes monthly when less than 180 days and more than 35 days" do
-      SiteSetting.top_page_default_timeframe = 'all'
       (35...180).each do |date|
-        expect(ListController.best_periods_for(date.days.ago)).to eq([:monthly, :yearly])
+        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:monthly, :yearly])
       end
     end
 
     it "includes weekly when less than 35 days and more than 8 days" do
-      SiteSetting.top_page_default_timeframe = 'all'
       (8...35).each do |date|
-        expect(ListController.best_periods_for(date.days.ago)).to eq([:weekly, :monthly, :yearly])
+        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:weekly, :monthly, :yearly])
       end
     end
 
     it "includes daily when less than 8 days" do
-      SiteSetting.top_page_default_timeframe = 'all'
       (0...8).each do |date|
-        expect(ListController.best_periods_for(date.days.ago)).to eq([:daily, :weekly, :monthly, :yearly])
+        expect(ListController.best_periods_for(date.days.ago, :all)).to eq([:daily, :weekly, :monthly, :yearly])
       end
     end
 
     it "returns default even for more than 180 days" do
-      SiteSetting.top_page_default_timeframe = 'monthly'
-      expect(ListController.best_periods_for(nil)).to eq([:monthly, :yearly])
-      expect(ListController.best_periods_for(180.days.ago)).to eq([:monthly, :yearly])
+      expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :yearly])
+      expect(ListController.best_periods_for(180.days.ago, :monthly)).to eq([:monthly, :yearly])
     end
 
     it "returns default even when less than 180 days and more than 35 days" do
-      SiteSetting.top_page_default_timeframe = 'weekly'
       (35...180).each do |date|
-        expect(ListController.best_periods_for(date.days.ago)).to eq([:weekly, :monthly, :yearly])
+        expect(ListController.best_periods_for(date.days.ago, :weekly)).to eq([:weekly, :monthly, :yearly])
       end
     end
 
     it "returns default even when less than 35 days and more than 8 days" do
-      SiteSetting.top_page_default_timeframe = 'daily'
       (8...35).each do |date|
-        expect(ListController.best_periods_for(date.days.ago)).to eq([:daily, :weekly, :monthly, :yearly])
+        expect(ListController.best_periods_for(date.days.ago, :daily)).to eq([:daily, :weekly, :monthly, :yearly])
       end
     end
 
     it "doesn't return default when set to all" do
-      SiteSetting.top_page_default_timeframe = 'all'
-      expect(ListController.best_periods_for(nil)).to eq([:yearly])
+      expect(ListController.best_periods_for(nil, :all)).to eq([:yearly])
     end
 
     it "doesn't return value twice when matches default" do
-      SiteSetting.top_page_default_timeframe = 'yearly'
-      expect(ListController.best_periods_for(nil)).to eq([:yearly])
+      expect(ListController.best_periods_for(nil, :yearly)).to eq([:yearly])
     end
-
   end
 
   describe "categories suppression" do

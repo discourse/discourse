@@ -1,4 +1,5 @@
 require 'cache'
+require 'open3'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
@@ -14,6 +15,23 @@ module Discourse
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
     extend Sidekiq::ExceptionHandler
+  end
+
+  class Utils
+    def self.execute_command(*command, failure_message: "")
+      stdout, stderr, status = Open3.capture3(*command)
+
+      if !status.success?
+        failure_message = "#{failure_message}\n" if !failure_message.blank?
+        raise "#{failure_message}#{stderr}"
+      end
+
+      stdout
+    end
+
+    def self.pretty_logs(logs)
+      logs.join("\n".freeze)
+    end
   end
 
   # Log an exception.
@@ -119,6 +137,10 @@ module Discourse
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.plugin_themes
+    @plugin_themes ||= plugins.map(&:themes).flatten
   end
 
   def self.official_plugins
@@ -387,5 +409,25 @@ module Discourse
   def self.static_doc_topic_ids
     [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
   end
+
+  cattr_accessor :last_ar_cache_reset
+
+  def self.reset_active_record_cache_if_needed(e)
+    last_cache_reset = Discourse.last_ar_cache_reset
+    if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil?  || last_cache_reset < 30.seconds.ago)
+      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+      Discourse.last_ar_cache_reset = Time.zone.now
+      Discourse.reset_active_record_cache
+    end
+  end
+
+  def self.reset_active_record_cache
+    ActiveRecord::Base.connection.query_cache.clear
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+      table.classify.constantize.reset_column_information rescue nil
+    end
+    nil
+  end
+
 
 end

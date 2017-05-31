@@ -10,34 +10,37 @@ class EmbeddableHost < ActiveRecord::Base
   def self.record_for_url(uri)
 
     if uri.is_a?(String)
-      uri = URI(uri) rescue nil
+      uri = URI(URI.encode(uri)) rescue nil
     end
     return false unless uri.present?
 
     host = uri.host
     return false unless host.present?
 
-    where("lower(host) = ?", host).first
-  end
-
-  def self.url_allowed?(url)
-    uri = URI(url) rescue nil
-    return false unless uri.present?
+    if uri.port.present? && uri.port != 80 && uri.port != 443
+      host << ":#{uri.port}"
+    end
 
     path = uri.path
     path << "?" << uri.query if uri.query.present?
 
-    host = record_for_url(uri)
+    where("lower(host) = ?", host).each do |eh|
+      return eh if eh.path_whitelist.blank? || !Regexp.new(eh.path_whitelist).match(path).nil?
+    end
 
-    return host.present? &&
-           (host.path_whitelist.blank? || !Regexp.new(host.path_whitelist).match(path).nil?)
+    nil
+  end
+
+  def self.url_allowed?(url)
+    uri = URI(URI.encode(url)) rescue nil
+    uri.present? && record_for_url(uri).present?
   end
 
   private
 
     def host_must_be_valid
-      if host !~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,7}(:[0-9]{1,5})?(\/.*)?\Z/i &&
-         host !~ /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\Z/ &&
+      if host !~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(:[0-9]{1,5})?(\/.*)?\Z/i &&
+         host !~ /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(:[0-9]{1,5})?(\/.*)?\Z/ &&
          host !~ /\A([a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.)?localhost(\:[0-9]{1,5})?(\/.*)?\Z/i
         errors.add(:host, I18n.t('errors.messages.invalid'))
       end
@@ -54,4 +57,5 @@ end
 #  created_at     :datetime
 #  updated_at     :datetime
 #  path_whitelist :string
+#  class_name     :string
 #

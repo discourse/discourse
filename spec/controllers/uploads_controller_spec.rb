@@ -33,22 +33,17 @@ describe UploadsController do
         })
       end
 
-      it 'fails if type is invalid' do
-        xhr :post, :create, file: logo, type: "invalid type cause has space"
-        expect(response.status).to eq 403
+      it 'expects a type' do
+        expect { xhr :post, :create, file: logo }.to raise_error(ActionController::ParameterMissing)
+      end
 
-        xhr :post, :create, file: logo, type: "\\invalid"
-        expect(response.status).to eq 403
-
-        xhr :post, :create, file: logo, type: "invalid."
-        expect(response.status).to eq 403
-
-        xhr :post, :create, file: logo, type: "toolong"*100
-        expect(response.status).to eq 403
+      it 'parameterize the type' do
+        subject.expects(:create_upload).with(logo, nil, "super_long_type_with_charssuper_long_type_with_char")
+        xhr :post, :create, file: logo, type: "super \# long \//\\ type with \\. $%^&*( chars" * 5
       end
 
       it 'is successful with an image' do
-        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: logo, type: "avatar"
@@ -75,12 +70,13 @@ describe UploadsController do
       end
 
       it 'is successful with synchronous api' do
-        SiteSetting.stubs(:authorized_extensions).returns("*")
+        SiteSetting.authorized_extensions = "*"
         controller.stubs(:is_api?).returns(true)
 
-        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
-        FakeWeb.register_uri(:get, "http://example.com/image.png", :body => File.read('spec/fixtures/images/logo.png'))
+        stub_request(:head, 'http://example.com/image.png')
+        stub_request(:get, "http://example.com/image.png").to_return(body: File.read('spec/fixtures/images/logo.png'))
 
         xhr :post, :create, url: 'http://example.com/image.png', type: "avatar", synchronous: true
 
@@ -92,7 +88,7 @@ describe UploadsController do
 
       it 'correctly sets retain_hours for admins' do
         log_in :admin
-        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: logo, retain_hours: 100, type: "profile_background"
@@ -110,7 +106,7 @@ describe UploadsController do
         end.first
 
         expect(response.status).to eq 200
-        expect(message.data["errors"]).to eq(I18n.t("upload.file_missing"))
+        expect(message.data["errors"]).to contain_exactly(I18n.t("upload.file_missing"))
       end
 
       it 'properly returns errors' do
@@ -139,7 +135,7 @@ describe UploadsController do
       end
 
       it 'returns an error when it could not determine the dimensions of an image' do
-        Jobs.expects(:enqueue).with(:create_thumbnails, anything).never
+        Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: fake_jpg, type: "composer"
@@ -148,8 +144,7 @@ describe UploadsController do
         expect(response.status).to eq 200
 
         expect(message.channel).to eq("/uploads/composer")
-        expect(message.data["errors"]).to be
-        expect(message.data["errors"][0]).to eq(I18n.t("upload.images.size_not_found"))
+        expect(message.data["errors"]).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
 
     end
@@ -189,7 +184,7 @@ describe UploadsController do
 
     it "handles file without extension" do
       SiteSetting.authorized_extensions = "*"
-      upload = Fabricate(:upload, original_filename: "image_file", sha1: sha)
+      Fabricate(:upload, original_filename: "image_file", sha1: sha)
       controller.stubs(:render)
       controller.expects(:send_file)
 

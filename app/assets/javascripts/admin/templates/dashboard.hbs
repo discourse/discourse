@@ -261,8 +261,8 @@
         <thead>
           <tr>
             <th class="title">{{top_referrers.title}} ({{i18n 'admin.dashboard.reports.last_30_days'}})</th>
-            <th>{{number top_referrers.ytitles.num_clicks}}</th>
-            <th>{{number top_referrers.ytitles.num_topics}}</th>
+            <th>{{top_referrers.ytitles.num_clicks}}</th>
+            <th>{{top_referrers.ytitles.num_topics}}</th>
           </tr>
         </thead>
         {{#each top_referrers.data as |r|}}

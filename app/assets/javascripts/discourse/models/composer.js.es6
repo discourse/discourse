@@ -15,9 +15,11 @@ const CLOSED = 'closed',
       // The actions the composer can take
       CREATE_TOPIC = 'createTopic',
       PRIVATE_MESSAGE = 'privateMessage',
+      NEW_PRIVATE_MESSAGE_KEY = 'new_private_message',
       REPLY = 'reply',
       EDIT = 'edit',
       REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
+      REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message",
 
       // When creating, these fields are moved into the post model from the composer model
       _create_serializer = {
@@ -69,6 +71,11 @@ const Composer = RestModel.extend({
       }
       return categoryId;
     }
+  },
+
+  @computed('categoryId')
+  category(categoryId) {
+    return categoryId ? this.site.categories.findBy('id', categoryId) : null;
   },
 
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
@@ -162,7 +169,10 @@ const Composer = RestModel.extend({
       const postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
         I18n.t("post.post_number", { number: postNumber }) + "</a>";
-      topicLink = "<a href='" + (topic.get('url')) + "'> " + escapeExpression(topic.get('title')) + "</a>";
+
+      let title = topic.get('fancy_title') || escapeExpression(topic.get('title'));
+
+      topicLink = "<a href='" + (topic.get('url')) + "'> " + title + "</a>";
       usernameLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" + this.get('post.username') + "</a>";
     }
 
@@ -277,13 +287,14 @@ const Composer = RestModel.extend({
 
     @property minimumTitleLength
   **/
-  minimumTitleLength: function() {
-    if (this.get('privateMessage')) {
+  @computed('privateMessage')
+  minimumTitleLength(privateMessage) {
+    if (privateMessage) {
       return this.siteSettings.min_private_message_title_length;
     } else {
       return this.siteSettings.min_topic_title_length;
     }
-  }.property('privateMessage'),
+  },
 
   @computed('minimumPostLength', 'replyLength', 'canEditTopicFeaturedLink')
   missingReplyCharacters(minimumPostLength, replyLength, canEditTopicFeaturedLink) {
@@ -297,16 +308,19 @@ const Composer = RestModel.extend({
 
     @property minimumPostLength
   **/
-  minimumPostLength: function() {
-    if( this.get('privateMessage') ) {
+  @computed('privateMessage', 'topicFirstPost', 'topic.pm_with_non_human_user')
+  minimumPostLength(privateMessage, topicFirstPost, pmWithNonHumanUser) {
+    if (pmWithNonHumanUser) {
+      return 1;
+    } else if (privateMessage) {
       return this.siteSettings.min_private_message_post_length;
-    } else if (this.get('topicFirstPost')) {
+    } else if (topicFirstPost) {
       // first post (topic body)
       return this.siteSettings.min_first_post_length;
     } else {
       return this.siteSettings.min_post_length;
     }
-  }.property('privateMessage', 'topicFirstPost'),
+  },
 
   /**
     Computes the length of the title minus non-significant whitespaces
@@ -814,7 +828,9 @@ Composer.reopenClass({
   EDIT,
 
   // Draft key
-  REPLY_AS_NEW_TOPIC_KEY
+  NEW_PRIVATE_MESSAGE_KEY,
+  REPLY_AS_NEW_TOPIC_KEY,
+  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
 });
 
 export default Composer;

@@ -10,7 +10,7 @@ module("lib:user-search", {
       ];
     };
 
-    server.get('/users/search/users', () => { //eslint-disable-line
+    server.get('/u/search/users', () => { //eslint-disable-line
       return response(
         {
           users: [
@@ -58,7 +58,7 @@ module("lib:user-search", {
 });
 
 test("it places groups unconditionally for exact match", function() {
-  return userSearch({term: 'team'}).then((results)=>{
+  return userSearch({term: 'Team'}).then((results)=>{
      equal(results[results.length-1]["name"], "team");
   });
 });

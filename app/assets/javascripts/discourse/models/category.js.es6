@@ -70,7 +70,7 @@ const Category = RestModel.extend({
 
   @computed("topic_count")
   moreTopics(topicCount) {
-    return topicCount > Discourse.SiteSettings.category_featured_topics;
+    return topicCount > (this.get('num_featured_topics') || 2);
   },
 
   save() {
@@ -102,7 +102,12 @@ const Category = RestModel.extend({
         allowed_tag_groups: this.get('allowed_tag_groups'),
         sort_order: this.get('sort_order'),
         sort_ascending: this.get('sort_ascending'),
-        topic_featured_link_allowed: this.get('topic_featured_link_allowed')
+        topic_featured_link_allowed: this.get('topic_featured_link_allowed'),
+        show_subcategory_list: this.get('show_subcategory_list'),
+        num_featured_topics: this.get('num_featured_topics'),
+        default_view: this.get('default_view'),
+        subcategory_list_style: this.get('subcategory_list_style'),
+        default_top_period: this.get('default_top_period')
       },
       type: id ? 'PUT' : 'POST'
     });
@@ -148,7 +153,7 @@ const Category = RestModel.extend({
   @computed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
-      return topics.slice(0, Discourse.SiteSettings.category_featured_topics || 2);
+      return topics.slice(0, this.get('num_featured_topics') || 2);
     }
   },
 

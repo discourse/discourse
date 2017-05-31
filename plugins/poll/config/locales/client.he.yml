@@ -54,6 +54,7 @@ he:
         insert: הכנסת סקר
         help:
           options_count: הכניסו לפחות 2 אפשרויות
+          invalid_values: ערך מינימלי חייב להיות קטן מערך מקסימלי.
         poll_type:
           label: סוג
           regular: בחירה בודדת

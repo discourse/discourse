@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
 import Scrolling from 'discourse/mixins/scrolling';
@@ -24,6 +25,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
   postStream: Ember.computed.alias('topic.postStream'),
   archetype: Ember.computed.alias('topic.archetype'),
+  dockAt: 0,
 
   _lastShowTopic: null,
 
@@ -35,7 +37,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     const enteredAt = this.get('enteredAt');
     if (enteredAt && (this.get('lastEnteredAt') !== enteredAt)) {
       this._lastShowTopic = null;
-      this.scrolled();
+      Ember.run.schedule('afterRender', () => this.scrolled());
       this.set('lastEnteredAt', enteredAt);
     }
   },
@@ -64,6 +66,24 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     this.appEvents.on('post:highlight', postNumber => {
       Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
     });
+
+    this.appEvents.on('header:update-topic', topic => {
+
+      if (topic === null) {
+        this._lastShowTopic = false;
+        this.appEvents.trigger('header:hide-topic');
+        return;
+      }
+
+      const offset = window.pageYOffset || $('html').scrollTop();
+      this._lastShowTopic = this.showTopicInHeader(topic, offset);
+
+      if (this._lastShowTopic) {
+        this.appEvents.trigger('header:show-topic', topic);
+      } else {
+        this.appEvents.trigger('header:hide-topic');
+      }
+    });
   },
 
   willDestroyElement() {
@@ -90,15 +110,11 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   resetExamineDockCache() {
-    this.set('docAt', false);
+    this.set('dockAt', 0);
   },
 
   showTopicInHeader(topic, offset) {
-    if (this.get('docAt')) {
-      return offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded');
-    } else {
-      return topic.get('postStream.firstPostNotLoaded');
-    }
+    return offset > this.get('dockAt');
   },
 
   // The user has scrolled the window, or it is finished rendering and ready for processing.
@@ -108,24 +124,30 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     }
 
     const offset = window.pageYOffset || $('html').scrollTop();
-    if (!this.get('docAt')) {
+    if (this.get('dockAt') === 0) {
       const title = $('#topic-title');
       if (title && title.length === 1) {
-        this.set('docAt', title.offset().top);
+        this.set('dockAt', title.offset().top);
       }
     }
+
 
     this.set('hasScrolled', offset > 0);
 
     const topic = this.get('topic');
     const showTopic = this.showTopicInHeader(topic, offset);
     if (showTopic !== this._lastShowTopic) {
-      this._lastShowTopic = showTopic;
-
       if (showTopic) {
         this.appEvents.trigger('header:show-topic', topic);
+        this._lastShowTopic = true;
       } else {
-        this.appEvents.trigger('header:hide-topic');
+        if (!DiscourseURL.isJumpScheduled()) {
+          const loadingNear = topic.get('postStream.loadingNearPost') || 1;
+          if (loadingNear === 1) {
+            this.appEvents.trigger('header:hide-topic');
+            this._lastShowTopic = false;
+          }
+        }
       }
     }
 

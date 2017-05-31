@@ -5,14 +5,16 @@ require 'rails_helper'
 describe SpamRulesEnforcer do
 
   describe 'auto-blocking users based on flagging' do
-    site_setting(:flags_required_to_hide_post, 0)
-    site_setting(:num_spam_flags_to_block_new_user, 2)
-    site_setting(:num_users_to_block_new_user, 2)
-
     let!(:admin)     { Fabricate(:admin) } # needed to send a system message
     let!(:moderator) { Fabricate(:moderator) }
     let(:user1)      { Fabricate(:user) }
     let(:user2)      { Fabricate(:user) }
+
+    before do
+      SiteSetting.flags_required_to_hide_post = 0
+      SiteSetting.num_spam_flags_to_block_new_user = 2
+      SiteSetting.num_users_to_block_new_user = 2
+    end
 
     context 'spammer is a new user' do
       let(:spammer)  { Fabricate(:user, trust_level: TrustLevel[0]) }
@@ -86,9 +88,8 @@ describe SpamRulesEnforcer do
         end
 
         context 'flags_required_to_hide_post takes effect too' do
-          site_setting(:flags_required_to_hide_post, 2)
-
           it 'should block the spammer' do
+            SiteSetting.flags_required_to_hide_post = 2
             PostAction.act(user2, spam_post, PostActionType.types[:spam])
             expect(spammer.reload).to be_blocked
             expect(Guardian.new(spammer).can_create_topic?(nil)).to be false

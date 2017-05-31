@@ -7,6 +7,11 @@ export default Discourse.Route.extend({
   // Avoid default model hook
   model(params) { return params; },
 
+  deactivate() {
+    this._super();
+    this.controllerFor('topic').unsubscribe();
+  },
+
   setupController(controller, params) {
     params = params || {};
     params.track_visit = true;
@@ -35,6 +40,8 @@ export default Discourse.Route.extend({
         enteredIndex: postStream.get('stream').indexOf(closestPost.get('id')),
         enteredAt: new Date().getTime().toString(),
       });
+
+      topicController.subscribe();
 
       // Highlight our post after the next render
       Ember.run.scheduleOnce('afterRender', function() {

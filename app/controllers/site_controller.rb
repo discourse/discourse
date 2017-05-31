@@ -3,7 +3,7 @@ require_dependency 'site_serializer'
 class SiteController < ApplicationController
   layout false
   skip_before_filter :preload_json, :check_xhr
-  skip_before_filter :redirect_to_login_if_required, only: ['basic_info']
+  skip_before_filter :redirect_to_login_if_required, only: ['basic_info', 'statistics']
 
   def site
     render json: Site.json_for(guardian)
@@ -34,12 +34,16 @@ class SiteController < ApplicationController
       title: SiteSetting.title,
       description: SiteSetting.site_description
     }
+    results[:mobile_logo_url] = SiteSetting.mobile_logo_url if SiteSetting.mobile_logo_url.present?
 
-    if SiteSetting.mobile_logo_url.present?
-      results[:mobile_logo_url] = SiteSetting.mobile_logo_url
-    end
+    DiscourseHub.stats_fetched_at = Time.zone.now if request.user_agent == "Discourse Hub"
 
     # this info is always available cause it can be scraped from a 404 page
     render json: results
+  end
+
+  def statistics
+    return redirect_to path('/') unless SiteSetting.share_anonymized_statistics?
+    render json: About.fetch_cached_stats
   end
 end

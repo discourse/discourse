@@ -54,6 +54,7 @@ sv:
         insert: Lägg till omröstning
         help:
           options_count: Ange minst 2 alternativ
+          invalid_values: Minimivärde måste vara mindre än det maximala värdet.
         poll_type:
           label: Typ
           regular: Ett val

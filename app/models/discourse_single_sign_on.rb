@@ -79,6 +79,8 @@ class DiscourseSingleSignOn < SingleSignOn
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
+    user.title = title unless title.nil?
+
     # optionally save the user and sso_record if they have changed
     user.user_avatar.save! if user.user_avatar
     user.save!
@@ -146,7 +148,7 @@ class DiscourseSingleSignOn < SingleSignOn
         sso_record.last_payload = unsigned_payload
         sso_record.external_id = external_id
       else
-        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id) if avatar_url.present?
+        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id, override_gravatar: SiteSetting.sso_overrides_avatar) if avatar_url.present?
         user.create_single_sign_on_record(
           last_payload: unsigned_payload,
           external_id: external_id,
@@ -164,6 +166,7 @@ class DiscourseSingleSignOn < SingleSignOn
   def change_external_attributes_and_override(sso_record, user)
     if SiteSetting.sso_overrides_email && user.email != email
       user.email = email
+      user.active = false if require_activation
     end
 
     if SiteSetting.sso_overrides_username && user.username != username && username.present?
@@ -180,7 +183,7 @@ class DiscourseSingleSignOn < SingleSignOn
       avatar_changed = sso_record.external_avatar_url != avatar_url
 
       if avatar_force_update || avatar_changed || avatar_missing
-        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id)
+        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id, override_gravatar: SiteSetting.sso_overrides_avatar)
       end
     end
 

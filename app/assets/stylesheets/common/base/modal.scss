@@ -73,9 +73,6 @@
   max-width: 710px;
   margin: 0 auto;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-
-  box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
 }
 
@@ -153,9 +150,6 @@
     }
     .warning {
       color: $danger !important;
-    }
-    .raw-email-textarea {
-      height: 300px;
     }
     .json-uploader {
       .jsfu-shade-container {
@@ -298,5 +292,95 @@
   }
   li {
     margin-bottom: 10px;
+  }
+}
+
+.edit-category-modal {
+  .auto-update-input, .num-featured-topics-fields, .position-fields {
+    input[type=text] {
+      width: 50px;
+    }
+  }
+
+  .subcategory-list-style-field {
+    margin-left: 16px;
+  }
+
+  .edit-category-tab-settings {
+    section.field {
+      margin-bottom: 10px;
+    }
+  }
+
+  .disable_info_wrap {
+    position: relative;
+    display: inline-block;
+    float: right;
+
+    .cannot_delete_reason {
+      position: absolute;
+      background: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
+      color: dark-light-choose(scale-color($primary, $lightness: 100%), scale-color($secondary, $lightness: 0%));
+      text-align: center;
+      border-radius: 2px;
+      padding: 12px 8px;
+
+      &::after {
+        top: 100%;
+        left: 57%;
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-top-color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
+        border-width: 8px;
+      }
+    }
+  }
+}
+
+
+.incoming-email-modal {
+  .btn {
+    transition: none;
+    background-color: transparent;
+    margin-right: 5px;
+    &:hover, &.active {
+      color: $primary;
+    }
+    &.active {
+      font-weight: bold;
+    }
+    &:focus {
+      outline: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    }
+  }
+  .incoming-email-tabs {
+    margin-bottom: 15px;
+  }
+  .incoming-email-content {
+    height: 300px;
+    textarea, .incoming-email-html-part {
+      height: 95%;
+      border: none;
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      padding-top: 10px;
+    }
+    textarea {
+      font-family: monospace;
+      resize: none;
+      border-radius: 0px;
+      box-shadow: none;
+    }
+    .incoming-email-html-part {
+      padding: 10px 4px 4px 4px;
+    }
+  }
+}
+
+.modal-button-bar {
+  margin-top: 1em;
+
+  button {
+    margin-right: 0.5em;
   }
 }

@@ -439,7 +439,7 @@ p    end
             # read attachment
             File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
             # create the upload for the user
-            upload = Upload.create_for(user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID, tmp, attachment.filename, tmp.size )
+            upload = UploadCreator.new(tmp, attachment.filename).create_for(user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID)
             if upload && upload.errors.empty?
               raw << "\n\n#{receiver.attachment_markdown(upload)}\n\n"
             end
@@ -530,7 +530,7 @@ p    end
             # read attachment
             File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
             # create the upload for the user
-            upload = Upload.create_for(user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID, tmp, attachment.filename, tmp.size )
+            upload = UploadCreator.new(tmp, attachment.filename).create_for(user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID)
             if upload && upload.errors.empty?
               raw << "\n\n#{receiver.attachment_markdown(upload)}\n\n"
             end

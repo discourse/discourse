@@ -1,5 +1,4 @@
 require_dependency 'distributed_cache'
-require_dependency 'sass/discourse_stylesheets'
 
 class Category < ActiveRecord::Base
 
@@ -37,6 +36,7 @@ class Category < ActiveRecord::Base
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
+  validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validate :parent_category_validator
 
   validate :email_in_validator
@@ -202,7 +202,7 @@ SQL
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.ignore_category_auto_close = true
-    t.set_auto_close(nil)
+    t.set_or_create_timer(TopicTimer.types[:close], nil)
     t.save!(validate: false)
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
@@ -388,8 +388,8 @@ SQL
       group = group.id if group.is_a?(Group)
 
       # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless group.is_a?(Fixnum)
-      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Fixnum)
+      group = Group[group.to_sym].id unless group.is_a?(Integer)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
 
       [group, permission]
     end
@@ -462,7 +462,7 @@ SQL
     old_name = changed_attributes["name"]
     return unless topic.present?
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
-      topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
+      topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
     end
   end
 
@@ -491,7 +491,7 @@ SQL
   end
 
   def publish_discourse_stylesheet
-    DiscourseStylesheets.cache.clear
+    Stylesheet::Manager.cache.clear
   end
 
   def index_search
@@ -505,6 +505,10 @@ SQL
     else
       self.where(slug: category_slug, parent_category_id: nil).first
     end
+  end
+
+  def subcategory_list_includes_topics?
+    subcategory_list_style.end_with?("with_featured_topics")
   end
 end
 
@@ -545,12 +549,18 @@ end
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
-#  all_topics_wiki               :boolean          default(FALSE)
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
 #  uploaded_logo_id              :integer
 #  uploaded_background_id        :integer
+#  topic_featured_link_allowed   :boolean          default(TRUE)
+#  all_topics_wiki               :boolean          default(FALSE), not null
+#  show_subcategory_list         :boolean          default(FALSE)
+#  num_featured_topics           :integer          default(3)
+#  default_view                  :string(50)
+#  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
+#  default_top_period            :string(20)       default("all")
 #
 # Indexes
 #

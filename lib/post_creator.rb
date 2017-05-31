@@ -182,7 +182,7 @@ class PostCreator
     create
 
     if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new("Failed to create post", self)
+      raise ActiveRecord::RecordNotSaved.new("Failed to create post: #{self.errors.full_messages}")
     end
 
     @post
@@ -377,21 +377,28 @@ class PostCreator
   end
 
   def update_topic_stats
-    return if @post.post_type == Post.types[:whisper]
-
-    attrs = {
-      last_posted_at: @post.created_at,
-      last_post_user_id: @post.user_id,
-      word_count: (@topic.word_count || 0) + @post.word_count,
-    }
-    attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
-    attrs[:bumped_at] = @post.created_at unless @post.no_bump
-    @topic.update_attributes(attrs)
+    if @post.post_type != Post.types[:whisper]
+      attrs = {}
+      attrs[:last_posted_at] = @post.created_at
+      attrs[:last_post_user_id] = @post.user_id
+      attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+      attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
+      attrs[:bumped_at] = @post.created_at unless @post.no_bump
+      @topic.update_attributes(attrs)
+    end
   end
 
   def update_topic_auto_close
-    if @topic.auto_close_based_on_last_post && @topic.auto_close_hours
-      @topic.set_auto_close(@topic.auto_close_hours).save
+    topic_timer = @topic.public_topic_timer
+
+    if topic_timer &&
+       topic_timer.based_on_last_post &&
+       topic_timer.duration > 0
+
+      @topic.set_or_create_timer(TopicTimer.types[:close],
+        topic_timer.duration,
+        based_on_last_post: topic_timer.based_on_last_post
+      )
     end
   end
 
@@ -486,6 +493,8 @@ class PostCreator
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
     elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:watching]
       TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:watching])
+    elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:regular]
+      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:regular])
     else
       TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:tracking])
     end

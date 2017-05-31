@@ -22,7 +22,8 @@ module Email
       @opts = opts || {}
 
       @template_args = {
-        site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
+        site_name: SiteSetting.title,
+        email_prefix: SiteSetting.email_prefix.presence || SiteSetting.title,
         base_url: Discourse.base_url,
         user_preferences_url: "#{Discourse.base_url}/my/preferences",
         hostname: Discourse.current_hostname,
@@ -60,6 +61,7 @@ module Email
       if @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:site_name])
+        subject.gsub!("%{email_prefix}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', @template_args) : '')
         subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', @template_args) : '')
         subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
@@ -202,16 +204,22 @@ module Email
     end
 
     def alias_email(source)
-      return source if @opts[:from_alias].blank? && SiteSetting.email_site_title.blank?
+      return source if @opts[:from_alias].blank? &&
+        SiteSetting.email_site_title.blank? &&
+        SiteSetting.title.blank?
+
       if !@opts[:from_alias].blank?
-        "#{Email.cleanup_alias(@opts[:from_alias])} <#{source}>"
+        "\"#{Email.cleanup_alias(@opts[:from_alias])}\" <#{source}>"
+      elsif source == SiteSetting.notification_email || source == SiteSetting.reply_by_email_address
+        site_alias_email(source)
       else
-        "#{Email.cleanup_alias(SiteSetting.email_site_title)} <#{source}>"
+        source
       end
     end
 
     def site_alias_email(source)
-      "#{Email.cleanup_alias(SiteSetting.email_site_title.presence || SiteSetting.title)} <#{source}>"
+      from_alias = SiteSetting.email_site_title.presence || SiteSetting.title
+      "\"#{Email.cleanup_alias(from_alias)}\" <#{source}>"
     end
 
   end

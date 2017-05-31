@@ -42,7 +42,7 @@ module I18n
         end
 
         # load it
-        I18n.backend.load_translations(I18n.load_path.grep Regexp.new("\\.#{locale}\\.yml$"))
+        I18n.backend.load_translations(I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml$/))
 
         @loaded_locales << locale
       end
@@ -125,7 +125,7 @@ module I18n
     end
 
     def client_overrides_json(locale)
-      client_json = (overrides_by_locale(locale) || {}).select {|k, _| k.starts_with?('js.') || k.starts_with?('admin_js.')}
+      client_json = (overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
       MultiJson.dump(client_json)
     end
 

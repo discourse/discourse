@@ -493,7 +493,7 @@ describe Post do
       expect(Fabricate.build(:post, post_args)).to be_valid
     end
 
-    it 'treate blank posts as invalid' do
+    it 'create blank posts as invalid' do
       expect(Fabricate.build(:post, raw: "")).not_to be_valid
     end
   end
@@ -952,7 +952,7 @@ describe Post do
 
   it "will unhide the post but will keep the topic invisible/unlisted" do
     hidden_topic = Fabricate(:topic, visible: false)
-    first_post = create_post(topic: hidden_topic)
+    create_post(topic: hidden_topic)
     second_post = create_post(topic: hidden_topic)
 
     second_post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)

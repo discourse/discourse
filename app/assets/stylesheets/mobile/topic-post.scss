@@ -53,45 +53,47 @@ nav.post-controls {
   margin-left: 10px;
 }
 
-button.like-count {
-  font-size: 1em;
-  padding: 8px 4px;
-}
+.topic-post {
+  button {
+    border: none;
+    font-size: 1.214em;
+    padding: 8px 10px;
+    vertical-align: top;
+    background: transparent;
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    float: left;
+    &.hidden {
+      display: none;
+    }
+    &.admin {
+      position: relative;
+    }
+    &.expand-post {
+      margin:10px 0 10px 0;
+    }
+    &.has-like {color: $love;}
 
-button {
-  border: none;
-  font-size: 1.214em;
-  padding: 8px 10px;
-  vertical-align: top;
-  background: transparent;
-  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
-  float: left;
-  &.hidden {
-    display: none;
-  }
-  &.admin {
-    position: relative;
-  }
-  &.expand-post {
-    margin:10px 0 10px 0;
-  }
-  &.has-like {color: $love;}
-  &.wikied { color: green; }
-  .read-icon {
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f02e";
-    }
-    &.unseen {
+    .read-icon {
       &:before {
-        content: "\f097";
+        font-family: "FontAwesome";
+        content: "\f02e";
+      }
+      &.unseen {
+        &:before {
+          content: "\f097";
+        }
+      }
+      &.bookmarked {
+        &:before {
+          color: $tertiary;
+        }
       }
     }
-    &.bookmarked {
-      &:before {
-        color: $tertiary;
-      }
-    }
+  }
+
+  button.like-count {
+    font-size: 1em;
+    padding: 8px 4px;
   }
 }
 
@@ -221,7 +223,7 @@ a.star {
     }
     .post-count {
       position: absolute;
-      right: 3px;
+      right: 0;
       border-radius: 100px;
       padding: 4px 5px 2px 5px;
       text-align: center;
@@ -311,7 +313,6 @@ a.star {
 
 #topic-footer-buttons {
   @include clearfix;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 20px 0 0 0;
   .fa-bookmark.bookmarked { color: $tertiary; }
 
@@ -328,6 +329,11 @@ a.star {
   clear: both; /* this is to force the drop-down notification state description para below the button */
   margin: 0;
   color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}
+
+#topic-footer-button {
+  width: 100px;
+  margin: 0 auto;
 }
 
 #suggested-topics {
@@ -470,7 +476,9 @@ button.select-post {
 
 
 .deleted {
-  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+  .topic-body {
+    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+  }
 }
 
 .deleted-user-avatar {
@@ -548,11 +556,6 @@ span.highlighted {
   button {
     margin-right: 7px;
   }
-}
-
-.gap.jagged-border {
-  margin-left: -10px;
-  margin-right: -10px;
 }
 
 .popup-menu {

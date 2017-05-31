@@ -56,8 +56,6 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 // clear child float (pika-lendar), using the famous micro clearfix hack
 // http://nicolasgallagher.com/micro-clearfix-hack/
 .pika-single {
-    *zoom: 1;
-
     &:before,
     &:after {
         content: " ";
@@ -91,7 +89,6 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 .pika-label {
     display: inline-block;
-    *display: inline;
     position: relative;
     z-index: 9999;
     overflow: hidden;
@@ -122,8 +119,6 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
     background-repeat: no-repeat;
     background-size: 75% 75%;
     opacity: .5;
-    *position: absolute;
-    *top: 0;
 
     &:hover {
         opacity: 1;
@@ -139,19 +134,16 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 .is-rtl .pika-next {
     float: left;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAYAAAAsEj5rAAAAUklEQVR42u3VMQoAIBADQf8Pgj+OD9hG2CtONJB2ymQkKe0HbwAP0xucDiQWARITIDEBEnMgMQ8S8+AqBIl6kKgHiXqQqAeJepBo/z38J/U0uAHlaBkBl9I4GwAAAABJRU5ErkJggg==');
-    *left: 0;
 }
 
 .pika-next,
 .is-rtl .pika-prev {
     float: right;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAYAAAAsEj5rAAAAU0lEQVR42u3VOwoAMAgE0dwfAnNjU26bYkBCFGwfiL9VVWoO+BJ4Gf3gtsEKKoFBNTCoCAYVwaAiGNQGMUHMkjGbgjk2mIONuXo0nC8XnCf1JXgArVIZAQh5TKYAAAAASUVORK5CYII=');
-    *right: 0;
 }
 
 .pika-select {
     display: inline-block;
-    *display: inline;
 }
 
 .pika-table {

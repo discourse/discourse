@@ -27,14 +27,14 @@ et:
   topics: "Teemad"
   posts: "postitused"
   loading: "Laetakse"
-  powered_by_html: 'Ajamiks on <a href="http://www.discourse.org">Discourse</a>... vaadata JavaScript lubatuna'
   log_in: "Logi sisse"
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
+  remove_posts_deleted_by_author: "Autori poolt kustutatud"
   emails:
     incoming:
-      default_subject: "%{email} saatis kirja"
+      default_subject: "See teema vajab pealkirja"
       show_trimmed_content: "Näita lühendatud sisu"
       maximum_staged_user_per_email_reached: "Meili teel loodud ettevalmistamisel olevate kasutajate maksimaalne arv on täis."
       errors:
@@ -72,6 +72,7 @@ et:
       inclusion: puudub nimekirjas
       invalid: pole korrektne
       is_invalid: "tundub segane. kas see on terve lause?"
+      contains_censored_words: "sisaldab järgmisi tsenseeritud sõnu: %{censored_words}"
       less_than: peab olema väiksem kui %{count}
       less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
       not_a_number: ei ole number
@@ -237,40 +238,6 @@ et:
       - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
 
       Rohkema info saamiseks [vaata meie kommuuni juhiseid](/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    avatar: |
-      ### Kuidas oleks, kui lisaksid oma kontole pildi?
-
-      Oled postitanud mõned teemad ja vastused aga sinu profiilipilt pole hetkel sama unikaalne nagu sina... see on lihtsalt üks täht.
-
-      Kas sa oled kaalunud **[külastada oma profiili](%{profile_path})** laadimaks üles sind ennast kujutav pilt?
-
-      Diskussioone jälgida ja vestlustest huvitavaid inimesi leida on lihtsam, kui kõigil on unikaalne profiilipilt!
-    sequential_replies: |
-      ### Kaalu mitmele postitusele samaaegset vastamist
-
-      Selle asemel, et vastata mitu korda järjest paljudele sõnumitele, palun kaalu ühe postituse kasutamist eelnevaid postitusi tsiteerides või kasutades viidet @nimi.
-
-      Saad muuta oma varasemat postitust ning lisada tsitaati valides teksti ning vajutades nähtavale ilmunud nuppu <b>tsiteeri</b>.
-
-      Kõigil on lihtsam lugeda teemasid, milles on põhjalikumad vastused paljude pisikeste vastuste asemel.
-    dominating_topic: |
-      ### Anna teistele mahti vestlusega liituda
-
-      See teema on Sulle kindlasti väga tähtis &ndash; enam kui %{percent}% vastustest siin on Sinu postitatud.
-
-      Kas oled kindel, et jätad ka teistele piisavalt aega ja võimalust oma arvamuse avaldamiseks?
-    too_many_replies: |
-      ### Oled selle teema vastuste limiidi saavutanud
-
-      Vabandame, kuid uutele kasutajatele on ajutiselt seatud limiit %{newuser_max_replies_per_topic} vastust teema kohta.
-
-      Uue vastuse lisamise asemel kaalu oma varasema vastuse muutmist või teiste teemade külastust.
-    reviving_old_topic: |
-      ### Vana teema taaselustamine?
-
-      Viimane vastus sellele teemale on rohkem kui %{days} päeva vana. Sinu vastus tõstab selle teema nimekirja ette ning teavitab kõiki, kes selle teemaga seotud olid.
-
-      Oled sa kindel, et soovid seda vana arutelu jätkata?
   activerecord:
     attributes:
       category:
@@ -301,22 +268,19 @@ et:
               same_as_username: "on sama mis su kasutajanimi. Palun kasuta turvalisemat parooli."
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
               same_as_current: "ühtib sinu hetkel kehtiva parooliga."
+              unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
             ip_address:
               signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
           attributes:
             hex:
               invalid: "pole korrektne värv"
-        post_reply:
-          base:
-            different_topic: "Postitus ja vastus peavad kuuluma samasse teemasse."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
       <<: *errors
   user_profile:
-    no_info_me: "<div class='missing-profile'>Sinu profiili väli 'Minust' on hetkel tühi, <a href='/users/%{username_lower}/preferences/about-me'>kas sooviksid selle ära täita?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} profiilis on väli 'Minust' veel täitmata</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
@@ -410,7 +374,6 @@ et:
       pms_per_day: "Oled ületanud tänaseks lubatud sõnumite limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       create_like: "Oled ületanud tänaseks lubatud meeldimiste lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       create_bookmark: "Oled ületanud tänaseks lubatud järjehoidjate lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      edit_post: "Oled ületanud tänaseks lubatud postituste muutmise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       live_post_counts: "Küsid postituste reaalajas loendit liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
       unsubscribe_via_email: "Oled ületanud tänaseks lubatud meilitsi tellimuste tühistamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       topic_invitations_per_day: "Oled ületanud tänaseks lubatud teemadesse kutsumise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
@@ -496,14 +459,13 @@ et:
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
     no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
-    choose_new: "Palun vali uus parool"
-    choose: "Palun vali parool"
+    choose_new: "Vali uus parool"
+    choose: "Vali parool"
     update: 'Uuenda parooli'
     save: 'Määra Parool'
     title: 'Uuenda Parool'
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
-    continue: "Edasi saidile %{site_name}"
   change_email:
     confirmed: "Sinu meiliaadress on uuendatud."
     please_continue: "Edasi saidile %{site_name}"
@@ -528,7 +490,6 @@ et:
       long_form: 'tähistasin selle kui teemavälise'
     spam:
       title: 'Spämm'
-      description: 'See postitus on reklaam. Käesoleva vestlusega seoses ei ole see ei kasulik ega asjakohane vaid pigem millegi reklaamimine.'
       long_form: 'tähistasin selle kui spämmi'
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
@@ -574,9 +535,11 @@ et:
       long_form: 'tähistasin selle kui spämmi'
     inappropriate:
       title: 'Ebasobiv'
+      description: 'Selle teema sisu on iga mõistliku inimese hinnangu järgi solvav, ahistav või rikub <a href="/guidelines">meie kommuuni reegleid</a>.'
       long_form: 'tähistasin selle kui sobimatu'
     notify_moderators:
       title: "Miski muu"
+      description: 'See teema vajab saidi meeskonna tähelepanu tulenevalt <a href="/guidelines">juhisest</a>, <a href="%{tos_url}">kasutustingimustest</a> või mõnest muust põhjusest, mida pole siin mainitud.'
       long_form: 'tähistasin selle kui moderaatori tähelepanu vajava'
       email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
       email_body: "%{link}\n\n%{message}"
@@ -592,18 +555,23 @@ et:
     mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
   user_api_key:
+    title: "Autoriseeri rakenduse ligipääs"
+    authorize: "Autoriseeri"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
   reports:
     visits:
+      title: "Kasutajakülastused"
       xaxis: "Päev"
       yaxis: "Külastajate arv"
     signups:
       title: "Uued kasutajad"
       xaxis: "Päev"
+      yaxis: "Uute kasutajate arv"
     profile_views:
       title: "Kasutaja profiili vaatamisi"
       xaxis: "Päev"
+      yaxis: "Kasutajaprofiilide vaatamiste arv"
     topics:
       title: "Teemad"
       xaxis: "Päev"
@@ -619,6 +587,7 @@ et:
     flags:
       title: "Tähised"
       xaxis: "Päev"
+      yaxis: "Lippude arv"
     bookmarks:
       title: "Järjehoidjad"
       xaxis: "Päev"
@@ -743,6 +712,8 @@ et:
     min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     remove_muted_tags_from_latest: "Ära näita värskete teemade nimistus teemasid, millel on vaigistatud silt."
+    errors:
+      invalid_integer: "Väärtuseks peab olema täisarv."
   search:
     types:
       category: 'Liigid'
@@ -754,6 +725,8 @@ et:
   login:
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
+  flags_dispositions:
+    agreed: "Täname, et teada andsite. Tegeleme sellega."
   system_messages:
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"
@@ -771,30 +744,8 @@ et:
       text_body_template: |2
 
         %{message}
-    mailing_list:
-      why: "Saidi %{site_link} kõik toimingud päeval %{date}"
-      subject_template: "[%{site_name}] Kokkuvõte päeval %{date}"
-      from: "%{site_name} kokkuvõte"
-      new_topics: "Uued teemad"
-      topic_updates: "eemade uuendused"
-      view_this_topic: "Vaata seda teemat"
-      back_to_top: "Tagasi üles"
-    forgot_password:
-      subject_template: "[%{site_name}] Parooli uuendamine"
-    set_password:
-      subject_template: "[%{site_name}] Määra parool"
-    admin_login:
-      subject_template: "[%{site_name}] Logi sisse"
-    account_created:
-      subject_template: "[%{site_name}] Sinu uus konto"
-    confirm_old_email:
-      subject_template: "[%{site_name}] Kinnita oma kehtiv meiliaadress"
-    notify_old_email:
-      subject_template: "[%{site_name}] Sinu meiliaadress on muudetud"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
-    signup:
-      subject_template: "[%{site_name}] Kinnita oma uus konto"
   page_not_found:
     title: "Oih! Soovitud lehte ei ole või on see privaatne."
     popular_topics: "Populaarsed"
@@ -933,10 +884,8 @@ et:
       description: Kasutasid postituses emotikoni
     first_mention:
       name: Esimene mainimine
-      description: Mainisid postituses kasutajat
     first_reply_by_email:
       name: Esimene vastamine meiliga
-      description: Vastasid postitusele läbi e-maili
   admin_login:
     success: "Kiri saadetud"
     error: "Viga!"
@@ -957,7 +906,6 @@ et:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
     title: "Sisene turvalisse režiimi"
-    no_customizations: "Keela kõik saidi kohandused"
     only_official: "Keela kõik mitteametlikud pluginad"
     no_plugins: "Keela kõik pluginad"
     enter: "Sisene turvalisse režiimi"
@@ -1022,7 +970,6 @@ et:
         title: "Kujundusteema"
         fields:
           theme_id:
-            description: "Kas soovid kasutada heledat või tumedat kujundust? Võid kujundusseadeid alati muuta läbi Admin paneeli ja seadistuste."
             choices:
               default:
                 label: "Lihtne hele"

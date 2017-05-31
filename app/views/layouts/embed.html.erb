@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html<%= raw @embeddable_css_class -%>>
   <head>
     <meta charset="utf-8">
 
-    <%= stylesheet_link_tag 'embed' %>
+    <%= discourse_stylesheet_link_tag 'embed', theme_key: nil %>
     <%- unless customization_disabled? %>
-      <%= SiteCustomization.custom_stylesheet(session[:preview_style], :embedded) %>
+      <%= discourse_stylesheet_link_tag  :embedded_theme %>
     <%- end %>
-    <%= javascript_include_tag 'break_string' %>
+    <%= preload_script 'break_string' %>
 
     <%- if @topic_view && @topic_view.page_title.present? %>
       <title><%= @topic_view.page_title %> - <%= SiteSetting.title %></title>

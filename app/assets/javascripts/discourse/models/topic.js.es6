@@ -9,6 +9,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { censor } from 'pretty-text/censored-words';
 import { emojiUnescape } from 'discourse/lib/text';
 import PreloadStore from 'preload-store';
+import { userPath } from 'discourse/lib/url';
 
 export function loadTopicView(topic, args) {
   const topicId = topic.get('id');
@@ -182,9 +183,10 @@ const Topic = RestModel.extend({
     return this.urlForPostNumber(1) + (this.get('has_summary') ? "?filter=summary" : "");
   }.property('url'),
 
-  lastPosterUrl: function() {
-    return Discourse.getURL("/users/") + this.get("last_poster.username");
-  }.property('last_poster'),
+  @computed('last_poster.username')
+  lastPosterUrl(username) {
+    return userPath(username);
+  },
 
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
@@ -221,16 +223,12 @@ const Topic = RestModel.extend({
 
   toggleStatus(property) {
     this.toggleProperty(property);
-    this.saveStatus(property, !!this.get(property));
+    return this.saveStatus(property, !!this.get(property));
   },
 
   saveStatus(property, value, until) {
     if (property === 'closed') {
       this.incrementProperty('posts_count');
-
-      if (value === true) {
-        this.set('details.auto_close_at', null);
-      }
     }
     return ajax(this.get('url') + "/status", {
       type: 'PUT',
@@ -284,21 +282,7 @@ const Topic = RestModel.extend({
         }
 
         return [];
-      }).catch(error => {
-        let showGenericError = true;
-        if (error && error.responseText) {
-          try {
-            bootbox.alert($.parseJSON(error.responseText).errors);
-            showGenericError = false;
-          } catch(e) { }
-        }
-
-        if (showGenericError) {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-
-        throw error;
-      }).finally(() => this.set('bookmarking', false));
+      }).catch(popupAjaxError).finally(() => this.set('bookmarking', false));
     };
 
     const unbookmarkedPosts = [];
@@ -378,9 +362,8 @@ const Topic = RestModel.extend({
   },
 
   reload() {
-    const self = this;
-    return ajax('/t/' + this.get('id'), { type: 'GET' }).then(function(topic_json) {
-      self.updateFromJson(topic_json);
+    return ajax(`/t/${this.get('id')}`, { type: 'GET' }).then(topic_json => {
+      this.updateFromJson(topic_json);
     });
   },
 

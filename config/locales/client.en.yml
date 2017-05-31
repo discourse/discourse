@@ -6,7 +6,7 @@
 # To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+# After this file is changed, ift needs to be pushed by a maintainer to Transifex:
 #
 #   tx push -s
 #
@@ -127,6 +127,7 @@ en:
           other: "%{count} years later"
       previous_month: 'Previous Month'
       next_month: 'Next Month'
+      placeholder: Pick a date
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -162,14 +163,20 @@ en:
       visible:
         enabled: 'listed %{when}'
         disabled: 'unlisted %{when}'
+      banner:
+        enabled: 'made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user.'
+        disabled: 'removed this banner %{when}. It will no longer appear at the top of every page.'
 
     topic_admin_menu: "topic admin actions"
 
-    wizard_required: "It's time to configure your forum! <a href='%{url}' data-auto-route='true'>Start the Setup Wizard</a>!"
+    wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
+
+    themes:
+      default_description: "Default"
 
     s3:
       regions:
@@ -178,6 +185,7 @@ en:
         us_west_2: "US West (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Ireland)"
+        eu_west_2: "EU (London)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -248,7 +256,7 @@ en:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "New Users"
+      user_count: "Users"
       active_user_count: "Active Users"
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
@@ -418,7 +426,7 @@ en:
       automatic_group: Automatic Group
       closed_group: Closed Group
       is_group_user: "You are a member of this group"
-      allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
+      allow_membership_requests: "Allow users to send membership requests to group owners"
       membership: "Membership"
       name: "Name"
       user_count: "Number of Members"
@@ -438,6 +446,7 @@ en:
       posts: "Posts"
       mentions: "Mentions"
       messages: "Messages"
+      notification_level: "Default notification level for group messages"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"
@@ -572,6 +581,7 @@ en:
       first_notification: "Your first notification! Select it to begin."
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
+      theme_default_on_all_devices: "Make this my default theme on all my devices"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -590,7 +600,6 @@ en:
         instructions: |
           This setting overrides the activity summary.<br />
           Muted topics and categories are not included in these emails.
-        daily: "Send daily updates"
         individual: "Send an email for every new post"
         individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
@@ -624,11 +633,13 @@ en:
       muted_users_instructions: "Suppress all notifications from these users."
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
+      tracked_topics_link: "Show tracked topics"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
       apps: "Apps"
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
+      theme: "Theme"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -649,12 +660,24 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
+      preferences_nav:
+        account: "Account"
+        profile: "Profile"
+        emails: "Emails"
+        notifications: "Notifications"
+        categories: "Categories"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Apps"
+
       change_password:
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
         set_password: "Set Password"
+        choose_new: "Choose a new password"
+        choose: "Choose a password"
 
       change_about:
         title: "Change About Me"
@@ -696,7 +719,7 @@ en:
 
       email:
         title: "Email"
-        instructions: "Never shown to the public"
+        instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
@@ -707,22 +730,20 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)"
+        instructions: "your full name (optional)"
         instructions_required: "Your full name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short"
+        instructions: "unique, no spaces, short"
         short_instructions: "People can mention you as @{{username}}"
         available: "Your username is available"
-        global_match: "Email matches the registered username"
-        global_mismatch: "Already registered. Try {{suggestion}}?"
         not_available: "Not available. Try {{suggestion}}?"
+        not_available_no_suggestion: "Not available"
         too_short: "Your username is too short"
         too_long: "Your username is too long"
         checking: "Checking username availability..."
-        enter_email: 'Username found; enter matching email'
         prefilled: "Email matches this registered username"
 
       locale:
@@ -820,6 +841,7 @@ en:
         rescinded: "Invite removed"
         reinvite: "Resend Invite"
         reinvite_all: "Resend all Invites"
+        reinvite_all_confirm: "Are you sure you want to resend all invites?"
         reinvited: "Invite re-sent"
         reinvited_all: "All Invites re-sent!"
         time_read: "Read Time"
@@ -830,10 +852,10 @@ en:
         link_generated: "Invite link generated successfully!"
         valid_for: "Invite link is only valid for this email address: %{email}"
         bulk_invite:
-          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
+          none: "You haven't invited anyone here yet. Send individual invites, or invite many people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
-          error: "Sorry, file should be of csv format."
+          error: "Sorry, file should be CSV format."
 
       password:
         title: "Password"
@@ -842,7 +864,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "At least %{count} characters."
+        instructions: "at least %{count} characters"
 
       summary:
         title: "Summary"
@@ -1037,10 +1059,17 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
+
+      resend_title: "Resend Activation Email"
+      change_email: "Change Email Address"
+      provide_new_email: "Provide a new address and we'll resend your confirmation email."
+      submit_new_email: "Update Email Address"
+
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
+      not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google:
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
@@ -1062,6 +1091,20 @@ en:
       github:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+    invites:
+      accept_title: "Invitation"
+      welcome_to: "Welcome to %{site_name}!"
+      invited_by: "You were invited by:"
+      social_login_available: "You'll also be able to sign in with any social login using that email."
+      your_email: "Your account email address is <b>%{email}</b>."
+      accept_invite: "Accept Invitation"
+      success: "Your account has been created and you're now logged in."
+      name_label: "Name"
+      name_label_optional: "Name (optional)"
+      password_label: "Set Password (optional)"
+
+    password_reset:
+      continue: "Continue to %{site_name}"
 
     emoji_set:
       apple_international: "Apple/International"
@@ -1103,7 +1146,7 @@ en:
       cannot_see_mention:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
-      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
+      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply on {{ago}}</a> – are you sure you want to post it again?"
 
       error:
         title_missing: "Title is required"
@@ -1174,16 +1217,6 @@ en:
         body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
-      auto_close:
-        label: "Auto-close topic time:"
-        error: "Please enter a valid value."
-        based_on_last_post: "Don't close until the last post in the topic is at least this old."
-        all:
-          units: ""
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
-        limited:
-          units: "(# of hours)"
-          examples: 'Enter number of hours (24).'
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
@@ -1209,6 +1242,7 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
 
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
@@ -1260,6 +1294,7 @@ en:
       sort_by: "Sort by"
       relevance: "Relevance"
       latest_post: "Latest Post"
+      latest_topic: "Latest Topic"
       most_viewed: "Most Viewed"
       most_liked: "Most Liked"
       select_all: "Select All"
@@ -1273,6 +1308,7 @@ en:
       no_more_results: "No more results found."
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
+      results_page: "Search Results"
 
       context:
         user: "Search posts by @{{username}}"
@@ -1303,6 +1339,8 @@ en:
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
+          seen: I've read
+          unseen: I've not read
           wiki: are wiki
         statuses:
           label: Where topics
@@ -1331,6 +1369,7 @@ en:
         select_all: "Select All"
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
+        relist_topics: "Relist Topics"
         reset_read: "Reset Read"
         delete: "Delete Topics"
         dismiss: "Dismiss"
@@ -1341,16 +1380,18 @@ en:
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Change Category"
+        change_category: "Set Category"
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
-        notification_level: "Change Notification Level"
+        notification_level: "Notifications"
         choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
-        change_tags: "Change Tags"
+        change_tags: "Replace Tags"
+        append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
+        choose_append_tags: "Choose new tags to append for these topics:"
         changed_tags: "The tags of those topics were changed."
 
       none:
@@ -1458,11 +1499,49 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
+      topic_status_update:
+        title: "Set Topic Timer"
+        save: "Set Timer"
+        num_of_hours: "Number of hours:"
+        remove: "Remove Timer"
+        publish_to: "Publish To:"
+        when: "When:"
+      auto_update_input:
+        none: ""
+        later_today: "Later today"
+        tomorrow: "Tomorrow"
+        later_this_week: "Later this week"
+        this_weekend: "This weekend"
+        next_week: "Next week"
+        next_month: "Next month"
+        pick_date_and_time: "Pick date and time"
+        set_based_on_last_post: "Close based on last post"
+      publish_to_category:
+        title: "Schedule Publishing"
+      temp_open:
+        title: "Open Temporarily"
+      auto_reopen:
+        title: "Auto-open Topic"
+      temp_close:
+        title: "Close Temporarily"
+      auto_close:
+        title: "Auto-Close Topic"
+        label: "Auto-close topic hours:"
+        error: "Please enter a valid value."
+        based_on_last_post: "Don't close until the last post in the topic is at least this old."
+      auto_delete:
+        title: "Auto-Delete Topic"
+      reminder:
+        title: "Remind Me"
+
+      status_update_notice:
+        auto_open: "This topic will automatically open %{timeLeft}."
+        auto_close: "This topic will automatically close %{timeLeft}."
+        auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
+        auto_delete: "This topic will be automatically deleted %{timeLeft}."
+        auto_reminder: "You will be reminded about this topic %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Save"
-      auto_close_remove: "Don't Auto-Close This Topic"
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
@@ -1495,10 +1574,10 @@ en:
           "3_2": 'You will receive notifications because you are watching this topic.'
           "3_1": 'You will receive notifications because you created this topic.'
           "3": 'You will receive notifications because you are watching this topic.'
-          "2_8": 'You will receive notifications because you are tracking this category.'
-          "2_4": 'You will receive notifications because you posted a reply to this topic.'
-          "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "2_8": 'You will see a count of new replies because you are tracking this category.'
+          "2_4": 'You will see a count of new replies because you posted a reply to this topic.'
+          "2_2": 'You will see a count of new replies because you are tracking this topic.'
+          "2": 'You will see a count of new replies because you <a href="/u/{{username}}/preferences">read this topic</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
           "0_7": 'You are ignoring all notifications in this category.'
@@ -1535,7 +1614,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        auto_close: "Auto Close…"
+        timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
@@ -1675,7 +1754,7 @@ en:
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
 
       change_timestamp:
-        title: "Change Timestamp"
+        title: "Change Timestamp..."
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -1700,8 +1779,10 @@ en:
       edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
+      wiki_last_edited_on: "wiki last edited on"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
+      reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
@@ -1887,17 +1968,31 @@ en:
           hide: "Hide revision"
           show: "Show revision"
           revert: "Revert to this revision"
+          edit_wiki: "Edit Wiki"
+          edit_post: "Edit Post"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
+            button: 'Raw'
+
+      raw_email:
+        displays:
+          raw:
+            title: "Show the raw email"
+            button: 'Raw'
+          text_part:
+            title: "Show the text part of the email"
+            button: 'Text'
+          html_part:
+            title: "Show the html part of the email"
+            button: 'HTML'
 
     category:
       can: 'can&hellip; '
@@ -1943,15 +2038,19 @@ en:
       security: "Security"
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
-      auto_close_label: "Auto-close topics after:"
-      auto_close_units: "hours"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      show_subcategory_list: "Show subcategory list above topics in this category."
+      num_featured_topics: "Number of topics shown on the categories page:"
+      subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default."
-      sort_order: "Default Sort:"
+      subcategory_list_style: "Subcategory List Style:"
+      sort_order: "Topic List Sort By:"
+      default_view: "Default Topic List:"
+      default_top_period: "Default Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -1989,6 +2088,11 @@ en:
         created: "Created"
       sort_ascending: 'Ascending'
       sort_descending: 'Descending'
+      subcategory_list_styles:
+        rows: "Rows"
+        rows_with_featured_topics: "Rows with featured topics"
+        boxes: "Boxes"
+        boxes_with_featured_topics: "Boxes with featured topics"
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
@@ -2100,7 +2204,7 @@ en:
     changed_by: "by {{author}}"
 
     raw_email:
-      title: "Raw Email"
+      title: "Incoming Email"
       not_available: "Not available!"
 
     categories_list: "Categories List"
@@ -2251,8 +2355,8 @@ en:
       granted_on: "Granted %{date}"
       others_count: "Others with this badge (%{count})"
       title: Badges
-      allow_title: "available title"
-      multiple_grant: "awarded multiple times"
+      allow_title: "You can use this badge as a title"
+      multiple_grant: "You can earn this multiple times"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"
@@ -2519,6 +2623,7 @@ en:
         add_members: "Add members"
         custom: "Custom"
         bulk_complete: "The users have been added to the group."
+        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
         bulk: "Bulk Add to Group"
         bulk_paste: "Paste a list of usernames or emails, one per line:"
         bulk_select: "(select a group)"
@@ -2531,6 +2636,8 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        none_selected: "Select a group to get started"
+        no_custom_groups: "Create a new custom group"
 
       api:
         generate_master: "Generate Master API Key"
@@ -2568,7 +2675,7 @@ en:
         event_type_missing: "You need to set up at least one event type."
         content_type: "Content Type"
         secret: "Secret"
-        event_chooser: "Which events would you like to trigger this webhook?"
+        event_chooser: "Which events should trigger this webhook?"
         wildcard_event: "Send me everything."
         individual_event: "Select individual events."
         verify_certificate: "Check TLS certificate of payload url"
@@ -2669,7 +2776,8 @@ en:
             without_uploads: "Yes (do not include files)"
           download:
             label: "Download"
-            title: "Download the backup"
+            title: "Send email with download link"
+            alert: "A link to download this backup has been emailed to you."
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
@@ -2703,36 +2811,22 @@ en:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
-        css: "CSS"
-        header: "Header"
-        top: "Top"
-        footer: "Footer"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML that will be inserted before the </head> tag"
-        body_tag:
-          text: "</body>"
-          title: "HTML that will be inserted before the </body> tag"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
         preview: "preview"
-        undo_preview: "remove preview"
-        rescue_preview: "default style"
-        explain_preview: "See the site with this custom stylesheet"
-        explain_undo_preview: "Go back to the currently enabled custom stylesheet"
-        explain_rescue_preview: "See the site with the default stylesheet"
+        explain_preview: "See the site with this theme enabled"
         save: "Save"
         new: "New"
         new_style: "New Style"
         import: "Import"
-        import_title: "Select a file or paste text"
         delete: "Delete"
-        delete_confirm: "Delete this customization?"
+        delete_confirm: "Delete this theme?"
         about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
+        copy_to_clipboard: "Copy to Clipboard"
+        copied_to_clipboard: "Copied to Clipboard"
+        copy_to_clipboard_error: "Error copying data to Clipboard"
+        theme_owner: "Not editable, owned by:"
         email_templates:
           title: "Email Templates"
           subject: "Subject"
@@ -2742,13 +2836,76 @@ en:
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
 
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS and HTML Customizations"
+        theme:
+          import_theme: "Import Theme"
+          customize_desc: "Customize:"
+          title: "Themes"
+          long_title: "Amend colors, CSS and HTML contents of your site"
+          edit: "Edit"
+          edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
+          common: "Common"
+          desktop: "Desktop"
+          mobile: "Mobile"
+          preview: "Preview"
+          is_default: "Theme is enabled by default"
+          user_selectable: "Theme can be selected by users"
+          color_scheme: "Color Scheme"
+          color_scheme_select: "Select colors to be used by theme"
+          custom_sections: "Custom sections:"
+          theme_components: "Theme Components"
+          uploads: "Uploads"
+          no_uploads: "You can upload assets associated with your theme such as fonts and images"
+          add_upload: "Add Upload"
+          upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
+          variable_name: "SCSS var name:"
+          upload: "Upload"
+          child_themes_check: "Theme includes other child themes"
+          css_html: "Custom CSS/HTML"
+          edit_css_html: "Edit CSS/HTML"
+          edit_css_html_help: "You have not edited any CSS or HTML"
+          delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
+          import_web_tip: "Repository containing theme"
+          import_file_tip: ".dcstyle.json file containing theme"
+          about_theme: "About Theme"
+          license: "License"
+          component_of: "Theme is a component of:"
+          update_to_latest: "Update to Latest"
+          check_for_updates: "Check for Updates"
+          updating: "Updating..."
+          up_to_date: "Theme is up-to-date, last checked:"
+          add: "Add"
+          commits_behind:
+            one: "Theme is 1 commit behind!"
+            other: "Theme is {{count}} commit behind!"
+          scss:
+            text: "CSS"
+            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+          header:
+            text: "Header"
+            title: "Enter HTML to display above site header"
+          after_header:
+            text: "After Header"
+            title: "Enter HTML to display on all pages after header"
+          footer:
+            text: "Footer"
+            title: "Enter HTML to display on page footer"
+          embedded_scss:
+            text: "Embedded CSS"
+            title: "Enter custom CSS to deliver with embedded version of comments"
+          head_tag:
+            text: "</head>"
+            title: "HTML that will be inserted before the </head> tag"
+          body_tag:
+            text: "</body>"
+            title: "HTML that will be inserted before the </body> tag"
         colors:
+          select_base:
+            title: "Select base color scheme"
+            description: "Base scheme:"
           title: "Colors"
+          edit: "Edit Color Schemes"
           long_title: "Color Schemes"
-          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
+          about: "Modify the colors used by your themes. Create a new color scheme to start."
           new_name: "New Color Scheme"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
@@ -2868,8 +3025,9 @@ en:
           block: "block"
           do_nothing: "do nothing"
         staff_actions:
+          all: "all"
+          filter: "Filter:"
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -2889,8 +3047,8 @@ en:
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
+            change_theme: "change theme"
+            delete_theme: "delete theme"
             change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
@@ -2922,6 +3080,8 @@ en:
             change_readonly_mode: "change readonly mode"
             backup_download: "download backup"
             backup_destroy: "destroy backup"
+            reviewed_post: "reviewed post"
+            custom_staff: "plugin custom action"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3030,17 +3190,17 @@ en:
         blocked: "Blocked?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        edit_title: "Edit Title"
-        save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
         refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'
+        action_logs: "Action Logs"
         ip_lookup: "IP Lookup"
         log_out: "Log Out"
         logged_out: "User was logged out on all devices"
         revoke_admin: 'Revoke Admin'
         grant_admin: 'Grant Admin'
+        grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
         unblock: 'Unblock'
@@ -3099,6 +3259,8 @@ en:
         reset_bounce_score:
           label: "Reset"
           title: "Reset bounce score back to 0"
+        visit_profile: "Visit <a href='%{url}'>this user's preferences page</a> to edit their profile"
+
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
@@ -3316,6 +3478,7 @@ en:
         sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
+        class_name: "Class Name"
         path_whitelist: "Path Whitelist"
         edit: "edit"
         category: "Post to Category"
@@ -3336,6 +3499,7 @@ en:
         embed_classname_whitelist: "Allowed CSS class names"
         feed_polling_enabled: "Import posts via RSS/ATOM"
         feed_polling_url: "URL of RSS/ATOM feed to crawl"
+        feed_polling_frequency_mins: "Frequency of feed polling (in minutes)"
         save: "Save Embedding Settings"
 
       permalink:

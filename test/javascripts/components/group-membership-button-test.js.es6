@@ -1,5 +1,3 @@
-import { currentUser } from "helpers/qunit-helpers";
-
 moduleFor('component:group-membership-button');
 
 test('canJoinGroup', function() {
@@ -16,24 +14,6 @@ test('canJoinGroup', function() {
   this.subject().setProperties({ currentUser: null, model: { public: true } });
 
   equal(this.subject().get("canJoinGroup"), true, "can't join group when not logged in");
-});
-
-test('canRequestMembership', function() {
-  this.subject().setProperties({
-    model: { allow_membership_requests: false, alias_level: 0 }
-  });
-
-  equal(this.subject().get('canRequestMembership'), false);
-
-  this.subject().setProperties({
-    currentUser: currentUser(), model: { allow_membership_requests: true, alias_level: 99 }
-  });
-
-  equal(this.subject().get('canRequestMembership'), true);
-
-  this.subject().set("model.alias_level", 0);
-
-  equal(this.subject().get('canRequestMembership'), false);
 });
 
 test('userIsGroupUser', function() {
@@ -56,6 +36,13 @@ test('userIsGroupUser', function() {
   equal(this.subject().get('userIsGroupUser'), false);
 
   this.subject().set('groupUserIds', undefined);
+
+  equal(this.subject().get('userIsGroupUser'), false);
+
+  this.subject().setProperties({
+    groupUserIds: [1, 3],
+    model: { id: 1, is_group_user: false }
+  });
 
   equal(this.subject().get('userIsGroupUser'), false);
 });

@@ -11,7 +11,7 @@ const defaultOpts = buildOptions({
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
-    censored_words: 'shucks|whiz|whizzer',
+    censored_words: 'shucks|whiz|whizzer|a**le',
     censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
   },
   getURL: url => url
@@ -130,8 +130,8 @@ test("Links", function() {
          "<p>Here's a tweet:<br/><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\">https://twitter.com/evil_trout/status/345954894420787200</a></p>",
          "It doesn't strip the new line.");
 
-  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/users/eviltrout/activity<br/>next line.",
-        "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/users/eviltrout/activity\">http://meta.discourse.org/users/eviltrout/activity</a><br>next line.</li></ol>",
+  cooked("1. View @eviltrout's profile here: http://meta.discourse.org/u/eviltrout/activity<br/>next line.",
+        "<ol><li>View <span class=\"mention\">@eviltrout</span>'s profile here: <a href=\"http://meta.discourse.org/u/eviltrout/activity\">http://meta.discourse.org/u/eviltrout/activity</a><br>next line.</li></ol>",
         "allows autolinking within a list without inserting a paragraph.");
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");
@@ -220,6 +220,11 @@ test("Quotes", function() {
                 "<p>1</p>\n\n<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob:" +
                 "</div><blockquote><p>my quote</p></blockquote></aside>\n\n<p>2</p>",
                 "includes no avatar if none is found");
+
+  cooked(`[quote]\na\n\n[quote]\nb\n[/quote]\n[/quote]`,
+         "<p><aside class=\"quote\"><blockquote><p>a</p><p><aside class=\"quote\"><blockquote><p>b</p></blockquote></aside></p></blockquote></aside></p>",
+         "handles nested quotes properly");
+
 });
 
 test("Mentions", function() {
@@ -227,7 +232,7 @@ test("Mentions", function() {
   const alwaysTrue = { mentionLookup: (function() { return "user"; }) };
 
   cookedOptions("Hello @sam", alwaysTrue,
-                "<p>Hello <a class=\"mention\" href=\"/users/sam\">@sam</a></p>",
+                "<p>Hello <a class=\"mention\" href=\"/u/sam\">@sam</a></p>",
                 "translates mentions to links");
 
   cooked("[@codinghorror](https://twitter.com/codinghorror)",
@@ -303,11 +308,11 @@ test("Mentions", function() {
          "handles mentions separated by a slash.");
 
   cookedOptions("@eviltrout", alwaysTrue,
-                "<p><a class=\"mention\" href=\"/users/eviltrout\">@eviltrout</a></p>",
+                "<p><a class=\"mention\" href=\"/u/eviltrout\">@eviltrout</a></p>",
                 "it doesn't onebox mentions");
 
   cookedOptions("<small>a @sam c</small>", alwaysTrue,
-                "<p><small>a <a class=\"mention\" href=\"/users/sam\">@sam</a> c</small></p>",
+                "<p><small>a <a class=\"mention\" href=\"/u/sam\">@sam</a> c</small></p>",
                 "it allows mentions within HTML tags");
 });
 
@@ -524,18 +529,26 @@ test("censoring", function() {
   cooked("aw shucks, golly gee whiz.",
          "<p>aw &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;, golly gee &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words in the Site Settings");
+
   cooked("you are a whizzard! I love cheesewhiz. Whiz.",
          "<p>you are a whizzard! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it doesn't censor words unless they have boundaries.");
+
   cooked("you are a whizzer! I love cheesewhiz. Whiz.",
          "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words even if previous partial matches exist.");
+
   cooked("The link still works. [whiz](http://www.whiz.com)",
          "<p>The link still works. <a href=\"http://www.whiz.com\">&#9632;&#9632;&#9632;&#9632;</a></p>",
          "it won't break links by censoring them.");
+
   cooked("Call techapj the computer whiz at 555-555-1234 for free help.",
          "<p>Call &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632; the computer &#9632;&#9632;&#9632;&#9632; at 555-&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632; for free help.</p>",
          "uses both censored words and patterns from site settings");
+
+  cooked("I have a pen, I have an a**le",
+         "<p>I have a pen, I have an &#9632;&#9632;&#9632;&#9632;&#9632;</p>",
+         "it escapes regexp chars");
 });
 
 test("code blocks/spans hoisting", function() {

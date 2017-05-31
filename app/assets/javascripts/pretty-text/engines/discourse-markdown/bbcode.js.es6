@@ -9,6 +9,8 @@ export function register(helper, codeName, args, emitter) {
     start: new RegExp("\\[" + codeName + "(=[^\\[\\]]+)?\\]([\\s\\S]*)", "igm"),
     stop: new RegExp("\\[\\/" + codeName + "\\]", "igm"),
     emitter(blockContents, matches) {
+
+
       const options = helper.getOptions();
       while (blockContents.length && (typeof blockContents[0] === "string" || blockContents[0] instanceof String)) {
         blockContents[0] = String(blockContents[0]).replace(/^\s+/, '');
@@ -22,7 +24,11 @@ export function register(helper, codeName, args, emitter) {
       let contents = [];
       if (blockContents.length) {
         const nextContents = blockContents.slice(1);
-        blockContents = this.processBlock(blockContents[0], nextContents).concat(nextContents);
+        blockContents = this.processBlock(blockContents[0], nextContents);
+
+        nextContents.forEach(nc => {
+          blockContents = blockContents.concat(this.processBlock(nc, []));
+        });
 
         blockContents.forEach(bc => {
           if (typeof bc === "string" || bc instanceof String) {

@@ -1,7 +1,8 @@
 module TopicsHelper
+  include ApplicationHelper
 
   def render_topic_title(topic)
-    link_to(topic.title,topic.relative_url)
+    link_to(gsub_emoji_to_unicode(topic.title),topic.relative_url)
   end
 
   def categories_breadcrumb(topic)
@@ -13,13 +14,6 @@ module TopicsHelper
         breadcrumb.push url: parent.url, name: parent.name
       end
       breadcrumb.push url: category.url, name: category.name
-    end
-
-    if SiteSetting.tagging_enabled && (tags = topic.tags).present?
-      tags.each do |tag|
-        url = "#{Discourse.base_url}/tags/#{tag.name}"
-        breadcrumb << {url: url, name: tag.name}
-      end
     end
 
     Plugin::Filter.apply(:topic_categories_breadcrumb, topic, breadcrumb)

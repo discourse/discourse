@@ -1,7 +1,7 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Object.extend({
-  searchContextEnabled: false,
+  searchContextEnabled: false, // checkbox to scope search
   searchContext: null,
   term: null,
   highlightTerm: null,

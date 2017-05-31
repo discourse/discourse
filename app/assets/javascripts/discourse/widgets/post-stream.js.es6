@@ -2,6 +2,22 @@ import { createWidget } from 'discourse/widgets/widget';
 import transformPost from 'discourse/lib/transform-post';
 import { Placeholder } from 'discourse/lib/posts-with-placeholders';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
+import { keyDirty } from 'discourse/widgets/widget';
+
+let transformCallbacks = null;
+function postTransformCallbacks(transformed) {
+  if (transformCallbacks === null) {
+    return;
+  }
+
+  for(let i=0; i < transformCallbacks.length; i++) {
+    transformCallbacks[i].call(this, transformed);
+  }
+}
+export function addPostTransformCallback(callback){
+  transformCallbacks = transformCallbacks || [];
+  transformCallbacks.push(callback);
+};
 
 const CLOAKING_ENABLED = !window.inTestEnv;
 const DAY = 1000 * 60 * 60 * 24;
@@ -20,12 +36,14 @@ export function cloak(post, component) {
   const $post = $(`#post_${post.post_number}`);
   _cloaked[post.id] = true;
   _heights[post.id] = $post.outerHeight();
+  keyDirty(`post-${post.id}`);
   Ember.run.debounce(component, 'queueRerender', 1000);
 }
 
 export function uncloak(post, component) {
   if (!CLOAKING_ENABLED || !_cloaked[post.id]) { return; }
   _cloaked[post.id] = null;
+  keyDirty(`post-${post.id}`);
   component.queueRerender();
 }
 
@@ -95,6 +113,8 @@ export default createWidget('post-stream', {
 
       transformed.height = _heights[post.id];
       transformed.cloaked = _cloaked[post.id];
+
+      postTransformCallbacks(transformed);
 
       if (transformed.isSmallAction) {
         result.push(this.attach('post-small-action', transformed, { model: post }));

@@ -52,7 +52,7 @@ module TopicGuardian
 
   # Recovery Method
   def can_recover_topic?(topic)
-    is_staff?
+    topic && topic.deleted_at && topic.user && is_staff?
   end
 
   def can_delete_topic?(topic)
@@ -69,7 +69,7 @@ module TopicGuardian
   end
 
   def can_reply_as_new_topic?(topic)
-    authenticated? && topic && !topic.private_message? && @user.has_trust_level?(TrustLevel[1])
+    authenticated? && topic && @user.has_trust_level?(TrustLevel[1])
   end
 
   def can_see_deleted_topics?

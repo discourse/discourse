@@ -1,4 +1,3 @@
-
 // styling of bottom section
 .user-stream .child-actions {
   margin-top: 8px;
@@ -48,6 +47,8 @@
 }
 
 .public-user-fields {
+  margin-top: 8px;
+  margin-bottom: 8px;
   .user-field-name {
     font-weight: bold;
   }
@@ -250,7 +251,6 @@
     display: inline-block;
     padding: 10px 14px;
     margin: 0 5px 10px 0;
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
 
     &.linked-stat { // This makes the entire "box" (the li) clickable instead of a narrow area.
       padding: 0;
@@ -332,8 +332,4 @@ and (max-width : 600px) {
   .select2-choices {
     border: none;
   }
-}
-
-.user-preferences .watching-first-post.fa-dot-circle-o {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }

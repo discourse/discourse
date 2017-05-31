@@ -15,7 +15,7 @@ export default Ember.Component.extend({
   @computed('model.limit', 'model.user_count')
   totalPages(limit, userCount) {
     if (userCount === 0) { return 0; }
-    return Math.floor(userCount / limit) + 1;
+    return Math.ceil(userCount / limit);
   },
 
   @computed('model.usernames')

@@ -31,7 +31,7 @@ fr:
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
-      long_with_year: "DD MMM YYY H:mm"
+      long_with_year: "DD MMM YYYY H:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
@@ -101,6 +101,7 @@ fr:
           other: "%{count} années plus tard"
       previous_month: 'Mois précédent'
       next_month: 'Mois suivant'
+      placeholder: Sélectionner une date
     share:
       topic: 'partager ce sujet'
       post: 'message #%{postNumber}'
@@ -135,11 +136,16 @@ fr:
       visible:
         enabled: 'a rendu ce sujet visible %{when}'
         disabled: 'a rendu ce sujet invisible %{when}'
+      banner:
+        enabled: 'a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu’à ce qu''il soit ignoré par un utilisateur.'
+        disabled: 'a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page.'
     topic_admin_menu: "actions d'administration sur le sujet"
-    wizard_required: "C'est le moment de configurer votre forum ! <a href='%{url}' data-auto-route='true'>Démarrer l'assistant de configuration</a>."
+    wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons pas <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confirance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque le nombre d'utilisateurs dépassera %{min_users}."
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
+    themes:
+      default_description: "Par défaut"
     s3:
       regions:
         us_east_1: "États-Unis est (Virginie)"
@@ -147,6 +153,7 @@ fr:
         us_west_2: "États-Unis ouest (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "UE (Irlande)"
+        eu_west_2: "UE (Londres)"
         eu_central_1: "UE (Francfort)"
         ap_southeast_1: "Asie-Pacifique (Singapour)"
         ap_southeast_2: "Asie-Pacifique (Sydney)"
@@ -214,7 +221,7 @@ fr:
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
-      user_count: "Nouveaux utilisateurs"
+      user_count: "Utilisateurs"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter : %{contact_info}"
@@ -363,7 +370,7 @@ fr:
       automatic_group: Groupe automatique
       closed_group: Groupe fermé
       is_group_user: "Vous êtes membre de ce groupe"
-      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe (nécessite que tout le monde puisse mentionner le groupe)"
+      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe"
       membership: "Adhésion"
       name: "Nom"
       user_count: "Nombre de membres"
@@ -383,6 +390,7 @@ fr:
       posts: "Messages"
       mentions: "Mentions"
       messages: "Messages"
+      notification_level: "Niveau de notification par défaut pour les messages de groupe"
       alias_levels:
         title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
@@ -510,6 +518,7 @@ fr:
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
+      theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -528,7 +537,6 @@ fr:
         instructions: |
           Ce réglage outrepasse le résumé d'activités.<br />
           Les sujets et catégories passés en silencieux ne sont pas inclus dans ces courriels.
-        daily: "Envoyer des informations quotidiennes"
         individual: "Envoyer un courriel pour chaque nouveau message"
         individual_no_echo: "Envoyer un courriel pour chaque nouveau message sauf les miens"
         many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)"
@@ -561,11 +569,13 @@ fr:
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
       muted_topics_link: "Afficher les sujets en silencieux"
       watched_topics_link: "Afficher les sujets surveillés"
+      tracked_topics_link: "Afficher les sujets suivis"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'arrive à la fin."
       apps: "Applications"
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
+      theme: "Thème"
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -583,12 +593,23 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
         select_all: "Tout sélectionner"
+      preferences_nav:
+        account: "Compte"
+        profile: "Profil"
+        emails: "Courriels"
+        notifications: "Notifications"
+        categories: "Catégories"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Applications"
       change_password:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
         error: "(erreur)"
         action: "Envoyer un courriel de réinitialisation du mot de passe"
         set_password: "Définir le mot de passe"
+        choose_new: "Choisissez un nouveau mot de passe"
+        choose: "Choisissez un mot de passe"
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -623,7 +644,7 @@ fr:
         instructions: "Les images d'arrière-plan seront centrées avec une taille par défaut de 590 pixels."
       email:
         title: "Courriel"
-        instructions: "Ne sera jamais visible publiquement"
+        instructions: "jamais visible publiquement"
         ok: "Nous vous enverrons un courriel de confirmation"
         invalid: "Merci d'entrer une adresse de courriel valide"
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}"
@@ -633,22 +654,20 @@ fr:
           other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes."
       name:
         title: "Nom d'utilisateur"
-        instructions: "Votre nom complet (facultatif)"
+        instructions: "votre nom complet (facultatif)"
         instructions_required: "Votre nom complet"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Pseudo"
-        instructions: "Unique, sans espaces, court"
+        instructions: "unique, sans espaces, court"
         short_instructions: "Les gens peuvent vous mentionner avec @{{username}}"
         available: "Votre pseudo est disponible"
-        global_match: "L'adresse de courriel correspond au pseudo enregistré"
-        global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
         not_available: "Indisponible. Essayez {{suggestion}} ?"
+        not_available_no_suggestion: "Non disponible"
         too_short: "Votre pseudo est trop court"
         too_long: "Votre pseudo est trop long"
         checking: "Vérification de la disponibilité du pseudo…"
-        enter_email: 'Pseudo trouvé ; entrez l''adresse de courriel correspondante'
         prefilled: "L'adresse de courriel correspond à ce pseudo enregistré"
       locale:
         title: "Langue de l'interface"
@@ -736,6 +755,7 @@ fr:
         rescinded: "Invitation annulée"
         reinvite: "Renvoyer l'invitation"
         reinvite_all: "Renvoyer toutes les invitations"
+        reinvite_all_confirm: "Êtes-vous sûr de renvoyer toutes les invitations ?"
         reinvited: "Invitation renvoyée"
         reinvited_all: "Invitations renvoyées !"
         time_read: "Temps de lecture"
@@ -746,9 +766,10 @@ fr:
         link_generated: "Lien d'invitation généré avec succés !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         bulk_invite:
-          none: "Vous n'avez invité personne pour le moment. Vous pouvez envoyer des invitations individuelles ou inviter plusieurs personnes à la fois en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV</a>."
+          none: "Vous n'avez encore invité personne. Envoyez des invitations individuelles ou à plusieurs personnes en même temps en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV.</a>"
           text: "Invitation massive depuis un fichier"
           success: "Le fichier a été correctement importé. Vous serez notifié par message privé lorsque le traitement sera terminé."
+          error: "Désolé, le fichier doit être au format CSV."
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -756,7 +777,7 @@ fr:
         same_as_username: "Votre mot de passe est le même que votre pseudo."
         same_as_email: "Votre mot de passe est le même que votre adresse mail."
         ok: "Votre mot de passe semble correct."
-        instructions: "Au moins %{count} caractères."
+        instructions: "au moins %{count} caractères."
       summary:
         title: "Résumé"
         stats: "Statistiques"
@@ -927,17 +948,22 @@ fr:
       logging_in: "Connexion en cours…"
       or: "ou"
       authenticating: "Authentification…"
-      awaiting_confirmation: "Votre compte est en attente d'activation, utilisez le lien mot de passe oublié pour demander un nouveau courriel d'activation."
+      awaiting_activation: "Votre compte est en attente d'activation, utilisez le lien mot de passe oublié pour envoyer un autre courriel d'activation."
       awaiting_approval: "Votre compte n'a pas encore été approuvé par un modérateur. Vous recevrez une confirmation par courriel lors de l'activation."
       requires_invite: "Désolé, l'accès à ce forum est sur invitation seulement."
       not_activated: "Vous ne pouvez pas vous encore vous connecter. Nous avons envoyé un courriel d'activation à <b>{{sentTo}}</b>. Merci de suivre les instructions afin d'activer votre compte."
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
+      resend_title: "Renvoyer le courriel d'activation"
+      change_email: "Changer l'adresse de courriel"
+      provide_new_email: "Donnez une nouvelle adresse et nous allons renvoyer votre courriel de confirmation."
+      submit_new_email: "Mettre à jour l'adresse de courriel"
       sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       to_continue: "Veuillez vous connecter"
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
       forgot: "J'ai oublié les détails de mon compte"
+      not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par mail lorsque vous pourrez vous connecter."
       google:
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
@@ -959,6 +985,17 @@ fr:
       github:
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
+    invites:
+      accept_title: "Invitation"
+      welcome_to: "Bienvenue sur %{site_name} !"
+      invited_by: "Vous avez été invité par :"
+      social_login_available: "Vous pourrez aussi vous connecter avec un réseau social utilisant cette adresse."
+      your_email: "L'adresse courriel de votre compte est <b>%{email}</b>."
+      accept_invite: "Accepter l'invitation"
+      success: "Votre compte a été créé et vous êtes maintenant connecté."
+      password_label: "Définir le mot de passe (facultatif)"
+    password_reset:
+      continue: "Continuer vers %{site_name}"
     emoji_set:
       apple_international: "Apple/International"
       google: "Google"
@@ -994,7 +1031,6 @@ fr:
       cannot_see_mention:
         category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message privé. Vous devez inviter cet utilisateur à la discussion."
-      duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été partagé par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse {{ago}}</a> – êtes vous sûr de vouloir le partager à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -1060,15 +1096,6 @@ fr:
         title: "Avez-vous oublié d'ajouter des destinataires ?"
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
-      auto_close:
-        label: "Heure de fermeture automatique du sujet :"
-        error: "Merci d'entrer une valeur valide."
-        based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
-        all:
-          examples: 'Saisir un nombre d''heures (24), une heure absolue (17:30) ou une date (2013-11-22 14:00).'
-        limited:
-          units: "(# d'heures)"
-          examples: 'Saisir le nombre d''heures (24).'
     notifications:
       title: "notifications des mentions de votre @pseudo, des réponses à vos messages, à vos sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
@@ -1138,6 +1165,7 @@ fr:
       sort_by: "Trier par"
       relevance: "Pertinence"
       latest_post: "Dernier message"
+      latest_topic: "Dernier sujet"
       most_viewed: "Plus vu"
       most_liked: "Plus aimé"
       select_all: "Sélectionner tout"
@@ -1151,6 +1179,7 @@ fr:
       no_more_results: "Aucun résultat supplémentaire."
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
+      results_page: "Résultats de votre recherche"
       context:
         user: "Chercher dans les messages de @{{username}}"
         category: "Rechercher dans la catégorie #{{category}}"
@@ -1179,6 +1208,8 @@ fr:
           first: qui sont les premiers messages
           pinned: qui sont épinglés
           unpinned: qui ne sont pas épinglés
+          seen: j'ai lu
+          unseen: je n'ai pas lu
           wiki: qui sont des wikis
         statuses:
           label: Dont les sujets
@@ -1215,16 +1246,18 @@ fr:
         dismiss_new: "Ignorer les nouveaux"
         toggle: "activer la sélection multiple de sujets"
         actions: "Actions sur la sélection"
-        change_category: "Modifier la catégorie"
+        change_category: "Définir la catégorie"
         close_topics: "Fermer les sujets"
         archive_topics: "Archiver les sujets"
-        notification_level: "Modifier le niveau de notification"
+        notification_level: "Notifications"
         choose_new_category: "Choisissez la nouvelle catégorie pour les sujets :"
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
         change_tags: "Changer les tags"
+        append_tags: "Ajouter les tags"
         choose_new_tags: "Choisir les nouveaux tags pour ces sujets :"
+        choose_append_tags: "Choisissez de nouveaux tags à ajouter à ces sujets :"
         changed_tags: "Les tags de ces sujets ont été modifiés."
       none:
         unread: "Vous n'avez aucun sujet non lu."
@@ -1312,11 +1345,47 @@ fr:
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: allez à des réponses ultérieures
       deleted: "Ce sujet a été supprimé"
-      auto_close_notice: "Ce sujet sera automatiquement fermé %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
+      topic_status_update:
+        title: "Planifier une action"
+        save: "Planifier"
+        num_of_hours: "Nombre d'heures :"
+        remove: "Supprimer la planification"
+        publish_to: "Publier dans :"
+        when: "Quand :"
+      auto_update_input:
+        later_today: "Plus tard aujourd'hui"
+        tomorrow: "Demain"
+        later_this_week: "Plus tard cette semaine"
+        this_weekend: "Ce weekend"
+        next_week: "Semaine prochaine"
+        next_month: "Mois prochai"
+        pick_date_and_time: "Sélectionner une date et heure"
+        set_based_on_last_post: "Fermer par rapport au dernier message"
+      publish_to_category:
+        title: "Publier"
+      temp_open:
+        title: "Ouvrir temporairement"
+      auto_reopen:
+        title: "Ouvrir automatiquement le sujet"
+      temp_close:
+        title: "Fermer temporairement"
+      auto_close:
+        title: "Fermer automatiquement le sujet"
+        label: "Heures de fermeture automatique du sujet :"
+        error: "Veuillez entrer une valeur valide."
+        based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
+      auto_delete:
+        title: "Auto-suppression du sujet"
+      reminder:
+        title: "Me rappeler"
+      status_update_notice:
+        auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
+        auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
+        auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_based_on_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
+        auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}"
+        auto_reminder: "Vous serez rappelé sur ce sujet %{timeLeft}"
       auto_close_title: 'Paramètres de fermeture automatique'
-      auto_close_save: "Sauvegarder"
-      auto_close_remove: "Ne pas fermer automatiquement ce sujet"
       auto_close_immediate:
         one: "Le dernier message dans ce sujet est déjà vieux de 1 heure donc le sujet sera immédiatement fermé."
         other: "Le dernier message dans ce sujet est déjà vieux de %{count} heures donc le sujet sera immédiatement fermé."
@@ -1346,10 +1415,10 @@ fr:
           '3_2': 'Vous recevrez des notifications car vous surveillez ce sujet.'
           '3_1': 'Vous recevrez des notifications car vous avez créé ce sujet.'
           '3': 'Vous recevrez des notifications car vous surveillez ce sujet.'
-          '2_8': 'Vous recevrez des notifications parce que vous suivez cette catégorie.'
-          '2_4': 'Vous recevrez des notifications car vous avez écrit une réponse dans ce sujet.'
-          '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
-          '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
+          '2_8': 'Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie.'
+          '2_4': 'Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet.'
+          '2_2': 'Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet.'
+          '2': 'Vous verrez un compteur de nouvelles réponses car vous <a href="/u/{{username}}/preferences">avez lu ce sujet</a>.'
           '1_2': 'Vous serez notifié si quelqu''un mentionne votre @pseudo ou vous répond.'
           '1': 'Vous serez notifié si quelqu''un mentionne votre @pseudo ou vous répond.'
           '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
@@ -1385,7 +1454,7 @@ fr:
         open: "Ouvrir le sujet"
         close: "Fermer le sujet"
         multi_select: "Sélectionner les messages…"
-        auto_close: "Fermeture automatique…"
+        timed_update: "Planifier une action…"
         pin: "Épingler le sujet…"
         unpin: "Désépingler le sujet…"
         unarchive: "Désarchiver le sujet"
@@ -1506,7 +1575,7 @@ fr:
           other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
         instructions_warn: "Aucune notification à propos de ce message ne sera transférée rétroactivement au nouvel utilisateur. <br>Attention : actuellement, aucune donnée liée aux messages n'est transféré vers le nouvel utilisateur. À utiliser avec précaution."
       change_timestamp:
-        title: "Modifier la date/heure"
+        title: "Modifier la date/heure…"
         action: "modifier la date/heure"
         invalid_timestamp: "La date/heure ne peut être dans le futur"
         error: "Il y a eu une erreur lors de la modification de la date/heure de ce sujet."
@@ -1529,8 +1598,10 @@ fr:
       edit: "Modifier {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
+      wiki_last_edited_on: "Wiki dernièrement modifié le"
       last_edited_on: "message dernièrement modifié le"
       reply_as_new_topic: "Répondre par un nouveau sujet"
+      reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet {{postLink}} :"
       follow_quote: "aller au message cité"
       show_full: "Afficher le message complet"
@@ -1702,17 +1773,30 @@ fr:
           hide: "Masquer la révision"
           show: "Afficher la révision"
           revert: "Revenir à cette révision"
+          edit_wiki: "Modifier le wiki"
+          edit_post: "Modifier le message"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Afficher les différences de rendu côte-à-côte"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Afficher les différences de la source côte-à-côte"
-            button: '<i class="fa fa-columns"></i> Brut'
+            button: 'Brut'
+      raw_email:
+        displays:
+          raw:
+            title: "Afficher le courriel brut"
+            button: 'Brut'
+          text_part:
+            title: "Afficher le contenu texte du courriel"
+            button: 'Texte'
+          html_part:
+            title: "Afficher le contenu HTML du courriel"
+            button: 'HTML'
     category:
       can: 'peut&hellip; '
       none: '(aucune catégorie)'
@@ -1757,15 +1841,19 @@ fr:
       security: "Sécurité"
       special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
       images: "Images"
-      auto_close_label: "Fermer automatiquement après :"
-      auto_close_units: "heures"
       email_in: "Adresse de courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
+      show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
+      num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
+      subcategory_num_featured_topics: "Nombre de sujets sélectionnés sur la page des catégories parentes :"
       all_topics_wiki: "Faire des nouveaux sujets des Wikis par défaut"
-      sort_order: "Tri par défaut :"
+      subcategory_list_style: "Style des listes de sous-catégories :"
+      sort_order: "Trier la liste de sujets par :"
+      default_view: "Liste de sujets par défaut :"
+      default_top_period: "Période des meilleurs sujets par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
       add_permission: "Ajouter la permission"
@@ -1803,6 +1891,11 @@ fr:
         created: "Création"
       sort_ascending: 'Croissant'
       sort_descending: 'Décroissant'
+      subcategory_list_styles:
+        rows: "Rangées"
+        rows_with_featured_topics: "Rangées avec sujets sélectionnés"
+        boxes: "Boîtes"
+        boxes_with_featured_topics: "Boîtes avec sujets sélectionnés"
     flagging:
       title: 'Merci d''aider à garder notre communauté civilisée !'
       action: 'Signaler ce message'
@@ -1887,7 +1980,9 @@ fr:
       one: "vue"
       other: "vues"
     replies: "Réponses"
-    views_long: "ce sujet a été vu {{number}} fois"
+    views_long:
+      one: "ce sujet a été vu 1 fois"
+      other: "ce sujet a été vu {{number}} fois"
     activity: "Activité"
     likes: "J'aime"
     likes_lowercase:
@@ -1902,7 +1997,7 @@ fr:
     history: "Historique"
     changed_by: "par {{author}}"
     raw_email:
-      title: "Couriel au format brut"
+      title: "Courriel entrant"
       not_available: "Indisponible !"
     categories_list: "Liste des catégories"
     filters:
@@ -2046,8 +2141,8 @@ fr:
       granted_on: "Accordé le %{date}"
       others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
-      allow_title: "titre disponible"
-      multiple_grant: "attribué plusieurs fois"
+      allow_title: "Vous pouvez utiliser ce badge comme titre"
+      multiple_grant: "Vous pouvez le gagner de multiples fois"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"
@@ -2192,8 +2287,8 @@ fr:
         backups: "sauvegardes"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
-        page_views: "Requêtes API"
-        page_views_short: "Requêtes API"
+        page_views: "Pages vues"
+        page_views_short: "Pages vues"
         show_traffic_report: "Afficher le rapport de trafic détaillé"
         reports:
           today: "Aujourd'hui"
@@ -2293,6 +2388,7 @@ fr:
         add_members: "Ajouter des membres"
         custom: "Personnalisé"
         bulk_complete: "Les utilisateurs ont été ajoutés au groupe"
+        bulk_complete_users_not_added: "Ces utilisateurs n'ont pas été ajoutés (vérifiez qu'ils ont un compte):"
         bulk: "Ajouter au groupe en masse"
         bulk_paste: "Coller une liste de pseudo ou courriel, un par ligne :"
         bulk_select: "(sélectionner un groupe)"
@@ -2305,6 +2401,8 @@ fr:
         add_owners: Ajouter des propriétaires
         incoming_email: "Adresse de courriel entrant personnalisée"
         incoming_email_placeholder: "Entrer une adresse de courriel"
+        none_selected: "Sélectionnez un groupe pour commencer"
+        no_custom_groups: "Créer un nouveau groupe personnalisé"
       api:
         generate_master: "Générer une clé d'API maître"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -2440,7 +2538,8 @@ fr:
             without_uploads: "Oui (ne pas inclure les fichiers)"
           download:
             label: "Télécharger"
-            title: "Télécharger la sauvegarde"
+            title: "Envoyer un courriel avec un lien de téléchargement"
+            alert: "Un lien pour télécharger la sauvegarder vous a été envoyé. "
           destroy:
             title: "Supprimer la sauvegarde"
             confirm: "Êtes-vous sûr de vouloir détruire cette sauvegarde?"
@@ -2471,36 +2570,22 @@ fr:
       customize:
         title: "Personnaliser"
         long_title: "Personnalisations du site"
-        css: "CSS"
-        header: "Entête"
-        top: "Top"
-        footer: "Pied de page"
-        embedded_css: "CSS intégré"
-        head_tag:
-          text: "</head>"
-          title: "HTML qui sera inséré avant la balise </head>"
-        body_tag:
-          text: "</body>"
-          title: "HTML qui sera inséré avant la balise </body>"
-        override_default: "Ne pas inclure la feuille de style par défaut"
-        enabled: "Activé ?"
         preview: "prévisualiser"
-        undo_preview: "supprimer l'aperçu"
-        rescue_preview: "style par défaut"
-        explain_preview: "Voir le site avec la feuille de style personnalisé"
-        explain_undo_preview: "Revenir à la feuille de style personnalisé actuellement activée"
-        explain_rescue_preview: "Voir le site avec la feuille de style par défaut"
+        explain_preview: "Voir le site avec ce thème activé"
         save: "Sauvegarder"
         new: "Nouveau"
         new_style: "Nouveau style"
         import: "Importer"
-        import_title: "Sélectionnez un fichier ou collez du texte"
         delete: "Supprimer"
-        delete_confirm: "Supprimer cette personnalisation"
+        delete_confirm: "Suprimmer ce thème ?"
         about: "Modification des feuilles de styles et en-têtes de votre site. Ajouter un style personnalisé pour commencer."
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
+        copy_to_clipboard: "Copier dans le presse-papier"
+        copied_to_clipboard: "Copié dans le presse-papier"
+        copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
+        theme_owner: "Non modifiable, appartient à :"
         email_templates:
           title: "Modèle de courriel"
           subject: "Objet"
@@ -2509,13 +2594,73 @@ fr:
           none_selected: "Choisissez un modèle de courriel pour commencer l'édition."
           revert: "Annuler les changements"
           revert_confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Personnalisations du CSS et HTML"
+        theme:
+          import_theme: "Importer un thème"
+          customize_desc: "Personaliser :"
+          title: "Thèmes"
+          long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
+          edit: "Modifier"
+          edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
+          common: "Général"
+          desktop: "Bureau"
+          mobile: "Mobile"
+          preview: "Prévisualiser"
+          is_default: "Thème activé par défaut"
+          user_selectable: "Thème sélectionnable par les utilisateurs"
+          color_scheme: "Palette de couleurs"
+          color_scheme_select: "Sélectionner les couleurs utilisées par le thème"
+          custom_sections: "Sections personnalisées :"
+          theme_components: "Composants du thème :"
+          uploads: "Uploads"
+          variable_name: "Nom de variable SCSS:"
+          upload: "Upload"
+          child_themes_check: "Thème incluant d'autres thèmes"
+          css_html: "CSS/HTML personnalisé"
+          edit_css_html: "Modifier le CSS/HTML"
+          edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
+          delete_upload_confirm: "Supprimer cet upload? (Le thème CSS pourrait ne plus fonctionner!)"
+          import_web_tip: "Dépôt contenant le thème"
+          import_file_tip: "Fichier .dcstyle.json contenant le thème"
+          about_theme: "À propos du thème"
+          license: "Licence"
+          component_of: "Le thème est un composant de :"
+          update_to_latest: "Mettre à jour"
+          check_for_updates: "Vérifier les mises à jour"
+          updating: "Mise à jour…"
+          up_to_date: "Thème à jour, dernière vérification :"
+          add: "Ajouter"
+          commits_behind:
+            one: "Le thème est en retard de 1 commit !"
+            other: "Le thème est en retard de {{count}} commits !"
+          scss:
+            text: "CSS"
+            title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
+          header:
+            text: "Entête"
+            title: "Entrez du HTML à afficher au dessus de l'entête du site"
+          after_header:
+            text: "Après l'entête"
+            title: "Entrez du HTML à afficher sur toutes les pages après l'entête"
+          footer:
+            text: "Pied de page"
+            title: "Entrez du HTML à afficher de le pied de page"
+          embedded_scss:
+            text: "CSS intégré"
+            title: "Entrez du CSS personnalisé pour la version intégrée des commentaires"
+          head_tag:
+            text: "</head>"
+            title: "HTML qui sera inséré avant la balise </head>"
+          body_tag:
+            text: "</body>"
+            title: "HTML qui sera inséré avant la balise </body>"
         colors:
+          select_base:
+            title: "Sélectionner la palette de couleurs de base"
+            description: "Palette de base :"
           title: "Couleurs"
+          edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
-          about: "Modification des couleurs utilisés par le site sans écrire du CSS. Ajouter une palette pour commencer."
+          about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
@@ -2575,7 +2720,7 @@ fr:
         send_test: "Envoyer un courriel de test"
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
-        preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
+        preview_digest_desc: "Prévisualiser le contenu des résumés par courriel envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
         send_digest_label: "Envoyer ce résultat à :"
         send_digest: "Envoyer"
@@ -2634,7 +2779,6 @@ fr:
           do_nothing: "ne rien faire"
         staff_actions:
           title: "Actions des responsables"
-          instructions: "Cliquez sur les pseudos et les actions pour filtrer la liste. Cliquez sur les images de profil pour aller aux pages des utilisateurs."
           clear_filters: "Tout afficher"
           staff_user: "Responsable"
           target_user: "Utilisateur cible"
@@ -2654,8 +2798,8 @@ fr:
             change_trust_level: "modifier le niveau de confiance"
             change_username: "modifier pseudo"
             change_site_setting: "modifier les paramètres du site"
-            change_site_customization: "modifier la personnalisation du site"
-            delete_site_customization: "supprimer la personnalisation du site"
+            change_theme: "changer le thème"
+            delete_theme: "supprimer le thème"
             change_site_text: "modifier le texte du site"
             suspend_user: "suspendre l'utilisateur"
             unsuspend_user: "annuler la suspension de l'utilisateur"
@@ -2676,10 +2820,17 @@ fr:
             revoke_admin: "révoquer les droits d'administration"
             grant_moderation: "Accorder les droits de modération"
             revoke_moderation: "Révoquer les droits de modération"
-            backup_operation: "sauvegarde"
+            backup_create: "créer une sauvegarde"
             deleted_tag: "tag supprimé"
             renamed_tag: "tag renommé"
             revoke_email: "révoquer le courriel"
+            lock_trust_level: "verrouiller le niveau de confiance "
+            unlock_trust_level: "déverouiller le niveau de confiance"
+            activate_user: "activer l'utilisateur"
+            deactivate_user: "désactvier l'utilisateur"
+            change_readonly_mode: "changer le mode de lecteur seule"
+            backup_download: "télécharger la sauvegarde"
+            backup_destroy: "détruire la sauvegarde"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -2783,17 +2934,17 @@ fr:
         blocked: "Bloqué ?"
         staged: "En attente ?"
         show_admin_profile: "Administration"
-        edit_title: "Modifier le titre"
-        save_title: "Sauvegarder le titre"
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
         refresh_browsers_message: "Message envoyé à tous les clients !"
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
+        action_logs: "Journaux d'actions"
         ip_lookup: "IP de consultation"
         log_out: "Déconnecter l'utilisateur"
         logged_out: "L'utilisateur s'est déconnecté de tous les appareils"
         revoke_admin: 'Révoquer les droits d''administration'
         grant_admin: 'Accorder les droits d''administration'
+        grant_admin_confirm: "Nous vous avons envoyé un courriel pour vérifier le nouvel administrateur. Veuillez le lire et suivre les instructions."
         revoke_moderation: 'Révoquer les droits de modération'
         grant_moderation: 'Accorder les droits de modération'
         unblock: 'Débloquer'
@@ -3062,6 +3213,7 @@ fr:
         sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
+        class_name: "Nom de classe"
         path_whitelist: "Chemins autorisés"
         edit: "modifier"
         category: "Écrire dans la catégorie"

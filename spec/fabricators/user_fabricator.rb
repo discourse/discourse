@@ -36,6 +36,7 @@ Fabricator(:inactive_user, from: :user) do
   name 'Inactive User'
   username 'inactive_user'
   email 'inactive@idontexist.com'
+  password 'qwerqwer123'
   active false
 end
 
@@ -94,7 +95,7 @@ Fabricator(:anonymous, from: :user) do
   trust_level TrustLevel[1]
   trust_level_locked true
 
-  after_create do |user|
+  before_create do |user|
     user.custom_fields["master_id"] = 1
     user.save!
   end

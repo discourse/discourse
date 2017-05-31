@@ -15,7 +15,7 @@
                  noSubcategories=noSubcategories
                  hideSubcategories=showingSubcategoryList}}
 
-  {{navigation-bar navItems=navItems filterMode=filterMode}}
+  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
 
   {{#if currentUser}}
     {{category-notifications-button category=category}}
@@ -33,4 +33,6 @@
   {{#if canEditCategory}}
     {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
   {{/if}}
+
+  {{plugin-outlet name="category-navigation" args=(hash category=category)}}
 </div>

@@ -2,6 +2,7 @@ require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
 require_dependency 'plugin/auth_provider'
+require_dependency 'plugin/theme'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -24,7 +25,13 @@ class Plugin::Instance
   attr_reader :admin_route
 
   # Memoized array readers
-  [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
+  [:assets,
+   :auth_providers,
+   :color_schemes,
+   :initializers,
+   :javascripts,
+   :styles,
+   :themes].each do |att|
     class_eval %Q{
       def #{att}
         @#{att} ||= []
@@ -39,7 +46,7 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap { |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/**/*/**/plugin.rb"].sort.each do |path|
+      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
 
         # tagging is included in core, so don't load it
         next if path =~ /discourse-tagging/
@@ -173,6 +180,10 @@ class Plugin::Instance
     end
   end
 
+  def directory
+    File.dirname(path)
+  end
+
   def auto_generated_path
     File.dirname(path) << "/auto_generated"
   end
@@ -227,6 +238,10 @@ class Plugin::Instance
     DiscoursePluginRegistry.custom_html.merge!(hash)
   end
 
+  def register_html_builder(name, &block)
+    DiscoursePluginRegistry.register_html_builder(name, &block)
+  end
+
   def register_asset(file, opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << [full_path, opts]
@@ -242,6 +257,14 @@ class Plugin::Instance
 
   def register_emoji(name, url)
     Plugin::CustomEmoji.register(name, url)
+  end
+
+  def register_theme(name)
+    return unless enabled?
+
+    theme = Plugin::Theme.new(self, name)
+    yield theme
+    themes << theme
   end
 
   def automatic_assets
@@ -337,11 +360,12 @@ JS
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
-      `mkdir -p #{target}`
+
+      Discourse::Utils.execute_command('mkdir', '-p', target)
       target << name.gsub(/\s/,"_")
       # TODO a cleaner way of registering and unregistering
-      `rm -f #{target}`
-      `ln -s #{public_data} #{target}`
+      Discourse::Utils.execute_command('rm', '-f', target)
+      Discourse::Utils.execute_command('ln', '-s', public_data, target)
     end
   end
 

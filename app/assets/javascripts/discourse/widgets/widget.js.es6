@@ -12,7 +12,10 @@ const _registry = {};
 let _dirty = {};
 
 export function keyDirty(key, options) {
-  _dirty[key] = options || {};
+  options = options || {};
+  options.dirty = true;
+
+  _dirty[key] = options;
 }
 
 export function renderedKey(key) {
@@ -125,6 +128,17 @@ export function createWidget(name, opts) {
   return result;
 }
 
+export function reopenWidget(name, opts) {
+  let existing = _registry[name];
+  if (!existing) {
+    console.error(`Could not find widget ${name} in registry`);
+    return;
+  }
+
+  Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
+  return existing;
+}
+
 export default class Widget {
   constructor(attrs, register, opts) {
     opts = opts || {};
@@ -145,12 +159,12 @@ export default class Widget {
     this.keyValueStore = register.lookup('key-value-store:main');
 
     // Helps debug widgets
-    if (Ember.testing) {
+    if (Discourse.Environment === "development" || Ember.testing) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
-        Ember.warn(`defaultState must return an object`);
+        throw `defaultState must return an object`;
       } else if (Object.keys(ds).length > 0 && !this.key) {
-        Ember.warn(`you need a key when using state ${this.name}`);
+        throw `you need a key when using state in ${this.name}`;
       }
     }
 
@@ -183,14 +197,17 @@ export default class Widget {
     }
 
     if (prev) {
-      const dirtyOpts = _dirty[prev.key] || {};
+      const dirtyOpts = _dirty[prev.key] || { dirty: false };
+
       if (prev.shadowTree) {
         this.shadowTree = true;
-        if (!dirtyOpts && !_dirty['*']) {
+        if (!dirtyOpts.dirty && !_dirty['*']) {
           return prev.vnode;
         }
       }
-      renderedKey(prev.key);
+      if (prev.key) {
+        renderedKey(prev.key);
+      }
 
       const refreshAction = dirtyOpts.onRefresh;
       if (refreshAction) {
@@ -298,12 +315,12 @@ export default class Widget {
     return result;
   }
 
-  sendWidgetEvent(name) {
+  sendWidgetEvent(name, attrs) {
     const methodName = `${name}Event`;
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(methodName);
       if (widget) {
-        return widget[methodName]();
+        return widget[methodName](attrs);
       }
     });
   }

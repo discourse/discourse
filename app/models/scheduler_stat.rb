@@ -1,6 +1,6 @@
 class SchedulerStat < ActiveRecord::Base
   def self.purge_old
-    where('started_at < ?', 3.months.ago).delete_all
+    where('started_at < ?', 1.months.ago).delete_all
   end
 end
 
@@ -17,4 +17,5 @@ end
 #  live_slots_finish :integer
 #  started_at        :datetime         not null
 #  success           :boolean
+#  error             :text
 #

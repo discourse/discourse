@@ -10,13 +10,9 @@ export default {
   after: 'message-bus',
 
   initialize(container) {
-    const user = container.lookup('current-user:main'),
-          site = container.lookup('site:main'),
-          siteSettings = container.lookup('site-settings:main'),
-          bus = container.lookup('message-bus:main'),
-          keyValueStore = container.lookup('key-value-store:main'),
-          store = container.lookup('store:main'),
-          appEvents = container.lookup('app-events:main');
+    const user = container.lookup('current-user:main');
+    const keyValueStore = container.lookup('key-value-store:main');
+    const bus = container.lookup('message-bus:main');
 
     // clear old cached notifications, we used to store in local storage
     // TODO 2017 delete this line
@@ -36,12 +32,17 @@ export default {
       }
 
       bus.subscribe(`/notification/${user.get('id')}`, data => {
+        const store = container.lookup('store:main');
+        const appEvents = container.lookup('app-events:main');
+
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
 
-        user.set('unread_notifications', data.unread_notifications);
-        user.set('unread_private_messages', data.unread_private_messages);
-        user.set('read_first_notification', data.read_first_notification);
+        user.setProperties({
+          unread_notifications: data.unread_notifications,
+          unread_private_messages: data.unread_private_messages,
+          read_first_notification: data.read_first_notification
+        });
 
         if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           appEvents.trigger('notifications:changed');
@@ -55,7 +56,7 @@ export default {
           const staleIndex = _.findIndex(oldNotifications, {id: lastNotification.id});
 
           if (staleIndex === -1) {
-            // this gets a bit tricky, uread pms are bumped to front
+            // this gets a bit tricky, unread pms are bumped to front
             let insertPosition = 0;
             if (lastNotification.notification_type !== 6) {
               insertPosition = _.findIndex(oldNotifications, n => n.notification_type !== 6 || n.read);
@@ -83,6 +84,9 @@ export default {
 
         }
       }, user.notification_channel_position);
+
+      const site = container.lookup('site:main');
+      const siteSettings = container.lookup('site-settings:main');
 
       bus.subscribe("/categories", data => {
         _.each(data.categories, c => site.updateCategory(c));

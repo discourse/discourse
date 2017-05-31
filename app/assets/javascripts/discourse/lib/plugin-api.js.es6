@@ -5,19 +5,29 @@ import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
+import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
+import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
+import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
+import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
+import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
+import { addPostClassesCallback } from 'discourse/widgets/post';
+import { addPostTransformCallback } from 'discourse/widgets/post-stream';
+import { attachAdditionalPanel } from 'discourse/widgets/header';
+
+
+// If you add any methods to the API ensure you bump up this number
+const PLUGIN_API_VERSION = '0.8.6';
 
 class PluginApi {
   constructor(version, container) {
     this.version = version;
     this.container = container;
-    this._currentUser = container.lookup('current-user:main');
     this.h = h;
   }
 
@@ -26,7 +36,7 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
   **/
   getCurrentUser() {
-    return this._currentUser;
+    return this.container.lookup('current-user:main');
   }
 
   /**
@@ -308,11 +318,41 @@ class PluginApi {
   }
 
   /**
+   * Exposes the widget update ability to plugins. Updates the widget
+   * registry for the given widget name to include the properties on args
+   * See `reopenWidget` in `discourse/widgets/widget` from more ifo.
+  **/
+
+  reopenWidget(name, args) {
+    return reopenWidget(name, args);
+  }
+
+  /**
    * Adds a property that can be summed for calculating the flag counter
    **/
   addFlagProperty(property) {
     return addFlagProperty(property);
   }
+
+  /**
+   * Adds a panel to the header
+   *
+   * takes a widget name, a value to toggle on, and a function which returns the attrs for the widget
+   * Example:
+   * ```javascript
+   * api.addHeaderPanel('widget-name', 'widgetVisible', function(attrs, state) {
+   *   return { name: attrs.name, description: state.description };
+   * });
+   * ```
+   * 'toggle' is an attribute on the state of the header widget,
+   *
+   * 'transformAttrs' is a function which is passed the current attrs and state of the widget,
+   * and returns a hash of values to pass to attach
+   *
+   **/
+   addHeaderPanel(name, toggle, transformAttrs) {
+     attachAdditionalPanel(name, toggle, transformAttrs);
+   }
 
   /**
    * Adds a pluralization to the store
@@ -352,12 +392,119 @@ class PluginApi {
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
   }
+
+  /**
+   * Register a small icon to be used for custom small post actions
+   *
+   * ```javascript
+   * api.registerPostSmallActionIcon('assign-to', 'user-add');
+   * ```
+   **/
+  addPostSmallActionIcon(key, icon) {
+    addPostSmallActionIcon(key, icon);
+  }
+
+  /**
+   * Register an additional query param with topic discovery,
+   * this allows for filters on the topic list
+   *
+   **/
+  addDiscoveryQueryParam(param, options) {
+    addDiscoveryQueryParam(param, options);
+  }
+
+  /**
+   * Register a callback to be called every time tags render
+   * highest priority callbacks are called first
+   * example:
+   *
+   * callback = function(topic, params) {
+   *    if (topic.get("created_at") < "2000-00-01") {
+   *      return "<span class='discourse-tag'>ANCIENT</span>"
+   *    }
+   * }
+   *
+   * api.addTagsHtmlCallback(callback, {priority: 100});
+   *
+   **/
+  addTagsHtmlCallback(callback, options) {
+    addTagsHtmlCallback(callback, options);
+  };
+
+  /**
+   * Adds a glyph to user menu after bookmarks
+   * WARNING: there is limited space there
+   *
+   * example:
+   *
+   * api.addUserMenuGlyph({
+   *    label: 'awesome.label',
+   *    className: 'my-class',
+   *    icon: 'my-icon',
+   *    href: `/some/path`
+   * });
+   *
+   */
+  addUserMenuGlyph(glyph) {
+    addUserMenuGlyph(glyph);
+  };
+
+  /**
+   * Adds a callback to be called before rendering any post that
+   * that returns custom classes to add to the post
+   *
+   * Example:
+   *
+   * addPostClassesCallback((atts) => {if (atts.post_number == 1) return ["first"];})
+   **/
+  addPostClassesCallback(callback) {
+    addPostClassesCallback(callback);
+  }
+
+  /**
+   *
+   * Adds a callback to be executed on the "transformed" post that is passed to the post
+   * widget.
+   *
+   * This allows you to apply transformations on the actual post that is about to be rendered.
+   *
+   * Example:
+   *
+   * addPostTransformCallback((t)=>{
+   *  // post number 7 is overrated, don't show it ever
+   *  if (t.post_number === 7) { t.cooked = ""; }
+   * })
+   */
+  addPostTransformCallback(callback) {
+    addPostTransformCallback(callback);
+  }
 }
 
 let _pluginv01;
+
+
+// from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
+function cmpVersions (a, b) {
+    var i, diff;
+    var regExStrip0 = /(\.0+)+$/;
+    var segmentsA = a.replace(regExStrip0, '').split('.');
+    var segmentsB = b.replace(regExStrip0, '').split('.');
+    var l = Math.min(segmentsA.length, segmentsB.length);
+
+    for (i = 0; i < l; i++) {
+        diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
+        if (diff) {
+            return diff;
+        }
+    }
+    return segmentsA.length - segmentsB.length;
+}
+
+
+
 function getPluginApi(version) {
-  version = parseFloat(version);
-  if (version <= 0.6) {
+  version = version.toString();
+  if (cmpVersions(version,PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }

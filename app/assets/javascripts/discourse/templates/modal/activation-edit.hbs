@@ -1,0 +1,11 @@
+{{#d-modal-body}}
+  {{activation-email-form email=newEmail}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="changeEmail"
+             label="login.submit_new_email"
+             disabled=submitDisabled
+             class="btn-primary"}}
+  {{d-button action="closeModal" label="close"}}
+</div>

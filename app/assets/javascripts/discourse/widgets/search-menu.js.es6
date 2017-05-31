@@ -85,7 +85,7 @@ export default createWidget('search-menu', {
 
       query += `q=${encodeURIComponent(searchData.term)}`;
 
-      if (contextEnabled) {
+      if (contextEnabled && ctx) {
         if (this.currentUser &&
             ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
             type === "private_messages") {
@@ -125,7 +125,8 @@ export default createWidget('search-menu', {
         results.push(this.attach('search-menu-results', { term: searchData.term,
                                                           noResults: searchData.noResults,
                                                           results: searchData.results,
-                                                          invalidTerm: searchData.invalidTerm }));
+                                                          invalidTerm: searchData.invalidTerm,
+                                                          searchContextEnabled: searchData.contextEnabled }));
       }
     }
 
@@ -147,7 +148,12 @@ export default createWidget('search-menu', {
   },
 
   html(attrs) {
-    searchData.contextEnabled = attrs.contextEnabled;
+    if (searchData.contextEnabled !== attrs.contextEnabled) {
+      searchData.contextEnabled = attrs.contextEnabled;
+      this.triggerSearch();
+    } else {
+      searchData.contextEnabled = attrs.contextEnabled;
+    }
 
     return this.attach('menu-panel', { maxWidth: 500, contents: () => this.panelContents() });
   },
@@ -169,6 +175,7 @@ export default createWidget('search-menu', {
   },
 
   searchContextChanged(enabled) {
+    // This indicates the checkbox has been clicked, NOT that the context has changed.
     searchData.typeFilter = null;
     this.sendWidgetAction('searchMenuContextChanged', enabled);
     searchData.contextEnabled = enabled;
@@ -191,6 +198,8 @@ export default createWidget('search-menu', {
     if (url) {
       this.sendWidgetEvent('linkClicked');
       DiscourseURL.routeTo(url);
+    } else if (searchData.contextEnabled) {
+      this.triggerSearch();
     }
   }
 });

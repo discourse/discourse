@@ -19,6 +19,7 @@ class UserAction < ActiveRecord::Base
   GOT_PRIVATE_MESSAGE = 13
   PENDING = 14
   SOLVED = 15
+  ASSIGNED = 16
 
   ORDER = Hash[*[
     GOT_PRIVATE_MESSAGE,
@@ -34,6 +35,7 @@ class UserAction < ActiveRecord::Base
     BOOKMARK,
     EDIT,
     SOLVED,
+    ASSIGNED,
   ].each_with_index.to_a.flatten]
 
   # note, this is temporary until we upgrade to rails 4
@@ -258,7 +260,7 @@ SQL
         end
 
         if action.user
-          MessageBus.publish("/users/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
+          MessageBus.publish("/u/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
         end
 
         action
@@ -277,7 +279,9 @@ SQL
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
 
-    update_like_count(hash[:user_id], hash[:action_type], -1)
+    if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
+      update_like_count(hash[:user_id], hash[:action_type], -1)
+    end
   end
 
   def self.synchronize_target_topic_ids(post_ids = nil)

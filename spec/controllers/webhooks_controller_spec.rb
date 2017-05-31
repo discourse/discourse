@@ -12,13 +12,14 @@ describe WebhooksController do
       SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
 
       user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       WebhooksController.any_instance.expects(:mailgun_verify).returns(true)
 
       post :mailgun, "token" => "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de",
                      "timestamp" => Time.now.to_i,
                      "event" => "dropped",
+                     "recipient" => email,
                      "Message-Id" => "<12345@il.com>"
 
       expect(response).to be_success
@@ -34,7 +35,7 @@ describe WebhooksController do
 
     it "works" do
       user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post :sendgrid, "_json" => [
         {
@@ -58,10 +59,11 @@ describe WebhooksController do
 
     it "works" do
       user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post :mailjet, {
         "event"       => "bounce",
+        "email"       => email,
         "hard_bounce" => true,
         "CustomID"    => message_id
       }
@@ -79,11 +81,12 @@ describe WebhooksController do
 
     it "works" do
       user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post :mandrill, mandrill_events: [{
         "event" => "hard_bounce",
         "msg" => {
+          "email" => email,
           "metadata" => {
             "message_id" => message_id
           }
@@ -103,12 +106,13 @@ describe WebhooksController do
 
     it "works" do
       user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post :sparkpost, "_json" => [{
         "msys" => {
           "message_event" => {
             "bounce_class" => 10,
+            "rcpt_to" => email,
             "rcpt_meta" => {
               "message_id" => message_id
             }

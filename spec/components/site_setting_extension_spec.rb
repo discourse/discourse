@@ -58,7 +58,7 @@ describe SiteSettingExtension do
       settings.hello = 100
       expect(settings.hello).to eq(100)
 
-      settings.provider.save(:hello, 99, SiteSetting.types[:fixnum] )
+      settings.provider.save(:hello, 99, SiteSetting.types[:integer] )
       settings.refresh!
 
       expect(settings.hello).to eq(99)
@@ -382,16 +382,6 @@ describe SiteSettingExtension do
       settings.refresh!
       expect {
         settings.set("provider", "haxxed")
-      }.to raise_error(ArgumentError)
-    end
-  end
-
-  describe "set for an invalid fixnum value" do
-    it "raises an error" do
-      settings.setting(:test_setting, 80)
-      settings.refresh!
-      expect {
-        settings.set("test_setting", 9999999999999999999)
       }.to raise_error(ArgumentError)
     end
   end

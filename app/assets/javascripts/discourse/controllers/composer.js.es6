@@ -3,11 +3,11 @@ import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import { relativeAge } from 'discourse/lib/formatter';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { escapeExpression } from 'discourse/lib/utilities';
 import { emojiUnescape } from 'discourse/lib/text';
+import { shortDate } from 'discourse/lib/formatter';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -57,6 +57,7 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
+  replyAsNewPrivateMessageDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY),
   checkedMessages: false,
   messageCount: null,
   showEditReason: false,
@@ -227,8 +228,6 @@ export default Ember.Controller.extend({
       if (topic.get('posts_count') === 1) { return; }
 
       const post = this.get('model.post');
-      if (post && post.get('user_id') !== this.currentUser.id) { return; }
-
       const $links = $('a[href]', $preview);
       $links.each((idx, l) => {
         const href = $(l).prop('href');
@@ -240,7 +239,7 @@ export default Ember.Controller.extend({
               domain: info.domain,
               username: info.username,
               post_url: topic.urlForPostNumber(info.post_number),
-              ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' })
+              ago: shortDate(info.posted_at)
             });
             this.appEvents.trigger('composer-messages:create', {
               extraClass: 'custom-body',
@@ -366,7 +365,7 @@ export default Ember.Controller.extend({
 
     cannotSeeMention(mentions) {
       mentions.forEach(mention => {
-        const translation = (this.get('topic.isPrivateMessage')) ?
+        const translation = (this.get('model.topic.isPrivateMessage')) ?
           'composer.cannot_see_mention.private' :
           'composer.cannot_see_mention.category';
         const body = I18n.t(translation, {
@@ -403,12 +402,14 @@ export default Ember.Controller.extend({
   disableSubmit: Ember.computed.or("model.loading", "isUploading"),
 
   save(force) {
-    const composer = this.get('model');
+    if (this.get("disableSubmit")) return;
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
       this.set('model.isWarning', false);
     }
+
+    const composer = this.get('model');
 
     if (composer.get('cantSubmitPost')) {
       this.set('lastValidatedAt', Date.now());
@@ -478,13 +479,13 @@ export default Ember.Controller.extend({
       }
 
       // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-      if (result.responseJson.action === "create_post" || this.get('replyAsNewTopicDraft')) {
+      if (result.responseJson.action === "create_post" || this.get('replyAsNewTopicDraft') || this.get('replyAsNewPrivateMessageDraft')) {
         this.destroyDraft();
       }
       if (this.get('model.action') === 'edit') {
         this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
         if (result.responseJson.post.post_number === 1) {
-          this.appEvents.trigger('header:show-topic', composer.get('topic'));
+          this.appEvents.trigger('header:update-topic', composer.get('topic'));
         }
       } else {
         this.appEvents.trigger('post-stream:refresh');
@@ -560,13 +561,16 @@ export default Ember.Controller.extend({
       return;
     }
 
+    this.setProperties({ showEditReason: false, editReason: null, scopedCategoryId: null });
+
     // If we show the subcategory list, scope the categories drop down to
     // the category we opened the composer with.
-    if (this.siteSettings.show_subcategory_list && opts.draftKey !== 'reply_as_new_topic') {
-      this.set('scopedCategoryId', opts.categoryId);
+    if (opts.categoryId && opts.draftKey !== 'reply_as_new_topic') {
+      const category = this.site.categories.findBy('id', opts.categoryId);
+      if (category && (category.get('show_subcategory_list') || category.get('parentCategory.show_subcategory_list'))) {
+        this.set('scopedCategoryId', opts.categoryId);
+      }
     }
-
-    this.setProperties({ showEditReason: false, editReason: null });
 
     // If we want a different draft than the current composer, close it and clear our model.
     if (composerModel &&
@@ -689,15 +693,21 @@ export default Ember.Controller.extend({
 
     return new Ember.RSVP.Promise(function (resolve) {
       if (self.get('model.hasMetaData') || self.get('model.replyDirty')) {
-        bootbox.confirm(I18n.t("post.abandon.confirm"), I18n.t("post.abandon.no_value"),
-            I18n.t("post.abandon.yes_value"), function(result) {
-          if (result) {
-            self.destroyDraft();
-            self.get('model').clearState();
-            self.close();
-            resolve();
+        bootbox.dialog(I18n.t("post.abandon.confirm"), [
+          { label: I18n.t("post.abandon.no_value") },
+          {
+            label: I18n.t("post.abandon.yes_value"),
+            'class': 'btn-danger',
+            callback(result) {
+              if (result) {
+                self.destroyDraft();
+                self.get('model').clearState();
+                self.close();
+                resolve();
+              }
+            }
           }
-        });
+        ]);
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         self.destroyDraft();

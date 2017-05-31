@@ -54,6 +54,7 @@ fr:
         insert: Insérer le sondage
         help:
           options_count: Entrez au moins 2 options
+          invalid_values: La valeur minimum doit être plus petite que la valeur maximum.
         poll_type:
           label: Type
           regular: Choix unique

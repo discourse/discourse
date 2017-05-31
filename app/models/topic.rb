@@ -7,8 +7,10 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
+require_dependency 'search'
 
 class Topic < ActiveRecord::Base
+  class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include HasCustomFields
@@ -39,12 +41,16 @@ class Topic < ActiveRecord::Base
     update_category_topic_count_by(-1) if deleted_at.nil?
     super(trashed_by)
     update_flagged_posts_count
+    self.topic_embed.trash! if has_topic_embed?
   end
 
   def recover!
     update_category_topic_count_by(1) unless deleted_at.nil?
     super
     update_flagged_posts_count
+    unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
+      topic_embed.recover!
+    end
   end
 
   rate_limit :default_rate_limiter
@@ -110,16 +116,17 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id
   belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
-  belongs_to :auto_close_user, class_name: 'User', foreign_key: :auto_close_user_id
 
   has_many :topic_users
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
+  has_many :topic_timers, dependent: :destroy
 
-  has_one :warning
-
+  has_one :user_warning
   has_one :first_post, -> {where post_number: 1}, class_name: Post
+
+  has_one :topic_embed, dependent: :destroy
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -163,7 +170,6 @@ class Topic < ActiveRecord::Base
 
   before_create do
     initialize_default_values
-    inherit_auto_close_from_category
   end
 
   after_create do
@@ -175,19 +181,18 @@ class Topic < ActiveRecord::Base
 
   before_save do
     unless skip_callbacks
-      cancel_auto_close_job
       ensure_topic_has_a_category
     end
     if title_changed?
       write_attribute :fancy_title, Topic.fancy_title(title)
     end
+
+    if category_id_changed? || new_record?
+      inherit_auto_close_from_category
+    end
   end
 
   after_save do
-    unless skip_callbacks
-      schedule_auto_close_job
-    end
-
     banner = "banner".freeze
 
     if archetype_was == banner || archetype == banner
@@ -210,9 +215,16 @@ class Topic < ActiveRecord::Base
   end
 
   def inherit_auto_close_from_category
-    if !@ignore_category_auto_close && self.category && self.category.auto_close_hours && self.auto_close_at.nil?
-      self.auto_close_based_on_last_post = self.category.auto_close_based_on_last_post
-      set_auto_close(self.category.auto_close_hours)
+    if !@ignore_category_auto_close &&
+       self.category &&
+       self.category.auto_close_hours &&
+       !public_topic_timer&.execute_at
+
+      self.set_or_create_timer(
+        TopicTimer.types[:close],
+        self.category.auto_close_hours,
+        based_on_last_post: self.category.auto_close_based_on_last_post
+      )
     end
   end
 
@@ -221,20 +233,6 @@ class Topic < ActiveRecord::Base
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
       DraftSequence.next!(user, Draft::NEW_TOPIC)
-    end
-  end
-
-  def cancel_auto_close_job
-    if (auto_close_at_changed? && !auto_close_at_was.nil?) || (auto_close_user_id_changed? && auto_close_at)
-      self.auto_close_started_at ||= Time.zone.now if auto_close_at
-      Jobs.cancel_scheduled_job(:close_topic, topic_id: id)
-    end
-  end
-
-  def schedule_auto_close_job
-    if auto_close_at && (auto_close_at_changed? || auto_close_user_id_changed?)
-      options = { topic_id: id, user_id: auto_close_user_id || user_id }
-      Jobs.enqueue_at(auto_close_at, :close_topic, options)
     end
   end
 
@@ -300,7 +298,7 @@ class Topic < ActiveRecord::Base
   def self.fancy_title(title)
     escaped = ERB::Util.html_escape(title)
     return unless escaped
-    HtmlPrettify.render(escaped)
+    Emoji.unicode_unescape(HtmlPrettify.render(escaped))
   end
 
   def fancy_title
@@ -402,6 +400,7 @@ class Topic < ActiveRecord::Base
 
   def reload(options=nil)
     @post_numbers = nil
+    @public_topic_timer = nil
     super(options)
   end
 
@@ -470,7 +469,7 @@ class Topic < ActiveRecord::Base
   end
 
   def update_status(status, enabled, user, opts={})
-    TopicStatusUpdate.new(self, user).update!(status, enabled, opts)
+    TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
     DiscourseEvent.trigger(:topic_status_updated, self.id, status, enabled)
   end
 
@@ -618,8 +617,7 @@ SQL
       old_category = category
 
       if self.category_id != new_category.id
-        self.category_id = new_category.id
-        self.update_column(:category_id, new_category.id)
+        self.update!(category_id: new_category.id)
         Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
 
         # when a topic changes category we may have to start watching it
@@ -702,6 +700,9 @@ SQL
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
+        # we can not remove ourselves cause then we will end up adding
+        # ourselves in add_small_action
+        removed_by = Discourse.system_user if user.id == removed_by&.id
         add_small_action(removed_by, "removed_user", user.username)
         return true
       end
@@ -728,7 +729,7 @@ SQL
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
-      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # Create a small action message
@@ -744,7 +745,7 @@ SQL
       end
     end
 
-    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+    if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
       # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
@@ -753,7 +754,7 @@ SQL
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
-      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # rate limit topic invite
@@ -816,7 +817,7 @@ SQL
     update_column(:like_count, Post.where(topic_id: id).sum(:like_count))
   end
 
-  def posters_summary(options = {})
+  def posters_summary(options = {}) # avatar lookup in options
     @posters_summary ||= TopicPostersSummary.new(self, options).summary
   end
 
@@ -829,8 +830,11 @@ SQL
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
 
+    UserProfile.where("dismissed_banner_key IS NOT NULL")
+      .update_all(dismissed_banner_key: nil)
+
     self.archetype = Archetype.banner
-    self.add_moderator_post(user, I18n.t("archetypes.banner.message.make"))
+    self.add_small_action(user, "banner.enabled")
     self.save
 
     MessageBus.publish('/site/banner', banner)
@@ -838,14 +842,14 @@ SQL
 
   def remove_banner!(user)
     self.archetype = Archetype.default
-    self.add_moderator_post(user, I18n.t("archetypes.banner.message.remove"))
+    self.add_small_action(user, "banner.disabled")
     self.save
 
     MessageBus.publish('/site/banner', nil)
   end
 
   def banner
-    post = self.posts.order(:post_number).limit(1).first
+    post = self.ordered_posts.first
 
     {
       html: post.cooked,
@@ -893,9 +897,15 @@ SQL
   end
 
   def self.relative_url(id, slug, post_number=nil)
-    url = "#{Discourse.base_uri}/t/#{slug}/#{id}"
+    url = "#{Discourse.base_uri}/t/"
+    url << "#{slug}/" if slug.present?
+    url << id.to_s
     url << "/#{post_number}" if post_number.to_i > 1
     url
+  end
+
+  def slugless_url(post_number=nil)
+    Topic.relative_url(id, nil, post_number)
   end
 
   def relative_url(post_number=nil)
@@ -948,91 +958,81 @@ SQL
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
-  def self.auto_close
-    Topic.where("NOT closed AND auto_close_at < ? AND auto_close_user_id IS NOT NULL", 1.minute.ago).each do |t|
-      t.auto_close
-    end
+  def public_topic_timer
+    @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
 
-  def auto_close(closer = nil)
-    if auto_close_at && !closed? && !deleted_at && auto_close_at < 5.minutes.from_now
-      closer ||= auto_close_user
-      if Guardian.new(closer).can_moderate?(self)
-        update_status('autoclosed', true, closer)
-      end
-    end
-  end
-
-  # Valid arguments for the auto close time:
-  #  * An integer, which is the number of hours from now to close the topic.
-  #  * A time, like "12:00", which is the time at which the topic will close in the current day
+  # Valid arguments for the time:
+  #  * An integer, which is the number of hours from now to update the topic's status.
+  #  * A time, like "12:00", which is the time at which the topic's status will update in the current day
   #    or the next day if that time has already passed today.
-  #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
+  #  * A timestamp, like "2013-11-25 13:00", when the topic's status should update.
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
-  #  * nil, to prevent the topic from automatically closing.
+  #  * `nil` to delete the topic's status update.
   # Options:
-  #  * by_user: User who is setting the auto close time
-  #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument. Default 0.
-  def set_auto_close(arg, opts={})
-    self.auto_close_hours = nil
-    by_user = opts[:by_user]
-    offset_minutes = opts[:timezone_offset]
+  #  * by_user: User who is setting the topic's status update.
+  #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument.
+  #  * based_on_last_post: True if time should be based on timestamp of the last post.
+  #  * category_id: Category that the update will apply to.
+  def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
+    topic_timer_options = { status_type: status_type, topic: self }
+    topic_timer_options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
+    topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
 
-    if self.auto_close_based_on_last_post
-      num_hours = arg.to_f
+    if time.blank?
+      topic_timer.trash!(trashed_by: by_user || Discourse.system_user)
+      return
+    end
+
+    time_now = Time.zone.now
+    topic_timer.based_on_last_post = !based_on_last_post.blank?
+
+    if status_type == TopicTimer.types[:publish_to_category]
+      topic_timer.category = Category.find_by(id: category_id)
+    end
+
+    if topic_timer.based_on_last_post
+      num_hours = time.to_f
+
       if num_hours > 0
-        last_post_created_at = self.ordered_posts.last.try(:created_at) || Time.zone.now
-        self.auto_close_at = last_post_created_at + num_hours.hours
-        self.auto_close_hours = num_hours
-      else
-        self.auto_close_at = nil
+        last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
+        topic_timer.execute_at = last_post_created_at + num_hours.hours
+        topic_timer.created_at = last_post_created_at
       end
     else
       utc = Time.find_zone("UTC")
-      if arg.is_a?(String) && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(arg.strip)
-        # a time of day in client's time zone, like "15:00"
-        now = utc.now
-        self.auto_close_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
-        self.auto_close_at += offset_minutes * 60 if offset_minutes
-        self.auto_close_at += 1.day if self.auto_close_at < now
-        self.auto_close_hours = -1
-      elsif arg.is_a?(String) && arg.include?("-") && timestamp = utc.parse(arg)
+      is_timestamp = time.is_a?(String)
+      now = utc.now
+
+      if is_timestamp && time.include?("-") && timestamp = utc.parse(time)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
-        self.auto_close_at = timestamp
-        self.auto_close_at += offset_minutes * 60 if offset_minutes
-        self.auto_close_hours = -1
-        self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
+        topic_timer.execute_at = timestamp
+        topic_timer.execute_at += timezone_offset * 60 if timezone_offset
+        topic_timer.errors.add(:execute_at, :invalid) if timestamp < now
       else
-        num_hours = arg.to_f
+        num_hours = time.to_f
+
         if num_hours > 0
-          self.auto_close_at = num_hours.hours.from_now
-          self.auto_close_hours = num_hours
-        else
-          self.auto_close_at = nil
+          topic_timer.execute_at = num_hours.hours.from_now
         end
       end
     end
 
-    if self.auto_close_at.nil?
-      self.auto_close_started_at = nil
-    else
-      if self.auto_close_based_on_last_post
-        self.auto_close_started_at = Time.zone.now
+    if topic_timer.execute_at
+      if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
+        topic_timer.user = by_user
       else
-        self.auto_close_started_at ||= Time.zone.now
-      end
-      if by_user.try(:staff?) || by_user.try(:trust_level) == TrustLevel[4]
-        self.auto_close_user = by_user
-      else
-        self.auto_close_user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
+        topic_timer.user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
       end
 
-      if self.auto_close_at.try(:<, Time.zone.now)
-        auto_close(auto_close_user)
+      if self.persisted?
+        topic_timer.save!
+      else
+        self.topic_timers << topic_timer
       end
+
+      topic_timer
     end
-
-    self
   end
 
   def read_restricted_category?
@@ -1118,6 +1118,7 @@ SQL
     builder.where("p.post_number > 1")
     builder.where("p.user_id != t.user_id")
     builder.where("p.user_id in (:user_ids)", {user_ids: opts[:user_ids]}) if opts[:user_ids]
+    builder.where("p.post_type = :post_type", post_type: Post.types[:regular])
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
     builder.exec
   end
@@ -1136,11 +1137,11 @@ SQL
     FROM (
       SELECT t.id, t.created_at::date AS created_at, MIN(p.post_number) first_reply
       FROM topics t
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL AND p.post_type = #{Post.types[:regular]}
       /*where*/
       GROUP BY t.id
     ) tt
-    WHERE tt.first_reply IS NULL
+    WHERE tt.first_reply IS NULL OR tt.first_reply < 2
     GROUP BY tt.created_at
     ORDER BY tt.created_at
   SQL
@@ -1160,11 +1161,11 @@ SQL
     FROM (
       SELECT t.id, MIN(p.post_number) first_reply
       FROM topics t
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL AND p.post_type = #{Post.types[:regular]}
       /*where*/
       GROUP BY t.id
     ) tt
-    WHERE tt.first_reply IS NULL
+    WHERE tt.first_reply IS NULL OR tt.first_reply < 2
   SQL
 
   def self.with_no_response_total(opts={})
@@ -1185,6 +1186,15 @@ SQL
     private_topic = TopicConverter.new(self, user).convert_to_private_message
     add_small_action(user, "private_topic") if private_topic
     private_topic
+  end
+
+  def pm_with_non_human_user?
+    Topic.private_messages
+      .joins("LEFT JOIN topic_allowed_groups ON topics.id = topic_allowed_groups.topic_id")
+      .where("topic_allowed_groups.topic_id IS NULL")
+      .where("topics.id = ?", self.id)
+      .where("(SELECT COUNT(*) FROM topic_allowed_users WHERE topic_allowed_users.topic_id = ? AND topic_allowed_users.user_id > 0) = 1", self.id)
+      .exists?
   end
 
   private
@@ -1259,6 +1269,7 @@ end
 #  pinned_until                  :datetime
 #  fancy_title                   :string(400)
 #  highest_staff_post_number     :integer          default(0), not null
+#  featured_link                 :string
 #
 # Indexes
 #

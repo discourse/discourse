@@ -1,9 +1,9 @@
 class DraftSequence < ActiveRecord::Base
   def self.next!(user,key)
     user_id = user
-    user_id = user.id unless user.class == Fixnum
+    user_id = user.id unless user.is_a?(Integer)
 
-    return 0 if user_id == Discourse::SYSTEM_USER_ID
+    return 0 if user_id < 0
 
     h = { user_id: user_id, draft_key: key }
     c = DraftSequence.find_by(h)
@@ -19,7 +19,7 @@ class DraftSequence < ActiveRecord::Base
     return nil unless user
 
     user_id = user
-    user_id = user.id unless user.class == Fixnum
+    user_id = user.id unless user.is_a?(Integer)
 
     # perf critical path
     r = exec_sql('select sequence from draft_sequences where user_id = ? and draft_key = ?', user_id, key).values

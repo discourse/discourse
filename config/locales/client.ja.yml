@@ -188,7 +188,6 @@ ja:
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "新規ユーザー"
       active_user_count: "アクティブユーザー"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 %{contact_info}までご連絡ください"
@@ -293,7 +292,6 @@ ja:
       add: "追加"
       automatic_group: 自動作成グループ
       closed_group: クローズドグループ
-      allow_membership_requests: "ユーザーがグループオーナーに対してメンバーシップリクエストを送信できるようにする(全ユーザーがグループへメンション出来るようにする必要があります。)"
       membership: "メンバーシップ"
       user_count: "メンバー数"
       selector_placeholder: "メンバーを追加"
@@ -427,7 +425,6 @@ ja:
         instructions: |
           この設定は、アクティビティの情報機能を無効化します。<br />
           ミュートしているトピックやカテゴリはこれらのメールには含まれません。
-        daily: "デイリーアップデートを送る"
         individual: "新しい投稿がある場合にメールで送る"
       watched_categories: "ウォッチ中"
       tracked_categories: "追跡中"
@@ -498,7 +495,6 @@ ja:
         instructions: "背景画像は、幅590pxで中央揃えになります"
       email:
         title: "メールアドレス"
-        instructions: "外部に公開されることはありません"
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは {{provider}} によって認証されています"
@@ -506,22 +502,17 @@ ja:
           other: "最後に利用されてから{{count}}分以上経過した場合にメールを送ります。"
       name:
         title: "名前"
-        instructions: "フルネーム(任意)"
         instructions_required: "氏名"
         too_short: "名前が短いです"
         ok: "問題ありません"
       username:
         title: "ユーザー名"
-        instructions: "空白を含まず、被らない名前を入力してください"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
         available: "ユーザ名は利用可能です"
-        global_match: "メールアドレスが登録済みのユーザ名と一致しました"
-        global_mismatch: "既に利用されています。{{suggestion}} などはどうでしょうか？"
         not_available: "利用出来ない名前です。 {{suggestion}} などはどうでしょうか？"
         too_short: "ユーザ名が短すぎます"
         too_long: "ユーザ名が長すぎます"
         checking: "ユーザ名が利用可能か確認しています..."
-        enter_email: 'ユーザ名が見つかりました; 正しいメールアドレスを入力してください'
         prefilled: "この登録ユーザにマッチするメールアドレスが見つかりました"
       locale:
         title: "表示する言語"
@@ -610,7 +601,6 @@ ja:
         same_as_username: "パスワードがユーザ名と一致しています"
         same_as_email: "パスワードとメールアドレスが一致しています"
         ok: "パスワード OK。"
-        instructions: "%{count} 文字以上の長さにしてください。"
       summary:
         title: "情報"
         stats: "統計"
@@ -746,7 +736,6 @@ ja:
       logging_in: "ログイン中..."
       or: "または"
       authenticating: "認証中..."
-      awaiting_confirmation: "アカウントはアクティベーション待ち状態です。もう一度アクティベーションメールを送信するには「パスワードを忘れました」リンクをクリックしてください。"
       awaiting_approval: "アカウントはまだスタッフに承認されていません。承認され次第メールにてお知らせいたします。"
       requires_invite: "申し訳ありませんが、このフォーラムは招待制です。"
       not_activated: "まだログインできません。<b>{{sentTo}}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
@@ -850,15 +839,6 @@ ja:
       modal_cancel: "キャンセル"
       cant_send_pm: "%{username}へメッセージを送ることはできません。"
       admin_options_title: "このトピックの詳細設定"
-      auto_close:
-        label: "このトピックを自動的にクローズする時間:"
-        error: "正しい値を入力してください。"
-        based_on_last_post: "このトピックの新しい投稿が古くなるまではクローズしない"
-        all:
-          examples: '時間 (例: 24), 時刻(例: 17:30 ), タイムスタンプ(2013-11-22 14:00) を入力してください'
-        limited:
-          units: "(# of hours)"
-          examples: '時間(24)を入力してください'
     notifications:
       title: "@ユーザ名 のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "通知はありません"
@@ -950,14 +930,11 @@ ja:
         dismiss_new: "既読にする"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
-        change_category: "カテゴリを変更"
         close_topics: "トピックをクローズする"
         archive_topics: "アーカイブトピック"
-        notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択してください"
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
-        change_tags: "タグを変更"
       none:
         unread: "未読のトピックはありません。"
         new: "新しいトピックはありません。"
@@ -1030,11 +1007,7 @@ ja:
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
-      auto_close_notice: "このトピックはあと%{timeLeft}で自動的にクローズします。"
-      auto_close_notice_based_on_last_post: "このトピックは最後の返信から%{duration} 経つとクローズします"
       auto_close_title: 'オートクローズの設定'
-      auto_close_save: "保存"
-      auto_close_remove: "このトピックを自動でクローズしない"
       timeline:
         back_description: "未読の最終投稿へ戻る"
       progress:
@@ -1054,10 +1027,6 @@ ja:
           '3_2': 'このトピックに参加中のため通知されます。'
           '3_1': 'このトピックを作成したため通知されます。'
           '3': 'このトピックに参加中のため通知されます。'
-          '2_8': 'このカテゴリを追跡しているため通知されます。'
-          '2_4': 'このトピックに返信したため通知されます。'
-          '2_2': 'このトピックを追跡中のため通知されます。'
-          '2': '<a href="/users/{{username}}/preferences">このトピックを閲覧した</a>ため通知されます。'
           '1_2': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
           '1': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
           '0_7': 'このカテゴリに関して一切通知を受け取りません。'
@@ -1093,7 +1062,6 @@ ja:
         open: "トピックをオープン"
         close: "トピックをクローズする"
         multi_select: "投稿を選択"
-        auto_close: "自動でクローズする..."
         pin: "トピックを固定"
         unpin: "トピックの固定を解除"
         unarchive: "トピックのアーカイブ解除"
@@ -1109,9 +1077,6 @@ ja:
         pin_globally: "トピックを全サイト的にピン留めする"
         make_banner: "バナートピック"
         remove_banner: "バナートピックを削除"
-      reply:
-        title: '返信'
-        help: 'このトピックに返信する'
       clear_pin:
         title: "ピンを解除する"
         help: "このトピックのピンを外し、トピックリストの先頭に表示されないようにする"
@@ -1192,7 +1157,6 @@ ja:
           other: "この {{count}} つの投稿の新しいオーナーを選択してください。（前のオーナー：<b>{{old_user}}</b>）"
         instructions_warn: "この投稿についての通知が新しいユーザにさかのぼって移動されることはないので注意してください。<br>警告: 投稿の関連データの所有権は、新しいユーザに転送されません。 注意して使用してください。"
       change_timestamp:
-        title: "タイムスタンプを変更"
         action: "タイムスタンプを変更"
       multi_select:
         select: '選択'
@@ -1343,13 +1307,10 @@ ja:
         displays:
           inline:
             title: "追加・削除箇所をインラインで表示"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "差分を横に並べて表示"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "ソース文書で表示する"
-            button: 'ソース文書'
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'
@@ -1387,8 +1348,6 @@ ja:
       already_used: 'この色は他のカテゴリで利用しています'
       security: "セキュリティ"
       images: "画像"
-      auto_close_label: "トピックが自動的にクローズするまでの時間:"
-      auto_close_units: "時間"
       email_in: "カスタムメールアドレス:"
       email_in_allow_strangers: "登録されていないユーザからメールを受け取ります"
       email_in_disabled: "メールでの新規投稿は、サイトの設定で無効になっています。メールでの新規投稿を有効にするには"
@@ -1474,7 +1433,6 @@ ja:
     views_lowercase:
       other: " 閲覧"
     replies: "返信"
-    views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
     likes_lowercase:
@@ -1487,7 +1445,6 @@ ja:
     history: "History"
     changed_by: "by {{author}}"
     raw_email:
-      title: "メール"
       not_available: "利用不可"
     categories_list: "カテゴリ一覧"
     filters:
@@ -1615,8 +1572,6 @@ ja:
     badges:
       granted_on: "%{date}にゲット!"
       title: バッジ
-      allow_title: "タイトルに使える"
-      multiple_grant: "何回もゲット出来る"
       badge_count:
         other: "%{count}個のバッジ"
     tagging:
@@ -1659,8 +1614,6 @@ ja:
         backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Show Detailed Traffic Report"
         reports:
           today: "今日"
@@ -1833,7 +1786,6 @@ ja:
             without_uploads: "はい(ファイルは含まない)"
           download:
             label: "ダウンロード"
-            title: "バックアップをダウンロード"
           destroy:
             title: "バックアップを削除"
             confirm: "このバックアップを削除しますか？"
@@ -1863,31 +1815,12 @@ ja:
       customize:
         title: "カスタマイズ"
         long_title: "サイトのカスタマイズ"
-        css: "CSS"
-        header: "ヘッダ"
-        top: "トップ"
-        footer: "フッター"
-        head_tag:
-          text: "</head>"
-          title: "</head>タグの前に挿入されるHTML"
-        body_tag:
-          text: "</body>"
-          title: "</body>タグの前に挿入されるHTML"
-        override_default: "標準のスタイルシートを読み込まない"
-        enabled: "有効にする"
         preview: "プレビュー"
-        undo_preview: "プレビューを削除"
-        rescue_preview: "既定スタイル"
-        explain_preview: "カスタムスタイルシートでサイトを表示する"
-        explain_undo_preview: "有効中のカスタムスタイルシートへ戻る"
-        explain_rescue_preview: "既定スタイルシートでサイトを表示する"
         save: "保存"
         new: "新規"
         new_style: "新しいスタイル"
         import: "インポート"
-        import_title: "ファイルを選択するかテキストをペースト"
         delete: "削除"
-        delete_confirm: "このカスタマイズ設定を削除しますか?"
         about: "サイトカスタマイズ設定により、サイトのヘッダとスタイルシートを変更できます。設定を選択するか、編集を開始して新たな設定を追加してください。"
         color: "カラー"
         opacity: "透明度"
@@ -1897,13 +1830,9 @@ ja:
           subject: "件名"
           multiple_subjects: "このメールのテンプレートは複数の件名があります。"
           none_selected: "編集するメールテンプレートを選択してください。"
-        css_html:
-          title: "CSS, HTML"
-          long_title: "CSS と HTML のカスタマイズ"
         colors:
           title: "カラー"
           long_title: "カラースキーム"
-          about: "CSSを記述することなくサイトのカラーを変更できます。スキームを追加して始めてください"
           new_name: "カラースキームを作成"
           copy_name_prefix: "のコピー"
           delete_confirm: "このカラースキームを削除してもよろしいですか？"
@@ -2006,7 +1935,6 @@ ja:
           do_nothing: "何もしない"
         staff_actions:
           title: "スタッフ操作"
-          instructions: "ユーザ名、アクションをクリックすると、リストはフィルタされます。プロフィール画像をクリックするとユーザページに遷移します"
           clear_filters: "すべて表示する"
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
@@ -2026,8 +1954,6 @@ ja:
             change_trust_level: "トラストレベルを変更"
             change_username: "ユーザ名変更"
             change_site_setting: "サイトの設定を変更"
-            change_site_customization: "サイトのカスタマイズ設定を変更"
-            delete_site_customization: "サイトのカスタマイズ設定を削除"
             suspend_user: "ユーザを凍結する"
             unsuspend_user: "ユーザの凍結を解除する"
             grant_badge: "バッジを付与"
@@ -2141,8 +2067,6 @@ ja:
         blocked: "ブロック状態"
         staged: "ステージドモードの状態"
         show_admin_profile: "アカウントの管理"
-        edit_title: "タイトルを編集"
-        save_title: "タイトルを保存"
         refresh_browsers: "ブラウザを強制更新"
         refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
         show_public_profile: "パブリックプロフィールを見る"

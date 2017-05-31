@@ -1,6 +1,6 @@
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "v2"
+  EMOJI_VERSION = "v3"
 
   include ActiveModel::SerializerSupport
 
@@ -12,14 +12,6 @@ class Emoji
 
   def initialize(path = nil)
     @path = path
-  end
-
-  def remove
-    return if path.blank?
-    if File.exists?(path)
-      File.delete(path) rescue nil
-      Emoji.clear_cache
-    end
   end
 
   def self.all
@@ -46,37 +38,13 @@ class Emoji
     Emoji.custom.detect { |e| e.name == name }
   end
 
-  def self.create_from_path(path)
-    extension = File.extname(path)
-    Emoji.new(path).tap do |e|
-      e.name = File.basename(path, ".*")
-      e.url = "#{base_url}/#{e.name}#{extension}"
-    end
-  end
-
   def self.create_from_db_item(emoji)
     name = emoji["name"]
     filename = "#{emoji['filename'] || name}.png"
     Emoji.new.tap do |e|
       e.name = name
-      e.url = "/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
+      e.url = "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
     end
-  end
-
-  def self.create_for(file, name)
-    extension = File.extname(file.original_filename)
-    path = "#{Emoji.base_directory}/#{name}#{extension}"
-    full_path = "#{Rails.root}/#{path}"
-
-    # store the emoji
-    FileUtils.mkdir_p(Pathname.new(path).dirname)
-    File.open(path, "wb") { |f| f << file.tempfile.read }
-    # clear the cache
-    Emoji.clear_cache
-    # launch resize job
-    Jobs.enqueue(:resize_emoji, path: full_path)
-    # return created emoji
-    Emoji[name]
   end
 
   def self.cache_key(name)
@@ -124,13 +92,17 @@ class Emoji
   def self.load_custom
     result = []
 
-    Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
-       .sort
-       .each { |emoji| result << Emoji.create_from_path(emoji) }
+    CustomEmoji.order(:name).all.each do |emoji|
+      result << Emoji.new.tap do |e|
+        e.name = emoji.name
+        e.url = emoji.upload&.url
+      end
+    end
 
     Plugin::CustomEmoji.emojis.each do |name, url|
       result << Emoji.new.tap do |e|
         e.name = name
+        url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
         e.url = url
       end
     end
@@ -172,6 +144,16 @@ class Emoji
     @unicode_replacements["\u{2665}"] = 'heart'
 
     @unicode_replacements
+  end
+
+  def self.unicode_unescape(string)
+    string.each_char.map do |c|
+      if str = unicode_replacements[c]
+        ":#{str}:"
+      else
+        c
+      end
+    end.join
   end
 
   def self.lookup_unicode(name)

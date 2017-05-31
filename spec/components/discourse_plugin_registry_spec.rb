@@ -44,6 +44,15 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '.register_html_builder' do
+    it "can register and build html" do
+      DiscoursePluginRegistry.register_html_builder(:my_html) { "<b>my html</b>" }
+      expect(DiscoursePluginRegistry.build_html(:my_html)).to eq('<b>my html</b>')
+      DiscoursePluginRegistry.reset!
+      expect(DiscoursePluginRegistry.build_html(:my_html)).to be_blank
+    end
+  end
+
   context '.register_css' do
     before do
       registry_instance.register_css('hello.css')

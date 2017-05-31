@@ -1,24 +1,26 @@
-<div class="container">
-  <div class='directory'>
+{{#load-more selector=".directory .user" action="loadMore"}}
+  <div class="container">
+    <div class='directory'>
 
-    <div class='clearfix user-controls'>
-      {{period-chooser period=period}}
-      {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+      <div class='clearfix user-controls'>
+        {{period-chooser period=period}}
+        {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+      </div>
+
+      {{#conditional-loading-spinner condition=model.loading}}
+        {{#if model.length}}
+          <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
+          {{#each model as |item|}}
+            {{directory-item tagName="div" class="user" item=item showTimeRead=showTimeRead}}
+          {{/each}}
+
+          {{conditional-loading-spinner condition=model.loadingMore}}
+        {{else}}
+          <div class='clearfix'></div>
+          <p>{{i18n "directory.no_results"}}</p>
+        {{/if}}
+      {{/conditional-loading-spinner}}
+
     </div>
-
-    {{#conditional-loading-spinner condition=model.loading}}
-      {{#if model.length}}
-        <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
-        {{#each model as |item|}}
-          {{directory-item tagName="div" class="user" item=item showTimeRead=showTimeRead}}
-        {{/each}}
-
-        {{conditional-loading-spinner condition=model.loadingMore}}
-      {{else}}
-        <div class='clearfix'></div>
-        <p>{{i18n "directory.no_results"}}</p>
-      {{/if}}
-    {{/conditional-loading-spinner}}
-
   </div>
-</div>
+{{/load-more}}

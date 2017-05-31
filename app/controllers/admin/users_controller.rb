@@ -1,5 +1,6 @@
 require_dependency 'user_destroyer'
 require_dependency 'admin_user_index_query'
+require_dependency 'admin_confirmation'
 
 class Admin::UsersController < Admin::AdminController
 
@@ -72,8 +73,7 @@ class Admin::UsersController < Admin::AdminController
 
   def log_out
     if @user
-      @user.auth_token = nil
-      @user.save!
+      @user.user_auth_tokens.destroy_all
       @user.logged_out
       render json: success_json
     else
@@ -104,10 +104,8 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
-    guardian.ensure_can_grant_admin!(@user)
-    @user.grant_admin!
-    StaffActionLogger.new(current_user).log_grant_admin(@user)
-    render_serialized(@user, AdminUserSerializer)
+    AdminConfirmation.new(@user, current_user).create_confirmation
+    render json: success_json
   end
 
   def revoke_moderation
@@ -142,11 +140,13 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
-
   def primary_group
+    group = Group.find(params[:primary_group_id].to_i)
     guardian.ensure_can_change_primary_group!(@user)
-    @user.primary_group_id = params[:primary_group_id]
-    @user.save!
+    if group.users.include?(@user)
+      @user.primary_group_id = params[:primary_group_id]
+      @user.save!
+    end
     render nothing: true
   end
 
@@ -322,6 +322,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def invite_admin
+    raise Discourse::InvalidAccess.new unless is_api?
 
     email = params[:email]
     unless user = User.find_by_email(email)
@@ -349,7 +350,9 @@ class Admin::UsersController < Admin::AdminController
                     email_token: email_token.token)
     end
 
-    render json: success_json.merge!(password_url: "#{Discourse.base_url}/users/password-reset/#{email_token.token}")
+    render json: success_json.merge!(
+      password_url: "#{Discourse.base_url}#{password_reset_token_path(token: email_token.token)}"
+    )
 
   end
 
@@ -364,7 +367,7 @@ class Admin::UsersController < Admin::AdminController
 
   def reset_bounce_score
     guardian.ensure_can_reset_bounce_score!(@user)
-    @user.user_stat.update_columns(bounce_score: 0, reset_bounce_score_after: nil)
+    @user.user_stat&.reset_bounce_score!
     render json: success_json
   end
 

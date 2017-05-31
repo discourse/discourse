@@ -33,9 +33,9 @@ export default Ember.Controller.extend({
     return !automatic && isGroupOwner;
   },
 
-  @computed('model.name', 'model.full_name')
-  groupName(name, fullName) {
-    return (fullName || name).capitalize();
+  @computed('model.displayName', 'model.full_name')
+  groupName(displayName, fullName) {
+    return (fullName || displayName).capitalize();
   },
 
   @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')
@@ -53,18 +53,18 @@ export default Ember.Controller.extend({
     this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
-  @computed('model.is_group_user', 'model.is_group_owner', 'model.automatic')
-  getTabs(isGroupUser, isGroupOwner, automatic) {
+  @computed('model.is_group_owner', 'model.automatic')
+  getTabs() {
     return this.get('tabs').filter(t => {
-      let display = true;
+      let canSee = true;
 
-      if (this.currentUser && t.get('requiresGroupAdmin')) {
-        display = automatic ? false : (this.currentUser.admin || isGroupOwner);
-      } else if (t.get('requiresGroupAdmin')) {
-        display = false;
+      if (this.currentUser && t.requiresGroupAdmin) {
+        canSee = this.currentUser.canManageGroup(this.get('model'));
+      } else if (t.requiresGroupAdmin) {
+        canSee = false;
       }
 
-      return display;
+      return canSee;
     });
   }
 });

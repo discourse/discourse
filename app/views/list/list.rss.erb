@@ -6,7 +6,7 @@
     <title><%= @title %></title>
     <link><%= @link %></link>
     <description><%= @description %></description>
-    <% if lang %><language><%= lang%></language><% end %>
+    <% if lang %><language><%= lang.sub('_', '-')%></language><% end %>
     <% if @topic_list.topics && @topic_list.topics.length > 0 %>
       <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
       <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
@@ -20,7 +20,7 @@
           <category><%= topic.category.name %></category>
           <description><![CDATA[
             <% if username.present? %>
-            <p><%= t('author_wrote', author: link_to("@#{username}", "#{Discourse.base_url}/users/#{topic.user.username_lower}")).html_safe %></p>
+            <p><%= t('author_wrote', author: link_to("@#{username}", "#{Discourse.base_url}/u/#{topic.user.username_lower}")).html_safe %></p>
             <% end %>
             <blockquote>
               <%= topic.posts.first.cooked.html_safe %>

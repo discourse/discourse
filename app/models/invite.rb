@@ -1,6 +1,7 @@
 require_dependency 'rate_limiter'
 
 class Invite < ActiveRecord::Base
+  class UserExists < StandardError; end
   include RateLimiter::OnCreateRecord
   include Trashable
 
@@ -51,15 +52,15 @@ class Invite < ActiveRecord::Base
     invalidated_at.nil?
   end
 
-  def redeem
-    InviteRedeemer.new(self).redeem unless expired? || destroyed? || !link_valid?
+  def redeem(username: nil, name: nil, password: nil)
+    InviteRedeemer.new(self, username, name, password).redeem unless expired? || destroyed? || !link_valid?
   end
 
   def self.extend_permissions(topic, user, invited_by)
     if topic.private_message?
       topic.grant_permission_to_user(user.email)
     elsif topic.category && topic.category.groups.any?
-      if Guardian.new(invited_by).can_invite_to?(topic) && !SiteSetting.enable_sso
+      if Guardian.new(invited_by).can_invite_via_email?(topic)
         (topic.category.groups - user.groups).each do |group|
           group.add(user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
@@ -103,7 +104,7 @@ class Invite < ActiveRecord::Base
 
     if user
       extend_permissions(topic, user, invited_by) if topic
-      return nil
+      raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
     end
 
     invite = Invite.with_deleted
@@ -115,6 +116,8 @@ class Invite < ActiveRecord::Base
       invite.destroy
       invite = nil
     end
+
+    invite.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now) if invite
 
     if !invite
       create_args = { invited_by: invited_by, email: lower_email }

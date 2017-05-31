@@ -12,20 +12,27 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
                             .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  after_save :refresh_notification_count
-  after_destroy :refresh_notification_count
-
   after_commit :send_email
+  # This is super weird because the tests fail if we don't specify `on: :destroy`
+  # TODO: Revert back to default in Rails 5 
+  after_commit :refresh_notification_count, on: :destroy
+  after_commit :refresh_notification_count, on: [:create, :update]
 
   def self.ensure_consistency!
-    Notification.exec_sql("
-    DELETE FROM Notifications n WHERE notification_type = :id AND
-    NOT EXISTS(
-      SELECT 1 FROM posts p
-      JOIN topics t ON t.id = p.topic_id
-      WHERE p.deleted_at is null AND t.deleted_at IS NULL
-        AND p.post_number = n.post_number AND t.id = n.topic_id
-    )" , id: Notification.types[:private_message])
+    Notification.exec_sql <<-SQL
+      DELETE
+        FROM notifications n
+       WHERE notification_type = #{Notification.types[:private_message]}
+         AND NOT EXISTS (
+            SELECT 1
+              FROM posts p
+              JOIN topics t ON t.id = p.topic_id
+             WHERE p.deleted_at IS NULL
+               AND t.deleted_at IS NULL
+               AND p.post_number = n.post_number
+               AND t.id = n.topic_id
+          )
+    SQL
   end
 
   def self.types
@@ -45,7 +52,8 @@ class Notification < ActiveRecord::Base
                         custom: 14,
                         group_mentioned: 15,
                         group_message_summary: 16,
-                        watching_first_post: 17
+                        watching_first_post: 17,
+                        topic_reminder: 18
                        )
   end
 
@@ -65,13 +73,12 @@ class Notification < ActiveRecord::Base
   end
 
   def self.read(user, notification_ids)
-    count = Notification.where(user_id: user.id,
-                               id: notification_ids,
-                               read: false).update_all(read: true)
+    count = Notification.where(user_id: user.id)
+                        .where(id: notification_ids)
+                        .where(read: false)
+                        .update_all(read: true)
 
-    if count > 0
-      user.publish_notifications_state
-    end
+    user.publish_notifications_state if count > 0
   end
 
   def self.interesting_after(min_date)

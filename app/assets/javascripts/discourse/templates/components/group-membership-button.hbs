@@ -6,13 +6,13 @@
         label="groups.leave"
         disabled=updatingMembership}}
   {{else}}
-    {{d-button action=joinGroupAction
+    {{d-button action="joinGroup"
         class="group-index-join"
         icon="plus"
         label="groups.join"
         disabled=updatingMembership}}
   {{/if}}
-{{else if canRequestMembership}}
+{{else if model.allow_membership_requests}}
   {{#if userIsGroupUser}}
     {{#if showMembershipStatus}}
       {{d-button
@@ -22,7 +22,7 @@
           disabled=true}}
     {{/if}}
   {{else}}
-    {{d-button action=requestMembershipAction
+    {{d-button action="requestMembership"
         class="group-index-request"
         icon="envelope"
         label="groups.request"}}

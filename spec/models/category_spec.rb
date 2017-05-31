@@ -310,6 +310,7 @@ describe Category do
       @category.update_attributes(name: 'Troutfishing')
       @topic.reload
       expect(@topic.title).to match(/Troutfishing/)
+      expect(@topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
@@ -342,7 +343,7 @@ describe Category do
 
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
-      expect(category.topic.auto_close_at).to be_nil
+      expect(category.topic.public_topic_timer).to eq(nil)
     end
 
     describe "creating a new category with the same slug" do

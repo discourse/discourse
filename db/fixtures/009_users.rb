@@ -27,21 +27,11 @@ UserOption.where(user_id: -1).update_all(
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
 
-# 60 minutes after our migration runs we need to exectue this code...
-duration = Rails.env.production? ? 60 : 0
-if User.exec_sql("SELECT 1 FROM schema_migration_details
-                  WHERE EXISTS(
-                      SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE table_schema = 'public' AND table_name = 'users' AND column_name = 'last_redirected_to_top_at'
-                    ) AND
-                    name = 'MoveTrackingOptionsToUserOptions' AND
-                    created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
-                 ").to_a.length > 0
 
-
-  User.transaction do
-    STDERR.puts "Removing superflous user columns!"
-    %w[
+ColumnDropper.drop(
+  table: 'users',
+  after_migration: 'AddUserAuthTokens',
+  columns:  %w[
       email_always
       mailing_list_mode
       email_digests
@@ -57,12 +47,12 @@ if User.exec_sql("SELECT 1 FROM schema_migration_details
       auto_track_topics_after_msecs
       new_topic_duration_minutes
       last_redirected_to_top_at
-].each do |column|
-      User.exec_sql("ALTER TABLE users DROP column IF EXISTS #{column}")
-    end
-
-  end
-end
+      auth_token
+      auth_token_updated_at ],
+  on_drop: ->(){
+    STDERR.puts 'Removing superflous users columns!'
+  }
+)
 
 # User for the smoke tests
 if ENV["SMOKE"] == "1"

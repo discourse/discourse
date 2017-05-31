@@ -95,5 +95,14 @@ module ImportScripts
         url: post.url,
       }
     end
+
+    def user_already_imported?(import_id)
+      @users.has_key?(import_id) || @users.has_key?(import_id.to_s)
+    end
+
+    def post_already_imported?(import_id)
+      @posts.has_key?(import_id) || @posts.has_key?(import_id.to_s)
+    end
+
   end
 end

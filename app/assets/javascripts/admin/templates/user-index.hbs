@@ -7,6 +7,9 @@
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
     {{/if}}
+    {{#if model.can_view_action_logs}}
+      {{d-button action="viewActionLogs" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
+    {{/if}}
     {{#if model.active}}
       {{#if model.can_impersonate}}
         {{d-button class="btn-danger" action="impersonate" icon="crosshairs" label="admin.impersonate.title" title="admin.impersonate.help"}}
@@ -19,18 +22,40 @@
 
   <div class='display-row username'>
     <div class='field'>{{i18n 'user.username.title'}}</div>
-    <div class='value'>{{model.username}}</div>
+    <div class='value'>
+      {{#if editingUsername}}
+        {{text-field value=userUsernameValue autofocus="autofocus"}}
+      {{else}}
+        <span {{action "toggleUsernameEdit"}}>{{model.username}}</span>
+      {{/if}}
+    </div>
     <div class='controls'>
-      {{#link-to 'preferences.username' model class="btn"}}
-        {{fa-icon "pencil"}}
-        {{i18n 'user.change_username.title'}}
-      {{/link-to}}
+      {{#if editingUsername}}
+        {{d-button action="saveUsername" label="admin.user_fields.save"}}
+        <a href {{action "toggleUsernameEdit"}}>{{i18n 'cancel'}}</a>
+      {{else}}
+        {{d-button action="toggleUsernameEdit" icon="pencil"}}
+      {{/if}}
     </div>
   </div>
 
   <div class='display-row'>
     <div class='field'>{{i18n 'user.name.title'}}</div>
-    <div class='value'>{{model.name}}</div>
+    <div class='value'>
+      {{#if editingName}}
+        {{text-field value=userNameValue autofocus="autofocus"}}
+      {{else}}
+        <span {{action "toggleNameEdit"}}>{{model.name}}</span>
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if editingName}}
+        {{d-button action="saveName" label="admin.user_fields.save"}}
+        <a href {{action "toggleNameEdit"}}>{{i18n 'cancel'}}</a>
+      {{else}}
+        {{d-button action="toggleNameEdit" icon="pencil"}}
+      {{/if}}
+    </div>
   </div>
 
   {{#if canCheckEmails}}
@@ -74,6 +99,9 @@
   <div class='display-row'>
     <div class='field'>{{i18n 'user.avatar.title'}}</div>
     <div class='value'>{{avatar content imageSize="large"}}</div>
+    <div class="controls">
+      {{{i18n "admin.user.visit_profile" url=preferencesPath}}}
+    </div>
   </div>
 
   <div class='display-row'>
@@ -87,10 +115,10 @@
     </div>
     <div class='controls'>
       {{#if editingTitle}}
-        {{d-button action="saveTitle" label="admin.user.save_title"}}
+        {{d-button action="saveTitle" label="admin.user_fields.save"}}
         <a href {{action "toggleTitleEdit"}}>{{i18n 'cancel'}}</a>
       {{else}}
-        {{d-button action="toggleTitleEdit" icon="pencil" label="admin.user.edit_title"}}
+        {{d-button action="toggleTitleEdit" icon="pencil"}}
       {{/if}}
     </div>
   </div>
@@ -318,32 +346,31 @@
   </div>
 </section>
 
-<section class='details'>
-  <h1>{{i18n 'admin.groups.title'}}</h1>
-
-  {{#if currentUser.admin}}
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.groups.automatic'}}</div>
-      <div class='value'>{{automaticGroups}}</div>
-    </div>
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.groups.custom'}}</div>
-      <div class='value'>
-        {{admin-group-selector selected=model.customGroups available=availableGroups}}
+{{#if currentUser.admin}}
+  <section class='details'>
+    <h1>{{i18n 'admin.groups.title'}}</h1>
+      <div class='display-row'>
+        <div class='field'>{{i18n 'admin.groups.automatic'}}</div>
+        <div class='value'>{{automaticGroups}}</div>
       </div>
-      <div class='controls'>
-        {{#if model.customGroups}}
-          {{i18n 'admin.groups.primary'}}
-          {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
-        {{/if}}
-        {{#if primaryGroupDirty}}
-          {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
-          {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
-        {{/if}}
+      <div class='display-row'>
+        <div class='field'>{{i18n 'admin.groups.custom'}}</div>
+        <div class='value'>
+          {{admin-group-selector selected=model.customGroups available=availableGroups}}
+        </div>
+        <div class='controls'>
+          {{#if model.customGroups}}
+            {{i18n 'admin.groups.primary'}}
+            {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+          {{/if}}
+          {{#if primaryGroupDirty}}
+            {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
+            {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
+          {{/if}}
+        </div>
       </div>
-    </div>
-  {{/if}}
-</section>
+  </section>
+{{/if}}
 
 <section class='details'>
   <h1>{{i18n 'admin.user.activity'}}</h1>

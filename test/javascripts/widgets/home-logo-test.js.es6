@@ -11,7 +11,7 @@ widgetTest('basics', {
   template: '{{mount-widget widget="home-logo" args=args}}',
   setup() {
     this.siteSettings.logo_url = bigLogo;
-    this.siteSettings.logo_small_url= smallLogo;
+    this.siteSettings.logo_small_url = smallLogo;
     this.siteSettings.title = title;
     this.set('args', { minimized: false });
   },
@@ -25,7 +25,7 @@ widgetTest('basics', {
   }
 });
 
-widgetTest('basics - minmized', {
+widgetTest('basics - minimized', {
   template: '{{mount-widget widget="home-logo" args=args}}',
   setup() {
     this.siteSettings.logo_url = bigLogo;

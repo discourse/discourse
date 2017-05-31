@@ -82,7 +82,6 @@ class Report
                                         .sum(:count)
   end
 
-
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
 
@@ -122,7 +121,7 @@ class Report
 
   def self.report_posts(report)
     basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date, report.category_id
-    countable = Post.public_posts
+    countable = Post.public_posts.where(post_type: Post.types[:regular])
     countable = countable.joins(:topic).where("topics.category_id = ?", report.category_id) if report.category_id
     add_counts report, countable, 'posts.created_at'
   end

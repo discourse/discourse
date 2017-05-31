@@ -82,7 +82,7 @@ export default function(options) {
   let prevTerm = null;
 
   // input is handled differently
-  const isInput = this[0].tagName === "INPUT";
+  const isInput = this[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
 
   function closeAutocomplete() {
@@ -175,8 +175,10 @@ export default function(options) {
       wrap.width(width);
     }
 
-    if(options.single) {
-      this.css("width","100%");
+    if(options.single && !options.width) {
+      this.css("width", "100%");
+    } else if (options.width) {
+      this.css("width", options.width);
     } else {
       this.width(150);
     }
@@ -238,6 +240,7 @@ export default function(options) {
     var pos = null;
     var vOffset = 0;
     var hOffset = 0;
+
     if (isInput) {
       pos = {
         left: 0,
@@ -250,15 +253,21 @@ export default function(options) {
         pos: completeStart,
         key: options.key
       });
+
       hOffset = 27;
+      if (options.treatAsTextarea) vOffset = -32;
     }
     div.css({
       left: "-1000px"
     });
 
-    me.parent().append(div);
+    if (options.appendSelector) {
+      me.parents(options.appendSelector).append(div);
+    } else {
+      me.parent().append(div);
+    }
 
-    if (!isInput) {
+    if (!isInput && !options.treatAsTextarea) {
       vOffset = div.height();
 
       if ((window.innerHeight - me.outerHeight() - $("header.d-header").innerHeight()) < vOffset) {

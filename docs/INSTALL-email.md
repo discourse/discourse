@@ -13,8 +13,15 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP server address? smtp.sparkpostmail.com
     SMTP user name?      SMTP_Injection
     SMTP password?       [Any API key with Send via SMTP permission]
+    
+#### [Elastic Email][ee] &mdash; 150k emails/month
 
-#### [SendGrid][sg] &mdash; 12k emails/month
+    SMTP server address? smtp.elasticemail.com
+    SMTP user name?      [Your registered email address]
+    SMTP password?       [Elastic Email API Key]
+    SMTP port?           2525
+
+#### [SendGrid][sg] &mdash; 40k emails on a 30 day trial
 
     SMTP server address? smtp.sendgrid.net
     SMTP user name?      apikey
@@ -22,7 +29,7 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
 
 We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
 
-#### [Mailgun][gun] &mdash; 10k emails/month
+#### [Mailgun][gun] &mdash; 10k emails/month (with credit card)
 
     SMTP server address? smtp.mailgun.org
     SMTP user name?      [SMTP credentials for your domain under domains tab]
@@ -33,6 +40,7 @@ We recommend creating an [API Key][sg2] instead of using your SendGrid username 
 Go to [My Account page](https://www.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://www.mailjet.com/account/setup) link.
 
    [sp]: https://www.sparkpost.com/
+   [ee]: https://elasticemail.com
   [jet]: https://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
    [sg]: https://sendgrid.com/

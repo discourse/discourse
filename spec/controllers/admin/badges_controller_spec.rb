@@ -26,6 +26,19 @@ describe Admin::BadgesController do
       end
     end
 
+    describe '.create' do
+      render_views
+
+      it 'can create badges correctly' do
+        SiteSetting.enable_badge_sql = true
+        result = xhr :post, :create, name: 'test', query: 'select 1 as user_id, null as granted_at', badge_type_id: 1
+        json = JSON.parse(result.body)
+        expect(result.status).to eq(200)
+        expect(json["badge"]["name"]).to eq('test')
+        expect(json["badge"]["query"]).to eq('select 1 as user_id, null as granted_at')
+      end
+    end
+
     context '.save_badge_groupings' do
 
       it 'can save badge groupings' do
@@ -75,6 +88,19 @@ describe Admin::BadgesController do
     end
 
     context '.update' do
+
+      it 'does not update the name of system badges' do
+        editor_badge = Badge.find(Badge::Editor)
+        editor_badge_name = editor_badge.name
+
+        xhr :put, :update,
+            id: editor_badge.id,
+            name: "123456"
+
+        expect(response).to be_success
+        editor_badge.reload
+        expect(editor_badge.name).to eq(editor_badge_name)
+      end
 
       it 'does not allow query updates if badge_sql is disabled' do
         badge.query = "select 123"

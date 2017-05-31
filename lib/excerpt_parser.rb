@@ -14,6 +14,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @markdown_images = options[:markdown_images] == true
     @keep_newlines = options[:keep_newlines] == true
     @keep_emoji_images = options[:keep_emoji_images] == true
+    @keep_onebox_source = options[:keep_onebox_source] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
   end
@@ -27,6 +28,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       parser.parse(html)
     end
     excerpt = me.excerpt.strip
+    excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source]
     excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
     excerpt
   end
@@ -66,9 +68,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 
-        if attributes["alt"]
+        if !attributes["alt"].blank?
           characters("[#{attributes["alt"]}]")
-        elsif attributes["title"]
+        elsif !attributes["title"].blank?
           characters("[#{attributes["title"]}]")
         else
           characters("[#{I18n.t 'excerpt_image'}]")
@@ -83,8 +85,15 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         end
 
       when "aside"
-        @in_quote = true
+        attributes = Hash[*attributes.flatten]
 
+        unless @keep_onebox_source && attributes['class'].include?('onebox')
+          @in_quote = true
+        end
+      when 'article'
+        if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
+          @in_quote = true
+        end
       when "div", "span"
         if attributes.include?(["class", "excerpt"])
           @excerpt = ""

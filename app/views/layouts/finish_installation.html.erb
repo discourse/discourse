@@ -1,9 +1,9 @@
 <html>
   <head>
-    <%= stylesheet_link_tag 'wizard' %>
+    <%= discourse_stylesheet_link_tag 'wizard', theme_key: nil %>
     <%= render partial: "common/special_font_face" %>
-    <%= script 'jquery_include' %>
-    <%= script 'wizard-vendor' %>
+    <%= preload_script 'ember_jquery' %>
+    <%= preload_script 'wizard-vendor' %>
     <%= render partial: "layouts/head" %>
     <title><%= t 'wizard.title' %></title>
   </head>

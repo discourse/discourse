@@ -101,6 +101,7 @@ gl:
           other: "%{count} anos despois"
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
+      placeholder: Escolla unha data
     share:
       topic: 'compartir unha ligazón a este tema'
       post: 'publicación %{postNumber}'
@@ -136,7 +137,6 @@ gl:
         enabled: 'listado o %{when}'
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
-    wizard_required: "É hora de configura-lo teu foro! <a href='%{url}' data-auto-route='true'>Inicie o Asistente de Configuración</a>!"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     s3:
       regions:
@@ -210,7 +210,6 @@ gl:
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
-      user_count: "Novos usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contacta connosco"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacta connosco en %{contact_info}."
@@ -512,7 +511,6 @@ gl:
         instructions: "As imaxes dos fondos centraranse e terán unha largura predeterminada de 590px."
       email:
         title: "Correo electrónico"
-        instructions: "Non se verá nunca en público"
         ok: "Enviarémosche un correo electrónico para confirmar"
         invalid: "Introduce un enderezo de correo electrónico correcto"
         authenticated: "O teu enderezo de correo electrónico foi autenticado por {{provider}}"
@@ -522,22 +520,17 @@ gl:
           other: "Só che eviaremos un correo-e se non te vimos nos últimos {{count}} minutos."
       name:
         title: "Nome"
-        instructions: "Nome completo (opcional)"
         instructions_required: "Nome completo"
         too_short: "O nome é curto de mais"
         ok: "O nome parece correcto"
       username:
         title: "Nome do usuario"
-        instructions: "Único, sen espazos, curto"
         short_instructions: "A xente pode mencionarte como @{{username}}"
         available: "O nome de usuario está dispoñíbel"
-        global_match: "O correo electrónico correspóndese co nome do usuario rexistrado"
-        global_mismatch: "Xa rexistrado. Tentar {{suggestion}}?"
         not_available: "Non dispoñíbel. Tentar {{suggestion}}?"
         too_short: "O nome do usuario é curto de máis"
         too_long: "O nome do usuario é longo de máis"
         checking: "Comprobando a dispoñibilidade do nome do usuario..."
-        enter_email: 'Atopouse o nome do usuario; introduce o correo electrónico'
         prefilled: "O correo electrónico coincide co nome do usuario rexistrado"
       locale:
         title: "Idioma da interface"
@@ -636,7 +629,6 @@ gl:
         same_as_username: "O contrasinal é igual ao nome do usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
         ok: "O contrasinal semella bo."
-        instructions: "Como mínimo %{count} caracteres."
       summary:
         title: "Resumo"
         stats: "Estatísticas"
@@ -766,7 +758,6 @@ gl:
       logging_in: "Iniciando sesión..."
       or: "ou"
       authenticating: "Autenticando..."
-      awaiting_confirmation: "A túa conta está pendente de se activar, emprega a ligazón de contrasinal esquecido para emitir outro correo de activación."
       awaiting_approval: "A túa conta non foi aínda aprobada polos membros do equipo. Enviaráseche unha mensaxe cando así for."
       requires_invite: "Sentímolo pero o acceso a este foro é unicamente por convite."
       not_activated: "Non podes acceder aínda. Antes debemos enviarche unha mensaxe a <b>{{sentTo}}</b>. Por favor, sigue as instrucións desta mensaxe para activar a túa conta."
@@ -870,15 +861,6 @@ gl:
       modal_cancel: "Cancelar"
       cant_send_pm: "Sentímolo pero non podes enviar unha mensaxe a %{username}."
       admin_options_title: "Axustes do equipo para este tema"
-      auto_close:
-        label: "Tempo para o peche automático deste tema:"
-        error: "Introduce un valor correcto."
-        based_on_last_post: "Non pechar até que a última publicación do tema teña alomenos este tempo."
-        all:
-          examples: 'Introducir o número de horas (24), hora absoluta (17:30) ou a marca data/hora (2013-11-22 14:00).'
-        limited:
-          units: "(# de horas)"
-          examples: 'Introducir o número de horas (24).'
     notifications:
       title: "notificacións das mencións ao teu @nome, respostas ás túas publicacións e temas, mensaxes, etc"
       none: "Non é posíbel cargar as notificacións neste intre"
@@ -979,10 +961,8 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        change_category: "Cambiar categoría"
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
-        notification_level: "Cambiar o nivel de notificación"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
           one: "Seleccionaches <b>un</b> tema."
@@ -1070,11 +1050,7 @@ gl:
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
-      auto_close_notice: "Este tema pechará automaticamente en %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Este tema pechará %{duration} despois da última resposta."
       auto_close_title: 'Axustes do peche automático'
-      auto_close_save: "Gardar"
-      auto_close_remove: "arriba"
       progress:
         title: progreso do tema
         go_top: "principio"
@@ -1091,10 +1067,6 @@ gl:
           '3_2': 'Recibirás notificacións porque estás vendo este tema.'
           '3_1': 'Recibirás notificacións por ser o creador deste tema.'
           '3': 'Recibirás notificacións porque estás vendo este tema.'
-          '2_8': 'Recibirás notificacións porque segues esta categoría.'
-          '2_4': 'Recibirás notificacións porque publicaches unha resposta neste tema.'
-          '2_2': 'Recibirás notificacións porque segues este tema.'
-          '2': 'Recibirás notificacións porque <a href="/users/{{username}}/preferences">liches este tema</a>.'
           '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
           '0_7': 'Estás ignorando todas as notificacións desta categoría.'
@@ -1130,7 +1102,6 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións..."
-        auto_close: "Pechar automaticamente..."
         pin: "Pegar tema..."
         unpin: "Despegar tema..."
         unarchive: "Desarquivar tema"
@@ -1144,9 +1115,6 @@ gl:
         pin_globally: "Pegar tema globalmente"
         make_banner: "Tema do báner"
         remove_banner: "Eliminar o tema do báner"
-      reply:
-        title: 'Responder'
-        help: 'responder a este tema'
       clear_pin:
         title: "Borrar o estado Pegar"
         help: "Borra o estado Pegado deste tema para que non apareza na banda superior da lista de temas."
@@ -1240,7 +1208,6 @@ gl:
           other: "Selecciona o novo propietario das {{count}} publicacións de <b>{{old_user}}</b>."
         instructions_warn: "Decátate que ningunha notificación sobre esta publicación se transferirá retroactivamente ao novo usuario.<br>Aviso: actualmente, non se transfire ao novo usuario ningún dato relacionado cunha publicación. Usa isto con tino."
       change_timestamp:
-        title: "Cambiar a marca data/hora"
         action: "cambiar a marca data/hora"
         invalid_timestamp: "A marca data/hora non pode ser no futuro."
         error: "Produciuse un erro cambiando a marca data/hora do tema."
@@ -1303,8 +1270,6 @@ gl:
         yes_value: "Si, abandonar"
       via_email: "esta publicación chegou por correo-e"
       whisper: "este é un bisbar privado para moderadores"
-      wiki:
-        about: "esta publicación é unha wiki"
       archetypes:
         save: 'Gardar opcións'
       controls:
@@ -1430,13 +1395,10 @@ gl:
         displays:
           inline:
             title: "Amosar o resultado coas adicións e eliminacións inseridas"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Amosar o resultado coas diferenzas comparadas"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Amosar a fonte crúa coas diferenzas comparadas"
-            button: '<i class="fa fa-columns"></i> Crúa'
     category:
       can: 'podes&hellip; '
       none: '(sen categoría)'
@@ -1475,8 +1437,6 @@ gl:
       security: "Seguranza"
       special_warning: "Aviso: esta categoría ten axustes predeterminados e as opcións de seguranza non se poden modificar. Se non queres usala, elimínaa no canto de reciclala."
       images: "Imaxes"
-      auto_close_label: "Pechar automaticamente os temas despois de:"
-      auto_close_units: "horas"
       email_in: "Personalizar enderezos de correos-e entrantes:"
       email_in_allow_strangers: "Aceptar correos-e de usuarios anónimos sen contas"
       email_in_disabled: "A publicación de novos temas vía correo-e está desactivada nos axustes do sitio. Para activala,"
@@ -1568,7 +1528,6 @@ gl:
       one: "vista"
       other: "vistas"
     replies: "Respostas"
-    views_long: "este tema visitouse {{number}} veces"
     activity: "Actividade"
     likes: "Gústames"
     likes_lowercase:
@@ -1583,7 +1542,6 @@ gl:
     history: "Historial"
     changed_by: "por {{author}}"
     raw_email:
-      title: "Fonte do correo"
       not_available: "Non dispoñíbel."
     categories_list: "Lista de categorías"
     filters:
@@ -1700,8 +1658,6 @@ gl:
         backups: "copias de seguranza"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
-        page_views: "Peticións API"
-        page_views_short: "Peticións API"
         show_traffic_report: "Amosar o informe detallado do tráfico"
         reports:
           today: "Hoxe"
@@ -1869,7 +1825,6 @@ gl:
             without_uploads: "Si (non incluír ficheiros)"
           download:
             label: "Descargar"
-            title: "Descargar a copia de seguranza"
           destroy:
             title: "Eliminar a copia de seguranza"
             confirm: "Confirmas a destrución desta copia de seguranza?"
@@ -1900,32 +1855,12 @@ gl:
       customize:
         title: "Personalizar"
         long_title: "Personalización do sitio"
-        css: "CSS"
-        header: "Cabeceira"
-        top: "Destacados"
-        footer: "Pé de páxina"
-        embedded_css: "CSS encaixado"
-        head_tag:
-          text: "</head>"
-          title: "HTML que se inserirá antes da etiqueta </head>"
-        body_tag:
-          text: "</body>"
-          title: "HTML que se inserirá antes da etiqueta </body>"
-        override_default: "Non incluír folla de estilo estándar"
-        enabled: "Activado?"
         preview: "previsualizar"
-        undo_preview: "eliminar previsualización"
-        rescue_preview: "estilo predeterminado"
-        explain_preview: "Ver o sitio con esta folla de estilo personalizada"
-        explain_undo_preview: "Volver á folla de estilo personalizada activada actualmente"
-        explain_rescue_preview: "Ver o sitio coa folla de estilo predeterminada"
         save: "Gardar"
         new: "Novo"
         new_style: "Novo estilo"
         import: "Importar"
-        import_title: "Seleccionar un ficheiro ou pegar un texto"
         delete: "Eliminar"
-        delete_confirm: "Queres eliminar esta personalización?"
         about: "Modificar as follas de estilo CSS e as cabeceiras HTML do sitio. Engadir unha personalización para comezar."
         color: "Cor"
         opacity: "Opacidade"
@@ -1938,13 +1873,9 @@ gl:
           none_selected: "Selecciona un modelo de correo-e para comezar a edición."
           revert: "Reverter os cambios"
           revert_confirm: "Confirmas a reversión dos cambios?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Personalizacións do CSS e do HTML"
         colors:
           title: "Cores"
           long_title: "Esquemas de cor"
-          about: "Modifica as cores usadas no sitio sen ter que escribir en CSS. Engade un esquema para comezar."
           new_name: "Novo esquema de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Queres eliminar este esquema de cor?"
@@ -2057,7 +1988,6 @@ gl:
           do_nothing: "non facer nada"
         staff_actions:
           title: "Accións do equipo"
-          instructions: "Premer nos nomes dos usuarios e nas accións para filtrar a lista. Premer nas imaxes dos perfís para ir ás páxinas dos usuarios."
           clear_filters: "Amosar todo"
           staff_user: "Usuario do equipo"
           target_user: "Usuario obxectivo"
@@ -2077,8 +2007,6 @@ gl:
             change_trust_level: "cambiar nivel de confianza"
             change_username: "cambiar nome do usuario"
             change_site_setting: "cambiar axuste do sitio"
-            change_site_customization: "cambiar a personalización do sitio"
-            delete_site_customization: "eliminar a personalización do sitio"
             change_site_text: "cambiar o texto do sitio"
             suspend_user: "suspender usuario"
             unsuspend_user: "non suspender usuario"
@@ -2099,7 +2027,6 @@ gl:
             revoke_admin: "revogar administración"
             grant_moderation: "conceder moderación"
             revoke_moderation: "revogar moderación"
-            backup_operation: "operación de copia de seguranza"
         screened_emails:
           title: "Correos-e controlados"
           description: "Cando alguén tente crear unha nova conta, comprobaranse os seguintes enderezos de correo electrónico e bloquearase o rexistro ou se tomará outra medida."
@@ -2202,8 +2129,6 @@ gl:
         blocked: "Bloqueado?"
         staged: "Transitorio?"
         show_admin_profile: "Administración"
-        edit_title: "Editar título"
-        save_title: "Gardar título"
         refresh_browsers: "Forzar a actualización do navegador"
         refresh_browsers_message: "Mensaxe enviada a todos os clientes."
         show_public_profile: "Amosar o perfil público"

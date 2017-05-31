@@ -1,15 +1,15 @@
-import { createWidget } from 'discourse/widgets/widget';
+import { applyDecorators, createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon-node';
 import DiscourseURL from 'discourse/lib/url';
 import RawHtml from 'discourse/widgets/raw-html';
-import { tagNode } from 'discourse/lib/render-tag';
+import renderTags from 'discourse/lib/render-tags';
 import { topicFeaturedLinkNode } from 'discourse/lib/render-topic-featured-link';
 
 export default createWidget('header-topic-info', {
   tagName: 'div.extra-info-wrapper',
 
-  html(attrs) {
+  html(attrs, state) {
     const topic = attrs.topic;
 
     const heading = [];
@@ -23,20 +23,22 @@ export default createWidget('header-topic-info', {
       }
     }
     const loaded = topic.get('details.loaded');
+    const fancyTitle = topic.get('fancyTitle');
+    const href = topic.get('url');
 
-    if (loaded) {
+    if (fancyTitle && href) {
       heading.push(this.attach('topic-status', attrs));
 
-      const titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
+      const titleHTML = new RawHtml({ html: `<span>${fancyTitle}</span>` });
       heading.push(this.attach('link', { className: 'topic-link',
                                          action: 'jumpToTopPost',
-                                         href: topic.get('url'),
+                                         href,
                                          contents: () => titleHTML }));
     }
 
     const title = [h('h1', heading)];
-    if (loaded) {
-      const category = topic.get('category');
+    const category = topic.get('category');
+    if (loaded || category) {
       if (category && (!category.get('isUncategorizedCategory') || !this.siteSettings.suppress_uncategorized_badge)) {
         const parentCategory = category.get('parentCategory');
         if (parentCategory) {
@@ -45,13 +47,14 @@ export default createWidget('header-topic-info', {
         title.push(this.attach('category-link', { category }));
       }
 
-      const extra = [];
-      if (this.siteSettings.tagging_enabled) {
-        const tags = topic.get('tags') || [];
-        if (tags.length) {
-          extra.push(h('div.list-tags', tags.map(tagNode)));
-        }
+      let extra = [];
+      const tags = renderTags(topic);
+      if (tags && tags.length > 0) {
+        extra.push(new RawHtml({html: tags}));
       }
+
+      extra = extra.concat(applyDecorators(this, 'after-tags', attrs, state));
+
       if (this.siteSettings.topic_featured_link_enabled) {
         const featured = topicFeaturedLinkNode(attrs.topic);
         if (featured) {

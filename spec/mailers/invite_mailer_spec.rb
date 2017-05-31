@@ -67,13 +67,15 @@ describe InviteMailer do
           it 'renders invite link' do
             expect(custom_invite_mail.body.encoded).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
           end
+
         end
       end
     end
 
 
     context "invite to topic" do
-      let(:topic) { Fabricate(:topic, excerpt: "Topic invite support is now available in Discourse!") }
+      let(:trust_level_2) { build(:user, trust_level: 2) }
+      let(:topic) { Fabricate(:topic, excerpt: "Topic invite support is now available in Discourse!", user: trust_level_2) }
       let(:invite) { topic.invite(topic.user, 'name@example.com') }
 
       context "default invite message" do
@@ -109,6 +111,14 @@ describe InviteMailer do
 
         it 'renders topic title' do
           expect(invite_mail.body.encoded).to match(topic.title)
+        end
+
+        it "respects the private_email setting" do
+          SiteSetting.private_email = true
+
+          message = invite_mail
+          expect(message.body.to_s).not_to include(topic.title)
+          expect(message.body.to_s).not_to include(topic.slug)
         end
       end
 

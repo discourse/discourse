@@ -1,5 +1,4 @@
 require "rails_helper"
-require 'sidekiq/testing'
 
 describe DiscourseSingleSignOn do
   before do
@@ -27,6 +26,7 @@ describe DiscourseSingleSignOn do
     sso.moderator = false
     sso.suppress_welcome_message = false
     sso.require_activation = false
+    sso.title = "user title"
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
     sso
@@ -45,6 +45,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.moderator).to eq sso.moderator
     expect(parsed.suppress_welcome_message).to eq sso.suppress_welcome_message
     expect(parsed.require_activation).to eq false
+    expect(parsed.title).to eq sso.title
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
   end
@@ -78,18 +79,24 @@ describe DiscourseSingleSignOn do
   end
 
   it "unstaged users" do
+    SiteSetting.sso_overrides_name = true
+
     email = "staged@user.com"
     Fabricate(:user, staged: true, email: email)
 
     sso = DiscourseSingleSignOn.new
     sso.username = "staged"
-    sso.name = "Staged User"
+    sso.name = "Bob O'Bob"
     sso.email = email
     sso.external_id = "B"
     user = sso.lookup_or_create_user(ip_address)
 
+    user.reload
+
     expect(user).to_not be_nil
     expect(user.staged).to be(false)
+
+    expect(user.name).to eq("Bob O'Bob")
   end
 
   it "can set admin and moderator" do
@@ -246,6 +253,28 @@ describe DiscourseSingleSignOn do
       expect(user.active).to eq(false)
     end
 
+    it 'deactivates accounts that have updated email address' do
+
+      SiteSetting.sso_overrides_email = true
+      sso.require_activation = true
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(false)
+
+      old_email = user.email
+
+      user.update_columns(active: true)
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+
+      user.update_columns(email: 'xXx@themovie.com')
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.email).to eq(old_email)
+      expect(user.active).to eq(false)
+
+    end
+
   end
 
   context 'welcome emails' do
@@ -260,13 +289,40 @@ describe DiscourseSingleSignOn do
 
     it "sends a welcome email by default" do
       User.any_instance.expects(:enqueue_welcome_message).once
-      user = sso.lookup_or_create_user(ip_address)
+      _user = sso.lookup_or_create_user(ip_address)
     end
 
     it "suppresses the welcome email when asked to" do
       User.any_instance.expects(:enqueue_welcome_message).never
       sso.suppress_welcome_message = true
+      _user = sso.lookup_or_create_user(ip_address)
+    end
+  end
+
+  context 'setting title for a user' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = 'test'
+      sso.name = 'test'
+      sso.email = 'test@test.com'
+      sso.external_id = '100'
+      sso.title = "The User's Title"
+      sso
+    }
+
+    it 'sets title correctly' do
       user = sso.lookup_or_create_user(ip_address)
+      expect(user.title).to eq(sso.title)
+
+      sso.title = "farmer"
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.title).to eq("farmer")
+
+      sso.title = nil
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.title).to eq("farmer")
     end
   end
 

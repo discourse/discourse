@@ -137,7 +137,6 @@ uk:
       like_count: "Вподобання"
       topic_count: "Теми"
       post_count: "Дописи:"
-      user_count: "Нові користувачі"
       active_user_count: "Діючі користувачі"
       contact: "Зв’язатися з нами"
       contact_info: "У випадку серйозних проблем з цим сайтом, будь ласка, зв’яжіться з нами через %{contact_info}."
@@ -351,7 +350,6 @@ uk:
       suspended_reason: "Причина: "
       github_profile: "Github"
       mailing_list_mode:
-        daily: "Надсилати щоденні оновлення"
         individual: "Надсилати всі нові дописи мені електронною поштою"
       watched_tags: "Відслідковувані"
       tracked_tags: "Відстежувані"
@@ -418,14 +416,12 @@ uk:
         invalid: "Будь ласка, введіть вірний email"
       name:
         title: "Ім'я"
-        instructions: "Ваше повне ім’я (необов’язково)"
         instructions_required: "Ваше повне ім’я"
         too_short: "Ваше ім’я надто коротке"
         ok: "Ваше ім’я виглядає добре"
       username:
         title: "Ім'я користувача"
         available: "Ваше ім'я доступне"
-        global_mismatch: "Вже зареєстровано. Спробуєте {{suggestion}}?"
         not_available: "Не доступно. Спробуєте {{suggestion}}?"
         too_short: "Ваше ім'я закоротке"
         too_long: "Ваше ім'я довге"
@@ -597,7 +593,6 @@ uk:
       logging_in: "Вхід..."
       or: "Або"
       authenticating: "Автентифікуємося..."
-      awaiting_confirmation: "Ваш обліковий запис очікує на активацію. Для отримання ще одного активаційного листа використайте посилання Забув пароль."
       awaiting_approval: "Ваш обліковий запис ще не затверджено членом команди. Коли його буде активовано, Ви отримаєте електронного листа."
       requires_invite: "Даруйте, доступ до цього форуму - лише за запрошеннями."
       not_activated: "Ви ще не можете увійти. Ми вже надіслали Вам листа для активації на скриньку <b>{{sentTo}}</b>. Будь ласка, виконайте інструкції в цьому листі, щоб активувати обліковий запис."
@@ -691,9 +686,6 @@ uk:
       modal_ok: "OK"
       modal_cancel: "Скасувати"
       admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"
-      auto_close:
-        limited:
-          units: "(# годин)"
     notifications:
       more: "переглянути старіші сповіщення"
       total_flagged: "всього дописів, на які поскаржилися"
@@ -743,9 +735,7 @@ uk:
         dismiss_new: "Dismiss New"
         toggle: "перемикач масової дії над темами"
         actions: "Масові дії"
-        change_category: "Змінити категорію"
         close_topics: "Закрити теми"
-        notification_level: "Change Notification Level"
       none:
         unread: "У Вас немає непрочитаних тем."
         new: "У Вас немає нових тем."
@@ -792,10 +782,7 @@ uk:
       jump_reply_up: перейти до ранішої відповіді
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
-      auto_close_notice: "Ця тема автоматично закриється %{timeLeft}."
       auto_close_title: 'Налаштування автоматичного закриття'
-      auto_close_save: "Зберегти"
-      auto_close_remove: "Не закривати цю тему автоматично"
       timeline:
         back: "Назад"
       progress:
@@ -812,9 +799,6 @@ uk:
           '3_2': 'Ви будете отримувати сповіщення, бо Ви слідкуєте за цією темою.'
           '3_1': 'Ви будете отримувати сповіщення, бо Ви створили цю тему.'
           '3': 'Ви будете отримувати сповіщення, бо Ви слідкуєте за цією темою.'
-          '2_4': 'Ви будете отримувати сповіщення, бо Ви залишили відповідь в цій темі.'
-          '2_2': 'Ви будете отримувати сповіщення, бо Ви стежите за цією темою.'
-          '2': 'Ви будете отримувати сповіщення, бо Ви <a href="/users/{{username}}/preferences">читаєте цю тему</a>.'
           '0_7': 'Ви ігноруєте всі сповіщення у цій категорії.'
           '0_2': 'Ви ігноруєте всі сповіщення з цієї теми.'
           '0': 'Ви ігноруєте всі сповіщення з цієї теми.'
@@ -838,9 +822,6 @@ uk:
         unarchive: "Розархівувати тему"
         archive: "Заархівувати тему"
         reset_read: "Скинути дані про прочитаність"
-      reply:
-        title: 'Відповісти'
-        help: 'почати складати відповідь на цю тему'
       clear_pin:
         title: "Відкріпити"
         help: "Скасувати закріплення цієї теми, щоб вона більше не з'являлася на початку Вашого переліку тем"
@@ -971,10 +952,8 @@ uk:
         displays:
           inline:
             title: "Показати результат виведення зі змінами на місці"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Показати бік-о-бік результати виведення"
-            button: '<i class="fa fa-columns"></i> HTML'
     category:
       can: 'може&hellip; '
       none: '(без категорії)'
@@ -1006,10 +985,7 @@ uk:
       already_used: 'Цей колір вже використовується іншою категорією'
       security: "Безпека"
       images: "Зображення"
-      auto_close_label: "Автоматично закривати теми після:"
-      auto_close_units: "годин"
       email_in: "Custom incoming email address:"
-      sort_order: "Типове сортування:"
       allow_badges_label: "Дозволити нагороджувати значками у цій категорії"
       edit_permissions: "Редагувати дозволи"
       add_permission: "Додати дозвіл"
@@ -1059,7 +1035,6 @@ uk:
     original_post: "Перший допис"
     views: "Перегляди"
     replies: "Відповіді"
-    views_long: "цю тему переглянули {{number}} разів"
     activity: "Активність"
     likes: "Вподобання"
     likes_long: "в цій темі {{number}} вподобань"
@@ -1319,7 +1294,6 @@ uk:
             without_uploads: "Так (не включати файли)"
           download:
             label: "Завантажити"
-            title: "Download the backup"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
@@ -1335,18 +1309,12 @@ uk:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
-        css: "CSS"
-        header: "Header"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
         preview: "preview"
-        rescue_preview: "стиль по замовчанню"
         save: "Save"
         new: "New"
         new_style: "New Style"
         import: "Імпорт"
         delete: "Delete"
-        delete_confirm: "Delete this customization?"
         color: "Колір"
         opacity: "Непрозорість"
         copy: "Копіювати"
@@ -1356,13 +1324,9 @@ uk:
           body: "Тіло"
           revert: "Повернути зміни"
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "Налаштування CSS та HTML"
         colors:
           title: "Кольори"
           long_title: "Схеми Кольорів"
-          about: "Змінюйте кольори, що використовуються на сайті без написання CSS. Додати схему, щоб почати. "
           new_name: "Нова Схема Кольорів"
           copy_name_prefix: "Копіювати з"
           delete_confirm: "Видалити цю кольорову схему?"
@@ -1475,8 +1439,6 @@ uk:
             change_trust_level: "зміна рівня довіри"
             change_username: "зміна імені користувача"
             change_site_setting: "зміна налаштування сайта"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
             change_site_text: "змінити текст сайту"
             suspend_user: "призупинення користувача"
             unsuspend_user: "скасування призупинення"
@@ -1564,8 +1526,6 @@ uk:
         admin: "Адмін?"
         blocked: "Заблоковано?"
         show_admin_profile: "Адмін"
-        edit_title: "Редагувати назву"
-        save_title: "Зберегти назву"
         refresh_browsers: "Примусово оновити оглядач"
         refresh_browsers_message: "Повідомлення надіслано всім клієнтам!"
         show_public_profile: "Показати публічний профіль"

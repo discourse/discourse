@@ -8,15 +8,46 @@ describe Admin::StaffActionLogsController do
   let!(:user) { log_in(:admin) }
 
   context '.index' do
-    before do
-      xhr :get, :index
+
+    it 'generates logs' do
+
+      topic = Fabricate(:topic)
+      _record = StaffActionLogger.new(Discourse.system_user).log_topic_deletion(topic)
+
+      xhr :get, :index, action_id: UserHistory.actions[:delete_topic]
+
+      json = JSON.parse(response.body)
+      expect(response).to be_success
+
+      expect(json["staff_action_logs"].length).to eq(1)
+      expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
+
+      expect(json["user_history_actions"]).to include({"id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic'})
+
     end
+  end
 
-    subject { response }
-    it { is_expected.to be_success }
+  context '.diff' do
+    it 'can generate diffs for theme changes' do
+      theme = Theme.new(user_id: -1, name: 'bob')
+      theme.set_field(target: :mobile, name: :scss, value: 'body {.up}')
+      theme.set_field(target: :common, name: :scss, value: 'omit-dupe')
 
-    it 'returns JSON' do
-      expect(::JSON.parse(subject.body)).to be_a(Array)
+      original_json = ThemeSerializer.new(theme, root: false).to_json
+
+      theme.set_field(target: :mobile, name: :scss, value: 'body {.down}')
+
+      record = StaffActionLogger.new(Discourse.system_user)
+        .log_theme_change(original_json, theme)
+
+      xhr :get, :diff, id: record.id
+      expect(response).to be_success
+
+      parsed = JSON.parse(response.body)
+      expect(parsed["side_by_side"]).to include("up")
+      expect(parsed["side_by_side"]).to include("down")
+
+      expect(parsed["side_by_side"]).not_to include("omit-dupe")
     end
   end
 end

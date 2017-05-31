@@ -1,9 +1,15 @@
 import { ajax } from 'discourse/lib/ajax';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { SEPARATOR } from 'discourse/lib/category-hashtags';
+import Category from 'discourse/models/category';
+import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
+import userSearch from 'discourse/lib/user-search';
+import { userPath } from 'discourse/lib/url';
 
 export function translateResults(results, opts) {
 
   const User = require('discourse/models/user').default;
-  const Category = require('discourse/models/category').default;
   const Post = require('discourse/models/post').default;
   const Topic = require('discourse/models/topic').default;
 
@@ -24,7 +30,7 @@ export function translateResults(results, opts) {
 
   results.posts = results.posts.map(post => {
     if (post.username) {
-      post.userPath = Discourse.getURL(`/users/${post.username.toLowerCase()}`);
+      post.userPath = userPath(post.username.toLowerCase());
     }
     post = Post.create(post);
     post.set('topic', topicMap[post.topic_id]);
@@ -123,4 +129,40 @@ export function isValidSearchTerm(searchTerm) {
   } else {
     return false;
   }
+};
+
+export function applySearchAutocomplete($input, siteSettings, appEvents, options) {
+  const afterComplete = function() {
+    if (appEvents) {
+      appEvents.trigger("search-autocomplete:after-complete");
+    }
+  };
+
+  $input.autocomplete(_.merge({
+    template: findRawTemplate('category-tag-autocomplete'),
+    key: '#',
+    width: '100%',
+    treatAsTextarea: true,
+    transformComplete(obj) {
+      if (obj.model) {
+        return Category.slugFor(obj.model, SEPARATOR);
+      } else {
+        return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
+      }
+    },
+    dataSource(term) {
+      return searchCategoryTag(term, siteSettings);
+    },
+    afterComplete
+  }, options));
+
+  $input.autocomplete(_.merge({
+    template: findRawTemplate('user-selector-autocomplete'),
+    key: "@",
+    width: '100%',
+    treatAsTextarea: true,
+    transformComplete: v => v.username || v.name,
+    dataSource: term => userSearch({ term, includeGroups: true }),
+    afterComplete
+  }, options));
 };

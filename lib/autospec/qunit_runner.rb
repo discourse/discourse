@@ -9,17 +9,17 @@ module Autospec
     def watchers; WATCHERS; end
 
     # Discourse specific
-    watch(%r{^app/assets/javascripts/discourse/(.+)\.js$}) { |m| "test/javascripts/#{m[1]}_test.js" }
-    watch(%r{^app/assets/javascripts/admin/(.+)\.js$})     { |m| "test/javascripts/admin/#{m[1]}_test.js" }
-    watch(%r{^test/javascripts/.+\.js$})
+    watch(%r{^app/assets/javascripts/discourse/(.+)\.js.es6$}) { |m| "test/javascripts/#{m[1]}-test.js.es6" }
+    watch(%r{^app/assets/javascripts/admin/(.+)\.js.es6$})     { |m| "test/javascripts/admin/#{m[1]}-test.js.es6" }
+    watch(%r{^test/javascripts/.+\.js.es6$})
 
     RELOADERS = Set.new
     def self.reload(pattern); RELOADERS << pattern; end
     def reloaders; RELOADERS; end
 
     # Discourse specific
-    reload(%r{^test/javascripts/fixtures/.+_fixtures\.js$})
-    reload(%r{^test/javascripts/(helpers|mixins)/.+\.js$})
+    reload(%r{^test/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
+    reload(%r{^test/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
     reload("test/javascripts/test_helper.js")
 
     require "socket"
@@ -49,14 +49,21 @@ module Autospec
 
     def run(specs)
       puts "Running Qunit: #{specs}"
+      Demon::RailsAutospec.ensure_running
 
       abort
 
       qunit_url = "http://localhost:#{port}/qunit"
 
-      if specs != "spec" && specs.split.length == 1
-        module_name = try_to_find_module_name(specs.strip)
-        qunit_url << "?module=#{module_name}" if module_name
+      if specs != "spec"
+        module_or_filename, test_id, _name = specs.strip.split(":::")
+        module_name = module_or_filename
+        if !test_id
+          module_name = try_to_find_module_name(module_or_filename)
+          qunit_url << "?module=#{module_name}" if module_name
+        else
+          qunit_url << "?testId=#{test_id}"
+        end
       end
 
       cmd = "phantomjs #{Rails.root}/lib/autospec/run-qunit.js \"#{qunit_url}\""
@@ -137,9 +144,19 @@ module Autospec
     end
 
     def try_to_find_module_name(file)
+      file,_ = file.split(/:\d+$/)
       return unless File.exists?(file)
       File.open(file, "r").each_line do |line|
         if m = /module\(['"]([^'"]+)/i.match(line)
+          return m[1]
+        end
+        if m = /moduleForWidget\(['"]([^"']+)/i.match(line)
+          return "widget:#{m[1]}"
+        end
+        if m = /acceptance\(['"]([^"']+)/i.match(line)
+          return "Acceptance: #{m[1]}"
+        end
+        if m = /moduleFor\(['"]([^'"]+)/i.match(line)
           return m[1]
         end
       end

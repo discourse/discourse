@@ -1,4 +1,6 @@
 // Initialize the message bus to receive messages.
+import pageVisible from 'discourse/lib/page-visible';
+
 export default {
   name: "message-bus",
   after: 'inject-objects',
@@ -29,16 +31,28 @@ export default {
 
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval = siteSettings.background_polling_interval;
-    messageBus.baseUrl = siteSettings.long_polling_base_url;
+    messageBus.baseUrl = siteSettings.long_polling_base_url.replace(/\/$/, '') + '/';
 
     if (messageBus.baseUrl !== '/') {
       // zepto compatible, 1 param only
       messageBus.ajax = function(opts) {
         opts.headers = opts.headers || {};
         opts.headers['X-Shared-Session-Key'] = $('meta[name=shared_session_key]').attr('content');
+        if (pageVisible()) {
+          opts.headers['Discourse-Visible'] = "true";
+        }
         return $.ajax(opts);
       };
     } else {
+
+      messageBus.ajax = function(opts) {
+        opts.headers = opts.headers || {};
+        if (pageVisible()) {
+          opts.headers['Discourse-Visible'] = "true";
+        }
+        return $.ajax(opts);
+      };
+
       messageBus.baseUrl = Discourse.getURL('/');
     }
 

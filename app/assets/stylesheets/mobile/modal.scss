@@ -34,38 +34,38 @@
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
-  padding: 10px 0 10px 10px;
-  width: 95%;
+  padding: 10px;
 }
 
-// we need a little extra room on mobile for the 
+// we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
-  padding-right: 0;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 .modal-footer .btn + .btn {
-  margin-right: 5px;
-  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-bottom: 0;
+}
+
+.modal-close {
+  display: inline-block;
+  float: right;
 }
 
 .modal-header {
-  // we need tighter spacing on mobile for header
-  // this clearfix under the modal title h3 pushes it way down
-  .clearfix {
-    display:none;
-  }
+  padding: 10px 0px 10px 10px;
+
   h3 {
+    display: inline;
     font-size: 1.286em;
-    padding-left: 15px;
-    margin-bottom: 5px;
+    margin: 0px;
   }
 }
 .close {
-  float: right;
   font-size: 1.714em;
   padding: 10px 15px 5px 5px;
-  margin: -15px 0 0 0;
   color: $primary;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .custom-message-length {
-  margin: -10px 0 10px 20px;
+  margin: -4px 0 10px 20px;
   color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
   font-size: 85%;
 }
@@ -132,6 +132,12 @@
         }
       }
     }
+  }
+
+  .disable_info_wrap .cannot_delete_reason {
+    top: -114px;
+    right: 8px;
+    min-width: 200px;
   }
 }
 
@@ -194,4 +200,9 @@
 
 #google-search form {
   padding-left: 10px;
+}
+
+.change-timestamp-footer .btn-primary {
+  float: right;
+  margin-right: 5px;
 }

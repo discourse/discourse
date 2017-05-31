@@ -15,9 +15,9 @@ describe "Groups" do
     end
 
     context 'when group directory is disabled' do
-      site_setting(:enable_group_directory, false)
-
       it 'should deny access' do
+        SiteSetting.enable_group_directory = false
+
         get "/groups.json"
         expect(response).to be_forbidden
       end

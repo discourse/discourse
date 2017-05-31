@@ -35,6 +35,20 @@ describe Jobs::UserEmail do
     Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
   end
 
+  context "bounce score" do
+
+    it "always sends critical emails when bounce score threshold has been reached" do
+      email_token = Fabricate(:email_token)
+      user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
+
+      Jobs::CriticalUserEmail.new.execute(type: "signup", user_id: user.id, email_token: email_token.token)
+
+      email_log = EmailLog.where(user_id: user.id).last
+      expect(email_log.email_type).to eq("signup")
+      expect(email_log.skipped).to eq(false)
+    end
+
+  end
 
   context 'to_address' do
     it 'overwrites a to_address when present' do
@@ -208,15 +222,21 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
-      it "does not send notification if limit is reached" do
-        SiteSetting.max_emails_per_day_per_user = 2
+      context 'max_emails_per_day_per_user limit is reached' do
+        before do
+          SiteSetting.max_emails_per_day_per_user = 2
+          2.times { Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email) }
+        end
 
-        user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
-        user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+        it "does not send notification if limit is reached" do
+          Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+        end
 
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
-
-        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+        it "sends critical email" do
+          Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, notification_id: notification.id, post_id: post.id)
+          expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(0)
+        end
       end
 
       it "does not send notification if bounce threshold is reached" do

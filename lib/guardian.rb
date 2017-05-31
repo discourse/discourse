@@ -158,6 +158,10 @@ class Guardian
     # make it impossible to be the same user.
   end
 
+  def can_view_action_logs?(target)
+    target.present? && is_staff?
+  end
+
   # Can we approve it?
   def can_approve?(target)
     is_staff? && target && not(target.approved?)
@@ -228,11 +232,11 @@ class Guardian
   end
 
   def can_invite_to?(object, group_ids=nil)
-    return false if ! authenticated?
-    return false unless (!SiteSetting.must_approve_users? || is_staff?)
+    return false unless authenticated?
     return true if is_admin?
+    return false unless SiteSetting.enable_private_messages?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
-    return false if ! can_see?(object)
+    return false unless can_see?(object)
     return false if group_ids.present?
 
     if object.is_a?(Topic) && object.category
@@ -242,6 +246,11 @@ class Guardian
     end
 
     user.has_trust_level?(TrustLevel[2])
+  end
+
+  def can_invite_via_email?(object)
+    return false unless can_invite_to?(object)
+    !SiteSetting.enable_sso && SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?)
   end
 
   def can_bulk_invite_to_forum?(user)
@@ -271,9 +280,7 @@ class Guardian
     # Have to be a basic level at least
     @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
     # PMs are enabled
-    (SiteSetting.enable_private_messages ||
-      @user.username == SiteSetting.site_contact_username ||
-      @user == Discourse.system_user) &&
+    (is_staff? || SiteSetting.enable_private_messages) &&
     # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?) &&
     # Blocked users can only send PM to staff
@@ -291,6 +298,14 @@ class Guardian
     # Regular users can only export their archives
     return false unless entity == "user_archive"
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
+  end
+
+  def allow_theme?(theme_key)
+    if is_staff?
+      Theme.theme_keys.include?(theme_key)
+    else
+      Theme.user_theme_keys.include?(theme_key)
+    end
   end
 
 

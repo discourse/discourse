@@ -1,5 +1,6 @@
 require_dependency 'url_helper'
 require_dependency 'file_helper'
+require_dependency 'upload_creator'
 
 module Jobs
 
@@ -26,7 +27,7 @@ module Jobs
       downloaded_urls = {}
 
       extract_images_from(post.cooked).each do |image|
-        src = image['src']
+        src = original_src = image['src']
         src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
@@ -35,13 +36,18 @@ module Jobs
             # have we already downloaded that file?
             unless downloaded_urls.include?(src)
               begin
-                hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked", true)
+                hotlinked = FileHelper.download(
+                  src,
+                  max_file_size: @max_size,
+                  tmp_file_name: "discourse-hotlinked",
+                  follow_redirect: true
+                )
               rescue Discourse::InvalidParameters
               end
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
-                  upload = Upload.create_for(post.user_id, hotlinked, filename, File.size(hotlinked.path), { origin: src })
+                  upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
                   downloaded_urls[src] = upload.url
                 else
                   Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
@@ -53,7 +59,7 @@ module Jobs
             # have we successfully downloaded that file?
             if downloaded_urls[src].present?
               url = downloaded_urls[src]
-              escaped_src = Regexp.escape(src)
+              escaped_src = Regexp.escape(original_src)
               # there are 6 ways to insert an image in a post
               # HTML tag - <img src="http://...">
               raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")

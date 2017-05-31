@@ -24,12 +24,21 @@ function loadWithTag(path, cb) {
   };
 }
 
+export function loadCSS(url) {
+  return loadScript(url, { css: true });
+}
+
 export default function loadScript(url, opts) {
 
   // TODO: Remove this once plugins have been updated not to use it:
   if (url === "defer/html-sanitizer-bundle") { return Ember.RSVP.Promise.resolve(); }
 
   opts = opts || {};
+
+  $('script').each((i, tag) => {
+    _loaded[tag.getAttribute('src')] = true;
+  });
+
 
   return new Ember.RSVP.Promise(function(resolve) {
     url = Discourse.getURL(url);
@@ -38,7 +47,7 @@ export default function loadScript(url, opts) {
     if (_loaded[url]) { return resolve(); }
     if (_loading[url]) { return _loading[url].then(resolve);}
 
-    var done;
+    let done;
     _loading[url] = new Ember.RSVP.Promise(function(_done){
       done = _done;
     });
@@ -47,16 +56,20 @@ export default function loadScript(url, opts) {
       delete _loading[url];
     });
 
-    const cb = function() {
+    const cb = function(data) {
       _loaded[url] = true;
+      if (opts && opts.css) {
+        $("head").append("<style>" + data + "</style>");
+      }
       done();
       resolve();
     };
 
-    var cdnUrl = url;
+    let cdnUrl = url;
 
     // Scripts should always load from CDN
-    if (Discourse.CDN && url[0] === "/" && url[1] !== "/") {
+    // CSS is type text, to accept it from a CDN we would need to handle CORS
+    if (!opts.css && Discourse.CDN && url[0] === "/" && url[1] !== "/") {
       cdnUrl = Discourse.CDN.replace(/\/$/,"") + url;
     }
 
@@ -64,9 +77,12 @@ export default function loadScript(url, opts) {
     // to dynamically load more JS. In that case, add the `scriptTag: true`
     // option.
     if (opts.scriptTag) {
+      if (Ember.Test) {
+        throw `In test mode scripts cannot be loaded async ${cdnUrl}`;
+      }
       loadWithTag(cdnUrl, cb);
     } else {
-      ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
+      ajax({url: cdnUrl, dataType: opts.css ? "text": "script", cache: true}).then(cb);
     }
   });
 }

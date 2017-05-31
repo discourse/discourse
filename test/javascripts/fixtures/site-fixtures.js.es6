@@ -92,7 +92,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":10,
@@ -108,7 +110,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":26,
@@ -141,7 +145,10 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":true,
+          "default_view":"latest",
+          "subcategory_list_style":"boxes_with_featured_topics"
         },
         {
           "id":6,
@@ -157,7 +164,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":24,
@@ -224,7 +233,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":14,
@@ -240,7 +251,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":12,
@@ -256,7 +269,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":13,
@@ -272,7 +287,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":5,
@@ -288,7 +305,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":11,
@@ -304,7 +323,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":22,
@@ -338,7 +359,9 @@ export default {
           "notification_level":null,
           "logo_url":null,
           "background_url":null,
-          "can_edit":true
+          "can_edit":true,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":17,
@@ -354,7 +377,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":"",
-          "background_url":""
+          "background_url":"",
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":21,
@@ -387,7 +412,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":9,
@@ -403,7 +430,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":2,
@@ -419,7 +448,10 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":true,
+          "default_view":"latest",
+          "subcategory_list_style":"boxes"
         }
       ],
       "post_action_types":[
@@ -427,6 +459,7 @@ export default {
           "name_key":"bookmark",
           "name":"Bookmark",
           "description":"Bookmark this post",
+          "short_description":"Bookmark this post",
           "long_form":"bookmarked this post",
           "is_flag":false,
           "icon":null,
@@ -437,6 +470,7 @@ export default {
           "name_key":"like",
           "name":"Like",
           "description":"Like this post",
+          "short_description":"Like this post",
           "long_form":"liked this",
           "is_flag":false,
           "icon":"heart",
@@ -447,6 +481,7 @@ export default {
           "name_key":"off_topic",
           "name":"Off-Topic",
           "description":"This post is radically off-topic in the current topic, and should probably be moved. If this is a topic, perhaps it does not belong here.",
+          "short_description":"Not relevant to the discussion",
           "long_form":"flagged this as off-topic",
           "is_flag":true,
           "icon":null,
@@ -457,6 +492,7 @@ export default {
           "name_key":"inappropriate",
           "name":"Inappropriate",
           "description":"This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href=\"/guidelines\">our community guidelines</a>.",
+          "short_description":'A violation of <a href="/guidelines">our community guidelines</a>',
           "long_form":"flagged this as inappropriate",
           "is_flag":true,
           "icon":null,
@@ -467,6 +503,7 @@ export default {
           "name_key":"vote",
           "name":"Vote",
           "description":"Vote for this post",
+          "short_description":'Vote for this post',
           "long_form":"voted for this post",
           "is_flag":false,
           "icon":null,
@@ -477,6 +514,7 @@ export default {
           "name_key":"spam",
           "name":"Spam",
           "description":"This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.",
+          "short_description":'This is an advertisement',
           "long_form":"flagged this as spam",
           "is_flag":true,
           "icon":null,
@@ -487,6 +525,7 @@ export default {
           "name_key":"notify_user",
           "name":"Notify {{username}}",
           "description":"This post contains something I want to talk to this person directly and privately about. Does not cast a flag.",
+          "short_description":'I want to talk to this person directly and privately about their post.',
           "long_form":"notified user",
           "is_flag":true,
           "icon":null,
@@ -497,6 +536,7 @@ export default {
           "name_key":"notify_moderators",
           "name":"Notify moderators",
           "description":"This post requires general moderator attention based on the <a href=\"/guidelines\">guidelines</a>, <a href=\"/tos\">TOS</a>, or for another reason not listed above.",
+          "short_description":'Requires staff attention for another reason',
           "long_form":"notified moderators",
           "is_flag":true,
           "icon":null,

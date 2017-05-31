@@ -1,3 +1,5 @@
+import pageVisible from 'discourse/lib/page-visible';
+
 let _trackView = false;
 let _transientHeader = null;
 
@@ -14,6 +16,7 @@ export function viewTrackingRequired() {
   for performance reasons. Also automatically adjusts the URL to support installs
   in subfolders.
 **/
+
 export function ajax() {
   let url, args;
   let ajaxObj;
@@ -47,6 +50,10 @@ export function ajax() {
       args.headers['Discourse-Track-View'] = "true";
     }
 
+    if (pageVisible()) {
+      args.headers['Discourse-Visible'] = "true";
+    }
+
     args.success = (data, textStatus, xhr) => {
       if (xhr.getResponseHeader('Discourse-Readonly')) {
         Ember.run(() => Discourse.Site.currentProp('isReadOnly', true));
@@ -62,7 +69,7 @@ export function ajax() {
     args.error = (xhr, textStatus, errorThrown) => {
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
-      if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
+      if (xhr.status === 403 && xhr.responseText === "[\"BAD CSRF\"]") {
         Discourse.Session.current().set('csrfToken', null);
       }
 

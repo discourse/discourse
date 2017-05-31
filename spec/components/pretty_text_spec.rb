@@ -124,12 +124,28 @@ HTML
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100)).to eq("[image]")
       end
 
-      it "should keep alt tags" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100)).to eq("[car]")
+      context 'alt tags' do
+        it "should keep alt tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>", 100)).to eq("[car]")
+        end
+
+        describe 'when alt tag is empty' do
+          it "should not keep alt tags" do
+            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq("[#{I18n.t('excerpt_image')}]")
+          end
+        end
       end
 
-      it "should keep title tags" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100)).to eq("[car]")
+      context 'title tags' do
+        it "should keep title tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100)).to eq("[car]")
+        end
+
+        describe 'when title tag is empty' do
+          it "should not keep title tags" do
+            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq("[#{I18n.t('excerpt_image')}]")
+          end
+        end
       end
 
       it "should convert images to markdown if the option is set" do
@@ -225,12 +241,11 @@ HTML
         <a href='http://body_and_quote.com'>http://useless2.com</a>
         ")
 
-      expect(links.map{|l| [l.url, l.is_quote]}.to_a.sort).to eq(
-        [["http://body_only.com",false],
-         ["http://body_and_quote.com", false],
-         ["/t/topic/1234",true]
-        ].sort
-      )
+      expect(links.map { |l| [l.url, l.is_quote] }.sort).to eq([
+        ["http://body_only.com", false],
+        ["http://body_and_quote.com", false],
+        ["/t/topic/1234", true],
+      ].sort)
     end
 
     it "should not preserve tags in code blocks" do
@@ -272,6 +287,25 @@ HTML
     it "should have an option to preserve emoji codes" do
       emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
+    end
+
+    context 'option ot preserve onebox source' do
+      it "should return the right excerpt" do
+        onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
+        expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
+
+        expect(PrettyText.excerpt(onebox, 100, keep_onebox_source: true))
+          .to eq(expected)
+
+        expect(PrettyText.excerpt("#{onebox}\n  \n \n \n\n\n #{onebox}", 100, keep_onebox_source: true))
+          .to eq("#{expected}\n\n#{expected}")
+      end
+
+      it 'should continue to strip quotes' do
+        expect(PrettyText.excerpt(
+          "<aside class='quote'><p>a</p><p>b</p></aside>boom", 100, keep_onebox_source: true
+        )).to eq("boom")
+      end
     end
 
   end
@@ -324,9 +358,9 @@ HTML
     end
 
     it "adds base url to relative links" do
-      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
+      html = "<p><a class=\"mention\" href=\"/u/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/u/trollol\">@trollol</a> what do you guys think? </p>"
       output = described_class.format_for_email(html, post)
-      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
+      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/u/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/u/trollol\">@trollol</a> what do you guys think? </p>")
     end
 
     it "doesn't change external absolute links" do
@@ -432,7 +466,9 @@ HTML
 
   describe "custom emoji" do
     it "replaces the custom emoji" do
-      Emoji.stubs(:custom).returns([ Emoji.create_from_path('trout') ])
+      CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))
+      Emoji.clear_cache
+
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
     end
   end
