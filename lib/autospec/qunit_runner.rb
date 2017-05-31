@@ -49,6 +49,7 @@ module Autospec
 
     def run(specs)
       puts "Running Qunit: #{specs}"
+      Demon::RailsAutospec.ensure_running
 
       abort
 
@@ -154,6 +155,9 @@ module Autospec
         end
         if m = /acceptance\(['"]([^"']+)/i.match(line)
           return "Acceptance: #{m[1]}"
+        end
+        if m = /moduleFor\(['"]([^'"]+)/i.match(line)
+          return m[1]
         end
       end
     end

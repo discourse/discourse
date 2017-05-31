@@ -381,7 +381,6 @@ cs:
       long_form: 'označil příspěvek jako off-topic'
     spam:
       title: 'Spam'
-      description: 'Tento příspěvek je reklama. Není užitečný ani relevantní k tématu.'
       long_form: 'označeno jako spam'
       email_title: '"%{title}" byl označen jako spam'
       email_body: "%{link}\n\n%{message}"

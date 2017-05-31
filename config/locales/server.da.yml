@@ -565,7 +565,6 @@ da:
       long_form: 'markerede dette som uden for emnet'
     spam:
       title: 'Spam'
-      description: 'Dette indlæg minder mere om en reklame end et debatindlæg. Det er ikke nyttigt eller relevant for diskussionen.'
       long_form: 'markerede dette som spam'
       email_title: '"%{title}" blev markeret som spam'
       email_body: "%{link}\n\n%{message}"
@@ -1014,7 +1013,6 @@ da:
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
-    invites_per_page: "Standard invitationer vist på en brugers side."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
     enable_emoji: "Aktivér emojis"
@@ -1273,35 +1271,9 @@ da:
     welcome_user:
       title: "Velkomst til bruger"
       subject_template: "Velkommen til %{site_name}!"
-      text_body_template: |
-        Tak, fordi du har tilmeldt dig %{site_name}, og velkommen!
-
-        %{new_user_tips}
-
-        Vi tror på [civiliseret opførsel på forum](%{base_url}/guidelines) til enhver tid.
-
-        God fornøjelse!
-
-        (Hvis du som ny bruger har brug for at henvende dig til [staben](%{base_url}/about), kan du bare svare på denne besked.)
     welcome_invite:
       title: "Velkomst til inviterede brugere"
       subject_template: "Velkommen til %{site_name}!"
-      text_body_template: |
-        Tak, fordi du har accepteret din invitation til %{site_name} -- velkommen!
-
-        - Vi har oprettet denne konto **%{username}** til dig. Du kan ændre dit navn eller din adgangskode ved at gå til [din brugerprofil][Indstillinger].
-
-        - Når du logger på, skal du **bruge den samme mailadresse som i den oprindelige invitation** -- ellers kan vi ikke se, det er dig!
-
-        %{new_user_tips}
-
-        Vi går ind for [civiliseret opførsel på forum](%{base_url}/guidelines) til enhver tid.
-
-        God fornøjelse!
-
-        (Hvis du som ny bruger har brug for at henvende dig til [staben](%{base_url}/about), kan du bare svare på denne besked.)
-
-        [Indstillinger]: %{user_preferences_url}
     csv_export_failed:
       text_body_template: "Desværre, din dataeksport mislykkedes. Kig venligst i loggen eller kontakt hjælperteamet."
     email_reject_insufficient_trust_level:
@@ -1507,9 +1479,6 @@ da:
   subject_pm: "[PB] "
   user_notifications:
     previous_discussion: "Forrige svar"
-    reached_limit:
-      one: "ADVARSEL: Du har nået grænsen for mails per dag. Nye mailbeskeder vil blive tilbageholdt."
-      other: "ADVARSEL: Du har nået grænsen på %{count} mails per dag. Nye mailbeskeder vil blive tilbageholdt."
     in_reply_to: "Som svar på"
     unsubscribe:
       title: "Frameld"

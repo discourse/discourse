@@ -29,11 +29,13 @@ class InvitesController < ApplicationController
   end
 
   def perform_accept_invitation
+    params.require(:id)
+    params.permit(:username, :name, :password)
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
       begin
-        user = invite.redeem(username: params[:username], password: params[:password])
+        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password])
         if user.present?
           log_on_user(user)
           post_process_invite(user)

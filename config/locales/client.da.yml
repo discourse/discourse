@@ -2761,7 +2761,6 @@ da:
           do_nothing: "gør intet"
         staff_actions:
           title: "Handlinger"
-          instructions: "Klik på brugernavne og handlinger for at filtrere listen. Klik på profilbillederne for at gå til brugersiderne."
           clear_filters: "Vis alt"
           staff_user: "Bruger"
           target_user: "Bruger"

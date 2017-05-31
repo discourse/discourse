@@ -1461,6 +1461,20 @@ describe UsersController do
         end
       end
 
+      context "approval is enabled" do
+        before do
+          SiteSetting.must_approve_users = true
+        end
+
+        it "should raise an error" do
+          unconfirmed_email_user = Fabricate(:user, active: true)
+          unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
+          session[SessionController::ACTIVATE_USER_KEY] = unconfirmed_email_user.id
+          xhr :post, :send_activation_email, username: unconfirmed_email_user.username
+          expect(response.status).to eq(403)
+        end
+      end
+
       describe 'when user does not have a valid session' do
         it 'should not be valid' do
           user = Fabricate(:user)

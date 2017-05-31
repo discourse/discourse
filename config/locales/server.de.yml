@@ -346,6 +346,10 @@ de:
           attributes:
             name:
               taken: wird schon von einem anderen Emoji verwendet
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "muss in der Zukunft liegen."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das „Über mich“-Feld in deinem Profil ist aktuell leer, <a href='/u/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
@@ -563,40 +567,48 @@ de:
     off_topic:
       title: 'Am Thema vorbei'
       description: 'Dieser Beitrag hat nichts mit dem Thema zu tun wie es im Titel und ersten Beitrag steht. Deshalb sollte er woanders hin verschoben werden.'
+      short_description: 'Nicht relevant für die Diskussion'
       long_form: 'dies als am Thema vorbei gemeldet'
     spam:
       title: 'Reklame'
-      description: 'Dieser Beitrag besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Er trägt nichts zum aktuellen Gespräch bei.'
+      description: 'Dieser Beitrag stellt Werbung oder Vandalismus dar. Er ist für das aktuelle Thema weder nützlich noch relevant.'
+      short_description: 'Dies ist Werbung oder Vandalismus.'
       long_form: 'dies als Spam gemeldet'
       email_title: '"%{title}" wurde als Spam markiert'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Unangemessen'
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
+      short_description: 'Ein Verstoß gegen <a href="/guidelines">unsere Community-Richtlinien</a>'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
       title: 'Schreibe @{{username}} eine Nachricht'
       description: 'Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden.'
+      short_description: 'Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
       description: 'Auf diesen Beitrag sollte aus einem oben nicht aufgeführten Grund ein Moderator aufmerksam gemacht werden.'
+      short_description: 'Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams'
       long_form: 'hat dies den Moderatoren gemeldet'
       email_title: 'Ein Beitrag in "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Lesezeichen'
       description: 'Lesezeichen auf diesen Beitrag setzen'
+      short_description: 'Lesezeichen auf diesen Beitrag setzen'
       long_form: 'ein Lesezeichen auf diesen Beitrag gesetzt'
     like:
       title: 'Gefällt mir'
       description: 'Dieser Beitrag gefällt mir'
+      short_description: 'Dieser Beitrag gefällt mir'
       long_form: 'hat dies gefallen'
     vote:
       title: 'Abstimmung'
       description: 'Stimme für diesen Beitrag'
+      short_description: 'Für diesen Beitrag abstimmen'
       long_form: 'für diesen Beitrag gestimmt'
   user_activity:
     no_bookmarks:
@@ -925,6 +937,7 @@ de:
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_whitelist: "Administratoren können sich nur anmelden, wenn sie von einer IP-Adresse aus zugreifen, welcher unter den vertrauenswürden IP-Adressen gelistet ist (Admin > Logs > Screened Ips)."
+    blacklist_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     top_menu: "Legt fest, welche Elemente in der Navigationsleiste der Startseite auftauchen sollen, und in welcher Reihenfolge. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
@@ -1051,6 +1064,7 @@ de:
     default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
     twitter_summary_large_image_url: "URL des Bildes, das standardmäßig in Twitter-Cards angezeigt wird (sollte mindestens 280 Pixel breit und 150 Pixel hoch sein)."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
+    png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam-Aufkommen führen!"
@@ -1108,6 +1122,7 @@ de:
     max_image_size_kb: "Maximale Größe eines hochgeladenen Bilds in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     max_attachment_size_kb: "Maximale Größe hochgeladener Dateianhänge in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Dateien ('*' um alle Dateiendungen zu erlauben)"
+    theme_authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Themes (verwende '*', um alle Dateitypen zu erlauben)"
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird an Hand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximale erlaubte Auflösung für Bilder (in Megapixeln)."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
@@ -1239,7 +1254,6 @@ de:
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge eine bestimmte Anzahl an Tagen auseinander liegen, zeige die Zeitdifferenz im Beitrag an."
-    invites_per_page: "Anzahl an Einladungen, die auf der Benutzerseite angezeigt werden."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die die Breite des Fortschrittsbalkens verändert wird."
     default_code_lang: "Standard Syntax Highlighting, dass auf GitHub Code Blöcke angewendet wird. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
@@ -1247,6 +1261,7 @@ de:
     highlighted_languages: "Aktivierter Regeln für das Syntax-Hervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen) siehe: https://highlightjs.org/static/demo/ für eine Demonstration"
     feed_polling_enabled: "NUR WENN EINGEBETTET: Bestimmt, ob Inhalte eines RSS-/ATOM-Feeds als zusätzliche Beiträge dargestellt werden."
     feed_polling_url: "NUR WENN EINGEBETTET: URL des einzubettenden RSS-/ATOM-Feeds."
+    feed_polling_frequency_mins: "NUR EINBETTUNG: Häufigkeit der Abfrage"
     embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt."
     embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu ermitteln."
     embed_title_scrubber: "Regulärer Ausdruck (Regex) um eingebettete Titel zu bereinigen"
@@ -1435,6 +1450,7 @@ de:
     pinned_globally_disabled: "Dieses Thema ist nicht mehr angeheftet. In seiner Kategorie wird es nicht länger oben erscheinen."
     visible_enabled: "Das Thema ist jetzt gelistet. Es wird in der Themenliste angezeigt."
     visible_disabled: "Das Thema ist jetzt ungelistet. Es wird nicht mehr in der Themenliste angezeigt. Dieses Thema kann nur mit einem direkten Link erreicht werden."
+    auto_deleted_by_timer: "Automatisch gelöscht durch Timer."
   login:
     not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald dies geschehen ist."
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
@@ -1727,32 +1743,28 @@ de:
       title: "Willkommen: Benutzer"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
-        Danke fürs Anmelden bei %{site_name}, sei willkommen!
+        Danke, dass du %{site_name} beigetreten bist, und willkommen!
 
         %{new_user_tips}
 
-        Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
+        Wir glauben an [zivilisiertes Community-Verhaltung](%{base_url}/guidelines) zu jeder Zeit.
 
-        Viel Spaß!
-
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Team-Mitglieder](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
+        Genieße deinen Aufenthalt!
     welcome_invite:
       title: "Willkommen: Einladung"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
-        Danke, dass du die Einladung zu %{site_name} angenommen hast -- und willkommen!
+        Danke, dass du die Einladung zu %{site_name} angenommen hast -- willkommen!
 
-        - Wir haben dieses neue Konto **%{username}** für dich erstellt. Ändere deinen Namen oder dein Passwort, indem du [dein Benutzerprofil][prefs] aufrufst.
+        - Wir haben dieses neue Benutzerkonto **%{username}** für dich erstellt. Ändere deinen Namen oder dein Passwort, indem du [dein Benutzerprofil][prefs] besuchst.
 
-        - Wenn du dich anmeldest, **verwende immer die gleiche E-Mail-Adresse wie von deiner ursprünglichen Einladung** – sonst wissen wir nicht, ob du es wirklich bist!
+        - Wenn du dich anmeldest, **verwende bitte dieselbe E-Mail-Adresse von der ursprünglichen Einladung** – sonst wissen wir nicht, ob du es wirklich bist!
 
         %{new_user_tips}
 
-        Wir glauben an [zivilisiertes Verhalten in unserer Community(%{base_url}/guidelines) zu jeder Zeit.
+        Wir glauben an [zivilisertes Community-Verhalten](%{base_url}/guidelines) zu allen Zeiten.
 
         Genieße deinen Aufenthalt!
-
-        (Wenn du als neuer Benutzer mit [Team-mitgliedern](%{base_url}/about) kommunizieren möchtest, antworte einfach auf diese Nachricht.)
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
@@ -1808,6 +1820,14 @@ de:
     bulk_invite_failed:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
+      text_body_template: |
+        Deine Datei zur Massenbenutzereinladung wurde verarbeitet, %{sent} Einladungen wurden verschickt mit %{failed} Fehler(n).
+
+        Hier ist das Protokoll:
+
+        ```text
+        %{logs}
+        ```
     csv_export_succeeded:
       title: "CSV-Export erfolgreich"
       subject_template: "Datenexport abgeschlossen"
@@ -2077,8 +2097,8 @@ de:
   user_notifications:
     previous_discussion: "Vorangehende Antworten"
     reached_limit:
-      one: "ACHTUNG: Du hast die Grenze für tägliche E-Mails erreicht. Weitere E-Mail-Nachrichten werden unterdrückt."
-      other: "ACHTUNG: Du hast die Grenze von %{count} für tägliche E-Mails erreicht. Weitere E-Mail-Nachrichten werden unterdrückt."
+      one: "Achtung: Wir senden maximal 1 E-Mail pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen."
+      other: "Achtung: Wir senden maximal%{count} E-Mails pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen. P.S.: Danke, dass du so beliebt bist!"
     in_reply_to: "Als Antwort auf"
     unsubscribe:
       title: "Abbestellen"
@@ -2327,22 +2347,20 @@ de:
       title: "Konto bestätigen nach Genehmigung"
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
-        Willkommen zu %{site_name}!
+        Willkommen bei%{site_name}!
 
-        Ein Team-Mitglied hat dein Konto genehmigt auf %{site_name}.
+        Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} bestätigt.
 
-        Folge diesem Link, um dein neues Konto zu bestätigen und zu aktivieren:
+        Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
         %{base_url}/u/activate-account/%{email_token}
 
-        Wenn der oben stehende Link nicht anklickbar ist, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.
+        Wenn sich der obenstehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.
 
         %{new_user_tips}
 
-        Wir glauben an [zivilisiertes Community-Verhalten](%{base_url}/guidelines) zu allen Zeiten.
+        Wir glauben an [zivilisiertes Community-Verhalten](%{base_url}/guidelines) zu jeder Zeit.
 
         Genieße deinen Aufenthalt!
-
-        (Wenn du als neuer Benutzer mit [Team-Mitgliedern](%{base_url}/about) kommunizieren möchtest, antworte einfach auf diese Nachricht.)
     signup:
       title: "Konto bestätigen nach Anmeldung"
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
@@ -2368,12 +2386,14 @@ de:
     title: "Nutzungsbedingungen"
     signup_form_message: 'Ich habe die <a href="/tos" target="_blank">Nutzungsbedingungen</a> gelesen und akzeptiert.'
   deleted: 'gelöscht'
+  image: "Bild"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldigung, die Datei die du hochladen möchtest ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
     pasted_image_filename: "Hinzugefügtes Bild"
     store_failure: "Hochladen von #%{upload_id} für Benutzer #%{user_id} ist fehlgeschlagen."
     file_missing: "Bitte wähle eine Datei zum Hochladen aus. "
+    empty: "Entschuldige, aber die angegebene Datei ist leer."
     attachments:
       too_large: "Entschuldigung, die Datei die du hochladen möchtest, ist zu groß (maximale Dateigröße ist %{max_size_kb}KB)."
     images:

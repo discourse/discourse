@@ -1099,6 +1099,8 @@ en:
       your_email: "Your account email address is <b>%{email}</b>."
       accept_invite: "Accept Invitation"
       success: "Your account has been created and you're now logged in."
+      name_label: "Name"
+      name_label_optional: "Name (optional)"
       password_label: "Set Password (optional)"
 
     password_reset:
@@ -1144,7 +1146,7 @@ en:
       cannot_see_mention:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
-      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}} ago</a> – are you sure you want to post it again?"
+      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply on {{ago}}</a> – are you sure you want to post it again?"
 
       error:
         title_missing: "Title is required"
@@ -3023,8 +3025,9 @@ en:
           block: "block"
           do_nothing: "do nothing"
         staff_actions:
+          all: "all"
+          filter: "Filter:"
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -3077,6 +3080,8 @@ en:
             change_readonly_mode: "change readonly mode"
             backup_download: "download backup"
             backup_destroy: "destroy backup"
+            reviewed_post: "reviewed post"
+            custom_staff: "plugin custom action"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3254,6 +3259,8 @@ en:
         reset_bounce_score:
           label: "Reset"
           title: "Reset bounce score back to 0"
+        visit_profile: "Visit <a href='%{url}'>this user's preferences page</a> to edit their profile"
+
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."

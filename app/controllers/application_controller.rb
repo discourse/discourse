@@ -273,7 +273,7 @@ class ApplicationController < ActionController::Base
 
     unless theme_key
       key, seq = cookies[:theme_key]&.split(",")
-      if key && seq && seq.to_i == user_option&.theme_key_seq
+      if key && seq && seq.to_i == user_option&.theme_key_seq.to_i
         theme_key = key
       end
     end
@@ -554,8 +554,9 @@ class ApplicationController < ActionController::Base
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && is_api?)
 
-      # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
+        flash.keep
+
         if SiteSetting.enable_sso?
           # save original URL in a session so we can redirect after login
           session[:destination_url] = destination_url

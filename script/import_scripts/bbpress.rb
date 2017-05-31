@@ -5,6 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
 =begin
+export BBPRESS_HOST="localhost"
 export BBPRESS_USER="root"
 export BBPRESS_DB="bbpress"
 export BBPRESS_PW=""
@@ -12,6 +13,7 @@ export BBPRESS_PW=""
 
 class ImportScripts::Bbpress < ImportScripts::Base
 
+  BB_PRESS_HOST ||= ENV['BBPRESS_HOST'] || "localhost"
   BB_PRESS_DB ||= ENV['BBPRESS_DB'] || "bbpress"
   BATCH_SIZE  ||= 1000
   BB_PRESS_PW ||= ENV['BBPRESS_PW'] || ""
@@ -22,7 +24,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     super
 
     @client = Mysql2::Client.new(
-      host: "localhost",
+      host: BB_PRESS_HOST,
       username: BB_PRESS_USER,
       database: BB_PRESS_DB,
       password: BB_PRESS_PW,
@@ -31,6 +33,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
 
   def execute
     import_users
+    import_anonymous_users
     import_categories
     import_topics_and_posts
   end
@@ -91,6 +94,61 @@ class ImportScripts::Bbpress < ImportScripts::Base
           last_seen_at: users_last_activity[u["id"]],
         }
       end
+    end
+  end
+
+  def import_anonymous_users
+    puts "", "importing anonymous users..."
+
+    anon_posts = Hash.new
+    anon_names = Hash.new
+    emails = Array.new
+
+    # gather anonymous users via postmeta table
+    bbpress_query(<<-SQL
+      SELECT post_id, meta_key, meta_value
+        FROM #{BB_PRESS_PREFIX}postmeta
+       WHERE meta_key LIKE '_bbp_anonymous%'
+    SQL
+    ).each do |pm|
+      anon_posts[pm['post_id']] = Hash.new if not anon_posts[pm['post_id']]
+
+      if pm['meta_key'] == '_bbp_anonymous_email'
+        anon_posts[pm['post_id']]['email'] = pm['meta_value']
+      end
+      if pm['meta_key'] == '_bbp_anonymous_name'
+        anon_posts[pm['post_id']]['name'] = pm['meta_value']
+      end
+      if pm['meta_key'] == '_bbp_anonymous_website'
+        anon_posts[pm['post_id']]['website'] = pm['meta_value']
+      end
+    end
+
+    # gather every existent username
+    anon_posts.each do |id,post|
+      anon_names[post['name']] = Hash.new if not anon_names[post['name']]
+      # overwriting email address, one user can only use one email address
+      anon_names[post['name']]['email'] = post['email']
+      anon_names[post['name']]['website'] = post['website'] if post['website'] != ''
+    end
+
+    # make sure every user name has a unique email address
+    anon_names.each do |k,name|
+      if not emails.include? name['email']
+        emails.push ( name['email'])
+      else
+        name['email'] = "anonymous_#{SecureRandom.hex}@no-email.invalid"
+      end
+    end
+
+
+    create_users(anon_names) do |k, n|
+      {
+        id: k,
+        email: n["email"].downcase,
+        name: k,
+        website: n["website"]
+      }
     end
   end
 
@@ -163,12 +221,22 @@ class ImportScripts::Bbpress < ImportScripts::Base
       SQL
       ).each { |pm| posts_likes[pm["post_id"]] = pm["likes"].to_i }
 
+      anon_names = {}
+      bbpress_query(<<-SQL
+        SELECT post_id, meta_value
+          FROM #{BB_PRESS_PREFIX}postmeta
+         WHERE post_id IN (#{post_ids_sql})
+           AND meta_key = '_bbp_anonymous_name'
+      SQL
+      ).each { |pm| anon_names[pm["post_id"]] = pm["meta_value"] }
+
       create_posts(posts, total: total_posts, offset: offset) do |p|
         skip = false
 
         post = {
           id: p["id"],
-          user_id: user_id_from_imported_user_id(p["post_author"]) || find_user_by_import_id(p["post_author"]).try(:id) || -1,
+          user_id: user_id_from_imported_user_id(p["post_author"]) || find_user_by_import_id(p["post_author"]).try(:id) ||
+              user_id_from_imported_user_id(anon_names[p['id']]) || find_user_by_import_id(anon_names[p['id']]).try(:id) || -1,
           raw: p["post_content"],
           created_at: p["post_date"],
           like_count: posts_likes[p["id"]],

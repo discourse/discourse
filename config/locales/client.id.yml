@@ -226,8 +226,6 @@ id:
     enable: "Aktifkan"
     disable: "Nonaktifkan"
     undo: "Batalkan perintah"
-    revert: "Kembali ke awal"
-    failed: "Gagal"
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
     banner:

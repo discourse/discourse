@@ -346,6 +346,10 @@ fr:
           attributes:
             name:
               taken: est déjà utilisé pas un autre emoji
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "Doit être dans le futur"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
@@ -563,10 +567,10 @@ fr:
     off_topic:
       title: 'Hors-sujet'
       description: 'Étant donné le titre et le premier message de cette discussion, ce message n''est pas pertinent dans ce contexte et devrait probablement être déplacé ailleurs.'
+      short_description: 'Non pertinent pour la discussio'
       long_form: 'signalé comme hors-sujet'
     spam:
       title: 'Spam'
-      description: 'Ce message est une publicité. Elle n''est pas utile ou pertinente dans ce sujet, mais est uniquement de nature promotionnelle.'
       long_form: 'signalé comme spam'
       email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
@@ -577,12 +581,14 @@ fr:
     notify_user:
       title: 'Envoyer un message à @{{username}} '
       description: 'Je veux parler à cette personne directement et de manière privée à propos de son message.'
+      short_description: 'Je veux parler à cette personne directement et de manière privée au sujet de son message'
       long_form: 'utilisateur contacté'
       email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
       description: 'Ce message demande l''attention des responsables pour une autre raison..'
+      short_description: 'Requière l''attention du staff pour une autre raison'
       long_form: 'signalé aux responsables'
       email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
@@ -593,10 +599,12 @@ fr:
     like:
       title: 'J''aime'
       description: 'Aimer ce message'
+      short_description: 'Aimer ce message'
       long_form: 'a été aimé'
     vote:
       title: 'Vote'
       description: 'Votez pour ce message'
+      short_description: 'Voter pour ce message'
       long_form: 'a voté pour ce message'
   user_activity:
     no_bookmarks:
@@ -1234,7 +1242,6 @@ fr:
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les courriels. Décocher pour cacher les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son @pseudo."
     show_time_gap_days: "Si deux messages sont publiés à ce nombre de jours d'écart, affichez cette durée dans le sujet."
-    invites_per_page: "Afficher les invitations sur la page de l'utilisateur."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse ce nombre, la barre de progression affichera uniquement le numéro de message actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
     default_code_lang: "Coloration syntaxique par défaut appliquée à la syntaxe des langages de programmation des blocs de code GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
@@ -1711,34 +1718,8 @@ fr:
     welcome_user:
       title: "Bienvenue Utilisateur"
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: |
-        Merci d'avoir rejoint %{site_name} et bienvenue !
-
-        %{new_user_tips}
-
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
-
-        Amusez-vous bien !
-
-        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: |
-        Merci d'avoir accepté l'invitation sur %{site_name} -- Bienvenue !
-
-        - Nous avons créé ce nouveau compte **%{username}** pour vous. Modifiez votre pseudo ou mot de passe en visitant [your user profile][prefs].
-
-        - Au moment de vous identifier, merci **d'indiquer l'adresse email utilisée pour l'invitation** — Autrement, nous ne pourrons pas vous reconnaître !
-
-        %{new_user_tips}
-
-        Nous croyons au [civilized community behavior](%{base_url}/guidelines) en tout temps.
-
-        Amusez-vous bien !
-
-        (Si vous souhaitez communiquer avec [staff members](%{base_url}/about) en tant que nouvel utilisateur, répondez simplement à ce message.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Sauvegarde réussie"
       subject_template: "Sauvegarde terminée avec succès"
@@ -2044,9 +2025,6 @@ fr:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Réponses précédentes"
-    reached_limit:
-      one: "ATTENTION : vous avez atteint la limite de courriels quotidiens. Les notifications par courriel suivantes seront supprimées."
-      other: "ATTENTION : vous avez atteint la limite de %{count} courriels par jour. Les notifications par courriel suivantes seront supprimées."
     in_reply_to: "En réponse à"
     unsubscribe:
       title: "Se désabonner"
@@ -2291,25 +2269,6 @@ fr:
     signup_after_approval:
       title: "Inscription après approbation"
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
-      text_body_template: |+
-        Bienvenue sur %{site_name} !
-
-        Un membre de l'équipe a approuvé votre compte sur %{site_name}.
-
-        Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte :
-        %{base_url}/u/activate-account/%{email_token}
-
-        Si le lien n'est pas clickable, essayez de le copier/coller dans la barre d'adresse de votre navigateur.
-
-        %{new_user_tips}
-
-        Nous croyons au [civilized community behavior](%{base_url}/guidelines) en tout temps.
-
-        Amusez-vous bien !
-
-        (Si vous souhaitez communiquer avec [staff members](%{base_url}/about) en tant que nouveau membre, répondez simplement à ce message.)
-
-
     signup:
       title: "Inscription"
       subject_template: "[%{email_prefix}] Activez votre nouveau compte"
@@ -2335,6 +2294,7 @@ fr:
     title: "Conditions générales d'utilisation"
     signup_form_message: 'J''ai lu et j''accepte les <a href="/tos" target="_blank">conditions générales d''utilisation</ a>.'
   deleted: 'supprimé'
+  image: "image"
   upload:
     edit_reason: "téléchargement d'une copie locale des images distantes"
     unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisés : %{authorized_extensions})."

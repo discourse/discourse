@@ -87,7 +87,7 @@ class Wizard
     end
 
     first_admin_id = User.where(admin: true)
-                      .where.not(id: Discourse.system_user.id)
+                      .human_users
                       .joins(:user_auth_tokens)
                       .order('user_auth_tokens.created_at')
                       .pluck(:id).first

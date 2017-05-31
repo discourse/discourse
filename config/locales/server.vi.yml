@@ -401,7 +401,6 @@ vi:
       long_form: 'đánh dấu không-đúng-chủ-đề'
     spam:
       title: 'Spam'
-      description: 'Bài đăng này là một bài quảng cáo. Không bổ ích hoặc liên quan tới chủ đề hiện tại, chỉ nhằm mục đích quảng cáo.'
       long_form: 'đánh dấu là spam'
       email_title: '"%{title}" đã bị gắn cờ spam'
       email_body: "%{link}\n\n%{message}"
@@ -942,7 +941,6 @@ vi:
     enable_names: "Hiển thị tên đầy đủ của thành viên trên trang hồ sơ, thẻ thành viên, và email. Tắt để ẩn tên đầy đủ ở khắp mọi nơi."
     display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
-    invites_per_page: "Lời mời mặc định hiển thị trên trang thành viên"
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
     default_code_lang: "Highlight cú pháp ngôn ngữ lập trình mặc định áp dụng cho đoạn mã GitHub (lang-auto, ruby, python...)"
     warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
@@ -1121,16 +1119,6 @@ vi:
   system_messages:
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
-      text_body_template: |
-        Chào mừng bạn gia nhập %{site_name}!
-
-        %{new_user_tips}
-
-        Chúng tôi tin rằng bạn sẽ cùng chúng tôi phát triển một cộng đồng văn minh [hành vi ứng xử](%{base_url}/guidelines).
-
-        Chúc vui vẻ!
-
-        (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
     backup_succeeded:
@@ -1293,8 +1281,6 @@ vi:
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Các trả lời trước"
-    reached_limit:
-      other: "LƯU Ý: bạn đã đạt đến giới hạn %{count} email được gửi mỗi ngày. Thêm nữa, các email thông báo sẽ tiếp tục bị chặn."
     in_reply_to: "Trong Trả Lời Tới"
     unsubscribe:
       title: "Bỏ theo dõi"

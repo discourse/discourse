@@ -49,6 +49,7 @@ zh_CN:
         insert: 插入投票
         help:
           options_count: 输入至少 2 个选项
+          invalid_values: 最小值必须小于最大值。
         poll_type:
           label: 类型
           regular: 单选

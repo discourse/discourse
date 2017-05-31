@@ -400,7 +400,6 @@ tr_TR:
       long_form: 'konu dışı olarak bildirildi'
     spam:
       title: 'İstenmeyen'
-      description: 'Bu gönderi reklam içeriklidir. Mevcut konuya alakası ya da faydası yoktur.'
       long_form: 'istenmeyen olarak bildirilmiş'
       email_title: '"%{title}" istenmeyen olarak bildirildi'
       email_body: "%{link}\n\n%{message}"
@@ -968,7 +967,6 @@ tr_TR:
     enable_names: "Kullanıcıların tam adlarını profillerde, kullanıcı kartlarında ve e-postalarda göster. Tam adların hiç bir yerde görünmemesi için devre dışı bırak."
     display_name_on_posts: "Gönderilerde @kullanıcıadı'na ek olarak kullanıcının tam adını da göster."
     show_time_gap_days: "İki gönderinin tarihleri arasında bu kadar gün farkı varsa, konuda zaman aralığına yer ver."
-    invites_per_page: "Öntanımlı olarak kullanıcı sayfasında gösterilen davetler."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktığında, ilerleme çubuğunda sadece şu anki gönderi sayısını göster. İlerleme çubuğunun kalınlığını değiştirirseniz, bu değeri de değiştirmeniz gerekebilir."
     default_code_lang: "GitHub kod parçalarına (lang-auto, ruby, python vs.) uygulanacak olan öntanımlı programlama dili söz dizimi vurgulaması."
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı iletisi çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
@@ -1200,16 +1198,6 @@ tr_TR:
       subject_template: "Gönderi topluluk bildirimleri tarafından gizlendi"
     welcome_user:
       subject_template: "%{site_name} topluluğuna hoş geldiniz!"
-      text_body_template: |
-        %{site_name} topluluğuna katıldığınız için teşekkür ederiz, hoş geldiniz!
-
-        %{new_user_tips}
-
-        Biz her zaman [topluluk yönergelerimize](%{base_url}/guidelines) inanıyoruz.
-
-        Ziyaretinizin keyfini çıkarın!
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu iletiyi cevaplamanız yeterli.)
     welcome_invite:
       subject_template: "%{site_name} topluluğuna hoş geldiniz!"
     backup_succeeded:

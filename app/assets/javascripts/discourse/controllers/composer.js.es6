@@ -3,11 +3,11 @@ import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import { relativeAge } from 'discourse/lib/formatter';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { escapeExpression } from 'discourse/lib/utilities';
 import { emojiUnescape } from 'discourse/lib/text';
+import { shortDate } from 'discourse/lib/formatter';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -239,7 +239,7 @@ export default Ember.Controller.extend({
               domain: info.domain,
               username: info.username,
               post_url: topic.urlForPostNumber(info.post_number),
-              ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' })
+              ago: shortDate(info.posted_at)
             });
             this.appEvents.trigger('composer-messages:create', {
               extraClass: 'custom-body',
@@ -485,7 +485,7 @@ export default Ember.Controller.extend({
       if (this.get('model.action') === 'edit') {
         this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
         if (result.responseJson.post.post_number === 1) {
-          this.appEvents.trigger('header:show-topic', composer.get('topic'));
+          this.appEvents.trigger('header:update-topic', composer.get('topic'));
         }
       } else {
         this.appEvents.trigger('post-stream:refresh');

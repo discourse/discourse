@@ -522,7 +522,6 @@ pt_BR:
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
-      description: 'Este post é claramente uma propaganda. Não é útil nem relevante para esta conversa, mas promocional por natureza.'
       long_form: 'sinalizado como spam'
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
@@ -1103,7 +1102,6 @@ pt_BR:
     enable_names: "Mostrar o nome completo do usuário em seu perfil, cartão de usuário, e emails. Desabilitar para esconder o nome completo em todos os lugares."
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
     show_time_gap_days: "Se duas mensagens são feitas com N dias de intervalo, mostre o intervalo no tópico."
-    invites_per_page: "Mostrar convites padrões no página de usuário"
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
@@ -1277,16 +1275,6 @@ pt_BR:
   system_messages:
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
-      text_body_template: |
-        Obrigado por participar do %{site_name}, e bem-vindo!
-
-        %{new_user_tips}
-
-        Nós acreditamos sempre no [comportamento comunitário civilizado](%{base_url}/guidelines).
-
-        Aproveite sua participação!
-
-        (Se precisar se comunicar com [membros da equipe](%{base_url}/about) como um novo usuário, apenas responda a esta mensagem.)
     welcome_invite:
       subject_template: "Bem-vindo ao %{site_name}!"
     backup_succeeded:

@@ -1,54 +1,12 @@
 require 'open-uri'
 require 'nokogiri'
 require 'excon'
+require 'final_destination'
 
 module Jobs
   class CrawlTopicLink < Jobs::Base
 
     class ReadEnough < StandardError; end
-
-    # Retrieve a header regardless of case sensitivity
-    def self.header_for(head, name)
-      header = head.headers.detect do |k, _|
-        name == k.downcase
-      end
-      header[1] if header
-    end
-
-    def self.request_headers(uri)
-      { "User-Agent" => "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36",
-        "Accept" => "text/html",
-        "Host" => uri.host }
-    end
-
-    # Follow any redirects that might exist
-    def self.final_uri(url, limit=5)
-      return if limit < 0
-
-      uri = URI(url)
-      return if uri.blank? || uri.host.blank?
-      return unless ['https', 'http'].include?(uri.scheme)
-      return unless [80, 443].include?(uri.port)
-
-      headers = CrawlTopicLink.request_headers(uri)
-      head = Excon.head(url, read_timeout: 20, headers: headers)
-
-      # If the site does not allow HEAD, just try the url
-      return uri if head.status == 405
-
-      if head.status == 200
-        uri = nil unless header_for(head, 'content-type') =~ /text\/html/
-        return uri
-      end
-
-      location = header_for(head, 'location')
-      if location
-        location = "#{uri.scheme}://#{uri.host}#{location}" if location[0] == "/"
-        return final_uri(location, limit - 1)
-      end
-
-      nil
-    end
 
     def self.max_chunk_size(uri)
       # Amazon leaves the title until very late. Normally it's a bad idea to make an exception for
@@ -64,7 +22,8 @@ module Jobs
       # Never crawl in test mode
       return if Rails.env.test?
 
-      uri = final_uri(url)
+      fd = FinalDestination.new(url)
+      uri = fd.resolve
       return "" unless uri
 
       result = ""
@@ -76,7 +35,7 @@ module Jobs
         # that matter!)
         raise ReadEnough.new if result.size > (CrawlTopicLink.max_chunk_size(uri) * 1024)
       end
-      Excon.get(uri.to_s, response_block: streamer, read_timeout: 20, headers: CrawlTopicLink.request_headers(uri))
+      Excon.get(uri.to_s, response_block: streamer, read_timeout: 20, headers: fd.request_headers)
       result
 
     rescue Excon::Errors::SocketError => ex

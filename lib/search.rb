@@ -51,7 +51,7 @@ class Search
                WHERE pd.post_id IS NULL
               )', SiteSetting.default_locale).limit(10000)
 
-    posts.each do |post|
+    posts.find_each do |post|
       # force indexing
       post.cooked += " "
       SearchIndexer.index(post)
@@ -64,7 +64,7 @@ class Search
                WHERE pd.topic_id IS NULL AND p2.post_number = 1
               )', SiteSetting.default_locale).limit(10000)
 
-    posts.each do |post|
+    posts.find_each do |post|
       # force indexing
       post.cooked += " "
       SearchIndexer.index(post)
@@ -474,7 +474,7 @@ class Search
           end
         end
 
-        if word == 'order:latest'
+        if word == 'order:latest' || word == 'l'
           @order = :latest
           nil
         elsif word == 'order:latest_topic'
@@ -664,7 +664,7 @@ class Search
           posts = posts.where("topics.category_id in (?)", category_ids)
         elsif @search_context.is_a?(Topic)
           posts = posts.where("topics.id = #{@search_context.id}")
-                       .order("posts.post_number")
+                       .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         end
 
       end
@@ -673,7 +673,7 @@ class Search
         if opts[:aggregate_search]
           posts = posts.order("MAX(posts.created_at) DESC")
         else
-          posts = posts.order("posts.created_at DESC")
+          posts = posts.reorder("posts.created_at DESC")
         end
       elsif @order == :latest_topic
         if opts[:aggregate_search]
@@ -710,6 +710,7 @@ class Search
       else
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
       end
+
       posts.limit(limit)
     end
 
@@ -776,8 +777,7 @@ class Search
     def aggregate_posts(post_sql)
       return [] unless post_sql
 
-      Post.includes(:topic => :category)
-        .includes(:user)
+      posts_eager_loads(Post)
         .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
         .order('row_number')
     end
@@ -805,15 +805,26 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id)
-                                   .includes(:topic => :category)
-                                   .includes(:user)
+        posts = posts_eager_loads(posts_query(@limit))
+          .where('posts.topic_id = ?', @search_context.id)
+
         posts.each do |post|
           @results.add(post)
         end
       else
         aggregate_search
       end
+    end
+
+    def posts_eager_loads(query)
+      query = query.includes(:user)
+      topic_eager_loads = [:category]
+
+      if SiteSetting.tagging_enabled
+        topic_eager_loads << :tags
+      end
+
+      query.includes(topic: topic_eager_loads)
     end
 
 end

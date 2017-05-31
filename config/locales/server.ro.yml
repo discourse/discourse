@@ -538,7 +538,6 @@ ro:
       long_form: 'marcat cu marcaj de avertizare ca fiind în afara subiectului'
     spam:
       title: 'Spam'
-      description: 'Această postare este o reclamă. Nu este folositoare sau relevantă în subiectul curent, ci are o natură promoțională.'
       long_form: 'marchează ca spam'
       email_title: '"%{title}" a fost marcat cu marcaj de avertizare spam'
       email_body: "%{link}\n\n%{message}"
@@ -1192,7 +1191,6 @@ ro:
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
-    invites_per_page: "Invitațiile implicite sunt afișate pe pagina utilizatorului."
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
     default_code_lang: "Evidențierea de sintaxa de limbaj de programare aplicată implicit blocurilor de cod GitHub (lang-auto, Ruby, Python etc.)"
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
@@ -1542,16 +1540,6 @@ ro:
         Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
-      text_body_template: |
-        Îți mulțumim că te-ai alăturat pe %{site_name}, și bun venit!
-
-        %{new_user_tips}
-
-        Noi credem într-un [comporament civilizat al comunității](%{base_url}/guidelines) indiferent de circumstante.
-
-        ședere plăcută!
-
-        (Dacă ai nevoie să comunici cu [membrii echipei](%{base_url}/about) din postura de nou utilizator, pur și simplu dă reply la acest mesaj.)
     welcome_invite:
       subject_template: "Bine ai venit pe %{site_name}!"
     backup_succeeded:
@@ -1804,10 +1792,6 @@ ro:
   subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "Răspunsurile precedente"
-    reached_limit:
-      one: "ATENȚIE: ai atins limita de un email zilnic. Notificările pe email viitoare vor fi stopate."
-      few: "ATENȚIE: ai atins limita de %{count}  emailuri zilnice. Notificările pe email viitoare vor fi stopate."
-      other: "ATENȚIE: ai atins limita de %{count} de emailuri zilnice. Notificările pe email viitoare vor fi stopate."
     in_reply_to: "Ca răspuns la"
     unsubscribe:
       title: "Dezabonare"

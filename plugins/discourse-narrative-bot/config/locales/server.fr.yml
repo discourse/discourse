@@ -1,0 +1,112 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fr:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Activer l''assistant Discourse'
+    disable_discourse_narrative_bot_welcome_post: "Désactiver le message de bienvenue de l'assistant Discourse"
+    discourse_narrative_bot_ignored_usernames: "Noms d'utilisateurs que l'assistant Discourse doit ignorer"
+    discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"
+    discourse_narrative_bot_welcome_post_type: "Type de message de bienvenue envoyé par l'assistant Discourse"
+    discourse_narrative_bot_welcome_post_delay: "Attendre (n) seconde(s) avant d'envoyer le message de bienvenue de l'Assistant Discourse"
+  badges:
+    certified:
+      name: Certifié
+      description: "A terminé le tutoriel des nouveaux utilisateurs"
+      long_description: |
+        Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des nouveaux utilisateurs. Vous avez pris l'initiative d'apprendre les outils de base de la discussion et vous êtes maintenant certifié !
+    licensed:
+      name: Certifié
+      description: "A terminé le tutoriel des utilisateurs avertis"
+      long_description: |
+        Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes maintenant certifié à 100% !
+  discourse_narrative_bot:
+    bio: "Bonjour, je ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez **`@%{discobot_username}`** n'importe où."
+    dice:
+      trigger: "Jet"
+      invalid: |-
+        Je suis désolé, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
+      not_enough_dice: |-
+        Je n'ai qu'un dé. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais!
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "Citation"
+      '1':
+        quote: "La difficulté est porteuse d'occasions"
+        author: "Albert Einstein"
+      '2':
+        quote: "Vous devez être le changement que vous voulez voir dans ce monde."
+        author: "Mahatma Gandhi"
+      '3':
+        quote: "Ne pleurez pas parce que c'est fini, souriez parce que c'est arrivé !"
+        author: "Dr Seuss"
+      '4':
+        quote: "On n'est jamais si bien servi que par soi-même."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        author: "Theodore Roosevelt"
+      '6':
+        quote: "La vie est comme une boîte de chocolats. On ne sait jamais sur quoi on va tomber."
+        author: "La maman de Forrest Gump"
+      '7':
+        quote: "C'est un petit pas pour un homme, un saut géant pour l'humanité."
+        author: "Neil Armstrong"
+      '8':
+        quote: "Fais une chose qui t'effraie chaque jour."
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"
+      '10':
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: %{quote} __ &mdash;  %{author}
+    magic_8_ball:
+      answers:
+        '1': "C'est certain"
+        '3': "Sans aucun doute"
+        '4': "Définitivement oui"
+        '5': "Vous pouvez compter dessus"
+        '6': "Comme je le vois, oui"
+        '7': "Probablement"
+        '9': "Oui"
+        '10': "Les signent tendent vers le oui"
+        '12': "Demander à nouveau plus tard"
+        '13': "Il vaut mieux ne pas vous le dire maintenant"
+        '14': "Impossible à prédire pour le moment"
+        '16': "Ne comptez pas dessus"
+        '17': "Ma réponse est non"
+        '18': "Mes sources disent non"
+        '20': "Très douteux"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      random_mention:
+        reply: |-
+          Bonjour ! Pour voir ce que je peux faire, dites `@%{discobot_username} `.
+        tracks: |-
+          Actuellement, je sais faire les choses suivantes:
+
+          `@%{discobot_username}%{reset_trigger}%{default_track} `
+          > Démarre l'un des récits interactifs suivants: %{tracks}.
+    new_user_narrative:
+      hello:
+        title: ":robot: Bienvenue !"
+      mention:
+        instructions: |-
+          Parfois vous avez peut-être envie d'attirer l'attention, même si vous ne lui répondez pas directement. Tapez  `@` et complétez son pseudo pour le mentionner.
+
+          Pouvez vous mentionner **`@%{discobot_username}`** dans votre réponse?
+        reply: |-
+          _Quelqu'un a dit mon nom ?_ :raised_hand: Je pense que vous l'avez fait ! :wave: Bien, je suis là ! Merci de m'avoir mentionné. :ok_hand:
+    advanced_user_narrative:
+      edit:
+        bot_created_post_raw: "@%{discobot_username} est, de loin, le robot le plus cool que je connaisse :wink:"
+        instructions: |-
+          Tout le monde fait des erreurs. Mais ne vous inquiétez pas, vous pouvez toujours éditer vos messages pour les réparer.
+
+          Pouvez-vous commencer par **éditer** le message que je viens de créer en votre nom?

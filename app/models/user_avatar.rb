@@ -20,13 +20,20 @@ class UserAvatar < ActiveRecord::Base
 
         max = Discourse.avatar_sizes.max
         gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
-        tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
-        upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
+        tempfile = FileHelper.download(
+          gravatar_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "gravatar",
+          skip_rate_limit: true
+        )
+        if tempfile
+          upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
 
-        if gravatar_upload_id != upload.id
-          gravatar_upload.try(:destroy!) rescue nil
-          self.gravatar_upload = upload
-          save!
+          if gravatar_upload_id != upload.id
+            gravatar_upload.try(:destroy!) rescue nil
+            self.gravatar_upload = upload
+            save!
+          end
         end
       rescue OpenURI::HTTPError
         save!
@@ -61,7 +68,14 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.import_url_for_user(avatar_url, user, options=nil)
-    tempfile = FileHelper.download(avatar_url, SiteSetting.max_image_size_kb.kilobytes, "sso-avatar", true)
+    tempfile = FileHelper.download(
+      avatar_url,
+      max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+      tmp_file_name: "sso-avatar",
+      follow_redirect: true
+    )
+
+    return unless tempfile
 
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind

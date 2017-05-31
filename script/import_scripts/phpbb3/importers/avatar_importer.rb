@@ -65,7 +65,11 @@ module ImportScripts::PhpBB3
       max_image_size_kb = SiteSetting.max_image_size_kb.kilobytes
 
       begin
-        avatar_file = FileHelper.download(url, max_image_size_kb, 'discourse-avatar')
+        avatar_file = FileHelper.download(
+          url,
+          max_file_size: max_image_size_kb,
+          tmp_file_name: 'discourse-avatar'
+        )
       rescue StandardError => err
         warn "Error downloading avatar: #{err.message}. Skipping..."
         return nil

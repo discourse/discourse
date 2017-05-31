@@ -9,10 +9,21 @@ describe Admin::StaffActionLogsController do
 
   context '.index' do
 
-    it 'works' do
-      xhr :get, :index
+    it 'generates logs' do
+
+      topic = Fabricate(:topic)
+      _record = StaffActionLogger.new(Discourse.system_user).log_topic_deletion(topic)
+
+      xhr :get, :index, action_id: UserHistory.actions[:delete_topic]
+
+      json = JSON.parse(response.body)
       expect(response).to be_success
-      expect(::JSON.parse(response.body)).to be_a(Array)
+
+      expect(json["staff_action_logs"].length).to eq(1)
+      expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
+
+      expect(json["user_history_actions"]).to include({"id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic'})
+
     end
   end
 

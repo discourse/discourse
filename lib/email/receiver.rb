@@ -28,6 +28,9 @@ module Email
     class InvalidPostAction            < ProcessingError; end
 
     attr_reader :incoming_email
+    attr_reader :raw_email
+    attr_reader :mail
+    attr_reader :message_id
 
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
@@ -241,7 +244,7 @@ module Email
 
     def try_to_encode(string, encoding)
       encoded = string.encode("UTF-8", encoding)
-      encoded.present? && encoded.valid_encoding? ? encoded : nil
+      !encoded.nil? && encoded.valid_encoding? ? encoded : nil
     rescue Encoding::InvalidByteSequenceError,
            Encoding::UndefinedConversionError,
            Encoding::ConverterNotFoundError
@@ -461,17 +464,16 @@ module Email
       true
     end
 
-    def self.reply_by_email_address_regex
-      @reply_by_email_address_regex ||= begin
-        reply_addresses = [
-           SiteSetting.reply_by_email_address,
-          *(SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
-        ]
-        escaped_reply_addresses = reply_addresses.select(&:present?)
-                                                 .map { |a| Regexp.escape(a) }
-                                                 .map { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})") }
-        Regexp.new(escaped_reply_addresses.join("|"))
-      end
+    def self.reply_by_email_address_regex(extract_reply_key=true)
+      reply_addresses = [SiteSetting.reply_by_email_address]
+      reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
+
+      reply_addresses.flatten!
+      reply_addresses.select!(&:present?)
+      reply_addresses.map! { |a| Regexp.escape(a) }
+      reply_addresses.map! { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})") }
+
+      /#{reply_addresses.join("|")}/
     end
 
     def group_incoming_emails_regex
@@ -529,9 +531,7 @@ module Email
     end
 
     def post_action_for(body)
-      if likes.include?(body.strip.downcase)
-        PostActionType.types[:like]
-      end
+      PostActionType.types[:like] if likes.include?(body.strip.downcase)
     end
 
     def create_topic(options={})
@@ -625,10 +625,7 @@ module Email
 
       # only add elided part in messages
       if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
-        options[:raw] << "\n\n" << "<details class='elided'>" << "\n"
-        options[:raw] << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
-        options[:raw] << options[:elided] << "\n"
-        options[:raw] << "</details>" << "\n"
+        options[:raw] << Email::Receiver.elided_html(options[:elided])
       end
 
       user = options.delete(:user)
@@ -644,6 +641,14 @@ module Email
       end
 
       result.post
+    end
+
+    def self.elided_html(elided)
+      html =  "\n\n" << "<details class='elided'>" << "\n"
+      html << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
+      html << elided << "\n"
+      html << "</details>" << "\n"
+      html
     end
 
     def add_other_addresses(topic, sender)

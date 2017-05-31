@@ -1,7 +1,10 @@
-{{d-button action=sendActivationEmail
-           label="login.resend_title"
-           icon="envelope"
-           class="btn-primary resend"}}
+{{#unless siteSettings.must_approve_users}}
+  {{d-button action=sendActivationEmail
+             label="login.resend_title"
+             icon="envelope"
+             class="btn-primary resend"}}
+{{/unless}}
+
 {{d-button action=editActivationEmail
            label="login.change_email"
            icon="pencil"

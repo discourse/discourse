@@ -1,6 +1,17 @@
 require 'rails_helper'
 
 describe TopicUser do
+  let :watching do
+    TopicUser.notification_levels[:watching]
+  end
+
+  let :regular do
+    TopicUser.notification_levels[:regular]
+  end
+
+  let :tracking do
+    TopicUser.notification_levels[:tracking]
+  end
 
   describe "#unwatch_categories!" do
     it "correctly unwatches categories" do
@@ -10,9 +21,6 @@ describe TopicUser do
       tracked_topic = Fabricate(:topic)
 
       user = op_topic.user
-      watching = TopicUser.notification_levels[:watching]
-      regular = TopicUser.notification_levels[:regular]
-      tracking = TopicUser.notification_levels[:tracking]
 
       TopicUser.change(user.id, op_topic, notification_level: watching)
       TopicUser.change(user.id, another_topic, notification_level: watching)

@@ -323,7 +323,6 @@ ja:
       long_form: '「関係ない話題」として通報'
     spam:
       title: 'スパム'
-      description: 'この投稿は、営利目的、宣伝目的の書き込みの可能性がある。'
       long_form: 'スパムとして通報する'
       email_title: '"%{title}"はスパムとして通報されています'
       email_body: "%{link}\n\n%{message}"
@@ -809,7 +808,6 @@ ja:
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
     show_time_gap_days: "２つの投稿の作成日が離れていた場合、time gapをトピックに表示する。"
-    invites_per_page: "ユーザページに表示されるデフォルトの招待数"
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
@@ -950,17 +948,6 @@ ja:
   system_messages:
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
-      text_body_template: |
-        %{site_name}に参加していただきありがとうございます。
-        そしてようこそ！
-
-        %{new_user_tips}
-
-        [ガイドライン](%{base_url}/guidelines) をよく読み、しっかり守りましょう。
-
-        それでは、楽しんでください！
-
-        (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
     backup_succeeded:

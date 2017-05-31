@@ -2600,7 +2600,6 @@ et:
           do_nothing: "ära tee midagi"
         staff_actions:
           title: "Tiimi tegevused"
-          instructions: "Kliki kasutajanimedele ja tegevustele nimekirja filtreerimiseks. Kliki profiilipiltidele, et minna kasutajalehtedele."
           clear_filters: "Näita kõike"
           staff_user: "Meeskonnaliige"
           target_user: "Sihtkasutaja"

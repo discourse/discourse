@@ -1,10 +1,8 @@
 require 'rails_helper'
 
 describe UserAvatar do
-  let(:avatar){
-    user = Fabricate(:user)
-    user.create_user_avatar!
-  }
+  let(:user) { Fabricate(:user) }
+  let(:avatar) { user.create_user_avatar! }
 
   it 'can update gravatars' do
     temp = Tempfile.new('test')
@@ -18,7 +16,7 @@ describe UserAvatar do
     expect(avatar.gravatar_upload).not_to eq(nil)
   end
 
-  context '#import_url_for_user' do
+  context '.import_url_for_user' do
 
     it 'creates user_avatar record if missing' do
       user = Fabricate(:user)
@@ -44,7 +42,20 @@ describe UserAvatar do
 
       user.reload
       expect(user.uploaded_avatar_id).to eq(1)
-      expect(user.user_avatar.custom_upload_id).not_to eq(nil)
+      expect(user.user_avatar.custom_upload_id).to eq(Upload.last.id)
+    end
+
+    describe 'when avatar url returns an invalid status code' do
+      it 'should not do anything' do
+        url = "http://thisfakesomething.something.com/"
+        stub_request(:head, url).to_return(status: 404)
+        UserAvatar.import_url_for_user(url, user)
+
+        user.reload
+
+        expect(user.uploaded_avatar_id).to eq(nil)
+        expect(user.user_avatar.custom_upload_id).to eq(nil)
+      end
     end
   end
 end
