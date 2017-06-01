@@ -51,7 +51,7 @@ class Search
                WHERE pd.post_id IS NULL
               )', SiteSetting.default_locale).limit(10000)
 
-    posts.find_each do |post|
+    posts.each do |post|
       # force indexing
       post.cooked += " "
       SearchIndexer.index(post)
@@ -64,7 +64,7 @@ class Search
                WHERE pd.topic_id IS NULL AND p2.post_number = 1
               )', SiteSetting.default_locale).limit(10000)
 
-    posts.find_each do |post|
+    posts.each do |post|
       # force indexing
       post.cooked += " "
       SearchIndexer.index(post)
