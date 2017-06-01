@@ -6,7 +6,7 @@ module DiscourseNarrativeBot
     TRANSITION_TABLE = {
       begin: {
         next_state: :tutorial_edit,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.edit.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.edit.instructions", i18n_post_args) },
         init: {
           action: :start_advanced_track
         }
@@ -14,7 +14,7 @@ module DiscourseNarrativeBot
 
       tutorial_edit: {
         next_state: :tutorial_delete,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.delete.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.delete.instructions", i18n_post_args) },
         edit: {
           action: :reply_to_edit
         },
@@ -26,7 +26,7 @@ module DiscourseNarrativeBot
 
       tutorial_delete: {
         next_state: :tutorial_recover,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.recover.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.recover.instructions", i18n_post_args) },
         delete: {
           action: :reply_to_delete
         },
@@ -47,7 +47,7 @@ module DiscourseNarrativeBot
           end
 
           I18n.t("#{I18N_KEY}.category_hashtag.instructions",
-            category: "##{slug}"
+            i18n_post_args(category: "##{slug}")
           )
         end,
         recover: {
@@ -61,7 +61,7 @@ module DiscourseNarrativeBot
 
       tutorial_category_hashtag: {
         next_state: :tutorial_change_topic_notification_level,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.change_topic_notification_level.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.change_topic_notification_level.instructions", i18n_post_args) },
         reply: {
           action: :reply_to_category_hashtag
         }
@@ -69,7 +69,7 @@ module DiscourseNarrativeBot
 
       tutorial_change_topic_notification_level: {
         next_state: :tutorial_poll,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.poll.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.poll.instructions", i18n_post_args) },
         topic_notification_level_changed: {
           action: :reply_to_topic_notification_level_changed
         },
@@ -81,7 +81,7 @@ module DiscourseNarrativeBot
 
       tutorial_poll: {
         next_state: :tutorial_details,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
         reply: {
           action: :reply_to_poll
         }
@@ -119,7 +119,7 @@ module DiscourseNarrativeBot
       post = PostCreator.create!(@user, {
         raw: I18n.t(
           "#{I18N_KEY}.edit.bot_created_post_raw",
-          discobot_username: self.discobot_user.username
+          i18n_post_args(discobot_username: self.discobot_user.username)
         ),
         topic_id: data[:topic_id],
         skip_bot: true
@@ -135,7 +135,7 @@ module DiscourseNarrativeBot
       post = PostCreator.create!(@user, {
         raw: I18n.t(
           "#{I18N_KEY}.recover.deleted_post_raw",
-          discobot_username: self.discobot_user.username
+          i18n_post_args(discobot_username: self.discobot_user.username)
         ),
         topic_id: data[:topic_id],
         skip_bot: true
@@ -146,7 +146,7 @@ module DiscourseNarrativeBot
     end
 
     def start_advanced_track
-      raw = I18n.t("#{I18N_KEY}.start_message", username: @user.username)
+      raw = I18n.t("#{I18N_KEY}.start_message", i18n_post_args(username: @user.username))
 
       raw = <<~RAW
       #{raw}
@@ -183,7 +183,7 @@ module DiscourseNarrativeBot
       fake_delay
 
       raw = <<~RAW
-      #{I18n.t("#{I18N_KEY}.edit.reply")}
+      #{I18n.t("#{I18N_KEY}.edit.reply", i18n_post_args)}
 
       #{instance_eval(&@next_instructions)}
       RAW
@@ -199,7 +199,7 @@ module DiscourseNarrativeBot
 
       unless @data[:attempted]
         reply_to(@post, I18n.t("#{I18N_KEY}.edit.not_found",
-          url: Post.find_by(id: post_id).url
+          i18n_post_args(url: Post.find_by(id: post_id).url)
         ))
       end
 
@@ -213,7 +213,7 @@ module DiscourseNarrativeBot
       fake_delay
 
       raw = <<~RAW
-      #{I18n.t("#{I18N_KEY}.delete.reply")}
+      #{I18n.t("#{I18N_KEY}.delete.reply", i18n_post_args)}
 
       #{instance_eval(&@next_instructions)}
       RAW
@@ -227,7 +227,7 @@ module DiscourseNarrativeBot
     def missing_delete
       return unless valid_topic?(@post.topic_id)
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.delete.not_found")) unless @data[:attempted]
+      reply_to(@post, I18n.t("#{I18N_KEY}.delete.not_found", i18n_post_args)) unless @data[:attempted]
       enqueue_timeout_job(@user)
       false
     end
@@ -238,7 +238,7 @@ module DiscourseNarrativeBot
       fake_delay
 
       raw = <<~RAW
-      #{I18n.t("#{I18N_KEY}.recover.reply")}
+      #{I18n.t("#{I18N_KEY}.recover.reply", i18n_post_args)}
 
       #{instance_eval(&@next_instructions)}
       RAW
@@ -254,7 +254,7 @@ module DiscourseNarrativeBot
         post_id = get_state_data(:post_id) && @post.id != post_id
 
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.recover.not_found")) unless @data[:attempted]
+      reply_to(@post, I18n.t("#{I18N_KEY}.recover.not_found", i18n_post_args)) unless @data[:attempted]
       enqueue_timeout_job(@user)
       false
     end
@@ -265,7 +265,7 @@ module DiscourseNarrativeBot
 
       if Nokogiri::HTML.fragment(@post.cooked).css('.hashtag').size > 0
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.category_hashtag.reply")}
+          #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -274,7 +274,7 @@ module DiscourseNarrativeBot
         reply_to(@post, raw)
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -284,7 +284,7 @@ module DiscourseNarrativeBot
       return unless valid_topic?(@post.topic_id)
 
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.change_topic_notification_level.not_found")) unless @data[:attempted]
+      reply_to(@post, I18n.t("#{I18N_KEY}.change_topic_notification_level.not_found", i18n_post_args)) unless @data[:attempted]
       enqueue_timeout_job(@user)
       false
     end
@@ -294,7 +294,7 @@ module DiscourseNarrativeBot
 
       fake_delay
       raw = <<~RAW
-        #{I18n.t("#{I18N_KEY}.change_topic_notification_level.reply")}
+        #{I18n.t("#{I18N_KEY}.change_topic_notification_level.reply", i18n_post_args)}
 
         #{instance_eval(&@next_instructions)}
       RAW
@@ -315,7 +315,7 @@ module DiscourseNarrativeBot
 
       if Nokogiri::HTML.fragment(@post.cooked).css(".poll").size > 0
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.poll.reply")}
+          #{I18n.t("#{I18N_KEY}.poll.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -324,7 +324,7 @@ module DiscourseNarrativeBot
         reply_to(@post, raw)
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.poll.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.poll.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -337,9 +337,9 @@ module DiscourseNarrativeBot
       fake_delay
 
       if Nokogiri::HTML.fragment(@post.cooked).css("details").size > 0
-        reply_to(@post, I18n.t("#{I18N_KEY}.details.reply"))
+        reply_to(@post, I18n.t("#{I18N_KEY}.details.reply", i18n_post_args))
       else
-        reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -352,9 +352,9 @@ module DiscourseNarrativeBot
       fake_delay
 
       if @post.wiki
-        reply_to(@post, I18n.t("#{I18N_KEY}.wiki.reply"))
+        reply_to(@post, I18n.t("#{I18N_KEY}.wiki.reply", i18n_post_args))
       else
-        reply_to(@post, I18n.t("#{I18N_KEY}.wiki.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.wiki.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -364,7 +364,7 @@ module DiscourseNarrativeBot
       fake_delay
 
       reply_to(@post, I18n.t("#{I18N_KEY}.end.message",
-        certificate: certificate('advanced')
+        i18n_post_args(certificate: certificate('advanced'))
       ))
     end
 

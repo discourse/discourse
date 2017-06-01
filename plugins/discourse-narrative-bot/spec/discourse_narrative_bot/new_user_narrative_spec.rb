@@ -44,6 +44,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         username: user.username,
         skip_trigger: skip_trigger,
         reset_trigger: "#{reset_trigger} #{described_class.reset_trigger}",
+        base_uri: ''
       ))
     end
   end
@@ -68,13 +69,13 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         narrative.reset_bot(user, post)
 
         expected_raw = I18n.t('discourse_narrative_bot.new_user_narrative.hello.message',
-          username: user.username, title: SiteSetting.title
+          username: user.username, title: SiteSetting.title, base_uri: ''
         )
 
         expected_raw = <<~RAW
         #{expected_raw}
 
-        #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.instructions', profile_page_url: profile_page_url)}
+        #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.instructions', profile_page_url: profile_page_url, base_uri: '')}
         RAW
 
         new_post = Post.last
@@ -96,13 +97,13 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         narrative.reset_bot(user, other_post)
 
         expected_raw = I18n.t('discourse_narrative_bot.new_user_narrative.hello.message',
-          username: user.username, title: SiteSetting.title
+          username: user.username, title: SiteSetting.title, base_uri: ''
         )
 
         expected_raw = <<~RAW
         #{expected_raw}
 
-        #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.instructions', profile_page_url: profile_page_url)}
+        #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.instructions', profile_page_url: profile_page_url, base_uri: '')}
         RAW
 
         new_post = Post.last
@@ -159,13 +160,13 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = I18n.t('discourse_narrative_bot.new_user_narrative.hello.message',
-          username: user.username, title: SiteSetting.title
+          username: user.username, title: SiteSetting.title, base_uri: ''
         )
 
         expected_raw = <<~RAW
         #{expected_raw}
 
-        #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.instructions', profile_page_url: profile_page_url)}
+        #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.instructions', profile_page_url: profile_page_url, base_uri: '')}
         RAW
 
         expect(new_post.raw).to eq(expected_raw.chomp)
@@ -207,7 +208,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
-          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.not_found'))
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
         end
 
@@ -220,9 +221,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             new_post = Post.last
 
-            expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.new_user_narrative.onebox.instructions')
-            )
+            expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: ''))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
           end
@@ -238,9 +237,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         profile_page_url = "#{Discourse.base_url}/u/#{user.username}"
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', profile_page_url: profile_page_url)}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', profile_page_url: profile_page_url, base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: '')}
         RAW
 
         expect(new_post.raw).to eq(expected_raw.chomp)
@@ -269,7 +268,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
-          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.onebox.not_found'))
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.onebox.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
         end
       end
@@ -280,7 +279,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
-          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.onebox.not_found'))
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.onebox.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
         end
       end
@@ -295,9 +294,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             new_post = Post.last
 
-            expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.new_user_narrative.emoji.instructions')
-            )
+            expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions', base_uri: ''))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
           end
@@ -312,9 +309,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions', base_uri: '')}
         RAW
 
         expect(new_post.raw).to eq(expected_raw.chomp)
@@ -357,7 +354,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.new_user_narrative.flag.instructions',
               guidelines_url: Discourse.base_url + '/guidelines',
-              about_url: Discourse.base_url + '/about'
+              about_url: Discourse.base_url + '/about',
+              base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
@@ -374,7 +372,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(Post.last.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.images.not_found',
-            image_url: "#{Discourse.base_url}/images/dog-walk.gif"
+            image_url: "#{Discourse.base_url}/images/dog-walk.gif", base_uri: ''
           ))
 
           described_class.any_instance.expects(:enqueue_timeout_job).with(user)
@@ -388,12 +386,13 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: new_post.id).select
 
           expected_raw = <<~RAW
-            #{I18n.t('discourse_narrative_bot.new_user_narrative.images.reply')}
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.images.reply', base_uri: '')}
 
             #{I18n.t(
               'discourse_narrative_bot.new_user_narrative.flag.instructions',
               guidelines_url: "#{Discourse.base_url}/guidelines",
-              about_url: "#{Discourse.base_url}/about"
+              about_url: "#{Discourse.base_url}/about",
+              base_uri: ''
             )}
           RAW
 
@@ -414,7 +413,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         expect(Post.last.raw).to eq(I18n.t(
           'discourse_narrative_bot.new_user_narrative.images.not_found',
-          image_url: "#{Discourse.base_url}/images/dog-walk.gif"
+          image_url: "#{Discourse.base_url}/images/dog-walk.gif",
+          base_uri: ''
         ))
 
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
@@ -430,7 +430,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         expect(Post.last.raw).to eq(I18n.t(
           'discourse_narrative_bot.new_user_narrative.images.like_not_found',
-          url: post_2.url
+          url: post_2.url, base_uri: ''
         ))
 
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
@@ -447,7 +447,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           #{I18n.t(
             'discourse_narrative_bot.new_user_narrative.flag.instructions',
             guidelines_url: "#{Discourse.base_url}/guidelines",
-            about_url: "#{Discourse.base_url}/about"
+            about_url: "#{Discourse.base_url}/about",
+            base_uri: ''
           )}
         RAW
 
@@ -482,7 +483,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)
 
-          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.formatting.not_found'))
+          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.formatting.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_formatting)
         end
       end
@@ -498,7 +499,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.new_user_narrative.quoting.instructions',
+              'discourse_narrative_bot.new_user_narrative.quoting.instructions', base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
@@ -515,9 +516,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           new_post = Post.last
 
           expected_raw = <<~RAW
-            #{I18n.t('discourse_narrative_bot.new_user_narrative.formatting.reply')}
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.formatting.reply', base_uri: '')}
 
-            #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.instructions')}
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.instructions', base_uri: '')}
           RAW
 
           expect(new_post.raw).to eq(expected_raw.chomp)
@@ -546,7 +547,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)
 
-          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.quoting.not_found'))
+          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.quoting.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
         end
       end
@@ -562,10 +563,23 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.new_user_narrative.images.instructions',
+              'discourse_narrative_bot.new_user_narrative.images.instructions', base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
+          end
+
+          it "should use correct path to images on subfolder installs" do
+            GlobalSetting.stubs(:relative_url_root).returns('/forum')
+            Discourse.stubs(:base_uri).returns("/forum")
+
+            post.update!(raw: skip_trigger)
+
+            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
+            new_post = Post.last
+
+            expect(new_post.raw).to include("/forum/images")
           end
         end
       end
@@ -580,9 +594,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.reply')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.images.instructions')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.images.instructions', base_uri: '')}
         RAW
 
         expect(new_post.raw).to eq(expected_raw.chomp)
@@ -610,7 +624,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)
 
-          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.emoji.not_found'))
+          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.emoji.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
         end
       end
@@ -627,7 +641,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.new_user_narrative.mention.instructions',
-              discobot_username: discobot_user.username
+              discobot_username: discobot_user.username, base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
@@ -645,10 +659,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.reply')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.reply', base_uri: '')}
 
           #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.instructions',
-            discobot_username: discobot_user.username
+            discobot_username: discobot_user.username, base_uri: ''
           )}
         RAW
 
@@ -680,7 +694,8 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(Post.last.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.mention.not_found',
             username: user.username,
-            discobot_username: discobot_user.username
+            discobot_username: discobot_user.username,
+            base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
@@ -698,7 +713,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.formatting.instructions',
-            discobot_username: discobot_user.username
+            discobot_username: discobot_user.username, base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_formatting)
@@ -715,10 +730,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.reply')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.reply', base_uri: '')}
 
           #{I18n.t(
-            'discourse_narrative_bot.new_user_narrative.formatting.instructions'
+            'discourse_narrative_bot.new_user_narrative.formatting.instructions', base_uri: ''
           )}
         RAW
 
@@ -762,7 +777,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.input(:reply, user, post: other_post)
           new_post = Post.last
 
-          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.flag.not_found'))
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.flag.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
         end
 
@@ -776,7 +791,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.new_user_narrative.search.instructions'
+              'discourse_narrative_bot.new_user_narrative.search.instructions', base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
@@ -792,10 +807,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.flag.reply')}
+          #{I18n.t('discourse_narrative_bot.new_user_narrative.flag.reply', base_uri: '')}
 
           #{I18n.t(
-            'discourse_narrative_bot.new_user_narrative.search.instructions'
+            'discourse_narrative_bot.new_user_narrative.search.instructions', base_uri: ''
           )}
         RAW
 
@@ -825,7 +840,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           narrative.input(:reply, user, post: post)
 
           expect(Post.last.raw).to eq(I18n.t(
-            'discourse_narrative_bot.new_user_narrative.search.not_found'
+            'discourse_narrative_bot.new_user_narrative.search.not_found', base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
@@ -847,7 +862,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)
 
           expect(post.reload.topic.first_post.raw).to include(I18n.t(
-            "discourse_narrative_bot.new_user_narrative.search.hidden_message"
+            "discourse_narrative_bot.new_user_narrative.search.hidden_message", base_uri: ''
           ))
         end
 
@@ -875,7 +890,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.search.reply',
-            search_url: "#{Discourse.base_url}/search"
+            search_url: "#{Discourse.base_url}/search", base_uri: ''
           ).chomp)
 
           expect(first_post.reload.raw).to eq('Hello world')
