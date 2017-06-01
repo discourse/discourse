@@ -912,6 +912,14 @@ class User < ActiveRecord::Base
     DiscourseEvent.trigger(:user_logged_out, self)
   end
 
+  def logged_in
+    DiscourseEvent.trigger(:user_logged_in, self)
+
+    if !self.seen_before?
+      DiscourseEvent.trigger(:user_first_logged_in, self)
+    end
+  end
+
   protected
 
   def badge_grant
