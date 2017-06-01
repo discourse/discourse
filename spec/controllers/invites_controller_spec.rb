@@ -197,7 +197,12 @@ describe InvitesController do
           end
 
           it 'logs in the user' do
-            subject
+            events = DiscourseEvent.track_events { subject }
+
+            expect(events.map { |event| event[:event_name] }).to include(
+              :user_logged_in, :user_first_logged_in
+            )
+
             expect(session[:current_user_id]).to eq(user.id)
           end
 
@@ -378,10 +383,20 @@ describe InvitesController do
 
         before do
           Invite.expects(:redeem_from_token).with(invite.invite_key, user.email, nil, nil, topic.id).returns(user)
-          get :redeem_disposable_invite, email: user.email, token: invite.invite_key, topic: topic.id
         end
 
         it 'logs in user' do
+          events = DiscourseEvent.track_events do
+            get :redeem_disposable_invite,
+              email: user.email,
+              token: invite.invite_key,
+              topic: topic.id
+          end
+
+          expect(events.map { |event| event[:event_name] }).to include(
+            :user_logged_in, :user_first_logged_in
+          )
+
           expect(session[:current_user_id]).to eq(user.id)
         end
 
