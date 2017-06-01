@@ -103,8 +103,12 @@ describe UserBadgesController do
     it 'will trigger :user_badge_granted' do
       log_in :admin
       user
-      DiscourseEvent.expects(:trigger).with(:user_badge_granted, anything, anything).once
-      xhr :post, :create, badge_id: badge.id, username: user.username
+
+      event = DiscourseEvent.track_events do
+        xhr :post, :create, badge_id: badge.id, username: user.username
+      end.first
+
+      expect(event[:event_name]).to eq(:user_badge_granted)
     end
   end
 
@@ -127,8 +131,11 @@ describe UserBadgesController do
     it 'will trigger :user_badge_removed' do
       log_in :admin
 
-      DiscourseEvent.expects(:trigger).with(:user_badge_removed, anything, anything).once
-      xhr :delete, :destroy, id: user_badge.id
+      event = DiscourseEvent.track_events do
+        xhr :delete, :destroy, id: user_badge.id
+      end.first
+
+      expect(event[:event_name]).to eq(:user_badge_removed)
     end
   end
 end
