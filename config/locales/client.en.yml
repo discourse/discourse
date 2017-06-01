@@ -6,7 +6,7 @@
 # To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, ift needs to be pushed by a maintainer to Transifex:
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
 #
 #   tx push -s
 #
