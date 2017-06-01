@@ -122,9 +122,11 @@ class UploadCreator
     end
   end
 
+  MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
+
   def should_convert_to_jpeg?
     TYPES_CONVERTED_TO_JPEG.include?(@image_info.type) &&
-    @image_info.size.min > 720 &&
+    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG &&
     SiteSetting.png_to_jpg_quality < 100
   end
 
