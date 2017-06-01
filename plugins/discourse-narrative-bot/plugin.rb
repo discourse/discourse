@@ -114,6 +114,18 @@ after_initialize do
   end
 
   self.add_model_callback(User, :after_commit, on: :create) do
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0
+      self.enqueue_bot_welcome_post
+    end
+  end
+
+  self.on(:user_first_logged_in) do |user|
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay > 0
+      user.enqueue_bot_welcome_post
+    end
+  end
+
+  self.add_to_class(:user, :enqueue_bot_welcome_post) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
     delay = SiteSetting.discourse_narrative_bot_welcome_post_delay
