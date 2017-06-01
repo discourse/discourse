@@ -132,7 +132,13 @@ class UploadCreator
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
-    Discourse::Utils.execute_command('convert', @file.path, '-quality', SiteSetting.png_to_jpg_quality.to_s, jpeg_tempfile.path)
+    Discourse::Utils.execute_command(
+      'convert', @file.path,
+      '-background', 'white',
+      '-flatten',
+      '-quality', SiteSetting.png_to_jpg_quality.to_s,
+      jpeg_tempfile.path
+    )
 
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85
