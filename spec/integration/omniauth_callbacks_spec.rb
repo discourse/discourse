@@ -49,7 +49,13 @@ RSpec.describe "OmniAuth Callbacks" do
       end
 
       it 'should return the right response' do
-        get "/auth/google_oauth2/callback.json"
+        events = DiscourseEvent.track_events do
+          get "/auth/google_oauth2/callback.json"
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(
+          :user_logged_in, :user_first_logged_in
+        )
 
         expect(response).to be_success
 

@@ -152,10 +152,17 @@ describe UsersController do
         before do
           Guardian.any_instance.expects(:can_access_forum?).returns(true)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-          put :perform_account_activation, token: 'asdfasdf'
         end
 
         it 'correctly logs on user' do
+          events = DiscourseEvent.track_events do
+            put :perform_account_activation, token: 'asdfasdf'
+          end
+
+          expect(events.map { |event| event[:event_name] }).to include(
+            :user_logged_in, :user_first_logged_in
+          )
+
           expect(response).to be_success
           expect(flash[:error]).to be_blank
           expect(session[:current_user_id]).to be_present
@@ -266,9 +273,15 @@ describe UsersController do
         user = Fabricate(:user)
         user_auth_token = UserAuthToken.generate!(user_id: user.id)
         token = user.email_tokens.create(email: user.email).token
-
         get :password_reset, token: token
-        put :password_reset, token: token, password: 'hg9ow8yhg98o'
+
+        events = DiscourseEvent.track_events do
+          put :password_reset, token: token, password: 'hg9ow8yhg98o'
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(
+          :user_logged_in, :user_first_logged_in
+        )
 
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
@@ -386,22 +399,24 @@ describe UsersController do
         expect(session[:current_user_id]).to be_blank
       end
 
-      it 'does log in admin with valid token and SSO disabled' do
-        SiteSetting.enable_sso = false
-        token = admin.email_tokens.create(email: admin.email).token
+      context 'valid token' do
+        it 'does log in admin with SSO disabled' do
+          SiteSetting.enable_sso = false
+          token = admin.email_tokens.create(email: admin.email).token
 
-        get :admin_login, token: token
-        expect(response).to redirect_to('/')
-        expect(session[:current_user_id]).to eq(admin.id)
-      end
+          get :admin_login, token: token
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
 
-      it 'logs in admin with valid token and SSO enabled' do
-        SiteSetting.enable_sso = true
-        token = admin.email_tokens.create(email: admin.email).token
+        it 'logs in admin with SSO enabled' do
+          SiteSetting.enable_sso = true
+          token = admin.email_tokens.create(email: admin.email).token
 
-        get :admin_login, token: token
-        expect(response).to redirect_to('/')
-        expect(session[:current_user_id]).to eq(admin.id)
+          get :admin_login, token: token
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
       end
     end
   end

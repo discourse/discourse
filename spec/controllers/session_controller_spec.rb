@@ -185,7 +185,14 @@ describe SessionController do
       sso.custom_fields["shop_url"] = "http://my_shop.com"
       sso.custom_fields["shop_name"] = "Sam"
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      events = DiscourseEvent.track_events do
+        get :sso_login, Rack::Utils.parse_query(sso.payload)
+      end
+
+      expect(events.map { |event| event[:event_name] }).to include(
+       :user_logged_in, :user_first_logged_in
+      )
+
       expect(response).to redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -500,7 +507,13 @@ describe SessionController do
 
       describe 'success by username' do
         it 'logs in correctly' do
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          events = DiscourseEvent.track_events do
+            xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          end
+
+          expect(events.map { |event| event[:event_name] }).to include(
+            :user_logged_in, :user_first_logged_in
+          )
 
           user.reload
 
