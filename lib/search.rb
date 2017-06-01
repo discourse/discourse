@@ -694,6 +694,8 @@ class Search
           posts = posts.order("posts.like_count DESC")
         end
       else
+        posts = posts.order("topics.closed") if SiteSetting.prioritize_open_topics_in_search
+
         posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
 
         data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
