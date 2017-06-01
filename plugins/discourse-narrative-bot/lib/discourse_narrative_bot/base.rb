@@ -91,9 +91,11 @@ module DiscourseNarrativeBot
 
       if post = Post.find_by(id: @data[:last_post_id])
         reply_to(post, I18n.t("discourse_narrative_bot.timeout.message",
-          username: user.username,
-          skip_trigger: TrackSelector.skip_trigger,
-          reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}",
+          i18n_post_args(
+            username: user.username,
+            skip_trigger: TrackSelector.skip_trigger,
+            reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}"
+          )
         ))
       end
     end
@@ -102,12 +104,11 @@ module DiscourseNarrativeBot
       options = {
         user_id: @user.id,
         date: Time.zone.now.strftime('%b %d %Y'),
-        host: Discourse.base_url,
         format: :svg
       }
 
       options.merge!(type: type) if type
-      src = DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_url(options)
+      src = Discourse.base_url + DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
       "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{I18n.t("#{self.class::I18N_KEY}.certificate.alt")}'>"
     end
 
@@ -152,6 +153,10 @@ module DiscourseNarrativeBot
       else
         @post
       end
+    end
+
+    def i18n_post_args(extra={})
+      {base_uri: Discourse.base_uri}.merge(extra)
     end
 
     def valid_topic?(topic_id)
