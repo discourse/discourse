@@ -1132,6 +1132,7 @@ search:
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size: 100000
+  prioritize_open_topics_in_search: false
 
 uncategorized:
   version_checks:
