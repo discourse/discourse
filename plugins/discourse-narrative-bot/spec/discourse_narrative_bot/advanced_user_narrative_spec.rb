@@ -42,6 +42,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         username: user.username,
         skip_trigger: skip_trigger,
         reset_trigger: "#{reset_trigger} #{described_class.reset_trigger}",
+        base_uri: ''
       ))
     end
   end
@@ -67,13 +68,13 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         expected_raw = I18n.t(
           'discourse_narrative_bot.advanced_user_narrative.start_message',
-          username: user.username
+          username: user.username, base_uri: ''
         )
 
         expected_raw = <<~RAW
         #{expected_raw}
 
-        #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions')}
+        #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
         new_post = Post.offset(1).last
@@ -99,13 +100,13 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         expected_raw = I18n.t(
           'discourse_narrative_bot.advanced_user_narrative.start_message',
-          username: user.username
+          username: user.username, base_uri: ''
         )
 
         expected_raw = <<~RAW
         #{expected_raw}
 
-        #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions')}
+        #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.instructions', base_uri: '')}
         RAW
 
         new_post = Post.offset(1).last
@@ -159,7 +160,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
           expect(Post.last.raw).to eq(I18n.t(
             'discourse_narrative_bot.advanced_user_narrative.edit.not_found',
-            url: first_post.url
+            url: first_post.url, base_uri: ''
           ))
         end
 
@@ -173,7 +174,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.advanced_user_narrative.delete.instructions')
+              'discourse_narrative_bot.advanced_user_narrative.delete.instructions', base_uri: '')
             )
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
@@ -192,9 +193,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           end.to change { Post.count }.by(1)
 
           expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.reply')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.edit.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.delete.instructions')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.delete.instructions', base_uri: '')}
           RAW
 
           expect(Post.last.raw).to eq(expected_raw.chomp)
@@ -220,7 +221,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           new_post = Post.last
 
           expect(new_post.raw).to eq(I18n.t(
-            'discourse_narrative_bot.advanced_user_narrative.delete.not_found'
+            'discourse_narrative_bot.advanced_user_narrative.delete.not_found', base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
@@ -236,7 +237,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             new_post = Post.offset(1).last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.advanced_user_narrative.recover.instructions')
+              'discourse_narrative_bot.advanced_user_narrative.recover.instructions', base_uri: '')
             )
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
@@ -263,9 +264,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             .to change { Post.count }.by(2)
 
           expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.delete.reply')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.delete.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.instructions')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.instructions', base_uri: '')}
           RAW
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
@@ -281,9 +282,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
               .to_not change { Post.count }
 
             expected_raw = <<~RAW
-            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.delete.reply')}
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.delete.reply', base_uri: '')}
 
-            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.instructions')}
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.instructions', base_uri: '')}
             RAW
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
@@ -314,7 +315,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           new_post = Post.last
 
           expect(new_post.raw).to eq(I18n.t(
-            'discourse_narrative_bot.advanced_user_narrative.recover.not_found'
+            'discourse_narrative_bot.advanced_user_narrative.recover.not_found', base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
@@ -334,7 +335,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions',
-              category: "#a:b"
+              category: "#a:b", base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
@@ -366,9 +367,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             .to change { Post.count }.by(1)
 
           expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.reply')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions', category: "#a:b")}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions', category: "#a:b", base_uri: '')}
           RAW
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
@@ -405,7 +406,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           new_post = Post.last
 
           expect(new_post.raw).to eq(I18n.t(
-            'discourse_narrative_bot.advanced_user_narrative.category_hashtag.not_found'
+            'discourse_narrative_bot.advanced_user_narrative.category_hashtag.not_found', base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
@@ -421,7 +422,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions'
+              'discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions', base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_change_topic_notification_level)
@@ -436,9 +437,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         narrative.input(:reply, user, post: post)
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.category_hashtag.reply')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.category_hashtag.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions', base_uri: '')}
         RAW
 
         expect(Post.last.raw).to eq(expected_raw.chomp)
@@ -479,7 +480,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           new_post = Post.last
 
           expect(new_post.raw).to eq(I18n.t(
-            'discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.not_found'
+            'discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.not_found', base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_change_topic_notification_level)
@@ -495,7 +496,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.advanced_user_narrative.poll.instructions')
+              'discourse_narrative_bot.advanced_user_narrative.poll.instructions', base_uri: '')
             )
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
@@ -512,9 +513,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           )
 
           expected_raw = <<~RAW
-            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply')}
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply', base_uri: '')}
 
-            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.poll.instructions')}
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.poll.instructions', base_uri: '')}
           RAW
 
           expect(Post.last.raw).to eq(expected_raw.chomp)
@@ -547,7 +548,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
-          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.advanced_user_narrative.poll.not_found'))
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.advanced_user_narrative.poll.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
         end
 
@@ -561,7 +562,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             new_post = Post.last
 
             expect(new_post.raw).to eq(I18n.t(
-              'discourse_narrative_bot.advanced_user_narrative.details.instructions')
+              'discourse_narrative_bot.advanced_user_narrative.details.instructions', base_uri: '')
             )
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
@@ -574,9 +575,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         narrative.input(:reply, user, post: post)
 
         expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.poll.reply')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.poll.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.details.instructions')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.details.instructions', base_uri: '')}
         RAW
 
         expect(Post.last.raw).to eq(expected_raw.chomp)
@@ -607,7 +608,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         it 'should create the right reply' do
           narrative.input(:reply, user, post: post)
 
-          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.advanced_user_narrative.details.not_found'))
+          expect(Post.last.raw).to eq(I18n.t('discourse_narrative_bot.advanced_user_narrative.details.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
         end
 
@@ -631,7 +632,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         narrative.input(:reply, user, post: post)
 
         expect(Post.offset(1).last.raw).to eq(I18n.t(
-          'discourse_narrative_bot.advanced_user_narrative.details.reply'
+          'discourse_narrative_bot.advanced_user_narrative.details.reply', base_uri: ''
         ))
 
         expect(narrative.get_data(user)).to eq({

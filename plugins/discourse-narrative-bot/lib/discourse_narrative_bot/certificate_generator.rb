@@ -577,7 +577,7 @@ module DiscourseNarrativeBot
       end
 
       def avatar_url
-        UrlHelper.absolute(@user.avatar_template.gsub('{size}', '250'))
+        UrlHelper.absolute(Discourse.base_uri + @user.avatar_template.gsub('{size}', '250'))
       end
   end
 end
