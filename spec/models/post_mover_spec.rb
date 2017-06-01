@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 describe PostMover do
+  RSpec::Matchers.define :a_moderator_post do |attributes|
+    match do |post|
+      expected_attributes =
+        (attributes || {}).merge(post_type: Post.types[:small_action], action_code: "split_topic")
+
+      expect(post).to have_attributes(expected_attributes)
+    end
+  end
 
   describe '#move_types' do
     context "verify enum sequence" do
@@ -47,16 +55,21 @@ describe PostMover do
     context 'success' do
 
       it "enqueues a job to notify users" do
-        topic.stubs(:add_moderator_post)
+        Jobs.stubs(:enqueue)
         Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p2.id, p4.id], moved_by_id: user.id)
         topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
       end
 
       it "adds a moderator post at the location of the first moved post" do
-        topic.expects(:add_moderator_post).with(user, instance_of(String), has_entries(post_number: 2))
         topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+        expect(topic.posts).to include(a_moderator_post(post_number: 2, sort_order: 2))
       end
 
+      it "adds a moderator post even if it doesn't meet length requirements" do
+        SiteSetting.stubs(:min_post_length).returns(999)
+        topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+        expect(topic.reload.posts).to include(a_moderator_post)
+      end
     end
 
     context "errors" do
@@ -152,7 +165,6 @@ describe PostMover do
       context "to a new topic" do
 
         it "works correctly" do
-          topic.expects(:add_moderator_post).once
           new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id)
 
           expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
@@ -183,8 +195,8 @@ describe PostMover do
           topic.reload
           expect(topic.featured_user1_id).to be_blank
           expect(topic.like_count).to eq(0)
-          expect(topic.posts_count).to eq(2)
-          expect(topic.posts.by_post_number).to match_array([p1, p3])
+          expect(topic.posts_count).to eq(3)
+          expect(topic.posts.by_post_number).to match_array([p1, p3, a_moderator_post])
           expect(topic.highest_post_number).to eq(p3.post_number)
 
           # both the like and was_liked user actions should be correct
@@ -193,7 +205,6 @@ describe PostMover do
         end
 
         it "moving all posts will close the topic" do
-          topic.expects(:add_moderator_post).twice
           new_topic = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], title: "new testing topic name", category_id: category.id)
           expect(new_topic).to be_present
 
@@ -215,7 +226,6 @@ describe PostMover do
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
 
         it "works correctly" do
-          topic.expects(:add_moderator_post).once
           moved_to = topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)
           expect(moved_to).to eq(destination_topic)
 
@@ -244,12 +254,11 @@ describe PostMover do
 
           # Check out the original topic
           topic.reload
-          expect(topic.posts_count).to eq(2)
           expect(topic.highest_post_number).to eq(3)
           expect(topic.featured_user1_id).to be_blank
           expect(topic.like_count).to eq(0)
-          expect(topic.posts_count).to eq(2)
-          expect(topic.posts.by_post_number).to match_array([p1, p3])
+          expect(topic.posts_count).to eq(3)
+          expect(topic.posts.by_post_number).to match_array([p1, p3, a_moderator_post])
           expect(topic.highest_post_number).to eq(p3.post_number)
 
           # Should update last reads
@@ -257,7 +266,6 @@ describe PostMover do
         end
 
         it "moving all posts will close the topic" do
-          topic.expects(:add_moderator_post).twice
           moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], destination_topic_id: destination_topic.id)
           expect(moved_to).to be_present
 
@@ -269,7 +277,6 @@ describe PostMover do
       context "moving the first post" do
 
         it "copies the OP, doesn't delete it" do
-          topic.expects(:add_moderator_post).once
           new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
 
           expect(new_topic).to be_present
@@ -297,7 +304,7 @@ describe PostMover do
           expect(p2.reply_count).to eq(0)
 
           topic.reload
-          expect(topic.posts.by_post_number).to match_array([p1, p3, p4])
+          expect(topic.posts.by_post_number).to match_array([p1, p3, p4, a_moderator_post])
           expect(topic.highest_post_number).to eq(p4.post_number)
         end
 
@@ -314,12 +321,18 @@ describe PostMover do
 
       end
 
-      context "to an existing topic with a deleted post" do
-
+      context "moving from a deleted topic" do
         before do
-          topic.expects(:add_moderator_post)
+          topic.trash!
         end
 
+        it "adds a moderator post at the location of the first moved post" do
+          topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+          expect(topic.posts).to include(a_moderator_post(post_number: 2, sort_order: 2))
+        end
+      end
+
+      context "to an existing topic with a deleted post" do
         let!(:destination_topic) { Fabricate(:topic, user: user ) }
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
         let!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }

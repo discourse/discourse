@@ -642,7 +642,6 @@ SQL
 
   def add_moderator_post(user, text, opts=nil)
     opts ||= {}
-    new_post = nil
     creator = PostCreator.new(user,
                               raw: text,
                               post_type: opts[:post_type] || Post.types[:moderator_action],
@@ -653,16 +652,13 @@ SQL
                               skip_validations: true,
                               custom_fields: opts[:custom_fields])
 
-    if (new_post = creator.create) && new_post.present?
-      increment!(:moderator_posts_count) if new_post.persisted?
-      # If we are moving posts, we want to insert the moderator post where the previous posts were
-      # in the stream, not at the end.
-      new_post.update_attributes!(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
+    new_post = creator.create
 
-      # Grab any links that are present
-      TopicLink.extract_from(new_post)
-      QuotedPost.extract_from(new_post)
-    end
+    increment!(:moderator_posts_count) if new_post.persisted?
+
+    # Grab any links that are present
+    TopicLink.extract_from(new_post)
+    QuotedPost.extract_from(new_post)
 
     new_post
   end
