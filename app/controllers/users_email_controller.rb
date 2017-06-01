@@ -45,4 +45,3 @@ class UsersEmailController < ApplicationController
   end
 
 end
-
