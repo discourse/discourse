@@ -116,7 +116,6 @@ module Onebox
           tmz.com
           torontosun.com
           tumblr.com
-          twitch.tv
           twitpic.com
           usatoday.com
           viddler.com
