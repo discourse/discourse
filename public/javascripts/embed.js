@@ -4,7 +4,7 @@
   var comments = document.getElementById('discourse-comments');
   var iframe = document.createElement('iframe');
 
-  ['discourseUrl', 'discourseEmbedUrl', 'discourseUserName'].forEach(function(i) {
+  ['discourseUrl', 'discourseEmbedUrl', 'discourseUserName', 'discourseEmbedClass'].forEach(function(i) {
     if (window[i]) { DE[i] = DE[i] || window[i]; }
   });
 
@@ -24,6 +24,10 @@
 
   if (DE.topicId) {
     queryParams.topic_id = DE.topicId;
+  }
+
+  if (DE.discourseEmbedClass) {
+      queryParams.embed_class = DE.discourseEmbedClass;
   }
 
   var src = DE.discourseUrl + 'embed/comments';
