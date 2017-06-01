@@ -36,6 +36,7 @@ describe PostMover do
     let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
     let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
     let!(:p5) { Fabricate(:post) }
+    let(:p6) { Fabricate(:post, topic: topic) }
 
     before do
       p1.replies << p3
@@ -46,15 +47,41 @@ describe PostMover do
 
     context 'success' do
 
-      it "enqueues a job to notify users" do
-        topic.stubs(:add_moderator_post)
-        Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p2.id, p4.id], moved_by_id: user.id)
-        topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
-      end
+      it "correctly handles notifications and bread crumbs" do
+        #topic.expects(:add_moderator_post).with(user, instance_of(String), has_entries(post_number: 2))
+        #Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p2.id, p4.id], moved_by_id: user.id)
 
-      it "adds a moderator post at the location of the first moved post" do
-        topic.expects(:add_moderator_post).with(user, instance_of(String), has_entries(post_number: 2))
-        topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
+        old_topic = p2.topic
+
+        old_topic_id = p2.topic_id
+
+        topic.move_posts(user, [p2.id, p4.id, p6.id], title: "new testing topic name")
+
+        p2.reload
+        expect(p2.topic_id).not_to eq(old_topic_id)
+        expect(p2.reply_to_post_number).to eq(nil)
+        expect(p2.reply_to_user_id).to eq(nil)
+
+        notification = p2.user.notifications.where(notification_type: Notification.types[:moved_post]).first
+
+        expect(notification.topic_id).to eq(p2.topic_id)
+        expect(notification.post_number).to eq(1)
+
+        # no message for person who made the move
+        expect(p4.user.notifications.where(notification_type: Notification.types[:moved_post]).length).to eq(0)
+
+        # notify at the right spot in the stream
+        notification = p6.user.notifications.where(notification_type: Notification.types[:moved_post]).first
+
+        expect(notification.topic_id).to eq(p2.topic_id)
+
+        # this is the 3rd post we moved
+        expect(notification.post_number).to eq(3)
+
+        old_topic.reload
+        move_message = old_topic.posts.find_by(post_number: 2)
+        expect(move_message.post_type).to eq(Post.types[:small_action])
+        expect(move_message.raw).to include("3 posts were split")
       end
 
     end
