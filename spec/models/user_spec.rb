@@ -81,8 +81,10 @@ describe User do
 
     it 'triggers a extensibility event' do
       user && admin # bypass the user_created event
-      DiscourseEvent.expects(:trigger).with(:user_approved, user).once
-      user.approve(admin)
+      event = DiscourseEvent.track_events { user.approve(admin) }.first
+
+      expect(event[:event_name]).to eq(:user_approved)
+      expect(event[:params].first).to eq(user)
     end
 
     context 'after approval' do
@@ -181,8 +183,10 @@ describe User do
     end
 
     it 'triggers an extensibility event' do
-      DiscourseEvent.expects(:trigger).with(:user_created, subject).once
-      subject.save!
+      event = DiscourseEvent.track_events { subject.save! }.first
+
+      expect(event[:event_name]).to eq(:user_created)
+      expect(event[:params].first).to eq(subject)
     end
 
     context 'after_save' do
