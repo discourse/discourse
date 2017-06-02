@@ -21,7 +21,7 @@
 
       {{#if model.admins}}
         <section class='about admins'>
-          <h3>{{i18n 'about.our_admins'}}</h3>
+          <h3>{{fa-icon "users"}} {{i18n 'about.our_admins'}}</h3>
 
           {{#each model.admins as |a|}}
             {{user-info user=a}}
@@ -33,7 +33,7 @@
 
       {{#if model.moderators}}
         <section class='about moderators'>
-          <h3>{{i18n 'about.our_moderators'}}</h3>
+          <h3>{{fa-icon "users"}} {{i18n 'about.our_moderators'}}</h3>
 
           <div class='users'>
             {{#each model.moderators as |m|}}
