@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe Admin::GroupsController do
+  let(:user) { Fabricate(:user) }
+  let(:group) { Fabricate(:group) }
 
   before do
     @admin = log_in(:admin)
@@ -77,7 +79,7 @@ describe Admin::GroupsController do
     end
   end
 
-  context ".create" do
+  context "#create" do
 
     it "strip spaces on the group name" do
       xhr :post, :create, { group: { name: " bob " } }
@@ -92,23 +94,33 @@ describe Admin::GroupsController do
 
   end
 
-  context ".update" do
+  context "#update" do
+    it 'should update a group' do
+      group.add_owner(user)
+
+      expect do
+        xhr :put, :update, { id: group.id, group: {
+          visible: "false",
+          allow_membership_requests: "true"
+        } }
+      end.to change { GroupHistory.count }.by(2)
+
+      expect(response).to be_success
+
+      group.reload
+      expect(group.visible).to eq(false)
+      expect(group.allow_membership_requests).to eq(true)
+    end
 
     it "ignore name change on automatic group" do
       expect do
-        xhr :put, :update, { id: 1, group: {
-          name: "WAT",
-          visible: "true",
-          allow_membership_requests: "true"
-        } }
+        xhr :put, :update, { id: 1, group: { name: "WAT" } }
       end.to change { GroupHistory.count }.by(1)
 
       expect(response).to be_success
 
       group = Group.find(1)
       expect(group.name).not_to eq("WAT")
-      expect(group.visible).to eq(true)
-      expect(group.allow_membership_requests).to eq(true)
     end
 
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
