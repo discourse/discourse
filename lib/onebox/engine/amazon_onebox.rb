@@ -49,12 +49,18 @@ module Onebox
       end
 
       def data
-        result = { link: link,
-                   title: CGI.unescapeHTML(raw.css("title").inner_text),
-                   image: image }
+        og = ::Onebox::Helpers.extract_opengraph(raw)
+        title = og[:title] || CGI.unescapeHTML(raw.css("title").inner_text)
+
+        result = {
+          link: link,
+          title: title,
+          image: og[:image] || image
+        }
 
         result[:by_info] = raw.at("#by-line")
         result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
+
 
         # get item price (Amazon markup is inconsistent, deal with it)
         result[:price] =
@@ -67,7 +73,7 @@ module Onebox
           end
 
         summary = raw.at("#productDescription")
-        result[:description] = summary.inner_text if summary
+        result[:description] = og[:description] || summary&.inner_text
         result
       end
     end

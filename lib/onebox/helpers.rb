@@ -18,6 +18,27 @@ module Onebox
       html.gsub(/<[^>]+>/, ' ').gsub(/\n/, '')
     end
 
+    def self.extract_opengraph(doc)
+      return {} unless doc
+
+      og = {}
+
+      doc.css('meta').each do |m|
+        if (m["property"] && m["property"][/^og:(.+)$/i]) || (m["name"] && m["name"][/^og:(.+)$/i])
+          value = (m["content"] || m["value"]).to_s
+          og[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
+        end
+      end
+
+      # Attempt to retrieve the title from the meta tag
+      title_element = doc.at_css('title')
+      if title_element && title_element.text
+        og[:title] ||= title_element.text unless Onebox::Helpers.blank?(title_element.text)
+      end
+
+      og
+    end
+
     def self.fetch_response(location, limit=5, domain=nil, headers=nil)
 
       limit = Onebox.options.redirect_limit if limit > Onebox.options.redirect_limit

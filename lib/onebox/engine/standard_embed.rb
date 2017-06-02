@@ -89,24 +89,7 @@ module Onebox
         end
 
         def get_opengraph
-          return {} unless html_doc
-
-          og = {}
-
-          html_doc.css('meta').each do |m|
-            if (m["property"] && m["property"][/^og:(.+)$/i]) || (m["name"] && m["name"][/^og:(.+)$/i])
-              value = (m["content"] || m["value"]).to_s
-              og[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
-            end
-          end
-
-          # Attempt to retrieve the title from the meta tag
-          title_element = html_doc.at_css('title')
-          if title_element && title_element.text
-            og[:title] ||= title_element.text unless Onebox::Helpers.blank?(title_element.text)
-          end
-
-          og
+          ::Onebox::Helpers.extract_opengraph(html_doc)
         end
 
         def get_twitter
