@@ -11,15 +11,14 @@ module DiscourseNarrativeBot
         default_opts = {
           raw: raw,
           topic_id: post.topic_id,
-          reply_to_post_number: post.post_number,
-          skip_validations: true
+          reply_to_post_number: post.post_number
         }
 
         new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
         reset_rate_limits(post) if new_post
         new_post
       else
-        PostCreator.create!(self.discobot_user, { raw: raw, skip_validations: true }.merge(opts))
+        PostCreator.create!(self.discobot_user, { raw: raw }.merge(opts))
       end
     end
 
