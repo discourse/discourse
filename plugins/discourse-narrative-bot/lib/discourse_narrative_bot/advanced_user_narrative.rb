@@ -122,7 +122,8 @@ module DiscourseNarrativeBot
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
         topic_id: data[:topic_id],
-        skip_bot: true
+        skip_bot: true,
+        skip_validations: true
       })
 
       set_state_data(:post_id, post.id)
@@ -138,7 +139,8 @@ module DiscourseNarrativeBot
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
         topic_id: data[:topic_id],
-        skip_bot: true
+        skip_bot: true,
+        skip_validations: true
       })
 
       set_state_data(:post_id, post.id)
@@ -305,6 +307,7 @@ module DiscourseNarrativeBot
         raw: raw,
         topic_id: @topic_id
       )
+
       enqueue_timeout_job(@user)
       post
     end
