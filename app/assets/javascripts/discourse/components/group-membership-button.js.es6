@@ -17,6 +17,22 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed
+  disableRequestMembership() {
+    if (this.currentUser) {
+      return this.currentUser.trust_level < this.siteSettings.min_trust_to_send_messages;
+    } else {
+      return false;
+    }
+  },
+
+  @computed("disableRequestMembership")
+  requestMembershipButtonTitle(disableRequestMembership) {
+    if (disableRequestMembership) {
+      return "groups.request_membership_pm.disabled";
+    }
+  },
+
   _showLoginModal() {
     this.sendAction('showLogin');
     $.cookie('destination_url', window.location.href);
