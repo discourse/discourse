@@ -34,7 +34,8 @@ This command installs the latest versions of Docker and Git on your server. Alte
 
 ### Install Discourse
 
-Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it:
+Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it:  
+_Note: this is not a recommended install directory. Discourse must live in `/var/discourse` to work properly._
 
     sudo -s
     mkdir /var/discourse
