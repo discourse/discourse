@@ -410,6 +410,7 @@ en:
       request_membership_pm:
         title: "Membership Request"
         body: "I would like to apply for membership in @%{groupName}."
+        disabled: "Insufficient trust level to request for group membership"
       name_placeholder: "Group name, no spaces, same as username rule"
       public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
