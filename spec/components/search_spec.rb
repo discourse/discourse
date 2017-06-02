@@ -662,26 +662,6 @@ describe Search do
       expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([latest_irelevant_topic_post.id, old_relevant_topic_post.id])
     end
 
-    context 'can prioritize open topics in search' do
-      before do
-        open_topic = Fabricate(:topic, title: 'Open Topic, testing prioritize open topics setting')
-        closed_topic = Fabricate(:topic, title: 'Closed Topic, testing prioritize open topics setting', closed: true)
-
-        @open_irrelevant_topic_post = Fabricate(:post, topic: open_topic, raw: 'Not Relevant')
-        @closed_relevant_topic_post = Fabricate(:post, topic: closed_topic, raw: 'Relevant Topic')
-      end
-
-      it "when prioritize_open_topics_in_search is disabled" do
-        SiteSetting.prioritize_open_topics_in_search = false
-        expect(Search.execute('Topic').posts.map(&:id)).to eq([@closed_relevant_topic_post.id, @open_irrelevant_topic_post.id])
-      end
-
-      it "when prioritize_open_topics_in_search is enabled" do
-        SiteSetting.prioritize_open_topics_in_search = true
-        expect(Search.execute('Topic').posts.map(&:id)).to eq([@open_irrelevant_topic_post.id, @closed_relevant_topic_post.id])
-      end
-    end
-
     it 'can tokenize dots' do
       post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
