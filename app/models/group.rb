@@ -371,6 +371,11 @@ class Group < ActiveRecord::Base
 
   def add(user)
     self.users.push(user) unless self.users.include?(user)
+
+    MessageBus.publish('/categories', {
+      categories: ActiveModel::ArraySerializer.new(self.categories).as_json
+    }, user_ids: [user.id])
+
     self
   end
 
