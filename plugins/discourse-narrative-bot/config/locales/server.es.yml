@@ -158,7 +158,7 @@ es:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          Genial! Esto funcionará con la mayoría de los <img src="/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda, deben ser escritos en la linea _todo el enlace_, con nada de texto (ni espacios) delante o detrás.
+          Genial! Esto funcionará con la mayoría de los <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda, deben ser escritos en la linea _todo el enlace_, con nada de texto (ni espacios) delante o detrás.
         not_found: |-
           Disculpa, no he podido encontrar el enlace en tu respuesta! :cry:
 
@@ -203,11 +203,11 @@ es:
           Seleccionando cualquier texto de mi mensaje, aparecerá la palabra <kbd>**Citar**</kbd>, como si fuese un botón. Y si decides presionar **Responder** habiendo seleccionado el texto, funcionará igual! ¿Puedes intentarlo de nuevo?
       bookmark:
         instructions: |-
-          Si quieres aprender más, selecciona <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> debajo y <img src="/images/font-awesome-bookmark.png" width="16" height="16">  **guarda como favorito este mensaje privado**. Si lo haces, quizás haya un :gift: en el futuro!
+          Si quieres aprender más, selecciona <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> debajo y <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16">  **guarda como favorito este mensaje privado**. Si lo haces, quizás haya un :gift: en el futuro!
         reply: |-
           Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento, desde la [sección de marcadores de tu perfil](%{profile_page_url}/activity/bookmarks). Sólo debes seleccionar la foto de tu perfil en la parte superior derecha de la pantalla &#8599;
         not_found: |-
-          Oh oh, no veo ningún mensaje marcado como favorito en esta conversación. No encontraste cómo marcar el mensaje debajo del post? Prueba usando el "ver más" <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> para ver las opciones, y ahí está el botón del marcador.
+          Oh oh, no veo ningún mensaje marcado como favorito en esta conversación. No encontraste cómo marcar el mensaje debajo del post? Prueba usando el "ver más" <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> para ver las opciones, y ahí está el botón del marcador.
       emoji:
         instructions: |-
           Habrás notado que uso algunas imagenes pequeñas en mis respuestas por ejemplo: :blue_car::dash: éstos son denominados [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **agregar un emoji** a tu respuesta? Cualquiera de éstos funcionarán:
@@ -216,7 +216,7 @@ es:
 
           - Escribe primero `dos puntos`, así <kbd>:</kbd> luego completa con el nombre del emoji, ejemplo `:tada:`
 
-          - Presiona el botón de los emojis <img src="/images/font-awesome-smile.png" width="16" height="16"> en el editor, o a través del teclado de tu móvil.
+          - Presiona el botón de los emojis <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> en el editor, o a través del teclado de tu móvil.
         reply: |-
           Eso es :sparkles: _emojitastic!_ :sparkles:
         not_found: |-
@@ -224,7 +224,7 @@ es:
 
           Prueba escribiendo <kbd>:</kbd> y verás que aparece el seleccionador de Emojis, puedes elegir uno, o bien seguir escribiendo el nombre del Emoji que quieras, como `:bird:`
 
-          O, presionar el botón de Emoji <img src="/images/font-awesome-smile.png" width="16" height="16"> en el editor.
+          O, presionar el botón de Emoji <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> en el editor.
 
           (Si estás usando un celular, también puedes poner los Emojis (smiles, o caritas) desde el teclado de tu celular.)
       mention:
@@ -242,20 +242,20 @@ es:
           Nos gustan nuestras conversaciones amistosas, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor marca con la bandera y de forma privada se le notificará al autor o bien se notificará al [staff](%{about_url}).
           >  :imp: Escribí algo desagradable aquí
 
-          Supongo que sabes qué hacer. Sigue adelante y **reporta este mensaje** <img src="/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
+          Supongo que sabes qué hacer. Sigue adelante y **reporta este mensaje** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
         reply: |-
           [Nuestro staff](/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, será ocultado automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora.)
         not_found: |-
-          Oh no, mi mensaje desagradable aún no ha sido reportado! :worried: ¿Puedes marcar como inapropiado el mensaje con la **bandera** <img src="/images/font-awesome-flag.png" width="16" height="16">? No te olvides de hacer clic en el botón para mostrar todas las opciones: <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> y ver así más acciones por cada mensaje.
+          Oh no, mi mensaje desagradable aún no ha sido reportado! :worried: ¿Puedes marcar como inapropiado el mensaje con la **bandera** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? No te olvides de hacer clic en el botón para mostrar todas las opciones: <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> y ver así más acciones por cada mensaje.
       search:
         instructions: |-
-          _psst_ … Te he ocultado una sorpresa en este tema. Si aceptas el reto, **selecciona el icono de búsqueda** <img src="/images/font-awesome-search.png" width="16" height="16"> en la parte superior &#8599; y busca lo siguiente.
+          _psst_ … Te he ocultado una sorpresa en este tema. Si aceptas el reto, **selecciona el icono de búsqueda** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> en la parte superior &#8599; y busca lo siguiente.
 
           Prueba buscar el término "capy&#8203;bara" en este tema
         hidden_message: |-
           Cómo te perdiste este capybara? :wink:
 
-          <img src="/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/images/capybara-eating.gif"/>
 
           ¿Te fijaste en que estás de vuelta al principio? Alimenta este pobre hambriendo capybara **respondiendo con el emoji `:herb:`** y serás automáticamente enviado al final.
         reply: |-
@@ -267,7 +267,7 @@ es:
 
           - Si tienes un :keyboard: físico, presiona la tecla <kbd>?</kbd> para ver nuestros prácticos atajos del teclado.
         not_found: |-
-          Hmm… parece que podrías estar teniendo problemas. Lo siento acerca de ésto. Buscaste <img src="/images/font-awesome-search.png" width="16" height="16"> el término **capy&#8203;bara**?
+          Hmm… parece que podrías estar teniendo problemas. Lo siento acerca de ésto. Buscaste <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> el término **capy&#8203;bara**?
       end:
         message: |-
           Gracias por quedarte conmigo @%{username}! Hice esto por tí, creo que te lo has ganado:
@@ -293,16 +293,16 @@ es:
           ¿Puedes empezar por **editar** el mensaje que acabo de crear en tu nombre?
         not_found: |-
           Parece que aún no has editado el [mensaje](%{url}) que creé por tí. ¿Puedes intentar de nuevo?
-          Usa el <img src="/images/font-awesome-pencil.png" width="16" height="16"> icono de lápiz para que aparezca el editor.
+          Usa el <img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16"> icono de lápiz para que aparezca el editor.
         reply: |-
           ¡Buen trabajo!
           Tenga en cuenta que las ediciones realizadas después de 5 minutos aparecerán como revisiones de edición pública y aparecerá un pequeño ícono de lápiz en la parte superior derecha con el recuento de revisiones.
       delete:
         instructions: |-
           Si deseas retirar una publicación que hayas realizado, puedes eliminarla.
-          Vamos a **borrar** cualquier post que hayas escrito usando la acción <img src="/images/font-awesome-trash.png" width="16" height="16"> para **borrar**. No vayas a querer borrar el primer post!
+          Vamos a **borrar** cualquier post que hayas escrito usando la acción <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> para **borrar**. No vayas a querer borrar el primer post!
         not_found: |-
-          ¿Todavía no veo ninguna publicación eliminada? Recuerda presionar <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> para mostrar el botón <img src="/images/font-awesome-trash.png" width="16" height="16"> y borrar.
+          ¿Todavía no veo ninguna publicación eliminada? Recuerda presionar <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> para mostrar el botón <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> y borrar.
         reply: |-
           Whoa! :boom:
 
@@ -311,9 +311,9 @@ es:
         deleted_post_raw: 'Por qué @%{discobot_username} borró mi mensaje? :anguished:'
         instructions: |-
           Oh no! Parece que accidentalmente borré un nuevo mensaje que tú acababas de crear.
-          ¿Puedes hacerme el favor y hacer clic en <img src="/images/font-awesome-rotate-left.png" width="16" height="16"> para **recuperar** el mensaje borrado?
+          ¿Puedes hacerme el favor y hacer clic en <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> para **recuperar** el mensaje borrado?
         not_found: |-
-          ¿Teniendo problemas? Recuerda <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> muestra más, y aparecerá el botón <img src="/images/font-awesome-rotate-left.png" width="16" height="16"> para recuperar.
+          ¿Teniendo problemas? Recuerda <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> muestra más, y aparecerá el botón <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> para recuperar.
         reply: |-
           Phew, ¡eso estuvo cerca! Gracias por solucionarlo :wink:
 
@@ -342,11 +342,11 @@ es:
           Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](/my/preferences).
       poll:
         instructions: |-
-          ¿Sabes que puedes agregar una encuesta en cualquier mensaje? Intenta usando el botón de engranaje <img src="/images/font-awesome-gear.png" width="16" height="16"> en el editor para **armar una encuesta**.
+          ¿Sabes que puedes agregar una encuesta en cualquier mensaje? Intenta usando el botón de engranaje <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor para **armar una encuesta**.
         not_found: |-
           Whoops! No hubo ninguna encuesta en tu respuesta.
 
-          Usa el ícono de engranaje: <img src="/images/font-awesome-gear.png" width="16" height="16"> en el editor, o bien copia y pega esta encuesta en tu próxima respuesta:
+          Usa el ícono de engranaje: <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor, o bien copia y pega esta encuesta en tu próxima respuesta:
 
           ```text
           [poll]
@@ -369,12 +369,12 @@ es:
           - Cuando su puesto necesita un montón de detalles opcionales que pueden ser abrumador cuando se lee todo a la vez.
 
           [details=¡Clic aquí para ver cómo funciona!]
-          1. Selecciona el botón de engranaje <img src="/images/font-awesome-gear.png" width="16" height="16"> en el editor.
+          1. Selecciona el botón de engranaje <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor.
           2. Selecciona "Hide Details".
           3. Edita los detalles, y agrega el contenido que desees ocultar.
           [/details]
 
-          ¿Puedes usar el botón de engranaje <img src="/images/font-awesome-gear.png" width="16" height="16"> en el editor para agregar datos ocultos en tu próxima respuesta?
+          ¿Puedes usar el botón de engranaje <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor para agregar datos ocultos en tu próxima respuesta?
         not_found: |-
           ¿Tiene problemas para crear un widget de detalles? Trate de incluir lo siguiente en su siguiente respuesta:
 
