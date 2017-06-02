@@ -48,9 +48,6 @@ describe PostMover do
     context 'success' do
 
       it "correctly handles notifications and bread crumbs" do
-        #topic.expects(:add_moderator_post).with(user, instance_of(String), has_entries(post_number: 2))
-        #Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p2.id, p4.id], moved_by_id: user.id)
-
         old_topic = p2.topic
 
         old_topic_id = p2.topic_id
@@ -278,6 +275,12 @@ describe PostMover do
           expect(topic.posts_count).to eq(2)
           expect(topic.posts.by_post_number).to match_array([p1, p3])
           expect(topic.highest_post_number).to eq(p3.post_number)
+
+          # Should notify correctly
+          notification = p2.user.notifications.where(notification_type: Notification.types[:moved_post]).first
+
+          expect(notification.topic_id).to eq(p2.topic_id)
+          expect(notification.post_number).to eq(p2.post_number)
 
           # Should update last reads
           expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
