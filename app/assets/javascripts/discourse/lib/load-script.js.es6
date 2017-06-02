@@ -77,7 +77,7 @@ export default function loadScript(url, opts) {
     // to dynamically load more JS. In that case, add the `scriptTag: true`
     // option.
     if (opts.scriptTag) {
-      if (Ember.Test) {
+      if (Ember.Testing) {
         throw `In test mode scripts cannot be loaded async ${cdnUrl}`;
       }
       loadWithTag(cdnUrl, cb);
