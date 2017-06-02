@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Group do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }
+  let(:group) { Fabricate(:group) }
 
   describe '#builtin' do
     context "verify enum sequence" do
@@ -447,6 +448,22 @@ describe Group do
     describe 'user is nil' do
       it 'should return the right groups' do
         expect(Group.visible_groups(nil).pluck(:id).sort).to eq([group_2.id])
+      end
+    end
+  end
+
+  describe '#add' do
+    context 'when adding a user into a public group' do
+      let(:category) { Fabricate(:category) }
+
+      it "should publish the group's categories to the client" do
+        group.update!(public: true, categories: [category])
+
+        message = MessageBus.track_publish { group.add(user) }.first
+
+        expect(message.data[:categories].count).to eq(1)
+        expect(message.data[:categories].first[:id]).to eq(category.id)
+        expect(message.user_ids).to eq([user.id])
       end
     end
   end
