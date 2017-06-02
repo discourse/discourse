@@ -162,7 +162,7 @@ id:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          Keren! Cara ini berlaku untuk semua <img src="/images/font-awesome-link.png" width="16" height="16"> tautan. Ingat, semuanya harus sebaris _all by itself_, tanpa ada sesuatu di depan atau di belakangnya.
+          Keren! Cara ini berlaku untuk semua <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> tautan. Ingat, semuanya harus sebaris _all by itself_, tanpa ada sesuatu di depan atau di belakangnya.
         not_found: |-
           Maaf, Saya tidak bisa menemukan tautan dari balasan Anda! :cry:
 
@@ -173,7 +173,7 @@ id:
         instructions: |-
           Ini adalah gambar kuda bertanduk unicorn:
 
-          <img src="/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
 
           Agar saya tahu kalau Anda suka, (siapa yang tidak suka!) tekan tombol :heart: yang ada di bawah pos ini.
 
@@ -222,11 +222,11 @@ id:
           Pilih teks apa saja di pos di atas untuk memunculkan tombol <kbd>**Quote**</kbd>. Lalu tekan tombol **Reply** setelah memilih teks apa saja. Bisakah tolong dicoba lagi?
       bookmark:
         instructions: |-
-          Jika ingin tahu lebih banyak, pilih <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> di bawah ini dan <img src="/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  Jika dilakukan, akan ada :gift: nanti!
+          Jika ingin tahu lebih banyak, pilih <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> di bawah ini dan <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  Jika dilakukan, akan ada :gift: nanti!
         reply: |-
           Hebat! Kelak Anda dapat mudah menemukan percakapan pribadi kapan saja, langsung dari [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Cukup pilih gambar profil Anda di pojok kanan atas &#8599;
         not_found: |-
-          Aduh, Saya tidak meliha tanda baca dalam topik ini. Apakah Anda melihat tanda baca atau bookmark yang di bawah setiap pos? Pilih tampilkan lebih banyak <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> untuk melihat fasilitas lain yang dibutuhkan.
+          Aduh, Saya tidak meliha tanda baca dalam topik ini. Apakah Anda melihat tanda baca atau bookmark yang di bawah setiap pos? Pilih tampilkan lebih banyak <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> untuk melihat fasilitas lain yang dibutuhkan.
       emoji:
         instructions: |-
           Anda telah melihat saya menggunakan gambar dalam balasan saya :blue_car::dash: gambar itu disebut [emoji](https://en.wikipedia.org/wiki/Emoji). Bisa tambahkan **add an emoji** pada balasan Anda? Pilih salah satu cara ini:
@@ -235,7 +235,7 @@ id:
 
           - Ketik titik dua <kbd>:</kbd> lalu sebut nama emoji `:tada:`
 
-          - Tekan tombol emoji <img src="/images/font-awesome-smile.png" width="16" height="16"> di editor, atau pada papan ketik ponsel Anda.
+          - Tekan tombol emoji <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> di editor, atau pada papan ketik ponsel Anda.
         reply: |-
           Hebat :sparkles: _emojitastic!_ :sparkles:
         not_found: |-
@@ -243,7 +243,7 @@ id:
 
           Cobalah ketik sebuah titik dua <kbd>:</kbd> untuk membuat pilihan emoji, lalu ketik satu kata yang diinginkan, seperti `:bird:`
 
-          Atau, pilih tombol emoji <img src="/images/font-awesome-smile.png" width="16" height="16"> di editor.
+          Atau, pilih tombol emoji <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> di editor.
 
           (Jika menggunakan ponsel, anda bisa langsung menggunakan dari papan ketik juga)
       mention:
@@ -263,20 +263,20 @@ id:
 
           >  :imp: Saya telah menulis sesuatu yang buruk di sini
 
-          Saya yakin Anda harus melakukan apa. Ayu **peringati pos ini** <img src="/images/font-awesome-flag.png" width="16" height="16"> karena kurang pantas!
+          Saya yakin Anda harus melakukan apa. Ayu **peringati pos ini** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> karena kurang pantas!
         reply: |-
           [Pengurus forum](/groups/staff) akan mendapatkan pemberitahuan secara rahasia tentang peringatan ini. Jika beberapa orang lainnya melakukan yang sama, secara otomatis kiriman tersebut akan disembunyikan sebagai antisipasi. (Karena saya tidak menulis sesuatu yang tidak baik :angel:, saya bisa terus bediskusi dan menghapus peringatannya sekarang.)
         not_found: |-
-          Tidak..., tulisan buruk saya belum ditandai. :worried: Bisakah Anda menandainya sebagai sesuatu yang kurang pantas dengan **flag** <img src="/images/font-awesome-flag.png" width="16" height="16">? Jangan lupa pilih tombol tampilkan lebih banyak <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> untuk melihat tindakan lain untuk setiap kiriman.
+          Tidak..., tulisan buruk saya belum ditandai. :worried: Bisakah Anda menandainya sebagai sesuatu yang kurang pantas dengan **flag** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? Jangan lupa pilih tombol tampilkan lebih banyak <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> untuk melihat tindakan lain untuk setiap kiriman.
       search:
         instructions: |-
-          _psst_ … Ada kejutan dalam topik ini. Jika mau mengikuti tantangannya, **pilih tombol pencarian** <img src="/images/font-awesome-search.png" width="16" height="16"> yang ada di kanan atas &#8599; untuk melakukan pencarian.
+          _psst_ … Ada kejutan dalam topik ini. Jika mau mengikuti tantangannya, **pilih tombol pencarian** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> yang ada di kanan atas &#8599; untuk melakukan pencarian.
 
           Coba cari istilah "capy&#8203;bara" dalam topik ini
         hidden_message: |-
           Bagaimana Anda melewatkan capcaybara? :wink:
 
-          <img src="/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/images/capybara-eating.gif"/>
 
           Apakah Anda sadar kalau sudah kembali ke diskusi awal? Beri makan si capcaybara yang kelaparan ini **ketik emotikon `:herb:`** dan otomatis Anda kembali ke diskusi paling bawah.
         reply: |-
@@ -288,7 +288,7 @@ id:
 
           - Jika menggunakan papan ketik fisik :keyboard:, tekan <kbd>?</kbd> untuk melihat pintasan mengetik yang bermanfaat.
         not_found: |-
-          Hmm… sepertinya Anda mengalami kesulitan. Mohon maaf kalau begitu. Apakah sudah mencari <img src="/images/font-awesome-search.png" width="16" height="16"> untuk istilah **capy&#8203;bara**?
+          Hmm… sepertinya Anda mengalami kesulitan. Mohon maaf kalau begitu. Apakah sudah mencari <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> untuk istilah **capy&#8203;bara**?
       end:
         message: |-
           Terima kasih sudah bersedia saya temani @%{username}! Saya berikan ini untuk Anda, Anda pantas menerima ini:
@@ -317,7 +317,7 @@ id:
         not_found: |-
           Tampaknya Anda belum mengedit tulisan [pos](%{url}) yang saya buatkan untuk Anda. Bisa dicoba lagi?
 
-          Gunakan ikon <img src="/images/font-awesome-pencil.png" width="16" height="16"> untuk menampilkan editor tulisan.
+          Gunakan ikon <img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16"> untuk menampilkan editor tulisan.
         reply: |-
           Bagus sekali!
 
@@ -326,9 +326,9 @@ id:
         instructions: |-
           Jika Anda ingin menarik pos yang sudah dipublikasi, Anda bisa menghapusnya.
 
-          Ayo coba lakukan dan **hapus** pos yang mana saya dengan menggunakan perintah <img src="/images/font-awesome-trash.png" width="16" height="16"> **hapus**. Tapi jangan menghapus pos yang paling pertama!
+          Ayo coba lakukan dan **hapus** pos yang mana saya dengan menggunakan perintah <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> **hapus**. Tapi jangan menghapus pos yang paling pertama!
         not_found: |-
-          Saya tidak melihat pos yang dihapus? Ingat <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> tombol tampilkan lebih banyak akan membuka <img src="/images/font-awesome-trash.png" width="16" height="16"> tombol untuk menghapus.
+          Saya tidak melihat pos yang dihapus? Ingat <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> tombol tampilkan lebih banyak akan membuka <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> tombol untuk menghapus.
         reply: |-
           Mantap! :boom:
 
@@ -338,9 +338,9 @@ id:
         instructions: |-
           Oh tidak! Sepertinya secara tidak sengaja saya menghapus pos baru yang baru saya buat.
 
-          Bisakah Anda bantu saya dan <img src="/images/font-awesome-rotate-left.png" width="16" height="16"> **batal hapus** pos itu?
+          Bisakah Anda bantu saya dan <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **batal hapus** pos itu?
         not_found: |-
-          Bingung? Ingat tampilkan lebih banyak <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> akan membuka <img src="/images/font-awesome-rotate-left.png" width="16" height="16"> tombol batal hapus.
+          Bingung? Ingat tampilkan lebih banyak <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> akan membuka <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> tombol batal hapus.
         reply: |-
           Fiuh, itu yang saya maksud! Terima kasih sudah memperbaikinya :wink:
 
@@ -371,11 +371,11 @@ id:
           Ingat, saat membalas sebuah topik, atau membaca sebuah topik selama beberapa saat, secara otomatis tingkat pemberitahuan akan menjadi 'tracking'. Anda dapat mengubah pengaturan ini di [pengaturan pengguna Anda](/my/preferences).
       poll:
         instructions: |-
-          Tahukah Anda kalau Anda bisa menambahkan pemungutan suara di pos mana saja? Coba gunakan <img src="/images/font-awesome-gear.png" width="16" height="16"> roda gigi yang ada di editor tulis untuk **membuat pemungutan suara**.
+          Tahukah Anda kalau Anda bisa menambahkan pemungutan suara di pos mana saja? Coba gunakan <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> roda gigi yang ada di editor tulis untuk **membuat pemungutan suara**.
         not_found: |-
           Aduh! Tampaknya tidak ada pemungutan suara dalam balasan Anda.
 
-          Gunakan <img src="/images/font-awesome-gear.png" width="16" height="16"> ikon roda gigi di editor, atau salin dan rekatkan pemungutan suara ini di balasan selanjutnya:
+          Gunakan <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> ikon roda gigi di editor, atau salin dan rekatkan pemungutan suara ini di balasan selanjutnya:
 
           ```text
           [poll]
@@ -399,12 +399,12 @@ id:
           - Jika pos Anda memiliki banyak pilihan rincian yang tampaknya akan terlalu banyak jika ditampilkan secara keseluruhan.
 
           [details=Buka ini untuk melihat cara kerja spoiler!]
-          1. Pilih <img src="/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor.
+          1. Pilih <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor.
           2. Pilih "Hide Details" atau sembunyikan rincian.
           3. Ubah ringkasan rinciannya dan tambahkan tulisan anda.
           [/details]
 
-          Bisakah Anda menggunakan <img src="/images/font-awesome-gear.png" width="16" height="16"> roda gigi dalam editor untuk menambah bagian rincian untuk balasan selanjutnya?
+          Bisakah Anda menggunakan <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> roda gigi dalam editor untuk menambah bagian rincian untuk balasan selanjutnya?
         not_found: |-
           Kesulitan membuat spoiler? Coba masukkan teks di bawah ini untuk balasan selanjutnya:
 

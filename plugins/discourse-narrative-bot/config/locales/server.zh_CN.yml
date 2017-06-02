@@ -173,7 +173,7 @@ zh_CN:
         instructions: |-
           这是一只独角兽的照片：
 
-          <img src="/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
 
           如果你喜欢它（谁不呢！），在帖子的下方赞 :heart: 一下，这样我就知道你喜欢它了。
 
@@ -222,10 +222,10 @@ zh_CN:
           选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
       bookmark:
         instructions: |-
-          如果你想到了解更多，选择下方的<img src="/images/font-awesome-ellipsis.png" width="16" height="16">和**收藏这个私信**<img src="/images/font-awesome-bookmark.png" width="16" height="16">。如果你做了，未来你可能收到一份 :gift: ！
+          如果你想到了解更多，选择下方的<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">和**收藏这个私信**<img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16">。如果你做了，未来你可能收到一份 :gift: ！
         reply: |-
           太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
-        not_found: "啊哦，我没有在这个主题中看到任何收藏。\b你在每个帖子下找到了收藏吗？如果需要的话，使用显示更多<img src=\"/images/font-awesome-ellipsis.png\" width=\"16\" height=\"16\">展开更多操作。"
+        not_found: "啊哦，我没有在这个主题中看到任何收藏。\b你在每个帖子下找到了收藏吗？如果需要的话，使用显示更多<img src=\"%{base_uri}/images/font-awesome-ellipsis.png\" width=\"16\" height=\"16\">展开更多操作。"
       emoji:
         instructions: |-
           你可能看到我在回复中用了些小图片 :blue_car::dash: 他们叫[Emoji](https://zh.wikipedia.org/wiki/Emoji)。你能在你的回复中**添加Emoji**吗？以下任意一个都可以：
@@ -234,10 +234,10 @@ zh_CN:
 
           - 输入半角冒号 <kbd>:</kbd> 然后是 emoji 的名字 `:tada:`
 
-          - 在编辑器中按下 emoji 按钮 <img src="/images/font-awesome-smile.png" width="16" height="16">，或者用你移动端的键盘
+          - 在编辑器中按下 emoji 按钮 <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16">，或者用你移动端的键盘
         reply: |-
           这是 :sparkles: **Emoji 精神!** :sparkles:
-        not_found: "啊，我没有在你的回复中看到任何 Emoji？\b哦不！ :sob:\n\n试试输入一个半角冒号<kbd>:</kbd>打开 emoji 选择器，然后输入你想要的几个字母，比如 `:bird`。\n\n或者，点击你编辑器里的 emoji 按钮<img src=\"/images/font-awesome-smile.png\" width=\"16\" height=\"16\">。\n\n（如果你正在用移动设备，你也可以试试直接在你的键盘里输入 Emoji）"
+        not_found: "啊，我没有在你的回复中看到任何 Emoji？\b哦不！ :sob:\n\n试试输入一个半角冒号<kbd>:</kbd>打开 emoji 选择器，然后输入你想要的几个字母，比如 `:bird`。\n\n或者，点击你编辑器里的 emoji 按钮<img src=\"%{base_uri}/images/font-awesome-smile.png\" width=\"16\" height=\"16\">。\n\n（如果你正在用移动设备，你也可以试试直接在你的键盘里输入 Emoji）"
       mention:
         instructions: |-
           有时你可能想要在回复别人的时候提醒另一个人。输入`@`然后是他们的用户名提及他们。
@@ -255,17 +255,17 @@ zh_CN:
 
           >  :imp: 我在这写了些脏话
 
-          我猜你知道要做什么了。点击**标记该贴**<img src="/images/font-awesome-flag.png" width="16" height="16">然后标记其为不合适的！
+          我猜你知道要做什么了。点击**标记该贴**<img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">然后标记其为不合适的！
         reply: |-
           [我们的管理人员](/groups/staff)将会私下里通知关于你标记的后续。如果许多社区成员标记了帖子，出于谨慎，帖子将自动被隐藏。（我没有真的写很糟糕的帖子 :angel:，我先把这个标记删除了）
         not_found: |-
-          啊不，我糟糕的帖子还没被标记。 :worried: 你能用**标记**<img src="/images/font-awesome-flag.png" width="16" height="16">标记其为不合适的吗？不要忘记每个帖子后都有显示更多<img src="/images/font-awesome-ellipsis.png" width="16" height="16">按钮，这样你能看到更多操作。
+          啊不，我糟糕的帖子还没被标记。 :worried: 你能用**标记**<img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">标记其为不合适的吗？不要忘记每个帖子后都有显示更多<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">按钮，这样你能看到更多操作。
       search:
-        instructions: "呼…我已经隐藏了这个主题中的一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src=\"/images/font-awesome-search.png\" width=\"16\" height=\"16\"> 来搜索。\n\n试试搜索\x1D在这个主题中搜索关键词“capy&#8203;bara”"
+        instructions: "呼…我已经隐藏了这个主题中的一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src=\"%{base_uri}/images/font-awesome-search.png\" width=\"16\" height=\"16\"> 来搜索。\n\n试试搜索\x1D在这个主题中搜索关键词“capy&#8203;bara”"
         hidden_message: |-
           你找到这个 capybara 啦 :wink:
 
-          <img src="/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/images/capybara-eating.gif"/>
 
           你注意到你回到了主题开头么？**回复`:herb:` 这个 emoji**给这帖，你会自动跳转到结尾。
         reply: |-
@@ -277,7 +277,7 @@ zh_CN:
 
           - 如果你有 :keyboard:，按下<kbd>?</kbd>查看有用的键盘快捷键列表。
         not_found: |-
-          哈...看起来你碰到了些问题。抱歉。你搜索过<img src="/images/font-awesome-search.png" width="16" height="16">**capy&#8203;bara**了吗？
+          哈...看起来你碰到了些问题。抱歉。你搜索过<img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16">**capy&#8203;bara**了吗？
       end:
         message: |-
           感谢你@%{username}一直和我相处！我给你准备了一个东西，这是你应得的：
@@ -304,7 +304,7 @@ zh_CN:
         not_found: |-
           看起来你还没有编辑我为你创建的[帖子](%{url})。你能再试试么？
 
-          试试<img src="/images/font-awesome-pencil.png" width="16" height="16">图标来召唤编辑器。
+          试试<img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16">图标来召唤编辑器。
         reply: |-
           干得漂亮！
 
@@ -316,7 +316,7 @@ zh_CN:
 
           前往并**删除**你的任意一个帖子。不过不要删除你的第一帖！
         not_found: |-
-          我没有看到你删除了任何一帖。记住点击<img src="/images/font-awesome-ellipsis.png" width="16" height="16">显示更多按钮后你可以看到<img src="/images/font-awesome-trash.png" width="16" height="16">删除按钮。
+          我没有看到你删除了任何一帖。记住点击<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">显示更多按钮后你可以看到<img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16">删除按钮。
         reply: |-
           哇！ :boom:
 
@@ -326,9 +326,9 @@ zh_CN:
         instructions: |-
           哦不！看起来我不小心删除了我给你创建的帖子。
 
-          你可以帮我<img src="/images/font-awesome-rotate-left.png" width="16" height="16">**恢复**它么？
+          你可以帮我<img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16">**恢复**它么？
         not_found: |-
-          碰到麻烦了？记住点击<img src="/images/font-awesome-ellipsis.png" width="16" height="16">显示更多按钮后你可以看到<img src="/images/font-awesome-rotate-left.png" width="16" height="16">恢复按钮。
+          碰到麻烦了？记住点击<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">显示更多按钮后你可以看到<img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16">恢复按钮。
         reply: |-
           呼，差点啊！感谢你帮忙 :wink:
 
@@ -351,11 +351,11 @@ zh_CN:
           注意当你回复主题时，或者花了几分钟读了一个主题，它将被自动设为“追踪”。你可以在[你的用户设置](/my/preferences)中修改。
       poll:
         instructions: |-
-          你知道你可以在任何帖子中添加投票吗？试试编辑器中的<img src="/images/font-awesome-gear.png" width="16" height="16">齿轮图标**设置投票**。
+          你知道你可以在任何帖子中添加投票吗？试试编辑器中的<img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16">齿轮图标**设置投票**。
         not_found: |-
           啊哦！你的回复中没有任何投票。
 
-          使用编辑器中的<img src="/images/font-awesome-gear.png" width="16" height="16">齿轮图标或者复制以下投票：
+          使用编辑器中的<img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16">齿轮图标或者复制以下投票：
 
           ```text
           [poll]
@@ -379,12 +379,12 @@ zh_CN:
           - 当你帖子中有大量可选的内容，一次读完可能太困难了。
 
           [details=点击它看看！]
-          1. 选择编辑器中的<img src="/images/font-awesome-gear.png" width="16" height="16">齿轮图标。
+          1. 选择编辑器中的<img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16">齿轮图标。
           2. 选择“隐藏详情”。
           3. 编辑详情信息并增加内容。
           [/details]
 
-          你可以用编辑器中的<img src="/images/font-awesome-gear.png" width="16" height="16">齿轮图标并在下次回复中添加详情一栏。
+          你可以用编辑器中的<img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16">齿轮图标并在下次回复中添加详情一栏。
         not_found: |-
           添加详情控件时碰到麻烦了？试试在下个回复中包含下列文字：
 
