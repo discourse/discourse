@@ -11,6 +11,10 @@ class ImportScripts::JiveApi < ImportScripts::Base
   STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
 
   TO_IMPORT ||= [
+    #############################
+    # WHOLE CATEGORY OF CONTENT #
+    #############################
+
     # Announcement & News
     { jive_object: { type: 37, id: 1004 }, filters: { created_after: 1.year.ago, type: "post" }, category_id: 7 },
     # Questions & Answers / General Discussions
@@ -28,6 +32,19 @@ class ImportScripts::JiveApi < ImportScripts::Base
     { jive_object: { type: 700, id: 1034 }, filters: { type: "discussion" }, authenticated: true, category_id: 15 },
     # Feature Requests
     { jive_object: { type: 14, id: 2015 }, filters: { type: "idea" }, category_id: 31 },
+
+    ####################
+    # SELECTED CONTENT #
+    ####################
+
+    # Announcement & News
+    { jive_object: { type: 37, id: 1004 }, filters: { entities: { 38 => [1345, 1381, 1845, 2046, 2060, 2061] } }, category_id: 7 },
+    # Problem Solving
+    { jive_object: { type: 14, id: 2006 }, filters: { entities: { 2 => [116685, 160745, 177010, 223482, 225036, 233228, 257882, 285103, 292297, 345243, 363250, 434546] } }, category_id: 10 },
+    # General Discussions
+    { jive_object: { type: 14, id: 2006 }, filters: { entities: { 2 => [178203, 188350, 312734] } }, category_id: 21 },
+    # Questions & Answers
+    { jive_object: { type: 14, id: 2006 }, filters: { entities: { 2 => [418811] } }, category_id: 5 },
   ]
 
   def initialize
@@ -82,7 +99,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
         }
       end
 
-      break if users["list"].size < USER_COUNT || users["links"].blank? || users["links"]["next"].blank?
+      break if users["list"].size < USER_COUNT || users.dig("links", "next").blank?
       imported_users += users["list"].size
       break unless start_index = users["links"]["next"][/startIndex=(\d+)/, 1]
     end
@@ -104,20 +121,29 @@ class ImportScripts::JiveApi < ImportScripts::Base
 
     start_index = 0
 
-    filters = "filter=status(published)"
-    if to_import[:filters]
-      filters << "&filter=type(#{to_import[:filters][:type]})" if to_import[:filters][:type].present?
-      filters << "&filter=creationDate(null,#{to_import[:filters][:created_after].strftime("%Y-%m-%dT%TZ")})" if to_import[:filters][:created_after].present?
+    if to_import.dig(:filters, :entities).present?
+      path = "contents"
+      entities = to_import[:filters][:entities].flat_map { |type, ids| ids.map { |id| "#{type},#{id}" } }
+      filters = "filter=entityDescriptor(#{entities.join(",")})"
+    else
+      path = "places/#{place["placeID"]}/contents"
+      filters = "filter=status(published)"
+      if to_import[:filters]
+        filters << "&filter=type(#{to_import[:filters][:type]})" if to_import[:filters][:type].present?
+        filters << "&filter=creationDate(null,#{to_import[:filters][:created_after].strftime("%Y-%m-%dT%TZ")})" if to_import[:filters][:created_after].present?
+      end
     end
 
     loop do
-      contents = get("places/#{place["placeID"]}/contents?#{filters}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      contents = get("#{path}?#{filters}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
       contents["list"].each do |content|
-        custom_fields = { import_id: content["contentID"] }
+        content_id = content["contentID"].presence || content["id"]
+
+        custom_fields = { import_id: content_id }
         custom_fields[:import_permalink] = content["permalink"] if content["permalink"].present?
 
         topic = {
-          id: content["contentID"],
+          id: content_id,
           created_at: content["published"],
           title: @htmlentities.decode(content["subject"]),
           raw: process_raw(content["content"]["text"]),
@@ -136,40 +162,43 @@ class ImportScripts::JiveApi < ImportScripts::Base
         parent_post = post_id ? Post.unscoped.find_by(id: post_id) : create_post(topic, topic[:id])
 
         if parent_post&.id && parent_post&.topic_id
-          import_likes(content["contentID"], parent_post.id) if content["likeCount"].to_i > 0
+          resources = content["resources"]
+          import_likes(resources["likes"]["ref"], parent_post.id) if content["likeCount"].to_i > 0 && resources.dig("likes", "ref").present?
           if content["replyCount"].to_i > 0
-            import_comments(content["contentID"], parent_post.topic_id, to_import) if content["resources"]["comments"].present?
-            import_messages(content["contentID"], parent_post.topic_id, to_import) if content["resources"]["messages"].present?
+            import_comments(resources["comments"]["ref"], parent_post.topic_id, to_import) if resources.dig("comments", "ref").present?
+            import_messages(resources["messages"]["ref"], parent_post.topic_id, to_import) if resources.dig("messages", "ref").present?
           end
         end
       end
 
-      break if contents["list"].size < POST_COUNT || contents["links"].blank? || contents["links"]["next"].blank?
+      break if contents["list"].size < POST_COUNT || contents.dig("links", "next").blank?
       break unless start_index = contents["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
 
-  def import_likes(content_id, post_id)
+  def import_likes(url, post_id)
     start_index = 0
 
     loop do
-      likes = get("contents/#{content_id}/likes?&count=#{USER_COUNT}&startIndex=#{start_index}", true)
+      likes = get("#{url}?&count=#{USER_COUNT}&startIndex=#{start_index}", true)
+      break if likes["error"]
       likes["list"].each do |like|
         next unless user_id = user_id_from_imported_user_id(like["id"])
         next if PostAction.exists?(user_id: user_id, post_id: post_id, post_action_type_id: PostActionType.types[:like])
         PostAction.act(User.find(user_id), Post.find(post_id), PostActionType.types[:like])
       end
 
-      break if likes["list"].size < USER_COUNT || likes["links"].blank? || likes["links"]["next"].blank?
+      break if likes["list"].size < USER_COUNT || likes.dig("links", "next").blank?
       break unless start_index = likes["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
 
-  def import_comments(content_id, topic_id, to_import)
+  def import_comments(url, topic_id, to_import)
     start_index = 0
 
     loop do
-      comments = get("contents/#{content_id}/comments?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      comments = get("#{url}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      break if comments["error"]
       comments["list"].each do |comment|
         next if post_id_from_imported_post_id(comment["id"])
 
@@ -189,20 +218,23 @@ class ImportScripts::JiveApi < ImportScripts::Base
         end
 
         if created_post = create_post(post, post[:id])
-          import_likes(content_id, created_post.id) if comment["likeCount"].to_i > 0
+          if comment["likeCount"].to_i > 0 && comment.dig("resources", "likes", "ref").present?
+            import_likes(comment["resources"]["likes"]["ref"], created_post.id)
+          end
         end
       end
 
-      break if comments["list"].size < POST_COUNT || comments["links"].blank? || comments["links"]["next"].blank?
+      break if comments["list"].size < POST_COUNT || comments.dig("links", "next").blank?
       break unless start_index = comments["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
 
-  def import_messages(content_id, topic_id, to_import)
+  def import_messages(url, topic_id, to_import)
     start_index = 0
 
     loop do
-      messages = get("messages/contents/#{content_id}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      messages = get("#{url}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      break if messages["error"]
       messages["list"].each do |message|
         next if post_id_from_imported_post_id(message["id"])
 
@@ -223,11 +255,13 @@ class ImportScripts::JiveApi < ImportScripts::Base
         end
 
         if created_post = create_post(post, post[:id])
-          import_likes(content_id, created_post.id) if message["likeCount"].to_i > 0
+          if message["likeCount"].to_i > 0 && message.dig("resources", "likes", "ref").present?
+            import_likes(message["resources"]["likes"]["ref"], created_post.id)
+          end
         end
       end
 
-      break if messages["list"].size < POST_COUNT || messages["links"].blank? || messages["links"]["next"].blank?
+      break if messages["list"].size < POST_COUNT || messages.dig("links", "next").blank?
       break unless start_index = messages["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
@@ -257,7 +291,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
         PostAction.act(User.find(user_id), Post.find(post_id), PostActionType.types[:bookmark])
       end
 
-      break if favorites["list"].size < POST_COUNT || favorites["links"].blank? || favorites["links"]["next"].blank?
+      break if favorites["list"].size < POST_COUNT || favorites.dig("links", "next").blank?
       break unless start_index = favorites["links"]["next"][/startIndex=(\d+)/, 1]
     end
   end
@@ -300,12 +334,12 @@ class ImportScripts::JiveApi < ImportScripts::Base
     SQL
   end
 
-  def get(query, authenticated=false)
+  def get(url_or_path, authenticated=false)
     tries ||= 3
 
     command = ["curl", "--silent"]
     command << "--user \"#{@username}:#{@password}\"" if !!authenticated
-    command << "\"#{@base_uri}/api/core/v3/#{query}\""
+    command << (url_or_path.start_with?("http") ? "\"#{url_or_path}\"" : "\"#{@base_uri}/api/core/v3/#{url_or_path}\"")
 
     puts command.join(" ") if ENV["VERBOSE"] == "1"
 
