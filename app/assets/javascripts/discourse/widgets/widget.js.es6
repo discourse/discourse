@@ -14,12 +14,15 @@ let _dirty = {};
 export function keyDirty(key, options) {
   options = options || {};
   options.dirty = true;
-
   _dirty[key] = options;
 }
 
 export function renderedKey(key) {
-  delete _dirty[key];
+  if (key === '*') {
+    _dirty = {};
+  } else {
+    delete _dirty[key];
+  }
 }
 
 export function queryRegistry(name) {
