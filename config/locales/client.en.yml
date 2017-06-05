@@ -1344,6 +1344,7 @@ en:
           seen: I've read
           unseen: I've not read
           wiki: are wiki
+          images: includes image
         statuses:
           label: Where topics
           open: are open
