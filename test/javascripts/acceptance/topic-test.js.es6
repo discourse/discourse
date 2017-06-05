@@ -137,3 +137,16 @@ test("Reply as new message", () => {
     );
   });
 });
+
+test("Updating the topic title with emojis", () => {
+  visit("/t/internationalization-localization/280");
+  click('#topic-title .fa-pencil');
+
+  fillIn('#edit-title', 'emojis title :bike: :blonde_woman:t6:');
+
+  click('#topic-title .submit-edit');
+
+  andThen(() => {
+    equal(find('.fancy-title').html().trim(), 'emojis title <img src=\"/images/emoji/emoji_one/bike.png?v=5\" title=\"bike\" alt=\"bike\" class=\"emoji\"> <img src=\"/images/emoji/emoji_one/blonde_woman/6.png?v=5\" title=\"blonde_woman:t6\" alt=\"blonde_woman:t6\" class=\"emoji\">', 'it displays the new title with emojis');
+  });
+});
