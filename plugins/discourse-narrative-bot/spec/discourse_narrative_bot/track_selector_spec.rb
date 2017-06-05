@@ -104,6 +104,18 @@ describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
+        context 'when a non regular post is created' do
+          it 'should not do anything' do
+            moderator_post = Fabricate(:moderator_post, user: user, topic: topic)
+
+            expect do
+              described_class.new(
+                :reply, user, post_id: moderator_post.id
+              ).select
+            end.to_not change { Post.count }
+          end
+        end
+
         describe 'when user thank the bot' do
           it 'should like the post' do
             post.update!(raw: 'thanks!')
@@ -115,9 +127,6 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(post_action.post).to eq(post)
             expect(post_action.post_action_type_id).to eq(PostActionType.types[:like])
-
-            post = Post.last
-
             expect(Post.last).to eq(post)
 
             expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
