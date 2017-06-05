@@ -82,7 +82,7 @@ export function setup(helper) {
     }
 
     let between;
-    let emojiNameMatch = text.match(/(?:.*?)(:(?!:).?[\w-]*(?::t\d)?:)/);
+    const emojiNameMatch = text.match(/(?:.*?)(:(?!:).?[\w-]*(?::t\d)?:)/);
     if (emojiNameMatch) {
       between = emojiNameMatch[0].slice(1, -1);
     } else {
