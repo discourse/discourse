@@ -28,7 +28,7 @@ module DiscourseNarrativeBot
     def select
       data = Store.get(@user.id)
 
-      if @post && !is_topic_action?
+      if @post && @post.post_type == Post.types[:regular] && !is_topic_action?
         is_reply = @input == :reply
         return if is_reply && reset_track
 
@@ -39,7 +39,7 @@ module DiscourseNarrativeBot
           klass = (data[:track] || NewUserNarrative.to_s).constantize
 
           if is_reply && like_user_post
-            Store.set(@user.id, data.merge!(state: nil, topic_id: nil))
+            terminate_track(data)
           elsif state&.to_sym == :end && is_reply
             bot_commands(bot_mentioned?) || generic_replies(klass.reset_trigger)
           elsif is_reply
@@ -252,6 +252,11 @@ module DiscourseNarrativeBot
     def public_reply?
       !SiteSetting.discourse_narrative_bot_disable_public_replies &&
         (bot_mentioned? || reply_to_bot_post?(@post))
+    end
+
+    def terminate_track(data)
+      Store.set(@user.id, data.merge!(state: nil, topic_id: nil))
+      cancel_timeout_job(@user)
     end
   end
 end

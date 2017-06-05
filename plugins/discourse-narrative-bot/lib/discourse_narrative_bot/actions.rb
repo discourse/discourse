@@ -77,5 +77,20 @@ module DiscourseNarrativeBot
       topic.pm_with_non_human_user? &&
         topic.topic_allowed_users.where(user_id: -2).exists?
     end
+
+    def cancel_timeout_job(user)
+      Jobs.cancel_scheduled_job(:narrative_timeout, user_id: user.id, klass: self.class.to_s)
+    end
+
+    def enqueue_timeout_job(user)
+      return if Rails.env.test?
+
+      cancel_timeout_job(user)
+
+      Jobs.enqueue_in(TIMEOUT_DURATION, :narrative_timeout,
+        user_id: user.id,
+        klass: self.class.to_s
+      )
+    end
   end
 end

@@ -77,6 +77,26 @@ describe Group do
       group.incoming_email = "foo@bar.org"
       expect(group.valid?).to eq(true)
     end
+
+    context 'when a group has no owners' do
+      it 'should not allow membership requests' do
+        group.allow_membership_requests = true
+
+        expect(group.valid?).to eq(false)
+
+        expect(group.errors.full_messages).to include(I18n.t(
+          "groups.errors.cant_allow_membership_requests"
+        ))
+
+        group.allow_membership_requests = false
+        group.save!
+
+        group.add_owner(user)
+        group.allow_membership_requests = true
+
+        expect(group.valid?).to eq(true)
+      end
+    end
   end
 
   def real_admins

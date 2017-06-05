@@ -36,6 +36,7 @@ class Group < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
+  validate :can_allow_membership_requests
   validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0,3] != 'fa-' }
 
   AUTO_GROUPS = {
@@ -510,6 +511,12 @@ SQL
     end
 
   private
+
+    def can_allow_membership_requests
+      if self.allow_membership_requests && !self.group_users.where(owner: true).exists?
+        self.errors.add(:base, I18n.t('groups.errors.cant_allow_membership_requests'))
+      end
+    end
 
     def enqueue_update_mentions_job
       Jobs.enqueue(:update_group_mentions,

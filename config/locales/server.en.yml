@@ -264,6 +264,7 @@ en:
       invalid_incoming_email: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
     default_names:
       everyone: "everyone"
       admins: "admins"
