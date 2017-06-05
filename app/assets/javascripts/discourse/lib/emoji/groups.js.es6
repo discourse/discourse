@@ -426,7 +426,6 @@ const groups = [
       "tornado",
       "sun_behind_large_cloud",
       "sun_behind_rain_cloud",
-      "white_sun_small_cloud",
       "comet",
       "crab",
       "dove",
