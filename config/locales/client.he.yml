@@ -2785,8 +2785,9 @@ he:
           block: "חסום"
           do_nothing: "עשה כלום"
         staff_actions:
+          all: "הכל"
+          filter: "סינון:"
           title: "פעולות צוות"
-          instructions: "הקליקו על שמות משתמשים ופעולות כדי לסנן את הרשימה. הקליקו על תמונות פרופיל כדי ללכת לעמודי המשתמשים."
           clear_filters: "הראה הכל"
           staff_user: "משתמש חבר צוות"
           target_user: "משתמש מטרה"
@@ -2839,6 +2840,7 @@ he:
             change_readonly_mode: "שינוי מצב קריאה בלבד"
             backup_download: "הורדת גיבוי"
             backup_destroy: "השמדת גיבוי"
+            reviewed_post: "פוסט מסוקר"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

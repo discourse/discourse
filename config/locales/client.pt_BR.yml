@@ -2693,7 +2693,6 @@ pt_BR:
           do_nothing: "não fazer nada"
         staff_actions:
           title: "Ações do Staff"
-          instructions: "Clique nos nomes de usuário e ações para filtrar a lista. Clique nas imagens de perfil para ir para as páginas de usuário."
           clear_filters: "Mostrar Tudo"
           staff_user: "Usuário do Staff"
           target_user: "Usuário Destino"

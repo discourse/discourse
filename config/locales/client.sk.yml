@@ -2440,7 +2440,6 @@ sk:
           do_nothing: "nerob nič"
         staff_actions:
           title: "Akcie personálu"
-          instructions: "Vyberte používateľské meno a akcie na filtrovanie zoznamu. Kliknite na profilovú fotku pre navigáciu na užívateľské stránky."
           clear_filters: "Ukázať všetko"
           staff_user: "Člen redakcie"
           target_user: "Cieľový používateľ"

@@ -122,9 +122,11 @@ class UploadCreator
     end
   end
 
+  MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
+
   def should_convert_to_jpeg?
     TYPES_CONVERTED_TO_JPEG.include?(@image_info.type) &&
-    @image_info.size.min > 720 &&
+    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG &&
     SiteSetting.png_to_jpg_quality < 100
   end
 
@@ -132,7 +134,13 @@ class UploadCreator
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
-    Discourse::Utils.execute_command('convert', @file.path, '-quality', SiteSetting.png_to_jpg_quality.to_s, jpeg_tempfile.path)
+    Discourse::Utils.execute_command(
+      'convert', @file.path,
+      '-background', 'white',
+      '-flatten',
+      '-quality', SiteSetting.png_to_jpg_quality.to_s,
+      jpeg_tempfile.path
+    )
 
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85

@@ -100,20 +100,19 @@ class PostMover
   def move(post)
     @first_post_number_moved ||= post.post_number
 
-    Post.where(id: post.id, topic_id: original_topic.id).update_all(
-      [
-        ['post_number = :post_number',
-         'reply_to_post_number = :reply_to_post_number',
-         'topic_id    = :topic_id',
-         'sort_order  = :post_number',
-         'reply_count = :reply_count',
-        ].join(', '),
-        reply_count: @reply_count[post.post_number] || 0,
-        post_number: @move_map[post.post_number],
-        reply_to_post_number: @move_map[post.reply_to_post_number],
-        topic_id: destination_topic.id
-      ]
-    )
+    update = {
+      reply_count: @reply_count[post.post_number] || 0,
+      post_number: @move_map[post.post_number],
+      reply_to_post_number: @move_map[post.reply_to_post_number],
+      topic_id: destination_topic.id,
+      sort_order: @move_map[post.post_number]
+    }
+
+    unless @move_map[post.reply_to_post_number]
+      update[:reply_to_user_id] = nil
+    end
+
+    Post.where(id: post.id, topic_id: original_topic.id).update_all(update)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)

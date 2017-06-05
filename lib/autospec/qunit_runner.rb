@@ -156,6 +156,9 @@ module Autospec
         if m = /acceptance\(['"]([^"']+)/i.match(line)
           return "Acceptance: #{m[1]}"
         end
+        if m = /moduleFor\(['"]([^'"]+)/i.match(line)
+          return m[1]
+        end
       end
     end
 

@@ -777,8 +777,7 @@ class Search
     def aggregate_posts(post_sql)
       return [] unless post_sql
 
-      Post.includes(:topic => :category)
-        .includes(:user)
+      posts_eager_loads(Post)
         .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
         .order('row_number')
     end
@@ -806,15 +805,26 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id)
-                                   .includes(:topic => :category)
-                                   .includes(:user)
+        posts = posts_eager_loads(posts_query(@limit))
+          .where('posts.topic_id = ?', @search_context.id)
+
         posts.each do |post|
           @results.add(post)
         end
       else
         aggregate_search
       end
+    end
+
+    def posts_eager_loads(query)
+      query = query.includes(:user)
+      topic_eager_loads = [:category]
+
+      if SiteSetting.tagging_enabled
+        topic_eager_loads << :tags
+      end
+
+      query.includes(topic: topic_eager_loads)
     end
 
 end

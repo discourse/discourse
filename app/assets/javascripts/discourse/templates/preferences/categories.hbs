@@ -43,8 +43,12 @@
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
+{{#if canSave}}
 <div class="control-group save-button">
   <div class="controls">
     {{partial 'user/preferences/save-button'}}
   </div>
 </div>
+{{else}}
+  {{i18n 'user.no_category_access'}}
+{{/if}}

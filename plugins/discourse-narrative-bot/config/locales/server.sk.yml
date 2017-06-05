@@ -1,0 +1,82 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sk:
+  badges:
+    licensed:
+      description: "Dokončili sme náš tutoriál pre pokročilých používateľov"
+  discourse_narrative_bot:
+    dice:
+      invalid: |-
+        Je mi to ľúto, ale je matematicky nemožné zahrať túto kombináciu kociek. :confounded:
+      not_enough_dice: |-
+        Ja mám len %{num_of_dice} kocky. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ja viem!
+    quote:
+      trigger: "citácia"
+      '1':
+        quote: "Uprostred každej prekážky sa nachádza príležitosť"
+        author: "Albert Einstein"
+      '2':
+        quote: "Musíte byť tou zmenou, ktorú chcete vidieť vo svete."
+        author: "Mahatma Gandhi"
+      '3':
+        quote: "Neplačte, lebo to skončilo, usmejte sa, pretože sa to stalo."
+        author: "Dr Seuss"
+      '4':
+        quote: "Ak chcete niečo urobiť správne, urobte to sami."
+        author: "Charles-Guillaume Étienne"
+      '5':
+        quote: "Verte, že to dokážete a ste na polceste."
+        author: "Theodore Roosevelt"
+      '6':
+        quote: "Život je ako bonboniéra. Nikdy nevieš, čo dostaneš."
+        author: "Matka Forresta Gumpa"
+      '7':
+        quote: "Jeden malý krok pre človeka, obrovský skok pre ľudstvo."
+        author: "Neil Armstrong"
+      '8':
+        quote: "Každý deň spravte niečo, čo vás straší."
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"
+      '10':
+        author: "Napoleon Hill"
+    magic_8_ball:
+      trigger: 'šťastie'
+      answers:
+        '1': "Je to isté"
+        '2': "Rozhodne je to tak"
+        '3': "Bez pochýb"
+        '4': "Áno jednoznačne"
+        '5': "Môžete sa na to spoľahnúť"
+        '6': "Vidím to tak, že áno"
+        '7': "Pravdepodobne"
+        '8': "Výhľad je dobrý"
+        '9': "Áno"
+        '12': "Opýtajte sa neskôr"
+        '13': "Radšej ti to teraz nepoviem"
+        '14': "Teraz to nie je možné predpovedať"
+        '16': "Nepočítajte s tým"
+        '17': "Moja odpoveď je nie"
+        '18': "Moje zdroje hovoria nie"
+        '19': "Výhľad nie je tak dobrý"
+        '20': "Veľmi pochybné"
+    track_selector:
+      reset_trigger: 'začať'
+      skip_trigger: 'preskočiť'
+      help_trigger: 'zobraziť pomoc'
+      random_mention:
+        reply: |-
+          Ahoj! Ak chcete zistiť, čo dokážem urobiť, povedzte `@%{discobot_username} %{help_trigger}`.
+    new_user_narrative:
+      reset_trigger: "nový používateľ"
+      quoting:
+        reply: |-
+          Pekná práca, vybrali ste môj obľúbený citát! :left_speech_bubble:
+    advanced_user_narrative:
+      reset_trigger: 'pokročilý používateľ'
+      title: ':arrow_up: Pokročilé funkcie používateľa'

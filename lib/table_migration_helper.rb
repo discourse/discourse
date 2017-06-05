@@ -3,7 +3,7 @@ class TableMigrationHelper
     ActiveRecord::Base.exec_sql <<-SQL
     CREATE OR REPLACE FUNCTION raise_read_only() RETURNS trigger AS $rro$
       BEGIN
-        RAISE EXCEPTION 'Table is read only';
+        RAISE EXCEPTION 'Discourse: Table is read only';
         RETURN null;
       END
     $rro$ LANGUAGE plpgsql;

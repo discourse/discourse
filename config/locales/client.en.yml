@@ -6,7 +6,7 @@
 # To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, ift needs to be pushed by a maintainer to Transifex:
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
 #
 #   tx push -s
 #
@@ -410,6 +410,7 @@ en:
       request_membership_pm:
         title: "Membership Request"
         body: "I would like to apply for membership in @%{groupName}."
+        disabled: "Insufficient trust level to request for group membership"
       name_placeholder: "Group name, no spaces, same as username rule"
       public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
@@ -549,7 +550,7 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
-        button_text: "Download My Posts"
+        button_text: "Download All"
         confirm: "Are you sure you want to download your posts?"
         success: "Download initiated, you will be notified via message when the process is complete."
         rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
@@ -622,6 +623,7 @@ en:
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
+      no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."

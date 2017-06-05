@@ -1,4 +1,15 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 fa_IR:
+  site_settings:
+    discourse_narrative_bot_enabled: 'ربات سخنگوی دیسکورس را فعال کنید'
+    disable_discourse_narrative_bot_welcome_post: "پیغام خوشامدگویی ربات دیسکورس را از کار بیاندازید"
+    discourse_narrative_bot_ignored_usernames: "نام‌های کاربری که بایستی توسط ربات دیسکورس چشمپوشی شوند"
   discourse_narrative_bot:
     quote:
       '9':
@@ -7,7 +18,16 @@ fa_IR:
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       answers:
+        '3': "بدون شک"
+        '4': "قطعا بله"
+        '5': "میتوانی رویش حساب کنی"
+        '7': "به احتمال زیاد"
         '9': "بله"
+        '12': "بعدا بپرسید"
+        '13': "بهتر است که الان به شما چیزی نگویم"
+        '14': "الان نمیتوانم پیشبینی کنم"
+        '16': "رویش حساب باز نکن"
+        '17': "پاسخ من خیر است"
       result: |-
         > :crystal_ball: %{result}
     track_selector:

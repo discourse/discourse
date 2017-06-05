@@ -114,6 +114,18 @@ after_initialize do
   end
 
   self.add_model_callback(User, :after_commit, on: :create) do
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0
+      self.enqueue_bot_welcome_post
+    end
+  end
+
+  self.on(:user_first_logged_in) do |user|
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay > 0
+      user.enqueue_bot_welcome_post
+    end
+  end
+
+  self.add_to_class(:user, :enqueue_bot_welcome_post) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
     delay = SiteSetting.discourse_narrative_bot_welcome_post_delay
@@ -131,17 +143,13 @@ after_initialize do
     end
   end
 
-  require_dependency "user"
-
-  User.class_eval do
-    def enqueue_narrative_bot_job?
-      SiteSetting.discourse_narrative_bot_enabled &&
-        self.id > 0 &&
-        !self.anonymous? &&
-        !self.user_option.mailing_list_mode &&
-        !self.staged &&
-        !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
-    end
+  self.add_to_class(:user, :enqueue_narrative_bot_job?) do
+    SiteSetting.discourse_narrative_bot_enabled &&
+      self.id > 0 &&
+      !self.anonymous? &&
+      !self.user_option.mailing_list_mode &&
+      !self.staged &&
+      !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
   end
 
   self.on(:post_created) do |post, options|

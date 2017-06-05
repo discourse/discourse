@@ -994,6 +994,8 @@ fi:
       your_email: "Tilisi sähköpostiosoite on <b>%{email}</b>."
       accept_invite: "Hyväksy kutsu"
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
+      name_label: "Nimi"
+      name_label_optional: "Nimi (valinnainen)"
       password_label: "Aseta salasana (valinnainen)"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
@@ -2569,8 +2571,8 @@ fi:
       export_json:
         button_text: "Vie"
       invite:
-        button_text: "Lähetä kutsut"
-        button_title: "Lähetä kutsut"
+        button_text: "Lähetä kutsuja"
+        button_title: "Lähetä kutsuja"
       customize:
         title: "Mukauta"
         long_title: "Sivuston mukautukset"
@@ -2784,7 +2786,6 @@ fi:
           do_nothing: "älä tee mitään"
         staff_actions:
           title: "Henkilökunnan toimet"
-          instructions: "Klikkaa käyttäjänimiä tai toimintoja suodattaaksesi listaa. Klikkaa profiilikuvaa siirtyäksesi käyttäjäsivulle."
           clear_filters: "Näytä kaikki"
           staff_user: "Palstan edustaja"
           target_user: "Kohteena ollut käyttäjä"
@@ -3009,6 +3010,7 @@ fi:
         reset_bounce_score:
           label: "Palauta"
           title: "Palauta palautuspisteiksi 0"
+        visit_profile: "Muokkaa <a href='%{url}'>tämän käyttäjän käyttäjäasetuksia</a> hänen profiilissaan"
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
@@ -3231,12 +3233,14 @@ fi:
         embed_by_username: "Käyttäjänimi ketjun luomiseksi"
         embed_post_limit: "Upotettavien viestien maksimimäärä"
         embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä"
+        embed_title_scrubber: "Säännöllinen lauseke, jolla riisutaan viestien otsikkoja"
         embed_truncate: "Typistä upotetut viestit"
         embed_whitelist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä"
         embed_blacklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä"
         embed_classname_whitelist: "Sallitut CSS luokat"
         feed_polling_enabled: "Tuo kirjoitukset RSS/ATOM syötteen avulla"
         feed_polling_url: "RSS/ATOM syötteen URL"
+        feed_polling_frequency_mins: "Syötteen kyselyn taajuus (minuutteina)"
         save: "Tallenna upotusasetukset"
       permalink:
         title: "Ikilinkit"

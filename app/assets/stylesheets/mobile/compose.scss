@@ -207,6 +207,12 @@ input[type=radio], input[type=checkbox] {
       position: absolute;
       display: block;
       bottom: 0;
+      white-space: nowrap;
+      .btn {
+        max-width: 120px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     }
   }
   .category-input {

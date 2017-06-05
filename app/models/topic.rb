@@ -170,7 +170,6 @@ class Topic < ActiveRecord::Base
 
   before_create do
     initialize_default_values
-    inherit_auto_close_from_category
   end
 
   after_create do
@@ -186,6 +185,10 @@ class Topic < ActiveRecord::Base
     end
     if title_changed?
       write_attribute :fancy_title, Topic.fancy_title(title)
+    end
+
+    if category_id_changed? || new_record?
+      inherit_auto_close_from_category
     end
   end
 
@@ -614,8 +617,7 @@ SQL
       old_category = category
 
       if self.category_id != new_category.id
-        self.category_id = new_category.id
-        self.update_column(:category_id, new_category.id)
+        self.update!(category_id: new_category.id)
         Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
 
         # when a topic changes category we may have to start watching it

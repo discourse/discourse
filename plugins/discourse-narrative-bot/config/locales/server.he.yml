@@ -1,4 +1,21 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 he:
+  site_settings:
+    discourse_narrative_bot_enabled: 'אפשרו את בוט הסיפורים של דיסקורס'
+    disable_discourse_narrative_bot_welcome_post: "נטרלו את פוסט הברוכים הבאים מאת בוט הסיפורים של דיסקורס"
+    discourse_narrative_bot_ignored_usernames: "שמות משתמשים שבוט הסיפורים של דיסקורס צריך להתעלם מהם"
+    discourse_narrative_bot_disable_public_replies: "נטרלו תגובות פומביות מאת בוט הסיפורים של דיסקורס"
+    discourse_narrative_bot_welcome_post_type: "סוג פוסט הברוכים הבאים שבוט הסיפורים של דיסקורס אמור לשלוח"
+    discourse_narrative_bot_welcome_post_delay: "המתנה של (n) שניות לפני שליחת פוסט ברוכים הבאים של בוט הסיפורים של דיסקורס."
+  badges:
+    certified:
+      description: "סיימו את הדרכת המשתמשים החדשים שלנו"
   discourse_narrative_bot:
     dice:
       trigger: "גלגול"
@@ -26,6 +43,9 @@ he:
       '7':
         quote: "זהו צעד אחד קטן לאדם, צעד גדול לאנושות."
         author: "ניל ארמסטרונג"
+      '8':
+        quote: "עשו דבר אחד בכל יום שמפחיד אתכם"
+        author: "אלינור רוזוולט"
       '9':
         quote: "טעויות תמיד נסלחות, אם יש את האומץ להודות בהן."
         author: "ברוס לי"
@@ -60,8 +80,19 @@ he:
       reset_trigger: 'התחלה'
       skip_trigger: 'דילוג'
       help_trigger: 'הצגת עזרה'
+      do_not_understand:
+        first_response: |-
+          הי, תודה על התגובה!
+
+          לצערי, כבוט שתוכנת בצורה גרועה, אני לא ממש מבין את זה. :frowning:
     new_user_narrative:
       reset_trigger: "משתמש/ת חדש/ה"
+      cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדש"
+      hello:
+        title: ":robot: ברכות!"
+      images:
+        like_not_found: |-
+          שכחתם לעשות לייק :heart: ל-[פוסט](%{url}) שלי? :crying_cat_face:
       certificate:
         alt: 'תעודת הישג'
     advanced_user_narrative:

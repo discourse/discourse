@@ -2567,7 +2567,6 @@ pt:
           do_nothing: "não fazer nada"
         staff_actions:
           title: "Ações do Pessoal"
-          instructions: "Clique nos nomes de utilizadores e nas ações para filtrar a lista. Clique nas fotografias de perfil para ir para as páginas dos utilizadores."
           clear_filters: "Mostrar Tudo"
           staff_user: "Utilizador do Pessoal"
           target_user: "Utilizador Destino"

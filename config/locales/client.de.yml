@@ -2781,7 +2781,6 @@ de:
           do_nothing: "nichts tun"
         staff_actions:
           title: "Team-Aktionen"
-          instructions: "Klicke auf die Benutzernamen und Aktionen, um die Liste zu filtern. Klicke auf das Profilbild, um die Benutzerseiten zu sehen."
           clear_filters: "Alles anzeigen"
           staff_user: "Team-Mitglied"
           target_user: "Betroffener Benutzer"

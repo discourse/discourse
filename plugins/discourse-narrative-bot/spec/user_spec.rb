@@ -30,7 +30,7 @@ describe User do
         end
       end
 
-      describe 'enabled' do
+      context 'enabled' do
         before do
           SiteSetting.disable_discourse_narrative_bot_welcome_post = false
         end
@@ -58,30 +58,16 @@ describe User do
           end
         end
 
-        describe 'when welcome message is delayed' do
+        describe 'when welcome message is configured to be delayed' do
           before do
             SiteSetting.discourse_narrative_bot_welcome_post_delay = 100
             SiteSetting.queue_jobs = true
           end
 
-          it 'should delay the initialization of the new user track' do
-            Timecop.freeze do
-              user
+          it 'should delay the welcome post until user logs in' do
+            user
 
-              expect(Jobs::NarrativeInit.jobs.first['at'])
-               .to be_within(1.second).of(Time.zone.now.to_f + 100)
-            end
-          end
-
-          it 'should delay sending the welcome message' do
-            SiteSetting.discourse_narrative_bot_welcome_post_type = 'welcome_message'
-
-            Timecop.freeze do
-              user
-
-              expect(Jobs::SendDefaultWelcomeMessage.jobs.first['at'])
-                .to be_within(1.second).of(Time.zone.now.to_f + 100)
-            end
+            expect(Jobs::NarrativeInit.jobs.count).to eq(0)
           end
         end
       end

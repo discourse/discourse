@@ -9,14 +9,14 @@ module DiscourseNarrativeBot
       begin: {
         init: {
           next_state: :tutorial_bookmark,
-          next_instructions: Proc.new { I18n.t("#{I18N_KEY}.bookmark.instructions") },
+          next_instructions: Proc.new { I18n.t("#{I18N_KEY}.bookmark.instructions", base_uri: Discourse.base_uri) },
           action: :say_hello
         }
       },
 
       tutorial_bookmark: {
         next_state: :tutorial_onebox,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.onebox.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.onebox.instructions", base_uri: Discourse.base_uri) },
 
         bookmark: {
           action: :reply_to_bookmark
@@ -30,7 +30,7 @@ module DiscourseNarrativeBot
 
       tutorial_onebox: {
         next_state: :tutorial_emoji,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.emoji.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.emoji.instructions", base_uri: Discourse.base_uri) },
 
         reply: {
           action: :reply_to_onebox
@@ -40,7 +40,9 @@ module DiscourseNarrativeBot
       tutorial_emoji: {
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
-          I18n.t("#{I18N_KEY}.mention.instructions", discobot_username: self.discobot_user.username)
+          I18n.t("#{I18N_KEY}.mention.instructions",
+            discobot_username: self.discobot_user.username,
+            base_uri: Discourse.base_uri)
         },
         reply: {
           action: :reply_to_emoji
@@ -49,7 +51,7 @@ module DiscourseNarrativeBot
 
       tutorial_mention: {
         next_state: :tutorial_formatting,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.formatting.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.formatting.instructions", base_uri: Discourse.base_uri) },
 
         reply: {
           action: :reply_to_mention
@@ -58,7 +60,7 @@ module DiscourseNarrativeBot
 
       tutorial_formatting: {
         next_state: :tutorial_quote,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.quoting.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.quoting.instructions", base_uri: Discourse.base_uri) },
 
         reply: {
           action: :reply_to_formatting
@@ -67,7 +69,7 @@ module DiscourseNarrativeBot
 
       tutorial_quote: {
         next_state: :tutorial_images,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.images.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.images.instructions", base_uri: Discourse.base_uri) },
 
         reply: {
           action: :reply_to_quote
@@ -79,7 +81,8 @@ module DiscourseNarrativeBot
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.flag.instructions",
             guidelines_url: url_helpers(:guidelines_url),
-            about_url: url_helpers(:about_index_url))
+            about_url: url_helpers(:about_index_url),
+            base_uri: Discourse.base_uri)
         },
         reply: {
           action: :reply_to_image
@@ -91,7 +94,7 @@ module DiscourseNarrativeBot
 
       tutorial_flag: {
         next_state: :tutorial_search,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions") },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions", base_uri: Discourse.base_uri) },
         flag: {
           action: :reply_to_flag
         },
@@ -144,7 +147,7 @@ module DiscourseNarrativeBot
       raw = <<~RAW
       #{post.raw}
 
-      #{I18n.t("#{I18N_KEY}.search.hidden_message")}
+      #{I18n.t("#{I18N_KEY}.search.hidden_message", i18n_post_args)}
       RAW
 
       PostRevisor.new(post, topic).revise!(
@@ -166,8 +169,10 @@ module DiscourseNarrativeBot
     def say_hello
       raw = I18n.t(
         "#{I18N_KEY}.hello.message",
-        username: @user.username,
-        title: SiteSetting.title
+        i18n_post_args(
+          username: @user.username,
+          title: SiteSetting.title
+        )
       )
 
       raw = <<~RAW
@@ -205,7 +210,7 @@ module DiscourseNarrativeBot
 
       fake_delay
       enqueue_timeout_job(@user)
-      reply_to(@post, I18n.t("#{I18N_KEY}.bookmark.not_found")) unless @data[:attempted]
+      reply_to(@post, I18n.t("#{I18N_KEY}.bookmark.not_found", i18n_post_args)) unless @data[:attempted]
       false
     end
 
@@ -214,7 +219,7 @@ module DiscourseNarrativeBot
       return unless @post.user_id == self.discobot_user.id
 
       raw = <<~RAW
-        #{I18n.t("#{I18N_KEY}.bookmark.reply", profile_page_url: url_helpers(:user_url, username: @user.username))}
+        #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(profile_page_url: url_helpers(:user_url, username: @user.username)))}
 
         #{instance_eval(&@next_instructions)}
       RAW
@@ -234,7 +239,7 @@ module DiscourseNarrativeBot
 
       if @post.post_analyzer.found_oneboxes?
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.onebox.reply")}
+          #{I18n.t("#{I18N_KEY}.onebox.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -246,7 +251,7 @@ module DiscourseNarrativeBot
         reply
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.onebox.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.onebox.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -270,7 +275,7 @@ module DiscourseNarrativeBot
           like_post(post)
 
           raw = <<~RAW
-            #{I18n.t("#{I18N_KEY}.images.reply")}
+            #{I18n.t("#{I18N_KEY}.images.reply", i18n_post_args)}
 
             #{instance_eval(&@next_instructions)}
           RAW
@@ -304,7 +309,7 @@ module DiscourseNarrativeBot
 
         if get_state_data(:liked)
           raw = <<~RAW
-            #{I18n.t("#{I18N_KEY}.images.reply")}
+            #{I18n.t("#{I18N_KEY}.images.reply", i18n_post_args)}
 
             #{instance_eval(&@next_instructions)}
           RAW
@@ -313,7 +318,7 @@ module DiscourseNarrativeBot
         else
           raw = I18n.t(
             "#{I18N_KEY}.images.like_not_found",
-            url: Post.find_by(id: @data[:last_post_id]).url
+            i18n_post_args(url: Post.find_by(id: @data[:last_post_id]).url)
           )
 
           transition = false
@@ -321,7 +326,7 @@ module DiscourseNarrativeBot
       else
         raw = I18n.t(
           "#{I18N_KEY}.images.not_found",
-          image_url: "#{Discourse.base_url}/images/dog-walk.gif"
+          i18n_post_args(image_url: "#{Discourse.base_url}/images/dog-walk.gif")
         )
 
         transition = false
@@ -341,7 +346,7 @@ module DiscourseNarrativeBot
 
       if Nokogiri::HTML.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.formatting.reply")}
+          #{I18n.t("#{I18N_KEY}.formatting.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -353,7 +358,7 @@ module DiscourseNarrativeBot
         reply
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.formatting.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.formatting.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -367,7 +372,7 @@ module DiscourseNarrativeBot
 
       if doc.css(".quote").size > 0
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.quoting.reply")}
+          #{I18n.t("#{I18N_KEY}.quoting.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -379,7 +384,7 @@ module DiscourseNarrativeBot
         reply
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.quoting.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.quoting.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -393,7 +398,7 @@ module DiscourseNarrativeBot
 
       if doc.css(".emoji").size > 0
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.emoji.reply")}
+          #{I18n.t("#{I18N_KEY}.emoji.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -405,7 +410,7 @@ module DiscourseNarrativeBot
         reply
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.emoji.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.emoji.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -417,7 +422,7 @@ module DiscourseNarrativeBot
 
       if bot_mentioned?(@post)
         raw = <<~RAW
-          #{I18n.t("#{I18N_KEY}.mention.reply")}
+          #{I18n.t("#{I18N_KEY}.mention.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
         RAW
@@ -433,8 +438,10 @@ module DiscourseNarrativeBot
         unless @data[:attempted]
           reply_to(@post, I18n.t(
             "#{I18N_KEY}.mention.not_found",
-            username: @user.username,
-            discobot_username: self.discobot_user.username
+            i18n_post_args(
+              username: @user.username,
+              discobot_username: self.discobot_user.username
+            )
           ))
         end
 
@@ -448,7 +455,7 @@ module DiscourseNarrativeBot
       return if @post.user_id == -2
 
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.flag.not_found")) unless @data[:attempted]
+      reply_to(@post, I18n.t("#{I18N_KEY}.flag.not_found", i18n_post_args)) unless @data[:attempted]
       false
     end
 
@@ -458,7 +465,7 @@ module DiscourseNarrativeBot
       return unless @post.user.id == -2
 
       raw = <<~RAW
-        #{I18n.t("#{I18N_KEY}.flag.reply")}
+        #{I18n.t("#{I18N_KEY}.flag.reply", i18n_post_args)}
 
         #{instance_eval(&@next_instructions)}
       RAW
@@ -478,10 +485,10 @@ module DiscourseNarrativeBot
 
       if @post.raw.match(/#{SEARCH_ANSWER}/)
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.search.reply", search_url: url_helpers(:search_url)))
+        reply_to(@post, I18n.t("#{I18N_KEY}.search.reply", i18n_post_args(search_url: url_helpers(:search_url))))
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.search.not_found")) unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.search.not_found", i18n_post_args)) unless @data[:attempted]
         enqueue_timeout_job(@user)
         false
       end
@@ -493,11 +500,13 @@ module DiscourseNarrativeBot
       reply_to(
         @post,
         I18n.t("#{I18N_KEY}.end.message",
-          username: @user.username,
-          base_url: Discourse.base_url,
-          certificate: certificate,
-          discobot_username: self.discobot_user.username,
-          advanced_trigger: AdvancedUserNarrative.reset_trigger
+          i18n_post_args(
+            username: @user.username,
+            base_url: Discourse.base_url,
+            certificate: certificate,
+            discobot_username: self.discobot_user.username,
+            advanced_trigger: AdvancedUserNarrative.reset_trigger
+          )
         ),
         topic_id: @data[:topic_id]
       )

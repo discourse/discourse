@@ -214,7 +214,7 @@ class Wizard
 
       @wizard.append_step('invites') do |step|
 
-        staff_count = User.where("moderator = true or admin = true").where("id <> ?", Discourse.system_user.id).count
+        staff_count = User.staff.human_users.count
         step.add_field(id: 'staff_count', type: 'component', value: staff_count)
 
         step.add_field(id: 'invite_list', type: 'component')

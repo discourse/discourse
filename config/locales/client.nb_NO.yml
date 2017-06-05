@@ -993,6 +993,8 @@ nb_NO:
       your_email: "E-postadressen tilknyttet din konto er <b>%{email}</b>."
       accept_invite: "Godta invitasjon"
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
+      name_label: "Navn"
+      name_label_optional: "Navn (valgfritt)"
       password_label: "Sett passord (valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
@@ -1059,7 +1061,7 @@ nb_NO:
       saved: "Lagret!"
       saved_draft: "Innleggsutkast. Velg for å fortsette."
       uploading: "Laster opp…"
-      show_preview: 'forhånsvis &raquo;'
+      show_preview: 'forhåndsvis &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
       quote_post_title: "Siter hele innlegget"
       bold_label: "F"
@@ -1236,6 +1238,7 @@ nb_NO:
         select_all: "Velg alle"
         clear_all: "Fjern alle"
         unlist_topics: "Avlist emner"
+        relist_topics: "List opp emner på nytt"
         reset_read: "Nullstill lest"
         delete: "Slett emne"
         dismiss: "Avslå"
@@ -1846,7 +1849,7 @@ nb_NO:
       email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       suppress_from_homepage: "Utelat denne kategorien fra hjemmesiden."
-      show_subcategory_list: "Vis underkategoriliste over emner i denne kategorien"
+      show_subcategory_list: "Vis underkategoriliste over emner i denne kategorien."
       num_featured_topics: "Antall emner vist på kategori-siden:"
       subcategory_num_featured_topics: "Antall framhevede emner på opphavets kategoriside:"
       all_topics_wiki: "Gjør nye emner til wiki-er som forvalg."
@@ -2438,6 +2441,7 @@ nb_NO:
         event_type_missing: "Du må sette opp minst en type hendelse."
         content_type: "Content Type"
         secret: "Delt hemmelighet"
+        event_chooser: "Hvilke hendelser skal utløse denne vevkroken?"
         wildcard_event: "Send meg alt"
         individual_event: "Velg hendelser enkeltvis."
         verify_certificate: "Kontroller TLSs-sertifikat til payload url"
@@ -2611,7 +2615,9 @@ nb_NO:
           custom_sections: "Egendefinerte valg:"
           theme_components: "Drakt-komponenter"
           uploads: "Opplastinger"
+          no_uploads: "Du kan laste opp effekter tilknyttet din drakt, som skrifter og bilder"
           add_upload: "Legg til opplasting"
+          upload_file_tip: "Velg en effekt å laste opp (PNG, WOFF2, osv…)"
           variable_name: "Variabelnavn for SCSS:"
           upload: "Last opp"
           child_themes_check: "Drakten inneholder andre underdrakter"
@@ -2779,7 +2785,6 @@ nb_NO:
           do_nothing: "ikke gjør noe"
         staff_actions:
           title: "Personalhandlinger"
-          instructions: "Klikk på brukernavn og handlinger for å filtrere listen. Klikk på profilbilder for å gå til brukerens side."
           clear_filters: "Vis alt"
           staff_user: "Personale"
           target_user: "Målbruker"
