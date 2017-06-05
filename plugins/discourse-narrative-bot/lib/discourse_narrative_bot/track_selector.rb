@@ -28,7 +28,7 @@ module DiscourseNarrativeBot
     def select
       data = Store.get(@user.id)
 
-      if @post && !is_topic_action?
+      if @post && @post.post_type == Post.types[:regular] && !is_topic_action?
         is_reply = @input == :reply
         return if is_reply && reset_track
 
