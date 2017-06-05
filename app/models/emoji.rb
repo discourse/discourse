@@ -1,6 +1,6 @@
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "v3"
+  EMOJI_VERSION = "v5"
 
   include ActiveModel::SerializerSupport
 
@@ -23,11 +23,15 @@ class Emoji
   end
 
   def self.aliases
-    Discourse.cache.fetch(cache_key("aliases_emojis")) { load_aliases }
+    Discourse.cache.fetch(cache_key("aliases_emojis")) { db['aliases'] }
   end
 
   def self.custom
     Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
+  end
+
+  def self.tonable_emojis
+    Discourse.cache.fetch(cache_key("tonable_emojis")) { db['tonableEmojis'] }
   end
 
   def self.exists?(name)
@@ -63,30 +67,11 @@ class Emoji
   end
 
   def self.db
-    return @db if @db
-    @db = File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
-
-    # Small tweak to `emoji.json` from Emoji one
-    @db['emojis'] << {"code" => "1f44d", "name" => "+1", "filename" => "thumbsup"}
-    @db['emojis'] << {"code" => "1f44e", "name" => "-1", "filename" => "thumbsdown"}
-
-    @db
+    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
   end
 
   def self.load_standard
     db['emojis'].map {|e| Emoji.create_from_db_item(e) }
-  end
-
-  def self.load_aliases
-    return @aliases if @aliases
-
-    @aliases ||= db['aliases']
-
-    # Fix how `slightly_smiling` was mislabeled
-    @aliases['slight_smile'] ||= []
-    @aliases['slight_smile'] << 'slightly_smiling'
-
-    @aliases
   end
 
   def self.load_custom
