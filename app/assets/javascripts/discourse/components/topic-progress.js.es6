@@ -92,10 +92,14 @@ export default Ember.Component.extend({
     if (!this._totalWidth) {
       this._totalWidth = $topicProgress[0].offsetWidth;
     }
+
+    // Only show percentage once we have one
+    if (!this._streamPercentage) { return; }
+
     const totalWidth = this._totalWidth;
     const progressWidth = (this._streamPercentage || 0) * totalWidth;
-
     const borderSize = (progressWidth === totalWidth) ? "0px" : "1px";
+
     const $bg = $topicProgress.find('.bg');
     if ($bg.length === 0) {
       const style = `border-right-width: ${borderSize}; width: ${progressWidth}px`;
