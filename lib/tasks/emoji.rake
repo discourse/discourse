@@ -211,7 +211,7 @@ EMOJI_ALIASES ||= {
   "fleur_de_lis" => [ "fleur-de-lis" ],
 }
 
-EMOJI_GROUPS = [
+EMOJI_GROUPS ||= [
   {
     "name" => "people",
     "fullname" => "People",
