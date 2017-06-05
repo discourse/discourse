@@ -338,7 +338,7 @@ export default Ember.Component.extend({
       },
 
       onKeyUp(text, cp) {
-        var subtext = text.substring(0, cp);
+        const subtext = text.substring(0, cp);
         return subtext.match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gm);
       },
 
@@ -377,7 +377,7 @@ export default Ember.Component.extend({
             return resolve([translations[full]]);
           }
 
-          let match = term.match(/^:?(.*?):t(\d)?$/);
+          const match = term.match(/^:?(.*?):t(\d)?$/);
           if (match) {
             let name = match[1];
             let scale = match[2];

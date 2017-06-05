@@ -64,7 +64,7 @@ export function buildEmojiUrl(code, opts) {
     url = opts.customEmoji[code];
   }
 
-  let noToneMatch = code.match(/(.?[\w-]*)?:?/);
+  const noToneMatch = code.match(/(.?[\w-]*)?:?/);
   if (noToneMatch && !url && (emojiHash.hasOwnProperty(noToneMatch[1]) || aliasHash.hasOwnProperty(noToneMatch[1]))) {
     url = opts.getURL(`/images/emoji/${opts.emojiSet}/${code.replace(/:t/, '/')}.png`);
   }
