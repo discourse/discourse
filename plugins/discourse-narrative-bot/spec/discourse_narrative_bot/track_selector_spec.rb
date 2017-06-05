@@ -127,9 +127,6 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(post_action.post).to eq(post)
             expect(post_action.post_action_type_id).to eq(PostActionType.types[:like])
-
-            post = Post.last
-
             expect(Post.last).to eq(post)
 
             expect(DiscourseNarrativeBot::NewUserNarrative.new.get_data(user)['state'])
