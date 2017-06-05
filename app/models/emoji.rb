@@ -144,11 +144,20 @@ class Emoji
   def self.lookup_unicode(name)
     @reverse_map ||= begin
       map = {}
+
       db['emojis'].each do |e|
         next if e['name'] == 'tm'
         code = replacement_code(e['code'])
         map[e['name']] = code if code
       end
+
+      Emoji.aliases.each do |key, alias_names|
+        next unless alias_code = map[key]
+        alias_names.each do |alias_name|
+          map[alias_name] = alias_code
+        end
+      end
+
       map
     end
     @reverse_map[name]
