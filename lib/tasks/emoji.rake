@@ -1,5 +1,6 @@
 require "active_support/core_ext/object/blank"
 require "active_support/core_ext/hash/deep_merge"
+require "active_support/test_case"
 require "base64"
 require "fileutils"
 require "image_optim"
@@ -2337,87 +2338,14 @@ task "emoji:update" do
 
   puts "\r\n"
   $debugging_output.each { |debug| puts debug }
+
+  TestEmojiUpdate.run_and_summarize
 end
 
 desc "test the emoji generation script"
 task "emoji:test" do
   ENV['EMOJI_TEST'] = "1"
-  require "active_support/test_case"
-
-  class TestEmojiUpdate < MiniTest::Test
-    def setup
-      Rake::Task["emoji:update"].invoke
-    end
-
-    def image_path(style, name)
-      File.join("public", "images", "emoji", style, "#{name}.png")
-    end
-
-    def test_code_to_emoji
-      assert_equal "😎", code_to_emoji("1f60e")
-    end
-
-    def test_codepoints_to_code
-      assert_equal "1f6b5_200d_2640", codepoints_to_code([128693, 8205, 9792, 65039], false)
-    end
-
-    def test_codepoints_to_code_with_scale
-      assert_equal "1f6b5_200d_2640_fe0f", codepoints_to_code([128693, 8205, 9792, 65039], true)
-    end
-
-    def test_groups_js_es6_creation
-      assert File.exists?(EMOJI_GROUPS_PATH)
-      assert File.size?(EMOJI_GROUPS_PATH)
-    end
-
-    def test_db_json_creation
-      assert File.exists?(EMOJI_DB_PATH)
-      assert File.size?(EMOJI_DB_PATH)
-    end
-
-    def test_alias_creation
-      original_image = image_path("apple", "right_anger_bubble")
-      alias_image = image_path("apple", "anger_right")
-
-      assert_equal File.size(original_image), File.size(alias_image)
-    end
-
-    def test_cell_index_patch
-      original_image = image_path("apple", "snowboarder")
-      alias_image = image_path("twitter", "snowboarder")
-
-      assert_equal File.size(original_image), File.size(alias_image)
-    end
-
-    def test_scales
-      original_image = image_path("apple", "blonde_woman")
-      assert File.exists?(original_image)
-      assert File.size?(original_image)
-
-      (2..6).each do |scale|
-        image = image_path("apple", "blonde_woman/#{scale}")
-        assert File.exists?(image)
-        assert File.size?(image)
-      end
-    end
-
-    def test_generate_emoji_scales
-      actual = generate_emoji_scales("sleeping_bed", "1f6cc")
-      expected = {
-        "1f6cc_1f3fb" => { :name => "sleeping_bed/2", :fitzpatrick_scale => false },
-        "1f6cc_1f3fc" => { :name => "sleeping_bed/3", :fitzpatrick_scale => false },
-        "1f6cc_1f3fd" => { :name => "sleeping_bed/4", :fitzpatrick_scale => false },
-        "1f6cc_1f3fe" => { :name => "sleeping_bed/5", :fitzpatrick_scale => false },
-        "1f6cc_1f3ff" => { :name => "sleeping_bed/6", :fitzpatrick_scale => false }
-      }
-
-      assert_equal expected, actual
-    end
-  end
-
-  reporter = Minitest::SummaryReporter.new
-  TestEmojiUpdate.run(reporter)
-  puts reporter.to_s
+  Rake::Task["emoji:update"].invoke
 end
 
 def write_emojis(emojis)
@@ -2689,4 +2617,79 @@ def confirm_overwrite(path)
 
   STDOUT.puts("[!] You are about to overwrite #{path}, are you sure? [CTRL+c] to cancel, [ENTER] to continue")
   STDIN.gets.chomp
+end
+
+
+class TestEmojiUpdate < MiniTest::Test
+  def self.run_and_summarize
+    puts "Runnings tests..."
+    reporter = Minitest::SummaryReporter.new
+    TestEmojiUpdate.run(reporter)
+    puts reporter.to_s
+  end
+
+  def image_path(style, name)
+    File.join("public", "images", "emoji", style, "#{name}.png")
+  end
+
+  def test_code_to_emoji
+    assert_equal "😎", code_to_emoji("1f60e")
+  end
+
+  def test_codepoints_to_code
+    assert_equal "1f6b5_200d_2640", codepoints_to_code([128693, 8205, 9792, 65039], false)
+  end
+
+  def test_codepoints_to_code_with_scale
+    assert_equal "1f6b5_200d_2640_fe0f", codepoints_to_code([128693, 8205, 9792, 65039], true)
+  end
+
+  def test_groups_js_es6_creation
+    assert File.exists?(EMOJI_GROUPS_PATH)
+    assert File.size?(EMOJI_GROUPS_PATH)
+  end
+
+  def test_db_json_creation
+    assert File.exists?(EMOJI_DB_PATH)
+    assert File.size?(EMOJI_DB_PATH)
+  end
+
+  def test_alias_creation
+    original_image = image_path("apple", "right_anger_bubble")
+    alias_image = image_path("apple", "anger_right")
+
+    assert_equal File.size(original_image), File.size(alias_image)
+  end
+
+  def test_cell_index_patch
+    original_image = image_path("apple", "snowboarder")
+    alias_image = image_path("twitter", "snowboarder")
+
+    assert_equal File.size(original_image), File.size(alias_image)
+  end
+
+  def test_scales
+    original_image = image_path("apple", "blonde_woman")
+    assert File.exists?(original_image)
+    assert File.size?(original_image)
+
+    (2..6).each do |scale|
+      image = image_path("apple", "blonde_woman/#{scale}")
+      assert File.exists?(image)
+      assert File.size?(image)
+    end
+  end
+
+  def test_generate_emoji_scales
+    actual = generate_emoji_scales("sleeping_bed", "1f6cc")
+    expected = {
+      "1f6cc_1f3fb" => { :name => "sleeping_bed/2", :fitzpatrick_scale => false },
+      "1f6cc_1f3fc" => { :name => "sleeping_bed/3", :fitzpatrick_scale => false },
+      "1f6cc_1f3fd" => { :name => "sleeping_bed/4", :fitzpatrick_scale => false },
+      "1f6cc_1f3fe" => { :name => "sleeping_bed/5", :fitzpatrick_scale => false },
+      "1f6cc_1f3ff" => { :name => "sleeping_bed/6", :fitzpatrick_scale => false }
+    }
+
+    assert_equal expected, actual
+  end
 end
