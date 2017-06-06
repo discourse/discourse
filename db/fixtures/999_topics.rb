@@ -108,6 +108,6 @@ ColumnDropper.drop(
   },
   on_drop: ->(){
     STDERR.puts "Removing superflous topic columns!"
-  }
+  },
   delay: 3600
 )
