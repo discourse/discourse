@@ -144,9 +144,17 @@ module Oneboxer
     def self.onebox_raw(url)
 
       Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-        uri = FinalDestination.new(url).resolve
+        fd = FinalDestination.new(url)
+        uri = fd.resolve
         return blank_onebox if uri.blank? || SiteSetting.onebox_domains_blacklist.include?(uri.hostname)
-        options = { cache: {}, max_width: 695, sanitize_config: Sanitize::Config::DISCOURSE_ONEBOX }
+        options = {
+          cache: {},
+          max_width: 695,
+          sanitize_config: Sanitize::Config::DISCOURSE_ONEBOX
+        }
+
+        options[:cookie] = fd.cookie if fd.cookie
+
         r = Onebox.preview(url, options)
         { onebox: r.to_s, preview: r.try(:placeholder_html).to_s }
       end
