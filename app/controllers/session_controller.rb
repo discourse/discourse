@@ -188,7 +188,7 @@ class SessionController < ApplicationController
     params.require(:login)
     params.require(:password)
 
-    return invalid_credentials if params[:password].length > User.max_password_length
+    return invalid_credentials if User.password_too_long?(params[:password])
 
     login = params[:login].strip
     login = login[1..-1] if login[0] == "@"

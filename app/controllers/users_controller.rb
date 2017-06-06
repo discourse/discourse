@@ -299,7 +299,7 @@ class UsersController < ApplicationController
       return fail_with("login.new_registrations_disabled")
     end
 
-    if params[:password] && params[:password].length > User.max_password_length
+    if User.password_too_long?(params[:password])
       return fail_with("login.password_too_long")
     end
 
@@ -412,7 +412,7 @@ class UsersController < ApplicationController
     if !@user
       @error = I18n.t('password_reset.no_token')
     elsif request.put?
-      @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
+      @invalid_password = params[:password].blank? || User.password_too_long?(params[:password])
 
       if @invalid_password
         @user.errors.add(:password, :invalid)
