@@ -155,7 +155,7 @@ module Oneboxer
 
         options[:cookie] = fd.cookie if fd.cookie
 
-        r = Onebox.preview(url, options)
+        r = Onebox.preview(uri.to_s, options)
         { onebox: r.to_s, preview: r.try(:placeholder_html).to_s }
       end
     rescue => e
