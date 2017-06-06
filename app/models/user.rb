@@ -1076,7 +1076,7 @@ class User < ActiveRecord::Base
   end
 
   def self.password_too_long?(password)
-    password.size > User.max_password_length
+    password.to_s.size > User.max_password_length
   end
 
   private
