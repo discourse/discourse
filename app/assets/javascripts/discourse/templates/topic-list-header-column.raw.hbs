@@ -1,12 +1,14 @@
 <th data-sort-order='{{order}}' class='{{view.className}}'>
-  {{~#if showBulkToggle}}
-      <button class='btn bulk-select' title='{{i18n "topics.bulk.toggle"}}'><i class='fa fa-list'></i></button>
-  {{/if ~}}
-  {{~#if bulkSelectEnabled}}
-    <span class='bulk-select-topics'>
-      <button class='btn bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
-      <button class='btn bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
-    </span>
+  {{~#if canBulkSelect}}
+    {{~#if showBulkToggle}}
+        <button class='btn bulk-select' title='{{i18n "topics.bulk.toggle"}}'><i class='fa fa-list'></i></button>
+    {{/if ~}}
+    {{~#if bulkSelectEnabled}}
+      <span class='bulk-select-topics'>
+        <button class='btn bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
+        <button class='btn bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
+      </span>
+    {{/if ~}}
   {{/if ~}}
   {{view.localizedName}}
   {{~#if view.isSorting}}
