@@ -1,5 +1,7 @@
 module DiscourseNarrativeBot
   module Actions
+    TIMEOUT_DURATION = 900 # 15 mins
+
     def discobot_user
       @discobot ||= User.find(-2)
     end
