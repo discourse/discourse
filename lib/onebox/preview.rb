@@ -66,7 +66,11 @@ module Onebox
 
       def engine
         return nil unless @engine_class
-        @engine ||= @engine_class.new(@url, cache)
+        return @engine if @engine
+
+        @engine = @engine_class.new(@url, cache)
+        @engine.options = @options
+        @engine
       end
 
       class InvalidURI < StandardError; end

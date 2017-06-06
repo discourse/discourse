@@ -50,7 +50,14 @@ module Onebox
       protected
 
         def html_doc
-          @html_doc ||= Nokogiri::HTML((Onebox::Helpers.fetch_response(url) rescue nil))
+          return @html_doc if @html_doc
+
+          headers = nil
+          headers = { 'Cookie' => options[:cookie] } if options[:cookie]
+
+          response = (Onebox::Helpers.fetch_response(url, nil, nil, headers) rescue nil)
+
+          @html_doc = Nokogiri::HTML(response)
         end
 
         def get_oembed

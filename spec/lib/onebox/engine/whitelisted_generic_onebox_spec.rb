@@ -83,6 +83,20 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     end
   end
 
+  describe "cookie support" do
+    let(:url) { "http://cookie-test.com" }
+    before do
+      fake(url, response('dailymail'))
+    end
+
+    it "sends the cookie with the request" do
+      onebox = described_class.new(url)
+      onebox.options = { cookie: "evil=trout" }
+      expect(onebox.to_html).not_to be_empty
+      expect(FakeWeb.last_request['Cookie']).to eq('evil=trout')
+    end
+  end
+
   describe 'to_html' do
     after(:each) do
       Onebox.options = Onebox::DEFAULTS

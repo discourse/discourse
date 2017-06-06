@@ -39,8 +39,9 @@ module Onebox
       og
     end
 
-    def self.fetch_response(location, limit=5, domain=nil, headers=nil)
+    def self.fetch_response(location, limit=nil, domain=nil, headers=nil)
 
+      limit ||= 5
       limit = Onebox.options.redirect_limit if limit > Onebox.options.redirect_limit
 
       raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
@@ -70,7 +71,7 @@ module Onebox
         http.request(request) do |response|
 
           if cookie = response.get_fields('set-cookie')
-            header = { 'cookie' => cookie.join }
+            header = { 'Cookie' => cookie.join }
           end
 
           header = nil unless header.is_a? Hash
