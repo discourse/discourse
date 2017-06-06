@@ -188,6 +188,19 @@ describe DiscourseNarrativeBot::TrackSelector do
             end
           end
         end
+
+        context 'when a new user is added into the topic' do
+          before do
+            topic.allowed_users << Fabricate(:user)
+          end
+
+          it 'should stop the new user track' do
+            post
+
+            expect { described_class.new(:reply, user, post_id: post.id).select }
+              .to_not change { Post.count }
+          end
+        end
       end
 
       context 'at the end of a tutorial track' do
