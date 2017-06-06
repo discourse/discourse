@@ -628,6 +628,16 @@ describe Search do
 
     end
 
+    it 'can find posts with images' do
+      post_uploaded = Fabricate(:post_with_uploaded_image)
+      post_with_image_urls = Fabricate(:post_with_image_urls)
+      Fabricate(:post)
+      TopicLink.extract_from(post_uploaded)
+      TopicLink.extract_from(post_with_image_urls)
+
+      expect(Search.execute('in:image').posts.map(&:id).sort).to eq([post_uploaded.id, post_with_image_urls.id].sort)
+    end
+
     it 'can find by latest' do
       topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
       post1 = Fabricate(:post, topic: topic1)
