@@ -1209,6 +1209,18 @@ describe User do
 
   end
 
+  describe "password_too_long" do
+    let(:password_max_length) { 'x' * User.max_password_length }
+
+    it "is not too long" do
+      expect(User.password_too_long?(password_max_length)).to eq false
+    end
+
+    it "is too long" do
+      expect(User.password_too_long?(password_max_length + 'x')).to eq true
+    end
+  end
+
   describe "automatic group membership" do
 
     let!(:group) {

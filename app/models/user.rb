@@ -1075,6 +1075,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.password_too_long?(password)
+    password.size > User.max_password_length
+  end
+
   private
 
   def previous_visit_at_update_required?(timestamp)
