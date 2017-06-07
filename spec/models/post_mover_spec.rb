@@ -357,7 +357,8 @@ describe PostMover do
         it "adds a moderator post at the location of the first moved post" do
           topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
 
-          expect(topic.posts).to include(have_attributes(post_type: Post.types[:small_action], action_code: "split_topic", post_number: 2, sort_order: 2))
+          expect(topic.posts.find_by(post_number: p2.post_number, sort_order: p2.sort_order)).to \
+            have_attributes(post_type: Post.types[:small_action], action_code: "split_topic")
         end
       end
 
