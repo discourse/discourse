@@ -354,6 +354,7 @@ fr:
       request_membership_pm:
         title: "Demande d'adhésion"
         body: "Je souhaiterais adhérer à @%{groupName}."
+        disabled: "Niveau de confiance insuffisant pour demander l'adhésion au groupe"
       name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
       public: "Autoriser les utilisateurs à rejoindre/quitter le groupe librement (nécessite que le groupe soit visible)"
       empty:
@@ -488,7 +489,7 @@ fr:
       mute: "Silencieux"
       edit: "Modifier les préférences"
       download_archive:
-        button_text: "Télécharger mes messages"
+        button_text: "Tout télécharger"
         confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
         success: "Le téléchargement a démarré ; vous serez notifié par message lorsqu'il est terminé."
         rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
@@ -558,6 +559,7 @@ fr:
       watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces tags."
       muted_categories: "Silencieuses"
       muted_categories_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
+      no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut pas être annulée !"
       deleted_yourself: "Votre compte a été supprimé avec succès."
@@ -617,7 +619,6 @@ fr:
         title: "Modifier le pseudo"
         confirm: "Si vous changez votre pseudonyme, toutes les citations existantes de vos messages et les mentions avec votre @pseudo seront cassées. Êtes-vous sûr de vouloir le changer ?"
         taken: "Désolé, ce pseudo est déjà pris."
-        error: "Il y a eu une erreur lors du changement de votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
       change_email:
         title: "Modifier l'adresse de courriel"
@@ -993,6 +994,8 @@ fr:
       your_email: "L'adresse courriel de votre compte est <b>%{email}</b>."
       accept_invite: "Accepter l'invitation"
       success: "Votre compte a été créé et vous êtes maintenant connecté."
+      name_label: "Nom"
+      name_label_optional: "Nom (optionnel)"
       password_label: "Définir le mot de passe (facultatif)"
     password_reset:
       continue: "Continuer vers %{site_name}"
@@ -1031,6 +1034,7 @@ fr:
       cannot_see_mention:
         category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message privé. Vous devez inviter cet utilisateur à la discussion."
+      duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été publié dans le sujet par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse de {{ago}}</a> – êtes vous sûr de vouloir le publier à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -1120,6 +1124,7 @@ fr:
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>Vous avez gagné {{description}}</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nouveau sujet</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='message dans la boite de réception de groupe' class='fa fa-group'></i><p>{{count}} message dans votre boite de réception {{group_name}} </p>"
@@ -1236,6 +1241,7 @@ fr:
         select_all: "Tout sélectionner"
         clear_all: "Tout désélectionner"
         unlist_topics: "Ne plus lister les sujets"
+        relist_topics: "Lister les sujets"
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
         dismiss: "Ignorer"
@@ -1809,8 +1815,8 @@ fr:
       settings: 'Paramètres'
       topic_template: "Modèle de sujet"
       tags: "Tags"
-      tags_allowed_tags: "Tags pouvant être utilisés uniquement dans cette catégorie :"
-      tags_allowed_tag_groups: "Groupes de tags pouvant être utilisés uniquement dans cette catégorie :"
+      tags_allowed_tags: "N'autoriser que ces tags à être utilisés dans cette catégorie:"
+      tags_allowed_tag_groups: "N'autoriser que les tags de ces groupes à être utilisés dans cette catégorie:"
       tags_placeholder: "(Facultatif) liste des tags autorisés"
       tag_groups_placeholder: "(Facultatif) liste des groupes de tags autorisés"
       topic_featured_link_allowed: "Autoriser les sujets avec lien dans cette catégorie"
@@ -1844,7 +1850,7 @@ fr:
       email_in: "Adresse de courriel entrant personnalisée :"
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
-      email_in_disabled_click: 'activer le paramètre "email in".'
+      email_in_disabled_click: 'activer le paramètre « email in ».'
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
@@ -2612,6 +2618,9 @@ fr:
           custom_sections: "Sections personnalisées :"
           theme_components: "Composants du thème :"
           uploads: "Uploads"
+          no_uploads: "Vous pouvez envoyer des ressources associées à votre thème comme des polices ou des images"
+          add_upload: "Ajouter un fichier"
+          upload_file_tip: "Choisir un fichier à téléverser (png, woff2, etc.)"
           variable_name: "Nom de variable SCSS:"
           upload: "Upload"
           child_themes_check: "Thème incluant d'autres thèmes"
@@ -2778,6 +2787,8 @@ fr:
           block: "bloquer"
           do_nothing: "ne rien faire"
         staff_actions:
+          all: "tout"
+          filter: "Filtre :"
           title: "Actions des responsables"
           clear_filters: "Tout afficher"
           staff_user: "Responsable"
@@ -2831,6 +2842,8 @@ fr:
             change_readonly_mode: "changer le mode de lecteur seule"
             backup_download: "télécharger la sauvegarde"
             backup_destroy: "détruire la sauvegarde"
+            reviewed_post: "message vérifié"
+            custom_staff: "action personnalisée de l'extension"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3003,6 +3016,7 @@ fr:
         reset_bounce_score:
           label: "Réinitialiser"
           title: "Réinitialiser le score de rejets à 0"
+        visit_profile: "Visiter <a href='%{url}'>la page de préférence de cet utilisateur</a> pour éditer son profil"
         deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse de courriel."
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
         block_explanation: "Un utilisateur bloqué ne peut pas écrire de messages ni créer de sujets."
@@ -3222,7 +3236,7 @@ fr:
         feed_settings: "Paramètres de flux RSS/ATOM"
         feed_description: "Fournir un flux RSS/ATOM pour votre site peut améliorer la capacité de Discourse à importer votre contenu."
         crawling_settings: "Paramètres de robot"
-        crawling_description: "Quand Discourse crée des sujets pour vos message, s'il n'y a pas de flux RSS/ATOM présent, il essayera de parser le contenu à partir du HTML. Parfois il peut être difficile d'extraire votre contenu, alors nous vous donnons ici la possibilité de spécifier des règles CSS pour faciliter l'extraction."
+        crawling_description: "Quand Discourse crée des sujets pour vos messages, si aucun flux RSS/ATOM n'est présent, il essayera d'extraire le contenu à partir du HTML. Parfois, cette extraction peut être difficile alors nous donnons la possibilité de définir des règles CSS pour faciliter l'extraction."
         embed_by_username: "Pseudo pour création de sujet"
         embed_post_limit: "Le nombre maximum de messages à intégrer"
         embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
@@ -3233,6 +3247,7 @@ fr:
         embed_classname_whitelist: "Classes CSS autorisées"
         feed_polling_enabled: "Importer les messages via flux RSS/ATOM"
         feed_polling_url: "URL du flux RSS/ATOM à importer"
+        feed_polling_frequency_mins: "Fréquence de rafraichissement du flux (en minutes)"
         save: "Sauvegarder les paramètres d'intégration"
       permalink:
         title: "Permaliens"

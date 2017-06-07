@@ -348,7 +348,6 @@ zh_CN:
   staff_category_name: "管理人员"
   staff_category_description: "管理人员可见的分类。只有管理员和版主才能阅览主题。"
   assets_topic_title: "站点设计资料"
-  assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传你想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交你的回复添加帖子。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "欢迎来到 Discourse"
     body: |2

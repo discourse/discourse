@@ -280,7 +280,6 @@ pt:
   meta_category_description: "Discussão sobre este sítio, a sua organização, como funciona, e como podemos melhorá-lo."
   staff_category_name: "Pessoal"
   staff_category_description: "Categoria privada para discussões do pessoal. Os tópicos estão apenas visíveis para administradores e moderadores."
-  assets_topic_body: "Este é um tópico permanente, visível apenas à equipa de apoio, para armazenar imagens e ficheiros usados no design do sítio. Não o apague!\n\n\nVeja como:\n\n\n1. Responda a este tópico.\n2. Carregue todas as imagens que deseja usar para os logótipos, favicons, e tudo o mais. (Use o ícone da ferramenta de carregamento neste editor de mensagens, arraste ou cole imagens).\n3. Submeta a sua resposta.\n4. Clique com o botão direito do rato nas imagens da sua nova mensagem para obter o caminho das imagens submetidas, ou carregue no ícone de edição para editar a sua mensagem e recuperar o caminho para as imagens. Copie os caminhos das imagens.\n5. Cole esses caminhos em [configurações básicas](/admin/site_settings/category/required).\n\n\nSe precisar de ativar o carregamento de diferentes tipos de ficheiros, edite `authorized_extensions` em [configurações de ficheiros](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2+

@@ -484,7 +484,6 @@ gl:
       change_username:
         title: "Cambiar o nome do usuario"
         taken: "Sentímolo pero este nome xa está en uso."
-        error: "Produciuse un erro cambiando o teu nome de usuario."
         invalid: "Este usuario é incorrecto. Só pode contar números e letras."
       change_email:
         title: "Cambiar o correo electrónico"

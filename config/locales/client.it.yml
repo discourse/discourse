@@ -487,7 +487,6 @@ it:
       mute: "Ignora"
       edit: "Modifica opzioni"
       download_archive:
-        button_text: "Scarica i Miei Messaggi"
         confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
         rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, riprova domani."
@@ -616,7 +615,6 @@ it:
         title: "Cambia Utente"
         confirm: "Se modifichi il nome utente, tutte le precedenti menzioni al tuo @nome non saranno più valide. Sei assolutamente sicuro di volerlo fare?"
         taken: "Spiacenti, questo nome utente è già riservato."
-        error: "C'è stato un problema nel cambio del tuo nome utente."
         invalid: "Nome utente non valido: usa solo lettere e cifre"
       change_email:
         title: "Cambia email"
@@ -1736,8 +1734,6 @@ it:
       settings: 'Impostazioni'
       topic_template: "Modello di Argomento"
       tags: "Etichette"
-      tags_allowed_tags: "Etichette che si possono usare soltanto in questa categoria:"
-      tags_allowed_tag_groups: "Aggiungi etichette ai gruppi che possono essere utilizzati unicamente in questa categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"

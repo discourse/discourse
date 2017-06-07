@@ -354,6 +354,7 @@ fi:
       request_membership_pm:
         title: "Jäsenhakemus"
         body: "Haluaisin ryhmään @%{groupName}."
+        disabled: "Luottamustaso ei riitä ryhmäjäsenyyden anomiseen"
       name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
       public: "Salli jäsenten liittyä/poistua ryhmästä vapaasti (ryhmän tulee olla näkyvillä)"
       empty:
@@ -376,7 +377,7 @@ fi:
       user_count: "Jäsenmäärä"
       bio: "Tietoa ryhmästä"
       selector_placeholder: "Lisää jäseniä"
-      owner: "omistaja"
+      owner: "isäntä"
       visible: "Ryhmä näkyy kaikille käyttäjille"
       index:
         title: "Ryhmät"
@@ -488,7 +489,7 @@ fi:
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive:
-        button_text: "Lataa viestini"
+        button_text: "Lataa kaikki"
         confirm: "Haluatko varmasti ladata viestisi?"
         success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
         rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Yritä huomenna uudelleen."
@@ -559,6 +560,7 @@ fi:
       watched_first_post_tags_instructions: "Saat ilmoituksen uusista ketjuista, joilla on joku näistä tunnisteista."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa ilmoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
+      no_category_access: "Valvojana sinulla on rajoitetut oikeudet alueisiin, et voi tallentaa."
       delete_account: "Poista tilini"
       delete_account_confirm: "Oletko varma, että haluat lopullisesti poistaa käyttäjätilisi? Tätä toimintoa ei voi perua!"
       deleted_yourself: "Käyttäjätilisi on poistettu."
@@ -618,7 +620,6 @@ fi:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
         taken: "Pahoittelut, tuo nimi on jo käytössä."
-        error: "Käyttäjätunnuksen vaihdossa tapahtui virhe."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
       change_email:
         title: "Vaihda sähköposti"
@@ -1043,7 +1044,7 @@ fi:
         post_length: "Viestissä täytyy olla vähintään {{min}} merkkiä"
         try_like: 'Oletko jo kokeillut <i class="fa fa-heart"></i>-nappia?'
         category_missing: "Sinun täytyy valita viestille alue"
-      save_edit: "Tallenna muokkaus"
+      save_edit: "Tallenna"
       reply_original: "Vastaa alkuperäiseen ketjuun"
       reply_here: "Vastaa tänne"
       reply: "Vastaa"
@@ -1815,8 +1816,8 @@ fi:
       settings: 'Asetukset'
       topic_template: "Ketjun sapluuna"
       tags: "Tunnisteet"
-      tags_allowed_tags: "Tällä alueella sallitut tunnisteet:"
-      tags_allowed_tag_groups: "Tällä alueella sallitut tunnisteryhmät:"
+      tags_allowed_tags: "Salli vain nämä tunnisteet tällä alueella:"
+      tags_allowed_tag_groups: "Salli vain näiden tunnisteryhmien tunnisteet tällä alueella:"
       tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
       tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
@@ -2614,7 +2615,7 @@ fi:
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
           color_scheme: "Värimalli"
-          color_scheme_select: "Valitse värit, joita teema käyttä"
+          color_scheme_select: "Valitse teemalle värit"
           custom_sections: "Mukautetut osiot:"
           theme_components: "Teeman osat"
           uploads: "Lataukset"
@@ -2785,6 +2786,8 @@ fi:
           block: "estä"
           do_nothing: "älä tee mitään"
         staff_actions:
+          all: "kaikki"
+          filter: "Suodata:"
           title: "Henkilökunnan toimet"
           clear_filters: "Näytä kaikki"
           staff_user: "Palstan edustaja"
@@ -2838,6 +2841,8 @@ fi:
             change_readonly_mode: "muuta vain luku -tilaa"
             backup_download: "lataa varmuuskopio"
             backup_destroy: "tuhoa varmuuskopio"
+            reviewed_post: "arvioi viestin"
+            custom_staff: "lisäosan mukautettu toiminto"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."

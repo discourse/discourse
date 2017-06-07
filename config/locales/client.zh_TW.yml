@@ -449,7 +449,6 @@ zh_TW:
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive:
-        button_text: "下載我的文章"
         confirm: "你確定要下載你的文章嗎?"
         success: "開始下載，處理完畢後將以私人訊息通知您。"
         rate_limit_error: "帖子只能每天下載一次，請明天再重試。"
@@ -566,7 +565,6 @@ zh_TW:
         title: "修改用戶名稱"
         confirm: "確定更換用戶名？你的帖子和@提及你的引用將失效。"
         taken: "抱歉，此用戶名稱已經有人使用。"
-        error: "修改你的用戶名稱時發生錯誤。"
         invalid: "此用戶名稱無效，只能使用數字與英文字母。"
       change_email:
         title: "修改電子郵件地址"
@@ -1632,8 +1630,6 @@ zh_TW:
       settings: '設定'
       topic_template: "主題範本"
       tags: "標籤"
-      tags_allowed_tags: "僅在該分類內可以使用的標籤"
-      tags_allowed_tag_groups: "僅在該分類內可以使用的標籤組"
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
       topic_featured_link_allowed: "運行在該分類中發佈特色連結"

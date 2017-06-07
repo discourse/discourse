@@ -162,7 +162,7 @@ fi:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          Siistiä! Suurin osa <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla yksin omalla rivillään; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
+          Siistiä! Suurin osa <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
         not_found: |-
           Voi ei, en löytänyt linkkiä vastauksestasi! :cry:
 
@@ -173,7 +173,7 @@ fi:
         instructions: |-
           Tämä on kuva yksisarvisesta:
 
-          <img src="%{base_uri}/images/unicorn.jpg" width="520" height="381">
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
 
           Jos pidät siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla tykkää-nappia :heart: tämän viestin alla.
 
@@ -235,7 +235,7 @@ fi:
 
           - Laita kaksoispiste <kbd>:</kbd> ja sen perään emojin nimi `:tada:`
 
-          - Paina editorin tai mobiililaitteesi näppäimistön emoji-kuvaketta <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16">.
+          - Paina editorin tai mobiililaitteesi näppäimistön emoji-kuvaketta <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16">
         reply: |-
           :sparkles: _Emojinomaista!_ :sparkles:
         not_found: |-

@@ -459,7 +459,6 @@ zh_CN:
       mute: "防打扰"
       edit: "修改设置"
       download_archive:
-        button_text: "下载我的帖子"
         confirm: "你确定要下载你的帖子吗？"
         success: "下载开始，完成后将有私信通知你。"
         rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
@@ -588,7 +587,6 @@ zh_CN:
         title: "更换用户名"
         confirm: "确定更换用户名？你的帖子和@提及你的引用将失效。"
         taken: "抱歉，此用户名已经有人使用了。"
-        error: "修改你的用户名时出错了。"
         invalid: "此用户名不合法，用户名只能包含字母和数字"
       change_email:
         title: "更换邮箱"
@@ -855,8 +853,8 @@ zh_CN:
       hide_session: "明天提醒我"
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
-      intro: "你好！:heart_eyes: 看起来你挺喜欢这样的讨论，可是你还没有注册账户。"
-      value_prop: "当你创建账户后，我们可以准确地记录你的阅读进度，这样你能够在下一次访问时回到你上次阅读到的地方。你也可以选择接受新帖子的网页和邮件通知。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
+      intro: "嘿！:heart_eyes: 看起来你正欣赏讨论，但你没有注册帐号。"
+      value_prop: "你创建一个帐号后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -1335,7 +1333,7 @@ zh_CN:
         auto_open: "本主题将在%{timeLeft}自动开启。"
         auto_close: "本主题将在%{timeLeft}自动关闭。"
         auto_publish_to_category: "主题%{timeLeft}将发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
-        auto_close_based_on_last_post: "主题在%{duration}内没有新回复后将被关闭。"
+        auto_close_based_on_last_post: "如在 %{duration}内没有新回复后主题将被关闭。"
         auto_delete: "主题在%{timeLeft}后将被自动删除。"
         auto_reminder: "你将在%{timeLeft}后收到该主题的提醒。"
       auto_close_title: '自动关闭设置'
@@ -1728,8 +1726,6 @@ zh_CN:
       settings: '设置'
       topic_template: "主题模板"
       tags: "标签"
-      tags_allowed_tags: "仅在该分类内可以使用的标签"
-      tags_allowed_tag_groups: "仅在该分类内可以使用的标签组"
       tags_placeholder: "（可选）允许使用的标签列表"
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
       topic_featured_link_allowed: "运行在该分类中发布特色链接"

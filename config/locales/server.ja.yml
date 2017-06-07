@@ -198,7 +198,6 @@ ja:
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフのためのプライベートカテゴリです。トピックは管理者とモデレータのみが閲覧できます"
-  assets_topic_body: "これはパーマネントトピックです。スタッフのみが閲覧でき、サイトデザインに使用する画像とファイルを保存するために使用します。削除しないでください！\n\n利用方法:\n\n\n1. このトピックに回答\n2. ロゴやファビコンなどに使用する全ての画像をアップロード(エディタのアップロードアイコンか、ドラッグアンドドロップで画像を貼付ける)\n3. 回答を投稿\n4. 新しい投稿の画像を右クリックしてアップロード済み画像のパスを取得するか、編集アイコンをクリックして画像のパスを探し、画像パスをコピーする\n5. 画像パスを[基本設定](/admin/site_settings/category/required)に貼付ける\n\nもし、別のファイルタイプが必要な場合、[ファイル設定](/admin/site_settings/category/files)の`サポートするファイルの拡張` を編集してください"
   lounge_welcome:
     title: "ラウンジへようこそ"
     body: |2

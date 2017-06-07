@@ -458,7 +458,6 @@ vi:
       mute: "Im lặng"
       edit: "Tùy chỉnh"
       download_archive:
-        button_text: "Tải các bài viết của tôi"
         confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
         success: "Quá trình tải về đã bắt đầu, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
         rate_limit_error: "Bài viết chỉ được tải về một lần mỗi người, hãy thử lại vào ngày mai."
@@ -581,7 +580,6 @@ vi:
         title: "Thay Username"
         confirm: "Nếu bạn thay đổi tên đăng nhập, tất cả những liên kết người khác nhắc đến bạn @name sẽ bị lỗi. Bạn chắc chắn muốn thay đổi chứ?"
         taken: "Xin lỗi, đã có username này."
-        error: "Có lỗi trong khi thay đổi username của bạn."
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự  là chữ cái và chữ số. "
       change_email:
         title: "Thay đổi Email"
@@ -1611,7 +1609,6 @@ vi:
       settings: 'Cấu hình'
       topic_template: "Mẫu Chủ đề"
       tags: "Thẻ"
-      tags_allowed_tags: "Thẻ chỉ được dùng ở chuyên mục này"
       tags_placeholder: "(Tuỳ chọn) danh sách thẻ cho phép"
       delete: 'Xóa chuyên mục'
       create: 'Chuyên mục mới'

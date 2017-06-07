@@ -15,10 +15,36 @@ he:
     discourse_narrative_bot_welcome_post_delay: "המתנה של (n) שניות לפני שליחת פוסט ברוכים הבאים של בוט הסיפורים של דיסקורס."
   badges:
     certified:
+      name: מוסמך
       description: "סיימו את הדרכת המשתמשים החדשים שלנו"
+      long_description: |
+        עיטור זה מוענק עם סיומו המוצלח של המדריך האינטראקטיבי למשתמש החדש. נקטתם יוזמה ללמוד כלים בסיסיים של דיון, וכעת אתם מוסמכים!
+    licensed:
+      name: מורשה
+      description: "השלימו את מדריך המשתמשים המתקדם שלנו"
+      long_description: |
+        עיטור זה ניתן בעבור השלמה של מדריך המשתמשים המתקדמים האינטראקטיבי. אתם שולטים בכלי דיון מתקדמים - וכעת יש לכם רשיון!
   discourse_narrative_bot:
+    bio: "הי, אני לא בן אדם אמיתי. אני בוט שיכול ללמד אתכם על האתר הזה. כדי לתקשר איתי, שילחו אלי הודעה או איזכור **`@%{discobot_username}`** בכל מקום שהוא."
+    timeout:
+      message: |-
+        הי %{username}, רק בודק כי לא שמעתי מכם מזה זמן.
+
+        - כדי להמשיך, ענו לי בכל זמן.
+
+        - אם תרצו לדלג על שלב זה, אימרו `%{skip_trigger}`.
+
+        - כדי להתחיל מחדש, אימרו `%{reset_trigger}`.
+
+        אם תעדיפו שלא, זה לגמרי בסדר. אני רובוט. לא תפגעו ברגשות שלי. :sob:
     dice:
       trigger: "גלגול"
+      invalid: |-
+        אני מצטער, אך זה מתמטית בלתי אפשרי לגלגל שילוב זה של קוביות. :confounded:
+      not_enough_dice: |-
+        יש לי רק %{num_of_dice} קוביות. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
+      out_of_range: |-
+        ידעתם ש[המספר המקסימלי של צדדים](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) לקוביה הוגנת מתמטית הוא 120?
       results: |-
         > :game_die: %{results}
     quote:
@@ -34,6 +60,7 @@ he:
         author: "ד״ר סוס"
       '4':
         quote: "אם אתם רוצים שמשהו יתבצע כמו שצריך, עשו זאת בעצמכם."
+        author: "צ׳ארלס-גילאום אטין"
       '5':
         quote: "האמינו שאתם יכולים ואתם מחצית הדרך לשם."
         author: "תאודור רוזוולט"
@@ -58,10 +85,12 @@ he:
       trigger: 'מזלות'
       answers:
         '1': "זה וודאי"
+        '2': "זה מוחלט כך"
         '3': "ללא ספק"
         '4': "כן בהחלט"
         '5': "אתם יכולים לסמוך על כך"
         '6': "כפי שאני רואה זאת, כן"
+        '7': "קרוב לוודאי"
         '8': "תחזית טובה"
         '9': "כן"
         '10': "הסימנים מראים שכן"
@@ -80,11 +109,26 @@ he:
       reset_trigger: 'התחלה'
       skip_trigger: 'דילוג'
       help_trigger: 'הצגת עזרה'
+      random_mention:
+        reply: |-
+          הי! כדי לגלות מה אני יכול לעשות, אימרו `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          אני כרגע יודע איך לעשות את הדברים הבאים:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > מתחיל את אחד הסיפורים האינטראקטיביים הבאים: %{tracks}.
       do_not_understand:
         first_response: |-
           הי, תודה על התגובה!
 
           לצערי, כבוט שתוכנת בצורה גרועה, אני לא ממש מבין את זה. :frowning:
+        track_response: אתם יכולים לנסות שוב, או אם אתם מעדיפים לדלג על שלב זה, אימרו `%{skip_trigger}`. אחרת, כדי להתחיל מחדש, אימרו `%{reset_trigger}`.
+        second_response: |-
+          או, מצטער. אני עדיין לא מבין. :anguished:
+
+          אני רק בוט, אבל אם תרצו לפנות לאדם אמיתי, בידקו את [דף יצירת הקשר](/about).
+
+          בינתיים, אשאר מחוץ לדרככם.
     new_user_narrative:
       reset_trigger: "משתמש/ת חדש/ה"
       cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדש"
@@ -99,3 +143,9 @@ he:
       reset_trigger: 'משתמש/ת מתקדם/ת'
       cert_title: "כהוקרה כל סיום מוצלח של מדריך המשתמשים המתקדמים"
       title: ':arrow_up: יכולות משתמשים מתקדמים'
+      recover:
+        deleted_post_raw: 'מדוע @%{discobot_username} מחק/ה את הפוסט שלי? :anguished:'
+        instructions: |-
+          הו לא! נראה שבטעות מחקתי פוסט חדש שרק יצרתי עבורכם.
+
+          תוכלו לעזור לי <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **להשיב** אותו?

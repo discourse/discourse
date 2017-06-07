@@ -476,8 +476,6 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
-      download_archive:
-        button_text: "Download mých příspěvků"
       new_private_message: "Nová zpráva"
       private_message: "Zpráva"
       private_messages: "Zprávy"
@@ -588,7 +586,6 @@ cs:
         title: "Změnit uživatelské jméno"
         confirm: "Pokud si změníte vaše uživatelské jméno, všechny přechozí citace vašich příspěvků a zmínky vašeho @jména budou rozbité. Jste si absolutně jistý, že chcete potvrdit toto operaci?"
         taken: "Toto uživatelské jméno je již zabrané."
-        error: "Nastala chyba při změně uživatelského jména."
         invalid: "Uživatelské jméno je neplatné. Musí obsahovat pouze písmena a číslice."
       change_email:
         title: "Změnit emailovou adresu"
@@ -1732,8 +1729,6 @@ cs:
       settings: 'Nastavení'
       topic_template: "Šablona tématu"
       tags: "Štítky"
-      tags_allowed_tags: "Štítky, které mohou být použity pouze v této kategorii:"
-      tags_allowed_tag_groups: "Skupiny štítků, které mohou být použity pouze v této kategorii:"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
       tag_groups_placeholder: "(Volitelné) seznam dovolených skupin štítků"
       delete: 'Smazat kategorii'

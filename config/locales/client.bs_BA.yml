@@ -479,7 +479,6 @@ bs_BA:
       mute: "Mutiraj"
       edit: "Uredi Postavke"
       download_archive:
-        button_text: "Preuzmite svoju objavu"
         confirm: "Da li ste sigurni da želite preuzeti svoju objavu?"
         success: "Preuzimanje je započeto, bit će te obavješteni porukom kada proces bude završen."
         rate_limit_error: "Objava može biti preuzeta samo jedanput na dan, molimo vas da pokušate sutra ponovo."
@@ -597,7 +596,6 @@ bs_BA:
         title: "Change Username"
         confirm: "Ukoliko promijenite vaše korisničko ime, sva dosadašnja citiranja u vašim objavama te @ime spomeni će biti ugašeni/sa vašim eventualno novim nickom razdvojeni. Da li ste APSOLUTNO SIGURNI da to želite učiniti?"
         taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
       change_email:
         title: "Change Email"
