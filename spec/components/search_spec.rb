@@ -60,6 +60,18 @@ describe Search do
 
   end
 
+  it 'strips zero-width characters from search terms' do
+    term = "\u0063\u0061\u0070\u0079\u200b\u200c\u200d\ufeff\u0062\u0061\u0072\u0061".encode("UTF-8")
+
+    expect(term == 'capybara').to eq(false)
+
+    search =  Search.new(term)
+    search.execute
+
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('capybara')
+  end
+
   it 'does not search when the search term is too small' do
     search = Search.new('evil', min_search_term_length: 5)
     search.execute
