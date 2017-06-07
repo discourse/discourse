@@ -307,12 +307,23 @@ describe UsersController do
         expect(user.user_auth_tokens.count).to eq(1)
       end
 
+      it "doesn't redirect to wizard on get" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
+        token = user.email_tokens.create(email: user.email).token
+        get :password_reset, token: token
+        expect(response).not_to redirect_to(wizard_path)
+      end
+
       it "redirects to the wizard if you're the first admin" do
         user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
         token = user.email_tokens.create(email: user.email).token
         get :password_reset, token: token
         put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
-        expect(response).to be_redirect
+        expect(response).to redirect_to(wizard_path)
       end
 
       it "doesn't invalidate the token when loading the page" do

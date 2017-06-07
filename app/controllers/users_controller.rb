@@ -434,7 +434,7 @@ class UsersController < ApplicationController
         else
           store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
         end
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
 
       format.json do
