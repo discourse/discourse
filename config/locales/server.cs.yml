@@ -221,7 +221,6 @@ cs:
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
-  assets_topic_body: "Tohle je permanentí téma, viditelné pouze redaktorům, pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nTady je jak:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte nebo „vložte“)\n3. Pošlete tuto odpověď\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu přípěvku a adresy vykopírujte tam.\n5. Vložte tyto adresy do [základního nastavení](/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Vítejte v Discourse"
   lounge_welcome:

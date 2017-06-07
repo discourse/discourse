@@ -361,7 +361,6 @@ de:
   staff_category_name: "Team"
   staff_category_description: "Geschützte Kategorie für das Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   assets_topic_title: "Mediendateien für das Seitendesign"
-  assets_topic_body: "Dies ist ein fester Beitrag, der nur für das Team sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Willkommen bei Discourse"
     body: |2

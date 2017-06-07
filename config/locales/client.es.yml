@@ -488,7 +488,6 @@ es:
       mute: "Silenciar"
       edit: "Editar Preferencias"
       download_archive:
-        button_text: "Descargar mis posts"
         confirm: "¿Seguro que quieres descargar tus posts?"
         success: "Descarga iniciada, se te notificará con un mensaje cuando el proceso se haya completado."
         rate_limit_error: "Los posts pueden ser descargados una vez al día. Por favor, inténtalo de nuevo mañana."
@@ -616,7 +615,6 @@ es:
         title: "Cambiar nombre de usuario"
         confirm: "Si cambias tu nombre de usuario, todas las citas anteriores a tus posts y menciones a tu @nombre se romperán. ¿Seguro que quieres hacerlo?"
         taken: "Lo sentimos, ese nombre de usuario ya está siendo usado."
-        error: "Ha ocurrido un error al cambiar tu nombre de usuario."
         invalid: "Este nombre de usuario no es válido. Debe incluir sólo números y letras"
       change_email:
         title: "Cambiar email"
@@ -1811,8 +1809,6 @@ es:
       settings: 'Ajustes'
       topic_template: "Plantilla de tema"
       tags: "Etiquetas"
-      tags_allowed_tags: "Las únicas etiquetas que pueden aplicarse en esta categoría:"
-      tags_allowed_tag_groups: "Grupos de etiquetas que sólo pueden pueden utilizarse en esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"

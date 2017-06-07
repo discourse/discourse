@@ -478,7 +478,6 @@ sv:
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
-        button_text: "Ladda ner mina inlägg"
         confirm: "Är du säker att du vill ladda ner dina inlägg?"
         success: "Nedladdning påbörjad, du kommer bli notifierad via meddelande när processen är klar."
         rate_limit_error: "Inlägg kan laddas ner en gång per dag, försök igen imorgon."
@@ -596,7 +595,6 @@ sv:
         title: "Byt användarnamn"
         confirm: "Om du byter ditt användarnamn kommer alla tidigare citeringar av dina inlägg och @namn-omnämningar att bli trasiga. Är du helt säker på att du vill?"
         taken: "Tyvärr, det användarnamnet är taget."
-        error: "Det uppstod ett problem under bytet av ditt användarnamn."
         invalid: "Det användarnamnet är ogiltigt. Det får bara innehålla siffror och bokstäver"
       change_email:
         title: "Byt e-post"
@@ -1756,8 +1754,6 @@ sv:
       settings: 'Inställningar'
       topic_template: "Ämnesmall"
       tags: "Taggar"
-      tags_allowed_tags: "Taggar som endast kan användas i den här kategorin:"
-      tags_allowed_tag_groups: "Grupptaggar som endast kan användas i den här kategorin:"
       tags_placeholder: "(Valfritt) lista av tillåtna taggar"
       tag_groups_placeholder: "(Valfritt) lista av tillåtna grupptaggar"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"

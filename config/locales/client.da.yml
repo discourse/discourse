@@ -488,7 +488,6 @@ da:
       mute: "Mute"
       edit: "Redigér indstillinger"
       download_archive:
-        button_text: "Download Mine Indlæg"
         confirm: "Er du sikker på, at du vil downloade dine indlæg?"
         success: "Downloaden er startet. Du vil blive notificeret via en besked, når processen er færdig."
         rate_limit_error: "Indlæg kan downloades en gang om dagen, prøv igen i morgen."
@@ -616,7 +615,6 @@ da:
         title: "Skift brugernavn"
         confirm: "Hvis du ændrer dit brugernavn, vil alle tidligere citeringer af dine indlæg ikke længere kunne vises. Er du helt sikker på at du ønsker at ændre brugernavn?"
         taken: "Beklager, det brugernavn er optaget."
-        error: "Der skete en fejl i forbindelse med skift af dit brugernavn."
         invalid: "Det brugernavn er ugyldigt. Det må kun bestå af bogstaver og tal."
       change_email:
         title: "Skift e-mail-adresse"
@@ -1798,8 +1796,6 @@ da:
       settings: 'Indstillinger'
       topic_template: "Skabelon for emne"
       tags: "Tags"
-      tags_allowed_tags: "Mærker der kun kan bruges i denne kategori:"
-      tags_allowed_tag_groups: "Mærke grupper der kun kan bruges i denne kategori:"
       tags_placeholder: "(Valgfri) liste af tiladte mærker"
       tag_groups_placeholder: "(Valgfri) liste af tiladte mærke grupper"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"

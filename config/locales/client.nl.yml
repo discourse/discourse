@@ -488,7 +488,6 @@ nl:
       mute: "Negeren"
       edit: "Voorkeuren bewerken"
       download_archive:
-        button_text: "Mijn berichten downloaden"
         confirm: "Weet u zeker dat u uw berichten wilt downloaden?"
         success: "Downloaden is gestart; u ontvangt een melding zodra het proces is voltooid."
         rate_limit_error: "Berichten kunnen maar één keer per dag worden gedownload; probeer het morgen opnieuw."
@@ -617,7 +616,6 @@ nl:
         title: "Gebruikersnaam wijzigen"
         confirm: "Als u uw gebruikersnaam wijzigt, kloppen alle eerdere citaten van uw berichten en vermeldingen van uw @naam niet meer. Weet u dit echt zeker?"
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
-        error: "Er is een fout opgetreden bij het wijzigen van uw gebruikersnaam."
         invalid: "Die gebruikersnaam is ongeldig. Hij mag alleen cijfers en letters bevatten."
       change_email:
         title: "E-mailadres wijzigen"
@@ -1812,8 +1810,6 @@ nl:
       settings: 'Instellingen'
       topic_template: "Topic-sjabloon"
       tags: "Tags"
-      tags_allowed_tags: "Tags die alleen in deze categorie kunnen worden gebruikt:"
-      tags_allowed_tag_groups: "Tag-groepen die alleen in deze categorie kunnen worden gebruikt:"
       tags_placeholder: "(Optioneel) lijst van toegestane tags"
       tag_groups_placeholder: "(Optioneel) lijst van toegestane tag-groepen"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"

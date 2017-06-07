@@ -509,7 +509,6 @@ ro:
       mute: "Silențios"
       edit: "Editează preferințe"
       download_archive:
-        button_text: "Descarcă postările mele"
         confirm: "Ești sigur că vrei să îți descarci postările?"
         success: "Descărcarea a început, vei fi notificat printr-un mesaj atunci când procesul se va termina."
         rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi, te rugăm să încerci din nou mâine."
@@ -626,7 +625,6 @@ ro:
         title: "Schimbă numele utilizatorului"
         confirm: "Dacă îți schimbi numele de utilizator, toate citările anterioare ale posturilor tale și toate mențiunile @numelui se vor pierde. Ești absolut sigur că vrei asta?"
         taken: "Acest nume de utilizator este deja folosit."
-        error: "A apărut o eroare la schimbarea numelui de utilizator."
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       change_email:
         title: "Schimbă email"
@@ -1777,8 +1775,6 @@ ro:
       settings: 'Setări'
       topic_template: "Șablon subiect"
       tags: "Etichete"
-      tags_allowed_tags: "În această categorie se pot folosi numai etichetele:"
-      tags_allowed_tag_groups: "În această categorie se pot folosi numai grupurile de etichete:"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
