@@ -51,7 +51,7 @@ class CookedPostProcessor
   end
 
   def keep_reverse_index_up_to_date
-    upload_ids = Array.new
+    upload_ids = []
 
     @doc.css("a/@href", "img/@src").each do |media|
       if upload = Upload.get_from_url(media.value)
@@ -59,7 +59,7 @@ class CookedPostProcessor
       end
     end
 
-    upload_ids.concat(oneboxed_image_uploads.pluck(:id))
+    upload_ids |= oneboxed_image_uploads.pluck(:id)
 
     values = upload_ids.map{ |u| "(#{@post.id},#{u})" }.join(",")
     PostUpload.transaction do
