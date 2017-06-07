@@ -186,6 +186,11 @@ export default Ember.Controller.extend({
 
     ajax("/search", { data: args }).then(results => {
       const model = translateResults(results) || {};
+
+      if (results.grouped_search_result) {
+        this.set('q', results.grouped_search_result.term);
+      }
+
       setTransient('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
     }).finally(() => this.set("searching", false));
