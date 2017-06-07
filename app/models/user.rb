@@ -689,8 +689,7 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    email_token = self.email_tokens.active.first
-    if email_token
+    if email_token = self.email_tokens.active.first
       EmailToken.confirm(email_token.token)
     else
       self.active = true
