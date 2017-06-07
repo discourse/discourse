@@ -127,14 +127,13 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    # TODO proper error surfacing (result is a Model#save call)
     result = UsernameChanger.change(user, params[:new_username], current_user)
-    raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render json: {
-      id: user.id,
-      username: user.username
-    }
+    if result
+      render json: { id: user.id, username: user.username }
+    else
+      render_json_error(user.errors.full_messages.join(','))
+    end
   end
 
   def check_emails
@@ -435,7 +434,7 @@ class UsersController < ApplicationController
         else
           store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
         end
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
 
       format.json do

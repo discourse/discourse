@@ -222,6 +222,7 @@ fi:
       invalid_incoming_email: "'%{email}' ei ole käypä sähköpostiosoite."
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
+      cant_allow_membership_requests: "Et voi sallia ryhmäjäsenyyden hakemista, jos ryhmällä ei ole isäntää."
     default_names:
       everyone: "kaikki"
       admins: "yllapitajat"
@@ -362,7 +363,7 @@ fi:
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   assets_topic_title: "Sivuston designiin liittyviä hyödykkeitä"
-  assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
+  assets_topic_body: "Tämä ketju näkyy ainoastaan henkilökunnalle, ja se on tarkoitettu sivuston tyyliin liittyvien kuvien ja muiden tiedostojen säilömiseen. Älä poista sitä!\n\n\nTässä ohjeet sen käyttämiseen:\n\n\n1. Vastaa ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Julkaise viesti.\n4. Klikkaa kuvia hiiren oikealla näppäimellä tai klikkaa viestin muokkauspainiketta, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nJos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `authorized_extensions`-listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Tervetuloa käyttämään Discoursea"
     body: |2
@@ -1390,7 +1391,7 @@ fi:
       one: "Yksi viesti siirrettiin toiseen ketjuun: %{topic_link}"
       other: "%{count} viestiä siirrettiin toiseen ketjuun: %{topic_link}"
   change_owner:
-    post_revision_text: "Omistus vaihdettu käyttäjältä %{old_user} käyttäjälle %{new_user}"
+    post_revision_text: "Omistus siirrettiin käyttäjältä %{old_user} käyttäjälle %{new_user}"
     deleted_user: "poistettu käyttäjä"
   topic_statuses:
     archived_enabled: "Tämä ketju on arkistoitu. Se on jäädytetty eikä sitä voi muuttaa millään tavalla."

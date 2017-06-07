@@ -137,7 +137,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
     loop do
       contents = get("#{path}?#{filters}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
       contents["list"].each do |content|
-        content_id = content["contentID"].presence || content["id"]
+        content_id = content["contentID"].presence || "#{content["type"]}_#{content["id"]}"
 
         custom_fields = { import_id: content_id }
         custom_fields[:import_permalink] = content["permalink"] if content["permalink"].present?

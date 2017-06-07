@@ -354,6 +354,7 @@ nb_NO:
       request_membership_pm:
         title: "Ønske om medlemskap"
         body: "Jeg vil be om å bli medlem av gruppen @%{groupName}."
+        disabled: "Manglende tillitsnivå for å forespørre gruppemedlemskap"
       name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
       public: "Tillatt brukere å bli medlem av og forlate gruppen fritt (Krever at gruppen er synlig)"
       empty:
@@ -488,7 +489,7 @@ nb_NO:
       mute: "Ignorer"
       edit: "Rediger innstillinger"
       download_archive:
-        button_text: "Last ned mine innlegg"
+        button_text: "Last ned alle"
         confirm: "Er du sikker på at du vil laste ned dine innlegg?"
         success: "Nedlasting iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
         rate_limit_error: "Innlegg kan lastes ned en gang om dagen, prøv igjen i morgen."
@@ -558,6 +559,7 @@ nb_NO:
       watched_first_post_tags_instructions: "Du vil bli varslet om det første innlegget i hvert nye emne med disse stikkordene."
       muted_categories: "Ignorert"
       muted_categories_instructions: "Du vil ikke bli varslet om noe med tanke på nye emner i disse kategoriene, og de vil ikke vises i siste."
+      no_category_access: "Som moderator har du begrenset kategoritilgang, lagring er avskrudd."
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
       deleted_yourself: "Slettingen av din konto har vært vellykket."
@@ -617,7 +619,6 @@ nb_NO:
         title: "Endre brukernavn"
         confirm: "Hvis du endrer brukernavnet ditt, vil alle gamle sitater av dine innlegg og @navn-nevninger feile. Er du helt sikker på at du vil bytte brukernavn?"
         taken: "Beklager, det brukernavnet er tatt."
-        error: "Det skjedde en feil ved endring av ditt brukernavn."
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
       change_email:
         title: "Endre e-postadresse"
@@ -1033,6 +1034,7 @@ nb_NO:
       cannot_see_mention:
         category: "Du nevnte {{username}}, men de vil ikke ikke bli varslet fordi de ikke hara tilgang til denne kategorien. Du må legge dem til en gruppe som har tilgang til denne kategorien."
         private: "Du nevnte {{username}}, men de vil ikke bli varslet fordi de ikke kan se denne samtalen. Du må invitere dem til samtalen."
+      duplicate_link: "Det ser ut til at <b>{{domain}}</b> allerede finnes som innlegg om emnet av <b>@{{username}}</b> i <a href='{{post_url}}'>et svar {{ago}}</a> – er du sikker på at du vil gjenta det?"
       error:
         title_missing: "Tittel er påkrevd"
         title_too_short: "Tittel må være på minst {{min}} tegn"
@@ -1122,6 +1124,7 @@ nb_NO:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ble tildelt '{{description}}'</p>"
+      topic_reminder: "<i title='emnepåminnelse' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nytt emne</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} melding i {{group_name}}-gruppens innboks</p>"
@@ -1812,8 +1815,8 @@ nb_NO:
       settings: 'Innstillinger'
       topic_template: "Emnemal"
       tags: "Stikkord"
-      tags_allowed_tags: "Stikkord som bare kan brukes i denne kategorien:"
-      tags_allowed_tag_groups: "Stikkord som bare kan brukes i denne kategorien:"
+      tags_allowed_tags: "Bare tillat disse etikettene brukt i denne kategorien:"
+      tags_allowed_tag_groups: "Bare tillat etiketter fra disse gruppene brukt i denne kategorien:"
       tags_placeholder: "(Valgfritt) Liste over tillatte stikkord"
       tag_groups_placeholder: "(Valgfritt) Liste over tillatte stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
@@ -2784,6 +2787,8 @@ nb_NO:
           block: "blokker"
           do_nothing: "ikke gjør noe"
         staff_actions:
+          all: "alle"
+          filter: "Filtrer:"
           title: "Personalhandlinger"
           clear_filters: "Vis alt"
           staff_user: "Personale"
@@ -2837,6 +2842,8 @@ nb_NO:
             change_readonly_mode: "endre skrivebeskyttelse"
             backup_download: "last ned sikkerhetskopi"
             backup_destroy: "ødelegg sikkerhetskopi"
+            reviewed_post: "gjennomsett innlegg"
+            custom_staff: "egendefinert handling for programtillegg"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -3240,6 +3247,7 @@ nb_NO:
         embed_classname_whitelist: "Tillatte navn for CSS-klasser"
         feed_polling_enabled: "Importer innlegg via RSS/ATOM"
         feed_polling_url: "Nettadresse for RSS/ATOM-informasjonskanal å gjennomgangssøke"
+        feed_polling_frequency_mins: "Frekvens for strømspørring (i minutter)"
         save: "Lagre innbyggingsinnstillinger"
       permalink:
         title: "Permalenker"

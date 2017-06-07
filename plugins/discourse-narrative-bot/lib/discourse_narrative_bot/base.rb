@@ -2,8 +2,6 @@ module DiscourseNarrativeBot
   class Base
     include Actions
 
-    TIMEOUT_DURATION = 900 # 15 mins
-
     class InvalidTransitionError < StandardError; end
 
     def input(input, user, post: nil, topic_id: nil, skip: false)

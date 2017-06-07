@@ -320,7 +320,6 @@ ro:
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătăți."
   staff_category_name: "Echipa"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Subiectele sunt vizibile numai pentru admini și moderatori."
-  assets_topic_body: "Acesta este un subiect permanent, vizibil doar pentru admini și echipă, care are ca scop stocarea imaginilor și fișierelor folosite la designul forumului. Nu îl șterge!\n\n\nIată cum se lucrează:\n\n\n1. Răspunde la acest subiect.\n2. Încarcă aici toate imaginile dorite pentru logouri, iconițe și așa mai departe. (Folosește iconița de încărcare din bara editorului de discuție, folosește drag-and-drop sau lipește imaginile.)\n3. Aprobă răspunsul pentru a-l posta.\n4. Click dreapta pe imaginile din noua postare pentru a obține calea spre imaginile încărcate, sau click pe icoana de editare pentru a edita postarea și a obține calea către imagini. Copiază calea imaginii.\n5. Lipește calea imaginii în [Setări principale](/admin/site_settings/category/required).\n\n\nDacă dorești să activezi încărcarea unor tipuri multiple de fișiere, editează `extensii_autorizate` în secțiunea [setări fișiere](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bine ai venit în sufragerie"
     body: |2

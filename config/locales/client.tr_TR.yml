@@ -449,7 +449,6 @@ tr_TR:
       mute: "Sustur"
       edit: "Tercihleri Düzenle"
       download_archive:
-        button_text: "Gönderilerimi İndir"
         confirm: "Gönderilerinizi indirmek istediğinize emin misiniz?"
         success: "İndirme başlatıldı, İşlem tamamlandığında mesaj ile bilgilendirileceksiniz."
         rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
@@ -568,7 +567,6 @@ tr_TR:
         title: "Kullanıcı Adını Değiştir"
         confirm: "Kullanıcı adınızı değiştirmeniz halinde, eski gönderilerinizden yapılan tüm alıntılar ve @eskiadınızdaki bahsetmeler bozulacak. Bunu yapmak istediğinize gerçekten emin misiniz?"
         taken: "Üzgünüz, bu kullanıcı adı alınmış."
-        error: "Kullanıcı adınızı değiştirirken bir hata oluştu."
         invalid: "Bu kullanıcı adı geçersiz. Sadece sayı ve harf içermelidir."
       change_email:
         title: "E-posta Adresini Değiştirin"
@@ -1625,8 +1623,6 @@ tr_TR:
       settings: 'Ayarlar'
       topic_template: "Konu Şablonu"
       tags: "Etiketler"
-      tags_allowed_tags: "Sadece bu kategoride kullanılabilir etiketler:"
-      tags_allowed_tag_groups: "Yalnızca bu kategoride kullanılabilir etiket grupları:"
       tags_placeholder: "(Seçmeli) izin verilen etiketlerin listesi"
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
       topic_featured_link_allowed: " Featured link'lere bu kategoride izin ver"

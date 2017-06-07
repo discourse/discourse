@@ -357,7 +357,6 @@ da:
   meta_category_description: "Diskussion om dette site, hvordan det er indrettet, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Staff"
   staff_category_description: "Privat gruppe for staff diskussioner. Emner er kun synlige for administratorer og moderatorer."
-  assets_topic_body: "Dette er et permanent emne, kun synlig for Staff, til at gemme billeder og filer som bruges til Site designet. Slet ikke dette emne!\n\n\nSådan virker det:\n\n\n1. Svar dette emne.\n2. Upload alle billeder som du ønsker at bruge til logoer, favicons etc her. (Brug upload ikonet i værktøjslinjen eller drag n drop billederne.)\n3. Send dit svar for at indsende det.\n4. Højreklik på billederne i dit svar for at se stien til de uploadede billeder, eller klik på ikonet for at redigere dit indlæg og find stierne til billederne der. Kopier billedestierne.\n5. Indsæt disse billedestier i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du har brug for at tillade flere filtyper, så kan du redigere `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
     body: |2

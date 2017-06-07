@@ -342,6 +342,16 @@ describe PostMover do
           expect(new_post.post_actions.size).to eq(1)
         end
 
+        it "preserves the custom_fields in the new post" do
+          custom_fields = { "some_field" => 'payload' }
+          p1.custom_fields = custom_fields
+          p1.save_custom_fields
+
+          new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
+
+          expect(new_topic.first_post.custom_fields).to eq(custom_fields)
+        end
+
       end
 
       context "to an existing topic with a deleted post" do

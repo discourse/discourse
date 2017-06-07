@@ -528,7 +528,6 @@ ko:
       change_username:
         title: "아이디 변경"
         taken: "죄송합니다. 이미 사용 중인 아이디입니다."
-        error: "아이디를 변경하는 중에 오류가 발생했습니다."
         invalid: "아이디가 잘못되었습니다. 숫자와 문자를 포함해야합니다."
       change_email:
         title: "이메일 변경"

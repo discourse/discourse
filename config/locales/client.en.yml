@@ -689,7 +689,6 @@ en:
         title: "Change Username"
         confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
 
       change_email:
@@ -2008,8 +2007,8 @@ en:
       settings: 'Settings'
       topic_template: "Topic Template"
       tags: "Tags"
-      tags_allowed_tags: "Tags that can only be used in this category:"
-      tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
+      tags_allowed_tags: "Only allow these tags to be used in this category:"
+      tags_allowed_tag_groups: "Only allow tags from these groups to be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       topic_featured_link_allowed: "Allow featured links in this category"

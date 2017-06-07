@@ -478,7 +478,6 @@ et:
       mute: "Vaigista"
       edit: "Muuda Eelistusi"
       download_archive:
-        button_text: "Lae Minu Postitused alla"
         confirm: "Oled kindel, et soovid enda postitused alla laadida?"
         success: "Allalaadimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
         rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
@@ -595,7 +594,6 @@ et:
         title: "Muuda kasutajanime"
         confirm: "Muutes oma kasutajanime, katkevad kõik varasemad viited sinu postitustele ja @name mainimised. Oled täiesti veendunud, et soovid seda?"
         taken: "Vabandust, see kasutajanimi on võetud."
-        error: "Kasutajanime muutmisel tekkis tõrge."
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
       change_email:
         title: "Muuda meiliaadressi"
@@ -1718,8 +1716,6 @@ et:
       settings: 'Sätted'
       topic_template: "Teema mall"
       tags: "Sildid"
-      tags_allowed_tags: "Sildid, mida saab kasutada vaid selles foorumis:"
-      tags_allowed_tag_groups: "Siltide grupid, mida saab kasutada vaid selles foorumis:"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
       topic_featured_link_allowed: "Luba selles foorumis esiletõstetud linke "

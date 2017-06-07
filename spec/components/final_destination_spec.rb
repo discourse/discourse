@@ -120,6 +120,45 @@ describe FinalDestination do
         expect(final.status).to eq(:invalid_address)
       end
     end
+
+    context "HEAD not supported" do
+      before do
+        stub_request(:get, 'https://eviltrout.com').to_return(
+          status: 301,
+          headers: {
+            "Location" => 'https://discourse.org',
+            'Set-Cookie' => 'evil=trout'
+          }
+        )
+        stub_request(:head, 'https://discourse.org').to_return(status: 200)
+      end
+
+      context "when the status code is 405" do
+        before do
+          stub_request(:head, 'https://eviltrout.com').to_return(status: 405)
+        end
+
+        it "will try a GET" do
+          final = FinalDestination.new('https://eviltrout.com', opts)
+          expect(final.resolve.to_s).to eq('https://discourse.org')
+          expect(final.status).to eq(:resolved)
+          expect(final.cookie).to eq('evil=trout')
+        end
+      end
+
+      context "when the status code is 501" do
+        before do
+          stub_request(:head, 'https://eviltrout.com').to_return(status: 501)
+        end
+
+        it "will try a GET" do
+          final = FinalDestination.new('https://eviltrout.com', opts)
+          expect(final.resolve.to_s).to eq('https://discourse.org')
+          expect(final.status).to eq(:resolved)
+          expect(final.cookie).to eq('evil=trout')
+        end
+      end
+    end
   end
 
   describe '.validate_uri' do

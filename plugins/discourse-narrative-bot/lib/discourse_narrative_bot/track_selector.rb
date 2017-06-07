@@ -30,11 +30,11 @@ module DiscourseNarrativeBot
 
       if @post && @post.post_type == Post.types[:regular] && !is_topic_action?
         is_reply = @input == :reply
+        @is_pm_to_bot = pm_to_bot?(@post)
+
         return if is_reply && reset_track
 
-        topic_id = @post.topic_id
-
-        if (data && data[:topic_id] == topic_id)
+        if data && (data[:topic_id] == @post.topic_id) && @is_pm_to_bot
           state = data[:state]
           klass = (data[:track] || NewUserNarrative.to_s).constantize
 
@@ -58,7 +58,7 @@ module DiscourseNarrativeBot
           else
             klass.new.input(@input, @user, post: @post, skip: skip_track?)
           end
-        elsif is_reply && (pm_to_bot?(@post) || public_reply?)
+        elsif is_reply && (@is_pm_to_bot || public_reply?)
           like_user_post
           bot_commands
         end
@@ -116,7 +116,7 @@ module DiscourseNarrativeBot
       post_raw = @post.raw
       trigger = "#{self.class.reset_trigger} #{klass.reset_trigger}"
 
-      if post_raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && pm_to_bot?(@post)
+      if post_raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && @is_pm_to_bot
         post_raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", 'i'))
       else
         match_trigger?(trigger)
@@ -215,7 +215,7 @@ module DiscourseNarrativeBot
     end
 
     def skip_track?
-      if pm_to_bot?(@post)
+      if @is_pm_to_bot
         post_raw = @post.raw
 
         post_raw.match(/^@#{self.discobot_user.username} #{self.class.skip_trigger}/i) ||
@@ -230,7 +230,7 @@ module DiscourseNarrativeBot
       regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}", 'i')
       match = @post.cooked.match(regexp)
 
-      if pm_to_bot?(@post)
+      if @is_pm_to_bot
         match || @post.raw.strip.match(Regexp.new("^#{trigger}$", 'i'))
       else
         match
@@ -255,7 +255,7 @@ module DiscourseNarrativeBot
     end
 
     def terminate_track(data)
-      Store.set(@user.id, data.merge!(state: nil, topic_id: nil))
+      Store.set(@user.id, data.merge!(track: nil, state: nil, topic_id: nil))
       cancel_timeout_job(@user)
     end
   end

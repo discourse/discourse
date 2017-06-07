@@ -357,7 +357,6 @@ nl:
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
   assets_topic_title: "Assets voor het websiteontwerp"
-  assets_topic_body: "Dit is een permanent topic, alleen zichtbaar voor staf, voor het opslaan van afbeeldingen en bestanden die in het ontwerp van de website worden gebruikt. Verwijder het niet!\n\n\nZo werkt het:\n\n\n1. Antwoord op dit topic.\n2. Upload hier alle afbeeldingen die u voor logo's, favicons, enzovoorts wilt gebruiken. (Gebruik het werkbalkpictogram voor uploaden in de berichteditor, of sleep of plak afbeeldingen.)\n3. Verzend uw antwoord om dit te plaatsen.\n4. Klik met de rechtermuisknop op de afbeeldingen in uw nieuwe bericht om het pad naar de geüploade afbeeldingen te verkrijgen, of klik op het bewerkingspictogram om uw bericht te bewerken en het pad naar de afbeeldingen op te halen. Kopieer de afbeeldingspaden.\n5. Plak die afbeeldingspaden in [basisinstellingen](/admin/site_settings/category/required).\n\n\nAls u verschillende soorten uploads van bestandstypen dient in te schakelen, bewerk dan 'authorized_extensions' in de [bestandsinstellingen](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Welkom bij Discourse"
     body: |2

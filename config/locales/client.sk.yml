@@ -478,7 +478,6 @@ sk:
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
-        button_text: "Uložiť moje príspevky"
         confirm: "Si si istý, že si chceš uložiť svoje príspevky na disk?"
         success: "Sťahovanie bolo spustené, o jeho ukončení budeš informovaný správou."
         rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
@@ -590,7 +589,6 @@ sk:
         title: "Zmeniť používateľské meno"
         confirm: "Ak zmeníte svoje používateľské meno, všetky predchádzajúce citácie Vašich príspevkov a všetky @zmienky búdú porušené. Ste si absolútne istý, že to chcete?"
         taken: "Ľutujeme, toto používateľské meno je obsadené."
-        error: "Pri zmene používateľského mena prišlo k chybe."
         invalid: "Toto používateľské meno nie je platné. Musí obsahovať iba znaky a čísla."
       change_email:
         title: "Zmeniť email"
@@ -1671,8 +1669,6 @@ sk:
       settings: 'Nastavenia'
       topic_template: "Formulár témy"
       tags: "Štítky"
-      tags_allowed_tags: "Štítky, ktoré môžu byť použité iba v tejto kategórii:"
-      tags_allowed_tag_groups: "Skupiny štítkov, ktoré môžu byť použité iba v tejto kategórii:"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"
       delete: 'Odstrániť kategóriu'

@@ -481,7 +481,6 @@ pt:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive:
-        button_text: "Descarregar As Minhas Publicações"
         confirm: "Tem a certeza que deseja descarregar as suas publicações?"
         success: "Descarregamento iniciado, será notificado via mensagem assim que o processo estiver concluído."
         rate_limit_error: "As publicações podem ser descarregadas uma vez por dia, por favor, tente novamente amanhã."
@@ -599,7 +598,6 @@ pt:
         title: "Alterar Nome de Utilizador"
         confirm: "Se mudar o seu nome de utilizador, todas as citações das suas publicações e menções @nome serão quebradas. Tem a certeza absoluta de que o quer fazer?"
         taken: "Pedimos desculpa, esse nome de utilizador já está a ser utilizado."
-        error: "Ocorreu um erro ao alterar o seu nome de utilizador."
         invalid: "Esse nome de utilizador é inválido. Deve conter apenas números e letras."
       change_email:
         title: "Alterar Email"
@@ -1697,8 +1695,6 @@ pt:
       settings: 'Configurações'
       topic_template: "Modelo do Tópico"
       tags: "Etiquetas"
-      tags_allowed_tags: "Etiquetas que só podem ser usadas nesta categoria:"
-      tags_allowed_tag_groups: "Grupos de etiquetas que só podem ser usados nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas perimitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       delete: 'Eliminar Categoria'

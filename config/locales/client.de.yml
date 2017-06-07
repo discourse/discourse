@@ -488,7 +488,6 @@ de:
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
-        button_text: "Meine Beiträge herunterladen"
         confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
@@ -617,7 +616,6 @@ de:
         title: "Benutzernamen ändern"
         confirm: "Wenn du deinen Benutzernamen änderst, werden alle vorherigen Zitate deiner Beiträge und Erwähnungen deines vorherigen @Namens nicht mehr funktonieren. Bist du dir ganz sicher, dass du das tun möchtest?"
         taken: "Der Benutzername ist bereits vergeben."
-        error: "Bei der Änderung deines Benutzernamens ist ein Fehler aufgetreten."
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
       change_email:
         title: "E-Mail-Adresse ändern"
@@ -1812,8 +1810,6 @@ de:
       settings: 'Einstellungen'
       topic_template: "Themenvorlage"
       tags: "Schlagwörter"
-      tags_allowed_tags: "Schlagwörter, die nur in dieser Kategorie verwendet werden können:"
-      tags_allowed_tag_groups: "Schlagwortgruppen, die nur in dieser Kategorie verwendet werden können:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"

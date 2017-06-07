@@ -2355,7 +2355,7 @@ en:
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
-        This award is only granted to two new users per month, and it will be permanently visible on [your user page](/my/badges).
+        This award is only granted to two new users per month, and it will be permanently visible on [your user page](%{base_url}/my/badges).
 
         You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
 

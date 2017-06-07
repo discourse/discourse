@@ -546,7 +546,6 @@ pl_PL:
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
-        button_text: "Pobierz moje wpisy"
         confirm: "Czy na pewno chcesz pobrać swoje wszystkie wpisy?"
         success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
         rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
@@ -673,7 +672,6 @@ pl_PL:
         title: "Zmień nazwę użytkownika"
         confirm: "Jeżeli zmienisz swoją nazwę użytkownika, wszystkie wcześniejsze cytaty twoich wpisów oraz wzmianki przez @nazwa przestaną działać. Czy jesteś absolutnie pewny że tego chcesz?"
         taken: "Przykro nam, ale ta nazwa jest zajęta."
-        error: "Podczas zmiany twojej nazwy użytkownika wystąpił błąd."
         invalid: "Ta nazwa jest niepoprawna. Powinna zawierać jedynie liczby i litery."
       change_email:
         title: "Zmień adres email"
@@ -1958,8 +1956,6 @@ pl_PL:
       settings: 'Ustawienia'
       topic_template: "Szablon tematu"
       tags: "Tagi"
-      tags_allowed_tags: "Tagi których można użyć w tej kategorii: "
-      tags_allowed_tag_groups: "Grupy tagów, które mogą być wykorzystane w tej kategorii"
       tags_placeholder: "(Opcjonalnie) lista dozwolonych tagów"
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
