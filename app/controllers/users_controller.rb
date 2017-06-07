@@ -127,14 +127,13 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    # TODO proper error surfacing (result is a Model#save call)
     result = UsernameChanger.change(user, params[:new_username], current_user)
-    raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render json: {
-      id: user.id,
-      username: user.username
-    }
+    if result
+      render json: { id: user.id, username: user.username }
+    else
+      render_json_error(user.errors.full_messages.join(','))
+    end
   end
 
   def check_emails
