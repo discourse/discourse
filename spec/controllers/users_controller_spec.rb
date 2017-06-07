@@ -867,7 +867,7 @@ describe UsersController do
 
   end
 
-  context '.username' do
+  context '#username' do
     it 'raises an error when not logged in' do
       expect { xhr :put, :username, username: 'somename' }.to raise_error(Discourse::NotLoggedIn)
     end
@@ -894,10 +894,17 @@ describe UsersController do
         expect(user.reload.username).to eq(old_username)
       end
 
-      # Bad behavior, this should give a real JSON error, not an InvalidParameters
       it 'raises an error when change_username fails' do
-        User.any_instance.expects(:save).returns(false)
-        expect { xhr :put, :username, username: user.username, new_username: new_username }.to raise_error(Discourse::InvalidParameters)
+        xhr :put, :username, username: user.username, new_username: '@'
+
+        expect(response).to_not be_success
+
+        body = JSON.parse(response.body)
+
+        expect(body['errors'].first).to include(I18n.t(
+          'user.username.short', min: User.username_length.begin
+        ))
+
         expect(user.reload.username).to eq(old_username)
       end
 
