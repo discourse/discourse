@@ -632,8 +632,9 @@ describe Search do
       post_uploaded = Fabricate(:post_with_uploaded_image)
       post_with_image_urls = Fabricate(:post_with_image_urls)
       Fabricate(:post)
-      TopicLink.extract_from(post_uploaded)
-      TopicLink.extract_from(post_with_image_urls)
+
+      CookedPostProcessor.new(post_uploaded).update_post_image
+      CookedPostProcessor.new(post_with_image_urls).update_post_image
 
       expect(Search.execute('in:image').posts.map(&:id).sort).to eq([post_uploaded.id, post_with_image_urls.id].sort)
     end

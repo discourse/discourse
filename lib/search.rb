@@ -338,6 +338,10 @@ class Search
     end
   end
 
+  advanced_filter(/in:image/) do |posts|
+    posts.where("posts.image_url IS NOT NULL")
+  end
+
   advanced_filter(/category:(.+)/) do |posts,match|
     exact = false
 
