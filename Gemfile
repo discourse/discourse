@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 #source 'http://production.cf.rubygems.org'
 
 # does not install in linux ATM, so hack this for now
-gem 'bootsnap', require: false
+# Also comment in code: config/boot.rb
+# gem 'bootsnap', require: false
 
 def rails_master?
   ENV["RAILS_MASTER"] == '1'
@@ -148,6 +149,8 @@ group :development do
   gem 'binding_of_caller'
   gem 'annotate'
   gem 'foreman', require: false
+
+  gem 'pgreset'
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -192,3 +195,5 @@ if ENV["IMPORT"] == "1"
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
 end
+
+
