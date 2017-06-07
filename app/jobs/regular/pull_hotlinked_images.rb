@@ -94,12 +94,14 @@ module Jobs
         # we never want that job to bump the topic
         options = { bypass_bump: true }
         post.revise(Discourse.system_user, changes, options)
+      elsif downloaded_urls.present?
+        post.trigger_post_process(true)
       end
     end
 
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
-      doc.css("img[src]") - doc.css(".onebox-result img") - doc.css("img.avatar")
+      doc.css("img[src]") - doc.css("img.avatar")
     end
 
     def is_valid_image_url(src)

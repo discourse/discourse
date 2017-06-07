@@ -51,13 +51,15 @@ class CookedPostProcessor
   end
 
   def keep_reverse_index_up_to_date
-    upload_ids = Set.new
+    upload_ids = Array.new
 
     @doc.css("a/@href", "img/@src").each do |media|
       if upload = Upload.get_from_url(media.value)
         upload_ids << upload.id
       end
     end
+
+    upload_ids.concat(oneboxed_image_uploads.pluck(:id))
 
     values = upload_ids.map{ |u| "(#{@post.id},#{u})" }.join(",")
     PostUpload.transaction do
@@ -105,7 +107,12 @@ class CookedPostProcessor
   end
 
   def oneboxed_images
-    @doc.css(".onebox-result img, .onebox img")
+    @doc.css(".onebox-body img, .onebox img")
+  end
+
+  def oneboxed_image_uploads
+    urls = oneboxed_images.map { |img| img["src"] }
+    Upload.where(origin: urls)
   end
 
   def limit_size!(img)
@@ -301,8 +308,14 @@ class CookedPostProcessor
       Oneboxer.onebox(url, args)
     end
 
-    # make sure we grab dimensions for oneboxed images
-    oneboxed_images.each { |img| limit_size!(img) }
+    uploads = oneboxed_image_uploads.select(:url, :origin)
+    oneboxed_images.each do |img|
+      upload = uploads.detect { |u| u.origin == img["src"] }
+      next unless upload.present?
+      img["src"] = upload.url
+      # make sure we grab dimensions for oneboxed images
+      limit_size!(img)
+    end
 
     # respect nofollow admin settings
     if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
