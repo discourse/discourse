@@ -13,9 +13,6 @@ rescue LoadError
   exit
 end
 
-# See https://meta.discourse.org/t/importing-from-vbulletin-4/54881
-# Please update there if substantive changes are made!
-
 class ImportScripts::VBulletin < ImportScripts::Base
   BATCH_SIZE = 1000
 
