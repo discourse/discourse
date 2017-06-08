@@ -191,13 +191,6 @@ const DiscourseURL = Ember.Object.extend({
     const oldPath = window.location.pathname;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
-    // handle prefixes
-    if (path.match(/^\//)) {
-      let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
-      rootURL = rootURL.replace(/\/$/, '');
-      path = path.replace(rootURL, '');
-    }
-
     // Rewrite /my/* urls
     if (path.indexOf('/my/') === 0) {
       const currentUser = Discourse.User.current();
@@ -207,6 +200,13 @@ const DiscourseURL = Ember.Object.extend({
         document.location.href = "/404";
         return;
       }
+    }
+
+    // handle prefixes
+    if (path.match(/^\//)) {
+      let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+      rootURL = rootURL.replace(/\/$/, '');
+      path = path.replace(rootURL, '');
     }
 
     path = rewritePath(path);
