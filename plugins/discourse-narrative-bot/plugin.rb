@@ -2,6 +2,7 @@
 # about: Introduces staff to Discourse
 # version: 0.0.1
 # authors: Nick Sahler (@nicksahler)
+# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 
 enabled_site_setting :discourse_narrative_bot_enabled
 
