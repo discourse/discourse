@@ -1957,7 +1957,7 @@ en:
 
       merge:
         confirm:
-          one: "Are you sure you want merge those posts?"
+          one: "Are you sure you want to merge those posts?"
           other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:
