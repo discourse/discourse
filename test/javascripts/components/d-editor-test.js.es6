@@ -21,7 +21,7 @@ componentTest('preview sanitizes HTML', {
   template: '{{d-editor value=value}}',
 
   test(assert) {
-    this.set('value', `"><svg onload="prompt(/xss/)"></svg>`);
+    fillIn('.d-editor-input', `"><svg onload="prompt(/xss/)"></svg>`);
     andThen(() => {
       assert.equal(this.$('.d-editor-preview').html().trim(), '<p>\"&gt;</p>');
     });

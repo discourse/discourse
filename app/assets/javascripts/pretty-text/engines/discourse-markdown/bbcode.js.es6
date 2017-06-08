@@ -102,6 +102,8 @@ export function builders(helper) {
 
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   helper.whiteList(['span.bbcode-b', 'span.bbcode-i', 'span.bbcode-u', 'span.bbcode-s']);
 
   const { replaceBBCode, rawBBCode, removeEmptyLines, replaceBBCodeParamsRaw } = builders(helper);

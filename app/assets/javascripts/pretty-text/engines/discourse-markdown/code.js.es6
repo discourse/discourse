@@ -21,6 +21,8 @@ registerOption((siteSettings, opts) => {
 
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   helper.whiteList({
     custom(tag, name, value) {
       if (tag === 'code' && name === 'class') {

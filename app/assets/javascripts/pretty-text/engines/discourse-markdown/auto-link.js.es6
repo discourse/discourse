@@ -21,6 +21,7 @@ const urlReplacerArgs = {
 };
 
 export function setup(helper) {
+  if (helper.markdownIt) { return; }
   helper.inlineRegexp(_.merge({start: 'http'}, urlReplacerArgs));
   helper.inlineRegexp(_.merge({start: 'www'}, urlReplacerArgs));
 }

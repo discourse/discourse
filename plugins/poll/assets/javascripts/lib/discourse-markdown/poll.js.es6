@@ -14,6 +14,274 @@ registerOption((siteSettings, opts) => {
   opts.pollMaximumOptions = siteSettings.poll_maximum_options;
 });
 
+function getHelpText(count, min, max) {
+
+  // default values
+  if (isNaN(min) || min < 1) { min = 1; }
+  if (isNaN(max) || max > count) { max = count; }
+
+  // add some help text
+  let help;
+
+  if (max > 0) {
+    if (min === max) {
+      if (min > 1) {
+        help = I18n.t("poll.multiple.help.x_options", { count: min });
+      }
+    } else if (min > 1) {
+      if (max < count) {
+        help = I18n.t("poll.multiple.help.between_min_and_max_options", { min: min, max: max });
+      } else {
+        help = I18n.t("poll.multiple.help.at_least_min_options", { count: min });
+      }
+    } else if (max <= count) {
+      help = I18n.t("poll.multiple.help.up_to_max_options", { count: max });
+    }
+  }
+
+  return help;
+}
+
+function replaceToken(tokens, target, list) {
+  let pos = tokens.indexOf(target);
+  tokens.splice(pos, 1, ...list);
+  list[0].map = target.map;
+}
+
+// analyzes the block to that we have poll options
+function getListItems(tokens, startToken) {
+
+  let i = tokens.length-1;
+  let listItems = [];
+  let buffer = [];
+
+  for(;tokens[i]!==startToken;i--) {
+    if (i === 0) {
+      return;
+    }
+
+    let token = tokens[i];
+    if (token.level === 0) {
+      if (token.tag !== 'ol' && token.tag !== 'ul') {
+        return;
+      }
+    }
+
+    if (token.level === 1 && token.nesting === 1) {
+      if (token.tag === 'li') {
+        listItems.push([token, buffer.reverse().join(' ')]);
+      } else {
+        return;
+      }
+    }
+
+    if (token.level === 1 && token.nesting === 1 && token.tag === 'li') {
+      buffer = [];
+    } else {
+      if (token.type === 'text' || token.type === 'inline') {
+        buffer.push(token.content);
+      }
+    }
+  }
+
+  return listItems.reverse();
+}
+
+function invalidPoll(state, tag) {
+  let token = state.push('text', '', 0);
+  token.content = '[/' + tag + ']';
+}
+
+const rule = {
+  tag: 'poll',
+
+  before: function(state, attrs, md, raw){
+    let token = state.push('text', '', 0);
+    token.content = raw;
+    token.bbcode_attrs = attrs;
+    token.bbcode_type = 'poll_open';
+  },
+
+  after: function(state, openToken, md, raw) {
+
+    let items = getListItems(state.tokens, openToken);
+
+    const attrs = openToken.bbcode_attrs;
+
+    // default poll attributes
+    const attributes = [["class", "poll"]];
+    attributes.push([DATA_PREFIX + "status", "open"]);
+
+    WHITELISTED_ATTRIBUTES.forEach(name => {
+      if (attrs[name]) {
+        attributes[DATA_PREFIX + name] = attrs[name];
+      }
+    });
+
+    if (!attrs.name) {
+      attributes.push([DATA_PREFIX + "name", DEFAULT_POLL_NAME]);
+    }
+
+    // we might need these values later...
+    let min = parseInt(attributes[DATA_PREFIX + "min"], 10);
+    let max = parseInt(attributes[DATA_PREFIX + "max"], 10);
+    let step = parseInt(attributes[DATA_PREFIX + "step"], 10);
+
+    let header = [];
+
+    let token = new state.Token('poll_open', 'div', 1);
+    token.block = true;
+    token.attrs = attributes;
+    header.push(token);
+
+    token = new state.Token('poll_open', 'div', 1);
+    token.block = true;
+    header.push(token);
+
+    token = new state.Token('poll_open', 'div', 1);
+    token.attrs = [['class', 'poll-container']];
+
+    header.push(token);
+
+    // generate the options when the type is "number"
+    if (attributes[DATA_PREFIX + "type"] === "number") {
+      // default values
+      if (isNaN(min)) { min = 1; }
+      if (isNaN(max)) { max = md.options.discourse.pollMaximumOptions; }
+      if (isNaN(step)) { step = 1; }
+
+      if (items.length > 0) {
+        return invalidPoll(state, raw);
+      }
+
+      // dynamically generate options
+      token = new state.Token('bullet_list_open', 'ul', 1);
+      header.push(token);
+
+      for (let o = min; o <= max; o += step) {
+        token = new state.Token('list_item_open', '', 1);
+        items.push([token,  String(o)]);
+        header.push(token);
+
+        token = new state.Token('text', '', 0);
+        token.content = String(o);
+        header.push(token);
+
+        token = new state.Token('list_item_close', '', -1);
+        header.push(token);
+      }
+      token = new state.Token('bullet_item_close', '', -1);
+      header.push(token);
+    }
+
+    if (items.length < 2) {
+      return invalidPoll(state, raw);
+    }
+
+    // flag items so we add hashes
+    for (let o = 0; o < items.length; o++) {
+      token = items[o][0];
+      let text = items[o][1];
+
+      token.attrs = token.attrs || [];
+      let md5Hash = md5(JSON.stringify([text]));
+      token.attrs.push([DATA_PREFIX + 'option-id', md5Hash]);
+    }
+
+    replaceToken(state.tokens, openToken, header);
+
+    state.push('poll_close', 'div', -1);
+
+    token = state.push('poll_open', 'div', 1);
+    token.attrs = [['class', 'poll-info']];
+
+    state.push('paragraph_open', 'p', 1);
+
+    token = state.push('span_open', 'span', 1);
+    token.block = false;
+    token.attrs = [['class', 'info-number']];
+    token = state.push('text', '', 0);
+    token.content = '0';
+    state.push('span_close', 'span', -1);
+
+    token = state.push('span_open', 'span', 1);
+    token.block = false;
+    token.attrs = [['class', 'info-text']];
+    token = state.push('text', '', 0);
+    token.content = I18n.t("poll.voters", { count: 0 });
+    state.push('span_close', 'span', -1);
+
+    state.push('paragraph_close', 'p', -1);
+
+    // multiple help text
+    if (attributes[DATA_PREFIX + "type"] === "multiple") {
+      let help = getHelpText(items.length, min, max);
+      if (help) {
+        state.push('paragraph_open', 'p', 1);
+        token = state.push('html_inline', '', 0);
+        token.content = help;
+        state.push('paragraph_close', 'p', -1);
+      }
+    }
+
+    if (attributes[DATA_PREFIX + 'public'] === 'true') {
+      state.push('paragraph_open', 'p', 1);
+      token = state.push('text', '', 0);
+      token.content = I18n.t('poll.public.title');
+      state.push('paragraph_close', 'p', -1);
+    }
+
+    state.push('poll_close', 'div', -1);
+    state.push('poll_close', 'div', -1);
+
+    token = state.push('poll_open', 'div', 1);
+    token.attrs = [['class', 'poll-buttons']];
+
+    if (attributes[DATA_PREFIX + 'type'] === 'multiple') {
+      token = state.push('link_open', 'a', 1);
+      token.block = false;
+      token.attrs = [
+        ['class', 'button cast-votes'],
+        ['title', I18n.t('poll.cast-votes.title')]
+      ];
+
+      token = state.push('text', '', 0);
+      token.content = I18n.t('poll.cast-votes.label');
+
+      state.push('link_close', 'a', -1);
+    }
+
+    token = state.push('link_open', 'a', 1);
+    token.block = false;
+    token.attrs = [
+      ['class', 'button toggle-results'],
+      ['title', I18n.t('poll.show-results.title')]
+    ];
+
+    token = state.push('text', '', 0);
+    token.content = I18n.t("poll.show-results.label");
+
+    state.push('link_close', 'a', -1);
+
+    state.push('poll_close', 'div', -1);
+    state.push('poll_close', 'div', -1);
+  }
+};
+
+function newApiInit(helper) {
+  helper.registerOptions((opts, siteSettings) => {
+    const currentUser = (opts.getCurrentUser && opts.getCurrentUser(opts.userId)) || opts.currentUser;
+    const staff = currentUser && currentUser.staff;
+
+    opts.features.poll = !!siteSettings.poll_enabled || staff;
+    opts.pollMaximumOptions = siteSettings.poll_maximum_options;
+  });
+
+  helper.registerPlugin(md => {
+    md.block.bbcode_ruler.push('poll', rule);
+  });
+}
+
 export function setup(helper) {
   helper.whiteList([
     'div.poll',
@@ -27,6 +295,11 @@ export function setup(helper) {
     'a.button.toggle-results',
     'li[data-*]'
   ]);
+
+  if (helper.markdownIt) {
+    newApiInit(helper);
+    return;
+  }
 
   helper.replaceBlock({
     start: /\[poll((?:\s+\w+=[^\s\]]+)*)\]([\s\S]*)/igm,

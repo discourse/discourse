@@ -18,6 +18,8 @@ registerOption((siteSettings, opts) => {
 
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   helper.whiteList(['table', 'table.md-table', 'tbody', 'thead', 'tr', 'th', 'td']);
 
   helper.replaceBlock({

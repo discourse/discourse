@@ -490,6 +490,10 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+  enable_experimental_markdown_it:
+    hidden: true
+    client: true
+    default: false
   traditional_markdown_linebreaks:
     client: true
     default: false
