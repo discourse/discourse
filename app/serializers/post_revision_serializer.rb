@@ -107,7 +107,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def edit_reason
     # only show 'edit_reason' when revisions are consecutive
-    current["edit_reason"] if scope.can_view_hidden_post_revisions? ||
+    current["edit_reason"] if scope.can_view_hidden_post_revisions?(object) ||
                               current["revision"] == previous["revision"] + 1
   end
 
@@ -179,7 +179,7 @@ class PostRevisionSerializer < ApplicationSerializer
     end
 
     def revisions
-      @revisions ||= all_revisions.select { |r| scope.can_view_hidden_post_revisions? || !r["hidden"] }
+      @revisions ||= all_revisions.select { |r| scope.can_view_hidden_post_revisions?(object) || !r["hidden"] }
     end
 
     def all_revisions

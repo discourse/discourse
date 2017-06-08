@@ -496,14 +496,15 @@ class PostsController < ApplicationController
 
   def find_latest_post_revision_from_params
     post_id = params[:id] || params[:post_id]
+    post = find_post_from_params
 
     finder = PostRevision.where(post_id: post_id).order(:number)
-    finder = finder.where(hidden: false) unless guardian.is_staff?
+    finder = finder.where(hidden: false) unless guardian.is_staff? || post.user_id == current_user.id
     post_revision = finder.last
 
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
