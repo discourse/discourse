@@ -230,7 +230,7 @@ module BackupRestore
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
+            'tar', '--append', '--dereference', '--warning=no-file-changed', '--file', tar_filename, upload_directory,
             failure_message: "Failed to archive uploads."
           )
         else
