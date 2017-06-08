@@ -236,7 +236,7 @@ GEM
     pry-rails (0.3.4)
       pry (>= 0.9.10)
     public_suffix (2.0.5)
-    puma (3.6.0)
+    puma (3.9.1)
     r2 (0.2.6)
     rack (1.6.8)
     rack-mini-profiler (0.10.5)
