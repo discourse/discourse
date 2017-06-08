@@ -998,7 +998,7 @@ class User < ActiveRecord::Base
   end
 
   def hash_password(password, salt)
-    raise StandardError.new("password is too long") if password.size > User.max_password_length
+    raise StandardError.new("password is too long") if User.password_too_long?(password)
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
   end
 
@@ -1072,6 +1072,10 @@ class User < ActiveRecord::Base
         # if for some reason the user can't be deleted, continue on to the next one
       end
     end
+  end
+
+  def self.password_too_long?(password)
+    password.to_s.size > User.max_password_length
   end
 
   private

@@ -354,7 +354,8 @@ describe UsersController do
       end
 
       it "fails when the password is too long" do
-        put :password_reset, token: token, password: ('x' * (User.max_password_length + 1))
+        User.expects(:password_too_long?).returns(true)
+        put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_present
         expect(session[:current_user_id]).to be_blank
       end

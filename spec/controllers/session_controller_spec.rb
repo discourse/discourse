@@ -475,9 +475,10 @@ describe SessionController do
       end
 
       describe 'invalid password' do
-        it "should return an error with an invalid password if too long" do
+        it "returns an error if the password is too long" do
+          User.expects(:password_too_long?).returns(true)
           User.any_instance.expects(:confirm_password?).never
-          xhr :post, :create, login: user.username, password: ('s' * (User.max_password_length + 1))
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
           expect(::JSON.parse(response.body)['error']).to be_present
         end
       end
