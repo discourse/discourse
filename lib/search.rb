@@ -445,7 +445,7 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
+  advanced_filter(/tags?:([a-zA-Zа-яА-Я0-9,\-_]+)/) do |posts, match|
     tags = match.split(",")
 
     posts.where("topics.id IN (
