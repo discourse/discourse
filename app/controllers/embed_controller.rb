@@ -32,7 +32,7 @@ class EmbedController < ApplicationController
       @topic_view = TopicView.new(topic_id,
                                   current_user,
                                   limit: SiteSetting.embed_post_limit,
-                                  exclude_first: true,
+                                  exclude_first: (SiteSetting.embed_post_limit > 0),
                                   exclude_deleted_users: true,
                                   exclude_hidden: true)
 
