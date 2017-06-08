@@ -293,12 +293,12 @@ en:
     cancel: "cancel"
 
     save: "Save Changes"
-    saving: "Saving..."
+    saving: "Saving…"
     saved: "Saved!"
 
     upload: "Upload"
-    uploading: "Uploading..."
-    uploading_filename: "Uploading {{filename}}..."
+    uploading: "Uploading…"
+    uploading_filename: "Uploading {{filename}}…"
     uploaded: "Uploaded!"
 
     enable: "Enable"
@@ -317,7 +317,7 @@ en:
     choose_topic:
       none_found: "No topics found."
       title:
-        search: "Search for a Topic by name, url or id:"
+        search: "Search for a Topic by name, URL or ID:"
         placeholder: "type the topic title here"
 
     queue:
@@ -721,13 +721,13 @@ en:
       email:
         title: "Email"
         instructions: "never shown to the public"
-        ok: "We will email you to confirm"
+        ok: "An email will be sent to you for you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
         frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
         frequency:
-          one: "We'll only email you if we haven't seen you in the last minute."
-          other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
+          one: "An email will only be sent to you if you haven't been seen you in the last minute."
+          other: "An email will only be sent to you if you haven't been seen you in the last {{count}} minutes."
 
       name:
         title: "Name"
@@ -744,7 +744,7 @@ en:
         not_available_no_suggestion: "Not available"
         too_short: "Your username is too short"
         too_long: "Your username is too long"
-        checking: "Checking username availability..."
+        checking: "Checking username availability…"
         prefilled: "Email matches this registered username"
 
       locale:
@@ -820,7 +820,7 @@ en:
       notification_level_when_replying: "When I post in a topic, set that topic to"
 
       invited:
-        search: "type to search invites..."
+        search: "type to search invites…"
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
@@ -929,7 +929,7 @@ en:
         private_message: "message"
         the_topic: "the topic"
 
-    loading: "Loading..."
+    loading: "Loading…"
     errors:
       prev_page: "while trying to load"
       reasons:
@@ -967,7 +967,7 @@ en:
         one: "1 error/%{duration}"
         other: "%{count} errors/%{duration}"
 
-    learn_more: "learn more..."
+    learn_more: "learn more…"
 
     all_time: 'total'
     all_time_desc: 'total topics created'
@@ -994,10 +994,10 @@ en:
       hide_forever: "no thanks"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
-      value_prop: "When you create an account, we remember exactly what you've read, so you always come right back where you left off. You also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
+      value_prop: "When you create an account, exactly what you've read is remembered, so you always come right back where you left off. You also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
 
     summary:
-      enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
+      enabled_description: "You're viewing a summary of this topic: The most interesting posts as determined by the community."
       description: "There are <b>{{replyCount}}</b> replies."
       description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Summarize This Topic'
@@ -1011,7 +1011,7 @@ en:
 
     private_message_info:
       title: "Message"
-      invite: "Invite Others..."
+      invite: "Invite Others…"
       remove_allowed_user: "Do you really want to remove {{name}} from this message?"
       remove_allowed_group: "Do you really want to remove {{name}} from this message?"
 
@@ -1035,8 +1035,8 @@ en:
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_username_found: "An account that matches the username <b>%{username}</b> was found, you should receive an email with instructions on how to reset your password shortly."
+      complete_email_found: "An account that matches <b>%{email}</b> was found, you should receive an email with instructions on how to reset your password shortly."
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
@@ -1050,14 +1050,14 @@ en:
       rate_limit: "Please wait before trying to log in again."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'
-      logging_in: "Signing In..."
+      logging_in: "Signing In…"
       or: "Or"
-      authenticating: "Authenticating..."
+      authenticating: "Authenticating…"
       awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
-      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
-      not_allowed_from_ip_address: "You can't login from that IP address."
+      not_activated: "You can't log in yet. An activation email was previously sent to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
+      not_allowed_from_ip_address: "You can't log in from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
 
@@ -1066,7 +1066,7 @@ en:
       provide_new_email: "Provide a new address and we'll resend your confirmation email."
       submit_new_email: "Update Email Address"
 
-      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      sent_activation_email_again: "Another activation email was sent to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
@@ -1126,7 +1126,7 @@ en:
 
     composer:
       emoji: "Emoji :)"
-      more_emoji: "more..."
+      more_emoji: "more…"
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
@@ -1135,10 +1135,10 @@ en:
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving..."
+      saving_draft_tip: "saving…"
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
-      similar_topics: "Your topic is similar to..."
+      similar_topics: "Your topic is similar to…"
       drafts_offline: "drafts offline"
 
       group_mentioned:
@@ -1178,7 +1178,7 @@ en:
       saving: "Saving"
       saved: "Saved!"
       saved_draft: "Post draft in progress. Select to resume."
-      uploading: "Uploading..."
+      uploading: "Uploading…"
       show_preview: 'show preview &raquo;'
       hide_preview: '&laquo; hide preview'
 
@@ -1307,7 +1307,7 @@ en:
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
-      searching: "Searching ..."
+      searching: "Searching…"
       post_format: "#{{post_number}} by {{username}}"
       results_page: "Search Results"
 
@@ -1330,7 +1330,7 @@ en:
         with_tags:
           label: With Tags
         filters:
-          label: Only return topics/posts that...
+          label: Only return topics/posts that…
           likes: I liked
           posted: I posted in
           watching: I'm watching
@@ -1453,10 +1453,10 @@ en:
         login_required: "You need to log in to see that topic."
       server_error:
         title: "Topic failed to load"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
+        description: "Sorry, topic could not be loaded, possibly due to a connection problem. Please try again. If the problem persists, let us know."
       not_found:
         title: "Topic not found"
-        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
+        description: "Sorry, topic could not be found. Perhaps it was removed by a moderator?"
       total_unread_posts:
         one: "you have 1 unread post in this topic"
         other: "you have {{count}} unread posts in this topic"
@@ -1558,7 +1558,7 @@ en:
         go_bottom: "bottom"
         go: "go"
         jump_bottom: "jump to last post"
-        jump_prompt: "jump to..."
+        jump_prompt: "jump to…"
         jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
@@ -1615,7 +1615,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        timed_update: "Set Topic Timer..."
+        timed_update: "Set Topic Timer…"
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
@@ -1681,7 +1681,7 @@ en:
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
 
-      inviting: "Inviting..."
+      inviting: "Inviting…"
       automatically_add_to_groups: "This invite also includes access to these groups:"
 
       invite_private:
@@ -1709,9 +1709,9 @@ en:
         to_username: "Enter the username of the person you'd like to invite. We'll send a notification with a link inviting them to this topic."
 
         email_placeholder: 'name@example.com'
-        success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
+        success_email: "An invitation was emailed out to <b>{{emailOrUsername}}</b>. You will be notified when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
         success_username: "We've invited that user to participate in this topic."
-        error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
+        error: "Sorry, could not invite that person. Perhaps they have already been invited? (Invites are rate limited)"
 
       login_reply: 'Log In to Reply'
 
@@ -1755,7 +1755,7 @@ en:
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
 
       change_timestamp:
-        title: "Change Timestamp..."
+        title: "Change Timestamp…"
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -1861,8 +1861,8 @@ en:
           yes_value: "Yes, delete the replies too"
           no_value: "No, just this post"
         admin: "post admin actions"
-        wiki: "Make Wiki"
-        unwiki: "Remove Wiki"
+        wiki: "Make wiki"
+        unwiki: "Remove wiki"
         convert_to_moderator: "Add Staff Color"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
@@ -1957,7 +1957,7 @@ en:
 
       merge:
         confirm:
-          one: "Are you sure you want merge those posts?"
+          one: "Are you sure you want to merge those posts?"
           other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:
@@ -1969,7 +1969,7 @@ en:
           hide: "Hide revision"
           show: "Show revision"
           revert: "Revert to this revision"
-          edit_wiki: "Edit Wiki"
+          edit_wiki: "Edit wiki"
           edit_post: "Edit Post"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
@@ -1992,7 +1992,7 @@ en:
             title: "Show the text part of the email"
             button: 'Text'
           html_part:
-            title: "Show the html part of the email"
+            title: "Show the HTML part of the email"
             button: 'HTML'
 
     category:
@@ -2123,8 +2123,8 @@ en:
           one: "enter at least 1 character"
           other: "enter at least {{count}} characters"
         more:
-          one: "1 to go..."
-          other: "{{count}} to go..."
+          one: "1 to go…"
+          other: "{{count}} to go…"
         left:
           one: "1 remaining"
           other: "{{count}} remaining"
@@ -2138,7 +2138,7 @@ en:
       title: "Topic Summary"
       participants_title: "Frequent Posters"
       links_title: "Popular Links"
-      links_shown: "show more links..."
+      links_shown: "show more links…"
       clicks:
         one: "1 click"
         other: "%{count} clicks"
@@ -2325,9 +2325,9 @@ en:
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
         search: '<b>/</b> Search'
         help: '<b>?</b> Open keyboard help'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
-        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss new/posts'
+        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss topics'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log out'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2480,7 +2480,7 @@ en:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "type to filter…"
 
     admin:
       title: 'Discourse Admin'
@@ -2546,7 +2546,7 @@ en:
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_modal_title: "Agree and..."
+        agree_flag_modal_title: "Agree and…"
         agree_flag_hide_post: "Agree (hide post + send PM)"
         agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it"
         agree_flag_restore_post: "Agree (restore post)"
@@ -2561,7 +2561,7 @@ en:
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
         delete_post_agree_flag: "Delete post and Agree with flag"
         delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
-        delete_flag_modal_title: "Delete and..."
+        delete_flag_modal_title: "Delete and…"
         delete_spammer: "Delete Spammer"
         delete_spammer_title: "Remove the user and all posts and topics by this user."
         disagree_flag_unhide_post: "Disagree (unhide post)"
@@ -2570,7 +2570,7 @@ en:
         disagree_flag_title: "Deny this flag as invalid or incorrect"
         clear_topic_flags: "Done"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
-        more: "(more replies...)"
+        more: "(more replies…)"
 
         dispositions:
           agreed: "agreed"
@@ -2624,7 +2624,7 @@ en:
         add_members: "Add members"
         custom: "Custom"
         bulk_complete: "The users have been added to the group."
-        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
+        bulk_complete_users_not_added: "These users were not added (make sure they have accounts):"
         bulk: "Bulk Add to Group"
         bulk_paste: "Paste a list of usernames or emails, one per line:"
         bulk_select: "(select a group)"
@@ -2681,7 +2681,7 @@ en:
         individual_event: "Select individual events."
         verify_certificate: "Check TLS certificate of payload url"
         active: "Active"
-        active_notice: "We will deliver event details when it happens."
+        active_notice: "Details of events will be delivered once they happen."
         categories_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified categories. Leave blank to trigger webhooks for all categories."
         categories_filter: "Triggered Categories"
         groups_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified groups. Leave blank to trigger webhooks for all groups."
@@ -2753,18 +2753,18 @@ en:
             title: "Disable read-only mode"
             label: "Disable read-only"
         logs:
-          none: "No logs yet..."
+          none: "No logs yet…"
         columns:
           filename: "Filename"
           size: "Size"
         upload:
           label: "Upload"
           title: "Upload a backup to this instance"
-          uploading: "Uploading..."
+          uploading: "Uploading…"
           success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
-          is_running: "An operation is currently running..."
+          is_running: "An operation is currently running…"
           failed: "The {{operation}} failed. Please check the logs."
           cancel:
             label: "Cancel"
@@ -2857,7 +2857,7 @@ en:
           uploads: "Uploads"
           no_uploads: "You can upload assets associated with your theme such as fonts and images"
           add_upload: "Add Upload"
-          upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
+          upload_file_tip: "Choose an asset to upload (PNG, WOFF2, etc…)"
           variable_name: "SCSS var name:"
           upload: "Upload"
           child_themes_check: "Theme includes other child themes"
@@ -2872,15 +2872,15 @@ en:
           component_of: "Theme is a component of:"
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
-          updating: "Updating..."
+          updating: "Updating…"
           up_to_date: "Theme is up-to-date, last checked:"
           add: "Add"
           commits_behind:
             one: "Theme is 1 commit behind!"
-            other: "Theme is {{count}} commit behind!"
+            other: "Theme is {{count}} commits behind!"
           scss:
             text: "CSS"
-            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+            title: "Enter custom CSS, all valid CSS and SCSS styles are accepted"
           header:
             text: "Header"
             title: "Enter HTML to display above site header"
@@ -2950,7 +2950,7 @@ en:
         settings: "Settings"
         templates: "Templates"
         preview_digest: "Preview Digest"
-        sending_test: "Sending test Email..."
+        sending_test: "Sending test email…"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
@@ -2971,7 +2971,7 @@ en:
         refresh: "Refresh"
         send_digest_label: "Send this result to:"
         send_digest: "Send"
-        sending_email: "Sending email..."
+        sending_email: "Sending email…"
         format: "Format"
         html: "html"
         text: "text"
@@ -2982,7 +2982,7 @@ en:
         incoming_emails:
           from_address: "From"
           to_addresses: "To"
-          cc_addresses: "Cc"
+          cc_addresses: "CC"
           subject: "Subject"
           error: "Error"
           none: "No incoming emails found."
@@ -2997,7 +2997,7 @@ en:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Subject..."
+            subject_placeholder: "Subject…"
             error_placeholder: "Error"
         logs:
           none: "No logs found."
@@ -3005,7 +3005,7 @@ en:
             title: "Filter"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
-            type_placeholder: "digest, signup..."
+            type_placeholder: "digest, signup…"
             reply_key_placeholder: "reply key"
             skipped_reason_placeholder: "reason"
 
@@ -3127,7 +3127,7 @@ en:
         create: 'Add Admin User'
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
-        id_not_found: "Sorry, that user id doesn't exist in our system."
+        id_not_found: "Sorry, that user ID doesn't exist in our system."
         active: "Active"
         show_emails: "Show Emails"
         nav:
@@ -3296,8 +3296,8 @@ en:
           flagged_by_users: "Users Who Flagged"
           likes_given: "Likes Given"
           likes_received: "Likes Received"
-          likes_received_days: "Likes Received: unique days"
-          likes_received_users: "Likes Received: unique users"
+          likes_received_days: "Likes Received: Unique days"
+          likes_received_users: "Likes Received: Unique users"
           qualifies: "Qualifies for trust level 3."
           does_not_qualify: "Doesn't qualify for trust level 3."
           will_be_promoted: "Will be promoted soon."
@@ -3357,7 +3357,7 @@ en:
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
         go_back: "Back to Search"
-        recommended: "We recommend customizing the following text to suit your needs:"
+        recommended: "It is recommended to customize the following text to suit your needs:"
         show_overriden: 'Only show overridden'
 
       site_settings:
@@ -3476,7 +3476,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Use the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"
@@ -3488,11 +3488,11 @@ en:
         feed_settings: "Feed Settings"
         feed_description: "Providing an RSS/ATOM feed for your site can improve Discourse's ability to import your content."
         crawling_settings: "Crawler Settings"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        crawling_description: "When Discourse creates topics for your posts, and no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so the ability to specify CSS rules is provided to make extraction easier."
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
-        embed_username_key_from_feed: "Key to pull discourse username from feed"
+        embed_username_key_from_feed: "Key to pull Discourse username from feed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
@@ -3526,7 +3526,7 @@ en:
       next: "Next"
       step: "%{current} of %{total}"
       upload: "Upload"
-      uploading: "Uploading..."
+      uploading: "Uploading…"
       quit: "Maybe Later"
 
       staff_count:
