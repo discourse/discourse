@@ -346,6 +346,7 @@ module Email
           return { type: :reply, obj: email_log } if email_log
         end
       end
+      nil
     end
 
     def process_destination(destination, user, body, elided)

@@ -555,4 +555,26 @@ describe Email::Receiver do
 
   end
 
+  context "check_address" do
+    before do
+      SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
+    end
+
+    it "returns nil when the key is invalid" do
+      expect(Email::Receiver.check_address('fake@fake.com')).to be_nil
+      expect(Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')).to be_nil
+    end
+
+    context "with a valid reply" do
+      it "returns the destination when the key is valid" do
+        Fabricate(:email_log, reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8')
+
+        dest = Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')
+        expect(dest).to be_present
+        expect(dest[:type]).to eq(:reply)
+        expect(dest[:obj]).to be_present
+      end
+    end
+  end
+
 end
