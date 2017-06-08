@@ -16,9 +16,13 @@ module Jobs
         SiteSetting.favicon_url,
         SiteSetting.apple_touch_icon_url,
       ].map do |url|
-        url = url.dup
-        url.gsub!(s3_cdn_hostname, s3_hostname) if s3_cdn_hostname.present?
-        url[base_url] && url[url.index(base_url)..-1]
+        if url.present?
+          url = url.dup
+          url.gsub!(s3_cdn_hostname, s3_hostname) if s3_cdn_hostname.present?
+          url[base_url] && url[url.index(base_url)..-1]
+        else
+          nil
+        end
       end.compact.uniq
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
