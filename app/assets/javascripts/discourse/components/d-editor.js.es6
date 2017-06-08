@@ -6,7 +6,7 @@ import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
 import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import { SEPARATOR } from 'discourse/lib/category-hashtags';
-import { cook } from 'discourse/lib/text';
+import { cookAsync } from 'discourse/lib/text';
 import { translations } from 'pretty-text/emoji/data';
 import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
@@ -279,14 +279,14 @@ export default Ember.Component.extend({
     const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
 
-    markdownOptions.siteSettings = this.siteSettings;
-
-    this.set('preview', cook(value));
-    Ember.run.scheduleOnce('afterRender', () => {
-      if (this._state !== "inDOM") { return; }
-      const $preview = this.$('.d-editor-preview');
-      if ($preview.length === 0) return;
-      this.sendAction('previewUpdated', $preview);
+    cookAsync(value, markdownOptions).then(cooked => {
+      this.set('preview', cooked);
+      Ember.run.scheduleOnce('afterRender', () => {
+        if (this._state !== "inDOM") { return; }
+        const $preview = this.$('.d-editor-preview');
+        if ($preview.length === 0) return;
+        this.sendAction('previewUpdated', $preview);
+      });
     });
   },
 

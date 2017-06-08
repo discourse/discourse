@@ -5,6 +5,8 @@
 **/
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   // We have to prune @mentions that are within links.
   helper.onParseNode(event => {
     const node = event.node,

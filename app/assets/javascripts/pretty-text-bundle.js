@@ -4,6 +4,7 @@
 //= require ./pretty-text/emoji/data
 //= require ./pretty-text/emoji
 //= require ./pretty-text/engines/discourse-markdown
+//= require ./pretty-text/engines/discourse-markdown-it
 //= require_tree ./pretty-text/engines/discourse-markdown
 //= require xss.min
 //= require better_markdown.js

@@ -8,6 +8,9 @@ registerOption((siteSettings, opts) => {
 });
 
 export function setup(helper) {
+
+  if (helper.markdownIt) { return; }
+
   helper.addPreProcessor(text => {
     const options = helper.getOptions();
     return censor(text, options.censoredWords, options.censoredPattern);

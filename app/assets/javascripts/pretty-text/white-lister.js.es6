@@ -155,6 +155,7 @@ whiteListFeature('default', [
   'kbd',
   'li',
   'ol',
+  'ol[start]',
   'p',
   'pre',
   's',

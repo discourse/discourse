@@ -9,6 +9,9 @@ registerOption((siteSettings, opts) => {
 
 
 export function setup(helper) {
+
+  if (helper.markdownIt) { return; }
+
   register(helper, 'quote', {noWrap: true, singlePara: true}, (contents, bbParams, options) => {
 
     const params = {'class': 'quote'};

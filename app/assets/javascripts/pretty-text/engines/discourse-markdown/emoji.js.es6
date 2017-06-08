@@ -35,6 +35,8 @@ registerOption((siteSettings, opts, state) => {
 
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   helper.whiteList('img.emoji');
 
   function imageFor(code) {

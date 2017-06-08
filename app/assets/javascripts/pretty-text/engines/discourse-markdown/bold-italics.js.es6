@@ -35,6 +35,8 @@ function unhoist(obj,from,to){
 
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   function replaceMarkdown(match, tag) {
     const hash = guid();
 
