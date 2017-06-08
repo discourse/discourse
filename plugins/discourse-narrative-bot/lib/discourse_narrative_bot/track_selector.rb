@@ -245,13 +245,13 @@ module DiscourseNarrativeBot
 
     def bot_mentioned?
       @bot_mentioned ||= PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(
-        self.discobot_user.username
+        self.discobot_user.username.downcase
       )
     end
 
     def public_reply?
       !SiteSetting.discourse_narrative_bot_disable_public_replies &&
-        (bot_mentioned? || reply_to_bot_post?(@post))
+        (reply_to_bot_post?(@post) || bot_mentioned?)
     end
 
     def terminate_track(data)
