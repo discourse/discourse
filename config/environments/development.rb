@@ -51,7 +51,7 @@ Discourse::Application.configure do
 
   require 'stylesheet/watcher'
   if defined? Puma
-    STDERR.puts "Staring CSS change watcher"
+    STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch
   end
 
