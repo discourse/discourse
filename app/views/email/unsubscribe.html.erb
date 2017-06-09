@@ -12,8 +12,7 @@
     <%- end %>
   <%- else %>
     <br/>
-    <h2><%= t 'unsubscribe.title'%></h2>
-    <div><%= t('unsubscribe.email_description', email: @user.email).html_safe %></div>
+    <h2><%= t 'unsubscribe.title'%> <%= @user.email %></h2>
     <br/>
     <%= form_tag(email_perform_unsubscribe_path(key: params[:key])) do %>
       <%if @topic %>
