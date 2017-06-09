@@ -9,22 +9,23 @@ require 'mina/rbenv'
 set :application_name, 'Discourse'
 set :user, 'discourse' # Username in the server to SSH to.
 set :repository, 'https://github.com/edgeryders/discourse.git'
+# The 'production' environment is also used for the staging website. Database settings are defined in
+# defined in '/home/discourse/staging/shared/config/discourse.conf'.
+set :rails_env, 'production'
 
 # shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
 set :shared_dirs, fetch(:shared_dirs, []).push('public/backups', 'public/uploads')
-set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/puma.rb')
+set :shared_files, fetch(:shared_files, []).push('config/discourse.conf', 'config/puma.rb')
 
 task :staging do
   set :domain, 'staging.edgeryders.eu'
   set :deploy_to, '/home/discourse/staging'
-  set :rails_env, 'staging'
   set :branch, 'master'
 end
 
 task :production do
   set :domain, 'discourse.edgeryders.eu'
   set :deploy_to, '/home/discourse/production'
-  set :rails_env, 'production'
   set :branch, 'master'
 end
 

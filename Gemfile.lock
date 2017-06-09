@@ -160,8 +160,6 @@ GEM
     mina (1.0.6)
       open4 (~> 1.3.4)
       rake
-    mina-multistage (1.0.3)
-      mina (~> 1.0)
     mina-puma (1.0.1)
       mina (~> 1.0.0)
       puma (>= 2.13)
@@ -180,7 +178,6 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mustache (1.0.5)
-    mysql2 (0.4.6)
     netrc (0.11.0)
     nokogiri (1.7.2)
       mini_portile2 (~> 2.1.0)
@@ -294,7 +291,6 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
-    redcarpet (3.4.0)
     redis (3.3.3)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
@@ -375,7 +371,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.3.13)
     stackprof (0.2.10)
     test_after_commit (1.1.0)
       activerecord (>= 3.2)
@@ -440,7 +435,6 @@ DEPENDENCIES
   message_bus
   mime-types
   mina
-  mina-multistage
   mina-puma
   mina-sidekiq
   mini_racer
@@ -449,7 +443,6 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
-  mysql2
   nokogiri
   oj
   omniauth
@@ -476,7 +469,6 @@ DEPENDENCIES
   rb-fsevent
   rb-inotify (~> 0.9)
   rbtrace
-  redcarpet
   redis
   redis-namespace
   rest-client
@@ -495,7 +487,6 @@ DEPENDENCIES
   simple-rss
   sinatra
   spork-rails
-  sqlite3 (~> 1.3.13)
   stackprof
   test_after_commit
   thor
