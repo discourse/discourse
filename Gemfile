@@ -151,6 +151,13 @@ group :development do
   gem 'foreman', require: false
 
   gem 'pgreset'
+
+  # https://github.com/mina-deploy/mina
+  gem 'mina'
+  # https://github.com/Mic92/mina-sidekiq
+  gem 'mina-sidekiq', require: false
+  # https://github.com/untitledkingdom/mina-puma
+  gem 'mina-puma', require: false
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -170,7 +177,7 @@ gem 'htmlentities', require: false
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
-gem 'unicorn', require: false
+# gem 'unicorn', require: false
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri

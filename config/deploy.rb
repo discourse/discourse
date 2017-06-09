@@ -1,27 +1,33 @@
+# https://github.com/mina-deploy/mina/tree/master/docs
+require 'mina/bundler'
+require 'mina_sidekiq/tasks'
+require 'mina/puma'
 require 'mina/rails'
 require 'mina/git'
-require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
-
-# Basic settings:
-#   domain       - The hostname to SSH to.
-#   deploy_to    - Path to deploy into.
-#   repository   - Git repo to clone from. (needed by mina/git)
-#   branch       - Branch name to deploy. (needed by mina/git)
+require 'mina/rbenv'
 
 set :application_name, 'Discourse'
-set :domain, 'discourse.edgeryders.eu'
-set :deploy_to, '/home/discourse/staging'
+set :user, 'discourse' # Username in the server to SSH to.
 set :repository, 'https://github.com/edgeryders/discourse.git'
-set :branch, 'master'
-
-# Optional settings:
-set :user, 'discourse'          # Username in the server to SSH to.
-# set :port, '30000'           # SSH port number.
-# set :forward_agent, true     # SSH forward_agent.
 
 # shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
 set :shared_dirs, fetch(:shared_dirs, []).push('public/backups', 'public/uploads')
 set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/puma.rb')
+
+task :staging do
+  set :domain, 'staging.edgeryders.eu'
+  set :deploy_to, '/home/discourse/staging'
+  set :rails_env, 'staging'
+  set :branch, 'master'
+end
+
+task :production do
+  set :domain, 'discourse.edgeryders.eu'
+  set :deploy_to, '/home/discourse/production'
+  set :rails_env, 'production'
+  set :branch, 'master'
+end
+
 
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
@@ -31,18 +37,15 @@ task :environment do
   invoke :'rbenv:load'
 end
 
-# Put any custom commands you need to run at setup
-# All paths in `shared_dirs` and `shared_paths` will be created on their own.
-task :setup do
-  # command %{rbenv install 2.3.0}
-end
-
 desc "Deploys the current version to the server."
-task :deploy do
+task deploy: :environment do
   # uncomment this line to make sure you pushed your local branch to the remote origin
   invoke :'git:ensure_pushed'
 
   deploy do
+    # stop accepting new workers
+    invoke :'sidekiq:quiet'
+
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
     invoke :'git:clone'
@@ -57,6 +60,7 @@ task :deploy do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
       end
+      # invoke :'sidekiq:restart'
     end
   end
 
@@ -64,6 +68,13 @@ task :deploy do
   # run(:local){ say 'done' }
 end
 
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - https://github.com/mina-deploy/mina/tree/master/docs
+
+# mina staging deploy discourse_setup
+# mina staging discourse_setup
+task discourse_setup: :environment do
+  in_path(fetch(:current_path)) do
+  # in_path('/home/discourse/staging/current') do
+    command 'echo "Import data:"'
+    command 'DRUPAL_DB=edgeryders_drupal IMPORT=1 bundle exec ruby script/import_scripts/drupal_er.rb'
+  end
+end
