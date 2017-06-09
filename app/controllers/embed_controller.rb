@@ -46,10 +46,10 @@ class EmbedController < ApplicationController
         @reply_count = @topic_view.topic.posts_count - 1
         @reply_count = 0 if @reply_count < 0
 
-        if SiteSetting.embed_post_limit > 0 && !SiteSetting.embed_link_to_top
-          @topic_view_continue_url = @topic_view.posts.last.full_url
-        else
+        if SiteSetting.embed_link_to_top || SiteSetting.embed_post_limit == 0
           @topic_view_continue_url = @topic_view.absolute_url
+        else
+          @topic_view_continue_url = @topic_view.posts.last.full_url
         end
       end
 
