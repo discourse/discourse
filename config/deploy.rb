@@ -74,7 +74,7 @@ end
 # mina staging discourse_setup
 task discourse_setup: :environment do
   in_path(fetch(:current_path)) do
-  # in_path('/home/discourse/staging/current') do
+    # in_path('/home/discourse/staging/current') do
     command 'echo "Import data:"'
     command 'DRUPAL_DB=edgeryders_drupal IMPORT=1 bundle exec ruby script/import_scripts/drupal_er.rb'
   end
