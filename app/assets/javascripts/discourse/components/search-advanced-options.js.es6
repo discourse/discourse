@@ -8,13 +8,13 @@ const REGEXP_CATEGORY_PREFIX       = /^(category:|#)/ig;
 const REGEXP_GROUP_PREFIX          = /^group:/ig;
 const REGEXP_BADGE_PREFIX          = /^badge:/ig;
 const REGEXP_TAGS_PREFIX           = /^(tags?:|#(?=[a-z0-9\-]+::tag))/ig;
-const REGEXP_IN_PREFIX             = /^in:/ig;
+const REGEXP_IN_PREFIX             = /^(in|with):/ig;
 const REGEXP_STATUS_PREFIX         = /^status:/ig;
 const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/ig;
 const REGEXP_POST_TIME_PREFIX      = /^(before|after):/ig;
 const REGEXP_TAGS_REPLACE          = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/ig;
 
-const REGEXP_IN_MATCH                 = /^in:(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/ig;
+const REGEXP_IN_MATCH                 = /^(in|with):(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/ig;
 const REGEXP_SPECIAL_IN_LIKES_MATCH   = /^in:likes/ig;
 const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /^in:private/ig;
 const REGEXP_SPECIAL_IN_SEEN_MATCH    = /^in:seen/ig;
@@ -22,6 +22,8 @@ const REGEXP_SPECIAL_IN_SEEN_MATCH    = /^in:seen/ig;
 const REGEXP_CATEGORY_SLUG            = /^(\#[a-zA-Z0-9\-:]+)/ig;
 const REGEXP_CATEGORY_ID              = /^(category:[0-9]+)/ig;
 const REGEXP_POST_TIME_WHEN           = /^(before|after)/ig;
+
+const IN_OPTIONS_MAPPING = {'images': 'with'};
 
 export default Em.Component.extend({
   classNames: ['search-advanced-options'],
@@ -36,7 +38,7 @@ export default Em.Component.extend({
     {name: I18n.t('search.advanced.filters.pinned'),    value: "pinned"},
     {name: I18n.t('search.advanced.filters.unpinned'),  value: "unpinned"},
     {name: I18n.t('search.advanced.filters.wiki'),  value: "wiki"},
-    {name: I18n.t('search.advanced.filters.images'),  value: "image"},
+    {name: I18n.t('search.advanced.filters.images'),  value: "images"},
   ],
   statusOptions: [
     {name: I18n.t('search.advanced.statuses.open'),        value: "open"},
@@ -392,13 +394,17 @@ export default Em.Component.extend({
   updateSearchTermForIn() {
     const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get('searchedTerms.in');
+    let keyword = 'in';
+    if(inFilter in IN_OPTIONS_MAPPING) {
+        keyword = IN_OPTIONS_MAPPING[inFilter];
+    }
     let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length !== 0) {
-        searchTerm = searchTerm.replace(match[0], `in:${inFilter}`);
+        searchTerm = searchTerm.replace(match[0], `${keyword}:${inFilter}`);
       } else {
-        searchTerm += ` in:${inFilter}`;
+        searchTerm += ` ${keyword}:${inFilter}`;
       }
 
       this.set('searchTerm', searchTerm.trim());

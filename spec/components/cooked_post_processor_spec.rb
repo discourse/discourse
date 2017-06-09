@@ -249,7 +249,7 @@ describe CookedPostProcessor do
       it "adds a topic image if there's one in the first post" do
         FastImage.stubs(:size)
         expect(post.topic.image_url).to eq(nil)
-        cpp.post_process_images
+        cpp.update_post_image
         post.topic.reload
         expect(post.topic.image_url).to be_present
       end
@@ -262,7 +262,7 @@ describe CookedPostProcessor do
       it "adds a post image if there's one in the post" do
         FastImage.stubs(:size)
         expect(reply.image_url).to eq(nil)
-        cpp.post_process_images
+        cpp.update_post_image
         reply.reload
         expect(reply.image_url).to be_present
       end

@@ -338,7 +338,7 @@ class Search
     end
   end
 
-  advanced_filter(/in:image/) do |posts|
+  advanced_filter(/with:images/) do |posts|
     posts.where("posts.image_url IS NOT NULL")
   end
 
