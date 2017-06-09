@@ -76,8 +76,6 @@ class CookedPostProcessor
       limit_size!(img)
       convert_to_link!(img)
     end
-
-    update_post_image
   end
 
   def extract_images
@@ -98,8 +96,6 @@ class CookedPostProcessor
     @doc.css("img[src]") -
     # minus, emojis
     @doc.css("img.emoji") -
-    # minus, image inside oneboxes
-    oneboxed_images -
     # minus, images inside quotes
     @doc.css(".quote img")
   end
@@ -283,6 +279,8 @@ class CookedPostProcessor
 
   def update_post_image
     img = extract_images_for_post.first
+    return if img.blank?
+
     if img["src"].present?
       @post.update_column(:image_url, img["src"][0...255]) # post
       @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
@@ -300,6 +298,8 @@ class CookedPostProcessor
       @has_oneboxes = true
       Oneboxer.onebox(url, args)
     end
+
+    update_post_image
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }

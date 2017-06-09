@@ -636,7 +636,7 @@ describe Search do
       CookedPostProcessor.new(post_uploaded).update_post_image
       CookedPostProcessor.new(post_with_image_urls).update_post_image
 
-      expect(Search.execute('in:image').posts.map(&:id).sort).to eq([post_uploaded.id, post_with_image_urls.id].sort)
+      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id, post_with_image_urls.id)
     end
 
     it 'can find by latest' do
