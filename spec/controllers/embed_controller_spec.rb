@@ -20,11 +20,20 @@ describe EmbedController do
 
     before do
       Fabricate(:embeddable_host)
-      SiteSetting.embed_link_to_top = true
       controller.request.stubs(:referer).returns('http://eviltrout.com/some-page')
     end
 
+    it "is successful if limit the setting is zero" do
+      SiteSetting.embed_link_to_top = false
+      topic = Fabricate(:topic)
+      SiteSetting.embed_post_limit = 0
+
+      get :comments, topic_id: topic.id
+      expect(response).to be_success
+    end
+
     it "allows a topic to be embedded by id" do
+      SiteSetting.embed_link_to_top = true
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post)
 
