@@ -728,7 +728,6 @@ en:
 
   unsubscribe:
     title: "Unsubscribe"
-    email_description: "You are unsubscribing emails for <b>%{email}</b>."
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
