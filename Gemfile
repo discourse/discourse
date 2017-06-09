@@ -100,6 +100,8 @@ gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
 
+gem 'pgreset'
+
 # for sidekiq web
 gem 'sinatra', require: false
 gem 'execjs', require: false
@@ -149,8 +151,6 @@ group :development do
   gem 'binding_of_caller'
   gem 'annotate'
   gem 'foreman', require: false
-
-  gem 'pgreset'
 
   # https://github.com/mina-deploy/mina
   gem 'mina'

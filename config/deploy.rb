@@ -17,6 +17,7 @@ set :rails_env, 'production'
 set :shared_dirs, fetch(:shared_dirs, []).push('public/backups', 'public/uploads')
 set :shared_files, fetch(:shared_files, []).push('config/discourse.conf', 'config/puma.rb')
 
+
 task :staging do
   set :domain, 'staging.edgeryders.eu'
   set :deploy_to, '/home/discourse/staging'
@@ -29,7 +30,6 @@ task :production do
   set :branch, 'master'
 end
 
-
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
 task :environment do
@@ -38,6 +38,7 @@ task :environment do
   invoke :'rbenv:load'
 end
 
+# mina staging deploy force_asset_precompile=true
 desc "Deploys the current version to the server."
 task deploy: :environment do
   # uncomment this line to make sure you pushed your local branch to the remote origin
@@ -58,9 +59,10 @@ task deploy: :environment do
 
     on :launch do
       in_path(fetch(:current_path)) do
-        command %{mkdir -p tmp/}
-        command %{touch tmp/restart.txt}
+        command %{mkdir -p tmp/sockets/}
       end
+
+      invoke :'puma:phased_restart'
       # invoke :'sidekiq:restart'
     end
   end
@@ -70,12 +72,23 @@ task deploy: :environment do
 end
 
 
+desc 'Starts an interactive console.'
+task console: :environment do
+  set :execution_mode, :exec
+  in_path "#{fetch(:current_path)}" do
+    command %{#{fetch(:rails)} console}
+  end
+end
+
+
 # mina staging deploy discourse_setup
 # mina staging discourse_setup
 task discourse_setup: :environment do
   in_path(fetch(:current_path)) do
-    # in_path('/home/discourse/staging/current') do
-    command 'echo "Import data:"'
-    command 'DRUPAL_DB=edgeryders_drupal bundle exec ruby script/import_scripts/drupal_er.rb'
+    command %{#{fetch(:rake)} db:drop}
+    command %{#{fetch(:rake)} db:create}
+    command %{#{fetch(:rake)} db:migrate}
+    comment %{Import data:}
+    command %{DRUPAL_DB=edgeryders_drupal #{fetch(:bundle_prefix)} ruby script/import_scripts/drupal_er.rb}
   end
 end
