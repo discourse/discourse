@@ -1071,7 +1071,7 @@ embedding:
     hidden: true
   embed_link_to_top:
     default: false
-    hidden: true
+    hidden: false
   embed_title_scrubber:
     default: ''
     hidden: true
