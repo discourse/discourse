@@ -29,7 +29,6 @@ class Sanitize
           a_tag = env[:node]
           a_tag['href'] ||= '#'
           if a_tag['href'] =~ %r{^(?:[a-z]+:)?//}
-            a_tag['target'] = '_blank'
             a_tag['rel']    = 'nofollow noopener'
           else
             a_tag.remove_attribute('target')
