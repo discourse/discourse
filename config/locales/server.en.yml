@@ -723,7 +723,7 @@ en:
 
   unsubscribed:
     title: "Unsubscribed!"
-    description: "You have been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
+    description: "<b>%{email}</b> has been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
 
   unsubscribe:
