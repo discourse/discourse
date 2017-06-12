@@ -65,11 +65,22 @@ test("new user cannot upload attachments", function() {
 });
 
 test("ensures an authorized upload", function() {
-  const html = { name: "unauthorized.html" };
+  sandbox.stub(bootbox, "alert");
+  not(validUpload([{ name: "unauthorized.html" }]));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() })));
+});
+
+test("staff can upload anything in PM", function() {
+  const files = [{ name: "some.docx" }];
+  Discourse.SiteSettings.authorized_extensions = "jpeg";
+  Discourse.SiteSettings.allow_staff_to_upload_any_file_in_pm = true;
+
+  Discourse.User.resetCurrent(Discourse.User.create({ moderator: true }));
+
   sandbox.stub(bootbox, "alert");
 
-  not(validUpload([html]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() })));
+  not(validUpload(files));
+  ok(validUpload(files, { isPrivateMessage: true }));
 });
 
 var imageSize = 10 * 1024;

@@ -185,6 +185,12 @@ export function validateUploadedFile(file, opts) {
   if (!name) { return false; }
 
   // check that the uploaded file is authorized
+  if (Discourse.SiteSettings.allow_staff_to_upload_any_file_in_pm) {
+    if (opts["isPrivateMessage"] && Discourse.User.current("staff")) {
+      return true
+    }
+  }
+
   if (opts["imagesOnly"]) {
     if (!isAnImage(name) && !isAuthorizedImage(name)) {
       bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedImagesExtensions() }));

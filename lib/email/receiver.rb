@@ -577,7 +577,7 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          opts = { is_attachment_for_group_message: options[:is_group_message] }
+          opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(options[:user].id)
           if upload && upload.errors.empty?
             # try to inline images

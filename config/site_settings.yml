@@ -798,6 +798,9 @@ files:
     default: 95
     min: 1
     max: 100
+  allow_staff_to_upload_any_file_in_pm:
+    default: true
+    client: true
 
 trust:
   default_trust_level:

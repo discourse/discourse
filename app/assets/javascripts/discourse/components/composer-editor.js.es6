@@ -239,8 +239,9 @@ export default Ember.Component.extend({
     });
 
     $element.on('fileuploadsubmit', (e, data) => {
-      const isUploading = validateUploadedFiles(data.files);
-      data.formData = { type: "composer" };
+      const isPrivateMessage = this.get("composer.privateMessage");
+      const isUploading = validateUploadedFiles(data.files, { isPrivateMessage });
+      data.formData = { type: "composer", for_private_message: isPrivateMessage };
       this.setProperties({ uploadProgress: 0, isUploading });
       return isUploading;
     });
