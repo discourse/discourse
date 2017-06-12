@@ -16,8 +16,9 @@ class UploadCreator
   #  - type (string)
   #  - content_type (string)
   #  - origin (string)
-  #  - is_attachment_for_group_message (boolean)
+  #  - for_group_message (boolean)
   #  - for_theme (boolean)
+  #  - for_private_message (boolean)
   def initialize(file, filename, opts = {})
     @upload = Upload.new
     @file = file
@@ -78,13 +79,9 @@ class UploadCreator
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
       end
 
-      if @opts[:is_attachment_for_group_message]
-        @upload.is_attachment_for_group_message = true
-      end
-
-      if @opts[:for_theme]
-        @upload.for_theme = true
-      end
+      @upload.for_private_message = true if @opts[:for_private_message]
+      @upload.for_group_message   = true if @opts[:for_group_message]
+      @upload.for_theme           = true if @opts[:for_theme]
 
       return @upload unless @upload.save
 
