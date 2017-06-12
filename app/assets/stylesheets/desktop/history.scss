@@ -12,10 +12,10 @@
 
     .btn[disabled] {
       cursor: not-allowed;
-      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+      background-color: $primary-low; 
     }
     .btn-danger[disabled] {
-      background-color: dark-light-diff($danger, $secondary, 30%, -60%);
+      background-color: $danger-medium;
     }
   }
   #display-modes {
@@ -25,7 +25,7 @@
 
     .btn {
       background-color:inherit;
-      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      color: blend-primary-secondary(50%);
     }
     .btn-primary {
       color: $primary;
@@ -35,7 +35,7 @@
   #revision-details {
     padding: 5px;
     margin-top: 10px;
-    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 3px solid $primary-low; 
   }
   #revisions {
     word-wrap: break-word;

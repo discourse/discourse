@@ -69,14 +69,14 @@
 
         &:hover {
           color: $primary;
-          background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
+          background-color:  $primary-low;
           border-top: 1px solid transparent;
           border-left: 1px solid transparent;
           border-right: 1px solid transparent;
         }
         &:active {
           color: $primary;
-          background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+          background-color: $primary-low;
         }
       }
       .drop-down-visible & {
@@ -85,9 +85,9 @@
           color: #7b7b7b;
           background-color: $secondary;
           cursor: default;
-          border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-          border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-          border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-top: 1px solid $primary-low;
+          border-left: 1px solid $primary-low;
+          border-right: 1px solid $primary-low;
 
           .badge-notification {
             top: -10px;
@@ -147,7 +147,7 @@
 
 
 .highlight-strong {
-  background-color: dark-light-diff($highlight, $secondary, 40%, -45%);
+  background-color: $highlight-medium;
 }
 
 .search-highlight {

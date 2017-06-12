@@ -90,9 +90,9 @@
 
   tbody {
     tr {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+      border-bottom: 1px solid $primary-low; 
       &:first-of-type {
-        border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+        border-top: 3px solid $primary-low; 
       }
     }
 

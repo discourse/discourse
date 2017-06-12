@@ -18,7 +18,7 @@
     max-width: 300px;
 
     .colorpicker {
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border: 1px solid $primary-low; 
       margin-right: 2px;
       width: 16px;
       height: 16px;

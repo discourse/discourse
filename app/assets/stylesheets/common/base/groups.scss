@@ -8,16 +8,16 @@
   width: 100%;
 
   th {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid $primary-low; 
     padding: 5px 0px;
     text-align: left;
   }
 
   tr {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid $primary-low; 
 
     td {
-      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      color: blend-primary-secondary(50%);
       padding: 0.8em 0;
     }
 

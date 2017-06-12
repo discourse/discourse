@@ -48,7 +48,7 @@
 }
 
 .group-edit {
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low; 
   padding: 10px;
 
   .form-horizontal {
