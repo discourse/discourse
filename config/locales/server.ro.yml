@@ -603,7 +603,6 @@ ro:
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
     title: "Te-ai dezabonat!"
-    description: "Te-ai dezabonat. Pentru a-ți schimba adresa de email <a href='%{url}'>vizitează preferințe utilizator</a>."
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"

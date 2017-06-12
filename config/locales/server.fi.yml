@@ -647,7 +647,6 @@ fi:
         remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
   unsubscribed:
     title: "Tilaus peruttu!"
-    description: "Tilauksesi on peruttu. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
   unsubscribe:
     title: "Peru tilaus"
@@ -2081,7 +2080,7 @@ fi:
       text_body_template: |
         Onneksi olkoon, olet ansainnut Kuukauden tulokas -palkinnon %{month_year}** :trophy:
 
-        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](/my/badges).
+        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](%{base_url}/my/badges).
 
         Sinusta on äkkiä tullut tärkeä osa yhteisöä. Kiitos kun liityit, ja jatka samaa rataa!
   unsubscribe_link: |

@@ -547,7 +547,6 @@ sv:
         remove: "Detta ämne är inte längre en banderoll. Den kommer inte att dyka upp i toppen av varje sida."
   unsubscribed:
     title: "Avprenumererat!"
-    description: "Du har avprenumererat. För att ändra dina e-postinställningar <a href='%{url}'>kan du besöka dina användarinställningar</a>."
     topic_description: "För att återprenumerera till %{link}, använd notifieringskontrollerna vid botten eller högra sidan av ämnet."
   unsubscribe:
     title: "Avprenumerera"

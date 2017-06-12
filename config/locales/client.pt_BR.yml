@@ -1735,10 +1735,6 @@ pt_BR:
         confirm:
           one: "Tem certeza que quer apagar esta resposta?"
           other: "Tem certeza que quer apagar todos essas respostas?"
-      merge:
-        confirm:
-          one: "Você tem certeza que quer fundir essas postagens?"
-          other: "Você tem certeza que quer fundir essas {{count}} postagens?"
       revisions:
         controls:
           first: "Primeira revisão"

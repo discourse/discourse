@@ -633,7 +633,6 @@ it:
         remove: "Questo argomento non è più uno striscione. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
     title: "Iscrizione annullata!"
-    description: "La tua iscrizione è stata annullata. Per cambiare le tue impostazioni email <a href='%{url}'>vai alle preferenze utente</a>."
     topic_description: "Per re-iscriverti a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
   unsubscribe:
     title: "Annulla iscrizione"

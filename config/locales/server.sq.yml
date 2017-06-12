@@ -382,7 +382,6 @@ sq:
         remove: "Kjo temë nuk është më banderolë. Nuk do të shfaqet më në majë të çdo faqeje të sitit. "
   unsubscribed:
     title: "U çregjistruat!"
-    description: "U çregjistruat. Për të ndryshuar rregullimet e email-it <a href='%{url}'> shkoni tek preferencat e përdoruesit</a>."
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
     title: "Çregjistrohuni"

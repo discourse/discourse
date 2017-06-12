@@ -1761,10 +1761,6 @@ nl:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
           other: "Weet u zeker dat u al die berichten wilt verwijderen?"
-      merge:
-        confirm:
-          one: "Weet u zeker dat u die berichten wilt samenvoegen?"
-          other: "Weet u zeker dat u die {{count}} berichten wilt samenvoegen?"
       revisions:
         controls:
           first: "Eerste revisie"
@@ -2631,9 +2627,6 @@ nl:
           updating: "Bijwerken..."
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           add: "Toevoegen"
-          commits_behind:
-            one: "Thema loopt 1 doorvoering achter!"
-            other: "Thema loopt {{count}} doorvoeringen achter!"
           scss:
             text: "CSS"
             title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"

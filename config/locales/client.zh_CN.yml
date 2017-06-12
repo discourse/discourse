@@ -1678,9 +1678,6 @@ zh_CN:
       delete:
         confirm:
           other: "确定要删除这些帖子吗？"
-      merge:
-        confirm:
-          other: "确定要合并这 {{count}} 个帖子吗？"
       revisions:
         controls:
           first: "第一版"
@@ -2521,8 +2518,6 @@ zh_CN:
           updating: "更新..."
           up_to_date: "主题已经是最新版本，上次检查："
           add: "添加"
-          commits_behind:
-            other: "主题落后了 {{count}} 个变更！"
           scss:
             text: "CSS"
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"

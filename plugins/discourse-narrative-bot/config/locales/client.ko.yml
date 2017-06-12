@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "모든 새로운 유저에게 튜토리얼을 시작합니다"
+        welcome_message: "모든 유저에게 빠른 시작 안내와 함께 환영 메세지를 보냅니다"

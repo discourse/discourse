@@ -630,7 +630,6 @@ da:
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: "Frameldt!"
-    description: "Du er blevet frameldt. For at ændre i dine email settings <a href='%{url}'> besøg din profil</a>."
     topic_description: "For at følge %{link}, brug notifikationsindstillinger i bunden, eller til højre for emnet."
   unsubscribe:
     title: "Frameld"
@@ -1460,12 +1459,6 @@ da:
     new_user_of_the_month:
       title: "Du er månedens nye bruger!"
       subject_template: "Du er månedens nye bruger!"
-      text_body_template: |
-        Tillykke, du er blevet tildelt **Månedens nye bruger-pris i %{month_year}**. :trophy:
-
-        Denne pris bliver kun tildelt to nye brugere per måned, og den vil altid kunne ses på [din brugerside](/my/badges).
-
-        Du er hurtigt blevet et værdsat medlem af vores forum. Tak, fordi du har sluttet dig til os, og fortsæt endelig på samme vis!
   unsubscribe_link: |
     [Klik her](%{unsubscribe_url}) hvis du ikke længere vil modtage disse emails.
   unsubscribe_link_and_mail: |

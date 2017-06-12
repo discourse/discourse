@@ -605,7 +605,6 @@ zh_CN:
         remove: "本主题已经不再是横幅主题。它将不在每个页面的顶部显示。"
   unsubscribed:
     title: "退订！"
-    description: "你已经退订。要更改你的邮件设置，<a href='%{url}'>访问你的用户设置页面</a>。"
     topic_description: "点击链接 %{link} 重新订阅，或是使用主题底部或右侧的通知控制。"
   unsubscribe:
     title: "退订"
@@ -2010,12 +2009,6 @@ zh_CN:
     new_user_of_the_month:
       title: "你是这个月的最佳新用户！"
       subject_template: "你是这个月的最佳新用户！"
-      text_body_template: |
-        恭喜，你获得了**%{month_year}月最佳新用户**。 :trophy:
-
-        该奖项每月只授予给两位新用户，并且你永远都可以在[你的用户页](/my/badges)找到。
-
-        你迅速成为了我们社区中的一员。感谢你参与，未来继续努力！
   unsubscribe_link: |
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -2215,11 +2208,11 @@ zh_CN:
       title: "忘记密码"
       subject_template: "[%{email_prefix}] 密码重置"
       text_body_template: |
-        有人尝试重置你在[%{site_name}](%{base_url})的账户。
+        在[%{site_name}](%{base_url})上有人要求重置你的密码。
 
-        如果不是你在操作，你可以安全地忽略这封邮件。
+        如果不是你，你可以安全地忽略此邮件。
 
-        点击下面的链接设置新密码：
+        点击以下链接设置新密码：
         %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "设置密码"
@@ -2235,11 +2228,11 @@ zh_CN:
       title: "管理员登陆"
       subject_template: "[%{email_prefix}] 登录"
       text_body_template: |
-        有人尝试登录你在[%{site_name}](%{base_url})的账户。
+        在[%{site_name}](%{base_url})上有人要求登录你的帐号。
 
-        如果不是你在操作，你可以安全地忽略这封邮件。
+        如果你没有提出此请求，你可以安全地忽略此邮件。
 
-        点击下面的链接设置新密码：
+        点击以下链接登录：
         %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "帐号已创建"

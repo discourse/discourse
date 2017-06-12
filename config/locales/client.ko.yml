@@ -83,6 +83,7 @@ ko:
           other: "%{count}년 후"
       previous_month: '이전 달'
       next_month: '다음 달'
+      placeholder: 날짜를 선택하세요
     share:
       topic: '주제를 공유합니다.'
       post: '게시글 #%{postNumber}'
@@ -2370,6 +2371,7 @@ ko:
         embed_truncate: "임베드된 글 뒷부분 잘라내기"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        embed_classname_whitelist: "허용된 CSS 클래스"
         feed_polling_enabled: "RSS/ATOM으로 글 가져오기"
         feed_polling_url: "긁어올 RSS/ATOM 피드 URL"
         save: "삽입(Embedding) 설정 저장하기"
@@ -2388,3 +2390,21 @@ ko:
           label: "새로운:"
           add: "추가"
           filter: "검색 (URL 혹은 외부 URL)"
+  wizard_js:
+    wizard:
+      done: "완료"
+      back: "이전"
+      next: "다음"
+      step: "%{total} 중 %{current}"
+      upload: "업로드"
+      uploading: "업로드 중..."
+      quit: "아마도 다음에"
+      staff_count:
+        other: "당신의 커뮤니티는 관리자가 %{count}명 있습니다."
+      invites:
+        add_user: "추가"
+        none_added: "관리자에게 초대되지 않았습니다. 계속하시겠습니까?"
+        roles:
+          admin: "관리자"
+          moderator: "운영자"
+          regular: "일반 유저"

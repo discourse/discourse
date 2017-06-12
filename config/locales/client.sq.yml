@@ -352,6 +352,12 @@ sq:
         body: "Do të doja të aplikoja për t'u bërë anëtar i grupit @%{groupName}."
       name_placeholder: "Emri i grupit, pa hapësira, si username-t"
       add: "Shto"
+      join: "Bashkoju grupit"
+      leave: "Ik nga grupi"
+      request: "Kërko t'i bashkohesh grupit"
+      automatic_group: Grup automatik
+      closed_group: Grup i mbyllur
+      is_group_user: "Jeni anëtar i këtij grupi"
       name: "Emri"
       user_count: "Numri i anëtarëve"
       bio: "Mbi grupin"
@@ -979,6 +985,8 @@ sq:
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
+      cannot_see_mention:
+        private: "Ju përmendët {{username}} , por ky anëtar nuk do të njoftohet sepse nuk kanë akses në këtë mesazh privat. Do t'ju duhet t'a ftoni anëtarin në këtë mesazh. "
       error:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
@@ -1281,7 +1289,10 @@ sq:
           '3_2': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
           '3_1': 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
           '3': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
-          '2_4': 'Ju do të shikoni një numër përgjigjes sepse ju postuat një përgjigje në këtë temë. '
+          '2_8': 'Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. '
+          '2_4': 'Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. '
+          '2_2': 'Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. '
+          '2': 'Ju do të shikoni numrin e përgjigjeve të reja sepse ju <a href="/u/{{username}}/preferences">lexuat këtë temë</a>.'
           '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
@@ -1596,10 +1607,6 @@ sq:
           vote:
             one: "1 anëtar votoi për këtë postim"
             other: "{{count}} anëtarë votuan për këtë postim"
-      merge:
-        confirm:
-          one: "Jeni i sigurtë që dëshironi t'i bashkoni këto postime?"
-          other: "Jeni i sigurtë që dëshironi t'i bashkoni këto {{count}} postime?"
       revisions:
         controls:
           first: "Revizioni i parë"
@@ -1613,10 +1620,18 @@ sq:
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
+            button: 'HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
+            button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
+      raw_email:
+        displays:
+          text_part:
+            button: 'Tekst'
+          html_part:
+            button: 'HTML'
     category:
       can: 'mund&hellip; '
       none: '(pa kategori)'
@@ -1629,6 +1644,8 @@ sq:
       settings: 'Rregullimet'
       topic_template: "Shabllon i Temës"
       tags: "Etiketat"
+      tags_allowed_tags: "Lejo vetëm këto etiketa të përdoren në këtë kategori:"
+      tags_allowed_tag_groups: "Lejo vetëm etiketat nga këto grupe të përdoren në këtë kategori:"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       delete: 'Fshini kategorinë'
@@ -1736,6 +1753,8 @@ sq:
     topic_statuses:
       warning:
         help: "Ky është një paralajmërim zyrtar."
+      bookmarked:
+        help: "E ruajte këtë temë tek të preferuarat e tua"
       locked:
         help: "Kjo temë është mbyllur; nuk pranon më përgjigje"
       archived:
@@ -1874,6 +1893,8 @@ sq:
         title: 'Shfletimi'
         jump: '<b>#</b> Shko tek postimi #'
         back: '<b>u</b> Mbrapa'
+        open: '<b>o</b> or <b>Enter</b> Lexo temën e zgjedhur'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Seksioni i ardhshëm/mëparshëm'
       application:
         title: 'Aplikimi'
         create: '<b>c</b> Hap një temë të re'
@@ -1905,6 +1926,7 @@ sq:
         mark_regular: '<b>m</b>, <b>r</b> Shënoje temën si të zakonshme'
         mark_tracking: '<b>m</b>, <b>t</b> Ndiqe temën'
         mark_watching: '<b>m</b>, <b>w</b> Vëzhgoje temën'
+        print: '<b>ctrl</b>+<b>p</b> Printo temën'
     badges:
       earned_n_times:
         one: "Kjo stemë është fituar 1 herë"
@@ -1912,6 +1934,8 @@ sq:
       granted_on: "Atribuar më %{date}"
       others_count: "Të tjerë me këtë stemë (%{count})"
       title: Stemat
+      allow_title: "Mund t'a përdorësh këtë stemë si titull"
+      multiple_grant: "Kjo stemë mund të fitohet disa herë"
       badge_count:
         one: "1 stemë"
         other: "%{count} stema"

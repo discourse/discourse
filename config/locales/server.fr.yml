@@ -646,7 +646,7 @@ fr:
         remove: "Ce sujet n'est plus à la une. Il ne sera plus affiché en haut de chaque page."
   unsubscribed:
     title: "Désabonné !"
-    description: "Vous avez été désabonné. Pour modifier vos paramètres de courriel, <a href='%{url}'>visitez vos préférences utilisateurs</a>."
+    description: "<b>%{email}</b> a été désabonné. Pour modifier vos paramètres de courriel, <a href='%{url}'>visitez vos préférences utilisateurs</a>."
     topic_description: "Pour vous ré-abonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
   unsubscribe:
     title: "Se désabonner"
@@ -2058,12 +2058,6 @@ fr:
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur du mois !"
       subject_template: "Vous êtes un nouvel utilisateur du mois !"
-      text_body_template: |
-        Félicitations, vous avez gagné le **prix du Nouveau Membre du Mois de %{month_year}**. :trophy:
-
-        Ce prix est seulement décerné à deux nouveaux membres par mois et sera visible sur [your user page](/my/badges).
-
-        Vous êtes devenu rapidement un membre précieux pour notre communauté. Merci de nous avoir rejoint et continuez à participer !
   unsubscribe_link: |
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

@@ -1695,11 +1695,6 @@ cs:
           one: "Opravdu chcete odstranit tento příspěvek?"
           few: "Opravdu chcete odstranit všechny tyto příspěvky?"
           other: "Opravdu chcete odstranit všechny tyto příspěvky?"
-      merge:
-        confirm:
-          one: "Určite chcete sloučit tyto příspěvky?"
-          few: "Určite chcete sloučit tyto {{count}} příspěvky?"
-          other: "Určite chcete sloučit těchto {{count}} příspěvků?"
       revisions:
         controls:
           first: "První revize"

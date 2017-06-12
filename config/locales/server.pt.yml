@@ -528,7 +528,6 @@ pt:
         remove: "Este tópico já não é uma faixa. Deixará de aparecer no topo de cada página."
   unsubscribed:
     title: "Subscrição cancelada!"
-    description: "A sua subscrição foi cancelada. Para mudar as suas definições de email <a href='%{url}'>visite as suas preferências de utilizador</a>."
     topic_description: "Para re-subscrever a %{link}, use o controle de notificação no fundo ou à direita do tópico."
   unsubscribe:
     title: "Cancelar subscrição"

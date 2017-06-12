@@ -1696,10 +1696,6 @@ it:
         confirm:
           one: "Sei sicuro di voler cancellare questo messaggio?"
           other: "Sei sicuro di voler cancellare tutti questi messaggi?"
-      merge:
-        confirm:
-          one: "Sicuro di voler unire questi messaggi?"
-          other: "Sicuro di voler unire questi {{count}} messaggi?"
       revisions:
         controls:
           first: "Prima revisione"

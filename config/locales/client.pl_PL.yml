@@ -1066,6 +1066,8 @@ pl_PL:
       your_email: "Adres e-mail przypisany do twojego konta to <b>%{email}</b>."
       accept_invite: "Akceptuj zaproszenie"
       success: "Twje konto zostało utworzone i zostałeś zalogowany."
+      name_label: "Nazwa"
+      name_label_optional: "Nazwa(opcjonalnie)"
       password_label: "Ustaw hasło (opcjonalne)"
     password_reset:
       continue: "Przejdź do %{site_name}"
@@ -1328,6 +1330,7 @@ pl_PL:
         actions: "Operacje grupowe"
         close_topics: "Zamknij wpisy"
         archive_topics: "Zarchiwizuj tematy"
+        notification_level: "Powiadomienia"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
         selected:
           one: "Zaznaczono <b>1</b> temat."
@@ -1446,7 +1449,12 @@ pl_PL:
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
       auto_update_input:
+        later_today: "Później dzisiaj"
         tomorrow: "Jutro"
+        later_this_week: "Później w tym tygodniu"
+        this_weekend: "W ten weekend"
+        next_week: "Następny tydzień"
+        next_month: "Następny miesiąc"
         pick_date_and_time: "Wybierz datę i czas"
       publish_to_category:
         title: "Zaplanuj publikację"
@@ -1905,12 +1913,6 @@ pl_PL:
           few: "Jesteś pewny(-a), że chcesz usunąć te wszystkie wpisy?"
           many: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
           other: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
-      merge:
-        confirm:
-          one: "Czy na pewno chcesz scalić te posty?"
-          few: "Czy na pewno chcesz scalić te {{count}} postów?"
-          many: "Czy na pewno chcesz scalić te {{count}} postów?"
-          other: "Czy na pewno chcesz scalić te {{count}} postów?"
       revisions:
         controls:
           first: "Pierwsza wersja"
@@ -2804,11 +2806,6 @@ pl_PL:
           updating: "Trwa proces aktualizacji..."
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           add: "Dodaj"
-          commits_behind:
-            one: "Motyw jest nieaktualny - dostępna 1 poprawka!"
-            few: "Motyw jest nieaktualny - dostępne {{count}} poprawki!"
-            many: "Motyw jest nieaktualny - dostępne {{count}} poprawek!"
-            other: "Motyw jest nieaktualny - dostępne {{count}} poprawek!"
           scss:
             text: "CSS"
             title: "Wstaw własny CSS, przyjmujemy wszystkie prawidłowe style CSS i SCSS"

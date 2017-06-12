@@ -1593,9 +1593,6 @@ zh_TW:
       delete:
         confirm:
           other: "你確定要刪除這些文章?"
-      merge:
-        confirm:
-          other: "確定要合併這 {{count}} 個帖子嗎？"
       revisions:
         controls:
           first: "第一版"

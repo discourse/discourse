@@ -1761,10 +1761,6 @@ de:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
           other: "Möchtest du wirklich all diese Beiträge löschen?"
-      merge:
-        confirm:
-          one: "Möchtest du diese Beiträge wirklich zusammenführen?"
-          other: "Möchtest du diese {{count}} Beiträge wirklich zusammenführen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -2627,9 +2623,6 @@ de:
           updating: "Wird aktualisiert..."
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           add: "Hinzufügen"
-          commits_behind:
-            one: "Theme ist 1 Commit hinterher!"
-            other: "Theme ist {{count}} Commits hinterher!"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"

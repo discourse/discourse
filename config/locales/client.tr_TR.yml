@@ -1587,9 +1587,6 @@ tr_TR:
       delete:
         confirm:
           other: "Tüm bu gönderileri silmek istediğinize emin misiniz?"
-      merge:
-        confirm:
-          other: "{{count}} adet gönderiyi birleştirmek istediğinize emin misiniz?"
       revisions:
         controls:
           first: "İlk revizyon"
