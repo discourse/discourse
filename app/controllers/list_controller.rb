@@ -84,6 +84,7 @@ class ListController < ApplicationController
           else
             @title = I18n.t('js.filters.with_topics', filter: filter_title)
           end
+          @title << " - #{SiteSetting.title}"
         end
       end
 
@@ -181,7 +182,7 @@ class ListController < ApplicationController
     guardian.ensure_can_see!(@category)
     discourse_expires_in 1.minute
 
-    @title = @category.name
+    @title = "#{@category.name} - #{SiteSetting.title}"
     @link = "#{Discourse.base_url}#{@category.url}"
     @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
@@ -239,7 +240,7 @@ class ListController < ApplicationController
       @rss = "top_#{period}"
 
       if use_crawler_layout?
-        @title = I18n.t("js.filters.top.#{period}.title")
+        @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
       end
 
       respond_with_list(list)

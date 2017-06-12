@@ -99,7 +99,7 @@
 <% if @title %>
   <% content_for :title do %><%= @title %><% end %>
 <% elsif @category %>
-  <% content_for :title do %><%= @category.name %><% end %>
+  <% content_for :title do %><%= @category.name %> - <%= SiteSetting.title %><% end %>
 <% elsif params[:page] %>
-  <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %><% end %>
+  <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %> - <%= SiteSetting.title %><% end %>
 <% end %>
