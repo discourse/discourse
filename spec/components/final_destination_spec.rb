@@ -240,6 +240,21 @@ describe FinalDestination do
     it "returns true for private ipv6" do
       expect(fd("https://[fdd7:b450:d4d1:6b44::1]").is_dest_valid?).to eq(false)
     end
+
+    it "returns true for the base uri" do
+      SiteSetting.force_hostname = "final-test.example.com"
+      expect(fd("https://final-test.example.com/onebox").is_dest_valid?).to eq(true)
+    end
+
+    it "returns true for the S3 CDN url" do
+      SiteSetting.s3_cdn_url = "https://s3.example.com"
+      expect(fd("https://s3.example.com/some/thing").is_dest_valid?).to eq(true)
+    end
+
+    it "returns true for the CDN url" do
+      GlobalSetting.stubs(:cdn_url).returns("https://cdn.example.com/discourse")
+      expect(fd("https://cdn.example.com/some/asset").is_dest_valid?).to eq(true)
+    end
   end
 
 end

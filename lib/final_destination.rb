@@ -63,6 +63,12 @@ class FinalDestination
       return nil
     end
 
+    # Always allow current base url
+    if hostname_matches?(Discourse.base_url_no_prefix)
+      @status = :resolved
+      return @uri
+    end
+
     return nil unless validate_uri
     headers = request_headers
     response = Excon.head(
@@ -124,17 +130,18 @@ class FinalDestination
     (IPAddr.new(@uri.hostname) rescue nil).nil?
   end
 
+  def hostname_matches?(url)
+    @uri && url.present? && @uri.hostname == (URI(url) rescue nil)&.hostname
+  end
+
   def is_dest_valid?
 
-    # CDNs are always allowed
-    return true if SiteSetting.s3_cdn_url.present? &&
-      @uri.hostname == URI(SiteSetting.s3_cdn_url).hostname
-
-    global_cdn = GlobalSetting.try(:cdn_url)
-    return true if global_cdn.present? &&
-      @uri.hostname == URI(global_cdn).hostname
-
     return false unless @uri && @uri.host
+
+    # Whitelisted hosts
+    return true if hostname_matches?(SiteSetting.s3_cdn_url) ||
+      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
+      hostname_matches?(Discourse.base_url_no_prefix)
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
     return false unless address_s
