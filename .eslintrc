@@ -6,7 +6,7 @@
     "browser": true,
     "builtin": true
   },
-  ecmaVersion: 7,
+  "ecmaVersion": 7,
   "globals":
     {"Ember":true,
     "jQuery":true,
