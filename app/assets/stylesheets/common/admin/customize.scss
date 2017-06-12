@@ -10,7 +10,7 @@
   .field-error {
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
+    background-color: $quaternary-low;
     padding: 5px;
   }
 
@@ -210,4 +210,3 @@
     margin-top: 20px;
   }
 }
-

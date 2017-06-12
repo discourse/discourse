@@ -314,7 +314,7 @@ body {
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
-  border: 4px solid dark-light-diff($primary, $secondary, 50%, -50%);
+  border: 4px solid blend-primary-secondary(50%);
   border-right-color: transparent;
   border-radius: 50%;
 
@@ -329,7 +329,7 @@ body {
 .content-list {
 
   h3 {
-    color: dark-light-diff($primary, $secondary, 50%, -20%);
+    color: $primary-medium; 
     font-size: 1.071em;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -340,10 +340,10 @@ body {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-top: 1px solid $primary-low; 
     }
     li {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-bottom: 1px solid $primary-low; 
     }
 
     li a {
@@ -352,7 +352,7 @@ body {
       color: $primary;
 
       &:hover {
-        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+        background-color: $primary-low; 
         color: $primary;
       }
 
@@ -380,7 +380,7 @@ span.relative-date {
 
 @keyframes background-fade-highlight {
   0% {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color: $tertiary-low;
   }
   100% {
     background-color: transparent;

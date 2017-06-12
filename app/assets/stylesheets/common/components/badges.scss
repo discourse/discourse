@@ -169,12 +169,12 @@
     }
 
     li.bar>.badge-category {
-      background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
+      background: $primary-low !important;
       color: $primary !important;
     }
 
     li.bullet>.badge-category {
-      background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
+      background: $primary-low !important;
       color: $primary !important;
 
       .badge-category-bg {
@@ -279,9 +279,9 @@
 
   &.clicks {
     font-weight: normal;
-    background-color: dark-light-diff($primary, $secondary, 88%, -60%);
+    background-color: $primary-low;
     top: -1px;
-    color: dark-light-diff($primary, $secondary, 40%, -20%);
+    color: $primary-medium;
     position: relative;
     margin-left: 2px;
     border: none;
@@ -308,8 +308,8 @@
   padding: 4px 5px 2px 5px;
   color: $primary;
   text-shadow: 0 1px 0 rgba($primary, 0.1);
-  background-color: dark-light-diff($primary, $secondary, 90%, -65%);
-  border-color: dark-light-diff($primary, $secondary, 90%, -65%);
+  background-color: $primary-low;
+  border-color: $primary-low;
   font-size: 0.857em;
   box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
 }

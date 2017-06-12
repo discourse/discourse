@@ -32,7 +32,7 @@
       transition: background .15s;
       &:hover {
         color: $quaternary;
-        background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
+        background-color: $quaternary-low;
       }
     }
     &.active > a, > a.active {
@@ -49,9 +49,9 @@
   @extend %nav;
   padding: 0;
   overflow: hidden;
-  background: dark-light-diff($primary, $secondary, 90%, -75%);
+  background: $primary-low;
   li {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -60%);
+    border-bottom: 1px solid $primary-low;
     position: relative;
     &:last-of-type {
       border-bottom: 0;
