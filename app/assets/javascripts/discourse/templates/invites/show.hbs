@@ -23,26 +23,36 @@
         </p>
 
         <form>
-          <label>{{i18n 'user.username.title'}}</label>
           <div class="input username-input">
+            <label>{{i18n 'user.username.title'}}</label>
             {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
             &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+            <div class="instructions">{{i18n 'user.username.instructions'}}</div>
           </div>
 
-          <label>{{nameLabel}}</label>
           <div class="input name-input">
+            <label>{{i18n 'invites.name_label'}}</label>
             {{input value=accountName id="new-account-name" name="name"}}
+            <div class="instructions">{{nameInstructions}}</div>
           </div>
 
-          <label>{{i18n 'invites.password_label'}}</label>
           <div class="input password-input">
+            <label>{{i18n 'invites.password_label'}}</label>
             {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
             &nbsp;{{input-tip validation=passwordValidation}}
+            <div class="instructions">
+              {{passwordInstructions}}
+              <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
+            </div>
           </div>
 
-          <div class="instructions">
-            <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
-          </div>
+          {{#if userFields}}
+            <div class='user-fields'>
+              {{#each userFields as |f|}}
+                {{user-field field=f.field value=f.value}}
+              {{/each}}
+            </div>
+          {{/if}}
 
           <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
 

@@ -9,6 +9,11 @@ export default Ember.Controller.extend(PreferencesTabController, {
     'watched_first_post_category_ids'
   ],
 
+  canSave: function() {
+    return this.get('currentUser.id') === this.get('model.id') ||
+      this.get('currentUser.admin');
+  }.property(),
+
   actions: {
     save() {
       this.set('saved', false);

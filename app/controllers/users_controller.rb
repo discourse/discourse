@@ -127,14 +127,13 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    # TODO proper error surfacing (result is a Model#save call)
     result = UsernameChanger.change(user, params[:new_username], current_user)
-    raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render json: {
-      id: user.id,
-      username: user.username
-    }
+    if result
+      render json: { id: user.id, username: user.username }
+    else
+      render_json_error(user.errors.full_messages.join(','))
+    end
   end
 
   def check_emails
@@ -293,6 +292,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    params.require(:email)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -303,7 +303,7 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
-    if params[:email] && params[:email].length > 254 + 1 + 253
+    if params[:email].length > 254 + 1 + 253
       return fail_with("login.email_too_long")
     end
 
@@ -311,7 +311,7 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).find_by(email: params[:email].strip.downcase)
+    if user = User.find_by(staged: true, email: params[:email].strip.downcase)
       user_params.each { |k, v| user.send("#{k}=", v) }
       user.staged = false
     else
@@ -435,7 +435,7 @@ class UsersController < ApplicationController
         else
           store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
         end
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
 
       format.json do

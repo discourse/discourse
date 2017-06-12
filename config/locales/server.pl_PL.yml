@@ -354,7 +354,6 @@ pl_PL:
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
-  assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Witaj w Discourse"
     body: |2
@@ -603,6 +602,7 @@ pl_PL:
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy jesteś pewny, że chcesz nadać użytkownikowi <b>%{target_username}</b> uprawnienia administratora?"
+      grant: "Przynaj prawa Admina"
       complete: "<b>%{target_username}</b> jest teraz administratorem."
       back_to: "Wróć do %{title}"
   post_action_types:
@@ -634,14 +634,17 @@ pl_PL:
     bookmark:
       title: 'Zakładka'
       description: 'Dodaj ten wpis do zakładek'
+      short_description: 'Dodaj do zakładek ten wpis'
       long_form: 'dodano ten wpis do zakładek'
     like:
       title: 'Polub'
       description: 'Polub ten wpis'
+      short_description: 'Polub ten wpis'
       long_form: 'polubiono to'
     vote:
       title: 'Głosuj'
       description: 'Głosuj za tym wpisem'
+      short_description: 'Zagłosuj na ten wpis'
       long_form: 'zagłosowano za tym wpisem'
   user_activity:
     no_bookmarks:
@@ -678,7 +681,6 @@ pl_PL:
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: "Od subskrybuj!"
-    description: "Zostałeś wypisany. Aby zmienić ustawienia swojego emaila  <a href='%{url}'>zajrzyj na ustawienia użytkownika</a>."
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
   unsubscribe:
     title: "Wypisz"

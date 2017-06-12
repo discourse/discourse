@@ -190,7 +190,11 @@ class PostCreator
 
   def enqueue_jobs
     return unless @post && !@post.errors.present?
-    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
+
+    PostJobsEnqueuer.new(@post, @topic, new_topic?,
+      import_mode: @opts[:import_mode],
+      post_alert_options: @opts[:post_alert_options]
+    ).enqueue_jobs
   end
 
   def self.track_post_stats

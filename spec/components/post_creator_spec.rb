@@ -77,16 +77,19 @@ describe PostCreator do
       end
 
       it "triggers extensibility events" do
-        DiscourseEvent.expects(:trigger).with(:before_create_post, anything).once
-        DiscourseEvent.expects(:trigger).with(:validate_post, anything).once
-        DiscourseEvent.expects(:trigger).with(:topic_created, anything, anything, user).once
-        DiscourseEvent.expects(:trigger).with(:post_created, anything, anything, user).once
-        DiscourseEvent.expects(:trigger).with(:after_validate_topic, anything, anything).once
-        DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
-        DiscourseEvent.expects(:trigger).with(:after_trigger_post_process, anything).once
-        DiscourseEvent.expects(:trigger).with(:markdown_context, anything).at_least_once
-        DiscourseEvent.expects(:trigger).with(:topic_notification_level_changed, anything, anything, anything).at_least_once
-        creator.create
+        events = DiscourseEvent.track_events { creator.create }
+
+        expect(events.map { |event| event[:event_name] }).to include(
+          :before_create_post,
+          :validate_post,
+          :topic_created,
+          :post_created,
+          :after_validate_topic,
+          :before_create_topic,
+          :after_trigger_post_process,
+          :markdown_context,
+          :topic_notification_level_changed,
+        )
       end
 
       it "does not notify on system messages" do
@@ -260,6 +263,22 @@ describe PostCreator do
         post = creator_with_featured_link.create
         expect(post.topic.featured_link).to eq('http://www.discourse.org')
         expect(post.valid?).to eq(true)
+      end
+
+      it 'allows notification email to be skipped' do
+        user_2 = Fabricate(:user)
+
+        creator = PostCreator.new(user,
+          title: 'hi there welcome to my topic',
+          raw: "this is my awesome message @#{user_2.username_lower}",
+          archetype: Archetype.private_message,
+          target_usernames: [user_2.username],
+          post_alert_options: { skip_send_email: true }
+        )
+
+        NotificationEmailer.expects(:process_notification).never
+
+        creator.create
       end
 
       describe "topic's auto close" do

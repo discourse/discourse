@@ -102,6 +102,36 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(Post.last.raw).to eq(expected_raw.chomp)
           end
+
+          it 'should not enqueue any user email' do
+            NotificationEmailer.enable
+            user.user_option.update!(email_always: true)
+
+            post.update!(
+              raw: 'show me what you can do',
+              reply_to_post_number: first_post.post_number
+            )
+
+            NotificationEmailer.expects(:process_notification).never
+
+            described_class.new(:reply, user, post_id: post.id).select
+
+            expect(Post.last.raw).to eq(I18n.t(
+              "discourse_narrative_bot.new_user_narrative.formatting.not_found"
+            ))
+          end
+        end
+
+        context 'when a non regular post is created' do
+          it 'should not do anything' do
+            moderator_post = Fabricate(:moderator_post, user: user, topic: topic)
+
+            expect do
+              described_class.new(
+                :reply, user, post_id: moderator_post.id
+              ).select
+            end.to_not change { Post.count }
+          end
         end
 
         context 'when a non regular post is created' do
@@ -186,6 +216,19 @@ describe DiscourseNarrativeBot::TrackSelector do
                     .to eq("tutorial_formatting")
               end
             end
+          end
+        end
+
+        context 'when a new user is added into the topic' do
+          before do
+            topic.allowed_users << Fabricate(:user)
+          end
+
+          it 'should stop the new user track' do
+            post
+
+            expect { described_class.new(:reply, user, post_id: post.id).select }
+              .to_not change { Post.count }
           end
         end
       end

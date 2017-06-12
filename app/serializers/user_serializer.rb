@@ -115,6 +115,7 @@ class UserSerializer < BasicUserSerializer
                        :bio_excerpt,
                        :location,
                        :website,
+                       :website_name,
                        :profile_background,
                        :card_background
 

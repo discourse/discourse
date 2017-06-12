@@ -5,4 +5,68 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Discourse 튜토리얼 봇을 활성화합니다'
+    disable_discourse_narrative_bot_welcome_post: "Discourse 튜토리얼 봇의 환영 포스트를 비활성화합니다"
+    discourse_narrative_bot_ignored_usernames: "Discourse 튜토리얼 봇이 무시할 유저 이름"
+    discourse_narrative_bot_disable_public_replies: "Discourse 튜토리얼 봇에 의한 공개적인 답글을 비활성화합니다"
+    discourse_narrative_bot_welcome_post_type: "Discourse 튜토리얼 봇이 보내야할 환영 포스트의 종류"
+    discourse_narrative_bot_welcome_post_delay: "Discourse 튜토리얼 봇이 환영 포스트를 보내려면 (n) 초를 기다려야 합니다."
+  badges:
+    certified:
+      name: 인증됨
+      description: "유저 튜토리얼을 완료하였습니다"
+      long_description: |
+        이 배지는 유저 튜토리얼을 성공적으로 마친 유저들에게 부여됩니다. 당신은 대화 도구의 기본적인 도구를 배웠고 인증되었습니다!
+    licensed:
+      description: "심화 유저 튜토리얼을 완료하였습니다"
+  discourse_narrative_bot:
+    bio: "저는 실제 사람이 아닙니다. 저는 이 사이트에 대해서 알려주는 봇입니다. 저에게 물어보고 싶은 것이 있다면 메세지를 보내시거나 **`@%{discobot_username}`** 를 언급하세요."
+    dice:
+      trigger: "굴리기"
+      invalid: |-
+        죄송합니다. 수학적으로 해당 주사위는 돌릴 수 없습니다. :confounded:
+    quote:
+      trigger: "인용"
+      '1':
+        quote: "모든 고난의 사이에는 기회가 존재합니다"
+        author: "앨버트 아인슈타인"
+      '3':
+        quote: "이미 끝났으니까 더 이상 울지 말고, 웃으세요."
+      '8':
+        quote: "하루에 한번 하기 두려운 것을 하세요."
+      '9':
+        quote: "실수는 언제나 용서될 수 있습니다. 실수를 인정할 수 있는 용기가 있다면 말이죠."
+    magic_8_ball:
+      answers:
+        '3': "의심 없이"
+        '4': "당연합니다"
+        '5': "확실합니다"
+        '6': "내가 보기에는 그렇습니다"
+        '7': "가장 그럴 듯 합니다"
+        '9': "예"
+        '12': "나중에 다시 물어봐주세요"
+        '13': "다음에 알려드리는 게 좋을 것 같네요"
+        '14': "지금은 예측할 수 없습니다"
+        '15': "집중해서 다시 물어봐주세요"
+        '16': "믿지 마세요"
+        '17': "내 답은 아닙니다"
+        '18': "내 소스는 아니라고 하네요"
+        '20': "의심스럽습니다"
+    track_selector:
+      reset_trigger: '시작'
+      skip_trigger: '건너뛰기'
+      help_trigger: '도움말 표시'
+      random_mention:
+        reply: |-
+          내가 할 수 있는 일을 알고 싶다면 `@%{discobot_username} %{help_trigger}` 를 말하세요.
+      do_not_understand:
+        second_response: |-
+          죄송해요. 아직도 이해를 못 하겠어요. :anguished:
+
+          혹시 실제 사람에게 문의를 하고 싶으시다면 [저희의 문의 페이지](/about) 를 참고하세요.
+
+          그 동안 저는 물러나 있겠습니다.
+    new_user_narrative:
+      reset_trigger: "새로운 유저"

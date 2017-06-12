@@ -25,7 +25,9 @@
     {{d-button action="requestMembership"
         class="group-index-request"
         icon="envelope"
-        label="groups.request"}}
+        label="groups.request"
+        title=requestMembershipButtonTitle
+        disabled=disableRequestMembership}}
   {{/if}}
 {{else}}
   {{yield}}

@@ -17,7 +17,7 @@ listen (ENV["UNICORN_PORT"] || 3000).to_i
 timeout 30
 
 # feel free to point this anywhere accessible on the filesystem
-pid "#{discourse_path}/tmp/pids/unicorn.pid"
+pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, some applications/frameworks log to stderr or stdout,

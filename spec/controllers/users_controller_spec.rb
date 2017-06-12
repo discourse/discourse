@@ -152,10 +152,17 @@ describe UsersController do
         before do
           Guardian.any_instance.expects(:can_access_forum?).returns(true)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-          put :perform_account_activation, token: 'asdfasdf'
         end
 
         it 'correctly logs on user' do
+          events = DiscourseEvent.track_events do
+            put :perform_account_activation, token: 'asdfasdf'
+          end
+
+          expect(events.map { |event| event[:event_name] }).to include(
+            :user_logged_in, :user_first_logged_in
+          )
+
           expect(response).to be_success
           expect(flash[:error]).to be_blank
           expect(session[:current_user_id]).to be_present
@@ -266,9 +273,15 @@ describe UsersController do
         user = Fabricate(:user)
         user_auth_token = UserAuthToken.generate!(user_id: user.id)
         token = user.email_tokens.create(email: user.email).token
-
         get :password_reset, token: token
-        put :password_reset, token: token, password: 'hg9ow8yhg98o'
+
+        events = DiscourseEvent.track_events do
+          put :password_reset, token: token, password: 'hg9ow8yhg98o'
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(
+          :user_logged_in, :user_first_logged_in
+        )
 
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
@@ -294,12 +307,23 @@ describe UsersController do
         expect(user.user_auth_tokens.count).to eq(1)
       end
 
+      it "doesn't redirect to wizard on get" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
+        token = user.email_tokens.create(email: user.email).token
+        get :password_reset, token: token
+        expect(response).not_to redirect_to(wizard_path)
+      end
+
       it "redirects to the wizard if you're the first admin" do
         user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
         token = user.email_tokens.create(email: user.email).token
         get :password_reset, token: token
         put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
-        expect(response).to be_redirect
+        expect(response).to redirect_to(wizard_path)
       end
 
       it "doesn't invalidate the token when loading the page" do
@@ -386,22 +410,24 @@ describe UsersController do
         expect(session[:current_user_id]).to be_blank
       end
 
-      it 'does log in admin with valid token and SSO disabled' do
-        SiteSetting.enable_sso = false
-        token = admin.email_tokens.create(email: admin.email).token
+      context 'valid token' do
+        it 'does log in admin with SSO disabled' do
+          SiteSetting.enable_sso = false
+          token = admin.email_tokens.create(email: admin.email).token
 
-        get :admin_login, token: token
-        expect(response).to redirect_to('/')
-        expect(session[:current_user_id]).to eq(admin.id)
-      end
+          get :admin_login, token: token
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
 
-      it 'logs in admin with valid token and SSO enabled' do
-        SiteSetting.enable_sso = true
-        token = admin.email_tokens.create(email: admin.email).token
+        it 'logs in admin with SSO enabled' do
+          SiteSetting.enable_sso = true
+          token = admin.email_tokens.create(email: admin.email).token
 
-        get :admin_login, token: token
-        expect(response).to redirect_to('/')
-        expect(session[:current_user_id]).to eq(admin.id)
+          get :admin_login, token: token
+          expect(response).to redirect_to('/')
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
       end
     end
   end
@@ -444,6 +470,17 @@ describe UsersController do
 
     def post_user
       xhr :post, :create, post_user_params
+    end
+
+    context 'when email params is missing' do
+      it 'should raise the right error' do
+        expect do
+          xhr :post, :create,
+            name: @user.name,
+            username: @user.username,
+            passsword: 'tesing12352343'
+        end.to raise_error(ActionController::ParameterMissing)
+      end
     end
 
     context 'when creating a user' do
@@ -852,7 +889,7 @@ describe UsersController do
 
   end
 
-  context '.username' do
+  context '#username' do
     it 'raises an error when not logged in' do
       expect { xhr :put, :username, username: 'somename' }.to raise_error(Discourse::NotLoggedIn)
     end
@@ -879,10 +916,17 @@ describe UsersController do
         expect(user.reload.username).to eq(old_username)
       end
 
-      # Bad behavior, this should give a real JSON error, not an InvalidParameters
       it 'raises an error when change_username fails' do
-        User.any_instance.expects(:save).returns(false)
-        expect { xhr :put, :username, username: user.username, new_username: new_username }.to raise_error(Discourse::InvalidParameters)
+        xhr :put, :username, username: user.username, new_username: '@'
+
+        expect(response).to_not be_success
+
+        body = JSON.parse(response.body)
+
+        expect(body['errors'].first).to include(I18n.t(
+          'user.username.short', min: User.username_length.begin
+        ))
+
         expect(user.reload.username).to eq(old_username)
       end
 

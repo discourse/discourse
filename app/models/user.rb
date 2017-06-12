@@ -689,8 +689,7 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    email_token = self.email_tokens.active.first
-    if email_token
+    if email_token = self.email_tokens.active.first
       EmailToken.confirm(email_token.token)
     else
       self.active = true
@@ -910,6 +909,14 @@ class User < ActiveRecord::Base
   def logged_out
     MessageBus.publish "/logout", self.id, user_ids: [self.id]
     DiscourseEvent.trigger(:user_logged_out, self)
+  end
+
+  def logged_in
+    DiscourseEvent.trigger(:user_logged_in, self)
+
+    if !self.seen_before?
+      DiscourseEvent.trigger(:user_first_logged_in, self)
+    end
   end
 
   protected
