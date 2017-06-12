@@ -2220,7 +2220,7 @@ zh_CN:
         如果不是你在操作，你可以安全地忽略这封邮件。
 
         点击下面的链接设置新密码：
-        %{base_url}/u/admin-login/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "设置密码"
       subject_template: "[%{email_prefix}] 设置密码"
