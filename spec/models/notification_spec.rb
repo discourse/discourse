@@ -44,7 +44,6 @@ describe Notification do
         process_alerts(Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")))
       }
 
-
       it 'notifies the poster on reply' do
         expect {
           reply = Fabricate(:basic_reply, user: coding_horror, topic: post.topic)

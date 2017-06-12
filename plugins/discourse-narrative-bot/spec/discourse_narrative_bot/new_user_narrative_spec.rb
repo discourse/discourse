@@ -37,6 +37,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
     end
 
     it 'should create the right message' do
+      NotificationEmailer.enable
+      NotificationEmailer.expects(:process_notification).once
+
       expect { narrative.notify_timeout(user) }.to change { Post.count }.by(1)
 
       expect(Post.last.raw).to eq(I18n.t(

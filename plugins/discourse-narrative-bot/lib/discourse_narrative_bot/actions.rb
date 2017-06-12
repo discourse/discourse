@@ -8,19 +8,25 @@ module DiscourseNarrativeBot
 
     private
 
-    def reply_to(post, raw, opts = {})
+    def reply_to(post, raw, opts = {}, post_alert_options = {})
+      defaut_post_alert_opts = { skip_send_email: true }.merge(post_alert_options)
+
       if post
         default_opts = {
           raw: raw,
           topic_id: post.topic_id,
-          reply_to_post_number: post.post_number
+          reply_to_post_number: post.post_number,
+          post_alert_options: defaut_post_alert_opts
         }
 
         new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
         reset_rate_limits(post) if new_post
         new_post
       else
-        PostCreator.create!(self.discobot_user, { raw: raw }.merge(opts))
+        PostCreator.create!(self.discobot_user, {
+          post_alert_options: defaut_post_alert_opts,
+          raw: raw
+        }.merge(opts))
       end
     end
 
