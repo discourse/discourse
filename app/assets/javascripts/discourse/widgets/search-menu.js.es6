@@ -54,6 +54,11 @@ const SearchHelper = {
       this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
       this._activeSearch.then(content => {
         searchData.noResults = content.resultTypes.length === 0;
+
+        if (content.grouped_search_result) {
+          searchData.term = content.grouped_search_result.term;
+        }
+
         searchData.results = content;
       }).finally(() => {
         searchData.loading = false;

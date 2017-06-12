@@ -94,9 +94,9 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  var promise = ajax('/search/query', { data: data });
+  let promise = ajax('/search/query', { data: data });
 
-  promise.then(function(results){
+  promise.then(results => {
     return translateResults(results, opts);
   });
 

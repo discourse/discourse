@@ -161,10 +161,12 @@ class Search
     @limit = Search.per_facet
     @valid = true
 
+    # Removes any zero-width characters from search terms
+    term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
     term = process_advanced_search!(term)
 
     if term.present?
-      @term = Search.prepare_data(term.to_s)
+      @term = Search.prepare_data(term)
       @original_term = PG::Connection.escape_string(@term)
     end
 
