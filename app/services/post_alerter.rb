@@ -1,11 +1,14 @@
 require_dependency 'distributed_mutex'
 
 class PostAlerter
-
-  def self.post_created(post)
-    alerter = PostAlerter.new
+  def self.post_created(post, opts = {})
+    alerter = PostAlerter.new(opts)
     alerter.after_save_post(post, true)
     post
+  end
+
+  def initialize(default_opts = {})
+    @default_opts = default_opts
   end
 
   def not_allowed?(user, post)
@@ -271,13 +274,13 @@ class PostAlerter
     Notification.types[:posted],
   ]
 
-  def create_notification(user, type, post, opts=nil)
+  def create_notification(user, type, post, opts = {})
+    opts = @default_opts.merge(opts)
+
     return if user.blank?
     return if user.id < 0
 
     return if type == Notification.types[:liked] && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
-
-    opts ||= {}
 
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
@@ -291,11 +294,19 @@ class PostAlerter
                                       .exists?
 
     # skip if muted on the topic
-    return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
+    return if TopicUser.where(
+      topic: post.topic,
+      user: user,
+      notification_level: TopicUser.notification_levels[:muted]
+    ).exists?
 
     # skip if muted on the group
     if group = opts[:group]
-      return if GroupUser.find_by(group_id: opts[:group_id], user_id: user.id).try(:notification_level) == TopicUser.notification_levels[:muted]
+      return if GroupUser.where(
+        group_id: opts[:group_id],
+        user_id: user.id,
+        notification_level: TopicUser.notification_levels[:muted]
+      ).exists?
     end
 
     # Don't notify the same user about the same notification on the same post
@@ -375,7 +386,8 @@ class PostAlerter
                               topic_id: post.topic_id,
                               post_number: post.post_number,
                               post_action_id: opts[:post_action_id],
-                              data: notification_data.to_json)
+                              data: notification_data.to_json,
+                              skip_send_email: opts[:skip_send_email])
 
    if !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
      # we may have an invalid post somehow, dont blow up
@@ -458,7 +470,7 @@ class PostAlerter
   end
 
   # Notify a bunch of users
-  def notify_non_pm_users(users, type, post, opts=nil)
+  def notify_non_pm_users(users, type, post, opts = {})
 
     return if post.topic.try(:private_message?)
 
