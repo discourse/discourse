@@ -10,6 +10,8 @@ describe User do
 
   describe 'when a user is created' do
     it 'should initiate the bot' do
+      NotificationEmailer.expects(:process_notification).never
+
       user
 
       expected_raw = I18n.t('discourse_narrative_bot.new_user_narrative.hello.message',

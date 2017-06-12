@@ -94,7 +94,7 @@ module DiscourseNarrativeBot
             skip_trigger: TrackSelector.skip_trigger,
             reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}"
           )
-        ))
+        ), {}, { skip_send_email: false })
       end
     end
 

@@ -102,6 +102,24 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(Post.last.raw).to eq(expected_raw.chomp)
           end
+
+          it 'should not enqueue any user email' do
+            NotificationEmailer.enable
+            user.user_option.update!(email_always: true)
+
+            post.update!(
+              raw: 'show me what you can do',
+              reply_to_post_number: first_post.post_number
+            )
+
+            NotificationEmailer.expects(:process_notification).never
+
+            described_class.new(:reply, user, post_id: post.id).select
+
+            expect(Post.last.raw).to eq(I18n.t(
+              "discourse_narrative_bot.new_user_narrative.formatting.not_found"
+            ))
+          end
         end
 
         context 'when a non regular post is created' do

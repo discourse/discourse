@@ -265,6 +265,22 @@ describe PostCreator do
         expect(post.valid?).to eq(true)
       end
 
+      it 'allows notification email to be skipped' do
+        user_2 = Fabricate(:user)
+
+        creator = PostCreator.new(user,
+          title: 'hi there welcome to my topic',
+          raw: "this is my awesome message @#{user_2.username_lower}",
+          archetype: Archetype.private_message,
+          target_usernames: [user_2.username],
+          post_alert_options: { skip_send_email: true }
+        )
+
+        NotificationEmailer.expects(:process_notification).never
+
+        creator.create
+      end
+
       describe "topic's auto close" do
         before do
           SiteSetting.queue_jobs = true
