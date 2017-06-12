@@ -292,6 +292,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    params.require(:email)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -302,7 +303,7 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
-    if params[:email] && params[:email].length > 254 + 1 + 253
+    if params[:email].length > 254 + 1 + 253
       return fail_with("login.email_too_long")
     end
 
@@ -310,7 +311,7 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).find_by(email: params[:email].strip.downcase)
+    if user = User.find_by(staged: true, email: params[:email].strip.downcase)
       user_params.each { |k, v| user.send("#{k}=", v) }
       user.staged = false
     else
