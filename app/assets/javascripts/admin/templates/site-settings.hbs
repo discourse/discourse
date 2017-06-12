@@ -1,10 +1,5 @@
 <div class='admin-controls'>
   <div class='search controls'>
-    {{#if site.isReadOnly}}
-      {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
-    {{else}}
-      {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
-    {{/if}}
     <label>
       {{input type="checkbox" checked=onlyOverridden}}
       {{i18n 'admin.site_settings.show_overriden'}}
