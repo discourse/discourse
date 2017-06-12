@@ -472,6 +472,17 @@ describe UsersController do
       xhr :post, :create, post_user_params
     end
 
+    context 'when email params is missing' do
+      it 'should raise the right error' do
+        expect do
+          xhr :post, :create,
+            name: @user.name,
+            username: @user.username,
+            passsword: 'tesing12352343'
+        end.to raise_error(ActionController::ParameterMissing)
+      end
+    end
+
     context 'when creating a user' do
       it 'sets the user locale to I18n.locale' do
         SiteSetting.default_locale = 'en'
