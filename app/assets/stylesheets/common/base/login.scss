@@ -94,6 +94,13 @@ $input-width: 220px;
     label {
       font-weight: bold;
     }
+    .instructions {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      margin: 0;
+      font-size: 0.929em;
+      font-weight: normal;
+      line-height: 18px;
+    }
   }
 }
 
