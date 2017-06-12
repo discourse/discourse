@@ -1741,11 +1741,6 @@ ro:
           one: "Ești sigur că vrei să ștergi acest mesaj?"
           few: "Ești sigur că vrei să ștergi toate aceste mesaje?"
           other: "Ești sigur că vrei să ștergi toate aceste mesaje?"
-      merge:
-        confirm:
-          one: "Ești sigur că vrei să aduni laolaltă această postare?"
-          few: "Ești sigur că vrei să comasezi aceste {{count}} postări?"
-          other: "Ești sigur că vrei să comasezi aceste {{count}} de postări?"
       revisions:
         controls:
           first: "Prima revizie"

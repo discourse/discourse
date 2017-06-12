@@ -1747,10 +1747,6 @@ da:
         confirm:
           one: "Er du sikker på, at du vil slette indlægget?"
           other: "Er du sikker på, at du vil slette alle de valgte indlæg?"
-      merge:
-        confirm:
-          one: "Er du sikker på du vil flette de indlæg?"
-          other: "Er du sikker på at du vil flette disse {{count}} indlæg?"
       revisions:
         controls:
           first: "Første udgave"
@@ -2607,9 +2603,6 @@ da:
           updating: "Opdaterer..."
           up_to_date: "Tema er opdateret, senest tjekket:"
           add: "Tilføj"
-          commits_behind:
-            one: "Temaet er 1 integrering bagud!"
-            other: "Temaet er {{count}} integreringer bagud!"
           scss:
             text: "CSS"
             title: "Angiv tilpasset CSS - vi accepterer alle gyldige CSS og SCSS-former"

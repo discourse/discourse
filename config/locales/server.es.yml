@@ -644,7 +644,6 @@ es:
         remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Suscripción cancelada!"
-    description: "Has cancelado tu suscripción. Para cambiar tus preferencias de email <a href='%{url}'>visita tus opciones de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, utiliza el desplegable de notificación al pie o en la parte derecha del tema."
   unsubscribe:
     title: "Cancelar suscripción"
@@ -2066,12 +2065,6 @@ es:
     new_user_of_the_month:
       title: "¡Eres un usuario nuevo del mes!"
       subject_template: "¡Eres un usuario nuevo del mes!"
-      text_body_template: |
-        Enhorabuena, has ganado el **premio al nuevo usuario del mes de %{month_year}** . :trophy:
-
-        Este distintivo solo se le concede a dos usuarios nuevos al mes, y será visible para siempre en [tu perfil](/my/badges).
-
-        Has conseguido ser un miembro valioso de nuestra comunidad. Gracias por unirte, ¡y sigue así!
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

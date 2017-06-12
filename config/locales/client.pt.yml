@@ -1657,10 +1657,6 @@ pt:
         confirm:
           one: "Tem a certeza que quer eliminar essa publicação?"
           other: "Tem a certeza que quer eliminar todas essas publicações?"
-      merge:
-        confirm:
-          one: "Tem a certeza que quer juntar estas publicações?"
-          other: "Tem a certeza que quer unir estas {{count}} publicações?"
       revisions:
         controls:
           first: "Primeira revisão"

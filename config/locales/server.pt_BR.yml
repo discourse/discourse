@@ -583,7 +583,6 @@ pt_BR:
         remove: "Este tópico não é mais um banner. Ela deixará de aparecer no topo de todas as páginas."
   unsubscribed:
     title: "Desinscrito!"
-    description: "You have been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>.\n\nVocê se desinscreveu. Para alterar as suas configurações de email"
     topic_description: "Para se reinscrever a %{link}, use o controle de notificações no fim ou no canto direito do tópico."
   unsubscribe:
     title: "Desinscrever"

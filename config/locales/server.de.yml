@@ -644,7 +644,6 @@ de:
         remove: "Dieses Thema ist jetzt kein Banner mehr. Es wird nicht mehr auf jeder Seite ganz oben angezeigt."
   unsubscribed:
     title: "Abbestellt!"
-    description: "Du hast die Benachrichtigungen erfolgreich abbestellt. Um deine E-Mail-Einstellungen zu ändern, <a href='%{url}%'>besuche deine Einstellungen</a>."
     topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen, die du am Ende und rechts von jedem Thema findest."
   unsubscribe:
     title: "Abbestellen"
@@ -2077,12 +2076,6 @@ de:
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"
-      text_body_template: |
-        Glückwunsch, du hast die Auszeichnung **Neuer Benutzer des Monats %{month_year}** erhalten. :trophy:
-
-        Diese Auszeichnung wird nur zwei neuen Benutzern pro Monat verliehen, und wird dauerhaft sichtbar sein auf [deiner Profilseite](/my/badges).
-
-        Du bist schnell ein wertvolles Mitglied unserer Community geworden. Danke, dass du dazugekommen bist, und mache weiter mit der großartigen Arbeit!
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

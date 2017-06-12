@@ -1769,8 +1769,8 @@ fi:
           other: "Oletko varma, että haluat poistaa kaikki nämä viestit?"
       merge:
         confirm:
-          one: "Oletko varma, että haluat yhdistää viestit?"
-          other: "Oletko varma, että haluat yhdistää {{count}} viestiä?"
+          one: "Oletko varma, että haluat yhdistää nämä viestit?"
+          other: "Oletko varma, että haluat yhdistää nämä {{count}} viestiä?"
       revisions:
         controls:
           first: "Ensimmäinen revisio"

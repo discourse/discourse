@@ -26,12 +26,21 @@ ko:
   topics: "글타래"
   posts: "글"
   loading: "로딩중"
+  powered_by_html: '<a href="https://www.discourse.org">Discourse</a> 으로 호스팅되고 있습니다. JavaScript 가 활성화되어 있을 때 가장 멋지게 보입니다.'
   log_in: "로그인"
+  purge_reason: "자동적으로 비활성화된 계정을 삭제하였습니다."
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
+  remove_posts_deleted_by_author: "글쓴이에 의해 삭제된 글"
+  themes:
+    bad_color_scheme: "색 스케마가 잘못되어서 테마를 업데이트할 수 없습니다"
+    other_error: "테마를 업데이트할 수 없습니다"
   emails:
     incoming:
+      default_subject: "토픽에는 제목이 필요합니다"
       show_trimmed_content: "일부 내용만 보기"
+      errors:
+        topic_not_found_error: "답글을 했지만 해당 주제가 삭제된 경우 발생합니다."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -51,6 +60,9 @@ ko:
       has_already_been_used: "이미 사용되었음"
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
+      is_invalid: "문장이 불분명합니다."
+      contains_censored_words: "검열된 단어가 있습니다: %{censored_words}"
+      matches_censored_pattern: "해당 단어는 사이트에서 검열하는 정규식을 포함하고 있습니다: %{censored_words}"
       less_than: '%{count}보다 작아야 함'
       less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
       not_a_number: 숫자가 아님

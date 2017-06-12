@@ -19,6 +19,11 @@ ko:
         help:
           at_least_min_options:
             other: "최소 <strong>%{count}</strong>개의 옵션을 선택해야합니다."
+          up_to_max_options:
+            other: "최대 <strong>%{count}</strong> 개의 옵션을 고를 수 있습니다"
+          x_options:
+            other: "<strong>%{count}</strong> 개이 옵션을 고르십시오"
+          between_min_and_max_options: "최소 <strong>%{min}</strong>개에서 최대 <strong>%{max}</strong>까지 선택할 수 있습니다."
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"
@@ -36,3 +41,8 @@ ko:
         title: "투표 닫기"
         label: "닫기"
         confirm: "정말 이 투표를 닫으시겠어요?"
+      ui_builder:
+        poll_type:
+          multiple: 복수 선택
+        poll_config:
+          max: 최대

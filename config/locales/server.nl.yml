@@ -631,7 +631,6 @@ nl:
         remove: "Dit topic is geen banner meer. Het zal niet meer bovenaan elke pagina verschijnen."
   unsubscribed:
     title: "Uitgeschreven!"
-    description: "U bent uitgeschreven. <a href='%{url}'>Bezoek uw gebruikersvoorkeuren</a> om uw e-mailinstellingen te wijzigen."
     topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw voor %{link} in te schrijven."
   unsubscribe:
     title: "Uitschrijven"

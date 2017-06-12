@@ -1766,10 +1766,6 @@ nb_NO:
         confirm:
           one: "Er du sikker på at du vil slette det innlegget?"
           other: "Er du sikker på at du vil slette alle de innleggene?"
-      merge:
-        confirm:
-          one: "Er du sikker på at du vil flette de innleggene?"
-          other: "Er du sikker på at du vil flette disse {{count}} innleggene?"
       revisions:
         controls:
           first: "Første versjon"
@@ -2638,9 +2634,6 @@ nb_NO:
           updating: "Oppdaterer…"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
-          commits_behind:
-            one: "Drakten én utgave foreldet!"
-            other: "Drakten er {{count}} utgaver foreldet!"
           scss:
             text: "CSS"
             title: "Skriv inn egendefinert CSS, alle gyldige CSS- og SCSS-stiler godtas"

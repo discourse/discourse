@@ -1708,10 +1708,6 @@ sv:
         confirm:
           one: "Är du säker på att du vill radera detta inlägg?"
           other: "Är du säker på att du vill radera alla dessa inlägg?"
-      merge:
-        confirm:
-          one: "Är du säker på att du vill sammanfoga inläggen?"
-          other: "Är du säker på att du vill sammanfoga de {{count}} inläggen?"
       revisions:
         controls:
           first: "Första revision"

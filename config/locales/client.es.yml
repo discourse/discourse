@@ -1760,10 +1760,6 @@ es:
         confirm:
           one: "¿Seguro que quieres eliminar ese post?"
           other: "¿Seguro que quieres eliminar todos esos posts?"
-      merge:
-        confirm:
-          one: "¿Seguro que quieres unir esos posts?"
-          other: "¿Seguro que quieres unir esos {{count}} posts?"
       revisions:
         controls:
           first: "Primera revisión"
@@ -2630,9 +2626,6 @@ es:
           updating: "Actualizando..."
           up_to_date: "El tema está actualizado, última comprobación:"
           add: "Añadir"
-          commits_behind:
-            one: "¡El tema está 1 commit atrasado!"
-            other: "¡El tema está {{count}} commits atrasado!"
           scss:
             text: "CSS"
             title: "Introducir CSS personalizado, se acepta tanto CSS como SCSS"

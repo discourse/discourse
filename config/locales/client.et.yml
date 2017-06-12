@@ -1678,10 +1678,6 @@ et:
         confirm:
           one: "Oled kindel, et soovid selle postituse kustutada?"
           other: "Oled kindel, et soovid kõik need postitused kustutada?"
-      merge:
-        confirm:
-          one: "Oled kindel, et soovid need postitused ühendada?"
-          other: "Oled kindel, et soovid need {{count}} postitust ühendada?"
       revisions:
         controls:
           first: "Esimene redaktsioon"

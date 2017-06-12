@@ -557,7 +557,6 @@ zh_TW:
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: "退訂！"
-    description: "你已經退訂。要更改你的郵件設置，<a href='%{url}'>訪問你的用戶設置頁面</a>。"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
   unsubscribe:
     title: "退訂"

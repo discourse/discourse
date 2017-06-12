@@ -602,6 +602,7 @@ pl_PL:
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy jesteś pewny, że chcesz nadać użytkownikowi <b>%{target_username}</b> uprawnienia administratora?"
+      grant: "Przynaj prawa Admina"
       complete: "<b>%{target_username}</b> jest teraz administratorem."
       back_to: "Wróć do %{title}"
   post_action_types:
@@ -633,14 +634,17 @@ pl_PL:
     bookmark:
       title: 'Zakładka'
       description: 'Dodaj ten wpis do zakładek'
+      short_description: 'Dodaj do zakładek ten wpis'
       long_form: 'dodano ten wpis do zakładek'
     like:
       title: 'Polub'
       description: 'Polub ten wpis'
+      short_description: 'Polub ten wpis'
       long_form: 'polubiono to'
     vote:
       title: 'Głosuj'
       description: 'Głosuj za tym wpisem'
+      short_description: 'Zagłosuj na ten wpis'
       long_form: 'zagłosowano za tym wpisem'
   user_activity:
     no_bookmarks:
@@ -677,7 +681,6 @@ pl_PL:
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: "Od subskrybuj!"
-    description: "Zostałeś wypisany. Aby zmienić ustawienia swojego emaila  <a href='%{url}'>zajrzyj na ustawienia użytkownika</a>."
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
   unsubscribe:
     title: "Wypisz"

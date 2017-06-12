@@ -1675,9 +1675,6 @@ fa_IR:
       delete:
         confirm:
           other: "آیا مطمئنید که می‌خواهید همه‌ی آن نوشته ها را پاک کنید؟"
-      merge:
-        confirm:
-          other: "آیا از ادغام  {{count}}  نوشته اطمینان دارید؟"
       revisions:
         controls:
           first: "بازبینی نخست"
@@ -2518,8 +2515,6 @@ fa_IR:
           updating: "در حال به‌روز‌رسانی"
           up_to_date: "قالب به روز است،‌ آخرین بررسی در:"
           add: "افزودن"
-          commits_behind:
-            other: "قالب {{count}} تغییر دیگر نیاز دارد."
           scss:
             text: "سی اس اس"
             title: "کد CSS مد نظرتان را وارد کنید، از تمام کد‌های CSS و SCSS معتبر پشتیبانی می‌شود."
