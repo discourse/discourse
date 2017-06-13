@@ -4,16 +4,16 @@ require 'jobs/regular/pull_hotlinked_images'
 describe Jobs::PullHotlinkedImages do
 
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
+  let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
 
   before do
-    png = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
-    stub_request(:get, image_url).to_return(body: png)
+    stub_request(:get, image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
     stub_request(:head, image_url)
     SiteSetting.download_remote_images_to_local = true
     FastImage.expects(:size).returns([100, 100]).at_least_once
   end
 
-  it 'replaces image src' do
+  it 'replaces images' do
     post = Fabricate(:post, raw: "<img src='http://wiki.mozilla.org/images/2/2e/Longcat1.png'>")
 
     Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
@@ -22,8 +22,20 @@ describe Jobs::PullHotlinkedImages do
     expect(post.raw).to match(/^<img src='\/uploads/)
   end
 
-  it 'replaces image src without protocol' do
+  it 'replaces images without protocol' do
     post = Fabricate(:post, raw: "<img src='//wiki.mozilla.org/images/2/2e/Longcat1.png'>")
+
+    Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+    post.reload
+
+    expect(post.raw).to match(/^<img src='\/uploads/)
+  end
+
+  it 'replaces images without extension' do
+    extensionless_url = "http://wiki.mozilla.org/images/2/2e/Longcat1"
+    stub_request(:get, extensionless_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
+    stub_request(:head, extensionless_url)
+    post = Fabricate(:post, raw: "<img src='#{extensionless_url}'>")
 
     Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
     post.reload
