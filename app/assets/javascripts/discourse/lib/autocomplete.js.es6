@@ -363,7 +363,7 @@ export default function(options) {
 
     if (options.key) {
       if (options.onKeyUp && key !== options.key) {
-        var match = options.onKeyUp(me.val(), cp);
+        let match = options.onKeyUp(me.val(), cp);
         if (match) {
           completeStart = cp - match[0].length;
           completeEnd = completeStart + match[0].length - 1;
