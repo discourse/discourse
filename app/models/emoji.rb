@@ -2,6 +2,8 @@ class Emoji
   # update this to clear the cache
   EMOJI_VERSION = "v5"
 
+  FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
+
   include ActiveModel::SerializerSupport
 
   attr_reader :path
@@ -147,8 +149,17 @@ class Emoji
 
       db['emojis'].each do |e|
         next if e['name'] == 'tm'
+
         code = replacement_code(e['code'])
-        map[e['name']] = code if code
+        next unless code
+
+        map[e['name']] = code
+        if Emoji.tonable_emojis.include?(e['name'])
+          FITZPATRICK_SCALE.each_with_index do |scale, index|
+            toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
+            map["#{e['name']}:t#{index+2}"] = toned_code
+          end
+        end
       end
 
       Emoji.aliases.each do |key, alias_names|
