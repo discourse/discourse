@@ -1,7 +1,7 @@
-import { emoji, aliases, translations } from 'pretty-text/emoji/data';
+import { emojis, aliases, translations, tonableEmojis } from 'pretty-text/emoji/data';
 
 // bump up this number to expire all emojis
-export const IMAGE_VERSION = "3";
+export const IMAGE_VERSION = "5";
 
 const extendedEmoji = {};
 
@@ -11,7 +11,7 @@ export function registerEmoji(code, url) {
 }
 
 export function emojiList() {
-  const result = emoji.slice(0);
+  const result = emojis.slice(0);
   _.each(extendedEmoji, (v,k) => result.push(k));
   return result;
 }
@@ -19,7 +19,7 @@ export function emojiList() {
 const emojiHash = {};
 
 // add all default emojis
-emoji.forEach(code => emojiHash[code] = true);
+emojis.forEach(code => emojiHash[code] = true);
 
 // and their aliases
 const aliasHash = {};
@@ -30,7 +30,7 @@ Object.keys(aliases).forEach(name => {
 export function performEmojiUnescape(string, opts) {
   // this can be further improved by supporting matches of emoticons that don't begin with a colon
   if (string.indexOf(":") >= 0) {
-    return string.replace(/\B:[^\s:]+:?\B/g, m => {
+    return string.replace(/\B:[^\s:]+(?::t\d)?:?\B/g, m => {
       const isEmoticon = !!translations[m];
       const emojiVal = isEmoticon ? translations[m] : m.slice(1, m.length - 1);
       const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
@@ -64,8 +64,9 @@ export function buildEmojiUrl(code, opts) {
     url = opts.customEmoji[code];
   }
 
-  if (!url && emojiHash.hasOwnProperty(code)) {
-    url = opts.getURL(`/images/emoji/${opts.emojiSet}/${code}.png`);
+  const noToneMatch = code.match(/(.?[\w-]*)?:?/);
+  if (noToneMatch && !url && (emojiHash.hasOwnProperty(noToneMatch[1]) || aliasHash.hasOwnProperty(noToneMatch[1]))) {
+    url = opts.getURL(`/images/emoji/${opts.emojiSet}/${code.replace(/:t/, '/')}.png`);
   }
 
   if (url) {
@@ -77,7 +78,7 @@ export function buildEmojiUrl(code, opts) {
 
 export function emojiExists(code) {
   code = code.toLowerCase();
-  return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
+  return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code) || aliasHash.hasOwnProperty(code));
 };
 
 let toSearch;
@@ -113,3 +114,12 @@ export function emojiSearch(term, options) {
 
   return results;
 };
+
+export function isSkinTonableEmoji(term) {
+  let match = term.match(/^:?(.*?):?$/);
+  if (match) {
+    return tonableEmojis.indexOf(match[1]) !== -1;
+  } else {
+    return tonableEmojis.indexOf(term) !== -1;
+  }
+}

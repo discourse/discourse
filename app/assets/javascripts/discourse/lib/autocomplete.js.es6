@@ -360,8 +360,21 @@ export default function(options) {
 
     var cp = caretPosition(me[0]);
 
-    if (options.key && completeStart === null && cp > 0) {
-      var key = me[0].value[cp-1];
+    if (!options.key) return;
+
+    const key = me[0].value[cp-1];
+
+    if (options.onKeyUp && key !== options.key) {
+      var match = options.onKeyUp(me.val(), cp);
+      if (match) {
+        completeStart = cp - match[0].length;
+        completeEnd = completeStart + match[0].length - 1;
+        let term = match[0].substring(1, match[0].length);
+        updateAutoComplete(dataSource(term, options));
+      }
+    }
+
+    if (completeStart === null && cp > 0) {
       if (key === options.key) {
         var prevChar = me.val().charAt(cp-2);
         if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
@@ -370,7 +383,7 @@ export default function(options) {
         }
       }
     } else if (completeStart !== null) {
-      var term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
+      let term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
       updateAutoComplete(dataSource(term, options));
     }
   });
