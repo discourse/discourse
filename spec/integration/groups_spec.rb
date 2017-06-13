@@ -151,26 +151,6 @@ describe "Groups" do
     end
   end
 
-  describe 'owners' do
-    let(:user1) { Fabricate(:user, last_seen_at: Time.zone.now) }
-    let(:user2) { Fabricate(:user, last_seen_at: Time.zone.now - 1 .day) }
-    let(:group) { Fabricate(:group, users: [user, user1, user2]) }
-
-    it 'should return the right list of owners' do
-      group.add_owner(user1)
-      group.add_owner(user2)
-
-      xhr :get, "/groups/#{group.name}/owners"
-
-      expect(response).to be_success
-
-      owners = JSON.parse(response.body)
-
-      expect(owners.count).to eq(2)
-      expect(owners.map { |o| o["id"] }.sort).to eq([user1.id, user2.id])
-    end
-  end
-
   describe 'members' do
     let(:user1) do
       Fabricate(:user,
@@ -553,6 +533,43 @@ describe "Groups" do
           expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
         end
       end
+    end
+  end
+
+  describe "requesting membership for a group" do
+    let(:new_user) { Fabricate(:user) }
+
+    it 'requires the user to log in' do
+      expect do
+        xhr :post, "/groups/#{group.name}/request_membership"
+      end.to raise_error(Discourse::NotLoggedIn)
+    end
+
+    it 'should create the right PM' do
+      sign_in(user)
+
+      xhr :post, "/groups/#{group.name}/request_membership"
+
+      expect(response).to be_success
+
+      post = Post.last
+      topic = post.topic
+      body = JSON.parse(response.body)
+
+      expect(body['relative_url']).to eq(topic.relative_url)
+      expect(post.user).to eq(user)
+
+      expect(topic.title).to eq(I18n.t('groups.request_membership_pm.title',
+        group_name: group.name
+      ))
+
+      expect(post.raw).to eq(I18n.t(
+        'groups.request_membership_pm.body', group_name: group.name
+      ))
+
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(topic.allowed_users).to eq([user])
+      expect(topic.allowed_groups).to eq([group])
     end
   end
 end

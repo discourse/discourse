@@ -2,7 +2,6 @@ import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import GroupHistory from 'discourse/models/group-history';
 import RestModel from 'discourse/models/rest';
-import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 const Group = RestModel.extend({
   limit: 50,
@@ -202,7 +201,13 @@ const Group = RestModel.extend({
       data: { notification_level, user_id: userId },
       type: "POST"
     });
-  }
+  },
+
+  requestMembership() {
+    return ajax(`/groups/${this.get('name')}/request_membership`, {
+      type: "POST"
+    });
+  },
 });
 
 Group.reopenClass({
@@ -214,10 +219,6 @@ Group.reopenClass({
 
   find(name) {
     return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
-  },
-
-  loadOwners(name) {
-    return ajax('/groups/' + name + '/owners.json').catch(popupAjaxError);
   },
 
   loadMembers(name, offset, limit, params) {
