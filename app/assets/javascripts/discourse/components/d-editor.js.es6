@@ -138,7 +138,7 @@ class Toolbar {
       label: button.label,
       icon: button.label ? null : button.icon || button.id,
       action: button.action || 'toolbarButton',
-      perform: button.perform || Ember.K,
+      perform: button.perform || function() { },
       trimLeading: button.trimLeading
     };
 

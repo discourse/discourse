@@ -4,6 +4,9 @@ const _buttons = [];
 
 const alwaysTrue = () => true;
 
+function identity() {
+}
+
 function addBulkButton(action, key, opts) {
   opts = opts || {};
 
@@ -72,7 +75,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.perform(operation).then(topics => {
       if (topics) {
         topics.forEach(cb);
-        (this.get('refreshClosure') || Ember.k)();
+        (this.get('refreshClosure') || identity)();
         this.send('closeModal');
       }
     });
@@ -80,7 +83,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   performAndRefresh(operation) {
     return this.perform(operation).then(() => {
-      (this.get('refreshClosure') || Ember.k)();
+      (this.get('refreshClosure') || identity)();
       this.send('closeModal');
     });
   },
@@ -145,7 +148,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       this.perform({type: 'change_category', category_id: categoryId}).then(topics => {
         topics.forEach(t => t.set('category', category));
-        (this.get('refreshClosure') || Ember.k)();
+        (this.get('refreshClosure') || identity)();
         this.send('closeModal');
       });
     },
