@@ -358,19 +358,18 @@ export default function(options) {
   $(this).on('keyup.autocomplete', function(e) {
     if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
 
-    var cp = caretPosition(me[0]);
-
-    if (!options.key) return;
-
+    let cp = caretPosition(me[0]);
     const key = me[0].value[cp-1];
 
-    if (options.onKeyUp && key !== options.key) {
-      var match = options.onKeyUp(me.val(), cp);
-      if (match) {
-        completeStart = cp - match[0].length;
-        completeEnd = completeStart + match[0].length - 1;
-        let term = match[0].substring(1, match[0].length);
-        updateAutoComplete(dataSource(term, options));
+    if (options.key) {
+      if (options.onKeyUp && key !== options.key) {
+        var match = options.onKeyUp(me.val(), cp);
+        if (match) {
+          completeStart = cp - match[0].length;
+          completeEnd = completeStart + match[0].length - 1;
+          let term = match[0].substring(1, match[0].length);
+          updateAutoComplete(dataSource(term, options));
+        }
       }
     }
 
