@@ -1,3 +1,4 @@
+require "mini_mime"
 require_dependency 'upload_creator'
 
 class UploadsController < ApplicationController
@@ -42,7 +43,7 @@ class UploadsController < ApplicationController
       if upload = Upload.find_by(sha1: params[:sha]) || Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
         opts = {
           filename: upload.original_filename,
-          content_type: Rack::Mime.mime_type(File.extname(upload.original_filename)),
+          content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
         }
         opts[:disposition]   = "inline" if params[:inline]
         opts[:disposition] ||= "attachment" unless FileHelper.is_image?(upload.original_filename)

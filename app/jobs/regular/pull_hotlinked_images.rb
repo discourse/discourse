@@ -47,8 +47,13 @@ module Jobs
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
+                  filename << File.extname(hotlinked.path) unless filename["."]
                   upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
-                  downloaded_urls[src] = upload.url
+                  if upload.persisted?
+                    downloaded_urls[src] = upload.url
+                  else
+                    Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
+                  end
                 else
                   Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                 end
@@ -81,8 +86,7 @@ module Jobs
           rescue => e
             Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           ensure
-            # close & delete the temp file
-            hotlinked && hotlinked.close!
+            hotlinked&.close! rescue nil
           end
         end
 

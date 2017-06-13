@@ -160,6 +160,7 @@ GEM
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (2.99.3)
+    mini_mime (0.1.3)
     mini_portile2 (2.2.0)
     mini_racer (0.1.9)
       libv8 (~> 5.3)
@@ -432,6 +433,7 @@ DEPENDENCIES
   memory_profiler
   message_bus
   mime-types
+  mini_mime
   mini_racer
   minitest
   mocha
@@ -491,4 +493,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
