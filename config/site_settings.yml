@@ -897,6 +897,9 @@ security:
     default: ''
     type: list
     shadowed_by_global: true
+  whitelist_internal_hosts:
+    default: ''
+    type: list
 
 onebox:
   enable_flash_video_onebox: false

@@ -143,6 +143,12 @@ class FinalDestination
       hostname_matches?(GlobalSetting.try(:cdn_url)) ||
       hostname_matches?(Discourse.base_url_no_prefix)
 
+    if SiteSetting.whitelist_internal_hosts.present?
+      SiteSetting.whitelist_internal_hosts.split('|').each do |h|
+        return true if @uri.hostname.downcase == h.downcase
+      end
+    end
+
     address_s = @opts[:lookup_ip].call(@uri.hostname)
     return false unless address_s
 
