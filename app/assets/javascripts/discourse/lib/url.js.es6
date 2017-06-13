@@ -367,7 +367,7 @@ const DiscourseURL = Ember.Object.extend({
         discoveryTopics.resetParams();
       }
 
-      router.router.updateURL(path);
+      router._routerMicrolib.updateURL(path);
     }
 
     const split = path.split('#');

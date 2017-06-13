@@ -101,7 +101,7 @@ GEM
       ember-source (>= 1.1.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (2.10.2)
+    ember-source (2.13.3)
     erubis (2.7.0)
     excon (0.56.0)
     execjs (2.7.0)

@@ -11,8 +11,7 @@ function initializeDetails(api) {
     };
   });
 
-  const ComposerController = api.container.lookupFactory("controller:composer");
-  ComposerController.reopen({
+  api.modifyClass('controller:composer', {
     actions: {
       insertDetails() {
         this.get("toolbarEvent").applySurround(
@@ -31,6 +30,6 @@ export default {
   name: "apply-details",
 
   initialize() {
-    withPluginApi('0.5', initializeDetails);
+    withPluginApi('0.8.7', initializeDetails);
   }
 };

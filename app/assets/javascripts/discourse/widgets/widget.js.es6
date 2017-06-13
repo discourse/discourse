@@ -248,6 +248,9 @@ export default class Widget {
         return;
       }
       WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
+      if (WidgetClass && WidgetClass.class) {
+        WidgetClass = WidgetClass.class;
+      }
     }
 
     if (WidgetClass) {
