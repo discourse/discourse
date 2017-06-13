@@ -74,6 +74,8 @@ describe InvitesController do
         invite.reload
         post :create, email: invite.email
         expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["failed"]).to be_present
       end
 
       it "allows admins to invite to groups" do
@@ -90,6 +92,14 @@ describe InvitesController do
         invite.reload
         post :create, email: invite.email
         expect(response).to be_success
+      end
+
+      it "responds with error message in case of validation failure" do
+        log_in(:admin)
+        post :create, email: "test@mailinator.com"
+        expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to be_present
       end
     end
 
