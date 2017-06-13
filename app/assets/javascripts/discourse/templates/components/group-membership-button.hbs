@@ -24,8 +24,13 @@
   {{else}}
     {{d-button action="requestMembership"
         class="group-index-request"
+        disabled=loading
         icon="envelope"
         label="groups.request"}}
+
+    {{#if loading}}
+      {{loading-spinner size="small"}}
+    {{/if}}
   {{/if}}
 {{else}}
   {{yield}}
