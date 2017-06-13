@@ -237,7 +237,7 @@ describe FinalDestination do
       expect(fd("https://[2001:470:1:3a8::251]").is_dest_valid?).to eq(true)
     end
 
-    it "returns true for private ipv6" do
+    it "returns false for private ipv6" do
       expect(fd("https://[fdd7:b450:d4d1:6b44::1]").is_dest_valid?).to eq(false)
     end
 
@@ -254,6 +254,11 @@ describe FinalDestination do
     it "returns true for the CDN url" do
       GlobalSetting.stubs(:cdn_url).returns("https://cdn.example.com/discourse")
       expect(fd("https://cdn.example.com/some/asset").is_dest_valid?).to eq(true)
+    end
+
+    it 'supports whitelisting via a site setting' do
+      SiteSetting.whitelist_internal_hosts = 'private-host.com'
+      expect(fd("https://private-host.com/some/url").is_dest_valid?).to eq(true)
     end
   end
 
