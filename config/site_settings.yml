@@ -824,7 +824,6 @@ trust:
   min_trust_to_send_messages:
     default: 1
     enum: 'TrustLevelSetting'
-    client: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30
