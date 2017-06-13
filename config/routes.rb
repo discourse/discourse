@@ -430,7 +430,6 @@ Discourse::Application.routes.draw do
     get 'activity' => "groups#show"
     get 'activity/:filter' => "groups#show"
     get 'members'
-    get 'owners'
     get 'posts'
     get 'topics'
     get 'mentions'
@@ -442,6 +441,7 @@ Discourse::Application.routes.draw do
     member do
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
+      post "request_membership" => "groups#request_membership"
       post "notifications" => "groups#set_notifications"
     end
   end
