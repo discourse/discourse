@@ -64,10 +64,10 @@ class EmailToken < ActiveRecord::Base
       if result[:success]
         # If we are activating the user, send the welcome message
         user.send_welcome_message = !user.active?
-
         user.active = true
         user.email = result[:email_token].email
         user.save!
+        user.set_automatic_groups
       end
 
       if user
