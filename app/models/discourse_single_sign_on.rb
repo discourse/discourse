@@ -68,6 +68,7 @@ class DiscourseSingleSignOn < SingleSignOn
       user.active = true
       user.save!
       user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
+      user.set_automatic_groups
     end
 
     custom_fields.each do |k,v|
