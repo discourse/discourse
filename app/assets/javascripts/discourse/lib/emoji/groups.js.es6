@@ -1466,7 +1466,6 @@ const groups = [
       "studio_microphone",
       "medal_military",
       "computer_mouse",
-      "mouse_three_button",
       "newspaper_roll",
       "spiral_notepad",
       "oil_drum",
