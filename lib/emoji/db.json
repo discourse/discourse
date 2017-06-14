@@ -6450,8 +6450,9 @@
     "new_moon": [
       "moon"
     ],
-    "automobile": [
-      "car"
+    "oncoming_automobile": [
+      "car",
+      "automobile"
     ],
     "fleur_de_lis": [
       "fleur-de-lis"

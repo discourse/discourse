@@ -208,7 +208,7 @@ EMOJI_ALIASES ||= {
   "tipping_hand_woman" => [ "information_desk_person" ],
   "rowing_man" => [ "rowboat" ],
   "new_moon" => [ "moon" ],
-  "automobile" => [ "car" ],
+  "oncoming_automobile" => [ "car", "automobile" ],
   "fleur_de_lis" => [ "fleur-de-lis" ],
 }
 
@@ -912,7 +912,6 @@ EMOJI_GROUPS ||= [
       "rotating_light",
       "taxi",
       "oncoming_taxi",
-      "automobile",
       "oncoming_automobile",
       "blue_car",
       "truck",
