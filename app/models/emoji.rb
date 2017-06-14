@@ -60,6 +60,7 @@ class Emoji
     Discourse.cache.delete(cache_key("standard_emojis"))
     Discourse.cache.delete(cache_key("aliases_emojis"))
     Discourse.cache.delete(cache_key("all_emojis"))
+    Discourse.cache.delete(cache_key("tonable_emojis"))
   end
 
   def self.db_file
