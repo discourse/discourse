@@ -89,6 +89,6 @@ task discourse_setup: :environment do
     command %{#{fetch(:rake)} db:create}
     command %{#{fetch(:rake)} db:migrate}
     comment %{Import data:}
-    command %{DRUPAL_DB=edgeryders_drupal #{fetch(:bundle_prefix)} ruby script/import_scripts/drupal_er.rb}
+    command %{DRUPAL_DB=edgeryders_drupal DRUPAL_FILES_DIR=/home/discourse/staging/shared/import/web/sites/edgeryders.eu/files #{fetch(:bundle_prefix)} ruby script/import_scripts/drupal_er.rb}
   end
 end
