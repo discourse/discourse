@@ -701,7 +701,6 @@ const groups = [
       "rotating_light",
       "taxi",
       "oncoming_taxi",
-      "automobile",
       "oncoming_automobile",
       "blue_car",
       "truck",
