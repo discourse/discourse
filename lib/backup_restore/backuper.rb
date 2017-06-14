@@ -55,11 +55,11 @@ module BackupRestore
       begin
         notify_user
         remove_old
+        clean_up
       rescue => ex
         Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
       end
 
-      clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
 
