@@ -7,7 +7,7 @@ let _unicodeRegexp;
 export function setUnicodeReplacements(replacements) {
   _unicodeReplacements = replacements;
   if (replacements) {
-    _unicodeRegexp = new RegExp(Object.keys(replacements).join("|"), "g");
+    _unicodeRegexp = new RegExp(Object.keys(replacements).sort().reverse().join("|"), "g");
   }
 };
 
