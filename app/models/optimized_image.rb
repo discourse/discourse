@@ -120,7 +120,7 @@ class OptimizedImage < ActiveRecord::Base
       -background transparent
       -thumbnail #{dimensions}^
       -extent #{dimensions}
-      -interpolate bicubic
+      -interpolate #{Rails.env.development? ? 'catrom' : 'bicubic'}
       -unsharp 2x0.5+0.7+0
       -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
