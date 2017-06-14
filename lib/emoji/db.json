@@ -6344,8 +6344,9 @@
     "artificial_satellite": [
       "satellite_orbital"
     ],
-    "three_button_mouse": [
-      "mouse_three_button"
+    "computer_mouse": [
+      "mouse_three_button",
+      "three_button_mouse"
     ],
     "hocho": [
       "knife"
