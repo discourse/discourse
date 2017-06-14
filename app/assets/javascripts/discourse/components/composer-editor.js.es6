@@ -243,7 +243,7 @@ export default Ember.Component.extend({
       const opts = {
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings.allow_staff_to_upload_any_file_in_pm,
-      }
+      };
       const isUploading = validateUploadedFiles(data.files, opts);
       data.formData = { type: "composer", for_private_message: isPrivateMessage };
       this.setProperties({ uploadProgress: 0, isUploading });
