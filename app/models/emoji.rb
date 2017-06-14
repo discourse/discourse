@@ -117,12 +117,21 @@ class Emoji
   def self.unicode_replacements
     return @unicode_replacements if @unicode_replacements
 
-
     @unicode_replacements = {}
+
     db['emojis'].each do |e|
       next if e['name'] == 'tm'
+
       code = replacement_code(e['code'])
-      @unicode_replacements[code] = e['name'] if code
+      next unless code
+
+      @unicode_replacements[code] = e['name']
+      if Emoji.tonable_emojis.include?(e['name'])
+        FITZPATRICK_SCALE.each_with_index do |scale, index|
+          toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
+          @unicode_replacements[toned_code] = "#{e['name']}:t#{index+2}"
+        end
+      end
     end
 
     @unicode_replacements["\u{2639}"] = 'frowning'
