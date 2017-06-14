@@ -6,7 +6,7 @@ module("Acceptance: wizard", {
     wizard = startApp();
   },
 
-  teardown() {
+  afterEach() {
     Ember.run(wizard, 'destroy');
   }
 });

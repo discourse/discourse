@@ -1,13 +1,13 @@
 import createStore from 'helpers/create-store';
 import Category from 'discourse/models/category';
 
-module("model:category");
+QUnit.module("model:category");
 
-test('slugFor', function(){
+QUnit.test('slugFor', assert =>{
   const store = createStore();
 
   const slugFor = function(cat, val, text) {
-    equal(Discourse.Category.slugFor(cat), val, text);
+    assert.equal(Discourse.Category.slugFor(cat), val, text);
   };
 
   slugFor(store.createRecord('category', {slug: 'hello'}), "hello", "It calculates the proper slug for hello");
@@ -31,8 +31,8 @@ test('slugFor', function(){
 });
 
 
-test('findBySlug', function() {
-  expect(6);
+QUnit.test('findBySlug', assert => {
+  assert.expect(6);
 
   const store = createStore();
   const darth = store.createRecord('category', {id: 1, slug: 'darth'}),
@@ -45,18 +45,18 @@ test('findBySlug', function() {
 
   sandbox.stub(Discourse.Category, 'list').returns(categoryList);
 
-  deepEqual(Discourse.Category.findBySlug('darth'), darth, 'we can find a category');
-  deepEqual(Discourse.Category.findBySlug('luke', 'darth'), luke, 'we can find the other category with parent category');
-  deepEqual(Discourse.Category.findBySlug('熱帶風暴畫眉'), hurricane, 'we can find a category with CJK slug');
-  deepEqual(Discourse.Category.findBySlug('뉴스피드', '熱帶風暴畫眉'), newsFeed, 'we can find a category with CJK slug whose parent slug is also CJK');
-  deepEqual(Discourse.Category.findBySlug('时间', 'darth'), time, 'we can find a category with CJK slug whose parent slug is english');
-  deepEqual(Discourse.Category.findBySlug('bah', '熱帶風暴畫眉'), bah, 'we can find a category with english slug whose parent slug is CJK');
+  assert.deepEqual(Discourse.Category.findBySlug('darth'), darth, 'we can find a category');
+  assert.deepEqual(Discourse.Category.findBySlug('luke', 'darth'), luke, 'we can find the other category with parent category');
+  assert.deepEqual(Discourse.Category.findBySlug('熱帶風暴畫眉'), hurricane, 'we can find a category with CJK slug');
+  assert.deepEqual(Discourse.Category.findBySlug('뉴스피드', '熱帶風暴畫眉'), newsFeed, 'we can find a category with CJK slug whose parent slug is also CJK');
+  assert.deepEqual(Discourse.Category.findBySlug('时间', 'darth'), time, 'we can find a category with CJK slug whose parent slug is english');
+  assert.deepEqual(Discourse.Category.findBySlug('bah', '熱帶風暴畫眉'), bah, 'we can find a category with english slug whose parent slug is CJK');
 
   sandbox.restore();
 });
 
-test('findSingleBySlug', function() {
-  expect(6);
+QUnit.test('findSingleBySlug', assert => {
+  assert.expect(6);
 
   const store = createStore();
   const darth = store.createRecord('category', {id: 1, slug: 'darth'}),
@@ -69,15 +69,15 @@ test('findSingleBySlug', function() {
 
   sandbox.stub(Discourse.Category, 'list').returns(categoryList);
 
-  deepEqual(Discourse.Category.findSingleBySlug('darth'), darth, 'we can find a category');
-  deepEqual(Discourse.Category.findSingleBySlug('darth/luke'), luke, 'we can find the other category with parent category');
-  deepEqual(Discourse.Category.findSingleBySlug('熱帶風暴畫眉'), hurricane, 'we can find a category with CJK slug');
-  deepEqual(Discourse.Category.findSingleBySlug('熱帶風暴畫眉/뉴스피드'), newsFeed, 'we can find a category with CJK slug whose parent slug is also CJK');
-  deepEqual(Discourse.Category.findSingleBySlug('darth/时间'), time, 'we can find a category with CJK slug whose parent slug is english');
-  deepEqual(Discourse.Category.findSingleBySlug('熱帶風暴畫眉/bah'), bah, 'we can find a category with english slug whose parent slug is CJK');
+  assert.deepEqual(Discourse.Category.findSingleBySlug('darth'), darth, 'we can find a category');
+  assert.deepEqual(Discourse.Category.findSingleBySlug('darth/luke'), luke, 'we can find the other category with parent category');
+  assert.deepEqual(Discourse.Category.findSingleBySlug('熱帶風暴畫眉'), hurricane, 'we can find a category with CJK slug');
+  assert.deepEqual(Discourse.Category.findSingleBySlug('熱帶風暴畫眉/뉴스피드'), newsFeed, 'we can find a category with CJK slug whose parent slug is also CJK');
+  assert.deepEqual(Discourse.Category.findSingleBySlug('darth/时间'), time, 'we can find a category with CJK slug whose parent slug is english');
+  assert.deepEqual(Discourse.Category.findSingleBySlug('熱帶風暴畫眉/bah'), bah, 'we can find a category with english slug whose parent slug is CJK');
 });
 
-test('findByIds', function() {
+QUnit.test('findByIds', assert => {
   const store = createStore();
   const categories =  {
     1: store.createRecord('category', {id: 1}),
@@ -85,25 +85,25 @@ test('findByIds', function() {
   };
 
   sandbox.stub(Discourse.Category, 'idMap').returns(categories);
-  deepEqual(Discourse.Category.findByIds([1,2,3]), _.values(categories));
+  assert.deepEqual(Discourse.Category.findByIds([1,2,3]), _.values(categories));
 });
 
-test('search with category name', () => {
+QUnit.test('search with category name', assert => {
   const store = createStore(),
         category1 = store.createRecord('category', { id: 1, name: 'middle term', slug: 'different-slug' }),
         category2 = store.createRecord('category', { id: 2, name: 'middle term', slug: 'another-different-slug' });
 
   sandbox.stub(Category, "listByActivity").returns([category1, category2]);
 
-  deepEqual(Category.search('term', { limit: 0 }), [], "returns an empty array when limit is 0");
-  deepEqual(Category.search(''), [category1, category2], "orders by activity if no term is matched");
-  deepEqual(Category.search('term'), [category1, category2], "orders by activity");
+  assert.deepEqual(Category.search('term', { limit: 0 }), [], "returns an empty array when limit is 0");
+  assert.deepEqual(Category.search(''), [category1, category2], "orders by activity if no term is matched");
+  assert.deepEqual(Category.search('term'), [category1, category2], "orders by activity");
 
   category2.set('name', 'TeRm start');
-  deepEqual(Category.search('tErM'), [category2, category1], "ignores case of category name and search term");
+  assert.deepEqual(Category.search('tErM'), [category2, category1], "ignores case of category name and search term");
 
   category2.set('name', 'term start');
-  deepEqual(Category.search('term'), [category2, category1], "orders matching begin with and then contains");
+  assert.deepEqual(Category.search('term'), [category2, category1], "orders matching begin with and then contains");
 
   sandbox.restore();
 
@@ -112,35 +112,35 @@ test('search with category name', () => {
 
   sandbox.stub(Category, "listByActivity").returns([read_restricted_category, category1, child_category1, category2]);
 
-  deepEqual(Category.search(''),
+  assert.deepEqual(Category.search(''),
             [category1, category2, read_restricted_category],
             "prioritize non read_restricted and does not include child categories when term is blank");
 
-  deepEqual(Category.search('', { limit: 3 }),
+  assert.deepEqual(Category.search('', { limit: 3 }),
             [category1, category2, read_restricted_category],
             "prioritize non read_restricted and does not include child categories categories when term is blank with limit");
 
-  deepEqual(Category.search('term'),
+  assert.deepEqual(Category.search('term'),
             [child_category1, category2, category1, read_restricted_category],
             "prioritize non read_restricted");
 
-  deepEqual(Category.search('term', { limit: 3 }),
+  assert.deepEqual(Category.search('term', { limit: 3 }),
             [child_category1, category2, read_restricted_category],
             "prioritize non read_restricted with limit");
 
   sandbox.restore();
 });
 
-test('search with category slug', () => {
+QUnit.test('search with category slug', assert => {
   const store = createStore(),
         category1 = store.createRecord('category', { id: 1, name: 'middle term', slug: 'different-slug' }),
         category2 = store.createRecord('category', { id: 2, name: 'middle term', slug: 'another-different-slug' });
 
   sandbox.stub(Category, "listByActivity").returns([category1, category2]);
 
-  deepEqual(Category.search('different-slug'), [category1, category2], "returns the right categories");
-  deepEqual(Category.search('another-different'), [category2], "returns the right categories");
+  assert.deepEqual(Category.search('different-slug'), [category1, category2], "returns the right categories");
+  assert.deepEqual(Category.search('another-different'), [category2], "returns the right categories");
 
   category2.set('slug', 'ANOTher-DIFfereNT');
-  deepEqual(Category.search('anOtHer-dIfFeREnt'), [category2], "ignores case of category slug and search term");
+  assert.deepEqual(Category.search('anOtHer-dIfFeREnt'), [category2], "ignores case of category slug and search term");
 });

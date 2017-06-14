@@ -31,7 +31,7 @@ componentTest('preview sanitizes HTML', {
 componentTest('updating the value refreshes the preview', {
   template: '{{d-editor value=value}}',
 
-  setup() {
+  beforeEach() {
     this.set('value', 'evil trout');
   },
 
@@ -52,7 +52,7 @@ function jumpEnd(textarea) {
 function testCase(title, testFunc) {
   componentTest(title, {
     template: '{{d-editor value=value}}',
-    setup() {
+    beforeEach() {
       this.set('value', 'hello world.');
     },
     test(assert) {
@@ -65,7 +65,7 @@ function testCase(title, testFunc) {
 function composerTestCase(title, testFunc) {
   componentTest(title, {
     template: '{{d-editor value=value composerEvents=true}}',
-    setup() {
+    beforeEach() {
       this.set('value', 'hello world.');
     },
     test(assert) {
@@ -269,7 +269,7 @@ testCase('link modal (link with description)', function(assert) {
 
 componentTest('advanced code', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value',
 `
@@ -304,7 +304,7 @@ function xyz(x, y, z) {
 
 componentTest('code button', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.code_formatting_style = '4-spaces-indent';
   },
 
@@ -406,7 +406,7 @@ third line`
 
 componentTest('code fences', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     this.set('value', '');
   },
 
@@ -740,7 +740,7 @@ testCase(`doesn't jump to bottom with long text`, function(assert, textarea) {
 
 componentTest('emoji', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     // Test adding a custom button
     withPluginApi('0.1', api => {
       api.onToolbarCreate(toolbar => {

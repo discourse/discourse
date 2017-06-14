@@ -1,5 +1,4 @@
-import { blank, present } from 'helpers/qunit-helpers';
-module("model:post-stream");
+QUnit.module("model:post-stream");
 
 import createStore from 'helpers/create-store';
 
@@ -15,93 +14,93 @@ const buildStream = function(id, stream) {
 
 const participant = {username: 'eviltrout'};
 
-test('create', function() {
+QUnit.test('create', assert => {
   const store = createStore();
-  ok(store.createRecord('postStream'), 'it can be created with no parameters');
+  assert.ok(store.createRecord('postStream'), 'it can be created with no parameters');
 });
 
-test('defaults', function() {
+QUnit.test('defaults', assert => {
   const postStream = buildStream(1234);
-  blank(postStream.get('posts'), "there are no posts in a stream by default");
-  ok(!postStream.get('loaded'), "it has never loaded");
-  present(postStream.get('topic'));
+  assert.blank(postStream.get('posts'), "there are no posts in a stream by default");
+  assert.ok(!postStream.get('loaded'), "it has never loaded");
+  assert.present(postStream.get('topic'));
 });
 
-test('appending posts', function() {
+QUnit.test('appending posts', assert => {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = postStream.store;
 
-  equal(postStream.get('firstPostId'), 1);
-  equal(postStream.get('lastPostId'), 4, "the last post id is 4");
+  assert.equal(postStream.get('firstPostId'), 1);
+  assert.equal(postStream.get('lastPostId'), 4, "the last post id is 4");
 
-  ok(!postStream.get('hasPosts'), "there are no posts by default");
-  ok(!postStream.get('firstPostPresent'), "the first post is not loaded");
-  ok(!postStream.get('loadedAllPosts'), "the last post is not loaded");
-  equal(postStream.get('posts.length'), 0, "it has no posts initially");
+  assert.ok(!postStream.get('hasPosts'), "there are no posts by default");
+  assert.ok(!postStream.get('firstPostPresent'), "the first post is not loaded");
+  assert.ok(!postStream.get('loadedAllPosts'), "the last post is not loaded");
+  assert.equal(postStream.get('posts.length'), 0, "it has no posts initially");
 
   postStream.appendPost(store.createRecord('post', {id: 2, post_number: 2}));
-  ok(!postStream.get('firstPostPresent'), "the first post is still not loaded");
-  equal(postStream.get('posts.length'), 1, "it has one post in the stream");
+  assert.ok(!postStream.get('firstPostPresent'), "the first post is still not loaded");
+  assert.equal(postStream.get('posts.length'), 1, "it has one post in the stream");
 
   postStream.appendPost(store.createRecord('post', {id: 4, post_number: 4}));
-  ok(!postStream.get('firstPostPresent'), "the first post is still loaded");
-  ok(postStream.get('loadedAllPosts'), "the last post is now loaded");
-  equal(postStream.get('posts.length'), 2, "it has two posts in the stream");
+  assert.ok(!postStream.get('firstPostPresent'), "the first post is still loaded");
+  assert.ok(postStream.get('loadedAllPosts'), "the last post is now loaded");
+  assert.equal(postStream.get('posts.length'), 2, "it has two posts in the stream");
 
   postStream.appendPost(store.createRecord('post', {id: 4, post_number: 4}));
-  equal(postStream.get('posts.length'), 2, "it will not add the same post with id twice");
+  assert.equal(postStream.get('posts.length'), 2, "it will not add the same post with id twice");
 
   const stagedPost = store.createRecord('post', {raw: 'incomplete post'});
   postStream.appendPost(stagedPost);
-  equal(postStream.get('posts.length'), 3, "it can handle posts without ids");
+  assert.equal(postStream.get('posts.length'), 3, "it can handle posts without ids");
   postStream.appendPost(stagedPost);
-  equal(postStream.get('posts.length'), 3, "it won't add the same post without an id twice");
+  assert.equal(postStream.get('posts.length'), 3, "it won't add the same post without an id twice");
 
   // change the stream
   postStream.set('stream', [1, 2, 4]);
-  ok(!postStream.get('firstPostPresent'), "the first post no longer loaded since the stream changed.");
-  ok(postStream.get('loadedAllPosts'), "the last post is still the last post in the new stream");
+  assert.ok(!postStream.get('firstPostPresent'), "the first post no longer loaded since the stream changed.");
+  assert.ok(postStream.get('loadedAllPosts'), "the last post is still the last post in the new stream");
 });
 
-test('closestPostNumberFor', function() {
+QUnit.test('closestPostNumberFor', assert => {
   const postStream = buildStream(1231);
   const store = postStream.store;
 
-  blank(postStream.closestPostNumberFor(1), "there is no closest post when nothing is loaded");
+  assert.blank(postStream.closestPostNumberFor(1), "there is no closest post when nothing is loaded");
 
   postStream.appendPost(store.createRecord('post', {id: 1, post_number: 2}));
   postStream.appendPost(store.createRecord('post', {id: 2, post_number: 3}));
 
-  equal(postStream.closestPostNumberFor(2), 2, "If a post is in the stream it returns its post number");
-  equal(postStream.closestPostNumberFor(3), 3, "If a post is in the stream it returns its post number");
-  equal(postStream.closestPostNumberFor(10), 3, "it clips to the upper bound of the stream");
-  equal(postStream.closestPostNumberFor(0), 2, "it clips to the lower bound of the stream");
+  assert.equal(postStream.closestPostNumberFor(2), 2, "If a post is in the stream it returns its post number");
+  assert.equal(postStream.closestPostNumberFor(3), 3, "If a post is in the stream it returns its post number");
+  assert.equal(postStream.closestPostNumberFor(10), 3, "it clips to the upper bound of the stream");
+  assert.equal(postStream.closestPostNumberFor(0), 2, "it clips to the lower bound of the stream");
 });
 
-test('closestDaysAgoFor', function() {
+QUnit.test('closestDaysAgoFor', assert => {
   const postStream = buildStream(1231);
   postStream.set('timelineLookup', [[1, 10], [3, 8], [5, 1]]);
 
-  equal(postStream.closestDaysAgoFor(1), 10);
-  equal(postStream.closestDaysAgoFor(2), 10);
-  equal(postStream.closestDaysAgoFor(3), 8);
-  equal(postStream.closestDaysAgoFor(4), 8);
-  equal(postStream.closestDaysAgoFor(5), 1);
+  assert.equal(postStream.closestDaysAgoFor(1), 10);
+  assert.equal(postStream.closestDaysAgoFor(2), 10);
+  assert.equal(postStream.closestDaysAgoFor(3), 8);
+  assert.equal(postStream.closestDaysAgoFor(4), 8);
+  assert.equal(postStream.closestDaysAgoFor(5), 1);
 
   // Out of bounds
-  equal(postStream.closestDaysAgoFor(-1), 10);
-  equal(postStream.closestDaysAgoFor(0), 10);
-  equal(postStream.closestDaysAgoFor(10), 1);
+  assert.equal(postStream.closestDaysAgoFor(-1), 10);
+  assert.equal(postStream.closestDaysAgoFor(0), 10);
+  assert.equal(postStream.closestDaysAgoFor(10), 1);
 });
 
-test('closestDaysAgoFor - empty', function() {
+QUnit.test('closestDaysAgoFor - empty', assert => {
   const postStream = buildStream(1231);
   postStream.set('timelineLookup', []);
 
-  equal(postStream.closestDaysAgoFor(1), null);
+  assert.equal(postStream.closestDaysAgoFor(1), null);
 });
 
-test('updateFromJson', function() {
+QUnit.test('updateFromJson', assert => {
   const postStream = buildStream(1231);
 
   postStream.updateFromJson({
@@ -110,13 +109,13 @@ test('updateFromJson', function() {
     extra_property: 12
   });
 
-  equal(postStream.get('posts.length'), 1, 'it loaded the posts');
-  containsInstance(postStream.get('posts'), Discourse.Post);
+  assert.equal(postStream.get('posts.length'), 1, 'it loaded the posts');
+  assert.containsInstance(postStream.get('posts'), Discourse.Post);
 
-  equal(postStream.get('extra_property'), 12);
+  assert.equal(postStream.get('extra_property'), 12);
 });
 
-test("removePosts", function() {
+QUnit.test("removePosts", assert => {
   const postStream = buildStream(10000001, [1,2,3]);
   const store = postStream.store;
 
@@ -130,179 +129,179 @@ test("removePosts", function() {
 
   // Removing nothing does nothing
   postStream.removePosts();
-  equal(postStream.get('posts.length'), 3);
+  assert.equal(postStream.get('posts.length'), 3);
 
   postStream.removePosts([p1, p3]);
-  equal(postStream.get('posts.length'), 1);
-  deepEqual(postStream.get('stream'), [2]);
+  assert.equal(postStream.get('posts.length'), 1);
+  assert.deepEqual(postStream.get('stream'), [2]);
 
 });
 
-test("cancelFilter", function() {
+QUnit.test("cancelFilter", assert => {
   const postStream = buildStream(1235);
 
   sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   postStream.set('summary', true);
   postStream.cancelFilter();
-  ok(!postStream.get('summary'), "summary is cancelled");
+  assert.ok(!postStream.get('summary'), "summary is cancelled");
 
   postStream.toggleParticipant(participant);
   postStream.cancelFilter();
-  blank(postStream.get('userFilters'), "cancelling the filters clears the userFilters");
+  assert.blank(postStream.get('userFilters'), "cancelling the filters clears the userFilters");
 });
 
-test("findPostIdForPostNumber", function() {
+QUnit.test("findPostIdForPostNumber", assert => {
   const postStream = buildStream(1234, [10, 20, 30, 40, 50, 60, 70]);
   postStream.set('gaps', { before: { 60: [55, 58] } });
 
-  equal(postStream.findPostIdForPostNumber(500), null, 'it returns null when the post cannot be found');
-  equal(postStream.findPostIdForPostNumber(1), 10, 'it finds the postId at the beginning');
-  equal(postStream.findPostIdForPostNumber(5), 50, 'it finds the postId in the middle');
-  equal(postStream.findPostIdForPostNumber(8), 60, 'it respects gaps');
+  assert.equal(postStream.findPostIdForPostNumber(500), null, 'it returns null when the post cannot be found');
+  assert.equal(postStream.findPostIdForPostNumber(1), 10, 'it finds the postId at the beginning');
+  assert.equal(postStream.findPostIdForPostNumber(5), 50, 'it finds the postId in the middle');
+  assert.equal(postStream.findPostIdForPostNumber(8), 60, 'it respects gaps');
 
 });
 
-test("toggleParticipant", function() {
+QUnit.test("toggleParticipant", assert => {
   const postStream = buildStream(1236);
   sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
-  equal(postStream.get('userFilters.length'), 0, "by default no participants are toggled");
+  assert.equal(postStream.get('userFilters.length'), 0, "by default no participants are toggled");
 
   postStream.toggleParticipant(participant.username);
-  ok(postStream.get('userFilters').includes('eviltrout'), 'eviltrout is in the filters');
+  assert.ok(postStream.get('userFilters').includes('eviltrout'), 'eviltrout is in the filters');
 
   postStream.toggleParticipant(participant.username);
-  blank(postStream.get('userFilters'), "toggling the participant again removes them");
+  assert.blank(postStream.get('userFilters'), "toggling the participant again removes them");
 });
 
-test("streamFilters", function() {
+QUnit.test("streamFilters", assert => {
   const postStream = buildStream(1237);
   sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
-  deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
-  ok(postStream.get('hasNoFilters'), "there are no filters by default");
+  assert.deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
+  assert.ok(postStream.get('hasNoFilters'), "there are no filters by default");
 
   postStream.set('summary', true);
-  deepEqual(postStream.get('streamFilters'), {filter: "summary"}, "postFilters contains the summary flag");
-  ok(!postStream.get('hasNoFilters'), "now there are filters present");
+  assert.deepEqual(postStream.get('streamFilters'), {filter: "summary"}, "postFilters contains the summary flag");
+  assert.ok(!postStream.get('hasNoFilters'), "now there are filters present");
 
   postStream.toggleParticipant(participant.username);
-  deepEqual(postStream.get('streamFilters'), {
+  assert.deepEqual(postStream.get('streamFilters'), {
     username_filters: 'eviltrout',
   }, "streamFilters contains the username we filtered");
 });
 
-test("loading", function() {
+QUnit.test("loading", assert => {
   let postStream = buildStream(1234);
-  ok(!postStream.get('loading'), "we're not loading by default");
+  assert.ok(!postStream.get('loading'), "we're not loading by default");
 
   postStream.set('loadingAbove', true);
-  ok(postStream.get('loading'), "we're loading if loading above");
+  assert.ok(postStream.get('loading'), "we're loading if loading above");
 
   postStream = buildStream(1234);
   postStream.set('loadingBelow', true);
-  ok(postStream.get('loading'), "we're loading if loading below");
+  assert.ok(postStream.get('loading'), "we're loading if loading below");
 
   postStream = buildStream(1234);
   postStream.set('loadingFilter', true);
-  ok(postStream.get('loading'), "we're loading if loading a filter");
+  assert.ok(postStream.get('loading'), "we're loading if loading a filter");
 });
 
-test("nextWindow", function() {
+QUnit.test("nextWindow", assert => {
   const postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
-  blank(postStream.get('nextWindow'), 'With no posts loaded, the window is blank');
+  assert.blank(postStream.get('nextWindow'), 'With no posts loaded, the window is blank');
 
   postStream.updateFromJson({ posts: [{id: 1}, {id: 2}] });
-  deepEqual(postStream.get('nextWindow'), [3,5,8,9,10],
+  assert.deepEqual(postStream.get('nextWindow'), [3,5,8,9,10],
             "If we've loaded the first 2 posts, the window should be the 5 after that");
 
   postStream.updateFromJson({ posts: [{id: 13}] });
-  deepEqual(postStream.get('nextWindow'), [14, 15, 16], "Boundary check: stop at the end.");
+  assert.deepEqual(postStream.get('nextWindow'), [14, 15, 16], "Boundary check: stop at the end.");
 
   postStream.updateFromJson({ posts: [{id: 16}] });
-  blank(postStream.get('nextWindow'), "Once we've seen everything there's nothing to load.");
+  assert.blank(postStream.get('nextWindow'), "Once we've seen everything there's nothing to load.");
 });
 
-test("previousWindow", function() {
+QUnit.test("previousWindow", assert => {
   const postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
-  blank(postStream.get('previousWindow'), 'With no posts loaded, the window is blank');
+  assert.blank(postStream.get('previousWindow'), 'With no posts loaded, the window is blank');
 
   postStream.updateFromJson({ posts: [{id: 11}, {id: 13}] });
-  deepEqual(postStream.get('previousWindow'), [3, 5, 8, 9, 10],
+  assert.deepEqual(postStream.get('previousWindow'), [3, 5, 8, 9, 10],
             "If we've loaded in the middle, it's the previous 5 posts");
 
   postStream.updateFromJson({ posts: [{id: 3}] });
-  deepEqual(postStream.get('previousWindow'), [1, 2], "Boundary check: stop at the beginning.");
+  assert.deepEqual(postStream.get('previousWindow'), [1, 2], "Boundary check: stop at the beginning.");
 
   postStream.updateFromJson({ posts: [{id: 1}] });
-  blank(postStream.get('previousWindow'), "Once we've seen everything there's nothing to load.");
+  assert.blank(postStream.get('previousWindow'), "Once we've seen everything there's nothing to load.");
 });
 
-test("storePost", function() {
+QUnit.test("storePost", assert => {
   const postStream = buildStream(1234),
         store = postStream.store,
         post = store.createRecord('post', {id: 1, post_number: 100, raw: 'initial value'});
 
-  blank(postStream.get('topic.highest_post_number'), "it has no highest post number yet");
+  assert.blank(postStream.get('topic.highest_post_number'), "it has no highest post number yet");
   let stored = postStream.storePost(post);
-  equal(post, stored, "it returns the post it stored");
-  equal(post.get('topic'), postStream.get('topic'), "it creates the topic reference properly");
-  equal(postStream.get('topic.highest_post_number'), 100, "it set the highest post number");
+  assert.equal(post, stored, "it returns the post it stored");
+  assert.equal(post.get('topic'), postStream.get('topic'), "it creates the topic reference properly");
+  assert.equal(postStream.get('topic.highest_post_number'), 100, "it set the highest post number");
 
   const dupePost = store.createRecord('post', {id: 1, post_number: 100, raw: 'updated value'});
   const storedDupe = postStream.storePost(dupePost);
-  equal(storedDupe, post, "it returns the previously stored post instead to avoid dupes");
-  equal(storedDupe.get('raw'), 'updated value', 'it updates the previously stored post');
+  assert.equal(storedDupe, post, "it returns the previously stored post instead to avoid dupes");
+  assert.equal(storedDupe.get('raw'), 'updated value', 'it updates the previously stored post');
 
   const postWithoutId = store.createRecord('post', {raw: 'hello world'});
   stored = postStream.storePost(postWithoutId);
-  equal(stored, postWithoutId, "it returns the same post back");
+  assert.equal(stored, postWithoutId, "it returns the same post back");
 
 });
 
-test("identity map", function() {
+QUnit.test("identity map", assert => {
   const postStream = buildStream(1234);
   const store = postStream.store;
 
   const p1 = postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1}));
   const p3 = postStream.appendPost(store.createRecord('post', {id: 3, post_number: 4}));
 
-  equal(postStream.findLoadedPost(1), p1, "it can return cached posts by id");
-  blank(postStream.findLoadedPost(4), "it can't find uncached posts");
+  assert.equal(postStream.findLoadedPost(1), p1, "it can return cached posts by id");
+  assert.blank(postStream.findLoadedPost(4), "it can't find uncached posts");
 
   // Find posts by ids uses the identity map
-  postStream.findPostsByIds([1, 2, 3]).then(result => {
-    equal(result.length, 3);
-    equal(result.objectAt(0), p1);
-    equal(result.objectAt(1).get('post_number'), 2);
-    equal(result.objectAt(2), p3);
+  return postStream.findPostsByIds([1, 2, 3]).then(result => {
+    assert.equal(result.length, 3);
+    assert.equal(result.objectAt(0), p1);
+    assert.equal(result.objectAt(1).get('post_number'), 2);
+    assert.equal(result.objectAt(2), p3);
   });
 });
 
-test("loadIntoIdentityMap with no data", () => {
+QUnit.test("loadIntoIdentityMap with no data", assert => {
   return buildStream(1234).loadIntoIdentityMap([]).then(result => {
-    equal(result.length, 0, 'requesting no posts produces no posts');
+    assert.equal(result.length, 0, 'requesting no posts produces no posts');
   });
 });
 
-test("loadIntoIdentityMap with post ids", function() {
+QUnit.test("loadIntoIdentityMap with post ids", assert => {
   const postStream = buildStream(1234);
 
   return postStream.loadIntoIdentityMap([10]).then(function() {
-    present(postStream.findLoadedPost(10), "it adds the returned post to the store");
+    assert.present(postStream.findLoadedPost(10), "it adds the returned post to the store");
   });
 });
 
-test("staging and undoing a new post", function() {
+QUnit.test("staging and undoing a new post", assert => {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
   const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
   postStream.appendPost(original);
-  ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
+  assert.ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
 
   const user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post', topic_id: 10101 });
@@ -315,39 +314,39 @@ test("staging and undoing a new post", function() {
 
   // Stage the new post in the stream
   const result = postStream.stagePost(stagedPost, user);
-  equal(result, "staged", "it returns staged");
-  equal(topic.get('highest_post_number'), 2, "it updates the highest_post_number");
-  ok(postStream.get('loading'), "it is loading while the post is being staged");
-  ok(postStream.get('lastAppended'), original, "it doesn't consider staged posts as the lastAppended");
+  assert.equal(result, "staged", "it returns staged");
+  assert.equal(topic.get('highest_post_number'), 2, "it updates the highest_post_number");
+  assert.ok(postStream.get('loading'), "it is loading while the post is being staged");
+  assert.ok(postStream.get('lastAppended'), original, "it doesn't consider staged posts as the lastAppended");
 
-  equal(topic.get('posts_count'), 2, "it increases the post count");
-  present(topic.get('last_posted_at'), "it updates last_posted_at");
-  equal(topic.get('details.last_poster'), user, "it changes the last poster");
+  assert.equal(topic.get('posts_count'), 2, "it increases the post count");
+  assert.present(topic.get('last_posted_at'), "it updates last_posted_at");
+  assert.equal(topic.get('details.last_poster'), user, "it changes the last poster");
 
-  equal(stagedPost.get('topic'), topic, "it assigns the topic reference");
-  equal(stagedPost.get('post_number'), 2, "it is assigned the probable post_number");
-  present(stagedPost.get('created_at'), "it is assigned a created date");
-  ok(postStream.get('posts').includes(stagedPost), "the post is added to the stream");
-  equal(stagedPost.get('id'), -1, "the post has a magical -1 id");
+  assert.equal(stagedPost.get('topic'), topic, "it assigns the topic reference");
+  assert.equal(stagedPost.get('post_number'), 2, "it is assigned the probable post_number");
+  assert.present(stagedPost.get('created_at'), "it is assigned a created date");
+  assert.ok(postStream.get('posts').includes(stagedPost), "the post is added to the stream");
+  assert.equal(stagedPost.get('id'), -1, "the post has a magical -1 id");
 
   // Undoing a created post (there was an error)
   postStream.undoPost(stagedPost);
 
-  ok(!postStream.get('loading'), "it is no longer loading");
-  equal(topic.get('highest_post_number'), 1, "it reverts the highest_post_number");
-  equal(topic.get('posts_count'), 1, "it reverts the post count");
-  equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
-  ok(!postStream.get('posts').includes(stagedPost), "the post is removed from the stream");
-  ok(postStream.get('lastAppended'), original, "it doesn't consider undid post lastAppended");
+  assert.ok(!postStream.get('loading'), "it is no longer loading");
+  assert.equal(topic.get('highest_post_number'), 1, "it reverts the highest_post_number");
+  assert.equal(topic.get('posts_count'), 1, "it reverts the post count");
+  assert.equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
+  assert.ok(!postStream.get('posts').includes(stagedPost), "the post is removed from the stream");
+  assert.ok(postStream.get('lastAppended'), original, "it doesn't consider undid post lastAppended");
 });
 
-test("staging and committing a post", function() {
+QUnit.test("staging and committing a post", assert => {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
   const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
   postStream.appendPost(original);
-  ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
+  assert.ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
 
   const user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post', topic_id: 10101 });
@@ -357,29 +356,29 @@ test("staging and committing a post", function() {
 
   // Stage the new post in the stream
   let result = postStream.stagePost(stagedPost, user);
-  equal(result, "staged", "it returns staged");
+  assert.equal(result, "staged", "it returns staged");
 
-  ok(postStream.get('loading'), "it is loading while the post is being staged");
+  assert.ok(postStream.get('loading'), "it is loading while the post is being staged");
   stagedPost.setProperties({ id: 1234, raw: "different raw value" });
 
   result = postStream.stagePost(stagedPost, user);
-  equal(result, "alreadyStaging", "you can't stage a post while it is currently staging");
-  ok(postStream.get('lastAppended'), original, "staging a post doesn't change the lastAppended");
+  assert.equal(result, "alreadyStaging", "you can't stage a post while it is currently staging");
+  assert.ok(postStream.get('lastAppended'), original, "staging a post doesn't change the lastAppended");
 
   postStream.commitPost(stagedPost);
-  ok(postStream.get('posts').includes(stagedPost), "the post is still in the stream");
-  ok(!postStream.get('loading'), "it is no longer loading");
+  assert.ok(postStream.get('posts').includes(stagedPost), "the post is still in the stream");
+  assert.ok(!postStream.get('loading'), "it is no longer loading");
 
-  equal(postStream.get('filteredPostsCount'), 2, "it increases the filteredPostsCount");
+  assert.equal(postStream.get('filteredPostsCount'), 2, "it increases the filteredPostsCount");
 
   const found = postStream.findLoadedPost(stagedPost.get('id'));
-  present(found, "the post is in the identity map");
-  ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
-  equal(found.get('raw'), 'different raw value', 'it also updated the value in the stream');
-  ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
+  assert.present(found, "the post is in the identity map");
+  assert.ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
+  assert.equal(found.get('raw'), 'different raw value', 'it also updated the value in the stream');
+  assert.ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
 });
 
-test("loadedAllPosts when the id changes", function() {
+QUnit.test("loadedAllPosts when the id changes", assert => {
   // This can happen in a race condition between staging a post and it coming through on the
   // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
   const postStream = buildStream(10101, [1, 2]);
@@ -388,13 +387,13 @@ test("loadedAllPosts when the id changes", function() {
 
   postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1}));
   postStream.appendPost(postWithoutId);
-  ok(!postStream.get('loadedAllPosts'), 'the last post is not loaded');
+  assert.ok(!postStream.get('loadedAllPosts'), 'the last post is not loaded');
 
   postWithoutId.set('id', 2);
-  ok(postStream.get('loadedAllPosts'), 'the last post is loaded now that the post has an id');
+  assert.ok(postStream.get('loadedAllPosts'), 'the last post is loaded now that the post has an id');
 });
 
-test("comitting and triggerNewPostInStream race condition", function() {
+QUnit.test("comitting and triggerNewPostInStream race condition", assert => {
   const postStream = buildStream(4964);
   const store = postStream.store;
 
@@ -403,18 +402,18 @@ test("comitting and triggerNewPostInStream race condition", function() {
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post' });
 
   postStream.stagePost(stagedPost, user);
-  equal(postStream.get('filteredPostsCount'), 0, "it has no filteredPostsCount yet");
+  assert.equal(postStream.get('filteredPostsCount'), 0, "it has no filteredPostsCount yet");
   stagedPost.set('id', 123);
 
   sandbox.stub(postStream, 'appendMore');
   postStream.triggerNewPostInStream(123);
-  equal(postStream.get('filteredPostsCount'), 1, "it added the post");
+  assert.equal(postStream.get('filteredPostsCount'), 1, "it added the post");
 
   postStream.commitPost(stagedPost);
-  equal(postStream.get('filteredPostsCount'), 1, "it does not add the same post twice");
+  assert.equal(postStream.get('filteredPostsCount'), 1, "it does not add the same post twice");
 });
 
-test("postsWithPlaceholders", () => {
+QUnit.test("postsWithPlaceholders", assert => {
   const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
   const store = postStream.store;
@@ -431,28 +430,28 @@ test("postsWithPlaceholders", () => {
   postStream.appendPost(p3);
 
   // Test enumerable and array access
-  equal(postsWithPlaceholders.get('length'), 3);
-  equal(testProxy.get('length'), 3);
-  equal(postsWithPlaceholders.nextObject(0), p1);
-  equal(postsWithPlaceholders.objectAt(0), p1);
-  equal(postsWithPlaceholders.nextObject(1, p1), p2);
-  equal(postsWithPlaceholders.objectAt(1), p2);
-  equal(postsWithPlaceholders.nextObject(2, p2), p3);
-  equal(postsWithPlaceholders.objectAt(2), p3);
+  assert.equal(postsWithPlaceholders.get('length'), 3);
+  assert.equal(testProxy.get('length'), 3);
+  assert.equal(postsWithPlaceholders.nextObject(0), p1);
+  assert.equal(postsWithPlaceholders.objectAt(0), p1);
+  assert.equal(postsWithPlaceholders.nextObject(1, p1), p2);
+  assert.equal(postsWithPlaceholders.objectAt(1), p2);
+  assert.equal(postsWithPlaceholders.nextObject(2, p2), p3);
+  assert.equal(postsWithPlaceholders.objectAt(2), p3);
 
   const promise = postStream.appendMore();
-  equal(postsWithPlaceholders.get('length'), 8, 'we immediately have a larger placeholder window');
-  equal(testProxy.get('length'), 8);
-  ok(!!postsWithPlaceholders.nextObject(3, p3));
-  ok(!!postsWithPlaceholders.objectAt(4));
-  ok(postsWithPlaceholders.objectAt(3) !== p4);
-  ok(testProxy.objectAt(3) !== p4);
+  assert.equal(postsWithPlaceholders.get('length'), 8, 'we immediately have a larger placeholder window');
+  assert.equal(testProxy.get('length'), 8);
+  assert.ok(!!postsWithPlaceholders.nextObject(3, p3));
+  assert.ok(!!postsWithPlaceholders.objectAt(4));
+  assert.ok(postsWithPlaceholders.objectAt(3) !== p4);
+  assert.ok(testProxy.objectAt(3) !== p4);
 
   return promise.then(() => {
-    equal(postsWithPlaceholders.objectAt(3), p4);
-    equal(postsWithPlaceholders.get('length'), 8, 'have a larger placeholder window when loaded');
-    equal(testProxy.get('length'), 8);
-    equal(testProxy.objectAt(3), p4);
+    assert.equal(postsWithPlaceholders.objectAt(3), p4);
+    assert.equal(postsWithPlaceholders.get('length'), 8, 'have a larger placeholder window when loaded');
+    assert.equal(testProxy.get('length'), 8);
+    assert.equal(testProxy.objectAt(3), p4);
   });
 
 });

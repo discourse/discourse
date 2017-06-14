@@ -1,29 +1,29 @@
 import { setting, propertyEqual, propertyNotEqual, fmt, i18n, url } from 'discourse/lib/computed';
 
-module("lib:computed", {
-  setup: function() {
+QUnit.module("lib:computed", {
+  beforeEach() {
     sandbox.stub(I18n, "t", function(scope) {
       return "%@ translated: " + scope;
     });
   },
 
-  teardown: function() {
+  afterEach() {
     I18n.t.restore();
   }
 });
 
-test("setting", function() {
+QUnit.test("setting", assert => {
   var t = Em.Object.extend({
     vehicle: setting('vehicle'),
     missingProp: setting('madeUpThing')
   }).create();
 
   Discourse.SiteSettings.vehicle = "airplane";
-  equal(t.get('vehicle'), "airplane", "it has the value of the site setting");
-  ok(!t.get('missingProp'), "it is falsy when the site setting is not defined");
+  assert.equal(t.get('vehicle'), "airplane", "it has the value of the site setting");
+  assert.ok(!t.get('missingProp'), "it is falsy when the site setting is not defined");
 });
 
-test("propertyEqual", function() {
+QUnit.test("propertyEqual", assert => {
   var t = Em.Object.extend({
     same: propertyEqual('cookies', 'biscuits')
   }).create({
@@ -31,12 +31,12 @@ test("propertyEqual", function() {
     biscuits: 10
   });
 
-  ok(t.get('same'), "it is true when the properties are the same");
+  assert.ok(t.get('same'), "it is true when the properties are the same");
   t.set('biscuits', 9);
-  ok(!t.get('same'), "it isn't true when one property is different");
+  assert.ok(!t.get('same'), "it isn't true when one property is different");
 });
 
-test("propertyNotEqual", function() {
+QUnit.test("propertyNotEqual", assert => {
   var t = Em.Object.extend({
     diff: propertyNotEqual('cookies', 'biscuits')
   }).create({
@@ -44,13 +44,13 @@ test("propertyNotEqual", function() {
     biscuits: 10
   });
 
-  ok(!t.get('diff'), "it isn't true when the properties are the same");
+  assert.ok(!t.get('diff'), "it isn't true when the properties are the same");
   t.set('biscuits', 9);
-  ok(t.get('diff'), "it is true when one property is different");
+  assert.ok(t.get('diff'), "it is true when one property is different");
 });
 
 
-test("fmt", function() {
+QUnit.test("fmt", assert => {
   var t = Em.Object.extend({
     exclaimyUsername: fmt('username', "!!! %@ !!!"),
     multiple: fmt('username', 'mood', "%@ is %@")
@@ -59,17 +59,17 @@ test("fmt", function() {
     mood: "happy"
   });
 
-  equal(t.get('exclaimyUsername'), '!!! eviltrout !!!', "it inserts the string");
-  equal(t.get('multiple'), "eviltrout is happy", "it inserts multiple strings");
+  assert.equal(t.get('exclaimyUsername'), '!!! eviltrout !!!', "it inserts the string");
+  assert.equal(t.get('multiple'), "eviltrout is happy", "it inserts multiple strings");
 
   t.set('username', 'codinghorror');
-  equal(t.get('multiple'), "codinghorror is happy", "it supports changing properties");
+  assert.equal(t.get('multiple'), "codinghorror is happy", "it supports changing properties");
   t.set('mood', 'ecstatic');
-  equal(t.get('multiple'), "codinghorror is ecstatic", "it supports changing another property");
+  assert.equal(t.get('multiple'), "codinghorror is ecstatic", "it supports changing another property");
 });
 
 
-test("i18n", function() {
+QUnit.test("i18n", assert => {
   var t = Em.Object.extend({
     exclaimyUsername: i18n('username', "!!! %@ !!!"),
     multiple: i18n('username', 'mood', "%@ is %@")
@@ -78,17 +78,17 @@ test("i18n", function() {
     mood: "happy"
   });
 
-  equal(t.get('exclaimyUsername'), '%@ translated: !!! eviltrout !!!', "it inserts the string and then translates");
-  equal(t.get('multiple'), "%@ translated: eviltrout is happy", "it inserts multiple strings and then translates");
+  assert.equal(t.get('exclaimyUsername'), '%@ translated: !!! eviltrout !!!', "it inserts the string and then translates");
+  assert.equal(t.get('multiple'), "%@ translated: eviltrout is happy", "it inserts multiple strings and then translates");
 
   t.set('username', 'codinghorror');
-  equal(t.get('multiple'), "%@ translated: codinghorror is happy", "it supports changing properties");
+  assert.equal(t.get('multiple'), "%@ translated: codinghorror is happy", "it supports changing properties");
   t.set('mood', 'ecstatic');
-  equal(t.get('multiple'), "%@ translated: codinghorror is ecstatic", "it supports changing another property");
+  assert.equal(t.get('multiple'), "%@ translated: codinghorror is ecstatic", "it supports changing another property");
 });
 
 
-test("url", function() {
+QUnit.test("url", assert => {
   var t, testClass;
   
   testClass = Em.Object.extend({
@@ -96,9 +96,9 @@ test("url", function() {
   });
 
   t = testClass.create({ username: 'eviltrout' });
-  equal(t.get('userUrl'), "/u/eviltrout", "it supports urls without a prefix");
+  assert.equal(t.get('userUrl'), "/u/eviltrout", "it supports urls without a prefix");
 
   Discourse.BaseUri = "/prefixed";
   t = testClass.create({ username: 'eviltrout' });
-  equal(t.get('userUrl'), "/prefixed/u/eviltrout", "it supports urls with a prefix");
+  assert.equal(t.get('userUrl'), "/prefixed/u/eviltrout", "it supports urls with a prefix");
 });

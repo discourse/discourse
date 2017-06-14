@@ -33,6 +33,7 @@ if (window.Logster) {
 } else {
   window.Logster = { enabled: false };
 }
+Ember.Test.adapter = window.QUnitAdapter.create();
 
 var createPretendServer = require('wizard/test/wizard-pretender', null, null, false).default;
 
@@ -44,6 +45,7 @@ QUnit.testStart(function() {
 QUnit.testDone(function() {
   server.shutdown();
 });
+
 
 var _testApp = require('wizard/test/helpers/start-app').default();
 var _buildResolver = require('discourse-common/resolver').buildResolver;

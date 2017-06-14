@@ -8,14 +8,14 @@ acceptance("Create Account - User Fields", {
   }
 });
 
-test("create account with user fields", () => {
+QUnit.test("create account with user fields", assert => {
   visit("/");
   click("header .sign-up-button");
 
   andThen(() => {
-    ok(exists('.create-account'), "it shows the create account modal");
-    ok(exists('.user-field'), "it has at least one user field");
-    ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled at first');
+    assert.ok(exists('.create-account'), "it shows the create account modal");
+    assert.ok(exists('.user-field'), "it has at least one user field");
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled at first');
   });
 
   fillIn('#new-account-name', 'Dr. Good Tuna');
@@ -24,24 +24,24 @@ test("create account with user fields", () => {
   fillIn('#new-account-username', 'goodtuna');
 
   andThen(() => {
-    ok(exists('#username-validation.good'), 'the username validation is good');
-    ok(exists('.modal-footer .btn-primary:disabled'), 'create account is still disabled due to lack of user fields');
+    assert.ok(exists('#username-validation.good'), 'the username validation is good');
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), 'create account is still disabled due to lack of user fields');
   });
 
   fillIn(".user-field input[type=text]:first", "Barky");
 
   andThen(() => {
-    ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled because field is not checked');
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled because field is not checked');
   });
 
   click(".user-field input[type=checkbox]");
   andThen(() => {
-    not(exists('.modal-footer .btn-primary:disabled'), 'create account is enabled because field is not checked');
+    assert.not(exists('.modal-footer .btn-primary:disabled'), 'create account is enabled because field is not checked');
   });
 
   click(".user-field input[type=checkbox]");
   andThen(() => {
-    ok(exists('.modal-footer .btn-primary:disabled'), 'unclicking the checkbox disables the submit');
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), 'unclicking the checkbox disables the submit');
   });
 
 });

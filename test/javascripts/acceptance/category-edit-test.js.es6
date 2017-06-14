@@ -6,7 +6,7 @@ acceptance("Category Edit", {
   settings: { email_in: true }
 });
 
-test("Can open the category modal", assert => {
+QUnit.test("Can open the category modal", assert => {
   visit("/c/bug");
 
   click('.edit-category');
@@ -20,7 +20,7 @@ test("Can open the category modal", assert => {
   });
 });
 
-test("Change the category color", assert => {
+QUnit.test("Change the category color", assert => {
   visit("/c/bug");
 
   click('.edit-category');
@@ -32,7 +32,7 @@ test("Change the category color", assert => {
   });
 });
 
-test("Change the topic template", assert => {
+QUnit.test("Change the topic template", assert => {
   visit("/c/bug");
 
   click('.edit-category');
@@ -45,7 +45,7 @@ test("Change the topic template", assert => {
   });
 });
 
-test("Error Saving", assert => {
+QUnit.test("Error Saving", assert => {
   visit("/c/bug");
 
   click('.edit-category');
@@ -58,19 +58,19 @@ test("Error Saving", assert => {
   });
 });
 
-test("Subcategory list settings", () => {
+QUnit.test("Subcategory list settings", assert => {
   visit("/c/bug");
 
   click('.edit-category');
   click('.edit-category-settings');
 
   andThen(() => {
-    ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible by default");
+    assert.ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible by default");
   });
 
   click(".show-subcategory-list-field input[type=checkbox]");
   andThen(() => {
-    ok(visible(".subcategory-list-style-field"), "subcategory list style is shown if show subcategory list is checked");
+    assert.ok(visible(".subcategory-list-style-field"), "subcategory list style is shown if show subcategory list is checked");
   });
 
   click('.edit-category-general');
@@ -78,7 +78,7 @@ test("Subcategory list settings", () => {
 
   click('.edit-category-settings');
   andThen(() => {
-    ok(!visible(".show-subcategory-list-field"), "show subcategory list isn't visible for child categories");
-    ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible for child categories");
+    assert.ok(!visible(".show-subcategory-list-field"), "show subcategory list isn't visible for child categories");
+    assert.ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible for child categories");
   });
 });

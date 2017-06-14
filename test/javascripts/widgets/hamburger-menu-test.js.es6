@@ -5,7 +5,7 @@ moduleForWidget('hamburger-menu');
 widgetTest('prioritize faq', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.siteSettings.faq_url = 'http://example.com/faq';
     this.currentUser.set('read_faq', false);
   },
@@ -19,7 +19,7 @@ widgetTest('prioritize faq', {
 widgetTest('prioritize faq - user has read', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.siteSettings.faq_url = 'http://example.com/faq';
     this.currentUser.set('read_faq', true);
   },
@@ -33,7 +33,7 @@ widgetTest('prioritize faq - user has read', {
 widgetTest('staff menu - not staff', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.set('staff', false);
   },
 
@@ -45,7 +45,7 @@ widgetTest('staff menu - not staff', {
 widgetTest('staff menu', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.setProperties({ staff: true, site_flagged_posts_count: 3 });
   },
 
@@ -60,7 +60,7 @@ widgetTest('staff menu', {
 widgetTest('staff menu - admin', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.setProperties({ staff: true, admin: true });
   },
 
@@ -73,7 +73,7 @@ widgetTest('staff menu - admin', {
 widgetTest('queued posts', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.setProperties({
       staff: true,
       show_queued_posts: true,
@@ -90,7 +90,7 @@ widgetTest('queued posts', {
 widgetTest('queued posts - disabled', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.setProperties({ staff: true, show_queued_posts: false });
   },
 
@@ -127,7 +127,7 @@ widgetTest('general links', {
 widgetTest('badges link - disabled', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.siteSettings.enable_badges = false;
   },
 
@@ -155,7 +155,7 @@ widgetTest('user directory link', {
 widgetTest('user directory link - disabled', {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.siteSettings.enable_user_directory = false;
   },
 

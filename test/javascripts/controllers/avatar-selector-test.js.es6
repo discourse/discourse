@@ -1,13 +1,13 @@
 import { mapRoutes } from 'discourse/mapping-router';
 
 moduleFor("controller:avatar-selector", "controller:avatar-selector", {
-  setup() {
+  beforeEach() {
     this.registry.register('router:main', mapRoutes());
   },
   needs: ['controller:modal']
 });
 
-test("avatarTemplate", function() {
+QUnit.test("avatarTemplate", function(assert) {
   const avatarSelectorController = this.subject();
 
   avatarSelectorController.setProperties({
@@ -17,11 +17,11 @@ test("avatarTemplate", function() {
     custom_avatar_upload_id: 3
   });
 
-  equal(avatarSelectorController.get("selectedUploadId"), 1, "we are using system by default");
+  assert.equal(avatarSelectorController.get("selectedUploadId"), 1, "we are using system by default");
 
   avatarSelectorController.set('selected', 'gravatar');
-  equal(avatarSelectorController.get("selectedUploadId"), 2, "we are using gravatar when set");
+  assert.equal(avatarSelectorController.get("selectedUploadId"), 2, "we are using gravatar when set");
 
   avatarSelectorController.set("selected", "custom");
-  equal(avatarSelectorController.get("selectedUploadId"), 3, "we are using custom when set");
+  assert.equal(avatarSelectorController.get("selectedUploadId"), 3, "we are using custom when set");
 });
