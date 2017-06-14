@@ -3,7 +3,7 @@ moduleForComponent('combo-box', {integration: true});
 
 componentTest('with objects', {
   template: '{{combo-box content=items value=value}}',
-  setup() {
+  beforeEach() {
     this.set('items', [{id: 1, name: 'hello'}, {id: 2, name: 'world'}]);
   },
 
@@ -17,7 +17,7 @@ componentTest('with objects', {
 
 componentTest('with objects and valueAttribute', {
   template: '{{combo-box content=items valueAttribute="value"}}',
-  setup() {
+  beforeEach() {
     this.set('items', [{value: 0, name: 'hello'}, {value: 1, name: 'world'}]);
   },
 
@@ -30,7 +30,7 @@ componentTest('with objects and valueAttribute', {
 
 componentTest('with an array', {
   template: '{{combo-box content=items value=value}}',
-  setup() {
+  beforeEach() {
     this.set('items', ['evil', 'trout', 'hat']);
   },
 
@@ -44,7 +44,7 @@ componentTest('with an array', {
 
 componentTest('with none', {
   template: '{{combo-box content=items none="test.none" value=value}}',
-  setup() {
+  beforeEach() {
     I18n.translations[I18n.locale].js.test = {none: 'none'};
     this.set('items', ['evil', 'trout', 'hat']);
   },
@@ -59,7 +59,7 @@ componentTest('with none', {
 
 componentTest('with Object none', {
   template: '{{combo-box content=items none=none value=value selected="something"}}',
-  setup() {
+  beforeEach() {
     this.set('none', { id: 'something', name: 'none' });
     this.set('items', ['evil', 'trout', 'hat']);
   },

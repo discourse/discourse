@@ -1,4 +1,4 @@
-/* global asyncTest, fixtures */
+/* global QUnit, fixtures */
 
 import sessionFixtures from 'fixtures/session-fixtures';
 import siteFixtures from 'fixtures/site-fixtures';
@@ -41,7 +41,7 @@ $.fn.modal = AcceptanceModal;
 
 function acceptance(name, options) {
   module("Acceptance: " + name, {
-    setup() {
+    beforeEach() {
       resetMobile();
 
       // For now don't do scrolling stuff in Test Mode
@@ -50,8 +50,8 @@ function acceptance(name, options) {
       resetExtraClasses();
       const siteJson = siteFixtures['site.json'].site;
       if (options) {
-        if (options.setup) {
-          options.setup.call(this);
+        if (options.beforeEach) {
+          options.beforeEach.call(this);
         }
 
         if (options.mobileView) {
@@ -77,9 +77,9 @@ function acceptance(name, options) {
       Discourse.reset();
     },
 
-    teardown() {
-      if (options && options.teardown) {
-        options.teardown.call(this);
+    afterEach() {
+      if (options && options.afterEach) {
+        options.afterEach.call(this);
       }
       flushMap();
       Discourse.User.resetCurrent();
@@ -102,10 +102,11 @@ function controllerFor(controller, model) {
 }
 
 function asyncTestDiscourse(text, func) {
-  asyncTest(text, function () {
-    var self = this;
-    Ember.run(function () {
-      func.call(self);
+  QUnit.test(text, function(assert) {
+    const done = assert.async();
+    Ember.run(() => {
+      func.call(this, assert);
+      done();
     });
   });
 }
@@ -117,20 +118,46 @@ function fixture(selector) {
   return $("#qunit-fixture");
 }
 
-function present(obj, text) {
-  ok(!Ember.isEmpty(obj), text);
-}
+QUnit.assert.not = function(actual, message) {
+  this.pushResult({
+    result: !actual,
+    actual,
+    expected: !actual,
+    message
+  });
+};
 
-function blank(obj, text) {
-  ok(Ember.isEmpty(obj), text);
-}
+QUnit.assert.blank = function(actual, message) {
+  this.pushResult({
+    result: Ember.isEmpty(actual),
+    actual,
+    message
+  });
+};
 
-function waitFor(callback, timeout) {
+QUnit.assert.present = function(actual, message) {
+  this.pushResult({
+    result: !Ember.isEmpty(actual),
+    actual,
+    message
+  });
+};
+
+QUnit.assert.containsInstance = function(collection, klass, message) {
+  const result = klass.detectInstance(_.first(collection));
+  this.pushResult({
+    result,
+    message
+  });
+};
+
+function waitFor(assert, callback, timeout) {
   timeout = timeout || 500;
-  stop();
+
+  const done = assert.async();
   Ember.run.later(() => {
     callback();
-    start();
+    done();
   }, timeout);
 }
 
@@ -140,6 +167,4 @@ export { acceptance,
          fixture,
          logIn,
          currentUser,
-         blank,
-         present,
          waitFor };

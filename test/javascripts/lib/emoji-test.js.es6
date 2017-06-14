@@ -1,13 +1,13 @@
 import { emojiSearch, IMAGE_VERSION as v } from 'pretty-text/emoji';
 import { emojiUnescape } from 'discourse/lib/text';
 
-module('lib:emoji');
+QUnit.module('lib:emoji');
 
-function testUnescape(input, expected, description) {
-  equal(emojiUnescape(input), expected, description);
-};
+QUnit.test("emojiUnescape", assert => {
+  const testUnescape = (input, expected, description) => {
+    assert.equal(emojiUnescape(input), expected, description);
+  };
 
-test("emojiUnescape", () => {
   testUnescape("Not emoji :O) :frog) :smile)", "Not emoji :O) :frog) :smile)", "title without emoji");
   testUnescape("Not emoji :frog :smile", "Not emoji :frog :smile", "end colon is not optional");
   testUnescape("emoticons :)", `emoticons <img src='/images/emoji/emoji_one/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'>`, "emoticons are still supported");
@@ -24,11 +24,11 @@ test("emojiUnescape", () => {
 
 });
 
-test("Emoji search", () => {
+QUnit.test("Emoji search", assert => {
   // able to find an alias
-  equal(emojiSearch("+1").length, 1);
+  assert.equal(emojiSearch("+1").length, 1);
 
   // able to find middle of line search
-  equal(emojiSearch("check", {maxResults: 3}).length, 3);
+  assert.equal(emojiSearch("check", {maxResults: 3}).length, 3);
 
 });

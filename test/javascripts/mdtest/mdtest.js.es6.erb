@@ -37,7 +37,7 @@ function sanitizer(result, whiteLister) {
   return result;
 }
 
-function md(input, expected, text, settings) {
+function md(assert, input, expected, text, settings) {
 
   const opts = buildOptions({ siteSettings: settings||{} });
   opts.traditionalMarkdownLinebreaks = true;
@@ -50,15 +50,11 @@ function md(input, expected, text, settings) {
   const same = (result === expected) || (resultNorm === expectedNorm);
 
   if (same) {
-    ok(same, text);
+    assert.ok(same, text);
   } else {
-    equal(resultNorm, expectedNorm, text);
+    assert.equal(resultNorm, expectedNorm, text);
   }
 };
-
-test("first", function(){
-  equal(1, 1, "cool")
-});
 
 <%
   def mdtest_suite
@@ -70,7 +66,7 @@ test("first", function(){
 
       text = File.read(f)
       html = File.read("#{filename_no_ext}.xhtml");
-      result << "test(\"#{filename}\", function() { md(#{text.to_json}, #{html.to_json}, 'passes MDTest'); });\n"
+      result << "test(\"#{filename}\", function(assert) { md(assert, #{text.to_json}, #{html.to_json}, 'passes MDTest'); });\n"
     end
     result
   end
@@ -78,10 +74,10 @@ test("first", function(){
 
 <%= mdtest_suite %>
 
-test("whitelisted url scheme", function() {
-  md("[Steam URL Scheme](steam://store/452530)", '<p><a href="steam://store/452530">Steam URL Scheme</a></p>', 'whitelists the steam url', {allowed_href_schemes: "macappstore|steam"});
+test("whitelisted url scheme", function(assert) {
+  md(assert, "[Steam URL Scheme](steam://store/452530)", '<p><a href="steam://store/452530">Steam URL Scheme</a></p>', 'whitelists the steam url', {allowed_href_schemes: "macappstore|steam"});
 });
 
-test("forbidden url scheme", function() {
-  md("[Steam URL Scheme](steam://store/452530)", '<p><a>Steam URL Scheme</a></p>', 'removes the href', {allowed_href_schemes: "macappstore|itunes"});
+test("forbidden url scheme", function(assert) {
+  md(assert, "[Steam URL Scheme](steam://store/452530)", '<p><a>Steam URL Scheme</a></p>', 'removes the href', {allowed_href_schemes: "macappstore|itunes"});
 });

@@ -1,6 +1,5 @@
-
-module("Discourse.NavItem", {
-  setup: function() {
+QUnit.module("Discourse.NavItem", {
+  beforeEach() {
     Ember.run(function() {
       const asianCategory = Discourse.Category.create({name: '确实是这样', id: 343434});
       Discourse.Site.currentProp('categories').addObject(asianCategory);
@@ -8,11 +7,11 @@ module("Discourse.NavItem", {
   }
 });
 
-test('href', function(){
-  expect(4);
+QUnit.test('href', assert =>{
+  assert.expect(4);
 
   function href(text, expected, label) {
-    equal(Discourse.NavItem.fromText(text, {}).get('href'), expected, label);
+    assert.equal(Discourse.NavItem.fromText(text, {}).get('href'), expected, label);
   }
 
   href('latest', '/latest', 'latest');

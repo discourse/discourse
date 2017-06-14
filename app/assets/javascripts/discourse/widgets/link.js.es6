@@ -11,12 +11,12 @@ export default createWidget('link', {
     const route = attrs.route;
     if (route) {
       const router = this.register.lookup('router:main');
-      if (router && router.router) {
+      if (router && router._routerMicrolib) {
         const params = [route];
         if (attrs.model) {
           params.push(attrs.model);
         }
-        return Discourse.getURL(router.router.generate.apply(router.router, params));
+        return Discourse.getURL(router._routerMicrolib.generate.apply(router._routerMicrolib, params));
       }
     } else {
       return Discourse.getURL(attrs.href);

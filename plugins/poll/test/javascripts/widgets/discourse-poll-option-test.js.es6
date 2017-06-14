@@ -8,7 +8,7 @@ const template = `{{mount-widget
 widgetTest('single, not selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('option', { id: 'opt-id' });
     this.set('vote', []);
   },
@@ -21,7 +21,7 @@ widgetTest('single, not selected', {
 widgetTest('single, selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('option', { id: 'opt-id' });
     this.set('vote', ['opt-id']);
   },
@@ -34,7 +34,7 @@ widgetTest('single, selected', {
 widgetTest('multi, not selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.setProperties({
       option: { id: 'opt-id' },
       isMultiple: true,
@@ -50,7 +50,7 @@ widgetTest('multi, not selected', {
 widgetTest('multi, selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.setProperties({
       option: { id: 'opt-id' },
       isMultiple: true,

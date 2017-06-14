@@ -8,12 +8,12 @@ acceptance("Accept Invite - User Fields", {
   }
 });
 
-test("accept invite with user fields", () => {
+QUnit.test("accept invite with user fields", assert => {
   visit("/invites/myvalidinvitetoken");
   andThen(() => {
-    ok(exists(".invites-show"), "shows the accept invite page");
-    ok(exists('.user-field'), "it has at least one user field");
-    ok(exists('.invites-show .btn-primary:disabled'), 'submit is disabled');
+    assert.ok(exists(".invites-show"), "shows the accept invite page");
+    assert.ok(exists('.user-field'), "it has at least one user field");
+    assert.ok(exists('.invites-show .btn-primary:disabled'), 'submit is disabled');
   });
 
   fillIn("#new-account-name", 'John Doe');
@@ -21,24 +21,24 @@ test("accept invite with user fields", () => {
   fillIn("#new-account-password", 'secur3ty4Y0uAndMe');
 
   andThen(() => {
-    ok(exists(".username-input .good"), "username is valid");
-    ok(exists('.invites-show .btn-primary:disabled'), 'submit is still disabled due to lack of user fields');
+    assert.ok(exists(".username-input .good"), "username is valid");
+    assert.ok(exists('.invites-show .btn-primary:disabled'), 'submit is still disabled due to lack of user fields');
   });
 
   fillIn(".user-field input[type=text]:first", "Barky");
 
   andThen(() => {
-    ok(exists('.invites-show .btn-primary:disabled'), 'submit is disabled because field is not checked');
+    assert.ok(exists('.invites-show .btn-primary:disabled'), 'submit is disabled because field is not checked');
   });
 
   click(".user-field input[type=checkbox]");
   andThen(() => {
-    not(exists('.invites-show .btn-primary:disabled'), 'submit is enabled because field is checked');
+    assert.not(exists('.invites-show .btn-primary:disabled'), 'submit is enabled because field is checked');
   });
 
   click(".user-field input[type=checkbox]");
   andThen(() => {
-    ok(exists('.invites-show .btn-primary:disabled'), 'unclicking the checkbox disables the submit');
+    assert.ok(exists('.invites-show .btn-primary:disabled'), 'unclicking the checkbox disables the submit');
   });
 
 });

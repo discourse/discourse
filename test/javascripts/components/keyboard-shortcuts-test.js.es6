@@ -3,8 +3,8 @@ import DiscourseURL from 'discourse/lib/url';
 var testMouseTrap;
 import KeyboardShortcuts from 'discourse/lib/keyboard-shortcuts';
 
-module("lib:keyboard-shortcuts", {
-  setup: function() {
+QUnit.module("lib:keyboard-shortcuts", {
+  beforeEach() {
     var _bindings = {};
 
     testMouseTrap = {
@@ -62,7 +62,7 @@ module("lib:keyboard-shortcuts", {
     ].join("\n"));
   },
 
-  teardown: function() {
+  afterEach() {
     $("#qunit-scratch").html("");
   }
 });
@@ -72,11 +72,11 @@ var pathBindings = KeyboardShortcuts.PATH_BINDINGS;
 _.each(pathBindings, function(path, binding) {
   var testName = binding + " goes to " + path;
 
-  test(testName, function() {
+  test(testName, function(assert) {
     KeyboardShortcuts.bindEvents(testMouseTrap);
     testMouseTrap.trigger(binding);
 
-    ok(DiscourseURL.routeTo.calledWith(path));
+    assert.ok(DiscourseURL.routeTo.calledWith(path));
   });
 });
 
@@ -87,10 +87,10 @@ _.each(clickBindings, function(selector, binding) {
 
   var testName = binding + " clicks on " + selector;
 
-  test(testName, function() {
+  test(testName, function(assert) {
     KeyboardShortcuts.bindEvents(testMouseTrap);
     $(selector).on("click", function() {
-      ok(true, selector + " was clicked");
+      assert.ok(true, selector + " was clicked");
     });
 
     _.each(bindings, function(b) {
@@ -104,9 +104,9 @@ var functionBindings = KeyboardShortcuts.FUNCTION_BINDINGS;
 _.each(functionBindings, function(func, binding) {
   var testName = binding + " calls " + func;
 
-  test(testName, function() {
+  test(testName, function(assert) {
     sandbox.stub(KeyboardShortcuts, func, function() {
-      ok(true, func + " is called when " + binding + " is triggered");
+      assert.ok(true, func + " is called when " + binding + " is triggered");
     });
     KeyboardShortcuts.bindEvents(testMouseTrap);
 
@@ -114,40 +114,40 @@ _.each(functionBindings, function(func, binding) {
   });
 });
 
-test("selectDown calls _moveSelection with 1", function() {
+QUnit.test("selectDown calls _moveSelection with 1", assert => {
   var spy = sandbox.spy(KeyboardShortcuts, '_moveSelection');
 
   KeyboardShortcuts.selectDown();
-  ok(spy.calledWith(1), "_moveSelection is called with 1");
+  assert.ok(spy.calledWith(1), "_moveSelection is called with 1");
 });
 
-test("selectUp calls _moveSelection with -1", function() {
+QUnit.test("selectUp calls _moveSelection with -1", assert => {
   var spy = sandbox.spy(KeyboardShortcuts, '_moveSelection');
 
   KeyboardShortcuts.selectUp();
-  ok(spy.calledWith(-1), "_moveSelection is called with -1");
+  assert.ok(spy.calledWith(-1), "_moveSelection is called with -1");
 });
 
-test("goBack calls history.back", function() {
+QUnit.test("goBack calls history.back", assert => {
   var called = false;
   sandbox.stub(history, 'back', function() {
     called = true;
   });
 
   KeyboardShortcuts.goBack();
-  ok(called, "history.back is called");
+  assert.ok(called, "history.back is called");
 });
 
-test("nextSection calls _changeSection with 1", function() {
+QUnit.test("nextSection calls _changeSection with 1", assert => {
   var spy = sandbox.spy(KeyboardShortcuts, '_changeSection');
 
   KeyboardShortcuts.nextSection();
-  ok(spy.calledWith(1), "_changeSection is called with 1");
+  assert.ok(spy.calledWith(1), "_changeSection is called with 1");
 });
 
-test("prevSection calls _changeSection with -1", function() {
+QUnit.test("prevSection calls _changeSection with -1", assert => {
   var spy = sandbox.spy(KeyboardShortcuts, '_changeSection');
 
   KeyboardShortcuts.prevSection();
-  ok(spy.calledWith(-1), "_changeSection is called with -1");
+  assert.ok(spy.calledWith(-1), "_changeSection is called with -1");
 });

@@ -1,5 +1,4 @@
-import { present } from 'helpers/qunit-helpers';
-module("model:topic-details");
+QUnit.module("model:topic-details");
 
 import Topic from 'discourse/models/topic';
 
@@ -8,13 +7,13 @@ var buildDetails = function(id) {
   return topic.get('details');
 };
 
-test('defaults', function() {
+QUnit.test('defaults', assert => {
   var details = buildDetails(1234);
-  present(details, "the details are present by default");
-  ok(!details.get('loaded'), "details are not loaded by default");
+  assert.present(details, "the details are present by default");
+  assert.ok(!details.get('loaded'), "details are not loaded by default");
 });
 
-test('updateFromJson', function() {
+QUnit.test('updateFromJson', assert => {
   var details = buildDetails(1234);
 
   details.updateFromJson({
@@ -22,10 +21,10 @@ test('updateFromJson', function() {
     allowed_users: [{username: 'eviltrout'}]
   });
 
-  equal(details.get('suggested_topics.length'), 2, 'it loaded the suggested_topics');
-  containsInstance(details.get('suggested_topics'), Topic);
+  assert.equal(details.get('suggested_topics.length'), 2, 'it loaded the suggested_topics');
+  assert.containsInstance(details.get('suggested_topics'), Topic);
 
-  equal(details.get('allowed_users.length'), 1, 'it loaded the allowed users');
-  containsInstance(details.get('allowed_users'), Discourse.User);
+  assert.equal(details.get('allowed_users.length'), 1, 'it loaded the allowed users');
+  assert.containsInstance(details.get('allowed_users'), Discourse.User);
 
 });

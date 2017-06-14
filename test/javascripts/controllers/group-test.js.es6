@@ -1,19 +1,21 @@
-moduleFor("controller:group");
+moduleFor("controller:group", {
+  needs: ['controller:application']
+});
 
-test("canEditGroup", function() {
+QUnit.test("canEditGroup", function(assert) {
   const GroupController = this.subject();
 
   GroupController.setProperties({
     model: { is_group_owner: true, automatic: true }
   });
 
-  equal(GroupController.get("canEditGroup"), false, "automatic groups cannot be edited");
+  assert.equal(GroupController.get("canEditGroup"), false, "automatic groups cannot be edited");
 
   GroupController.set("model.automatic", false);
 
-  equal(GroupController.get("canEditGroup"), true, "owners can edit groups");
+  assert.equal(GroupController.get("canEditGroup"), true, "owners can edit groups");
 
   GroupController.set("model.is_group_owner", false);
 
-  equal(GroupController.get("canEditGroup"), false, "normal users cannot edit groups");
+  assert.equal(GroupController.get("canEditGroup"), false, "normal users cannot edit groups");
 });
