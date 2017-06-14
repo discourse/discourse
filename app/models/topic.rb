@@ -719,6 +719,21 @@ SQL
       # ensure all the notifications are out
       PostAlerter.new.after_save_post(last_post)
       add_small_action(user, "invited_group", group.name)
+
+      group.users.where(
+        "group_users.notification_level > ?", NotificationLevels.all[:muted]
+      ).find_each do |u|
+
+        u.notifications.create!(
+          notification_type: Notification.types[:invited_to_private_message],
+          topic_id: self.id,
+          post_number: 1,
+          data: {
+            topic_title: self.title,
+            display_username: user.username
+          }.to_json
+        )
+      end
     end
 
     true

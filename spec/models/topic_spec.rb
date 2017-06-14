@@ -439,20 +439,40 @@ describe Topic do
         let(:walter) { Fabricate(:walter_white) }
 
         context 'by group name' do
+          let(:group) { Fabricate(:group) }
 
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
-            admins.alias_level = Group::ALIAS_LEVELS[:everyone]
-            admins.save
+            admins.update!(alias_level: Group::ALIAS_LEVELS[:everyone])
 
             expect(topic.invite_group(topic.user, admins)).to eq(true)
-
             expect(topic.allowed_groups.include?(admins)).to eq(true)
-
             expect(topic.remove_allowed_group(topic.user, 'admins')).to eq(true)
-            topic.reload
-
             expect(topic.allowed_groups.include?(admins)).to eq(false)
+          end
+
+          it 'creates a notification for each user in the group' do
+            user = Fabricate(:user)
+            user_2 = Fabricate(:user)
+            Fabricate(:post, topic: topic)
+
+            group.add(user)
+            group.add(user_2)
+
+            group.group_users.find_by(user: user_2).update!(
+              notification_level: NotificationLevels.all[:muted]
+            )
+
+            expect { topic.invite_group(topic.user, group) }
+              .to change { Notification.count }.by(1)
+
+            notification = Notification.last
+
+            expect(notification.user).to eq(user)
+            expect(notification.topic).to eq(topic)
+            
+            expect(notification.notification_type)
+              .to eq(Notification.types[:invited_to_private_message])
           end
 
         end
