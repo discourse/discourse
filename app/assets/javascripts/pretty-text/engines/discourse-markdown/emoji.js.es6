@@ -7,6 +7,7 @@ let _unicodeRegexp;
 export function setUnicodeReplacements(replacements) {
   _unicodeReplacements = replacements;
   if (replacements) {
+    // We sort and reverse to match longer emoji sequences first
     _unicodeRegexp = new RegExp(Object.keys(replacements).sort().reverse().join("|"), "g");
   }
 };
