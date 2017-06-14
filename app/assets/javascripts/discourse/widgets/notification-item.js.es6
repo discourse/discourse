@@ -11,7 +11,6 @@ import { userPath } from 'discourse/lib/url';
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
 const GROUP_SUMMARY_TYPE = 16;
-const GRANTED_BADGE = 12;
 
 createWidget('notification-item', {
   tagName: 'li',
@@ -89,10 +88,6 @@ createWidget('notification-item', {
       } else {
         return I18n.t('notifications.liked_many', {description, username, username2, count});
       }
-    }
-
-    if (notificationType === GRANTED_BADGE && data.badge_title) {
-      return I18n.t('notifications.granted_badge_allow_title', {description, username});
     }
 
     return I18n.t(scope, {description, username});
