@@ -220,7 +220,7 @@ module ApplicationHelper
 
   def gsub_emoji_to_unicode(str)
     if str
-      str.gsub(/:([\w\-+]*):/) { |name| Emoji.lookup_unicode($1) || name }
+      str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name }
     end
   end
 

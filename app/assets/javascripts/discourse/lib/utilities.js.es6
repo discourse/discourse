@@ -185,8 +185,8 @@ export function validateUploadedFile(file, opts) {
   if (!name) { return false; }
 
   // check that the uploaded file is authorized
-  if (Discourse.SiteSettings.allow_staff_to_upload_any_file_in_pm) {
-    if (opts["isPrivateMessage"] && Discourse.User.current("staff")) {
+  if (opts["allowStaffToUploadAnyFileInPm"] && opts["isPrivateMessage"]) {
+    if (Discourse.User.current("staff")) {
       return true;
     }
   }

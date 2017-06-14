@@ -138,7 +138,7 @@ class Toolbar {
       label: button.label,
       icon: button.label ? null : button.icon || button.id,
       action: button.action || 'toolbarButton',
-      perform: button.perform || Ember.K,
+      perform: button.perform || function() { },
       trimLeading: button.trimLeading
     };
 
@@ -338,8 +338,7 @@ export default Ember.Component.extend({
       },
 
       onKeyUp(text, cp) {
-        const subtext = text.substring(0, cp);
-        return subtext.match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gm);
+        return text.substring(0, cp).match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/g);
       },
 
       transformComplete(v) {

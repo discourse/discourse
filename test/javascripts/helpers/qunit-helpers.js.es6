@@ -45,7 +45,7 @@ function acceptance(name, options) {
       resetMobile();
 
       // For now don't do scrolling stuff in Test Mode
-      HeaderComponent.reopen({examineDockHeader: Ember.K});
+      HeaderComponent.reopen({examineDockHeader: function() { }});
 
       resetExtraClasses();
       const siteJson = siteFixtures['site.json'].site;
