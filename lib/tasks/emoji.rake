@@ -1727,6 +1727,8 @@ VARIATION_SELECTOR ||= "fe0f"
 
 # Patch content of EMOJI_KEYWORDS_URL
 EMOJI_KEYWORDS_PATCH ||= {
+  "woman_cook" => { "fitzpatrick_scale" => true },
+  "man_cook" => { "fitzpatrick_scale" => true },
   "thumbsup" => { "char" => "👍", "fitzpatrick_scale" => true },
   "thumbsdown" => { "char" => "👎", "fitzpatrick_scale" => true },
   "asterisk" => { "char" => "*️⃣" },
