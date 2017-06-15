@@ -546,6 +546,10 @@ describe "Groups" do
     end
 
     it 'should create the right PM' do
+      owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
+      owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1 .day)
+      [owner1, owner2].each { |owner| group.add_owner(owner) }
+
       sign_in(user)
 
       xhr :post, "/groups/#{group.name}/request_membership"
@@ -568,8 +572,8 @@ describe "Groups" do
       ))
 
       expect(topic.archetype).to eq(Archetype.private_message)
-      expect(topic.allowed_users).to eq([user])
-      expect(topic.allowed_groups).to eq([group])
+      expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
+      expect(topic.allowed_groups).to eq([])
     end
   end
 end
