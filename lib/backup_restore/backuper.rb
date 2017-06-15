@@ -263,7 +263,7 @@ module BackupRestore
         logs: Discourse::Utils.pretty_logs(@logs)
       )
 
-      if @user.id == Discourse::SYSTEM_USER_ID
+      if !@success && @user.id == Discourse::SYSTEM_USER_ID
         post.topic.invite_group(@user, Group[:admins])
       end
 
