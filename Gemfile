@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
-source 'http://gems.github.com'
-
 # if there is a super emergency and rubygems is playing up, try
-#source 'http://production.cf.rubygems.org'
+source 'http://production.cf.rubygems.org'
 
 # does not install in linux ATM, so hack this for now
 # Also comment in code: config/boot.rb
