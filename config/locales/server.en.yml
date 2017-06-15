@@ -409,6 +409,11 @@ en:
           attributes:
             execute_at:
               in_the_past: "must be in the future."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
+              missing_interpolation_keys: 'The following interpolation key(s) are missing: "%{keys}"'
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/u/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
