@@ -72,9 +72,17 @@ module ApplicationHelper
   end
 
   def body_classes
+    result = []
+
     if @category && @category.url.present?
-      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+      result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
     end
+
+    if current_user.present? && primary_group_name = current_user.primary_group&.name
+      result << "primary-group-#{primary_group_name.downcase}"
+    end
+
+    result.join(' ')
   end
 
   def rtl_class
