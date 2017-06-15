@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
-source 'http://production.cf.rubygems.org'
+# source 'http://production.cf.rubygems.org'
 
 # does not install in linux ATM, so hack this for now
 # Also comment in code: config/boot.rb
@@ -195,6 +195,8 @@ gem 'rmmseg-cpp', require: false
 gem 'logster'
 
 gem 'sassc', require: false
+
+gem 'nokogiri', '~> 1.7.2', require: false
 
 
 # if ENV["IMPORT"] == "1"
