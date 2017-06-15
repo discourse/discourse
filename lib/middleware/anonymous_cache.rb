@@ -1,5 +1,6 @@
 require_dependency "mobile_detection"
 require_dependency "crawler_detection"
+require_dependency "guardian"
 
 module Middleware
   class AnonymousCache
@@ -15,7 +16,7 @@ module Middleware
 
       def initialize(env)
         @env = env
-        @request = Rack::Request.new(env)
+        @request = Rack::Request.new(@env)
       end
 
       def is_mobile=(val)
@@ -59,7 +60,7 @@ module Middleware
       end
 
       def theme_key
-        key = @request.cookies['theme_key']
+        key,_ = @request.cookies['theme_key']&.split(',')
         if key && Guardian.new.allow_theme?(key)
           key
         else
