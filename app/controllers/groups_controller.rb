@@ -238,14 +238,19 @@ class GroupsController < ApplicationController
 
     group = find_group(:id)
     group_name = group.name
-    username = current_user.username
+
+    usernames = [current_user.username].concat(
+      group.users.where('group_users.owner')
+        .order("users.last_seen_at DESC")
+        .limit(5)
+        .pluck("users.username")
+    )
 
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
       raw: I18n.t('groups.request_membership_pm.body', group_name: group_name),
       archetype: Archetype.private_message,
-      target_usernames: username,
-      target_group_names: group_name,
+      target_usernames: usernames.join(','),
       skip_validations: true
     ).create!
 
