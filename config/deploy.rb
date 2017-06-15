@@ -62,7 +62,8 @@ task deploy: :environment do
         command %{mkdir -p tmp/sockets/}
       end
 
-      invoke :'puma:phased_restart'
+      # invoke :'puma:phased_restart'
+      invoke :'puma:hard_restart'
       # invoke :'sidekiq:restart'
     end
   end
