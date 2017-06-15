@@ -446,7 +446,7 @@ DEPENDENCIES
   multi_json
   mustache
   mysql2
-  nokogiri (= 1.7.1)
+  nokogiri
   oj
   omniauth
   omniauth-facebook
