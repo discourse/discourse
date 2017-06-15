@@ -1753,6 +1753,7 @@ EMOJI_KEYWORDS_PATCH ||= {
   "walking_woman" => { "fitzpatrick_scale" => true },
   "woman_facepalming" => { "fitzpatrick_scale" => true },
   "bowing_woman" => { "fitzpatrick_scale" => true },
+  "woman_shrugging" => { "char" => "🤷‍♀️" },
   "man_shrugging" => { "fitzpatrick_scale" => true },
   "tipping_hand_man" => { "fitzpatrick_scale" => true },
   "no_good_man" => { "fitzpatrick_scale" => true },
