@@ -15,6 +15,7 @@ module Middleware
 
       def initialize(env)
         @env = env
+        @request = Rack::Request.new(env)
       end
 
       def is_mobile=(val)
@@ -54,7 +55,16 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_key}"
+      end
+
+      def theme_key
+        key = @request.cookies['theme_key']
+        if key && Guardian.new.allow_theme?(key)
+          key
+        else
+          nil
+        end
       end
 
       def cache_key_body
