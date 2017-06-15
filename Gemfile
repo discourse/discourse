@@ -75,7 +75,7 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 
-gem 'nokogiri', '~> 1.7.1', require: false
+gem 'nokogiri', '1.7.1', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'

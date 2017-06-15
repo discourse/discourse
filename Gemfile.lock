@@ -180,7 +180,7 @@ GEM
     mustache (1.0.5)
     mysql2 (0.4.6)
     netrc (0.11.0)
-    nokogiri (1.7.2)
+    nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.10)
       nokogiri
@@ -446,7 +446,7 @@ DEPENDENCIES
   multi_json
   mustache
   mysql2
-  nokogiri (~> 1.7.1)
+  nokogiri (= 1.7.1)
   oj
   omniauth
   omniauth-facebook
