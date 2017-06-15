@@ -74,7 +74,9 @@ gem 'email_reply_trimmer', '0.1.6'
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
-gem 'nokogiri'
+
+gem 'nokogiri', '~> 1.7.2', require: false
+
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'
@@ -196,7 +198,6 @@ gem 'logster'
 
 gem 'sassc', require: false
 
-gem 'nokogiri', '~> 1.7.2', require: false
 
 
 # if ENV["IMPORT"] == "1"
