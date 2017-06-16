@@ -537,7 +537,16 @@ describe UserNotifications do
       end
 
       context "when customized" do
-        let(:custom_body) { "You are now officially notified." }
+        let(:custom_body) do
+          body = <<~BODY
+          You are now officially notified.
+          %{header_instructions}
+          %{message} %{respond_instructions}
+          BODY
+
+          body << "%{context}" if notification_type != :invited_to_topic
+          body
+        end
 
         before do
           TranslationOverride.upsert!("en", "user_notifications.user_#{notification_type}.text_body_template", custom_body)
