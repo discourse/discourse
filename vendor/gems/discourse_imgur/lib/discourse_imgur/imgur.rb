@@ -1,5 +1,3 @@
-require 'rest_client'
-
 # /!\ WARNING /!\
 # This plugin has been extracted from the Discourse source code and has not been tested.
 # It really needs some love <3
@@ -16,10 +14,9 @@ module Imgur
 
     blob = file.read
 
-    response = RestClient.post(
-      SiteSetting.imgur_endpoint,
-      { image: Base64.encode64(blob) },
-      { 'Authorization' => "ClientID #{SiteSetting.imgur_client_id}" }
+    response = Excon.post(SiteSetting.imgur_endpoint,
+      body: { image: Base64.encode64(blob) },
+      headers: { 'Authorization' => "ClientID #{SiteSetting.imgur_client_id}" }
     )
 
     json = JSON.parse(response.body)['data'] rescue nil

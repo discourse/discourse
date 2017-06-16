@@ -2,11 +2,6 @@ require 'rails_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do
-
-  before do
-    RestClient.stubs(:delete).returns( {success: 'OK'}.to_json )
-  end
-
   describe 'new' do
     it 'raises an error when user is nil' do
       expect { UserDestroyer.new(nil) }.to raise_error(Discourse::InvalidParameters)

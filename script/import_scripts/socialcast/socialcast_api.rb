@@ -1,6 +1,5 @@
 require 'base64'
 require 'json'
-require 'rest-client'
 
 class SocialcastApi
 
@@ -22,7 +21,7 @@ class SocialcastApi
   end
 
   def request url
-    JSON.parse(RestClient.get url, headers)
+    JSON.parse(Excon.get(url, headers: headers)
   end
 
   def list_users(opts={})

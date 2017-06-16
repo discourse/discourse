@@ -95,7 +95,6 @@ gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 gem 'thor', require: false
-gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
