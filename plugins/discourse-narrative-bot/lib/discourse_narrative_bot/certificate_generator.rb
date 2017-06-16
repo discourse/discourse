@@ -552,7 +552,7 @@ module DiscourseNarrativeBot
     private
 
       def name
-        (@user.name && !@user.name.blank? ? @user.name : @user.username).titleize
+        @user.username.titleize
       end
 
       def logo_group(size, width, height)
