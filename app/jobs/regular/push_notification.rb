@@ -20,8 +20,10 @@ module Jobs
           })
         end
 
-        RestClient.send :post, push_url, payload.merge({notifications: notifications}).to_json, content_type: :json, accept: :json
-
+        Excon.post(push_url,
+          body: payload.merge(notifications: notifications).to_json,
+          headers: { 'Content-Type' => 'application/json', 'Accept' => 'applicaton/json' }
+        )
       end
 
     end
