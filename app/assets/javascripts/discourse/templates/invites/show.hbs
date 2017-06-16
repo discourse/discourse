@@ -41,7 +41,7 @@
             {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
             &nbsp;{{input-tip validation=passwordValidation}}
             <div class="instructions">
-              {{passwordInstructions}}
+              {{passwordInstructions}} {{i18n 'invites.optional_description'}}
               <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
             </div>
           </div>
