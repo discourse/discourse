@@ -6,7 +6,7 @@ describe DiscourseHub do
     it 'should return just return the json that the hub returns' do
       hub_response = {'success' => 'OK', 'latest_version' => '0.8.1', 'critical_updates' => false}
 
-      stub_request(:get, "http://local.hub:3000/api/version_check").
+      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api") + "/version_check").
         to_return(status: 200, body: hub_response.to_json)
 
       expect(DiscourseHub.discourse_version_check).to eq(hub_response)
