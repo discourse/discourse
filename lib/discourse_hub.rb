@@ -42,8 +42,9 @@ module DiscourseHub
   def self.singular_action(action, rel_url, params={})
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
-      body: params.to_query,
-      headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') }
+      headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
+      :query => params,
+      :omit_default_port => true
     ).body)
   end
 
