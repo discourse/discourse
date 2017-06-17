@@ -1,0 +1,33 @@
+{{#if default}}
+  <div class="overlay">
+    <div class="wrap">
+      {{#if siteSettings.banner_title}}
+        <h1>{{siteSettings.banner_title}}</h1>
+        <div class="description">
+          <p>{{siteSettings.banner_description}}</p>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+  <img class="banner-image" src="{{siteSettings.banner_image_url}}" alt="{{siteSettings.banner_title}}">
+{{/if}}
+{{#if smart}}
+  <div class="wrap">
+    <div class="banner-image">
+      <img src="{{siteSettings.banner_image_url}}" alt="{{siteSettings.banner_title}}">
+    </div>
+    <div class="banner-text">
+      <h1>{{siteSettings.banner_title}}</h1>
+      <div class="banner-links">
+        {{plugin-outlet name="branding-banner-links"}}
+      </div>
+      <div class="description">
+        <p>{{siteSettings.banner_description}}</p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+{{/if}}
+{{#if plugin}}
+  {{plugin-outlet name="branding-banner"}}
+{{/if}}

@@ -1,0 +1,39 @@
+branding:
+  branding_enabled:
+    default: true
+    client: true
+  brand_name:
+    default: 'Discourse'
+    client: true
+  brand_logo_url:
+    default: '/images/d-logo-sketch.png'
+    client: true
+  brand_mobile_logo_url:
+    default: '/images/d-logo-sketch.png'
+    client: true
+  brand_url:
+    default: '/'
+    client: true
+  brand_home_link_enabled:
+    default: true
+    client: true
+  banner_enabled:
+    default: false
+    client: true
+  banner_title:
+    default: ''
+    client: true
+  banner_description:
+    default: ''
+    client: true
+  banner_image_url:
+    default: ''
+    client: true
+  banner_style:
+    default: 'default'
+    client: true
+    type: enum
+    choices:
+      - default
+      - smart
+      - plugin

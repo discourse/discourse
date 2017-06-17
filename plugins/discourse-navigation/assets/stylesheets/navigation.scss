@@ -1,0 +1,36 @@
+.menu-links .menu-link {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+}
+.menu-links .menu-link .form-display {
+    width: 25%;
+    display: inline-block;
+    float: left;
+}
+.menu-links .menu-link .form-element {
+    float: left;
+    min-height: 30px;
+    padding: 0.25em 0;
+}
+.menu-links .menu-link .controls {
+    float: right;
+    text-align: right;
+}
+.menu-links .menu-link .form-element.label-area {
+    width: 25%;
+}
+.menu-links .menu-link .form-element.label-area label {
+    margin: 0.5em 1em 0 0;
+    text-align: right;
+    font-weight: bold;
+}
+.menu-links .menu-link .form-element.input-area {
+    width: 75%;
+}
+.menu-links .menu-link .form-element.input-area input[type=text] {
+    width: 50%;
+}
+.menu-links small {
+  font-size: 12px;
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %> branding">
+  <head>
+    <meta charset="utf-8">
+    <title><%= content_for?(:title) ? yield(:title) + ' - ' + site_title : site_title %></title>
+    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <%= render partial: "layouts/head" %>
+    <%= render partial: "common/special_font_face" %>
+    <%= render partial: "common/discourse_stylesheet" %>
+    <%= discourse_csrf_tags %>
+
+    <%- if SiteSetting.enable_escaped_fragments? %>
+      <meta name="fragment" content="!">
+    <%- end %>
+
+    <%- if shared_session_key %>
+      <meta name="shared_session_key" content="<%= shared_session_key %>">
+    <%- end %>
+
+    <script>
+      window.EmberENV = window.EmberENV || {};
+      window.EmberENV['FORCE_JQUERY'] = true;
+    </script>
+
+    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script "ember_jquery" %>
+    <%= preload_script "preload-store" %>
+    <%= preload_script "vendor" %>
+    <%= preload_script "pretty-text-bundle" %>
+    <%= preload_script "application" %>
+    <%- if allow_plugins? %>
+    <%= preload_script "plugin" %>
+    <%- end %>
+    <%- if allow_third_party_plugins? %>
+    <%= preload_script "plugin-third-party" %>
+    <%- end %>
+
+    <%- if staff? %>
+      <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>
+      <%= preload_script "admin" %>
+    <%- end %>
+
+    <%- unless customization_disabled? %>
+      <%= raw theme_lookup("head_tag") %>
+    <%- end %>
+
+    <%= render_google_universal_analytics_code %>
+    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
+
+    <%= yield :head %>
+  </head>
+
+  <body class="<%= body_classes %>">
+    <%= render_google_tag_manager_code %>
+
+    <div class='debug-eyeline'></div>
+
+    <noscript data-path="<%= request.env['PATH_INFO'] %>">
+      <%= server_plugin_outlet "above_site_header" %>
+      <%= render partial: 'header' %>
+      <div id="main-outlet" class="wrap">
+        <!-- preload-content: -->
+        <%= yield %>
+        <!-- :preload-content -->
+        <footer>
+          <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
+            <a href='<%= path "/" %>'><%= t 'home_title' %></a>
+            <%= link_to t('js.filters.categories.title'), path("/categories") %>
+            <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
+            <%= link_to t('tos_topic.title'), path("/tos") %>
+            <%= link_to t('privacy_topic.title'), path("/privacy") %>
+          </nav>
+        </footer>
+      </div>
+
+      <footer id='noscript-footer'>
+        <p><%= t 'powered_by_html' %></p>
+      </footer>
+    </noscript>
+
+    <%- unless customization_disabled? || loading_admin? %>
+      <%= theme_lookup("header") %>
+    <%- end %>
+
+    <section id='main'>
+    </section>
+
+    <div id='offscreen-content'>
+    </div>
+
+    <% unless current_user %>
+      <form id='hidden-login-form' method="post" action="<%=main_app.login_path%>" style="display: none;">
+        <input name="username" type="text"     id="signin_username">
+        <input name="password" type="password" id="signin_password">
+        <input name="redirect" type="hidden">
+        <input type="submit" id="signin-button" value="<%= t 'log_in' %>">
+      </form>
+    <% end %>
+
+    <%- if @preloaded.present? %>
+      <script>
+      (function() {
+        var ps = require('preload-store').default;
+        <%- @preloaded.each do |key, json| %>
+          ps.store("<%= key %>", <%= escape_unicode(json) %>);
+        <% end %>
+      })();
+      </script>
+    <%- end %>
+
+    <%= yield :data %>
+
+    <%= render :partial => "common/discourse_javascript" %>
+
+    <%= render_google_analytics_code %>
+
+    <%- unless customization_disabled? %>
+      <%= raw theme_lookup("body_tag") %>
+    <%- end %>
+  </body>
+</html>

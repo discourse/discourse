@@ -1,0 +1,7 @@
+{{#if siteSettings.branding_enabled}}
+  {{#unless site.mobileView}}
+    {{#if siteSettings.banner_enabled}}
+      {{branding-banner siteSettings=siteSettings style=siteSettings.banner_style}}
+    {{/if}}
+  {{/unless}}
+{{/if}}

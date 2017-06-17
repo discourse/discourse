@@ -1,0 +1,79 @@
+{{#if editing}}
+  {{#admin-form-row label="admin.menu_links.name"}}
+    {{input value=buffered.name class="menu-link-name"}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row label="admin.menu_links.icon"}}
+    {{input value=buffered.icon class="menu-link-icon"}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row label="admin.menu_links.url"}}
+    {{input value=buffered.url class="menu-link-url"}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row label="admin.menu_links.visible"}}
+    {{#admin-form-row label="admin.menu_links.main.menu"}}
+      <div class="row">
+        <div class="form-element input-area">
+          {{input type="checkbox" checked=buffered.visible_main}}
+        </div>
+      </div>
+    {{/admin-form-row}}
+
+    {{#admin-form-row label="admin.menu_links.hamburger.menu"}}
+      <div class="row">
+        <div class="form-element input-area">
+          {{input type="checkbox" checked=buffered.visible_hamburger_general}} {{i18n 'admin.menu_links.hamburger.general'}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-element input-area">
+          {{input type="checkbox" checked=buffered.visible_hamburger_footer}} {{i18n 'admin.menu_links.hamburger.footer'}}
+        </div>
+      </div>
+    {{/admin-form-row}}
+
+    {{#admin-form-row label="admin.menu_links.branding.menu"}}
+      <div class="row">
+        <div class="form-element input-area">
+          for <a target="_blank" href="https://github.com/vinkas0/discourse-branding">{{i18n 'admin.navigation.plugin.branding'}}</a> plugin
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-element input-area">
+          {{input type="checkbox" checked=buffered.visible_brand_general}} {{i18n 'admin.menu_links.branding.general'}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-element input-area">
+          {{input type="checkbox" checked=buffered.visible_brand_icon}} {{i18n 'admin.menu_links.branding.icon'}}
+        </div>
+      </div>
+    {{/admin-form-row}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row}}
+    {{d-button action="save" class="btn-primary" icon="check" label="admin.menu_links.save"}}
+    {{d-button action="cancel" class="btn-danger" icon="times" label="admin.menu_links.cancel"}}
+  {{/admin-form-row}}
+{{else}}
+  <div class="row">
+    <div class='form-display'>
+      <strong>{{menuLink.name}}</strong>
+    </div>
+    <div class='form-display'>
+      <a href="{{menuLink.url}}" target="_blank">{{menuLink.url}}</a>
+    </div>
+    <div class='form-element controls'>
+      {{d-button action="edit" class="btn-default" icon="pencil" label="admin.menu_links.edit"}}
+      {{d-button action="destroy" class="btn-danger" icon="trash-o" label="admin.menu_links.delete"}}
+      {{d-button action="moveUp" icon="arrow-up" disabled=cantMoveUp}}
+      {{d-button action="moveDown" icon="arrow-down" disabled=cantMoveDown}}
+    </div>
+  </div>
+  <small class="row">{{flags}}</small>
+{{/if}}
+<div class='clearfix'></div>

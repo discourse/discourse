@@ -1,0 +1,13 @@
+en:
+  site_settings:
+    branding_enabled: "Enable 'Branding' plugin"
+    brand_name: "The name of your brand, as used in the title tag."
+    brand_logo_url: "The brand logo image at the top left of your site, should be a wide rectangle shape."
+    brand_mobile_logo_url: "The fixed position logo image used at the top left of your mobile site."
+    brand_url: "Absolute url of your brand website"
+    brand_home_link_enabled: "Enable link for brand's home page in header navigation"
+    banner_enabled: "Enable home page banner"
+    banner_title: ""
+    banner_description: ""
+    banner_image_url: ""
+    banner_style: "If 'plugin' is chosen then `plugin-outlet: branding-banner` will be rendered instead"

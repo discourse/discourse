@@ -1,0 +1,213 @@
+@import "theme_variables";
+
+.b-header {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 1001;
+  background-color: $tertiary;
+  left: 0;
+  z-index: 1002;
+  height: 48px;
+  margin-bottom: 0;
+
+  .contents {
+    margin: 8px 0;
+  }
+
+  .title {
+    float: left;
+    margin-right: 24px;
+    a {
+      color: $secondary;
+    }
+    &:visited {
+      color: $secondary;
+    }
+  }
+
+  #brand-logo {
+    max-height: 32px;
+  }
+
+  #brand-text-logo {
+    line-height: 32px;
+    margin: 0;
+  }
+
+  nav.links {
+    float: left;
+  }
+
+  .nav-pills {
+    margin-bottom: 0;
+    > li > a {
+      color: $secondary;
+      line-height: 22px;
+      &:hover {
+        color: $quaternary;
+        background-color: dark-light-diff($quaternary, $tertiary, -70%, 70%);
+      }
+      &.active > a, > a.active {
+        color: $secondary;
+        background-color: $quaternary;
+      }
+    }
+  }
+
+  .panel {
+    float: right;
+    position: relative;
+  }
+
+  .menu-panel {
+    position: absolute;
+    top: 100%;
+    right: -10px;
+  }
+
+  ul.icons {
+    text-align: center;
+    margin: 0 0 0 5px;
+    > li {
+      float: left;
+      list-style: none;
+    }
+    [class^="fa fa-"] {
+      width: 28px;
+      height: 28px;
+      font-size: 16px;
+      line-height: 28px;
+      display: inline-block;
+      margin: 2px;
+    }
+  }
+
+  .panel > ul.icons {
+    float: right;
+    [class^="fa fa-"] {
+      color: $secondary;
+    }
+  }
+}
+
+.b-banner {
+  display: none;
+  padding-top: 111px;
+  margin-bottom: -111px;
+  position: relative;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 150%;
+  h1 {
+    margin: 30px 0 20px 0;
+  }
+  .description {
+    margin:0 20%;
+  }
+  &.default {
+    text-align: center;
+    background-color: $tertiary;
+    color: scale-color($tertiary, $lightness: 95%);
+    img.banner-image {
+      width: 100%;
+      max-width: 100%;
+    }
+    .overlay {
+      background-color: scale-color($quaternary, $lightness: -85%);
+      color: scale-color($quaternary, $lightness: 95%);
+      text-shadow: 1px 1px scale-color($quaternary, $lightness: -100%);
+      position: absolute;
+      top: 111px;
+      width: 100%;
+      height: 100%;
+      padding: 30px 0;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.2s linear;
+      h1 {
+        color: $quaternary;
+      }
+    }
+    &:hover .overlay {
+      visibility: visible;
+      opacity: 0.85;
+    }
+  }
+  &.smart {
+    background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
+    .banner-image {
+      border: 32px solid  scale-color($quaternary, $lightness: 60%);
+      border-radius: 250px;
+      float: left;
+      margin:15px 30px 10px 10px;
+      position: relative;
+      height: 215px;
+      width: 215px;
+      overflow: hidden;
+    }
+    h1 {
+      color: $quaternary;
+      margin-top: 50px;
+    }
+    .banner-links {
+      float: right;
+      width: 30%;
+      margin-left: 30px;
+      font-size: 14px;
+      line-height: 100%;
+      ul {
+        margin: 0 0 0 10px;
+        li {
+          margin: 10px 0;
+        }
+      }
+    }
+  }
+}
+.navigation-topics .b-banner, .navigation-categories .b-banner {
+  display: block;
+}
+.branding .d-header {
+  margin-top: 48px;
+}
+.branding #main-outlet {
+  padding-top: 130px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .b-banner {
+    font-size: 14px;
+    line-height: 125%;
+  }
+  .b-banner.smart .banner-image {
+    display: none;
+  }
+  .b-banner.smart .banner-image, .b-banner.smart .banner-text {
+    margin-bottom: 10px;
+  }
+  .b-banner .description {
+    margin: 0;
+  }
+  .b-banner.smart .banner-links {
+    width: 35%;
+  }
+  .banner-links > div > p:first-child {
+    margin-top: 0;
+  }
+  .b-banner h1 {
+    margin: 0;
+    font-size: 1.4em;
+  }
+  .b-banner.smart h1 {
+    margin: 20px 0;
+  }
+  .b-banner.default .overlay {
+    padding: 10px 0;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .b-banner {
+    display: none !important;
+  }
+}
