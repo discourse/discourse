@@ -12,7 +12,27 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   DRUPAL_FILES_DIR = ENV['DRUPAL_FILES_DIR']
 
 
+
   def execute
+
+    site_settings = {
+      # Basic Setup
+      enable_badges: false,
+      # Login
+      invite_only: true,
+      login_required: true,
+      # Posting
+      allow_duplicate_topic_titles: true,
+      allow_html_tables: true,
+      suppress_reply_directly_below: false,
+      suppress_reply_directly_above: false,
+      # Email
+      disable_emails: true,
+      # Plugins
+      discourse_narrative_bot_enabled: false
+    }
+    site_settings.each { |key, value| SiteSetting.set(key, value) }
+
 
     # # You'll need to edit the following query for your Drupal install:
     # #
@@ -26,23 +46,28 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # User.where.not("email = 'admin@example.com' or id = -1 or id = -2").delete_all
     # UserCustomField.delete_all
 
-    #     Topic.delete_all
-    #     TopicCustomField.delete_all
-    #
-    #     Post.delete_all
-    #     PostCustomField.delete_all
-    #
-    create_users
+    # import_users
 
-    create_post_and_wiki_topics
 
-    create_challenge_response_topics
+    Topic.delete_all
+    TopicCustomField.delete_all
 
-    create_replies
+    Post.delete_all
+    PostCustomField.delete_all
 
-    # Permalink.delete_all
+    Permalink.delete_all
 
-    process_posts
+
+    import_post_and_wiki_topics
+
+    # import_challenge_response_topics
+
+    import_replies
+
+    post_process_posts
+
+    # import_likes
+
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -54,7 +79,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
-  def create_users
+  def import_users
     puts '', 'creating users...'
 
     sql = <<-SQL
@@ -85,7 +110,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         (fc.entity_type = 'user' or fc.entity_type is null) AND
         (co.entity_type = 'user' or co.entity_type is null)
     SQL
-    super(@client.query(sql)) do |row|
+    create_users(@client.query(sql)) do |row|
       {
         id: row['id'],
         username: row['name'], #.parameterize.underscore,
@@ -128,7 +153,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
-  def create_post_and_wiki_topics
+  def import_post_and_wiki_topics
     puts '', 'creating post and wiki topics...'
 
     # create_category({
@@ -176,7 +201,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
-  def create_challenge_response_topics
+  def import_challenge_response_topics
     puts '', 'creating challenge response topics...'
 
     # create_category({
@@ -222,7 +247,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
-  def create_replies
+  def import_replies
     puts '', "creating replies in topics..."
 
     total_count = @client.query("
@@ -238,7 +263,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     batches(batch_size) do |offset|
       results = @client.query("
         SELECT c.cid, c.pid, c.nid, c.uid, c.created, c.subject,
-               f.comment_body_value body
+               f.comment_body_value body, SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1)) torder
           FROM comment c,
                field_data_comment_body f,
                node n
@@ -246,7 +271,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
            AND n.nid = c.nid
            AND c.status = 1
            AND n.type IN ('challenge_response', 'post', 'wiki')
-          ORDER BY c.cid
+          ORDER BY torder ASC
          LIMIT #{batch_size}
         OFFSET #{offset};
       ", cache_rows: false)
@@ -269,7 +294,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
             user_id: user_id_from_imported_user_id(row['uid']) || -1,
             raw: content,
             created_at: Time.zone.at(row['created']),
+            custom_fields: {import_id: "cid:#{row['cid']}"}
           }
+
+          # Reply reference.
+          # if (import_parent_id = post.custom_fields['import_parent_id'])
+          #   post.reply_to_post_number = PostCustomField.find_by(name: 'import_id', value: import_parent_id).post.post_number
+          # end
+          # h[:custom_fields][:import_parent_id] = "cid:#{row['pid']}" if row['pid'] != 0
+
           if row['pid']
             parent = topic_lookup_from_imported_post_id("cid:#{row['pid']}")
             h[:reply_to_post_number] = parent[:post_number] if parent and parent[:post_number] > 1
@@ -285,7 +318,105 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
-  def process_posts
+  def import_likes
+    puts "\nimporting likes..."
+
+    sql = "select uid user_id, entity_type post_type, entity_id post_id, timestamp created_at FROM votingapi_vote"
+    results = @client.query(sql, cache_rows: false)
+
+    puts "loading unique id map"
+    existing_map = {}
+    PostCustomField.where(name: 'import_id').pluck(:post_id, :value).each do |post_id, import_id|
+      existing_map[import_id] = post_id
+    end
+
+
+    puts "loading data into temp table"
+    PostAction.exec_sql("create temp table like_data(user_id int, post_id int, created_at timestamp without time zone)")
+    PostAction.transaction do
+      results.each do |result|
+
+        result["user_id"] = user_id_from_imported_user_id(result["user_id"].to_s)
+        result["post_id"] = if result['post_type'] == 'comment'
+                              existing_map["cid:#{result["post_id"]}"]
+                            else
+                              existing_map["nid:#{result["post_id"]}"]
+                            end
+
+        next unless result["user_id"] && result["post_id"]
+
+        PostAction.exec_sql("INSERT INTO like_data VALUES (:user_id,:post_id,:created_at)",
+                            user_id: result["user_id"],
+                            post_id: result["post_id"],
+                            created_at: Time.zone.at(result["created_at"])
+        )
+
+      end
+    end
+
+    puts "creating missing post actions"
+    PostAction.exec_sql <<-SQL
+
+    INSERT INTO post_actions (post_id, user_id, post_action_type_id, created_at, updated_at)
+             SELECT l.post_id, l.user_id, 2, l.created_at, l.created_at FROM like_data l
+             LEFT JOIN post_actions a ON a.post_id = l.post_id AND l.user_id = a.user_id AND a.post_action_type_id = 2
+             WHERE a.id IS NULL
+    SQL
+
+    puts "creating missing user actions"
+    UserAction.exec_sql <<-SQL
+    INSERT INTO user_actions (user_id, action_type, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+             SELECT pa.user_id, 1, p.topic_id, p.id, pa.user_id, pa.created_at, pa.created_at
+             FROM post_actions pa
+             JOIN posts p ON p.id = pa.post_id
+             LEFT JOIN user_actions ua ON action_type = 1 AND ua.target_post_id = pa.post_id AND ua.user_id = pa.user_id
+
+             WHERE ua.id IS NULL AND pa.post_action_type_id = 2
+    SQL
+
+
+    # reverse action
+    UserAction.exec_sql <<-SQL
+    INSERT INTO user_actions (user_id, action_type, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+             SELECT p.user_id, 2, p.topic_id, p.id, pa.user_id, pa.created_at, pa.created_at
+             FROM post_actions pa
+             JOIN posts p ON p.id = pa.post_id
+             LEFT JOIN user_actions ua ON action_type = 2 AND ua.target_post_id = pa.post_id AND
+                ua.acting_user_id = pa.user_id AND ua.user_id = p.user_id
+
+             WHERE ua.id IS NULL AND pa.post_action_type_id = 2
+    SQL
+    puts "updating like counts on posts"
+
+    Post.exec_sql <<-SQL
+        UPDATE posts SET like_count = coalesce(cnt,0)
+                  FROM (
+        SELECT post_id, count(*) cnt
+        FROM post_actions
+        WHERE post_action_type_id = 2 AND deleted_at IS NULL
+        GROUP BY post_id
+    ) x
+    WHERE posts.like_count <> x.cnt AND posts.id = x.post_id
+
+    SQL
+
+    puts "updating like counts on topics"
+
+    Post.exec_sql <<-SQL
+      UPDATE topics SET like_count = coalesce(cnt,0)
+      FROM (
+        SELECT topic_id, sum(like_count) cnt
+        FROM posts
+        WHERE deleted_at IS NULL
+        GROUP BY topic_id
+      ) x
+      WHERE topics.like_count <> x.cnt AND topics.id = x.topic_id
+
+    SQL
+  end
+
+
+  def post_process_posts
     puts '', 'processing posts...'
 
     Post.find_each do |post|

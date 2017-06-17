@@ -14,7 +14,7 @@ set :repository, 'https://github.com/edgeryders/discourse.git'
 set :rails_env, 'production'
 
 # shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
-set :shared_dirs, fetch(:shared_dirs, []).push('public/backups', 'public/uploads')
+set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp', 'public/backups', 'public/uploads')
 set :shared_files, fetch(:shared_files, []).push('config/discourse.conf', 'config/puma.rb')
 
 
@@ -58,13 +58,18 @@ task deploy: :environment do
     invoke :'deploy:cleanup'
 
     on :launch do
-      in_path(fetch(:current_path)) do
-        command %{mkdir -p tmp/sockets/}
-      end
+      # in_path(fetch(:current_path)) do
+      #   command %{mkdir -p tmp/sockets/}
+      #   command %{mkdir -p tmp/pids/}
+      # end
 
-      # invoke :'puma:phased_restart'
-      invoke :'puma:hard_restart'
-      # invoke :'sidekiq:restart'
+        # Required to load rbenv.
+        invoke :environment
+
+        invoke :'puma:phased_restart'
+        # invoke :'puma:start'
+        # invoke :'puma:restart'
+        # invoke :'sidekiq:restart'
     end
   end
 
@@ -86,9 +91,9 @@ end
 # mina staging discourse_setup
 task discourse_setup: :environment do
   in_path(fetch(:current_path)) do
-    command %{#{fetch(:rake)} db:drop}
-    command %{#{fetch(:rake)} db:create}
-    command %{#{fetch(:rake)} db:migrate}
+    # command %{#{fetch(:rake)} db:drop}
+    # command %{#{fetch(:rake)} db:create}
+    # command %{#{fetch(:rake)} db:migrate}
     comment %{Import data:}
     command %{DRUPAL_DB=edgeryders_drupal DRUPAL_FILES_DIR=/home/discourse/staging/shared/import/web/sites/edgeryders.eu/files #{fetch(:bundle_prefix)} ruby script/import_scripts/drupal_er.rb}
   end
