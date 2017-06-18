@@ -43,8 +43,8 @@ module DiscourseHub
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
       headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
-      :query => params,
-      :omit_default_port => true
+      query: params,
+      omit_default_port: true
     ).body)
   end
 
