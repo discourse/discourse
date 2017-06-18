@@ -52,7 +52,7 @@ module DiscourseHub
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
       body: params,
-      headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), 'Content-Type' => 'applicaton/json' }
+      headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), 'Content-Type' => 'application/json' }
     ).body)
   end
 
