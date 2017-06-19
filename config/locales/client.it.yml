@@ -351,9 +351,6 @@ it:
         full_name: 'Nome Completo'
         add_members: "Aggiungi Membri"
         delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
-      request_membership_pm:
-        title: "Richiesta di Iscrizione"
-        body: "Vorrei iscrivermi a @%{groupName}."
       name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
       public: "Permetti agli utenti di aggiungersi/togliersi liberamente dal gruppo (il gruppo deve essere visibile)"
       empty:
@@ -1064,9 +1061,9 @@ it:
       olist_title: "Elenco Numerato"
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
-      heading_label: "I"
-      heading_title: "Intestazione"
-      heading_text: "Intestazione"
+      heading_label: "T"
+      heading_title: "Titolo"
+      heading_text: "Titolo"
       hr_title: "Linea Orizzontale"
       help: "Aiuto Inserimento Markdown"
       toggler: "nascondi o mostra il pannello di editing"

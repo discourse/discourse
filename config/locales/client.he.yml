@@ -351,9 +351,6 @@ he:
         full_name: 'שם מלא'
         add_members: "הוספת חברים"
         delete_member_confirm: "הסרת '%{username}' מהקבוצה '%{group}'?"
-      request_membership_pm:
-        title: "בקשת חברות"
-        body: "הייתי מעוניין להגיש בקשת חברות ב-@%{groupName}."
       name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
       public: "אפשרו למשתמשים להצטרף/לעזוב את הקבוצה בחופשיות (על הקבוצה להיות נראית)"
       empty:
@@ -488,6 +485,7 @@ he:
       mute: "השתק"
       edit: "עריכת העדפות"
       download_archive:
+        button_text: "להוריד הכל"
         confirm: "האם אתם בטוחים שאתם מעוניינים להוריד אליכם את הפוסטים שלכם?"
         success: "הורדה החלה, תקבלו הודעה כאשר התהליך הסתיים."
         rate_limit_error: "ניתן להוריד פוסטים פעם ביום, אנא נסו שוב מחר."
@@ -557,6 +555,7 @@ he:
       watched_first_post_tags_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בתגיות אלו."
       muted_categories: "מושתק"
       muted_categories_instructions: "אתם לא תיודעו על שום דבר לגבי נושאים חדשים בקטגוריות אלו, והם לא יופיעו ב״אחרונים״."
+      no_category_access: "בתור מנחים יש לכם גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
       delete_account: "מחק את החשבון שלי"
       delete_account_confirm: "אתם בטוחים שברצונכם למחוק את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "חשבונך נמחק בהצלחה."
@@ -991,7 +990,7 @@ he:
       your_email: "כתובת המייל של החשבון שלכם היא <b>%{email}</b>."
       accept_invite: "קבלת הזמנה"
       success: "החשבון שלכם נוצר ואתם מחוברים עכשיו."
-      password_label: "קביעת סיסמה (אופציונלי)"
+      name_label: "שם"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -1762,6 +1761,10 @@ he:
         confirm:
           one: "האם אתם בטוחים שאתם מעוניינים למחוק פוסט זה?"
           other: "האם אתם בטוחים שאתם מעוניינים למחוק את כל הפוסטים האלו?"
+      merge:
+        confirm:
+          one: "האם אתם בטוחים שאתם מעוניינים למזג פוסטים אלו?"
+          other: "האם אתם בטוחים שאתם מעוניינים למזג {{count}} פוסטים אלו?"
       revisions:
         controls:
           first: "מהדורה ראשונה"
@@ -1807,6 +1810,7 @@ he:
       settings: 'הגדרות'
       topic_template: "תבנית נושא"
       tags: "תגיות"
+      tags_allowed_tags: "לאפשר רק לתגיות אלו להיות בשימוש בקטגוריה זו:"
       tags_placeholder: "(אופציונלי) רשימת תגים מותרים"
       tag_groups_placeholder: "(אופציונלי) רשימת קבוצות תגים"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
@@ -2628,6 +2632,9 @@ he:
           updating: "מעדכנים..."
           up_to_date: "התמה מעודכנת, נבדקה לאחרונה ב:"
           add: "הוספה"
+          commits_behind:
+            one: "התמה נמצאת קומיט 1 מאחור!"
+            other: "התמה נמצאת {{count}} קומיטים מאחור!"
           scss:
             text: "CSS"
             title: "עריכת CSS מותאם, אנחנו מקבלים כל סגנון CSS ו SCSS תקני"

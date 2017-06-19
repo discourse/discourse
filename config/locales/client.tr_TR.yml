@@ -317,9 +317,6 @@ tr_TR:
         full_name: 'Tam İsim'
         add_members: "Üyeleri ekle"
         delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
-      request_membership_pm:
-        title: "Üyelik isteği"
-        body: "@%{groupName} adlı gruba üye olarak başvurmak istiyorum."
       name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
       public: "Kullanıcıların gruptan serbest bir şekilde ayrılıp/katılmasına izin ver (grubun görünür olması gerekmekte)"
       empty:

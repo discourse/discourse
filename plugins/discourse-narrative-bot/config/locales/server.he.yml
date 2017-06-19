@@ -149,3 +149,8 @@ he:
           הו לא! נראה שבטעות מחקתי פוסט חדש שרק יצרתי עבורכם.
 
           תוכלו לעזור לי <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **להשיב** אותו?
+      details:
+        reply: |-
+          עבודה מעולה — תשומת הלב שלכם _לפרטים_ מוערצת!
+      certificate:
+        alt: 'תעודת סיום, מסלול משתמש מתקדם'

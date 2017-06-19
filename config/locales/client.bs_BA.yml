@@ -349,9 +349,6 @@ bs_BA:
         full_name: 'Puno ime'
         add_members: "Dodaj Članove"
         delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
-      request_membership_pm:
-        title: "Zahtjev za članstvom"
-        body: "Želio bi da apliciram u članstvo @%{groupName}."
       name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
       public: "Dozvolite korisnicima da se pridruže/napuste grupu slobodno (Zahtjeva da grupa bude vidljiva)"
       empty:

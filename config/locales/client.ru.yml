@@ -398,9 +398,6 @@ ru:
         full_name: 'Полное Имя'
         add_members: "Добавить Участников"
         delete_member_confirm: "Удалить '%{username}' из группы '%{group}'?"
-      request_membership_pm:
-        title: "Запрос на Вступление"
-        body: "Я бы хотел вступить в @%{groupName}."
       name_placeholder: "Название группы, без пробелов, по тем же правилам, что и для псевдонимов."
       public: "Позволить пользователям свободно вступать/покидать группу (Группа должна быть видимой)"
       empty:
@@ -1049,7 +1046,6 @@ ru:
       your_email: "Ваш электронный адрес аккаунта <b>%{email}</b>."
       accept_invite: "Принять приглашение"
       success: "Ваш аккаунт создан и вы можете теперь войти."
-      password_label: "Установить пароль (опционально)"
     password_reset:
       continue: "Далее на %{site_name}"
     emoji_set:

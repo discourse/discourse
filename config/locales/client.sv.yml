@@ -346,9 +346,6 @@ sv:
         full_name: 'Fullständigt namn'
         add_members: "Lägg till medlemmar"
         delete_member_confirm: "Ta bort '%{username}' från gruppen '%{group}'?"
-      request_membership_pm:
-        title: "Begäran om medlemskap"
-        body: "Jag skulle vilja ansöka om medlemskap i @%(namn på gruppen)."
       name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
       public: "Tillåt användare att delta/lämna gruppen av egen vilja (Kräver gruppen att vara synlig)"
       empty:
@@ -969,7 +966,6 @@ sv:
       your_email: "Mailadressen för ditt konto är <b>%{email}</b>."
       accept_invite: "Acceptera inbjudan"
       success: "Ditt konto har skapats och du är nu inloggad."
-      password_label: "Ange lösenord (valfritt)"
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:

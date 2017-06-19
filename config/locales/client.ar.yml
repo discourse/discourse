@@ -451,9 +451,6 @@ ar:
         full_name: 'الإسم الكامل'
         add_members: "إضافة أعضاء"
         delete_member_confirm: "أأزيل ’%{username}‘ من مجموعة ’%{group}‘؟"
-      request_membership_pm:
-        title: "طلب العضوية"
-        body: "أود تسجيل العضوية في المجموعة @%{groupName}"
       name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
       public: "اسمح للأعضاء بحريّة الانضمام إلى المجموعة أو تركها (يجب أن تكون المجموعة مرئيّة)"
       empty:
@@ -1120,7 +1117,6 @@ ar:
       your_email: "بريدك الإلكتروني  <b>%{email}</b>."
       accept_invite: "قُبول الدعوة "
       success: "أُنشئ حسابك وقد سجلت الدخول الآن."
-      password_label: "تعيين رمز سري (اختياري)"
     password_reset:
       continue: "تابع نحو %{site_name}"
     emoji_set:
@@ -3139,7 +3135,7 @@ ar:
           one: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يوم. (The delete_user_max_post_age setting.)"
           two: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يومين. (The delete_user_max_post_age setting.)"
           few: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام قليلة. (The delete_user_max_post_age setting.)"
-          many: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام %{كثيرة}. (The delete_user_max_post_age setting.)"
+          many: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من أيام %{count}. (The delete_user_max_post_age setting.)"
           other: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من %{count} أيام. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
           zero: "لا يمكن مسح كل المشاركات لأن العضو لديه أكثر من %{count} مشاركة.\n(delete_all_posts_max)"

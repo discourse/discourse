@@ -403,9 +403,6 @@ pl_PL:
         full_name: 'Pełna nazwa'
         add_members: "Dodaj użytkowników"
         delete_member_confirm: "Czy usunąć użytkownika '%{username}' z grupy '%{group}'?"
-      request_membership_pm:
-        title: "Prośba o członkostwo"
-        body: "Chciałbym(-am) poprosić o członkostwo w grupie @%{groupName}."
       name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
       public: "Zezwalaj użytkownikom na zapraszanie/opuszczanie grupy (Grupa musi być widoczna)"
       empty:
@@ -1067,8 +1064,6 @@ pl_PL:
       accept_invite: "Akceptuj zaproszenie"
       success: "Twje konto zostało utworzone i zostałeś zalogowany."
       name_label: "Nazwa"
-      name_label_optional: "Nazwa(opcjonalnie)"
-      password_label: "Ustaw hasło (opcjonalne)"
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:

@@ -343,9 +343,6 @@ et:
         full_name: 'Täisnimi'
         add_members: "Lisa liikmed"
         delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
-      request_membership_pm:
-        title: "Liikmelisuse taotlus"
-        body: "Soovin liituda grupiga @%{groupName}."
       name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
       public: "Luba kasutajatel vabalt grupiga liituda/sellest lahkuda (nõuab, et grupp oleks nähtav)"
       empty:
@@ -963,7 +960,6 @@ et:
       your_email: "Teie konto meiliaadress on <b>%{email}</b>."
       accept_invite: "Võta kutse vastu"
       success: "Teie konto on loodud ning olete nüüd sisse logitud."
-      password_label: "Määra parool (mittekohustuslik)"
     password_reset:
       continue: "Edasi saidile %{site_name}"
     emoji_set:

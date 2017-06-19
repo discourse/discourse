@@ -317,9 +317,6 @@ ko:
         full_name: '전체 이름'
         add_members: "구성원 추가"
         delete_member_confirm: "'%{username}'를 '%{group}' 그룹에서 삭제하겠습니까?"
-      request_membership_pm:
-        title: "멤버십 요청"
-        body: "@%{groupName} 에 멤버십을 요청합니다."
       name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
       public: "사용자들이 그룹을 자유롭게 참여/탈퇴 가능하게 합니다. (그룹은 반드시 공개되어야 함)"
       empty:
@@ -594,6 +591,7 @@ ko:
       like_notification_frequency:
         title: "누군가 '좋아요' 해주면 알려주기"
         always: "항상"
+        first_time: "게시글이 첫 좋아요를 받은 시간"
         never: "절대"
       email_previous_replies:
         title: "이메일 밑부분에 이전 댓글을 포함합니다."
@@ -681,6 +679,8 @@ ko:
           other: "좋아요"
         likes_received:
           other: "받음"
+        bookmark_count:
+          other: "북마크들"
         top_replies: "인기 댓글"
         no_replies: "아직 답글이 없습니다."
         more_replies: "답글 더 보기"
@@ -690,6 +690,10 @@ ko:
         top_badges: "인기 배지"
         no_badges: "아직 배지가 없습니다."
         more_badges: "배지 더 보기"
+        top_links: "인기 링크"
+        no_links: "아직 링크가 없습니다."
+        most_liked_by: "가장 많이 좋아요를 한 사용자"
+        most_liked_users: "가장 많이 좋아요를 받은"
       associated_accounts: "로그인"
       ip_address:
         title: "마지막 IP 주소"

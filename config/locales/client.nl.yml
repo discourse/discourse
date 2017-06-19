@@ -351,9 +351,6 @@ nl:
         full_name: 'Volledige naam'
         add_members: "Leden toevoegen"
         delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
-      request_membership_pm:
-        title: "Lidmaatschapsverzoek"
-        body: "Ik zou graag lid willen worden van @%{groupName}."
       name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
       public: "Gebruikers toestaan om vrij aan de groep deel te nemen of deze te verlaten (Groep moet hiervoor zichtbaar zijn)"
       empty:
@@ -991,7 +988,6 @@ nl:
       your_email: "Het e-mailadres van uw account is <b>%{email}</b>."
       accept_invite: "Uitnodiging accepteren"
       success: "Uw account is gemaakt en u bent nu aangemeld."
-      password_label: "Wachtwoord instellen (optioneel)"
     password_reset:
       continue: "Doorgaan naar %{site_name}"
     emoji_set:

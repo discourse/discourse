@@ -351,10 +351,6 @@ fi:
         full_name: 'Täysimittainen nimi'
         add_members: "Lisää jäseniä"
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
-      request_membership_pm:
-        title: "Jäsenhakemus"
-        body: "Haluaisin ryhmään @%{groupName}."
-        disabled: "Luottamustaso ei riitä ryhmäjäsenyyden anomiseen"
       name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
       public: "Salli jäsenten liittyä/poistua ryhmästä vapaasti (ryhmän tulee olla näkyvillä)"
       empty:
@@ -996,8 +992,8 @@ fi:
       accept_invite: "Hyväksy kutsu"
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
-      name_label_optional: "Nimi (valinnainen)"
-      password_label: "Aseta salasana (valinnainen)"
+      password_label: "Aseta salasana"
+      optional_description: "(valinnainen)"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
     emoji_set:
@@ -1217,6 +1213,7 @@ fi:
           seen: jotka olen lukenut
           unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä
+          all_tags: Ketjulla on kaikki tunnisteet
         statuses:
           label: Ketju/Ketjuun
           open: on avoin
