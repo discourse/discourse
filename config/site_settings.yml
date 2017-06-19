@@ -34,7 +34,7 @@ required:
     client: true
     default: ''
   notification_email:
-    default: 'noreply@unconfigured.discourse.org'
+    default: 'noreply@edgeryders.eu'
     type: email
     shadowed_by_global: true
   site_contact_username:
@@ -42,10 +42,10 @@ required:
     type: username
   logo_url:
     client: true
-    default: '/images/d-logo-sketch.png'
+    default: '/images/logo.png'
   logo_small_url:
     client: true
-    default: '/images/d-logo-sketch-small.png'
+    default: '/images/logo-small.png'
   digest_logo_url:
     default: ''
   mobile_logo_url:

@@ -13,6 +13,7 @@ set :repository, 'https://github.com/edgeryders/discourse.git'
 # defined in '/home/discourse/staging/shared/config/discourse.conf'.
 set :rails_env, 'production'
 
+
 # shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
 set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp', 'public/backups', 'public/uploads')
 set :shared_files, fetch(:shared_files, []).push('config/discourse.conf', 'config/puma.rb')
@@ -67,14 +68,15 @@ task deploy: :environment do
         invoke :environment
 
         invoke :'puma:phased_restart'
+        # invoke :'puma:stop'
         # invoke :'puma:start'
         # invoke :'puma:restart'
-        # invoke :'sidekiq:restart'
+
+        # invoke :'sidekiq:stop'
+        invoke :'sidekiq:restart'
     end
   end
 
-  # you can use `run :local` to run tasks on local machine before of after the deploy scripts
-  # run(:local){ say 'done' }
 end
 
 
@@ -98,3 +100,5 @@ task discourse_setup: :environment do
     command %{DRUPAL_DB=edgeryders_drupal DRUPAL_FILES_DIR=/home/discourse/staging/shared/import/web/sites/edgeryders.eu/files #{fetch(:bundle_prefix)} ruby script/import_scripts/drupal_er.rb}
   end
 end
+
+
