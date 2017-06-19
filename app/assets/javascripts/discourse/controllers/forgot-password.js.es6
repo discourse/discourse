@@ -6,6 +6,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   offerHelp: null,
+  helpSeen: false,
 
   @computed('accountEmailOrUsername', 'disabled')
   submitDisabled(accountEmailOrUsername, disabled) {
@@ -59,8 +60,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     help() {
-      this.set('offerHelp', I18n.t('forgot_password.help'));
-      $('.forgot-password-help-btn').hide();
+      this.setProperties({ offerHelp: I18n.t('forgot_password.help'), helpSeen: true });
     }
   }
 
