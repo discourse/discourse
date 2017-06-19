@@ -51,8 +51,9 @@ module DiscourseHub
   def self.collection_action(action, rel_url, params={})
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
-      body: params,
-      headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), 'Content-Type' => 'application/json' }
+      body: URI.encode_www_form(params),
+      headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), "Content-Type" => "application/x-www-form-urlencoded" },
+      omit_default_port: true
     ).body)
   end
 
