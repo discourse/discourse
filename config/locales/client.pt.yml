@@ -348,9 +348,6 @@ pt:
         full_name: 'Nome Completo'
         add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
-      request_membership_pm:
-        title: "Pedido de Adesão"
-        body: "Eu gostaria de aderir a @%{groupName}."
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
       public: "Permitir aos utilizadores de se juntarem/saírem do grupo livremente (Requere que o grupo seja visível)"
       empty:

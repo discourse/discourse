@@ -351,10 +351,6 @@ fr:
         full_name: 'Nom complet'
         add_members: "Ajouter des membres"
         delete_member_confirm: "Supprimer %{username} du groupe « %{group} » ?"
-      request_membership_pm:
-        title: "Demande d'adhésion"
-        body: "Je souhaiterais adhérer à @%{groupName}."
-        disabled: "Niveau de confiance insuffisant pour demander l'adhésion au groupe"
       name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
       public: "Autoriser les utilisateurs à rejoindre/quitter le groupe librement (nécessite que le groupe soit visible)"
       empty:
@@ -995,8 +991,6 @@ fr:
       accept_invite: "Accepter l'invitation"
       success: "Votre compte a été créé et vous êtes maintenant connecté."
       name_label: "Nom"
-      name_label_optional: "Nom (optionnel)"
-      password_label: "Définir le mot de passe (facultatif)"
     password_reset:
       continue: "Continuer vers %{site_name}"
     emoji_set:

@@ -351,10 +351,6 @@ nb_NO:
         full_name: 'Fullt navn'
         add_members: "Legg til medlemmer"
         delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
-      request_membership_pm:
-        title: "Ønske om medlemskap"
-        body: "Jeg vil be om å bli medlem av gruppen @%{groupName}."
-        disabled: "Manglende tillitsnivå for å forespørre gruppemedlemskap"
       name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
       public: "Tillatt brukere å bli medlem av og forlate gruppen fritt (Krever at gruppen er synlig)"
       empty:
@@ -995,8 +991,8 @@ nb_NO:
       accept_invite: "Godta invitasjon"
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
-      name_label_optional: "Navn (valgfritt)"
-      password_label: "Sett passord (valgfritt)"
+      password_label: "Sett passord"
+      optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
     emoji_set:
@@ -1216,6 +1212,7 @@ nb_NO:
           seen: Jeg har lest
           unseen: Jeg har ikke lest
           wiki: er wiki
+          all_tags: Inneholder alle stikkord
         statuses:
           label: Der emner
           open: er åpen
@@ -1766,6 +1763,10 @@ nb_NO:
         confirm:
           one: "Er du sikker på at du vil slette det innlegget?"
           other: "Er du sikker på at du vil slette alle de innleggene?"
+      merge:
+        confirm:
+          one: "Er du sikker på at du vil flette disse postene?"
+          other: "Er du sikker på at du vil flette disse {{count}} postene?"
       revisions:
         controls:
           first: "Første versjon"
@@ -2634,6 +2635,9 @@ nb_NO:
           updating: "Oppdaterer…"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
+          commits_behind:
+            one: "Drakten er én utgave foreldet!"
+            other: "Drakten er {{count}} utgaver foreldet!"
           scss:
             text: "CSS"
             title: "Skriv inn egendefinert CSS, alle gyldige CSS- og SCSS-stiler godtas"

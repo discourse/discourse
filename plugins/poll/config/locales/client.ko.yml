@@ -42,7 +42,11 @@ ko:
         label: "닫기"
         confirm: "정말 이 투표를 닫으시겠어요?"
       ui_builder:
+        title: 투표 만들기
+        insert: 투표 삽입하기
         poll_type:
           multiple: 복수 선택
         poll_config:
           max: 최대
+        poll_public:
+          label: 투표한 사람 보기

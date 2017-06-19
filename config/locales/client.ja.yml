@@ -316,9 +316,6 @@ ja:
         full_name: 'フルネーム'
         add_members: "メンバーを追加"
         delete_member_confirm: "'%{username}' を '%{group}' から削除してもよろしいですか？"
-      request_membership_pm:
-        title: "メンバーシップリクエスト"
-        disabled: "グループのメンバーシップを要求するためのトラストレベルが足りません"
       name_placeholder: "グループネームはユーザー名と同様にスペース無し"
       public: "ユーザーがグループへ自由に参加/離脱できるようにする(グループが見える状態である必要があります)"
       add: "追加"

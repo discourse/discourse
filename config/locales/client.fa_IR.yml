@@ -325,9 +325,6 @@ fa_IR:
         full_name: 'نام و نام خانوادگی'
         add_members: "افزودن اعضا"
         delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف شود؟"
-      request_membership_pm:
-        title: "درخواست عضویت"
-        body: "من تقاضای عضویت در @%{groupName} را دارم."
       name_placeholder: "در نام گروه نمی توان از فاصله استفاده کرد، مانند قوانین نامگذاری نام کاربری"
       public: "اجازه‌ی ورود/خروج کاربران به گروه (نیازمند قابل نمایش بودن گروه است)"
       empty:
@@ -951,7 +948,6 @@ fa_IR:
       your_email: "ایمیل شما: <b>%{email}</b>."
       accept_invite: "پذیرفتن دعوت"
       success: "حساب‌کاربری شما با موفقیت ایجاد شد و می‌توانید وارد سایت شوید."
-      password_label: "تنظیم رمز‌عبور (اختیاری)"
     password_reset:
       continue: "برو به %{site_name}"
     emoji_set:

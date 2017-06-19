@@ -347,9 +347,6 @@ sq:
         full_name: 'Emri i plotë'
         add_members: "Shto anëtarë"
         delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
-      request_membership_pm:
-        title: "Kërkesë për anëtarësim"
-        body: "Do të doja të aplikoja për t'u bërë anëtar i grupit @%{groupName}."
       name_placeholder: "Emri i grupit, pa hapësira, si username-t"
       add: "Shto"
       join: "Bashkoju grupit"
@@ -950,7 +947,6 @@ sq:
       your_email: "Adresa email e llogarisë tuaj është <b>%{email}</b>."
       accept_invite: "Prano ftesën"
       success: "Llogaria juaj u krijua dhe ju tani mund të identifikoheni."
-      password_label: "Vendos fjalëkalimin (opsionale)"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
     emoji_set:

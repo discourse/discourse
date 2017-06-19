@@ -351,9 +351,6 @@ es:
         full_name: 'Nombre completo'
         add_members: "Añadir miembros"
         delete_member_confirm: "¿Quitar a '%{username}' del grupo '%{group}'?"
-      request_membership_pm:
-        title: "Solicitud de miembro"
-        body: "Me gustaría pertenecer al grupo @%{groupName}."
       name_placeholder: "Nombre del grupo, sin espacios, igual que los nombres de usuarios"
       public: "Permitir a los usuarios unirse o salir del grupo cuando quieran (es necesario que el grupo sea visible)"
       empty:
@@ -990,7 +987,6 @@ es:
       your_email: "La dirección de email de tu cuenta es <b>%{email}</b>."
       accept_invite: "Aceptar invitación"
       success: "Tu nueva cuenta está confirmada y ahora estás logueado/a."
-      password_label: "Establecer contraseña (opcional)"
     password_reset:
       continue: "Continuar a %{site_name}"
     emoji_set:

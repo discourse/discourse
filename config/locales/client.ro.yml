@@ -371,9 +371,6 @@ ro:
         full_name: 'Nume complet'
         add_members: "Adaugă membri"
         delete_member_confirm: "Șterge utilizatorul '%{username}' din grupul '%{group}'?"
-      request_membership_pm:
-        title: "Cerere de adăugare ca membru"
-        body: "Aș dori să fac o cerere de adăugare ca membru în @%{groupName}."
       name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
       public: "Permite utilizatorilor să intre/iasă din grup fără restricții. (Presupune ca grupul să fie vizibil)"
       empty:

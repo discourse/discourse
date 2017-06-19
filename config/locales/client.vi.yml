@@ -325,9 +325,6 @@ vi:
         full_name: 'Tên đầy đủ'
         add_members: "Thêm thành viên"
         delete_member_confirm: "Xoá  '%{username}' khỏi nhóm '%{group}' ?"
-      request_membership_pm:
-        title: "Xin làm thành viên"
-        body: "Tôi muốn gia nhập nhóm @%{groupName}."
       name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
       public: "Cho phép người dùng tham gia/rời bỏ nhóm tự do (Nhóm phải là công khai)"
       empty:
@@ -925,7 +922,6 @@ vi:
       invited_by: "Bạn đã được mời bởi:"
       your_email: "Địa chỉ email của bạn là <b>%{email}</b>."
       accept_invite: "Chấp nhận lời mời"
-      password_label: "Thiết lập mật khẩu (Không bắt buộc)"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:

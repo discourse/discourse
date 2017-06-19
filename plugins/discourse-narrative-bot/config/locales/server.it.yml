@@ -177,7 +177,7 @@ it:
 
           Se ti piace (e a chi non piacerebbe!) vai avanti e premi il pulsante mi piace :heart: sotto a questo messaggio per farmelo sapere.
 
-          Puoi **rispondere con un'immagine?** Qualsiasi immagine andrà bene! Trascinala e rilasciala, Premi il pulsante carica, oppure copiala e incollala.
+          Puoi **rispondere con un'immagine?** Qualsiasi immagine andrà bene! Trascinala e rilasciala, premi il pulsante carica, oppure copiala e incollala.
         reply: |-
           Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-
@@ -229,7 +229,7 @@ it:
           Oh oh, non vedo nessun segnalibro in questo argomento. Hai trovato il pulsante segnalibro sotto ogni messaggio?  Usa il pulsante mostra altro <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare altri pulsanti se è necessario.
       emoji:
         instructions: |-
-          Puoi avermi visto usare delle piccole immagini nelle mie risposte :blue_car::dash: che sono chiamate [emoji](https://it.wikipedia.org/wiki/Emoji). Puoi **aggiungere una emoji** alla tua risposta? Qualsiasi di questi metodi funzionerà:
+          Puoi avermi visto usare delle piccole immagini nelle mie risposte :blue_car::dash: che sono chiamate [emoji](https://it.wikipedia.org/wiki/Emoji). Puoi **aggiungere una emoji** alla tua risposta? Uno qualsiasi di questi metodi funzionerà:
 
           - Digita `:) ;) :D :P :O`
 

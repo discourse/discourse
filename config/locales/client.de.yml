@@ -351,9 +351,6 @@ de:
         full_name: 'Vollständiger Name'
         add_members: "Mitglieder hinzufügen"
         delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
-      request_membership_pm:
-        title: "Mitgliedschaftsanfrage"
-        body: "Ich möchte mich um eine Mitgliedschaft in @%{groupName} bewerben."
       name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
       public: "Benutzern erlauben, die Gruppenzugehörigkeit frei zu wechseln (Erfordert, dass die Gruppe sichtbar ist)"
       empty:
@@ -991,7 +988,8 @@ de:
       your_email: "Die E-Mail-Adresse deines Benutzerkontos ist <b>%{email}</b>"
       accept_invite: "Einladung annehmen"
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
-      password_label: "Passwort setzen (optional)"
+      password_label: "Wähle ein Passwort"
+      optional_description: "(optional)"
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
@@ -1211,6 +1209,7 @@ de:
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis
+          all_tags: Enthält alle Schlagwörter
         statuses:
           label: 'Themen einschränken:'
           open: Offene Themen
@@ -2769,6 +2768,7 @@ de:
           block: "blockieren"
           do_nothing: "nichts tun"
         staff_actions:
+          all: "alle"
           title: "Team-Aktionen"
           clear_filters: "Alles anzeigen"
           staff_user: "Team-Mitglied"

@@ -363,9 +363,6 @@ sk:
         title: 'Upraviť skupinu'
         full_name: 'Celé meno'
         add_members: "Pridať používateľov"
-      request_membership_pm:
-        title: "Žiadosť o pridanie"
-        body: "Chcel by som sa stať členom skupiny @%{groupName}."
       add: "Pridať"
       closed_group: Uzavretá skupina
       membership: "Členstvo"
@@ -945,7 +942,6 @@ sk:
       accept_title: "Pozvánka"
       accept_invite: "Prijať pozvánku"
       success: "Váš účet bol vytvorený a ste prihlásený."
-      password_label: "Nastaviť heslo (voliteľne)"
     emoji_set:
       apple_international: "Apple/Medzinárodné"
       google: "Google"

@@ -351,9 +351,6 @@ da:
         full_name: 'Fulde Navn'
         add_members: "Tilføj Medlemmer"
         delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
-      request_membership_pm:
-        title: "Medlemskabsanmodning"
-        body: "Jeg vil gerne ansøge om medlemskab i @%{groupName}."
       name_placeholder: "Gruppe navn, ingen mellemrum, samme som reglen for brugernavn"
       public: "Tillad at brugere frit kan tilmelde sig/forlade gruppen (Kræver at gruppen er synlig)"
       empty:
@@ -989,7 +986,6 @@ da:
       your_email: "E-mail-adressen knyttet til kontoen er <b>%{email}</b>."
       accept_invite: "Accepter Invitation"
       success: "Din konto er blevet oprettet, og du er nu logget ind."
-      password_label: "Angiv Kodeord (valgfrit)"
     password_reset:
       continue: "Fortsæt til %{site_name}"
     emoji_set:
