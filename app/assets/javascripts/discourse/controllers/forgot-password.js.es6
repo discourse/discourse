@@ -60,6 +60,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     help() {
       this.set('offerHelp', I18n.t('forgot_password.help'));
+      $('.forgot-password-help-btn').hide();
     }
   }
 
