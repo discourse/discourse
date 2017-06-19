@@ -100,7 +100,8 @@ gem 'sanitize'
 gem 'sidekiq'
 
 # for sidekiq web
-gem 'sinatra', require: false
+gem 'tilt', require: false
+
 gem 'execjs', require: false
 gem 'mini_racer'
 gem 'highline', require: false
