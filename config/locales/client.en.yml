@@ -1036,6 +1036,9 @@ en:
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
+      help: "Please contact site administrator."
+      button_ok: "OK"
+      button_help: "Help"
     login:
       title: "Log In"
       username: "User"

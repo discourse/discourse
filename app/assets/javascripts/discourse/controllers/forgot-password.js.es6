@@ -5,6 +5,7 @@ import { extractError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
+  offerHelp: null,
 
   @computed('accountEmailOrUsername', 'disabled')
   submitDisabled(accountEmailOrUsername, disabled) {
@@ -35,8 +36,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (data.user_found === true) {
           key += '_found';
           this.set('accountEmailOrUsername', '');
-          bootbox.alert(I18n.t(key, {email: escaped, username: escaped}));
-          this.send("closeModal");
+          this.set('offerHelp', I18n.t(key, {email: escaped, username: escaped}));
         } else {
           if (data.user_found === false) {
             key += '_not_found';
@@ -52,6 +52,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
       });
 
       return false;
+    },
+
+    ok() {
+      this.send('closeModal');
+    },
+
+    help() {
+      this.set('offerHelp', I18n.t('forgot_password.help'));
     }
   }
 
