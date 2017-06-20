@@ -3,6 +3,7 @@ class UserActionSerializer < ApplicationSerializer
   attributes :action_type,
              :created_at,
              :excerpt,
+             :truncated,
              :avatar_template,
              :acting_avatar_template,
              :slug,
@@ -29,9 +30,21 @@ class UserActionSerializer < ApplicationSerializer
              :closed,
              :archived
 
+  def cooked
+    @cooked ||= object.cooked || PrettyText.cook(object.raw)
+  end
+
   def excerpt
-    cooked = object.cooked || PrettyText.cook(object.raw)
-    PrettyText.excerpt(cooked, 300, keep_emoji_images: true) if cooked
+    return nil unless cooked
+    @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
+  end
+
+  def truncated
+    true
+  end
+
+  def include_truncated?
+    excerpt != cooked
   end
 
   def avatar_template

@@ -1,17 +1,29 @@
-class AdminPostSerializer < ApplicationSerializer
+class AdminUserActionSerializer < ApplicationSerializer
 
-  attributes :id,
-             :created_at,
-             :post_number,
-             :name, :username, :avatar_template,
-             :topic_id, :topic_slug, :topic_title,
-             :category_id,
-             :excerpt,
-             :hidden,
-             :moderator_action,
-             :deleted_at, :deleted_by,
-             :reply_to_post_number,
-             :action_type
+  attributes(
+    :id,
+    :created_at,
+    :post_number,
+    :name,
+    :username,
+    :avatar_template,
+    :topic_id,
+    :slug,
+    :title,
+    :category_id,
+    :excerpt,
+    :hidden,
+    :moderator_action,
+    :deleted,
+    :deleted_at,
+    :deleted_by,
+    :reply_to_post_number,
+    :action_type
+  )
+
+  def deleted
+    deleted_at.present?
+  end
 
   def name
     object.user.name
@@ -29,11 +41,11 @@ class AdminPostSerializer < ApplicationSerializer
     object.user.avatar_template
   end
 
-  def topic_slug
+  def slug
     topic.slug
   end
 
-  def topic_title
+  def title
     topic.title
   end
 

@@ -6,6 +6,14 @@
     <a href={{item.postUrl}}>{{{item.title}}}</a>
   </span>
   <div class="category">{{category-link item.category}}</div>
+  {{#if item.deleted_by}}
+    <span class="delete-info">
+      {{fa-icon "trash-o"}}
+      {{avatar item.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}
+      {{format-date item.deleted_at leaveAgo="true"}}
+    </span>
+  {{/if}}
+
   {{plugin-outlet name="user-stream-item-header" args=(hash item=item)}}
 </div>
 
@@ -20,7 +28,7 @@
     <i class="icon {{child.icon}}"></i>
     {{#each child.items as |grandChild|}}
       {{#if grandChild.removableBookmark}}
-        <button class="btn btn-default remove-bookmark" {{action "removeBookmark" grandChild}}>
+        <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>
           {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
         </button>
       {{else}}
