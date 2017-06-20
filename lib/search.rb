@@ -456,6 +456,15 @@ class Search
       )", tags)
   end
 
+  advanced_filter(/filetypes?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
+    file_extensions = match.split(",")
+
+    posts.where("posts.id IN (
+      SELECT post_id FROM topic_links
+      WHERE extension IN (?)
+      )", file_extensions)
+  end
+
   private
 
 
