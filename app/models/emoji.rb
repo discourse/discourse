@@ -108,10 +108,9 @@ class Emoji
   end
 
   def self.replacement_code(code)
-    hexes = code.split('-').map(&:hex)
-
+    hexes = code.split('-'.freeze).map!(&:hex)
     # Don't replace digits, letters and some symbols
-    return hexes.pack("U" * hexes.size) if hexes[0] > 255
+    hexes.pack("U*".freeze) if hexes[0] > 255
   end
 
   def self.unicode_replacements
@@ -119,18 +118,20 @@ class Emoji
 
     @unicode_replacements = {}
     is_tonable_emojis = Emoji.tonable_emojis
+    fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
 
     db['emojis'].each do |e|
-      next if e['name'] == 'tm'
+      name = e['name']
+      next if name == 'tm'.freeze
 
       code = replacement_code(e['code'])
       next unless code
 
-      @unicode_replacements[code] = e['name']
-      if is_tonable_emojis.include?(e['name'])
-        FITZPATRICK_SCALE.each_with_index do |scale, index|
-          toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
-          @unicode_replacements[toned_code] = "#{e['name']}:t#{index+2}"
+      @unicode_replacements[code] = name
+      if is_tonable_emojis.include?(name)
+        fitzpatrick_scales.each_with_index do |scale, index|
+          toned_code = code.codepoints.insert(1, scale).pack("U*".freeze)
+          @unicode_replacements[toned_code] = "#{name}:t#{index+2}"
         end
       end
     end
