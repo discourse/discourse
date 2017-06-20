@@ -4,6 +4,7 @@ class AdminUserActionSerializer < ApplicationSerializer
     :id,
     :created_at,
     :post_number,
+    :post_id,
     :name,
     :username,
     :avatar_template,
@@ -11,6 +12,7 @@ class AdminUserActionSerializer < ApplicationSerializer
     :slug,
     :title,
     :category_id,
+    :truncated,
     :excerpt,
     :hidden,
     :moderator_action,
@@ -20,6 +22,18 @@ class AdminUserActionSerializer < ApplicationSerializer
     :reply_to_post_number,
     :action_type
   )
+
+  def truncated
+    true
+  end
+
+  def post_id
+    object.id
+  end
+
+  def include_truncated?
+    object.excerpt != object.cooked
+  end
 
   def deleted
     deleted_at.present?
