@@ -1,11 +1,17 @@
 <div class='clearfix info'>
   <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
   <span class='time'>{{format-date item.created_at}}</span>
+  {{#if item.truncated}}
+    <a class="expand-item" href {{action "expandItem"}} title={{i18n "post.expand_collapse"}}>
+      {{fa-icon "chevron-down"}}
+    </a>
+  {{/if}}
   {{topic-status topic=item disableActions=true}}
   <span class="title">
     <a href={{item.postUrl}}>{{{item.title}}}</a>
   </span>
   <div class="category">{{category-link item.category}}</div>
+
   {{#if item.deleted_by}}
     <span class="delete-info">
       {{fa-icon "trash-o"}}

@@ -44,7 +44,7 @@ class UserActionSerializer < ApplicationSerializer
   end
 
   def include_truncated?
-    excerpt != cooked
+    cooked.length > 300
   end
 
   def avatar_template
