@@ -54,7 +54,7 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
-  if defined? Rails::Server || defined? Puma
+  if defined?(Rails::Server) || defined?(Puma)
     require 'stylesheet/watcher'
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch
