@@ -118,6 +118,7 @@ class Emoji
     return @unicode_replacements if @unicode_replacements
 
     @unicode_replacements = {}
+    is_tonable_emojis = Emoji.tonable_emojis
 
     db['emojis'].each do |e|
       next if e['name'] == 'tm'
@@ -126,7 +127,7 @@ class Emoji
       next unless code
 
       @unicode_replacements[code] = e['name']
-      if Emoji.tonable_emojis.include?(e['name'])
+      if is_tonable_emojis.include?(e['name'])
         FITZPATRICK_SCALE.each_with_index do |scale, index|
           toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
           @unicode_replacements[toned_code] = "#{e['name']}:t#{index+2}"
@@ -156,6 +157,7 @@ class Emoji
   def self.lookup_unicode(name)
     @reverse_map ||= begin
       map = {}
+      is_tonable_emojis = Emoji.tonable_emojis
 
       db['emojis'].each do |e|
         next if e['name'] == 'tm'
@@ -164,7 +166,7 @@ class Emoji
         next unless code
 
         map[e['name']] = code
-        if Emoji.tonable_emojis.include?(e['name'])
+        if is_tonable_emojis.include?(e['name'])
           FITZPATRICK_SCALE.each_with_index do |scale, index|
             toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
             map["#{e['name']}:t#{index+2}"] = toned_code
