@@ -159,8 +159,7 @@ class Auth::DefaultCurrentUserProvider
       value: unhashed_auth_token,
       httponly: true,
       expires: SiteSetting.maximum_session_age.hours.from_now,
-      secure: SiteSetting.force_https,
-      path: GlobalSetting.relative_url_root.nil? ? '/' : GlobalSetting.relative_url_root
+      secure: SiteSetting.force_https
     }
 
     if SiteSetting.same_site_cookies != "Disabled"
