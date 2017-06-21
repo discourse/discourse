@@ -17,7 +17,7 @@
 .user-stream .item .expand-item {
   float: right;
   margin-right: 0.5em;
-  color: $primary;
+  color: lighten($primary, 40%);
 }
 
 .user-main {
