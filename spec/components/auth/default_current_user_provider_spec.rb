@@ -245,18 +245,6 @@ describe Auth::DefaultCurrentUserProvider do
     expect(cookies["_t"].key?(:same_site)).to eq(false)
   end
 
-  it "cookies includes path" do
-    user = Fabricate(:user)
-    cookies = {}
-    provider('/').log_on_user(user, {}, cookies)
-    expect(cookies["_t"][:path]).to eq("/")
-
-    GlobalSetting.stubs(:relative_url_root).returns('/forum')
-    cookies = {}
-    provider('/').log_on_user(user, {}, cookies)
-    expect(cookies["_t"][:path]).to eq("/forum")
-  end
-
   it "correctly expires session" do
     SiteSetting.maximum_session_age = 2
     user = Fabricate(:user)
