@@ -979,8 +979,6 @@ SQL
 
   # Valid arguments for the time:
   #  * An integer, which is the number of hours from now to update the topic's status.
-  #  * A time, like "12:00", which is the time at which the topic's status will update in the current day
-  #    or the next day if that time has already passed today.
   #  * A timestamp, like "2013-11-25 13:00", when the topic's status should update.
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
   #  * `nil` to delete the topic's status update.
