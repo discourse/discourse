@@ -1,9 +1,10 @@
+require_relative 'post_item_excerpt'
+
 class UserActionSerializer < ApplicationSerializer
+  include PostItemExcerpt
 
   attributes :action_type,
              :created_at,
-             :excerpt,
-             :truncated,
              :avatar_template,
              :acting_avatar_template,
              :slug,
@@ -30,22 +31,6 @@ class UserActionSerializer < ApplicationSerializer
              :closed,
              :archived
 
-  def cooked
-    @cooked ||= object.cooked || PrettyText.cook(object.raw)
-  end
-
-  def excerpt
-    return nil unless cooked
-    @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
-  end
-
-  def truncated
-    true
-  end
-
-  def include_truncated?
-    cooked.length > 300
-  end
 
   def avatar_template
     User.avatar_template(object.username, object.uploaded_avatar_id)

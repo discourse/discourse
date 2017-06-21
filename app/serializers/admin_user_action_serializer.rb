@@ -1,4 +1,7 @@
+require_relative 'post_item_excerpt'
+
 class AdminUserActionSerializer < ApplicationSerializer
+  include PostItemExcerpt
 
   attributes(
     :id,
@@ -13,7 +16,6 @@ class AdminUserActionSerializer < ApplicationSerializer
     :title,
     :category_id,
     :truncated,
-    :excerpt,
     :hidden,
     :moderator_action,
     :deleted,
@@ -23,16 +25,8 @@ class AdminUserActionSerializer < ApplicationSerializer
     :action_type
   )
 
-  def truncated
-    true
-  end
-
   def post_id
     object.id
-  end
-
-  def include_truncated?
-    object.excerpt != object.cooked
   end
 
   def deleted
