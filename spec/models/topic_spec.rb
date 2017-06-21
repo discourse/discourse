@@ -470,7 +470,7 @@ describe Topic do
 
             expect(notification.user).to eq(user)
             expect(notification.topic).to eq(topic)
-            
+
             expect(notification.notification_type)
               .to eq(Notification.types[:invited_to_private_message])
           end
@@ -1264,6 +1264,16 @@ describe Topic do
       Timecop.freeze(now) do
         closing_topic.set_or_create_timer(TopicTimer.types[:close], 48)
         expect(closing_topic.reload.public_topic_timer.execute_at).to eq(2.days.from_now)
+      end
+    end
+
+    it 'should allow status_type to be updated' do
+      Timecop.freeze do
+        topic_timer = closing_topic.set_or_create_timer(
+          TopicTimer.types[:publish_to_category], 72, by_user: admin
+        )
+
+        expect(topic_timer.execute_at).to eq(3.days.from_now)
       end
     end
 
