@@ -1,4 +1,4 @@
-class Auth::FacebookAuthenticator < Auth::Authenticator
+﻿class Auth::FacebookAuthenticator < Auth::Authenticator
 
   AVATAR_SIZE = 480
 
@@ -72,6 +72,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
       email = auth_token["info"][:email]
 
+      access_token = auth_token["credentials"][:token]
+
       website = (info["urls"] && info["urls"]["Website"]) || nil
 
       {
@@ -87,7 +89,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
           avatar_url: info["image"],
           location: info["location"],
           website: website,
-          about_me: info["description"]
+          about_me: info["description"],
+          token: access_token
         },
         email: email,
         email_valid: true

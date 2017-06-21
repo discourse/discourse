@@ -1,4 +1,4 @@
-require 'rails_helper'
+﻿require 'rails_helper'
 
 # In the ghetto ... getting the spec to run in autospec
 #  thing is we need to load up all auth really early pre-fork
@@ -27,7 +27,10 @@ describe Auth::FacebookAuthenticator do
             "Website" => "https://awesome.com"
           }
         },
-        "uid" => "100"
+        "uid" => "100",
+        "credentials" => {
+            :token => "abcdefghi123"
+        }
       }
 
       result = authenticator.after_authenticate(hash)
@@ -50,7 +53,10 @@ describe Auth::FacebookAuthenticator do
         "info" => {
           :email => "bob@bob.com"
         },
-        "uid" => "100"
+        "uid" => "100",
+        "credentials" => {
+            :token => "abcdefghi123"
+        }
       }
 
       authenticator = Auth::FacebookAuthenticator.new
