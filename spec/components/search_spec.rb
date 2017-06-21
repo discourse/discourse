@@ -65,11 +65,10 @@ describe Search do
 
     expect(term == 'capybara').to eq(false)
 
-    search =  Search.new(term)
-    search.execute
-
+    search = Search.new(term)
     expect(search.valid?).to eq(true)
     expect(search.term).to eq('capybara')
+    expect(search.clean_term).to eq('capybara')
   end
 
   it 'does not search when the search term is too small' do
