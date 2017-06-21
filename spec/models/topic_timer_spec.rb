@@ -260,7 +260,8 @@ RSpec.describe TopicTimer, type: :model do
       open_topic_timer = Fabricate(:topic_timer,
         status_type: described_class.types[:open],
         execute_at: Time.zone.now - 1.hour,
-        created_at: Time.zone.now - 2.hour
+        created_at: Time.zone.now - 2.hour,
+        topic: Fabricate(:topic, closed: true)
       )
 
       Fabricate(:topic_timer)
