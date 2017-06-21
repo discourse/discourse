@@ -151,6 +151,7 @@ class Search
   end
 
   attr_accessor :term
+  attr_reader :clean_term
 
   def initialize(term, opts=nil)
     @opts = opts || {}
@@ -163,6 +164,8 @@ class Search
 
     # Removes any zero-width characters from search terms
     term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    @clean_term = term.to_s.dup
+
     term = process_advanced_search!(term)
 
     if term.present?
@@ -179,7 +182,7 @@ class Search
       @limit = Search.per_filter
     end
 
-    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
+    @results = GroupedSearchResults.new(@opts[:type_filter], clean_term, @search_context, @include_blurbs, @blurb_length)
   end
 
   def valid?
