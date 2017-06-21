@@ -1,3 +1,9 @@
+server 'staging.edgeryders.eu', user: 'discourse', roles: [:web, :app, :db], primary: true
+
+set :stage,           :staging
+set :application,     'discourse-staging'
+
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.

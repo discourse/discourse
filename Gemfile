@@ -202,10 +202,6 @@ gem 'logster'
 gem 'sassc', require: false
 
 
-# https://github.com/kostya/eye
-gem 'eye'
-
-
 
 # if ENV["IMPORT"] == "1"
   gem 'mysql2'

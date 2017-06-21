@@ -1,12 +1,8 @@
 
-server 'discourse.edgeryders.eu', roles: [:web, :app, :db], primary: true
+server 'discourse.edgeryders.eu', user: 'discourse', roles: [:web, :app, :db], primary: true
 
 set :stage,           :production
 set :application,     'discourse-production'
-# set :deploy_to,       '/home/discourse/production'
-
-
-#  user: "discourse", port: 9292,
 
 
 
