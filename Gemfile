@@ -152,13 +152,18 @@ group :development do
   gem 'annotate'
   gem 'foreman', require: false
 
-  # https://github.com/mina-deploy/mina
-  gem 'mina'
-  # https://github.com/Mic92/mina-sidekiq
-  gem 'mina-sidekiq', require: false
-  # https://github.com/untitledkingdom/mina-puma
-  gem 'mina-puma', require: false
+  # https://github.com/capistrano/capistrano
+  gem 'capistrano', '~> 3.8', require: false
+  # https://github.com/capistrano/rails
+  gem 'capistrano-rails', '~> 1.3', require: false
+  # https://github.com/capistrano/rbenv
+  gem 'capistrano-rbenv', '~> 2.0', require: false
+  # https://github.com/seuros/capistrano-puma
+  gem 'capistrano3-puma', git: 'https://github.com/seuros/capistrano-puma.git'
+  # https://github.com/seuros/capistrano-sidekiq
+  gem 'capistrano-sidekiq', require: false
 end
+
 
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
@@ -195,6 +200,10 @@ gem 'rmmseg-cpp', require: false
 gem 'logster'
 
 gem 'sassc', require: false
+
+
+# https://github.com/kostya/eye
+gem 'eye'
 
 
 

@@ -79,3 +79,4 @@ end
 
 # Migrate the database with each deployment
 after  'deploy:update_code', 'deploy:migrate'
+
