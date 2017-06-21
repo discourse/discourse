@@ -10,8 +10,10 @@ export default Ember.Component.extend({
   actions: {
     expandItem() {
       const item = this.get('item');
+      const topicId = item.get('topic_id');
+      const postNumber = item.get('post_number');
 
-      return ajax(`/posts/${item.get('post_id')}/cooked.json`).then(result => {
+      return ajax(`/posts/by_number/${topicId}/${postNumber}.json`).then(result => {
         item.set('truncated', false);
         item.set('excerpt', result.cooked);
       });
