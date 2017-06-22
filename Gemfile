@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
-source 'http://production.cf.rubygems.org'
+# source 'http://production.cf.rubygems.org'
 
 # does not install in linux ATM, so hack this for now
 # Also comment in code: config/boot.rb
@@ -74,7 +74,7 @@ gem 'email_reply_trimmer', '0.1.6'
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
-gem 'nokogiri'
+gem 'nokogiri', '1.7.2'
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'

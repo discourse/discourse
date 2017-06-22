@@ -9,7 +9,6 @@ GIT
 
 GEM
   remote: https://rubygems.org/
-  remote: http://production.cf.rubygems.org/
   specs:
     actionmailer (4.2.8)
       actionpack (= 4.2.8)
@@ -190,7 +189,7 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mini_portile2 (2.2.0)
+    mini_portile2 (2.1.0)
     mini_racer (0.1.9)
       libv8 (~> 5.3)
     minitest (5.10.2)
@@ -208,8 +207,8 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
     netrc (0.11.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
+    nokogiri (1.7.2)
+      mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.13)
       nokogiri
     oauth (0.5.3)
@@ -478,7 +477,7 @@ DEPENDENCIES
   multi_json
   mustache
   mysql2
-  nokogiri
+  nokogiri (= 1.7.2)
   oj
   omniauth
   omniauth-facebook
