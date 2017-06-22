@@ -6,12 +6,12 @@ class GlobalSetting
     end
   end
 
-  VALID_SECRET_KEY = /^[0-9a-f]{128}$/
+  VALID_SECRET_KEY ||= /^[0-9a-f]{128}$/
   # this is named SECRET_TOKEN as opposed to SECRET_KEY_BASE
   # for legacy reasons
-  REDIS_SECRET_KEY = 'SECRET_TOKEN'
+  REDIS_SECRET_KEY ||= 'SECRET_TOKEN'
 
-  REDIS_VALIDATE_SECONDS = 30
+  REDIS_VALIDATE_SECONDS ||= 30
 
   # In Rails secret_key_base is used to encrypt the cookie store
   # the cookie store contains session data
