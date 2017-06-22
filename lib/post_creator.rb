@@ -107,8 +107,8 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       return false unless skip_validations? || validate_child(topic_creator)
     else
-      @topic = Topic.find_by(id: @opts[:topic_id])
-      if (@topic.blank? || !guardian.can_create?(Post, @topic))
+      @topic = Topic.with_deleted.find_by(id: @opts[:topic_id])
+      if (@topic.blank? || !guardian.can_create?(Post, @topic)) && !skip_validations?
         errors[:base] << I18n.t(:topic_not_found)
         return false
       end
@@ -366,13 +366,15 @@ class PostCreator
   end
 
   def create_topic
-    return if @topic
-    begin
-      topic_creator = TopicCreator.new(@user, guardian, @opts)
-      @topic = topic_creator.create
-    rescue ActiveRecord::Rollback
-      rollback_from_errors!(topic_creator)
+    unless @topic
+      begin
+        topic_creator = TopicCreator.new(@user, guardian, @opts)
+        @topic = topic_creator.create
+      rescue ActiveRecord::Rollback
+        rollback_from_errors!(topic_creator)
+      end
     end
+
     @post.topic_id = @topic.id
     @post.topic = @topic
     if @topic && @topic.category && @topic.category.all_topics_wiki
