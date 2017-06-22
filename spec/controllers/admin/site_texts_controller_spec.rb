@@ -48,12 +48,11 @@ describe Admin::SiteTextsController do
 
       describe 'failure' do
         before do
-          TranslationOverride.any_instance.expects(:lookup_original_text)
-            .returns('%{first} %{second}')
+          I18n.backend.store_translations(:en, some_key: '%{first} %{second}')
         end
 
         it 'returns the right error message' do
-          xhr :put, :update, id: 'title', site_text: { value: 'hello %{key}' }
+          xhr :put, :update, id: 'some_key', site_text: { value: 'hello %{key}' }
 
           expect(response.status).to eq(422)
 
