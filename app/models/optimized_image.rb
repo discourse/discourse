@@ -115,6 +115,7 @@ class OptimizedImage < ActiveRecord::Base
     %W{
       convert
       #{from}[0]
+      -auto-orient
       -gravity center
       -background transparent
       -thumbnail #{dimensions}^
@@ -146,6 +147,7 @@ class OptimizedImage < ActiveRecord::Base
     %W{
       convert
       #{from}[0]
+      -auto-orient
       -gravity north
       -background transparent
       -thumbnail #{opts[:width]}
@@ -176,6 +178,7 @@ class OptimizedImage < ActiveRecord::Base
     %W{
       convert
       #{from}[0]
+      -auto-orient
       -gravity center
       -background transparent
       -resize #{dimensions}
