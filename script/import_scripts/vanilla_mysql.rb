@@ -52,27 +52,26 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     @user_is_deleted = false
     @last_deleted_username = nil
     username = nil
-
+    @last_user_id = -1
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}User;").first['count']
-
+    
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
         "SELECT UserID, Name, Title, Location, About, Email,
                 DateInserted, DateLastActive, InsertIPAddress, Admin
+         WHERE id > #{@last_user_id}
          FROM #{TABLE_PREFIX}User
          ORDER BY UserID ASC
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};")
+         LIMIT #{BATCH_SIZE};")
 
       break if results.size < 1
-
+      @last_user_id = results.to_a.last['UserID']
       next if all_records_exist? :users, results.map {|u| u['UserID'].to_i}
 
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
         next if user['Name'].blank?
         next if @lookup.user_id_from_imported_user_id(user['UserID'])
-
         if user['Name'] == '[Deleted User]'
           # EVERY deleted user record in Vanilla has the same username: [Deleted User]
           # Save our UserNameSuggester some pain:
@@ -198,17 +197,20 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     tag_names_sql = "select t.name as tag_name from GDN_Tag t, GDN_TagDiscussion td where t.tagid = td.tagid and td.discussionid = {discussionid} and t.name != '';"
 
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Discussion;").first['count']
-
+    
+    @last_topic_id = -1
+    
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
         "SELECT DiscussionID, CategoryID, Name, Body,
                 DateInserted, InsertUserID
+         WHERE DiscussionID > #{@last_topic_id}
          FROM #{TABLE_PREFIX}Discussion
          ORDER BY DiscussionID ASC
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};")
+         LIMIT #{BATCH_SIZE};")
 
       break if discussions.size < 1
+      @last_topic_id = discussions.to_a.last['DiscussionID']
       next if all_records_exist? :posts, discussions.map {|t| "discussion#" + t['DiscussionID'].to_s}
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
@@ -234,17 +236,18 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     puts "", "importing posts..."
 
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Comment;").first['count']
-
+    @last_post_id = -1
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
         "SELECT CommentID, DiscussionID, Body,
                 DateInserted, InsertUserID
+         WHERE CommentID > #{@last_post_id}
          FROM #{TABLE_PREFIX}Comment
          ORDER BY CommentID ASC
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};")
+         LIMIT #{BATCH_SIZE};")
 
       break if comments.size < 1
+      @last_post_id = comments.to_a.last['CommentID']
       next if all_records_exist? :posts, comments.map {|comment| "comment#" + comment['CommentID'].to_s}
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
