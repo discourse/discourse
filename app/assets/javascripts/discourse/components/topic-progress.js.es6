@@ -52,8 +52,14 @@ export default Ember.Component.extend({
   },
 
   _topicScrolled(event) {
-    this.set('progressPosition', event.postIndex);
-    this._streamPercentage = event.percent;
+    if (this.get('docked')) {
+      this.set('progressPosition', this.get('postStream.filteredPostsCount'));
+      this._streamPercentage = 1.0;
+    } else {
+      this.set('progressPosition', event.postIndex);
+      this._streamPercentage = event.percent;
+    }
+
     this._updateBar();
   },
 
