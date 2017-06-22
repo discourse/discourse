@@ -31,6 +31,7 @@ class FileHelper
 
     if extension.blank? && downloaded.content_type.present?
       ext = MiniMime.lookup_by_content_type(downloaded.content_type)&.extension
+      ext = "jpg" if ext == "jpe"
       extension = "." + ext if ext.present?
     end
 
