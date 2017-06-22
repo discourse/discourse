@@ -45,7 +45,6 @@ class UploadCreator
 
           return @upload   if is_still_too_big?
 
-          fix_orientation! if should_fix_orientation?
           crop!            if should_crop?
           optimize!        if should_optimize?
         end
@@ -133,6 +132,7 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
     Discourse::Utils.execute_command(
       'convert', @file.path,
+      '-auto-orient',
       '-background', 'white',
       '-flatten',
       '-quality', SiteSetting.png_to_jpg_quality.to_s,
@@ -141,10 +141,10 @@ class UploadCreator
 
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85
-      @image_info = FastImage.new(jpeg_tempfile)
       @file = jpeg_tempfile
       @filename = (File.basename(@filename, ".*").presence || I18n.t("image").presence || "image") + ".jpg"
       @opts[:content_type] = "image/jpeg"
+      extract_image_info!
     else
       jpeg_tempfile.close! rescue nil
     end
@@ -205,17 +205,8 @@ class UploadCreator
     when "custom_emoji"
       OptimizedImage.downsize(@file.path, @file.path, "100x100\\>", filename: @filename, allow_animation: allow_animation)
     end
-  end
 
-  def should_fix_orientation?
-    # orientation is between 1 and 8, 1 being the default
-    # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
-    @image_info.orientation.to_i > 1
-  end
-
-  def fix_orientation!
-    OptimizedImage.ensure_safe_paths!(@file.path)
-    Discourse::Utils.execute_command('convert', @file.path, '-auto-orient', @file.path)
+    extract_image_info!
   end
 
   def should_optimize?
@@ -231,6 +222,7 @@ class UploadCreator
   def optimize!
     OptimizedImage.ensure_safe_paths!(@file.path)
     ImageOptim.new.optimize_image!(@file.path)
+    extract_image_info!
   rescue ImageOptim::Worker::TimeoutExceeded
     Rails.logger.warn("ImageOptim timed out while optimizing #{@filename}")
   end
