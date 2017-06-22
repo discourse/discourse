@@ -39,7 +39,7 @@ class UploadCreator
 
         if @filename[/\.svg$/i]
           whitelist_svg!
-        else
+        elsif !Rails.env.test?
           convert_to_jpeg! if should_convert_to_jpeg?
           downsize!        if should_downsize?
 

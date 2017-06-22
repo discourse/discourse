@@ -33,14 +33,12 @@ class TranslationOverride < ActiveRecord::Base
       MessageBus.publish('/i18n-flush', { refresh: true })
     end
 
-    def lookup_original_text
-      I18n::Backend::Simple.new.send(
-        :lookup, self.locale, self.translation_key
-      )
-    end
-
     def check_interpolation_keys
-      if original_text = lookup_original_text
+      original_text = I18n.overrides_disabled do
+        I18n.backend.send(:lookup, self.locale, self.translation_key)
+      end
+
+      if original_text
         original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
         new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
         missing_keys = (original_interpolation_keys - new_interpolation_keys)
