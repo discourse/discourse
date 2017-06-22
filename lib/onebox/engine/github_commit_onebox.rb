@@ -5,7 +5,7 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp Regexp.new("^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
+      matches_regexp Regexp.new("^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commits?/")
       always_https
 
       def url
@@ -15,7 +15,13 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/commit/(?<sha>[^/]+)})
+        return @match if @match
+
+        @match = @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/commits?/(?<sha>[^/]+)})
+
+        @match = @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<pr>[^/]+)/commits?/(?<sha>[^/]+)}) if @match.nil?
+
+        @match
       end
 
       def data
