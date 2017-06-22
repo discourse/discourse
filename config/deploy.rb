@@ -37,7 +37,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 
 
 # https://github.com/capistrano/bundler
-set :bundle_path, -> { fetch(:shared_path).join('vendor', 'bundle') }
+set :bundle_path, -> { shared_path.join('vendor', 'bundle') }
 
 
 # https://github.com/capistrano/rails
@@ -47,13 +47,15 @@ set :conditionally_migrate, true
 
 
 # https://github.com/seuros/capistrano-puma
-set :puma_conf, "#{fetch(:shared_path)}/config/puma.rb"
+set :puma_conf, "#{shared_path}/config/puma.rb"
 set :puma_threads, [4, 16]
 set :puma_workers, 4
 set :puma_init_active_record, true
 set :puma_preload_app, false
 set :puma_daemonize, true
 append :rbenv_map_bins, 'puma', 'pumactl'
+
+
 # set :puma_user, fetch(:user)
 # set :puma_rackup, -> { File.join(current_path, 'config.ru') }
 # set :puma_state, "#{shared_path}/tmp/pids/puma.state"
