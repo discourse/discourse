@@ -486,6 +486,8 @@ module Email
     end
 
     def find_related_post
+      return if SiteSetting.find_related_post_with_key
+
       message_ids = [@mail.in_reply_to, Email::Receiver.extract_references(@mail.references)]
       message_ids.flatten!
       message_ids.select!(&:present?)
