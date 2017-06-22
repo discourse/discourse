@@ -64,7 +64,7 @@ module Jobs
 
         # Special case: Images
         # If the link is to an image, put the filename as the title
-        if topic_link.url =~ /\.(jpg|gif|png)$/
+        if FileHelper.is_image?(topic_link.url)
           uri = URI(topic_link.url)
           filename = File.basename(uri.path)
           crawled = (TopicLink.where(id: topic_link.id).update_all(["title = ?, crawled_at = CURRENT_TIMESTAMP", filename]) == 1)
