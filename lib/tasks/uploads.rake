@@ -438,7 +438,7 @@ def recover_from_tombstone
 
             if File.exists?(tombstone_path)
               File.open(tombstone_path) do |file|
-                new_upload = UploadCreator.new(file, File.basename(url), File.size(file)).create_for(Discourse::SYSTEM_USER_ID)
+                new_upload = UploadCreator.new(file, File.basename(url)).create_for(Discourse::SYSTEM_USER_ID)
 
                 if new_upload.persisted?
                   printf "Restored into #{new_upload.url}\n"
