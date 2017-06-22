@@ -88,12 +88,12 @@ GEM
     capistrano-bundler (1.2.0)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-chruby (0.1.2)
+      capistrano (~> 3.0)
+      sshkit (~> 1.3)
     capistrano-rails (1.3.0)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
-    capistrano-rbenv (2.1.1)
-      capistrano (~> 3.1)
-      sshkit (~> 1.3)
     capistrano-sidekiq (0.10.0)
       capistrano
       sidekiq (>= 3.4)
@@ -437,8 +437,8 @@ DEPENDENCIES
   bullet
   byebug
   capistrano (~> 3.8)
+  capistrano-chruby
   capistrano-rails (~> 1.3)
-  capistrano-rbenv (~> 2.0)
   capistrano-sidekiq
   capistrano3-puma!
   certified

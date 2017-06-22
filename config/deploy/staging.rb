@@ -1,7 +1,10 @@
 server 'staging.edgeryders.eu', user: 'discourse', roles: [:web, :app, :db], primary: true
 
-set :stage,           :staging
-set :application,     'discourse-staging'
+set :puma_bind, %w(tcp://0.0.0.0:9293 unix:///home/discourse/staging/current/tmp/sockets/puma.sock)
+
+
+# set :stage,           :staging
+# set :application,     'discourse-staging'
 
 
 # server-based syntax

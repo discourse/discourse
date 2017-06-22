@@ -1,8 +1,9 @@
 
 server 'discourse.edgeryders.eu', user: 'discourse', roles: [:web, :app, :db], primary: true
 
-set :stage,           :production
-set :application,     'discourse-production'
+set :puma_bind, %w(tcp://0.0.0.0:9292 unix:///home/discourse/production/current/tmp/sockets/puma.sock)
+
+# set :stage,           :production
 
 
 

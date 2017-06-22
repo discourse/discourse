@@ -1,0 +1,10 @@
+# Monit configuration for Sidekiq :  <%= fetch(:application) %>
+<% processes_pids.each_with_index do |pid_file, idx| %>
+check process <%= sidekiq_service_name(idx) %>
+  with pidfile "<%= pid_file %>"
+  start program = "/bin/su - <%= sidekiq_user(@role) %> -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:sidekiq] %> <%= sidekiq_config %> --index <%= idx %> --pidfile <%= pid_file %> --environment <%= fetch(:sidekiq_env) %> <%= sidekiq_concurrency %> <%= sidekiq_logfile %> <%= sidekiq_require %> <%= sidekiq_queues %> <%= sidekiq_options_per_process[idx] %> -d'" with timeout 30 seconds
+
+  stop program = "/bin/su - <%= sidekiq_user(@role) %> -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:sidekiqctl] %> stop <%= pid_file %>'" with timeout <%= fetch(:sidekiq_timeout).to_i + 10  %> seconds
+  group <%= fetch(:sidekiq_monit_group, fetch(:application)) %>-sidekiq
+
+<% end %>

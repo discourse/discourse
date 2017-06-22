@@ -156,8 +156,8 @@ group :development do
   gem 'capistrano', '~> 3.8', require: false
   # https://github.com/capistrano/rails
   gem 'capistrano-rails', '~> 1.3', require: false
-  # https://github.com/capistrano/rbenv
-  gem 'capistrano-rbenv', '~> 2.0', require: false
+  # https://github.com/capistrano/chruby
+  gem 'capistrano-chruby', require: false
   # https://github.com/seuros/capistrano-puma
   gem 'capistrano3-puma', git: 'https://github.com/seuros/capistrano-puma.git'
   # https://github.com/seuros/capistrano-sidekiq
