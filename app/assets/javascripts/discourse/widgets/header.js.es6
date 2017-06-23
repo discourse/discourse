@@ -282,7 +282,10 @@ export default createWidget('header', {
   },
 
   toggleUserMenu() {
-    this.state.ringBackdrop = false;
+    if (this.currentUser.get('read_first_notification')) {
+      this.state.ringBackdrop = false;
+    };
+
     this.state.userVisible = !this.state.userVisible;
   },
 
