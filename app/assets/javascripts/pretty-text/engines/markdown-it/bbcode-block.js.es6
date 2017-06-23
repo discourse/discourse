@@ -46,7 +46,7 @@ export function parseBBCodeTag(src, start, max) {
   }
 
   if (closed) {
-    length = i;
+    length = (i-start)+1;
 
     let raw = src.slice(start+tag.length+1, i);
 
@@ -168,14 +168,35 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   // this will prevent lazy continuations from ever going past our end marker
   state.lineMax = nextLine;
 
-  rule.before.call(this, state, info.attrs, md, state.src.slice(initial, initial + info.length + 1));
+  if (rule.before) {
+    rule.before.call(this, state, info.attrs, md, state.src.slice(initial, initial + info.length + 1));
+  }
+
+  let wrapTag;
+  if (rule.wrap) {
+    let split = rule.wrap.split('.');
+    wrapTag = split[0];
+    let className = split.slice(1).join(' ');
+
+    let token = state.push('wrap_bbcode', wrapTag, 1);
+
+    if (className) {
+      token.attrs = [['class', className]];
+    }
+  }
 
   let lastToken = state.tokens[state.tokens.length-1];
   lastToken.map    = [ startLine, nextLine ];
 
   state.md.block.tokenize(state, startLine + 1, nextLine);
 
-  rule.after.call(this, state, lastToken, md);
+  if (rule.wrap) {
+    state.push('wrap_bbcode', wrapTag, -1);
+  }
+
+  if (rule.after) {
+    rule.after.call(this, state, lastToken, md);
+  }
 
   lastToken = state.tokens[state.tokens.length-1];
 
@@ -186,8 +207,6 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
   return true;
 }
-
-
 
 export function setup(helper) {
   if (!helper.markdownIt) { return; }

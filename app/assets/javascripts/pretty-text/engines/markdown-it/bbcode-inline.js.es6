@@ -1,13 +1,6 @@
 import { parseBBCodeTag } from 'pretty-text/engines/markdown-it/bbcode-block';
 
-const rules = {
-  'b': {tag: 'span', 'class': 'bbcode-b'},
-  'i': {tag: 'span', 'class': 'bbcode-i'},
-  'u': {tag: 'span', 'class': 'bbcode-u'},
-  's': {tag: 'span', 'class': 'bbcode-s'}
-};
-
-function tokanizeBBCode(state, silent) {
+function tokanizeBBCode(state, silent, ruler) {
 
   let pos = state.pos;
 
@@ -22,7 +15,17 @@ function tokanizeBBCode(state, silent) {
     return false;
   }
 
-  const rule = rules[tagInfo.tag];
+  let rules = ruler.getRules();
+  let rule;
+
+  for (let i=0; i<rules.length; i++) {
+    let r = rules[i].rule;
+    if (r.tag === tagInfo.tag) {
+      rule = r;
+      break;
+    }
+  }
+
   if (!rule) {
     return false;
   }
@@ -74,17 +77,24 @@ function processBBCode(state, silent) {
 
     endDelim = delimiters[startDelim.end];
 
+    let split = tagInfo.rule.wrap.split('.');
+    let tag = split[0];
+    let className = split.slice(1).join(' ');
+
     token = state.tokens[startDelim.token];
+
     token.type = 'bbcode_' + tagInfo.tag + '_open';
-    token.attrs = [['class', tagInfo.rule['class']]];
-    token.tag = tagInfo.rule.tag;
+    token.tag = tag;
+    if (className) {
+      token.attrs = [['class', className]];
+    }
     token.nesting = 1;
     token.markup = token.content;
     token.content = '';
 
     token = state.tokens[endDelim.token];
     token.type = 'bbcode_' + tagInfo.tag + '_close';
-    token.tag = tagInfo.rule.tag;
+    token.tag = tag;
     token.nesting = -1;
     token.markup = token.content;
     token.content = '';
@@ -103,7 +113,29 @@ export function setup(helper) {
   });
 
   helper.registerPlugin(md => {
-    md.inline.ruler.push('bbcode-inline', tokanizeBBCode);
+    const ruler = md.inline.bbcode_ruler;
+
+    md.inline.ruler.push('bbcode-inline', (state,silent) => tokanizeBBCode(state,silent,ruler));
     md.inline.ruler2.before('text_collapse', 'bbcode-inline', processBBCode);
+
+    ruler.push('bold', {
+      tag: 'b',
+      wrap: 'span.bbcode-b',
+    });
+
+    ruler.push('italic', {
+      tag: 'i',
+      wrap: 'span.bbcode-i'
+    });
+
+    ruler.push('underline', {
+      tag: 'u',
+      wrap: 'span.bbcode-u'
+    });
+
+    ruler.push('strike', {
+      tag: 's',
+      wrap: 'span.bbcode-s'
+    });
   });
 }
