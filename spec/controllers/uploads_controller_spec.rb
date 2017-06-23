@@ -38,7 +38,7 @@ describe UploadsController do
       end
 
       it 'parameterize the type' do
-        subject.expects(:create_upload).with(logo, nil, "super_long_type_with_charssuper_long_type_with_char", nil)
+        subject.expects(:create_upload).with(logo, nil, "super_long_type_with_charssuper_long_type_with_char", false, false)
         xhr :post, :create, file: logo, type: "super \# long \//\\ type with \\. $%^&*( chars" * 5
       end
 
@@ -140,7 +140,7 @@ describe UploadsController do
         @user.update_columns(moderator: true)
 
         message = MessageBus.track_publish do
-          xhr :post, :create, file: text_file, type: "composer", for_private_message: true
+          xhr :post, :create, file: text_file, type: "composer", for_private_message: "true"
         end.first
 
         expect(response).to be_success

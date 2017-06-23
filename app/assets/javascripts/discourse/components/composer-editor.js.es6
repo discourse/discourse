@@ -228,6 +228,8 @@ export default Ember.Component.extend({
   _bindUploadTarget() {
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
 
+    let pasted = false;
+
     const $element = this.$();
     const csrf = this.session.get('csrfToken');
     const uploadPlaceholder = this.get('uploadPlaceholder');
@@ -238,15 +240,24 @@ export default Ember.Component.extend({
       pasteZone: $element,
     });
 
+    $element.on('fileuploadpaste', () => this.pasted = true);
+
     $element.on('fileuploadsubmit', (e, data) => {
       const isPrivateMessage = this.get("composer.privateMessage");
+
+      data.formData = { type: "composer" }
+      if (isPrivateMessage) data.formData.for_private_message = true;
+      if (this.pasted) data.formData.pasted = true;
+
       const opts = {
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings.allow_staff_to_upload_any_file_in_pm,
       };
+
       const isUploading = validateUploadedFiles(data.files, opts);
-      data.formData = { type: "composer", for_private_message: isPrivateMessage };
+
       this.setProperties({ uploadProgress: 0, isUploading });
+
       return isUploading;
     });
 
@@ -255,6 +266,7 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadsend", (e, data) => {
+      this.pasted = false;
       this._validUploads++;
       this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
 
