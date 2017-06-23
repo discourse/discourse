@@ -1,43 +1,22 @@
-set :chruby_ruby, 'ruby-2.3.1'
-
-
 set :application,     'discourse'
 set :repo_url,        'https://github.com/edgeryders/discourse.git'
 set :user,            'discourse'
 set :deploy_to,       "/home/discourse/#{fetch(:stage)}"
 set :use_sudo,        false
 set :deploy_via,      :remote_cache
-set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa.pub) }
+# set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa.pub) }
 # There is a known bug that prevents sidekiq from starting when pty is true on Capistrano 3.
 # See: https://github.com/seuros/capistrano-sidekiq
 set :pty,             false
 ## Linked Files & Directories (Default None):
 set :linked_files, fetch(:linked_files, []).push('config/discourse.conf', 'config/puma.rb')
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle',  'public/system', 'public/backups', 'public/uploads')
-## Defaults:
-# set :scm,           :git
-# set :branch,        :master
-# set :format,        :pretty
-# set :log_level,     :debug
-# set :keep_releases, 5
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'public/backups', 'public/uploads')
 
 
-# https://github.com/capistrano/rbenv
-# set :rbenv_ruby, '2.3.1'
-# set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
-# set :rbenv_custom_path, fetch(:shared_path).join('rbenv')
-
-# set :rbenv_ruby, File.read('.ruby-version').strip
-#set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
-# set :rbenv_map_bins, %w{rake gem bundle ruby rails}
-# set :rbenv_roles, :all # default value
-# set :rbenv_type, :user # or :system, depends on your rbenv setup
-# set :rbenv_ruby, '2.0.0-p247'
-# in case you want to set ruby version from the file:
-
-
-# https://github.com/capistrano/bundler
-set :bundle_path, -> { shared_path.join('vendor', 'bundle') }
+# https://github.com/capistrano/chruby
+set :chruby_ruby, 'ruby-2.3.1'
+# Workaround for capistrano bug: https://github.com/capistrano/chruby/issues/7#issuecomment-214770540
+set :default_env, { path: '/opt/rubies/ruby-2.3.1/lib/ruby/gems/2.3.0/bin:/opt/rubies/ruby-2.3.1/bin:$PATH' }
 
 
 # https://github.com/capistrano/rails
@@ -53,9 +32,6 @@ set :puma_workers, 4
 set :puma_init_active_record, true
 set :puma_preload_app, false
 set :puma_daemonize, true
-append :rbenv_map_bins, 'puma', 'pumactl'
-
-
 # set :puma_user, fetch(:user)
 # set :puma_rackup, -> { File.join(current_path, 'config.ru') }
 # set :puma_state, "#{shared_path}/tmp/pids/puma.state"
@@ -69,7 +45,6 @@ append :rbenv_map_bins, 'puma', 'pumactl'
 # set :puma_worker_timeout, nil
 # set :puma_plugins, []  #accept array of plugins
 # set :puma_tag, fetch(:application)
-
 
 
 # https://github.com/seuros/capistrano-sidekiq

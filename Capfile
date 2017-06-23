@@ -35,10 +35,10 @@ install_plugin Capistrano::Puma::Workers  # if you want to control the workers (
 #   https://github.com/capistrano/passenger
 #
 require 'capistrano/rails'
+# require 'capistrano/rails/migrations'
+# require 'capistrano/rails/assets'
 require 'capistrano/chruby'
 require 'capistrano/bundler'
-require 'capistrano/rails/migrations'
-require 'capistrano/rails/assets'
 require 'capistrano/sidekiq'
 require 'capistrano/sidekiq/monit'
 
