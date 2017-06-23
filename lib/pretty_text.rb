@@ -74,6 +74,7 @@ module PrettyText
 
     if Rails.env.development? || Rails.env.test?
       ctx.attach("console.log", proc { |l| p l })
+      ctx.eval('window.console = console;')
     end
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
