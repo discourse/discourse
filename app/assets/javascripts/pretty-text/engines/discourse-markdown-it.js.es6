@@ -26,11 +26,11 @@ function createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOp
   // hack to allow moving of getOptions
   helper.getOptions = () => getOptions.f();
 
-  helper.registerOptions = function(callback){
+  helper.registerOptions = (callback) => {
     optionCallbacks.push([featureName, callback]);
   };
 
-  helper.registerPlugin = function(callback){
+  helper.registerPlugin = (callback) => {
     pluginCallbacks.push([featureName, callback]);
   };
 
@@ -55,6 +55,10 @@ class Ruler {
 // block bb code ruler for parsing of quotes / code / polls
 function setupBlockBBCode(md) {
   md.block.bbcode_ruler = new Ruler();
+}
+
+function setupInlineBBCode(md) {
+  md.inline.bbcode_ruler = new Ruler();
 }
 
 export function setup(opts, siteSettings, state) {
@@ -117,6 +121,7 @@ export function setup(opts, siteSettings, state) {
   });
 
   setupBlockBBCode(opts.engine);
+  setupInlineBBCode(opts.engine);
 
   pluginCallbacks.forEach(([feature, callback])=>{
     if (opts.discourse.features[feature]) {
