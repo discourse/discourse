@@ -32,13 +32,12 @@ module Jobs
       SQL
 
       badge = Badge.find(Badge::Anniversary)
-      user_ids = results.map {|r| r['user_id'].to_i }
+      user_ids = results.map { |r| r['user_id'].to_i }
 
-      User.where(id: user_ids).each do |user|
+      User.where(id: user_ids).find_each do |user|
         BadgeGranter.grant(badge, user, created_at: end_date)
       end
     end
 
   end
 end
-
