@@ -21,7 +21,7 @@ function render(tokens, idx, options, env, slf, md) {
     langName = info;
   }
 
-  className = TEXT_CODE_CLASSES.indexOf(langName) !== -1 ? 'lang-nohighlight' : 'lang-' + langName;
+  className = TEXT_CODE_CLASSES.indexOf(info) !== -1 ? 'lang-nohighlight' : 'lang-' + langName;
 
   return `<pre><code class='${className}'>${escapedContent}</code></pre>\n`;
 }

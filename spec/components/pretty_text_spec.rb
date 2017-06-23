@@ -587,6 +587,8 @@ HTML
 
     it 'can include code class correctly' do
       expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<pre><code class='lang-cpp'>cpp\n</code></pre>")
+      expect(PrettyText.cook("```\ncpp\n```")).to match_html("<pre><code class='lang-auto'>cpp\n</code></pre>")
+      expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-nohighlight'>cpp\n</code></pre>")
     end
 
     it 'indents code correctly' do
