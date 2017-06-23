@@ -71,24 +71,24 @@
       </div>
 
       {{#topic-navigation topic=model jumpToIndex=(action "jumpToIndex") as |info|}}
-        {{#if info.renderAdminMenuButton}}
-          {{topic-admin-menu-button
-            topic=model
-            fixed="true"
-            toggleMultiSelect=(action "toggleMultiSelect")
-            deleteTopic=(action "deleteTopic")
-            recoverTopic=(action "recoverTopic")
-            toggleClosed=(action "toggleClosed")
-            toggleArchived=(action "toggleArchived")
-            toggleVisibility=(action "toggleVisibility")
-            showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-            showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-            showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
-            convertToPublicTopic=(action "convertToPublicTopic")
-            convertToPrivateMessage=(action "convertToPrivateMessage")}}
-        {{/if}}
-
         {{#if info.renderTimeline}}
+          {{#if info.renderAdminMenuButton}}
+            {{topic-admin-menu-button
+              topic=model
+              fixed="true"
+              toggleMultiSelect=(action "toggleMultiSelect")
+              deleteTopic=(action "deleteTopic")
+              recoverTopic=(action "recoverTopic")
+              toggleClosed=(action "toggleClosed")
+              toggleArchived=(action "toggleArchived")
+              toggleVisibility=(action "toggleVisibility")
+              showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
+              showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+              showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+              convertToPublicTopic=(action "convertToPublicTopic")
+              convertToPrivateMessage=(action "convertToPrivateMessage")}}
+          {{/if}}
+
           {{topic-timeline
             topic=model
             prevEvent=info.prevEvent
@@ -113,11 +113,29 @@
             convertToPublicTopic=(action "convertToPublicTopic")
             convertToPrivateMessage=(action "convertToPrivateMessage")}}
         {{else}}
-          {{topic-progress
+          {{#topic-progress
             prevEvent=info.prevEvent
             topic=model
             expanded=info.topicProgressExpanded
             jumpToPost=(action "jumpToPost")}}
+            {{#if info.renderAdminMenuButton}}
+              {{topic-admin-menu-button
+                topic=model
+                openUpwards="true"
+                rightSide="true"
+                toggleMultiSelect=(action "toggleMultiSelect")
+                deleteTopic=(action "deleteTopic")
+                recoverTopic=(action "recoverTopic")
+                toggleClosed=(action "toggleClosed")
+                toggleArchived=(action "toggleArchived")
+                toggleVisibility=(action "toggleVisibility")
+                showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
+                showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+                showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                convertToPublicTopic=(action "convertToPublicTopic")
+                convertToPrivateMessage=(action "convertToPrivateMessage")}}
+            {{/if}}
+          {{/topic-progress}}
         {{/if}}
       {{/topic-navigation}}
 
