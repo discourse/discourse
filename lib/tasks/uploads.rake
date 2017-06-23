@@ -148,7 +148,7 @@ def migrate_from_s3
               tmp_file_name: "from_s3",
               follow_redirect: true
             )
-            if upload = UploadCreator.new(file, filename, File.size(file)).create_for(post.user_id || -1)
+            if upload = UploadCreator.new(file, filename).create_for(post.user_id || -1)
               post.raw = post.raw.gsub(/(https?:)?#{Regexp.escape(url)}/, upload.url)
               post.save
               post.rebake!
