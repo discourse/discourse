@@ -3,8 +3,8 @@ import { sanitize } from 'pretty-text/sanitizer';
 
 function deprecate(feature, name){
   return function() {
-    if (console && console.log) {
-      console.log(feature + ': ' + name + ' is deprecated, please use the new markdown it APIs');
+    if (window.console && window.console.log) {
+      window.console.log(feature + ': ' + name + ' is deprecated, please use the new markdown it APIs');
     }
   };
 }
