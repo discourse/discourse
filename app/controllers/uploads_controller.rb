@@ -13,17 +13,18 @@ class UploadsController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    url  = params[:url]
-    file = params[:file] || params[:files]&.first
-    for_private_message = params[:for_private_message]
+    url    = params[:url]
+    file   = params[:file] || params[:files]&.first
+    pasted = params[:pasted] == "true"
+    for_private_message = params[:for_private_message] == "true"
 
     if params[:synchronous] && (current_user.staff? || is_api?)
-      data = create_upload(file, url, type, for_private_message)
+      data = create_upload(file, url, type, for_private_message, pasted)
       render json: data.as_json
     else
       Scheduler::Defer.later("Create Upload") do
         begin
-          data = create_upload(file, url, type, for_private_message)
+          data = create_upload(file, url, type, for_private_message, pasted)
         ensure
           MessageBus.publish("/uploads/#{type}", (data || {}).as_json, client_ids: [params[:client_id]])
         end
@@ -60,7 +61,7 @@ class UploadsController < ApplicationController
     raise Discourse::NotFound
   end
 
-  def create_upload(file, url, type, for_private_message = false)
+  def create_upload(file, url, type, for_private_message, pasted)
     if file.nil?
       if url.present? && is_api?
         maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
@@ -79,8 +80,12 @@ class UploadsController < ApplicationController
 
     return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
 
-    opts = { type: type, content_type: content_type }
-    opts[:for_private_message] = true if for_private_message
+    opts = {
+      type: type,
+      content_type: content_type,
+      for_private_message: for_private_message,
+      pasted: pasted,
+    }
 
     upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
 

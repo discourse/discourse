@@ -19,6 +19,7 @@ class UploadCreator
   #  - for_group_message (boolean)
   #  - for_theme (boolean)
   #  - for_private_message (boolean)
+  #  - pasted (boolean)
   def initialize(file, filename, opts = {})
     @upload = Upload.new
     @file = file
@@ -121,9 +122,10 @@ class UploadCreator
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
   def should_convert_to_jpeg?
-    TYPES_CONVERTED_TO_JPEG.include?(@image_info.type) &&
-    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG &&
-    SiteSetting.png_to_jpg_quality < 100
+    return false if !TYPES_CONVERTED_TO_JPEG.include?(@image_info.type)
+    return true  if @opts[:pasted]
+    return false if SiteSetting.png_to_jpg_quality < 100
+    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
   def convert_to_jpeg!
