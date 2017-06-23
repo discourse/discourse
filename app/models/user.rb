@@ -573,6 +573,7 @@ class User < ActiveRecord::Base
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
+      url = "#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
       url.gsub! "{color}", letter_avatar_color(username.downcase)
       url.gsub! "{username}", username
       url.gsub! "{first_letter}", username[0].downcase

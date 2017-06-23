@@ -49,7 +49,21 @@ HTML
       it "trims spaces on quote params" do
         expect(PrettyText.cook("[quote=\"#{user.username}, post:555, topic: 666\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">#{user.username}:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
+    end
 
+    describe "with letter avatar" do
+      let(:user) { Fabricate(:user) }
+
+      context "subfolder" do
+        before do
+          GlobalSetting.stubs(:relative_url_root).returns("/forum")
+          Discourse.stubs(:base_uri).returns("/forum")
+        end
+
+        it "should have correct avatar url" do
+          expect(PrettyText.cook("[quote=\"#{user.username}, post:123, topic:456, full:true\"]ddd[/quote]")).to include("/forum/letter_avatar_proxy")
+        end
+      end
     end
 
     it "should handle 3 mentions in a row" do
