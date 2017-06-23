@@ -504,6 +504,10 @@ HTML
       SiteSetting.enable_experimental_markdown_it = true
     end
 
+    after do
+      SiteSetting.enable_experimental_markdown_it = false
+    end
+
     # it "replaces skin toned emoji" do
     #   expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/emoji_one/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     #   expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/emoji_one/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
