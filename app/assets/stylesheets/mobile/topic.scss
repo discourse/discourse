@@ -213,6 +213,7 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 }
 
 .show-topic-admin {
-  top: 0px;
+  bottom: 0px;
   right: 150px;
+  top: inherit;
 }
