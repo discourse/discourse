@@ -228,7 +228,7 @@ export default Ember.Component.extend({
   _bindUploadTarget() {
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
 
-    let pasted = false;
+    this._pasted = false;
 
     const $element = this.$();
     const csrf = this.session.get('csrfToken');
@@ -240,14 +240,14 @@ export default Ember.Component.extend({
       pasteZone: $element,
     });
 
-    $element.on('fileuploadpaste', () => this.pasted = true);
+    $element.on('fileuploadpaste', () => this._pasted = true);
 
     $element.on('fileuploadsubmit', (e, data) => {
       const isPrivateMessage = this.get("composer.privateMessage");
 
-      data.formData = { type: "composer" }
+      data.formData = { type: "composer" };
       if (isPrivateMessage) data.formData.for_private_message = true;
-      if (this.pasted) data.formData.pasted = true;
+      if (this._pasted) data.formData.pasted = true;
 
       const opts = {
         isPrivateMessage,
@@ -266,7 +266,7 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadsend", (e, data) => {
-      this.pasted = false;
+      this._pasted = false;
       this._validUploads++;
       this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
 
