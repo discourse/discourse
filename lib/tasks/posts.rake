@@ -166,3 +166,24 @@ task 'posts:delete_word', [:find] => [:environment] do |_,args|
   total = remap_posts(find)
   puts "", "#{total} posts updated!", ""
 end
+
+desc 'Delete all likes'
+task 'posts:delete_all_likes' => :environment do
+
+  post_actions = PostAction.where(post_action_type_id: PostActionType.types[:like])
+
+  likes_deleted = 0
+  total = post_actions.count
+
+  post_actions.each do |post_action|
+    begin
+      post_action.remove_act!(Discourse.system_user)
+      print_status(likes_deleted += 1, total)
+    rescue
+      # skip
+    end
+  end
+
+  UserStat.update_all(likes_given: 0, likes_received: 0) # clear user likes stats
+  puts "", "#{likes_deleted} likes deleted!", ""
+end
