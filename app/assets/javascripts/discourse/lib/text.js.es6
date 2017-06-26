@@ -33,8 +33,8 @@ export function cookAsync(text, options) {
 }
 
 
-export function sanitize(text) {
-  return textSanitize(text, new WhiteLister(getOpts()));
+export function sanitize(text, options) {
+  return textSanitize(text, new WhiteLister(options));
 }
 
 function emojiOptions() {
