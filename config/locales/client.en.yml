@@ -1848,6 +1848,7 @@ en:
         has_liked: "you've liked this post"
         undo_like: "undo like"
         edit: "edit this post"
+        edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
