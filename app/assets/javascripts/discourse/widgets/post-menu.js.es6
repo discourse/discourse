@@ -251,7 +251,6 @@ export default createWidget('post-menu', {
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki) {
       replaceButton(orderedButtons, 'edit', 'reply-small');
-      replaceButton(hiddenButtons, 'edit', 'reply-small');
       replaceButton(orderedButtons, 'reply', 'wiki-edit');
     }
 
