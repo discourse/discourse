@@ -14,12 +14,18 @@ function concatUniq(src, elems) {
 
 export default class WhiteLister {
   constructor(options) {
+    options = options || {
+      features: {
+        default: true
+      }
+    };
+
     options.features.default = true;
 
     this._featureKeys = Object.keys(options.features).filter(f => options.features[f]);
     this._key = this._featureKeys.join(':');
     this._features = options.features;
-    this._options = options||{};
+    this._options = {};
   }
 
   getCustom() {
