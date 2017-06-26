@@ -164,7 +164,8 @@ export function cook(raw, opts) {
 
   opts.discourse.hoisted = hoisted;
 
-  let cooked = opts.discourse.sanitizer(opts.engine.render(raw), whiteLister).trim();
+  const rendered = opts.engine.render(raw);
+  let cooked = opts.discourse.sanitizer(rendered, whiteLister).trim();
 
   const keys = Object.keys(hoisted);
   if (keys.length) {

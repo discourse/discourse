@@ -9,3 +9,4 @@
 //= require ./pretty-text/engines/markdown-it/code
 //= require ./pretty-text/engines/markdown-it/category-hashtag
 //= require ./pretty-text/engines/markdown-it/censored
+//= require ./pretty-text/engines/markdown-it/table
