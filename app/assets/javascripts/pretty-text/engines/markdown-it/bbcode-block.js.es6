@@ -96,7 +96,6 @@ function applyBBCode(state, startLine, endLine, silent, md) {
       initial = start,
       max = state.eMarks[startLine];
 
-
   // [ === 91
   if (91 !== state.src.charCodeAt(start)) { return false; }
 
@@ -128,9 +127,8 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   for (;;) {
     nextLine++;
     if (nextLine >= endLine) {
-      // unclosed block should be autoclosed by end of document.
-      // also block seems to be autoclosed by end of parent
-      break;
+      // unclosed bbcode block should not be autoclosed by end of document.
+      return false;
     }
 
     start = state.bMarks[nextLine] + state.tShift[nextLine];
