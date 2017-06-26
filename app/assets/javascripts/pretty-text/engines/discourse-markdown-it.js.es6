@@ -151,13 +151,12 @@ export function setup(opts, siteSettings, state) {
   opts.setup = true;
 
   if (!opts.discourse.sanitizer) {
-    opts.sanitizer = opts.discourse.sanitizer = (!!opts.discourse.sanitize) ? sanitize : a=>a;
+    const whiteLister = new WhiteLister(opts.discourse);
+    opts.sanitizer = opts.discourse.sanitizer = (!!opts.discourse.sanitize) ? a=>sanitize(a, whiteLister) : a=>a;
   }
 }
 
 export function cook(raw, opts) {
-  const whiteLister = new WhiteLister(opts.discourse);
-
   // we still have to hoist html_raw nodes so they bypass the whitelister
   // this is the case for oneboxes
   let hoisted = {};
@@ -165,7 +164,7 @@ export function cook(raw, opts) {
   opts.discourse.hoisted = hoisted;
 
   const rendered = opts.engine.render(raw);
-  let cooked = opts.discourse.sanitizer(rendered, whiteLister).trim();
+  let cooked = opts.discourse.sanitizer(rendered).trim();
 
   const keys = Object.keys(hoisted);
   if (keys.length) {

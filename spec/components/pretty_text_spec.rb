@@ -440,21 +440,6 @@ HTML
     expect(PrettyText.cook(raw)).to match_html(cooked)
   end
 
-  describe 'tables' do
-    it 'allows table html' do
-      SiteSetting.allow_html_tables = true
-      table = "<table class='fa-spin'><thead><tr>\n<th class='fa-spin'>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
-      match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
-      expect(PrettyText.cook(table)).to match_html(match)
-    end
-
-    it 'allows no tables when not enabled' do
-      SiteSetting.allow_html_tables = false
-      table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
-      expect(PrettyText.cook(table)).to match_html("")
-    end
-  end
-
   describe "emoji" do
     it "replaces unicode emoji with our emoji sets if emoji is enabled" do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
@@ -518,10 +503,6 @@ HTML
       SiteSetting.enable_experimental_markdown_it = true
     end
 
-    after do
-      SiteSetting.enable_experimental_markdown_it = false
-    end
-
     # it "replaces skin toned emoji" do
     #   expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/emoji_one/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     #   expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/emoji_one/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
@@ -529,6 +510,20 @@ HTML
     #   expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/emoji_one/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
     # end
     #
+
+    it "supports href schemes" do
+      SiteSetting.allowed_href_schemes = "macappstore|steam"
+      cooked = cook("[Steam URL Scheme](steam://store/452530)")
+      expected = '<p><a href="steam://store/452530" rel="nofollow noopener">Steam URL Scheme</a></p>'
+      expect(cooked).to eq(n expected)
+    end
+
+    it "supports forbidden schemes" do
+      SiteSetting.allowed_href_schemes = "macappstore|itunes"
+      cooked = cook("[Steam URL Scheme](steam://store/452530)")
+      expected = '<p><a>Steam URL Scheme</a></p>'
+      expect(cooked).to eq(n expected)
+    end
 
     it "produces tag links" do
       Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})

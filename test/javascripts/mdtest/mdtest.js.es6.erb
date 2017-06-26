@@ -73,11 +73,3 @@ function md(assert, input, expected, text, settings) {
 %>
 
 <%= mdtest_suite %>
-
-test("whitelisted url scheme", function(assert) {
-  md(assert, "[Steam URL Scheme](steam://store/452530)", '<p><a href="steam://store/452530">Steam URL Scheme</a></p>', 'whitelists the steam url', {allowed_href_schemes: "macappstore|steam"});
-});
-
-test("forbidden url scheme", function(assert) {
-  md(assert, "[Steam URL Scheme](steam://store/452530)", '<p><a>Steam URL Scheme</a></p>', 'removes the href', {allowed_href_schemes: "macappstore|itunes"});
-});
