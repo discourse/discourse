@@ -136,6 +136,7 @@ class UploadCreator
       'convert', @file.path,
       '-auto-orient',
       '-background', 'white',
+      '-interlace', 'none',
       '-flatten',
       '-quality', SiteSetting.png_to_jpg_quality.to_s,
       jpeg_tempfile.path
