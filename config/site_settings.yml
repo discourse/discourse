@@ -568,7 +568,7 @@ posting:
     default: true
     client: true
   emoji_set:
-    default: 'emoji_one'
+    default: 'twitter'
     client: true
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
