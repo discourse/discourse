@@ -20,6 +20,7 @@ class FinalDestination
         nil
       end
     end
+    @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
     @limit = @opts[:max_redirects]
     @status = :ready
     @cookie = nil
@@ -63,10 +64,11 @@ class FinalDestination
       return nil
     end
 
-    # Always allow current base url
-    if hostname_matches?(Discourse.base_url_no_prefix)
-      @status = :resolved
-      return @uri
+    @ignored.each do |host|
+      if hostname_matches?(host)
+        @status = :resolved
+        return @uri
+      end
     end
 
     return nil unless validate_uri

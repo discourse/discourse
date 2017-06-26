@@ -4,7 +4,10 @@ require 'final_destination'
 describe FinalDestination do
 
   let(:opts) do
-    { # avoid IP lookups in test
+    {
+      ignore_redirects: ['https://ignore-me.com'],
+
+      # avoid IP lookups in test
       lookup_ip: lambda do |host|
         case host
         when 'eviltrout.com' then '52.84.143.152'
@@ -13,6 +16,7 @@ describe FinalDestination do
         when 'some_thing.example.com' then '104.25.152.10'
         when 'private-host.com' then '192.168.10.1'
         when 'internal-ipv6.com' then '2001:abc:de:01:3:3d0:6a65:c2bf'
+        when 'ignore-me.com' then '53.84.143.152'
         else
           as_ip = IPAddr.new(host) rescue nil
           raise "couldn't lookup #{host}" if as_ip.nil?
@@ -62,6 +66,13 @@ describe FinalDestination do
         expect(final.redirected?).to eq(false)
         expect(final.status).to eq(:resolved)
       end
+    end
+
+    it "ignores redirects" do
+      final = FinalDestination.new('https://ignore-me.com/some-url', opts)
+      expect(final.resolve.to_s).to eq('https://ignore-me.com/some-url')
+      expect(final.redirected?).to eq(false)
+      expect(final.status).to eq(:resolved)
     end
 
     context "underscores in URLs" do
