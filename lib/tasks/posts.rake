@@ -185,5 +185,6 @@ task 'posts:delete_all_likes' => :environment do
   end
 
   UserStat.update_all(likes_given: 0, likes_received: 0) # clear user likes stats
+  DirectoryItem.update_all(likes_given: 0, likes_received: 0) # clear user directory likes stats
   puts "", "#{likes_deleted} likes deleted!", ""
 end
