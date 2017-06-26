@@ -2587,7 +2587,7 @@ en:
       popular_posts: "Popular Posts"
       more_new: "New for you"
       subject_template: "[%{email_prefix}] Summary"
-      unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
+      unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change <a href='%{email_settings_url}'>your email settings</a>, or %{unsubscribe_link} to unsubscribe."
       click_here: "click here"
       from: "%{site_name} summary"
       preheader: "A brief summary since your last visit on %{last_seen_at}"
