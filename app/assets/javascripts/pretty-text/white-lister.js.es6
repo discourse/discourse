@@ -25,7 +25,7 @@ export default class WhiteLister {
     this._featureKeys = Object.keys(options.features).filter(f => options.features[f]);
     this._key = this._featureKeys.join(':');
     this._features = options.features;
-    this._options = {};
+    this._options = options;
   }
 
   getCustom() {
