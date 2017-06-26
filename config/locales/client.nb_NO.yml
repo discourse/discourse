@@ -218,7 +218,7 @@ nb_NO:
         all_time: "Gjennom tidene"
         last_7_days: "Siste 7 dager"
         last_30_days: "Siste 30 dager"
-      like_count: "Kjærtegn"
+      like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
       user_count: "Brukere"
@@ -424,8 +424,8 @@ nb_NO:
       flair_preview_image: "Forhåndsvis bilde"
       flair_note: "Merk: Bilde for gruppetilhørighet på avatar vil bare vises for brukerens primære gruppe."
     user_action_groups:
-      '1': "Kjærtegn tildelt"
-      '2': "Kjærtegn mottatt"
+      '1': "Likes tildelt"
+      '2': "Likes mottatt"
       '3': "Bokmerker"
       '4': "Emner"
       '5': "Svar"
@@ -814,7 +814,7 @@ nb_NO:
         most_liked_by: "Mest likt av"
         most_liked_users: "Mest likt"
         most_replied_to_users: "Mest besvart"
-        no_likes: "Ingen kjærtegner dette enda."
+        no_likes: "Ingen likes her enda."
       associated_accounts: "Innloggingsforsøk"
       ip_address:
         title: "Siste IP-adresse"
@@ -857,7 +857,7 @@ nb_NO:
     logout: "Du ble logget ut"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne, men du kan ikke svare, gi kjærtegn eller utføre andre handlinger som er slått av."
+      enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
     too_few_topics_and_posts_notice: "La oss  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang diskusjonen.</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye brukere trenger noen samtaler å lese og svare på."
@@ -932,6 +932,9 @@ nb_NO:
       complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med instruksjoner for hvordan du nullstiller passordet."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
+      help: "Fikk du ikke e-posten? Sjekk søppelposten din først.<p>Er du ikke sikker på hvilken e-postadresse du brukte. Skriv inn adressen her og vi vil fortelle deg om den finnes her.</p><p>Hvis du ikke lenger har tilgang til e-postadressen på kontoen din, kontakt <a href='/about'>vår hjelpfulle stab.</a></p>"
+      button_ok: "OK"
+      button_help: "Hjelp"
     login:
       title: "Logg Inn"
       username: "Bruker"
@@ -1334,7 +1337,7 @@ nb_NO:
         other: "Det er {{count}} nye innlegg i dette emnet siden sist du leste det"
       likes:
         one: "det er ett kjærtegn i dette emnet"
-        other: "det er {{count}} kjærtegn i dette emnet"
+        other: "det er {{count}} likes i dette emnet"
       back_to_list: "Tilbake til emnelisten"
       options: "Valg for emner"
       show_links: "vis lenker i dette emnet"
@@ -1622,7 +1625,7 @@ nb_NO:
         other: "{{count}} svar"
       has_likes:
         one: "{{count}} kjærtegn"
-        other: "{{count}} kjærtegn"
+        other: "{{count}} likes"
       has_likes_title:
         one: "{{count}} bruker likte dette innlegget"
         other: "{{count}} brukere likte dette innlegget"
@@ -1652,7 +1655,7 @@ nb_NO:
         about: "dette innlegget er en wiki"
       archetypes:
         save: 'Lagre alternativene'
-      few_likes_left: "Takk for at du sprer kjærlighet! Du vil nå grensen for antall ting du kan kjærtegne i dag ganske snart."
+      few_likes_left: "Takk for at du sprer kjærlighet! Du vil nå grensen for antall ting du kan like i dag ganske snart."
       controls:
         reply: "begynn å skrive et svar til dette innlegget"
         like: "lik dette innlegget"
@@ -1884,8 +1887,8 @@ nb_NO:
           description: "Du vil aldri bli varslet om noe med tanke på nye emner i disse kategoriene, og de vil ikke vises i siste."
       sort_options:
         default: "forvalg"
-        likes: "Kjærtegn"
-        op_likes: "Kjærtegn gitt orginalinnlegget"
+        likes: "Likes"
+        op_likes: "Likes gitt orginalinnlegget"
         views: "Visninger"
         posts: "Innlegg"
         activity: "Aktivitet"
@@ -1987,11 +1990,11 @@ nb_NO:
       one: "dette emnet er vist 1 gang"
       other: "dette emnet er vist {{number}} ganger"
     activity: "Aktivitet"
-    likes: "Kjærtegn"
+    likes: "Likes"
     likes_lowercase:
       one: "kjærtegn"
-      other: "kjærtegn"
-    likes_long: "det er {{number}} kjærtegn i dette emnet"
+      other: "likes"
+    likes_long: "det er {{number}} likes i dette emnet"
     users: "Deltakere"
     users_lowercase:
       one: "bruker"
@@ -2962,7 +2965,7 @@ nb_NO:
         reputation: Rykte
         permissions: Tillatelser
         activity: Aktivitet
-        like_count: Kjærtegn tildelt / mottatt
+        like_count: Likes tildelt / mottatt
         last_100_days: 'de siste 100 dagene'
         private_topics_count: Private emner
         posts_read_count: Innlegg lest
@@ -3046,10 +3049,10 @@ nb_NO:
           posts_read_all_time: "Innlegg lest (totalt)"
           flagged_posts: "Rapporterte innlegg"
           flagged_by_users: "Brukere som rapporterte"
-          likes_given: "Kjærtegn tildelt"
-          likes_received: "Kjærtegn mottatt"
-          likes_received_days: "Kjærtegn mottatt: Unike dager"
-          likes_received_users: "Kjærtegn mottatt: Unike brukere"
+          likes_given: "Likes tildelt"
+          likes_received: "Likes mottatt"
+          likes_received_days: "Likes mottatt: Unike dager"
+          likes_received_users: "Likes mottatt: Unike brukere"
           qualifies: "Kvalifiserer til tillitsnivå 3."
           does_not_qualify: "Kvalifiserer ikke til tillitsnivå 3."
           will_be_promoted: "Vil snart forfremmes."

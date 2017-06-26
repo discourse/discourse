@@ -970,7 +970,7 @@ sq:
       whisper: "pëshpëritje"
       unlist: "çlistuar"
       add_warning: "Ky është një paralajmërim zyrtar."
-      toggle_whisper: "Hiq pëshpëritjet"
+      toggle_whisper: "Pëshpëritje?"
       toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saving_draft_tip: "duke e ruajtur..."

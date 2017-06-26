@@ -9,26 +9,26 @@ it:
   site_settings:
     discourse_narrative_bot_enabled: 'Abilita Discourse Narrative Bot'
     disable_discourse_narrative_bot_welcome_post: "Disabilita il messaggio di benvenuto di Discourse Narrative Bot"
-    discourse_narrative_bot_ignored_usernames: "Gli username che Discourse Narrative Bot dovrebbe ignorare"
+    discourse_narrative_bot_ignored_usernames: "Nomi utente che Discourse Narrative Bot deve ignorare"
     discourse_narrative_bot_disable_public_replies: "Disabilita le risposte pubbliche da Discourse Narrative Bot"
-    discourse_narrative_bot_welcome_post_type: "Tipo di messaggio di benvenuto che Discourse Narrative Bot dovrebbe inviare"
-    discourse_narrative_bot_welcome_post_delay: "Aspetta (n) secondi prima di inviare Il messaggio di benvenuto di Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Tipo di messaggio di benvenuto che Discourse Narrative Bot deve inviare"
+    discourse_narrative_bot_welcome_post_delay: "Aspetta (n) secondi prima di inviare Il messaggio di benvenuto di Discourse Narrative Bot."
   badges:
     certified:
       name: Certificato
       description: "Completato il tutorial per nuovi utenti"
       long_description: |
-        Questo distintivo è assegnato al completamento del tutorial interattivo per nuovi utenti. Hai voluto imparare gli strumenti base di una discussione, e ora sei certificato!
+        Questo distintivo è assegnato al completamento del tutorial interattivo per nuovi utenti. Hai deciso di imparare gli strumenti base di una discussione, e ora sei certificato!
     licensed:
-      name: Diploma
+      name: Diplomato
       description: "Completato il tutorial per utenti avanzati"
       long_description: |
         Questo distintivo è assegnato al completamento del tutorial interattivo per utenti avanzati. Hai imparato gli strumenti avanzati di discussione  — e ora sei un diplomato!
   discourse_narrative_bot:
-    bio: "Ciao, io non sono una persona reale. Io sono un bot che ti può insegnare ad usare questo sito. Per interagire con me inviami un messaggio o menziona**`@%{discobot_username}`** ovunque."
+    bio: "Ciao, io non sono una persona reale. Sono un robot che ti può insegnare ad usare questo sito. Per interagire con me inviami un messaggio o menziona**`@%{discobot_username}`** ovunque."
     timeout:
       message: |-
-        Hey @%{username}, sto solo controllando perchè è da un po' che non ti sento.
+        Hey @%{username}, sto solo controllando perché è da un po' che non ti sento.
 
         - Per continuare, rispondimi in qualsiasi momento.
 
@@ -50,16 +50,16 @@ it:
     quote:
       trigger: "cita"
       '1':
-        quote: "Nel mezzo delle difficoltà nascono le opportunità."
+        quote: "E' nel mezzo delle difficoltà che nascono le opportunità"
         author: "Albert Einstein"
       '2':
         quote: "Siate il cambiamento che volete vedere nel mondo."
         author: "Mahatma Gandhi"
       '3':
-        quote: "Non piangere perchè è finita, sorridi perchè è successo."
+        quote: "Non piangere perché è finita, sorridi perché è successo."
         author: "Dr Seuss"
       '4':
-        quote: "Se vuoi fare bene una cosa, falla da solo."
+        quote: "Se vuoi che qualcosa sia ben fatta, falla tu stesso."
         author: "Charles-Guillaume Étienne"
       '5':
         quote: "Se credi che sia possibile sei già a metà strada."
@@ -97,7 +97,7 @@ it:
         '11': "E' difficile rispondere, prova di nuovo"
         '12': "Rifai la domanda più tardi"
         '13': "Meglio non risponderti adesso"
-        '14': "Non posso predirlo ora"
+        '14': "Ora non lo posso prevedere"
         '15': "Concentrati e rifai la domanda"
         '16': "Non ci contare"
         '17': "La mia risposta è no"
@@ -117,7 +117,7 @@ it:
           Attualmente so fare le seguenti cose:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Avvia una delle seguenti narrazioni interattive: %{tracks}.
+          > Avvia uno dei seguenti resoconti interattivi: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -131,7 +131,7 @@ it:
         first_response: |-
           Hey, grazie per la risposta!
 
-          Sfortunatamente, come un bot mal programmato, non posso capire la tua risposta. :frowning:
+          Sfortunatamente, essendo un robot mal programmato, non l'ho capita bene. :frowning:
         track_response: Puoi provare di nuovo, o se vuoi saltare questo passaggio, dimmi `%{skip_trigger}`. Altrimenti per ricominciare, dimmi `%{reset_trigger}`.
         second_response: |-
           Aw, scusa. Non sto ancora capendo. :anguished:

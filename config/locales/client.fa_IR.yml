@@ -890,6 +890,8 @@ fa_IR:
       complete_email_found: "ما حساب کاربری که با ایمیل <b>%{email}</b>همخوانی دارد را پیدا کردیم، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
       complete_username_not_found: "هیچ حساب کاربری که با <b>%{username}</b> همخوانی داشته باشد پیدا نشد"
       complete_email_not_found: "هیچ حساب کاربری که <b>%{email}</b> همخوانی داشته باشد پیدا نشد"
+      button_ok: "اوکی"
+      button_help: "کمک"
     login:
       title: "ورود"
       username: "کاربر"
@@ -948,6 +950,9 @@ fa_IR:
       your_email: "ایمیل شما: <b>%{email}</b>."
       accept_invite: "پذیرفتن دعوت"
       success: "حساب‌کاربری شما با موفقیت ایجاد شد و می‌توانید وارد سایت شوید."
+      name_label: "نام"
+      password_label: "تنظیم رمز عبور"
+      optional_description: "(اختیاری)"
     password_reset:
       continue: "برو به %{site_name}"
     emoji_set:
@@ -2657,6 +2662,7 @@ fa_IR:
           block: "بستن"
           do_nothing: "هیچ کاری نکن"
         staff_actions:
+          all: "همه"
           title: "عملیات همکارا"
           clear_filters: "همه چیز را نشان بده "
           staff_user: "کاربر همکار"

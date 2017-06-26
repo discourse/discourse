@@ -3009,6 +3009,7 @@ he:
         reset_bounce_score:
           label: "איפוס"
           title: "איפוס ניקוד-החזר"
+        visit_profile: "בקרו <a href='%{url}'>בדף ההעדפות של משתמש/ת זה/זו</a> כדי לערוך את הפרופיל שלהם"
         deactivate_explanation: "חשבון משתמש מנוטרל נדרש לוודא דואר אלקטרוני מחדש."
         suspended_explanation: "משתמש מושעה לא יכול להתחבר."
         block_explanation: "משתמש חסום לא יכול לפרסם או להתחיל נושאים."

@@ -204,7 +204,7 @@ zh_CN:
       user_count: "用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "重要事件或紧急事件，请通过 %{contact_info} 联系我们。"
+      contact_info: "如有重要问题或网站紧急事件，请以 %{contact_info} 联系我们。"
     bookmarked:
       title: "收藏"
       clear_bookmarks: "取消收藏"
@@ -852,7 +852,7 @@ zh_CN:
       hide_session: "明天提醒我"
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
-      intro: "嘿！:heart_eyes: 看起来你正欣赏讨论，但你没有注册帐号。"
+      intro: "嘿！:heart_eyes: 看来你很欣赏该讨论，但你没有注册帐号。"
       value_prop: "你创建一个帐号后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"

@@ -932,6 +932,9 @@ fr:
       complete_email_found: "Nous avons trouvé un compte correspond au courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
+      help: "Le courriel n'est pas arrivé ? Pensez bien à vérifier dans votre dossier de spam.<p>Vous n'êtes pas sûr de l'adresse électronique que vous avez utilisée ? Saisissez ici une adresse électronique, et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse électronique de votre compte, merci de contacter <a href='/about'>nos responsables serviables.</a></p>"
+      button_ok: "OK"
+      button_help: "Aide"
     login:
       title: "Se connecter"
       username: "Utilisateur"
@@ -991,6 +994,8 @@ fr:
       accept_invite: "Accepter l'invitation"
       success: "Votre compte a été créé et vous êtes maintenant connecté."
       name_label: "Nom"
+      password_label: "Définir le mot de passe"
+      optional_description: "(facultatif)"
     password_reset:
       continue: "Continuer vers %{site_name}"
     emoji_set:
@@ -1210,6 +1215,7 @@ fr:
           seen: j'ai lu
           unseen: je n'ai pas lu
           wiki: qui sont des wikis
+          all_tags: Contient tous les tags
         statuses:
           label: Dont les sujets
           open: sont ouverts

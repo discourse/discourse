@@ -25,7 +25,7 @@ zh_CN:
       long_description: |
         该徽章授予完成我们交互式高级用户教程的你。你已经掌握了讨论的高级工具——你已经收到了证明！
   discourse_narrative_bot:
-    bio: "你好，我不是真实的人。我是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及**`@%{discobot_username}`**与我交互。"
+    bio: "你好，我不是真实的人。我是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`%{discobot_username}`** 与我交互。"
     timeout:
       message: |-
         你好，@%{username}。好久没见到你了，一切可好？
