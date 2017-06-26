@@ -24,11 +24,12 @@
 #topic-progress-wrapper {
   .topic-admin-menu-button-container {
     position: relative;
-    right: 37px;
+    right: 38px;
     top: 35px;
 
     .widget-button {
       height: 35px;
+      border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
     }
   }
 
