@@ -233,6 +233,9 @@ fr:
       trust_level_2: "niveau_confiance_2"
       trust_level_3: "niveau_confiance_3"
       trust_level_4: "niveau_confiance_4"
+    request_membership_pm:
+      title: "Demande d'adhésion pour @%{group_name}"
+      body: "Je souhaiterais adhérer à @%{group_name}."
   education:
     until_posts:
       one: "1 message"
@@ -351,6 +354,11 @@ fr:
           attributes:
             execute_at:
               in_the_past: "Doit être dans le futur"
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: 'Les clés d''interpolation suivantes sont invalides : « %{keys} »'
+              missing_interpolation_keys: 'Les clés d''interpolation suivantes sont absentes : « %{keys} »'
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
@@ -938,6 +946,7 @@ fr:
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP surveillées (Admin > Journaux > IP surveillés)."
     blacklist_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être crawlés par Discourse"
+    whitelist_internal_hosts: "Une liste de domaines internes que Discourse peut crawler en sécurité pour les Onebox et autres"
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."

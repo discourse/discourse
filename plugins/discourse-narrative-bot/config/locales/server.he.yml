@@ -94,6 +94,7 @@ he:
         '8': "תחזית טובה"
         '9': "כן"
         '10': "הסימנים מראים שכן"
+        '11': "תגובה מעורפלת לנסות שוב"
         '12': "תשאלו שוב מאוחר יותר"
         '13': "עדיף לא לענות עכשיו"
         '14': "קשה לחזות עכשיו"
@@ -117,6 +118,15 @@ he:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
           > מתחיל את אחד הסיפורים האינטראקטיביים הבאים: %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _ניקטו במעשה אקראי של חסד, ללא ציפייה לתמורה, בטוחים בידיעה שיום אחד מישהו עלול לעשות אותו הדבר בשבילכם_ &mdash; הנסיכה דיינה
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: אתם יכולים לסמוך על כך
       do_not_understand:
         first_response: |-
           הי, תודה על התגובה!
@@ -134,21 +144,88 @@ he:
       cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדש"
       hello:
         title: ":robot: ברכות!"
+        message: |-
+          תודה שהצטרפתם ל-%{title}, וברוכים הבאים!
+
+          - אני רק בוט, אבל [הצוות החביב שלנו](/about) גם כן נמצא כאן אם אתם צריכים לפנות לבן-אדם.
+
+          - מסיבות בטיחותיות, אנחנו מגבילים באופן זמני את מה שמשתמשים חדשים יכולים לעשות. אתם בזכו ביכולות חדשות (וב-[עיטורים](/badges)) ככל שנכיר אתכם.
+
+          - אנחנו מאמינים ב-[התנהגות קהילתית מתורבתת](/guidelines) בכל זמן.
+      onebox:
+        instructions: |-
+          כעת, האם תוכלו לשתף את אחד הקישורים האלו איתי? השיבו עם **קישור בשורה בפני עצמו**, והוא יפתח לכלול סיכום.
+
+          להעתקת קישור, לחצו והחזיקו במכשיר נייד, או לחצו עם הכפתור הימני של העכבר:
+
+          - https://en.wikipedia.org/wiki/Inherently_funny_word
+          - https://en.wikipedia.org/wiki/Death_by_coconut
+          - https://en.wikipedia.org/wiki/Calculator_spelling
+        reply: |-
+          מגניב! זה יעבוד בשביל רוב <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> הקישורים. זיכרו, זה חייב להיות בשורה _בפני עצמו_, בלי שום דבר לפני ואחרי.
+        not_found: |-
+          מצטער, לא מצאתי את הקישור בתשובה שלכם! :cry:
+
+          תוכלו להוסיף את הקישור הבא, בשורה בפני עצמו, עם התשובה הבאה שלכם?
+
+          - https://en.wikipedia.org/wiki/Exotic_Shorthair
       images:
+        instructions: |-
+          הנה תמונה של חד-קרן:
+
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+
+          אם אתם אוהבים אותה (ומי לא!) ליחצו על כפתור :heart: הלייק מתחת לפוסט זה כדי שאדע על כך.
+
+          תוכלו **להשיב עם תמונה?** כל תמונה תתאים! גררו ושחררו, לחצו על כפתור ההעלאה, או אפילו העתיקו והדביקו פנימה.
+        reply: |-
+          תמונה שווה - לחצתי על כפתור :heart: הלייק כדי שתדעו כמה אני מעריך זאת :heart_eyes:
         like_not_found: |-
           שכחתם לעשות לייק :heart: ל-[פוסט](%{url}) שלי? :crying_cat_face:
+        not_found: |-
+          נראה שלא העליתם תמונה אז בחרתי תמונה שאני _בטוח_ שתהנו ממנה.
+
+          `%{image_url}`
+
+          עכשיו נסו להעלות אותה, או להדביק את הקישור בשורה בפני עצמו!
+      formatting:
+        instructions: |-
+          תוכלו **להבליט** כמה מילים או _להטות_ בתגובה שלכם?
+
+          - הקלידו **bold** או `_italic_`
+
+          - או, לחצו על הכפתורים <kbd><b>B</b></kbd> או <kbd><i>I</i></kbd> בעורך
+        reply: |-
+          עבודה מעולה! HTML ו BBCodeגם עובדים בשביל פורמט - כדי ללמוד עוד, [נסו את המדריך הזה](http://commonmark.org/help) :nerd:
+      quoting:
+        reply: |-
+          עבודה טובה, בחרתם את הציטוט האהוב עלי! :left_speech_bubble:
+      emoji:
+        reply: |-
+          זה :sparkles: _emojitastic!_ :sparkles:
+      mention:
+        reply: |-
+          _קראתם בשמי!?_ :raised_hand: אני מאמין שכן! :wave: ובכן, אני כאן! תודה שאיזכרתם אותי.  :ok_hand:
       certificate:
         alt: 'תעודת הישג'
     advanced_user_narrative:
       reset_trigger: 'משתמש/ת מתקדם/ת'
       cert_title: "כהוקרה כל סיום מוצלח של מדריך המשתמשים המתקדמים"
       title: ':arrow_up: יכולות משתמשים מתקדמים'
+      delete:
+        not_found: |-
+          אני עדיין לא רואה פוסטים שנמחקו? זיכרו <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> הצג עוד יחשוף <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> מחיקה.
       recover:
         deleted_post_raw: 'מדוע @%{discobot_username} מחק/ה את הפוסט שלי? :anguished:'
         instructions: |-
           הו לא! נראה שבטעות מחקתי פוסט חדש שרק יצרתי עבורכם.
 
           תוכלו לעזור לי <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **להשיב** אותו?
+        not_found: |-
+          מתקשים? זיכרו <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> הצגת עוד תחשוף <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> אחזור.
+      category_hashtag:
+        reply: |-
+          מצויין! זיכרו שזה עובד בשביל קטגוריות _וגם_ תגיות, אם תגיות מאופשרות.
       details:
         reply: |-
           עבודה מעולה — תשומת הלב שלכם _לפרטים_ מוערצת!

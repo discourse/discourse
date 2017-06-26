@@ -28,6 +28,8 @@ ru:
     dice:
       invalid: |-
         Извините, даже математически невозможно бросить эту комбинацию костей. :confounded:
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "цитата"
       '1':
@@ -60,6 +62,8 @@ ru:
       '10':
         quote: "Что разум человека способен познать и вообразить, того он способен достичь."
         author: "Наполеон Хилл"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       answers:
         '1': "Это точно"
