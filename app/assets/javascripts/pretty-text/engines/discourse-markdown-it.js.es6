@@ -1,5 +1,6 @@
 import { default as WhiteLister, whiteListFeature } from 'pretty-text/white-lister';
 import { sanitize } from 'pretty-text/sanitizer';
+import guid from 'pretty-text/guid';
 
 function deprecate(feature, name){
   return function() {
@@ -61,6 +62,21 @@ function setupInlineBBCode(md) {
   md.inline.bbcode_ruler = new Ruler();
 }
 
+function renderHoisted(tokens, idx, options) {
+  const content = tokens[idx].content;
+  if (content && content.length > 0) {
+    let id = guid();
+    options.discourse.hoisted[id] = tokens[idx].content;
+    return id;
+  } else {
+    return '';
+  }
+}
+
+function setupHoister(md) {
+  md.renderer.rules.html_raw = renderHoisted;
+}
+
 export function setup(opts, siteSettings, state) {
   if (opts.setup) {
     return;
@@ -120,6 +136,7 @@ export function setup(opts, siteSettings, state) {
     typographer: false
   });
 
+  setupHoister(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
 
@@ -140,5 +157,33 @@ export function setup(opts, siteSettings, state) {
 
 export function cook(raw, opts) {
   const whiteLister = new WhiteLister(opts.discourse);
-  return opts.discourse.sanitizer(opts.engine.render(raw), whiteLister).trim();
+
+  // we still have to hoist html_raw nodes so they bypass the whitelister
+  // this is the case for oneboxes
+  let hoisted = {};
+
+  opts.discourse.hoisted = hoisted;
+
+  let cooked = opts.discourse.sanitizer(opts.engine.render(raw), whiteLister).trim();
+
+  const keys = Object.keys(hoisted);
+  if (keys.length) {
+    let found = true;
+
+    const unhoist = function(key) {
+      cooked = cooked.replace(new RegExp(key, "g"), function() {
+        found = true;
+        return hoisted[key];
+      });
+    };
+
+    while (found) {
+      found = false;
+      keys.forEach(unhoist);
+    }
+  }
+
+  delete opts.discourse.hoisted;
+  return cooked;
+
 }

@@ -1,3 +1,5 @@
+import { lookupCache } from 'pretty-text/oneboxer';
+
 function applyOnebox(state, silent) {
   if (silent || !state.tokens || state.tokens.length < 3) {
     return;
@@ -47,8 +49,27 @@ function applyOnebox(state, silent) {
             continue;
           }
 
-          // decorate...
-          attrs.push(["class", "onebox"]);
+          // we already determined earlier that 0 0 was href
+          let cached = lookupCache(attrs[0][1]);
+
+          if (cached) {
+            // replace link with 2 blank text nodes and inline html for onebox
+            child.type = 'html_raw';
+            child.content = cached;
+            child.inline = true;
+
+            text.type = 'html_raw';
+            text.content = '';
+            text.inline = true;
+
+            close.type = 'html_raw';
+            close.content = '';
+            close.inline = true;
+
+          } else {
+            // decorate...
+            attrs.push(["class", "onebox"]);
+          }
         }
       }
     }
