@@ -317,7 +317,7 @@ blockquote > *:last-child {
 }
 
 
-.cooked table {
+.cooked table, .d-editor-preview table {
   thead {
     border-bottom: 2px solid lighten($primary, 80%);
     th {
