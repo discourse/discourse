@@ -196,7 +196,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         const quotedText = Quote.build(post, buffer);
         composerOpts.quote = quotedText;
         if (composer.get('model.viewOpen')) {
-          this.appEvents.trigger('composer:insert-text', quotedText);
+          this.appEvents.trigger('composer:insert-block', quotedText);
         } else if (composer.get('model.viewDraft')) {
           const model = composer.get('model');
           model.set('reply', model.get('reply') + quotedText);
@@ -320,7 +320,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           composerController.get('content.action') === Composer.REPLY) {
         composerController.set('content.post', post);
         composerController.set('content.composeState', Composer.OPEN);
-        this.appEvents.trigger('composer:insert-text', quotedText.trim());
+        this.appEvents.trigger('composer:insert-block', quotedText.trim());
       } else {
 
         const opts = {
