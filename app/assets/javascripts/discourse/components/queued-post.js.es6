@@ -1,6 +1,8 @@
 import { propertyEqual } from 'discourse/lib/computed';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { bufferedProperty } from 'discourse/mixins/buffered-content';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { cookAsync } from 'discourse/lib/text';
 
 function updateState(state, opts) {
   opts = opts || {};
@@ -20,6 +22,12 @@ function updateState(state, opts) {
 export default Ember.Component.extend(bufferedProperty('post'), {
   editing: propertyEqual('post', 'currentlyEditing'),
   _confirmDelete: updateState('rejected', {deleteUser: true}),
+
+  @computed('post.raw')
+  cooked(raw) {
+    cookAsync(raw).then(cooked => this.set('cooked', cooked));
+    return raw;
+  },
 
   actions: {
     approve: updateState('approved'),
