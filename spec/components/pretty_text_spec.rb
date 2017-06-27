@@ -615,6 +615,13 @@ HTML
       expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
     end
 
+    it 'supports typographer' do
+      SiteSetting.enable_markdown_typographer = true
+      expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+      SiteSetting.enable_markdown_typographer = false
+      expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+    end
+
     it 'handles onebox correctly' do
       # we expect 2 oneboxes
       expect(PrettyText.cook("http://a.com\nhttp://b.com").split("onebox").length).to eq(3)
