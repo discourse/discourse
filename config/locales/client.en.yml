@@ -1129,6 +1129,7 @@ en:
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
+      blockquote_text: "Blockquote"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"

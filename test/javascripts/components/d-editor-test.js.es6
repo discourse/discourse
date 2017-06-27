@@ -515,29 +515,37 @@ third line`
 
 
 testCase('quote button', function(assert, textarea) {
-  click('button.quote');
-  andThen(() => {
-    assert.equal(this.get('value'), 'hello world.');
-  });
 
   andThen(() => {
     textarea.selectionStart = 6;
-    textarea.selectionEnd = 11;
+    textarea.selectionEnd = 9;
   });
 
   click('button.quote');
   andThen(() => {
-    assert.equal(this.get('value'), 'hello > world.');
-    assert.equal(textarea.selectionStart, 6);
-    assert.equal(textarea.selectionEnd, 13);
+    assert.equal(this.get('value'), 'hello\n\n> wor\n\nld.');
+    assert.equal(textarea.selectionStart, 7);
+    assert.equal(textarea.selectionEnd, 12);
+  });
+
+  click('button.quote');
+
+  andThen(() => {
+    assert.equal(this.get('value'), 'hello\n\nwor\n\nld.');
+    assert.equal(textarea.selectionStart, 7);
+    assert.equal(textarea.selectionEnd, 10);
+  });
+
+  andThen(() => {
+    textarea.selectionStart = 15;
+    textarea.selectionEnd = 15;
   });
 
   click('button.quote');
   andThen(() => {
-    assert.equal(this.get('value'), 'hello world.');
-    assert.equal(textarea.selectionStart, 6);
-    assert.equal(textarea.selectionEnd, 11);
+    assert.equal(this.get('value'), 'hello\n\nwor\n\nld.\n\n> Blockquote');
   });
+
 });
 
 testCase(`bullet button with no selection`, function(assert, textarea) {
