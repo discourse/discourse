@@ -309,7 +309,9 @@ Discourse::Application.routes.draw do
   get "user_preferences" => "users#user_preferences_redirect"
 
   %w{users u}.each_with_index do |root_path, index|
-    resources :users, except: [:new, :show, :update, :destroy], path: root_path do
+    get "#{root_path}" => "users#index", constraints: { format: 'html' }
+
+    resources :users, except: [:index, :new, :show, :update, :destroy], path: root_path do
       collection do
         get "check_username"
         get "is_local_username"
