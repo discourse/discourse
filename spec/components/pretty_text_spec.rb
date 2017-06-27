@@ -658,6 +658,18 @@ HTML
       expect(cooked.scan('quote]').length).to eq(0)
     end
 
+    it "can onebox local topics" do
+      op = Fabricate(:post)
+      reply = Fabricate(:post, topic_id: op.topic_id)
+
+
+      url = Discourse.base_url + reply.url
+      quote = create_post(topic_id: op.topic.id, raw: "This is a sample reply with a quote\n\n#{url}")
+      quote.reload
+
+      expect(quote.cooked).not_to include('[quote')
+    end
+
     it "do off topic quoting with emoji unescape" do
 
       topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
