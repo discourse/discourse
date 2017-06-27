@@ -1,5 +1,3 @@
-require 'cgi'
-
 module Onebox
   module Engine
     class GoogleMapsOnebox
@@ -122,7 +120,7 @@ module Onebox
         when :canonical
           uri = URI(@url)
 
-          query = CGI::parse(uri.query)
+          query = URI::decode_www_form(uri.query).to_h
           if !query.has_key?("ll")
             raise ArgumentError, "canonical url lacks location argument" unless query.has_key?("sll")
             query["ll"] = query["sll"]
