@@ -78,7 +78,7 @@ class Toolbar {
       group: 'insertions',
       icon: 'quote-right',
       shortcut: 'Shift+9',
-      perform: e => e.applySurround('> ', '', 'code_text')
+      perform: e => e.applyList('> ', 'blockquote_text')
     });
 
     this.addButton({id: 'code', group: 'insertions', shortcut: 'Shift+C', action: 'formatCode'});
