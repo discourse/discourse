@@ -312,7 +312,7 @@ HTML
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
-    context 'option ot preserve onebox source' do
+    context 'option to preserve onebox source' do
       it "should return the right excerpt" do
         onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
@@ -629,6 +629,7 @@ HTML
       expect(PrettyText.cook("http://a.com ")).to include('onebox')
       expect(PrettyText.cook("http://a.com a")).not_to include('onebox')
       expect(PrettyText.cook("- http://a.com")).not_to include('onebox')
+      expect(PrettyText.cook("<http://a.com>")).not_to include('onebox')
     end
 
     it "can handle bbcode" do

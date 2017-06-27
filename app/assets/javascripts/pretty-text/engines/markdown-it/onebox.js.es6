@@ -17,7 +17,7 @@ function applyOnebox(state, silent) {
       for(j=0;j<token.children.length;j++){
         let child = token.children[j];
 
-        if (child.type === "link_open") {
+        if (child.type === "link_open" && child.markup === 'linkify' && child.info === 'auto') {
 
           // look behind for soft or hard break
           if (j > 0 && token.children[j-1].tag !== 'br') {
