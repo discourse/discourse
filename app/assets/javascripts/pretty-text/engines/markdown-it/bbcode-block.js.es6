@@ -1,6 +1,19 @@
+let isWhiteSpace;
+
+function trailingSpaceOnly(src, start, max) {
+  let i;
+  for(i=start;i<max;i++) {
+    let code = src.charCodeAt(i);
+    if (code === 0x0A) { return true; }
+    if (!isWhiteSpace(code)) { return false; }
+  }
+
+  return true;
+}
+
 // parse a tag [test a=1 b=2] to a data structure
 // {tag: "test", attrs={a: "1", b: "2"}
-export function parseBBCodeTag(src, start, max) {
+export function parseBBCodeTag(src, start, max, multiline) {
 
   let i;
   let tag;
@@ -31,6 +44,11 @@ export function parseBBCodeTag(src, start, max) {
 
   if (closingTag) {
     if (src[i] === ']') {
+
+      if (multiline && !trailingSpaceOnly(src, i+1, max)) {
+        return;
+      }
+
       return {tag, length: tag.length+3, closing: true};
     }
     return;
@@ -81,6 +99,10 @@ export function parseBBCodeTag(src, start, max) {
       }
     }
 
+    if (multiline && !trailingSpaceOnly(src, start+length, max)) {
+      return;
+    }
+
     tag = tag.toLowerCase();
 
     return {tag, attrs, length};
@@ -89,9 +111,8 @@ export function parseBBCodeTag(src, start, max) {
 
 function applyBBCode(state, startLine, endLine, silent, md) {
 
-  var i, pos, nextLine,
+  var i, nextLine,
       old_parent, old_line_max, rule,
-      auto_closed = false,
       start = state.bMarks[startLine] + state.tShift[startLine],
       initial = start,
       max = state.eMarks[startLine];
@@ -99,9 +120,9 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   // [ === 91
   if (91 !== state.src.charCodeAt(start)) { return false; }
 
-  let info = parseBBCodeTag(state.src, start, max);
+  let info = parseBBCodeTag(state.src, start, max, true);
 
-  if (!info) {
+  if (!info || info.closing) {
     return false;
   }
 
@@ -123,6 +144,9 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
   // Search for the end of the block
   nextLine = startLine;
+
+  let closeTag;
+  let nesting = 0;
 
   for (;;) {
     nextLine++;
@@ -150,14 +174,24 @@ function applyBBCode(state, startLine, endLine, silent, md) {
       continue;
     }
 
+    closeTag = parseBBCodeTag(state.src, start, max, true);
 
-    if (state.src.slice(start+2, max-1) !== rule.tag) { continue; }
+    if (closeTag && closeTag.closing && closeTag.tag === info.tag) {
+      if (nesting === 0) {
+        break;
+      }
+      nesting--;
+    }
 
-    if (pos < max) { continue; }
+    if (closeTag && !closeTag.closing && closeTag.tag === info.tag) {
+      nesting++;
+    }
 
-    // found!
-    auto_closed = true;
-    break;
+    closeTag = null;
+  }
+
+  if (!closeTag) {
+    return false;
   }
 
   old_parent = state.parentType;
@@ -199,9 +233,8 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   lastToken = state.tokens[state.tokens.length-1];
 
   state.parentType = old_parent;
-
   state.lineMax = old_line_max;
-  state.line = nextLine + (auto_closed ? 1 : 0);
+  state.line = nextLine+1;
 
   return true;
 }
@@ -210,8 +243,9 @@ export function setup(helper) {
   if (!helper.markdownIt) { return; }
 
   helper.registerPlugin(md => {
+    isWhiteSpace = md.utils.isWhiteSpace;
     md.block.ruler.after('fence', 'bbcode', (state, startLine, endLine, silent)=> {
       return applyBBCode(state, startLine, endLine, silent, md);
-    });
+    }, { alt: ['paragraph', 'reference', 'blockquote', 'list'] });
   });
 }
