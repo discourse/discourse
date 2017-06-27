@@ -637,9 +637,25 @@ HTML
     end
 
     it "can handle quote edge cases" do
-      # expect(cook("a\n[quote]\ntest\n[quote]")).to include('aside')
-      expect(cook("[quote]\ntest")).not_to include('aside')
-      # expect(cook("[quote]abc\ntest\n[quote]")).not_to include('aside')
+      expect(PrettyText.cook("a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
+      expect(PrettyText.cook("- a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
+      expect(PrettyText.cook("[quote]\ntest")).not_to include('aside')
+      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
+      expect(PrettyText.cook("[quote]\ntest\n[/quote]z")).not_to include('aside')
+
+      nested = <<~QUOTE
+        [quote]
+        a
+        [quote]
+        b
+        [/quote]
+        c
+        [/quote]
+      QUOTE
+
+      cooked = PrettyText.cook(nested)
+      expect(cooked.scan('aside').length).to eq(4)
+      expect(cooked.scan('quote]').length).to eq(0)
     end
 
     it "do off topic quoting with emoji unescape" do
