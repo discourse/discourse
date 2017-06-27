@@ -247,6 +247,7 @@ export default Ember.Component.extend({
     });
 
     if (this.get('composerEvents')) {
+      this.appEvents.on('composer:insert-block', text => this._addBlock(this._getSelected(), text));
       this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
       this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
     }
@@ -569,6 +570,36 @@ export default Ember.Component.extend({
 
     // Restore cursor.
     this._selectText(newSelection.start, newSelection.end - newSelection.start);
+  },
+
+  _addBlock(sel, text) {
+    text = (text || '').trim();
+    if (text.length === 0) {
+      return;
+    }
+
+    let pre = sel.pre;
+    let post = sel.value + sel.post;
+
+    if (pre.length > 0) {
+      pre = pre.replace(/\n*$/, "\n\n");
+    }
+
+    if (post.length > 0) {
+      post = post.replace(/^\n*/, "\n\n");
+    }
+
+
+    const value = pre + text + post;
+    const $textarea = this.$('textarea.d-editor-input');
+
+    this.set('value', value);
+
+    $textarea.val(value);
+    $textarea.prop("selectionStart", (pre+text).length + 2);
+    $textarea.prop("selectionEnd", (pre+text).length + 2);
+
+    Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
   _addText(sel, text) {
