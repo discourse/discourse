@@ -19,9 +19,14 @@ function applyOnebox(state, silent) {
 
         if (child.type === "link_open" && child.markup === 'linkify' && child.info === 'auto') {
 
-          // look behind for soft or hard break
-          if (j > 0 && token.children[j-1].tag !== 'br') {
+          if (j === 0 && token.leading_space) {
             continue;
+          } else if (j > 0) {
+            let prevSibling = token.children[j-1];
+
+            if (prevSibling.tag !== 'br' || prevSibling.leading_space) {
+              continue;
+            }
           }
 
           // look ahead for soft or hard break

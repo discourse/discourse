@@ -10,3 +10,5 @@
 //= require ./pretty-text/engines/markdown-it/category-hashtag
 //= require ./pretty-text/engines/markdown-it/censored
 //= require ./pretty-text/engines/markdown-it/table
+//= require ./pretty-text/engines/markdown-it/paragraph
+//= require ./pretty-text/engines/markdown-it/newline
