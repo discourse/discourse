@@ -1024,6 +1024,7 @@ en:
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
+    enable_markdown_typographer: "Use basic typography rules to improve text readability of paragraphs of text, replaces (c) (tm) etc, with symbols, reduces number of question marks and so on"
     allow_html_tables: "Allow tables to be entered in Markdown using HTML tags. TABLE, THEAD, TD, TR, TH will be whitelisted (requires full rebake on all old posts containing tables)"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"

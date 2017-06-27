@@ -133,7 +133,7 @@ export function setup(opts, siteSettings, state) {
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
     linkify: true,
-    typographer: false
+    typographer: siteSettings.enable_markdown_typographer
   });
 
   setupHoister(opts.engine);
