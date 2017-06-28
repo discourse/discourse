@@ -34,13 +34,21 @@ describe Topic do
           it 'should not be valid' do
             SiteSetting.censored_words = 'pineapple|pen'
 
-            topic.title = 'pen PinEapple apple pen '
+            topic.title = 'pen PinEapple apple pen is a complete sentence'
 
             expect(topic).to_not be_valid
 
             expect(topic.errors.full_messages.first).to include(I18n.t(
               'errors.messages.contains_censored_words', censored_words: 'pen, pineapple'
             ))
+          end
+        end
+
+        describe 'titles with censored words not on boundaries' do
+          it "should be valid" do
+            SiteSetting.censored_words = 'apple'
+            topic.title = "Pineapples are great fruit! Applebee's is a great restaurant"
+            expect(topic).to be_valid
           end
         end
 
