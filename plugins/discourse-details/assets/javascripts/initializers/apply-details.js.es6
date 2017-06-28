@@ -15,10 +15,10 @@ function initializeDetails(api) {
     actions: {
       insertDetails() {
         this.get("toolbarEvent").applySurround(
-          `[details=${I18n.t("composer.details_title")}]`,
-          "[/details]",
+          "\n" + `[details=${I18n.t("composer.details_title")}]` + "\n",
+          "\n[/details]\n",
           "details_text",
-          { multiline: false }
+          { multiline: true }
         );
         this.set('optionsVisible', false);
       }
