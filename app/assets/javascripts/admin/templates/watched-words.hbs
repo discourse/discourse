@@ -1,0 +1,31 @@
+<div class='admin-controls'>
+  <div class='search controls'>
+    <label class="show-words-checkbox">
+      {{input type="checkbox" checked=showWords disabled=disableShowWords}}
+      {{i18n 'admin.watched_words.show_words'}}
+    </label>
+  </div>
+  <div class='controls'>
+    {{text-field value=filter placeholderKey="admin.watched_words.search" class="no-blur"}}
+    {{d-button action="clearFilter" label="admin.watched_words.clear_filter"}}
+  </div>
+</div>
+
+<div class="admin-nav pull-left">
+  <ul class="nav nav-stacked">
+    {{#each model as |action|}}
+      {{#link-to 'adminWatchedWords.action' action.nameKey tagName='li' class=action.nameKey}}
+        {{#link-to 'adminWatchedWords.action' action.nameKey}}
+          {{action.name}}
+          {{#if action.count}}<span class="count">({{action.count}})</span>{{/if}}
+        {{/link-to}}
+      {{/link-to}}
+    {{/each}}
+  </ul>
+</div>
+
+<div class="admin-detail pull-left mobile-closed watched-words-detail">
+  {{outlet}}
+</div>
+
+<div class="clearfix"></div>
