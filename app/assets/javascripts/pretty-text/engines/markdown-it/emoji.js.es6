@@ -171,12 +171,16 @@ function getEmojiTokenByTranslation(content, pos, state) {
   }
 }
 
-function applyEmoji(content, state) {
+function applyEmoji(content, state, emojiUnicodeReplacer) {
   let i;
   let result = null;
   let contentToken = null;
 
   let start = 0;
+
+  if (emojiUnicodeReplacer) {
+    content = emojiUnicodeReplacer(content);
+  }
 
   let endToken = content.length;
 
@@ -236,6 +240,8 @@ export function setup(helper) {
   });
 
   helper.registerPlugin((md)=>{
-    md.core.ruler.push('emoji', state => textReplace(state, applyEmoji));
+    md.core.ruler.push('emoji', state => textReplace(
+      state, (c,s)=>applyEmoji(c,s,md.options.discourse.emojiUnicodeReplacer))
+    );
   });
 }

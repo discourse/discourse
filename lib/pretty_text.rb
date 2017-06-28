@@ -149,6 +149,7 @@ module PrettyText
       end
 
       if SiteSetting.enable_experimental_markdown_it
+        # defer load markdown it
         unless context.eval("window.markdownit")
           ctx_load_manifest(context, "markdown-it-bundle.js")
         end
@@ -168,6 +169,7 @@ module PrettyText
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.mentionLookup = __mentionLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
+        __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
       JS
 
       if opts[:topicId]
