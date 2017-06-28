@@ -1,4 +1,6 @@
-{{yield}}
+{{#unless hideProgress}}
+  {{yield}}
+{{/unless}}
 
 {{#if showBackButton}}
   <div class='progress-back-container'>
