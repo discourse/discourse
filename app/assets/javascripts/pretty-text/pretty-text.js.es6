@@ -21,7 +21,8 @@ export function buildOptions(state) {
     userId,
     getCurrentUser,
     currentUser,
-    lookupAvatarByPostNumber
+    lookupAvatarByPostNumber,
+    emojiUnicodeReplacer
   } = state;
 
   if (!siteSettings.enable_experimental_markdown_it) {
@@ -53,6 +54,7 @@ export function buildOptions(state) {
     currentUser,
     lookupAvatarByPostNumber,
     mentionLookup: state.mentionLookup,
+    emojiUnicodeReplacer,
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
     markdownIt: siteSettings.enable_experimental_markdown_it
   };
