@@ -168,9 +168,9 @@ function render(page, offset, options) {
   }
 
   const model = {
-    toolbarItems: toolbarItems,
-    skinTones: skinTones,
-    rows: rows,
+    toolbarItems,
+    skinTones,
+    rows,
     prevDisabled: offset === 0,
     nextDisabled: (max + 1) > icons.length,
     modalClass: options.modalClass
