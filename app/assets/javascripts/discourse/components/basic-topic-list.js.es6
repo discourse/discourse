@@ -39,12 +39,21 @@ export default Ember.Component.extend({
     if (!this.site.mobileView) { return; }
 
     let target = $(e.target);
-
-    if (target.hasClass('posts-map')) {
+    if (target.closest('.posts-map').length) {
       const topicId = target.closest('tr').attr('data-topic-id');
       if (topicId) {
         if (target.prop('tagName') !== 'A') {
-          target = target.find('a');
+          let targetLinks = target.find('a');
+          if (targetLinks.length) {
+            target = targetLinks;
+          } else {
+            targetLinks = target.closest('a');
+            if (targetLinks.length) {
+              target = targetLinks;
+            } else {
+              return false;
+            }
+          }
         }
 
         const topic = this.get('topics').findBy('id', parseInt(topicId));
