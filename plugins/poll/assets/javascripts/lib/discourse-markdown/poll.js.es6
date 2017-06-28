@@ -44,8 +44,18 @@ function getHelpText(count, min, max) {
 
 function replaceToken(tokens, target, list) {
   let pos = tokens.indexOf(target);
+  let level = tokens[pos].level;
+
   tokens.splice(pos, 1, ...list);
   list[0].map = target.map;
+
+  // resequence levels
+  for(;pos<tokens.length;pos++) {
+    let nesting = tokens[pos].nesting;
+    if (nesting < 0) { level--; }
+    tokens[pos].level = level;
+    if (nesting > 0) { level++; }
+  }
 }
 
 // analyzes the block to that we have poll options
@@ -105,6 +115,9 @@ const rule = {
   after: function(state, openToken, md, raw) {
 
     let items = getListItems(state.tokens, openToken);
+    if (!items) {
+      return invalidPoll(state, raw);
+    }
 
     const attrs = openToken.bbcode_attrs;
 
@@ -189,6 +202,10 @@ const rule = {
     }
 
     replaceToken(state.tokens, openToken, header);
+
+    // we got to correct the level on the state
+    // we just resequenced
+    state.level = state.tokens[state.tokens.length-1].level;
 
     state.push('poll_close', 'div', -1);
 
