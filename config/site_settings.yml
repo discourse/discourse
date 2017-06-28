@@ -491,7 +491,6 @@ posting:
     client: true
     default: 24
   enable_experimental_markdown_it:
-    hidden: true
     client: true
     default: false
   traditional_markdown_linebreaks:
