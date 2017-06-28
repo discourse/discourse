@@ -131,6 +131,7 @@ table.emoji-page td {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 .emoji-modal .tones-button.default { background: #ffcc4d; }
 .emoji-modal .tones-button.light { background: #f7dece; }
