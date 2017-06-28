@@ -12,6 +12,27 @@ describe PrettyText do
       SiteSetting.enable_experimental_markdown_it = true
     end
 
+    it 'can properly bake 2 polls' do
+      md = <<~MD
+        this is a test
+
+        - i am a list
+
+        [poll]
+        1. test 1
+        2. test 2
+        [/poll]
+
+        [poll name=poll2]
+        1. test 1
+        2. test 2
+        [/poll]
+      MD
+
+      cooked = PrettyText.cook(md)
+      expect(cooked.scan('class="poll"').length).to eq(2)
+    end
+
     it 'works correctly for new vs old engine with trivial cases' do
       md = <<~MD
         [poll]

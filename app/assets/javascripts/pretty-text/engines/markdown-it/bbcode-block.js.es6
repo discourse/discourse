@@ -227,7 +227,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   }
 
   if (rule.after) {
-    rule.after.call(this, state, lastToken, md);
+    rule.after.call(this, state, lastToken, md, state.src.slice(start-2, start + closeTag.length - 1));
   }
 
   lastToken = state.tokens[state.tokens.length-1];
