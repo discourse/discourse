@@ -11,9 +11,9 @@ const rawOpts = {
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
-    censored_words: 'shucks|whiz|whizzer|a**le',
     censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
   },
+  censoredWords: 'shucks|whiz|whizzer|a**le',
   getURL: url => url
 };
 

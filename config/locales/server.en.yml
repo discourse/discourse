@@ -208,6 +208,7 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+  contains_blocked_words: "Your post contains words that aren't allowed."
 
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
@@ -414,6 +415,10 @@ en:
           attributes:
             value:
               missing_interpolation_keys: 'The following interpolation key(s) are missing: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "Too many words for that action"
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/u/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"

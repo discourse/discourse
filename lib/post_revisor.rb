@@ -273,6 +273,12 @@ class PostRevisor
     @post.word_count     = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
     @post.self_edits    += 1 if self_edit?
 
+    if !@post.acting_user.staff? && !@post.acting_user.staged && WordWatcher.new(@post.raw).should_block?
+      @post.errors[:base] << I18n.t('contains_blocked_words')
+      @post_successfully_saved = false
+      return
+    end
+
     remove_flags_and_unhide_post
 
     @post.extract_quoted_post_numbers
