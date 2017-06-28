@@ -1,6 +1,6 @@
 import groups from 'discourse/lib/emoji/groups';
 import KeyValueStore from "discourse/lib/key-value-store";
-import { emojiList } from 'pretty-text/emoji';
+import { emojiList, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
 
@@ -11,6 +11,7 @@ let PER_ROW = 12;
 const PER_PAGE = 60;
 
 let ungroupedIcons, recentlyUsedIcons;
+let selectedSkinTone = keyValueStore.getObject('selectedSkinTone') || 1;
 
 if (!keyValueStore.getObject(EMOJI_USAGE)) {
   keyValueStore.setObject({key: EMOJI_USAGE, value: {}});
@@ -121,6 +122,13 @@ function bindEvents(page, offset, options) {
     render(p, 0, options);
     return false;
   });
+
+  $('.emoji-modal .tones-button').click(function(){
+    selectedSkinTone = parseInt($(this).data('skin-tone'));
+    keyValueStore.setObject({key: 'selectedSkinTone', value: selectedSkinTone});
+    render(page, offset, options);
+    return false;
+  });
 }
 
 function render(page, offset, options) {
@@ -139,12 +147,29 @@ function render(page, offset, options) {
       rows.push(row);
       row = [];
     }
-    row.push({src: emojiUrlFor(icons[i]), title: icons[i]});
+
+    let code = icons[i];
+    if(selectedSkinTone !== 1 && isSkinTonableEmoji(code)) {
+      code = `${code}:t${selectedSkinTone}`;
+    }
+
+    row.push({src: emojiUrlFor(code), title: code});
   }
   rows.push(row);
 
+  const skinTones = [];
+  const skinToneNames = ['default', 'light', 'medium-light', 'medium', 'medium-dark', 'dark'];
+  for(let i=1; i<skinToneNames.length+1; i++){
+    skinTones.push({
+      selected: selectedSkinTone === i,
+      level: i,
+      className: skinToneNames[i-1]
+    });
+  }
+
   const model = {
     toolbarItems: toolbarItems,
+    skinTones: skinTones,
     rows: rows,
     prevDisabled: offset === 0,
     nextDisabled: (max + 1) > icons.length,
