@@ -679,20 +679,49 @@ HTML
       expect(quote.cooked).not_to include('[quote')
     end
 
+    it "supports tables" do
+      markdown = <<~MD
+        | Tables        | Are           | Cool  |
+        | ------------- |:-------------:| -----:|
+        | col 3 is      | right-aligned | $1600 |
+      MD
+
+      expected = <<~HTML
+        <table>
+        <thead>
+        <tr>
+        <th>Tables</th>
+        <th style="text-align:center">Are</th>
+        <th style="text-align:right">Cool</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>col 3 is</td>
+        <td style="text-align:center">right-aligned</td>
+        <td style="text-align:right">$1600</td>
+        </tr>
+        </tbody>
+        </table>
+      HTML
+
+      expect(PrettyText.cook(markdown)).to eq(expected.strip)
+    end
+
     it "do off topic quoting with emoji unescape" do
 
       topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
-      expected = <<HTML
-<aside class="quote" data-topic="#{topic.id}" data-post="2">
-<div class="title">
-  <div class="quote-controls"></div>
-  <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
-</div>
-<blockquote>
-  <p>ddd</p>
-</blockquote>
-</aside>
-HTML
+      expected = <<~HTML
+        <aside class="quote" data-topic="#{topic.id}" data-post="2">
+        <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
+        </div>
+        <blockquote>
+          <p>ddd</p>
+        </blockquote>
+        </aside>
+      HTML
 
       expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
     end
