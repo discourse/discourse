@@ -14,22 +14,32 @@
   </table>
   </div>
 
-  <div class='info'></div>
-  <div class='nav'>
-    <span class='prev'>
-      {{#if prevDisabled}}
-        {{fa-icon "fast-backward"}}
-      {{else}}
-        <a>{{fa-icon "fast-backward"}}</a>
-      {{/if}}
-    </span>
-    <span class='next'>
-      {{#if nextDisabled}}
-        {{fa-icon "fast-forward"}}
-      {{else}}
-        <a>{{fa-icon "fast-forward"}}</a>
-      {{/if}}
-    </span>
+  <div class='footer'>
+    <div class='info'></div>
+    <div class='tones'>
+      {{#each skinTones as |skinTone|}}
+        <button class='tones-button {{skinTone.className}}' data-skin-tone="{{skinTone.level}}">
+          {{#if skinTone.selected}}{{fa-icon "check"}}{{/if}}
+        </button>
+      {{/each}}
+    </div>
+    <div class='nav'>
+      <span class='prev'>
+        {{#if prevDisabled}}
+          {{fa-icon "fast-backward"}}
+        {{else}}
+          <a>{{fa-icon "fast-backward"}}</a>
+        {{/if}}
+      </span>
+      <span class='next'>
+        {{#if nextDisabled}}
+          {{fa-icon "fast-forward"}}
+        {{else}}
+          <a>{{fa-icon "fast-forward"}}</a>
+        {{/if}}
+      </span>
+    </div>
   </div>
+
   <div class='clearfix'></div>
 </div>
