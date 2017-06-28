@@ -25,7 +25,8 @@ class SiteSerializer < ApplicationSerializer
              :top_tags,
              :wizard_required,
              :topic_featured_link_allowed_category_ids,
-             :user_themes
+             :user_themes,
+             :censored_words
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
@@ -141,5 +142,9 @@ class SiteSerializer < ApplicationSerializer
 
   def topic_featured_link_allowed_category_ids
     scope.topic_featured_link_allowed_category_ids
+  end
+
+  def censored_words
+    WordWatcher.words_for_action(:censor).join('|')
   end
 end

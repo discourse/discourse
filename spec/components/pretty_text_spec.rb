@@ -247,8 +247,9 @@ describe PrettyText do
     end
 
     it 'does censor code fences' do
-      SiteSetting.censored_words = 'apple|banana'
+      ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
       expect(PrettyText.cook("# banana")).not_to include('banana')
+      $redis.flushall
     end
   end
 
@@ -787,11 +788,12 @@ HTML
   end
 
   it 'can censor words correctly' do
-    SiteSetting.censored_words = 'apple|banana'
+    ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
     expect(PrettyText.cook('yay banana yay')).not_to include('banana')
     expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
     expect(PrettyText.cook("# banana")).not_to include('banana')
     expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
+    $redis.flushall
   end
 
   it 'supports typographer' do

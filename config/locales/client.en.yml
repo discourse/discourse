@@ -3148,6 +3148,31 @@ en:
         logster:
           title: "Error Logs"
 
+      watched_words:
+        title: "Watched Words"
+        search: "search"
+        clear_filter: "Clear"
+        show_words: "show words"
+        word_count:
+          one: "1 word"
+          other: "%{count} words"
+        actions:
+          block: 'Block'
+          censor: 'Censor'
+          require_approval: 'Require Approval'
+          flag: 'Flag'
+        action_descriptions:
+          block: 'Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post.'
+          censor: 'Allow posts containing these words, but replace them with characters that hide the censored words.'
+          require_approval: 'Posts containing these words will require approval by staff before they can be seen.'
+          flag: 'Allow posts containing these words, but flag them as inappropriate so moderators can review them.'
+        form:
+          label: 'New Word:'
+          add: 'Add'
+          success: 'Success'
+          upload: "Upload"
+          upload_successful: "Upload successful. Words have been added."
+
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
