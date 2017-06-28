@@ -18,9 +18,9 @@
     <div class='info'></div>
     <div class='tones'>
       {{#each skinTones as |skinTone|}}
-        <button class='tones-button {{skinTone.className}}' data-skin-tone="{{skinTone.level}}">
+        <a href='#' class='tones-button {{skinTone.className}}' data-skin-tone="{{skinTone.level}}">
           {{#if skinTone.selected}}{{fa-icon "check"}}{{/if}}
-        </button>
+        </a>
       {{/each}}
     </div>
     <div class='nav'>
