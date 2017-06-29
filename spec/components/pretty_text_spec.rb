@@ -759,6 +759,31 @@ HTML
 
       expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
     end
+
+    it "supports img bbcode" do
+      cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
+      html = "<p><img src=\"http://www.image/test.png\" alt></p>"
+      expect(cooked).to eq(html)
+    end
+
+    it "provides safety for img bbcode" do
+      cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
+      html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt></p>'
+      expect(cooked).to eq(html)
+    end
+
+    it "supports email bbcode" do
+      cooked = PrettyText.cook "[email]sam@sam.com[/email]"
+      html = '<p><a href="mailto:sam@sam.com" data-bbcode="true">sam@sam.com</a></p>'
+      expect(cooked).to eq(html)
+    end
+
+    it "supports url bbcode" do
+      cooked = PrettyText.cook "[url]http://sam.com[/url]"
+      html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
+      expect(cooked).to eq(html)
+    end
+
   end
 
 end

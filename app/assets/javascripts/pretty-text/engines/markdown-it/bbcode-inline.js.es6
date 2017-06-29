@@ -16,9 +16,9 @@ function tokanizeBBCode(state, silent, ruler) {
   }
 
   let rules = ruler.getRules();
-  let rule;
+  let rule, i;
 
-  for (let i=0; i<rules.length; i++) {
+  for (i=0; i<rules.length; i++) {
     let r = rules[i].rule;
     if (r.tag === tagInfo.tag) {
       rule = r;
@@ -30,24 +30,56 @@ function tokanizeBBCode(state, silent, ruler) {
     return false;
   }
 
-  tagInfo.rule = rule;
+  if (rule.replace) {
+    // special handling for replace
+    // we pass raw contents to callback so we simply need to greedy match to end tag
+    if (tagInfo.closing) {
+      return false;
+    }
 
-  let token = state.push('text', '' , 0);
-  token.content = state.src.slice(pos, pos+tagInfo.length);
+    let closeTag = '[/' + tagInfo.tag + ']';
+    let found = false;
 
-  state.delimiters.push({
-    bbInfo: tagInfo,
-    marker: 'bb' + tagInfo.tag,
-    open: !tagInfo.closing,
-    close: !!tagInfo.closing,
-    token: state.tokens.length - 1,
-    level: state.level,
-    end: -1,
-    jump: 0
-  });
+    for(i=state.pos+tagInfo.length; i<=state.posMax-closeTag.length; i++) {
+      if (state.src.charCodeAt(pos) === 91 && state.src.slice(i, i + closeTag.length).toLowerCase() === closeTag) {
+        found = true;
+        break;
+      }
+    }
 
-  state.pos = pos + tagInfo.length;
-  return true;
+    if (!found) {
+      return false;
+    }
+
+    let content = state.src.slice(state.pos+tagInfo.length, i);
+
+    if (rule.replace(state, tagInfo, content)) {
+      state.pos = i + closeTag.length;
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+
+    tagInfo.rule = rule;
+
+    let token = state.push('text', '' , 0);
+    token.content = state.src.slice(pos, pos+tagInfo.length);
+
+    state.delimiters.push({
+      bbInfo: tagInfo,
+      marker: 'bb' + tagInfo.tag,
+      open: !tagInfo.closing,
+      close: !!tagInfo.closing,
+      token: state.tokens.length - 1,
+      level: state.level,
+      end: -1,
+      jump: 0
+    });
+
+    state.pos = pos + tagInfo.length;
+    return true;
+  }
 }
 
 function processBBCode(state, silent) {
@@ -117,6 +149,48 @@ export function setup(helper) {
 
     md.inline.ruler.push('bbcode-inline', (state,silent) => tokanizeBBCode(state,silent,ruler));
     md.inline.ruler2.before('text_collapse', 'bbcode-inline', processBBCode);
+
+    ruler.push('url', {
+      tag: 'url',
+      replace: function(state, tagInfo, content) {
+        let token;
+
+        token = state.push('link_open', 'a', 1);
+        token.attrs = [['href', content], ['data-bbcode', 'true']];
+
+        token = state.push('text', '', 0);
+        token.content = content;
+
+        token = state.push('link_close', 'a', -1);
+        return true;
+      }
+    });
+
+    ruler.push('email', {
+      tag: 'email',
+      replace: function(state, tagInfo, content) {
+        let token;
+
+        token = state.push('link_open', 'a', 1);
+        token.attrs = [['href', 'mailto:' + content], ['data-bbcode', 'true']];
+
+        token = state.push('text', '', 0);
+        token.content = content;
+
+        token = state.push('link_close', 'a', -1);
+        return true;
+      }
+    });
+
+    ruler.push('image', {
+      tag: 'img',
+      replace: function(state, tagInfo, content) {
+        let token = state.push('image', 'img', 0);
+        token.attrs = [['src', content],['alt','']];
+        token.children = [];
+        return true;
+      }
+    });
 
     ruler.push('bold', {
       tag: 'b',
