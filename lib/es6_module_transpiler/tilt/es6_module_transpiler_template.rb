@@ -27,6 +27,7 @@ module Tilt
       # timeout any eval that takes longer than 15 seconds
       ctx = MiniRacer::Context.new(timeout: 15000)
       ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
+      ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
       ctx.eval("module = {}; exports = {};");
       ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
@@ -36,7 +37,13 @@ module Tilt
         log: function(msg){ rails.logger.info(console.prefix + msg); },
         error: function(msg){ rails.logger.error(console.prefix + msg); }
       }
+
 JS
+      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js.es6")
+      js_source = ::JSON.generate(source, quirks_mode: true)
+      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex'] }).code")
+      ctx.eval(js)
+
       ctx
     end
 
@@ -105,7 +112,11 @@ JS
       klass = self.class
       klass.protect do
         klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
-        transpiled = babel_source(source, module_name: module_name(root_path, logical_path))
+        transpiled = babel_source(
+          source,
+          module_name: module_name(root_path, logical_path),
+          filename: logical_path
+        )
         @output = klass.v8.eval(transpiled)
       end
     end
@@ -116,7 +127,14 @@ JS
       klass = self.class
       klass.protect do
         klass.v8.eval("console.prefix = 'BABEL: #{scope.logical_path}: ';")
-        @output = klass.v8.eval(babel_source(data, module_name: module_name(scope.root_path, scope.logical_path)))
+
+        source = babel_source(
+          data,
+          module_name: module_name(scope.root_path, scope.logical_path),
+          filename: scope.logical_path
+        )
+
+        @output = klass.v8.eval(source)
       end
 
       # For backwards compatibility with plugins, for now export the Global format too.
@@ -156,15 +174,15 @@ JS
     end
 
     def babel_source(source, opts = nil)
-
       opts ||= {}
 
       js_source = ::JSON.generate(source, quirks_mode: true)
 
       if opts[:module_name]
-        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy'] }).code"
+        filename = opts[:filename] || 'unknown'
+        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
       else
-        "Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex', 'transform-regenerator', 'transform-decorators-legacy'] }).code"
+        "Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex', 'transform-regenerator', 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
       end
     end
 
