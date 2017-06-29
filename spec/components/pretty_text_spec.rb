@@ -784,6 +784,18 @@ HTML
       expect(cooked).to eq(html)
     end
 
+    it "supports inline code bbcode" do
+      cooked = PrettyText.cook "Testing [code]codified **stuff** and `more` stuff[/code]"
+      html = "<p>Testing <code>codified **stuff** and `more` stuff</code></p>"
+      expect(cooked).to eq(html)
+    end
+
+    it "supports block code bbcode" do
+      cooked = PrettyText.cook "[code]\ncodified\n\n\n  **stuff** and `more` stuff\n[/code]"
+      html = "<pre><code class=\"lang-auto\">codified\n\n\n  **stuff** and `more` stuff</code></pre>"
+      expect(cooked).to eq(html)
+    end
+
   end
 
 end
