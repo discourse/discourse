@@ -256,6 +256,12 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  def self.rescind_all_invites_from(user)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user.id).find_each do |invite|
+      invite.trash!(user) unless invite.blank?
+    end
+  end
+
   def limit_invites_per_day
     RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
   end

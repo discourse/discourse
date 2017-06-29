@@ -12,6 +12,7 @@ export default Ember.Controller.extend({
   canLoadMore: true,
   invitesLoading: false,
   reinvitedAll: false,
+  rescindedAll: false,
 
   init: function() {
     this._super();
@@ -32,7 +33,7 @@ export default Ember.Controller.extend({
 
   inviteRedeemed: Em.computed.equal('filter', 'redeemed'),
 
-  showReinviteAllButton: function() {
+  showBulkActionButtons: function() {
     return (this.get('filter') === "pending" && this.get('model').invites.length > 4 && this.currentUser.get('staff'));
   }.property('filter'),
 
@@ -84,6 +85,18 @@ export default Ember.Controller.extend({
     rescind(invite) {
       invite.rescind();
       return false;
+    },
+
+    rescindAll() {
+      const self = this;
+      bootbox.confirm(I18n.t("user.invited.rescind_all_confirm"), confirm => {
+        if (confirm) {
+          Invite.rescindAll().then(function() {
+            self.set('rescindedAll', true);
+            self.get('model.invites').clear();
+          }).catch(popupAjaxError);
+        }
+      });
     },
 
     reinvite(invite) {

@@ -6,7 +6,7 @@ class InvitesController < ApplicationController
   skip_before_filter :preload_json, except: [:show]
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :upload_csv]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
   before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
   before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
 
@@ -147,6 +147,13 @@ class InvitesController < ApplicationController
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.trash!(current_user)
 
+    render nothing: true
+  end
+
+  def rescind_all_invites
+    guardian.ensure_can_rescind_all_invites!(current_user)
+
+    Invite.rescind_all_invites_from(current_user)
     render nothing: true
   end
 
