@@ -646,6 +646,7 @@ Discourse::Application.routes.draw do
 
   resources :invites
   post "invites/upload_csv" => "invites#upload_csv"
+  post "invites/rescind-all" => "invites#rescind_all_invites"
   post "invites/reinvite" => "invites#resend_invite"
   post "invites/reinvite-all" => "invites#resend_all_invites"
   post "invites/link" => "invites#create_invite_link"
