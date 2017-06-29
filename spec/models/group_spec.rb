@@ -487,4 +487,18 @@ describe Group do
       end
     end
   end
+
+  describe '.search_group' do
+    let(:group) { Fabricate(:group, name: 'tEsT', full_name: 'eSTt') }
+
+    it 'should return the right groups' do
+      group
+
+      expect(Group.search_group('te')).to eq([group])
+      expect(Group.search_group('TE')).to eq([group])
+      expect(Group.search_group('es')).to eq([group])
+      expect(Group.search_group('ES')).to eq([group])
+      expect(Group.search_group('test2')).to eq([])
+    end
+  end
 end
