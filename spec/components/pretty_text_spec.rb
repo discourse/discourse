@@ -473,7 +473,14 @@ HTML
   describe "tag and category links" do
     it "produces tag links" do
       Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
-      expect(PrettyText.cook(" #unknown::tag #known::tag")).to match_html("<p> <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>")
+
+      cooked = PrettyText.cook(" #unknown::tag #known::tag")
+
+      html = <<~HTML
+        <p> <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>
+      HTML
+
+      expect(cooked).to match_html(html)
     end
 
     # TODO does it make sense to generate hashtags for tags that are missing in action?
@@ -527,7 +534,33 @@ HTML
 
     it "produces tag links" do
       Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
-      expect(PrettyText.cook("x #unknown::tag #known::tag")).to match_html("<p>x <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>")
+
+      cooked = PrettyText.cook(" #unknown::tag #known::tag")
+
+      html = <<~HTML
+        <p><span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+
+      cooked = PrettyText.cook("[`a` #known::tag here](http://somesite.com)")
+
+      html = <<~HTML
+        <p><a href="http://somesite.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+
+      cooked = PrettyText.cook("<a href='http://somesite.com'>`a` #known::tag here</a>")
+
+      expect(cooked).to eq(html.strip)
+
+      cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
+      html = <<~HTML
+        <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tags/known">#<span>known</span></a></p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
     end
 
     it "can handle mixed lists" do
@@ -680,6 +713,7 @@ HTML
     end
 
     it "supports tables" do
+
       markdown = <<~MD
         | Tables        | Are           | Cool  |
         | ------------- |:-------------:| -----:|
