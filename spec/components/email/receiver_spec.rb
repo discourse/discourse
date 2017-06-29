@@ -309,6 +309,18 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
     end
 
+    it "doesn't include the 'elided' part of the original message when always_show_trimmed_content is disabled" do
+      SiteSetting.always_show_trimmed_content = false
+      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect(topic.posts.last.raw).to eq("This is a reply :)")
+    end
+
+    it "adds the 'elided' part of the original message for public replies when always_show_trimmed_content is enabled" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
+    end
+
     it "supports attached images in TEXT part" do
       SiteSetting.queue_jobs = true
 
@@ -481,6 +493,16 @@ describe Email::Receiver do
 
       # allows new user to create a topic
       expect { process(:new_user) }.to change(Topic, :count)
+    end
+
+    it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
+      SiteSetting.always_show_trimmed_content = true
+
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
+
+      new_post, = Post.last
+      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?","<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>","Discoursing much today?")
     end
 
     it "works when approving is enabled" do

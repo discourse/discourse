@@ -374,6 +374,7 @@ module Email
 
         create_topic(user: user,
                      raw: body,
+                     elided: elided,
                      title: subject,
                      category: category.id,
                      skip_validations: user.staged?)
