@@ -249,7 +249,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_send_private_message_to_user
-    scope.can_send_private_message?(object)
+    scope.can_send_private_message?(object) && scope.current_user != object
   end
 
   def bio_excerpt
