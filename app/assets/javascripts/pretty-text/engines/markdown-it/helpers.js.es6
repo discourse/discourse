@@ -17,10 +17,10 @@ export function inlineRegexRule(md, options) {
   const start = options.start.charCodeAt(0);
   const maxLength = (options.maxLength || 500) + 1;
 
-  return function(state) {
+  return function(state, silent) {
     const pos = state.pos;
 
-    if (state.src.charCodeAt(pos) !== start) {
+    if (state.src.charCodeAt(pos) !== start || silent) {
       return false;
     }
 
@@ -34,17 +34,18 @@ export function inlineRegexRule(md, options) {
 
     // skip if in a link
     if (options.skipInLink && state.tokens) {
-      let last = state.tokens[state.tokens.length-1];
-      if (last) {
-        if (last.type === 'link_open') {
+      let i;
+      for(i=state.tokens.length-1;i>=0;i--) {
+        let token = state.tokens[i];
+        let type = token.type;
+        if (type === 'link_open' || (type === 'html_inline' && token.content.substr(0,2) === "<a")) {
           return false;
         }
-        if (last.type === 'html_inline' && last.content.substr(0,2) === "<a") {
-          return false;
+        if (type.block || type === 'link_close' || (type === 'html_inline' && token.content.substr(0,3).toLowerCase() === "</a>")) {
+          break;
         }
       }
     }
-
 
     const substr = state.src.slice(pos, Math.min(pos + maxLength,state.posMax));
 
