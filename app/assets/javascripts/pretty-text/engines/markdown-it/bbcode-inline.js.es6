@@ -150,6 +150,16 @@ export function setup(helper) {
     md.inline.ruler.push('bbcode-inline', (state,silent) => tokanizeBBCode(state,silent,ruler));
     md.inline.ruler2.before('text_collapse', 'bbcode-inline', processBBCode);
 
+    ruler.push('code', {
+      tag: 'code',
+      replace: function(state, tagInfo, content) {
+        let token;
+        token = state.push('code_inline', 'code', 0);
+        token.content = content;
+        return true;
+      }
+    });
+
     ruler.push('url', {
       tag: 'url',
       replace: function(state, tagInfo, content) {

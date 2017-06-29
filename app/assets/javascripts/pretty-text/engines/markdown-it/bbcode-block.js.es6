@@ -200,37 +200,43 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   // this will prevent lazy continuations from ever going past our end marker
   state.lineMax = nextLine;
 
-  if (rule.before) {
-    rule.before.call(this, state, info.attrs, md, state.src.slice(initial, initial + info.length + 1));
-  }
+  if (rule.replace) {
+    let content = state.src.slice(state.bMarks[startLine+1], state.eMarks[nextLine-1]);
+    if (!rule.replace.call(this, state, info, content)) {
+      return false;
+    }
+  } else {
 
-  let wrapTag;
-  if (rule.wrap) {
-    let split = rule.wrap.split('.');
-    wrapTag = split[0];
-    let className = split.slice(1).join(' ');
+    if (rule.before) {
+      rule.before.call(this, state, info.attrs, md, state.src.slice(initial, initial + info.length + 1));
+    }
 
-    let token = state.push('wrap_bbcode', wrapTag, 1);
+    let wrapTag;
+    if (rule.wrap) {
+      let split = rule.wrap.split('.');
+      wrapTag = split[0];
+      let className = split.slice(1).join(' ');
 
-    if (className) {
-      token.attrs = [['class', className]];
+      let token = state.push('wrap_bbcode', wrapTag, 1);
+
+      if (className) {
+        token.attrs = [['class', className]];
+      }
+    }
+
+    let lastToken = state.tokens[state.tokens.length-1];
+    lastToken.map    = [ startLine, nextLine ];
+
+    state.md.block.tokenize(state, startLine + 1, nextLine);
+
+    if (rule.wrap) {
+      state.push('wrap_bbcode', wrapTag, -1);
+    }
+
+    if (rule.after) {
+      rule.after.call(this, state, lastToken, md, state.src.slice(start-2, start + closeTag.length - 1));
     }
   }
-
-  let lastToken = state.tokens[state.tokens.length-1];
-  lastToken.map    = [ startLine, nextLine ];
-
-  state.md.block.tokenize(state, startLine + 1, nextLine);
-
-  if (rule.wrap) {
-    state.push('wrap_bbcode', wrapTag, -1);
-  }
-
-  if (rule.after) {
-    rule.after.call(this, state, lastToken, md, state.src.slice(start-2, start + closeTag.length - 1));
-  }
-
-  lastToken = state.tokens[state.tokens.length-1];
 
   state.parentType = old_parent;
   state.lineMax = old_line_max;
@@ -242,7 +248,20 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 export function setup(helper) {
   if (!helper.markdownIt) { return; }
 
+
   helper.registerPlugin(md => {
+    const ruler = md.block.bbcode_ruler;
+
+    ruler.push('code', {
+      tag: 'code',
+      replace: function(state, tagInfo, content) {
+        let token;
+        token = state.push('fence', 'code', 0);
+        token.content = content;
+        return true;
+      }
+    });
+
     isWhiteSpace = md.utils.isWhiteSpace;
     md.block.ruler.after('fence', 'bbcode', (state, startLine, endLine, silent)=> {
       return applyBBCode(state, startLine, endLine, silent, md);
