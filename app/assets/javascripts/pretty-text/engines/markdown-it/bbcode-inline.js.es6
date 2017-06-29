@@ -109,11 +109,19 @@ function processBBCode(state, silent) {
 
     endDelim = delimiters[startDelim.end];
 
-    let split = tagInfo.rule.wrap.split('.');
-    let tag = split[0];
-    let className = split.slice(1).join(' ');
-
     token = state.tokens[startDelim.token];
+    let tag, className;
+
+    if (typeof tagInfo.rule.wrap === 'function') {
+      if (!tagInfo.rule.wrap(token, tagInfo)) {
+        return false;
+      }
+      tag = token.tag;
+    } else {
+      let split = tagInfo.rule.wrap.split('.');
+      tag = split[0];
+      className = split.slice(1).join(' ');
+    }
 
     token.type = 'bbcode_' + tagInfo.tag + '_open';
     token.tag = tag;
