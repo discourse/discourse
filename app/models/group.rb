@@ -282,7 +282,9 @@ class Group < ActiveRecord::Base
   end
 
   def self.search_group(name)
-    Group.where(visible: true).where("name ILIKE :term_like", term_like: "#{name}%")
+    Group.where(visible: true).where(
+      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "#{name}%"
+    )
   end
 
   def self.lookup_group(name)
