@@ -213,14 +213,31 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
     let wrapTag;
     if (rule.wrap) {
-      let split = rule.wrap.split('.');
-      wrapTag = split[0];
-      let className = split.slice(1).join(' ');
+      let token;
 
-      let token = state.push('wrap_bbcode', wrapTag, 1);
+      if (typeof rule.wrap === 'function') {
+        token = new state.Token('wrap_bbcode', 'div', 1);
+        token.level = state.level+1;
 
-      if (className) {
-        token.attrs = [['class', className]];
+        if (!rule.wrap(token, info)) {
+          return false;
+        }
+
+        state.tokens.push(token);
+        state.level = token.level;
+        wrapTag = token.tag;
+
+      } else {
+
+        let split = rule.wrap.split('.');
+        wrapTag = split[0];
+        let className = split.slice(1).join(' ');
+
+        token = state.push('wrap_bbcode', wrapTag, 1);
+
+        if (className) {
+          token.attrs = [['class', className]];
+        }
       }
     }
 
