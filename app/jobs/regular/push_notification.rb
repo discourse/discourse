@@ -22,6 +22,7 @@ module Jobs
 
         result = Excon.post(push_url,
           body: payload.merge(notifications: notifications).to_json,
+          omit_default_port: true,
           headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
         )
 
