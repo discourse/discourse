@@ -3,12 +3,12 @@ class LogAnalyzer
   class LineParser
 
 
-    # log_format log_discourse '[$time_local] $remote_addr "$request" "$http_user_agent" "$sent_http_x_discourse_route" $status $bytes_sent "$http_referer" $upstream_response_time $request_time "$sent_http_x_discourse_username"';
+    # log_format log_discourse '[$time_local] "$http_host" $remote_addr "$request" "$http_user_agent" "$sent_http_x_discourse_route" $status $bytes_sent "$http_referer" $upstream_response_time $request_time "$sent_http_x_discourse_username"';
 
     attr_accessor :time, :ip_address, :url, :route, :user_agent, :rails_duration, :total_duration,
                   :username, :status, :bytes_sent, :referer
 
-    PATTERN = /\[(.*)\] (\S+) \"(.*)\" \"(.*)\" \"(.*)\" ([0-9]+) ([0-9]+) \"(.*)\" ([0-9.]+) ([0-9.]+) "(.*)"/
+    PATTERN = /\[(.*)\](?: ".*")? (\S+) \"(.*)\" \"(.*)\" \"(.*)\" ([0-9]+) ([0-9]+) \"(.*)\" ([0-9.]+) ([0-9.]+) "(.*)"/
 
     TIME_FORMAT = "%d/%b/%Y:%H:%M:%S %Z"
 
