@@ -20,7 +20,7 @@ export default Ember.Component.extend({
 
   @computed('postStream.loaded', 'topic.currentPost', 'postStream.filteredPostsCount')
   hideProgress(loaded, currentPost, filteredPostsCount) {
-    return (!loaded) || (!currentPost) || (filteredPostsCount < 2);
+    return (!loaded) || (!currentPost) || (!this.site.mobileView && filteredPostsCount < 2);
   },
 
   @computed('postStream.filteredPostsCount')
