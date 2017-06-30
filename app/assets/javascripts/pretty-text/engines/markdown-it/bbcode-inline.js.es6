@@ -15,20 +15,12 @@ function tokanizeBBCode(state, silent, ruler) {
     return false;
   }
 
-  let rules = ruler.getRules();
   let rule, i;
 
-  for (i=0; i<rules.length; i++) {
-    let r = rules[i].rule;
-    if (r.tag === tagInfo.tag) {
-      rule = r;
-      break;
-    }
-  }
+  let ruleInfo = ruler.getRuleForTag(tagInfo.tag);
+  if (!ruleInfo) { return false; }
+  rule = ruleInfo.rule;
 
-  if (!rule) {
-    return false;
-  }
 
   if (rule.replace) {
     // special handling for replace

@@ -111,7 +111,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
 
 function applyBBCode(state, startLine, endLine, silent, md) {
 
-  var i, nextLine,
+  var nextLine,
       old_parent, old_line_max, rule,
       start = state.bMarks[startLine] + state.tShift[startLine],
       initial = start,
@@ -126,18 +126,10 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     return false;
   }
 
-  let rules = md.block.bbcode_ruler.getRules();
+  let ruleInfo = md.block.bbcode_ruler.getRuleForTag(info.tag);
+  if (!ruleInfo) { return false; }
 
-  for(i=0;i<rules.length;i++) {
-    let r = rules[i].rule;
-
-    if (r.tag === info.tag) {
-      rule = r;
-      break;
-    }
-  }
-
-  if (!rule) { return false; }
+  rule = ruleInfo.rule;
 
   // Since start is found, we can report success here in validation mode
   if (silent) { return true; }

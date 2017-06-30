@@ -48,8 +48,24 @@ class Ruler {
     return this.rules;
   }
 
+  getRuleForTag(tag) {
+    this.ensureCache();
+    return this.cache[tag];
+  }
+
+  ensureCache() {
+    if (this.cache) { return; }
+
+    this.cache = {};
+    for(let i=this.rules.length-1;i>=0;i--) {
+      let info = this.rules[i];
+      this.cache[info.rule.tag] = info;
+    }
+  }
+
   push(name, rule) {
     this.rules.push({name, rule});
+    this.cache = null;
   }
 }
 
