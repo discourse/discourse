@@ -22,7 +22,7 @@ module Jobs
 
         Excon.post(push_url,
           body: payload.merge(notifications: notifications).to_json,
-          headers: { 'Content-Type' => 'application/json', 'Accept' => 'applicaton/json' }
+          headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
         )
       end
 
