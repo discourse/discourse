@@ -9,7 +9,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:invite_id) unless args[:invite_id].present?
 
       invite = Invite.find_by(id: args[:invite_id])
-      message = InviteMailer.send_invite(invite, args[:custom_message])
+      message = InviteMailer.send_invite(invite)
       Email::Sender.new(message, :invite).send
     end
 
