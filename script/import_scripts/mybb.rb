@@ -37,6 +37,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   end
 
   def execute
+    SiteSetting.disable_emails=true
     import_users
     import_categories
     import_posts
