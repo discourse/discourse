@@ -122,6 +122,7 @@ class Invite < ActiveRecord::Base
     if !invite
       create_args = { invited_by: invited_by, email: lower_email }
       create_args[:moderator] = true if opts[:moderator]
+      create_args[:custom_message] = custom_message if custom_message
       invite = Invite.create!(create_args)
     end
 
@@ -143,7 +144,7 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id, custom_message: custom_message) if send_email
+    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
 
     invite.reload
     invite
@@ -295,6 +296,7 @@ end
 #  deleted_by_id  :integer
 #  invalidated_at :datetime
 #  moderator      :boolean          default(FALSE), not null
+#  custom_message :text
 #
 # Indexes
 #
