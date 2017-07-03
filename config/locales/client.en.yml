@@ -408,7 +408,7 @@ en:
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       name_placeholder: "Group name, no spaces, same as username rule"
-      public: "Allow users to join/leave the group freely (Requires group to be visible)"
+      public: "Allow users to join/leave the group freely (Requires publicly visible group)"
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
@@ -430,7 +430,6 @@ en:
       bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
-      visible: "Group is visible to all users"
       index:
         title: "Groups"
         empty: "There are no visible groups."
@@ -444,6 +443,12 @@ en:
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
+      visibility_levels:
+        title: "Who can see this group?"
+        public: "Everyone"
+        members: "Group owners, members and admins"
+        staff: "Group owners and staff"
+        owners: "Group owners and admins"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"

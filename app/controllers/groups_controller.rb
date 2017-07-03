@@ -20,6 +20,12 @@ class GroupsController < ApplicationController
     page = params[:page]&.to_i || 0
 
     groups = Group.visible_groups(current_user)
+
+    unless guardian.is_staff?
+      # hide automatic groups from all non stuff to de-clutter page
+      groups = groups.where(automatic: false)
+    end
+
     count = groups.count
     groups = groups.offset(page * page_size).limit(page_size)
 

@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require_dependency 'enum'
+
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
@@ -62,17 +66,56 @@ class Group < ActiveRecord::Base
     :everyone => 99
   }
 
+  def self.visibility_levels
+    @visibility_levels = Enum.new(
+      public: 0,
+      members: 1,
+      staff: 2,
+      owners: 3
+    )
+  end
+
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
   scope :visible_groups, ->(user) {
     groups = Group.order(name: :asc).where("groups.id > 0")
 
-    if !user || !user.admin
-      owner_group_ids = GroupUser.where(user: user, owner: true).pluck(:group_id)
+    unless user&.admin
+      sql =  <<~SQL
+        groups.id IN (
+          SELECT g.id FROM groups g WHERE g.visibility_level = :public
 
-      groups = groups.where("
-        (groups.automatic = false AND groups.visible = true) OR groups.id IN (?)
-      ", owner_group_ids)
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id
+          WHERE g.visibility_level = :members
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          LEFT JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.visibility_level = :owners
+
+        )
+      SQL
+
+      groups = groups.where(
+        sql,
+        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      )
+
     end
 
     groups
@@ -191,7 +234,7 @@ class Group < ActiveRecord::Base
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
     if name == :everyone
-      group.visible = false
+      group.visibility_level = Group.visibility_levels[:owners]
       group.save!
       return group
     end
@@ -282,7 +325,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.search_group(name)
-    Group.where(visible: true).where(
+    Group.where(visibility_level: visibility_levels[:public]).where(
       "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "#{name}%"
     )
   end
@@ -487,11 +530,11 @@ class Group < ActiveRecord::Base
       return if new_record? && !self.primary_group?
 
       if self.primary_group_changed?
-        sql = <<SQL
-        UPDATE users
-        /*set*/
-        /*where*/
-SQL
+        sql = <<~SQL
+          UPDATE users
+          /*set*/
+          /*where*/
+        SQL
 
         builder = SqlBuilder.new(sql)
         builder.where("
@@ -539,7 +582,6 @@ end
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
 #  alias_level                        :integer          default(0)
-#  visible                            :boolean          default(TRUE), not null
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
@@ -556,6 +598,7 @@ end
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
+#  visibility_level                   :integer          default(0)
 #
 # Indexes
 #

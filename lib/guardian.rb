@@ -135,10 +135,21 @@ class Guardian
 
   def can_see_group?(group)
     return false if group.blank?
-    return true if is_admin? || group.visible?
+    return true if group.visibility_level == Group.visibility_levels[:public]
+    return true if is_admin?
+    return true if is_staff? && group.visibility_level == Group.visibility_levels[:staff]
     return false if user.blank?
 
-    group.group_users.where(user_id: user.id).exists?
+    membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
+
+    return false unless membership
+
+    if !membership.owner
+      return false if group.visibility_level == Group.visibility_levels[:owners]
+      return false if group.visibility_level == Group.visibility_levels[:staff]
+    end
+
+    true
   end
 
 

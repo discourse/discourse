@@ -180,7 +180,7 @@ describe Group do
   describe '.refresh_automatic_group!' do
     it "makes sure the everyone group is not visible" do
       g = Group.refresh_automatic_group!(:everyone)
-      expect(g.visible).to eq(false)
+      expect(g.visibility_level).to eq(Group.visibility_levels[:owners])
     end
 
     it "uses the localized name if name has not been taken" do
@@ -432,44 +432,54 @@ describe Group do
   end
 
   describe ".visible_groups" do
-    let(:group) { Fabricate(:group, visible: false) }
-    let(:group_2) { Fabricate(:group, visible: true) }
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
 
-    before do
-      group
-      group_2
+    def can_view?(user, group)
+      Group.visible_groups(user).where(id: group.id).exists?
     end
 
-    describe 'when user is an admin' do
-      it 'should return the right groups' do
-        expect(Group.visible_groups(admin).pluck(:id).sort)
-          .to eq([group.id, group_2.id].concat(Group::AUTO_GROUP_IDS.keys - [0]).sort)
-      end
+    it 'correctly restricts group visibility' do
+      group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+
+      moderator = Fabricate(:user, moderator: true)
+      admin = Fabricate(:user, admin: true)
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:staff])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:members])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:public])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(true)
     end
 
-    describe 'when user is owner of a group' do
-      it 'should return the right groups' do
-        group.add_owner(user)
-
-        expect(Group.visible_groups(user).pluck(:id).sort)
-          .to eq([group.id, group_2.id])
-      end
-    end
-
-    describe 'when user is not the owner of any group' do
-      it 'should return the right groups' do
-        expect(Group.visible_groups(user).pluck(:id).sort)
-          .to eq([group_2.id])
-      end
-    end
-
-    describe 'user is nil' do
-      it 'should return the right groups' do
-        expect(Group.visible_groups(nil).pluck(:id).sort).to eq([group_2.id])
-      end
-    end
   end
 
   describe '#add' do

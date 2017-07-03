@@ -2,16 +2,11 @@ require 'rails_helper'
 
 describe "Groups" do
   let(:user) { Fabricate(:user) }
-  let(:group) { Fabricate(:group, users: [user]) }
+  let!(:group) { Fabricate(:group, users: [user]) }
 
   describe 'viewing groups' do
-    let(:other_group) do
-      Fabricate(:group, name: '0000', visible: true, automatic: false)
-    end
-
-    before do
-      other_group
-      group.update_attributes!(automatic: true, visible: true)
+    let!(:staff_group) do
+      Fabricate(:group, name: '0000', visibility_level: Group.visibility_levels[:staff])
     end
 
     context 'when group directory is disabled' do
@@ -33,8 +28,8 @@ describe "Groups" do
       group_ids = response_body["groups"].map { |g| g["id"] }
 
       expect(response_body["extras"]["group_user_ids"]).to eq([])
-      expect(group_ids).to include(other_group.id)
-      expect(group_ids).to_not include(group.id)
+      expect(group_ids).to include(group.id)
+      expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
       expect(response_body["total_rows_groups"]).to eq(1)
     end
@@ -54,7 +49,7 @@ describe "Groups" do
         group_ids = response_body["groups"].map { |g| g["id"] }
 
         expect(response_body["extras"]["group_user_ids"]).to eq([group.id])
-        expect(group_ids).to include(group.id, other_group.id)
+        expect(group_ids).to include(group.id, staff_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
         expect(response_body["total_rows_groups"]).to eq(10)
       end

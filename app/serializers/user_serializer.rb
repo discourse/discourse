@@ -129,13 +129,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def groups
-    groups = object.groups.order(:id)
-
-    if scope.is_admin? || object.id == scope.user.try(:id)
-      groups
-    else
-      groups.where(visible: true)
-    end
+    object.groups.order(:id)
+          .visible_groups(scope.user)
   end
 
   def group_users
