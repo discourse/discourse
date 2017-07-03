@@ -13,7 +13,9 @@ class Highlighted extends RawHtml {
 
   decorate($html) {
     if (this.term) {
-      $html.highlight(this.term.split(/\s+/), { className: 'search-highlight' });
+      // special case ignore "l" which is used for magic sorting
+      const words = _.reject(this.term.split(/\s+/), t => t === 'l');
+      $html.highlight(words, { className: 'search-highlight' });
     }
   }
 }
