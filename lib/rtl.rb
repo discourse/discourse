@@ -1,4 +1,4 @@
-class RTL
+class Rtl
 
   attr_reader :user
 

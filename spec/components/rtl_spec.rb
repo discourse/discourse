@@ -1,25 +1,28 @@
 require 'rails_helper'
+require_dependency 'rtl'
 
-describe RTL do
+describe Rtl do
 
   let(:user) { Fabricate.build(:user) }
 
   describe '.css_class' do
 
     context 'user locale is allowed' do
-      before { SiteSetting.stubs(:allow_user_locale).returns(true) }
+      before {
+        SiteSetting.allow_user_locale = true
+      }
 
       context 'user locale is RTL' do
-        before { user.stubs(:locale).returns('he') }
+        before { user.locale = 'he' }
 
         it 'returns rtl class' do
-          expect(RTL.new(user).css_class).to eq('rtl')
+          expect(Rtl.new(user).css_class).to eq('rtl')
         end
       end
 
       context 'user locale is not RTL' do
         it 'returns empty class' do
-          expect(RTL.new(user).css_class).to eq('')
+          expect(Rtl.new(user).css_class).to eq('')
         end
       end
 
@@ -32,7 +35,7 @@ describe RTL do
         before { SiteSetting.stubs(:default_locale).returns('he') }
 
         it 'returns rtl class' do
-          expect(RTL.new(user).css_class).to eq('rtl')
+          expect(Rtl.new(user).css_class).to eq('rtl')
         end
       end
 
@@ -43,7 +46,7 @@ describe RTL do
           before { user.stubs(:locale).returns('he') }
 
           it 'returns empty class' do
-            expect(RTL.new(user).css_class).to eq('')
+            expect(Rtl.new(user).css_class).to eq('')
           end
         end
       end
