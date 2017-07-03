@@ -6,6 +6,7 @@ Fabricator(:upload) do
   width 100
   height 200
   url { sequence(:url) { |n| "/uploads/default/#{n}/1234567890123456.png" } }
+  extension "png"
 end
 
 Fabricator(:upload_s3, from: :upload) do
