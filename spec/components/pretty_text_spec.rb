@@ -656,7 +656,6 @@ HTML
     end
 
     it 'handles onebox correctly' do
-      # we expect 2 oneboxes
       expect(PrettyText.cook("http://a.com\nhttp://b.com").split("onebox").length).to eq(3)
       expect(PrettyText.cook("http://a.com\n\nhttp://b.com").split("onebox").length).to eq(3)
       expect(PrettyText.cook("a\nhttp://a.com")).to include('onebox')
@@ -664,7 +663,6 @@ HTML
       expect(PrettyText.cook("a\nhttp://a.com a")).not_to include('onebox')
       expect(PrettyText.cook("a\nhttp://a.com\na")).to include('onebox')
       expect(PrettyText.cook("http://a.com")).to include('onebox')
-      expect(PrettyText.cook("a.com")).not_to include('onebox')
       expect(PrettyText.cook("http://a.com ")).to include('onebox')
       expect(PrettyText.cook("http://a.com a")).not_to include('onebox')
       expect(PrettyText.cook("- http://a.com")).not_to include('onebox')
@@ -793,6 +791,18 @@ HTML
     it "supports block code bbcode" do
       cooked = PrettyText.cook "[code]\ncodified\n\n\n  **stuff** and `more` stuff\n[/code]"
       html = "<pre><code class=\"lang-auto\">codified\n\n\n  **stuff** and `more` stuff</code></pre>"
+      expect(cooked).to eq(html)
+    end
+
+    it "support special handling for space in urls" do
+      cooked = PrettyText.cook "http://testing.com?a%20b"
+      html = '<p><a href="http://testing.com?a%20b" class="onebox" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
+      expect(cooked).to eq(html)
+    end
+
+    it "supports onebox for decoded urls" do
+      cooked = PrettyText.cook "http://testing.com?a%50b"
+      html = '<p><a href="http://testing.com?a%50b" class="onebox" rel="nofollow noopener">http://testing.com?aPb</a></p>'
       expect(cooked).to eq(html)
     end
 

@@ -45,10 +45,7 @@ function applyOnebox(state, silent) {
             continue;
           }
 
-          // check text matches href
-          if (text.type !== "text" || attrs[0][1] !== text.content) {
-            continue;
-          }
+          // we already know text matches cause it is an auto link
 
           if (!close || close.type !== "link_close") {
             continue;
