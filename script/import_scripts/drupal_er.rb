@@ -459,6 +459,9 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # Replace three or more consecutive linebreaks with two.
       post.raw.gsub!(/\n{3,}/, "\n\n")
 
+      # Make sure the content is not blank as a minimum length of 1 character is required.
+      post.raw = '\n' if post.raw.blank?
+
       post.save!
     end
 
