@@ -219,7 +219,22 @@ describe ListController do
           xhr :get, :category_default, category: category.slug
           expect(response).to be_success
         end
+      end
 
+      describe "renders canonical tag" do
+        render_views
+
+        it 'for category default view' do
+          get :category_default, category: category.slug
+          expect(response).to be_success
+          expect(css_select("link[rel=canonical]").length).to eq(1)
+        end
+
+        it 'for category latest view' do
+          get :category_latest, category: category.slug
+          expect(response).to be_success
+          expect(css_select("link[rel=canonical]").length).to eq(1)
+        end
       end
     end
   end
