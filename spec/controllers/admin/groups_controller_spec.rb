@@ -29,7 +29,7 @@ describe Admin::GroupsController do
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
-        "visible"=>true,
+        "visibility_level"=>0,
         "automatic_membership_email_domains"=>nil,
         "automatic_membership_retroactive"=>false,
         "title"=>nil,
@@ -100,15 +100,17 @@ describe Admin::GroupsController do
 
       expect do
         xhr :put, :update, { id: group.id, group: {
-          visible: "false",
+          visibility_level: Group.visibility_levels[:owners],
           allow_membership_requests: "true"
         } }
+
       end.to change { GroupHistory.count }.by(2)
 
       expect(response).to be_success
 
       group.reload
-      expect(group.visible).to eq(false)
+
+      expect(group.visibility_level).to eq( Group.visibility_levels[:owners])
       expect(group.allow_membership_requests).to eq(true)
     end
 

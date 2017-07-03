@@ -59,7 +59,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def save_group(group)
     group.alias_level = group_params[:alias_level].to_i if group_params[:alias_level].present?
-    group.visible = group_params[:visible] == "true"
+    group.visibility_level = group_params[:visibility_level]
     grant_trust_level = group_params[:grant_trust_level].to_i
     group.grant_trust_level = (grant_trust_level > 0 && grant_trust_level <= 4) ? grant_trust_level : nil
 
@@ -160,7 +160,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def group_params
     params.require(:group).permit(
-      :name, :alias_level, :visible, :automatic_membership_email_domains,
+      :name, :alias_level, :visibility_level, :automatic_membership_email_domains,
       :automatic_membership_retroactive, :title, :primary_group,
       :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
       :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name,

@@ -113,23 +113,27 @@ const Group = RestModel.extend({
     return aliasLevel === '99';
   },
 
-  @observes("visible", "canEveryoneMention")
+  @observes("visibility_level", "canEveryoneMention")
   _updateAllowMembershipRequests() {
-    if (!this.get('visible') || !this.get('canEveryoneMention')) {
+    if (this.get('visibility_level') !== 0 || !this.get('canEveryoneMention')) {
       this.set ('allow_membership_requests', false);
     }
   },
 
-  @observes("visible")
+  @observes("visibility_level")
   _updatePublic() {
-    if (!this.get('visible')) this.set('public', false);
+    let visibility_level = parseInt(this.get('visibility_level'));
+    if (visibility_level !== 0) {
+      this.set('public', false);
+      this.set('allow_membership_requests', false);
+    }
   },
 
   asJSON() {
     return {
       name: this.get('name'),
       alias_level: this.get('alias_level'),
-      visible: !!this.get('visible'),
+      visibility_level: this.get('visibility_level'),
       automatic_membership_email_domains: this.get('emailDomains'),
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive'),
       title: this.get('title'),
