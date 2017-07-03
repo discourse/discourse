@@ -712,14 +712,16 @@ describe Search do
                          raw: "Discourse logo\n"\
                               "https://www.discourse.org/a/img/favicon.png\n"\
                               "https://www.discourse.org/a/img/trust-1x.jpg")
+      post_with_upload = Fabricate(:post)
+      post_with_upload.uploads = [Fabricate(:upload)]
       Fabricate(:post)
 
       TopicLink.extract_from(post1)
       TopicLink.extract_from(post2)
 
       expect(Search.execute('filetype:jpg').posts.map(&:id)).to eq([post2.id])
-      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id)
-      expect(Search.execute('logo filetype:jpg').posts.map(&:id)).to eq([post2.id])
+      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id, post_with_upload.id)
+      expect(Search.execute('logo filetype:png').posts.map(&:id)).to eq([post2.id])
     end
   end
 
