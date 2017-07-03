@@ -89,6 +89,12 @@ function renderHoisted(tokens, idx, options) {
   }
 }
 
+function setupUrlDecoding(md) {
+  // this fixed a subtle issue where %20 is decoded as space in
+  // automatic urls
+  md.utils.lib.mdurl.decode.defaultChars = ';/?:@&=+$,# ';
+}
+
 function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
@@ -152,6 +158,7 @@ export function setup(opts, siteSettings, state) {
     typographer: siteSettings.enable_markdown_typographer
   });
 
+  setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
