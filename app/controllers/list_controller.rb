@@ -111,6 +111,7 @@ class ListController < ApplicationController
   end
 
   def category_default
+    canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
     view_method = @category.default_view
     view_method = 'latest' unless %w(latest top).include?(view_method)
 
