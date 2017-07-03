@@ -59,7 +59,11 @@ class Admin::GroupsController < Admin::AdminController
 
   def save_group(group)
     group.alias_level = group_params[:alias_level].to_i if group_params[:alias_level].present?
-    group.visibility_level = group_params[:visibility_level]
+
+    if group_params[:visibility_level]
+      group.visibility_level = group_params[:visibility_level]
+    end
+
     grant_trust_level = group_params[:grant_trust_level].to_i
     group.grant_trust_level = (grant_trust_level > 0 && grant_trust_level <= 4) ? grant_trust_level : nil
 

@@ -115,10 +115,7 @@ describe Admin::GroupsController do
     end
 
     it "ignore name change on automatic group" do
-      expect do
-        xhr :put, :update, { id: 1, group: { name: "WAT" } }
-      end.to change { GroupHistory.count }.by(1)
-
+      xhr :put, :update, { id: 1, group: { name: "WAT" } }
       expect(response).to be_success
 
       group = Group.find(1)
