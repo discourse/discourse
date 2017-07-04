@@ -435,7 +435,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         if img['src'].present?
           Permalink.create(url: img['src']) rescue nil
           if '/sites/edgeryders.eu/files/'.in?(img['src'])
-            filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
+            # filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
+            filename = img['src'].gsub('/sites/edgeryders.eu/files', DRUPAL_FILES_DIR)
             if File.exists?(filename)
               upload = create_upload(post.user_id, filename, File.basename(filename))
               if upload.nil? || upload.invalid?
