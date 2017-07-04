@@ -1,15 +1,8 @@
-require "active_support/core_ext/object/blank"
-require "active_support/core_ext/hash/deep_merge"
 require "active_support/test_case"
-require "base64"
 require "fileutils"
-require "image_optim"
 require "json"
 require "nokogiri"
 require "open-uri"
-require "pathname"
-
-$debugging_output = []
 
 EMOJI_GROUPS_PATH ||= "app/assets/javascripts/discourse/lib/emoji/groups.js.es6"
 
@@ -17,11 +10,7 @@ EMOJI_DB_PATH ||= "lib/emoji/db.json"
 
 EMOJI_IMAGES_PATH ||= "public/images/emoji"
 
-EMOJI_LIST_URL ||= "http://unicode.org/emoji/charts/full-emoji-list.html"
-
 EMOJI_ORDERING_URL ||= "http://www.unicode.org/emoji/charts/emoji-ordering.html"
-
-EMOJI_KEYWORDS_URL ||= "https://raw.githubusercontent.com/muan/emojilib/master/emojis.json"
 
 EMOJI_ALIASES ||= {
   "right_anger_bubble" => [ "anger_right" ],
@@ -37,7 +26,6 @@ EMOJI_ALIASES ||= {
   "champagne" => [ "bottle_with_popping_cork" ],
   "cheese" => [ "cheese_wedge" ],
   "city_sunset" => [ "city_dusk" ],
-  "clock" => [ "mantlepiece_clock" ],
   "couch_and_lamp" => [ "couch" ],
   "crayon" => [ "lower_left_crayon" ],
   "cricket" => [ "cricket_bat_ball" ],
@@ -85,7 +73,6 @@ EMOJI_ALIASES ||= {
   "paperclips" => [ "linked_paperclips" ],
   "pause_button" => [ "double_vertical_bar" ],
   "peace_symbol" => [ "peace" ],
-  "pen_ballpoint" => [ "lower_left_ballpoint_pen" ],
   "fountain_pen" => [ "pen_fountain", "lower_left_fountain_pen" ],
   "ping_pong" => [ "table_tennis" ],
   "place_of_worship" => [ "worship_symbol" ],
@@ -98,8 +85,8 @@ EMOJI_ALIASES ||= {
   "speaking_head" => [ "speaking_head_in_silhouette" ],
   "male_detective" => [ "spy", "sleuth_or_spy" ],
   "thinking" => [ "thinking_face" ],
-  "thumbsdown" => [ "-1" ],
-  "thumbsup" => [ "+1" ],
+  "-1" => [ "thumbsdown" ],
+  "+1" => [ "thumbsup" ],
   "cloud_with_lightning_and_rain" => [ "thunder_cloud_rain", "thunder_cloud_and_rain" ],
   "tickets" => [ "admission_tickets" ],
   "next_track_button" => [ "track_next", "next_track" ],
@@ -191,7 +178,7 @@ EMOJI_ALIASES ||= {
   "open_book" => [ "book" ],
   "national_park" => [ "park" ],
   "world_map" => [ "map" ],
-  "pen" => [ "pen_ballpoint" ],
+  "pen" => [ "pen_ballpoint", "lower_left_ballpoint_pen" ],
   "email" => [ "envelope", "e-mail" ],
   "phone" => [ "telephone" ],
   "atom_symbol" => [ "atom" ],
@@ -346,637 +333,103 @@ EMOJI_GROUPS ||= [
 
 FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
-VARIATION_SELECTOR ||= "fe0f"
+DEFAULT_SET ||= "twitter"
 
-# Patch content of EMOJI_KEYWORDS_URL
-EMOJI_KEYWORDS_PATCH ||= {
-  "man_singer" => { "fitzpatrick_scale" => true },
-  "woman_singer" => { "fitzpatrick_scale" => true },
-  "woman_student" => { "fitzpatrick_scale" => true },
-  "man_student" => { "fitzpatrick_scale" => true },
-  "woman_cook" => { "fitzpatrick_scale" => true },
-  "man_cook" => { "fitzpatrick_scale" => true },
-  "thumbsup" => { "char" => "👍", "fitzpatrick_scale" => true },
-  "thumbsdown" => { "char" => "👎", "fitzpatrick_scale" => true },
-  "asterisk" => { "char" => "*️⃣" },
-  "dancing_men" => { "char" => "👯‍♂️️" },
-  "women_wrestling" => { "char" => "🤼‍♀️️", "fitzpatrick_scale" => false },
-  "men_wrestling" => { "char" => "🤼‍♂️️", "fitzpatrick_scale" => false },
-  "female_detective" => { "char" => "🕵️‍♀️", "fitzpatrick_scale" => true },
-  "blonde_woman" => { "fitzpatrick_scale" => true },
-  "woman_with_turban" => { "fitzpatrick_scale" => true },
-  "policewoman" => { "fitzpatrick_scale" => true },
-  "construction_worker_woman" => { "fitzpatrick_scale" => true },
-  "guardswoman" => { "fitzpatrick_scale" => true },
-  "woman_health_worker" => { "fitzpatrick_scale" => true },
-  "man_health_worker" => { "fitzpatrick_scale" => true },
-  "woman_pilot" => { "fitzpatrick_scale" => true },
-  "man_pilot" => { "fitzpatrick_scale" => true },
-  "woman_judge" => { "fitzpatrick_scale" => true },
-  "man_judge" => { "fitzpatrick_scale" => true },
-  "running_woman" => { "fitzpatrick_scale" => true },
-  "walking_woman" => { "fitzpatrick_scale" => true },
-  "woman_facepalming" => { "fitzpatrick_scale" => true },
-  "bowing_woman" => { "fitzpatrick_scale" => true },
-  "woman_shrugging" => { "char" => "🤷‍♀️" },
-  "man_shrugging" => { "fitzpatrick_scale" => true },
-  "tipping_hand_man" => { "fitzpatrick_scale" => true },
-  "no_good_man" => { "fitzpatrick_scale" => true },
-  "ok_man" => { "fitzpatrick_scale" => true },
-  "raising_hand_man" => { "fitzpatrick_scale" => true },
-  "pouting_man" => { "fitzpatrick_scale" => true },
-  "frowning_man" => { "fitzpatrick_scale" => true },
-  "haircut_man" => { "fitzpatrick_scale" => true },
-  "massage_man" => { "fitzpatrick_scale" => true },
-  "golfing_woman" => { "fitzpatrick_scale" => true },
-  "rowing_woman" => { "fitzpatrick_scale" => true },
-  "swimming_woman" => { "fitzpatrick_scale" => true },
-  "surfing_woman" => { "fitzpatrick_scale" => true },
-  "basketball_woman" => { "fitzpatrick_scale" => true },
-  "weight_lifting_woman" => { "fitzpatrick_scale" => true },
-  "biking_woman" => { "fitzpatrick_scale" => true },
-  "mountain_biking_woman" => { "fitzpatrick_scale" => true },
-  "handshake" => { "fitzpatrick_scale" => false },
-  "dancing_women" => { "fitzpatrick_scale" => false },
-  "couple" => { "fitzpatrick_scale" => false },
-  "two_men_holding_hands" => { "fitzpatrick_scale" => false },
-  "two_women_holding_hands" => { "fitzpatrick_scale" => false },
-  "couple_with_heart_woman_man" => { "fitzpatrick_scale" => false },
-  "couplekiss_man_woman" => { "fitzpatrick_scale" => false },
-  "family_man_woman_boy" => { "fitzpatrick_scale" => false },
-  "rescue_worker_helmet" => { "fitzpatrick_scale" => false },
-  "skier" => { "fitzpatrick_scale" => false }
-}
-
-# Exclude keywords from EMOJI_KEYWORDS_URL
-EMOJI_KEYWORDS_EXCLUDE_LIST ||= [ "+1", "-1" ]
-
-# Cell index of each platform in EMOJI_LIST_URL
-EICI ||= EMOJI_IMAGES_CELLS_INDEX ||= {
-  :windows => 10,
-  :apple => 3,
-  :google => 4,
-  :twitter => 5,
-  :one => 6
-}
-
-# Replace the platform by another when downloading the image
-EMOJI_IMAGES_CELLS_INDEX_PATCH ||= {
-  :apple => {
-    "snowboarder" => EICI[:twitter],
-    "snowboarder/2" => EICI[:twitter],
-    "snowboarder/3" => EICI[:twitter],
-    "snowboarder/4" => EICI[:twitter],
-    "snowboarder/5" => EICI[:twitter],
-    "snowboarder/6" => EICI[:twitter],
-    "sleeping_bed" => EICI[:twitter],
-    "sleeping_bed/2" => EICI[:twitter],
-    "sleeping_bed/3" => EICI[:twitter],
-    "sleeping_bed/4" => EICI[:twitter],
-    "sleeping_bed/5" => EICI[:twitter],
-    "sleeping_bed/6" => EICI[:twitter],
+# Replace the platform by another when downloading the image (accepts names or categories)
+EMOJI_IMAGES_PATCH ||= {
+  "windows" => {
+    "hash" => "apple",
+    "zero" => "apple",
+    "one" => "apple",
+    "two" => "apple",
+    "three" => "apple",
+    "four" => "apple",
+    "five" => "apple",
+    "six" => "apple",
+    "seven" => "apple",
+    "eight" => "apple",
+    "nine" => "apple",
+    "asterisk" => "apple"
   },
-  :one => {
-    # dot not use emoji-one rounded flags
-    "afghanistan" => EICI[:twitter],
-    "aland_islands" => EICI[:twitter],
-    "albania" => EICI[:twitter],
-    "algeria" => EICI[:twitter],
-    "american_samoa" => EICI[:twitter],
-    "andorra" => EICI[:twitter],
-    "angola" => EICI[:twitter],
-    "anguilla" => EICI[:twitter],
-    "antarctica" => EICI[:twitter],
-    "antigua_barbuda" => EICI[:twitter],
-    "argentina" => EICI[:twitter],
-    "armenia" => EICI[:twitter],
-    "aruba" => EICI[:twitter],
-    "australia" => EICI[:twitter],
-    "austria" => EICI[:twitter],
-    "azerbaijan" => EICI[:twitter],
-    "bahamas" => EICI[:twitter],
-    "bahrain" => EICI[:twitter],
-    "bangladesh" => EICI[:twitter],
-    "barbados" => EICI[:twitter],
-    "belarus" => EICI[:twitter],
-    "belgium" => EICI[:twitter],
-    "belize" => EICI[:twitter],
-    "benin" => EICI[:twitter],
-    "bermuda" => EICI[:twitter],
-    "bhutan" => EICI[:twitter],
-    "bolivia" => EICI[:twitter],
-    "caribbean_netherlands" => EICI[:twitter],
-    "bosnia_herzegovina" => EICI[:twitter],
-    "botswana" => EICI[:twitter],
-    "brazil" => EICI[:twitter],
-    "british_indian_ocean_territory" => EICI[:twitter],
-    "british_virgin_islands" => EICI[:twitter],
-    "brunei" => EICI[:twitter],
-    "bulgaria" => EICI[:twitter],
-    "burkina_faso" => EICI[:twitter],
-    "burundi" => EICI[:twitter],
-    "cape_verde" => EICI[:twitter],
-    "cambodia" => EICI[:twitter],
-    "cameroon" => EICI[:twitter],
-    "canada" => EICI[:twitter],
-    "canary_islands" => EICI[:twitter],
-    "cayman_islands" => EICI[:twitter],
-    "central_african_republic" => EICI[:twitter],
-    "chad" => EICI[:twitter],
-    "chile" => EICI[:twitter],
-    "cn" => EICI[:twitter],
-    "christmas_island" => EICI[:twitter],
-    "cocos_islands" => EICI[:twitter],
-    "colombia" => EICI[:twitter],
-    "comoros" => EICI[:twitter],
-    "congo_brazzaville" => EICI[:twitter],
-    "congo_kinshasa" => EICI[:twitter],
-    "cook_islands" => EICI[:twitter],
-    "costa_rica" => EICI[:twitter],
-    "croatia" => EICI[:twitter],
-    "cuba" => EICI[:twitter],
-    "curacao" => EICI[:twitter],
-    "cyprus" => EICI[:twitter],
-    "czech_republic" => EICI[:twitter],
-    "denmark" => EICI[:twitter],
-    "djibouti" => EICI[:twitter],
-    "dominica" => EICI[:twitter],
-    "dominican_republic" => EICI[:twitter],
-    "ecuador" => EICI[:twitter],
-    "egypt" => EICI[:twitter],
-    "el_salvador" => EICI[:twitter],
-    "equatorial_guinea" => EICI[:twitter],
-    "eritrea" => EICI[:twitter],
-    "estonia" => EICI[:twitter],
-    "ethiopia" => EICI[:twitter],
-    "eu" => EICI[:twitter],
-    "falkland_islands" => EICI[:twitter],
-    "faroe_islands" => EICI[:twitter],
-    "fiji" => EICI[:twitter],
-    "finland" => EICI[:twitter],
-    "fr" => EICI[:twitter],
-    "french_guiana" => EICI[:twitter],
-    "french_polynesia" => EICI[:twitter],
-    "french_southern_territories" => EICI[:twitter],
-    "gabon" => EICI[:twitter],
-    "gambia" => EICI[:twitter],
-    "georgia" => EICI[:twitter],
-    "de" => EICI[:twitter],
-    "ghana" => EICI[:twitter],
-    "gibraltar" => EICI[:twitter],
-    "greece" => EICI[:twitter],
-    "greenland" => EICI[:twitter],
-    "grenada" => EICI[:twitter],
-    "guadeloupe" => EICI[:twitter],
-    "guam" => EICI[:twitter],
-    "guatemala" => EICI[:twitter],
-    "guernsey" => EICI[:twitter],
-    "guinea" => EICI[:twitter],
-    "guinea_bissau" => EICI[:twitter],
-    "guyana" => EICI[:twitter],
-    "haiti" => EICI[:twitter],
-    "honduras" => EICI[:twitter],
-    "hong_kong" => EICI[:twitter],
-    "hungary" => EICI[:twitter],
-    "iceland" => EICI[:twitter],
-    "india" => EICI[:twitter],
-    "indonesia" => EICI[:twitter],
-    "iran" => EICI[:twitter],
-    "iraq" => EICI[:twitter],
-    "ireland" => EICI[:twitter],
-    "isle_of_man" => EICI[:twitter],
-    "israel" => EICI[:twitter],
-    "it" => EICI[:twitter],
-    "cote_divoire" => EICI[:twitter],
-    "jamaica" => EICI[:twitter],
-    "jp" => EICI[:twitter],
-    "jersey" => EICI[:twitter],
-    "jordan" => EICI[:twitter],
-    "kazakhstan" => EICI[:twitter],
-    "kenya" => EICI[:twitter],
-    "kiribati" => EICI[:twitter],
-    "kosovo" => EICI[:twitter],
-    "kuwait" => EICI[:twitter],
-    "kyrgyzstan" => EICI[:twitter],
-    "laos" => EICI[:twitter],
-    "latvia" => EICI[:twitter],
-    "lebanon" => EICI[:twitter],
-    "lesotho" => EICI[:twitter],
-    "liberia" => EICI[:twitter],
-    "libya" => EICI[:twitter],
-    "liechtenstein" => EICI[:twitter],
-    "lithuania" => EICI[:twitter],
-    "luxembourg" => EICI[:twitter],
-    "macau" => EICI[:twitter],
-    "macedonia" => EICI[:twitter],
-    "madagascar" => EICI[:twitter],
-    "malawi" => EICI[:twitter],
-    "malaysia" => EICI[:twitter],
-    "maldives" => EICI[:twitter],
-    "mali" => EICI[:twitter],
-    "malta" => EICI[:twitter],
-    "marshall_islands" => EICI[:twitter],
-    "martinique" => EICI[:twitter],
-    "mauritania" => EICI[:twitter],
-    "mauritius" => EICI[:twitter],
-    "mayotte" => EICI[:twitter],
-    "mexico" => EICI[:twitter],
-    "micronesia" => EICI[:twitter],
-    "moldova" => EICI[:twitter],
-    "monaco" => EICI[:twitter],
-    "mongolia" => EICI[:twitter],
-    "montenegro" => EICI[:twitter],
-    "montserrat" => EICI[:twitter],
-    "morocco" => EICI[:twitter],
-    "mozambique" => EICI[:twitter],
-    "myanmar" => EICI[:twitter],
-    "namibia" => EICI[:twitter],
-    "nauru" => EICI[:twitter],
-    "nepal" => EICI[:twitter],
-    "netherlands" => EICI[:twitter],
-    "new_caledonia" => EICI[:twitter],
-    "new_zealand" => EICI[:twitter],
-    "nicaragua" => EICI[:twitter],
-    "niger" => EICI[:twitter],
-    "nigeria" => EICI[:twitter],
-    "niue" => EICI[:twitter],
-    "norfolk_island" => EICI[:twitter],
-    "northern_mariana_islands" => EICI[:twitter],
-    "north_korea" => EICI[:twitter],
-    "norway" => EICI[:twitter],
-    "oman" => EICI[:twitter],
-    "pakistan" => EICI[:twitter],
-    "palau" => EICI[:twitter],
-    "palestinian_territories" => EICI[:twitter],
-    "panama" => EICI[:twitter],
-    "papua_new_guinea" => EICI[:twitter],
-    "paraguay" => EICI[:twitter],
-    "peru" => EICI[:twitter],
-    "philippines" => EICI[:twitter],
-    "pitcairn_islands" => EICI[:twitter],
-    "poland" => EICI[:twitter],
-    "portugal" => EICI[:twitter],
-    "puerto_rico" => EICI[:twitter],
-    "qatar" => EICI[:twitter],
-    "reunion" => EICI[:twitter],
-    "romania" => EICI[:twitter],
-    "ru" => EICI[:twitter],
-    "rwanda" => EICI[:twitter],
-    "st_barthelemy" => EICI[:twitter],
-    "st_helena" => EICI[:twitter],
-    "st_kitts_nevis" => EICI[:twitter],
-    "st_lucia" => EICI[:twitter],
-    "st_pierre_miquelon" => EICI[:twitter],
-    "st_vincent_grenadines" => EICI[:twitter],
-    "samoa" => EICI[:twitter],
-    "san_marino" => EICI[:twitter],
-    "sao_tome_principe" => EICI[:twitter],
-    "saudi_arabia" => EICI[:twitter],
-    "senegal" => EICI[:twitter],
-    "serbia" => EICI[:twitter],
-    "seychelles" => EICI[:twitter],
-    "sierra_leone" => EICI[:twitter],
-    "singapore" => EICI[:twitter],
-    "sint_maarten" => EICI[:twitter],
-    "slovakia" => EICI[:twitter],
-    "slovenia" => EICI[:twitter],
-    "solomon_islands" => EICI[:twitter],
-    "somalia" => EICI[:twitter],
-    "south_africa" => EICI[:twitter],
-    "south_georgia_south_sandwich_islands" => EICI[:twitter],
-    "kr" => EICI[:twitter],
-    "south_sudan" => EICI[:twitter],
-    "es" => EICI[:twitter],
-    "sri_lanka" => EICI[:twitter],
-    "sudan" => EICI[:twitter],
-    "suriname" => EICI[:twitter],
-    "swaziland" => EICI[:twitter],
-    "sweden" => EICI[:twitter],
-    "switzerland" => EICI[:twitter],
-    "syria" => EICI[:twitter],
-    "taiwan" => EICI[:twitter],
-    "tajikistan" => EICI[:twitter],
-    "tanzania" => EICI[:twitter],
-    "thailand" => EICI[:twitter],
-    "timor_leste" => EICI[:twitter],
-    "togo" => EICI[:twitter],
-    "tokelau" => EICI[:twitter],
-    "tonga" => EICI[:twitter],
-    "trinidad_tobago" => EICI[:twitter],
-    "tunisia" => EICI[:twitter],
-    "tr" => EICI[:twitter],
-    "turkmenistan" => EICI[:twitter],
-    "turks_caicos_islands" => EICI[:twitter],
-    "tuvalu" => EICI[:twitter],
-    "uganda" => EICI[:twitter],
-    "ukraine" => EICI[:twitter],
-    "united_arab_emirates" => EICI[:twitter],
-    "uk" => EICI[:twitter],
-    "us" => EICI[:twitter],
-    "us_virgin_islands" => EICI[:twitter],
-    "uruguay" => EICI[:twitter],
-    "uzbekistan" => EICI[:twitter],
-    "vanuatu" => EICI[:twitter],
-    "vatican_city" => EICI[:twitter],
-    "venezuela" => EICI[:twitter],
-    "vietnam" => EICI[:twitter],
-    "wallis_futuna" => EICI[:twitter],
-    "western_sahara" => EICI[:twitter],
-    "yemen" => EICI[:twitter],
-    "zambia" => EICI[:twitter],
-    "zimbabwe" => EICI[:twitter],
+  "apple" => {
+    "snowboarder" => "twitter"
   },
-  :windows => {
-    "hash" => EICI[:apple],
-    "zero" => EICI[:apple],
-    "one" => EICI[:apple],
-    "two" => EICI[:apple],
-    "three" => EICI[:apple],
-    "four" => EICI[:apple],
-    "five" => EICI[:apple],
-    "six" => EICI[:apple],
-    "seven" => EICI[:apple],
-    "eight" => EICI[:apple],
-    "nine" => EICI[:apple],
-    "asterisk" => EICI[:apple],
-    "afghanistan" => EICI[:twitter],
-    "aland_islands" => EICI[:twitter],
-    "albania" => EICI[:twitter],
-    "algeria" => EICI[:twitter],
-    "american_samoa" => EICI[:twitter],
-    "andorra" => EICI[:twitter],
-    "angola" => EICI[:twitter],
-    "anguilla" => EICI[:twitter],
-    "antarctica" => EICI[:twitter],
-    "antigua_barbuda" => EICI[:twitter],
-    "argentina" => EICI[:twitter],
-    "armenia" => EICI[:twitter],
-    "aruba" => EICI[:twitter],
-    "australia" => EICI[:twitter],
-    "austria" => EICI[:twitter],
-    "azerbaijan" => EICI[:twitter],
-    "bahamas" => EICI[:twitter],
-    "bahrain" => EICI[:twitter],
-    "bangladesh" => EICI[:twitter],
-    "barbados" => EICI[:twitter],
-    "belarus" => EICI[:twitter],
-    "belgium" => EICI[:twitter],
-    "belize" => EICI[:twitter],
-    "benin" => EICI[:twitter],
-    "bermuda" => EICI[:twitter],
-    "bhutan" => EICI[:twitter],
-    "bolivia" => EICI[:twitter],
-    "caribbean_netherlands" => EICI[:twitter],
-    "bosnia_herzegovina" => EICI[:twitter],
-    "botswana" => EICI[:twitter],
-    "brazil" => EICI[:twitter],
-    "british_indian_ocean_territory" => EICI[:twitter],
-    "british_virgin_islands" => EICI[:twitter],
-    "brunei" => EICI[:twitter],
-    "bulgaria" => EICI[:twitter],
-    "burkina_faso" => EICI[:twitter],
-    "burundi" => EICI[:twitter],
-    "cape_verde" => EICI[:twitter],
-    "cambodia" => EICI[:twitter],
-    "cameroon" => EICI[:twitter],
-    "canada" => EICI[:twitter],
-    "canary_islands" => EICI[:twitter],
-    "cayman_islands" => EICI[:twitter],
-    "central_african_republic" => EICI[:twitter],
-    "chad" => EICI[:twitter],
-    "chile" => EICI[:twitter],
-    "cn" => EICI[:twitter],
-    "christmas_island" => EICI[:twitter],
-    "cocos_islands" => EICI[:twitter],
-    "colombia" => EICI[:twitter],
-    "comoros" => EICI[:twitter],
-    "congo_brazzaville" => EICI[:twitter],
-    "congo_kinshasa" => EICI[:twitter],
-    "cook_islands" => EICI[:twitter],
-    "costa_rica" => EICI[:twitter],
-    "croatia" => EICI[:twitter],
-    "cuba" => EICI[:twitter],
-    "curacao" => EICI[:twitter],
-    "cyprus" => EICI[:twitter],
-    "czech_republic" => EICI[:twitter],
-    "denmark" => EICI[:twitter],
-    "djibouti" => EICI[:twitter],
-    "dominica" => EICI[:twitter],
-    "dominican_republic" => EICI[:twitter],
-    "ecuador" => EICI[:twitter],
-    "egypt" => EICI[:twitter],
-    "el_salvador" => EICI[:twitter],
-    "equatorial_guinea" => EICI[:twitter],
-    "eritrea" => EICI[:twitter],
-    "estonia" => EICI[:twitter],
-    "ethiopia" => EICI[:twitter],
-    "eu" => EICI[:twitter],
-    "falkland_islands" => EICI[:twitter],
-    "faroe_islands" => EICI[:twitter],
-    "fiji" => EICI[:twitter],
-    "finland" => EICI[:twitter],
-    "fr" => EICI[:twitter],
-    "french_guiana" => EICI[:twitter],
-    "french_polynesia" => EICI[:twitter],
-    "french_southern_territories" => EICI[:twitter],
-    "gabon" => EICI[:twitter],
-    "gambia" => EICI[:twitter],
-    "georgia" => EICI[:twitter],
-    "de" => EICI[:twitter],
-    "ghana" => EICI[:twitter],
-    "gibraltar" => EICI[:twitter],
-    "greece" => EICI[:twitter],
-    "greenland" => EICI[:twitter],
-    "grenada" => EICI[:twitter],
-    "guadeloupe" => EICI[:twitter],
-    "guam" => EICI[:twitter],
-    "guatemala" => EICI[:twitter],
-    "guernsey" => EICI[:twitter],
-    "guinea" => EICI[:twitter],
-    "guinea_bissau" => EICI[:twitter],
-    "guyana" => EICI[:twitter],
-    "haiti" => EICI[:twitter],
-    "honduras" => EICI[:twitter],
-    "hong_kong" => EICI[:twitter],
-    "hungary" => EICI[:twitter],
-    "iceland" => EICI[:twitter],
-    "india" => EICI[:twitter],
-    "indonesia" => EICI[:twitter],
-    "iran" => EICI[:twitter],
-    "iraq" => EICI[:twitter],
-    "ireland" => EICI[:twitter],
-    "isle_of_man" => EICI[:twitter],
-    "israel" => EICI[:twitter],
-    "it" => EICI[:twitter],
-    "cote_divoire" => EICI[:twitter],
-    "jamaica" => EICI[:twitter],
-    "jp" => EICI[:twitter],
-    "jersey" => EICI[:twitter],
-    "jordan" => EICI[:twitter],
-    "kazakhstan" => EICI[:twitter],
-    "kenya" => EICI[:twitter],
-    "kiribati" => EICI[:twitter],
-    "kosovo" => EICI[:twitter],
-    "kuwait" => EICI[:twitter],
-    "kyrgyzstan" => EICI[:twitter],
-    "laos" => EICI[:twitter],
-    "latvia" => EICI[:twitter],
-    "lebanon" => EICI[:twitter],
-    "lesotho" => EICI[:twitter],
-    "liberia" => EICI[:twitter],
-    "libya" => EICI[:twitter],
-    "liechtenstein" => EICI[:twitter],
-    "lithuania" => EICI[:twitter],
-    "luxembourg" => EICI[:twitter],
-    "macau" => EICI[:twitter],
-    "macedonia" => EICI[:twitter],
-    "madagascar" => EICI[:twitter],
-    "malawi" => EICI[:twitter],
-    "malaysia" => EICI[:twitter],
-    "maldives" => EICI[:twitter],
-    "mali" => EICI[:twitter],
-    "malta" => EICI[:twitter],
-    "marshall_islands" => EICI[:twitter],
-    "martinique" => EICI[:twitter],
-    "mauritania" => EICI[:twitter],
-    "mauritius" => EICI[:twitter],
-    "mayotte" => EICI[:twitter],
-    "mexico" => EICI[:twitter],
-    "micronesia" => EICI[:twitter],
-    "moldova" => EICI[:twitter],
-    "monaco" => EICI[:twitter],
-    "mongolia" => EICI[:twitter],
-    "montenegro" => EICI[:twitter],
-    "montserrat" => EICI[:twitter],
-    "morocco" => EICI[:twitter],
-    "mozambique" => EICI[:twitter],
-    "myanmar" => EICI[:twitter],
-    "namibia" => EICI[:twitter],
-    "nauru" => EICI[:twitter],
-    "nepal" => EICI[:twitter],
-    "netherlands" => EICI[:twitter],
-    "new_caledonia" => EICI[:twitter],
-    "new_zealand" => EICI[:twitter],
-    "nicaragua" => EICI[:twitter],
-    "niger" => EICI[:twitter],
-    "nigeria" => EICI[:twitter],
-    "niue" => EICI[:twitter],
-    "norfolk_island" => EICI[:twitter],
-    "northern_mariana_islands" => EICI[:twitter],
-    "north_korea" => EICI[:twitter],
-    "norway" => EICI[:twitter],
-    "oman" => EICI[:twitter],
-    "pakistan" => EICI[:twitter],
-    "palau" => EICI[:twitter],
-    "palestinian_territories" => EICI[:twitter],
-    "panama" => EICI[:twitter],
-    "papua_new_guinea" => EICI[:twitter],
-    "paraguay" => EICI[:twitter],
-    "peru" => EICI[:twitter],
-    "philippines" => EICI[:twitter],
-    "pitcairn_islands" => EICI[:twitter],
-    "poland" => EICI[:twitter],
-    "portugal" => EICI[:twitter],
-    "puerto_rico" => EICI[:twitter],
-    "qatar" => EICI[:twitter],
-    "reunion" => EICI[:twitter],
-    "romania" => EICI[:twitter],
-    "ru" => EICI[:twitter],
-    "rwanda" => EICI[:twitter],
-    "st_barthelemy" => EICI[:twitter],
-    "st_helena" => EICI[:twitter],
-    "st_kitts_nevis" => EICI[:twitter],
-    "st_lucia" => EICI[:twitter],
-    "st_pierre_miquelon" => EICI[:twitter],
-    "st_vincent_grenadines" => EICI[:twitter],
-    "samoa" => EICI[:twitter],
-    "san_marino" => EICI[:twitter],
-    "sao_tome_principe" => EICI[:twitter],
-    "saudi_arabia" => EICI[:twitter],
-    "senegal" => EICI[:twitter],
-    "serbia" => EICI[:twitter],
-    "seychelles" => EICI[:twitter],
-    "sierra_leone" => EICI[:twitter],
-    "singapore" => EICI[:twitter],
-    "sint_maarten" => EICI[:twitter],
-    "slovakia" => EICI[:twitter],
-    "slovenia" => EICI[:twitter],
-    "solomon_islands" => EICI[:twitter],
-    "somalia" => EICI[:twitter],
-    "south_africa" => EICI[:twitter],
-    "south_georgia_south_sandwich_islands" => EICI[:twitter],
-    "kr" => EICI[:twitter],
-    "south_sudan" => EICI[:twitter],
-    "es" => EICI[:twitter],
-    "sri_lanka" => EICI[:twitter],
-    "sudan" => EICI[:twitter],
-    "suriname" => EICI[:twitter],
-    "swaziland" => EICI[:twitter],
-    "sweden" => EICI[:twitter],
-    "switzerland" => EICI[:twitter],
-    "syria" => EICI[:twitter],
-    "taiwan" => EICI[:twitter],
-    "tajikistan" => EICI[:twitter],
-    "tanzania" => EICI[:twitter],
-    "thailand" => EICI[:twitter],
-    "timor_leste" => EICI[:twitter],
-    "togo" => EICI[:twitter],
-    "tokelau" => EICI[:twitter],
-    "tonga" => EICI[:twitter],
-    "trinidad_tobago" => EICI[:twitter],
-    "tunisia" => EICI[:twitter],
-    "tr" => EICI[:twitter],
-    "turkmenistan" => EICI[:twitter],
-    "turks_caicos_islands" => EICI[:twitter],
-    "tuvalu" => EICI[:twitter],
-    "uganda" => EICI[:twitter],
-    "ukraine" => EICI[:twitter],
-    "united_arab_emirates" => EICI[:twitter],
-    "uk" => EICI[:twitter],
-    "us" => EICI[:twitter],
-    "us_virgin_islands" => EICI[:twitter],
-    "uruguay" => EICI[:twitter],
-    "uzbekistan" => EICI[:twitter],
-    "vanuatu" => EICI[:twitter],
-    "vatican_city" => EICI[:twitter],
-    "venezuela" => EICI[:twitter],
-    "vietnam" => EICI[:twitter],
-    "wallis_futuna" => EICI[:twitter],
-    "western_sahara" => EICI[:twitter],
-    "yemen" => EICI[:twitter],
-    "zambia" => EICI[:twitter],
-    "zimbabwe" => EICI[:twitter],
+  "emoji_one" => {
+    "country-flag" => "twitter"
   }
 }
 
-PLATFORM_STYLES ||= {
-  :apple => "apple",
-  :google => "google",
-  :twitter => "twitter",
-  :one => "emoji_one",
-  :windows => "win10"
+EMOJI_SETS ||= {
+  "apple" => "apple",
+  "google" => "google",
+  "google_blob" => "google_blob",
+  "facebook_messenger" => "facebook_messenger",
+  "twitter" => "twitter",
+  "emoji_one" => "emoji_one",
+  "windows" => "win10",
 }
+
+EMOJI_DB_REPO ||= "git@github.com:jjaffeux/emoji-db.git"
+
+EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
+
+GENERATED_PATH ||= File.join(EMOJI_DB_REPO_PATH, "generated")
 
 desc "update emoji images"
 task "emoji:update" do
-  emojis = build_emojis_list(EMOJI_KEYWORDS_URL)
-  images = build_images_list(EMOJI_LIST_URL, emojis)
-  emojis.each { |code, emoji| emoji[:images] = ( images[code] || {} ) }
-  write_emojis(emojis)
-  write_db_json(emojis)
-  groups = generate_emoji_groups(emojis)
-  write_groups_js_es6(emojis, groups)
+  copy_emoji_db
 
-  puts "\r\n"
-  $debugging_output.each { |debug| puts debug }
+  json_db = open(File.join(GENERATED_PATH, "db.json")).read
+  keywords = JSON.parse(json_db)
+
+  write_db_json(keywords)
+  fix_incomplete_sets(keywords)
+  write_aliases
+  groups = generate_emoji_groups(keywords)
+  write_js_groups(keywords, groups)
 
   TestEmojiUpdate.run_and_summarize
+
+  FileUtils.rm_rf(EMOJI_DB_REPO_PATH)
 end
 
 desc "test the emoji generation script"
 task "emoji:test" do
   ENV['EMOJI_TEST'] = "1"
   Rake::Task["emoji:update"].invoke
+end
+
+def copy_emoji_db
+  `rm -rf tmp/emoji-db && git clone #{EMOJI_DB_REPO} tmp/emoji-db`
+
+  path = "#{EMOJI_IMAGES_PATH}/**/*"
+  confirm_overwrite(path)
+  puts "Cleaning emoji folder..."
+  FileUtils.rm_rf(Dir.glob(path))
+
+  EMOJI_SETS.each do |set_name, set_destination|
+    origin = File.join(GENERATED_PATH, set_name)
+    destination = File.join(EMOJI_IMAGES_PATH, set_destination)
+    FileUtils.mv(origin, destination)
+  end
+end
+
+def fix_incomplete_sets(emojis)
+  emojis.each do |code, config|
+    EMOJI_SETS.each do |set_name, set_destination|
+      patch_set = EMOJI_SETS[EMOJI_IMAGES_PATCH.dig(set_name, config["name"])] ||
+        EMOJI_SETS[EMOJI_IMAGES_PATCH.dig(set_name, config["category"])]
+
+      if patch_set || !File.exist?(File.join(EMOJI_IMAGES_PATH, set_destination, "#{config['name']}.png"))
+        origin = File.join(EMOJI_IMAGES_PATH, patch_set || EMOJI_SETS[DEFAULT_SET], config['name'])
+
+        FileUtils.cp("#{origin}.png", File.join(EMOJI_IMAGES_PATH, set_destination, "#{config['name']}.png"))
+        if File.directory?(origin)
+          FileUtils.cp_r(origin, File.join(EMOJI_IMAGES_PATH, set_destination, config['name']))
+        end
+      end
+    end
+  end
 end
 
 def generate_emoji_groups(emojis)
@@ -998,8 +451,10 @@ def generate_emoji_groups(emojis)
                          .map { |code| code.downcase.strip }
                          .join("_")
 
-        if emoji = emojis[emoji_code]
-          group["icons"] << emoji[:name]
+        emoji_char = code_to_emoji(emoji_code)
+
+        if emoji = emojis[emoji_char]
+          group["icons"] << emoji["name"]
         end
       end
     end
@@ -1008,115 +463,20 @@ def generate_emoji_groups(emojis)
   end
 end
 
-def write_emojis(emojis)
-  check_pngout
+def write_aliases
+  EMOJI_ALIASES.each do |original, aliases|
+    aliases.each do |emoji_alias|
+      EMOJI_SETS.each do |set_name, set_destination|
+        origin_file = File.join(EMOJI_IMAGES_PATH, set_destination, "#{original}.png")
+        origin_dir = File.join(EMOJI_IMAGES_PATH, set_destination, original)
+        FileUtils.cp(origin_file, File.join(EMOJI_IMAGES_PATH, set_destination, "#{emoji_alias}.png"))
 
-  path = "#{EMOJI_IMAGES_PATH}/**/*"
-  confirm_overwrite(path)
-  puts "Cleaning emoji folder..."
-  FileUtils.rm_rf(Dir.glob(path))
-
-  puts "Writing emojis to disk..."
-
-  emojis.each do |code, emoji|
-    images = emoji[:images]
-
-    if images.values.all? { |image| !image.nil? }
-      PLATFORM_STYLES.each do |platform, style|
-        style_path = File.join(EMOJI_IMAGES_PATH, style)
-        image_path = File.join(style_path, "#{emoji[:name]}.png")
-        FileUtils.mkdir_p(File.expand_path("..", image_path))
-        image = images[platform]
-
-        write_emoji(image_path, image)
-
-        if aliases = EMOJI_ALIASES[emoji[:name]]
-          aliases.each do |alias_name|
-            alias_image_path = File.join(style_path, "#{alias_name}.png")
-            write_emoji(alias_image_path, image)
-          end
+        if File.directory?(origin_dir)
+          FileUtils.cp_r(origin_dir, File.join(EMOJI_IMAGES_PATH, set_destination, emoji_alias))
         end
       end
-    else
-      platforms = images.select { |_, v| v.nil? }.keys.join(',')
-      $debugging_output << "[!] Skipping `#{emoji[:name]} #{code_to_emoji(code)}`, undefined platforms: #{platforms}"
     end
   end
-
-  puts "\r\n"
-end
-
-def build_emojis_list(url)
-  puts "Downloading remote emoji list..."
-  list = open(url).read
-
-  emojis = {}
-
-  keywords = JSON.parse(list).deep_merge(EMOJI_KEYWORDS_PATCH)
-  EMOJI_KEYWORDS_EXCLUDE_LIST.each { |x| keywords.delete(x) }
-  keywords.keys.each do |name|
-    keyword = keywords[name]
-    next unless char = keyword["char"].presence
-
-    code = codepoints_to_code(char.codepoints, keyword["fitzpatrick_scale"])
-    emojis[code] ||= {
-      :name => name,
-      :fitzpatrick_scale => keyword["fitzpatrick_scale"]
-    }
-
-    if keyword["fitzpatrick_scale"]
-      emojis.merge!(generate_emoji_scales(name, code))
-    end
-  end
-
-  emojis
-end
-
-def build_images_list(url, emojis)
-  puts "Downloading remote emoji images list..."
-  list = open(url).read
-
-  puts "Parsing remote emoji images list..."
-  images = {}
-
-  doc = Nokogiri::HTML(list)
-  table = doc.css("table")[0]
-  table.css("tr").each do |row|
-    cells = row.css("td")
-
-    # skip header and section rows
-    next if cells.size != 16
-
-    code = cells[1].at_css("a")["name"]
-
-    cell_to_img = lambda { |cell|
-      return unless img = cell.at_css("img")
-      Base64.decode64(img["src"][/base64,(.+)$/, 1])
-    }
-
-    images[code] = {}
-    PLATFORM_STYLES.keys.each do |platform|
-      default_cell_index = EMOJI_IMAGES_CELLS_INDEX[platform]
-
-      if emoji = emojis[code]
-        name = emoji[:name]
-        patch_index = EMOJI_IMAGES_CELLS_INDEX_PATCH.fetch(platform, {})[name]
-
-        if patch_index && cell_to_img.call(cells[default_cell_index])
-          $debugging_output << "[!] Found existing image `#{name}` for platform: #{platform}, might want to remove the patch."
-        end
-      end
-
-      index = patch_index || default_cell_index
-      images[code][platform] = cell_to_img.call(cells[index])
-    end
-
-    putc "."
-  end
-
-  puts "\r\n"
-
-  images
 end
 
 def write_db_json(emojis)
@@ -1128,19 +488,25 @@ def write_db_json(emojis)
 
   # skin tones variations of emojis shouldn’t appear in autocomplete
   emojis_without_tones = emojis
-    .select { |code, _| !FITZPATRICK_SCALE.any? {|scale| code[scale] } }
-    .keys
-    .map { |code|
+    .select { |char, config|
+      !FITZPATRICK_SCALE.any? { |scale|
+        codepoints_to_code(char.codepoints, config["fitzpatrick_scale"])[scale]
+      }
+    }
+    .map { |char, config|
       {
-        "code" => code.tr("_", "-"),
-        "name" => emojis[code][:name]
+        "code" => codepoints_to_code(char.codepoints, config["fitzpatrick_scale"]).tr("_", "-"),
+        "name" => config["name"]
       }
     }
 
+  # adds emoji wich are not displayed in picker but available in autocomplete
+  emojis_without_tones << { "code" => "1f44d", "name" => "thumbsup" }
+  emojis_without_tones << { "code" => "1f44e", "name" => "thumbsdown" }
+
   emoji_with_tones = emojis
-    .select { |code, emoji| emoji[:fitzpatrick_scale] }
-    .keys
-    .map { |code| emojis[code][:name] }
+    .select { |code, config| config["fitzpatrick_scale"] }
+    .map { |code, config| config["name"] }
 
   db = {
     "emojis" => emojis_without_tones,
@@ -1151,12 +517,10 @@ def write_db_json(emojis)
   File.write(EMOJI_DB_PATH, JSON.pretty_generate(db))
 end
 
-def write_groups_js_es6(emojis, groups)
+def write_js_groups(emojis, groups)
   puts "Writing #{EMOJI_GROUPS_PATH}..."
 
   confirm_overwrite(EMOJI_GROUPS_PATH)
-
-  check_groups(emojis)
 
   template = <<TEMPLATE
 // This file is generated by emoji.rake do not modify directly
@@ -1169,49 +533,6 @@ TEMPLATE
 
   FileUtils.mkdir_p(File.expand_path("..", EMOJI_GROUPS_PATH))
   File.write(EMOJI_GROUPS_PATH, template)
-end
-
-def check_groups(emojis)
-  grouped_emojis_names = EMOJI_GROUPS.map { |group| group["icons"] }.flatten
-
-  emojis.each do |code, emoji|
-    # we don’t group aliases
-    next if EMOJI_ALIASES.values.flatten.include?(emoji[:name])
-
-    # we don’t want skined toned emojis to appear in groups
-    next if FITZPATRICK_SCALE.include?(code.split("_")[1])
-
-    # we don’t need to categorize an already categorized aliased emoji
-    aliases = EMOJI_ALIASES[emoji[:name]]
-    next if aliases && grouped_emojis_names.any? { |name| aliases.include?(name) }
-
-    if !grouped_emojis_names.include?(emoji[:name])
-      $debugging_output << "[!] `#{emoji[:name]}` not found in any group, add it."
-    end
-  end
-
-  emojis_names = emojis
-                  .map { |_, emoji| emoji[:name] }
-                  .concat(EMOJI_ALIASES.values).flatten
-
-  grouped_emojis_names.each do |emoji_name|
-    PLATFORM_STYLES.each do |_, style|
-      path = File.join("public", "images", "emoji", style, "#{emoji_name}.png")
-      if File.exists?(path) && !File.size?(path)
-        $debugging_output << "[!] `#{emoji_name}` is in a group but we didn't create it. Possible fix: remove it, add an alias or patch keywords list."
-      end
-    end
-  end
-end
-
-def write_emoji(path, image)
-  open(path, "wb") { |file| file << image }
-  `pngout #{path} -s0` if !ENV['EMOJI_TEST']
-  putc "."
-ensure
-  if File.exists?(path) && !File.size?(path)
-    raise "Failed to write emoji: #{path}"
-  end
 end
 
 def code_to_emoji(code)
@@ -1228,48 +549,10 @@ def codepoints_to_code(codepoints, fitzpatrick_scale)
                 .downcase
 
   if !fitzpatrick_scale
-    codepoints.gsub!(/_#{VARIATION_SELECTOR}$/, "")
+    codepoints.gsub!(/_fe0f$/, "")
   end
 
   codepoints
-end
-
-def inject_scale_to_codes(codes, scale)
-  # some emojis were male only and got a male and woman variant while
-  # keeping the original, for those the rule is different (eg: golfing_woman)
-  if codes[1] == VARIATION_SELECTOR
-    codes[1] = scale
-  else
-    codes.insert(1, scale)
-  end
-  codes.join("_")
-end
-
-def generate_emoji_scales(name, code)
-  scaled_keywords = {}
-
-  FITZPATRICK_SCALE.each.with_index do |scale, index|
-    codes = code.split("_")
-    code_with_scale = inject_scale_to_codes(codes, scale)
-    scaled_keywords[code_with_scale] ||= {
-      :name => "#{name}/#{index + 2}",
-      :fitzpatrick_scale => false
-    }
-  end
-
-  scaled_keywords
-end
-
-def check_pngout
-  return if ENV['EMOJI_TEST']
-
-  unless command?("pngout")
-    raise "Please make sure `pngout` is installed and in your PATH"
-  end
-end
-
-def command?(command)
-  system("which \"#{command}\" > /dev/null 2>&1")
 end
 
 def confirm_overwrite(path)
@@ -1278,7 +561,6 @@ def confirm_overwrite(path)
   STDOUT.puts("[!] You are about to overwrite #{path}, are you sure? [CTRL+c] to cancel, [ENTER] to continue")
   STDIN.gets.chomp
 end
-
 
 class TestEmojiUpdate < MiniTest::Test
   def self.run_and_summarize
@@ -1340,16 +622,13 @@ class TestEmojiUpdate < MiniTest::Test
     end
   end
 
-  def test_generate_emoji_scales
-    actual = generate_emoji_scales("sleeping_bed", "1f6cc")
-    expected = {
-      "1f6cc_1f3fb" => { :name => "sleeping_bed/2", :fitzpatrick_scale => false },
-      "1f6cc_1f3fc" => { :name => "sleeping_bed/3", :fitzpatrick_scale => false },
-      "1f6cc_1f3fd" => { :name => "sleeping_bed/4", :fitzpatrick_scale => false },
-      "1f6cc_1f3fe" => { :name => "sleeping_bed/5", :fitzpatrick_scale => false },
-      "1f6cc_1f3ff" => { :name => "sleeping_bed/6", :fitzpatrick_scale => false }
-    }
+  def test_default_set
+    original_image = image_path("twitter", "macau")
 
-    assert_equal expected, actual
+    alias_image = image_path("emoji_one", "macau")
+    assert_equal File.size(original_image), File.size(alias_image)
+
+    alias_image = image_path("win10", "macau")
+    assert_equal File.size(original_image), File.size(alias_image)
   end
 end
