@@ -385,10 +385,12 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # Upload images.
       doc.css('img').each do |img|
         if img['src'].present?
-          Permalink.create(url: img['src']) rescue nil
+          #Permalink.create(url: img['src']) rescue nil
           if '/sites/edgeryders.eu/files/'.in?(img['src'])
             # filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
             filename = img['src'].gsub(/.*#{Regexp.quote('/sites/edgeryders.eu/files')}/, DRUPAL_FILES_DIR)
+            # Decode URL characters.
+            filename = URI.decode_www_form_component(filename)
 
             if File.exists?(filename)
               upload = create_upload(post.user_id, filename, File.basename(filename))
