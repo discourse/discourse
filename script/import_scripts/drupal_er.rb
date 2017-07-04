@@ -460,9 +460,9 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(/\n{3,}/, "\n\n")
 
       # Make sure the content is not blank as a minimum length of 1 character is required.
-      post.raw = '\n' if post.raw.blank?
+      #post.raw = '\n' if post.raw.blank?
 
-      post.save!
+      post.save!(validate: false)
     end
 
   end
