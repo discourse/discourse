@@ -51,10 +51,6 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.5.3)
       aws-sdk-core (= 2.5.3)
-    babel-source (5.8.34)
-    babel-transpiler (0.7.0)
-      babel-source (>= 4.0, < 6)
-      execjs (~> 2.0)
     barber (0.11.2)
       ember-source (>= 1.0, < 3)
       execjs (>= 1.2, < 3)
@@ -392,7 +388,6 @@ DEPENDENCIES
   active_model_serializers (~> 0.8.3)
   annotate
   aws-sdk
-  babel-transpiler
   barber
   better_errors
   binding_of_caller

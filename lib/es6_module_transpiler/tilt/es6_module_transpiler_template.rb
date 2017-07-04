@@ -1,5 +1,4 @@
 require 'execjs'
-require 'babel/transpiler'
 require 'mini_racer'
 
 module Tilt
@@ -27,7 +26,7 @@ module Tilt
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
       ctx = MiniRacer::Context.new(timeout: 15000)
-      ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
+      ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
       ctx.attach("rails.logger.info", proc{|err| Rails.logger.info(err.to_s)})
