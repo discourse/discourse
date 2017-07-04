@@ -12,7 +12,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   DRUPAL_FILES_DIR = ENV['DRUPAL_FILES_DIR']
 
 
-
   def execute
 
     site_settings = {
@@ -55,11 +54,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
 
-    import_users
-    import_topics
-    import_replies
+    # import_users
+    # import_topics
+    # import_replies
+    # import_likes
     post_process_posts
-    import_likes
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -388,7 +387,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
           #Permalink.create(url: img['src']) rescue nil
           if '/sites/edgeryders.eu/files/'.in?(img['src'])
             # filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
-            filename = img['src'].gsub(/.*#{Regexp.quote('/sites/edgeryders.eu/files')}/, DRUPAL_FILES_DIR)
+            filename = img['src'].gsub(/.*#{Regexp.quote('/sites/edgeryders.eu/files')}/, DRUPAL_FILES_DIR).gsub(/\?.*/, '')
             # Decode URL characters.
             filename = URI.decode_www_form_component(filename)
 
@@ -407,7 +406,27 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         end
       end
 
+
+      # NOTE: The order is important. Do this first.
+      doc.css('div.media_embed').each { |node| node.replace node.inner_html }
+
+      # Replace youtube and vimeo iframes with onebox links.
+      doc.css('iframe').each do |node|
+        if %w(youtube.com player.vimeo.com).in?(node['src'])
+          u = URI.parse(node['src'])
+          u.scheme = 'https'
+          node.replace u.to_s
+        end
+      end
+
+      # Replace twitter blockquotes with onebox links.
+      doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
+
+      post.raw = doc.to_s
+
+
       # HTML cleanup.
+      post.raw.gsub!('<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>', '')
       post.raw.gsub!(' dir="ltr"', '')
       post.raw.gsub!('<p>&nbsp;</p>', '')
       post.raw.gsub!('<li>&nbsp;</li>', '')
