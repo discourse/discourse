@@ -355,6 +355,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
              SELECT l.post_id, l.user_id, 2, l.created_at, l.created_at FROM like_data l
              LEFT JOIN post_actions a ON a.post_id = l.post_id AND l.user_id = a.user_id AND a.post_action_type_id = 2
              WHERE a.id IS NULL
+             ON CONFLICT DO NOTHING
     SQL
 
     puts "creating missing user actions"
@@ -366,6 +367,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
              LEFT JOIN user_actions ua ON action_type = 1 AND ua.target_post_id = pa.post_id AND ua.user_id = pa.user_id
 
              WHERE ua.id IS NULL AND pa.post_action_type_id = 2
+             ON CONFLICT DO NOTHING
     SQL
 
 
@@ -379,6 +381,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
                 ua.acting_user_id = pa.user_id AND ua.user_id = p.user_id
 
              WHERE ua.id IS NULL AND pa.post_action_type_id = 2
+             ON CONFLICT DO NOTHING
     SQL
     puts "updating like counts on posts"
 
