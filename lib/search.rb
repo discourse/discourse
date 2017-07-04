@@ -462,7 +462,11 @@ class Search
     posts.where("posts.id IN (
       SELECT post_id FROM topic_links
       WHERE extension IN (?)
-      )", file_extensions)
+      UNION
+      SELECT post_uploads.post_id FROM uploads
+      JOIN post_uploads ON post_uploads.upload_id = uploads.id
+      WHERE lower(uploads.extension) IN (?)
+      )", file_extensions, file_extensions)
   end
 
   private

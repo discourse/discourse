@@ -52,10 +52,6 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def extension
-    File.extname(original_filename)
-  end
-
   def self.generate_digest(path)
     Digest::SHA1.file(path).hexdigest
   end
