@@ -372,8 +372,11 @@ class Topic < ActiveRecord::Base
     # Remove muted tags
     muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     unless muted_tag_ids.empty?
-      topics = topics.joins("LEFT OUTER JOIN topic_tags ON topic_tags.topic_id = topics.id")
-                     .where("topic_tags.tag_id NOT IN (?) OR topic_tags.tag_id is null", muted_tag_ids)
+      # If multiple tags per topic, include topics with tags that aren't muted,
+      # and don't forget untagged topics.
+      topics = topics.where(
+        "EXISTS ( SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id AND tag_id NOT IN (?) )
+        OR NOT EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id)", muted_tag_ids)
     end
 
     topics
