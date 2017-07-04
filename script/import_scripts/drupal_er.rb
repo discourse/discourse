@@ -369,6 +369,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
     Post.find_each do |post|
       next if post.raw.nil?
+      puts "post: ##{post.id}..."
 
       # Extract all links.
       links = []
@@ -412,7 +413,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
       # Replace youtube and vimeo iframes with onebox links.
       doc.css('iframe').each do |node|
-        if %w(youtube.com player.vimeo.com).in?(node['src'])
+        if 'youtube.com'.in?(node['src']) || 'player.vimeo.com'.in?(node['src'])
           u = URI.parse(node['src'])
           u.scheme = 'https'
           node.replace u.to_s
