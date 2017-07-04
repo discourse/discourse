@@ -393,6 +393,14 @@
       "name": "call_me_hand"
     },
     {
+      "code": "1f44d",
+      "name": "+1"
+    },
+    {
+      "code": "1f44e",
+      "name": "-1"
+    },
+    {
       "code": "1f44a",
       "name": "facepunch"
     },
@@ -601,7 +609,7 @@
       "name": "guardsman"
     },
     {
-      "code": "1f575-fe0f-200d-2640-fe0f",
+      "code": "1f575-fe0f-200d-2640",
       "name": "female_detective"
     },
     {
@@ -797,7 +805,7 @@
       "name": "dancing_women"
     },
     {
-      "code": "1f46f-200d-2642-fe0f",
+      "code": "1f46f-200d-2642",
       "name": "dancing_men"
     },
     {
@@ -829,7 +837,7 @@
       "name": "woman_facepalming"
     },
     {
-      "code": "1f937-200d-2640-fe0f",
+      "code": "1f937",
       "name": "woman_shrugging"
     },
     {
@@ -2161,7 +2169,7 @@
       "name": "golf"
     },
     {
-      "code": "1f3cc-fe0f-200d-2640-fe0f",
+      "code": "1f3cc-fe0f-200d-2640",
       "name": "golfing_woman"
     },
     {
@@ -2209,11 +2217,11 @@
       "name": "person_fencing"
     },
     {
-      "code": "1f93c-200d-2640-fe0f",
+      "code": "1f93c-200d-2640",
       "name": "women_wrestling"
     },
     {
-      "code": "1f93c-200d-2642-fe0f",
+      "code": "1f93c-200d-2642",
       "name": "men_wrestling"
     },
     {
@@ -2289,7 +2297,7 @@
       "name": "bath"
     },
     {
-      "code": "26f9-fe0f-200d-2640-fe0f",
+      "code": "26f9-fe0f-200d-2640",
       "name": "basketball_woman"
     },
     {
@@ -2297,7 +2305,7 @@
       "name": "basketball_man"
     },
     {
-      "code": "1f3cb-fe0f-200d-2640-fe0f",
+      "code": "1f3cb-fe0f-200d-2640",
       "name": "weight_lifting_woman"
     },
     {
@@ -5721,6 +5729,274 @@
       "name": "zimbabwe"
     },
     {
+      "code": "1f929",
+      "name": "star_struck"
+    },
+    {
+      "code": "1f928",
+      "name": "face_with_raised_eyebrow"
+    },
+    {
+      "code": "1f92f",
+      "name": "exploding_head"
+    },
+    {
+      "code": "1f92a",
+      "name": "crazy_face"
+    },
+    {
+      "code": "1f92c",
+      "name": "face_with_symbols_over_mouth"
+    },
+    {
+      "code": "1f92e",
+      "name": "face_vomiting"
+    },
+    {
+      "code": "1f92b",
+      "name": "sushing_face"
+    },
+    {
+      "code": "1f92d",
+      "name": "face_with_hand_over_mouth"
+    },
+    {
+      "code": "1f9d0",
+      "name": "face_with_monocle"
+    },
+    {
+      "code": "1f9d2",
+      "name": "child"
+    },
+    {
+      "code": "1f9d1",
+      "name": "adult"
+    },
+    {
+      "code": "1f9d3",
+      "name": "older_adult"
+    },
+    {
+      "code": "1f9d5",
+      "name": "woman_with_headscarf"
+    },
+    {
+      "code": "1f9d4",
+      "name": "bearded_person"
+    },
+    {
+      "code": "1f931",
+      "name": "breast_feeding"
+    },
+    {
+      "code": "1f9d9",
+      "name": "mage"
+    },
+    {
+      "code": "1f9da",
+      "name": "fairy"
+    },
+    {
+      "code": "1f9db",
+      "name": "vampire"
+    },
+    {
+      "code": "1f9dc",
+      "name": "merperson"
+    },
+    {
+      "code": "1f9dd",
+      "name": "elf"
+    },
+    {
+      "code": "1f9de",
+      "name": "genie"
+    },
+    {
+      "code": "1f9df",
+      "name": "zombie"
+    },
+    {
+      "code": "1f9d6",
+      "name": "person_in_steamy_room"
+    },
+    {
+      "code": "1f9d7",
+      "name": "person_climbing"
+    },
+    {
+      "code": "1f9d8",
+      "name": "person_in_lotus_position"
+    },
+    {
+      "code": "1f91f",
+      "name": "love_you_gesture"
+    },
+    {
+      "code": "1f932",
+      "name": "palms_up_together"
+    },
+    {
+      "code": "1f9e0",
+      "name": "brain"
+    },
+    {
+      "code": "1f9e1",
+      "name": "orange_heart"
+    },
+    {
+      "code": "1f9e3",
+      "name": "scarf"
+    },
+    {
+      "code": "1f9e4",
+      "name": "gloves"
+    },
+    {
+      "code": "1f9e5",
+      "name": "coat"
+    },
+    {
+      "code": "1f9e6",
+      "name": "socks"
+    },
+    {
+      "code": "1f9e2",
+      "name": "billed_cap"
+    },
+    {
+      "code": "1f993",
+      "name": "zebra"
+    },
+    {
+      "code": "1f992",
+      "name": "giraffe"
+    },
+    {
+      "code": "1f994",
+      "name": "hedgehog"
+    },
+    {
+      "code": "1f995",
+      "name": "sauropod"
+    },
+    {
+      "code": "1f996",
+      "name": "t_rex"
+    },
+    {
+      "code": "1f997",
+      "name": "cricket"
+    },
+    {
+      "code": "1f965",
+      "name": "coconut"
+    },
+    {
+      "code": "1f966",
+      "name": "broccoli"
+    },
+    {
+      "code": "1f968",
+      "name": "pretzel"
+    },
+    {
+      "code": "1f969",
+      "name": "cut_of_meat"
+    },
+    {
+      "code": "1f96a",
+      "name": "sandwich"
+    },
+    {
+      "code": "1f963",
+      "name": "bowl_with_spoon"
+    },
+    {
+      "code": "1f96b",
+      "name": "canned_food"
+    },
+    {
+      "code": "1f95f",
+      "name": "dumpling"
+    },
+    {
+      "code": "1f960",
+      "name": "fortune_cookie"
+    },
+    {
+      "code": "1f961",
+      "name": "takeout_box"
+    },
+    {
+      "code": "1f967",
+      "name": "pie"
+    },
+    {
+      "code": "1f964",
+      "name": "cup_with_straw"
+    },
+    {
+      "code": "1f962",
+      "name": "chopsticks"
+    },
+    {
+      "code": "1f6f8",
+      "name": "flying_saucer"
+    },
+    {
+      "code": "1f6f7",
+      "name": "sled"
+    },
+    {
+      "code": "1f94c",
+      "name": "curling_stone"
+    },
+    {
+      "code": "1f1f8-1f1ef",
+      "name": "svalbard_and_jan_mayen"
+    },
+    {
+      "code": "1f1f2-1f1eb",
+      "name": "st_martin"
+    },
+    {
+      "code": "1f1fa-1f1f2",
+      "name": "us_outlying_islands"
+    },
+    {
+      "code": "1f1f9-1f1e6",
+      "name": "tristan_da_cunha"
+    },
+    {
+      "code": "1f1ed-1f1f2",
+      "name": "heard_and_mc_donald_islands"
+    },
+    {
+      "code": "1f1ea-1f1e6",
+      "name": "ceuta_and_melilla"
+    },
+    {
+      "code": "1f1e9-1f1ec",
+      "name": "diego_garcia"
+    },
+    {
+      "code": "1f1e6-1f1e8",
+      "name": "ascension_island"
+    },
+    {
+      "code": "1f1e7-1f1fb",
+      "name": "bouvet_island"
+    },
+    {
+      "code": "1f1e8-1f1f5",
+      "name": "clipperton_island"
+    },
+    {
+      "code": "1f1fa-1f1f3",
+      "name": "united_nations"
+    },
+    {
       "code": "1f44d",
       "name": "thumbsup"
     },
@@ -5734,6 +6010,8 @@
     "clap",
     "wave",
     "call_me_hand",
+    "+1",
+    "-1",
     "facepunch",
     "fist",
     "fist_left",
@@ -5778,18 +6056,37 @@
     "construction_worker_man",
     "guardswoman",
     "guardsman",
-    "female_detective",
     "male_detective",
     "woman_health_worker",
     "man_health_worker",
+    "woman_farmer",
+    "man_farmer",
     "woman_cook",
     "man_cook",
     "woman_student",
     "man_student",
     "woman_singer",
     "man_singer",
+    "woman_teacher",
+    "man_teacher",
+    "woman_factory_worker",
+    "man_factory_worker",
+    "woman_technologist",
+    "man_technologist",
+    "woman_office_worker",
+    "man_office_worker",
+    "woman_mechanic",
+    "man_mechanic",
+    "woman_scientist",
+    "man_scientist",
+    "woman_artist",
+    "man_artist",
+    "woman_firefighter",
+    "man_firefighter",
     "woman_pilot",
     "man_pilot",
+    "woman_astronaut",
+    "man_astronaut",
     "woman_judge",
     "man_judge",
     "mrs_claus",
@@ -5828,7 +6125,6 @@
     "haircut_man",
     "massage_woman",
     "massage_man",
-    "golfing_woman",
     "golfing_man",
     "snowboarder",
     "woman_cartwheeling",
@@ -5844,9 +6140,7 @@
     "surfing_woman",
     "surfing_man",
     "bath",
-    "basketball_woman",
     "basketball_man",
-    "weight_lifting_woman",
     "weight_lifting_man",
     "biking_woman",
     "biking_man",
@@ -5856,9 +6150,7 @@
     "business_suit_levitating",
     "woman_juggling",
     "man_juggling",
-    "sleeping_bed",
-    "thumbsup",
-    "thumbsdown"
+    "sleeping_bed"
   ],
   "aliases": {
     "right_anger_bubble": [
@@ -5903,9 +6195,6 @@
     ],
     "city_sunset": [
       "city_dusk"
-    ],
-    "clock": [
-      "mantlepiece_clock"
     ],
     "couch_and_lamp": [
       "couch"
@@ -6062,9 +6351,6 @@
     "peace_symbol": [
       "peace"
     ],
-    "pen_ballpoint": [
-      "lower_left_ballpoint_pen"
-    ],
     "fountain_pen": [
       "pen_fountain",
       "lower_left_fountain_pen"
@@ -6105,11 +6391,11 @@
     "thinking": [
       "thinking_face"
     ],
-    "thumbsdown": [
-      "-1"
+    "-1": [
+      "thumbsdown"
     ],
-    "thumbsup": [
-      "+1"
+    "+1": [
+      "thumbsup"
     ],
     "cloud_with_lightning_and_rain": [
       "thunder_cloud_rain",
@@ -6400,7 +6686,8 @@
       "map"
     ],
     "pen": [
-      "pen_ballpoint"
+      "pen_ballpoint",
+      "lower_left_ballpoint_pen"
     ],
     "email": [
       "envelope",

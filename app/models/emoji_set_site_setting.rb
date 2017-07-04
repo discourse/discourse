@@ -31,7 +31,9 @@ class EmojiSetSiteSetting < EnumSiteSetting
       { name: 'emoji_set.google', value: 'google' },
       { name: 'emoji_set.twitter', value: 'twitter' },
       { name: 'emoji_set.emoji_one', value: 'emoji_one' },
-      { name: 'emoji_set.win10', value: 'win10' }
+      { name: 'emoji_set.win10', value: 'win10' },
+      { name: 'emoji_set.google_blob', value: 'google_blob' },
+      { name: 'emoji_set.facebook_messenger', value: 'facebook_messenger' },
     ]
   end
 
