@@ -56,12 +56,10 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
 
     import_users
-    import_post_and_wiki_topics
-    import_challenge_response_topics
+    import_topics
     import_replies
     post_process_posts
     import_likes
-
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -147,8 +145,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
-  def import_post_and_wiki_topics
-    puts '', 'creating post and wiki topics...'
+  def import_topics
+    puts '', 'creating topics...'
 
     # create_category({
     #                   name: 'Post',
@@ -159,70 +157,24 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     sql = <<-SQL
       SELECT
         n.nid nid,
-        n.type type,
         n.uid uid,
         n.status status,
         n.created created,
         n.changed changed,
         tf.title_field_value title,
-        db.body_value content
+        db.body_value content,
+        n.type type
       FROM node AS n
         LEFT JOIN field_data_title_field AS tf on n.nid = tf.entity_id
         LEFT JOIN field_data_body AS db on n.nid = db.entity_id
       WHERE
-        n.type IN('post', 'wiki')
+        n.type IN('challenge_response', 'post', 'wiki')
       ORDER BY n.nid DESC
     SQL
     # LIMIT 50
     # OFFSET 500
 
     results = @client.query(sql, cache_rows: false)
-
-    create_posts(results) do |row|
-      {
-        id: "nid:#{row['nid']}",
-        user_id: user_id_from_imported_user_id(row['uid']) || -1,
-        title: row['title'].try(:strip),
-        raw: row['content'],
-        created_at: Time.zone.at(row['created']),
-        updated_at: Time.zone.at(row['changed']),
-        custom_fields: {import_id: "nid:#{row['nid']}"}
-        # category: 'Blog',
-        # visible: row['status'].to_i == 0 ? false : true
-        # pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
-      }
-    end
-  end
-
-
-  def import_challenge_response_topics
-    puts '', 'creating challenge response topics...'
-
-    # create_category({
-    #                   name: 'Post',
-    #                   user_id: -1,
-    #                   description: "Articles from the blog"
-    #                 }, nil) unless Category.find_by_name('Blog')
-
-    sql = <<-SQL
-      SELECT
-        n.nid nid,
-        n.uid uid,
-        tf.title_field_value title,
-        db.body_value content,
-        n.status status,
-        n.created created,
-        n.changed changed,
-        n.type type
-      FROM node AS n
-        LEFT JOIN field_data_title_field AS tf on n.nid = tf.entity_id
-        LEFT JOIN field_data_body AS db on n.nid = db.entity_id
-      WHERE
-        n.type IN('post', 'wiki')
-    SQL
-
-    results = @client.query(sql, cache_rows: false)
-
 
     create_posts(results) do |row|
       {
