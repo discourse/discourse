@@ -172,9 +172,9 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       WHERE
         n.type IN('post', 'wiki')
       ORDER BY n.nid DESC
-      LIMIT 50
-      OFFSET 500
     SQL
+    # LIMIT 50
+    # OFFSET 500
 
     results = @client.query(sql, cache_rows: false)
 
