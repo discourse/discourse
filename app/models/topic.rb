@@ -373,7 +373,7 @@ class Topic < ActiveRecord::Base
     muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     unless muted_tag_ids.empty?
       topics = topics.joins("LEFT OUTER JOIN topic_tags ON topic_tags.topic_id = topics.id")
-                     .where("topic_tags.tag_id NOT IN (?)", muted_tag_ids)
+                     .where("topic_tags.tag_id NOT IN (?) OR topic_tags.tag_id is null", muted_tag_ids)
     end
 
     topics

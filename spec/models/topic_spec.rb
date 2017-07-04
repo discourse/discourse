@@ -1413,6 +1413,17 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
     end
 
+    it "returns topics with no tags too" do
+      user = Fabricate(:user)
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+      TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
+      topic1 = Fabricate(:topic, tags: [muted_tag])
+      topic2 = Fabricate(:topic, tags: [other_tag])
+      topic3 = Fabricate(:topic)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to contain_exactly(topic2, topic3)
+    end
+
     it "sorts by category notification levels" do
       category1, category2 = Fabricate(:category), Fabricate(:category)
       2.times {|i| Fabricate(:topic, category: category1) }
