@@ -317,7 +317,6 @@ ja:
         add_members: "メンバーを追加"
         delete_member_confirm: "'%{username}' を '%{group}' から削除してもよろしいですか？"
       name_placeholder: "グループネームはユーザー名と同様にスペース無し"
-      public: "ユーザーがグループへ自由に参加/離脱できるようにする(グループが見える状態である必要があります)"
       add: "追加"
       join: "グループに参加"
       leave: "グループから離脱"
@@ -332,7 +331,6 @@ ja:
       bio: "グループについて"
       selector_placeholder: "メンバーを追加"
       owner: "オーナー"
-      visible: "このグループは全てのユーザーに表示されています。"
       index:
         title: "グループ"
         empty: "表示するグループはありません。"

@@ -400,7 +400,7 @@ fi:
 
           - Viestissäsi on suuria määriä yksityiskohtaista tietoa, joka ei ole kaikille olennaista ja joka voisi uuvuttaa tai häiritä lukijaa.
 
-          [details=Select this to see how it works!]
+          [details=Napauta niin näet kuinka se toimii!]
           1. Valitse editorin <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.
           2. Valitse "Piilota yksityiskohdat".
           3. Muokkaa Yhteenveto-tekstiä, jonka taakse tiedot piilotetaan, ja lisää sisältö.

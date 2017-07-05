@@ -352,7 +352,6 @@ da:
         add_members: "Tilføj Medlemmer"
         delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
       name_placeholder: "Gruppe navn, ingen mellemrum, samme som reglen for brugernavn"
-      public: "Tillad at brugere frit kan tilmelde sig/forlade gruppen (Kræver at gruppen er synlig)"
       empty:
         posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe."
         members: "Der er ingen medlemmer i denne gruppe."
@@ -374,7 +373,6 @@ da:
       bio: "Om Grupper"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
-      visible: "Gruppen er synlige for alle brugere"
       index:
         title: "Grupper"
         empty: "Der er ingen synlige grupper"

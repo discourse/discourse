@@ -1553,7 +1553,9 @@ it:
         %{message}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
-      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
+      liked_received: "Like ricevuti"
+      new_users: "Nuovi utenti"
+      follow_topic: "Segui questo topic"
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       preheader: "Un breve riepilogo dall'ultima tua visita il %{last_seen_at}"

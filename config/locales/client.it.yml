@@ -352,7 +352,6 @@ it:
         add_members: "Aggiungi Membri"
         delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
       name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
-      public: "Permetti agli utenti di aggiungersi/togliersi liberamente dal gruppo (il gruppo deve essere visibile)"
       empty:
         posts: "Non ci sono messaggi da membri di questo gruppo."
         members: "Non ci sono membri in questo gruppo."
@@ -374,7 +373,6 @@ it:
       bio: "Informazioni sul Gruppo"
       selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
-      visible: "Il Gruppo è visibile a tutti gli utenti"
       index:
         title: "Gruppi"
         empty: "Non ci sono gruppi visibili."
@@ -1660,6 +1658,7 @@ it:
         has_liked: "ti è piaciuto questo messaggio"
         undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
+        edit_action: "Modifica"
         edit_anonymous: "Spiacenti, devi essere connesso per poter modificare questo messaggio."
         flag: "segnala privatamente questo messaggio o invia una notifica privata"
         delete: "cancella questo messaggio"

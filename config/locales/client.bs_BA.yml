@@ -350,7 +350,6 @@ bs_BA:
         add_members: "Dodaj Članove"
         delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
       name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
-      public: "Dozvolite korisnicima da se pridruže/napuste grupu slobodno (Zahtjeva da grupa bude vidljiva)"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
         members: "Nema članova u grupi."
@@ -371,7 +370,6 @@ bs_BA:
       bio: "O grupi"
       selector_placeholder: "Dodaj članove"
       owner: "vlasnik"
-      visible: "Grupa je vidljiva svim korisnicima"
       index:
         title: "Grupe"
         empty: "Vidljive grupe još ne postoje."

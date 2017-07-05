@@ -360,7 +360,6 @@ sq:
       bio: "Mbi grupin"
       selector_placeholder: "Shto anëtarë"
       owner: "autori"
-      visible: "Grupi është i dukshëm për të gjithë përdoruesit"
       index:
         title: "Grupet"
       title:
@@ -2603,6 +2602,7 @@ sq:
         help: "Shto fusha që përdoruesit mund të plotësojnë."
         create: "Krijo fushë përdoruesi"
         untitled: "Pa Titull"
+        name: "Fusha e emrit"
         save: "Ruaj"
         edit: "Redakto"
         delete: "Fshij"
@@ -2623,13 +2623,13 @@ sq:
           enabled: "e treguar në kartën e anëtarit"
           disabled: "nuk tregohet në kartën e anëtarit"
         field_types:
-          text: 'Fushë tekst'
+          text: 'Fusha tekstit'
           confirm: 'Konfirmimi'
           dropdown: "Listë Dropdown"
       site_text:
         description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
         search: "Kërkoni për tekstin që dëshironi të redaktoni"
-        title: 'Tekstet'
+        title: 'Përmbajtje Tekstit'
         edit: 'redakto'
         revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
@@ -2644,6 +2644,7 @@ sq:
         no_results: "Nuk u gjet asnjë rezultat."
         clear_filter: "Pastro"
         add_url: "shto URL"
+        add_host: "shto host"
         categories:
           all_results: 'Të gjitha'
           required: 'E nevojshme'
@@ -2669,6 +2670,7 @@ sq:
           user_preferences: "Rregullimet e përdoruesit"
           tags: "Etiketat"
           search: "Kërko"
+          groups: "Grupet"
       badges:
         title: Stemat
         new_badge: Stemë e Re

@@ -1169,7 +1169,6 @@ sq:
         %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
-      unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
     notify_old_email:

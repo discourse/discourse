@@ -1624,7 +1624,6 @@ da:
       popular_posts: "Populære indlæg"
       more_new: "Nyt for dig"
       subject_template: "[%{email_prefix}] Sammendrag"
-      unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} resumé"
       preheader: "Et kort resume siden de sidste besøg %{last_seen_at}"

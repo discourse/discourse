@@ -352,7 +352,7 @@ fi:
         add_members: "Lisää jäseniä"
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
       name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
-      public: "Salli jäsenten liittyä/poistua ryhmästä vapaasti (ryhmän tulee olla näkyvillä)"
+      public: "Salli käyttäjien liittyä ryhmään ja poistua siitä vapaasti (ryhmän täytyy olla julkisesti näkyvillä)"
       empty:
         posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä."
         members: "Ryhmässä ei ole jäseniä."
@@ -374,7 +374,6 @@ fi:
       bio: "Tietoa ryhmästä"
       selector_placeholder: "Lisää jäseniä"
       owner: "isäntä"
-      visible: "Ryhmä näkyy kaikille käyttäjille"
       index:
         title: "Ryhmät"
         empty: "Näkyvillä olevia ryhmiä ei ole."
@@ -388,6 +387,12 @@ fi:
       mentions: "Maininnat"
       messages: "Viestit"
       notification_level: "Ryhmäviestien oletusilmoitusasetus"
+      visibility_levels:
+        title: "Ketkä näkevät tämän ryhmän?"
+        public: "Kaikk"
+        members: "Ryhmän isännät, jäsenet ja ylläpitäjät"
+        staff: "Ryhmän isännät ja henkilökunta"
+        owners: "Ryhmän isännät ja ylläpitäjät"
       alias_levels:
         title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @mainita sen?"
         nobody: "Ei kukaan"
@@ -751,6 +756,9 @@ fi:
         expired: "Tämä kutsu on rauennut."
         rescind: "Poista"
         rescinded: "Kutsu poistettu"
+        rescind_all: "Peru kaikki kutsut"
+        rescinded_all: "Kaikki kutsut peruttu!"
+        rescind_all_confirm: "Haluatko varmasti perua kaikki kutsut?"
         reinvite: "Lähetä kutsu uudestaan"
         reinvite_all: "Lähetä kaikki kutsut uudestaan"
         reinvite_all_confirm: "Haluatko varmasti lähettää kaikki kutsut uudelleen?"
@@ -1663,6 +1671,7 @@ fi:
         has_liked: "tykkäsit tästä viestistä"
         undo_like: "peru tykkäys"
         edit: "muokkaa viestiä"
+        edit_action: "Muokkaa"
         edit_anonymous: "Pahoittelut, sinun täytyy ensin kirjautua sisään voidaksesi muokata tätä viestiä."
         flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisesti siihen liittyvä huomio"
         delete: "poista tämä viesti"

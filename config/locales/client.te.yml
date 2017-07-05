@@ -209,7 +209,6 @@ te:
     directory:
       title: "వాడుకరులు"
     groups:
-      visible: "గుంపు అందరు సభ్యులకు కనిపిస్తుంది"
       title:
         one: "గుంపు"
         other: "గుంపులు"

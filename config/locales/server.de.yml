@@ -2268,7 +2268,6 @@ de:
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
       subject_template: "[%{email_prefix}] Zusammenfassung"
-      unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"

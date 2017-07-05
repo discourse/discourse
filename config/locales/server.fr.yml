@@ -2255,7 +2255,6 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
-      unsubscribe: "Ce résumé est envoyé depuis %{site_link} lorsque nous ne vous voyons plus depuis un moment. Pour se désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "résumé de %{site_name}"
       preheader: "Un bref résumé depuis votre dernière visite le %{last_seen_at}"

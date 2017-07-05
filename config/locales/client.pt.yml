@@ -349,7 +349,6 @@ pt:
         add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
-      public: "Permitir aos utilizadores de se juntarem/saírem do grupo livremente (Requere que o grupo seja visível)"
       empty:
         posts: "Não existem publicações por membros deste grupo."
         members: "Não existem membros neste grupo."
@@ -371,7 +370,6 @@ pt:
       bio: "Acerca do Grupo"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
-      visible: "O grupo é visível para todos os utilizadores"
       index:
         title: "Grupos"
         empty: "Não existem grupos visíveis."

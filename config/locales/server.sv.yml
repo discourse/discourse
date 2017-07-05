@@ -1801,7 +1801,6 @@ sv:
       join_the_discussion: "Läs mer"
       popular_posts: "Populära meddelanden"
       more_new: "Nytt för er"
-      unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
       from: "%{site_name} sammanfattning"
     forgot_password:

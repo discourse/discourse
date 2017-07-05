@@ -326,7 +326,6 @@ vi:
         add_members: "Thêm thành viên"
         delete_member_confirm: "Xoá  '%{username}' khỏi nhóm '%{group}' ?"
       name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
-      public: "Cho phép người dùng tham gia/rời bỏ nhóm tự do (Nhóm phải là công khai)"
       empty:
         posts: "Không có bài viết nào của các thành viên trong nhóm này"
         members: "Không có thành viên nào trong nhóm này"
@@ -348,7 +347,6 @@ vi:
       bio: "Thông tin về nhóm"
       selector_placeholder: "Thêm thành viên"
       owner: "chủ"
-      visible: "Mọi thành viên có thể nhìn thấy nhóm"
       index:
         title: "Nhóm"
         empty: "Không có nhóm công khai nào."

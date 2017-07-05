@@ -724,7 +724,6 @@ cs:
       join_the_discussion: "Číst dále"
       popular_posts: "Populární příspěvky"
       subject_template: "[%{email_prefix}] Přehled"
-      unsubscribe: "Přehled zaslán z webu %{site_link}, protože jsi jej již nějaký čas nenavštívil. Pro zrušení zasílání %{unsubscribe_link}."
       click_here: "klikněte zde"
       from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"

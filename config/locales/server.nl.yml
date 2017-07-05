@@ -1506,8 +1506,8 @@ nl:
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
       subject_template: "[%{email_prefix}] Samenvatting"
-      unsubscribe: "Deze samenvatting is verstuurd door %{site_link}, omdat we je al een tijdje niet gezien hebben. Om je af te melden van onze community e-mails, %{unsubscribe_link}."
       click_here: "klik hier"
+      from: "%{site_name} samenvatting"
       preheader: "Een korte samenvatting sinds uw laatste bezoek op %{last_seen_at}"
     set_password:
       title: "Wachtwoord instellen"

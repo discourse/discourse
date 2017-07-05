@@ -2255,7 +2255,6 @@ he:
       popular_posts: "פוסטים פופולאריים"
       more_new: "חדש בשבילכם"
       subject_template: "[%{email_prefix}] סיכום"
-      unsubscribe: "סיכום זה נשלח מ %{site_link} כאשר אנחנו לא רואים אתכם לאורך זמן. כדי לבטל את המנוי %{unsubscribe_link}."
       click_here: "לחצו כאן"
       from: "סיכום %{site_name}"
       preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
