@@ -213,6 +213,7 @@ en:
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
+  max_pm_recepients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
@@ -1497,6 +1498,8 @@ en:
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
 
     code_formatting_style: "Code button in composer will default to this code formatting style"
+
+    max_allowed_message_recipients: "Maximum recipients allowed in a message."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
