@@ -631,6 +631,26 @@ describe PostsController do
 
         expect(response.body).to eq(original)
       end
+
+      it 'allows to create posts in import_mode' do
+        NotificationEmailer.enable
+        post = Fabricate(:post)
+        user = Fabricate(:user)
+        master_key = ApiKey.create_master_key.key
+
+        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: 'this is test reply 1', topic_id: post.topic.id, reply_to_post_number: 1}
+        expect(response).to be_success
+        expect(post.topic.user.notifications.count).to eq(1)
+        post.topic.user.notifications.destroy_all
+
+        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: 'this is test reply 2', topic_id: post.topic.id, reply_to_post_number: 1, :import_mode => true}
+        expect(response).to be_success
+        expect(post.topic.user.notifications.count).to eq(0)
+
+        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: 'this is test reply 3', topic_id: post.topic.id, reply_to_post_number: 1, :import_mode => false}
+        expect(response).to be_success
+        expect(post.topic.user.notifications.count).to eq(1)
+      end
     end
 
     describe 'when logged in' do
