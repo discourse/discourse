@@ -18,7 +18,7 @@ export default Ember.Component.extend({
 
   actions: {
     submit: function() {
-      const Permalink = require('admin/models/permalink').default;
+      const Permalink = requirejs('admin/models/permalink').default;
 
       if (!this.get('formSubmitted')) {
         const self = this;

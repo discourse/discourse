@@ -358,7 +358,7 @@ class DialectHelper {
 
     Object.keys(require._eak_seen).forEach(entry => {
       if (entry.indexOf('discourse-markdown') !== -1) {
-        const module = require(entry);
+        const module = requirejs(entry);
         if (module && module.setup) {
           const featureName = entry.split('/').reverse()[0];
           helper.whiteList = info => whiteListFeature(featureName, info);
@@ -397,7 +397,7 @@ export function cook(raw, opts) {
 
   if (currentOpts.enableExperimentalMarkdownIt) {
     result = opts.sanitizer(
-        require('pretty-text/engines/markdown-it/instance').default(opts).render(raw),
+        requirejs('pretty-text/engines/markdown-it/instance').default(opts).render(raw),
         whiteLister
     );
   } else {

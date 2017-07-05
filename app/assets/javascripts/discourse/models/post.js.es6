@@ -104,7 +104,7 @@ const Post = RestModel.extend({
 
   createProperties() {
     // composer only used once, defer the dependency
-    const Composer = require('discourse/models/composer').default;
+    const Composer = requirejs('discourse/models/composer').default;
     const data = this.getProperties(Composer.serializedFieldsForCreate());
     data.reply_to_post_number = this.get('reply_to_post_number');
     data.image_sizes = this.get('imageSizes');

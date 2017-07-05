@@ -34,7 +34,7 @@ QUnit.module("initializer:localization", {
   }
 });
 
-QUnit.test("translation overrides", assert => {
+QUnit.test("translation overrides", function(assert) {
   PreloadStore.store('translationOverrides', {"js.composer.reply":"WAT","js.topic.reply.help":"foobar"});
   LocalizationInitializer.initialize(this.registry);
 

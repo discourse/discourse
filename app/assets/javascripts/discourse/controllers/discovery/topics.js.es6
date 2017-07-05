@@ -60,7 +60,7 @@ const controllerOpts = {
 
       this.topicTrackingState.resetTracking();
       this.store.findFiltered('topicList', {filter}).then(list => {
-        const TopicList = require('discourse/models/topic-list').default;
+        const TopicList = requirejs('discourse/models/topic-list').default;
         TopicList.hideUniformCategory(list, this.get('category'));
 
         this.setProperties({ model: list });

@@ -37,7 +37,7 @@ ApiKey.reopenClass({
     @returns {ApiKey} the ApiKey instance
   **/
   create: function() {
-    const AdminUser = require('admin/models/admin-user').default;
+    const AdminUser = requirejs('admin/models/admin-user').default;
     var result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = AdminUser.create(result.user);

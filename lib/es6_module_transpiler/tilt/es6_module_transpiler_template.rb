@@ -28,7 +28,6 @@ module Tilt
       ctx = MiniRacer::Context.new(timeout: 15000)
       ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
       ctx.eval("module = {}; exports = {};");
-      ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
       ctx.attach("rails.logger.info", proc{|err| Rails.logger.info(err.to_s)})
       ctx.attach("rails.logger.error", proc{|err| Rails.logger.error(err.to_s)})
       ctx.eval <<JS
@@ -105,12 +104,8 @@ JS
       klass = self.class
       klass.protect do
         klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
-
-        transpiled = babel_source(source)
-
-        compiler_source = "new module.exports.Compiler(#{transpiled}, '#{module_name(root_path, logical_path)}', #{compiler_options}).#{compiler_method}()"
-
-        @output = klass.v8.eval(compiler_source)
+        transpiled = babel_source(source, module_name: module_name(root_path, logical_path))
+        @output = klass.v8.eval(transpiled)
       end
     end
 
@@ -120,7 +115,7 @@ JS
       klass = self.class
       klass.protect do
         klass.v8.eval("console.prefix = 'BABEL: #{scope.logical_path}: ';")
-        @output = klass.v8.eval(generate_source(scope))
+        @output = klass.v8.eval(babel_source(data, module_name: module_name(scope.root_path, scope.logical_path)))
       end
 
       # For backwards compatibility with plugins, for now export the Global format too.
@@ -159,17 +154,20 @@ JS
       @output
     end
 
-    def babel_source(source)
+    def babel_source(source, opts=nil)
+
+      opts ||= {}
+
       js_source = ::JSON.generate(source, quirks_mode: true)
-      "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring', 'es6.spread', 'es6.parameters', 'es6.templateLiterals', 'es6.regex.unicode', 'es7.decorators', 'es6.classes']})['code']"
+
+      if opts[:module_name]
+        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy'] }).code"
+      else
+        "Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex', 'transform-regenerator', 'transform-decorators-legacy'] }).code"
+      end
     end
 
     private
-
-    def generate_source(scope)
-      js_source = babel_source(data)
-      "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
-    end
 
     def module_name(root_path, logical_path)
       path = nil
