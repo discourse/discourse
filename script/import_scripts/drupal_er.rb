@@ -42,10 +42,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     #   {id: c['tid'], name: c['name'], description: c['description']}
     # end
 
-    # User.where.not("email = 'admin@example.com' or id = -1 or id = -2").delete_all
-    # UserCustomField.delete_all
 
     if Rails.env.development?
+      # User.where.not("email = 'admin@example.com' or id = -1 or id = -2").delete_all
+      # UserCustomField.delete_all
+
       Topic.delete_all
       TopicCustomField.delete_all
       Post.delete_all
@@ -54,11 +55,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
 
-    # import_users
+    import_users
     # import_topics
     # import_replies
     # import_likes
-    post_process_posts
+    # post_process_posts
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -74,7 +75,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     puts '', 'creating users...'
 
     sql = <<-SQL
-      SELECT u.uid id, u.name, u.mail email, u.created, fb.field_bio_value bio_raw, fa.field_agegroup_value agegroup,
+      SELECT u.uid id, u.name, u.mail email, u.pass, u.created, fb.field_bio_value bio_raw, fa.field_agegroup_value agegroup,
         bi.field_i_m_based_in_value location, fu.field_facebook_url_url facebook_url, tu.field_twitter_url_url twitter_url,
         lu.field_linkedin_url_url linkedin_url, wu.field_website_url_url website_url, fc.field_first_contact_value first_contact,
         co.field_consent_opencare_value consent_opencare_date, fm.filename profile_picture
@@ -111,6 +112,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         bio_raw: row['bio_raw'],
         website: row['website_url'],
         location: row['location'],
+        active: true,
         custom_fields: {
           agegroup: row['agegroup'],
           facebook_url: row['facebook_url'],
@@ -118,7 +120,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
           linkedin_url: row['linkedin_url'],
           first_contact: row['first_contact'],
           consent_opencare: row['consent_opencare_date'],
-          import_id: row['id']
+          import_id: row['id'],
+          import_pass: row['pass']
         },
         post_create_action: proc do |user|
           if row['profile_picture'].present? && user.uploaded_avatar_id.blank?
@@ -438,7 +441,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!('<p>', '')
       post.raw.gsub!('</p>', '')
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
-      
+
       # NOTE: Do not use \s to also match non-breaking spaces.
       # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
       post.raw.gsub!(/(\r|\n)[[:space:]]*<\/li>/, '</li>')
@@ -457,7 +460,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
   end
-
 
 
 end
