@@ -1,6 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { emailValid } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
+import Group from 'discourse/models/group';
+import Invite from 'discourse/models/invite';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   userInvitedShow: Ember.inject.controller('user-invited-show'),
@@ -144,7 +146,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isPrivateTopic'),
 
   groupFinder(term) {
-    const Group = requirejs('discourse/models/group').default;
     return Group.findAll({search: term, ignore_automatic: true});
   },
 
@@ -191,9 +192,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
 
     createInvite() {
-      const Invite = requirejs('discourse/models/invite').default;
       const self = this;
-
       if (this.get('disabled')) { return; }
 
       const groupNames = this.get('model.groupNames'),
@@ -237,7 +236,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     generateInvitelink() {
-      const Invite = requirejs('discourse/models/invite').default;
       const self = this;
 
       if (this.get('disabled')) { return; }

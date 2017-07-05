@@ -1,4 +1,6 @@
+import AdminUser from 'admin/models/admin-user';
 import { ajax } from 'discourse/lib/ajax';
+
 const ApiKey = Discourse.Model.extend({
 
   /**
@@ -36,8 +38,7 @@ ApiKey.reopenClass({
     @param {...} var_args the properties to initialize this with
     @returns {ApiKey} the ApiKey instance
   **/
-  create: function() {
-    const AdminUser = requirejs('admin/models/admin-user').default;
+  create() {
     var result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = AdminUser.create(result.user);
