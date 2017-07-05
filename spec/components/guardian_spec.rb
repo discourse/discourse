@@ -434,31 +434,6 @@ describe Guardian do
       expect(Guardian.new.can_see?(nil)).to be_falsey
     end
 
-    describe 'a Group' do
-      let(:group) { Group.new }
-      let(:invisible_group) { Group.new(visible: false, name: 'invisible') }
-
-      it "returns true when the group is visible" do
-        expect(Guardian.new.can_see?(group)).to be_truthy
-      end
-
-      it "returns true when the group is invisible but the user is an admin" do
-        admin = Fabricate.build(:admin)
-        expect(Guardian.new(admin).can_see?(invisible_group)).to be_truthy
-      end
-
-      it "returns true when the group is invisible but the user is a member" do
-        invisible_group.save!
-        member = Fabricate.build(:user)
-        GroupUser.create(group: invisible_group, user: member)
-        expect(Guardian.new(member).can_see?(invisible_group)).to be_truthy
-      end
-
-      it "returns false when the group is invisible" do
-        expect(Guardian.new.can_see?(invisible_group)).to be_falsey
-      end
-    end
-
     describe 'a Category' do
 
       it 'allows public categories' do
@@ -2434,6 +2409,69 @@ describe Guardian do
         end
       end
     end
+  end
+
+  describe(:can_see_group) do
+    it 'Correctly handles owner visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(false)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles staff visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(member).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+    end
+
+    it 'Correctly handles member visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles public groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:public])
+
+      expect(Guardian.new.can_see_group?(group)).to eq(true)
+    end
+
   end
 
   context 'topic featured link category restriction' do

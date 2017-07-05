@@ -1,4 +1,7 @@
 export function setup(helper) {
+
+  if (helper.markdownIt) { return; }
+
   helper.inlineRegexp({
     start: '#',
     matcher: /^#([\w-:]{1,101})/i,

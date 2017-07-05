@@ -212,6 +212,11 @@
     display: inline-block;
     margin-right: 10px;
   }
+
+  // password reset modal
+  .modal-body.forgot-password-modal p {
+    font-size: 14px;
+  }
 }
 
 .reply-where-modal {

@@ -49,7 +49,7 @@ class Search
                SELECT p2.id FROM posts p2
                LEFT JOIN post_search_data pd ON locale = ? AND p2.id = pd.post_id
                WHERE pd.post_id IS NULL
-              )', SiteSetting.default_locale).limit(10000)
+              )', SiteSetting.default_locale).limit(limit)
 
     posts.each do |post|
       # force indexing
@@ -62,7 +62,7 @@ class Search
                SELECT p2.id FROM posts p2
                LEFT JOIN topic_search_data pd ON locale = ? AND p2.topic_id = pd.topic_id
                WHERE pd.topic_id IS NULL AND p2.post_number = 1
-              )', SiteSetting.default_locale).limit(10000)
+              )', SiteSetting.default_locale).limit(limit)
 
     posts.each do |post|
       # force indexing
@@ -151,6 +151,7 @@ class Search
   end
 
   attr_accessor :term
+  attr_reader :clean_term
 
   def initialize(term, opts=nil)
     @opts = opts || {}
@@ -163,6 +164,8 @@ class Search
 
     # Removes any zero-width characters from search terms
     term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    @clean_term = term.to_s.dup
+
     term = process_advanced_search!(term)
 
     if term.present?
@@ -179,7 +182,7 @@ class Search
       @limit = Search.per_filter
     end
 
-    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
+    @results = GroupedSearchResults.new(@opts[:type_filter], clean_term, @search_context, @include_blurbs, @blurb_length)
   end
 
   def valid?
@@ -447,15 +450,27 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
-    tags = match.split(",")
+  advanced_filter(/tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
+    if match.include?('+')
+      tags = match.split('+')
 
-    posts.where("topics.id IN (
+      posts.where("topics.id IN (
+      SELECT tt.topic_id
+      FROM topic_tags tt, tags
+      WHERE tt.tag_id = tags.id
+      GROUP BY tt.topic_id
+      HAVING to_tsvector(#{query_locale}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{query_locale}, ?)
+      )", tags.join('&'))
+    else
+      tags = match.split(",")
+
+      posts.where("topics.id IN (
       SELECT DISTINCT(tt.topic_id)
       FROM topic_tags tt, tags
       WHERE tt.tag_id = tags.id
       AND tags.name in (?)
       )", tags)
+    end
   end
 
   private

@@ -19,7 +19,12 @@
                 {{csv-uploader uploading=uploading}}
                 <a href="https://meta.discourse.org/t/sending-bulk-user-invites/16468" target="_blank" style="color:black;">{{fa-icon "question-circle"}}</a>
               {{/if}}
-              {{#if showReinviteAllButton}}
+              {{#if showBulkActionButtons}}
+                {{#if rescindedAll}}
+                  {{i18n 'user.invited.rescinded_all'}}
+                {{else}}
+                  {{d-button icon="times" action="rescindAll" class="btn" label="user.invited.rescind_all"}}
+                {{/if}}
                 {{#if reinvitedAll}}
                   {{i18n 'user.invited.reinvited_all'}}
                 {{else}}

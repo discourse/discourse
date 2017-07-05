@@ -15,7 +15,11 @@ export function getRegister(obj) {
   const register = {
     lookup: (...args) => owner.lookup(...args),
     lookupFactory: (...args) => {
-      return owner.lookupFactory ? owner.lookupFactory(...args) : owner._lookupFactory(...args);
+      if (owner.factoryFor) {
+        return owner.factoryFor(...args);
+      } else if (owner._lookupFactory) {
+        return owner._lookupFactory(...args);
+      }
     },
 
     deprecateContainer(target) {

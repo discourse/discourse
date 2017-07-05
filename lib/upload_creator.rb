@@ -16,8 +16,10 @@ class UploadCreator
   #  - type (string)
   #  - content_type (string)
   #  - origin (string)
-  #  - is_attachment_for_group_message (boolean)
+  #  - for_group_message (boolean)
   #  - for_theme (boolean)
+  #  - for_private_message (boolean)
+  #  - pasted (boolean)
   def initialize(file, filename, opts = {})
     @upload = Upload.new
     @file = file
@@ -38,7 +40,7 @@ class UploadCreator
 
         if @filename[/\.svg$/i]
           whitelist_svg!
-        else
+        elsif !Rails.env.test?
           convert_to_jpeg! if should_convert_to_jpeg?
           downsize!        if should_downsize?
 
@@ -77,13 +79,9 @@ class UploadCreator
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
       end
 
-      if @opts[:is_attachment_for_group_message]
-        @upload.is_attachment_for_group_message = true
-      end
-
-      if @opts[:for_theme]
-        @upload.for_theme = true
-      end
+      @upload.for_private_message = true if @opts[:for_private_message]
+      @upload.for_group_message   = true if @opts[:for_group_message]
+      @upload.for_theme           = true if @opts[:for_theme]
 
       return @upload unless @upload.save
 
@@ -124,9 +122,10 @@ class UploadCreator
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
   def should_convert_to_jpeg?
-    TYPES_CONVERTED_TO_JPEG.include?(@image_info.type) &&
-    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG &&
-    SiteSetting.png_to_jpg_quality < 100
+    return false if !TYPES_CONVERTED_TO_JPEG.include?(@image_info.type)
+    return true  if @opts[:pasted]
+    return false if SiteSetting.png_to_jpg_quality == 100
+    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
   def convert_to_jpeg!
@@ -137,6 +136,7 @@ class UploadCreator
       'convert', @file.path,
       '-auto-orient',
       '-background', 'white',
+      '-interlace', 'none',
       '-flatten',
       '-quality', SiteSetting.png_to_jpg_quality.to_s,
       jpeg_tempfile.path

@@ -391,6 +391,19 @@ describe PostMover do
         end
       end
 
+      context "to an existing closed topic" do
+        let!(:destination_topic) { Fabricate(:topic, closed: true) }
+
+        it "works correctly for admin" do
+          admin = Fabricate(:admin)
+          moved_to = topic.move_posts(admin, [p1.id, p2.id], destination_topic_id: destination_topic.id)
+          expect(moved_to).to be_present
+
+          moved_to.reload
+          expect(moved_to.posts_count).to eq(2)
+          expect(moved_to.highest_post_number).to eq(2)
+        end
+      end
 
     end
   end

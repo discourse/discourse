@@ -90,7 +90,8 @@ class PostMover
       raw: post.raw,
       topic_id: destination_topic.id,
       acting_user: user,
-      skip_validations: true
+      skip_validations: true,
+      guardian: Guardian.new(user)
     )
 
     PostAction.copy(post, new_post)

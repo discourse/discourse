@@ -1,5 +1,6 @@
-require "open-uri"
 require "final_destination"
+require "mini_mime"
+require "open-uri"
 
 class FileHelper
 
@@ -24,19 +25,27 @@ class FileHelper
     ).resolve
     return unless uri.present?
 
+    downloaded = uri.open("rb", read_timeout: read_timeout)
+
     extension = File.extname(uri.path)
+
+    if extension.blank? && downloaded.content_type.present?
+      ext = MiniMime.lookup_by_content_type(downloaded.content_type)&.extension
+      ext = "jpg" if ext == "jpe"
+      extension = "." + ext if ext.present?
+    end
+
     tmp = Tempfile.new([tmp_file_name, extension])
 
     File.open(tmp.path, "wb") do |f|
-      downloaded = uri.open("rb", read_timeout: read_timeout)
       while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
         f.write(data)
       end
-      # tiny files are StringIO, no close! on them
-      downloaded.try(:close!) rescue nil
     end
 
     tmp
+  ensure
+    downloaded&.close
   end
 
   private

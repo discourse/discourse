@@ -13,5 +13,5 @@
 <% end %>
 
 <% content_for :title do %>
-  <%= t("js.user.profile")%> - <%= @user.username %>
+  <%= t("js.user.profile")%> - <%= @user.username %> - <%= SiteSetting.title %>
 <% end %>

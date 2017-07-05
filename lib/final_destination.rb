@@ -20,6 +20,7 @@ class FinalDestination
         nil
       end
     end
+    @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
     @limit = @opts[:max_redirects]
     @status = :ready
     @cookie = nil
@@ -63,10 +64,11 @@ class FinalDestination
       return nil
     end
 
-    # Always allow current base url
-    if hostname_matches?(Discourse.base_url_no_prefix)
-      @status = :resolved
-      return @uri
+    @ignored.each do |host|
+      if hostname_matches?(host)
+        @status = :resolved
+        return @uri
+      end
     end
 
     return nil unless validate_uri
@@ -82,7 +84,7 @@ class FinalDestination
     when 200
       @status = :resolved
       return @uri
-    when 405, 501
+    when 405, 409, 501
       get_response = small_get(headers)
 
       if get_response.code.to_i == 200
@@ -137,6 +139,17 @@ class FinalDestination
   def is_dest_valid?
 
     return false unless @uri && @uri.host
+
+    # Whitelisted hosts
+    return true if hostname_matches?(SiteSetting.s3_cdn_url) ||
+      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
+      hostname_matches?(Discourse.base_url_no_prefix)
+
+    if SiteSetting.whitelist_internal_hosts.present?
+      SiteSetting.whitelist_internal_hosts.split('|').each do |h|
+        return true if @uri.hostname.downcase == h.downcase
+      end
+    end
 
     # Whitelisted hosts
     return true if hostname_matches?(SiteSetting.s3_cdn_url) ||

@@ -303,6 +303,30 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         )
       end
 
+      describe 'when posts are configured to be deleted immediately' do
+        before do
+          SiteSetting.delete_removed_posts_after = 0
+        end
+
+        it 'should set up the tutorial correctly' do
+          narrative.set_data(user,
+            state: :tutorial_delete,
+            topic_id: topic.id,
+            track: described_class.to_s
+          )
+
+          PostDestroyer.new(user, post).destroy
+
+          post = Post.last
+
+          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+
+          PostDestroyer.destroy_stubs
+
+          expect(post.reload).to be_present
+        end
+      end
+
       describe 'when user replies to the topic' do
         it 'should create the right reply' do
           narrative.set_data(user, narrative.get_data(user).merge(

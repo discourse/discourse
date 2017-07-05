@@ -1,4 +1,5 @@
 require "uri"
+require "mini_mime"
 require_dependency "file_store/base_store"
 require_dependency "s3_helper"
 require_dependency "file_helper"
@@ -33,7 +34,7 @@ module FileStore
       # stored uploaded are public by default
       options = {
         acl: "public-read",
-        content_type: opts[:content_type].presence || Rack::Mime.mime_type(File.extname(filename))
+        content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
       # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_image?(filename)

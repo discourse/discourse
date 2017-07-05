@@ -490,7 +490,13 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+  enable_experimental_markdown_it:
+    client: true
+    default: false
   traditional_markdown_linebreaks:
+    client: true
+    default: false
+  enable_markdown_typographer:
     client: true
     default: false
   allow_html_tables:
@@ -564,7 +570,7 @@ posting:
     default: true
     client: true
   emoji_set:
-    default: 'emoji_one'
+    default: 'twitter'
     client: true
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
@@ -629,6 +635,8 @@ email:
   alternative_reply_by_email_addresses:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
+  find_related_post_with_key:
+    default: false
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -798,6 +806,9 @@ files:
     default: 95
     min: 1
     max: 100
+  allow_staff_to_upload_any_file_in_pm:
+    default: true
+    client: true
 
 trust:
   default_trust_level:
@@ -821,7 +832,6 @@ trust:
   min_trust_to_send_messages:
     default: 1
     enum: 'TrustLevelSetting'
-    client: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30
@@ -895,6 +905,9 @@ security:
     default: ''
     type: list
     shadowed_by_global: true
+  whitelist_internal_hosts:
+    default: ''
+    type: list
 
 onebox:
   enable_flash_video_onebox: false

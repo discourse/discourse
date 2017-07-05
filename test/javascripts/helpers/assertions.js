@@ -8,14 +8,6 @@ function count(selector) {
   return find(selector).length;
 }
 
-function containsInstance(collection, klass, text) {
-  ok(klass.detectInstance(_.first(collection)), text);
-}
-
-function not(state, message) {
-  ok(!state, message);
-}
-
 function visible(selector) {
   return find(selector + ":visible").length > 0;
 }

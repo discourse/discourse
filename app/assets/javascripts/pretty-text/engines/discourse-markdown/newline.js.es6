@@ -2,6 +2,9 @@
 // in the tree, replace any new lines with `br`s.
 
 export function setup(helper) {
+
+  if (helper.markdownIt) { return; }
+
   helper.postProcessText((text, event) => {
     const { options, insideCounts } = event;
     if (options.traditionalMarkdownLinebreaks || (insideCounts.pre > 0)) { return; }

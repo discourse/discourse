@@ -173,6 +173,13 @@ describe Email::Styles do
       style.strip_avatars_and_emojis
       expect(style.to_html).to match_html("cry_cry")
     end
+
+    it "works if img tag has no attrs" do
+      cooked = "Create a method for click on image and use ng-click in <img> in your slide box...it is simple"
+      style = Email::Styles.new(cooked)
+      style.strip_avatars_and_emojis
+      expect(style.to_html).to eq(cooked)
+    end
   end
 
   context "onebox_styles" do

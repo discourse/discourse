@@ -1,6 +1,7 @@
 require_dependency 'markdown_linker'
 require_dependency 'email/message_builder'
 require_dependency 'age_words'
+require_dependency 'rtl'
 
 class UserNotifications < ActionMailer::Base
   include UserNotificationsHelper
@@ -392,7 +393,7 @@ class UserNotifications < ActionMailer::Base
           template: 'email/invite',
           format: :html,
           locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
-                    classes: RTL.new(user).css_class
+                    classes: Rtl.new(user).css_class
           }
         )
       end
@@ -418,7 +419,7 @@ class UserNotifications < ActionMailer::Base
                     reached_limit: reached_limit,
                     post: post,
                     in_reply_to_post: in_reply_to_post,
-                    classes: RTL.new(user).css_class
+                    classes: Rtl.new(user).css_class
           }
         )
       end

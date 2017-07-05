@@ -3,8 +3,9 @@ import Composer from 'discourse/models/composer';
 import afterTransition from 'discourse/lib/after-transition';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
 import { headerHeight } from 'discourse/components/site-header';
+import KeyEnterEscape from 'discourse/mixins/key-enter-escape';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(KeyEnterEscape, {
   elementId: 'reply-control',
 
   classNameBindings: ['composer.creatingPrivateMessage:private-message',
@@ -63,17 +64,6 @@ export default Ember.Component.extend({
       if (lastKeyUp !== this._lastKeyUp) { return; }
       this.appEvents.trigger('composer:find-similar');
     }, 1000);
-  },
-
-  keyDown(e) {
-    if (e.which === 27) {
-      this.sendAction('cancelled');
-      return false;
-    } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
-      // CTRL+ENTER or CMD+ENTER
-      this.sendAction('save');
-      return false;
-    }
   },
 
   @observes('composeState')

@@ -1468,7 +1468,6 @@ pt_BR:
       follow_topic: "Seguir esse tópico"
       join_the_discussion: "Leia Mais"
       popular_posts: "Publicações Populares"
-      unsubscribe: "Este resumo é enviado por %{site_link} quando não o vemos há algum tempo. Para cancelar a assinatura %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo do site %{site_name} "
       preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"

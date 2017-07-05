@@ -4,7 +4,10 @@ require 'final_destination'
 describe FinalDestination do
 
   let(:opts) do
-    { # avoid IP lookups in test
+    {
+      ignore_redirects: ['https://ignore-me.com'],
+
+      # avoid IP lookups in test
       lookup_ip: lambda do |host|
         case host
         when 'eviltrout.com' then '52.84.143.152'
@@ -13,6 +16,7 @@ describe FinalDestination do
         when 'some_thing.example.com' then '104.25.152.10'
         when 'private-host.com' then '192.168.10.1'
         when 'internal-ipv6.com' then '2001:abc:de:01:3:3d0:6a65:c2bf'
+        when 'ignore-me.com' then '53.84.143.152'
         else
           as_ip = IPAddr.new(host) rescue nil
           raise "couldn't lookup #{host}" if as_ip.nil?
@@ -62,6 +66,13 @@ describe FinalDestination do
         expect(final.redirected?).to eq(false)
         expect(final.status).to eq(:resolved)
       end
+    end
+
+    it "ignores redirects" do
+      final = FinalDestination.new('https://ignore-me.com/some-url', opts)
+      expect(final.resolve.to_s).to eq('https://ignore-me.com/some-url')
+      expect(final.redirected?).to eq(false)
+      expect(final.status).to eq(:resolved)
     end
 
     context "underscores in URLs" do
@@ -237,7 +248,7 @@ describe FinalDestination do
       expect(fd("https://[2001:470:1:3a8::251]").is_dest_valid?).to eq(true)
     end
 
-    it "returns true for private ipv6" do
+    it "returns false for private ipv6" do
       expect(fd("https://[fdd7:b450:d4d1:6b44::1]").is_dest_valid?).to eq(false)
     end
 
@@ -254,6 +265,11 @@ describe FinalDestination do
     it "returns true for the CDN url" do
       GlobalSetting.stubs(:cdn_url).returns("https://cdn.example.com/discourse")
       expect(fd("https://cdn.example.com/some/asset").is_dest_valid?).to eq(true)
+    end
+
+    it 'supports whitelisting via a site setting' do
+      SiteSetting.whitelist_internal_hosts = 'private-host.com'
+      expect(fd("https://private-host.com/some/url").is_dest_valid?).to eq(true)
     end
   end
 

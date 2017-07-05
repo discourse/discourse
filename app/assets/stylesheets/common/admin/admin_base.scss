@@ -316,6 +316,17 @@ td.flaggers td {
   }
 }
 
+.email-preview {
+  .ac-wrap {
+    .item {
+      margin: 0.2em 0 0 0.4em;
+    }
+    // input[type=text] {
+    //   margin-left: 0.4em;
+    // }
+  }
+}
+
 .paste-users {
   width: 400px;
   height: 150px;
@@ -1471,7 +1482,7 @@ and (max-width : 500px) {
   div.ac-wrap {
     width: 100% !important;
     box-sizing: border-box;
-    }
+  }
 
   .admin-container {
     h2 {

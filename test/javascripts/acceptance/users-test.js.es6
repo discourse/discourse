@@ -1,17 +1,17 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("User Directory");
 
-test("Visit Page", function() {
+QUnit.test("Visit Page", assert => {
   visit("/users");
   andThen(() => {
-    ok($('body.users-page').length, "has the body class");
-    ok(exists('.directory table tr'), "has a list of users");
+    assert.ok($('body.users-page').length, "has the body class");
+    assert.ok(exists('.directory table tr'), "has a list of users");
   });
 });
 
-test("Visit All Time", function() {
+QUnit.test("Visit All Time", assert => {
   visit("/users?period=all");
   andThen(() => {
-    ok(exists('.time-read'), "has time read column");
+    assert.ok(exists('.time-read'), "has time read column");
   });
 });

@@ -4,7 +4,7 @@ moduleForComponent('invite-list', { integration: true });
 componentTest('can add users', {
   template: `{{invite-list field=field}}`,
 
-  setup() {
+  beforeEach() {
     this.set('field', {});
   },
 

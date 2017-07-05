@@ -86,6 +86,35 @@ registerButton('edit', attrs => {
   }
 });
 
+registerButton('reply-small', attrs => {
+  if (!attrs.canCreatePost) { return; }
+
+  const args = {
+    action: 'replyToPost',
+    title: 'post.controls.reply',
+    icon: 'reply',
+    className: 'reply',
+  };
+
+  return args;
+});
+
+registerButton('wiki-edit', attrs => {
+  if (attrs.canEdit) {
+    const args = {
+      action: 'editPost',
+      className: 'edit create',
+      title: 'post.controls.edit',
+      icon: 'pencil-square-o',
+      alwaysShowYours: true
+    };
+    if (!attrs.mobileView) {
+      args.label = 'post.controls.edit_action';
+    }
+    return args;
+  }
+});
+
 registerButton('replies', (attrs, state, siteSettings) => {
   const replyCount = attrs.replyCount;
 
@@ -180,6 +209,13 @@ registerButton('delete', attrs => {
   }
 });
 
+function replaceButton(buttons, find, replace) {
+  const idx = buttons.indexOf(find);
+  if (idx !== -1) {
+    buttons[idx] = replace;
+  }
+}
+
 export default createWidget('post-menu', {
   tagName: 'section.post-menu-area.clearfix',
 
@@ -209,7 +245,16 @@ export default createWidget('post-menu', {
 
     const allButtons = [];
     let visibleButtons = [];
-    siteSettings.post_menu.split('|').forEach(i => {
+
+    const orderedButtons = siteSettings.post_menu.split('|');
+
+    // If the post is a wiki, make Edit more prominent
+    if (attrs.wiki) {
+      replaceButton(orderedButtons, 'edit', 'reply-small');
+      replaceButton(orderedButtons, 'reply', 'wiki-edit');
+    }
+
+    orderedButtons.forEach(i => {
       const button = this.attachButton(i, attrs);
       if (button) {
         allButtons.push(button);

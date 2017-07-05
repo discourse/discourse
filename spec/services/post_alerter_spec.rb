@@ -329,7 +329,7 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     it "pushes nothing to suspended users" do
-
+      SiteSetting.queue_jobs = true
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       evil_trout.update_columns(suspended_till: 1.year.from_now)
@@ -343,8 +343,7 @@ describe PostAlerter do
                            push_url: "https://site2.com/push")
       end
 
-      RestClient.expects(:post).never
-      mention_post
+      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end
 
     it "correctly pushes notifications if configured correctly" do
@@ -362,13 +361,10 @@ describe PostAlerter do
       body = nil
       headers = nil
 
-      # should only happen once even though we are using 2 keys
-      RestClient.expects(:post).with{|_req,_body,_headers|
-        headers = _headers
-        body = _body
+      Excon.expects(:post).with{|_req, _body|
+        headers = _body[:headers]
+        body = _body[:body]
       }.returns("OK")
-
-      mention_post
 
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
@@ -399,8 +395,10 @@ describe PostAlerter do
         ]
       }
 
+      mention_post
+
       expect(JSON.parse(body)).to eq(payload)
-      expect(headers[:content_type]).to eq(:json)
+      expect(headers["Content-Type"]).to eq('application/json')
     end
   end
 

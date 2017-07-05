@@ -122,6 +122,7 @@ class Invite < ActiveRecord::Base
     if !invite
       create_args = { invited_by: invited_by, email: lower_email }
       create_args[:moderator] = true if opts[:moderator]
+      create_args[:custom_message] = custom_message if custom_message
       invite = Invite.create!(create_args)
     end
 
@@ -143,7 +144,7 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id, custom_message: custom_message) if send_email
+    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
 
     invite.reload
     invite
@@ -252,7 +253,13 @@ class Invite < ActiveRecord::Base
 
   def self.resend_all_invites_from(user_id)
     Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id).find_each do |invite|
-      invite.resend_invite unless invite.blank?
+      invite.resend_invite
+    end
+  end
+
+  def self.rescind_all_invites_from(user)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user.id).find_each do |invite|
+      invite.trash!(user)
     end
   end
 
@@ -289,6 +296,7 @@ end
 #  deleted_by_id  :integer
 #  invalidated_at :datetime
 #  moderator      :boolean          default(FALSE), not null
+#  custom_message :text
 #
 # Indexes
 #

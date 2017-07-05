@@ -218,6 +218,10 @@ const TopicRoute = Discourse.Route.extend({
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get('id'), controller);
+
+    Ember.run.scheduleOnce('afterRender', () => {
+      this.appEvents.trigger('header:update-topic', model);
+    });
   }
 
 });

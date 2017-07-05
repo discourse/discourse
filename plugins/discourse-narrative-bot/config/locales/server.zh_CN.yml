@@ -25,7 +25,7 @@ zh_CN:
       long_description: |
         该徽章授予完成我们交互式高级用户教程的你。你已经掌握了讨论的高级工具——你已经收到了证明！
   discourse_narrative_bot:
-    bio: "你好，我不是真实的人。我是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及**`@%{discobot_username}`**与我交互。"
+    bio: "你好，我不是真实的人。我是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`%{discobot_username}`** 与我交互。"
     timeout:
       message: |-
         你好，@%{username}。好久没见到你了，一切可好？
@@ -145,13 +145,13 @@ zh_CN:
       hello:
         title: ":robot: 祝贺！"
         message: |-
-          感谢你加入%{title}，然后欢迎！
+          感谢加入%{title}，  欢迎！
 
-          - 我只是个机器人，但是需要的话[我们友善的管理人员](/about)也能帮助你。
+          - 我只是个机器人， 但是如果你需要接触人， [我们友善的管理人员](/about) 也可以帮助你。
 
-          - 出于安全原因，我们临时限制了新用户能做的事。随着我们对你的了解，你将获得新能力（和[徽章](/badges)）。
+          - 出于安全考虑，我们暂时限制新用户的功能。当我们了解你的时候，你会获得新的能力 (和 [徽章](/badges))。
 
-          - 我们一直相信[文明的讨论行为](/guidelines)。
+          - 我们始终相信[文明 社区 行为](/guidelines)。
       onebox:
         instructions: |-
           接下来，你能分享下列链接给我么？回复**单独一行的链接**，然后它会自动展开显示一个有用的摘要。
@@ -211,6 +211,8 @@ zh_CN:
 
           选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
       bookmark:
+        instructions: |-
+          如果你想了解更多，请选择下方<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做， 未来你可能会有 :gift: ！
         reply: |-
           太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
       emoji:

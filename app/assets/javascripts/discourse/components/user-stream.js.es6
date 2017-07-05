@@ -1,6 +1,7 @@
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from 'discourse/lib/click-track';
 import { selectedText } from 'discourse/lib/utilities';
+import Post from 'discourse/models/post';
 
 export default Ember.Component.extend(LoadMore, {
   loading: false,
@@ -44,6 +45,13 @@ export default Ember.Component.extend(LoadMore, {
   }.on('willDestroyElement'),
 
   actions: {
+    removeBookmark(userAction) {
+      const stream = this.get('stream');
+      Post.updateBookmark(userAction.get("post_id"), false).then(() => {
+        stream.remove(userAction);
+      });
+    },
+
     loadMore() {
       if (this.get('loading')) { return; }
 

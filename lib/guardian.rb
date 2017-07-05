@@ -126,8 +126,11 @@ class Guardian
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
-  alias :can_send_activation_email? :can_moderate?
   alias :can_close? :can_moderate?
+
+  def can_send_activation_email?(user)
+    user && is_staff? && !SiteSetting.must_approve_users?
+  end
 
   def can_grant_badges?(_user)
     SiteSetting.enable_badges && is_staff?
@@ -135,10 +138,21 @@ class Guardian
 
   def can_see_group?(group)
     return false if group.blank?
-    return true if is_admin? || group.visible?
+    return true if group.visibility_level == Group.visibility_levels[:public]
+    return true if is_admin?
+    return true if is_staff? && group.visibility_level == Group.visibility_levels[:staff]
     return false if user.blank?
 
-    group.group_users.where(user_id: user.id).exists?
+    membership = GroupUser.find_by(group_id: group.id, user_id: user.id)
+
+    return false unless membership
+
+    if !membership.owner
+      return false if group.visibility_level == Group.visibility_levels[:owners]
+      return false if group.visibility_level == Group.visibility_levels[:staff]
+    end
+
+    true
   end
 
 
@@ -266,6 +280,10 @@ class Guardian
   end
 
   def can_resend_all_invites?(user)
+    user.staff?
+  end
+
+  def can_rescind_all_invites?(user)
     user.staff?
   end
 

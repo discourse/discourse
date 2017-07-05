@@ -21,6 +21,8 @@ function splitAtLast(tag, block, next, first) {
 
 export function setup(helper) {
 
+  if (helper.markdownIt) { return; }
+
   // If a row begins with HTML tags, don't parse it.
   helper.registerBlock('html', function(block, next) {
     let split, pos;

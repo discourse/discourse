@@ -239,6 +239,19 @@ describe PostDestroyer do
       end
     end
 
+    it "accepts a delete_removed_posts_after option" do
+      SiteSetting.delete_removed_posts_after = 0
+
+      PostDestroyer.new(post.user, post, delete_removed_posts_after: 1).destroy
+
+      post.reload
+
+      expect(post.deleted_at).to eq(nil)
+      expect(post.user_deleted).to eq(true)
+
+      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+    end
+
     context "as a moderator" do
       it "deletes the post" do
         author = post.user

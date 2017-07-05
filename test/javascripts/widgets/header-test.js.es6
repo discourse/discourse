@@ -14,7 +14,7 @@ widgetTest('sign up / login buttons', {
   template: '{{mount-widget widget="header" showCreateAccount="showCreateAccount" showLogin="showLogin" args=args}}',
   anonymous: true,
 
-  setup() {
+  beforeEach() {
     this.set('args', { canSignUp: true });
     this.on('showCreateAccount', () => this.signupShown = true);
     this.on('showLogin', () => this.loginShown = true);
@@ -40,7 +40,7 @@ widgetTest('anon when login required', {
   template: '{{mount-widget widget="header" showCreateAccount="showCreateAccount" showLogin="showLogin" args=args}}',
   anonymous: true,
 
-  setup() {
+  beforeEach() {
     this.set('args', { canSignUp: true });
     this.on('showCreateAccount', () => this.signupShown = true);
     this.on('showLogin', () => this.loginShown = true);
@@ -58,7 +58,7 @@ widgetTest('anon when login required', {
 widgetTest('logged in when login required', {
   template: '{{mount-widget widget="header" showCreateAccount="showCreateAccount" showLogin="showLogin" args=args}}',
 
-  setup() {
+  beforeEach() {
     this.set('args', { canSignUp: true });
     this.on('showCreateAccount', () => this.signupShown = true);
     this.on('showLogin', () => this.loginShown = true);

@@ -34,13 +34,21 @@ describe Topic do
           it 'should not be valid' do
             SiteSetting.censored_words = 'pineapple|pen'
 
-            topic.title = 'pen PinEapple apple pen '
+            topic.title = 'pen PinEapple apple pen is a complete sentence'
 
             expect(topic).to_not be_valid
 
             expect(topic.errors.full_messages.first).to include(I18n.t(
               'errors.messages.contains_censored_words', censored_words: 'pen, pineapple'
             ))
+          end
+        end
+
+        describe 'titles with censored words not on boundaries' do
+          it "should be valid" do
+            SiteSetting.censored_words = 'apple'
+            topic.title = "Pineapples are great fruit! Applebee's is a great restaurant"
+            expect(topic).to be_valid
           end
         end
 
@@ -439,20 +447,40 @@ describe Topic do
         let(:walter) { Fabricate(:walter_white) }
 
         context 'by group name' do
+          let(:group) { Fabricate(:group) }
 
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
-            admins.alias_level = Group::ALIAS_LEVELS[:everyone]
-            admins.save
+            admins.update!(alias_level: Group::ALIAS_LEVELS[:everyone])
 
             expect(topic.invite_group(topic.user, admins)).to eq(true)
-
             expect(topic.allowed_groups.include?(admins)).to eq(true)
-
             expect(topic.remove_allowed_group(topic.user, 'admins')).to eq(true)
-            topic.reload
-
             expect(topic.allowed_groups.include?(admins)).to eq(false)
+          end
+
+          it 'creates a notification for each user in the group' do
+            user = Fabricate(:user)
+            user_2 = Fabricate(:user)
+            Fabricate(:post, topic: topic)
+
+            group.add(user)
+            group.add(user_2)
+
+            group.group_users.find_by(user: user_2).update!(
+              notification_level: NotificationLevels.all[:muted]
+            )
+
+            expect { topic.invite_group(topic.user, group) }
+              .to change { Notification.count }.by(1)
+
+            notification = Notification.last
+
+            expect(notification.user).to eq(user)
+            expect(notification.topic).to eq(topic)
+
+            expect(notification.notification_type)
+              .to eq(Notification.types[:invited_to_private_message])
           end
 
         end
@@ -1247,6 +1275,16 @@ describe Topic do
       end
     end
 
+    it 'should allow status_type to be updated' do
+      Timecop.freeze do
+        topic_timer = closing_topic.set_or_create_timer(
+          TopicTimer.types[:publish_to_category], 72, by_user: admin
+        )
+
+        expect(topic_timer.execute_at).to eq(3.days.from_now)
+      end
+    end
+
     it "does not update topic's topic status created_at it was already set to close" do
       expect{
         closing_topic.set_or_create_timer(TopicTimer.types[:close], 14)
@@ -1373,6 +1411,19 @@ describe Topic do
       topic = Fabricate(:topic, tags: [muted_tag, other_tag])
 
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
+    end
+
+    it "returns topics with no tags too" do
+      user = Fabricate(:user)
+      muted_tag = Fabricate(:tag)
+      TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
+      topic1 = Fabricate(:topic, tags: [muted_tag])
+      topic2 = Fabricate(:topic, tags: [Fabricate(:tag), Fabricate(:tag)])
+      topic3 = Fabricate(:topic)
+
+      topics = Topic.for_digest(user, 1.year.ago, top_order: true)
+      expect(topics.size).to eq(2)
+      expect(topics).to contain_exactly(topic2, topic3)
     end
 
     it "sorts by category notification levels" do

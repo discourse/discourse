@@ -122,6 +122,7 @@ class OptimizedImage < ActiveRecord::Base
       -extent #{dimensions}
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
+      -interlace none
       -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
@@ -153,6 +154,7 @@ class OptimizedImage < ActiveRecord::Base
       -thumbnail #{opts[:width]}
       -crop #{dimensions}+0+0
       -unsharp 2x0.5+0.7+0
+      -interlace none
       -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
@@ -181,6 +183,7 @@ class OptimizedImage < ActiveRecord::Base
       -auto-orient
       -gravity center
       -background transparent
+      -interlace none
       -resize #{dimensions}
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}

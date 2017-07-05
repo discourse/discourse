@@ -220,6 +220,9 @@ fa_IR:
       trust_level_2: "سطح اعتماد 2"
       trust_level_3: "سطح اعتماد 3"
       trust_level_4: "سطح اعتماد 4"
+    request_membership_pm:
+      title: "درخواست عضویت در @%{group_name}"
+      body: "میخواهم برای عضویت در @%{group_name} اقدام کنم."
   education:
     until_posts:
       other: "%{count} نوشته"
@@ -1022,6 +1025,7 @@ fa_IR:
     twitter_summary_large_image_url: "لینک پیشفرض خلاصه توییتر و تصویر (باید حداقل 280 در 150 پیکسل باشد)"
     allow_all_attachments_for_group_messages: "اجازه‌ی ضمیمه فایل در ایمیل پیام‌های گروهی."
     png_to_jpg_quality: "کیفیت تبدیل فایل‌های JPG (1 کمترین کیفیت، 99 بالاترین کیفیت، 100 برای غیر‌فعال)"
+    allow_staff_to_upload_any_file_in_pm: "به مدیران اجازه بده که هر فایلی در پیغام خصوصی آپلود کنند."
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید باعث ایجاد خطرات امنیتی شود."
     default_invitee_trust_level: "سطح اعتماد پیشفرض (0-4) برای دعوت کاربران"
     default_trust_level: "سطح اعتماد پیشفرض(0-4) برای تمام کاربران جدید. اخطار! تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
@@ -2164,7 +2168,6 @@ fa_IR:
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
       subject_template: "[%{email_prefix}] خلاصه"
-      unsubscribe: "این خلاصه از %{site_link} به دلیل اینکه مدتی است شما را ندیده ایم ارسال شده است. برای لغو اشتراک %{unsubscribe_link}"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name} خلاصه"
       preheader: "یک خلاصه مختصر  به دلیل اینکه آخرین بازدیدتان در %{last_seen_at} بوده."
