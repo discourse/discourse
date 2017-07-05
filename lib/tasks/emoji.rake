@@ -500,10 +500,6 @@ def write_db_json(emojis)
       }
     }
 
-  # adds emoji wich are not displayed in picker but available in autocomplete
-  emojis_without_tones << { "code" => "1f44d", "name" => "thumbsup" }
-  emojis_without_tones << { "code" => "1f44e", "name" => "thumbsdown" }
-
   emoji_with_tones = emojis
     .select { |code, config| config["fitzpatrick_scale"] }
     .map { |code, config| config["name"] }
