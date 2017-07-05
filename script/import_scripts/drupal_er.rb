@@ -435,11 +435,14 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!('<li>&nbsp;</li>', '')
       post.raw.gsub!("<li>\r", '<li>')
       post.raw.gsub!("<li>\n", '<li>')
-      post.raw.gsub!(%r~(\r|\n)\s*</li>~, '</li>')
-
       post.raw.gsub!('<p>', '')
       post.raw.gsub!('</p>', '')
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
+      
+      # NOTE: Do not use \s to also match non-breaking spaces.
+      # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
+      post.raw.gsub!(/(\r|\n)[[:space:]]*<\/li>/, '</li>')
+
       # Replace three or more consecutive linebreaks with two.
       post.raw.gsub!(/\n{3,}/, "\n\n")
       post.raw.gsub!(/\r{3,}/, "\n\n")
