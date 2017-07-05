@@ -2198,7 +2198,7 @@
     },
     {
       "code": "1f3cf",
-      "name": "cricket"
+      "name": "cricket_bat_and_ball"
     },
     {
       "code": "1f3bf",
@@ -6194,7 +6194,7 @@
     "crayon": [
       "lower_left_crayon"
     ],
-    "cricket": [
+    "cricket_bat_and_ball": [
       "cricket_bat_ball"
     ],
     "latin_cross": [
