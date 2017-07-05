@@ -1,5 +1,7 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 import { escapeExpression } from 'discourse/lib/utilities';
+import Group from 'discourse/models/group';
+import Badge from 'discourse/models/badge';
 
 const REGEXP_BLOCKS                = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -525,12 +527,10 @@ export default Em.Component.extend({
   },
 
   groupFinder(term) {
-    const Group = requirejs('discourse/models/group').default;
     return Group.findAll({search: term, ignore_automatic: false});
   },
 
   badgeFinder(term) {
-    const Badge = requirejs('discourse/models/badge').default;
     return Badge.findAll({search: term});
   }
 });

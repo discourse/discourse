@@ -8,6 +8,7 @@ import mobile from 'discourse/lib/mobile';
 import { findAll } from 'discourse/models/login-method';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { userPath } from 'discourse/lib/url';
+import Composer from 'discourse/models/composer';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -58,7 +59,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
           reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
 
       // used only once, one less dependency
-      const Composer = requirejs('discourse/models/composer').default;
       return this.controllerFor('composer').open({
         action: Composer.PRIVATE_MESSAGE,
         usernames: recipient,

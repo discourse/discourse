@@ -1,16 +1,9 @@
-/**
-  Handles routes for admin reports
+import Report from 'admin/models/report';
 
-  @class AdminReportsRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.Route.extend({
   queryParams: { mode: {}, "start_date": {}, "end_date": {}, "category_id": {}, "group_id": {} },
 
-  model: function(params) {
-    const Report = requirejs('admin/models/report').default;
+  model(params) {
     return Report.find(params.type, params['start_date'], params['end_date'], params['category_id'], params['group_id']);
   },
 
