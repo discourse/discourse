@@ -92,8 +92,8 @@ module Email
       style('.user-avatar img', nil, width: '45', height: '45')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('.rtl', 'direction: rtl;')
-      style('td.body', 'padding-top:5px;', colspan: "2")
-      style('.whisper td.body', 'font-style: italic; color: #9c9c9c;')
+      style('div.body', 'padding-top:5px;')
+      style('.whisper div.body', 'font-style: italic; color: #9c9c9c;')
       style('.lightbox-wrapper .meta', 'display: none')
       correct_first_body_margin
       correct_footer_style
@@ -186,16 +186,15 @@ module Email
     def to_html
       strip_classes_and_ids
       replace_relative_urls
-      @fragment.to_html.tap do |result|
-        result.gsub!(/\[email-indent\]/, "<div style='margin-left: 15px'>")
-        result.gsub!(/\[\/email-indent\]/, "</div>")
-      end
+      @fragment.to_html
     end
 
     def strip_avatars_and_emojis
       @fragment.search('img').each do |img|
+        next unless img['src']
+
         if img['src'][/_avatar/]
-          img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
+          img.parent['style'] = "vertical-align: top;" if img.parent&.name == 'td'
           img.remove
         end
 
@@ -228,7 +227,7 @@ module Email
 
       @fragment.css('[href]').each do |element|
         href = element['href']
-        if href =~ /^\/\/#{host}/
+        if href.start_with?("\/\/#{host}")
           element['href'] = "#{scheme}:#{href}"
         end
       end
@@ -260,8 +259,8 @@ module Email
 
     def strip_classes_and_ids
       @fragment.css('*').each do |element|
-        element.delete('class')
-        element.delete('id')
+        element.delete('class'.freeze)
+        element.delete('id'.freeze)
       end
     end
 

@@ -9,15 +9,6 @@ import DecoratorHelper from 'discourse/widgets/decorator-helper';
 function emptyContent() { }
 
 const _registry = {};
-let _dirty = {};
-
-export function keyDirty(key, options) {
-  _dirty[key] = options || {};
-}
-
-export function renderedKey(key) {
-  delete _dirty[key];
-}
 
 export function queryRegistry(name) {
   return _registry[name];
@@ -143,6 +134,7 @@ export default class Widget {
     this.mergeState = opts.state;
     this.model = opts.model;
     this.register = register;
+    this.dirtyKeys = opts.dirtyKeys;
 
     register.deprecateContainer(this);
 
@@ -182,6 +174,8 @@ export default class Widget {
   }
 
   render(prev) {
+    const { dirtyKeys } = this;
+
     if (prev && prev.key && prev.key === this.key) {
       this.state = prev.state;
     } else {
@@ -194,14 +188,17 @@ export default class Widget {
     }
 
     if (prev) {
-      const dirtyOpts = _dirty[prev.key] || {};
+      const dirtyOpts = dirtyKeys.optionsFor(prev.key);
+
       if (prev.shadowTree) {
         this.shadowTree = true;
-        if (!dirtyOpts && !_dirty['*']) {
+        if (!dirtyOpts.dirty && !dirtyKeys.allDirty()) {
           return prev.vnode;
         }
       }
-      renderedKey(prev.key);
+      if (prev.key) {
+        dirtyKeys.renderedKey(prev.key);
+      }
 
       const refreshAction = dirtyOpts.onRefresh;
       if (refreshAction) {
@@ -239,11 +236,15 @@ export default class Widget {
         return;
       }
       WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
+      if (WidgetClass && WidgetClass.class) {
+        WidgetClass = WidgetClass.class;
+      }
     }
 
     if (WidgetClass) {
       const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
+      result.dirtyKeys = this.dirtyKeys;
       return result;
     } else {
       throw `Couldn't find ${widgetName} factory`;
@@ -254,7 +255,7 @@ export default class Widget {
     let widget = this;
     while (widget) {
       if (widget.shadowTree) {
-        keyDirty(widget.key);
+        this.dirtyKeys.keyDirty(widget.key);
       }
 
       const rerenderable = widget._rerenderable;

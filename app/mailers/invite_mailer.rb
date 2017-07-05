@@ -5,9 +5,10 @@ class InviteMailer < ActionMailer::Base
 
   class UserNotificationRenderer < ActionView::Base
     include UserNotificationsHelper
+    include EmailHelper
   end
 
-  def send_invite(invite, custom_message=nil)
+  def send_invite(invite)
     # Find the first topic they were invited to
     first_topic = invite.topics.order(:created_at).first
 
@@ -26,8 +27,14 @@ class InviteMailer < ActionMailer::Base
       end
 
       template = 'invite_mailer'
-      if custom_message.present?
+      if invite.custom_message.present?
         template = 'custom_invite_mailer'
+      end
+
+      topic_title = first_topic.try(:title)
+      if SiteSetting.private_email?
+        topic_title = I18n.t("system_messages.private_topic_title", id: first_topic.id)
+        topic_excerpt = ""
       end
 
       build_email(invite.email,
@@ -35,14 +42,14 @@ class InviteMailer < ActionMailer::Base
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
-                  topic_title: first_topic.try(:title),
+                  topic_title: topic_title,
                   topic_excerpt: topic_excerpt,
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title,
-                  user_custom_message: custom_message)
+                  user_custom_message: invite.custom_message)
     else
       template = 'invite_forum_mailer'
-      if custom_message.present?
+      if invite.custom_message.present?
         template = 'custom_invite_forum_mailer'
       end
 
@@ -53,7 +60,7 @@ class InviteMailer < ActionMailer::Base
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title,
-                  user_custom_message: custom_message)
+                  user_custom_message: invite.custom_message)
     end
   end
 

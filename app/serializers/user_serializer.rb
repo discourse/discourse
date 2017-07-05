@@ -115,6 +115,7 @@ class UserSerializer < BasicUserSerializer
                        :bio_excerpt,
                        :location,
                        :website,
+                       :website_name,
                        :profile_background,
                        :card_background
 
@@ -128,13 +129,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def groups
-    groups = object.groups.order(:id)
-
-    if scope.is_admin? || object.id == scope.user.try(:id)
-      groups
-    else
-      groups.where(visible: true)
-    end
+    object.groups.order(:id)
+          .visible_groups(scope.user)
   end
 
   def group_users
@@ -248,7 +244,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_send_private_message_to_user
-    scope.can_send_private_message?(object)
+    scope.can_send_private_message?(object) && scope.current_user != object
   end
 
   def bio_excerpt

@@ -5,8 +5,13 @@ module Validators; end
 class Validators::UploadValidator < ActiveModel::Validator
 
   def validate(upload)
+    # staff can upload any file in PM
+    if upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm
+      return true if upload.user&.staff?
+    end
+
     # check the attachment blacklist
-    if upload.is_attachment_for_group_message && SiteSetting.allow_all_attachments_for_group_messages
+    if upload.for_group_message && SiteSetting.allow_all_attachments_for_group_messages
       return upload.original_filename =~ SiteSetting.attachment_filename_blacklist_regex
     end
 
@@ -24,11 +29,11 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def is_authorized?(upload, extension)
-    authorized_extensions(upload, extension, authorized_uploads)
+    authorized_extensions(upload, extension, authorized_uploads(upload))
   end
 
   def authorized_image_extension(upload, extension)
-    authorized_extensions(upload, extension, authorized_images)
+    authorized_extensions(upload, extension, authorized_images(upload))
   end
 
   def maximum_image_file_size(upload)
@@ -36,7 +41,7 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def authorized_attachment_extension(upload, extension)
-    authorized_extensions(upload, extension, authorized_attachments)
+    authorized_extensions(upload, extension, authorized_attachments(upload))
   end
 
   def maximum_attachment_file_size(upload)
@@ -45,10 +50,12 @@ class Validators::UploadValidator < ActiveModel::Validator
 
   private
 
-  def authorized_uploads
+  def authorized_uploads(upload)
     authorized_uploads = Set.new
 
-    SiteSetting.authorized_extensions
+    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
+
+    extensions
       .gsub(/[\s\.]+/, "")
       .downcase
       .split("|")
@@ -57,20 +64,21 @@ class Validators::UploadValidator < ActiveModel::Validator
     authorized_uploads
   end
 
-  def authorized_images
-    authorized_uploads & FileHelper.images
+  def authorized_images(upload)
+    authorized_uploads(upload) & FileHelper.images
   end
 
-  def authorized_attachments
-    authorized_uploads - FileHelper.images
+  def authorized_attachments(upload)
+    authorized_uploads(upload) - FileHelper.images
   end
 
-  def authorizes_all_extensions?
-    SiteSetting.authorized_extensions.include?("*")
+  def authorizes_all_extensions?(upload)
+    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
+    extensions.include?("*")
   end
 
   def authorized_extensions(upload, extension, extensions)
-    return true if authorizes_all_extensions?
+    return true if authorizes_all_extensions?(upload)
 
     unless authorized = extensions.include?(extension.downcase)
       message = I18n.t("upload.unauthorized", authorized_extensions: extensions.to_a.join(", "))

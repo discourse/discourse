@@ -2,5 +2,8 @@
   {{fa-icon icon}}
 {{/if}}
 
-{{{translatedLabel}}}
+{{#if translatedLabel}}
+  <span class='d-button-label'>{{{translatedLabel}}}</span>
+{{/if}}
+
 {{yield}}

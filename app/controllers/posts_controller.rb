@@ -383,8 +383,10 @@ class PostsController < ApplicationController
       PostAction.act(current_user, post, PostActionType.types[:bookmark])
     else
       post_action = PostAction.find_by(post_id: params[:post_id], user_id: current_user.id)
-      post = post_action.post
-      raise Discourse::InvalidParameters unless post_action
+      raise Discourse::NotFound unless post_action
+
+      post = Post.with_deleted.find_by(id: post_action&.post_id)
+      raise Discourse::NotFound unless post
 
       PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
     end
@@ -443,7 +445,7 @@ class PostsController < ApplicationController
                                    .where(disagreed_at: nil)
                                    .select(:post_id))
 
-    render_serialized(posts, AdminPostSerializer)
+    render_serialized(posts, AdminUserActionSerializer)
   end
 
   def deleted_posts
@@ -456,7 +458,7 @@ class PostsController < ApplicationController
 
     posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 
-    render_serialized(posts, AdminPostSerializer)
+    render_serialized(posts, AdminUserActionSerializer)
   end
 
   protected

@@ -81,8 +81,10 @@ describe User do
 
     it 'triggers a extensibility event' do
       user && admin # bypass the user_created event
-      DiscourseEvent.expects(:trigger).with(:user_approved, user).once
-      user.approve(admin)
+      event = DiscourseEvent.track_events { user.approve(admin) }.first
+
+      expect(event[:event_name]).to eq(:user_approved)
+      expect(event[:params].first).to eq(user)
     end
 
     context 'after approval' do
@@ -181,8 +183,10 @@ describe User do
     end
 
     it 'triggers an extensibility event' do
-      DiscourseEvent.expects(:trigger).with(:user_created, subject).once
-      subject.save!
+      event = DiscourseEvent.track_events { subject.save! }.first
+
+      expect(event[:event_name]).to eq(:user_created)
+      expect(event[:params].first).to eq(subject)
     end
 
     context 'after_save' do
@@ -1216,29 +1220,16 @@ describe User do
       )
     }
 
-    it "doesn't automatically add inactive users" do
-      inactive_user = Fabricate(:user, active: false, email: "wat@wat.com")
-      group.reload
-      expect(group.users.include?(inactive_user)).to eq(false)
-    end
-
-    it "doesn't automatically add users with unconfirmed email" do
-      unconfirmed_email_user = Fabricate(:user, active: true, email: "wat@wat.com")
-      unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
-      group.reload
-      expect(group.users.include?(unconfirmed_email_user)).to eq(false)
-    end
-
     it "doesn't automatically add staged users" do
       staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
+      EmailToken.confirm(staged_user.email_tokens.last.token)
       group.reload
       expect(group.users.include?(staged_user)).to eq(false)
     end
 
     it "is automatically added to a group when the email matches" do
       user = Fabricate(:user, active: true, email: "foo@bar.com")
-      email_token = user.email_tokens.create(email: user.email).token
-      EmailToken.confirm(email_token)
+      EmailToken.confirm(user.email_tokens.last.token)
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1259,8 +1250,7 @@ describe User do
 
       user.password_required!
       user.save!
-      email_token = user.email_tokens.create(email: user.email).token
-      EmailToken.confirm(email_token)
+      EmailToken.confirm(user.email_tokens.last.token)
       user.reload
 
       expect(user.title).to eq("bars and wats")

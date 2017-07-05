@@ -77,16 +77,19 @@ describe PostCreator do
       end
 
       it "triggers extensibility events" do
-        DiscourseEvent.expects(:trigger).with(:before_create_post, anything).once
-        DiscourseEvent.expects(:trigger).with(:validate_post, anything).once
-        DiscourseEvent.expects(:trigger).with(:topic_created, anything, anything, user).once
-        DiscourseEvent.expects(:trigger).with(:post_created, anything, anything, user).once
-        DiscourseEvent.expects(:trigger).with(:after_validate_topic, anything, anything).once
-        DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
-        DiscourseEvent.expects(:trigger).with(:after_trigger_post_process, anything).once
-        DiscourseEvent.expects(:trigger).with(:markdown_context, anything).at_least_once
-        DiscourseEvent.expects(:trigger).with(:topic_notification_level_changed, anything, anything, anything).at_least_once
-        creator.create
+        events = DiscourseEvent.track_events { creator.create }
+
+        expect(events.map { |event| event[:event_name] }).to include(
+          :before_create_post,
+          :validate_post,
+          :topic_created,
+          :post_created,
+          :after_validate_topic,
+          :before_create_topic,
+          :after_trigger_post_process,
+          :markdown_context,
+          :topic_notification_level_changed,
+        )
       end
 
       it "does not notify on system messages" do
@@ -262,6 +265,22 @@ describe PostCreator do
         expect(post.valid?).to eq(true)
       end
 
+      it 'allows notification email to be skipped' do
+        user_2 = Fabricate(:user)
+
+        creator = PostCreator.new(user,
+          title: 'hi there welcome to my topic',
+          raw: "this is my awesome message @#{user_2.username_lower}",
+          archetype: Archetype.private_message,
+          target_usernames: [user_2.username],
+          post_alert_options: { skip_send_email: true }
+        )
+
+        NotificationEmailer.expects(:process_notification).never
+
+        creator.create
+      end
+
       describe "topic's auto close" do
         before do
           SiteSetting.queue_jobs = true
@@ -269,12 +288,12 @@ describe PostCreator do
 
         it "doesn't update topic's auto close when it's not based on last post" do
           Timecop.freeze do
-            topic = Fabricate(:topic).set_or_create_status_update(TopicStatusUpdate.types[:close], 12)
+            topic = Fabricate(:topic).set_or_create_timer(TopicTimer.types[:close], 12)
 
             PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
             topic.reload
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
             expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
             expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
           end
@@ -283,7 +302,7 @@ describe PostCreator do
         it "updates topic's auto close date when it's based on last post" do
           Timecop.freeze do
             topic = Fabricate(:topic,
-              topic_status_updates: [Fabricate(:topic_status_update,
+              topic_timers: [Fabricate(:topic_timer,
                 based_on_last_post: true,
                 execute_at: Time.zone.now - 12.hours,
                 created_at: Time.zone.now - 24.hours
@@ -294,7 +313,7 @@ describe PostCreator do
 
             PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
 
-            topic_status_update = TopicStatusUpdate.last
+            topic_status_update = TopicTimer.last
             expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
             expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
           end
@@ -362,7 +381,7 @@ describe PostCreator do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         expect {
           PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create!
-        }.to_not change { TopicStatusUpdate.count }
+        }.to_not change { TopicTimer.count }
       end
     end
   end
@@ -395,6 +414,9 @@ describe PostCreator do
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
 
+      # date is not precise enough in db
+      whisper_reply.reload
+
 
       first.reload
       # does not leak into the OP
@@ -408,7 +430,10 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
 
-      topic.update_columns(highest_staff_post_number:0, highest_post_number:0, posts_count: 0, last_posted_at: 1.year.ago)
+      topic.update_columns(highest_staff_post_number:0,
+                           highest_post_number:0,
+                           posts_count: 0,
+                           last_posted_at: 1.year.ago)
 
       Topic.reset_highest(topic.id)
 

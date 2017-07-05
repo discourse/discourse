@@ -1,16 +1,13 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import Group from 'discourse/models/group';
+import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Component.extend({
+  loading: false,
+
   @computed("model.public")
   canJoinGroup(publicGroup) {
     return publicGroup;
-  },
-
-  @computed('model.allow_membership_requests', 'model.alias_level')
-  canRequestMembership(allowMembershipRequests, aliasLevel) {
-    return allowMembershipRequests && aliasLevel === 99;
   },
 
   @computed("model.is_group_user", "model.id", "groupUserIds")
@@ -56,13 +53,12 @@ export default Ember.Component.extend({
 
     requestMembership() {
       if (this.currentUser) {
-        const groupName = this.get('model.name');
+        this.set('loading', true);
 
-        Group.loadOwners(groupName).then(result => {
-          const names = result.map(owner => owner.username).join(",");
-          const title = I18n.t('groups.request_membership_pm.title');
-          const body = I18n.t('groups.request_membership_pm.body', { groupName });
-          this.sendAction("createNewMessageViaParams", names, title, body);
+        this.get('model').requestMembership().then(result => {
+          DiscourseURL.routeTo(result.relative_url);
+        }).catch(popupAjaxError).finally(() => {
+          this.set('loading', false);
         });
       } else {
         this._showLoginModal();

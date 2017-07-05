@@ -49,6 +49,7 @@ vi:
         insert: Chèn thăm dò
         help:
           options_count: Nhập vào ít nhất 2 lựa chọn
+          invalid_values: Giá trị nhỏ nhất phải nhỏ hơn giá trị lớn nhất.
         poll_type:
           label: Loại
           regular: Một lựa chọn

@@ -11,6 +11,10 @@ task 'assets:precompile:before' do
   puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
+  # Ensure we clear emoji cache before pretty-text/emoji/data.js.es6.erb
+  # is recompiled
+  Emoji.clear_cache
+
   if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
     $node_uglify = true
   end
@@ -51,7 +55,11 @@ task 'assets:precompile:css' => 'environment' do
 
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
-        Stylesheet::Manager.precompile_css
+        begin
+          Stylesheet::Manager.precompile_css
+        rescue => PG::UndefinedColumn
+          STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
+        end
       end
     end
 

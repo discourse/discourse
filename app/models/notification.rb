@@ -12,9 +12,11 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
                             .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  after_commit :send_email
+  attr_accessor :skip_send_email
+
+  after_commit :send_email, on: :create
   # This is super weird because the tests fail if we don't specify `on: :destroy`
-  # TODO: Revert back to default in Rails 5 
+  # TODO: Revert back to default in Rails 5
   after_commit :refresh_notification_count, on: :destroy
   after_commit :refresh_notification_count, on: [:create, :update]
 
@@ -52,7 +54,8 @@ class Notification < ActiveRecord::Base
                         custom: 14,
                         group_mentioned: 15,
                         group_message_summary: 16,
-                        watching_first_post: 17
+                        watching_first_post: 17,
+                        topic_reminder: 18
                        )
   end
 
@@ -205,8 +208,7 @@ class Notification < ActiveRecord::Base
   end
 
   def send_email
-    transaction_includes_action = self.send(:transaction_include_any_action?, [:create])
-    NotificationEmailer.process_notification(self) if transaction_includes_action
+    NotificationEmailer.process_notification(self) if !skip_send_email
   end
 
 end

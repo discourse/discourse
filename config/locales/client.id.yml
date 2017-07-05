@@ -226,8 +226,6 @@ id:
     enable: "Aktifkan"
     disable: "Nonaktifkan"
     undo: "Batalkan perintah"
-    revert: "Kembali ke awal"
-    failed: "Gagal"
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
     banner:
@@ -294,18 +292,11 @@ id:
       add: "Menambahkan"
       selector_placeholder: "Menambahkan anggota"
       owner: "pemilik"
-      visible: "Grup terlihat oleh semua pengguna"
-      title:
-        other: "Grup"
-      members: "Anggota"
       topics: "Topik-topik"
-      posts: "Post"
       mentions: "Balasan-balasan"
       messages: "Pesan-pesan"
       alias_levels:
         title: "Siapa yang mendapat pesan dan membalas kelompok ini?"
-        nobody: "Tak seorangpun"
-        only_admins: "Hanya admin"
         mods_and_admins: "Hanya moderator dan Admin"
         members_mods_and_admins: "Hanya anggota grup, moderator dan admin"
         everyone: "Semua orang"
@@ -423,7 +414,6 @@ id:
       mailing_list_mode:
         label: "mode milis"
         enabled: "Aktifkan mode milis"
-        daily: "mengirim pembaharuan harian"
         individual: "Kirim email untuk setiap pesan baru"
         few_per_day: "Kirim saya surel untuk setiap postingan baru (sekitar 2 per hari)"
       watched_categories: "Dilihat"
@@ -468,7 +458,6 @@ id:
       change_username:
         title: "Ganti Username"
         taken: "Maaf, username tersebut sudah ada yang menggunakan"
-        error: "Terjadi kesalahan saat mengganti username anda"
         invalid: "Username tersebut tidak valid. Username harus berupa angka dan huruf"
       change_email:
         title: "Ganti Alamat Surel"
@@ -719,7 +708,6 @@ id:
           first: "Revisi pertama"
     category:
       edit_long: "Ubah"
-      auto_close_units: "jam"
     topic_statuses:
       locked:
         help: "Topik ini telah ditutup; tidak lagi menerima jawaban baru"

@@ -158,7 +158,16 @@ describe Email::Receiver do
 
       expect { process(:html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
+    end
 
+    it "doesn't process email with same message-id more than once" do
+      expect do
+        process(:text_reply)
+        process(:text_reply)
+      end.to change { topic.posts.count }.by(1)
+    end
+
+    it "handles different encodings correctly" do
       expect { process(:hebrew_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("שלום! מה שלומך היום?")
 
@@ -167,11 +176,27 @@ describe Email::Receiver do
 
       expect { process(:reply_with_weird_encoding) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a reply with a weird encoding.")
+
+      expect { process(:reply_with_8bit_encoding) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("hab vergessen kritische zeichen einzufügen:\näöüÄÖÜß")
+
     end
 
     it "prefers text over html" do
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
+    end
+
+    it "prefers html over text when site setting is enabled" do
+      SiteSetting.incoming_email_prefer_html = true
+      expect { process(:text_and_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq('This is the **html** part.')
+    end
+
+    it "uses text when prefer_html site setting is enabled but no html is available" do
+      SiteSetting.incoming_email_prefer_html = true
+      expect { process(:text_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a text reply :)")
     end
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do
@@ -284,14 +309,34 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
     end
 
-    it "supports attached images" do
+    it "doesn't include the 'elided' part of the original message when always_show_trimmed_content is disabled" do
+      SiteSetting.always_show_trimmed_content = false
+      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect(topic.posts.last.raw).to eq("This is a reply :)")
+    end
+
+    it "adds the 'elided' part of the original message for public replies when always_show_trimmed_content is enabled" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
+    end
+
+    it "supports attached images in TEXT part" do
       SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
 
       expect { process(:inline_image) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/Before\s+<img.+\s+After/m)
+      expect(topic.posts.last.raw).to match(/Before\s+<img.+>\s+After/)
+    end
+
+    it "supports attached images in HTML part" do
+      SiteSetting.queue_jobs = true
+      SiteSetting.incoming_email_prefer_html = true
+
+      expect { process(:inline_image) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to match(/\*\*Before\*\*\s+<img.+>\s+\*After\*/)
     end
 
     it "supports attachments" do
@@ -450,6 +495,16 @@ describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
+      SiteSetting.always_show_trimmed_content = true
+
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
+
+      new_post, = Post.last
+      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?","<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>","Discoursing much today?")
+    end
+
     it "works when approving is enabled" do
       SiteSetting.approve_unless_trust_level = 4
 
@@ -491,6 +546,57 @@ describe Email::Receiver do
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
 
+  end
+
+  context "#reply_by_email_address_regex" do
+
+    before do
+      SiteSetting.reply_by_email_address = nil
+      SiteSetting.alternative_reply_by_email_addresses = nil
+    end
+
+    it "is empty by default" do
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(//)
+    end
+
+    it "uses 'reply_by_email_address' site setting" do
+      SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/foo\+(\h{32})@bar\.com/)
+    end
+
+    it "uses 'alternative_reply_by_email_addresses' site setting" do
+      SiteSetting.alternative_reply_by_email_addresses = "alt.foo+%{reply_key}@bar.com"
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/alt\.foo\+(\h{32})@bar\.com/)
+    end
+
+    it "combines both 'reply_by_email' settings" do
+      SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
+      SiteSetting.alternative_reply_by_email_addresses = "alt.foo+%{reply_key}@bar.com"
+      expect(Email::Receiver.reply_by_email_address_regex).to eq(/foo\+(\h{32})@bar\.com|alt\.foo\+(\h{32})@bar\.com/)
+    end
+
+  end
+
+  context "check_address" do
+    before do
+      SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
+    end
+
+    it "returns nil when the key is invalid" do
+      expect(Email::Receiver.check_address('fake@fake.com')).to be_nil
+      expect(Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')).to be_nil
+    end
+
+    context "with a valid reply" do
+      it "returns the destination when the key is valid" do
+        Fabricate(:email_log, reply_key: '4f97315cc828096c9cb34c6f1a0d6fe8')
+
+        dest = Email::Receiver.check_address('foo+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com')
+        expect(dest).to be_present
+        expect(dest[:type]).to eq(:reply)
+        expect(dest[:obj]).to be_present
+      end
+    end
   end
 
 end

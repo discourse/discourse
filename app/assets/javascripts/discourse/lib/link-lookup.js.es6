@@ -1,5 +1,4 @@
 const _warned = {};
-
 const NO_RESULT = [false, null];
 
 export default class LinkLookup {
@@ -16,8 +15,20 @@ export default class LinkLookup {
 
     const linkInfo = this._links[normalized];
     if (linkInfo) {
-      // Skip edits to the same post
-      if (post && post.get('post_number') === linkInfo.post_number) { return NO_RESULT; }
+
+      if (post) {
+        // Skip edits to the OP
+        if (post) {
+          const postNumber = post.get('post_number');
+          if (postNumber === 1 || postNumber === linkInfo.post_number) { return NO_RESULT; }
+        }
+
+        // Don't warn on older posts
+        const createdAt = moment(post.get('created_at'));
+        if (createdAt.isBefore(moment().subtract(2, 'weeks'))) {
+          return NO_RESULT;
+        }
+      }
 
       _warned[href] = true;
       _warned[normalized] = true;

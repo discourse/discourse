@@ -25,6 +25,9 @@ function isOnOneLine(link, parent) {
 
 //  We only onebox stuff that is on its own line.
 export function setup(helper) {
+
+  if (helper.markdownIt) { return; }
+
   helper.onParseNode(event => {
     const node = event.node,
     path = event.path;

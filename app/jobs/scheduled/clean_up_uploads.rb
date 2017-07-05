@@ -5,13 +5,25 @@ module Jobs
     def execute(args)
       return unless SiteSetting.clean_up_uploads?
 
+      base_url = Discourse.store.internal? ? Discourse.store.relative_base_url : Discourse.store.absolute_base_url
+      s3_hostname = URI.parse(base_url).hostname
+      s3_cdn_hostname = URI.parse(SiteSetting.s3_cdn_url || "").hostname
+
       # Any URLs in site settings are fair game
       ignore_urls = [
         SiteSetting.logo_url,
         SiteSetting.logo_small_url,
         SiteSetting.favicon_url,
-        SiteSetting.apple_touch_icon_url
-      ]
+        SiteSetting.apple_touch_icon_url,
+      ].map do |url|
+        if url.present?
+          url = url.dup
+          url.gsub!(s3_cdn_hostname, s3_hostname) if s3_cdn_hostname.present?
+          url[base_url] && url[url.index(base_url)..-1]
+        else
+          nil
+        end
+      end.compact.uniq
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 
@@ -23,13 +35,15 @@ module Jobs
         .joins("LEFT JOIN user_profiles up ON up.profile_background = uploads.url OR up.card_background = uploads.url")
         .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
+        .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .where("pu.upload_id IS NULL")
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
         .where("up.profile_background IS NULL AND up.card_background IS NULL")
         .where("c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL")
-        .where("ce.upload_id IS NULL")
-        .where("uploads.url NOT IN (?)", ignore_urls)
+        .where("ce.upload_id IS NULL AND tf.upload_id IS NULL")
+
+      result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 
       result.find_each do |upload|
         next if QueuedPost.where("raw LIKE '%#{upload.sha1}%'").exists?

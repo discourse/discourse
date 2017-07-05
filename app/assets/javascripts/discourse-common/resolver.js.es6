@@ -134,7 +134,6 @@ export function buildResolver(baseName) {
       if (full.indexOf('connectors') === 0) {
         return Ember.TEMPLATES[`javascripts/${full}`];
       }
-
     },
 
     resolveTemplate(parsedName) {

@@ -83,6 +83,7 @@ ja:
           other: "%{count}年後"
       previous_month: '前の月'
       next_month: '次の月'
+      placeholder: 日時を選択
     share:
       topic: 'このトピックのリンクをシェアする'
       post: '投稿 #%{postNumber}'
@@ -118,6 +119,8 @@ ja:
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
     bootstrap_mode_enabled: "かんたんにサイトを立ち上げられるようにするため、ブートストラップモードが有効になっています。新しいユーザーは全員、トラストレベル1を付与し、毎日更新がメールで届けられます。これらの機能は総ユーザー数が%{min_users}を超えた時にオフになります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間後に無効化されます。"
+    themes:
+      default_description: "デフォルト"
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -125,12 +128,15 @@ ja:
         us_west_2: "US West (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Ireland)"
+        eu_west_2: "EU(ロンドン)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "アジア(ムンバイ)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "中国(北京)"
     edit: 'このトピックのタイトル/カテゴリを編集'
     not_implemented: "この機能はまだ実装されていません！"
     no_value: "いいえ"
@@ -188,6 +194,7 @@ ja:
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
+      user_count: "ユーザー"
       active_user_count: "アクティブユーザー"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 %{contact_info}までご連絡ください"
@@ -225,6 +232,8 @@ ja:
     undo: "取り消す"
     revert: "戻す"
     failed: "失敗"
+    switch_to_anon: "匿名モードにする"
+    switch_from_anon: "匿名モードから抜ける"
     banner:
       close: "バナーを閉じる。"
       edit: "このバナーを編集 >>"
@@ -286,22 +295,48 @@ ja:
       posts_read_long: "投稿の閲覧数"
       total_rows:
         other: "%{count}人のユーザー"
+    group_histories:
+      actions:
+        change_group_setting: "グループの設定を変更"
+        add_user_to_group: "ユーザーを追加"
+        remove_user_from_group: "ユーザーを削除"
+        make_user_group_owner: "オーナーにする"
+        remove_user_as_group_owner: "オーナーから削除する"
     groups:
-      request_membership_pm:
-        title: "メンバーシップリクエスト"
+      logs:
+        title: "ログ"
+        when: "日時"
+        action: "アクション"
+        acting_user: "アクションしたユーザー"
+        target_user: "対象ユーザー"
+        subject: "対象"
+        details: "詳細"
+      edit:
+        title: 'グループの編集'
+        full_name: 'フルネーム'
+        add_members: "メンバーを追加"
+        delete_member_confirm: "'%{username}' を '%{group}' から削除してもよろしいですか？"
+      name_placeholder: "グループネームはユーザー名と同様にスペース無し"
       add: "追加"
+      join: "グループに参加"
+      leave: "グループから離脱"
+      request: "グループへの参加をリクエスト"
       automatic_group: 自動作成グループ
       closed_group: クローズドグループ
+      is_group_user: "このグループのメンバーです"
+      allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
       membership: "メンバーシップ"
+      name: "名前"
       user_count: "メンバー数"
+      bio: "グループについて"
       selector_placeholder: "メンバーを追加"
       owner: "オーナー"
-      visible: "このグループは全てのユーザーに表示されています。"
       index:
         title: "グループ"
         empty: "表示するグループはありません。"
       title:
         other: "グループ"
+      activity: "アクティビティ"
       members: "メンバー"
       topics: "トピック"
       posts: "投稿"
@@ -382,6 +417,8 @@ ja:
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
+      download_archive:
+        button_text: "すべてダウンロード"
       new_private_message: "メッセージを作成"
       private_message: "メッセージ"
       private_messages: "メッセージ"
@@ -425,7 +462,6 @@ ja:
         instructions: |
           この設定は、アクティビティの情報機能を無効化します。<br />
           ミュートしているトピックやカテゴリはこれらのメールには含まれません。
-        daily: "デイリーアップデートを送る"
         individual: "新しい投稿がある場合にメールで送る"
       watched_categories: "ウォッチ中"
       tracked_categories: "追跡中"
@@ -457,6 +493,13 @@ ja:
         move_to_archive: "アーカイブ"
         failed_to_move: "選択したメッセージを移動できませんでした(ネットワークがダウンしている可能性があります)"
         select_all: "すべて選択する"
+      preferences_nav:
+        account: "アカウント"
+        profile: "プロフィール"
+        emails: "メール"
+        notifications: "お知らせ"
+        categories: "カテゴリ"
+        interface: "表示設定"
       change_password:
         success: "(メールを送信しました)"
         in_progress: "(メールを送信中)"
@@ -469,7 +512,6 @@ ja:
       change_username:
         title: "ユーザー名を変更"
         taken: "このユーザー名は既に使われています。"
-        error: "ユーザー名の変更中にエラーが発生しました。"
         invalid: "このユーザー名は無効です。英数字のみ利用可能です。"
       change_email:
         title: "メールアドレスを変更"
@@ -548,7 +590,7 @@ ja:
       email_private_messages: "メッセージを受け取ったときにメールで通知を受け取る。"
       email_always: "常にメールへ通知を送る"
       other_settings: "その他"
-      categories_settings: "カテゴリ設定"
+      categories_settings: "カテゴリの設定"
       new_topic_duration:
         label: "以下の条件でトピックを新規と見なす"
         not_viewed: "未読"
@@ -767,6 +809,8 @@ ja:
       github:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
+    category_page_style:
+      categories_only: "カテゴリのみ"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -931,10 +975,8 @@ ja:
         dismiss_new: "既読にする"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
-        change_category: "カテゴリを変更"
         close_topics: "トピックをクローズする"
         archive_topics: "アーカイブトピック"
-        notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択してください"
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
@@ -1030,9 +1072,6 @@ ja:
           '3_2': 'このトピックに参加中のため通知されます。'
           '3_1': 'このトピックを作成したため通知されます。'
           '3': 'このトピックに参加中のため通知されます。'
-          '2_8': 'このカテゴリを追跡しているため通知されます。'
-          '2_4': 'このトピックに返信したため通知されます。'
-          '2_2': 'このトピックを追跡中のため通知されます。'
           '1_2': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
           '1': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
           '0_7': 'このカテゴリに関して一切通知を受け取りません。'
@@ -1163,7 +1202,6 @@ ja:
           other: "この {{count}} つの投稿の新しいオーナーを選択してください。（前のオーナー：<b>{{old_user}}</b>）"
         instructions_warn: "この投稿についての通知が新しいユーザにさかのぼって移動されることはないので注意してください。<br>警告: 投稿の関連データの所有権は、新しいユーザに転送されません。 注意して使用してください。"
       change_timestamp:
-        title: "タイムスタンプを変更"
         action: "タイムスタンプを変更"
       multi_select:
         select: '選択'
@@ -1355,8 +1393,6 @@ ja:
       already_used: 'この色は他のカテゴリで利用しています'
       security: "セキュリティ"
       images: "画像"
-      auto_close_label: "トピックが自動的にクローズするまでの時間:"
-      auto_close_units: "時間"
       email_in: "カスタムメールアドレス:"
       email_in_allow_strangers: "登録されていないユーザからメールを受け取ります"
       email_in_disabled: "メールでの新規投稿は、サイトの設定で無効になっています。メールでの新規投稿を有効にするには"
@@ -1581,8 +1617,6 @@ ja:
     badges:
       granted_on: "%{date}にゲット!"
       title: バッジ
-      allow_title: "タイトルに使える"
-      multiple_grant: "何回もゲット出来る"
       badge_count:
         other: "%{count}個のバッジ"
     tagging:
@@ -1620,12 +1654,14 @@ ja:
         private_messages_short: "メッセージ"
         private_messages_title: "メッセージ"
         mobile_title: "モバイル"
-        space_free: "{{size}} free"
+        space_free: "{{size}} 空き"
         uploads: "アップロード"
         backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
-        show_traffic_report: "Show Detailed Traffic Report"
+        page_views: "閲覧数"
+        page_views_short: "閲覧数"
+        show_traffic_report: "詳細なトラフィックレポートを表示出来るようにする"
         reports:
           today: "今日"
           yesterday: "昨日"
@@ -1890,6 +1926,7 @@ ja:
         test_error: "テストメールを送れませんでした。メール設定、またはホストをメールコネクションをブロックされていないようを確認してください。"
         sent: "送信したメール"
         skipped: "スキップ済み"
+        bounced: "バウンス"
         received: "受信したメール"
         rejected: "拒否されたメール"
         sent_at: "送信時間"
@@ -1946,7 +1983,6 @@ ja:
           do_nothing: "何もしない"
         staff_actions:
           title: "スタッフ操作"
-          instructions: "ユーザ名、アクションをクリックすると、リストはフィルタされます。プロフィール画像をクリックするとユーザページに遷移します"
           clear_filters: "すべて表示する"
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
@@ -2083,6 +2119,7 @@ ja:
         refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
         show_public_profile: "パブリックプロフィールを見る"
         impersonate: 'このユーザになりすます'
+        action_logs: "アクションログ"
         ip_lookup: "IPアドレスを検索"
         log_out: "ログアウト"
         logged_out: "すべてのデバイスでログアウトしました"
@@ -2138,10 +2175,18 @@ ja:
         unblock_failed: 'ユーザのブロック解除に失敗しました。'
         block_failed: 'ユーザのブロックに失敗しました。'
         block_confirm: 'このユーザをブロックしてもよろしいですか? ユーザは新しくトピックを作成したり、投稿する事ができなくなります。'
+        bounce_score: "バウンススコア"
+        reset_bounce_score:
+          title: "バウンススコアを0にリセット"
+        visit_profile: "<a href='%{url}'>設定ページ</a>からプロフィールの変更ができます"
         deactivate_explanation: "アクティベート解除されたユーザは、メールで再アクティベートする必要があります。"
         suspended_explanation: "凍結中のユーザはログインできません。"
         block_explanation: "ブロックされているユーザは投稿およびトピックの作成ができません。"
         staged_explanation: "ステージドユーザは特定のトピック宛に、メールを経由して投稿する事が出来ます。"
+        bounce_score_explanation:
+          none: "直近ではバウンスメールは受け取っていません。"
+          some: "最近、メールからバウンスが受信されました。"
+          threshold_reached: "そのメールから何度もバウンスを受信しています。"
         trust_level_change_failed: "ユーザのトラストレベル変更に失敗しました。"
         suspend_modal_title: "凍結中のユーザ"
         trust_level_2_users: "トラストレベル2のユーザ"

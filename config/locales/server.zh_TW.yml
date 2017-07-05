@@ -317,7 +317,6 @@ zh_TW:
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   assets_topic_title: "站點設計資料"
-  assets_topic_body: "這是一個永久主題，僅對管理人員可見，用於存儲論壇設計使用的圖像和檔案。不要刪除它！\n\n\n詳細教程：\n\n\n1. 回覆到這個主題。\n2. 上傳你想用作站點標誌、表徵圖和其他所有圖片到這兒。（使用帖子編輯器工具欄中的上傳表徵圖，或者拖拽或者粘貼圖像。）\n3. 提交你的回覆添加帖子。\n4. 在你的新帖子裡右鍵點擊圖片獲得這些已上傳圖片的連結，或者點擊編輯按鈕來編輯帖子，獲得到圖片的相對地址。複製這些相對地址。\n5. 粘貼這些圖像的路徑到[基礎設置](/admin/site_settings/category/required)。\n\n\n如果你需要運行額外的上傳檔案類型，在[檔案設置](/admin/site_settings/category/files)中編輯 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "歡迎來到 Discourse"
     body: |2
@@ -492,7 +491,6 @@ zh_TW:
       long_form: '投訴為離題內容'
     spam:
       title: '垃圾內容'
-      description: '此文章內容為廣告，與當前討論話題無關，只有促銷資訊。'
       long_form: '投訴為垃圾內容'
       email_title: '“%{title}”被標記為垃圾'
       email_body: "%{link}\n\n%{message}"
@@ -559,7 +557,6 @@ zh_TW:
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: "退訂！"
-    description: "你已經退訂。要更改你的郵件設置，<a href='%{url}'>訪問你的用戶設置頁面</a>。"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
   unsubscribe:
     title: "退訂"
@@ -880,7 +877,6 @@ zh_TW:
     force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
-    invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_username_length: "最短用戶名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
     max_username_length: "最長用戶名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"
@@ -971,8 +967,6 @@ zh_TW:
     default_opengraph_image_url: "opengraph圖像的預設URL。"
     twitter_summary_large_image_url: "預設 Twitter summary 卡片的 URL（需要至少寬 280px 和高 150px）。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
-    convert_pasted_images_to_hq_jpg: "將粘貼圖片轉為高質量 JPG 檔案。"
-    convert_pasted_images_quality: "轉換過的 JPG 檔案質量（1 是最低，100 最高質量）。"
     enable_flash_video_onebox: "在 Onebox 啟用嵌入 swf 和 flv (Adobe Flash) 的鏈接。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設信任等級（0-4）。警告！改變此項將提高廣告氾濫的風險。"
@@ -1068,7 +1062,6 @@ zh_TW:
     reply_by_email_enabled: "啟用通過電郵回覆。"
     reply_by_email_address: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "對進站郵件優先使用 HTML 而不是純文字檔案。可能導致格式問題。"
     disable_emails: "禁止 Discourse 發送任何郵件"
     strip_images_from_short_emails: "郵件小於 2800 位元組時去除圖片"
     short_email_length: "短郵件地址長度（以比特作為單位）"
@@ -1157,7 +1150,6 @@ zh_TW:
     enable_names: "在用戶的個人信息、用戶卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在用戶的帖子中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個帖子發表間隔多天，在主題中顯示時間間隔提示。"
-    invites_per_page: "默認在用戶頁顯示的邀請。"
     short_progress_text_threshold: "在主題中的帖子數超過這個設定後，進度條將只顯示當前的帖子數。如果你更改了進度條的寬度，你需要修改這個值。"
     default_code_lang: "預設語法高亮語言，使用 GitHub 代碼塊（lang-auto、ruby、python或者其他等等。）"
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
@@ -1174,7 +1166,6 @@ zh_TW:
     embed_username_required: "創建主題需要用戶名。"
     embed_whitelist_selector: "在 embeds 頁面允許 CSS 元素選擇器"
     embed_blacklist_selector: "在 embeds 頁面移除 CSS 元件選擇器"
-    notify_about_flags_after: "如果有標記沒有在設定小時後處理，發送一封郵件給 contact_email。設為 0 將禁用。"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用戶數下限（0 為禁用）。"
@@ -1369,8 +1360,6 @@ zh_TW:
     website:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
   flags_reminder:
-    flags_were_submitted:
-      other: "這些標記在過去 %{count} 小時內被提交。請審核他們。"
     subject_template:
       other: "%{count} 個標記需要被處理"
   unsubscribe_mailer:
@@ -1564,32 +1553,9 @@ zh_TW:
     welcome_user:
       title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"
-      text_body_template: |+
-        感謝你加入%{site_name}，歡迎討論！
-
-        %{new_user_tips}
-
-        我們相信始終相信[公民社群守則](%{base_url}/guidelines) 。好好享受你在論壇的時光！
-
-        （如果身為新的使用者你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
-
     welcome_invite:
       title: "歡迎邀請"
       subject_template: "歡迎來到 %{site_name}！"
-      text_body_template: |
-        感謝你接受邀請加入 %{site_name} — 歡迎！
-
-        - 我們已為你建立 **%{username}** 帳號。請到 [偏好設定][prefs] 頁面修改帳號名稱或密碼。
-
-        - 請使用與你的邀請信件 **相同的 email 信箱登入**，不然我們就不知道你來了！
-
-        %{new_user_tips}
-
-        我們始終相信[社群參與指南守則](%{base_url}/guidelines) 。好好享受你在論壇的時光！
-
-        （身為新的使用者，如果你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "備份成功"
       subject_template: "備份成功完成"
@@ -1643,14 +1609,6 @@ zh_TW:
     bulk_invite_failed:
       title: "批量邀請失敗"
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
-      text_body_template: |
-        批量邀請已經完成，發出了 %{sent} 個邀請並且 %{failed} 個失敗。
-
-        查看日誌：
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "資料匯出完成"
@@ -1890,8 +1848,6 @@ zh_TW:
   subject_pm: "[私訊]"
   user_notifications:
     previous_discussion: "之前的回覆"
-    reached_limit:
-      other: "警告：你達到了每日郵件限額（%{count}）。之後郵件通知將被禁用。"
     in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"
@@ -2056,18 +2012,9 @@ zh_TW:
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
-      unsubscribe: "這是封來自%{site_link}的摘要郵件，因為你長時間沒有訪問而發送。%{unsubscribe_link}取消訂閲。"
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
-    mailing_list:
-      why: "%{date}%{site_link}上的所有情況"
-      unsubscribe: "這是每日摘要郵件。站點啟用了郵件列表模式，點擊連結 %{unsubscribe_link} 退訂。"
-      from: "%{site_name}的摘要"
-      new_topics: "近期主題"
-      topic_updates: "主題更新"
-      view_this_topic: "查看此主題"
-      back_to_top: "回到頂部"
     forgot_password:
       title: "忘記密碼"
     set_password:
@@ -2597,8 +2544,6 @@ zh_TW:
     error: "錯誤"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
-  discourse_hub:
-    access_token_problem: "告訴管理員：請更新站點設置，應使用正確的 discourse_org_access_key。"
   performance_report:
     initial_post_raw: 這個主題將用來展示網站每日性能報告。
     initial_topic_title: 網站效能報表

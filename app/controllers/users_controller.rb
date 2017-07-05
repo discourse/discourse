@@ -127,14 +127,13 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    # TODO proper error surfacing (result is a Model#save call)
     result = UsernameChanger.change(user, params[:new_username], current_user)
-    raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render json: {
-      id: user.id,
-      username: user.username
-    }
+    if result
+      render json: { id: user.id, username: user.username }
+    else
+      render_json_error(user.errors.full_messages.join(','))
+    end
   end
 
   def check_emails
@@ -293,6 +292,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    params.require(:email)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -303,7 +303,7 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
-    if params[:email] && params[:email].length > 254 + 1 + 253
+    if params[:email].length > 254 + 1 + 253
       return fail_with("login.email_too_long")
     end
 
@@ -357,6 +357,7 @@ class UsersController < ApplicationController
 
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
+      session[SessionController::ACTIVATE_USER_KEY] = user.id
 
       render json: {
         success: true,
@@ -381,8 +382,6 @@ class UsersController < ApplicationController
       success: false,
       message: I18n.t("login.something_already_taken")
     }
-  rescue RestClient::Forbidden
-    render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
   end
 
   def get_honeypot_value
@@ -436,7 +435,7 @@ class UsersController < ApplicationController
         else
           store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
         end
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
 
       format.json do
@@ -534,10 +533,30 @@ class UsersController < ApplicationController
   end
 
   def account_created
+    return redirect_to("/") if current_user.present?
+
     @custom_body_class = "static-account-created"
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
+    @account_created = {
+      message: @message,
+      show_controls: false
+    }
+
+    if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
+      if user = User.where(id: session_user_id.to_i).first
+        @account_created[:username] = user.username
+        @account_created[:email] = user.email
+        @account_created[:show_controls] = true
+      end
+    end
+
+    store_preloaded("accountCreated", MultiJson.dump(@account_created))
     expires_now
-    render layout: 'no_ember'
+
+    respond_to do |format|
+      format.html { render "default/empty" }
+      format.json { render json: success_json }
+    end
   end
 
   def activate_account
@@ -573,12 +592,17 @@ class UsersController < ApplicationController
   def update_activation_email
     RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
 
-    @user = User.find_by_username_or_email(params[:username])
+    if params[:username].present?
+      @user = User.find_by_username_or_email(params[:username])
+      raise Discourse::InvalidAccess.new unless @user.present?
+      raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
+    elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
+      @user = User.where(id: user_key.to_i).first
+    end
+
     raise Discourse::InvalidAccess.new unless @user.present?
     raise Discourse::InvalidAccess.new if @user.active?
     raise Discourse::InvalidAccess.new if current_user.present?
-
-    raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
 
     User.transaction do
       @user.email = params[:email]
@@ -598,14 +622,17 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
     end
 
-    @user = User.find_by_username_or_email(params[:username].to_s)
+    raise Discourse::InvalidAccess.new if SiteSetting.must_approve_users?
 
+    if params[:username].present?
+      @user = User.find_by_username_or_email(params[:username].to_s)
+    end
     raise Discourse::NotFound unless @user
 
     if !current_user&.staff? &&
         @user.id != session[SessionController::ACTIVATE_USER_KEY]
 
-      raise Discourse::InvalidAccess
+      raise Discourse::InvalidAccess.new
     end
 
     session.delete(SessionController::ACTIVATE_USER_KEY)

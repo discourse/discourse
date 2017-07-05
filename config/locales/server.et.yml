@@ -289,7 +289,6 @@ et:
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
   assets_topic_title: "Saidi kujunduse vahendid"
-  assets_topic_body: "See on püsiteema, nähtav vaid meeskonnale, selle saidi kujunduses kasutatavate piltide ja failide talletamiseks. Ära seda kustuta!\n\n\nTee nii:\n\n\n1. Vasta siia teemasse.\n2. Lae üles kõik pildid, mida soovida kasutada logodena, ikoonidena, vms. (Kasuta üleslaadimise ikooni postituse redaktori tööriistaribal, võid pildid siia ka lohistada või kleepida.)\n3. Postita oma vastus.\n4. Tee üleslaetud pildifailini leiad kas oma uues postituses oleval pildil paremklikates, või postituse muutmise ikooni klikkides ja kopeerides postitusest redaktoris. Kopeeri teed pildifailideni.\n5. Kleebi need teed sättesse [basic settings](/admin/site_settings/category/required).\n\n\nKui soovid lubada einevate failitüüpide üleslaadimist, muuda `authorized_extensions` sättes [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Teretulemast Discourse'i"
     body: |2
@@ -490,7 +489,6 @@ et:
       long_form: 'tähistasin selle kui teemavälise'
     spam:
       title: 'Spämm'
-      description: 'See postitus on reklaam. Käesoleva vestlusega seoses ei ole see ei kasulik ega asjakohane vaid pigem millegi reklaamimine.'
       long_form: 'tähistasin selle kui spämmi'
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
@@ -745,13 +743,6 @@ et:
       text_body_template: |2
 
         %{message}
-    mailing_list:
-      why: "Saidi %{site_link} kõik toimingud päeval %{date}"
-      from: "%{site_name} kokkuvõte"
-      new_topics: "Uued teemad"
-      topic_updates: "eemade uuendused"
-      view_this_topic: "Vaata seda teemat"
-      back_to_top: "Tagasi üles"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:

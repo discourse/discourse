@@ -60,6 +60,17 @@ describe Search do
 
   end
 
+  it 'strips zero-width characters from search terms' do
+    term = "\u0063\u0061\u0070\u0079\u200b\u200c\u200d\ufeff\u0062\u0061\u0072\u0061".encode("UTF-8")
+
+    expect(term == 'capybara').to eq(false)
+
+    search = Search.new(term)
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('capybara')
+    expect(search.clean_term).to eq('capybara')
+  end
+
   it 'does not search when the search term is too small' do
     search = Search.new('evil', min_search_term_length: 5)
     search.execute
@@ -159,44 +170,64 @@ describe Search do
 
     it 'searches correctly' do
 
-       expect do
-         Search.execute('mars', type_filter: 'private_messages')
-       end.to raise_error(Discourse::InvalidAccess)
+      expect do
+       Search.execute('mars', type_filter: 'private_messages')
+      end.to raise_error(Discourse::InvalidAccess)
 
-       TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
-       TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
+      TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
+      TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
 
-       results = Search.execute('mars',
-                                type_filter: 'private_messages',
-                                guardian: Guardian.new(reply.user))
+      results = Search.execute('mars',
+                              type_filter: 'private_messages',
+                              guardian: Guardian.new(reply.user))
 
-       expect(results.posts.length).to eq(1)
-
-
-       results = Search.execute('mars',
-                                search_context: topic,
-                                guardian: Guardian.new(reply.user))
-
-       expect(results.posts.length).to eq(1)
-
-       # does not leak out
-       results = Search.execute('mars',
-                                type_filter: 'private_messages',
-                                guardian: Guardian.new(Fabricate(:user)))
-
-       expect(results.posts.length).to eq(0)
-
-       Fabricate(:topic, category_id: nil, archetype: 'private_message')
-       Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+      expect(results.posts.length).to eq(1)
 
 
-       # admin can search everything with correct context
-       results = Search.execute('mars',
-                                type_filter: 'private_messages',
-                                search_context: post.user,
-                                guardian: Guardian.new(Fabricate(:admin)))
+      results = Search.execute('mars',
+                              search_context: topic,
+                              guardian: Guardian.new(reply.user))
 
-       expect(results.posts.length).to eq(1)
+      expect(results.posts.length).to eq(1)
+
+      # does not leak out
+      results = Search.execute('mars',
+                              type_filter: 'private_messages',
+                              guardian: Guardian.new(Fabricate(:user)))
+
+      expect(results.posts.length).to eq(0)
+
+      Fabricate(:topic, category_id: nil, archetype: 'private_message')
+      Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+
+
+      # admin can search everything with correct context
+      results = Search.execute('mars',
+                              type_filter: 'private_messages',
+                              search_context: post.user,
+                              guardian: Guardian.new(Fabricate(:admin)))
+
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('mars in:private',
+                              search_context: post.user,
+                              guardian: Guardian.new(post.user))
+
+      expect(results.posts.length).to eq(1)
+
+      # can search group PMs as well as non admin
+      #
+      user = Fabricate(:user)
+      group = Fabricate.build(:group)
+      group.add(user)
+      group.save!
+
+      TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
+
+      results = Search.execute('mars in:private',
+                              guardian: Guardian.new(user))
+
+      expect(results.posts.length).to eq(1)
 
     end
 
@@ -232,6 +263,9 @@ describe Search do
 
         results = Search.execute('posting', search_context: post1.topic)
         expect(results.posts.map(&:id)).to eq([post1.id, post2.id, post3.id, post4.id])
+
+        results = Search.execute('posting l', search_context: post1.topic)
+        expect(results.posts.map(&:id)).to eq([post4.id, post3.id, post2.id, post1.id])
 
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
@@ -613,6 +647,8 @@ describe Search do
 
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute('sam l').posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute('l sam').posts.map(&:id)).to eq([post2.id, post1.id])
     end
 
     it 'can order by topic creation' do
@@ -669,15 +705,35 @@ describe Search do
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 
-    it "can find with tag" do
-      topic1 = Fabricate(:topic, title: 'Could not, would not, on a boat')
-      topic1.tags = [Fabricate(:tag, name: 'eggs'), Fabricate(:tag, name: 'ham')]
-      Fabricate(:post, topic: topic1)
-      post2 = Fabricate(:post, topic: topic1, raw: "It probably doesn't help that they're green...")
+    context 'tags' do
+      let(:tag1) { Fabricate(:tag, name: 'lunch') }
+      let(:tag2) { Fabricate(:tag, name: 'eggs') }
+      let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
+      let(:topic2) { Fabricate(:topic, tags: [tag2]) }
+      let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
+      let!(:post1) { Fabricate(:post, topic: topic1)}
+      let!(:post2) { Fabricate(:post, topic: topic2)}
+      let!(:post3) { Fabricate(:post, topic: topic3)}
 
-      expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post2.id])
-      expect(Search.execute('green tags:plants').posts.size).to eq(0)
+      it 'can find posts with tag' do
+        post4 = Fabricate(:post, topic: topic3, raw: "It probably doesn't help that they're green...")
+
+        expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post4.id])
+        expect(Search.execute('tags:plants').posts.size).to eq(0)
+      end
+
+      it 'can find posts with any tag from multiple tags' do
+        Fabricate(:post)
+
+        expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id].sort)
+      end
+
+      it 'can find posts which contains all provided tags' do
+        expect(Search.execute('tags:lunch+eggs').posts.map(&:id)).to eq([post3.id])
+        expect(Search.execute('tags:eggs+lunch').posts.map(&:id)).to eq([post3.id])
+      end
     end
+
   end
 
   it 'can parse complex strings using ts_query helper' do

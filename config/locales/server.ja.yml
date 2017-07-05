@@ -198,7 +198,6 @@ ja:
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフのためのプライベートカテゴリです。トピックは管理者とモデレータのみが閲覧できます"
-  assets_topic_body: "これはパーマネントトピックです。スタッフのみが閲覧でき、サイトデザインに使用する画像とファイルを保存するために使用します。削除しないでください！\n\n利用方法:\n\n\n1. このトピックに回答\n2. ロゴやファビコンなどに使用する全ての画像をアップロード(エディタのアップロードアイコンか、ドラッグアンドドロップで画像を貼付ける)\n3. 回答を投稿\n4. 新しい投稿の画像を右クリックしてアップロード済み画像のパスを取得するか、編集アイコンをクリックして画像のパスを探し、画像パスをコピーする\n5. 画像パスを[基本設定](/admin/site_settings/category/required)に貼付ける\n\nもし、別のファイルタイプが必要な場合、[ファイル設定](/admin/site_settings/category/files)の`サポートするファイルの拡張` を編集してください"
   lounge_welcome:
     title: "ラウンジへようこそ"
     body: |2
@@ -323,7 +322,6 @@ ja:
       long_form: '「関係ない話題」として通報'
     spam:
       title: 'スパム'
-      description: 'この投稿は、営利目的、宣伝目的の書き込みの可能性がある。'
       long_form: 'スパムとして通報する'
       email_title: '"%{title}"はスパムとして通報されています'
       email_body: "%{link}\n\n%{message}"
@@ -629,7 +627,6 @@ ja:
     force_hostname: "開発者用! 警告! URL 内のホスト名を指定。空欄でデフォルト値を利用。"
     invite_expiry_days: "招待キーの有効期間 (日)"
     invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
-    invite_only: "パブリックなユーザー登録を無効化し、全てのユーザは他のメンバーかスタッフの招待を必要とする"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
@@ -810,7 +807,6 @@ ja:
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
     show_time_gap_days: "２つの投稿の作成日が離れていた場合、time gapをトピックに表示する。"
-    invites_per_page: "ユーザページに表示されるデフォルトの招待数"
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
@@ -823,7 +819,6 @@ ja:
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
     embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
-    notify_about_flags_after: "この数時間後に処理されていない通報がある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
@@ -952,17 +947,6 @@ ja:
   system_messages:
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
-      text_body_template: |
-        %{site_name}に参加していただきありがとうございます。
-        そしてようこそ！
-
-        %{new_user_tips}
-
-        [ガイドライン](%{base_url}/guidelines) をよく読み、しっかり守りましょう。
-
-        それでは、楽しんでください！
-
-        (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
     backup_succeeded:
@@ -978,14 +962,6 @@ ja:
       text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
     bulk_invite_failed:
       subject_template: "ユーザの一括招待中にエラーが発生しました"
-      text_body_template: |
-        一括ユーザ招待が処理され、%{sent} 通の招待メールが送信され、%{failed}個のエラーが発生しました
-
-        ログ:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "データのダウンロード準備が完了しました"
     csv_export_failed:
@@ -1017,10 +993,7 @@ ja:
     posted_by: "%{post_date} に %{username} が投稿"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
-    mailing_list:
-      new_topics: "新着トピック"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
   page_not_found:
@@ -1196,8 +1169,6 @@ ja:
     error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
-  discourse_hub:
-    access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート

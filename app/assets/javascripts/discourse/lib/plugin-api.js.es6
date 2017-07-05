@@ -22,13 +22,12 @@ import { attachAdditionalPanel } from 'discourse/widgets/header';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.6';
+const PLUGIN_API_VERSION = '0.8.7';
 
 class PluginApi {
   constructor(version, container) {
     this.version = version;
     this.container = container;
-    this._currentUser = container.lookup('current-user:main');
     this.h = h;
   }
 
@@ -37,7 +36,26 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
   **/
   getCurrentUser() {
-    return this._currentUser;
+    return this.container.lookup('current-user:main');
+  }
+
+  /**
+   * Allows you to overwrite or extend methods in a class.
+   *
+   * For example:
+   *
+   * ```
+   * api.modifyClass('controller:composer', {
+   *   actions: {
+   *     newActionHere() { }
+   *   }
+   * });
+   * ```
+   **/
+  modifyClass(resolverName, changes) {
+    const klass = this.container.factoryFor(resolverName);
+    klass.class.reopen(changes);
+    return klass;
   }
 
   /**
@@ -62,7 +80,7 @@ class PluginApi {
 
     if (!opts.onlyStream) {
       decorate(ComposerEditor, 'previewRefreshed', callback);
-      decorate(this.container.lookupFactory('component:user-stream'), 'didInsertElement', callback);
+      decorate(this.container.factoryFor('component:user-stream').class, 'didInsertElement', callback);
     }
   }
 
@@ -171,7 +189,7 @@ class PluginApi {
    * ```
    **/
   attachWidgetAction(widget, actionName, fn) {
-    const widgetClass = this.container.lookupFactory(`widget:${widget}`);
+    const widgetClass = this.container.factoryFor(`widget:${widget}`).class;
     widgetClass.prototype[actionName] = fn;
   }
 

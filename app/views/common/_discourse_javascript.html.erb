@@ -17,12 +17,6 @@
     <% end %>
     window.onerror(e && e.message, null,null,null,e);
   });
-
-<% if Rails.env.development? || Rails.env.test? %>
-  //Ember.ENV.RAISE_ON_DEPRECATION = true
-  //Ember.LOG_STACKTRACE_ON_DEPRECATION = true
-<% end %>
-
 </script>
 
 <script>
@@ -48,19 +42,22 @@
     Discourse.Environment = '<%= Rails.env %>';
     Discourse.SiteSettings = ps.get('siteSettings');
     Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
+    <%- if SiteSetting.enable_experimental_markdown_it %>
+    Discourse.MarkdownItURL = '<%= asset_url('markdown-it-bundle.js') %>';
+    <%- end %>
     I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
     Discourse.start();
     Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
     Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
     <%- if params["safe_mode"] %>
-        Discourse.Session.currentProp("safe_mode", <%= normalized_safe_mode.inspect.html_safe %>);
+    Discourse.Session.currentProp("safe_mode", <%= normalized_safe_mode.inspect.html_safe %>);
     <%- end %>
     Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;
     <%- if SiteSetting.enable_s3_uploads %>
       <%- if SiteSetting.s3_cdn_url.present? %>
-        Discourse.S3CDN = '<%= SiteSetting.s3_cdn_url %>';
+    Discourse.S3CDN = '<%= SiteSetting.s3_cdn_url %>';
       <%- end %>
-      Discourse.S3BaseUrl = '<%= Discourse.store.absolute_base_url %>';
+    Discourse.S3BaseUrl = '<%= Discourse.store.absolute_base_url %>';
     <%- end %>
   })();
 </script>

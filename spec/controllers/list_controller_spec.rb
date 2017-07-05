@@ -192,25 +192,48 @@ describe ListController do
       end
 
       describe "category default views" do
-        it "top default view" do
+        it "has a top default view" do
           category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
           described_class.expects(:best_period_with_topics_for).with(anything, category.id, :monthly).returns(:monthly)
           xhr :get, :category_default, category: category.slug
           expect(response).to be_success
         end
 
-        it "default view is nil" do
+        it "has a default view of nil" do
           category.update_attributes!(default_view: nil)
           described_class.expects(:best_period_for).never
           xhr :get, :category_default, category: category.slug
           expect(response).to be_success
         end
 
-        it "default view is latest" do
+        it "has a default view of ''" do
+          category.update_attributes!(default_view: '')
+          described_class.expects(:best_period_for).never
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
+        it "has a default view of latest" do
           category.update_attributes!(default_view: 'latest')
           described_class.expects(:best_period_for).never
           xhr :get, :category_default, category: category.slug
           expect(response).to be_success
+        end
+      end
+
+      describe "renders canonical tag" do
+        render_views
+
+        it 'for category default view' do
+          get :category_default, category: category.slug
+          expect(response).to be_success
+          expect(css_select("link[rel=canonical]").length).to eq(1)
+        end
+
+        it 'for category latest view' do
+          get :category_latest, category: category.slug
+          expect(response).to be_success
+          expect(css_select("link[rel=canonical]").length).to eq(1)
         end
       end
     end

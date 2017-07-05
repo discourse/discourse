@@ -385,14 +385,25 @@ export function cook(raw, opts) {
   currentOpts = opts;
 
   hoisted = {};
-  raw = hoistCodeBlocksAndSpans(raw);
 
-  preProcessors.forEach(p => raw = p(raw));
+  if (!currentOpts.enableExperimentalMarkdownIt) {
+    raw = hoistCodeBlocksAndSpans(raw);
+    preProcessors.forEach(p => raw = p(raw));
+  }
 
   const whiteLister = new WhiteLister(opts);
 
-  const tree = parser.toHTMLTree(raw, 'Discourse');
-  let result = opts.sanitizer(parser.renderJsonML(parseTree(tree, opts)), whiteLister);
+  let result;
+
+  if (currentOpts.enableExperimentalMarkdownIt) {
+    result = opts.sanitizer(
+        require('pretty-text/engines/markdown-it/instance').default(opts).render(raw),
+        whiteLister
+    );
+  } else {
+    const tree = parser.toHTMLTree(raw, 'Discourse');
+    result = opts.sanitizer(parser.renderJsonML(parseTree(tree, opts)), whiteLister);
+  }
 
   // If we hoisted out anything, put it back
   const keys = Object.keys(hoisted);

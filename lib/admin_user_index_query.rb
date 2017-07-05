@@ -25,7 +25,11 @@ class AdminUserIndexQuery
   }
 
   def find_users(limit=100)
-    find_users_query.limit(limit)
+    page = params[:page].to_i - 1
+    if page < 0
+        page = 0
+    end
+    find_users_query.limit(limit).offset(page * limit)
   end
 
   def count_users

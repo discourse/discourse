@@ -1,5 +1,6 @@
 require_dependency 'url_helper'
 require_dependency 'file_helper'
+require_dependency 'upload_creator'
 
 module Jobs
 
@@ -35,19 +36,29 @@ module Jobs
             # have we already downloaded that file?
             unless downloaded_urls.include?(src)
               begin
-                hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked", true)
+                hotlinked = FileHelper.download(
+                  src,
+                  max_file_size: @max_size,
+                  tmp_file_name: "discourse-hotlinked",
+                  follow_redirect: true
+                )
               rescue Discourse::InvalidParameters
               end
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
-                  upload = Upload.create_for(post.user_id, hotlinked, filename, File.size(hotlinked.path), { origin: src })
-                  downloaded_urls[src] = upload.url
+                  filename << File.extname(hotlinked.path) unless filename["."]
+                  upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
+                  if upload.persisted?
+                    downloaded_urls[src] = upload.url
+                  else
+                    log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
+                  end
                 else
-                  Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
+                  log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                 end
               else
-                Rails.logger.error("There was an error while downloading '#{src}' locally for post: #{post_id}")
+                log(:error, "There was an error while downloading '#{src}' locally for post: #{post_id}")
               end
             end
             # have we successfully downloaded that file?
@@ -73,10 +84,7 @@ module Jobs
               raw.gsub!(/^#{escaped_src}(\s?)$/) { "<img src='#{url}'>#{$1}" }
             end
           rescue => e
-            Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
-          ensure
-            # close & delete the temp file
-            hotlinked && hotlinked.close!
+            log(:info, "Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           end
         end
 
@@ -88,12 +96,14 @@ module Jobs
         # we never want that job to bump the topic
         options = { bypass_bump: true }
         post.revise(Discourse.system_user, changes, options)
+      elsif downloaded_urls.present?
+        post.trigger_post_process(true)
       end
     end
 
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
-      doc.css("img[src]") - doc.css(".onebox-result img") - doc.css("img.avatar")
+      doc.css("img[src]") - doc.css("img.avatar")
     end
 
     def is_valid_image_url(src)
@@ -116,6 +126,13 @@ module Jobs
       return false if URI.parse(Discourse.base_url_no_prefix).hostname == uri.hostname
       # check the domains blacklist
       SiteSetting.should_download_images?(src)
+    end
+
+    def log(log_level, message)
+      Rails.logger.public_send(
+        log_level,
+        "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+      )
     end
 
   end

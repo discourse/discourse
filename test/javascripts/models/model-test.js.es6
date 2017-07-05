@@ -1,8 +1,8 @@
 import Model from 'discourse/models/model';
 
-module("model:discourse");
+QUnit.module("model:discourse");
 
-test("extractByKey: converts a list of hashes into a hash of instances of specified class, indexed by their ids", function() {
+QUnit.test("extractByKey: converts a list of hashes into a hash of instances of specified class, indexed by their ids", assert => {
   var firstObject = {id: "id_1", foo: "foo_1"};
   var secondObject = {id: "id_2", foo: "foo_2"};
 
@@ -12,10 +12,10 @@ test("extractByKey: converts a list of hashes into a hash of instances of specif
     id_2: Ember.Object.create(secondObject)
   };
 
-  ok(_.isEqual(actual, expected));
+  assert.ok(_.isEqual(actual, expected));
 });
 
-test("extractByKey: returns an empty hash if there isn't anything to convert", function() {
-  deepEqual(Model.extractByKey(), {}, "when called without parameters");
-  deepEqual(Model.extractByKey([]), {}, "when called with an empty array");
+QUnit.test("extractByKey: returns an empty hash if there isn't anything to convert", assert => {
+  assert.deepEqual(Model.extractByKey(), {}, "when called without parameters");
+  assert.deepEqual(Model.extractByKey([]), {}, "when called with an empty array");
 });

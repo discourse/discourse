@@ -4,15 +4,18 @@ import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
+import NameValidation from "discourse/mixins/name-validation";
+import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods }  from 'discourse/models/login-method';
 
-export default Ember.Controller.extend(PasswordValidation, UsernameValidation, {
+export default Ember.Controller.extend(PasswordValidation, UsernameValidation, NameValidation, UserFieldsValidation, {
   invitedBy: Ember.computed.alias('model.invited_by'),
   email: Ember.computed.alias('model.email'),
   accountUsername: Ember.computed.alias('model.username'),
   passwordRequired: Ember.computed.notEmpty('accountPassword'),
   successMessage: null,
   errorMessage: null,
+  userFields: null,
   inviteImageUrl: getUrl('/images/envelope.svg'),
 
   @computed
@@ -30,19 +33,30 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, {
     return findLoginMethods(this.siteSettings, this.capabilities, this.site.isMobileDevice).length > 0;
   },
 
-  @computed('usernameValidation.failed', 'passwordValidation.failed')
-  submitDisabled(usernameFailed, passwordFailed) {
-    return usernameFailed || passwordFailed;
+  @computed('usernameValidation.failed', 'passwordValidation.failed', 'nameValidation.failed', 'userFieldsValidation.failed')
+  submitDisabled(usernameFailed, passwordFailed, nameFailed, userFieldsFailed) {
+    return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
   },
 
   actions: {
     submit() {
+
+      const userFields = this.get('userFields');
+      let userCustomFields = {};
+      if (!Ember.isEmpty(userFields)) {
+        userFields.forEach(function(f) {
+          userCustomFields[f.get('field.id')] = f.get('value');
+        });
+      }
+
       ajax({
         url: `/invites/show/${this.get('model.token')}.json`,
         type: 'PUT',
         data: {
           username: this.get('accountUsername'),
-          password: this.get('accountPassword')
+          name: this.get('accountName'),
+          password: this.get('accountPassword'),
+          userCustomFields
         }
       }).then(result => {
         if (result.success) {

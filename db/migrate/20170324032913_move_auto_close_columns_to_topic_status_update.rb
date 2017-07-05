@@ -1,12 +1,13 @@
 class MoveAutoCloseColumnsToTopicStatusUpdate < ActiveRecord::Migration
   def up
+    # The 1 in the fourth column is TopicStatusUpdate.types[:close], an enum with value 1.
     execute <<~SQL
     INSERT INTO topic_status_updates(topic_id, user_id, execute_at, status_type, based_on_last_post, created_at, updated_at)
     SELECT
       t.id,
       t.auto_close_user_id,
       t.auto_close_at,
-      #{TopicStatusUpdate.types[:close]},
+      1,
       t.auto_close_based_on_last_post,
       t.auto_close_started_at,
       t.auto_close_started_at

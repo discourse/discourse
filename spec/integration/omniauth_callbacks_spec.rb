@@ -8,12 +8,20 @@ RSpec.describe "OmniAuth Callbacks" do
   end
 
   after do
+    Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
     OmniAuth.config.test_mode = false
   end
 
   context 'Google Oauth2' do
     before do
       SiteSetting.enable_google_oauth2_logins = true
+    end
+
+    context "without an `omniauth.auth` env" do
+      it "should return a 404" do
+        get "/auth/eviltrout/callback"
+        expect(response.code).to eq("404")
+      end
     end
 
     describe 'when user has been verified' do
@@ -41,7 +49,13 @@ RSpec.describe "OmniAuth Callbacks" do
       end
 
       it 'should return the right response' do
-        get "/auth/google_oauth2/callback.json"
+        expect(user.email_confirmed?).to eq(false)
+
+        events = DiscourseEvent.track_events do
+          get "/auth/google_oauth2/callback.json"
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
 
         expect(response).to be_success
 
@@ -52,6 +66,27 @@ RSpec.describe "OmniAuth Callbacks" do
         expect(response_body["awaiting_approval"]).to eq(false)
         expect(response_body["not_allowed_from_ip_address"]).to eq(false)
         expect(response_body["admin_not_allowed_from_ip_address"]).to eq(false)
+
+        user.reload
+        expect(user.email_confirmed?).to eq(true)
+      end
+
+      it "should confirm email even when the tokens are expired" do
+        user.email_tokens.update_all(confirmed: false, expired: true)
+
+        user.reload
+        expect(user.email_confirmed?).to eq(false)
+
+        events = DiscourseEvent.track_events do
+          get "/auth/google_oauth2/callback.json"
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
+
+        expect(response).to be_success
+
+        user.reload
+        expect(user.email_confirmed?).to eq(true)
       end
 
       context 'when user has not verified his email' do

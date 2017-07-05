@@ -1,9 +1,9 @@
 import TopicTrackingState from 'discourse/models/topic-tracking-state';
 import createStore from 'helpers/create-store';
 
-module("model:topic-tracking-state");
+QUnit.module("model:topic-tracking-state");
 
-test("sync", function (assert) {
+QUnit.test("sync", function (assert) {
   const state = TopicTrackingState.create();
   state.states["t111"] = {last_read_post_number: null};
 
@@ -19,7 +19,7 @@ test("sync", function (assert) {
   assert.equal(list.topics.length, 0, "expect new topic to be removed as it was seen");
 });
 
-test("subscribe to category", function(assert){
+QUnit.test("subscribe to category", function(assert){
 
   const store = createStore();
   const darth = store.createRecord('category', {id: 1, slug: 'darth'}),

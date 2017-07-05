@@ -109,15 +109,16 @@ class EmailController < ApplicationController
       redirect_to :back
     else
       if topic
-        redirect_to path("/email/unsubscribed?topic_id=#{topic.id}")
+        redirect_to path("/email/unsubscribed?topic_id=#{topic.id}&email=#{user.email}")
       else
-        redirect_to path("/email/unsubscribed")
+        redirect_to path("/email/unsubscribed?email=#{user.email}")
       end
     end
 
   end
 
   def unsubscribed
+    @email = params[:email]
     @topic = Topic.find_by(id: params[:topic_id].to_i) if params[:topic_id]
   end
 

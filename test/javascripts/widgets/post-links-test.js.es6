@@ -4,7 +4,7 @@ moduleForWidget('post-links');
 
 widgetTest("duplicate links", {
   template: '{{mount-widget widget="post-links" args=args}}',
-  setup() {
+  beforeEach() {
     this.set('args', {
       id: 2,
       links: [
@@ -20,7 +20,7 @@ widgetTest("duplicate links", {
 
 widgetTest("collapsed links", {
   template: '{{mount-widget widget="post-links" args=args}}',
-  setup() {
+  beforeEach() {
     this.set('args', {
       id: 1,
       links: [

@@ -21,8 +21,8 @@ After
 --001a114b2eccff1836052998ec67
 Content-Type: text/html; charset=UTF-8
 
-<div dir="ltr">Before<div><br></div><div><img src="cid:ii_1525434659ddb4cb" alt="内嵌图片 1" style="margin-right: 0px;"><br>
-<div><br></div><div>After</div></div></div>
+<div dir="ltr"><b>Before</b><div><br></div><div><img src="cid:ii_1525434659ddb4cb" alt="内嵌图片 1"><br></div><div><br></div><div><i>After</i>
+</div></div>
 
 --001a114b2eccff1836052998ec67--
 --001a114b2eccff183a052998ec68

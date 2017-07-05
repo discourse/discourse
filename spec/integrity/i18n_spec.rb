@@ -59,6 +59,16 @@ describe "i18n integrity checks" do
     end
   end
 
+  Dir["#{Rails.root}/config/locales/{client,server}.*.yml"].each do |path|
+    it "does not contain invalid interpolation keys for '#{path}'" do
+      matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
+      matches.flatten!
+      matches.compact!
+      matches.uniq!
+      expect(matches).to eq([])
+    end
+  end
+
   Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
     it "has valid client YAML for '#{path}'" do
       yaml = YAML.load_file(path)

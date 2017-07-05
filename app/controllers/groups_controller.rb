@@ -5,7 +5,8 @@ class GroupsController < ApplicationController
     :mentionable,
     :update,
     :messages,
-    :histories
+    :histories,
+    :request_membership
   ]
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -19,6 +20,12 @@ class GroupsController < ApplicationController
     page = params[:page]&.to_i || 0
 
     groups = Group.visible_groups(current_user)
+
+    unless guardian.is_staff?
+      # hide automatic groups from all non stuff to de-clutter page
+      groups = groups.where(automatic: false)
+    end
+
     count = groups.count
     groups = groups.offset(page * page_size).limit(page_size)
 
@@ -136,16 +143,6 @@ class GroupsController < ApplicationController
     }
   end
 
-  def owners
-    group = find_group(:group_id)
-
-    owners = group.users.where('group_users.owner')
-      .order("users.last_seen_at DESC")
-      .limit(5)
-
-    render_serialized(owners, GroupUserSerializer)
-  end
-
   def add_members
     group = Group.find(params[:id])
     group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
@@ -238,7 +235,32 @@ class GroupsController < ApplicationController
     else
       render_json_error(group)
     end
+  end
 
+  def request_membership
+    unless current_user.staff?
+      RateLimiter.new(current_user, "request_group_membership", 1, 1.day).performed!
+    end
+
+    group = find_group(:id)
+    group_name = group.name
+
+    usernames = [current_user.username].concat(
+      group.users.where('group_users.owner')
+        .order("users.last_seen_at DESC")
+        .limit(5)
+        .pluck("users.username")
+    )
+
+    post = PostCreator.new(current_user,
+      title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
+      raw: I18n.t('groups.request_membership_pm.body', group_name: group_name),
+      archetype: Archetype.private_message,
+      target_usernames: usernames.join(','),
+      skip_validations: true
+    ).create!
+
+    render json: success_json.merge(relative_url: post.topic.relative_url)
   end
 
   def set_notifications

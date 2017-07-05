@@ -1,6 +1,8 @@
 import loadScript from 'discourse/lib/load-script';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
+const LOAD_ASYNC = !Ember.Test;
+
 export default Ember.Component.extend({
   mode: 'css',
   classNames: ['ace-wrapper'],
@@ -23,7 +25,7 @@ export default Ember.Component.extend({
 
   @observes('mode')
   modeChanged() {
-    if (this._editor && !this._skipContentChangeEvent) {
+    if (LOAD_ASYNC && this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setMode("ace/mode/" + this.get('mode'));
     }
   },
@@ -37,6 +39,9 @@ export default Ember.Component.extend({
       // xxx: don't run during qunit tests
       this.appEvents.off('ace:resize', this, this.resize);
     }
+
+    $(window).off('ace:resize');
+
   }.on('willDestroyElement'),
 
   resize() {
@@ -53,10 +58,14 @@ export default Ember.Component.extend({
         if (!this.element || this.isDestroying || this.isDestroyed) { return; }
         const editor = loadedAce.edit(this.$('.ace')[0]);
 
-        editor.setTheme("ace/theme/chrome");
+        if (LOAD_ASYNC) {
+          editor.setTheme("ace/theme/chrome");
+        }
         editor.setShowPrintMargin(false);
         editor.setOptions({fontSize: "14px"});
-        editor.getSession().setMode("ace/mode/" + this.get('mode'));
+        if (LOAD_ASYNC) {
+          editor.getSession().setMode("ace/mode/" + this.get('mode'));
+        }
         editor.on('change', () => {
           this._skipContentChangeEvent = true;
           this.set('content', editor.getSession().getValue());
@@ -67,9 +76,14 @@ export default Ember.Component.extend({
 
         this.$().data('editor', editor);
         this._editor = editor;
+
+        $(window).off('ace:resize').on('ace:resize', ()=>{
+          this.appEvents.trigger('ace:resize');
+        });
+
         if (this.appEvents) {
           // xxx: don't run during qunit tests
-          this.appEvents.on('ace:resize', self, self.resize);
+          this.appEvents.on('ace:resize', ()=>this.resize());
         }
 
         if (this.get("autofocus")) {

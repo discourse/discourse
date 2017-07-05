@@ -195,6 +195,8 @@ describe Admin::UsersController do
     end
 
     context '.primary_group' do
+      let(:group) { Fabricate(:group) }
+
       before do
         @another_user = Fabricate(:coding_horror)
       end
@@ -211,9 +213,16 @@ describe Admin::UsersController do
       end
 
       it "changes the user's primary group" do
-        xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: 2
+        group.add(@another_user)
+        xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: group.id
         @another_user.reload
-        expect(@another_user.primary_group_id).to eq(2)
+        expect(@another_user.primary_group_id).to eq(group.id)
+      end
+
+      it "doesn't change primary group if they aren't a member of the group" do
+        xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: group.id
+        @another_user.reload
+        expect(@another_user.primary_group_id).to be_nil
       end
     end
 
@@ -516,6 +525,15 @@ describe Admin::UsersController do
         expect(response).to be_success
         json = ::JSON.parse(response.body)
         expect(json["password_url"]).to be_present
+      end
+    end
+
+    context 'remove_group' do
+      it "also clears the user's primary group" do
+        g = Fabricate(:group)
+        u = Fabricate(:user, primary_group: g)
+        xhr :delete, :remove_group, group_id: g.id, user_id: u.id
+        expect(u.reload.primary_group).to be_nil
       end
     end
 

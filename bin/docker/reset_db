@@ -1,7 +1,7 @@
 #!/bin/bash
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" && cd ../.. && pwd -P)
-DATA_DIR=$SOURCE_DIR/tmp/postgres
+DATA_DIR=$SOURCE_DIR/data/postgres
 
 # Should this also run /etc/runit/1.d/ensure_database, or will that
 # happen automatically?

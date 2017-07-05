@@ -6,18 +6,31 @@ class HtmlToMarkdown
     def initialize(name, head="", body="", opened=false, markdown=""); super; end
   end
 
-  def initialize(html)
-    @doc = Nokogiri::HTML.fragment(html)
+  def initialize(html, opts={})
+    @opts = opts || {}
+    @doc = fix_span_elements(Nokogiri::HTML(html))
+
     remove_whitespaces!
+  end
+
+
+  # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
+  def fix_span_elements(node)
+    if node.name == 'span' && node.at('div')
+      node.swap(node.children)
+    end
+
+    node.children.each {|c| fix_span_elements(c)}
+    node
   end
 
   def remove_whitespaces!
     @doc.traverse do |node|
       if node.is_a? Nokogiri::XML::Text
-        node.content = node.content.lstrip if node.previous_element&.description&.block?
-        node.content = node.content.lstrip if node.previous_element.nil? && node.parent.description&.block?
-        node.content = node.content.rstrip if node.next_element&.description&.block?
-        node.content = node.content.rstrip if node.next_element.nil? && node.parent.description&.block?
+        node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element&.description&.block?
+        node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && node.parent.description&.block?
+        node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element&.description&.block?
+        node.content = node.content.gsub(/[[:space:]]+\z/, "") if node.next_element.nil? && node.parent.description&.block?
         node.remove if node.content.empty?
       end
     end
@@ -32,10 +45,12 @@ class HtmlToMarkdown
   end
 
   def traverse(node)
-    node.children.each { |node| visit(node) }
+    node.children.each { |n| visit(n) }
   end
 
   def visit(node)
+    return if node["style"] && node["style"][/display\s*:\s*none/]
+
     if node.description&.block? && node.parent&.description&.block? && @stack[-1].markdown.size > 0
       block = @stack[-1].dup
       @markdown << format_block
@@ -99,7 +114,7 @@ class HtmlToMarkdown
 
   def visit_li(node)
     parent = @stack.reverse.find { |n| n.name[/ul|ol|menu/] }
-    prefix = parent.name == "ol" ? "1. " : "- "
+    prefix = parent&.name == "ol" ? "1. " : "- "
     @stack << Block.new("li", prefix, "  ")
     traverse(node)
     @markdown << format_block
@@ -133,14 +148,24 @@ class HtmlToMarkdown
   end
 
   def visit_img(node)
-    title = node["alt"].presence || node["title"].presence
-    @stack[-1].markdown << "![#{title}](#{node["src"]})"
+    if is_valid_src?(node["src"]) && is_visible_img?(node)
+      if @opts[:keep_img_tags]
+        @stack[-1].markdown << node.to_html
+      else
+        title = node["alt"].presence || node["title"].presence
+        @stack[-1].markdown << "![#{title}](#{node["src"]})"
+      end
+    end
   end
 
   def visit_a(node)
-    @stack[-1].markdown << "["
-    traverse(node)
-    @stack[-1].markdown << "](#{node["href"]})"
+    if is_valid_href?(node["href"])
+      @stack[-1].markdown << "["
+      traverse(node)
+      @stack[-1].markdown << "](#{node["href"]})"
+    else
+      traverse(node)
+    end
   end
 
   def visit_tt(node)
@@ -191,6 +216,23 @@ class HtmlToMarkdown
     end
     @stack.pop
     (lines + [""]).join("\n")
+  end
+
+  def is_valid_href?(href)
+    href.present? && (href.start_with?("http") || href.start_with?("www."))
+  end
+
+  def is_valid_src?(src)
+    return false if src.blank?
+    return true  if @opts[:keep_cid_imgs] && src.start_with?("cid:")
+    src.start_with?("http") || src.start_with?("www.")
+  end
+
+  def is_visible_img?(img)
+    return false if img["width"].present?  && img["width"].to_i == 0
+    return false if img["height"].present? && img["height"].to_i == 0
+    return false if img["style"].present?  && img["style"][/(width|height)\s*:\s*0/]
+    true
   end
 
 end

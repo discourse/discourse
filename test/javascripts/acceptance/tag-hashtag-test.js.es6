@@ -3,7 +3,7 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Tag Hashtag", {
   loggedIn: true,
   settings: { tagging_enabled: true },
-  setup() {
+  beforeEach() {
     const response = (object) => {
       return [
         200,
@@ -26,18 +26,18 @@ acceptance("Tag Hashtag", {
   }
 });
 
-test("tag is cooked properly", () => {
+QUnit.test("tag is cooked properly", assert => {
   visit("/t/internationalization-localization/280");
   click('#topic-footer-buttons .btn.create');
 
   fillIn('.d-editor-input', "this is a tag hashtag #monkey::tag");
   andThen(() => {
     // TODO: Test that the autocomplete shows
-    equal(find('.d-editor-preview:visible').html().trim(), "<p>this is a tag hashtag <a href=\"/tags/monkey\" class=\"hashtag\">#<span>monkey</span></a></p>");
+    assert.equal(find('.d-editor-preview:visible').html().trim(), "<p>this is a tag hashtag <a href=\"/tags/monkey\" class=\"hashtag\">#<span>monkey</span></a></p>");
   });
 
   click('#reply-control .btn.create');
   andThen(() => {
-    equal(find('.topic-post:last .cooked').html().trim(), "<p>this is a tag hashtag <a href=\"/tags/monkey\" class=\"hashtag\">#<span>monkey</span></a></p>");
+    assert.equal(find('.topic-post:last .cooked').html().trim(), "<p>this is a tag hashtag <a href=\"/tags/monkey\" class=\"hashtag\">#<span>monkey</span></a></p>");
   });
 });

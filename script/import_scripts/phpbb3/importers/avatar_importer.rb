@@ -65,7 +65,11 @@ module ImportScripts::PhpBB3
       max_image_size_kb = SiteSetting.max_image_size_kb.kilobytes
 
       begin
-        avatar_file = FileHelper.download(url, max_image_size_kb, 'discourse-avatar')
+        avatar_file = FileHelper.download(
+          url,
+          max_file_size: max_image_size_kb,
+          tmp_file_name: 'discourse-avatar'
+        )
       rescue StandardError => err
         warn "Error downloading avatar: #{err.message}. Skipping..."
         return nil
@@ -75,7 +79,6 @@ module ImportScripts::PhpBB3
         if avatar_file.size <= max_image_size_kb
           return avatar_file
         else
-          Rails.logger.error("Failed to download remote avatar: #{url} - Image is larger than #{max_image_size_kb} KB")
           return nil
         end
       end

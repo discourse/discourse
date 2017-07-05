@@ -45,6 +45,11 @@ html {
 }
 
 body {
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+  }
+
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
@@ -149,6 +154,48 @@ body {
   .profiler-results.profiler-left {
     top: 60px !important;
   }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input {
+    &[type="radio"], &[type="checkbox"] {
+      margin: 3px 0;
+      line-height: normal;
+      cursor: pointer;
+    }
+    &[type="submit"], &[type="reset"], &[type="button"], &[type="radio"], &[type="checkbox"] {
+      width: auto;
+    }
+  }
+  .radio, .checkbox {
+    min-height: 18px;
+    padding-left: 18px;
+  }
+  .radio input[type="radio"], .checkbox input[type="checkbox"] {
+    float: left;
+    margin-left: -18px;
+  }
+  .controls > {
+    .radio:first-child, .checkbox:first-child {
+      padding-top: 5px;
+    }
+  }
+  .radio.inline, .checkbox.inline {
+    display: inline-block;
+    padding-top: 5px;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+  .radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
+    margin-left: 10px;
+  }
+}
+
+.flex-center-align {
+  display: flex;
+  align-items: center;
 }
 
 .unread-private-messages {

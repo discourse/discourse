@@ -6,7 +6,7 @@ class InvitesController < ApplicationController
   skip_before_filter :preload_json, except: [:show]
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :upload_csv]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
   before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
   before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
 
@@ -29,11 +29,13 @@ class InvitesController < ApplicationController
   end
 
   def perform_accept_invitation
+    params.require(:id)
+    params.permit(:username, :name, :password, :user_custom_fields)
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
       begin
-        user = invite.redeem(username: params[:username], password: params[:password])
+        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields])
         if user.present?
           log_on_user(user)
           post_process_invite(user)
@@ -74,7 +76,7 @@ class InvitesController < ApplicationController
       else
         render json: failed_json, status: 422
       end
-    rescue => e
+    rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
       render json: {errors: [e.message]}, status: 422
     end
   end
@@ -145,6 +147,13 @@ class InvitesController < ApplicationController
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.trash!(current_user)
 
+    render nothing: true
+  end
+
+  def rescind_all_invites
+    guardian.ensure_can_rescind_all_invites!(current_user)
+
+    Invite.rescind_all_invites_from(current_user)
     render nothing: true
   end
 

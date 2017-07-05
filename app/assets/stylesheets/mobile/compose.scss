@@ -21,6 +21,9 @@ input {
   box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 }
+input[type=radio], input[type=checkbox] {
+  box-shadow: none;
+}
 
 #reply-control {
   // used for upload link
@@ -204,6 +207,12 @@ input {
       position: absolute;
       display: block;
       bottom: 0;
+      white-space: nowrap;
+      .btn {
+        max-width: 120px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     }
   }
   .category-input {
@@ -229,6 +238,9 @@ input {
   button.btn.no-text {
     margin: 7px 0 0 5px;
     position: absolute;
+  }
+  .btn-primary {
+    margin-bottom: 8px;
   }
 }
 

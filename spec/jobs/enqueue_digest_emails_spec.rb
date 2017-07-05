@@ -6,7 +6,7 @@ describe Jobs::EnqueueDigestEmails do
   describe '#target_users' do
 
     context 'disabled digests' do
-      before { SiteSetting.stubs(:default_email_digest_frequency).returns(0) }
+      before { SiteSetting.default_email_digest_frequency = 0 }
       let!(:user_no_digests) { Fabricate(:active_user, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       it "doesn't return users with email disabled" do
@@ -129,13 +129,24 @@ describe Jobs::EnqueueDigestEmails do
       end
     end
 
+    context "private email" do
+      before do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
+        SiteSetting.private_email = true
+        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id).never
+      end
+      it "doesn't return users with email disabled" do
+        Jobs::EnqueueDigestEmails.new.execute({})
+      end
+    end
+
     context "digest emails are disabled" do
       before do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
+        SiteSetting.disable_digest_emails = true
       end
 
       it "does not enqueue the digest email job" do
-        SiteSetting.stubs(:disable_digest_emails?).returns(true)
         Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id).never
         Jobs::EnqueueDigestEmails.new.execute({})
       end

@@ -15,6 +15,15 @@ export default Ember.Controller.extend({
     ];
   }.property(),
 
+  visibilityLevelOptions: function() {
+    return [
+      { name: I18n.t("groups.visibility_levels.public"), value: 0 },
+      { name: I18n.t("groups.visibility_levels.members"), value: 1 },
+      { name: I18n.t("groups.visibility_levels.staff"), value: 2 },
+      { name: I18n.t("groups.visibility_levels.owners"), value: 3 }
+    ];
+  }.property(),
+
   trustLevelOptions: function() {
     return [
       { name: I18n.t("groups.trust_levels.none"), value: 0 },
@@ -22,14 +31,16 @@ export default Ember.Controller.extend({
     ];
   }.property(),
 
-  @computed('model.visible', 'model.public')
-  disableMembershipRequestSetting(visible, publicGroup) {
-    return !visible || publicGroup;
+  @computed('model.visibility_level', 'model.public')
+  disableMembershipRequestSetting(visibility_level, publicGroup) {
+    visibility_level = parseInt(visibility_level);
+    return (visibility_level !== 0) || publicGroup;
   },
 
-  @computed('model.visible', 'model.allow_membership_requests')
-  disablePublicSetting(visible, allowMembershipRequests) {
-    return !visible || allowMembershipRequests;
+  @computed('model.visibility_level', 'model.allow_membership_requests')
+  disablePublicSetting(visibility_level, allowMembershipRequests) {
+    visibility_level = parseInt(visibility_level);
+    return (visibility_level !== 0) || allowMembershipRequests;
   },
 
   actions: {

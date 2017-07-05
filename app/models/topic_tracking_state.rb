@@ -186,7 +186,7 @@ class TopicTrackingState
       if opts && opts[:skip_unread]
         "1=0"
       else
-        TopicQuery.unread_filter(Topic, staff: opts && opts[:staff]).where_values.join(" AND ")
+        TopicQuery.unread_filter(Topic, -999, staff: opts && opts[:staff]).where_values.join(" AND ").sub("-999", ":user_id")
       end
 
     new =

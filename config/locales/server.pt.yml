@@ -280,7 +280,6 @@ pt:
   meta_category_description: "Discussão sobre este sítio, a sua organização, como funciona, e como podemos melhorá-lo."
   staff_category_name: "Pessoal"
   staff_category_description: "Categoria privada para discussões do pessoal. Os tópicos estão apenas visíveis para administradores e moderadores."
-  assets_topic_body: "Este é um tópico permanente, visível apenas à equipa de apoio, para armazenar imagens e ficheiros usados no design do sítio. Não o apague!\n\n\nVeja como:\n\n\n1. Responda a este tópico.\n2. Carregue todas as imagens que deseja usar para os logótipos, favicons, e tudo o mais. (Use o ícone da ferramenta de carregamento neste editor de mensagens, arraste ou cole imagens).\n3. Submeta a sua resposta.\n4. Clique com o botão direito do rato nas imagens da sua nova mensagem para obter o caminho das imagens submetidas, ou carregue no ícone de edição para editar a sua mensagem e recuperar o caminho para as imagens. Copie os caminhos das imagens.\n5. Cole esses caminhos em [configurações básicas](/admin/site_settings/category/required).\n\n\nSe precisar de ativar o carregamento de diferentes tipos de ficheiros, edite `authorized_extensions` em [configurações de ficheiros](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2+
@@ -463,7 +462,6 @@ pt:
       long_form: 'sinalizou isto como fora de contexto'
     spam:
       title: 'Spam'
-      description: 'Esta mensagem é publicidade. Não é útil nem relevante para o tópico atual, mas apenas de natureza promocional.'
       long_form: 'sinalizou isto como spam'
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
@@ -530,7 +528,6 @@ pt:
         remove: "Este tópico já não é uma faixa. Deixará de aparecer no topo de cada página."
   unsubscribed:
     title: "Subscrição cancelada!"
-    description: "A sua subscrição foi cancelada. Para mudar as suas definições de email <a href='%{url}'>visite as suas preferências de utilizador</a>."
     topic_description: "Para re-subscrever a %{link}, use o controle de notificação no fundo ou à direita do tópico."
   unsubscribe:
     title: "Cancelar subscrição"
@@ -850,7 +847,6 @@ pt:
     force_hostname: "PROGRAMADOR APENAS! AVISO! Especifique um nome de servidor no URL. Deixe em branco para utilizar o valor por defeito."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
-    invite_only: "O registo público está desativado, todos os novos utilizadores devem ser explicitamente convidados por outros membros ou pelo pessoal."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
@@ -938,8 +934,6 @@ pt:
     default_opengraph_image_url: "URL da imagem opengraph por defeito."
     twitter_summary_large_image_url: "URL da imagem do cartão de sumário de defeito do Twitter (deverá ser pelo menos 280px em largura, e pelo menos 150px em altura)."
     allow_all_attachments_for_group_messages: "Permitir qualquer anexo de email nas mensagens de grupo."
-    convert_pasted_images_to_hq_jpg: "Converter imagens coladas para ficheiros JPG de alta qualidade."
-    convert_pasted_images_quality: "Qualidade dos ficheiros JPG convertidos (1 é a qualidade menor, 100 é a melhor qualidade)."
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
@@ -1034,7 +1028,6 @@ pt:
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
-    incoming_email_prefer_html: "Usar o HTML em vez de texto para email recebido. Poderá causar problemas de formatação!"
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
@@ -1116,7 +1109,6 @@ pt:
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
-    invites_per_page: "Convites por defeito exibidos na página do utilizador."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
     default_code_lang: "Linguagem de programação por defeito a aplicar no destaque da sintaxe em blocos de código GitHub (lang-auto, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
@@ -1133,7 +1125,6 @@ pt:
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
-    notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
@@ -1335,9 +1326,6 @@ pt:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
   flags_reminder:
-    flags_were_submitted:
-      one: "Uma denúncia foi submetida há 1 hora atrás. Por favor reveja-a. "
-      other: "Denúncias foram submetidas há %{count} horas atrás. Por favor reveja-as."
     subject_template:
       one: "1 sinalização à espera de ser tratada"
       other: "%{count} sinalizações à espera de serem tratadas"
@@ -1458,16 +1446,6 @@ pt:
         Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
-      text_body_template: |
-        Obrigado por se juntar a %{site_name}, e bem-vindo!
-
-        %{new_user_tips}
-
-        Nós acreditamos no [comportamento civilizado da comunidade](%{base_url}/guidelines) em qualquer altura.
-
-        Desfrute da sua estadia!
-
-        (Se precisar de comunicar com [membros do pessoal](%{base_url}/about) como um novo utilizador, simplesmente responda a esta mensagem.)
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
     backup_succeeded:
@@ -1517,14 +1495,6 @@ pt:
       text_body_template: "O seu ficheiro de convites de utilizadores em massa foi processado, %{sent} convites enviados."
     bulk_invite_failed:
       subject_template: "Convite de utilizadores em massa processado com erros"
-      text_body_template: |
-        O seu ficheiro de convite de utilizadores em massa foi processado, %{sent} convites enviados com %{failed} erro(s).
-
-        Aqui está o registo do log:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Exportação de dados completa"
     csv_export_failed:
@@ -1729,9 +1699,6 @@ pt:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
-    reached_limit:
-      one: "AVISO: atingiu o número máximo de emails por dia. Próximas notificações será suprimidas."
-      other: "AVISO: atingiu o número máximo de %{count} emails por dia. Próximas notificações será suprimidas."
     in_reply_to: "Em Resposta A"
     unsubscribe:
       title: "Cancelar a Subscrição"
@@ -1884,18 +1851,9 @@ pt:
       follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
-      unsubscribe: "Este resumo é enviado de %{site_link} quando não o vemos há algum tempo. Para anular a subscrição %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
-    mailing_list:
-      why: "Toda a atividade em %{site_link} em %{date}"
-      unsubscribe: "Este resumo é enviado diariamente devido ao modo de lista de distribuição estar ativado. Para anular a subscrição %{unsubscribe_link}."
-      from: "resumo de %{site_name}"
-      new_topics: "Novos tópicos"
-      topic_updates: "Atualizações de tópico"
-      view_this_topic: "Ver este tópico"
-      back_to_top: "Voltar ao topo"
     notify_old_email:
       text_body_template: |
         Isto é uma mensagem automática para o informar que o seu endereço de email para
@@ -2408,8 +2366,6 @@ pt:
     error: "Erro!"
     email_input: "Email Administração"
     submit_button: "Enviar Email"
-  discourse_hub:
-    access_token_problem: "Dizer a um administrador: Por favor atualize as configurações do sítio para incluir a discourse_org_access_key correta."
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio

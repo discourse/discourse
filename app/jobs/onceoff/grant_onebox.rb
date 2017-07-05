@@ -35,7 +35,7 @@ module Jobs
     end
 
     def badge
-      @badge ||= Badge.find(Badge::FirstOnebox)
+      Badge.find(Badge::FirstOnebox)
     end
 
   end

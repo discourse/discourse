@@ -68,6 +68,7 @@ class DiscourseSingleSignOn < SingleSignOn
       user.active = true
       user.save!
       user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
+      user.set_automatic_groups
     end
 
     custom_fields.each do |k,v|
@@ -166,6 +167,7 @@ class DiscourseSingleSignOn < SingleSignOn
   def change_external_attributes_and_override(sso_record, user)
     if SiteSetting.sso_overrides_email && user.email != email
       user.email = email
+      user.active = false if require_activation
     end
 
     if SiteSetting.sso_overrides_username && user.username != username && username.present?

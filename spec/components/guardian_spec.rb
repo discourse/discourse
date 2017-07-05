@@ -330,42 +330,71 @@ describe Guardian do
   end
 
   describe 'can_invite_to?' do
-    let(:group) { Fabricate(:group) }
-    let(:category) { Fabricate(:category, read_restricted: true) }
-    let(:topic) { Fabricate(:topic) }
-    let(:private_topic) { Fabricate(:topic, category: category) }
-    let(:user) { topic.user }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
-    let(:private_category)  { Fabricate(:private_category, group: group) }
-    let(:group_private_topic) { Fabricate(:topic, category: private_category) }
-    let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
 
-    it 'handles invitation correctly' do
-      expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
-      expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
-      expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-      expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+    describe "regular topics" do
+      let(:group) { Fabricate(:group) }
+      let(:category) { Fabricate(:category, read_restricted: true) }
+      let(:topic) { Fabricate(:topic) }
+      let(:private_topic) { Fabricate(:topic, category: category) }
+      let(:user) { topic.user }
+      let(:moderator) { Fabricate(:moderator) }
+      let(:admin) { Fabricate(:admin) }
+      let(:private_category)  { Fabricate(:private_category, group: group) }
+      let(:group_private_topic) { Fabricate(:topic, category: private_category) }
+      let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
+      let(:pm) { Fabricate(:topic) }
 
-      SiteSetting.max_invites_per_day = 0
+      it 'handles invitation correctly' do
+        expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
+        expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
 
-      expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
-      # staff should be immune to max_invites_per_day setting
-      expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
+        SiteSetting.max_invites_per_day = 0
+
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        # staff should be immune to max_invites_per_day setting
+        expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
+      end
+
+      it 'returns false for normal user on private topic' do
+        expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
+      end
+
+      it 'returns true for admin on private topic' do
+        expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
+      end
+
+      it 'returns true for a group owner' do
+        expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
+      end
     end
 
-    it 'returns false for normal user on private topic' do
-      expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
-    end
+    describe "private messages" do
+      let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      let!(:pm) { Fabricate(:private_message_topic, user: user) }
+      let(:admin) { Fabricate(:admin) }
 
-    it 'returns true for admin on private topic' do
-      expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
-    end
+      context "when private messages are disabled" do
+        it "allows an admin to invite to the pm" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_truthy
+        end
+      end
 
-    it 'returns true for a group owner' do
-      expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
+      context "when private messages are disabled" do
+        before do
+          SiteSetting.enable_private_messages = false
+        end
+
+        it "doesn't allow a regular user to invite" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+      end
     end
   end
+
 
   describe 'can_invite_via_email?' do
     it 'returns true for all (tl2 and above) users when sso is disabled, local logins are enabled, user approval is not required' do
@@ -403,31 +432,6 @@ describe Guardian do
 
     it 'returns false with a nil object' do
       expect(Guardian.new.can_see?(nil)).to be_falsey
-    end
-
-    describe 'a Group' do
-      let(:group) { Group.new }
-      let(:invisible_group) { Group.new(visible: false, name: 'invisible') }
-
-      it "returns true when the group is visible" do
-        expect(Guardian.new.can_see?(group)).to be_truthy
-      end
-
-      it "returns true when the group is invisible but the user is an admin" do
-        admin = Fabricate.build(:admin)
-        expect(Guardian.new(admin).can_see?(invisible_group)).to be_truthy
-      end
-
-      it "returns true when the group is invisible but the user is a member" do
-        invisible_group.save!
-        member = Fabricate.build(:user)
-        GroupUser.create(group: invisible_group, user: member)
-        expect(Guardian.new(member).can_see?(invisible_group)).to be_truthy
-      end
-
-      it "returns false when the group is invisible" do
-        expect(Guardian.new.can_see?(invisible_group)).to be_falsey
-      end
     end
 
     describe 'a Category' do
@@ -1048,6 +1052,19 @@ describe Guardian do
       it 'returns true if another regular user tries to edit wiki post' do
         post.wiki = true
         expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
+      end
+
+      it "returns false if a wiki but the user can't create a post" do
+        c = Fabricate(:category)
+        c.set_permissions(:everyone => :readonly)
+        c.save
+
+        topic = Fabricate(:topic, category: c)
+        post = Fabricate(:post, topic: topic)
+        post.wiki = true
+
+        user = Fabricate(:user)
+        expect(Guardian.new(user).can_edit?(post)).to eq(false)
       end
 
       it 'returns true as a moderator' do
@@ -2392,6 +2409,69 @@ describe Guardian do
         end
       end
     end
+  end
+
+  describe(:can_see_group) do
+    it 'Correctly handles owner visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(false)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles staff visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(member).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+    end
+
+    it 'Correctly handles member visibile groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
+
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      group.reload
+
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new.can_see_group?(group)).to eq(false)
+      expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(member).can_see_group?(group)).to eq(true)
+      expect(Guardian.new(owner).can_see_group?(group)).to eq(true)
+    end
+
+    it 'Correctly handles public groups' do
+      group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:public])
+
+      expect(Guardian.new.can_see_group?(group)).to eq(true)
+    end
+
   end
 
   context 'topic featured link category restriction' do

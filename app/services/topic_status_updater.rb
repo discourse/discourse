@@ -2,7 +2,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def update!(status, enabled, opts={})
     status = Status.new(status, enabled)
 
-    @topic_status_update = topic.topic_status_update
+    @topic_status_update = topic.public_topic_timer
 
     updated = nil
     Topic.transaction do
@@ -38,9 +38,9 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
 
     if @topic_status_update
       if status.manually_closing_topic? || status.closing_topic?
-        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], nil)
+        topic.set_or_create_timer(TopicTimer.types[:close], nil)
       elsif status.manually_opening_topic? || status.opening_topic?
-        topic.set_or_create_status_update(TopicStatusUpdate.types[:open], nil)
+        topic.set_or_create_timer(TopicTimer.types[:open], nil)
       end
     end
 

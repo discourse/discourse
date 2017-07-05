@@ -6,7 +6,7 @@
 # To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, ift needs to be pushed by a maintainer to Transifex:
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
 #
 #   tx push -s
 #
@@ -407,11 +407,8 @@ en:
         full_name: 'Full Name'
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
-      request_membership_pm:
-        title: "Membership Request"
-        body: "I would like to apply for membership in @%{groupName}."
       name_placeholder: "Group name, no spaces, same as username rule"
-      public: "Allow users to join/leave the group freely (Requires group to be visible)"
+      public: "Allow users to join/leave the group freely (Requires publicly visible group)"
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
@@ -433,7 +430,6 @@ en:
       bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
-      visible: "Group is visible to all users"
       index:
         title: "Groups"
         empty: "There are no visible groups."
@@ -447,6 +443,12 @@ en:
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
+      visibility_levels:
+        title: "Who can see this group?"
+        public: "Everyone"
+        members: "Group owners, members and admins"
+        staff: "Group owners and staff"
+        owners: "Group owners and admins"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"
@@ -549,7 +551,7 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
-        button_text: "Download My Posts"
+        button_text: "Download All"
         confirm: "Are you sure you want to download your posts?"
         success: "Download initiated, you will be notified via message when the process is complete."
         rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
@@ -581,6 +583,7 @@ en:
       first_notification: "Your first notification! Select it to begin."
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
+      theme_default_on_all_devices: "Make this my default theme on all my devices"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -599,7 +602,6 @@ en:
         instructions: |
           This setting overrides the activity summary.<br />
           Muted topics and categories are not included in these emails.
-        daily: "Send daily updates"
         individual: "Send an email for every new post"
         individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
@@ -622,6 +624,7 @@ en:
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
+      no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
@@ -660,6 +663,16 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
+      preferences_nav:
+        account: "Account"
+        profile: "Profile"
+        emails: "Emails"
+        notifications: "Notifications"
+        categories: "Categories"
+        tags: "Tags"
+        interface: "Interface"
+        apps: "Apps"
+
       change_password:
         success: "(email sent)"
         in_progress: "(sending email)"
@@ -677,7 +690,6 @@ en:
         title: "Change Username"
         confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
 
       change_email:
@@ -829,8 +841,12 @@ en:
         expired: "This invite has expired."
         rescind: "Remove"
         rescinded: "Invite removed"
+        rescind_all: "Remove all Invites"
+        rescinded_all: "All Invites removed!"
+        rescind_all_confirm: "Are you sure you want to remove all invites?"
         reinvite: "Resend Invite"
         reinvite_all: "Resend all Invites"
+        reinvite_all_confirm: "Are you sure you want to resend all invites?"
         reinvited: "Invite re-sent"
         reinvited_all: "All Invites re-sent!"
         time_read: "Read Time"
@@ -1028,6 +1044,9 @@ en:
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
+      help: "Email not arriving? Be sure to check your spam folder first.<p>Not sure which email address you used? Enter an email address and we’ll let you know if it exists here.</p><p>If you no longer have access to the email address on your account, please contact <a href='/about'>our helpful staff.</a></p>"
+      button_ok: "OK"
+      button_help: "Help"
     login:
       title: "Log In"
       username: "User"
@@ -1088,7 +1107,9 @@ en:
       your_email: "Your account email address is <b>%{email}</b>."
       accept_invite: "Accept Invitation"
       success: "Your account has been created and you're now logged in."
-      password_label: "Set Password (optional)"
+      name_label: "Name"
+      password_label: "Set Password"
+      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -1099,6 +1120,8 @@ en:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_blob: "Google Blob"
+      facebook_messenger: "Facebook Messenger"
 
     category_page_style:
       categories_only: "Categories Only"
@@ -1116,6 +1139,7 @@ en:
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
+      blockquote_text: "Blockquote"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
@@ -1133,7 +1157,7 @@ en:
       cannot_see_mention:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
-      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
+      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply on {{ago}}</a> – are you sure you want to post it again?"
 
       error:
         title_missing: "Title is required"
@@ -1229,6 +1253,7 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
 
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
@@ -1294,6 +1319,7 @@ en:
       no_more_results: "No more results found."
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
+      results_page: "Search Results"
 
       context:
         user: "Search posts by @{{username}}"
@@ -1327,6 +1353,7 @@ en:
           seen: I've read
           unseen: I've not read
           wiki: are wiki
+          all_tags: Contains all tags
         statuses:
           label: Where topics
           open: are open
@@ -1354,6 +1381,7 @@ en:
         select_all: "Select All"
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
+        relist_topics: "Relist Topics"
         reset_read: "Reset Read"
         delete: "Delete Topics"
         dismiss: "Dismiss"
@@ -1364,10 +1392,10 @@ en:
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Change Category"
+        change_category: "Set Category"
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
-        notification_level: "Change Notification Level"
+        notification_level: "Notifications"
         choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>1</b> topic."
@@ -1497,6 +1525,7 @@ en:
         later_this_week: "Later this week"
         this_weekend: "This weekend"
         next_week: "Next week"
+        next_month: "Next month"
         pick_date_and_time: "Pick date and time"
         set_based_on_last_post: "Close based on last post"
       publish_to_category:
@@ -1512,12 +1541,18 @@ en:
         label: "Auto-close topic hours:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
+      auto_delete:
+        title: "Auto-Delete Topic"
+      reminder:
+        title: "Remind Me"
 
       status_update_notice:
         auto_open: "This topic will automatically open %{timeLeft}."
         auto_close: "This topic will automatically close %{timeLeft}."
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
+        auto_delete: "This topic will be automatically deleted %{timeLeft}."
+        auto_reminder: "You will be reminded about this topic %{timeLeft}."
       auto_close_title: 'Auto-Close Settings'
       auto_close_immediate:
         one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
@@ -1731,7 +1766,7 @@ en:
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
 
       change_timestamp:
-        title: "Change Timestamp"
+        title: "Change Timestamp..."
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -1824,6 +1859,7 @@ en:
         has_liked: "you've liked this post"
         undo_like: "undo like"
         edit: "edit this post"
+        edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
@@ -1933,7 +1969,7 @@ en:
 
       merge:
         confirm:
-          one: "Are you sure you want merge those posts?"
+          one: "Are you sure you want to merge those posts?"
           other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:
@@ -1983,8 +2019,8 @@ en:
       settings: 'Settings'
       topic_template: "Topic Template"
       tags: "Tags"
-      tags_allowed_tags: "Tags that can only be used in this category:"
-      tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
+      tags_allowed_tags: "Only allow these tags to be used in this category:"
+      tags_allowed_tag_groups: "Only allow tags from these groups to be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       topic_featured_link_allowed: "Allow featured links in this category"
@@ -2332,8 +2368,8 @@ en:
       granted_on: "Granted %{date}"
       others_count: "Others with this badge (%{count})"
       title: Badges
-      allow_title: "available title"
-      multiple_grant: "awarded multiple times"
+      allow_title: "You can use this badge as a title"
+      multiple_grant: "You can earn this multiple times"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"
@@ -2600,6 +2636,7 @@ en:
         add_members: "Add members"
         custom: "Custom"
         bulk_complete: "The users have been added to the group."
+        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
         bulk: "Bulk Add to Group"
         bulk_paste: "Paste a list of usernames or emails, one per line:"
         bulk_select: "(select a group)"
@@ -2651,7 +2688,7 @@ en:
         event_type_missing: "You need to set up at least one event type."
         content_type: "Content Type"
         secret: "Secret"
-        event_chooser: "Which events would you like to trigger this webhook?"
+        event_chooser: "Which events should trigger this webhook?"
         wildcard_event: "Send me everything."
         individual_event: "Select individual events."
         verify_certificate: "Check TLS certificate of payload url"
@@ -2829,10 +2866,17 @@ en:
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
+          uploads: "Uploads"
+          no_uploads: "You can upload assets associated with your theme such as fonts and images"
+          add_upload: "Add Upload"
+          upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
+          variable_name: "SCSS var name:"
+          upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
           edit_css_html: "Edit CSS/HTML"
           edit_css_html_help: "You have not edited any CSS or HTML"
+          delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
           import_file_tip: ".dcstyle.json file containing theme"
           about_theme: "About Theme"
@@ -2845,7 +2889,7 @@ en:
           add: "Add"
           commits_behind:
             one: "Theme is 1 commit behind!"
-            other: "Theme is {{count}} commit behind!"
+            other: "Theme is {{count}} commits behind!"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
@@ -2994,8 +3038,9 @@ en:
           block: "block"
           do_nothing: "do nothing"
         staff_actions:
+          all: "all"
+          filter: "Filter:"
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -3048,6 +3093,8 @@ en:
             change_readonly_mode: "change readonly mode"
             backup_download: "download backup"
             backup_destroy: "destroy backup"
+            reviewed_post: "reviewed post"
+            custom_staff: "plugin custom action"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3225,6 +3272,8 @@ en:
         reset_bounce_score:
           label: "Reset"
           title: "Reset bounce score back to 0"
+        visit_profile: "Visit <a href='%{url}'>this user's preferences page</a> to edit their profile"
+
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
@@ -3442,6 +3491,7 @@ en:
         sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
+        class_name: "Class Name"
         path_whitelist: "Path Whitelist"
         edit: "edit"
         category: "Post to Category"
@@ -3462,6 +3512,7 @@ en:
         embed_classname_whitelist: "Allowed CSS class names"
         feed_polling_enabled: "Import posts via RSS/ATOM"
         feed_polling_url: "URL of RSS/ATOM feed to crawl"
+        feed_polling_frequency_mins: "Frequency of feed polling (in minutes)"
         save: "Save Embedding Settings"
 
       permalink:

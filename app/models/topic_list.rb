@@ -46,8 +46,6 @@ class TopicList
     if @opts[:category]
       @category = Category.find_by(id: @opts[:category_id])
     end
-
-    preloaded_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
   end
 
   def tags

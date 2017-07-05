@@ -2,11 +2,7 @@
 
 .user-preferences {
   .control-group {
-    // border-bottom: 1px solid #e5e5e5;
     padding: 8px 36px 8px 8px;
-  }
-  .control-label {
-    font-weight: bold;
   }
   textarea {
     width: 530px;
@@ -39,8 +35,9 @@
     width: 520px;
   }
 
-  .other .controls-dropdown {
+  .controls-dropdown {
     margin-top: 10px;
+    margin-bottom: 15px;
     padding-left: 5px;
     select {
       width: 280px;
@@ -68,6 +65,16 @@
   }
 
   textarea {width: 100%;}
+
+  .desktop-notifications button {
+    float: none;
+  }
+  .apps .controls button {
+    float: right;
+  }
+  .category-notifications .category-controls, .tag-notifications .tag-controls {
+    margin-top: 24px;
+  }
 }
 
 .profile-image {
@@ -121,10 +128,6 @@
     color: $secondary;
   }
 
-}
-
-.form-horizontal .control-group.other {
-  margin-bottom: 0;
 }
 
 .form-horizontal .control-group.category {
@@ -211,9 +214,10 @@
     overflow: hidden;
     color: $secondary;
 
-  .secondary {
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
-    font-size: 0.929em;
+    .secondary {
+      background: dark-light-diff($primary, $secondary, 90%, -65%);
+      font-size: 0.929em;
+
       .btn { padding: 3px 12px; }
 
       dl dd {
@@ -549,13 +553,9 @@
 
   .user-field {
     label {
-      width: 140px;
-      float: left;
-      text-align: right;
+      width: auto;
+      text-align: left;
       font-weight: bold;
-    }
-    input[type=text] {
-      width: 530px;
     }
     .controls {
       label {
@@ -564,7 +564,7 @@
         font-weight: normal;
         float: auto;
       }
-      p {
+      .instructions {
         color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         margin-top: 5px;
         margin-bottom: 10px;
@@ -581,9 +581,9 @@
   margin-top: 20px;
 
   .user-content {
-      width: 100%;
-      margin-top: 0;
-    }
+    width: 100%;
+    margin-top: 0;
+  }
 }
 
 .user-archive {

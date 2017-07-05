@@ -56,7 +56,7 @@ module Onebox
             excerpt.gsub!(/[\r\n]+/, " ")
             excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
 
-            quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, slug:#{slug}, post:#{post.post_number}\"]#{excerpt}[/quote]"
+            quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, slug:#{slug}, post:#{post.post_number}\"]\n#{excerpt}\n[/quote]"
 
             args = {}
             args[:topic_id] = source_topic_id if source_topic_id > 0

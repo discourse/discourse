@@ -58,6 +58,10 @@ Invite.reopenClass({
 
   reinviteAll() {
     return ajax('/invites/reinvite-all', { type: 'POST' });
+  },
+
+  rescindAll() {
+    return ajax('/invites/rescind-all', { type: 'POST' });
   }
 
 });

@@ -16,7 +16,7 @@
     <label class='radio'>
       <input type='radio' id="radio_{{unbound flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'> <strong>{{formattedName}}</strong>
       {{#if showDescription}}
-        <div class='description'>{{{flag.description}}}</div>
+        <div class='description'>{{{description}}}</div>
       {{/if}}
     </label>
     {{#if showMessageInput}}

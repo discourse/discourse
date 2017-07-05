@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe Admin::GroupsController do
+  let(:user) { Fabricate(:user) }
+  let(:group) { Fabricate(:group) }
 
   before do
     @admin = log_in(:admin)
@@ -27,7 +29,7 @@ describe Admin::GroupsController do
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
-        "visible"=>true,
+        "visibility_level"=>0,
         "automatic_membership_email_domains"=>nil,
         "automatic_membership_retroactive"=>false,
         "title"=>nil,
@@ -69,10 +71,15 @@ describe Admin::GroupsController do
       expect(user2.primary_group).to eq(group)
       expect(user2.title).to eq("WAT")
       expect(user2.trust_level).to eq(4)
+
+      # verify JSON response
+      json = ::JSON.parse(response.body)
+      expect(json['message']).to eq("2 users have been added to the group.")
+      expect(json['users_not_added'][0]).to eq("doesnt_exist")
     end
   end
 
-  context ".create" do
+  context "#create" do
 
     it "strip spaces on the group name" do
       xhr :post, :create, { group: { name: " bob " } }
@@ -87,23 +94,32 @@ describe Admin::GroupsController do
 
   end
 
-  context ".update" do
+  context "#update" do
+    it 'should update a group' do
+      group.add_owner(user)
 
-    it "ignore name change on automatic group" do
       expect do
-        xhr :put, :update, { id: 1, group: {
-          name: "WAT",
-          visible: "true",
+        xhr :put, :update, { id: group.id, group: {
+          visibility_level: Group.visibility_levels[:owners],
           allow_membership_requests: "true"
         } }
-      end.to change { GroupHistory.count }.by(1)
 
+      end.to change { GroupHistory.count }.by(2)
+
+      expect(response).to be_success
+
+      group.reload
+
+      expect(group.visibility_level).to eq( Group.visibility_levels[:owners])
+      expect(group.allow_membership_requests).to eq(true)
+    end
+
+    it "ignore name change on automatic group" do
+      xhr :put, :update, { id: 1, group: { name: "WAT" } }
       expect(response).to be_success
 
       group = Group.find(1)
       expect(group.name).not_to eq("WAT")
-      expect(group.visible).to eq(true)
-      expect(group.allow_membership_requests).to eq(true)
     end
 
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do

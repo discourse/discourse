@@ -190,7 +190,11 @@ class PostCreator
 
   def enqueue_jobs
     return unless @post && !@post.errors.present?
-    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
+
+    PostJobsEnqueuer.new(@post, @topic, new_topic?,
+      import_mode: @opts[:import_mode],
+      post_alert_options: @opts[:post_alert_options]
+    ).enqueue_jobs
   end
 
   def self.track_post_stats
@@ -377,28 +381,27 @@ class PostCreator
   end
 
   def update_topic_stats
-    return if @post.post_type == Post.types[:whisper]
-
-    attrs = {
-      last_posted_at: @post.created_at,
-      last_post_user_id: @post.user_id,
-      word_count: (@topic.word_count || 0) + @post.word_count,
-    }
-    attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
-    attrs[:bumped_at] = @post.created_at unless @post.no_bump
-    @topic.update_attributes(attrs)
+    if @post.post_type != Post.types[:whisper]
+      attrs = {}
+      attrs[:last_posted_at] = @post.created_at
+      attrs[:last_post_user_id] = @post.user_id
+      attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+      attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
+      attrs[:bumped_at] = @post.created_at unless @post.no_bump
+      @topic.update_attributes(attrs)
+    end
   end
 
   def update_topic_auto_close
-    topic_status_update = @topic.topic_status_update
+    topic_timer = @topic.public_topic_timer
 
-    if topic_status_update &&
-       topic_status_update.based_on_last_post &&
-       topic_status_update.duration > 0
+    if topic_timer &&
+       topic_timer.based_on_last_post &&
+       topic_timer.duration > 0
 
-      @topic.set_or_create_status_update(TopicStatusUpdate.types[:close],
-        topic_status_update.duration,
-        based_on_last_post: topic_status_update.based_on_last_post
+      @topic.set_or_create_timer(TopicTimer.types[:close],
+        topic_timer.duration,
+        based_on_last_post: topic_timer.based_on_last_post
       )
     end
   end

@@ -74,6 +74,8 @@ describe InvitesController do
         invite.reload
         post :create, email: invite.email
         expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["failed"]).to be_present
       end
 
       it "allows admins to invite to groups" do
@@ -90,6 +92,14 @@ describe InvitesController do
         invite.reload
         post :create, email: invite.email
         expect(response).to be_success
+      end
+
+      it "responds with error message in case of validation failure" do
+        log_in(:admin)
+        post :create, email: "test@mailinator.com"
+        expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to be_present
       end
     end
 
@@ -197,7 +207,12 @@ describe InvitesController do
           end
 
           it 'logs in the user' do
-            subject
+            events = DiscourseEvent.track_events { subject }
+
+            expect(events.map { |event| event[:event_name] }).to include(
+              :user_logged_in, :user_first_logged_in
+            )
+
             expect(session[:current_user_id]).to eq(user.id)
           end
 
@@ -378,10 +393,20 @@ describe InvitesController do
 
         before do
           Invite.expects(:redeem_from_token).with(invite.invite_key, user.email, nil, nil, topic.id).returns(user)
-          get :redeem_disposable_invite, email: user.email, token: invite.invite_key, topic: topic.id
         end
 
         it 'logs in user' do
+          events = DiscourseEvent.track_events do
+            get :redeem_disposable_invite,
+              email: user.email,
+              token: invite.invite_key,
+              topic: topic.id
+          end
+
+          expect(events.map { |event| event[:event_name] }).to include(
+            :user_logged_in, :user_first_logged_in
+          )
+
           expect(session[:current_user_id]).to eq(user.id)
         end
 

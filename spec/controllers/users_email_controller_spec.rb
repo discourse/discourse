@@ -35,7 +35,13 @@ describe UsersEmailController do
       it 'confirms with a correct token' do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
 
-        get :confirm, token: user.email_tokens.last.token
+        events = DiscourseEvent.track_events do
+          get :confirm, token: user.email_tokens.last.token
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(
+          :user_logged_in, :user_first_logged_in
+        )
 
         expect(response).to be_success
         expect(assigns(:update_result)).to eq(:complete)

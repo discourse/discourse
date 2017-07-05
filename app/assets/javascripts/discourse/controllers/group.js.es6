@@ -33,9 +33,9 @@ export default Ember.Controller.extend({
     return !automatic && isGroupOwner;
   },
 
-  @computed('model.name', 'model.full_name')
-  groupName(name, fullName) {
-    return (fullName || name).capitalize();
+  @computed('model.displayName', 'model.full_name')
+  groupName(displayName, fullName) {
+    return (fullName || displayName).capitalize();
   },
 
   @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')

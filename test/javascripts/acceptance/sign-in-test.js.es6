@@ -1,11 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Signing In");
 
-test("sign in", () => {
+QUnit.test("sign in", assert => {
   visit("/");
   click("header .login-button");
   andThen(() => {
-    ok(exists('.login-modal'), "it shows the login modal");
+    assert.ok(exists('.login-modal'), "it shows the login modal");
   });
 
   // Test invalid password first
@@ -13,48 +13,48 @@ test("sign in", () => {
   fillIn('#login-account-password', 'incorrect');
   click('.modal-footer .btn-primary');
   andThen(() => {
-    ok(exists('#modal-alert:visible'), 'it displays the login error');
-    not(exists('.modal-footer .btn-primary:disabled'), "enables the login button");
+    assert.ok(exists('#modal-alert:visible'), 'it displays the login error');
+    assert.not(exists('.modal-footer .btn-primary:disabled'), "enables the login button");
   });
 
   // Use the correct password
   fillIn('#login-account-password', 'correct');
   click('.modal-footer .btn-primary');
   andThen(() => {
-    ok(exists('.modal-footer .btn-primary:disabled'), "disables the login button");
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), "disables the login button");
   });
 });
 
-test("sign in - not activated", () => {
+QUnit.test("sign in - not activated", assert => {
   visit("/");
   andThen(() => {
     click("header .login-button");
     andThen(() => {
-      ok(exists('.login-modal'), "it shows the login modal");
+      assert.ok(exists('.login-modal'), "it shows the login modal");
     });
 
     fillIn('#login-account-name', 'eviltrout');
     fillIn('#login-account-password', 'not-activated');
     click('.modal-footer .btn-primary');
     andThen(() => {
-      equal(find('.modal-body b').text(), '<small>eviltrout@example.com</small>');
-      ok(!exists('.modal-body small'), 'it escapes the email address');
+      assert.equal(find('.modal-body b').text(), '<small>eviltrout@example.com</small>');
+      assert.ok(!exists('.modal-body small'), 'it escapes the email address');
     });
 
     click('.modal-footer button.resend');
     andThen(() => {
-      equal(find('.modal-body b').text(), '<small>current@example.com</small>');
-      ok(!exists('.modal-body small'), 'it escapes the email address');
+      assert.equal(find('.modal-body b').text(), '<small>current@example.com</small>');
+      assert.ok(!exists('.modal-body small'), 'it escapes the email address');
     });
   });
 });
 
-test("sign in - not activated - edit email", () => {
+QUnit.test("sign in - not activated - edit email", assert => {
   visit("/");
   andThen(() => {
     click("header .login-button");
     andThen(() => {
-      ok(exists('.login-modal'), "it shows the login modal");
+      assert.ok(exists('.login-modal'), "it shows the login modal");
     });
 
     fillIn('#login-account-name', 'eviltrout');
@@ -62,27 +62,27 @@ test("sign in - not activated - edit email", () => {
     click('.modal-footer .btn-primary');
     click('.modal-footer button.edit-email');
     andThen(() => {
-      equal(find('.activate-new-email').val(), 'current@example.com');
-      equal(find('.modal-footer .btn-primary:disabled').length, 1, "must change email");
+      assert.equal(find('.activate-new-email').val(), 'current@example.com');
+      assert.equal(find('.modal-footer .btn-primary:disabled').length, 1, "must change email");
     });
     fillIn('.activate-new-email', 'different@example.com');
     andThen(() => {
-      equal(find('.modal-footer .btn-primary:disabled').length, 0);
+      assert.equal(find('.modal-footer .btn-primary:disabled').length, 0);
     });
     click(".modal-footer .btn-primary");
     andThen(() => {
-      equal(find('.modal-body b').text(), 'different@example.com');
+      assert.equal(find('.modal-body b').text(), 'different@example.com');
     });
   });
 });
 
-test("create account", () => {
+QUnit.test("create account", assert => {
   visit("/");
   click("header .sign-up-button");
 
   andThen(() => {
-    ok(exists('.create-account'), "it shows the create account modal");
-    ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled at first');
+    assert.ok(exists('.create-account'), "it shows the create account modal");
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled at first');
   });
 
   fillIn('#new-account-name', 'Dr. Good Tuna');
@@ -92,18 +92,18 @@ test("create account", () => {
   fillIn('#new-account-email', 'good.tuna@test.com');
   fillIn('#new-account-username', 'taken');
   andThen(() => {
-    ok(exists('#username-validation.bad'), 'the username validation is bad');
-    ok(exists('.modal-footer .btn-primary:disabled'), 'create account is still disabled');
+    assert.ok(exists('#username-validation.bad'), 'the username validation is bad');
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), 'create account is still disabled');
   });
 
   fillIn('#new-account-username', 'goodtuna');
   andThen(() => {
-    ok(exists('#username-validation.good'), 'the username validation is good');
-    not(exists('.modal-footer .btn-primary:disabled'), 'create account is enabled');
+    assert.ok(exists('#username-validation.good'), 'the username validation is good');
+    assert.not(exists('.modal-footer .btn-primary:disabled'), 'create account is enabled');
   });
 
   click('.modal-footer .btn-primary');
   andThen(() => {
-    ok(exists('.modal-footer .btn-primary:disabled'), "create account is disabled");
+    assert.ok(exists('.modal-footer .btn-primary:disabled'), "create account is disabled");
   });
 });

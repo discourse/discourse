@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+nb_NO:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Start den nye brukerveiledningen for alle nye brukere"
+        welcome_message: "Send alle nye brukere en velkomstmelding med en rask startguide"

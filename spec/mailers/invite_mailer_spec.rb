@@ -5,9 +5,9 @@ describe InviteMailer do
   describe "send_invite" do
 
     context "invite to site" do
-      let(:invite) { Fabricate(:invite) }
 
       context "default invite message" do
+        let(:invite) { Fabricate(:invite) }
         let(:invite_mail) { InviteMailer.send_invite(invite) }
 
         it 'renders the invitee email' do
@@ -36,9 +36,10 @@ describe InviteMailer do
       end
 
       context "custom invite message" do
+        let(:invite) { Fabricate(:invite, custom_message: "Hey, you should join this forum!") }
 
         context "custom message includes invite link" do
-          let(:custom_invite_mail) { InviteMailer.send_invite(invite, "Hey, you should join this forum!") }
+          let(:custom_invite_mail) { InviteMailer.send_invite(invite) }
 
           it 'renders the invitee email' do
             expect(custom_invite_mail.to).to eql([invite.email])
@@ -67,6 +68,7 @@ describe InviteMailer do
           it 'renders invite link' do
             expect(custom_invite_mail.body.encoded).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
           end
+
         end
       end
     end
@@ -75,9 +77,9 @@ describe InviteMailer do
     context "invite to topic" do
       let(:trust_level_2) { build(:user, trust_level: 2) }
       let(:topic) { Fabricate(:topic, excerpt: "Topic invite support is now available in Discourse!", user: trust_level_2) }
-      let(:invite) { topic.invite(topic.user, 'name@example.com') }
 
       context "default invite message" do
+        let(:invite) { topic.invite(topic.user, 'name@example.com') }
         let(:invite_mail) { InviteMailer.send_invite(invite) }
 
         it 'renders the invitee email' do
@@ -111,10 +113,19 @@ describe InviteMailer do
         it 'renders topic title' do
           expect(invite_mail.body.encoded).to match(topic.title)
         end
+
+        it "respects the private_email setting" do
+          SiteSetting.private_email = true
+
+          message = invite_mail
+          expect(message.body.to_s).not_to include(topic.title)
+          expect(message.body.to_s).not_to include(topic.slug)
+        end
       end
 
       context "custom invite message" do
-        let(:custom_invite_mail) { InviteMailer.send_invite(invite, "Hey, I thought you might enjoy this topic!") }
+        let(:invite) { topic.invite(topic.user, 'name@example.com', nil, "Hey, I thought you might enjoy this topic!") }
+        let(:custom_invite_mail) { InviteMailer.send_invite(invite) }
 
         it 'renders custom_message' do
           expect(custom_invite_mail.body.encoded).to match("Hey, I thought you might enjoy this topic!")

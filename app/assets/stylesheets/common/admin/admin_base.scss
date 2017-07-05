@@ -316,6 +316,17 @@ td.flaggers td {
   }
 }
 
+.email-preview {
+  .ac-wrap {
+    .item {
+      margin: 0.2em 0 0 0.4em;
+    }
+    // input[type=text] {
+    //   margin-left: 0.4em;
+    // }
+  }
+}
+
 .paste-users {
   width: 400px;
   height: 150px;
@@ -549,12 +560,20 @@ section.details {
   padding: 5px;
   clear: both;
   text-align: right;
+  @media (max-width: $mobile-breakpoint) {
+    .btn {
+      margin: 2px;
+    }
+  }
 }
 
 .display-row.associations .value {
   width: 750px;
   @media (max-width: $mobile-breakpoint) {
-    width: 100%;
+    width: 75%;
+    float: right;
+    text-align: left;
+    margin-left: 0;
   }
 }
 
@@ -580,11 +599,22 @@ section.details {
     width: 17.65765%;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0;
+      line-height: 20px;
+      margin-top: 5px;
+    }
   }
   .value {
     width: 250px;
     float: left;
     margin-left: 12px;
+    @media (max-width: $mobile-breakpoint) {
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
+    }
   }
   .long-value {
     width: 800px;
@@ -602,10 +632,13 @@ section.details {
     float: left;
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
-      width: 100%;
+      width: 75%;
+      float: right;
+      text-align: left;
+      margin-left: 0;
     }
     .btn {
-      margin-right: 5px;
+      margin: 2px 5px 2px 0;
     }
   }
 }
@@ -746,16 +779,25 @@ section.details {
   .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
   .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
 
+  .flagged-post-avatar {
+    margin-right: 10px;
+  }
+
   .excerpt {
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
     h3 {
-      max-height: 1.2em;
-      overflow: hidden;
       margin-top: 0;
       margin-bottom: 5px;
     }
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  tr.message td {
+    padding-left: 60px;
   }
 
   .flagged-posts { background: $danger; }
@@ -1274,10 +1316,6 @@ table.api-keys {
   }
 }
 
-.staff-action-logs-instructions {
-  margin: 0 0 10px 10px;
-}
-
 // Ember.ListView
 
 .ember-list-view {
@@ -1444,7 +1482,7 @@ and (max-width : 500px) {
   div.ac-wrap {
     width: 100% !important;
     box-sizing: border-box;
-    }
+  }
 
   .admin-container {
     h2 {
@@ -1827,6 +1865,20 @@ table#user-badges {
   width: 300px;
   left: -100%;
 }
+
+.mobile-view .admin-flags {
+  .flaggers {
+    padding: 2px;
+    .avatar {
+      padding: 0;
+    }
+  }
+  tr.message td {
+    padding-left: 8px;
+  }
+}
+
+
 
 .cboxcontainer {
   display: inline-block;

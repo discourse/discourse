@@ -13,7 +13,12 @@ module Autospec
               "-f", "Autospec::Formatter", specs.split].flatten.join(" ")
       # launch rspec
       Dir.chdir(Rails.root) do
-        @pid = Process.spawn({"RAILS_ENV" => "test"}, "bin/rspec #{args}")
+        env = {"RAILS_ENV" => "test"}
+        if specs.split(' ').any?{|s| s =~ /^(.\/)?plugins/}
+          env["LOAD_PLUGINS"] = "1"
+          puts "Loading plugins while running specs"
+        end
+        @pid = Process.spawn(env, "bin/rspec #{args}")
         _, status = Process.wait2(@pid)
         status.exitstatus
       end

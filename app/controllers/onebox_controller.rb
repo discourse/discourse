@@ -6,10 +6,11 @@ class OneboxController < ApplicationController
   def show
     params.require(:user_id)
 
-    preview = Oneboxer.cached_preview(params[:url])
-    preview.strip! if preview.present?
-
-    return render(plain: preview) if preview.present?
+    unless params[:refresh] == 'true'
+      preview = Oneboxer.cached_preview(params[:url])
+      preview.strip! if preview.present?
+      return render(plain: preview) if preview.present?
+    end
 
     # only 1 outgoing preview per user
     return render(nothing: true, status: 429) if Oneboxer.is_previewing?(params[:user_id])

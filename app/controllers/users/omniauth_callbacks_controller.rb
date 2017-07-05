@@ -31,6 +31,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def complete
     auth = request.env["omniauth.auth"]
+    raise Discourse::NotFound unless request.env["omniauth.auth"]
+
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
@@ -113,6 +115,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       user.update!(staged: false)
+      # ensure there is an active email token
+      user.email_tokens.create(email: user.email) unless user.email_tokens.active.exists?
       user.activate
     end
 

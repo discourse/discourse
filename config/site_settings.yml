@@ -340,28 +340,22 @@ users:
     max: 60
   reserved_usernames:
     type: list
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|account-created"
   min_password_length:
     client: true
     default: 10
     min: 8
-    max: 2000
+    max: 500
   min_admin_password_length:
     client: true
     default: 15
     min: 8
-    max: 2000
+    max: 500
   password_unique_characters:
     default: 6
     min: 1
-    max: 2000
+    max: 10
   block_common_passwords: true
-  enforce_global_nicknames:
-    default: false
-    hidden: true
-  discourse_org_access_key:
-    default: ''
-    hidden: true
   username_change_period: 3
   email_editable: true
   logout_redirect:
@@ -379,7 +373,7 @@ users:
   invites_per_page:
     client: true
     default: 40
-    min: 1
+    hidden: true
   delete_user_max_post_age:
     client: true
     default: 60
@@ -487,14 +481,22 @@ posting:
     default: true
     client: true
   editing_grace_period: 300
-  post_edit_time_limit: 86400
+  post_edit_time_limit:
+    default: 86400
+    max: 525600
   edit_history_visible_to_public:
     client: true
     default: true
   delete_removed_posts_after:
     client: true
     default: 24
+  enable_experimental_markdown_it:
+    client: true
+    default: false
   traditional_markdown_linebreaks:
+    client: true
+    default: false
+  enable_markdown_typographer:
     client: true
     default: false
   allow_html_tables:
@@ -568,7 +570,7 @@ posting:
     default: true
     client: true
   emoji_set:
-    default: 'emoji_one'
+    default: 'twitter'
     client: true
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
@@ -633,6 +635,8 @@ email:
   alternative_reply_by_email_addresses:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
+  find_related_post_with_key:
+    default: false
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -646,6 +650,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
+  incoming_email_prefer_html: false
   email_in:
     default: false
     client: true
@@ -701,6 +706,7 @@ email:
     default: "smime.p7s|signature.asc"
   enable_forwarded_emails: false
   always_show_trimmed_content: false
+  private_email: false
 
 files:
   max_image_size_kb:
@@ -715,6 +721,9 @@ files:
     default: 40
     min: 5
     max: 150
+  theme_authorized_extensions:
+    default: 'jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif'
+    type: list
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
@@ -793,11 +802,13 @@ files:
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
   allow_all_attachments_for_group_messages: false
-  convert_pasted_images_to_hq_jpg: true
-  convert_pasted_images_quality:
+  png_to_jpg_quality:
     default: 95
     min: 1
     max: 100
+  allow_staff_to_upload_any_file_in_pm:
+    default: true
+    client: true
 
 trust:
   default_trust_level:
@@ -890,6 +901,13 @@ security:
   use_admin_ip_whitelist:
     default: false
     client: true
+  blacklist_ip_blocks:
+    default: ''
+    type: list
+    shadowed_by_global: true
+  whitelist_internal_hosts:
+    default: ''
+    type: list
 
 onebox:
   enable_flash_video_onebox: false
@@ -1038,6 +1056,9 @@ developer:
   wizard_enabled:
     default: true
     hidden: true
+  bypass_wizard_check:
+    default: false
+    hidden: true
 
 embedding:
   feed_polling_enabled:
@@ -1045,6 +1066,11 @@ embedding:
     hidden: true
   feed_polling_url:
     default: ''
+    hidden: true
+  feed_polling_frequency_mins:
+    min: 5
+    max: 180
+    default: 60
     hidden: true
   embed_by_username:
     default: ''

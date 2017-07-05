@@ -1,8 +1,8 @@
 {{#if visible}}
   <div class="row">
     <div id="banner" class={{overlay}}>
+      <div class="close" {{action "dismiss"}}><i class="fa fa-times" title="{{i18n 'banner.close'}}"></i></div>
       <div id="banner-content">
-        <div class="close" {{action "dismiss"}}><i class="fa fa-times" title="{{i18n 'banner.close'}}"></i></div>
         {{{banner.html}}}
         {{#if currentUser.staff}}
           <p><a href="{{banner.url}}">{{{i18n "banner.edit"}}}</a></p>

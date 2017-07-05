@@ -2,9 +2,10 @@ class BasicGroupSerializer < ApplicationSerializer
   attributes :id,
              :automatic,
              :name,
+             :display_name,
              :user_count,
              :alias_level,
-             :visible,
+             :visibility_level,
              :automatic_membership_email_domains,
              :automatic_membership_retroactive,
              :primary_group,
@@ -21,6 +22,16 @@ class BasicGroupSerializer < ApplicationSerializer
              :allow_membership_requests,
              :full_name,
              :default_notification_level
+
+  def include_display_name?
+    object.automatic
+  end
+
+  def display_name
+    if auto_group_name = Group::AUTO_GROUP_IDS[object.id]
+      I18n.t("groups.default_names.#{auto_group_name}")
+    end
+  end
 
   def include_incoming_email?
     staff?

@@ -25,7 +25,7 @@ module Jobs
       ScoreCalculator.new.calculate(args)
 
       # Re-run stuff that we missed
-      TopicStatusUpdate.ensure_consistency!
+      TopicTimer.ensure_consistency!
 
       # Forces rebake of old posts where needed, as long as no system avatars need updating
       unless UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first

@@ -65,12 +65,8 @@ class OptimizedImage < ActiveRecord::Base
             if url.present?
               thumbnail.url = url
               thumbnail.save
-            else
-              Rails.logger.error("Failed to store optimized image #{width}x#{height} for #{upload.url}")
             end
           end
-        else
-          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
         end
 
         # close && remove temp file
@@ -119,12 +115,14 @@ class OptimizedImage < ActiveRecord::Base
     %W{
       convert
       #{from}[0]
+      -auto-orient
       -gravity center
       -background transparent
       -thumbnail #{dimensions}^
       -extent #{dimensions}
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
+      -interlace none
       -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
@@ -150,11 +148,13 @@ class OptimizedImage < ActiveRecord::Base
     %W{
       convert
       #{from}[0]
+      -auto-orient
       -gravity north
       -background transparent
       -thumbnail #{opts[:width]}
       -crop #{dimensions}+0+0
       -unsharp 2x0.5+0.7+0
+      -interlace none
       -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
@@ -180,9 +180,11 @@ class OptimizedImage < ActiveRecord::Base
     %W{
       convert
       #{from}[0]
+      -auto-orient
       -gravity center
       -background transparent
-      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -interlace none
+      -resize #{dimensions}
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }
@@ -250,7 +252,12 @@ class OptimizedImage < ActiveRecord::Base
           # download if external
           if external
             url = SiteSetting.scheme + ":" + previous_url
-            file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
+            file = FileHelper.download(
+              url,
+              max_file_size: max_file_size_kb,
+              tmp_file_name: "discourse",
+              follow_redirect: true
+            ) rescue nil
             path = file.path
           else
             path = local_store.path_for(optimized_image)

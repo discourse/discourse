@@ -16,7 +16,8 @@ class SocketServer
   end
 
   def stop
-    @server.close if @server
+    @server&.close rescue nil
+    FileUtils.rm_f(@socket_path)
     @server = nil
     @blk = nil
   end
@@ -26,9 +27,14 @@ class SocketServer
   def new_accept_thread
     server = @server
     Thread.new do
-      done = false
-      while !done
-        done = !accept_connection(server)
+      begin
+        done = false
+        while !done
+          done = !accept_connection(server)
+        end
+      ensure
+        self.stop
+        Rails.logger.info("Cleaned up socket server at #{@socket_path}")
       end
     end
   end
@@ -37,7 +43,7 @@ class SocketServer
     socket = nil
     begin
       socket = server.accept
-    rescue IOError
+    rescue IOError, Errno::EPIPE
       # socket was shut down or something catastrophic like that happened
       return false
     end
@@ -61,10 +67,10 @@ class SocketServer
     end
 
     true
-  rescue IOError => e
+  rescue IOError, Errno::EPIPE
     # nothing to do here, case its normal on shutdown
   rescue => e
-    Rails.logger.warn("Failed to handle connection in stats socket #{e}")
+    Rails.logger.warn("Failed to handle connection in stats socket #{e}:\n#{e.backtrace.join("\n")}")
   ensure
     socket&.close rescue nil
   end

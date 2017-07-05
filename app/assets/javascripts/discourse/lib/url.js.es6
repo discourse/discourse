@@ -22,7 +22,12 @@ export function rewritePath(path) {
   const params = path.split("?");
 
   let result = params[0];
-  rewrites.forEach(rw => result = result.replace(rw.regexp, rw.replacement));
+  rewrites.forEach(rw => {
+    if (((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0))) {
+      return;
+    }
+    result = result.replace(rw.regexp, rw.replacement);
+  });
 
   if (params.length > 1) {
     result += `?${params[1]}`;
@@ -186,13 +191,6 @@ const DiscourseURL = Ember.Object.extend({
     const oldPath = window.location.pathname;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
-    // handle prefixes
-    if (path.match(/^\//)) {
-      let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
-      rootURL = rootURL.replace(/\/$/, '');
-      path = path.replace(rootURL, '');
-    }
-
     // Rewrite /my/* urls
     if (path.indexOf('/my/') === 0) {
       const currentUser = Discourse.User.current();
@@ -202,6 +200,13 @@ const DiscourseURL = Ember.Object.extend({
         document.location.href = "/404";
         return;
       }
+    }
+
+    // handle prefixes
+    if (path.match(/^\//)) {
+      let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+      rootURL = rootURL.replace(/\/$/, '');
+      path = path.replace(rootURL, '');
     }
 
     path = rewritePath(path);
@@ -216,11 +221,16 @@ const DiscourseURL = Ember.Object.extend({
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path, opts)) { return; }
 
+    // Navigating to empty string is the same as root
+    if (path === '') {
+      path = '/';
+    }
+
     return this.handleURL(path, opts);
   },
 
-  rewrite(regexp, replacement) {
-    rewrites.push({ regexp, replacement });
+  rewrite(regexp, replacement, opts) {
+    rewrites.push({ regexp, replacement, opts: opts || {} });
   },
 
   redirectTo(url) {
@@ -269,18 +279,17 @@ const DiscourseURL = Ember.Object.extend({
 
         if (newMatches[3]) { opts.nearPost = newMatches[3]; }
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
-        const closest = opts.nearPost || 1;
 
         opts.cancelSummary = true;
 
         postStream.refresh(opts).then(() => {
+          const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
 
           this.appEvents.trigger('post:highlight', closest);
-        }).then(() => {
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen
           };
@@ -363,7 +372,7 @@ const DiscourseURL = Ember.Object.extend({
         discoveryTopics.resetParams();
       }
 
-      router.router.updateURL(path);
+      router._routerMicrolib.updateURL(path);
     }
 
     const split = path.split('#');

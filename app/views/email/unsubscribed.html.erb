@@ -3,7 +3,7 @@
   <h2><%=t "unsubscribed.title"%></h2>
   <br>
   <p>
-    <%=t("unsubscribed.description", url: path("/my/preferences")).html_safe %>
+    <%=t("unsubscribed.description", email: @email, url: path("/my/preferences")).html_safe %>
   </p>
 
   <% if @topic %>

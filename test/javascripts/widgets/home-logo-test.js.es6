@@ -9,9 +9,9 @@ const title = "Cool Forum";
 
 widgetTest('basics', {
   template: '{{mount-widget widget="home-logo" args=args}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.logo_url = bigLogo;
-    this.siteSettings.logo_small_url= smallLogo;
+    this.siteSettings.logo_small_url = smallLogo;
     this.siteSettings.title = title;
     this.set('args', { minimized: false });
   },
@@ -25,9 +25,9 @@ widgetTest('basics', {
   }
 });
 
-widgetTest('basics - minmized', {
+widgetTest('basics - minimized', {
   template: '{{mount-widget widget="home-logo" args=args}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.logo_url = bigLogo;
     this.siteSettings.logo_small_url= smallLogo;
     this.siteSettings.title = title;
@@ -43,7 +43,7 @@ widgetTest('basics - minmized', {
 
 widgetTest('no logo', {
   template: '{{mount-widget widget="home-logo" args=args}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.logo_url = '';
     this.siteSettings.logo_small_url = '';
     this.siteSettings.title = title;
@@ -58,7 +58,7 @@ widgetTest('no logo', {
 
 widgetTest('no logo - minimized', {
   template: '{{mount-widget widget="home-logo" args=args}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.logo_url = '';
     this.siteSettings.logo_small_url = '';
     this.siteSettings.title = title;
@@ -72,7 +72,7 @@ widgetTest('no logo - minimized', {
 
 widgetTest('mobile logo', {
   template: '{{mount-widget widget="home-logo" args=args}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.mobile_logo_url = mobileLogo;
     this.siteSettings.logo_small_url= smallLogo;
     this.site.mobileView = true;
@@ -86,7 +86,7 @@ widgetTest('mobile logo', {
 
 widgetTest('mobile without logo', {
   template: '{{mount-widget widget="home-logo" args=args}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.logo_url = bigLogo;
     this.site.mobileView = true;
   },

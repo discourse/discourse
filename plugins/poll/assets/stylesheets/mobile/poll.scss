@@ -6,4 +6,8 @@ div.poll {
       margin: 4px 2px;
     }
   }
+
+  .poll-info {
+    .info-text:before {content:"\00a0";} // nbsp
+  }
 }

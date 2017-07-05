@@ -33,7 +33,7 @@ class CensoredWordsValidator < ActiveModel::EachValidator
 
     def censored_words_regexp
       Regexp.new(
-        SiteSetting.censored_words.split('|'.freeze).map! { |w| Regexp.escape(w) }.join('|'.freeze),
+        '\b(' + SiteSetting.censored_words.split('|'.freeze).map! { |w| Regexp.escape(w) }.join('|'.freeze) + ')\b',
         true
       )
     end

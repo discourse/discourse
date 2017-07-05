@@ -35,7 +35,7 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
-      @title = @topic.title
+      @title = "#{@topic.title} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
@@ -102,7 +102,12 @@ class StaticController < ApplicationController
 
     data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*30) do
       begin
-        file = FileHelper.download(SiteSetting.favicon_url, 50.kilobytes, "favicon.png", true)
+        file = FileHelper.download(
+          SiteSetting.favicon_url,
+          max_file_size: 50.kilobytes,
+          tmp_file_name: "favicon.png",
+          follow_redirect: true
+        )
         data = file.read
         file.unlink
         data

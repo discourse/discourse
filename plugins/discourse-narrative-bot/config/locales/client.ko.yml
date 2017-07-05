@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ko:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "모든 신규 사용자를 위한 튜토리얼을 시작합니다."
+        welcome_message: "모든 신규 사용자에게 퀵 스타트 가이드와 함께 환영 메세지를 보냅니다."

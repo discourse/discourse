@@ -55,11 +55,11 @@ module BackupRestore
       begin
         notify_user
         remove_old
+        clean_up
       rescue => ex
         Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
       end
 
-      clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
 
@@ -230,7 +230,7 @@ module BackupRestore
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
+            'tar', '--append', '--dereference', '--warning=no-file-changed', '--file', tar_filename, upload_directory,
             failure_message: "Failed to archive uploads."
           )
         else
@@ -259,9 +259,15 @@ module BackupRestore
       log "Notifying '#{@user.username}' of the end of the backup..."
       status = @success ? :backup_succeeded : :backup_failed
 
-      SystemMessage.create_from_system_user(@user, status,
+      post = SystemMessage.create_from_system_user(@user, status,
         logs: Discourse::Utils.pretty_logs(@logs)
       )
+
+      if !@success && @user.id == Discourse::SYSTEM_USER_ID
+        post.topic.invite_group(@user, Group[:admins])
+      end
+
+      post
     end
 
     def clean_up

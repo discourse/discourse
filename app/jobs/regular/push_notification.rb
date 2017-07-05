@@ -20,8 +20,15 @@ module Jobs
           })
         end
 
-        RestClient.send :post, push_url, payload.merge({notifications: notifications}).to_json, content_type: :json, accept: :json
+        result = Excon.post(push_url,
+          body: payload.merge(notifications: notifications).to_json,
+          headers: { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+        )
 
+        if result.status != 200
+          # we failed to push a notification ... log it
+          Rails.logger.warn("Failed to push a notification to #{push_url} Status: #{result.status}: #{result.status_line}")
+        end
       end
 
     end

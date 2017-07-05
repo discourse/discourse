@@ -35,12 +35,15 @@ export function cloak(post, component) {
   const $post = $(`#post_${post.post_number}`);
   _cloaked[post.id] = true;
   _heights[post.id] = $post.outerHeight();
+
+  component.dirtyKeys.keyDirty(`post-${post.id}`);
   Ember.run.debounce(component, 'queueRerender', 1000);
 }
 
 export function uncloak(post, component) {
   if (!CLOAKING_ENABLED || !_cloaked[post.id]) { return; }
   _cloaked[post.id] = null;
+  component.dirtyKeys.keyDirty(`post-${post.id}`);
   component.queueRerender();
 }
 

@@ -1,3 +1,5 @@
+require "final_destination"
+require "mini_mime"
 require "open-uri"
 
 class FileHelper
@@ -6,23 +8,44 @@ class FileHelper
     filename =~ images_regexp
   end
 
-  def self.download(url, max_file_size, tmp_file_name, follow_redirect=false, read_timeout=5)
+  def self.download(url,
+                    max_file_size:,
+                    tmp_file_name:,
+                    follow_redirect: false,
+                    read_timeout: 5,
+                    skip_rate_limit: false)
+
+    url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = parse_url(url)
+    uri = FinalDestination.new(
+      url,
+      max_redirects: follow_redirect ? 5 : 1,
+      skip_rate_limit: skip_rate_limit
+    ).resolve
+    return unless uri.present?
+
+    downloaded = uri.open("rb", read_timeout: read_timeout)
+
     extension = File.extname(uri.path)
+
+    if extension.blank? && downloaded.content_type.present?
+      ext = MiniMime.lookup_by_content_type(downloaded.content_type)&.extension
+      ext = "jpg" if ext == "jpe"
+      extension = "." + ext if ext.present?
+    end
+
     tmp = Tempfile.new([tmp_file_name, extension])
 
     File.open(tmp.path, "wb") do |f|
-      downloaded = uri.open("rb", read_timeout: read_timeout, redirect: follow_redirect, allow_redirections: :all)
       while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
         f.write(data)
       end
-      # tiny files are StringIO, no close! on them
-      downloaded.try(:close!) rescue nil
     end
 
     tmp
+  ensure
+    downloaded&.close
   end
 
   private
@@ -33,17 +56,6 @@ class FileHelper
 
   def self.images_regexp
     @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
-  end
-
-  # HACK to support underscores in URLs
-  # cf. http://stackoverflow.com/a/18938253/11983
-  def self.parse_url(url)
-    URI.parse(url)
-  rescue URI::InvalidURIError
-    host = url.match(".+\:\/\/([^\/]+)")[1]
-    uri = URI.parse(url.sub(host, 'valid-host'))
-    uri.instance_variable_set("@host", host)
-    uri
   end
 
 end

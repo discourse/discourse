@@ -43,10 +43,8 @@
   {{/if}}
 
   <div>
-    <label>
-      {{input type="checkbox" checked=model.visible}}
-      {{i18n 'groups.visible'}}
-    </label>
+    <label for="visiblity">{{i18n 'groups.visibility_levels.title'}}</label>
+    {{combo-box name="alias" valueAttribute="value" value=model.visibility_level content=visibilityLevelOptions}}
   </div>
 
   {{#unless model.automatic}}
