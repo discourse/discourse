@@ -45,7 +45,7 @@ class FileHelper
 
     tmp
   ensure
-    downloaded&.close! rescue nil
+    downloaded&.close
   end
 
   private
