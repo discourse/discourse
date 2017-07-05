@@ -435,6 +435,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!('<li>&nbsp;</li>', '')
       post.raw.gsub!("<li>\r", '<li>')
       post.raw.gsub!("<li>\n", '<li>')
+      post.raw.gsub!(%r~(\r|\n)\s*</li>~, '</li>')
+
       post.raw.gsub!('<p>', '')
       post.raw.gsub!('</p>', '')
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
