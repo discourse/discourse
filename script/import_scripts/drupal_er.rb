@@ -398,7 +398,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
                 puts "Upload not valid :(  #{filename}"
                 puts upload.errors.inspect if upload
               else
-                post.raw.gsub!(img['src'], upload.url)
+                post.raw.gsub!(img['src'], upload.url || '')
               end
             else
               puts "Image doesn't exist: #{filename}"
