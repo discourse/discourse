@@ -440,10 +440,13 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
       # Replace three or more consecutive linebreaks with two.
       post.raw.gsub!(/\n{3,}/, "\n\n")
-      post.raw.gsub!(/\n{3,}/, "\r\r")
-
-      # Make sure the content is not blank as a minimum length of 1 character is required.
-      #post.raw = '\n' if post.raw.blank?
+      post.raw.gsub!(/\r{3,}/, "\n\n")
+      # Remove trailing tabs.
+      post.raw.gsub!(/\n\t{1,}/, "\n")
+      post.raw.gsub!(/\r\t{1,}/, "\n")
+      # Remove trailing whitespaces.
+      post.raw.gsub!(/\n\s{1,}/, "\n")
+      post.raw.gsub!(/\r\s{1,}/, "\n")
 
       post.save!(validate: false)
     end
