@@ -428,16 +428,19 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
 
       # HTML cleanup.
+      post.raw.gsub!('<meta charset="utf-8">', '')
       post.raw.gsub!('<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>', '')
       post.raw.gsub!(' dir="ltr"', '')
       post.raw.gsub!('<p>&nbsp;</p>', '')
       post.raw.gsub!('<li>&nbsp;</li>', '')
+      post.raw.gsub!("<li>\r", '<li>')
       post.raw.gsub!("<li>\n", '<li>')
       post.raw.gsub!('<p>', '')
       post.raw.gsub!('</p>', '')
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
       # Replace three or more consecutive linebreaks with two.
       post.raw.gsub!(/\n{3,}/, "\n\n")
+      post.raw.gsub!(/\n{3,}/, "\r\r")
 
       # Make sure the content is not blank as a minimum length of 1 character is required.
       #post.raw = '\n' if post.raw.blank?
@@ -446,6 +449,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
   end
+
 
 
 end
