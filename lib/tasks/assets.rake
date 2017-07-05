@@ -11,6 +11,10 @@ task 'assets:precompile:before' do
   puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
+  # Ensure we clear emoji cache before pretty-text/emoji/data.js.es6.erb
+  # is recompiled
+  Emoji.clear_cache
+
   if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
     $node_uglify = true
   end
