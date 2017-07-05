@@ -369,7 +369,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
     Post.find_each do |post|
       next if post.raw.nil?
-      puts "post: ##{post.id}..."
+      puts "processing post: ##{post.id}..."
 
       # Extract all links.
       links = []
@@ -393,7 +393,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
             filename = URI.decode_www_form_component(filename)
 
             if File.exists?(filename)
-              upload = create_upload(post.user_id, filename, File.basename(filename))
+              upload = create_upload(post.user_id, filename, File.basename(filename)) rescue nil
               if upload.nil? || upload.invalid?
                 puts "Upload not valid :(  #{filename}"
                 puts upload.errors.inspect if upload
