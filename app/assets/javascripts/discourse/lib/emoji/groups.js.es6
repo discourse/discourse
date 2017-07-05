@@ -680,7 +680,7 @@ const groups = [
       "tennis",
       "8ball",
       "bowling",
-      "cricket",
+      "cricket_bat_and_ball",
       "field_hockey",
       "ice_hockey",
       "ping_pong",
