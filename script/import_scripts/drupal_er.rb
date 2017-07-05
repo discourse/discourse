@@ -393,8 +393,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
             filename = URI.decode_www_form_component(filename)
 
             if File.exists?(filename)
-              upload = create_upload(post.user_id, filename, File.basename(filename)) rescue nil
-              if upload.nil? || upload.invalid?
+              upload = create_upload(post.user_id, filename, File.basename(filename))
+              if upload.nil? || (upload.invalid? rescue nil)
                 puts "Upload not valid :(  #{filename}"
                 puts upload.errors.inspect if upload
               else
@@ -408,10 +408,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       end
 
 
-      # NOTE: The order is important. Do this first.
+      # NOTE: The order is important.
+      # 1. Replace media divs.
       doc.css('div.media_embed').each { |node| node.replace node.inner_html }
 
-      # Replace youtube and vimeo iframes with onebox links.
+      # 2. Replace youtube and vimeo iframes with onebox links.
       doc.css('iframe').each do |node|
         if 'youtube.com'.in?(node['src']) || 'player.vimeo.com'.in?(node['src'])
           u = URI.parse(node['src'])
@@ -420,7 +421,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         end
       end
 
-      # Replace twitter blockquotes with onebox links.
+      # 3. Replace twitter blockquotes with onebox links.
       doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
 
       post.raw = doc.to_s
