@@ -52,13 +52,13 @@ module Jobs
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
                   else
-                    Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
+                    log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
                   end
                 else
-                  Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
+                  log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                 end
               else
-                Rails.logger.error("There was an error while downloading '#{src}' locally for post: #{post_id}")
+                log(:error, "There was an error while downloading '#{src}' locally for post: #{post_id}")
               end
             end
             # have we successfully downloaded that file?
@@ -84,7 +84,7 @@ module Jobs
               raw.gsub!(/^#{escaped_src}(\s?)$/) { "<img src='#{url}'>#{$1}" }
             end
           rescue => e
-            Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            log(:info, "Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           end
         end
 
@@ -126,6 +126,13 @@ module Jobs
       return false if URI.parse(Discourse.base_url_no_prefix).hostname == uri.hostname
       # check the domains blacklist
       SiteSetting.should_download_images?(src)
+    end
+
+    def log(log_level, message)
+      Rails.logger.public_send(
+        log_level,
+        "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+      )
     end
 
   end
