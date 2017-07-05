@@ -372,7 +372,6 @@ ro:
         add_members: "Adaugă membri"
         delete_member_confirm: "Șterge utilizatorul '%{username}' din grupul '%{group}'?"
       name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
-      public: "Permite utilizatorilor să intre/iasă din grup fără restricții. (Presupune ca grupul să fie vizibil)"
       empty:
         posts: "Nu există postări ale membrilor acestui grup."
         members: "Nu există nici un membru în acest grup."
@@ -393,7 +392,6 @@ ro:
       bio: "Despre grup"
       selector_placeholder: "Adaugă membri"
       owner: "Proprietar"
-      visible: "Grupul este vizibil tuturor utilizatorilor"
       index:
         title: "Grupuri"
         empty: "Nu există nici un grup vizibil."

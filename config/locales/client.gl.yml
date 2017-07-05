@@ -316,7 +316,6 @@ gl:
       add: "Engadir"
       selector_placeholder: "Engadir membros"
       owner: "propietario"
-      visible: "O grupo é visíbel para todos os usuarios."
       title:
         one: "grupo"
         other: "grupos"

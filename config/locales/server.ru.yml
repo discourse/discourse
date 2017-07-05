@@ -1424,7 +1424,6 @@ ru:
       popular_posts: "Популярные сообщения"
       more_new: "Новинки для вас"
       subject_template: "[%{email_prefix}] — сводка"
-      unsubscribe: "Сводка новостей отправляется, если вы давно не заходили на сайт %{site_link}. Чтобы отписаться от этой рассылки, %{unsubscribe_link}."
       click_here: "нажмите здесь"
       from: "Сводка — %{site_name}"
       preheader: "Сводка новостей с вашего последнего визита %{last_seen_at}"

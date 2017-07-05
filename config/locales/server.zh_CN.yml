@@ -1537,11 +1537,11 @@ zh_CN:
     title: "下载备份邮件发件人"
     subject_template: "[%{email_prefix}] 站点备份下载"
     text_body_template: |
-      这是你需要的[站点备份下载](%{backup_file_path})。
+      这是你[站点备份文件](%{backup_file_path})。
 
-      我们处于安全原因把下载链接发到你确认过的邮箱。
+      出于安全原因我们把下载链接直接发到你确认过的邮箱。
 
-      （如果你**没有**请求下载，你需要认真考虑了——有管理员请求下载）
+      （如果你**没有**请求下载，你需要认真想想了——有个管理员请求了备份文件）
     no_token: |
       抱歉，这个备份下载链接已经被使用或已经过期。
   admin_confirmation_mailer:
@@ -2200,7 +2200,6 @@ zh_CN:
       popular_posts: "流行帖子"
       more_new: "你关注的新帖"
       subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "这是封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。%{unsubscribe_link}取消订阅。"
       click_here: "点击此处"
       from: "%{site_name}的摘要"
       preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"

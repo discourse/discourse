@@ -318,7 +318,6 @@ tr_TR:
         add_members: "Üyeleri ekle"
         delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
       name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
-      public: "Kullanıcıların gruptan serbest bir şekilde ayrılıp/katılmasına izin ver (grubun görünür olması gerekmekte)"
       empty:
         posts: "Bu grubun üyelerinden konu yok."
         members: "Bu grupta üye bulunmamaktır."
@@ -339,7 +338,6 @@ tr_TR:
       bio: "Grup Hakkında"
       selector_placeholder: "Üye ekle"
       owner: "sahip"
-      visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
       index:
         title: "Gruplar"
         empty: "Görünen hiç bir grup bulunmamaktadır."

@@ -326,7 +326,6 @@ zh_CN:
         add_members: "增加组员"
         delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
       name_placeholder: "群组名，没有空格，和用户名一样的规则"
-      public: "允许用户自由加入/离开群组（需要群组是可见）"
       empty:
         posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
@@ -348,7 +347,6 @@ zh_CN:
       bio: "关于群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
-      visible: "群组对所有用户可见"
       index:
         title: "群组"
         empty: "没有可见的群组。"
@@ -853,7 +851,7 @@ zh_CN:
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
       intro: "嘿！:heart_eyes: 看来你很欣赏该讨论，但你没有注册帐号。"
-      value_prop: "你创建一个帐号后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
+      value_prop: "你创建一个 账号 后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"

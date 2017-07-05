@@ -344,7 +344,6 @@ et:
         add_members: "Lisa liikmed"
         delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
       name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
-      public: "Luba kasutajatel vabalt grupiga liituda/sellest lahkuda (nõuab, et grupp oleks nähtav)"
       empty:
         posts: "Selle grupi liikmetelt ei ole postitusi."
         members: "Sellel grupil liikmed puuduvad."
@@ -365,7 +364,6 @@ et:
       bio: "Grupist"
       selector_placeholder: "Lisa liikmeid"
       owner: "omanik"
-      visible: "Grupp on kõigile kasutajatele nähtav."
       index:
         title: "Grupid"
         empty: "Ühtegi nähtavat gruppi pole."

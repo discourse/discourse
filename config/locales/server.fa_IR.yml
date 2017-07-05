@@ -220,6 +220,9 @@ fa_IR:
       trust_level_2: "سطح اعتماد 2"
       trust_level_3: "سطح اعتماد 3"
       trust_level_4: "سطح اعتماد 4"
+    request_membership_pm:
+      title: "درخواست عضویت در @%{group_name}"
+      body: "میخواهم برای عضویت در @%{group_name} اقدام کنم."
   education:
     until_posts:
       other: "%{count} نوشته"
@@ -2165,7 +2168,6 @@ fa_IR:
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
       subject_template: "[%{email_prefix}] خلاصه"
-      unsubscribe: "این خلاصه از %{site_link} به دلیل اینکه مدتی است شما را ندیده ایم ارسال شده است. برای لغو اشتراک %{unsubscribe_link}"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name} خلاصه"
       preheader: "یک خلاصه مختصر  به دلیل اینکه آخرین بازدیدتان در %{last_seen_at} بوده."

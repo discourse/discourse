@@ -404,7 +404,6 @@ pl_PL:
         add_members: "Dodaj użytkowników"
         delete_member_confirm: "Czy usunąć użytkownika '%{username}' z grupy '%{group}'?"
       name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
-      public: "Zezwalaj użytkownikom na zapraszanie/opuszczanie grupy (Grupa musi być widoczna)"
       empty:
         posts: "Członkowie tej grupy nie opublikowali żadnych postów."
         members: "Nie ma użytkowników w tej grupie"
@@ -426,7 +425,6 @@ pl_PL:
       bio: "O grupie"
       selector_placeholder: "Dodaj członków"
       owner: "właściciel"
-      visible: "Grupa jest widoczna dla wszystkich użytkowników"
       index:
         title: "Grupy"
         empty: "Nie ma widocznych grup"

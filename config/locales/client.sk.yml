@@ -371,7 +371,6 @@ sk:
       bio: "O skupine"
       selector_placeholder: "Pridať členov"
       owner: "vlastník"
-      visible: "Skupina je viditeľná všetkým používateľom"
       index:
         title: "Skupiny"
         empty: "Nenašli sa viditeľné skupiny."

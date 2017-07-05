@@ -251,7 +251,6 @@ uk:
       add: "Додати"
       closed_group: Закрита Група
       selector_placeholder: "Додати учасників"
-      visible: "Група видна всім користувачам"
       title:
         one: "група"
         few: "групи"

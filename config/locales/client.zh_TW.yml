@@ -318,7 +318,6 @@ zh_TW:
         add_members: "增加成員"
         delete_member_confirm: "從「%{group}」群組移除「%{username}」？"
       name_placeholder: "群組名，沒有空格，和用戶名一樣的規則"
-      public: "允許用戶自由加入/離開群組（需要群組是可見）"
       empty:
         posts: "群組成員沒有發佈帖子。"
         members: "這個團隊裡面沒有成員"
@@ -339,7 +338,6 @@ zh_TW:
       bio: "關於群組"
       selector_placeholder: "新增成員"
       owner: "擁有者"
-      visible: "群組可被所有用戶看到"
       index:
         title: "群組"
         empty: "沒有可看見的群組。"

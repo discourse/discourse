@@ -371,7 +371,6 @@ cs:
       bio: "O skupině"
       selector_placeholder: "Přidat členy"
       owner: "Vlastník"
-      visible: "Skupina je viditelná pro všechny uživatele"
       index:
         title: "Skupiny"
         empty: "Žádné viditelné skupiny."

@@ -347,7 +347,6 @@ sv:
         add_members: "Lägg till medlemmar"
         delete_member_confirm: "Ta bort '%{username}' från gruppen '%{group}'?"
       name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
-      public: "Tillåt användare att delta/lämna gruppen av egen vilja (Kräver gruppen att vara synlig)"
       empty:
         posts: "Det är inga kommentarer från medlemmar i denna grupp"
         members: "Det finns inga medlemmar i denna grupp"
@@ -369,7 +368,6 @@ sv:
       bio: "Om grupp"
       selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
-      visible: "Gruppen är synlig för alla användare"
       index:
         title: "Grupper"
         empty: "Det finns inga synliga grupper"

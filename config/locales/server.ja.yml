@@ -993,7 +993,6 @@ ja:
     posted_by: "%{post_date} に %{username} が投稿"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
