@@ -85,8 +85,6 @@ module Jobs
             end
           rescue => e
             Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
-          ensure
-            hotlinked&.close! rescue nil
           end
         end
 
