@@ -35,7 +35,7 @@ if (window.Logster) {
 }
 Ember.Test.adapter = window.QUnitAdapter.create();
 
-var createPretendServer = require('wizard/test/wizard-pretender', null, null, false).default;
+var createPretendServer = requirejs('wizard/test/wizard-pretender', null, null, false).default;
 
 var server;
 QUnit.testStart(function() {
@@ -47,12 +47,12 @@ QUnit.testDone(function() {
 });
 
 
-var _testApp = require('wizard/test/helpers/start-app').default();
-var _buildResolver = require('discourse-common/resolver').buildResolver;
+var _testApp = requirejs('wizard/test/helpers/start-app').default();
+var _buildResolver = requirejs('discourse-common/resolver').buildResolver;
 window.setResolver(_buildResolver('wizard').create({ namespace: _testApp }));
 
 Object.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {
-    require(entry, null, null, true);
+    requirejs(entry, null, null, true);
   }
 });

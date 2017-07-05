@@ -1,5 +1,5 @@
 (function() {
-  var Discourse = require('discourse').default;
+  var Discourse = requirejs('discourse').default;
 
   Discourse.dialect_deprecated = true;
 

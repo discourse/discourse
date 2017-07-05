@@ -525,12 +525,12 @@ export default Em.Component.extend({
   },
 
   groupFinder(term) {
-    const Group = require('discourse/models/group').default;
+    const Group = requirejs('discourse/models/group').default;
     return Group.findAll({search: term, ignore_automatic: false});
   },
 
   badgeFinder(term) {
-    const Badge = require('discourse/models/badge').default;
+    const Badge = requirejs('discourse/models/badge').default;
     return Badge.findAll({search: term});
   }
 });

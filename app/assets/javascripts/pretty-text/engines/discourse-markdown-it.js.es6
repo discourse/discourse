@@ -119,7 +119,7 @@ export function setup(opts, siteSettings, state) {
 
   Object.keys(require._eak_seen).forEach(entry => {
     if (check.test(entry)) {
-      const module = require(entry);
+      const module = requirejs(entry);
       if (module && module.setup) {
 
         const featureName = entry.split('/').reverse()[0];

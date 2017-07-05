@@ -58,7 +58,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
           reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
 
       // used only once, one less dependency
-      const Composer = require('discourse/models/composer').default;
+      const Composer = requirejs('discourse/models/composer').default;
       return this.controllerFor('composer').open({
         action: Composer.PRIVATE_MESSAGE,
         usernames: recipient,

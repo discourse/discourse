@@ -44,7 +44,7 @@ export default Ember.Component.extend({
           self.set("totalOthersWithSameIP", result.total);
         });
 
-        const AdminUser = require('admin/models/admin-user').default;
+        const AdminUser = requirejs('admin/models/admin-user').default;
         AdminUser.findAll("active", data).then(function (users) {
           self.setProperties({
             other_accounts: users,

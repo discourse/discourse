@@ -9,9 +9,9 @@ import { userPath } from 'discourse/lib/url';
 
 export function translateResults(results, opts) {
 
-  const User = require('discourse/models/user').default;
-  const Post = require('discourse/models/post').default;
-  const Topic = require('discourse/models/topic').default;
+  const User = requirejs('discourse/models/user').default;
+  const Post = requirejs('discourse/models/post').default;
+  const Topic = requirejs('discourse/models/topic').default;
 
   if (!opts) opts = {};
 

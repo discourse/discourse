@@ -144,7 +144,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isPrivateTopic'),
 
   groupFinder(term) {
-    const Group = require('discourse/models/group').default;
+    const Group = requirejs('discourse/models/group').default;
     return Group.findAll({search: term, ignore_automatic: true});
   },
 
@@ -191,7 +191,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
 
     createInvite() {
-      const Invite = require('discourse/models/invite').default;
+      const Invite = requirejs('discourse/models/invite').default;
       const self = this;
 
       if (this.get('disabled')) { return; }
@@ -237,7 +237,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     generateInvitelink() {
-      const Invite = require('discourse/models/invite').default;
+      const Invite = requirejs('discourse/models/invite').default;
       const self = this;
 
       if (this.get('disabled')) { return; }
