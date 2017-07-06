@@ -436,12 +436,17 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(' dir="ltr"', '')
       post.raw.gsub!('<p>&nbsp;</p>', '')
       post.raw.gsub!('<li>&nbsp;</li>', '')
+      # Remove html attributes in opening tags.
       post.raw.gsub!(/<ul.*?>/, '<ul>')
       post.raw.gsub!(/<span.*?>/, '<span>')
-      post.raw.gsub!(/<li.*?>\r/, '<li>')
-      post.raw.gsub!(/<li.*?>\n/, '<li>')
+      post.raw.gsub!(/<li.*?>/, '<li>')
+
       post.raw.gsub!(/<p.*?>/, '')
-      post.raw.gsub!('</p>', '')
+      post.raw.gsub!('</p>', "\n")
+
+      post.raw.gsub!(/<li>\r/, '<li>')
+      post.raw.gsub!(/<li>\n/, '<li>')
+
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
 
       # NOTE: Do not use \s to also match non-breaking spaces.
