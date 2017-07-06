@@ -600,6 +600,9 @@ posting:
     client: true
     default: ''
     type: list
+  max_allowed_message_recipients:
+    default: 30
+    min: 1
 
 email:
   email_time_window_mins:
