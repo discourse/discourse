@@ -4,9 +4,11 @@ set :puma_bind, %w(tcp://0.0.0.0:9293 unix:///home/discourse/staging/current/tmp
 
 set :rails_env, 'production'
 
+# Required to use rails production environment for the staging application.
+set :sidekiq_env, 'production'
+set :sidekiq_service_name, "sidekiq_#{fetch(:application)}_staging"
 
-# set :stage,           :staging
-# set :application,     'discourse-staging'
+
 
 
 # server-based syntax

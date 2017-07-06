@@ -48,6 +48,8 @@ set :puma_daemonize, true
 
 
 # https://github.com/seuros/capistrano-sidekiq
+set :sidekiq_queue, %w(critical default low)
+# set :sidekiq_config,        "#{current_path}/config/sidekiq.yml"
 # set :sidekiq_default_hooks, -> { true }
 # set :sidekiq_pid, -> { File.join(shared_path, 'tmp', 'pids', 'sidekiq.pid') }
 # set :sidekiq_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
@@ -57,6 +59,8 @@ set :puma_daemonize, true
 # set :sidekiq_processes, -> { 1 }
 # set :sidekiq_options_per_process, -> { nil }
 # set :sidekiq_user, -> { nil }
+
+
 # # Rbenv, Chruby, and RVM integration
 # set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w(sidekiq sidekiqctl))
 # set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w(sidekiq sidekiqctl))
