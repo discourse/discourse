@@ -55,11 +55,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
 
-    import_users
+    # import_users
     # import_topics
     # import_replies
     # import_likes
-    # post_process_posts
+    post_process_posts
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -436,9 +436,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(' dir="ltr"', '')
       post.raw.gsub!('<p>&nbsp;</p>', '')
       post.raw.gsub!('<li>&nbsp;</li>', '')
-      post.raw.gsub!("<li>\r", '<li>')
-      post.raw.gsub!("<li>\n", '<li>')
-      post.raw.gsub!('<p>', '')
+      post.raw.gsub!(/<ul.*?>/, '<ul>')
+      post.raw.gsub!(/<span.*?>/, '<span>')
+      post.raw.gsub!(/<li.*?>\r/, '<li>')
+      post.raw.gsub!(/<li.*?>\n/, '<li>')
+      post.raw.gsub!(/<p.*?>/, '')
       post.raw.gsub!('</p>', '')
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
 
