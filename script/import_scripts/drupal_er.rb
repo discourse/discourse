@@ -55,10 +55,10 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
 
-    # import_users
-    # import_topics
-    # import_replies
-    # import_likes
+    import_users
+    import_topics
+    import_replies
+    import_likes
     post_process_posts
 
     # begin
@@ -397,7 +397,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
             if File.exists?(filename)
               upload = create_upload(post.user_id, filename, File.basename(filename))
-              if upload.nil? || (upload.invalid? rescue nil)
+              # if upload.nil? || (upload.invalid? rescue nil)
+              if upload.nil? || upload.invalid?
                 puts "Upload not valid :(  #{filename}"
                 puts upload.errors.inspect if upload
               else
@@ -458,7 +459,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # Remove trailing whitespaces.
       post.raw.gsub!(/\n\s{1,}/, "\n")
       # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
-      post.raw.gsub!(/\n#/, "\n\#")
+      post.raw.gsub!(/\n#/, "\n\\#")
 
       post.save!(validate: false)
     end
