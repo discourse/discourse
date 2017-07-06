@@ -70,7 +70,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       time,
       this.get('topicTimer.based_on_last_post'),
       statusType,
-      this.get('categoryId')
+      this.get('topicTimer.category_id')
     ).then(result => {
       if (time) {
         this.send('closeModal');
