@@ -1150,6 +1150,7 @@ uncategorized:
   version_checks:
     client: true
     default: true
+    shadowed_by_global: true
   new_version_emails: true
   send_welcome_message: true
 
