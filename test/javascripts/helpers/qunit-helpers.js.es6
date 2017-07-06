@@ -40,7 +40,7 @@ window.bootbox.$body = $('#ember-testing');
 $.fn.modal = AcceptanceModal;
 
 function acceptance(name, options) {
-  module("Acceptance: " + name, {
+  QUnit.module("Acceptance: " + name, {
     beforeEach() {
       resetMobile();
 

@@ -28,7 +28,7 @@ EMOJI_ALIASES ||= {
   "city_sunset" => [ "city_dusk" ],
   "couch_and_lamp" => [ "couch" ],
   "crayon" => [ "lower_left_crayon" ],
-  "cricket" => [ "cricket_bat_ball" ],
+  "cricket_bat_and_ball" => [ "cricket_bat_ball" ],
   "latin_cross" => [ "cross" ],
   "dagger" => [ "dagger_knife" ],
   "desktop_computer" => [ "desktop" ],
@@ -362,7 +362,7 @@ EMOJI_IMAGES_PATCH ||= {
 EMOJI_SETS ||= {
   "apple" => "apple",
   "google" => "google",
-  "google_blob" => "google_blob",
+  "google_blob" => "google_classic",
   "facebook_messenger" => "facebook_messenger",
   "twitter" => "twitter",
   "emoji_one" => "emoji_one",
@@ -499,10 +499,6 @@ def write_db_json(emojis)
         "name" => config["name"]
       }
     }
-
-  # adds emoji wich are not displayed in picker but available in autocomplete
-  emojis_without_tones << { "code" => "1f44d", "name" => "thumbsup" }
-  emojis_without_tones << { "code" => "1f44e", "name" => "thumbsdown" }
 
   emoji_with_tones = emojis
     .select { |code, config| config["fitzpatrick_scale"] }

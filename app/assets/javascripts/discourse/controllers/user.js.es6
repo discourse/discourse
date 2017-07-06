@@ -87,7 +87,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     adminDelete() {
       // I really want this deferred, don't want to bring in all this code till used
-      const AdminUser = require('admin/models/admin-user').default;
+      const AdminUser = requirejs('admin/models/admin-user').default;
       AdminUser.find(this.get('model.id')).then(user => user.destroy({deletePosts: true}));
     },
 

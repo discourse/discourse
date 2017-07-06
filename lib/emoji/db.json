@@ -2198,7 +2198,7 @@
     },
     {
       "code": "1f3cf",
-      "name": "cricket"
+      "name": "cricket_bat_and_ball"
     },
     {
       "code": "1f3bf",
@@ -5995,14 +5995,6 @@
     {
       "code": "1f1fa-1f1f3",
       "name": "united_nations"
-    },
-    {
-      "code": "1f44d",
-      "name": "thumbsup"
-    },
-    {
-      "code": "1f44e",
-      "name": "thumbsdown"
     }
   ],
   "tonableEmojis": [
@@ -6202,7 +6194,7 @@
     "crayon": [
       "lower_left_crayon"
     ],
-    "cricket": [
+    "cricket_bat_and_ball": [
       "cricket_bat_ball"
     ],
     "latin_cross": [
