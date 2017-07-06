@@ -5,6 +5,8 @@ import {
   SET_BASED_ON_LAST_POST
 } from "discourse/components/auto-update-input-selector";
 
+import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
+
 export default Ember.Component.extend({
   selection: null,
   date: null,
@@ -62,9 +64,13 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("statusType", "input", "isCustom", "date", "time", "willCloseImmediately")
-  showTopicStatusInfo(statusType, input, isCustom, date, time, willCloseImmediately) {
+  @computed("statusType", "input", "isCustom", "date", "time", "willCloseImmediately", "categoryId")
+  showTopicStatusInfo(statusType, input, isCustom, date, time, willCloseImmediately, categoryId) {
     if (!statusType || willCloseImmediately) return false;
+
+    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && Ember.isEmpty(categoryId)) {
+      return false;
+    }
 
     if (isCustom) {
       return date || time;
