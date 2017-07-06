@@ -440,28 +440,25 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(/<ul.*?>/, '<ul>')
       post.raw.gsub!(/<span.*?>/, '<span>')
       post.raw.gsub!(/<li.*?>/, '<li>')
-
+      # Normalize line breaks.
+      post.raw.gsub!(/\r/, "\n")
+      post.raw.gsub!(%r~<br\s*\/?>~, "\n")
+      # Remove paragraphs.
       post.raw.gsub!(/<p.*?>/, '')
       post.raw.gsub!('</p>', "\n")
-
-      post.raw.gsub!(/<li>\r/, '<li>')
+      # Remove line breaks.
       post.raw.gsub!(/<li>\n/, '<li>')
-
-      post.raw.gsub!(%r~<br\s*\/?>~, "\n")
-
       # NOTE: Do not use \s to also match non-breaking spaces.
       # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
-      post.raw.gsub!(/(\r|\n)[[:space:]]*<\/li>/, '</li>')
-
+      post.raw.gsub!(/\n[[:space:]]*<\/li>/, '</li>')
       # Replace three or more consecutive linebreaks with two.
       post.raw.gsub!(/\n{3,}/, "\n\n")
-      post.raw.gsub!(/\r{3,}/, "\n\n")
       # Remove trailing tabs.
       post.raw.gsub!(/\n\t{1,}/, "\n")
-      post.raw.gsub!(/\r\t{1,}/, "\n")
       # Remove trailing whitespaces.
       post.raw.gsub!(/\n\s{1,}/, "\n")
-      post.raw.gsub!(/\r\s{1,}/, "\n")
+      # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
+      post.raw.gsub!(/\n#/, "\n\#")
 
       post.save!(validate: false)
     end
