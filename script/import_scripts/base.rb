@@ -203,7 +203,7 @@ class ImportScripts::Base
       return true
     end
   ensure
-    connection.exec('DROP TABLE import_ids')
+    connection.exec('DROP TABLE import_ids') unless connection.nil?
   end
 
   def created_user(user)
