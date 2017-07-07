@@ -450,7 +450,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(/<p.*?>/, '')
       post.raw.gsub!('</p>', "\n")
       # Remove line breaks.
-      post.raw.gsub!(/<li>\n/, '<li>')
+      post.raw.gsub!(/<li>\n{1,}/, '<li>')
       # NOTE: Do not use \s to also match non-breaking spaces.
       # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
       post.raw.gsub!(/\n[[:space:]]*<\/li>/, '</li>')

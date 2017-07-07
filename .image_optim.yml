@@ -10,3 +10,5 @@ pngquant: false
 # JPG
 jpegrecompress: false
 timeout: 15
+# https://github.com/toy/image_optim/issues/87
+svgo: false
