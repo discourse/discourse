@@ -1,6 +1,6 @@
 const regex = /^(\w[\w.-]{0,59})\b/i;
 
-function applyMentions(state, silent, isSpace, isPunctChar, mentionLookup, getURL) {
+function applyMentions(state, silent, isWhiteSpace, isPunctChar, mentionLookup, getURL) {
 
   let pos = state.pos;
 
@@ -11,7 +11,7 @@ function applyMentions(state, silent, isSpace, isPunctChar, mentionLookup, getUR
 
   if (pos > 0) {
     let prev = state.src.charCodeAt(pos-1);
-    if (!isSpace(prev) && !isPunctChar(String.fromCharCode(prev))) {
+    if (!isWhiteSpace(prev) && !isPunctChar(String.fromCharCode(prev))) {
       return false;
     }
   }
@@ -78,7 +78,7 @@ export function setup(helper) {
     md.inline.ruler.push('mentions', (state,silent)=> applyMentions(
           state,
           silent,
-          md.utils.isSpace,
+          md.utils.isWhiteSpace,
           md.utils.isPunctChar,
           md.options.discourse.mentionLookup,
           md.options.discourse.getURL
