@@ -658,13 +658,6 @@ HTML
       expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
     end
 
-    it 'does not typographer text blocks' do
-
-      SiteSetting.enable_markdown_typographer = true
-      expect(PrettyText.cook('```text\n"test"\n```')).to eq('<p></p>')
-
-    end
-
     it 'handles onebox correctly' do
       expect(PrettyText.cook("http://a.com\nhttp://b.com").split("onebox").length).to eq(3)
       expect(PrettyText.cook("http://a.com\n\nhttp://b.com").split("onebox").length).to eq(3)
