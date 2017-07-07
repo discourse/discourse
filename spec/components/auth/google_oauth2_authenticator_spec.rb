@@ -82,4 +82,19 @@ describe Auth::GoogleOAuth2Authenticator do
     end
   end
 
+  context 'after_create_account' do
+    it 'confirms email' do
+      authenticator = Auth::GoogleOAuth2Authenticator.new
+      user = Fabricate(:user)
+      session = {
+        :email_valid => "true",
+        :extra_data => {
+          :google_user_id => 1
+        }
+      }
+      authenticator.after_create_account(user, session)
+      expect(user.email_confirmed?).to eq(true)
+    end
+  end
+
 end
