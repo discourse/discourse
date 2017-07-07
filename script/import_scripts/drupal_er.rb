@@ -59,7 +59,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     import_topics
     import_replies
     import_likes
-    post_process_posts
+    # post_process_posts
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -402,9 +402,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # 3. Replace twitter blockquotes with onebox links.
       doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
 
-      post.raw = doc.to_s
-
-
 
       # Upload images.
       doc.css('img').each do |img|
@@ -423,7 +420,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
                 puts "Upload not valid :(  #{filename}"
                 puts upload.errors.inspect if upload
               else
-                post.raw.gsub!(img['src'], upload.url) if upload.url.present?
+                img.replace "\n" + embedded_image_html(upload)
               end
             else
               puts "Image doesn't exist: #{filename}"
@@ -431,6 +428,9 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
           end
         end
       end
+
+      post.raw = doc.to_s
+
 
 
       # HTML cleanup.
