@@ -580,11 +580,13 @@ HTML
     it "can handle mentions" do
       Fabricate(:user, username: "sam")
       expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
+      expect(PrettyText.cook("hi\n@sam")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a></p>")
     end
 
     it "can handle mentions inside a hyperlink" do
-    expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
+      expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
     end
+
 
     it "can handle mentions inside a hyperlink" do
       expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="nofollow noopener">link @inner</a></p>'
@@ -651,8 +653,16 @@ HTML
     it 'supports typographer' do
       SiteSetting.enable_markdown_typographer = true
       expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+
       SiteSetting.enable_markdown_typographer = false
       expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+    end
+
+    it 'does not typographer text blocks' do
+
+      SiteSetting.enable_markdown_typographer = true
+      expect(PrettyText.cook('```text\n"test"\n```')).to eq('<p></p>')
+
     end
 
     it 'handles onebox correctly' do
