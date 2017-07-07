@@ -29,10 +29,10 @@ describe Rtl do
     end
 
     context 'user locale is not allowed' do
-      before { SiteSetting.stubs(:allow_user_locale).returns(false) }
+      before { SiteSetting.allow_user_locale = false }
 
       context 'site default locale is RTL' do
-        before { SiteSetting.stubs(:default_locale).returns('he') }
+        before { SiteSetting.default_locale = 'he' }
 
         it 'returns rtl class' do
           expect(Rtl.new(user).css_class).to eq('rtl')
@@ -40,7 +40,7 @@ describe Rtl do
       end
 
       context 'site default locale is LTR' do
-        before { SiteSetting.stubs(:default_locale).returns('en') }
+        before { SiteSetting.default_locale = 'en' }
 
         context 'user locale is RTL' do
           before { user.stubs(:locale).returns('he') }

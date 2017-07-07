@@ -7,7 +7,7 @@ describe SuggestedTopicsBuilder do
   let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
   before do
-    SiteSetting.stubs(:suggested_topics).returns(5)
+    SiteSetting.suggested_topics = 5
   end
 
   context "splicing category results" do

@@ -66,7 +66,7 @@ describe User do
     let(:admin) { Fabricate(:admin) }
 
     it "enqueues a 'signup after approval' email if must_approve_users is true" do
-      SiteSetting.stubs(:must_approve_users).returns(true)
+      SiteSetting.must_approve_users = true
       Jobs.expects(:enqueue).with(
         :critical_user_email, has_entries(type: :signup_after_approval)
       )
@@ -74,7 +74,7 @@ describe User do
     end
 
     it "doesn't enqueue a 'signup after approval' email if must_approve_users is false" do
-      SiteSetting.stubs(:must_approve_users).returns(false)
+      SiteSetting.must_approve_users = false
       Jobs.expects(:enqueue).never
       user.approve(admin)
     end
@@ -648,8 +648,8 @@ describe User do
     let!(:third_visit_date) { 5.hours.from_now }
 
     before do
-      SiteSetting.stubs(:active_user_rate_limit_secs).returns(0)
-      SiteSetting.stubs(:previous_visit_timeout_hours).returns(1)
+      SiteSetting.active_user_rate_limit_secs = 0
+      SiteSetting.previous_visit_timeout_hours = 1
     end
 
     it "should act correctly" do
@@ -969,7 +969,7 @@ describe User do
 
     before do
       # To make testing easier, say 1 reply is too much
-      SiteSetting.stubs(:newuser_max_replies_per_topic).returns(1)
+      SiteSetting.newuser_max_replies_per_topic = 1
       UserActionCreator.enable
     end
 

@@ -94,8 +94,8 @@ HTML
 
   describe "rel nofollow" do
     before do
-      SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
-      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com|bar.com")
+      SiteSetting.add_rel_nofollow_to_user_content = true
+      SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
     it "should inject nofollow in all user provided links" do

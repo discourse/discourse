@@ -39,7 +39,7 @@ describe TopicTitleLengthValidator do
       validate
       expect(record.errors[:title]).to_not be_present
 
-      SiteSetting.stubs(:min_topic_title_length).returns(2)
+      SiteSetting.min_topic_title_length = 2
 
       record.title = 'aaa'
       validate

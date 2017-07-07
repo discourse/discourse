@@ -29,7 +29,7 @@ describe Upload do
   context ".create_thumbnail!" do
 
     it "does not create a thumbnail when disabled" do
-      SiteSetting.stubs(:create_thumbnails?).returns(false)
+      SiteSetting.create_thumbnails = false
       OptimizedImage.expects(:create_for).never
       upload.create_thumbnail!(100, 100)
     end

@@ -70,12 +70,12 @@ describe PostSerializer do
     let(:json) { serializer.as_json }
 
     it "returns the display_username it when `enable_names` is on" do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.enable_names = true
       expect(json[:display_username]).to be_present
     end
 
     it "doesn't return the display_username it when `enable_names` is off" do
-      SiteSetting.stubs(:enable_names).returns(false)
+      SiteSetting.enable_names = false
       expect(json[:display_username]).to be_blank
     end
   end

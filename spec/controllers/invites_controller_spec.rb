@@ -283,7 +283,7 @@ describe InvitesController do
     context 'new registrations are disabled' do
       let(:topic) { Fabricate(:topic) }
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
-      before { SiteSetting.stubs(:allow_new_registrations).returns(false) }
+      before { SiteSetting.allow_new_registrations = false }
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never

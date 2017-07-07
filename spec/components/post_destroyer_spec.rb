@@ -51,7 +51,7 @@ describe PostDestroyer do
 
   describe 'destroy_old_stubs' do
     it 'destroys stubs for deleted by user posts' do
-      SiteSetting.stubs(:delete_removed_posts_after).returns(24)
+      SiteSetting.delete_removed_posts_after = 24
       Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
@@ -102,7 +102,7 @@ describe PostDestroyer do
       PostDestroyer.new(reply1.user, reply1).destroy
       PostDestroyer.new(reply2.user, reply2).destroy
 
-      SiteSetting.stubs(:delete_removed_posts_after).returns(1)
+      SiteSetting.delete_removed_posts_after = 1
 
       reply2.update_column(:updated_at, 70.minutes.ago)
 
@@ -114,7 +114,7 @@ describe PostDestroyer do
       expect(reply1.deleted_at).to eq(nil)
       expect(reply2.deleted_at).not_to eq(nil)
 
-      SiteSetting.stubs(:delete_removed_posts_after).returns(72)
+      SiteSetting.delete_removed_posts_after = 72
 
       reply1.update_column(:updated_at, 2.days.ago)
 
@@ -122,7 +122,7 @@ describe PostDestroyer do
 
       expect(reply1.reload.deleted_at).to eq(nil)
 
-      SiteSetting.stubs(:delete_removed_posts_after).returns(47)
+      SiteSetting.delete_removed_posts_after = 47
 
       PostDestroyer.destroy_stubs
 
@@ -134,7 +134,7 @@ describe PostDestroyer do
       topic = post.topic
       reply1 = create_post(topic: topic)
 
-      SiteSetting.stubs(:delete_removed_posts_after).returns(0)
+      SiteSetting.delete_removed_posts_after = 0
 
       PostDestroyer.new(reply1.user, reply1).destroy
 
