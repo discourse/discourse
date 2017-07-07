@@ -60,7 +60,6 @@ function applyHashtag(content, state) {
     // check boundary
     if (match.index > 0) {
       if (!allowedBoundary(content, match.index-1, state.md.utils)) {
-        console.log("not allowed");
         continue;
       }
     }
