@@ -561,6 +561,12 @@ HTML
       HTML
 
       expect(cooked).to eq(html.strip)
+
+      # ensure it does not fight with the autolinker
+      expect(PrettyText.cook(' http://somewhere.com/#known')).not_to include('hashtag')
+      expect(PrettyText.cook(' http://somewhere.com/?#known')).not_to include('hashtag')
+      expect(PrettyText.cook(' http://somewhere.com/?abc#known')).not_to include('hashtag')
+
     end
 
     it "can handle mixed lists" do

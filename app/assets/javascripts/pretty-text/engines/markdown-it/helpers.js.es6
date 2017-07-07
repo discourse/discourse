@@ -12,6 +12,7 @@ export default null;
 //   matcher: /^#([\w-:]{1,101})/i,
 //   emitter: emitter
 // });
+
 export function inlineRegexRule(md, options) {
 
   const start = options.start.charCodeAt(0);
@@ -27,7 +28,7 @@ export function inlineRegexRule(md, options) {
     // test prev
     if (pos > 0) {
       let prev = state.src.charCodeAt(pos-1);
-      if (!md.utils.isSpace(prev) && !md.utils.isPunctChar(String.fromCharCode(prev))) {
+      if (!md.utils.isWhiteSpace(prev) && !md.utils.isPunctChar(String.fromCharCode(prev))) {
         return false;
       }
     }
@@ -38,10 +39,10 @@ export function inlineRegexRule(md, options) {
       for(i=state.tokens.length-1;i>=0;i--) {
         let token = state.tokens[i];
         let type = token.type;
-        if (type === 'link_open' || (type === 'html_inline' && token.content.substr(0,2) === "<a")) {
+        if (type === 'link_open' || (type === 'html_inline' && token.content.substr(0,2).toLowerCase() === "<a")) {
           return false;
         }
-        if (type.block || type === 'link_close' || (type === 'html_inline' && token.content.substr(0,3).toLowerCase() === "</a>")) {
+        if (type.block || type === 'link_close' || (type === 'html_inline' && token.content.substr(0,4).toLowerCase() === "</a>")) {
           break;
         }
       }
@@ -75,10 +76,10 @@ export function inlineRegexRule(md, options) {
 
 // based off https://github.com/markdown-it/markdown-it-emoji/blob/master/dist/markdown-it-emoji.js
 //
-export function textReplace(state, callback) {
+export function textReplace(state, callback, skipAllLinks) {
   var i, j, l, tokens, token,
         blockTokens = state.tokens,
-        autolinkLevel = 0;
+        linkLevel = 0;
 
   for (j = 0, l = blockTokens.length; j < l; j++) {
     if (blockTokens[j].type !== 'inline') { continue; }
@@ -89,11 +90,23 @@ export function textReplace(state, callback) {
     for (i = tokens.length - 1; i >= 0; i--) {
       token = tokens[i];
 
-      if (token.type === 'link_open' || token.type === 'link_close') {
-        if (token.info === 'auto') { autolinkLevel -= token.nesting; }
+      if (skipAllLinks) {
+        if (token.type === 'link_open' || token.type === 'link_close') {
+          linkLevel -= token.nesting;
+        } else if (token.type === 'html_inline') {
+          if (token.content.substr(0,2).toLowerCase() === "<a") {
+            linkLevel++;
+          } else if (token.content.substr(0,4).toLowerCase() === "</a>") {
+            linkLevel--;
+          }
+        }
+      } else {
+        if (token.type === 'link_open' || token.type === 'link_close') {
+          if (token.info === 'auto') { linkLevel -= token.nesting; }
+        }
       }
 
-      if (token.type === 'text' && autolinkLevel === 0) {
+      if (token.type === 'text' && linkLevel === 0) {
         let split;
         if(split = callback(token.content, state)) {
           // replace current node
