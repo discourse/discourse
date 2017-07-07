@@ -787,7 +787,7 @@ describe UsersController do
     end
 
     context 'with an existing email' do
-      email = 'leo@m.ca'
+      let(:email) { 'leo@m.ca' }
       let(:first_create_params) { {username: 'LeoMcA', email: email, password: '$up3r$3cure'} }
       let(:second_create_params) { {username: 'notLeo', email: email, password: '$up3r$3cure2'} }
 

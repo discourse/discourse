@@ -107,7 +107,7 @@ class AdminUserIndexQuery
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
         @query.joins(:primary_email)
-              .where('username_lower ILIKE :filter OR email ILIKE :filter', filter: "%#{params[:filter]}%")
+              .where('username_lower ILIKE :filter OR user_emails.email ILIKE :filter', filter: "%#{params[:filter]}%")
       end
     end
   end
