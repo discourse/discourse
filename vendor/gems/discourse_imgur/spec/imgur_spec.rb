@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'discourse_imgur/imgur'
+require 'rails_helper'
+require_relative 'discourse_imgur/imgur'
 
 # /!\ WARNING /!\
 # This plugin has been extracted from the Discourse source code and has not been tested.
@@ -14,9 +14,9 @@ describe Imgur do
     let(:image_info) { FastImage.new(file) }
     let(:params) { [SiteSetting.imgur_endpoint, { image: Base64.encode64(file.read) }, { 'Authorization' => "ClientID #{SiteSetting.imgur_client_id}" }] }
 
-    before(:each) do
-      SiteSetting.stubs(:imgur_endpoint).returns("imgur_endpoint")
-      SiteSetting.stubs(:imgur_client_id).returns("imgur_client_id")
+    before do
+      SiteSetting.imgur_endpoint = "imgur_endpoint"
+      SiteSetting.imgur_client_id = "imgur_client_id"
     end
 
     it 'returns the url of the Imgur upload if successful' do

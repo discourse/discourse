@@ -19,7 +19,7 @@ describe PasswordValidator do
       end
 
       context "min password length is 8" do
-        before { SiteSetting.stubs(:min_password_length).returns(8) }
+        before { SiteSetting.min_password_length = 8 }
 
         it "doesn't add an error when password is good" do
           @password = "weron235alsfn234"
@@ -56,7 +56,7 @@ describe PasswordValidator do
       end
 
       context "min password length is 12" do
-        before { SiteSetting.stubs(:min_password_length).returns(12) }
+        before { SiteSetting.min_password_length = 12 }
 
         it "adds an error when password length is 11" do
           @password = "gt38sdt92bv"
@@ -68,19 +68,19 @@ describe PasswordValidator do
 
     context "password is commonly used" do
       before do
-        SiteSetting.stubs(:min_password_length).returns(8)
+        SiteSetting.min_password_length = 8
         CommonPasswords.stubs(:common_password?).returns(true)
       end
 
       it "adds an error when block_common_passwords is enabled" do
-        SiteSetting.stubs(:block_common_passwords).returns(true)
+        SiteSetting.block_common_passwords = true
         @password = "password"
         validate
         expect(record.errors[:password]).to include(password_error_message(:common))
       end
 
       it "doesn't add an error when block_common_passwords is disabled" do
-        SiteSetting.stubs(:block_common_passwords).returns(false)
+        SiteSetting.block_common_passwords = false
         @password = "password"
         validate
         expect(record.errors[:password]).not_to be_present

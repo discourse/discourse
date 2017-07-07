@@ -14,7 +14,7 @@ describe ApplicationHelper do
   describe "mobile_view?" do
     context "enable_mobile_theme is true" do
       before do
-        SiteSetting.stubs(:enable_mobile_theme).returns(true)
+        SiteSetting.enable_mobile_theme = true
       end
 
       it "is true if mobile_view is '1' in the session" do
@@ -67,7 +67,7 @@ describe ApplicationHelper do
 
     context "enable_mobile_theme is false" do
       before do
-        SiteSetting.stubs(:enable_mobile_theme).returns(false)
+        SiteSetting.enable_mobile_theme = false
       end
 
       it "is false if mobile_view is '1' in the session" do

@@ -8,7 +8,7 @@ describe ListController do
     @post = Fabricate(:post, user: @user)
 
     # forces tests down some code paths
-    SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|categories|category/beer')
+    SiteSetting.top_menu = 'latest,-video|new|unread|categories|category/beer'
   end
 
   describe 'titles for crawler layout' do

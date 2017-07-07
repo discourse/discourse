@@ -73,7 +73,7 @@ describe PostRevisor do
 
     describe 'ninja editing' do
       it 'correctly applies edits' do
-        SiteSetting.stubs(:editing_grace_period).returns(1.minute)
+        SiteSetting.editing_grace_period = 1.minute
 
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
@@ -86,7 +86,7 @@ describe PostRevisor do
       end
 
       it "doesn't create a new version" do
-        SiteSetting.stubs(:editing_grace_period).returns(1.minute)
+        SiteSetting.editing_grace_period = 1.minute
 
         # making a revision
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
@@ -106,7 +106,7 @@ describe PostRevisor do
       let!(:revised_at) { post.updated_at + 2.minutes }
 
       before do
-        SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
+        SiteSetting.editing_grace_period = 1.minute
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: revised_at)
         post.reload
       end
@@ -244,7 +244,7 @@ describe PostRevisor do
       let(:changed_by) { Fabricate(:admin) }
 
       before do
-        SiteSetting.stubs(:newuser_max_images).returns(0)
+        SiteSetting.newuser_max_images = 0
         url = "http://i.imgur.com/wfn7rgU.jpg"
         Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(changed_by, { raw: "So, post them here!\n#{url}" })
@@ -262,7 +262,7 @@ describe PostRevisor do
 
     describe "new user editing their own post" do
       before do
-        SiteSetting.stubs(:newuser_max_images).returns(0)
+        SiteSetting.newuser_max_images = 0
         url = "http://i.imgur.com/FGg7Vzu.gif"
         Oneboxer.stubs(:cached_onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, { raw: "So, post them here!\n#{url}" })
@@ -312,7 +312,7 @@ describe PostRevisor do
 
       context 'second poster posts again quickly' do
         before do
-          SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
+          SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
         end
@@ -326,7 +326,7 @@ describe PostRevisor do
 
       context 'passing skip_revision as true' do
         before do
-          SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
+          SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, { revised_at: post.updated_at + 10.hours, skip_revision: true })
           post.reload
         end

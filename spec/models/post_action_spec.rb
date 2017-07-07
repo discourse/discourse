@@ -319,7 +319,7 @@ describe PostAction do
       it "returns the correct flag counts" do
         post = create_post
 
-        SiteSetting.stubs(:flags_required_to_hide_post).returns(7)
+        SiteSetting.flags_required_to_hide_post = 7
 
         # A post with no flags has 0 for flag counts
         expect(PostAction.flag_counts_for(post.id)).to eq([0, 0])
@@ -367,7 +367,7 @@ describe PostAction do
       post = create_post
       walterwhite = Fabricate(:walter_white)
 
-      SiteSetting.stubs(:flags_required_to_hide_post).returns(2)
+      SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])

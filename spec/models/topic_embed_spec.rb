@@ -96,8 +96,8 @@ describe TopicEmbed do
 
       response = nil
 
-      before(:each) do
-        SiteSetting.stubs(:embed_classname_whitelist).returns 'emoji , foo'
+      before do
+        SiteSetting.embed_classname_whitelist = 'emoji, foo'
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
         response = TopicEmbed.find_remote(url)
@@ -155,7 +155,7 @@ describe TopicEmbed do
       response = nil
 
       before(:each) do
-        SiteSetting.stubs(:embed_classname_whitelist).returns ' '
+        SiteSetting.embed_classname_whitelist = ''
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
         response = TopicEmbed.find_remote(url)

@@ -39,7 +39,7 @@ describe PostActionNotifier do
 
     context "edit notifications are disabled" do
 
-      before { SiteSetting.stubs(:disable_edit_notifications).returns(true) }
+      before { SiteSetting.disable_edit_notifications = true }
 
 
       it 'notifies a user of the revision made by another user' do

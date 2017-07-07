@@ -22,7 +22,7 @@ describe Admin::DashboardController do
 
       context 'version checking is enabled' do
         before do
-          SiteSetting.stubs(:version_checks).returns(true)
+          SiteSetting.version_checks = true
         end
 
         it 'returns discourse version info' do
@@ -34,7 +34,7 @@ describe Admin::DashboardController do
 
       context 'version checking is disabled' do
         before do
-          SiteSetting.stubs(:version_checks).returns(false)
+          SiteSetting.version_checks = false
         end
 
         it 'does not return discourse version info' do

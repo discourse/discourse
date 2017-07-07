@@ -245,7 +245,7 @@ describe Invite do
 
     context "invite trust levels" do
       it "returns the trust level in default_invitee_trust_level" do
-        SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel[3])
+        SiteSetting.default_invitee_trust_level = TrustLevel[3]
         expect(invite.redeem.trust_level).to eq(TrustLevel[3])
       end
     end
@@ -253,7 +253,7 @@ describe Invite do
     context 'inviting when must_approve_users? is enabled' do
       it 'correctly activates accounts' do
         invite.invited_by = Fabricate(:admin)
-        SiteSetting.stubs(:must_approve_users).returns(true)
+        SiteSetting.must_approve_users = true
         user = invite.redeem
         expect(user.approved?).to eq(true)
       end

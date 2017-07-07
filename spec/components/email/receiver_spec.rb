@@ -254,7 +254,7 @@ describe Email::Receiver do
         end
 
         it 'does nothing unless unsubscribe_via_email is turned on' do
-          SiteSetting.stubs("unsubscribe_via_email").returns(false)
+          SiteSetting.unsubscribe_via_email = false
           before_deliveries = ActionMailer::Base.deliveries.count
           expect { process("unsubscribe_subject") }.to raise_error { Email::Receiver::BadDestinationAddress }
           expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
@@ -272,7 +272,7 @@ describe Email::Receiver do
         end
 
         it 'does nothing unless unsubscribe_via_email is turned on' do
-          SiteSetting.stubs(:unsubscribe_via_email).returns(false)
+          SiteSetting.unsubscribe_via_email = false
           before_deliveries = ActionMailer::Base.deliveries.count
           expect { process("unsubscribe_body") }.to raise_error { Email::Receiver::InvalidPost }
           expect(before_deliveries).to eq ActionMailer::Base.deliveries.count

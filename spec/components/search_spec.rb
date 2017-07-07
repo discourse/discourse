@@ -121,7 +121,7 @@ describe Search do
     end
 
     context 'hiding user profiles' do
-      before { SiteSetting.stubs(:hide_user_profiles_from_public).returns(true) }
+      before { SiteSetting.hide_user_profiles_from_public = true }
 
       it 'returns no result for anon' do
         expect(result.users.length).to eq(0)
