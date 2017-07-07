@@ -385,32 +385,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         end
       end
 
-      # Upload images.
-      doc.css('img').each do |img|
-        if img['src'].present?
-          #Permalink.create(url: img['src']) rescue nil
-          if '/sites/edgeryders.eu/files/'.in?(img['src'])
-            # filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
-            filename = img['src'].gsub(/.*#{Regexp.quote('/sites/edgeryders.eu/files')}/, DRUPAL_FILES_DIR).gsub(/\?.*/, '')
-            # Decode URL characters.
-            filename = URI.decode_www_form_component(filename)
-
-            if File.exists?(filename)
-              upload = create_upload(post.user_id, filename, File.basename(filename))
-              # if upload.nil? || (upload.invalid? rescue nil)
-              if upload.nil? || upload.invalid?
-                puts "Upload not valid :(  #{filename}"
-                puts upload.errors.inspect if upload
-              else
-                post.raw.gsub!(img['src'], upload.url || '')
-              end
-            else
-              puts "Image doesn't exist: #{filename}"
-            end
-          end
-        end
-      end
-
 
       # NOTE: The order is important.
       # 1. Replace media divs.
@@ -429,6 +403,34 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
 
       post.raw = doc.to_s
+
+
+
+      # Upload images.
+      doc.css('img').each do |img|
+        if img['src'].present?
+          #Permalink.create(url: img['src']) rescue nil
+          if '/sites/edgeryders.eu/files/'.in?(img['src'])
+            # filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
+            filename = img['src'].gsub(/.*#{Regexp.quote('/sites/edgeryders.eu/files')}/, DRUPAL_FILES_DIR).gsub(/\?.*/, '')
+            # Decode URL characters.
+            filename = URI.decode_www_form_component(filename)
+
+            if File.exists?(filename)
+              upload = create_upload(post.user_id, filename, File.basename(filename))
+              # if upload.nil? || (upload.invalid? rescue nil)
+              if upload.nil? || upload.invalid?
+                puts "Upload not valid :(  #{filename}"
+                puts upload.errors.inspect if upload
+              else
+                post.raw.gsub!(img['src'], upload.url) if upload.url.present?
+              end
+            else
+              puts "Image doesn't exist: #{filename}"
+            end
+          end
+        end
+      end
 
 
       # HTML cleanup.
