@@ -55,11 +55,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
 
-    import_users
-    import_topics
-    import_replies
-    import_likes
-    # post_process_posts
+    # import_users
+    # import_topics
+    # import_replies
+    # import_likes
+    post_process_posts
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
