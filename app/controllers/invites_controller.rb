@@ -7,8 +7,8 @@ class InvitesController < ApplicationController
   skip_before_filter :redirect_to_login_if_required
 
   before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
-  before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
-  before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
+  before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
+  before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
 
   def show
     expires_now
@@ -102,42 +102,6 @@ class InvitesController < ApplicationController
     rescue => e
       render json: {errors: [e.message]}, status: 422
     end
-  end
-
-  def create_disposable_invite
-    guardian.ensure_can_create_disposable_invite!(current_user)
-    params.permit(:username, :email, :quantity, :group_names)
-
-    username_or_email = params[:username] ? fetch_username : fetch_email
-    user = User.find_by_username_or_email(username_or_email)
-
-    # generate invite tokens
-    invite_tokens = Invite.generate_disposable_tokens(user, params[:quantity], params[:group_names])
-
-    render_json_dump(invite_tokens)
-  end
-
-  def redeem_disposable_invite
-    params.require(:email)
-    params.permit(:username, :name, :topic)
-    params[:email] = params[:email].split(' ').join('+')
-
-    invite = Invite.find_by(invite_key: params[:token])
-
-    if invite.present?
-      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name], params[:topic].to_i)
-      if user.present?
-        log_on_user(user)
-        post_process_invite(user)
-        topic = invite.topics.first
-        if topic.present?
-          redirect_to path("#{topic.relative_url}")
-          return
-        end
-      end
-    end
-
-    redirect_to path("/")
   end
 
   def destroy
