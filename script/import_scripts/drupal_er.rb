@@ -59,7 +59,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # import_topics
     # import_replies
     # import_likes
-    post_process_posts
+    # post_process_posts
+    create_permalinks
+
+    remap_urls
+
 
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
@@ -377,13 +381,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # Extract all links.
       links = []
       doc = Nokogiri::HTML.fragment(post.raw)
-      doc.css('a').each do |a|
-        if a['href'].present? && a['href'][0] != '#'
-          # Permalink.create(url: '/discussion/12345', topic_id: 987)
-          Permalink.create(url: a['href']) rescue nil
-          links << a['href']
-        end
-      end
+
+
+      # doc.css('a').each do |a|
+      #   if a['href'].present? && a['href'][0] != '#'
+      #     # Permalink.create(url: '/discussion/12345', topic_id: 987)
+      #     Permalink.create(url: a['href']) rescue nil
+      #     links << a['href']
+      #   end
+      # end
 
 
       # NOTE: The order is important.
@@ -406,9 +412,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # Upload images.
       doc.css('img').each do |img|
         if img['src'].present?
-          #Permalink.create(url: img['src']) rescue nil
           if '/sites/edgeryders.eu/files/'.in?(img['src'])
-            # filename = File.join(DRUPAL_FILES_DIR, 'inline-images', File.basename(img['src']))
             filename = img['src'].gsub(/.*#{Regexp.quote('/sites/edgeryders.eu/files')}/, DRUPAL_FILES_DIR).gsub(/\?.*/, '')
             # Decode URL characters.
             filename = URI.decode_www_form_component(filename)
@@ -430,7 +434,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       end
 
       post.raw = doc.to_s
-
 
 
       # HTML cleanup.
@@ -466,6 +469,61 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.save!(validate: false)
     end
 
+  end
+
+
+  def create_permalinks
+    Topic.find_each do |topic|
+      if topic_nid = topic.ordered_posts.first.custom_fields['import_id']
+
+        topic_nid = topic_nid.first if topic_nid.is_a?(Array)
+
+        if result = @client.query("SELECT source, alias FROM url_alias WHERE source LIKE 'node/#{topic_nid.gsub(/nid:/, '')}'", cache_rows: false).first
+          Permalink.create(url: result['alias'], topic_id: topic.id) rescue nil
+        end
+      end
+    end
+  end
+
+
+  def remap_urls
+    # Normalize URLs
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'http://edgeryders.eu', 'https://edgeryders.eu')")
+
+    # Topic URLs
+    Permalink.where.not(topic_id: nil).find_each do |p|
+      ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'https://edgeryders.eu/#{p.url}', '#{p.target_url}')")
+    end
+
+    # Post URLs
+    %w(https://edgeryders.eu/comment/ https://edgeryders.eu/en/comment/).each do |url|
+      Post.where('raw ILIKE :q', q: "%#{url}%").each do |post|
+        doc = Nokogiri::HTML.fragment(post.raw)
+        doc.css('a').each do |link|
+          if link['href'].present? && url.in?(link['href'])
+            cid = link['href'].match(/#{Regexp.quote(url)}([0-9]*)/).try(:captures).try(:first)
+            if cf = PostCustomField.find_by(name: 'import_id', value: "cid:#{cid}")
+              link.attributes['href'].value = cf.post.url
+            end
+          end
+        end
+        post.raw = doc.to_s
+        post.save!(validate: false)
+      end
+    end
+
+    # User URLs
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'https://edgeryders.eu/users/', '/u/')")
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'https://edgeryders.eu/en/users/', '/u/')")
+
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/users/', '=\"/u/')")
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/en/users/', '=\"/u/')")
+
+    User.find_each do |user|
+      if import_id = user.custom_fields['import_id'].is_a?(Array) ? user.custom_fields['import_id'].first : user.custom_fields['import_id']
+        ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/user/#{import_id}', '=\"/u/#{user.id}')")
+      end
+    end
   end
 
 
