@@ -30,6 +30,16 @@ export default Ember.Component.extend({
   _setupPreview() {
     const val = (this.site.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
+
+    this.appEvents.on('composer:show-preview', () => {
+      this.set('showPreview', true);
+      this.keyValueStore.set({ key: 'composer.showPreview', value: true });
+    });
+
+    this.appEvents.on('composer:hide-preview', () => {
+      this.set('showPreview', false);
+      this.keyValueStore.set({ key: 'composer.showPreview', value: false });
+    });
   },
 
   @computed('site.mobileView', 'showPreview')
@@ -445,6 +455,8 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _composerClosed() {
     this.appEvents.trigger('composer:will-close');
+    this.appEvents.off('composer:show-preview');
+    this.appEvents.off('composer:hide-preview');
     Ember.run.next(() => {
       $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
