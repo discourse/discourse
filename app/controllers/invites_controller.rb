@@ -125,19 +125,24 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:token])
 
     if invite.present?
-      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name], params[:topic].to_i)
-      if user.present?
-        log_on_user(user)
-        post_process_invite(user)
-        topic = invite.topics.first
-        if topic.present?
-          redirect_to path("#{topic.relative_url}")
-          return
+      begin
+        user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name], params[:topic].to_i)
+        if user.present?
+          log_on_user(user)
+          post_process_invite(user)
         end
-      end
-    end
 
-    redirect_to path("/")
+        topic = invite.topics.first
+        topic = user.present? ? invite.topics.first : nil
+        return redirect_to path("#{topic.relative_url}") if topic.present?
+
+        redirect_to path("/")
+      rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
+        render json: {errors: [e.message]}, status: 422
+      end
+    else
+      render json: { success: false, message: I18n.t('invite.not_found') }
+    end
   end
 
   def destroy

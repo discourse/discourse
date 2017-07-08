@@ -239,6 +239,10 @@ class Invite < ActiveRecord::Base
   def self.redeem_from_token(token, email, username=nil, name=nil, topic_id=nil)
     invite = Invite.find_by(invite_key: token)
     if invite
+      lower_email = Email.downcase(email)
+      user = User.find_by(email: lower_email)
+      raise UserExists.new I18n.t("invite.user_exists_simple") if user.present?
+
       invite.update_column(:email, email)
       invite.topic_invites.create!(invite_id: invite.id, topic_id: topic_id) if topic_id && Topic.find_by_id(topic_id) && !invite.topic_invites.pluck(:topic_id).include?(topic_id)
       user = InviteRedeemer.new(invite, username, name).redeem
