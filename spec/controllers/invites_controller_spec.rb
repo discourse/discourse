@@ -155,7 +155,7 @@ describe InvitesController do
         xhr :put, :perform_accept_invitation, id: "doesn't exist", format: :json
       end
 
-      it "redirects to the root" do
+      it "fails" do
         expect(response).to be_success
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
@@ -175,7 +175,7 @@ describe InvitesController do
         xhr :put, :perform_accept_invitation, id: deleted_invite.invite_key, format: :json
       end
 
-      it "redirects to the root" do
+      it "fails" do
         expect(response).to be_success
         json = JSON.parse(response.body)
         expect(json["success"]).to eq(false)
@@ -364,8 +364,11 @@ describe InvitesController do
         get :redeem_disposable_invite, email: "name@example.com", token: "doesn't exist"
       end
 
-      it "redirects to the root" do
-        expect(response).to redirect_to("/")
+      it "fails" do
+        expect(response).to be_success
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+        expect(json["message"]).to eq(I18n.t('invite.not_found'))
       end
 
       it "should not change the session" do
