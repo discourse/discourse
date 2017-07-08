@@ -150,24 +150,6 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-  # generate invite tokens without email
-  def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
-    invite_tokens = []
-    quantity ||= 1
-    group_ids = get_group_ids(group_names)
-
-    quantity.to_i.times do
-      invite = Invite.create!(invited_by: invited_by)
-      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
-      group_ids.each do |group_id|
-        invite.invited_groups.create!(group_id: group_id)
-      end
-      invite_tokens.push(invite.invite_key)
-    end
-
-    invite_tokens
-  end
-
   def self.get_group_ids(group_names)
     group_ids = []
     if group_names
