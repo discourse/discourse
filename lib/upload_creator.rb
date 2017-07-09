@@ -27,6 +27,11 @@ class UploadCreator
     @opts = opts
   end
 
+  attr_accessor :upload
+  attr_accessor :file
+  attr_accessor :filename
+  attr_accessor :opts
+
   def create_for(user_id)
     if filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
@@ -34,6 +39,8 @@ class UploadCreator
     end
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
+      DiscourseEvent.trigger(:upload, self)
+
       if FileHelper.is_image?(@filename)
         extract_image_info!
         return @upload if @upload.errors.present?
