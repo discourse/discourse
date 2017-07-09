@@ -59,10 +59,10 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # import_topics
     # import_replies
     # import_likes
+    import_tags
     # post_process_posts
-    create_permalinks
-
-    remap_urls
+    # create_permalinks
+    # remap_urls
 
 
     # begin
@@ -162,6 +162,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
     sql = <<-SQL
       SELECT
+      # General
         n.nid nid,
         n.uid uid,
         n.status status,
@@ -169,28 +170,91 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         n.changed changed,
         tf.title_field_value title,
         db.body_value content,
-        n.type type
+        n.type type,
+      # Document
+        df.field_document_file_description doc_description,
+        df.field_document_file_fid doc_fid,
+      # Journal
+        fc.field_client_value j_client,
+        fce.field_client_s_email_value j_client_email,
+        fm.field_manager_target_id j_manager_uid,
+        fas.field_activity_state_value j_activity_state,
+        fa.field_attention_value j_attention,
+        ff.field_file_fid j_file_fid,
+        ff.field_file_description j_file_description,
+      # Events
+        fd.field_date_value e_date1,
+        fd.field_date_value2 e_date2,
+        fd.field_date_timezone e_timezone,
+        fou.field_offsite_url_value e_url
       FROM node AS n
+      # General
         LEFT JOIN field_data_title_field AS tf on n.nid = tf.entity_id
         LEFT JOIN field_data_body AS db on n.nid = db.entity_id
+      # Document
+        LEFT JOIN field_data_field_document_file AS df on n.nid = df.entity_id
+		  # Journal
+        LEFT JOIN field_data_field_client AS fc on n.nid = fc.entity_id
+        LEFT JOIN field_data_field_client_s_email AS fce on n.nid = fce.entity_id
+        LEFT JOIN field_data_field_manager AS fm on n.nid = fm.entity_id
+        LEFT JOIN field_data_field_activity_state AS fas on n.nid = fas.entity_id
+        LEFT JOIN field_data_field_attention AS fa on n.nid = fa.entity_id
+        LEFT JOIN field_data_field_file AS ff on n.nid = ff.entity_id
+      # Events
+        LEFT JOIN field_data_field_date AS fd on n.nid = fd.entity_id
+        LEFT JOIN field_data_field_offsite_url AS fou on n.nid = fou.entity_id
       WHERE
-        n.type IN('challenge_response', 'post', 'wiki')
+        n.type IN('challenge_response', 'post', 'wiki', 'document', 'group', 'minisite_page', 'page', 'task', 'infopage',
+                  'event', 'document', 'journal')
       ORDER BY n.nid DESC
     SQL
-    # LIMIT 50
-    # OFFSET 500
 
     results = @client.query(sql, cache_rows: false)
 
     create_posts(results) do |row|
+
+      content = row['content']
+
+      if row['type'] == 'event'
+        content+= "\nDate: #{row['e_date1'].gsub!(/T/, ' ')} - #{row['e_date2'].gsub!(/T/, ' ')}, #{row['e_timezone']} Time."
+        content+= "\nURL: #{row['e_url']}" if row['e_url'].present?
+      elsif row['type'] == 'document'
+        content+= "\n\nfile_fid:#{row['doc_fid']} - #{row['doc_description']}"
+      elsif row['type'] == 'journal'
+        content+= "\nClient: #{row['j_client']}" if row['j_client'].present?
+
+        content+= "\nEmail: #{row['j_client_email']}" if row['j_client_email'].present?
+
+        content+= "\nUser: @#{UserCustomField.find_by(import_id: row['j_manager_uid']).user.username}" if row['j_manager_uid'].present?
+
+        content+= "\nActivity State: #{row['j_activity_state']}" if row['j_activity_state'].present?
+
+        attention_values = {
+          1 => 'none',
+          2 => 'awareness',
+          3 => 'awareness and monitoring',
+          4 => 'management (light)',
+          5 => 'management (normal)',
+          6 => 'management (attentive)',
+          9 => 'management (CRISIS MODE)'
+        }
+        content+= "\nAttention: #{attention_values[row['j_attention'].to_i]}" if row['j_attention'].present?
+
+        content+= "\nFile: file_fid:#{row['j_file_fid']} - #{row['j_file_description']}" if row['j_file_fid'].present?
+      end
+
       {
         id: "nid:#{row['nid']}",
         user_id: user_id_from_imported_user_id(row['uid']) || -1,
         title: row['title'].try(:strip),
-        raw: row['content'],
+        raw: content,
         created_at: Time.zone.at(row['created']),
         updated_at: Time.zone.at(row['changed']),
-        custom_fields: {import_id: "nid:#{row['nid']}"}
+        custom_fields: {import_id: "nid:#{row['nid']}"},
+        post_create_action: proc do |post|
+          tag_names = [row['type']]
+          DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Discourse.system_user), tag_names, append: true)
+        end
         # category: 'Blog',
         # visible: row['status'].to_i == 0 ? false : true
         # pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
@@ -208,7 +272,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
                node n
          WHERE n.nid = c.nid
            AND c.status = 1
-           AND n.type IN ('challenge_response', 'post', 'wiki');").first['count']
+           AND n.type IN('challenge_response', 'post', 'wiki', 'document', 'group', 'minisite_page', 'page', 'task', 'infopage', 'event', 'document', 'journal');").first['count']
 
     batch_size = 1000
 
@@ -222,7 +286,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
          WHERE c.cid = f.entity_id
            AND n.nid = c.nid
            AND c.status = 1
-           AND n.type IN ('challenge_response', 'post', 'wiki')
+           AND n.type IN('challenge_response', 'post', 'wiki', 'document', 'group', 'minisite_page', 'page', 'task', 'infopage', 'event', 'document', 'journal')
           ORDER BY torder ASC
          LIMIT #{batch_size}
         OFFSET #{offset};
@@ -465,6 +529,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(/\n\s{1,}/, "\n")
       # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
       post.raw.gsub!(/\n#/, "\n\\#")
+      # Escape hash signs after a whitespace to prevent markdown messing up the html formatting.
+      post.raw.gsub!(/\s#/, " \\#")
 
       post.save!(validate: false)
     end
@@ -480,7 +546,17 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
         if result = @client.query("SELECT source, alias FROM url_alias WHERE source LIKE 'node/#{topic_nid.gsub(/nid:/, '')}'", cache_rows: false).first
           Permalink.create(url: result['alias'], topic_id: topic.id) rescue nil
+          Permalink.create(url: result['source'], topic_id: topic.id) rescue nil
         end
+      end
+    end
+
+    # Redirects
+    results = @client.query("SELECT source, redirect FROM redirect WHERE redirect LIKE 'node%'", cache_rows: false)
+    results.each do |row|
+      nid = row['redirect'].gsub(/node\//, '')
+      if cf = PostCustomField.find_by(name: 'import_id', value: "nid:#{nid}")
+        Permalink.create(url: row['source'], topic_id: cf.topic_id) rescue nil
       end
     end
   end
@@ -522,6 +598,25 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     User.find_each do |user|
       if import_id = user.custom_fields['import_id'].is_a?(Array) ? user.custom_fields['import_id'].first : user.custom_fields['import_id']
         ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/user/#{import_id}', '=\"/u/#{user.id}')")
+      end
+    end
+  end
+
+
+  def import_tags
+    puts '', 'creating tags...'
+
+    Topic.find_each do |topic|
+      if topic_nid = topic.ordered_posts.first.custom_fields['import_id']
+        topic_nid = topic_nid.first if topic_nid.is_a?(Array)
+
+        sql = "SELECT td.name
+               FROM field_data_field_topics AS ft
+               INNER JOIN taxonomy_term_data AS td ON ft.field_topics_tid = td.tid
+               WHERE ft.entity_id = #{topic_nid.gsub(/nid:/, '')}"
+        results = @client.query(sql, cache_rows: false)
+
+        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(Discourse.system_user), results.map { |row| row['name'] }, append: true)
       end
     end
   end
