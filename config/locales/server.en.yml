@@ -1580,6 +1580,8 @@ en:
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       invalid_regex: "Regex is invalid or not allowed."
+      email_editable_enabled: "You must disable 'email editable' before enabling this setting."
+      enable_sso_disabled: "You must first enable 'enable sso' before enabling this setting."
 
   search:
     within_post: "#%{post_number} by %{username}"
