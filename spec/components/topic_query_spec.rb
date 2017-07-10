@@ -67,6 +67,35 @@ describe TopicQuery do
 
   end
 
+  context "prioritize_pinned_topics" do
+
+    it "does the pagination correctly" do
+
+      num_topics = 15
+      per_page = 3
+
+      topics = []
+      (num_topics - 1).downto(0).each do |i|
+         topics[i] = Fabricate(:topic)
+      end
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expect(topic_query.prioritize_pinned_topics(results, {
+        :per_page => per_page,
+        :page => 0
+      })).to eq(topics[0...per_page])
+
+      expect(topic_query.prioritize_pinned_topics(results, {
+        :per_page => per_page,
+        :page => 1
+      })).to eq(topics[per_page...num_topics])
+
+    end
+
+  end
+
   context 'bookmarks' do
     it "filters and returns bookmarks correctly" do
       post = Fabricate(:post)
