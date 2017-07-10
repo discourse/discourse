@@ -33,12 +33,10 @@ export default Ember.Component.extend({
 
     this.appEvents.on('composer:show-preview', () => {
       this.set('showPreview', true);
-      this.keyValueStore.set({ key: 'composer.showPreview', value: true });
     });
 
     this.appEvents.on('composer:hide-preview', () => {
       this.set('showPreview', false);
-      this.keyValueStore.set({ key: 'composer.showPreview', value: false });
     });
   },
 
@@ -50,6 +48,11 @@ export default Ember.Component.extend({
   @computed('showPreview')
   toggleText: function(showPreview) {
     return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
+  },
+
+  @observes('showPreview')
+  showPreviewChanged() {
+      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   @computed
@@ -498,7 +501,6 @@ export default Ember.Component.extend({
 
     togglePreview() {
       this.toggleProperty('showPreview');
-      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
     },
 
     extraButtons(toolbar) {
