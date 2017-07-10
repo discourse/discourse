@@ -258,7 +258,7 @@ module Onebox
         end
 
         def is_video?
-          data[:type] =~ /^video\// && !Onebox::Helpers.blank?(data[:video])
+          data[:type] =~ /^video[\/\.]/ && !Onebox::Helpers.blank?(data[:video])
         end
 
         def is_embedded?
