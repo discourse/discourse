@@ -204,6 +204,10 @@ gem 'logster'
 gem 'sassc', require: false
 
 
+gem 'bcrypt', '3.1.3'
+gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'
+
+
 
 # if ENV["IMPORT"] == "1"
   gem 'mysql2'

@@ -15,8 +15,8 @@
 # for SMF                      #{username}:#{password}  sha1(user+pass)
 # for WBBlite                  #{salt}:#{hash}          sha1(salt+sha1(salt+sha1(pass)))
 
-gem 'bcrypt', '3.1.3'
-gem 'unix-crypt', '1.3.0', :require_name => 'unix_crypt'
+# gem 'bcrypt', '3.1.3'
+# gem 'unix-crypt', '1.3.0', :require_name => 'unix_crypt'
 
 require 'digest'
 require 'ruby_drupal_hash'
