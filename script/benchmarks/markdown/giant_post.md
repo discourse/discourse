@@ -1,15 +1,15 @@
     [discourse]# ./launcher bootstrap app
     which: no docker.io in (/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin)
-    
+
     WARNING: We are about to start downloading the Discourse base image
     This process may take anywhere between a few minutes to an hour, depending on your network speed
-    
+
     Please be patient
-    
+
     Unable to find image 'samsaffron/discourse:1.0.13' locally
     1.0.13: Pulling from samsaffron/discourse
     ........
-    
+
     Fast-forward
      .travis.yml                                        |   3 -
      Gemfile                                            |  25 +-
@@ -439,7 +439,6 @@
      test/javascripts/models/post-stream-test.js.es6    |   2 +-
      test/javascripts/test_helper.js                    |   3 +
      test/stylesheets/test_helper.css                   |   8 +
-     .../lib/discourse_imgur/locale/server.ar.yml       |   4 +-
      vendor/gems/rails_multisite/.gitignore             |  17 -
      vendor/gems/rails_multisite/Gemfile                |  14 -
      vendor/gems/rails_multisite/Guardfile              |   9 -
@@ -508,7 +507,7 @@
      delete mode 100644 vendor/gems/rails_multisite/spec/fixtures/database.yml
      delete mode 100644 vendor/gems/rails_multisite/spec/fixtures/two_dbs.yml
      delete mode 100644 vendor/gems/rails_multisite/spec/spec_helper.rb
-    
+
     I, [2015-10-23T15:53:58.134756 #42]  INFO -- : > cd /var/www/discourse && git fetch origin tests-passed
     From https://github.com/discourse/discourse
      * branch            tests-passed -> FETCH_HEAD
@@ -516,7 +515,7 @@
     I, [2015-10-23T15:54:04.069344 #42]  INFO -- : > cd /var/www/discourse && git checkout tests-passed
     Switched to a new branch 'tests-passed'
     I, [2015-10-23T15:54:04.200168 #42]  INFO -- : Branch tests-passed set up to track remote branch tests-passed from origin.
-    
+
     I, [2015-10-23T15:54:04.200518 #42]  INFO -- : > cd /var/www/discourse && mkdir -p tmp/pids
     I, [2015-10-23T15:54:04.205068 #42]  INFO -- :
     I, [2015-10-23T15:54:04.205515 #42]  INFO -- : > cd /var/www/discourse && mkdir -p tmp/sockets
@@ -553,12 +552,12 @@
     I, [2015-10-23T15:54:06.849445 #42]  INFO -- : Replacing (?-mix:client_max_body_size.+$) with client_max_body_size $upload_size ; in /etc/nginx/conf.d/discourse.conf
     I, [2015-10-23T15:54:06.851315 #42]  INFO -- : > echo "done configuring web"
     I, [2015-10-23T15:54:06.856465 #42]  INFO -- : done configuring web
-    
+
     I, [2015-10-23T15:54:06.858840 #42]  INFO -- : > cd /var/www/discourse && gem update bundler
     ERROR:  While executing gem ... (Gem::RemoteFetcher::FetchError)
         hostname "rubygems.global.ssl.fastly.net" does not match the server certificate (https://rubygems.global.ssl.fastly.net/specs.4.8.gz)
     I, [2015-10-23T15:54:27.329080 #42]  INFO -- : Updating installed gems
-    
+
     I, [2015-10-23T15:54:27.330007 #42]  INFO -- : Terminating async processes
     I, [2015-10-23T15:54:27.330217 #42]  INFO -- : Sending INT to HOME=/var/lib/postgresql USER=postgres exec chpst -u postgres:postgres:ssl-cert -U postgres:postgres:ssl-cert /usr/lib/postgresql/9.3/bin/postmaster -D /etc/postgresql/9.3/main pid: 112
     2015-10-23 15:54:27 UTC [112-2] LOG:  received fast shutdown request
@@ -572,8 +571,8 @@
     240:M 23 Oct 15:54:27.371 * DB saved on disk
     240:M 23 Oct 15:54:27.371 # Redis is now ready to exit, bye bye...
     2015-10-23 15:54:31 UTC [116-2] LOG:  database system is shut down
-    
-    
+
+
     FAILED
     --------------------
     RuntimeError: cd /var/www/discourse && gem update bundler failed with return #<Process::Status: pid 335 exit 1>
