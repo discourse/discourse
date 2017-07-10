@@ -103,8 +103,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       {
         id: row['id'],
         username: row['name'].parameterize.underscore,
-        email: row['email'],
-        # email: "#{rand(36**12).to_s(36)}@example.com",
+        email: row['email'] || "#{rand(36**12).to_s(36)}@example.com",
         created_at: Time.zone.at(row['created']),
         bio_raw: row['bio_raw'],
         website: row['website_url'],
