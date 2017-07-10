@@ -33,36 +33,28 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     site_settings.each { |key, value| SiteSetting.set(key, value) }
 
 
-    # # You'll need to edit the following query for your Drupal install:
-    # #
-    # #   * Drupal allows duplicate category names, so you may need to exclude some categories or rename them here.
-    # #   * Table name may be term_data.
-    # #   * May need to select a vid other than 1.
-    # create_categories(categories_query) do |c|
-    #   {id: c['tid'], name: c['name'], description: c['description']}
+    # if Rails.env.development?
+    #   # User.where.not("email = 'admin@example.com' or id = -1 or id = -2").delete_all
+    #   # UserCustomField.delete_all
+    #   Category.delete_all
+    #   CategoryCustomField.delete_all
+    #   Topic.delete_all
+    #   TopicCustomField.delete_all
+    #   Post.delete_all
+    #   PostCustomField.delete_all
+    #   Permalink.delete_all
     # end
 
 
-    if Rails.env.development?
-      # User.where.not("email = 'admin@example.com' or id = -1 or id = -2").delete_all
-      # UserCustomField.delete_all
-
-      Topic.delete_all
-      TopicCustomField.delete_all
-      Post.delete_all
-      PostCustomField.delete_all
-      Permalink.delete_all
-    end
-
-
-    # import_users
-    # import_topics
-    # import_replies
-    # import_likes
+    import_users
+    import_categories
+    import_topics
+    import_replies
+    import_likes
     import_tags
-    # post_process_posts
-    # create_permalinks
-    # remap_urls
+    post_process_posts
+    create_permalinks
+    remap_urls
 
 
     # begin
@@ -71,7 +63,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     #   puts '', "Failed to create admin user"
     #   puts e.message
     # end
-
   end
 
 
@@ -107,11 +98,13 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         (co.entity_type = 'user' or co.entity_type is null)
     SQL
     create_users(@client.query(sql)) do |row|
+      next if UserCustomField.exists?(name: 'import_id', value: row['id'])
+
       {
         id: row['id'],
-        username: row['name'], #.parameterize.underscore,
-        #email: row['email'],
-        email: "#{rand(36**12).to_s(36)}@example.com",
+        username: row['name'].parameterize.underscore,
+        email: row['email'],
+        # email: "#{rand(36**12).to_s(36)}@example.com",
         created_at: Time.zone.at(row['created']),
         bio_raw: row['bio_raw'],
         website: row['website_url'],
@@ -148,17 +141,14 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         end
       }
     end
+
+    # Remove automatically suggested names.
+    User.update_all(name: nil)
   end
 
 
   def import_topics
     puts '', 'creating topics...'
-
-    # create_category({
-    #                   name: 'Post',
-    #                   user_id: -1,
-    #                   description: "Articles from the blog"
-    #                 }, nil) unless Category.find_by_name('Blog')
 
     sql = <<-SQL
       SELECT
@@ -186,7 +176,10 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         fd.field_date_value e_date1,
         fd.field_date_value2 e_date2,
         fd.field_date_timezone e_timezone,
-        fou.field_offsite_url_value e_url
+        fou.field_offsite_url_value e_url,
+      # Category
+        om.gid category_nid,
+        cref.og_challenge_ref_target_id challenge_category_nid
       FROM node AS n
       # General
         LEFT JOIN field_data_title_field AS tf on n.nid = tf.entity_id
@@ -200,23 +193,27 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         LEFT JOIN field_data_field_activity_state AS fas on n.nid = fas.entity_id
         LEFT JOIN field_data_field_attention AS fa on n.nid = fa.entity_id
         LEFT JOIN field_data_field_file AS ff on n.nid = ff.entity_id
-      # Events
+      # Event
         LEFT JOIN field_data_field_date AS fd on n.nid = fd.entity_id
         LEFT JOIN field_data_field_offsite_url AS fou on n.nid = fou.entity_id
+      # Category
+        LEFT JOIN og_membership AS om on n.nid = om.etid
+        LEFT JOIN field_data_og_challenge_ref AS cref on n.nid = cref.entity_id
       WHERE
         n.type IN('challenge_response', 'post', 'wiki', 'document', 'group', 'minisite_page', 'page', 'task', 'infopage',
-                  'event', 'document', 'journal')
-      ORDER BY n.nid DESC
+                  'event', 'document', 'journal') AND
+        ((om.entity_type = 'node' or om.entity_type is null) AND (om.group_type = 'node' or om.group_type is null))
+      ORDER BY om.id ASC
     SQL
 
     results = @client.query(sql, cache_rows: false)
 
     create_posts(results) do |row|
 
-      content = row['content']
+      content = row['content'] || ''
 
       if row['type'] == 'event'
-        content+= "\nDate: #{row['e_date1'].gsub!(/T/, ' ')} - #{row['e_date2'].gsub!(/T/, ' ')}, #{row['e_timezone']} Time."
+        content+= "\nDate: #{row['e_date1'].gsub!(/T/, ' ')} - #{row['e_date2'].gsub!(/T/, ' ')}, #{row['e_timezone']} Time." if row['e_date1'].present?
         content+= "\nURL: #{row['e_url']}" if row['e_url'].present?
       elsif row['type'] == 'document'
         content+= "\n\nfile_fid:#{row['doc_fid']} - #{row['doc_description']}"
@@ -225,7 +222,9 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
         content+= "\nEmail: #{row['j_client_email']}" if row['j_client_email'].present?
 
-        content+= "\nUser: @#{UserCustomField.find_by(import_id: row['j_manager_uid']).user.username}" if row['j_manager_uid'].present?
+        if row['j_manager_uid'].present? && (cf = UserCustomField.find_by(name: 'import_id', value: row['j_manager_uid']))
+          content+= "\nUser: @#{cf.user.username}"
+        end
 
         content+= "\nActivity State: #{row['j_activity_state']}" if row['j_activity_state'].present?
 
@@ -243,19 +242,21 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         content+= "\nFile: file_fid:#{row['j_file_fid']} - #{row['j_file_description']}" if row['j_file_fid'].present?
       end
 
+      category_nid = (row['type'] == 'challenge_response') ? row['challenge_category_nid'] : row['category_nid']
+
       {
         id: "nid:#{row['nid']}",
         user_id: user_id_from_imported_user_id(row['uid']) || -1,
-        title: row['title'].try(:strip),
+        title: row['title'].try(:strip) || '--title missing--',
         raw: content,
         created_at: Time.zone.at(row['created']),
         updated_at: Time.zone.at(row['changed']),
         custom_fields: {import_id: "nid:#{row['nid']}"},
+        category: CategoryCustomField.find_by(name: 'import_id', value: category_nid).try(:category).try(:name),
         post_create_action: proc do |post|
           tag_names = [row['type']]
           DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Discourse.system_user), tag_names, append: true)
         end
-        # category: 'Blog',
         # visible: row['status'].to_i == 0 ? false : true
         # pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
       }
@@ -312,12 +313,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
             created_at: Time.zone.at(row['created']),
             custom_fields: {import_id: "cid:#{row['cid']}"}
           }
-
-          # Reply reference.
-          # if (import_parent_id = post.custom_fields['import_parent_id'])
-          #   post.reply_to_post_number = PostCustomField.find_by(name: 'import_id', value: import_parent_id).post.post_number
-          # end
-          # h[:custom_fields][:import_parent_id] = "cid:#{row['pid']}" if row['pid'] != 0
 
           if row['pid']
             parent = topic_lookup_from_imported_post_id("cid:#{row['pid']}")
@@ -442,19 +437,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       next if post.raw.nil?
       puts "processing post: ##{post.id}..."
 
-      # Extract all links.
-      links = []
       doc = Nokogiri::HTML.fragment(post.raw)
-
-
-      # doc.css('a').each do |a|
-      #   if a['href'].present? && a['href'][0] != '#'
-      #     # Permalink.create(url: '/discussion/12345', topic_id: 987)
-      #     Permalink.create(url: a['href']) rescue nil
-      #     links << a['href']
-      #   end
-      # end
-
 
       # NOTE: The order is important.
       # 1. Replace media divs.
@@ -483,7 +466,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
             if File.exists?(filename)
               upload = create_upload(post.user_id, filename, File.basename(filename))
-              # if upload.nil? || (upload.invalid? rescue nil)
               if upload.nil? || upload.invalid?
                 puts "Upload not valid :(  #{filename}"
                 puts upload.errors.inspect if upload
@@ -539,6 +521,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
 
   def create_permalinks
+    puts '', 'creating permalinks...'
+
     Topic.find_each do |topic|
       if topic_nid = topic.ordered_posts.first.custom_fields['import_id']
 
@@ -563,6 +547,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
 
   def remap_urls
+    puts '', 'remapping urls...'
+
     # Normalize URLs
     ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'http://edgeryders.eu', 'https://edgeryders.eu')")
 
@@ -599,6 +585,33 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       if import_id = user.custom_fields['import_id'].is_a?(Array) ? user.custom_fields['import_id'].first : user.custom_fields['import_id']
         ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/user/#{import_id}', '=\"/u/#{user.id}')")
       end
+    end
+  end
+
+
+  def import_categories
+    puts '', 'creating categories...'
+
+    sql = <<-SQL
+      SELECT
+        n.nid nid,
+        tf.title_field_value name,
+        db.body_value description
+      FROM node AS n
+        LEFT JOIN field_data_title_field AS tf on n.nid = tf.entity_id
+        LEFT JOIN field_data_body AS db on n.nid = db.entity_id
+      WHERE
+        n.type IN('group', 'challenge')
+      ORDER BY n.nid DESC
+    SQL
+    results = @client.query(sql, cache_rows: false)
+
+    create_categories(results) do |c|
+      {
+        id: c['nid'],
+        name: "#{c['name']} ##{c['nid']}",
+        description: "###{c['name']}\n\n#{c['description']}"
+      }
     end
   end
 

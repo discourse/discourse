@@ -268,7 +268,7 @@ class ImportScripts::Base
     post_create_action = opts.delete(:post_create_action)
 
     existing = User.where("email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
-    return existing if existing && (merge || existing.custom_fields["import_id"].to_i == import_id.to_i)
+    return existing if existing && (merge || (existing.custom_fields["import_id"].is_a?(Array) ? existing.custom_fields["import_id"].first : existing.custom_fields["import_id"]).to_i == import_id.to_i)
 
     bio_raw = opts.delete(:bio_raw)
     website = opts.delete(:website)
