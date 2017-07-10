@@ -14,6 +14,7 @@ const SERVER_SIDE_ONLY = [
   /^\/raw\//,
   /^\/posts\/\d+\/raw/,
   /^\/raw\/\d+/,
+  /^\/wizard/,
   /\.rss$/,
   /\.json$/,
 ];
