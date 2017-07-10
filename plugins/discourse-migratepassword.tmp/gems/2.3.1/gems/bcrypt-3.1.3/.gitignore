@@ -1,0 +1,10 @@
+*.o
+*.bundle
+*.so
+*.jar
+ext/mri/Makefile
+doc
+pkg
+*.class
+tmp/
+.DS_Store

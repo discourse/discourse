@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'unix_crypt'
+rescue LoadError
+  require 'rubygems'
+  require 'unix_crypt'
+end
+
+require 'unix_crypt/command_line'
+
+begin
+  UnixCrypt::CommandLine.new(ARGV).encrypt
+rescue UnixCrypt::CommandLine::Abort => e
+  abort e.message
+end

@@ -1,0 +1,24 @@
+current directory: /Users/macbook/Projects/Edgeryders/plugins/discourse-migratepassword/gems/2.3.1/gems/bcrypt-3.1.3/ext/mri
+/Users/macbook/.rbenv/versions/2.3.1/bin/ruby -r ./siteconf20170705-70911-1xdmnfc.rb extconf.rb
+checking for ruby/util.h... yes
+creating Makefile
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /Users/macbook/Projects/Edgeryders/plugins/discourse-migratepassword/gems/2.3.1/extensions/x86_64-darwin-15/2.3.0-static/bcrypt-3.1.3/mkmf.log
+
+current directory: /Users/macbook/Projects/Edgeryders/plugins/discourse-migratepassword/gems/2.3.1/gems/bcrypt-3.1.3/ext/mri
+make "DESTDIR=" clean
+
+current directory: /Users/macbook/Projects/Edgeryders/plugins/discourse-migratepassword/gems/2.3.1/gems/bcrypt-3.1.3/ext/mri
+make "DESTDIR="
+compiling bcrypt_ext.c
+compiling crypt.c
+compiling crypt_blowfish.c
+compiling crypt_gensalt.c
+compiling wrapper.c
+linking shared-object bcrypt_ext.bundle
+
+current directory: /Users/macbook/Projects/Edgeryders/plugins/discourse-migratepassword/gems/2.3.1/gems/bcrypt-3.1.3/ext/mri
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 bcrypt_ext.bundle ./.gem.20170705-70911-1toh13w

@@ -54,7 +54,7 @@ bootsnap-load-path-cache
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-navigation
 !/plugins/discourse-branding
-!/plugins/discourse-migratepassword
+!/plugins/discourse-migratepassword.tmp
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
