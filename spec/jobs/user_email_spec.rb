@@ -162,7 +162,7 @@ describe Jobs::UserEmail do
       end
 
       context 'user is anonymous' do
-        before { SiteSetting.stubs(:allow_anonymous_posting).returns(true) }
+        before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
           Email::Sender.any_instance.expects(:send).never
@@ -332,7 +332,7 @@ describe Jobs::UserEmail do
       end
 
       context 'user is anonymous' do
-        before { SiteSetting.stubs(:allow_anonymous_posting).returns(true) }
+        before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
           Email::Sender.any_instance.expects(:send).never

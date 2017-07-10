@@ -52,7 +52,6 @@ gem 'ember-rails', '0.18.5'
 gem 'ember-source'
 gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
-gem 'babel-transpiler'
 
 gem 'message_bus'
 

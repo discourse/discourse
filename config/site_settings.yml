@@ -304,7 +304,9 @@ login:
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
   sso_overrides_bio: false
-  sso_overrides_email: false
+  sso_overrides_email:
+    default: false
+    validator: "SsoOverridesEmailValidator"
   sso_overrides_username: false
   sso_overrides_name: false
   sso_overrides_avatar:
@@ -600,6 +602,9 @@ posting:
     client: true
     default: ''
     type: list
+  max_allowed_message_recipients:
+    default: 30
+    min: 1
 
 email:
   email_time_window_mins:
@@ -1150,6 +1155,7 @@ uncategorized:
   version_checks:
     client: true
     default: true
+    shadowed_by_global: true
   new_version_emails: true
   send_welcome_message: true
 

@@ -36,7 +36,7 @@ describe SessionController do
       # send welcome messages
       Fabricate(:admin)
       # skip for now
-      # SiteSetting.stubs("send_welcome_message").returns(false)
+      # SiteSetting.send_welcome_message = false
     end
 
     def get_sso(return_path)
@@ -343,9 +343,10 @@ describe SessionController do
 
     describe 'local attribute override from SSO payload' do
       before do
-        SiteSetting.stubs("sso_overrides_email").returns(true)
-        SiteSetting.stubs("sso_overrides_username").returns(true)
-        SiteSetting.stubs("sso_overrides_name").returns(true)
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+        SiteSetting.sso_overrides_username = true
+        SiteSetting.sso_overrides_name = true
 
         @user = Fabricate(:user)
 
@@ -525,7 +526,7 @@ describe SessionController do
 
       describe 'local logins disabled' do
         it 'fails' do
-          SiteSetting.stubs(:enable_local_logins).returns(false)
+          SiteSetting.enable_local_logins = false
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
           expect(response.status.to_i).to eq(500)
         end
@@ -617,7 +618,7 @@ describe SessionController do
         let(:permitted_ip_address) { '111.234.23.11' }
         before do
           Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
-          SiteSetting.stubs(:use_admin_ip_whitelist).returns(true)
+          SiteSetting.use_admin_ip_whitelist = true
         end
 
         it 'is successful for admin at the ip address' do

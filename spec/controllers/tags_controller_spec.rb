@@ -130,6 +130,21 @@ describe TagsController do
         json = ::JSON.parse(response.body)
         expect(json["results"].map{|j| j["id"]}).to eq(['cooltag'])
       end
+
+      it "supports Chinese and Russian" do
+        tag_names = ['房地产', 'тема-в-разработке']
+        tag_names.each { |name| Fabricate(:tag, name: name) }
+
+        xhr :get, :search, q: '房'
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        expect(json["results"].map{|j| j["id"]}).to eq(['房地产'])
+
+        xhr :get, :search, q: 'тема'
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        expect(json["results"].map{|j| j["id"]}).to eq(['тема-в-разработке'])
+      end
     end
   end
 end

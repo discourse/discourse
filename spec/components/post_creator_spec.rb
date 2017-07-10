@@ -997,4 +997,57 @@ describe PostCreator do
       expect(pc.errors).to be_blank
     end
   end
+
+  context "private message recipients limit (max_allowed_message_recipients) reached" do
+    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user2) { Fabricate(:evil_trout) }
+    let(:target_user3) { Fabricate(:walter_white) }
+
+    before do
+      SiteSetting.max_allowed_message_recipients = 2
+    end
+
+    context "for normal user" do
+      it 'fails when sending message to multiple recipients' do
+        pc = PostCreator.new(
+          user,
+          title: 'this message is for multiple recipients!',
+          raw: "Lorem ipsum dolor sit amet, id elitr praesent mea, ut ius facilis fierent.",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username, target_user3.username].join(',')
+        )
+        expect(pc).not_to be_valid
+        expect(pc.errors).to be_present
+      end
+
+      it 'succeeds when sending message to multiple recipients if skip_validations is true' do
+        pc = PostCreator.new(
+          user,
+          title: 'this message is for multiple recipients!',
+          raw: "Lorem ipsum dolor sit amet, id elitr praesent mea, ut ius facilis fierent.",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username, target_user3.username].join(','),
+          skip_validations: true
+        )
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+
+    context "always succeeds if the user is staff" do
+      let(:staff_user) { Fabricate(:admin) }
+
+      it 'when sending message to multiple recipients' do
+        pc = PostCreator.new(
+          staff_user,
+          title: 'this message is for multiple recipients!',
+          raw: "Lorem ipsum dolor sit amet, id elitr praesent mea, ut ius facilis fierent.",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username, target_user3.username].join(',')
+        )
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+  end
 end

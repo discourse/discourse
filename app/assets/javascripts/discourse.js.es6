@@ -102,7 +102,7 @@ const Discourse = Ember.Application.extend({
 
     Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/pre\-initializers\//.test(key)) {
-        const module = require(key, null, null, true);
+        const module = requirejs(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
 
         const init = module.default;
@@ -117,7 +117,7 @@ const Discourse = Ember.Application.extend({
 
     Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/initializers\//.test(key)) {
-        const module = require(key, null, null, true);
+        const module = requirejs(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
 
         const init = module.default;
@@ -131,7 +131,7 @@ const Discourse = Ember.Application.extend({
     });
 
     // Plugins that are registered via `<script>` tags.
-    const withPluginApi = require('discourse/lib/plugin-api').withPluginApi;
+    const withPluginApi = requirejs('discourse/lib/plugin-api').withPluginApi;
     let initCount = 0;
     _pluginCallbacks.forEach(function(cb) {
       Discourse.instanceInitializer({

@@ -94,7 +94,7 @@ describe CategoryList do
 
     context 'fixed_category_positions is enabled' do
       before do
-        SiteSetting.stubs(:fixed_category_positions).returns(true)
+        SiteSetting.fixed_category_positions = true
       end
 
       it "returns categories in specified order" do
@@ -114,7 +114,7 @@ describe CategoryList do
 
     context 'fixed_category_positions is disabled' do
       before do
-        SiteSetting.stubs(:fixed_category_positions).returns(false)
+        SiteSetting.fixed_category_positions = false
       end
 
       it "returns categories in order of activity" do

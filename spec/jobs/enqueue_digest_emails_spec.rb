@@ -18,12 +18,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:unapproved_user) { Fabricate(:active_user, approved: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       before do
-        @original_value = SiteSetting.must_approve_users
         SiteSetting.must_approve_users = true
-      end
-
-      after do
-        SiteSetting.must_approve_users = @original_value
       end
 
       it 'should enqueue the right digest emails' do
@@ -123,7 +118,7 @@ describe Jobs::EnqueueDigestEmails do
       end
 
       it "enqueues the digest email job" do
-        SiteSetting.stubs(:disable_digest_emails?).returns(false)
+        SiteSetting.disable_digest_emails = false
         Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id)
         Jobs::EnqueueDigestEmails.new.execute({})
       end

@@ -104,10 +104,9 @@ module I18n
       site = RailsMultisite::ConnectionManagement.current_db
 
       by_site = @overrides_by_site[site]
+      by_site ||= {}
 
-      if by_site.nil? || !by_site.has_key?(locale)
-        by_site = @overrides_by_site[site] = {}
-
+      if !by_site.has_key?(locale)
         # Load overrides
         translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value, :compiled_js)
 
@@ -119,6 +118,8 @@ module I18n
             by_locale[tuple[0]] = tuple[2] || tuple[1]
           end
         end
+
+        @overrides_by_site[site] = by_site
       end
 
       by_site[locale].with_indifferent_access

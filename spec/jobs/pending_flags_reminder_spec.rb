@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Jobs::PendingFlagsReminder do
   context "notify_about_flags_after is 0" do
-    before { SiteSetting.stubs(:notify_about_flags_after).returns(0) }
+    before { SiteSetting.notify_about_flags_after = 0 }
 
     it "never notifies" do
       PostAction.stubs(:flagged_posts_count).returns(1)

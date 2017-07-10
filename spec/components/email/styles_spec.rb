@@ -117,7 +117,7 @@ describe Email::Styles do
 
     context "without https" do
       before do
-        SiteSetting.stubs(:force_https).returns(false)
+        SiteSetting.force_https = false
       end
 
       it "rewrites the href to have http" do
@@ -138,7 +138,7 @@ describe Email::Styles do
 
     context "with https" do
       before do
-        SiteSetting.stubs(:force_https).returns(true)
+        SiteSetting.force_https = true
       end
 
       it "rewrites the forum URL to have https" do

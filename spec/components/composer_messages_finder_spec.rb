@@ -28,7 +28,7 @@ describe ComposerMessagesFinder do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
 
       before do
-        SiteSetting.stubs(:educate_until_posts).returns(10)
+        SiteSetting.educate_until_posts = 10
       end
 
       it "returns a message for a user who has not posted any topics" do
@@ -66,7 +66,7 @@ describe ComposerMessagesFinder do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
 
       before do
-        SiteSetting.stubs(:educate_until_posts).returns(10)
+        SiteSetting.educate_until_posts = 10
       end
 
       it "returns a message for a user who has not posted any topics" do
@@ -152,13 +152,13 @@ describe ComposerMessagesFinder do
     let(:topic) { Fabricate(:topic) }
 
     before do
-      SiteSetting.stubs(:educate_until_posts).returns(10)
+      SiteSetting.educate_until_posts = 10
       user.stubs(:post_count).returns(11)
 
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: user)
 
-      SiteSetting.stubs(:sequential_replies_threshold).returns(2)
+      SiteSetting.sequential_replies_threshold = 2
     end
 
     it "does not give a message for new topics" do
@@ -189,7 +189,7 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify a user who has less than the `sequential_replies_threshold` threshold posts" do
-        SiteSetting.stubs(:sequential_replies_threshold).returns(5)
+        SiteSetting.sequential_replies_threshold = 5
         expect(finder.check_sequential_replies).to be_blank
       end
 
@@ -224,16 +224,16 @@ describe ComposerMessagesFinder do
     let(:topic) { Fabricate(:topic) }
 
     before do
-      SiteSetting.stubs(:educate_until_posts).returns(10)
+      SiteSetting.educate_until_posts = 10
       user.stubs(:post_count).returns(11)
 
-      SiteSetting.stubs(:summary_posts_required).returns(1)
+      SiteSetting.summary_posts_required = 1
 
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: Fabricate(:user))
 
-      SiteSetting.stubs(:sequential_replies_threshold).returns(2)
+      SiteSetting.sequential_replies_threshold = 2
     end
 
     it "does not give a message for new topics" do
@@ -254,7 +254,7 @@ describe ComposerMessagesFinder do
       end
 
       it "does not notify if the `summary_posts_required` has not been reached" do
-        SiteSetting.stubs(:summary_posts_required).returns(100)
+        SiteSetting.summary_posts_required = 100
         expect(finder.check_dominating_topic).to be_blank
       end
 
@@ -269,12 +269,12 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify a user if the topic has less than `summary_posts_required` posts" do
-        SiteSetting.stubs(:summary_posts_required).returns(5)
+        SiteSetting.summary_posts_required = 5
         expect(finder.check_dominating_topic).to be_blank
       end
 
       it "doesn't notify a user if they've posted less than the percentage" do
-        SiteSetting.stubs(:dominating_topic_minimum_percent).returns(100)
+        SiteSetting.dominating_topic_minimum_percent = 100
         expect(finder.check_dominating_topic).to be_blank
       end
 
@@ -433,7 +433,7 @@ describe ComposerMessagesFinder do
     context "a reply" do
       context "warn_reviving_old_topic_age is 180 days" do
         before do
-          SiteSetting.stubs(:warn_reviving_old_topic_age).returns(180)
+          SiteSetting.warn_reviving_old_topic_age = 180
         end
 
         it "does not notify if last post is recent" do
@@ -449,7 +449,7 @@ describe ComposerMessagesFinder do
 
       context "warn_reviving_old_topic_age is 0" do
         before do
-          SiteSetting.stubs(:warn_reviving_old_topic_age).returns(0)
+          SiteSetting.warn_reviving_old_topic_age = 0
         end
 
         it "does not notify if last post is new" do

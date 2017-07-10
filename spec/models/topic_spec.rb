@@ -185,8 +185,8 @@ describe Topic do
 
   context 'private message title' do
     before do
-      SiteSetting.stubs(:min_topic_title_length).returns(15)
-      SiteSetting.stubs(:min_private_message_title_length).returns(3)
+      SiteSetting.min_topic_title_length = 15
+      SiteSetting.min_private_message_title_length = 3
     end
 
     it 'allows shorter titles' do
@@ -327,7 +327,7 @@ describe Topic do
   context 'category validation' do
     context 'allow_uncategorized_topics is false' do
       before do
-        SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+        SiteSetting.allow_uncategorized_topics = false
       end
 
       it "does not allow nil category" do
@@ -348,7 +348,7 @@ describe Topic do
 
     context 'allow_uncategorized_topics is true' do
       before do
-        SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
+        SiteSetting.allow_uncategorized_topics = true
       end
 
       it "passes for topics with nil category" do
@@ -538,7 +538,7 @@ describe Topic do
   context 'rate limits' do
 
     it "rate limits topic invitations" do
-      SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
+      SiteSetting.max_topic_invitations_per_day = 2
       RateLimiter.stubs(:disabled?).returns(false)
       RateLimiter.clear_all!
 
@@ -1085,7 +1085,7 @@ describe Topic do
 
       context 'when allow_uncategorized_topics is false' do
         before do
-          SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+          SiteSetting.allow_uncategorized_topics = false
         end
 
         let!(:topic) { Fabricate(:topic, category: Fabricate(:category)) }
@@ -1649,7 +1649,7 @@ describe Topic do
   end
 
   describe ".count_exceeds_minimun?" do
-    before { SiteSetting.stubs(:minimum_topics_similar).returns(20) }
+    before { SiteSetting.minimum_topics_similar = 20 }
 
     context "when Topic count is geater than minimum_topics_similar" do
       it "should be true" do
@@ -1718,11 +1718,11 @@ describe Topic do
   end
 
   it "doesn't validate the title again if it isn't changing" do
-    SiteSetting.stubs(:min_topic_title_length).returns(5)
+    SiteSetting.min_topic_title_length = 5
     topic = Fabricate(:topic, title: "Short")
     expect(topic).to be_valid
 
-    SiteSetting.stubs(:min_topic_title_length).returns(15)
+    SiteSetting.min_topic_title_length = 15
     topic.last_posted_at = 1.minute.ago
     expect(topic.save).to eq(true)
   end

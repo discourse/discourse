@@ -2,7 +2,7 @@ require 'rails_helper'
 require_dependency 'validators/post_validator'
 
 describe Validators::PostValidator do
-  let(:post) { build(:post) }
+  let(:post) { build(:post, topic: Fabricate(:topic)) }
   let(:validator) { Validators::PostValidator.new({}) }
 
   context "#post_body_validator" do
@@ -144,7 +144,7 @@ describe Validators::PostValidator do
 
   describe "unique_post_validator" do
     before do
-      SiteSetting.stubs(:unique_posts_mins).returns(5)
+      SiteSetting.unique_posts_mins = 5
     end
 
     context "post is unique" do
@@ -193,7 +193,7 @@ describe Validators::PostValidator do
   context "admin editing a static page" do
     before do
       post.acting_user = build(:admin)
-      SiteSetting.stubs(:tos_topic_id).returns(post.topic_id)
+      SiteSetting.tos_topic_id = post.topic_id
     end
 
     include_examples "almost no validations"

@@ -94,8 +94,8 @@ HTML
 
   describe "rel nofollow" do
     before do
-      SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
-      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com|bar.com")
+      SiteSetting.add_rel_nofollow_to_user_content = true
+      SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
     it "should inject nofollow in all user provided links" do
@@ -561,6 +561,12 @@ HTML
       HTML
 
       expect(cooked).to eq(html.strip)
+
+      # ensure it does not fight with the autolinker
+      expect(PrettyText.cook(' http://somewhere.com/#known')).not_to include('hashtag')
+      expect(PrettyText.cook(' http://somewhere.com/?#known')).not_to include('hashtag')
+      expect(PrettyText.cook(' http://somewhere.com/?abc#known')).not_to include('hashtag')
+
     end
 
     it "can handle mixed lists" do
@@ -580,11 +586,13 @@ HTML
     it "can handle mentions" do
       Fabricate(:user, username: "sam")
       expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
+      expect(PrettyText.cook("hi\n@sam")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a></p>")
     end
 
     it "can handle mentions inside a hyperlink" do
-    expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
+      expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
     end
+
 
     it "can handle mentions inside a hyperlink" do
       expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="nofollow noopener">link @inner</a></p>'
@@ -651,6 +659,7 @@ HTML
     it 'supports typographer' do
       SiteSetting.enable_markdown_typographer = true
       expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+
       SiteSetting.enable_markdown_typographer = false
       expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
     end
