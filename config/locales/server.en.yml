@@ -2425,6 +2425,7 @@ en:
     invited_to_topic_body: |
       %{username} invited you to a discussion
 
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
