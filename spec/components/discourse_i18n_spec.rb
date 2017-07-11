@@ -163,7 +163,20 @@ describe I18n::Backend::DiscourseI18n do
         .to eq('snow is the new queen')
     end
 
-    it 'supports ActiveModel::Naming#human' do
+    it "returns override if it exists before falling back" do
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got', default: '')).to eq('winter')
+      expect(I18n.with_locale(:ru) { I18n.translate('got', default: '') }).to eq('winter')
+
+      TranslationOverride.upsert!('ru', 'got', "summer")
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got', default: '')).to eq('winter')
+      expect(I18n.with_locale(:ru) { I18n.translate('got', default: '') }).to eq('summer')
+    end
+
+    it 'does not affect ActiveModel::Naming#human' do
       Fish = Class.new(ActiveRecord::Base)
 
       TranslationOverride.upsert!('en', 'fish', "fake fish")

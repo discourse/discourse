@@ -495,6 +495,7 @@ posting:
   enable_experimental_markdown_it:
     client: true
     default: false
+    shadowed_by_global: true
   traditional_markdown_linebreaks:
     client: true
     default: false

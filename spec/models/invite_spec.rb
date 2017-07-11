@@ -465,25 +465,6 @@ describe Invite do
 
   end
 
-  describe '.redeem_from_token' do
-    let(:inviter) { Fabricate(:user) }
-    let(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
-    let(:user) { Fabricate(:user, email: invite.email) }
-
-    it 'redeems the invite from token' do
-      Invite.redeem_from_token(invite.invite_key, user.email)
-      invite.reload
-      expect(invite).to be_redeemed
-    end
-
-    it 'does not redeem the invite if token does not match' do
-      Invite.redeem_from_token("bae0071f995bb4b6f756e80b383778b5", user.email)
-      invite.reload
-      expect(invite).not_to be_redeemed
-    end
-
-  end
-
   describe '.rescind_all_invites_from' do
     it 'removes all invites sent by a user' do
       user = Fabricate(:user)

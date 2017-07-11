@@ -306,8 +306,12 @@ export default createWidget('header', {
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
-      showSearch = ($('.topic-post .cooked, .small-action:not(.time-gap)').length <
-                    this.register.lookup('controller:topic').get('model.postStream.stream.length'));
+      const controller = this.register.lookup('controller:topic');
+      const total = controller.get('model.postStream.stream.length') || 0;
+      const chunkSize = controller.get('model.chunk_size') || 0;
+
+      showSearch = (total > chunkSize) &&
+        $('.topic-post .cooked, .small-action:not(.time-gap)').length < total;
     }
 
     if (state.searchVisible) {
