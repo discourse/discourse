@@ -81,6 +81,10 @@ module PrettyText
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
 
+    if SiteSetting.enable_experimental_markdown_it
+      ctx_load_manifest(ctx, "markdown-it-bundle.js")
+    end
+
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
     apply_es6_file(ctx, root_path, "discourse/lib/utilities")

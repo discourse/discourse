@@ -143,10 +143,15 @@ function setupImageDimensions(md) {
   md.renderer.rules.image = renderImage;
 }
 
+let Helpers;
+
 export function setup(opts, siteSettings, state) {
   if (opts.setup) {
     return;
   }
+
+  // we got to require this late cause bundle is not loaded in pretty-text
+  Helpers = Helpers || requirejs('pretty-text/engines/markdown-it/helpers');
 
   opts.markdownIt = true;
 
@@ -189,6 +194,10 @@ export function setup(opts, siteSettings, state) {
     copy[entry] = opts[entry];
     delete opts[entry];
   });
+
+  copy.helpers = {
+    textReplace: Helpers.textReplace
+  };
 
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;

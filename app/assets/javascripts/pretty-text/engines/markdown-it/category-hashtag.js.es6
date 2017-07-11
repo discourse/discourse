@@ -1,5 +1,3 @@
-import { textReplace } from 'pretty-text/engines/markdown-it/helpers';
-
 function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
   const [hashtag, slug] = matches;
@@ -99,7 +97,7 @@ export function setup(helper) {
 
   helper.registerPlugin(md=>{
 
-    md.core.ruler.push('category-hashtag', state => textReplace(
+    md.core.ruler.push('category-hashtag', state => md.options.discourse.helpers.textReplace(
       state, applyHashtag, true /* skip all links */
     ));
   });
