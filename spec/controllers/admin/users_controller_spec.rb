@@ -512,7 +512,7 @@ describe Admin::UsersController do
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         expect(response).to be_success
 
-        u = User.find_by(email: 'bill@bill.com')
+        u = User.find_by_email('bill@bill.com')
         expect(u.name).to eq("Bill")
         expect(u.username).to eq("bill22")
         expect(u.admin).to eq(true)
@@ -587,7 +587,7 @@ describe Admin::UsersController do
       xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
       expect(response).to be_success
 
-      user = User.where(email: 'dr@claw.com').first
+      user = User.find_by_email('dr@claw.com')
       expect(user).to be_present
       expect(user.ip_address).to be_blank
     end

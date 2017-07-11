@@ -786,6 +786,20 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
+    context 'with an existing email' do
+      let(:email) { 'leo@m.ca' }
+      let(:first_create_params) { {username: 'LeoMcA', email: email, password: '$up3r$3cure'} }
+      let(:second_create_params) { {username: 'notLeo', email: email, password: '$up3r$3cure2'} }
+
+      it 'should fail' do
+        expect { xhr :post, :create, first_create_params }.to change { User.count }.by(1)
+
+        xhr :post, :create, second_create_params
+        json = JSON::parse(response.body)
+        expect(json["message"]).to eq("Primary email is invalid")
+      end
+    end
+
     context 'when an Exception is raised' do
       before { User.any_instance.stubs(:save).raises(ActiveRecord::StatementInvalid.new('Oh no')) }
 
@@ -822,7 +836,7 @@ describe UsersController do
         it "should succeed without the optional field" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -834,7 +848,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = 'value3'
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -846,7 +860,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = ('x' * 3000)
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
 
           val = inserted.custom_fields["user_field_#{optional_field.id}"]
           expect(val.length).to eq(UserField.max_length)
@@ -868,7 +882,7 @@ describe UsersController do
         it "should succeed" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).not_to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
@@ -883,7 +897,7 @@ describe UsersController do
         xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd$$"
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
-        expect(User.find_by(email: staged.email).staged).to eq(false)
+        expect(User.find_by_email(staged.email).staged).to eq(false)
       end
     end
 

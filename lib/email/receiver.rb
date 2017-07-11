@@ -153,7 +153,7 @@ module Email
       if $redis.setnx(key, "1")
         $redis.expire(key, 25.hours)
 
-        if user = User.find_by(email: email)
+        if user = User.find_by_email(email)
           user.user_stat.bounce_score += score
           user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
           user.user_stat.save

@@ -6,12 +6,18 @@ if user
   user.save
 end
 
+UserEmail.seed do |ue|
+  ue.id = -1
+  ue.email = "no_email"
+  ue.user_id = -1
+end
+
 User.seed do |u|
   u.id = -1
   u.name = "system"
   u.username = "system"
   u.username_lower = "system"
-  u.email = "no_email"
+  u.primary_email_id = -1
   u.password = SecureRandom.hex
   u.active = true
   u.admin = true
@@ -77,4 +83,3 @@ if ENV["SMOKE"] == "1"
 
   EmailToken.where(user_id: smoke_user.id).update_all(confirmed: true)
 end
-

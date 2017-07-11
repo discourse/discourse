@@ -32,7 +32,7 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    u = User.find_by("email = ?", Email.downcase(email))
+    u = User.find_by_email(Email.downcase(email))
     if u && u.id != self.user_id
       @email_already_exists = true
       errors.add(:email)
@@ -100,7 +100,7 @@ class Invite < ActiveRecord::Base
     custom_message = opts[:custom_message]
 
     lower_email = Email.downcase(email)
-    user = User.find_by(email: lower_email)
+    user = User.find_by_email(lower_email)
 
     if user
       extend_permissions(topic, user, invited_by) if topic

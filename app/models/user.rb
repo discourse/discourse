@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+  has_many :user_emails, dependent: :destroy
 
 
   has_one :user_option, dependent: :destroy
@@ -56,6 +57,7 @@ class User < ActiveRecord::Base
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
+  belongs_to :primary_email, class_name: 'UserEmail', autosave: true, validate: false
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
@@ -74,13 +76,11 @@ class User < ActiveRecord::Base
 
   delegate :last_sent_email_address, :to => :email_logs
 
-  before_validation :strip_downcase_email
-
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
-  validates :email, presence: true, uniqueness: true
-  validates :email, format: { with: EmailValidator.email_regex }, if: :email_changed?
-  validates :email, email: true, if: :should_validate_email?
+  validates :email, presence: true
+  validates_presence_of :primary_email, if: :should_validate_primary_email?
+  validates_associated :primary_email, if: :should_validate_primary_email?
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
@@ -97,6 +97,7 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
+  after_save :associate_primary_email, if: :primary_email_id_changed?
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
@@ -122,6 +123,8 @@ class User < ActiveRecord::Base
 
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
+
+  scope :with_email, -> email { includes(:primary_email).where(user_emails: { email: email }) }
 
   scope :human_users, -> { where('users.id > 0') }
 
@@ -232,7 +235,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    find_by(email: Email.downcase(email))
+    UserEmail.find_by(email: Email.downcase(email))&.user
   end
 
   def self.find_by_username(username)
@@ -267,8 +270,8 @@ class User < ActiveRecord::Base
     used_invite.try(:invited_by)
   end
 
-  def should_validate_email?
-    return !skip_email_validation && !staged? && email_changed?
+  def should_validate_primary_email?
+    return !skip_email_validation && !staged?
   end
 
   # Approve this user
@@ -935,6 +938,22 @@ class User < ActiveRecord::Base
     end
   end
 
+  def email
+    primary_email&.email
+  end
+
+  def email=(email)
+    if primary_email
+      primary_email.email = email
+    else
+      build_primary_email(email: email)
+    end
+  end
+
+  def associate_primary_email
+    primary_email.update!(user_id: self.id)
+  end
+
   protected
 
   def badge_grant
@@ -1009,13 +1028,6 @@ class User < ActiveRecord::Base
 
   def update_username_lower
     self.username_lower = username.downcase
-  end
-
-  def strip_downcase_email
-    if self.email
-      self.email = self.email.strip
-      self.email = self.email.downcase
-    end
   end
 
   def username_validator
@@ -1104,7 +1116,6 @@ end
 #  name                    :string
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
-#  email                   :string(513)      not null
 #  password_hash           :string(64)
 #  salt                    :string(32)
 #  active                  :boolean          default(FALSE), not null
@@ -1133,6 +1144,7 @@ end
 #  trust_level_locked      :boolean          default(FALSE), not null
 #  staged                  :boolean          default(FALSE), not null
 #  first_seen_at           :datetime
+#  primary_email_id        :integer          not null
 #
 # Indexes
 #
@@ -1140,6 +1152,7 @@ end
 #  idx_users_moderator                (id)
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
+#  index_users_on_primary_email_id    (primary_email_id)
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
 #  index_users_on_username            (username) UNIQUE
 #  index_users_on_username_lower      (username_lower) UNIQUE

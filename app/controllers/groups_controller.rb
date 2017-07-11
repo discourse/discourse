@@ -153,7 +153,7 @@ class GroupsController < ApplicationController
       elsif params[:user_ids].present?
         User.find(params[:user_ids].split(","))
       elsif params[:user_emails].present?
-        User.where(email: params[:user_emails].split(","))
+        User.with_email(params[:user_emails].split(","))
       else
         raise Discourse::InvalidParameters.new(
           'user_ids or usernames or user_emails must be present'

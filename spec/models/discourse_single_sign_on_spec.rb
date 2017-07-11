@@ -271,7 +271,7 @@ describe DiscourseSingleSignOn do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
 
-      user.update_columns(email: 'xXx@themovie.com')
+      user.primary_email.update_columns(email: 'xXx@themovie.com')
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.email).to eq(old_email)
