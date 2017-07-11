@@ -218,16 +218,6 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-  def self.redeem_from_token(token, email, username=nil, name=nil, topic_id=nil)
-    invite = Invite.find_by(invite_key: token)
-    if invite
-      invite.update_column(:email, email)
-      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic_id) if topic_id && Topic.find_by_id(topic_id) && !invite.topic_invites.pluck(:topic_id).include?(topic_id)
-      user = InviteRedeemer.new(invite, username, name).redeem
-    end
-    user
-  end
-
   def resend_invite
     self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
