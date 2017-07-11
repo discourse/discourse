@@ -1,6 +1,5 @@
 import { buildEmojiUrl, isCustomEmoji } from 'pretty-text/emoji';
 import { translations } from 'pretty-text/emoji/data';
-import { textReplace } from 'pretty-text/engines/markdown-it/helpers';
 
 const MAX_NAME_LENGTH = 60;
 
@@ -240,7 +239,7 @@ export function setup(helper) {
   });
 
   helper.registerPlugin((md)=>{
-    md.core.ruler.push('emoji', state => textReplace(
+    md.core.ruler.push('emoji', state => md.options.discourse.helpers.textReplace(
       state, (c,s)=>applyEmoji(c,s,md.options.discourse.emojiUnicodeReplacer))
     );
   });
