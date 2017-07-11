@@ -30,6 +30,14 @@ export default Ember.Component.extend({
   _setupPreview() {
     const val = (this.site.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
+
+    this.appEvents.on('composer:show-preview', () => {
+      this.set('showPreview', true);
+    });
+
+    this.appEvents.on('composer:hide-preview', () => {
+      this.set('showPreview', false);
+    });
   },
 
   @computed('site.mobileView', 'showPreview')
@@ -40,6 +48,11 @@ export default Ember.Component.extend({
   @computed('showPreview')
   toggleText: function(showPreview) {
     return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
+  },
+
+  @observes('showPreview')
+  showPreviewChanged() {
+      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   @computed
@@ -445,6 +458,8 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _composerClosed() {
     this.appEvents.trigger('composer:will-close');
+    this.appEvents.off('composer:show-preview');
+    this.appEvents.off('composer:hide-preview');
     Ember.run.next(() => {
       $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
@@ -486,7 +501,6 @@ export default Ember.Component.extend({
 
     togglePreview() {
       this.toggleProperty('showPreview');
-      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
     },
 
     extraButtons(toolbar) {
