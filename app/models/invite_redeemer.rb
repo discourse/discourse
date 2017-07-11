@@ -19,9 +19,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   # extracted from User cause it is very specific to invites
   def self.create_user_from_invite(invite, username, name, password=nil, user_custom_fields=nil)
-    user_exists = User.where(admin: false).find_by_email(invite.email)
-    return user if user_exists
-
     if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
       available_username = username
     else
@@ -94,7 +91,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def get_existing_user
-    User.find_by(email: invite.email)
+    User.where(admin: false).find_by(email: invite.email)
   end
 
 
