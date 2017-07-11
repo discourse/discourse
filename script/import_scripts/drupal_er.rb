@@ -11,7 +11,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
   DRUPAL_FILES_DIR = ENV['DRUPAL_FILES_DIR']
 
-
+ 
   def execute
 
     # site_settings = {
