@@ -159,6 +159,7 @@ describe DiscourseSingleSignOn do
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 
+    SiteSetting.email_editable = false
     SiteSetting.sso_overrides_name = true
     SiteSetting.sso_overrides_email = true
     SiteSetting.sso_overrides_username = true
@@ -257,6 +258,7 @@ describe DiscourseSingleSignOn do
 
     it 'deactivates accounts that have updated email address' do
 
+      SiteSetting.email_editable = false
       SiteSetting.sso_overrides_email = true
       sso.require_activation = true
 

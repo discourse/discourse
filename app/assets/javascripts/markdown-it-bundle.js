@@ -12,3 +12,4 @@
 //= require ./pretty-text/engines/markdown-it/table
 //= require ./pretty-text/engines/markdown-it/paragraph
 //= require ./pretty-text/engines/markdown-it/newline
+//= require ./pretty-text/engines/markdown-it/html_img

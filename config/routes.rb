@@ -650,8 +650,6 @@ Discourse::Application.routes.draw do
   post "invites/reinvite" => "invites#resend_invite"
   post "invites/reinvite-all" => "invites#resend_all_invites"
   post "invites/link" => "invites#create_invite_link"
-  post "invites/disposable" => "invites#create_disposable_invite"
-  get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
   put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
 

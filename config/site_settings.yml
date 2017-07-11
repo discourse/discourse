@@ -304,7 +304,9 @@ login:
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
   sso_overrides_bio: false
-  sso_overrides_email: false
+  sso_overrides_email:
+    default: false
+    validator: "SsoOverridesEmailValidator"
   sso_overrides_username: false
   sso_overrides_name: false
   sso_overrides_avatar:
@@ -493,6 +495,7 @@ posting:
   enable_experimental_markdown_it:
     client: true
     default: false
+    shadowed_by_global: true
   traditional_markdown_linebreaks:
     client: true
     default: false

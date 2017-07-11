@@ -48,20 +48,5 @@ describe "Discobot welcome post" do
       end
     end
 
-    context 'when user redeems a disposable invite' do
-      it 'should delay the welcome post until the user logs in' do
-        token = Invite.generate_disposable_tokens(user).first
-
-        expect do
-          xhr :get, "/invites/redeem/#{token}",
-            email: 'testing@gmail.com',
-            username: 'somename',
-            name: 'testing',
-            password: 'asodaasdaosdhq'
-        end.to change { User.count }.by(1)
-
-        expect(Jobs::NarrativeInit.jobs.first["args"].first["user_id"]).to eq(User.last.id)
-      end
-    end
   end
 end

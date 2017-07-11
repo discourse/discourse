@@ -42,23 +42,11 @@ class TranslationOverride < ActiveRecord::Base
         original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
         new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
         missing_keys = (original_interpolation_keys - new_interpolation_keys)
-        invalid_keys = (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys
 
         if missing_keys.present?
           self.errors.add(:base, I18n.t(
             'activerecord.errors.models.translation_overrides.attributes.value.missing_interpolation_keys',
             keys: missing_keys.join(', ')
-          ))
-
-          return false
-        end
-
-        invalid_keys = (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys
-
-        if invalid_keys.present?
-          self.errors.add(:base, I18n.t(
-            'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
-            keys: invalid_keys.join(', ')
           ))
 
           return false

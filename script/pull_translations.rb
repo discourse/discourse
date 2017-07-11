@@ -62,8 +62,7 @@ END
 
 YML_DIRS = ['config/locales',
             'plugins/poll/config/locales',
-            'plugins/discourse-narrative-bot/config/locales',
-            'vendor/gems/discourse_imgur/lib/discourse_imgur/locale']
+            'plugins/discourse-narrative-bot/config/locales']
 YML_FILE_PREFIXES = ['server', 'client']
 
 def yml_path(dir, prefix, language)
