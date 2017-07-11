@@ -1134,6 +1134,18 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    emoji_picker:
+      filter_placeholder: Search an emoji
+      people: People
+      nature: Nature
+      food: Food
+      activity: Activity
+      travel: Travel
+      objects: Objects
+      celebration: Celebration
+      custom: Custom emojis
+      recent: Recently used emojis
+
     composer:
       emoji: "Emoji :)"
       more_emoji: "more..."
