@@ -14,23 +14,23 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
   def execute
 
-    site_settings = {
-      # Basic Setup
-      enable_badges: false,
-      # Login
-      invite_only: true,
-      login_required: true,
-      # Posting
-      allow_duplicate_topic_titles: true,
-      allow_html_tables: true,
-      suppress_reply_directly_below: false,
-      suppress_reply_directly_above: false,
-      # Email
-      disable_emails: true,
-      # Plugins
-      discourse_narrative_bot_enabled: false
-    }
-    site_settings.each { |key, value| SiteSetting.set(key, value) }
+    # site_settings = {
+    #   # Basic Setup
+    #   enable_badges: false,
+    #   # Login
+    #   invite_only: true,
+    #   login_required: true,
+    #   # Posting
+    #   allow_duplicate_topic_titles: true,
+    #   allow_html_tables: true,
+    #   suppress_reply_directly_below: false,
+    #   suppress_reply_directly_above: false,
+    #   # Email
+    #   disable_emails: true,
+    #   # Plugins
+    #   discourse_narrative_bot_enabled: false
+    # }
+    # site_settings.each { |key, value| SiteSetting.set(key, value) }
 
 
     # if Rails.env.development?
@@ -46,15 +46,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # end
 
 
-    import_users
-    import_categories
-    import_topics
-    import_replies
-    import_likes
-    import_tags
+    # import_users
+    # import_categories
+    # import_topics
+    # import_replies
+    # import_likes
+    # import_tags
+    # create_permalinks
+    normalize_urls
     post_process_posts
-    create_permalinks
-    remap_urls
 
 
     # begin
@@ -142,7 +142,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     end
 
     # Remove automatically suggested names.
-    User.update_all(name: nil)
+    # User.update_all(name: nil)
   end
 
 
@@ -455,7 +455,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
 
 
-      # Upload images.
+      # 4. Upload images.
       doc.css('img').each do |img|
         if img['src'].present?
           if '/sites/edgeryders.eu/files/'.in?(img['src'])
@@ -474,6 +474,28 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
             else
               puts "Image doesn't exist: #{filename}"
             end
+          end
+        end
+      end
+
+      # 5. Remap URLs.
+      doc.css('a').each do |link|
+        next unless link['href'].present?
+
+        if link['href'].match(/^\/(?:en\/)?comment\/([0-9]*)/)
+          # Comment URLs
+          cid = link['href'].match(/comment\/([0-9]*)/).try(:captures).try(:first)
+          if cf = PostCustomField.find_by(name: 'import_id', value: "cid:#{cid}")
+            link.attributes['href'].value = cf.post.url
+          end
+        elsif pl = Permalink.find_by_url(link['href'])
+          # Permalinks
+          link.attributes['href'].value = pl.target_url
+        elsif link['href'].match(/^\/(?:en\/)?users\/([0-9]*)/)
+          # User URLs
+          uid = link['href'].match(/users\/([0-9]*)/).try(:captures).try(:first)
+          if uf = UserCustomField.find_by(name: 'import_id', value: "#{uid}")
+            link.attributes['href'].value = uf.user.url
           end
         end
       end
@@ -519,6 +541,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   end
 
 
+  def normalize_urls
+    puts '', 'normalize urls...'
+
+    # Normalize URLs
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=http://edgeryders.eu/', '=/')")
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=https://edgeryders.eu/', '=/')")
+  end
+
+
   def create_permalinks
     puts '', 'creating permalinks...'
 
@@ -540,49 +571,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       nid = row['redirect'].gsub(/node\//, '')
       if cf = PostCustomField.find_by(name: 'import_id', value: "nid:#{nid}")
         Permalink.create(url: row['source'], topic_id: cf.topic_id) rescue nil
-      end
-    end
-  end
-
-
-  def remap_urls
-    puts '', 'remapping urls...'
-
-    # Normalize URLs
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'http://edgeryders.eu', 'https://edgeryders.eu')")
-
-    # Topic URLs
-    Permalink.where.not(topic_id: nil).find_each do |p|
-      ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'https://edgeryders.eu/#{p.url}', '#{p.target_url}')")
-    end
-
-    # Post URLs
-    %w(https://edgeryders.eu/comment/ https://edgeryders.eu/en/comment/).each do |url|
-      Post.where('raw ILIKE :q', q: "%#{url}%").each do |post|
-        doc = Nokogiri::HTML.fragment(post.raw)
-        doc.css('a').each do |link|
-          if link['href'].present? && url.in?(link['href'])
-            cid = link['href'].match(/#{Regexp.quote(url)}([0-9]*)/).try(:captures).try(:first)
-            if cf = PostCustomField.find_by(name: 'import_id', value: "cid:#{cid}")
-              link.attributes['href'].value = cf.post.url
-            end
-          end
-        end
-        post.raw = doc.to_s
-        post.save!(validate: false)
-      end
-    end
-
-    # User URLs
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'https://edgeryders.eu/users/', '/u/')")
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, 'https://edgeryders.eu/en/users/', '/u/')")
-
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/users/', '=\"/u/')")
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/en/users/', '=\"/u/')")
-
-    User.find_each do |user|
-      if import_id = user.custom_fields['import_id'].is_a?(Array) ? user.custom_fields['import_id'].first : user.custom_fields['import_id']
-        ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"/user/#{import_id}', '=\"/u/#{user.id}')")
       end
     end
   end
