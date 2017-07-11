@@ -1,6 +1,5 @@
 /*global Mousetrap:true */
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import { showSelector } from "discourse/lib/emoji/toolbar";
 import Category from 'discourse/models/category';
 import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
 import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
@@ -346,20 +345,8 @@ export default Ember.Component.extend({
         if (v.code) {
           return `${v.code}:`;
         } else {
-          showSelector({
-            appendTo: self.$(),
-            register,
-            onSelect: title => {
-              // Remove the previously type characters when a new emoji is selected from the selector.
-              let selected = self._getSelected();
-              let newPre = selected.pre.replace(/:[^:]+$/, ":");
-              let numOfRemovedChars = selected.pre.length - newPre.length;
-              selected.pre = newPre;
-              selected.start -= numOfRemovedChars;
-              selected.end -= numOfRemovedChars;
-              self._addText(selected, `${title}:`);
-            }
-          });
+          $editorInput.autocomplete({cancel: true});
+          self.set('emojiPickerIsActive', true);
           return "";
         }
       },
@@ -614,6 +601,21 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    emojiSelected(code) {
+      let selected = this._getSelected();
+      const captures = selected.pre.match(/\B:(\w*)$/);
+
+      if(_.isEmpty(captures)) {
+        this._addText(selected, `:${code}:`);
+      } else {
+        let numOfRemovedChars = selected.pre.length - captures[1].length;
+        selected.pre = selected.pre.slice(0, selected.pre.length - captures[1].length);
+        selected.start -= numOfRemovedChars;
+        selected.end -= numOfRemovedChars;
+        this._addText(selected, `${code}:`);
+      }
+    },
+
     toolbarButton(button) {
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
@@ -692,11 +694,7 @@ export default Ember.Component.extend({
     },
 
     emoji() {
-      showSelector({
-        appendTo: this.$(),
-        register: this.register,
-        onSelect: title => this._addText(this._getSelected(), `:${title}:`)
-      });
+      this.set('emojiPickerIsActive', !this.get('emojiPickerIsActive'));
     }
   }
 });
