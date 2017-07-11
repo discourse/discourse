@@ -74,9 +74,8 @@ module I18n
           existing_translations = super(locale, key, scope, options)
           overrides = options.dig(:overrides, locale)
 
-          if overrides && existing_translations
-            if options[:count]
-
+          if overrides && !scope&.include?(:models)
+            if existing_translations && options[:count]
               remapped_translations =
                 if existing_translations.is_a?(Hash)
                   Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
