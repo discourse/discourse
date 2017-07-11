@@ -509,6 +509,7 @@ Discourse::Application.routes.draw do
   post "categories/reorder" => "categories#reorder"
   post "category/:category_id/notifications" => "categories#set_notifications"
   put "category/:category_id/slug" => "categories#update_slug"
+  put "category/:category_id/email_subject_slug" => "categories#update_email_slug"
 
   get "categories_and_latest" => "categories#categories_and_latest"
 
