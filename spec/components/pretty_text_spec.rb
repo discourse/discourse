@@ -908,7 +908,6 @@ HTML
         <img src="http://png.com/my.png" alt="stuff"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"></p>
       HTML
-      puts cooked
 
       expect(cooked).to eq(html.strip)
     end
