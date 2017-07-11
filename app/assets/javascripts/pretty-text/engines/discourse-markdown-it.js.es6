@@ -99,6 +99,50 @@ function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
+const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(,([1-9][0-9]?)%)?$/;
+function renderImage(tokens, idx, options, env, slf) {
+  var token = tokens[idx];
+
+  let alt = slf.renderInlineAsText(token.children, options, env);
+
+  let split = alt.split('|');
+  if (split.length > 1) {
+    let match;
+    let info = split.splice(split.length-1)[0];
+
+    if (match = info.match(IMG_SIZE_REGEX)) {
+      if (match[1] && match[2]) {
+        alt = split.join('|');
+
+        let width = match[1];
+        let height = match[2];
+
+        if (match[4]) {
+          let percent = parseFloat(match[4]) / 100.0;
+          width = parseInt(width * percent);
+          height = parseInt(height * percent);
+        }
+
+        if (token.attrIndex('width') === -1) {
+          token.attrs.push(['width', width]);
+        }
+
+        if (token.attrIndex('height') === -1) {
+          token.attrs.push(['height', height]);
+        }
+      }
+
+    }
+  }
+
+  token.attrs[token.attrIndex('alt')][1] = alt;
+  return slf.renderToken(tokens, idx, options);
+}
+
+function setupImageDimensions(md) {
+  md.renderer.rules.image = renderImage;
+}
+
 export function setup(opts, siteSettings, state) {
   if (opts.setup) {
     return;
@@ -160,6 +204,7 @@ export function setup(opts, siteSettings, state) {
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
+  setupImageDimensions(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
 
