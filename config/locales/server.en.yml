@@ -413,7 +413,6 @@ en:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
               missing_interpolation_keys: 'The following interpolation key(s) are missing: "%{keys}"'
 
   user_profile:
