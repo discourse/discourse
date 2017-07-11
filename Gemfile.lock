@@ -448,7 +448,7 @@ DEPENDENCIES
   omniauth-twitter
   onebox
   openid-redis-store
-  pg
+  pg (= 0.20.0)
   pry-nav
   pry-rails
   puma
