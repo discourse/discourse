@@ -127,7 +127,7 @@ const rule = {
 
     WHITELISTED_ATTRIBUTES.forEach(name => {
       if (attrs[name]) {
-        attributes[DATA_PREFIX + name] = attrs[name];
+        attributes.push([DATA_PREFIX + name, attrs[name]]);
       }
     });
 
@@ -136,9 +136,9 @@ const rule = {
     }
 
     // we might need these values later...
-    let min = parseInt(attributes[DATA_PREFIX + "min"], 10);
-    let max = parseInt(attributes[DATA_PREFIX + "max"], 10);
-    let step = parseInt(attributes[DATA_PREFIX + "step"], 10);
+    let min = parseInt(attrs["min"], 10);
+    let max = parseInt(attrs["max"], 10);
+    let step = parseInt(attrs["step"], 10);
 
     let header = [];
 
@@ -157,7 +157,7 @@ const rule = {
     header.push(token);
 
     // generate the options when the type is "number"
-    if (attributes[DATA_PREFIX + "type"] === "number") {
+    if (attrs["type"] === "number") {
       // default values
       if (isNaN(min)) { min = 1; }
       if (isNaN(max)) { max = md.options.discourse.pollMaximumOptions; }
@@ -172,7 +172,7 @@ const rule = {
       header.push(token);
 
       for (let o = min; o <= max; o += step) {
-        token = new state.Token('list_item_open', '', 1);
+        token = new state.Token('list_item_open', 'li', 1);
         items.push([token,  String(o)]);
         header.push(token);
 
@@ -180,7 +180,7 @@ const rule = {
         token.content = String(o);
         header.push(token);
 
-        token = new state.Token('list_item_close', '', -1);
+        token = new state.Token('list_item_close', 'li', -1);
         header.push(token);
       }
       token = new state.Token('bullet_item_close', '', -1);

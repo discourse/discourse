@@ -11,6 +11,8 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
+const ATTR_REGEX = /(([a-z0-9]*)\s*=)/ig;
+
 // parse a tag [test a=1 b=2] to a data structure
 // {tag: "test", attrs={a: "1", b: "2"}
 export function parseBBCodeTag(src, start, max, multiline) {
@@ -71,31 +73,23 @@ export function parseBBCodeTag(src, start, max, multiline) {
     // trivial parser that is going to have to be rewritten at some point
     if (raw) {
 
-      // reading a key 0, reading a val = 1
-      let readingKey = true;
-      let startSplit = 0;
-      let key;
+      let match, key, val;
 
-      for(i=0; i<raw.length; i++) {
-        if (raw[i] === '=' || i === (raw.length-1)) {
-          // one more offset to allow room to capture last
-          if (raw[i] !== '=' || i === (raw.length-1)) {
-            i+=1;
-          }
-
-          let cur = raw.slice(startSplit, i).trim();
-          if (readingKey) {
-            key =  cur || '_default';
-          } else {
-            let val = raw.slice(startSplit, i).trim();
-            if (val && val.length > 0) {
-              val = val.replace(/^["'](.*)["']$/, '$1');
-              attrs[key] = val;
-            }
-          }
-          readingKey = !readingKey;
-          startSplit = i+1;
+      while(match = ATTR_REGEX.exec(raw)) {
+        if (key) {
+          val = raw.slice(attrs[key],match.index) || '';
+          val = val.trim();
+          val = val.replace(/^["'](.*)["']$/, '$1');
+          attrs[key] = val;
         }
+        key = match[2] || '_default';
+        attrs[key] = match.index + match[0].length;
+      }
+
+      if (key) {
+        val = raw.slice(attrs[key]);
+        val = val.replace(/^["'](.*)["']$/, '$1');
+        attrs[key] = val;
       }
     }
 
