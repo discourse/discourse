@@ -890,5 +890,29 @@ HTML
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
   end
 
+  # custom rule used to specify image dimensions via alt tags
+  describe "image dimensions" do
+    it "allows title plus dimensions" do
+      cooked = PrettyText.cook <<~MD
+        ![title with | title|220x100](http://png.com/my.png)
+        ![](http://png.com/my.png)
+        ![|220x100](http://png.com/my.png)
+        ![stuff](http://png.com/my.png)
+        ![|220x100,50%](http://png.com/my.png)
+      MD
+
+      html = <<~HTML
+        <p><img src="http://png.com/my.png" alt="title with | title" width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt><br>
+        <img src="http://png.com/my.png" alt width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt="stuff"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+      HTML
+      puts cooked
+
+      expect(cooked).to eq(html.strip)
+    end
+  end
+
 
 end
