@@ -1,9 +1,12 @@
 import { cook as cookIt, setup as setupIt } from 'pretty-text/engines/discourse-markdown-it';
+import { sanitize } from 'pretty-text/sanitizer';
+import WhiteLister from 'pretty-text/white-lister';
 
-export function registerOption() {
-  if (window.console) {
-    window.console.log("registerOption is deprecated");
-  }
+const _registerFns = [];
+const identity = value => value;
+
+export function registerOption(fn) {
+  _registerFns.push(fn);
 }
 
 export function buildOptions(state) {
@@ -21,7 +24,7 @@ export function buildOptions(state) {
     emojiUnicodeReplacer
   } = state;
 
-  let features = {
+  const features = {
     'bold-italics': true,
     'auto-link': true,
     'mentions': true,
@@ -32,10 +35,6 @@ export function buildOptions(state) {
     'onebox': true,
     'newline': !siteSettings.traditional_markdown_linebreaks
   };
-
-  if (state.features) {
-    features = _.merge(features, state.features);
-  }
 
   const options = {
     sanitize: true,
@@ -55,8 +54,6 @@ export function buildOptions(state) {
     markdownIt: true
   };
 
-  // note, this will mutate options due to the way the API is designed
-  // may need a refactor
   setupIt(options, siteSettings, state);
 
   return options;
@@ -64,14 +61,9 @@ export function buildOptions(state) {
 
 export default class {
   constructor(opts) {
-    if (!opts) {
-      opts = buildOptions({ siteSettings: {}});
-    }
-    this.opts = opts;
-  }
-
-  disableSanitizer() {
-    this.opts.sanitizer = this.opts.discourse.sanitizer = ident => ident;
+    this.opts = opts || {};
+    this.opts.features = this.opts.features || {};
+    this.opts.sanitizer = (!!this.opts.sanitize) ? (this.opts.sanitizer || sanitize) : identity;
   }
 
   cook(raw) {
@@ -83,6 +75,6 @@ export default class {
   }
 
   sanitize(html) {
-    return this.opts.sanitizer(html).trim();
+    return this.opts.sanitizer(html, new WhiteLister(this.opts));
   }
 };
