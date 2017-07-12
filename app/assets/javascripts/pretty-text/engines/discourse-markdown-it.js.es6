@@ -227,10 +227,11 @@ export function setup(opts, siteSettings, state) {
   opts.markdownIt = true;
   opts.setup = true;
 
-  if (!opts.discourse.sanitizer) {
+  if (!opts.discourse.sanitizer || !opts.sanitizer) {
     const whiteLister = new WhiteLister(opts.discourse);
     opts.sanitizer = opts.discourse.sanitizer = (!!opts.discourse.sanitize) ? a=>sanitize(a, whiteLister) : a=>a;
   }
+
 }
 
 export function cook(raw, opts) {

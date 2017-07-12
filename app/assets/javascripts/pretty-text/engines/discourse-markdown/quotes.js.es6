@@ -26,7 +26,7 @@ const rule = {
           continue;
         }
 
-        if (split[i].indexOf(/full:\s*true/) === 0) {
+        if (/full:\s*true/.test(split[i])) {
           full = true;
           continue;
         }
