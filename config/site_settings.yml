@@ -492,19 +492,12 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
-  enable_experimental_markdown_it:
-    client: true
-    default: false
-    shadowed_by_global: true
   traditional_markdown_linebreaks:
     client: true
     default: false
   enable_markdown_typographer:
     client: true
-    default: false
-  allow_html_tables:
-    client: true
-    default: false
+    default: true
   suppress_reply_directly_below:
     client: true
     default: true

@@ -80,11 +80,7 @@ module PrettyText
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
-
-    if SiteSetting.enable_experimental_markdown_it
-      ctx_load_manifest(ctx, "markdown-it-bundle.js")
-    end
-
+    ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
     apply_es6_file(ctx, root_path, "discourse/lib/utilities")
@@ -150,13 +146,6 @@ module PrettyText
           paths[:S3CDN] = SiteSetting.s3_cdn_url
         end
         paths[:S3BaseUrl] = Discourse.store.absolute_base_url
-      end
-
-      if SiteSetting.enable_experimental_markdown_it
-        # defer load markdown it
-        unless context.eval("window.markdownit")
-          ctx_load_manifest(context, "markdown-it-bundle.js")
-        end
       end
 
       custom_emoji = {}
