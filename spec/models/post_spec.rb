@@ -414,14 +414,12 @@ describe Post do
       end
 
       it "ignores pre" do
-        # we need to force an inline
-        post = Fabricate.build(:post, post_args.merge(raw: "p <pre>@Jake</pre> @Finn"))
+        post = Fabricate.build(:post, post_args.merge(raw: "<pre>@Jake</pre> @Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "catches content between pre tags" do
-        # per common mark we need to force an inline
-        post = Fabricate.build(:post, post_args.merge(raw: "a <pre>hello</pre> @Finn <pre></pre>"))
+        post = Fabricate.build(:post, post_args.merge(raw: "<pre>hello</pre> @Finn <pre></pre>"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
@@ -431,7 +429,7 @@ describe Post do
       end
 
       it "ignores quotes" do
-        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n@Finn"))
+        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]@Jake[/quote] @Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
