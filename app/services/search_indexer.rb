@@ -31,7 +31,7 @@ class SearchIndexer
     end
 
     # for user login and name use "simple" lowercase stemmer
-    stemmer = table == "user" ? "simple" : Search.long_locale
+    stemmer = table == "user" ? "simple" : Search.ts_config
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
