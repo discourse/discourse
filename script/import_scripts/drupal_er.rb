@@ -53,7 +53,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # import_likes
     # import_tags
     # create_permalinks
-    # normalize_urls
+    normalize_urls
     post_process_posts
 
 
@@ -432,9 +432,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   def post_process_posts
     puts '', 'processing posts...'
 
-    ids = [30, 200, 33212, 187, 25, 79, 33, 34, 33207, 271, 31, 95, 301, 101, 150, 86, 255, 277, 92, 97, 99, 103, 297, 102, 306, 100, 106, 152, 104, 217, 134, 136, 137, 153, 107, 108, 202, 126, 117, 33204, 182, 181, 121, 118, 119, 223, 183, 184, 147, 286, 274, 164, 211, 310, 130, 177, 244, 141, 143, 264, 105, 111, 124, 157, 158, 205, 293, 160, 208, 265, 162, 171, 116, 172, 113, 176, 186, 125, 192, 193, 90, 98, 191, 209, 203, 230, 231, 233, 235, 207, 215, 94, 229, 156, 243, 88, 148, 249, 251, 226, 241, 247, 144, 254, 299, 114, 257, 258, 259, 252, 263, 269, 194, 216, 281, 282, 260, 261, 307, 273, 168, 290, 291, 294, 295, 302, 284, 285, 296, 298, 300, 305, 169, 303, 309, 311, 129, 276, 289, 270, 279, 140, 170, 87, 268, 109, 315, 133, 212, 242, 267, 234, 236, 262, 151, 220, 163, 204, 312, 112, 166, 250, 115, 292, 139, 180, 219, 221, 224, 227, 280, 287, 232, 159, 189, 85, 155, 240, 198, 145, 165, 123, 272, 185, 283, 190, 288, 110, 275, 91, 154, 179, 278, 167, 161, 149, 245, 238, 173, 237, 175, 174, 308, 188, 93, 138, 135, 239, 128, 266, 196, 89, 218, 222, 256, 214, 228, 304, 314, 225, 313, 197, 206, 253, 248]
-
-    Post.where(id: ids).find_each do |post|
+    Post.find_each do |post|
       next if post.raw.nil?
       puts "processing post: ##{post.id}..."
 
@@ -547,8 +545,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     puts '', 'normalize urls...'
 
     # Normalize URLs
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=http://edgeryders.eu/', '=/')")
-    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=https://edgeryders.eu/', '=/')")
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"http://edgeryders.eu/', '=\"/')")
+    ActiveRecord::Base.connection.execute("UPDATE posts SET raw = replace(raw, '=\"https://edgeryders.eu/', '=\"/')")
   end
 
 
