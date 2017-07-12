@@ -61,7 +61,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote" data-post="123" data-topic="456">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -786,7 +786,6 @@ HTML
     expect(PrettyText.cook("<http://a.com>")).not_to include('onebox')
     expect(PrettyText.cook(" http://a.com")).not_to include('onebox')
     expect(PrettyText.cook("a\n http://a.com")).not_to include('onebox')
-    expect(PrettyText.cook("sam@sam.com")).not_to include('onebox')
   end
 
   it "can handle bbcode" do
@@ -858,13 +857,7 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>';
-    expect(cooked).to eq(html)
-  end
-
-  it "supports nesting tags in url" do
-    cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>';
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -882,34 +875,19 @@ HTML
 
   it "support special handling for space in urls" do
     cooked = PrettyText.cook "http://testing.com?a%20b"
-    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
+    html = '<p><a href="http://testing.com?a%20b" class="onebox" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports onebox for decoded urls" do
     cooked = PrettyText.cook "http://testing.com?a%50b"
-    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?aPb</a></p>'
+    html = '<p><a href="http://testing.com?a%50b" class="onebox" rel="nofollow noopener">http://testing.com?aPb</a></p>'
     expect(cooked).to eq(html)
   end
 
-  it "should sanitize the html" do
-    expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
-  end
-
-  it "should not onebox magically linked urls" do
-    expect(PrettyText.cook('[url]site.com[/url]')).not_to include('onebox')
-  end
 
   it "should sanitize the html" do
-    expect(PrettyText.cook("<p class='hi'>hi</p>")).to eq "<p>hi</p>"
-  end
-
-  it "should strip SCRIPT" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
-  end
-
-  it "should allow sanitize bypass" do
-    expect(PrettyText.cook("<test>alert(42)</test>", sanitize: false)).to eq "<p><test>alert(42)</test></p>"
   end
 
   # custom rule used to specify image dimensions via alt tags

@@ -175,14 +175,12 @@ module PrettyText
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
 
-
-      buffer << ("__pt = new __PrettyText(__textOptions);")
-
       # Be careful disabling sanitization. We allow for custom emails
       if opts[:sanitize] == false
-        buffer << ('__pt.disableSanitizer();')
+        buffer << ('__textOptions.sanitize = false;')
       end
 
+      buffer << ("__pt = new __PrettyText(__textOptions);")
       opts = context.eval(buffer)
 
       DiscourseEvent.trigger(:markdown_context, context)
