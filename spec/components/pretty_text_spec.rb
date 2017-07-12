@@ -5,7 +5,7 @@ require 'html_normalize'
 describe PrettyText do
 
   before do
-    SiteSetting.enable_experimental_markdown_it = true
+    SiteSetting.enable_markdown_typographer = false
   end
 
   def n(html)
