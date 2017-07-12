@@ -744,9 +744,10 @@ SQL
 
   # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids=nil, custom_message=nil)
+    user = User.find_by_username_or_email(username_or_email)
+
     if private_message?
       # If the user exists, add them to the message.
-      user = User.find_by_username_or_email(username_or_email)
       raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
@@ -764,18 +765,27 @@ SQL
     end
 
     if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
-      # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
-      # NOTE callers expect an invite object if an invite was sent via email
-      invite_by_email(invited_by, username_or_email, group_ids, custom_message)
+      if user.present?
+        # add existing users
+        Invite.extend_permissions(self, user, invited_by)
+
+        # Notify the user they've been invited
+        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
+                                  topic_id: id,
+                                  post_number: 1,
+                                  data: { topic_title: title,
+                                          display_username: invited_by.username }.to_json)
+        return true
+      else
+        # NOTE callers expect an invite object if an invite was sent via email
+        invite_by_email(invited_by, username_or_email, group_ids, custom_message)
+      end
     else
-      # invite existing member to a topic
-      user = User.find_by_username(username_or_email)
       raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
-        # rate limit topic invite
         RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
         # Notify the user they've been invited
