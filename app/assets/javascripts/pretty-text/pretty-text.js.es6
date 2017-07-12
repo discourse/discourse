@@ -1,10 +1,9 @@
 import { cook as cookIt, setup as setupIt } from 'pretty-text/engines/discourse-markdown-it';
 
 export function registerOption() {
-  // TODO next major version deprecate this
-  // if (window.console) {
-  //   window.console.log("registerOption is deprecated");
-  // }
+  if (window.console) {
+    window.console.log("registerOption is deprecated");
+  }
 }
 
 export function buildOptions(state) {
