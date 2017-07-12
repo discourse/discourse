@@ -22,6 +22,7 @@ function applyOnebox(state, silent) {
           if (j === 0 && token.leading_space) {
             continue;
           } else if (j > 0) {
+
             let prevSibling = token.children[j-1];
 
             if (prevSibling.tag !== 'br' || prevSibling.leading_space) {
@@ -45,8 +46,12 @@ function applyOnebox(state, silent) {
             continue;
           }
 
-          // we already know text matches cause it is an auto link
+          // edge case ... what if this is not http or protocoless?
+          if (!/^http|^\/\//i.test(attrs[0][1])) {
+            continue;
+          }
 
+          // we already know text matches cause it is an auto link
           if (!close || close.type !== "link_close") {
             continue;
           }
@@ -71,6 +76,7 @@ function applyOnebox(state, silent) {
           } else {
             // decorate...
             attrs.push(["class", "onebox"]);
+            attrs.push(["target", "_blank"]);
           }
         }
       }
