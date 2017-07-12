@@ -1114,7 +1114,7 @@ legal:
 
 backups:
   readonly_mode_during_backup:
-    default: true
+    default: false
   allow_restore:
     default: false
   maximum_backups:
