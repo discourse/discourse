@@ -881,6 +881,7 @@ zh_CN:
     notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个私信给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
+    allow_html_tables: "允许在输入 Markdown 文本时使用表格 HTML 标签。标签 TABLE、THEAD、TD、TR、TH 将被允许使用，即白名单这些标签（需要重置所有包含表格的老帖子的 HTML）"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"

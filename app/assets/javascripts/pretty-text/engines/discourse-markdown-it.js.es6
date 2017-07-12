@@ -151,7 +151,7 @@ export function setup(opts, siteSettings, state) {
   }
 
   // we got to require this late cause bundle is not loaded in pretty-text
-  Helpers = Helpers || requirejs('pretty-text/engines/discourse-markdown/helpers');
+  Helpers = Helpers || requirejs('pretty-text/engines/markdown-it/helpers');
 
   opts.markdownIt = true;
 

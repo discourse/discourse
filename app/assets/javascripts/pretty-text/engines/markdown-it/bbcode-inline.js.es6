@@ -1,4 +1,4 @@
-import { parseBBCodeTag } from 'pretty-text/engines/discourse-markdown/bbcode-block';
+import { parseBBCodeTag } from 'pretty-text/engines/markdown-it/bbcode-block';
 
 function tokanizeBBCode(state, silent, ruler) {
 

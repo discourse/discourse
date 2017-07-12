@@ -818,6 +818,7 @@ sv:
     notify_mods_when_user_blocked: "Om en användare blockeras automatiskt, skicka ett meddelande till alla moderatorer."
     flag_sockpuppets: "Flagga båda användarnas inlägg som potentiell skräppost om en ny användare svarar på ett ämne från samma IP-adress som den andra nya användaren som skapade ämnet."
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
+    allow_html_tables: "Tillåt tabeller att läggas in i Markdown genom användning av HTML-taggar. TABLE, THEAD, TD, TR, TH kommer att vitlistas (kräver full uppdatering/rebake av alla gamla inlägg som innehåller tabeller)"
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
     must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "

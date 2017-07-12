@@ -1,3 +1,4 @@
+import { cook, setup } from 'pretty-text/engines/discourse-markdown';
 import { cook as cookIt, setup as setupIt } from 'pretty-text/engines/discourse-markdown-it';
 import { sanitize } from 'pretty-text/sanitizer';
 import WhiteLister from 'pretty-text/white-lister';
@@ -23,6 +24,10 @@ export function buildOptions(state) {
     lookupAvatarByPostNumber,
     emojiUnicodeReplacer
   } = state;
+
+  if (!siteSettings.enable_experimental_markdown_it) {
+    setup();
+  }
 
   const features = {
     'bold-italics': true,
@@ -51,10 +56,15 @@ export function buildOptions(state) {
     mentionLookup: state.mentionLookup,
     emojiUnicodeReplacer,
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
-    markdownIt: true
+    markdownIt: siteSettings.enable_experimental_markdown_it
   };
 
-  setupIt(options, siteSettings, state);
+  if (siteSettings.enable_experimental_markdown_it) {
+    setupIt(options, siteSettings, state);
+  } else {
+    // TODO deprecate this
+    _registerFns.forEach(fn => fn(siteSettings, options, state));
+  }
 
   return options;
 }
@@ -64,13 +74,22 @@ export default class {
     this.opts = opts || {};
     this.opts.features = this.opts.features || {};
     this.opts.sanitizer = (!!this.opts.sanitize) ? (this.opts.sanitizer || sanitize) : identity;
+    // We used to do a failsafe call to setup here
+    // under new engine we always expect setup to be called by buildOptions.
+    // setup();
   }
 
   cook(raw) {
     if (!raw || raw.length === 0) { return ""; }
 
     let result;
-    result = cookIt(raw, this.opts);
+
+    if (this.opts.markdownIt) {
+      result = cookIt(raw, this.opts);
+    } else {
+      result = cook(raw, this.opts);
+    }
+
     return result ? result : "";
   }
 
