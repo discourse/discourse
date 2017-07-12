@@ -42,6 +42,9 @@ QUnit.assert.cookedPara = function(input, expected, message) {
 };
 
 QUnit.test("buildOptions", assert => {
+  assert.ok(buildOptions({ siteSettings: { allow_html_tables: true } }).features.table, 'tables enabled');
+  assert.ok(!buildOptions({ siteSettings: { allow_html_tables: false } }).features.table, 'tables disabled');
+
   assert.ok(buildOptions({ siteSettings: { enable_emoji: true } }).features.emoji, 'emoji enabled');
   assert.ok(!buildOptions({ siteSettings: { enable_emoji: false } }).features.emoji, 'emoji disabled');
 });

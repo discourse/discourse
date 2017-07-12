@@ -1,31 +1,35 @@
-export function setup(helper) {
+import { registerOption } from 'pretty-text/pretty-text';
 
-  if (!helper.markdownIt) { return; }
+function tableFlattenBlocks(blocks) {
+  let result = "";
 
-  // this is built in now
-  // TODO: sanitizer needs fixing, does not properly support this yet
-
-  // we need a custom callback for style handling
-  helper.whiteList({
-    custom: function(tag,attr,val) {
-      if (tag !== 'th' && tag !== 'td') {
-        return false;
-      }
-
-      if (attr !== 'style') {
-        return false;
-      }
-
-      return (val === 'text-align:right' || val === 'text-align:left' || val === 'text-align:center');
-    }
+  blocks.forEach(b => {
+    result += b;
+    if (b.trailing) { result += b.trailing; }
   });
 
-  helper.whiteList([
-      'table',
-      'tbody',
-      'thead',
-      'tr',
-      'th',
-      'td',
-  ]);
+  // bypass newline insertion
+  return result.replace(/[\n\r]/g, " ");
+};
+
+registerOption((siteSettings, opts) => {
+  opts.features.table = !!siteSettings.allow_html_tables;
+});
+
+export function setup(helper) {
+
+  if (helper.markdownIt) { return; }
+
+  helper.whiteList(['table', 'table.md-table', 'tbody', 'thead', 'tr', 'th', 'td']);
+
+  helper.replaceBlock({
+    start: /(<table[^>]*>)([\S\s]*)/igm,
+    stop: /<\/table>/igm,
+    rawContents: true,
+    priority: 1,
+
+    emitter(contents) {
+      return ['table', {"class": "md-table"}, tableFlattenBlocks.apply(this, [contents])];
+    }
+  });
 }
