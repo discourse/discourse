@@ -184,7 +184,8 @@ module DiscourseNarrativeBot
       opts = {
         title: I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title),
         target_usernames: @user.username,
-        archetype: Archetype.private_message
+        archetype: Archetype.private_message,
+        subtype: TopicSubtype.system_message,
       }
 
       if @post &&
