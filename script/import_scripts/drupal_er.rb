@@ -10,8 +10,8 @@ require File.expand_path(File.dirname(__FILE__) + "/drupal.rb")
 class ImportScripts::DrupalER < ImportScripts::Drupal
 
   DRUPAL_FILES_DIR = ENV['DRUPAL_FILES_DIR']
-
  
+
   def execute
 
     # site_settings = {
@@ -53,8 +53,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # import_likes
     # import_tags
     # create_permalinks
-    normalize_urls
-    post_process_posts
+    # normalize_urls
+    # post_process_posts
 
 
     # begin
