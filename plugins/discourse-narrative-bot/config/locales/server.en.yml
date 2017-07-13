@@ -32,18 +32,18 @@ en:
 
         - To start over, say `%{reset_trigger}`.
 
-        If you’d rather not, that’s OK too. I’m a robot. You won’t hurt my feelings. :sob:
+        If you’d rather not, that’s OK too. I’m a robot. You won’t hurt my feelings. 😭
 
     dice:
       trigger: "roll"
       invalid: |-
-        I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
+        I’m sorry, it is mathematically impossible to roll that combination of dice. 😖
       not_enough_dice: |-
         I only have %{num_of_dice} dice. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
       out_of_range: |-
         Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair die is 120?
       results: |-
-        > :game_die: %{results}
+        > 🎲 %{results}
 
     quote:
       trigger: "quote"
@@ -78,7 +78,7 @@ en:
         quote: "Whatever the mind of man can conceive and believe, it can achieve."
         author: "Napoleon Hill"
       results: |-
-        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+        > 🗨 _%{quote}_ &mdash; %{author}
 
     magic_8_ball:
       trigger: 'fortune'
@@ -104,7 +104,7 @@ en:
         "19": "Outlook not so good"
         "20": "Very doubtful"
       result: |-
-        > :crystal_ball: %{result}
+        > 🔮 %{result}
 
     track_selector:
       reset_trigger: 'start'
@@ -121,23 +121,23 @@ en:
           > Starts one of the following interactive narratives: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
-          > :game_die: 3, 6
+          > 🎲 3, 6
 
           `@%{discobot_username} %{quote_trigger}`
-          > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
+          > 🗨 _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: You may rely on it
+          > 🔮 You may rely on it
 
       do_not_understand:
         first_response: |-
           Hey, thanks for the reply!
 
-          Unfortunately, as a poorly programmed bot, I can’t quite understand that one. :frowning:
+          Unfortunately, as a poorly programmed bot, I can’t quite understand that one. 🙁
         track_response:
           You can try again, or if you’d like to skip this step, say `%{skip_trigger}`. Otherwise, to start over, say `%{reset_trigger}`.
         second_response: |-
-          Aw, sorry. I’m still not getting it. :anguished:
+          Aw, sorry. I’m still not getting it. 😧
 
           I’m just a bot, but if you’d like to reach a real person, see [our contact page](/about).
 
@@ -148,7 +148,7 @@ en:
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:
-        title: ":robot: Greetings!"
+        title: "🤖 Greetings!"
         message: |-
           Thanks for joining %{title}, and welcome!
 
@@ -170,7 +170,7 @@ en:
         reply: |-
           Cool! This will work for most <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
         not_found: |-
-          Sorry, I couldn’t find the link in your reply! :cry:
+          Sorry, I couldn’t find the link in your reply! 😭
 
           Can you try adding the following link, on its own line, in your next reply?
 
@@ -182,13 +182,13 @@ en:
 
           <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
 
-          If you like it (and who wouldn’t!) go ahead and press the like :heart: button below this post to let me know.
+          If you like it (and who wouldn’t!) go ahead and press the like ❤ button below this post to let me know.
 
           Can you **reply with a picture?** Any picture will do! Drag and drop, press the upload button, or even copy and paste it in.
         reply: |-
-          Nifty picture – I pressed the like :heart: button to let you know how much I appreciated it :heart_eyes:
+          Nifty picture – I pressed the like ❤ button to let you know how much I appreciated it 😍
         like_not_found: |-
-          Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
+          Did you forget to like ❤ my [post?](%{url}) 😿
         not_found: |-
           Looks like you didn’t upload an image so I’ve choosen a picture that I’m _sure_ you will enjoy.
 
@@ -205,9 +205,9 @@ en:
           - or, push the <kbd><b>B</b></kbd> or <kbd><i>I</i></kbd> buttons in the editor
 
         reply: |-
-          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](http://commonmark.org/help) :nerd:
+          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](http://commonmark.org/help) 🤓
         not_found: |-
-          Aww, I didn’t find any formatting in your reply. :pencil2:
+          Aww, I didn’t find any formatting in your reply. ✏
 
           Can you try again? Use the <kbd><b>B</b></kbd> bold or <kbd><i>I</i></kbd> italic buttons in the editor if you get stuck.
 
@@ -223,9 +223,9 @@ en:
 
           Select the text of whichever &uarr; quote you prefer, and then press the **Quote** button that pops up over your selection – or the **Reply** button at the bottom of this post.
 
-          Below the quote, type a word or two about why you picked that one, because I’m curious :thinking:
+          Below the quote, type a word or two about why you picked that one, because I’m curious 🤔
         reply: |-
-          Nice work, you picked my favorite quote! :left_speech_bubble:
+          Nice work, you picked my favorite quote! 🗨
         not_found: |-
           Hmm it looks like you didn’t quote me in your reply?
 
@@ -233,7 +233,7 @@ en:
 
       bookmark:
         instructions: |-
-          If you’d like to learn more, select <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  If you do, there may be a :gift: in your future!
+          If you’d like to learn more, select <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  If you do, there may be a 🎁 in your future!
         reply: |-
           Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Just select your profile picture at the upper right &#8599;
         not_found: |-
@@ -241,7 +241,7 @@ en:
 
       emoji:
         instructions: |-
-          You may have seen me use little pictures in my replies :blue_car::dash: those are called [emoji](https://en.wikipedia.org/wiki/Emoji). Can you **add an emoji** to your reply? Any of these will work:
+          You may have seen me use little pictures in my replies 🚙💨 those are called [emoji](https://en.wikipedia.org/wiki/Emoji). Can you **add an emoji** to your reply? Any of these will work:
 
           - Type `:) ;) :D :P :O`
 
@@ -249,9 +249,9 @@ en:
 
           - Press the emoji button <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> in the editor, or on your mobile keyboard
         reply: |-
-          That’s :sparkles: _emojitastic!_ :sparkles:
+          That’s ✨ _emojitastic!_ ✨
         not_found: |-
-          Oops, I don’t see any Emoji in your reply? Oh no! :sob:
+          Oops, I don’t see any Emoji in your reply? Oh no! 😭
 
           Try typing a colon <kbd>:</kbd> to bring up the emoji picker, then type the first few letters of what you want, such as `:bird:`
 
@@ -265,21 +265,21 @@ en:
 
           Can you mention **`@%{discobot_username}`** in your reply?
         reply: |-
-          _Did someone say my name!?_ :raised_hand: I believe you did! :wave:  Well, here I am! Thanks for mentioning me.  :ok_hand:
+          _Did someone say my name!?_ ✋ I believe you did! 👋  Well, here I am! Thanks for mentioning me. 👌
         not_found: |-
-          I don’t see my name in there anywhere :frowning: Can you try mentioning me as `@%{discobot_username}` again?
+          I don’t see my name in there anywhere ☹ Can you try mentioning me as `@%{discobot_username}` again?
 
-          (And yes, my user name is spelled _disco_, as in the 1970s dance craze. I do [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+          (And yes, my user name is spelled _disco_, as in the 1970s dance craze. I do [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) 💃)
 
       flag:
         instructions: |-
           We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author, or [our helpful staff](%{about_url}), know about it.
 
-          >  :imp: I wrote something nasty here
+          >  👿 I wrote something nasty here
 
           I guess you know what to do. Go ahead and **flag this post** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> as inappropriate!
         reply: |-
-          [Our staff](/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
+          [Our staff](/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post 😇, I’ve gone ahead and removed the flag for now.)
         not_found: |-
           Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
 
@@ -289,11 +289,11 @@ en:
 
           Try searching for the term "capy&#8203;bara" in this topic
         hidden_message: |-
-          How did you miss this capybara? :wink:
+          How did you miss this capybara? 😉
 
           <img src="%{base_uri}/images/capybara-eating.gif"/>
 
-          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `:herb:` emoji** and you’ll be automatically taken to the end.
+          Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the 🌿 emoji** and you’ll be automatically taken to the end.
         reply: |-
           Yay you found it :tada:
 
@@ -301,7 +301,7 @@ en:
 
           - To jump anywhere in a long discussion, try the topic timeline controls on the right (and bottom, on mobile).
 
-          - If you have a physical :keyboard:, press <kbd>?</kbd> to view our handy keyboard shortcuts.
+          - If you have a physical ⌨, press <kbd>?</kbd> to view our handy keyboard shortcuts.
         not_found: |-
           Hmm… looks like you might be having trouble. Sorry about that. Did you search <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> for the term **capy&#8203;bara**?
 
@@ -311,7 +311,7 @@ en:
 
           %{certificate}
 
-          That’s all for now! Check out [**our latest discussion topics**](/latest) or [**discussion categories**](/categories). :sunglasses:
+          That’s all for now! Check out [**our latest discussion topics**](/latest) or [**discussion categories**](/categories). 😎
 
           (If you’d like to speak with me again to learn more, just message or mention `@%{discobot_username}` any time!)
 
@@ -321,14 +321,14 @@ en:
     advanced_user_narrative:
       reset_trigger: 'advanced user'
       cert_title: "In recognition of successful completion of the advanced user tutorial"
-      title: ':arrow_up: Advanced user features'
+      title: '⬆ Advanced user features'
       start_message: |-
         As an _advanced_ user, have you visited [your preferences page](/my/preferences) yet @%{username}? There are lots of ways to customize your experience, such as selecting a dark or light theme.
 
         But I digress, let’s begin!
 
       edit:
-        bot_created_post_raw: "@%{discobot_username} is, by far, the coolest bot I know :wink:"
+        bot_created_post_raw: "@%{discobot_username} is, by far, the coolest bot I know 😉"
         instructions: |-
           Everyone makes mistakes. But don’t worry, you can always edit your posts to fix them!
 
@@ -350,7 +350,7 @@ en:
         not_found: |-
           I don’t see any deleted posts yet? Remember <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> delete.
         reply: |-
-          Whoa! :boom:
+          Whoa! 💥
 
           To preserve continuity of discussions, deletes aren’t immediate, so the post will be removed after some time.
 
@@ -363,7 +363,7 @@ en:
         not_found: |-
           Having trouble? Remember <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> undelete.
         reply: |-
-          Phew, that was a close one! Thanks for fixing that :wink:
+          Phew, that was a close one! Thanks for fixing that 😉
 
           Do note that you only have 24 hours to undelete a post.
 
@@ -389,9 +389,9 @@ en:
 
           Let’s try changing the notification level for this topic. At the bottom of the topic, you’ll find a button which shows that you’re **watching** this topic. Can you change the notification level to **tracking**?
         not_found: |-
-          It looks like you’re still watching :eyes: this topic! If you’re having trouble finding it, the notification level button is located at the bottom of the topic.
+          It looks like you’re still watching 👀 this topic! If you’re having trouble finding it, the notification level button is located at the bottom of the topic.
         reply: |-
-          Awesome work! I hope you didn’t mute this topic since I can be a little talkative at times :grin:.
+          Awesome work! I hope you didn’t mute this topic since I can be a little talkative at times 😁.
 
           Note that when you reply to a topic, or read a topic for more than a few minutes, it is automatically set to a notification level of 'tracking'. You can change this in [your user preferences](/my/preferences).
 
@@ -405,16 +405,16 @@ en:
 
           ```text
           [poll]
-          * :cat:
-          * :dog:
+          * 🐈
+          * 🐕
           [/poll]
           ```
         reply: |-
           Hey, nice poll! How’d I do in teaching you?
 
           [poll]
-          * :+1:
-          * :-1:
+          * 👍
+          * 👎
           [/poll]
       details:
         instructions: |-
@@ -443,12 +443,12 @@ en:
           Great work — your attention to _detail_ is admirable!
       end:
         message: |-
-          You blazed through this like an _advanced user_ indeed :bow:
+          You blazed through this like an _advanced user_ indeed 🙇
 
           %{certificate}
 
           That’s all I have for you.
 
-          Bye for now! If you’d like to speak with me again, send me a message any time :sunglasses:
+          Bye for now! If you’d like to speak with me again, send me a message any time 😎
       certificate:
         alt: 'Advanced User Track Certificate of Achievement'

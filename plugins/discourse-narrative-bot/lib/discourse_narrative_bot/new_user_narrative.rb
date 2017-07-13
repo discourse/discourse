@@ -113,7 +113,7 @@ module DiscourseNarrativeBot
       }
     }
 
-    SEARCH_ANSWER = ':herb:'.freeze
+    SEARCH_ANSWER = [':herb:', '🌿'].freeze.each(&:freeze)
 
     def self.reset_trigger
       I18n.t('discourse_narrative_bot.new_user_narrative.reset_trigger')
@@ -485,7 +485,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      if @post.raw.match(/#{SEARCH_ANSWER}/)
+      if @post.raw.match(/#{SEARCH_ANSWER.join('|')}/)
         fake_delay
         reply_to(@post, I18n.t("#{I18N_KEY}.search.reply", i18n_post_args(search_url: url_helpers(:search_url))))
       else
