@@ -103,6 +103,9 @@ basic:
   ga_universal_domain_name:
     client: true
     default: 'auto'
+  ga_universal_auto_link_domains:
+    default: ''
+    type: list
   ga_tracking_code:
     client: true
     default: ''

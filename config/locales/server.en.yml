@@ -1035,6 +1035,7 @@ en:
     ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See Google's Cross-Domain Tracking guide."
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
