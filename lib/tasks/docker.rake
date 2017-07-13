@@ -1,3 +1,25 @@
+# rake docker:test is designed to be used inside the discourse/docker_test image
+# running it anywhere else will likely fail
+#
+# Environment Variables (specific to this rake task)
+# => JS_ONLY        set to 1 to skip rspec tests
+# => RUBY_ONLY      set to 1 to skip qunit tests
+# => SINGLE_PLUGIN  set to plugin name to skip eslint, and only run plugin-specific rspec tests
+#
+# Other useful environment variables (not specific to this rake task)
+# => LOAD_PLUGINS   set to 1 to load all plugins when running tests
+# => MODULE         set to a qunit module name to run only those tests
+# => FILTER         set to a qunit filter string to run only those tests
+# => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
+#                   this can also be set to a branch, e.g. "origin/tests-passed"
+#
+# Example usage:
+#   Run all core tests:  
+#       docker run discourse/discourse_test:release
+#   Run only rspec tests:  
+#       docker run -e RUBY_ONLY=1 discourse/discourse_test:release
+#   Run all core and plugin tests (plugin mounted from host filesystem):
+#       docker run -e LOAD_PLUGINS=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release 
 
 def run_or_fail(command)
   pid = Process.spawn(command)
