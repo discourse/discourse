@@ -38,6 +38,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_emoji: {
+        prerequisite: Proc.new { SiteSetting.enable_emoji },
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
