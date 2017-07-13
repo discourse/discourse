@@ -22,6 +22,10 @@ class SearchController < ApplicationController
       search_args[:type_filter] = type if type
     end
 
+    search_args[:search_type] = :full_page
+    search_args[:ip_address] = request.remote_ip
+    search_args[:user_id] = current_user.id if current_user.present?
+
     search = Search.new(params[:q], search_args)
     result = search.execute
 
@@ -37,7 +41,6 @@ class SearchController < ApplicationController
         render_json_dump(serializer)
       end
     end
-
   end
 
   def query
@@ -55,7 +58,11 @@ class SearchController < ApplicationController
       search_args[:type_filter] = type if type
     end
 
-    search = Search.new(params[:term], search_args.symbolize_keys)
+    search_args[:search_type] = :header
+    search_args[:ip_address] = request.remote_ip
+    search_args[:user_id] = current_user.id if current_user.present?
+
+    search = Search.new(params[:term], search_args)
     result = search.execute
     render_serialized(result, GroupedSearchResultSerializer, result: result)
   end

@@ -196,6 +196,15 @@ class Search
   # Query a term
   def execute
 
+    if SiteSetting.log_search_queries?
+      SearchLog.log(
+        term: @term,
+        search_type: @opts[:search_type],
+        ip_address: @opts[:ip_address],
+        user_id: @opts[:user_id]
+      )
+    end
+
     unless @filters.present?
       min_length = @opts[:min_search_term_length] || SiteSetting.min_search_term_length
       terms = (@term || '').split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject {|t| t.length < min_length }
