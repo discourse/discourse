@@ -1,4 +1,4 @@
-import { parseBBCodeTag } from 'pretty-text/engines/markdown-it/bbcode-block';
+import { parseBBCodeTag } from 'pretty-text/engines/discourse-markdown/bbcode-block';
 
 function tokanizeBBCode(state, silent, ruler) {
 
@@ -57,6 +57,7 @@ function tokanizeBBCode(state, silent, ruler) {
 
     let token = state.push('text', '' , 0);
     token.content = state.src.slice(pos, pos+tagInfo.length);
+    token.meta = 'bbcode';
 
     state.delimiters.push({
       bbInfo: tagInfo,
@@ -105,10 +106,15 @@ function processBBCode(state, silent) {
     let tag, className;
 
     if (typeof tagInfo.rule.wrap === 'function') {
-      if (!tagInfo.rule.wrap(token, tagInfo)) {
-        return false;
+      let content = "";
+      for (let j = startDelim.token+1; j < endDelim.token; j++) {
+        let inner = state.tokens[j];
+        if (inner.type === 'text' && inner.meta !== 'bbcode') {
+          content += inner.content;
+        }
       }
-      tag = token.tag;
+      tagInfo.rule.wrap(token, state.tokens[endDelim.token], tagInfo, content);
+      continue;
     } else {
       let split = tagInfo.rule.wrap.split('.');
       tag = split[0];
@@ -160,19 +166,35 @@ export function setup(helper) {
       }
     });
 
+    const simpleUrlRegex = /^http[s]?:\/\//;
     ruler.push('url', {
       tag: 'url',
-      replace: function(state, tagInfo, content) {
-        let token;
+      wrap: function(startToken, endToken, tagInfo, content) {
 
-        token = state.push('link_open', 'a', 1);
-        token.attrs = [['href', content], ['data-bbcode', 'true']];
+        const url = (tagInfo.attrs['_default'] || content).trim();
 
-        token = state.push('text', '', 0);
-        token.content = content;
+        if (simpleUrlRegex.test(url)) {
+          startToken.type = 'link_open';
+          startToken.tag = 'a';
+          startToken.attrs = [['href', url], ['data-bbcode', 'true']];
+          startToken.content = '';
+          startToken.nesting = 1;
 
-        token = state.push('link_close', 'a', -1);
-        return true;
+          endToken.type = 'link_close';
+          endToken.tag = 'a';
+          endToken.content = '';
+          endToken.nesting = -1;
+        } else {
+          // just strip the bbcode tag
+          endToken.content = '';
+          startToken.content = '';
+
+          // edge case, we don't want this detected as a onebox if auto linked
+          // this ensures it is not stripped
+          startToken.type = 'html_inline';
+        }
+
+        return false;
       }
     });
 
@@ -180,9 +202,10 @@ export function setup(helper) {
       tag: 'email',
       replace: function(state, tagInfo, content) {
         let token;
+        let email = tagInfo.attrs['_default'] || content;
 
         token = state.push('link_open', 'a', 1);
-        token.attrs = [['href', 'mailto:' + content], ['data-bbcode', 'true']];
+        token.attrs = [['href', 'mailto:' + email], ['data-bbcode', 'true']];
 
         token = state.push('text', '', 0);
         token.content = content;
