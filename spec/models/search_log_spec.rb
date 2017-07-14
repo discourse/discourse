@@ -137,6 +137,26 @@ RSpec.describe SearchLog, type: :model do
       end
 
     end
+  end
+
+  context "clean_up" do
+
+    it "will remove old logs" do
+      SearchLog.log(term: 'jawa', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'jedi', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'rey', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'finn', search_type: :header, ip_address: '127.0.0.1')
+
+      SiteSetting.search_query_log_max_size = 5
+      SearchLog.clean_up
+      expect(SearchLog.count).to eq(4)
+
+      SiteSetting.search_query_log_max_size = 2
+      SearchLog.clean_up
+      expect(SearchLog.count).to eq(2)
+      expect(SearchLog.where(term: 'rey').first).to be_present
+      expect(SearchLog.where(term: 'finn').first).to be_present
+    end
 
   end
 

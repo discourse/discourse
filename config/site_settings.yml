@@ -1155,6 +1155,7 @@ search:
   search_prefer_recent_posts: false
   search_recent_posts_size: 100000
   log_search_queries: true
+  search_query_log_max_size: 1000000
 
 uncategorized:
   version_checks:
