@@ -464,7 +464,7 @@ module DiscourseNarrativeBot
             <clipPath id="clipCircle">
               <circle r="15" cx="15" cy="15"/>
             </clipPath>
-            <image clip-path="url(#clipCircle)" height="30px" width="30px" xlink:href="data:image/png;base64,#{Base64.strict_encode64(URI(avatar_url).open('rb', redirect: true, allow_redirections: :all).read)}"/>
+            <image clip-path="url(#clipCircle)" height="30px" width="30px" #{base64_image_link(avatar_url)}/>
           </g>
           <text x="#{width / 2}" y="240.94" text-anchor="middle" font-size="24" fill="#020403" font-family="Tangerine, Tangerine">
             #{name}
@@ -530,7 +530,7 @@ module DiscourseNarrativeBot
           <clipPath id="clipCircle">
             <circle r="19" cx="19" cy="19"/>
           </clipPath>
-          <image clip-path="url(#clipCircle)" height="38px" width="38px" xlink:href="data:image/png;base64,#{Base64.strict_encode64(URI(avatar_url).open('rb', redirect: true, allow_redirections: :all).read)}"/>
+          <image clip-path="url(#clipCircle)" height="38px" width="38px" #{base64_image_link(avatar_url)}/>
         </g>
         <text transform="matrix(1.0705 0 0 1 544.2073 388.3629)" fill="#020403" font-family="'Tangerine'" font-size="24.9219px">
           #{@discobot_user.username}
@@ -568,12 +568,26 @@ module DiscourseNarrativeBot
 
           <<~URL
           <g transform="translate(#{width / 2 - (size / 2)} #{height})">
-            <image height="#{size}px" width="#{size}px" xlink:href="data:image/png;base64,#{Base64.strict_encode64(logo_uri.open('rb', redirect: true, allow_redirections: :all).read)}"/>
+            <image height="#{size}px" width="#{size}px" #{base64_image_link(logo_uri)}/>
           </g>
           URL
         rescue URI::InvalidURIError
           ''
         end
+      end
+
+      def base64_image_link(url)
+        if image = fetch_image(url)
+          "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(image)}\""
+        else
+          ""
+        end
+      end
+
+      def fetch_image(url)
+        URI(url).open('rb', redirect: true, allow_redirections: :all).read
+      rescue OpenURI::HTTPError
+        # Ignore if fetching image returns a non 200 response
       end
 
       def avatar_url
