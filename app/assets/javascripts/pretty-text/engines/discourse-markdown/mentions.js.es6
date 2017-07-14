@@ -1,51 +1,88 @@
-/**
-  Supports our custom @mention syntax for calling out a user in a post.
-  It will add a special class to them, and create a link if the user is found in a
-  local map.
-**/
+const regex = /^(\w[\w.-]{0,59})\b/i;
+
+function applyMentions(state, silent, isWhiteSpace, isPunctChar, mentionLookup, getURL) {
+
+  let pos = state.pos;
+
+  // 64 = @
+  if (silent || state.src.charCodeAt(pos) !== 64) {
+    return false;
+  }
+
+  if (pos > 0) {
+    let prev = state.src.charCodeAt(pos-1);
+    if (!isWhiteSpace(prev) && !isPunctChar(String.fromCharCode(prev))) {
+      return false;
+    }
+  }
+
+  // skip if in a link
+  if (state.tokens) {
+    let last = state.tokens[state.tokens.length-1];
+    if (last) {
+      if (last.type === 'link_open') {
+        return false;
+      }
+      if (last.type === 'html_inline' && last.content.substr(0,2) === "<a") {
+        return false;
+      }
+    }
+  }
+
+  let maxMention = state.src.substr(pos+1, 60);
+
+  let matches = maxMention.match(regex);
+
+  if (!matches) {
+    return false;
+  }
+
+  let username = matches[1];
+
+  let type = mentionLookup && mentionLookup(username);
+
+  let tag = 'a';
+  let className = 'mention';
+  let href = null;
+
+  if (type === 'user') {
+    href = getURL('/u/') + username.toLowerCase();
+  } else if (type === 'group') {
+    href = getURL('/groups/') + username;
+    className = 'mention-group';
+  } else {
+    tag = 'span';
+  }
+
+  let token = state.push('mention_open', tag, 1);
+  token.attrs = [['class', className]];
+  if (href) {
+    token.attrs.push(['href', href]);
+  }
+
+  token = state.push('text', '', 0);
+  token.content = '@'+username;
+
+  state.push('mention_close', tag, -1);
+
+  state.pos = pos + username.length + 1;
+
+  return true;
+}
+
 export function setup(helper) {
 
-  if (helper.markdownIt) { return; }
+  if (!helper.markdownIt) { return; }
 
-  // We have to prune @mentions that are within links.
-  helper.onParseNode(event => {
-    const node = event.node,
-    path = event.path;
-
-    if (node[1] && node[1]["class"] === 'mention')  {
-      const parent = path[path.length - 1];
-
-      // If the parent is an 'a', remove it
-      if (parent && parent[0] === 'a') {
-        const name = node[2];
-        node.length = 0;
-        node[0] = "__RAW";
-        node[1] = name;
-      }
-    }
-  });
-
-  helper.inlineRegexp({
-    start: '@',
-    // NOTE: since we can't use SiteSettings here (they loads later in process)
-    // we are being less strict to account for more cases than allowed
-    matcher: /^@(\w[\w.-]{0,59})\b/i,
-    wordBoundary: true,
-
-    emitter(matches) {
-      const mention = matches[0].trim();
-      const name = matches[1];
-      const opts = helper.getOptions();
-      const mentionLookup = opts.mentionLookup;
-
-      const type = mentionLookup && mentionLookup(name);
-      if (type === "user") {
-        return ['a', {'class': 'mention', href: opts.getURL("/u/") + name.toLowerCase()}, mention];
-      } else if (type === "group") {
-        return ['a', {'class': 'mention-group', href: opts.getURL("/groups/") + name}, mention];
-      } else {
-        return ['span', {'class': 'mention'}, mention];
-      }
-    }
+  helper.registerPlugin(md => {
+    md.inline.ruler.push('mentions', (state,silent)=> applyMentions(
+          state,
+          silent,
+          md.utils.isWhiteSpace,
+          md.utils.isPunctChar,
+          md.options.discourse.mentionLookup,
+          md.options.discourse.getURL
+    ));
   });
 }
+

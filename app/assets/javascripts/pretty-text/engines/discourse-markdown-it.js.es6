@@ -1,4 +1,4 @@
-import { default as WhiteLister, whiteListFeature } from 'pretty-text/white-lister';
+import { default as WhiteLister } from 'pretty-text/white-lister';
 import { sanitize } from 'pretty-text/sanitizer';
 import guid from 'pretty-text/guid';
 
@@ -10,10 +10,10 @@ function deprecate(feature, name){
   };
 }
 
-function createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOptions) {
+function createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOptions, whiteListed) {
   let helper = {};
   helper.markdownIt = true;
-  helper.whiteList = info => whiteListFeature(featureName, info);
+  helper.whiteList = info => whiteListed.push([featureName, info]);
   helper.registerInline = deprecate(featureName,'registerInline');
   helper.replaceBlock = deprecate(featureName,'replaceBlock');
   helper.addPreProcessor = deprecate(featureName,'addPreProcessor');
@@ -151,7 +151,7 @@ export function setup(opts, siteSettings, state) {
   }
 
   // we got to require this late cause bundle is not loaded in pretty-text
-  Helpers = Helpers || requirejs('pretty-text/engines/markdown-it/helpers');
+  Helpers = Helpers || requirejs('pretty-text/engines/discourse-markdown/helpers');
 
   opts.markdownIt = true;
 
@@ -165,6 +165,7 @@ export function setup(opts, siteSettings, state) {
 
   const check = /discourse-markdown\/|markdown-it\//;
   let features = [];
+  let whiteListed = [];
 
   Object.keys(require._eak_seen).forEach(entry => {
     if (check.test(entry)) {
@@ -173,7 +174,7 @@ export function setup(opts, siteSettings, state) {
 
         const featureName = entry.split('/').reverse()[0];
         features.push(featureName);
-        module.setup(createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOptions));
+        module.setup(createHelper(featureName, opts, optionCallbacks, pluginCallbacks, getOptions, whiteListed));
       }
     }
   });
@@ -227,10 +228,16 @@ export function setup(opts, siteSettings, state) {
   opts.markdownIt = true;
   opts.setup = true;
 
-  if (!opts.discourse.sanitizer) {
+  if (!opts.discourse.sanitizer || !opts.sanitizer) {
     const whiteLister = new WhiteLister(opts.discourse);
+
+    whiteListed.forEach(([feature, info]) => {
+      whiteLister.whiteListFeature(feature, info);
+    });
+
     opts.sanitizer = opts.discourse.sanitizer = (!!opts.discourse.sanitize) ? a=>sanitize(a, whiteLister) : a=>a;
   }
+
 }
 
 export function cook(raw, opts) {
