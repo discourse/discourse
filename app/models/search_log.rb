@@ -44,4 +44,11 @@ class SearchLog < ActiveRecord::Base
       [:updated, rows[0]['id'].to_i]
     end
   end
+
+  def self.clean_up
+    search_id = SearchLog.order(:id).offset(SiteSetting.search_query_log_max_size).limit(1).pluck(:id)
+    if search_id.present?
+      SearchLog.where('id < ?', search_id[0]).delete_all
+    end
+  end
 end
