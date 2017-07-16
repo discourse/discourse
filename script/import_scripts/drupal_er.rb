@@ -57,6 +57,12 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     post_process_posts
 
 
+    # Reset "New" topics counter for all users.
+    # User.find_each {|u| u.user_stat.update_column(:new_since, Time.now) }
+
+    # Reset "Unread" topics counter for all users.
+    # Topic.exec_sql("UPDATE topic_users tu SET highest_seen_post_number = t.highest_post_number , last_read_post_number = highest_post_number FROM topics t WHERE t.id = tu.topic_id")
+
     # begin
     #   create_admin(email: 'admin@example.com', username: UserNameSuggester.suggest('admin'))
     # rescue => e
@@ -529,11 +535,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       # Remove trailing tabs.
       post.raw.gsub!(/\n\t{1,}/, "\n")
       # Remove trailing whitespaces.
-      post.raw.gsub!(/\n\s{1,}/, "\n")
+      post.raw.gsub!(/\n[[:space:]]{1,}/, "\n")
       # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
       post.raw.gsub!(/\n#/, "\n\\#")
       # Escape hash signs after a whitespace to prevent markdown messing up the html formatting.
-      post.raw.gsub!(/\s#/, " \\#")
+      post.raw.gsub!(/[[:space:]]#/, " \\#")
 
       post.save!(validate: false)
     end
