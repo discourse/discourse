@@ -1,0 +1,124 @@
+/**
+* CSS rules for the OpenCare consent funnel quiz.
+*
+* Overrides everything from quizlib.css / quizlib.min.css, so that file does not have to be included.
+*/
+#consent-panel {
+  margin-right: 20px;
+
+  .card {
+    padding: 8px;
+    background-color: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+  }
+
+  /** Basic dialog elements. Overwrites dialog module definitions.
+   *  (This is only included when used by edgeryders_consent, so it has global side effects.) */
+
+  .ui-dialog {
+    /* Overwriting style="width:300px" set somewhere in the dialog module code. */
+    //    min-width:500px !important;
+    //    width: 80% !important;
+  }
+
+  .ui-widget {
+    //    font-size: inherit;
+  }
+
+  .ui-dialog .ui-dialog-titlebar {
+    /* Simplest way to hide the close-button is hiding the complete title bar. */
+    display: none;
+  }
+
+  /** Quiz specific definitions. */
+
+  #quiz {
+    //    display: none; /* Initially. Shown automatically when opening the dialog. */
+  }
+
+  #quiz-result-progress, #quiz-result-finished {
+    display: none; /* Initially. Shown with JS when needed. */
+    margin-bottom: 10px;
+    text-align: center;
+    /* font-size: 16px; */
+    color: #fff;
+  }
+
+  #quiz-result-finished {
+    background-color: #4caf50;
+  }
+
+  input[type="text"] {
+    margin-left: 20px;
+  }
+
+  .quizlib-intro {
+    /* Formatting is equiv. to .fieldset-legend span.summary {}, used in the form sidebars visible to admins. */
+    //    font-size: 0.85em;
+    //    color: #999999;
+    margin-bottom: 1em;
+  }
+
+  .quizlib-question {
+    margin-bottom: 1em;
+  }
+
+  .quizlib-question-title {
+  }
+
+  .quizlib-question-answers input[type="checkbox"] {
+    margin-right: 0.5em;
+
+    /* Prevent the scaling up of checkbox fields done in the main form. */
+    /* TODO Replace !important with including the file with a higher weight than the edgeryders_challenges CSS file. */
+    transform: initial !important;
+    -webkit-transform: initial !important;
+  }
+
+  .quizlib-question-answers input[type="radio"] {
+    margin-right: 0.5em;
+  }
+
+  .quizlib-question-answers label {
+    /* TODO Replace !important with including the file with a higher weight than the edgeryders_challenges CSS file. */
+    color: #222222 !important;
+    font-weight: normal !important;
+  }
+
+  .quizlib-question-answers ul {
+    list-style: none;
+  }
+
+  .quizlib-hint {
+    display: none; /* Shown by JS where needed. */
+    padding: 0.5em;
+    border: 1px solid #f44336;
+    margin-bottom: 1em;
+  }
+
+  .quizlib-question-warning {
+    color: #f44336;
+    margin-left: 1em;
+    margin-bottom: 0.5em;
+  }
+
+  /* Highlights correctly answered questions, and correctly selected answer options. */
+  /* TODO Rework the CSS and content structure to get rid of !important and of the duplicate selector (needed to be specific enough). */
+  .quizlib-correct,
+  .quizlib-question-answers label.quizlib-correct {
+    color: #4caf50 !important;
+  }
+
+  /* Highlights incorrectly answered questions, and incorrectly selected answer options. */
+  /* TODO Rework the CSS and content structure to get rid of !important and of the duplicate selector (needed to be specific enough). */
+  .quizlib-incorrect,
+  .quizlib-question-answers label.quizlib-incorrect {
+    color: #f44336 !important;
+  }
+
+}
