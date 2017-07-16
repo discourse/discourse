@@ -3,7 +3,6 @@
 # version: 0.0.1
 
 register_asset 'stylesheets/consent.scss'
-register_asset 'javascripts/bidiweb.build.js'
 register_asset 'javascripts/quiz.js'
 register_asset 'javascripts/quizlib.1.0.0.min.js'
 
