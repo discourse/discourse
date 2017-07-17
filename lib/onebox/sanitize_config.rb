@@ -19,7 +19,8 @@ class Sanitize
       add_attributes: {
         'iframe' => {
           'seamless' => 'seamless',
-          'sandbox' => 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox',
+          'sandbox' => 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox' \
+                       ' allow-presentation',
         }
       },
 
