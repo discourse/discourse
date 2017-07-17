@@ -461,13 +461,16 @@ td.flaggers td {
     .setting-controls {
       float: left;
     }
-    .input-setting-string {
+    .input-setting-string, .input-setting-textarea {
       box-sizing: border-box;
       height: 30px;
       width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
+    }
+    .input-setting-textarea {
+      height: 150px;
     }
     .input-setting-list {
       @media (max-width: $mobile-breakpoint) {
@@ -531,7 +534,7 @@ td.flaggers td {
   }
 
   .setting.overridden.string {
-    input[type=text] {
+    input[type=text], textarea {
       background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
     }
   }
