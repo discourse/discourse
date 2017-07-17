@@ -123,4 +123,89 @@ describe SearchController do
 
   end
 
+  context "#click" do
+    it "doesn't work wthout the necessary parameters" do
+      expect(-> {
+        xhr :post, :click
+      }).to raise_error(ActionController::ParameterMissing)
+    end
+
+    it "doesn't record the click for a different user" do
+      log_in(:user)
+
+      _, search_log_id = SearchLog.log(
+        term: 'kitty',
+        search_type: :header,
+        user_id: -10,
+        ip_address: '127.0.0.1'
+      )
+
+      xhr :post, :click, {
+        search_log_id: search_log_id,
+        search_result_id: 12345,
+        search_result_type: 'topic'
+      }
+      expect(response).to be_success
+
+      expect(SearchLog.find(search_log_id).clicked_topic_id).to be_blank
+    end
+
+    it "records the click for a logged in user" do
+      user = log_in(:user)
+
+      _, search_log_id = SearchLog.log(
+        term: 'kitty',
+        search_type: :header,
+        user_id: user.id,
+        ip_address: '127.0.0.1'
+      )
+
+      xhr :post, :click, {
+        search_log_id: search_log_id,
+        search_result_id: 12345,
+        search_result_type: 'topic'
+      }
+      expect(response).to be_success
+
+      expect(SearchLog.find(search_log_id).clicked_topic_id).to eq(12345)
+    end
+
+    it "records the click for an anonymous user" do
+      request.stubs(:remote_ip).returns('192.168.0.1')
+
+      _, search_log_id = SearchLog.log(
+        term: 'kitty',
+        search_type: :header,
+        ip_address: '192.168.0.1'
+      )
+
+      xhr :post, :click, {
+        search_log_id: search_log_id,
+        search_result_id: 22222,
+        search_result_type: 'topic'
+      }
+      expect(response).to be_success
+
+      expect(SearchLog.find(search_log_id).clicked_topic_id).to eq(22222)
+    end
+
+    it "doesn't record the click for a different IP" do
+      request.stubs(:remote_ip).returns('192.168.0.2')
+
+      _, search_log_id = SearchLog.log(
+        term: 'kitty',
+        search_type: :header,
+        ip_address: '192.168.0.1'
+      )
+
+      xhr :post, :click, {
+        search_log_id: search_log_id,
+        search_result_id: 22222,
+        search_result_type: 'topic'
+      }
+      expect(response).to be_success
+
+      expect(SearchLog.find(search_log_id).clicked_topic_id).to be_blank
+    end
+  end
 end

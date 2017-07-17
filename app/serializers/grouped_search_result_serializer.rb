@@ -8,4 +8,8 @@ class GroupedSearchResultSerializer < ApplicationSerializer
     object.search_log_id
   end
 
+  def include_search_log_id?
+    search_log_id.present?
+  end
+
 end
