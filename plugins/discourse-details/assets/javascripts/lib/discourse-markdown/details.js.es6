@@ -25,6 +25,6 @@ export function setup(helper) {
   ]);
 
   helper.registerPlugin(md => {
-    md.block.bbcode_ruler.push('details', rule);
+    md.block.bbcode.ruler.push('details', rule);
   });
 }

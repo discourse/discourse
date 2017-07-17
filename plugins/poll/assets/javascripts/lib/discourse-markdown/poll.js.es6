@@ -295,7 +295,7 @@ function newApiInit(helper) {
   });
 
   helper.registerPlugin(md => {
-    md.block.bbcode_ruler.push('poll', rule);
+    md.block.bbcode.ruler.push('poll', rule);
   });
 }
 

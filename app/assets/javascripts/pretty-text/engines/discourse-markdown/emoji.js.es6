@@ -229,9 +229,6 @@ function applyEmoji(content, state, emojiUnicodeReplacer) {
 }
 
 export function setup(helper) {
-
-  if (!helper.markdownIt) { return; }
-
   helper.registerOptions((opts, siteSettings, state)=>{
     opts.features.emoji = !!siteSettings.enable_emoji;
     opts.emojiSet = siteSettings.emoji_set || "";

@@ -27,8 +27,6 @@ function render(tokens, idx, options, env, slf, md) {
 }
 
 export function setup(helper) {
-  if (!helper.markdownIt) { return; }
-
   helper.registerOptions((opts, siteSettings) => {
     opts.defaultCodeLang = siteSettings.default_code_lang;
     opts.acceptableCodeClasses = (siteSettings.highlighted_languages || "").split("|").concat(['auto', 'nohighlight']);

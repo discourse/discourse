@@ -1,43 +1,7 @@
-const regex = /^(\w[\w.-]{0,59})\b/i;
-
-function applyMentions(state, silent, isWhiteSpace, isPunctChar, mentionLookup, getURL) {
-
-  let pos = state.pos;
-
-  // 64 = @
-  if (silent || state.src.charCodeAt(pos) !== 64) {
-    return false;
-  }
-
-  if (pos > 0) {
-    let prev = state.src.charCodeAt(pos-1);
-    if (!isWhiteSpace(prev) && !isPunctChar(String.fromCharCode(prev))) {
-      return false;
-    }
-  }
-
-  // skip if in a link
-  if (state.tokens) {
-    let last = state.tokens[state.tokens.length-1];
-    if (last) {
-      if (last.type === 'link_open') {
-        return false;
-      }
-      if (last.type === 'html_inline' && last.content.substr(0,2) === "<a") {
-        return false;
-      }
-    }
-  }
-
-  let maxMention = state.src.substr(pos+1, 60);
-
-  let matches = maxMention.match(regex);
-
-  if (!matches) {
-    return false;
-  }
-
-  let username = matches[1];
+function addMention(buffer, match, state) {
+  let username = match.slice(1);
+  let mentionLookup = state.md.options.discourse.mentionLookup;
+  let getURL = state.md.options.discourse.getURL;
 
   let type = mentionLookup && mentionLookup(username);
 
@@ -54,35 +18,31 @@ function applyMentions(state, silent, isWhiteSpace, isPunctChar, mentionLookup, 
     tag = 'span';
   }
 
-  let token = state.push('mention_open', tag, 1);
+  let token = new state.Token('mention_open', tag, 1);
   token.attrs = [['class', className]];
   if (href) {
     token.attrs.push(['href', href]);
   }
 
-  token = state.push('text', '', 0);
+  buffer.push(token);
+
+  token = new state.Token('text', '', 0);
   token.content = '@'+username;
 
-  state.push('mention_close', tag, -1);
+  buffer.push(token);
 
-  state.pos = pos + username.length + 1;
-
-  return true;
+  token = new state.Token('mention_close', tag, -1);
+  buffer.push(token);
 }
 
 export function setup(helper) {
-
-  if (!helper.markdownIt) { return; }
-
   helper.registerPlugin(md => {
-    md.inline.ruler.push('mentions', (state,silent)=> applyMentions(
-          state,
-          silent,
-          md.utils.isWhiteSpace,
-          md.utils.isPunctChar,
-          md.options.discourse.mentionLookup,
-          md.options.discourse.getURL
-    ));
+
+    const rule = {
+      matcher: /@\w[\w.-]{0,59}/,
+      onMatch: addMention
+    };
+
+    md.core.textPostProcess.ruler.push('mentions', rule);
   });
 }
-

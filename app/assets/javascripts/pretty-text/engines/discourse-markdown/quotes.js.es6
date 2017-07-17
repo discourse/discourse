@@ -121,14 +121,12 @@ const rule = {
 
 export function setup(helper) {
 
-  if (!helper.markdownIt) { return; }
-
   helper.registerOptions((opts, siteSettings) => {
     opts.enableEmoji = siteSettings.enable_emoji;
     opts.emojiSet = siteSettings.emoji_set;
   });
 
   helper.registerPlugin(md=>{
-     md.block.bbcode_ruler.push('quotes', rule);
+     md.block.bbcode.ruler.push('quotes', rule);
   });
 }

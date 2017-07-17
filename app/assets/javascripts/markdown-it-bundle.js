@@ -12,4 +12,5 @@
 //= require ./pretty-text/engines/discourse-markdown/table
 //= require ./pretty-text/engines/discourse-markdown/paragraph
 //= require ./pretty-text/engines/discourse-markdown/newline
-//= require ./pretty-text/engines/discourse-markdown/html_img
+//= require ./pretty-text/engines/discourse-markdown/html-img
+//= require ./pretty-text/engines/discourse-markdown/text-post-process
