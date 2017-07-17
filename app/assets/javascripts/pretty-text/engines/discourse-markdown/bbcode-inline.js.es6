@@ -141,9 +141,6 @@ function processBBCode(state, silent) {
 }
 
 export function setup(helper) {
-
-  if (!helper.markdownIt) { return; }
-
   helper.whiteList(['span.bbcode-b', 'span.bbcode-i', 'span.bbcode-u', 'span.bbcode-s']);
 
   helper.registerOptions(opts => {
@@ -151,7 +148,7 @@ export function setup(helper) {
   });
 
   helper.registerPlugin(md => {
-    const ruler = md.inline.bbcode_ruler;
+    const ruler = md.inline.bbcode.ruler;
 
     md.inline.ruler.push('bbcode-inline', (state,silent) => tokanizeBBCode(state,silent,ruler));
     md.inline.ruler2.before('text_collapse', 'bbcode-inline', processBBCode);

@@ -1,7 +1,4 @@
 export function setup(helper) {
-
-  if (!helper.markdownIt) { return; }
-
   // this is built in now
   // TODO: sanitizer needs fixing, does not properly support this yet
 

@@ -120,7 +120,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     return false;
   }
 
-  let ruleInfo = md.block.bbcode_ruler.getRuleForTag(info.tag);
+  let ruleInfo = md.block.bbcode.ruler.getRuleForTag(info.tag);
   if (!ruleInfo) { return false; }
 
   rule = ruleInfo.rule;
@@ -249,11 +249,8 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 }
 
 export function setup(helper) {
-  if (!helper.markdownIt) { return; }
-
-
   helper.registerPlugin(md => {
-    const ruler = md.block.bbcode_ruler;
+    const ruler = md.block.bbcode.ruler;
 
     ruler.push('code', {
       tag: 'code',

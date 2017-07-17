@@ -175,6 +175,10 @@ describe PrettyText do
       )
     end
 
+    it 'should not treat a medium link as a mention' do
+      expect(PrettyText.cook(". http://test/@sam")).not_to include('mention')
+    end
+
   end
 
   describe "code fences" do

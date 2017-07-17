@@ -71,11 +71,16 @@ class Ruler {
 
 // block bb code ruler for parsing of quotes / code / polls
 function setupBlockBBCode(md) {
-  md.block.bbcode_ruler = new Ruler();
+  md.block.bbcode = { ruler: new Ruler() };
 }
 
 function setupInlineBBCode(md) {
-  md.inline.bbcode_ruler = new Ruler();
+  md.inline.bbcode = { ruler: new Ruler() };
+}
+
+function setupTextPostProcessRuler(md) {
+  const TextPostProcessRuler = requirejs('pretty-text/engines/discourse-markdown/text-post-process').TextPostProcessRuler;
+  md.core.textPostProcess = { ruler: new TextPostProcessRuler() };
 }
 
 function renderHoisted(tokens, idx, options) {
@@ -217,6 +222,7 @@ export function setup(opts, siteSettings, state) {
   setupImageDimensions(opts.engine);
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
+  setupTextPostProcessRuler(opts.engine);
 
   pluginCallbacks.forEach(([feature, callback])=>{
     if (opts.discourse.features[feature]) {

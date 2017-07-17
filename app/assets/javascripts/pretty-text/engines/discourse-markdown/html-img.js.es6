@@ -65,9 +65,6 @@ function rule(state, startLine, endLine) {
 
 
 export function setup(helper) {
-
-  if (!helper.markdownIt) { return; }
-
   helper.registerPlugin(md=>{
      md.block.ruler.before('html_block', 'html_img', rule, {alt: ['fence']});
   });
