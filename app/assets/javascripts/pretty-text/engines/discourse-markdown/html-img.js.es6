@@ -49,7 +49,7 @@ function rule(state, startLine, endLine) {
   let oldParentType = state.parentType;
   state.parentType = 'paragraph';
 
-  token = state.push('paragraph_open', 'p', 0);
+  token = state.push('paragraph_open', 'p', 1);
   token.map = [startLine, state.line];
 
   token = state.push('inline', '', 0);

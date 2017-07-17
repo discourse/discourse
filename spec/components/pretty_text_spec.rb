@@ -561,19 +561,15 @@ describe PrettyText do
     html = <<~HTML
       <p>a <img><br>
       <img></p>
-      <p>
-      <img><br>
+      <p><img><br>
       <img></p>
-      <p>
-      <img></p>
+      <p><img></p>
       <p>a</p>
-      <p>
-      <img></p>
+      <p><img></p>
       <ul>
       <li>li</li>
       </ul>
-      <p>
-      <img></p>
+      <p><img></p>
       <pre><code class="lang-auto">test
       </code></pre>
       <pre><code class="lang-auto">test
@@ -600,8 +596,7 @@ describe PrettyText do
     HTML
 
     html = <<~HTML
-      <p>
-      <img><br>
+      <p><img><br>
       <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
       <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
       <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
@@ -661,6 +656,9 @@ describe PrettyText do
     expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
   end
 
+  it "should not treat a non emoji as an emoji" do
+    expect(PrettyText.cook(':email,class_name:')).not_to include('emoji')
+  end
 
   it "supports href schemes" do
     SiteSetting.allowed_href_schemes = "macappstore|steam"
@@ -791,6 +789,7 @@ HTML
     expect(PrettyText.cook(" http://a.com")).not_to include('onebox')
     expect(PrettyText.cook("a\n http://a.com")).not_to include('onebox')
     expect(PrettyText.cook("sam@sam.com")).not_to include('onebox')
+    expect(PrettyText.cook("<img src='a'>\nhttp://a.com")).to include('onebox')
   end
 
   it "can handle bbcode" do
