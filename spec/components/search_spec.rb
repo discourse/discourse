@@ -790,4 +790,16 @@ describe Search do
     end
   end
 
+  context "search_log_id" do
+    it "returns an id when the search succeeds" do
+      s = Search.new(
+        'indiana jones',
+        search_type: :header,
+        ip_address: '127.0.0.1'
+      )
+      results = s.execute
+      expect(results.search_log_id).to be_present
+    end
+  end
+
 end

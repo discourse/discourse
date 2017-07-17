@@ -57,8 +57,17 @@ describe SearchController do
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       xhr :get, :query, term: 'wookie'
+
       expect(response).to be_success
       expect(SearchLog.where(term: 'wookie')).to be_present
+
+      json = JSON.parse(response.body)
+      search_log_id = json['grouped_search_result']['search_log_id']
+      expect(search_log_id).to be_present
+
+      log = SearchLog.where(id: search_log_id).first
+      expect(log).to be_present
+      expect(log.term).to eq('wookie')
     end
 
     it "doesn't log when disabled" do

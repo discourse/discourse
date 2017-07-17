@@ -12,6 +12,9 @@ class SearchLog < ActiveRecord::Base
 
   def self.log(term:, search_type:, ip_address:, user_id:nil)
 
+    search_type = search_types[search_type]
+    return [:error] unless search_type.present? && ip_address.present?
+
     update_sql = <<~SQL
       UPDATE search_logs
       SET term = :term,
@@ -35,7 +38,7 @@ class SearchLog < ActiveRecord::Base
     if rows.cmd_tuples == 0
       result = create(
         term: term,
-        search_type: search_types[search_type],
+        search_type: search_type,
         ip_address: ip_address,
         user_id: user_id
       )
