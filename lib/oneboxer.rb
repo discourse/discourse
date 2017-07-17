@@ -18,7 +18,7 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://store.steampowered.com']
+    @ignore_redirects ||= ['http://store.steampowered.com', Discourse.base_url]
   end
 
   def self.preview(url, options=nil)
@@ -146,7 +146,6 @@ module Oneboxer
     end
 
     def self.onebox_raw(url)
-
       Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
         fd = FinalDestination.new(url, ignore_redirects: ignore_redirects)
         uri = fd.resolve
