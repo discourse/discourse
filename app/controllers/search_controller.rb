@@ -67,6 +67,27 @@ class SearchController < ApplicationController
     render_serialized(result, GroupedSearchResultSerializer, result: result)
   end
 
+  def click
+    params.require(:search_log_id)
+    params.require(:search_result_type)
+    params.require(:search_result_id)
+
+    if params[:search_result_type] == 'topic'
+      where = { id: params[:search_log_id] }
+      if current_user.present?
+        where[:user_id] = current_user.id
+      else
+        where[:ip_address] = request.remote_ip
+      end
+
+      SearchLog.where(where).update_all(
+        clicked_topic_id: params[:search_result_id]
+      )
+    end
+
+    render json: success_json
+  end
+
   protected
 
   def lookup_search_context
