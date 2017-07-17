@@ -4,6 +4,26 @@ RSpec.describe SearchLog, type: :model do
 
   describe ".log" do
 
+    context "invalid arguments" do
+      it "no search type returns error" do
+        status, _ = SearchLog.log(
+          term: 'bounty hunter',
+          search_type: :missing,
+          ip_address: '127.0.0.1'
+        )
+        expect(status).to eq(:error)
+      end
+
+      it "no IP returns error" do
+        status, _ = SearchLog.log(
+          term: 'bounty hunter',
+          search_type: :header,
+          ip_address: nil
+        )
+        expect(status).to eq(:error)
+      end
+    end
+
     context "when anonymous" do
       it "logs and updates the search" do
         Timecop.freeze do
