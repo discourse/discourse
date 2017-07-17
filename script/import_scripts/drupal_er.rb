@@ -51,10 +51,10 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # import_topics
     # import_replies
     # import_likes
-    # import_tags
+    import_tags
     # create_permalinks
-    normalize_urls
-    post_process_posts
+    # normalize_urls
+    # post_process_posts
 
 
     # Reset "New" topics counter for all users.
@@ -257,11 +257,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         created_at: Time.zone.at(row['created']),
         updated_at: Time.zone.at(row['changed']),
         custom_fields: {import_id: "nid:#{row['nid']}"},
-        category: CategoryCustomField.find_by(name: 'import_id', value: category_nid).try(:category).try(:name),
-        post_create_action: proc do |post|
-          tag_names = [row['type']]
-          DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Discourse.system_user), tag_names, append: true)
-        end
+        category: CategoryCustomField.find_by(name: 'import_id', value: category_nid).try(:category).try(:name)
         # visible: row['status'].to_i == 0 ? false : true
         # pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
       }
@@ -626,14 +622,18 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     Topic.find_each do |topic|
       if topic_nid = topic.ordered_posts.first.custom_fields['import_id']
         topic_nid = topic_nid.first if topic_nid.is_a?(Array)
+        topic_nid = topic_nid.gsub(/nid:/, '')
+
+        results = @client.query("SELECT type FROM node WHERE nid = #{topic_nid}", cache_rows: false)
+        topic_type = results.first['type']
 
         sql = "SELECT td.name
                FROM field_data_field_topics AS ft
                INNER JOIN taxonomy_term_data AS td ON ft.field_topics_tid = td.tid
-               WHERE ft.entity_id = #{topic_nid.gsub(/nid:/, '')}"
+               WHERE ft.entity_type = 'node' AND ft.entity_id = #{topic_nid}"
         results = @client.query(sql, cache_rows: false)
 
-        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(Discourse.system_user), results.map { |row| row['name'] }, append: true)
+        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(Discourse.system_user), [topic_type] + results.map { |row| row['name'] }, append: true)
       end
     end
   end
