@@ -12,7 +12,7 @@ class FinalDestination
   def initialize(url, opts=nil)
     @uri =
       begin
-        URI(url) if url
+        URI(URI.escape(url)) if url
       rescue URI::InvalidURIError
       end
 
