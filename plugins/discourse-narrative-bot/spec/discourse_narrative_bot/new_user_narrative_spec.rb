@@ -612,7 +612,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         it 'should create the right reply' do
           post.update!(
-            raw: '[quote="#{post.user}, post:#{post.post_number}, topic:#{topic.id}"]\n:monkey: :fries:\n[/quote]'
+            raw: "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]"
           )
 
           narrative.expects(:enqueue_timeout_job).with(user)
