@@ -79,8 +79,8 @@ describe ::DiscoursePoll::PollsController do
     end
 
     it "ensures poll is open" do
-      closed_poll = Fabricate(:post, raw: "[poll status=closed]\n- A\n- B\n[/poll]")
-      xhr :put, :vote, { post_id: closed_poll.id, poll_name: "poll", options: ["A"] }
+      closed_poll = create_post(raw: "[poll status=closed]\n- A\n- B\n[/poll]")
+      xhr :put, :vote, { post_id: closed_poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.poll_must_be_open_to_vote"))

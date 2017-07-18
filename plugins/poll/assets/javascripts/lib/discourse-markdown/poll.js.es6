@@ -113,7 +113,10 @@ const rule = {
 
     // default poll attributes
     const attributes = [["class", "poll"]];
-    attributes.push([DATA_PREFIX + "status", "open"]);
+
+    if (!attrs['status']) {
+      attributes.push([DATA_PREFIX + "status", "open"]);
+    }
 
     WHITELISTED_ATTRIBUTES.forEach(name => {
       if (attrs[name]) {
