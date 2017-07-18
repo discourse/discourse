@@ -103,3 +103,33 @@ widgetTest('anonymous - switch back', {
     });
   }
 });
+
+widgetTest('bookmarks', {
+  template: '{{mount-widget widget="user-menu"}}',
+
+  test(assert) {
+    assert.ok(this.$('.user-menu').length);
+    click('.user-bookmarks-link');
+    andThen(() => {
+      assert.ok(this.$('.menu-bookmarks').length);
+      assert.equal(this.$('.bookmarks a').text(), "How to check the user level via ajax?/users/activate-account pulling blank logo instead of defaulting to h2Support for Piwik Analytics as an alternative to Google AnalyticsAllow for multiple API Keysview more bookmarks...");
+    });
+  }
+});
+
+widgetTest('private messages', {
+  template: '{{mount-widget widget="user-menu"}}',
+
+  beforeEach() {
+    this.siteSettings.enable_private_messages = true;
+  },
+
+  test(assert) {
+    assert.ok(this.$('.user-menu').length);
+    click('.user-pms-link');
+    andThen(() => {
+      assert.ok(this.$('.menu-private-messages').length);
+      assert.equal(this.$('.private-messages a').text(), "view more messages...");
+    });
+  },
+});
