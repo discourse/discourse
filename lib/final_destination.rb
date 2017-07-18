@@ -10,7 +10,12 @@ class FinalDestination
   attr_reader :cookie
 
   def initialize(url, opts=nil)
-    @uri = URI(url) rescue nil
+    @uri =
+      begin
+        URI(url) if url
+      rescue URI::InvalidURIError
+      end
+
     @opts = opts || {}
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda do |host|
