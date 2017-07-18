@@ -25,7 +25,13 @@ class Plugin::Metadata
     "poll",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
-    "discourse-oauth2-basic"
+    "discourse-oauth2-basic",
+    "discourse-math",
+    "discourse-bbcode-color",
+    "discourse-bbcode",
+    "discourse-affiliate",
+    "discourse-translator",
+    "discourse-patreon"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
