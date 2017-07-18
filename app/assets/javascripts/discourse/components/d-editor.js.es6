@@ -327,7 +327,6 @@ export default Ember.Component.extend({
   _applyEmojiAutocomplete($editorInput) {
     if (!this.siteSettings.enable_emoji) { return; }
 
-    const register = this.register;
     const self = this;
 
     $editorInput.autocomplete({
