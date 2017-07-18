@@ -1,6 +1,6 @@
 directory 'plugins'
 
-desc 'install all official plugins'
+desc 'install all official plugins (use GIT_WRITE=1 to pull with write access)'
 task 'plugin:install_all_official' do
   skip = Set.new([
     'customer-flair',
