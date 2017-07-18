@@ -182,7 +182,13 @@ class Search
       @limit = Search.per_filter
     end
 
-    @results = GroupedSearchResults.new(@opts[:type_filter], clean_term, @search_context, @include_blurbs, @blurb_length)
+    @results = GroupedSearchResults.new(
+      @opts[:type_filter],
+      clean_term,
+      @search_context,
+      @include_blurbs,
+      @blurb_length
+    )
   end
 
   def valid?
@@ -195,6 +201,16 @@ class Search
 
   # Query a term
   def execute
+
+    if SiteSetting.log_search_queries?
+      status, search_log_id = SearchLog.log(
+        term: @term,
+        search_type: @opts[:search_type],
+        ip_address: @opts[:ip_address],
+        user_id: @opts[:user_id]
+      )
+      @results.search_log_id = search_log_id unless status == :error
+    end
 
     unless @filters.present?
       min_length = @opts[:min_search_term_length] || SiteSetting.min_search_term_length

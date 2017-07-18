@@ -8,8 +8,32 @@ describe PrettyText do
   end
 
   context 'markdown it' do
-    before do
-      SiteSetting.enable_experimental_markdown_it = true
+    it 'supports multi choice polls' do
+      cooked = PrettyText.cook <<~MD
+        [poll type=multiple min=1 max=3 public=true]
+        * option 1
+        * option 2
+        * option 3
+        [/poll]
+      MD
+
+      expect(cooked).to include('class="poll"')
+      expect(cooked).to include('data-poll-status="open"')
+      expect(cooked).to include('data-poll-name="poll"')
+      expect(cooked).to include('data-poll-type="multiple"')
+      expect(cooked).to include('data-poll-min="1"')
+      expect(cooked).to include('data-poll-max="3"')
+      expect(cooked).to include('data-poll-public="true"')
+    end
+
+    it 'can dynamically generate a poll' do
+
+      cooked = PrettyText.cook <<~MD
+        [poll type=number min=1 max=20 step=1]
+        [/poll]
+      MD
+
+      expect(cooked.scan('<li').length).to eq(20)
     end
 
     it 'can properly bake 2 polls' do
@@ -31,22 +55,6 @@ describe PrettyText do
 
       cooked = PrettyText.cook(md)
       expect(cooked.scan('class="poll"').length).to eq(2)
-    end
-
-    it 'works correctly for new vs old engine with trivial cases' do
-      md = <<~MD
-        [poll]
-        1. test 1
-        2. test 2
-        [/poll]
-      MD
-
-      new_engine = n(PrettyText.cook(md))
-
-      SiteSetting.enable_experimental_markdown_it = false
-      old_engine = n(PrettyText.cook(md))
-
-      expect(new_engine).to eq(old_engine)
     end
 
     it 'does not break poll options when going from loose to tight' do
@@ -88,7 +96,7 @@ describe PrettyText do
       cooked = PrettyText.cook md
 
       expected = <<~MD
-        <div class="poll" data-poll-status="open" data-poll-name="poll">
+        <div class="poll" data-poll-status="open" data-poll-name="poll" data-poll-type="multiple">
         <div>
         <div class="poll-container">
         <ol>

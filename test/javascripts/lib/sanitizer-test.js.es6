@@ -12,15 +12,15 @@ QUnit.test("sanitize", assert => {
   assert.equal(pt.sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
   assert.equal(pt.sanitize("<3 <3"), "&lt;3 &lt;3");
   assert.equal(pt.sanitize("<_<"), "&lt;_&lt;");
+
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");
 
   cooked("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>",
          "<p><a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a></p>",
          "we can embed proper links");
 
-  cooked("<center>hello</center>", "<p>hello</p>", "it does not allow centering");
-  cooked("<table><tr><td>hello</td></tr></table>\nafter", "<p>after</p>", "it does not allow tables");
-  cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n\n<br/>\n\n</blockquote>", "it does not double sanitize");
+  cooked("<center>hello</center>", "hello", "it does not allow centering");
+  cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n</blockquote>", "it does not double sanitize");
 
   cooked("<iframe src=\"http://discourse.org\" width=\"100\" height=\"42\"></iframe>", "", "it does not allow most iframes");
 
@@ -38,9 +38,9 @@ QUnit.test("sanitize", assert => {
   assert.equal(pt.sanitize("<progress>hello"), "hello");
   assert.equal(pt.sanitize("<mark>highlight</mark>"), "highlight");
 
-  cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
+  cooked("[the answer](javascript:alert(42))", "<p>[the answer](javascript:alert(42))</p>", "it prevents XSS");
 
-  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i><br/></p>", "it doesn't circumvent XSS with comments");
+  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i></p>", "it doesn't circumvent XSS with comments");
 
   cooked("<span class=\"-bbcode-s fa fa-spin\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
   cooked("<span class=\"fa fa-spin -bbcode-s\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");

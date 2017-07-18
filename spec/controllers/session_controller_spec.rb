@@ -343,6 +343,7 @@ describe SessionController do
 
     describe 'local attribute override from SSO payload' do
       before do
+        SiteSetting.email_editable = false
         SiteSetting.sso_overrides_email = true
         SiteSetting.sso_overrides_username = true
         SiteSetting.sso_overrides_name = true

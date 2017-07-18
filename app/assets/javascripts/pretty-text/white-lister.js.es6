@@ -1,115 +1,112 @@
-const masterList = {};
-const masterCallbacks = {};
-
-const _whiteLists = {};
-const _callbacks = {};
-
-function concatUniq(src, elems) {
-  src = src || [];
-  if (!Array.isArray(elems)) {
-    elems = [elems];
-  }
-  return src.concat(elems.filter(e => src.indexOf(e) === -1));
-}
+// to match:
+// abcd
+// abcd[test]
+// abcd[test=bob]
+const WHITELIST_REGEX = /([^\[]+)(\[([^=]+)(=(.*))?\])?/;
 
 export default class WhiteLister {
   constructor(options) {
-    options = options || {
-      features: {
-        default: true
-      }
-    };
 
-    options.features.default = true;
+    this._enabled = { "default": true };
+    this._allowedHrefSchemes =  (options && options.allowedHrefSchemes) || [];
+    this._rawFeatures = [["default", DEFAULT_LIST]];
 
-    this._featureKeys = Object.keys(options.features).filter(f => options.features[f]);
-    this._key = this._featureKeys.join(':');
-    this._features = options.features;
-    this._options = options;
+    this._cache = null;
+
+    if (options && options.features) {
+      Object.keys(options.features).forEach(f => {
+        if (options.features[f]) {
+          this._enabled[f] = true;
+        }
+      });
+    }
   }
 
-  getCustom() {
-    if (!_callbacks[this._key]) {
-      const callbacks = [];
-      this._featureKeys.forEach(f => {
-        (masterCallbacks[f] || []).forEach(cb => callbacks.push(cb));
-      });
-      _callbacks[this._key] = callbacks;
-    }
+  whiteListFeature(feature, info) {
+    this._rawFeatures.push([feature, info]);
+  }
 
-    return _callbacks[this._key];
+  disable(feature) {
+    this._enabled[feature] = false;
+    this._cache = null;
+  }
+
+  enable(feature) {
+    this._enabled[feature] = true;
+    this._cache = null;
+  }
+
+  _buildCache() {
+    const tagList = {};
+    const attrList = {};
+    const custom = [];
+
+    this._rawFeatures.forEach(([name, info]) => {
+      if (!this._enabled[name]) return;
+
+      if (info.custom) {
+        custom.push(info.custom);
+        return;
+      }
+
+      if (typeof info === "string") {
+        info = [info];
+      }
+
+      (info || []).forEach(tag => {
+        const classes = tag.split('.');
+        const tagWithAttr = classes.shift();
+
+        const m = WHITELIST_REGEX.exec(tagWithAttr);
+        if (m) {
+
+          const [,tagname,,attr,,val] = m;
+          tagList[tagname] = [];
+
+          let attrs = attrList[tagname] = attrList[tagname] || {};
+          if (classes.length > 0) {
+            attrs["class"] = (attrs["class"] || []).concat(classes);
+          }
+
+          if (attr) {
+            let attrInfo = attrs[attr] = attrs[attr] || [];
+
+            if (val) {
+              attrInfo.push(val);
+            } else {
+              attrs[attr] = ["*"];
+            }
+          }
+        }
+      });
+    });
+
+
+    this._cache = {custom, whiteList: {tagList, attrList}};
+  }
+
+  _ensureCache() {
+    if (!this._cache) { this._buildCache(); }
   }
 
   getWhiteList() {
-    if (!_whiteLists[this._key]) {
-      const tagList = {};
-      let attrList = {};
+    this._ensureCache();
+    return this._cache.whiteList;
+  }
 
-      // merge whitelists for these features
-      this._featureKeys.forEach(f => {
-        const info = masterList[f] || {};
-        Object.keys(info).forEach(t => {
-          tagList[t] = [];
-          attrList[t] = attrList[t] || {};
-
-          const attrs = info[t];
-          Object.keys(attrs).forEach(a => attrList[t][a] = concatUniq(attrList[t][a], attrs[a]));
-        });
-      });
-
-      _whiteLists[this._key] = { tagList, attrList };
-    }
-    return _whiteLists[this._key];
+  getCustom() {
+    this._ensureCache();
+    return this._cache.custom;
   }
 
   getAllowedHrefSchemes() {
-    return this._options.allowedHrefSchemes || [];
+    return this._allowedHrefSchemes;
   }
-}
-
-// Builds our object that represents whether something is sanitized for a particular feature.
-export function whiteListFeature(feature, info) {
-  const featureInfo = {};
-
-  // we can supply a callback instead
-  if (info.custom) {
-    masterCallbacks[feature] = masterCallbacks[feature] || [];
-    masterCallbacks[feature].push(info.custom);
-    return;
-  }
-
-  if (typeof info === "string") { info = [info]; }
-
-  (info || []).forEach(tag => {
-    const classes = tag.split('.');
-    const tagName = classes.shift();
-    const m = /\[([^\]]+)]/.exec(tagName);
-    if (m) {
-      const [full, inside] = m;
-      const stripped = tagName.replace(full, '');
-      const vals = inside.split('=');
-
-      featureInfo[stripped] = featureInfo[stripped] || {};
-      if (vals.length === 2) {
-        const [name, value] = vals;
-        featureInfo[stripped][name] = value;
-      } else {
-        featureInfo[stripped][inside] = '*';
-      }
-    }
-
-    featureInfo[tagName] = featureInfo[tagName] || {};
-    if (classes.length) {
-      featureInfo[tagName]['class'] = concatUniq(featureInfo[tagName]['class'], classes);
-    }
-  });
-
-  masterList[feature] = featureInfo;
 }
 
 // Only add to `default` when you always want your whitelist to occur. In other words,
 // don't change this for a plugin or a feature that can be disabled
-whiteListFeature('default', [
+const DEFAULT_LIST = [
   'a.attachment',
   'a.hashtag',
   'a.mention',
@@ -174,4 +171,4 @@ whiteListFeature('default', [
   'sub',
   'sup',
   'ul',
-]);
+];

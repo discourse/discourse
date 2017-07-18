@@ -1,13 +1,10 @@
-import { cook, setup } from 'pretty-text/engines/discourse-markdown';
 import { cook as cookIt, setup as setupIt } from 'pretty-text/engines/discourse-markdown-it';
-import { sanitize } from 'pretty-text/sanitizer';
-import WhiteLister from 'pretty-text/white-lister';
 
-const _registerFns = [];
-const identity = value => value;
-
-export function registerOption(fn) {
-  _registerFns.push(fn);
+export function registerOption() {
+  // TODO next major version deprecate this
+  // if (window.console) {
+  //   window.console.log("registerOption is deprecated");
+  // }
 }
 
 export function buildOptions(state) {
@@ -25,11 +22,7 @@ export function buildOptions(state) {
     emojiUnicodeReplacer
   } = state;
 
-  if (!siteSettings.enable_experimental_markdown_it) {
-    setup();
-  }
-
-  const features = {
+  let features = {
     'bold-italics': true,
     'auto-link': true,
     'mentions': true,
@@ -40,6 +33,10 @@ export function buildOptions(state) {
     'onebox': true,
     'newline': !siteSettings.traditional_markdown_linebreaks
   };
+
+  if (state.features) {
+    features = _.merge(features, state.features);
+  }
 
   const options = {
     sanitize: true,
@@ -56,44 +53,37 @@ export function buildOptions(state) {
     mentionLookup: state.mentionLookup,
     emojiUnicodeReplacer,
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
-    markdownIt: siteSettings.enable_experimental_markdown_it
+    markdownIt: true
   };
 
-  if (siteSettings.enable_experimental_markdown_it) {
-    setupIt(options, siteSettings, state);
-  } else {
-    // TODO deprecate this
-    _registerFns.forEach(fn => fn(siteSettings, options, state));
-  }
+  // note, this will mutate options due to the way the API is designed
+  // may need a refactor
+  setupIt(options, siteSettings, state);
 
   return options;
 }
 
 export default class {
   constructor(opts) {
-    this.opts = opts || {};
-    this.opts.features = this.opts.features || {};
-    this.opts.sanitizer = (!!this.opts.sanitize) ? (this.opts.sanitizer || sanitize) : identity;
-    // We used to do a failsafe call to setup here
-    // under new engine we always expect setup to be called by buildOptions.
-    // setup();
+    if (!opts) {
+      opts = buildOptions({ siteSettings: {}});
+    }
+    this.opts = opts;
+  }
+
+  disableSanitizer() {
+    this.opts.sanitizer = this.opts.discourse.sanitizer = ident => ident;
   }
 
   cook(raw) {
     if (!raw || raw.length === 0) { return ""; }
 
     let result;
-
-    if (this.opts.markdownIt) {
-      result = cookIt(raw, this.opts);
-    } else {
-      result = cook(raw, this.opts);
-    }
-
+    result = cookIt(raw, this.opts);
     return result ? result : "";
   }
 
   sanitize(html) {
-    return this.opts.sanitizer(html, new WhiteLister(this.opts));
+    return this.opts.sanitizer(html).trim();
   }
 };

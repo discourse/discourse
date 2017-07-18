@@ -38,6 +38,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_emoji: {
+        prerequisite: Proc.new { SiteSetting.enable_emoji },
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
@@ -184,7 +185,8 @@ module DiscourseNarrativeBot
       opts = {
         title: I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title),
         target_usernames: @user.username,
-        archetype: Archetype.private_message
+        archetype: Archetype.private_message,
+        subtype: TopicSubtype.system_message,
       }
 
       if @post &&

@@ -36,7 +36,11 @@ export default function loadScript(url, opts) {
   opts = opts || {};
 
   $('script').each((i, tag) => {
-    _loaded[tag.getAttribute('src')] = true;
+    const src = tag.getAttribute('src');
+
+    // For some reason, a script tag with `url` as the source is appended into
+    // the head tag while loading the script. 
+    if (src && src !== url) _loaded[tag.getAttribute('src')] = true;
   });
 
 
@@ -57,12 +61,12 @@ export default function loadScript(url, opts) {
     });
 
     const cb = function(data) {
-      _loaded[url] = true;
       if (opts && opts.css) {
         $("head").append("<style>" + data + "</style>");
       }
       done();
       resolve();
+      _loaded[url] = true;
     };
 
     let cdnUrl = url;

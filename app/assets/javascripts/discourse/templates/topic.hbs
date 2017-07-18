@@ -10,7 +10,7 @@
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
-      {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic"}}
+      {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
         {{#if editingTopic}}
           {{#if model.isPrivateMessage}}
             <span class="private-message-glyph">{{fa-icon "envelope"}}</span>

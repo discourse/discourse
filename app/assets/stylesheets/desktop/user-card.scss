@@ -205,17 +205,12 @@ $user_card_background: $secondary;
 
     .names {
       float: left;
-      height: 60px;
-      position: relative;
       width: 45%;
 
       span {
-        position: absolute;
-        bottom: 0;
         display: block;
         width: 250px;
       }
-
     }
 
     .badge-section {

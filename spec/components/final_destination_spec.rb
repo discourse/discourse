@@ -60,6 +60,14 @@ describe FinalDestination do
         stub_request(:head, "https://eviltrout.com").to_return(doc_response)
       end
 
+      it "escapes url" do
+        url = 'https://eviltrout.com?s=180&#038;d=mm&#038;r=g'
+        escaped_url = URI.escape(url)
+        stub_request(:head, escaped_url).to_return(doc_response)
+
+        expect(fd(url).resolve.to_s).to eq(escaped_url)
+      end
+
       it "returns the final url" do
         final = FinalDestination.new('https://eviltrout.com', opts)
         expect(final.resolve.to_s).to eq('https://eviltrout.com')

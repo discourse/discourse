@@ -761,7 +761,6 @@ sk:
     notify_mods_when_user_blocked: "Ak je používateľ automaticky zablokovaný, pošli správu všetkým moderátorom."
     flag_sockpuppets: "Ak nový používateľ odpovedá na tému z rovnakej IP adresy, ako nový používateľ, ktorý danú tému vytvoril, označ oba ich príspevky ako potencionálny spam."
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
-    allow_html_tables: "V Markdown umožniť použitie tabuliek pomocou HTML značiek. TABLE, THEAD, TD, TR, TH budú umožnené (vyžaduje \"full rebake\" na všetkých starých príspevkoch ktoré obsahujú tabuľky)"
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     must_approve_users: "Obsluha musí povoliť účty všetkým novým používateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."

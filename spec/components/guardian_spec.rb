@@ -2174,6 +2174,7 @@ describe Guardian do
 
     context 'when SSO email override is active' do
       before do
+        SiteSetting.email_editable = false
         SiteSetting.enable_sso = true
         SiteSetting.sso_overrides_email = true
       end
