@@ -359,9 +359,9 @@ export default Ember.Component.extend({
       $picker.css({
         width: this.site.isMobileDevice ? this.$(window).width() - 12 : 340,
         marginLeft: this.site.isMobileDevice ? 5 : -170,
-        marginTop: this.site.isMobileDevice ? 5 : -150,
+        marginTop: -130,
         left: this.site.isMobileDevice ? 0 : "50%",
-        top: this.site.isMobileDevice ? 0 : "50%",
+        top: "50%",
         display: "flex"
       });
     } else {
