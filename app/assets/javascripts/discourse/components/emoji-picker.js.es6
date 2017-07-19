@@ -289,8 +289,8 @@ export default Ember.Component.extend({
     if(selectedSection) {
       $picker.find(".category-icon").removeClass("current");
       $picker.find(`.category-icon a[title='${selectedSection.$section.data("section")}']`)
-                         .parent()
-                         .addClass("current");
+             .parent()
+             .addClass("current");
 
       if(!selectedSection.$section.hasClass("loaded")) {
         selectedSection.$section.addClass("loaded");
