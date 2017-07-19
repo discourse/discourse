@@ -178,6 +178,10 @@ body img.emoji {
   padding-right: 24px;
 }
 
+.emoji-picker .filter input::-ms-clear {
+  display: none;
+}
+
 .emoji-picker .results {
   display: none;
   flex-wrap: wrap;
