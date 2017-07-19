@@ -59,12 +59,12 @@ export default Ember.Component.extend({
     keyValueStore.setObject({key: EMOJI_SELECTED_DIVERSITY, value: this.get("selectedDiversity")});
 
     $.each($list.find(".emoji.diversity[src!='']"), (_, icon) => {
-      this._updateIconSrc(icon);
+      this._updateIconSrc(icon, true);
     });
 
     if(this.get("filter") !== "") {
       $.each($results.find(".emoji.diversity"), (_, icon) => {
-        this._updateIconSrc(icon);
+        this._updateIconSrc(icon, true);
       });
     }
   },
@@ -210,8 +210,7 @@ export default Ember.Component.extend({
 
     (hoverables || this.$(".section-group")).on({
       mouseover: (event) => {
-        const $a = $(event.currentTarget);
-        const code = this._codeWithDiversity($a.attr("title"), $a.find("img").hasClass("diversity"));
+        const code = this._codeForEmojiLink($(event.currentTarget));
         const html = `<img src="${emojiUrlFor(code)}" class="emoji"> <span>:${code}:<span>`;
         replaceInfoContent(html);
       },
@@ -243,9 +242,7 @@ export default Ember.Component.extend({
 
   _bindEmojiClick($emojisContainer) {
     $emojisContainer.off("click").on("click", "a", e => {
-      const $icon = $(e.currentTarget);
-      const title = $icon.attr("title");
-      const code = this._codeWithDiversity(title, $icon.find("img").hasClass("diversity"));
+      const code = this._codeForEmojiLink($(e.currentTarget));
 
       this._trackEmojiUsage(code);
 
@@ -375,9 +372,7 @@ export default Ember.Component.extend({
 
   _loadVisibleEmojis($visibleEmojis) {
     $.each($visibleEmojis, (_, icon) => {
-      const $icon = $(icon);
-      const code = this._codeWithDiversity($icon.parent().attr("title"), $icon.hasClass("diversity"));
-      $icon.attr("src", emojiUrlFor(code));
+      this._updateIconSrc(icon)
     });
   },
 
@@ -429,9 +424,18 @@ export default Ember.Component.extend({
     }
   },
 
-  _updateIconSrc(icon) {
+  _codeForEmojiLink($a) {
+    const title = $a.attr("title");
+    const $img = $a.find("img");
+    return this._codeWithDiversity(title, $img.hasClass("diversity"));
+  },
+
+  _updateIconSrc(icon, diversity) {
     const $icon = $(icon);
-    const code = this._codeWithDiversity($icon.parent().attr("title"), true);
+    const code = this._codeWithDiversity(
+      $icon.parent().attr("title"),
+      diversity || $icon.hasClass("diversity")
+    );
     $icon.attr("src", emojiUrlFor(code));
   },
 });
