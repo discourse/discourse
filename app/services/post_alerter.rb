@@ -84,14 +84,18 @@ class PostAlerter
     if new_record
       if post.topic.private_message?
         # users that aren't part of any mentioned groups
-        directly_targeted_users(post).each do |user|
+        users = directly_targeted_users(post)
+        DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+        users.each do |user|
           notification_level = TopicUser.get(post.topic, user).try(:notification_level)
           if notified.include?(user) || notification_level == TopicUser.notification_levels[:watching]
             create_notification(user, Notification.types[:private_message], post)
           end
         end
         # users that are part of all mentionned groups
-        indirectly_targeted_users(post).each do |user|
+        users = indirectly_targeted_users(post)
+        DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+        users.each do |user|
           # only create a notification when watching the group
           notification_level = TopicUser.get(post.topic, user).try(:notification_level)
 
@@ -145,7 +149,9 @@ class PostAlerter
     # Don't notify the OP
     user_ids -= [post.user_id]
 
-    User.where(id: user_ids).each do |u|
+    users = User.where(id: user_ids)
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    users.each do |u|
       create_notification(u, Notification.types[:watching_first_post], post)
     end
   end
@@ -276,6 +282,8 @@ class PostAlerter
 
   def create_notification(user, type, post, opts = {})
     opts = @default_opts.merge(opts)
+
+    DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
     return if user.blank?
     return if user.id < 0
@@ -476,6 +484,7 @@ class PostAlerter
 
     users = [users] unless users.is_a?(Array)
 
+    DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |u|
       create_notification(u, Notification.types[type], post, opts)
     end
@@ -521,6 +530,8 @@ SQL
     exclude_user_ids = notified.map(&:id)
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
+
+    DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
     notify.each do |user|
       create_notification(user, Notification.types[:posted], post)
     end
