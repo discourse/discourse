@@ -16,7 +16,7 @@ acceptance("EmojiPicker", {
   }
 });
 
-QUnit.test("emoji picker can be opened/closed", assert => {
+QUnit.skip("emoji picker can be opened/closed", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
@@ -39,7 +39,7 @@ QUnit.test("emoji picker can be opened/closed", assert => {
   });
 });
 
-QUnit.test("emojis can be hovered to display info", assert => {
+QUnit.skip("emojis can be hovered to display info", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
@@ -77,7 +77,7 @@ QUnit.skip("emoji picker has sections", assert => {
   });
 });
 
-QUnit.test("emoji picker triggers event when picking emoji", assert => {
+QUnit.skip("emoji picker triggers event when picking emoji", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -92,7 +92,7 @@ QUnit.test("emoji picker triggers event when picking emoji", assert => {
   });
 });
 
-QUnit.test("emoji picker has a list of recently used emojis", assert => {
+QUnit.skip("emoji picker has a list of recently used emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -135,7 +135,7 @@ QUnit.test("emoji picker has a list of recently used emojis", assert => {
   });
 });
 
-QUnit.test("emoji picker correctly orders recently used emojis", assert => {
+QUnit.skip("emoji picker correctly orders recently used emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -159,7 +159,7 @@ QUnit.test("emoji picker correctly orders recently used emojis", assert => {
   });
 });
 
-QUnit.test("emoji picker lazy loads emojis", assert => {
+QUnit.skip("emoji picker lazy loads emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
