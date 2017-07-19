@@ -108,6 +108,7 @@ export default Ember.Component.extend({
     $list = $picker.find(".list");
 
     this.set("selectedDiversity", keyValueStore.getObject(EMOJI_SELECTED_DIVERSITY) || 1);
+    this.set("recentEmojis", _.map(keyValueStore.getObject(EMOJI_USAGE) || {}).sort(this._sortByUsage).slice(0, PER_ROW));
 
     this._bindEvents();
 
@@ -115,7 +116,6 @@ export default Ember.Component.extend({
       this._setDiversity();
       this._positionPicker();
       this._scrollTo();
-      this.recentEmojisChanged();
     });
   },
 
@@ -239,10 +239,12 @@ export default Ember.Component.extend({
   },
 
   _bindEmojiClick($emojisContainer) {
-    $emojisContainer.off("click").on("click", "a", e => {
+    // $emojisContainer.off("click", "a");
+    $emojisContainer.on("click", "a", e => {
       const code = this._codeForEmojiLink($(e.currentTarget));
 
       this._trackEmojiUsage(code);
+      this.sendAction("emojiSelected", code);
 
       if(this._isSmallViewport()) {
         this.set("active", false);
@@ -400,8 +402,6 @@ export default Ember.Component.extend({
     keyValueStore.setObject({ key: EMOJI_USAGE, value: recent });
 
     this.set("recentEmojis", _.map(recent).sort(this._sortByUsage).slice(0, PER_ROW));
-
-    this.sendAction("emojiSelected", code);
   },
 
   _sortByUsage(a, b) {
