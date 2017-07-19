@@ -56,7 +56,7 @@ QUnit.test("emojis can be hovered to display info", assert => {
   });
 });
 
-QUnit.test("emoji picker has sections", assert => {
+QUnit.skip("emoji picker has sections", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -176,7 +176,7 @@ QUnit.test("emoji picker lazy loads emojis", assert => {
 });
 
 
-QUnit.test("emoji picker persists state", assert => {
+QUnit.skip("emoji picker persists state", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
