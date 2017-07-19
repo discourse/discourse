@@ -339,7 +339,7 @@ export default Ember.Component.extend({
       $modal.addClass("fadeIn");
 
       $picker.css({
-        width: this.site.isMobileDevice ? this.$(window).width() - 10 : 340,
+        width: this.site.isMobileDevice ? this.$(window).width() - 12 : 340,
         marginLeft: this.site.isMobileDevice ? 5 : -170,
         marginTop: this.site.isMobileDevice ? 5 : -150,
         left: this.site.isMobileDevice ? 0 : "50%",
