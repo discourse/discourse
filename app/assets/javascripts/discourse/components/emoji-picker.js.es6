@@ -385,7 +385,7 @@ export default Ember.Component.extend({
   _loadVisibleEmojis($visibleEmojis) {
     $.each($visibleEmojis, (_, icon) => {
       const $icon = $(icon);
-      const code = this._codeWithDiversity($icon.parents("a").attr("title"), $icon.hasClass("diversity"));
+      const code = this._codeWithDiversity($icon.parent().attr("title"), $icon.hasClass("diversity"));
       $icon.attr("src", emojiUrlFor(code));
     });
   },
@@ -440,7 +440,7 @@ export default Ember.Component.extend({
 
   _updateIconSrc(icon) {
     const $icon = $(icon);
-    const code = this._codeWithDiversity($icon.parents("a").attr("title"), true);
+    const code = this._codeWithDiversity($icon.parent().attr("title"), true);
     $icon.attr("src", emojiUrlFor(code));
   },
 });
