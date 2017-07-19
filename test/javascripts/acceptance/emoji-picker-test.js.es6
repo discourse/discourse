@@ -10,7 +10,7 @@ import {
 acceptance("EmojiPicker", {
   loggedIn: true,
   beforeEach() {
-    keyValueStore.setObject({ key: EMOJI_USAGE, value: {} });
+    keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
     keyValueStore.setObject({ key: EMOJI_SCROLL_Y, value: 0 });
     keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
   }

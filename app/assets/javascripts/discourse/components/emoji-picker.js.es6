@@ -34,7 +34,10 @@ export default Ember.Component.extend({
     $modal = this.$(".emoji-picker-modal");
 
     if (!keyValueStore.getObject(EMOJI_USAGE)) {
-      keyValueStore.setObject({ key: EMOJI_USAGE, value: {} });
+      keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
+    } else if(_.isPlainObject(keyValueStore.getObject(EMOJI_USAGE))) {
+      // handle legacy format
+      keyValueStore.setObject({ key: EMOJI_USAGE, value: _.keys(keyValueStore.getObject(EMOJI_USAGE)) });
     }
   },
 
@@ -80,8 +83,8 @@ export default Ember.Component.extend({
       $recentSection.css("height", "auto").show();
     }
 
-    const recentEmojis = _.map(this.get("recentEmojis"), emoji => {
-      return { code: emoji.title, src: emojiUrlFor(emoji.title) };
+    const recentEmojis = _.map(this.get("recentEmojis"), code => {
+      return { code, src: emojiUrlFor(code) };
     });
     const model = { recentEmojis };
     const template = recentTemplate(model);
@@ -108,7 +111,7 @@ export default Ember.Component.extend({
     $list = $picker.find(".list");
 
     this.set("selectedDiversity", keyValueStore.getObject(EMOJI_SELECTED_DIVERSITY) || 1);
-    this.set("recentEmojis", _.map(keyValueStore.getObject(EMOJI_USAGE) || {}).sort(this._sortByUsage).slice(0, PER_ROW));
+    this.set("recentEmojis", keyValueStore.getObject(EMOJI_USAGE) || []);
 
     this._bindEvents();
 
@@ -231,8 +234,8 @@ export default Ember.Component.extend({
   _bindClearRecentEmojisGroup() {
     const $recent = $picker.find(".section[data-section='recent'] .clear-recent");
     $recent.on("click", () => {
-      keyValueStore.setObject({ key: EMOJI_USAGE, value: {} });
-      this.set("recentEmojis", {});
+      keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
+      this.set("recentEmojis", []);
       this._scrollTo(0);
       return false;
     });
@@ -407,23 +410,12 @@ export default Ember.Component.extend({
   },
 
   _trackEmojiUsage(code) {
-    const recent = keyValueStore.getObject(EMOJI_USAGE) || {};
-
-    if (!recent[code]) {
-      // keeping title here for legacy reasons, might migrate later
-      recent[code] = { title: code, usage: 0 };
-    }
-    recent[code]["usage"]++;
-
+    let recent = keyValueStore.getObject(EMOJI_USAGE) || [];
+    recent = recent.filter(r => r !== code);
+    recent.unshift(code);
+    recent.length = Math.min(recent.length, PER_ROW);
     keyValueStore.setObject({ key: EMOJI_USAGE, value: recent });
-
-    this.set("recentEmojis", _.map(recent).sort(this._sortByUsage).slice(0, PER_ROW));
-  },
-
-  _sortByUsage(a, b) {
-    if (a.usage > b.usage) { return -1; }
-    if (b.usage > a.usage) { return 1; }
-    return a.title.localeCompare(b.title);
+    this.set("recentEmojis", recent);
   },
 
   _scrollTo(y) {
