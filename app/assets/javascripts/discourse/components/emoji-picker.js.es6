@@ -239,7 +239,7 @@ export default Ember.Component.extend({
   },
 
   _bindEmojiClick($emojisContainer) {
-    let handler = (event) => {
+    const handler = (event) => {
       const code = this._codeForEmojiLink($(event.currentTarget));
 
       this._trackEmojiUsage(code);
