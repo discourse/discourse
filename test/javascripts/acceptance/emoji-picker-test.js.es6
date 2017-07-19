@@ -189,46 +189,8 @@ QUnit.test("emoji picker lazy loads emojis", assert => {
       "it doesn't load invisible emojis"
     );
   });
-
-  andThen(() => {
-    const done = assert.async();
-    setTimeout(() => {
-      $('.emoji-picker .list').scrollTop(2600);
-      setTimeout(() => {
-        const $emoji = $('a[title="massage_woman"] img');
-        assert.equal(
-          $emoji.attr('src'),
-          `/images/emoji/emoji_one/massage_woman.png?v=${v}`,
-          "it loads visible emojis"
-        );
-        done();
-      }, 50);
-    }, 50);
-  });
 });
 
-QUnit.test("emoji picker supports diversity scale", assert => {
-  visit("/t/internationalization-localization/280");
-  click("#topic-footer-buttons .btn.create");
-  click("button.emoji.btn");
-
-  click('.emoji-picker a.diversity-scale.dark');
-  andThen(() => {
-    const done = assert.async();
-    setTimeout(() => {
-      $('.emoji-picker .list').scrollTop(2900);
-      setTimeout(() => {
-        const $emoji = $('a[title="massage_woman"] img');
-        assert.equal(
-          $emoji.attr('src'),
-          `/images/emoji/emoji_one/massage_woman/6.png?v=${v}`,
-          "it applies diversity scale on emoji"
-        );
-        done();
-      }, 250);
-    }, 250);
-  });
-});
 
 QUnit.test("emoji picker persists state", assert => {
   visit("/t/internationalization-localization/280");
