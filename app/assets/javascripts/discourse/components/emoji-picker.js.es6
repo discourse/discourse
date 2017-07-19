@@ -58,14 +58,10 @@ export default Ember.Component.extend({
   selectedDiversityChanged() {
     keyValueStore.setObject({key: EMOJI_SELECTED_DIVERSITY, value: this.get("selectedDiversity")});
 
-    $.each($list.find(".emoji.diversity[src!='']"), (_, icon) => {
-      this._updateIconSrc(icon, true);
-    });
+    $.each($list.find(".emoji.diversity[src!='']"), (_, icon) => this._setIconSrc(icon, true) );
 
     if(this.get("filter") !== "") {
-      $.each($results.find(".emoji.diversity"), (_, icon) => {
-        this._updateIconSrc(icon, true);
-      });
+      $.each($results.find(".emoji.diversity"), (_, icon) => this._setIconSrc(icon, true) );
     }
   },
 
@@ -139,9 +135,7 @@ export default Ember.Component.extend({
   },
 
   _bindModalClick() {
-    $modal.on("click", () => {
-      this.set("active", false);
-    });
+    $modal.on("click", () => this.set("active", false));
   },
 
   _unbindEvents() {
@@ -204,9 +198,7 @@ export default Ember.Component.extend({
   },
 
   _bindHover($hoverables) {
-    const replaceInfoContent = (html) => {
-      $picker.find(".footer .info").html(html || "");
-    };
+    const replaceInfoContent = (html) => $picker.find(".footer .info").html(html || "");
 
     ($hoverables || $list.find(".section-group")).on({
       mouseover: (event) => {
@@ -214,9 +206,7 @@ export default Ember.Component.extend({
         const html = `<img src="${emojiUrlFor(code)}" class="emoji"> <span>:${code}:<span>`;
         replaceInfoContent(html);
       },
-      mouseleave: () => {
-        replaceInfoContent();
-      }
+      mouseleave: () => replaceInfoContent()
     }, "a");
   },
 
@@ -371,9 +361,7 @@ export default Ember.Component.extend({
   },
 
   _loadVisibleEmojis($visibleEmojis) {
-    $.each($visibleEmojis, (_, icon) => {
-      this._updateIconSrc(icon);
-    });
+    $.each($visibleEmojis, (_, icon) => this._setIconSrc(icon) );
   },
 
   _codeWithDiversity(code, diversity) {
@@ -430,7 +418,7 @@ export default Ember.Component.extend({
     return this._codeWithDiversity(title, $img.hasClass("diversity"));
   },
 
-  _updateIconSrc(icon, diversity) {
+  _setIconSrc(icon, diversity) {
     const $icon = $(icon);
     const code = this._codeWithDiversity(
       $icon.parent().attr("title"),
