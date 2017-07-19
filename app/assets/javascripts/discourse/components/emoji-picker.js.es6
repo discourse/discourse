@@ -130,7 +130,6 @@ export default Ember.Component.extend({
     this._bindEmojiClick($list.find(".section-group"));
     this._bindClearRecentEmojisGroup();
     this._bindResizing();
-    this._bindHover();
     this._bindCategoryClick();
     this._bindModalClick();
     this._bindFilterInput();
@@ -144,6 +143,9 @@ export default Ember.Component.extend({
         return false;
       }
     });
+    if(!this.site.isMobileDevice) {
+      this._bindHover();
+    }
   },
 
   _bindModalClick() {
