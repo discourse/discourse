@@ -267,7 +267,7 @@ export default Ember.Component.extend({
 
   _bindSectionsScroll() {
     $list.on("scroll", () => {
-      Ember.run.debounce(this, this._checkVisibleSection, 150);
+      Ember.run.debounce(this, this._checkVisibleSection, 500);
       Ember.run.debounce(this, this._storeScrollPosition, 100);
     });
   },
@@ -314,7 +314,7 @@ export default Ember.Component.extend({
       if(preloadedSection && !preloadedSection.$section.hasClass("loaded")) {
         preloadedSection.$section.addClass("loaded");
         const $visibleEmojis = preloadedSection.$section.find(".emoji[src='']");
-        Ember.run.later(this, () => this._loadVisibleEmojis($visibleEmojis), 1500);
+        Ember.run.later(this, () => this._loadVisibleEmojis($visibleEmojis), 3000);
       }
     }
   },
