@@ -217,7 +217,7 @@ export default Ember.Component.extend({
       mouseleave: () => {
         replaceInfoContent();
       }
-    }, "a")
+    }, "a");
   },
 
   _bindResizing() {
@@ -372,7 +372,7 @@ export default Ember.Component.extend({
 
   _loadVisibleEmojis($visibleEmojis) {
     $.each($visibleEmojis, (_, icon) => {
-      this._updateIconSrc(icon)
+      this._updateIconSrc(icon);
     });
   },
 
