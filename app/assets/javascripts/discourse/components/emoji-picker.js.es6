@@ -257,7 +257,7 @@ export default Ember.Component.extend({
   _bindSectionsScroll() {
     $list.on("scroll", () => {
       Ember.run.debounce(this, this._checkVisibleSection, 150);
-      Ember.run.debounce(this, this._storeScrollPosition, 50);
+      Ember.run.debounce(this, this._storeScrollPosition, 100);
     });
   },
 
