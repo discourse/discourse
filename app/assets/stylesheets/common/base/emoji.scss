@@ -1,25 +1,24 @@
 .emoji-picker {
-  background-color: #fff;
-  border: 1px solid #e9e9e9;
   box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
   z-index: 10000;
   position: fixed;
-  background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
   display: none;
   flex-direction: row;
   height: 300px;
   border-radius: 3px;
+  color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
+  background-color: $secondary;
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 .emoji-picker .categories-column {
   display: flex;
   flex-direction: column;
-  background: white;
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  border-right: 1px solid #e9e9e9;
+  border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   min-width: 36px;
 }
 
@@ -38,7 +37,6 @@
 .emoji-picker .main-column {
   display: flex;
   flex-direction: column;
-  background: white;
   flex: 20;
 }
 
@@ -58,13 +56,14 @@
   padding: 8px;
   margin-bottom: 4px;
   padding-bottom: 4px;
-  border-bottom: 1px solid #e9e9e9;
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   justify-content: space-between;
   display: flex;
   align-items: center;
 }
 
 .emoji-picker .section-header .title {
+  color: $primary;
 }
 
 .emoji-picker .section-header .clear-recent .fa{
@@ -83,14 +82,14 @@
   display: inline-block;
   vertical-align: top;
   border-radius: 50%;
-  background-color: #d1f0ff;
+  background-color: lighten($tertiary, 30%);
 }
 
 .emoji-picker .footer {
   align-items: center;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid #e9e9e9;
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 .emoji-picker .info {
@@ -164,7 +163,7 @@ body img.emoji {
 
 .emoji-picker .filter {
   background-color: none;
-  border-bottom: 1px solid #e9e9e9;
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px;
   display: flex;
   position: relative;
@@ -186,6 +185,8 @@ body img.emoji {
   box-shadow: none;
   padding-right: 24px;
   outline: none;
+  color: $primary;
+  background: $secondary;
 
   &:focus {
     border: none;
