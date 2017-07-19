@@ -84,7 +84,7 @@ export default Ember.Component.extend({
       $recentSection.css("height", "auto").show();
     }
 
-    const recentEmojis = _.map(this.get("recentEmojis"), function(emoji) {
+    const recentEmojis = _.map(this.get("recentEmojis"), emoji => {
       return { code: emoji.title, src: emojiUrlFor(emoji.title) };
     });
     const model = { recentEmojis };
