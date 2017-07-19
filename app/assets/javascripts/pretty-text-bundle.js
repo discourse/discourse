@@ -9,3 +9,4 @@
 //= require ./pretty-text/white-lister
 //= require ./pretty-text/sanitizer
 //= require ./pretty-text/oneboxer
+//= require ./pretty-text/inline-oneboxer

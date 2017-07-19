@@ -164,6 +164,7 @@ module PrettyText
         __optInput.mentionLookup = __mentionLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
+        __optInput.lookupInlineOnebox = __lookupInlineOnebox;
       JS
 
       if opts[:topicId]

@@ -123,16 +123,11 @@ SQL
           internal = false
           topic_id = nil
           post_number = nil
-          parsed_path = parsed.path || ""
 
           if Discourse.store.has_been_uploaded?(url)
             internal = Discourse.store.internal?
-          elsif (parsed.host == Discourse.current_hostname && parsed_path.start_with?(Discourse.base_uri)) || !parsed.host
+          elsif route = Discourse.route_for(parsed)
             internal = true
-
-            parsed_path.slice!(Discourse.base_uri)
-
-            route = Rails.application.routes.recognize_path(parsed_path)
 
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'

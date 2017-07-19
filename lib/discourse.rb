@@ -214,6 +214,23 @@ module Discourse
     base_url_no_prefix + base_uri
   end
 
+  def self.route_for(uri)
+
+    uri = URI(uri) rescue nil unless (uri.is_a?(URI))
+    return unless uri
+
+    path = uri.path || ""
+    if (uri.host == Discourse.current_hostname &&
+      path.start_with?(Discourse.base_uri)) ||
+      !uri.host
+
+      path.slice!(Discourse.base_uri)
+      return Rails.application.routes.recognize_path(path)
+    end
+
+    nil
+  end
+
   READONLY_MODE_KEY_TTL  ||= 60
   READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
   PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze
