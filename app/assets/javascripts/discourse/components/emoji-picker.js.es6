@@ -220,11 +220,11 @@ export default Ember.Component.extend({
 
   _bindResizing() {
     this.$(window).on("resize", () => {
-      Ember.run.debounce(this, this._positionPicker, 100);
+      Ember.run.throttle(this, this._positionPicker, 50);
     });
 
-    Ember.$("#reply-control").on("div-resized", () => {
-      Ember.run.debounce(this, this._positionPicker, 100);
+    Ember.$("#reply-control").on("div-resizing", () => {
+      Ember.run.throttle(this, this._positionPicker, 50);
     });
   },
 
