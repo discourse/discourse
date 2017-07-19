@@ -71,7 +71,7 @@
   margin: 0;
 }
 
-.section-group {
+.emoji-picker .section-group {
   flex-wrap: wrap;
   display: flex;
   align-items: center;
@@ -79,7 +79,7 @@
   padding: 4px;
 }
 
-.section-group a:hover, .results a:hover {
+.emoji-picker .section-group a:hover, .emoji-picker .results a:hover {
   display: inline-block;
   vertical-align: top;
   border-radius: 50%;
