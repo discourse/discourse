@@ -951,4 +951,19 @@ HTML
       expect(cooked).to eq(html.strip)
     end
   end
+
+  describe "inline onebox" do
+    it "includes the topic title" do
+      topic = Fabricate(:topic)
+
+      raw = "Hello #{topic.url}"
+
+      cooked = <<~HTML
+        <p>Hello <a href="#{topic.url}">#{topic.title}</a></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+  end
+
 end

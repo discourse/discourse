@@ -4,6 +4,7 @@
 //= require ./pretty-text/engines/discourse-markdown/quotes
 //= require ./pretty-text/engines/discourse-markdown/emoji
 //= require ./pretty-text/engines/discourse-markdown/onebox
+//= require ./pretty-text/engines/discourse-markdown/inline-onebox
 //= require ./pretty-text/engines/discourse-markdown/bbcode-block
 //= require ./pretty-text/engines/discourse-markdown/bbcode-inline
 //= require ./pretty-text/engines/discourse-markdown/code

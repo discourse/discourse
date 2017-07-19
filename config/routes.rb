@@ -664,6 +664,7 @@ Discourse::Application.routes.draw do
   end
 
   get "onebox" => "onebox#show"
+  get "inline-onebox" => "inline_onebox#show"
 
   get "exception" => "list#latest"
 
