@@ -239,9 +239,8 @@ export default Ember.Component.extend({
   },
 
   _bindEmojiClick($emojisContainer) {
-    // $emojisContainer.off("click", "a");
-    $emojisContainer.on("click", "a", e => {
-      const code = this._codeForEmojiLink($(e.currentTarget));
+    let handler = (event) => {
+      const code = this._codeForEmojiLink($(event.currentTarget));
 
       this._trackEmojiUsage(code);
       this.sendAction("emojiSelected", code);
@@ -251,7 +250,24 @@ export default Ember.Component.extend({
       }
 
       return false;
-    });
+    };
+
+    if(this.site.isMobileDevice) {
+      const self = this;
+
+      $emojisContainer
+        .off("touchstart")
+        .on("touchstart", "a", (touchStartEvent) => {
+          const $this = $(touchStartEvent.currentTarget);
+          $this.on('touchend', (touchEndEvent) => {
+            handler.bind(self)(touchEndEvent);
+            $this.off('touchend');
+          });
+          $this.on('touchmove', () => $this.off('touchend') );
+        });
+    } else {
+      $emojisContainer.on("click", "a", e => handler.bind(this)(e) );
+    }
   },
 
   _bindSectionsScroll() {
