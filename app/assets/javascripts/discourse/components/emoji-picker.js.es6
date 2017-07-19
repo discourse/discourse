@@ -149,7 +149,7 @@ export default Ember.Component.extend({
   _unbindEvents() {
     this.$(window).off("resize");
     $modal.off("click");
-    Ember.$("#reply-control").off("div-resized");
+    Ember.$("#reply-control").off("div-resizing");
   },
 
   _filterEmojisList() {
