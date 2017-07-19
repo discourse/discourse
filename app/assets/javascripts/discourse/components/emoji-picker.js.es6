@@ -12,7 +12,7 @@ export const EMOJI_USAGE = "emojiUsage";
 export const EMOJI_SCROLL_Y = "emojiScrollY";
 export const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const PER_ROW = 11;
-const customEmojis = _.map(_.keys(extendedEmojiList()), function(code) {
+const customEmojis = _.map(_.keys(extendedEmojiList()), code => {
   return { code, src: emojiUrlFor(code) };
 });
 let $picker, $modal, $filter, $results, $list;
