@@ -6,7 +6,7 @@
   z-index: 10000;
   position: fixed;
   background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
-  display: flex;
+  display: none;
   flex-direction: row;
   height: 300px;
   border-radius: 3px;
