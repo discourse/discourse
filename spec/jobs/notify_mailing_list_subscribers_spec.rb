@@ -21,6 +21,13 @@ describe Jobs::NotifyMailingListSubscribers do
       UserNotifications.expects(:mailing_list_notify).with(mailing_list_user, post).once
       Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
     end
+
+    it "triggers :notify_mailing_list_subscribers" do
+      events = DiscourseEvent.track_events do
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+      end
+      expect(events).to include({ event_name: :notify_mailing_list_subscribers, params: [[mailing_list_user], post] })
+    end
   end
 
   context "when mailing list mode is globally disabled" do
