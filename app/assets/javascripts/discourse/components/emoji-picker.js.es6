@@ -266,7 +266,7 @@ export default Ember.Component.extend({
           $this.on('touchmove', () => $this.off('touchend') );
         });
     } else {
-      $emojisContainer.on("click", "a", e => handler.bind(this)(e) );
+      $emojisContainer.off("click").on("click", "a", e => handler.bind(this)(e) );
     }
   },
 
