@@ -91,7 +91,7 @@ export default Ember.Component.extend({
 
   close() {
     $picker
-      .css({width: "", left: "", bottom: ""})
+      .css({width: "", left: "", bottom: "", display: "none"})
       .empty();
 
     $modal.removeClass("fadeIn");
@@ -343,12 +343,13 @@ export default Ember.Component.extend({
         marginLeft: this.site.isMobileDevice ? 5 : -170,
         marginTop: this.site.isMobileDevice ? 5 : -150,
         left: this.site.isMobileDevice ? 0 : "50%",
-        top: this.site.isMobileDevice ? 0 : "50%"
+        top: this.site.isMobileDevice ? 0 : "50%",
+        display: "flex"
       });
     } else {
       $modal.removeClass("fadeIn");
 
-      let cssAttributes = { width: 400, marginLeft: "", marginTop: "", left: "", top: "" };
+      let cssAttributes = { width: 400, marginLeft: "", marginTop: "", left: "", top: "", display: "flex"};
 
       if(isLargePreview) {
         cssAttributes.left = (Ember.$("#reply-control").width() - Ember.$(".d-editor").width() ) / 2 + Ember.$(".d-editor-preview-wrapper").position().left;
