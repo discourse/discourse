@@ -37,6 +37,7 @@ describe SiteSettings::YamlLoader do
   let(:enum)        { "#{Rails.root}/spec/fixtures/site_settings/enum.yml" }
   let(:enum_client) { "#{Rails.root}/spec/fixtures/site_settings/enum_client.yml" }
   let(:deprecated_env) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_env.yml" }
+  let(:deprecated_hidden) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_hidden.yml" }
 
   it "loads simple settings" do
     receiver.expects(:setting).with('category1', 'title', 'My Site', {}).once
@@ -77,5 +78,9 @@ describe SiteSettings::YamlLoader do
 
   it "raises deprecation when load settings based on environment" do
     expect { receiver.load_yaml(deprecated_env) }.to raise_error(Discourse::Deprecation)
+  end
+
+  it "raises deprecation when hidden property is based on environment" do
+    expect { receiver.load_yaml(deprecated_hidden) }.to raise_error(Discourse::Deprecation)
   end
 end

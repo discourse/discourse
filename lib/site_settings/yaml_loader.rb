@@ -25,8 +25,8 @@ class SiteSettings::YamlLoader
             raise Discourse::Deprecation, "Site setting per env is no longer supported. Error setting: #{setting_name}"
           end
 
-          if hash.key?('hidden')
-            hash['hidden'] = env_val(hash.delete('hidden'))
+          if hash['hidden']&.is_a?(Hash)
+            raise Discourse::Deprecation, "Hidden site setting per env is no longer supported. Error setting: #{setting_name}"
           end
 
           yield category, setting_name, value, hash.symbolize_keys!

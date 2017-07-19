@@ -981,19 +981,13 @@ rate_limits:
 
 developer:
   force_hostname:
-    hidden:
-      development: false
-      default: true
+    hidden: true
     default: ''
   port:
-    hidden:
-      development: false
-      default: true
+    hidden: true
     default: ''
   queue_jobs:
-    hidden:
-      development: false
-      default: true
+    hidden: true
     default: true
   enable_long_polling:
     client: true
