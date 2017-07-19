@@ -433,6 +433,7 @@ export default Ember.Component.extend({
       $icon.parent().attr("title"),
       diversity || $icon.hasClass("diversity")
     );
+    $icon.attr("src", "");
     $icon.attr("src", emojiUrlFor(code));
   },
 });
