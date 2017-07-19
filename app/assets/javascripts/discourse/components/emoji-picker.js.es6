@@ -74,6 +74,8 @@ export default Ember.Component.extend({
     const $recentSection = $list.find(".section[data-section='recent']");
     const $recentSectionGroup = $recentSection.find(".section-group");
     const $recentCategory = $picker.find(".category-icon a[title='recent']").parent();
+
+    // we set height to 0 to avoid it being taken into account for scroll position
     if(_.isEmpty(this.get("recentEmojis"))) {
       $recentCategory.hide();
       $recentSection.css("height", 0).hide();
