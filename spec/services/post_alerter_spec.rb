@@ -45,6 +45,21 @@ describe PostAlerter do
 
 
     end
+
+    it "triggers :before_create_notifications_for_users" do
+      pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
+      op = Fabricate(:post, user_id: pm.user_id, topic: pm)
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      group = Fabricate(:group, users: [user2])
+      pm.allowed_users << user1
+      pm.allowed_groups << group
+      events = DiscourseEvent.track_events do
+        PostAlerter.post_created(op)
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user1], op] })
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user2], op] })
+    end
   end
 
   context "unread" do
@@ -201,13 +216,23 @@ describe PostAlerter do
         Fabricate(:post, topic: topic, user: topic.user, raw: '[quote="Bruce Wayne, post:1"]whatup[/quote]')
       }.not_to change(topic.user.notifications, :count)
     end
+
+    it "triggers :before_create_notifications_for_users" do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      events = DiscourseEvent.track_events do
+        PostAlerter.post_created(post)
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[evil_trout], post] })
+    end
   end
 
   context 'linked' do
+    let(:post1) { create_post }
+    let(:user) { post1.user }
+    let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
+
     it "will notify correctly on linking" do
-      post1 = create_post
-      user = post1.user
-      create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
+      linking_post
 
       expect(user.notifications.count).to eq(1)
 
@@ -228,17 +253,24 @@ describe PostAlerter do
       expect(PostAlerter.new.extract_linked_users(post1).length).to eq(0)
 
     end
+
+    it "triggers :before_create_notifications_for_users" do
+      events = DiscourseEvent.track_events do
+        linking_post
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], linking_post] })
+    end
   end
 
   context '@group mentions' do
 
+    let(:group) { Fabricate(:group, name: 'group', alias_level: Group::ALIAS_LEVELS[:everyone]) }
+    let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
+    before { group.add(evil_trout) }
+
     it 'notifies users correctly' do
-
-      group = Fabricate(:group, name: 'group', alias_level: Group::ALIAS_LEVELS[:everyone])
-      group.add(evil_trout)
-
       expect {
-        create_post_with_alerts(raw: "Hello @group how are you?")
+        post
       }.to change(evil_trout.notifications, :count).by(1)
 
       expect(GroupMention.count).to eq(1)
@@ -257,6 +289,13 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
 
       expect(GroupMention.count).to eq(3)
+    end
+
+    it "triggers :before_create_notifications_for_users" do
+      events = DiscourseEvent.track_events do
+        post
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[evil_trout], post] })
     end
   end
 
@@ -284,6 +323,13 @@ describe PostAlerter do
       expect {
         create_post_with_alerts(user: user, raw: 'second post', topic: topic)
       }.not_to change(user.notifications, :count)
+    end
+
+    it "triggers :before_create_notifications_for_users" do
+      events = DiscourseEvent.track_events do
+        mention_post
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[evil_trout], mention_post] })
     end
 
   it "notification comes from editor is mention is added later" do
@@ -321,6 +367,18 @@ describe PostAlerter do
       }.to change { user.notifications.count }.by(1)
 
       expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
+    end
+
+    it "triggers :post_notification_alert" do
+
+    end
+
+    it "triggers :before_create_notification" do
+      type = Notification.types[:private_message]
+      events = DiscourseEvent.track_events do
+        PostAlerter.new.create_notification(user, type, post, {})
+      end
+      expect(events).to include({ event_name: :before_create_notification, params: [user, type, post, {}] })
     end
   end
 
@@ -446,6 +504,60 @@ describe PostAlerter do
 
       PostAlerter.post_created(post)
       expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+
+    it "triggers :before_create_notifications_for_users" do
+      level = CategoryUser.notification_levels[:watching_first_post]
+      CategoryUser.set_notification_level_for_category(user, level, category.id)
+      events = DiscourseEvent.track_events do
+        PostAlerter.new.after_save_post(post, true)
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], post] })
+    end
+  end
+
+  context "replies" do
+    it "triggers :before_create_notifications_for_users" do
+      user = Fabricate(:user)
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, user: user, topic: topic)
+      reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+      events = DiscourseEvent.track_events do
+        PostAlerter.post_created(reply)
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], reply] })
+    end
+  end
+
+  context "watching" do
+    it "triggers :before_create_notifications_for_users" do
+      user = Fabricate(:user)
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category: category)
+      post = Fabricate(:post, topic: topic)
+      level = CategoryUser.notification_levels[:watching]
+      CategoryUser.set_notification_level_for_category(user, level, category.id)
+      events = DiscourseEvent.track_events do
+        PostAlerter.post_created(post)
+      end
+      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], post] })
+    end
+  end
+
+  context "tags" do
+    context "watching" do
+      it "triggers :before_create_notifications_for_users" do
+        user = Fabricate(:user)
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+        post = Fabricate(:post, topic: topic)
+        level = TagUser.notification_levels[:watching]
+        TagUser.change(user.id, tag.id, level)
+        events = DiscourseEvent.track_events do
+          PostAlerter.post_created(post)
+        end
+        expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], post] })
+      end
     end
   end
 end
