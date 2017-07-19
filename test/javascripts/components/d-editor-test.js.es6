@@ -763,19 +763,11 @@ componentTest('emoji', {
     this.set('value', 'hello world.');
   },
   test(assert) {
-    assert.equal($('.emoji-modal').length, 0);
-
     jumpEnd(this.$('textarea.d-editor-input')[0]);
     click('button.emoji');
-    andThen(() => {
-      assert.equal($('.emoji-modal').length, 1);
-    });
 
-    click('a[data-group-id=0]');
     click('a[title=grinning]');
-
     andThen(() => {
-      assert.ok($('.emoji-modal').length === 0);
       assert.equal(this.get('value'), 'hello world.:grinning:');
     });
   }
