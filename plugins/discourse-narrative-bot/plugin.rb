@@ -16,6 +16,11 @@ if Rails.env.development?
   end
 end
 
+if Rails.env.test?
+  SiteSettings.defaults[:discourse_narrative_bot_enabled] = false
+  SiteSettings.refresh!
+end
+
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
 
 after_initialize do

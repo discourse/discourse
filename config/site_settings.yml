@@ -433,21 +433,15 @@ posting:
   min_post_length:
     client: true
     min: 1
-    default:
-      test: 5
-      default: 20
+    default: 20
   min_first_post_length:
     client: true
     min: 1
-    default:
-      test: 5
-      default: 20
+    default: 20
   min_private_message_post_length:
     client: true
     min: 1
-    default:
-      test: 5
-      default: 10
+    default: 10
   max_post_length:
     client: true
     default: 32000
@@ -727,9 +721,7 @@ files:
     refresh: true
     type: list
   crawl_images:
-    default:
-      test: false
-      default: true
+    default: true
   max_image_width:
     client: true
     default: 690
@@ -737,9 +729,7 @@ files:
     client: true
     default: 500
   download_remote_images_to_local:
-    default:
-      test: false
-      default: true
+    default: true
   download_remote_images_threshold: 10
   download_remote_images_max_days_old:
     default: 30
@@ -953,10 +943,7 @@ spam:
   auto_block_first_post_regex: ""
 
 rate_limits:
-  unique_posts_mins:
-    default:
-      test: 0
-      default: 5
+  unique_posts_mins: 5
   rate_limit_create_topic: 15
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
@@ -1002,16 +989,12 @@ developer:
     hidden:
       development: false
       default: true
-    default:
-      development: 3000
-      default: ''
+    default: ''
   queue_jobs:
     hidden:
       development: false
       default: true
-    default:
-      test: false
-      default: true
+    default: true
   enable_long_polling:
     client: true
     default: true

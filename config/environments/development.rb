@@ -59,6 +59,9 @@ Discourse::Application.configure do
   end
 
   config.after_initialize do
+    SiteSetting.defaults[:port] = 3000
+    SiteSetting.refresh!
+
     if ENV['BULLET']
       Bullet.enable = true
       Bullet.rails_logger = true

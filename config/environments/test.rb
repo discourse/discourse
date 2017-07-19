@@ -46,4 +46,15 @@ Discourse::Application.configure do
     config.logger = Logger.new(nil)
     config.log_level = :fatal
   end
+
+  config.after_initialize do
+    SiteSetting.defaults[:min_post_length] = 5
+    SiteSetting.defaults[:min_first_post_length] = 5
+    SiteSetting.defaults[:min_private_message_post_length] = 10
+    SiteSetting.defaults[:crawl_images] = false
+    SiteSetting.defaults[:download_remote_images_to_local] = false
+    SiteSetting.defaults[:unique_posts_mins] = 0
+    SiteSetting.defaults[:queue_jobs] = false
+    SiteSetting.refresh!
+  end
 end
