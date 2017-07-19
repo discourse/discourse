@@ -112,42 +112,26 @@ QUnit.test("emoji picker has a list of recently used emojis", assert => {
       "it adds the emoji code to the recently used emojis list"
     );
   });
-});
 
-QUnit.test("emoji picker can clear recently used emojis", assert => {
-  visit("/t/internationalization-localization/280");
-  click("#topic-footer-buttons .btn.create");
-  click("button.emoji.btn");
-
-  click(".emoji-picker a[title='grinning']");
-  click(".emoji-picker a[title='sunglasses']");
-  click(".emoji-picker a[title='sunglasses']");
+  click(".emoji-picker .clear-recent");
   andThen(() => {
     assert.equal(
       find('.section[data-section="recent"] .section-group img.emoji').length,
-      2
+      0,
+      "it has cleared recent emojis"
     );
 
-    click(".emoji-picker .clear-recent");
-    andThen(() => {
-      assert.equal(
-        find('.section[data-section="recent"] .section-group img.emoji').length,
-        0,
-        "it has cleared recent emojis"
-      );
+    assert.equal(
+      find('.section[data-section="recent"]').css("display"),
+      "none",
+      "it hides recent section"
+    );
 
-      assert.equal(
-        find('.section[data-section="recent"]').css("display"),
-        "none",
-        "it hides recent section"
-      );
-
-      assert.equal(
-        find('.category-icon a[title="recent"]').parent().css("display"),
-        "none",
-        "it hides recent category icon"
-      );
-    });
+    assert.equal(
+      find('.category-icon a[title="recent"]').parent().css("display"),
+      "none",
+      "it hides recent category icon"
+    );
   });
 });
 
