@@ -301,7 +301,7 @@ export default Ember.Component.extend({
       if(preloadedSection && !preloadedSection.$section.hasClass("loaded")) {
         preloadedSection.$section.addClass("loaded");
         const $visibleEmojis = preloadedSection.$section.find(".emoji[src='']");
-        this._later(this, function() { this._loadVisibleEmojis($visibleEmojis) }, 1500)
+        this._later(this, function() { this._loadVisibleEmojis($visibleEmojis); }, 1500);
       }
     }
   },
