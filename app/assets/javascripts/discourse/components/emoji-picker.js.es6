@@ -203,12 +203,12 @@ export default Ember.Component.extend({
     });
   },
 
-  _bindHover(hoverables) {
+  _bindHover($hoverables) {
     const replaceInfoContent = (html) => {
       $picker.find(".footer .info").html(html || "");
     };
 
-    (hoverables || this.$(".section-group")).on({
+    ($hoverables || this.$(".section-group")).on({
       mouseover: (event) => {
         const code = this._codeForEmojiLink($(event.currentTarget));
         const html = `<img src="${emojiUrlFor(code)}" class="emoji"> <span>:${code}:<span>`;
