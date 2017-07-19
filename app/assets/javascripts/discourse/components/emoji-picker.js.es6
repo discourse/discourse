@@ -115,19 +115,11 @@ export default Ember.Component.extend({
 
     this._bindEvents();
 
-    this._later(this, function() {
+    Ember.run.scheduleOnce('afterRender', this, function() {
       this._setDiversity();
       this._positionPicker();
       this._scrollTo();
     });
-  },
-
-  _later(context, handler, timeout) {
-    if(Ember.testing) {
-      handler.bind(context)();
-    } else {
-      Ember.run.later(context, handler, timeout);
-    }
   },
 
   _bindEvents() {
@@ -322,7 +314,7 @@ export default Ember.Component.extend({
       if(preloadedSection && !preloadedSection.$section.hasClass("loaded")) {
         preloadedSection.$section.addClass("loaded");
         const $visibleEmojis = preloadedSection.$section.find(".emoji[src='']");
-        this._later(this, function() { this._loadVisibleEmojis($visibleEmojis); }, 1500);
+        Ember.run.later(this, () => this._loadVisibleEmojis($visibleEmojis), 1500);
       }
     }
   },
