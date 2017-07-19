@@ -97,11 +97,10 @@ export default Ember.Component.extend({
     $picker
       .css({width: "", left: "", bottom: ""})
       .empty();
+
     $modal.removeClass("fadeIn");
 
     this._unbindEvents();
-
-    $filter, $results, $list = null;
   },
 
   show() {
@@ -133,16 +132,7 @@ export default Ember.Component.extend({
     this._bindCategoryClick();
     this._bindModalClick();
     this._bindFilterInput();
-    // this._bindEscape();
-  },
 
-  _bindEscape() {
-    this.$().on("keydown", e => {
-      if (e.which === 27) {
-        this.set("active", false);
-        return false;
-      }
-    });
     if(!this.site.isMobileDevice) {
       this._bindHover();
     }
@@ -158,7 +148,6 @@ export default Ember.Component.extend({
     this.$(window).off("resize");
     $modal.off("click");
     Ember.$("#reply-control").off("div-resized");
-    // this.$().off("keydown");
   },
 
   _filterEmojisList() {
