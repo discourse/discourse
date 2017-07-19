@@ -208,7 +208,7 @@ export default Ember.Component.extend({
       $picker.find(".footer .info").html(html || "");
     };
 
-    ($hoverables || this.$(".section-group")).on({
+    ($hoverables || $list.find(".section-group")).on({
       mouseover: (event) => {
         const code = this._codeForEmojiLink($(event.currentTarget));
         const html = `<img src="${emojiUrlFor(code)}" class="emoji"> <span>:${code}:<span>`;
