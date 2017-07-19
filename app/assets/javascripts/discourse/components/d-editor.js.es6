@@ -197,6 +197,7 @@ export default Ember.Component.extend({
   linkText: '',
   lastSel: null,
   _mouseTrap: null,
+  emojiPickerIsActive: false,
 
   @computed('placeholder')
   placeholderTranslated(placeholder) {
