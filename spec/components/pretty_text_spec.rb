@@ -879,6 +879,12 @@ HTML
     expect(cooked).to eq(html)
   end
 
+  it "supports query params in bbcode url" do
+    cooked = PrettyText.cook("[url=https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse]BBcode link[/url]")
+    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="nofollow noopener">BBcode link</a></p>'
+    expect(cooked).to eq(html)
+  end
+
   it "supports inline code bbcode" do
     cooked = PrettyText.cook "Testing [code]codified **stuff** and `more` stuff[/code]"
     html = "<p>Testing <code>codified **stuff** and `more` stuff</code></p>"
