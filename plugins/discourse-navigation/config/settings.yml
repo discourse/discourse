@@ -1,4 +1,0 @@
-plugins:
-  navigation_enabled:
-    default: true
-    client: true
