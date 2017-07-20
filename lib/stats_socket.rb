@@ -14,6 +14,12 @@ class StatsSocket < SocketServer
       when "gc_stat"
         GC.stat.to_json
       when "v8_stat"
+        stats = {}
+        ObjectSpace.each_object(MiniRacer::Context) do |context|
+          context.heap_stats.each do |k,v|
+            stats[k] = (stats[k] || 0) + v
+          end
+        end
         PrettyText.v8.heap_stats.to_json
       else
         "[\"UNKNOWN COMMAND\"]"
