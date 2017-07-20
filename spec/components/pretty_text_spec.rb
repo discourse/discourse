@@ -951,6 +951,4 @@ HTML
       expect(cooked).to eq(html.strip)
     end
   end
-
-
 end
