@@ -123,6 +123,7 @@ module PrettyText
 
   def self.reset_context
     @ctx_init.synchronize do
+      @ctx.dispose
       @ctx = nil
     end
   end
