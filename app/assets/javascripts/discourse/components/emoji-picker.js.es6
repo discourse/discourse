@@ -15,7 +15,7 @@ const PER_ROW = 11;
 const customEmojis = _.map(_.keys(extendedEmojiList()), code => {
   return { code, src: emojiUrlFor(code) };
 });
-let $picker, $modal, $filter, $results, $list;
+let $picker, $filter, $results, $list;
 
 export default Ember.Component.extend({
   willDestroyElement() {
@@ -371,8 +371,8 @@ export default Ember.Component.extend({
 
     const desktopModalePositioning = options => {
       const attributes = {
-        width: windowWidth < 450 ? windowWidth - 12 : 400,
-        marginLeft: -($picker.width() / 2) + 12,
+        width: Math.min(windowWidth, 400) - 12,
+        marginLeft: -(Math.min(windowWidth, 400)/2) + 6,
         marginTop: -130,
         left: "50%",
         bottom: "",
@@ -403,7 +403,7 @@ export default Ember.Component.extend({
 
     const desktopPositioning = options => {
       const attributes = {
-        width: windowWidth < 450 ? windowWidth - 12 : 400,
+        width: windowWidth < 485 ? windowWidth - 12 : 400,
         marginLeft: "",
         marginTop: "",
         right: "",
@@ -424,7 +424,7 @@ export default Ember.Component.extend({
     } else {
       if(this._isReplyControlExpanded()) {
         let $editorWrapper = Ember.$(".d-editor-preview-wrapper");
-        if(($editorWrapper.is(":visible") && $editorWrapper.width() < 400) || windowWidth < 450) {
+        if(($editorWrapper.is(":visible") && $editorWrapper.width() < 400) || windowWidth < 485) {
           desktopModalePositioning();
         } else {
           if($editorWrapper.is(":visible")) {
@@ -439,7 +439,7 @@ export default Ember.Component.extend({
           }
         }
       } else {
-        if(windowWidth < 450) {
+        if(windowWidth < 485) {
           desktopModalePositioning();
         } else {
           let previewInputOffset = Ember.$(".d-editor-input").offset();
