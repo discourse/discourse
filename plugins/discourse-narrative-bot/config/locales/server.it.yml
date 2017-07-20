@@ -134,7 +134,7 @@ it:
           Sfortunatamente, essendo un robot mal programmato, non l'ho capita bene. :frowning:
         track_response: Puoi provare di nuovo, o se vuoi saltare questo passaggio, dimmi `%{skip_trigger}`. Altrimenti per ricominciare, dimmi `%{reset_trigger}`.
         second_response: |-
-          Aw, scusa. Non sto ancora capendo. :anguished:
+          Oh, scusa. Non sto ancora capendo. :anguished:
 
           Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](/about).
 

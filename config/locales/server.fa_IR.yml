@@ -1464,41 +1464,9 @@ fa_IR:
   invite_mailer:
     title: "دعوت نامه‌رسان"
     subject_template: "%{invitee_name} شما را به %{topic_title}' در  %{site_domain_name}  دعوت کرده"
-    text_body_template: |
-      %{invitee_name} شما را به گفتگو دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      اگر علاقه‌مند هستید روی لینک زیر کلیک کنید:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "دعوت سفارشی نامه‌رسان"
     subject_template: "%{invitee_name} شما را به '%{topic_title}' در %{site_domain_name} دعوت کرده"
-    text_body_template: |
-      %{invitee_name} شما را به گفتگو دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      با این یادداشت
-
-      > %{user_custom_message}
-
-      اگر علاقه‌مند هستید روی لینک زیر کلیک کنید:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "دعوت نامه‌رسان انجمن"
     subject_template: "%{invitee_name} به عضویت در %{site_domain_name} دعوت شدید"
@@ -2000,26 +1968,6 @@ fa_IR:
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     visit_link_to_respond_pm: "[پیام را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
-    invited_to_private_message_body: |
-      %{username} شما را به یک پیام دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} شما را به یک بحث دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "کاربر دعوت شده به پیام خصوصی"
       subject_template: "[%{email_prefix}] %{username} شما را به پیام '%{topic_title}' دعوت کرده"

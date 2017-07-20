@@ -1374,41 +1374,9 @@ zh_TW:
   invite_mailer:
     title: "邀請 Mailer"
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
-    text_body_template: |
-      %{invitee_name} 邀請你參與位於
-
-      > %{site_title} -- %{site_description}
-
-      的以下討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      如果你有興趣，請點擊下面的連結：
-
-      %{invite_link}
   custom_invite_mailer:
     title: "客製邀請 Mailer"
     subject_template: "%{invitee_name}邀請你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} 留下以下留言
-
-      > %{user_custom_message}
-
-      邀請你參與位於
-
-      > %{site_title} -- %{site_description}
-
-      的討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      如果你有興趣，請點擊下面的連結：
-
-      %{invite_link}
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
@@ -1857,26 +1825,6 @@ zh_TW:
     visit_link_to_respond: "[訪問主題](%{base_url}%{url})以回覆。"
     visit_link_to_respond_pm: "[訪問\"私訊\"](%{base_url}%{url})以回覆。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
-    invited_to_private_message_body: |
-      %{username} 邀請你至消息交流：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      論壇：
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} 邀請你參與討論：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      論壇：
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "用戶被邀請至私人訊息"
       text_body_template: |
