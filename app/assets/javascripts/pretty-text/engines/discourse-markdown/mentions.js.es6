@@ -39,7 +39,7 @@ export function setup(helper) {
   helper.registerPlugin(md => {
 
     const rule = {
-      matcher: /@\w[\w.-]{0,59}/,
+      matcher: /@\w[\w.-]{0,58}\w|@\w/,
       onMatch: addMention
     };
 

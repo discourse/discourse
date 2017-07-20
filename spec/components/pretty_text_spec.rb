@@ -146,10 +146,18 @@ describe PrettyText do
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
-    it "can handle mentions" do
+    it "can handle mention edge cases" do
+      expect(PrettyText.cook("hi\n@s")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span></p>")
+      expect(PrettyText.cook("hi\n@ss")).to eq("<p>hi<br>\n<span class=\"mention\">@ss</span></p>")
+      expect(PrettyText.cook("hi\n@s.")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span>.</p>")
+      expect(PrettyText.cook("hi\n@s.s")).to eq("<p>hi<br>\n<span class=\"mention\">@s.s</span></p>")
+      expect(PrettyText.cook("hi\n@.s.s")).to eq("<p>hi<br>\n@.s.s</p>")
+    end
+
+    it "can handle mention with hyperlinks" do
       Fabricate(:user, username: "sam")
       expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
-      expect(PrettyText.cook("hi\n@sam")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a></p>")
+      expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
     end
 
     it "can handle mentions inside a hyperlink" do
