@@ -154,6 +154,10 @@ describe Admin::UsersController do
         @another_user = Fabricate(:coding_horror)
       end
 
+      after do
+        $redis.flushall
+      end
+
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_grant_admin?).with(@another_user).returns(false)
         xhr :put, :grant_admin, user_id: @another_user.id
@@ -512,7 +516,7 @@ describe Admin::UsersController do
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         expect(response).to be_success
 
-        u = User.find_by(email: 'bill@bill.com')
+        u = User.find_by_email('bill@bill.com')
         expect(u.name).to eq("Bill")
         expect(u.username).to eq("bill22")
         expect(u.admin).to eq(true)
@@ -587,7 +591,7 @@ describe Admin::UsersController do
       xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
       expect(response).to be_success
 
-      user = User.where(email: 'dr@claw.com').first
+      user = User.find_by_email('dr@claw.com')
       expect(user).to be_present
       expect(user.ip_address).to be_blank
     end
@@ -599,7 +603,7 @@ describe Admin::UsersController do
 
       xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(403)
-      expect(JSON.parse(response.body)["message"]).to include("Email can't be blank")
+      expect(JSON.parse(response.body)["message"]).to include("Primary email is invalid")
     end
   end
 end
