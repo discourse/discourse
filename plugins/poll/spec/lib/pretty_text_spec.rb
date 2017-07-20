@@ -8,10 +8,6 @@ describe PrettyText do
   end
 
   context 'markdown it' do
-    before do
-      SiteSetting.enable_experimental_markdown_it = true
-    end
-
     it 'supports multi choice polls' do
       cooked = PrettyText.cook <<~MD
         [poll type=multiple min=1 max=3 public=true]
@@ -59,22 +55,6 @@ describe PrettyText do
 
       cooked = PrettyText.cook(md)
       expect(cooked.scan('class="poll"').length).to eq(2)
-    end
-
-    it 'works correctly for new vs old engine with trivial cases' do
-      md = <<~MD
-        [poll]
-        1. test 1
-        2. test 2
-        [/poll]
-      MD
-
-      new_engine = n(PrettyText.cook(md))
-
-      SiteSetting.enable_experimental_markdown_it = false
-      old_engine = n(PrettyText.cook(md))
-
-      expect(new_engine).to eq(old_engine)
     end
 
     it 'does not break poll options when going from loose to tight' do

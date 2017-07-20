@@ -9,11 +9,10 @@ describe User do
     describe 'emails' do
       let(:user) { Fabricate.build(:user) }
 
-      it { is_expected.to validate_presence_of :email }
-
       describe 'when record has a valid email' do
         it "should be valid" do
           user.email = 'test@gmail.com'
+
           expect(user).to be_valid
         end
       end
@@ -21,7 +20,9 @@ describe User do
       describe 'when record has an invalid email' do
         it 'should not be valid' do
           user.email = 'test@gmailcom'
+
           expect(user).to_not be_valid
+          expect(user.errors.messages).to include(:primary_email)
         end
       end
     end

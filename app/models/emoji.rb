@@ -1,6 +1,6 @@
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "v5"
+  EMOJI_VERSION = "5"
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
@@ -46,15 +46,19 @@ class Emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
-    filename = "#{emoji['filename'] || name}.png"
+    filename = emoji['filename'] || name
     Emoji.new.tap do |e|
       e.name = name
-      e.url = "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
+      e.url = Emoji.url_for(filename)
     end
   end
 
+  def self.url_for(name)
+    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=5"
+  end
+
   def self.cache_key(name)
-    "#{name}:#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
+    "#{name}:v#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
   end
 
   def self.clear_cache

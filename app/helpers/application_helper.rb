@@ -23,6 +23,9 @@ module ApplicationHelper
     if current_user.present?
       result[:userId] = current_user.id
     end
+    if SiteSetting.ga_universal_auto_link_domains.present?
+      result[:allowLinker] = true
+    end
     result.to_json.html_safe
   end
 

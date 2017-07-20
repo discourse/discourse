@@ -127,11 +127,13 @@ export default createWidget('search-menu', {
       if (searchData.loading) {
         results.push(h('div.searching', h('div.spinner')));
       } else {
-        results.push(this.attach('search-menu-results', { term: searchData.term,
-                                                          noResults: searchData.noResults,
-                                                          results: searchData.results,
-                                                          invalidTerm: searchData.invalidTerm,
-                                                          searchContextEnabled: searchData.contextEnabled }));
+        results.push(this.attach('search-menu-results', {
+          term: searchData.term,
+          noResults: searchData.noResults,
+          results: searchData.results,
+          invalidTerm: searchData.invalidTerm,
+          searchContextEnabled: searchData.contextEnabled
+        }));
       }
     }
 

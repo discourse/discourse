@@ -93,7 +93,7 @@ class BulkImport::Base
 
     puts "Loading users indexes..."
     @last_user_id = User.unscoped.maximum(:id)
-    @emails = User.unscoped.pluck(:email).to_set
+    @emails = User.unscoped.pluck(:"user_emails.email").to_set
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @mapped_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("user_custom_fields.value", "users.username").to_h
 

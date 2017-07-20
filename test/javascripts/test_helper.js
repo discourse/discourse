@@ -143,6 +143,5 @@ Object.keys(requirejs.entries).forEach(function(entry) {
     require(entry, null, null, true);
   }
 });
-require('mdtest/mdtest', null, null, true);
 resetSite();
 

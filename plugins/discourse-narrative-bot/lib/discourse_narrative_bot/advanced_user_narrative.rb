@@ -74,7 +74,7 @@ module DiscourseNarrativeBot
           action: :reply_to_topic_notification_level_changed
         },
         reply: {
-          next_state: :tutorial_notification_level,
+          next_state: :tutorial_change_topic_notification_level,
           action: :missing_topic_notification_level_change
         }
       },

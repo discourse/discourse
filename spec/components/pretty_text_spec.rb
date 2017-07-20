@@ -5,7 +5,7 @@ require 'html_normalize'
 describe PrettyText do
 
   before do
-    SiteSetting.enable_experimental_markdown_it = true
+    SiteSetting.enable_markdown_typographer = false
   end
 
   def n(html)
@@ -61,7 +61,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote" data-post="123" data-topic="456">
+          <aside class="quote" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -146,10 +146,18 @@ describe PrettyText do
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
-    it "can handle mentions" do
+    it "can handle mention edge cases" do
+      expect(PrettyText.cook("hi\n@s")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span></p>")
+      expect(PrettyText.cook("hi\n@ss")).to eq("<p>hi<br>\n<span class=\"mention\">@ss</span></p>")
+      expect(PrettyText.cook("hi\n@s.")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span>.</p>")
+      expect(PrettyText.cook("hi\n@s.s")).to eq("<p>hi<br>\n<span class=\"mention\">@s.s</span></p>")
+      expect(PrettyText.cook("hi\n@.s.s")).to eq("<p>hi<br>\n@.s.s</p>")
+    end
+
+    it "can handle mention with hyperlinks" do
       Fabricate(:user, username: "sam")
       expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
-      expect(PrettyText.cook("hi\n@sam")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a></p>")
+      expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
     end
 
     it "can handle mentions inside a hyperlink" do
@@ -173,6 +181,10 @@ describe PrettyText do
       expect(PrettyText.cook("hello @bob's @bob,@bob; @bob\"")).to match_html(
         "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
       )
+    end
+
+    it 'should not treat a medium link as a mention' do
+      expect(PrettyText.cook(". http://test/@sam")).not_to include('mention')
     end
 
   end
@@ -557,19 +569,15 @@ describe PrettyText do
     html = <<~HTML
       <p>a <img><br>
       <img></p>
-      <p>
-      <img><br>
+      <p><img><br>
       <img></p>
-      <p>
-      <img></p>
+      <p><img></p>
       <p>a</p>
-      <p>
-      <img></p>
+      <p><img></p>
       <ul>
       <li>li</li>
       </ul>
-      <p>
-      <img></p>
+      <p><img></p>
       <pre><code class="lang-auto">test
       </code></pre>
       <pre><code class="lang-auto">test
@@ -596,8 +604,7 @@ describe PrettyText do
     HTML
 
     html = <<~HTML
-      <p>
-      <img><br>
+      <p><img><br>
       <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
       <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
       <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
@@ -657,6 +664,9 @@ describe PrettyText do
     expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
   end
 
+  it "should not treat a non emoji as an emoji" do
+    expect(PrettyText.cook(':email,class_name:')).not_to include('emoji')
+  end
 
   it "supports href schemes" do
     SiteSetting.allowed_href_schemes = "macappstore|steam"
@@ -786,6 +796,8 @@ HTML
     expect(PrettyText.cook("<http://a.com>")).not_to include('onebox')
     expect(PrettyText.cook(" http://a.com")).not_to include('onebox')
     expect(PrettyText.cook("a\n http://a.com")).not_to include('onebox')
+    expect(PrettyText.cook("sam@sam.com")).not_to include('onebox')
+    expect(PrettyText.cook("<img src='a'>\nhttp://a.com")).to include('onebox')
   end
 
   it "can handle bbcode" do
@@ -857,7 +869,19 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>';
+    expect(cooked).to eq(html)
+  end
+
+  it "supports nesting tags in url" do
+    cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>';
+    expect(cooked).to eq(html)
+  end
+
+  it "supports query params in bbcode url" do
+    cooked = PrettyText.cook("[url=https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse]BBcode link[/url]")
+    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="nofollow noopener">BBcode link</a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -875,19 +899,34 @@ HTML
 
   it "support special handling for space in urls" do
     cooked = PrettyText.cook "http://testing.com?a%20b"
-    html = '<p><a href="http://testing.com?a%20b" class="onebox" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
+    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports onebox for decoded urls" do
     cooked = PrettyText.cook "http://testing.com?a%50b"
-    html = '<p><a href="http://testing.com?a%50b" class="onebox" rel="nofollow noopener">http://testing.com?aPb</a></p>'
+    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?aPb</a></p>'
     expect(cooked).to eq(html)
   end
 
+  it "should sanitize the html" do
+    expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
+  end
+
+  it "should not onebox magically linked urls" do
+    expect(PrettyText.cook('[url]site.com[/url]')).not_to include('onebox')
+  end
 
   it "should sanitize the html" do
+    expect(PrettyText.cook("<p class='hi'>hi</p>")).to eq "<p>hi</p>"
+  end
+
+  it "should strip SCRIPT" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
+  end
+
+  it "should allow sanitize bypass" do
+    expect(PrettyText.cook("<test>alert(42)</test>", sanitize: false)).to eq "<p><test>alert(42)</test></p>"
   end
 
   # custom rule used to specify image dimensions via alt tags
@@ -913,5 +952,18 @@ HTML
     end
   end
 
+  describe "inline onebox" do
+    it "includes the topic title" do
+      topic = Fabricate(:topic)
+
+      raw = "Hello #{topic.url}"
+
+      cooked = <<~HTML
+        <p>Hello <a href="#{topic.url}">#{topic.title}</a></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+  end
 
 end

@@ -5,4 +5,43 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ja: {}
+ja:
+  site_settings:
+    discourse_narrative_bot_enabled: 'ディスコースの自動ナレーターを許可してください。'
+    disable_discourse_narrative_bot_welcome_post: "ディスコースナレーター、ボットからのようこそ投稿を無効にしてください。"
+    discourse_narrative_bot_ignored_usernames: "ディスコースナレーター、ボットのユーザー名は気にするべきではありません。"
+    discourse_narrative_bot_disable_public_replies: "ディスコースナレーター、ボットからの返信を無効にして下さい。"
+    discourse_narrative_bot_welcome_post_delay: "ディスコースのナレーター、ボットのようこそ投稿を送信する前に(n)秒待ってください。"
+  badges:
+    certified:
+      name: 承認されました。
+      description: "新規ユーザーのチュートリアルが完了しました。"
+      long_description: |
+        このバッジは新規ユーザーチュートリアルの優れた結果のもと授与されました。あなたはディスカッションの基礎的なツールを学ぶための主導権を獲得したことが証明されました!
+    licensed:
+      name: 許可されました。
+      description: "上級のユーザーチュートリアルが完了しました。"
+      long_description: |
+        このバッジは上級ユーザーチュートリアルの優れた結果において授与されました。あなたは上級ディスカッションツールをマスターし、完全に許可されました。
+  discourse_narrative_bot:
+    bio: "初めまして。私は実在する人ではなく、このサイトについて教えることができるコンピュータプログラムです。私と情報交換するためにはメッセージを送信するか%{discobot_username}のどこかでちょっと話を出しておいて下さい。"
+    timeout:
+      message: |-
+        こんにちは%{username}、しばらく便りがなかったのでチェックをしているところです。
+
+        続けるためには、私に時間のある時に返信してください。
+
+        もしこのステップをスキップしたい場合、%{skip_trigger}とおっしゃってください。
+
+        やり直したい場合、%{reset_trigger}とおっしゃってください。
+
+        仮にこれらをしたくなくても、それもOKです。私はプログラムですから傷つきません。:くすん:
+    quote:
+      '1':
+        author: "アルベルト・アインシュタイン"
+      '2':
+        author: "マハトマガンジー"
+      '3':
+        quote: "終わったからと悲しまず、出会えたのだから微笑んでください。"
+      '4':
+        quote: "あなたが誰かに正しい行いを求めるのであれば、自分自身で行ってください。"

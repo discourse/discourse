@@ -550,6 +550,7 @@ Discourse::Application.routes.draw do
   get "top" => "list#top"
   get "search/query" => "search#query"
   get "search" => "search#show"
+  post "search/click" => "search#click"
 
   # Topics resource
   get "t/:id" => "topics#show"
@@ -663,6 +664,7 @@ Discourse::Application.routes.draw do
   end
 
   get "onebox" => "onebox#show"
+  get "inline-onebox" => "inline_onebox#show"
 
   get "exception" => "list#latest"
 

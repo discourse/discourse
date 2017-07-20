@@ -52,16 +52,25 @@ task 'docker:test' do
     ENV["RAILS_ENV"] = "test"
 
     @good = run_or_fail("bundle exec rake db:create db:migrate")
-    unless ENV["JS_ONLY"] 
-      if ENV["SINGLE_PLUGIN"]
-        @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
-      else
+
+    if ENV["INSTALL_OFFICIAL_PLUGINS"]
+      @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
+    end
+
+    unless ENV["JS_ONLY"]
+
+      unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("bundle exec rspec")
-        
-        if ENV["LOAD_PLUGINS"]
+      end
+
+      if ENV["LOAD_PLUGINS"]
+        if ENV["SINGLE_PLUGIN"]
+          @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
+        else
           @good &&= run_or_fail("bundle exec rake plugin:spec")
         end
       end
+      
     end
 
     unless ENV["RUBY_ONLY"]

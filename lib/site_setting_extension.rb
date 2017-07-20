@@ -195,6 +195,8 @@ module SiteSettingExtension
           opts.merge!({valid_values: choices[s].map{|c| {name: c, value: c}}, translate_names: false})
         end
 
+        opts[:textarea] = true if static_types[s] == :textarea
+
         opts[:choices] = choices[s] if choices.has_key? s
         opts
       end

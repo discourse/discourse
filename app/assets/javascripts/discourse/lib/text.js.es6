@@ -26,7 +26,8 @@ export function cook(text, options) {
 export function cookAsync(text, options) {
   if (Discourse.MarkdownItURL) {
     return loadScript(Discourse.MarkdownItURL)
-      .then(()=>cook(text, options));
+      .then(()=>cook(text, options))
+      .catch(e => Ember.Logger.error(e));
   } else {
     return Ember.RSVP.Promise.resolve(cook(text));
   }

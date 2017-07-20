@@ -890,7 +890,6 @@ el:
     notify_mods_when_user_blocked: "Εάν ένας χρήστης αυτόματα μπλοκαριστει, στείλε μήνυμα σε όλους τους συντονιστές."
     flag_sockpuppets: "Εάν ένας νέος χρήστης απαντήσει σε ένα νήμα από την ίδια διεύθυνση ΙP όπως ο νέος χρήστης, ο οποίος ξεκίνησε το νήμα, και οι δυο δημοσιεύσεις τους θα επισημανθούν ως δυνητικά ανεπιθύμητες."
     traditional_markdown_linebreaks: "Χρήση παραδοσιακών αλλαγών γραμμών στη Markdown, η οποία απαιτεί δύο κενά διαστήματα για μια αλλαγή γραμμής."
-    allow_html_tables: "Αποδοχή εισδοχής πινάκων στη Markdown με τη χρήση ετικετών HTML. TABLE, THEAD, TD, TR, TH θα μπαίνουν στη λίστα επιτρεπόμενων (απαιτείται πληρής αντιγραφή σε όλες τις αναρτήσεις που περιέχουν πίνακες)"
     post_undo_action_window_mins: "Αριθμός των λεπτών όπου οι χρήστες δικαιούνται να αναιρέσουν πρόσφατες ενέργειες πάνω σε ένα θέμα (μου αρέσει, επισήμανση, κτλ) "
     must_approve_users: "Το προσωπικό πρέπει να εγκρίνει όλους τους λογαριασμούς των νέων χρηστών προτού τους επιτραπεί να έχουν πρόσβαση στην ιστοσελίδα. Προειδοποίηση: ενεργοποιώντας το για μια ζωντανή ιστοσελίδα θα έχει ως αποτέλεσμα την ανάκληση για τους υπάρχοντες χρήστες που δεν ανήκουν στο προσωπικό!"
     pending_users_reminder_delay: "Ειδοποίηση συντονιστών αν καινούργιοι χρήστες περιμένουν για αποδοχή για μεγαλύτερο απο αυτό το χρονικό διάστημα. Όρισέ το στο -1 για να απενεργοποιηθούν οι ειδοποιήσεις."
@@ -1450,43 +1449,9 @@ el:
   invite_mailer:
     title: "Προσκάλεσε τον αποστολέα"
     subject_template: "%{invitee_name} σε προσκάλεσε σε '%{topic_title}' πάνω σε %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
-
-      Εάν σε ενδιαφέρει, κάνε κλικ στο σύνδεσμο παρακάτω:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Προσαρμοσμένη Πρόσκληση Ταχυδρομείου"
     subject_template: "%{invitee_name} σε προσκάλεσε στο %{topic_title}' του %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
-
-      Με αυτή τη σημείωση
-
-      > %{user_custom_message}
-
-      Εάν σε ενδιαφέρει, κάνε κλικ στο σύνδεσμο παρακάτω:
-
-      %{invite_link}
-
-      Αυτή η πρόσκληση προέρχεται από έμπιστο χρήστη, επομένως ένας λογαριασμός θα δημιουργηθεί αυτόματα για εσένα χρησιμοποιώντας αυτή τη διεύθυνση ηλεκτρονικού ταχυδρομείου.
   invite_forum_mailer:
     title: "Προσκαλέστε τον Μέιλερ του Φόρουμ"
     subject_template: "%{invitee_name} σε προσκάλεσε να συμμετέχεις στο %{site_domain_name}"
@@ -1942,26 +1907,6 @@ el:
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) για να αποκριθείς."
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) για να αποκριθείς."
     posted_by: "Δημοσιεύθηκε από %{username} στις %{post_date}"
-    invited_to_private_message_body: |
-      %{username} σας προσκάλεσε σε ένα μήνυμα
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Ο χρήστης προσκλήθηκε σε προσωπικό μήνυμα"
       text_body_template: |

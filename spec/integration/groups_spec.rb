@@ -315,6 +315,13 @@ describe "Groups" do
 
           expect(response).to be_success
         end
+
+        it "adds by email" do
+          expect { xhr :put, "/groups/#{group.id}/members", user_emails: [user1.email, user2.email].join(",") }
+            .to change { group.users.count }.by(2)
+
+          expect(response).to be_success
+        end
       end
 
       it "returns 422 if member already exists" do

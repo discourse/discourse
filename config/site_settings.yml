@@ -103,6 +103,9 @@ basic:
   ga_universal_domain_name:
     client: true
     default: 'auto'
+  ga_universal_auto_link_domains:
+    default: ''
+    type: list
   ga_tracking_code:
     client: true
     default: ''
@@ -492,19 +495,12 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
-  enable_experimental_markdown_it:
-    client: true
-    default: false
-    shadowed_by_global: true
   traditional_markdown_linebreaks:
     client: true
     default: false
   enable_markdown_typographer:
     client: true
-    default: false
-  allow_html_tables:
-    client: true
-    default: false
+    default: true
   suppress_reply_directly_below:
     client: true
     default: true
@@ -1114,7 +1110,7 @@ legal:
 
 backups:
   readonly_mode_during_backup:
-    default: true
+    default: false
   allow_restore:
     default: false
   maximum_backups:
@@ -1151,6 +1147,8 @@ search:
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size: 100000
+  log_search_queries: true
+  search_query_log_max_size: 1000000
 
 uncategorized:
   version_checks:

@@ -652,7 +652,7 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post) }
 
     context "emoji inside a quote" do
-      let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
+      let(:post) { Fabricate(:post, raw: "time to eat some sweet \n[quote]\n:candy:\n[/quote]\n mmmm") }
 
       it "doesn't award a badge when the emoji is in a quote" do
         cpp.grant_badges

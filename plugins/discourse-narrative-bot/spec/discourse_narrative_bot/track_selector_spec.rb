@@ -562,7 +562,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           describe 'when roll dice command is present inside a quote' do
             it 'should ignore the command' do
               user
-              post.update!(raw: '[quote="Donkey, post:6, topic:1"]@discobot roll 2d1[/quote]')
+              post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot roll 2d1\n[/quote]")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }
@@ -599,7 +599,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           describe 'when quote command is present inside a onebox or quote' do
             it 'should ignore the command' do
               user
-              post.update!(raw: '[quote="Donkey, post:6, topic:1"]@discobot quote[/quote]')
+              post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot quote\n[/quote]")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }

@@ -42,7 +42,11 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+  has_many :user_emails, dependent: :destroy
 
+  has_one :primary_email, -> { where(primary: true)  },
+    dependent: :destroy,
+    class_name: 'UserEmail'
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -74,16 +78,13 @@ class User < ActiveRecord::Base
 
   delegate :last_sent_email_address, :to => :email_logs
 
-  before_validation :strip_downcase_email
-
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
-  validates :email, presence: true, uniqueness: true
-  validates :email, format: { with: EmailValidator.email_regex }, if: :email_changed?
-  validates :email, email: true, if: :should_validate_email?
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
+  validates :primary_email, presence: true, if: :should_validate_primary_email?
+  validates_associated :primary_email, if: :should_validate_primary_email?
 
   after_initialize :add_trust_level
 
@@ -122,6 +123,8 @@ class User < ActiveRecord::Base
 
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
+
+  scope :with_email, ->(email) { joins(:user_emails).where(user_emails: { email: email }) }
 
   scope :human_users, -> { where('users.id > 0') }
 
@@ -232,7 +235,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    find_by(email: Email.downcase(email))
+    self.with_email(Email.downcase(email)).first
   end
 
   def self.find_by_username(username)
@@ -267,8 +270,8 @@ class User < ActiveRecord::Base
     used_invite.try(:invited_by)
   end
 
-  def should_validate_email?
-    return !skip_email_validation && !staged? && email_changed?
+  def should_validate_primary_email?
+    !skip_email_validation && !staged?
   end
 
   # Approve this user
@@ -935,6 +938,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def email
+    primary_email.email
+  end
+
+  def email=(email)
+    if primary_email
+      self.new_record? ? primary_email.email = email : primary_email.update(email: email)
+    else
+      build_primary_email(email: email)
+    end
+  end
+
   protected
 
   def badge_grant
@@ -1009,13 +1024,6 @@ class User < ActiveRecord::Base
 
   def update_username_lower
     self.username_lower = username.downcase
-  end
-
-  def strip_downcase_email
-    if self.email
-      self.email = self.email.strip
-      self.email = self.email.downcase
-    end
   end
 
   def username_validator
@@ -1104,7 +1112,7 @@ end
 #  name                    :string
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
-#  email                   :string(513)      not null
+#  email                   :string(513)
 #  password_hash           :string(64)
 #  salt                    :string(32)
 #  active                  :boolean          default(FALSE), not null

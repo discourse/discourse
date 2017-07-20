@@ -381,7 +381,7 @@ describe Email::Receiver do
 
     it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
       expect { process(:cc) }.to change(Topic, :count)
-      emails = Topic.last.allowed_users.pluck(:email)
+      emails = Topic.last.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
       expect(emails.size).to eq(3)
       expect(emails).to include("someone@else.com", "discourse@bar.com", "wat@bar.com")
     end
@@ -498,7 +498,7 @@ describe Email::Receiver do
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
-      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
 
       new_post, = Post.last
