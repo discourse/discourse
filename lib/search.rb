@@ -159,8 +159,8 @@ class Search
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
-    @limit = Search.per_facet
     @valid = true
+    @page = @opts[:page]
 
     # Removes any zero-width characters from search terms
     term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
@@ -178,10 +178,6 @@ class Search
       @search_context = @guardian.user
     end
 
-    if @opts[:type_filter].present?
-      @limit = Search.per_filter
-    end
-
     @results = GroupedSearchResults.new(
       @opts[:type_filter],
       clean_term,
@@ -189,6 +185,22 @@ class Search
       @include_blurbs,
       @blurb_length
     )
+  end
+
+  def limit
+    if @opts[:type_filter].present?
+      Search.per_filter + 1
+    else
+      Search.per_facet + 1
+    end
+  end
+
+  def offset
+    if @page && @opts[:type_filter].present?
+      (@page - 1) * Search.per_filter
+    else
+      0
+    end
   end
 
   def valid?
@@ -547,7 +559,6 @@ class Search
         raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
         send("#{@results.type_filter}_search")
       else
-        @limit = Search.per_facet + 1
         unless @search_context
           user_search if @term.present?
           category_search if @term.present?
@@ -605,7 +616,7 @@ class Search
                            .references(:category_search_data)
                            .order("topics_month DESC")
                            .secured(@guardian)
-                           .limit(@limit)
+                           .limit(limit)
 
       categories.each do |category|
         @results.add(category)
@@ -622,7 +633,7 @@ class Search
                   .where("user_search_data.search_data @@ #{ts_query("simple")}")
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
                   .order("last_posted_at DESC")
-                  .limit(@limit)
+                  .limit(limit)
 
       users.each do |user|
         @results.add(user)
@@ -744,6 +755,7 @@ class Search
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
       end
 
+      posts = posts.offset(offset)
       posts.limit(limit)
     end
 
@@ -787,10 +799,10 @@ class Search
       query =
         if @order == :likes
           # likes are a pain to aggregate so skip
-          posts_query(@limit, private_messages: opts[:private_messages])
+          posts_query(limit, private_messages: opts[:private_messages])
             .select('topics.id', "posts.post_number")
         else
-          posts_query(@limit, aggregate_search: true, private_messages: opts[:private_messages])
+          posts_query(limit, aggregate_search: true, private_messages: opts[:private_messages])
             .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
             .group('topics.id')
         end
@@ -825,7 +837,7 @@ class Search
         added += 1
       end
 
-      if added < @limit
+      if added < limit
         aggregate_posts(post_sql[:remaining]).each {|p| @results.add(p) }
       end
     end
@@ -838,7 +850,7 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_eager_loads(posts_query(@limit))
+        posts = posts_eager_loads(posts_query(limit))
           .where('posts.topic_id = ?', @search_context.id)
 
         posts.each do |post|

@@ -13,7 +13,10 @@ class SearchController < ApplicationController
       type_filter: 'topic',
       guardian: guardian,
       include_blurbs: true,
-      blurb_length: 300
+      blurb_length: 300,
+      page: if params[:page].to_i <= 10
+              [params[:page].to_i, 1].max
+            end
     }
 
     context, type = lookup_search_context
