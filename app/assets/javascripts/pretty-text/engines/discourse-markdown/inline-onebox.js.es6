@@ -7,6 +7,7 @@ function applyInlineOnebox(state, silent) {
 
   for (let i=1; i<state.tokens.length; i++) {
     let token = state.tokens[i];
+
     if (token.type === "inline") {
       let children = token.children;
       for (let j=0; j<children.length-2; j++) {
@@ -62,6 +63,6 @@ function applyInlineOnebox(state, silent) {
 
 export function setup(helper) {
   helper.registerPlugin(md => {
-    md.core.ruler.after('linkify', 'inline-onebox', applyInlineOnebox);
+    md.core.ruler.after('onebox', 'inline-onebox', applyInlineOnebox);
   });
 }
