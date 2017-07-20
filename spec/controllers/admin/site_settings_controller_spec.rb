@@ -27,6 +27,7 @@ describe Admin::SiteSettingsController do
 
       before do
         SiteSetting.setting(:test_setting, "default")
+        SiteSetting.refresh!
       end
 
       it 'sets the value when the param is present' do
@@ -49,6 +50,7 @@ describe Admin::SiteSettingsController do
 
       it 'does not allow changing of hidden settings' do
         SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
+        SiteSetting.refresh!
         result = xhr :put, :update, id: 'hidden_setting', hidden_setting: 'not allowed'
         expect(SiteSetting.hidden_setting).to eq("hidden")
         expect(result.status).to eq(422)
@@ -57,6 +59,41 @@ describe Admin::SiteSettingsController do
       it 'fails when a setting does not exist' do
         expect {
           xhr :put, :update, id: 'provider', provider: 'gotcha'
+        }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '.destroy' do
+      before do
+        SiteSetting.setting(:test_setting, "default")
+        SiteSetting.refresh!
+      end
+
+      it 'destroys related record' do
+        SiteSetting.test_setting = 'create'
+        # TODO: change mock to expect to change by count when defaults in site setting is not rebased.
+        SiteSetting.expects(:remove_override!).with(:test_setting)
+        xhr :delete, :destroy, id: 'test_setting'
+      end
+
+      it 'logs the change' do
+        SiteSetting.test_setting = 'previous'
+        StaffActionLogger.any_instance.expects(:log_site_setting_change).with('test_setting', 'previous', 'default')
+        xhr :delete, :destroy, id: 'test_setting'
+        expect(SiteSetting.test_setting).to eq('default')
+      end
+
+      it 'does not allow changing of hidden settings' do
+        SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
+        SiteSetting.refresh!
+        result = xhr :delete, :destroy, id: 'hidden_setting'
+        expect(SiteSetting.hidden_setting).to eq("hidden")
+        expect(result.status).to eq(422)
+      end
+
+      it 'fails when a setting does not exist' do
+        expect {
+          xhr :delete, :destroy, id: 'provider'
         }.to raise_error(ArgumentError)
       end
     end

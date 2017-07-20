@@ -1119,6 +1119,9 @@ search:
   min_search_term_length:
     client: true
     default: 3
+    locale_default:
+      zh_CN: 2
+      zh_TW: 2
 
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false

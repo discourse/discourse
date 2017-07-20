@@ -26,6 +26,11 @@ class SiteSetting < ActiveRecord::Base
       load_settings(file)
     end
   end
+  # 2017-07-20
+  # `current` hash is not populated everytime when load a site setting
+  # in order to support locale default. Instead, we simply `refresh!` once.
+  # This should only affects the spec in which you should populate `current`
+  refresh!
 
   client_settings << :available_locales
 

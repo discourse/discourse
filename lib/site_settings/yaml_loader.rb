@@ -1,17 +1,8 @@
 module SiteSettings; end
 
 class SiteSettings::YamlLoader
-
   def initialize(file)
     @file = file
-  end
-
-  def env_val(value)
-    if value.is_a?(Hash)
-      value.has_key?(Rails.env) ? value[Rails.env] : value['default']
-    else
-      value
-    end
   end
 
   def load

@@ -49,6 +49,10 @@ module SiteSettingExtension
     @defaults ||= {}
   end
 
+  def locale_defaults
+    @locale_defaults ||= {}
+  end
+
   def categories
     @categories ||= {}
   end
@@ -94,14 +98,17 @@ module SiteSettingExtension
     mutex.synchronize do
       self.defaults[name] = default
       categories[name] = opts[:category] || :uncategorized
-      current_value = current.has_key?(name) ? current[name] : default
 
-      if enum = opts[:enum]
+      if name != :default_locale && (locale_default = opts[:locale_default])
+        self.locale_defaults[name] = locale_default
+      end
+
+      if (enum = opts[:enum])
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
         opts[:type] ||= :enum
       end
 
-      if new_choices = opts[:choices]
+      if (new_choices = opts[:choices])
 
         new_choices = eval(new_choices) if new_choices.is_a?(String)
 
@@ -110,7 +117,7 @@ module SiteSettingExtension
           choices[name] = new_choices
       end
 
-      if type = opts[:type]
+      if (type = opts[:type])
         static_types[name.to_sym] = type.to_sym
       end
 
@@ -124,7 +131,6 @@ module SiteSettingExtension
         unless val.nil? || (val == ''.freeze)
           hidden_settings << name
           shadowed_settings << name
-          current_value = val
         end
       end
 
@@ -143,11 +149,10 @@ module SiteSettingExtension
       opts[:validator] = opts[:validator].try(:constantize)
       type = opts[:type] || get_data_type(name, defaults[name])
 
-      if validator_type = opts[:validator] || validator_for(type)
+      if (validator_type = opts[:validator] || validator_for(type))
         validators[name] = { class: validator_type, opts: opts }
       end
 
-      current[name] = current_value
       setup_methods(name)
     end
   end
@@ -180,7 +185,7 @@ module SiteSettingExtension
         opts = {
           setting: s,
           description: description(s),
-          default: v.to_s,
+          default: defaults[v].to_s,
           type: type.to_s,
           value: value.to_s,
           category: categories[s],
@@ -215,22 +220,22 @@ module SiteSettingExtension
   def refresh!
     mutex.synchronize do
       ensure_listen_for_changes
-      old = current
 
       new_hash = Hash[*(provider.all.map { |s|
         [s.name.intern, convert(s.value, s.data_type, s.name)]
       }.to_a.flatten)]
+      current_locale = current_default_locale(new_hash[:default_locale])
+      defaults_view = defaults.merge(locale_defaults.transform_values { |v| v[current_locale] }.compact)
 
-      # add defaults, cause they are cached
-      new_hash = defaults.merge(new_hash)
+      # add locale default and defaults based on default_locale, cause they are cached
+      new_hash = defaults_view.merge(new_hash)
 
       # add shadowed
       shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
 
-      changes, deletions = diff_hash(new_hash, old)
-
+      changes, deletions = diff_hash(new_hash, current)
       changes.each   { |name, val| current[name] = val }
-      deletions.each { |name, val| current[name] = defaults[name] }
+      deletions.each { |name, _|   current[name] = defaults_view[name] }
 
       clear_cache!
     end
@@ -275,7 +280,12 @@ module SiteSettingExtension
 
   def remove_override!(name)
     provider.destroy(name)
-    current[name] = defaults[name]
+    if name == :default_locale
+      current[name] = defaults[name]
+      refresh!
+    else
+      current[name] = locale_defaults.dig(name, current_default_locale) || defaults[name]
+    end
     clear_cache!
   end
 
@@ -305,7 +315,7 @@ module SiteSettingExtension
       end
     end
 
-    if v = validators[name]
+    if (v = validators[name])
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
         raise Discourse::InvalidParameters.new(validator.error_message)
@@ -318,6 +328,7 @@ module SiteSettingExtension
 
     provider.save(name, val, type)
     current[name] = convert(val, type, name)
+    refresh! if name.to_sym == :default_locale
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
@@ -375,6 +386,18 @@ module SiteSettingExtension
     StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
   end
 
+  def reset_and_log(name, user=Discourse.system_user)
+    name = name.to_sym
+    prev_value = send(name)
+    if has_setting?(name)
+      remove_override!(name)
+      Discourse.request_refresh! if requires_refresh?(name)
+      StaffActionLogger.new(user).log_site_setting_change(name.to_s, prev_value, send(name))
+    else
+      raise ArgumentError, "no setting named '#{name}' exists"
+    end
+  end
+
   protected
 
   def clear_cache!
@@ -406,6 +429,8 @@ module SiteSettingExtension
       return types[static_type] if types.keys.include?(static_type)
     end
 
+    val = val[:default] if val.is_a?(Hash)
+
     case val
     when String
       types[:string]
@@ -432,6 +457,8 @@ module SiteSettingExtension
       nil
     when types[:enum]
       defaults[name.to_sym].is_a?(Integer) ? value.to_i : value
+    when types[:string]
+      value.to_s
     else
       return value if types[type]
       # Otherwise it's a type error
@@ -479,8 +506,7 @@ module SiteSettingExtension
     clean_name = name.to_s.sub("?", "").to_sym
 
     define_singleton_method clean_name do
-      c = @containers[provider.current_site]
-      if c
+      if (c = @containers[provider.current_site])
         c[name]
       else
         refresh!
@@ -507,6 +533,15 @@ module SiteSettingExtension
       url = URI.parse(url).host
     end
     url
+  end
+
+  def current_default_locale(fetched = nil)
+    return fetched.to_sym if fetched
+    if (s = provider.find(:default_locale))
+      convert(s.value, s.data_type, s.name).to_sym
+    else
+      (defaults[:default_locale] || 'en').to_sym
+    end
   end
 
   private

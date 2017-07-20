@@ -28,6 +28,8 @@ describe SiteSettingExtension do
     Class.new do
       extend SiteSettingExtension
       self.provider = provider
+    end.tap do |s|
+      s.setting(:default_locale, 'en')
     end
   end
 
@@ -64,7 +66,7 @@ describe SiteSettingExtension do
       expect(settings.hello).to eq(99)
     end
 
-    it "Publishes changes cross sites" do
+    it "publishes changes cross sites" do
       settings.setting(:hello, 1)
       settings2.setting(:hello, 1)
 
@@ -155,8 +157,11 @@ describe SiteSettingExtension do
   end
 
   describe "remove_override" do
-    it "correctly nukes overrides" do
+    before do
       settings.setting(:test_override, "test")
+      settings.refresh!
+    end
+    it "correctly nukes overrides" do
       settings.test_override = "bla"
       settings.remove_override!(:test_override)
       expect(settings.test_override).to eq("test")
@@ -263,6 +268,7 @@ describe SiteSettingExtension do
       settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
       settings.test_int_enum = "2"
       settings.refresh!
+      expect(settings.defaults[:test_int_enum]).to eq(1)
       expect(settings.test_int_enum).to eq(2)
     end
 
@@ -384,6 +390,16 @@ describe SiteSettingExtension do
     end
   end
 
+  describe ".reset_and_log" do
+    it "raises an error when set for an invalid setting name" do
+      settings.setting(:test_setting, 77)
+      settings.refresh!
+      expect {
+        settings.reset_and_log("provider", "haxxed")
+      }.to raise_error(ArgumentError)
+    end
+  end
+
   describe "filter domain name" do
     before do
       settings.setting(:white_listed_spam_host_domains, "www.example.com")
@@ -500,6 +516,49 @@ describe SiteSettingExtension do
       it "should add the key to the shadowed_settings collection" do
         expect(settings.shadowed_settings.include?(:trout_api_key)).to eq(true)
       end
+    end
+  end
+
+  describe 'locale default overrides are respected' do
+    before do
+      settings.setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
+      settings.refresh!
+    end
+
+    after do
+      settings.remove_override!(:default_locale)
+      settings.remove_override!(:test_override)
+    end
+
+    it 'ensures the default cache expired after overriding the default_locale' do
+      expect(settings.test_override).to eq('default')
+      settings.default_locale = 'zh_CN'
+      expect(settings.test_override).to eq('cn')
+    end
+
+    it 'returns the saved setting even locale default exists' do
+      expect(settings.test_override).to eq('default')
+      settings.default_locale = 'zh_CN'
+      settings.test_override = 'saved'
+      expect(settings.test_override).to eq('saved')
+    end
+  end
+
+  describe '.current_default_locale' do
+    it 'returns a symbol if given the fetched default_locale' do
+      expect(settings.send(:current_default_locale, :en)).to eq :en
+      expect(settings.send(:current_default_locale, 'en')).to eq :en
+    end
+
+    it 'returns overridden default_locale' do
+      settings.default_locale = 'zh_CN'
+      expect(settings.send(:current_default_locale)).to eq :zh_CN
+    end
+
+    it 'unconditionally returns the default_locale (:en)' do
+      expect(settings.send(:current_default_locale)).to eq :en
+      settings.defaults.delete(:default_locale)
+      expect(settings.send(:current_default_locale)).to eq :en
     end
   end
 

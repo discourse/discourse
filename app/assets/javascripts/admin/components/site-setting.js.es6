@@ -51,17 +51,18 @@ export default Ember.Component.extend(BufferedContent, {
     this.$().off("keydown.site-setting-enter");
   }.on("willDestroyElement"),
 
-  _save() {
-    const self = this,
-          setting = this.get('buffered');
-    SiteSetting.update(setting.get('setting'), setting.get('value')).then(function() {
-      self.set('validationMessage', null);
-      self.commitBuffer();
-    }).catch(function(e) {
+  _save(isUpdate = true) {
+    const setting = this.get('buffered'),
+      action = isUpdate ? SiteSetting.update(setting.get('setting'), setting.get('value')) :
+        SiteSetting.destroy(setting.get('setting'));
+    action.then(() => {
+      this.set('validationMessage', null);
+      this.commitBuffer();
+    }).catch((e) => {
       if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-        self.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
+        this.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
       } else {
-        self.set('validationMessage', I18n.t('generic_error'));
+        this.set('validationMessage', I18n.t('generic_error'));
       }
     });
   },
@@ -73,7 +74,7 @@ export default Ember.Component.extend(BufferedContent, {
 
     resetDefault() {
       this.set('buffered.value', this.get('setting.default'));
-      this._save();
+      this._save(false);
     },
 
     cancel() {
