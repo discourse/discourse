@@ -370,7 +370,7 @@ export default Ember.Component.extend({
     let windowWidth = this.$(window).width();
 
     const desktopModalePositioning = options => {
-      const attributes = {
+      let attributes = {
         width: Math.min(windowWidth, 400) - 12,
         marginLeft: -(Math.min(windowWidth, 400)/2) + 6,
         marginTop: -130,
@@ -379,14 +379,14 @@ export default Ember.Component.extend({
         top: "50%",
         display: "flex"
       };
-      Object.assign(attributes, options);
+      attributes = _.merge(attributes, options);
 
       this.$(".emoji-picker-modal").addClass("fadeIn");
       $picker.css(attributes);
     };
 
     const mobilePositioning = options => {
-      const attributes = {
+      let attributes = {
         width: windowWidth - 12,
         marginLeft: 5,
         marginTop: -130,
@@ -395,14 +395,14 @@ export default Ember.Component.extend({
         top: "50%",
         display: "flex"
       };
-      Object.assign(attributes, options);
+      attributes = _.merge(attributes, options);
 
       this.$(".emoji-picker-modal").addClass("fadeIn");
       $picker.css(attributes);
     };
 
     const desktopPositioning = options => {
-      const attributes = {
+      let attributes = {
         width: windowWidth < 485 ? windowWidth - 12 : 400,
         marginLeft: "",
         marginTop: "",
@@ -413,7 +413,7 @@ export default Ember.Component.extend({
         display:
         "flex"
       };
-      Object.assign(attributes, options);
+      attributes = _.merge(attributes, options);
 
       this.$(".emoji-picker-modal").removeClass("fadeIn");
       $picker.css(attributes);
