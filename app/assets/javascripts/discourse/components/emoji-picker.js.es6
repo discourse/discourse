@@ -147,7 +147,7 @@ export default Ember.Component.extend({
     this.$(".emoji-picker-modal")
         .on("click", () => this.set("active", false));
 
-    Ember.$(document).on("click", (event) => {
+    this.$(document).on("click.emoji-picker", (event) => {
       if(event.target.className.indexOf("grippie") === -1) {
         this.set("active", false);
         return false;
@@ -159,7 +159,7 @@ export default Ember.Component.extend({
     this.$(window).off("resize");
     this.$(".emoji-picker-modal").off("click");
     Ember.$("#reply-control").off("div-resizing");
-    Ember.$(document).off("click");
+    this.$(document).off("click.emoji-picker");
   },
 
   _filterEmojisList() {
@@ -443,7 +443,7 @@ export default Ember.Component.extend({
           desktopModalePositioning();
         } else {
           let previewInputOffset = Ember.$(".d-editor-input").offset();
-          let replyControlOffset = Ember.$("#reply-control").offset();
+          let replyControlOffset = Ember.$("#reply-control").offset() || {left: 0};
           let left = previewInputOffset.left - replyControlOffset.left;
           desktopPositioning({left, bottom: Ember.$("#reply-control").height() - 48});
         }
