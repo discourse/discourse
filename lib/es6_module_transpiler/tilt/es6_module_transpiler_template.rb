@@ -41,7 +41,7 @@ JS
     end
 
     def self.reset_context
-      @ctx.dispose
+      @ctx&.dispose
       @ctx = nil
     end
 
