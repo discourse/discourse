@@ -51,7 +51,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # import_topics
     # import_replies
     # import_likes
-    import_tags
+    # import_tags
     # create_permalinks
     # normalize_urls
     # post_process_posts
