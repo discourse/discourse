@@ -229,6 +229,8 @@ module Discourse
     end
 
     nil
+  rescue ActionController::RoutingError
+    nil
   end
 
   READONLY_MODE_KEY_TTL  ||= 60

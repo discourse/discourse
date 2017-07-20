@@ -22,8 +22,7 @@ class InlineOneboxer
     if route = Discourse.route_for(url)
       if route[:controller] == "topics" &&
         route[:action] == "show" &&
-
-        topic = Topic.where(id: route[:topic_id].to_i).first
+        topic = (Topic.where(id: route[:topic_id].to_i).first rescue nil)
 
         # Only public topics
         if Guardian.new.can_see?(topic)
