@@ -1,6 +1,6 @@
-function addHashtag(buffer, match, state) {
+function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
-  const slug = match.slice(1);
+  const slug = matches[1];
   const categoryHashtagLookup = options.categoryHashtagLookup;
   const result = categoryHashtagLookup && categoryHashtagLookup(slug);
 
@@ -34,7 +34,7 @@ function addHashtag(buffer, match, state) {
     buffer.push(token);
 
     token = new state.Token('text', '', 0);
-    token.content = match;
+    token.content = matches[0];
     buffer.push(token);
 
     token = new state.Token('span_close', 'span', -1);
@@ -46,7 +46,7 @@ export function setup(helper) {
   helper.registerPlugin(md=>{
 
     const rule = {
-      matcher: /#[\w-:]{1,101}/,
+      matcher: /#([\w-:]{1,101})/,
       onMatch: addHashtag
     };
 
