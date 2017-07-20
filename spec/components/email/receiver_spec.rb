@@ -498,7 +498,7 @@ describe Email::Receiver do
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
-      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
 
       new_post, = Post.last

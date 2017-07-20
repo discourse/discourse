@@ -48,7 +48,13 @@ describe InlineOneboxer do
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq(topic.title)
     end
+
+    it "returns nothing for unknown links" do
+      expect(InlineOneboxer.lookup(nil)).to be_nil
+      expect(InlineOneboxer.lookup("/test")).to be_nil
+    end
   end
+
 
 end
 
