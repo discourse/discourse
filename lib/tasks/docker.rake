@@ -2,9 +2,11 @@
 # running it anywhere else will likely fail
 #
 # Environment Variables (specific to this rake task)
-# => JS_ONLY        set to 1 to skip rspec tests
-# => RUBY_ONLY      set to 1 to skip qunit tests
-# => SINGLE_PLUGIN  set to plugin name to skip eslint, and only run plugin-specific rspec tests
+# => SKIP CORE                 set to 1 to skip core rspec tests
+# => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
+# => JS_ONLY                   set to 1 to skip all rspec tests
+# => RUBY_ONLY                 set to 1 to skip all qunit tests
+# => SINGLE_PLUGIN             set to plugin name to skip eslint, and only run plugin-specific rspec tests
 #
 # Other useful environment variables (not specific to this rake task)
 # => LOAD_PLUGINS   set to 1 to load all plugins when running tests
