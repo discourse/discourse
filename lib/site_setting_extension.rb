@@ -132,6 +132,10 @@ module SiteSettingExtension
         refresh_settings << name
       end
 
+      if opts[:client]
+        client_settings << name.to_sym
+      end
+
       if opts[:preview]
         previews[name] = opts[:preview]
       end
@@ -146,12 +150,6 @@ module SiteSettingExtension
       current[name] = current_value
       setup_methods(name)
     end
-  end
-
-  # just like a setting, except that it is available in javascript via DiscourseSession
-  def client_setting(name, default = nil, opts = {})
-    setting(name, default, opts)
-    client_settings << name.to_sym
   end
 
   def settings_hash

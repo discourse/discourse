@@ -143,7 +143,7 @@ describe SiteSettingExtension do
 
       it "should publish changes to clients" do
         settings.setting("test_setting", 100)
-        settings.client_setting("test_setting")
+        settings.setting("test_setting", nil, client: true)
 
         messages = MessageBus.track_publish do
           settings.test_setting = 88

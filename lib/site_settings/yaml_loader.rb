@@ -29,7 +29,7 @@ class SiteSettings::YamlLoader
             raise Discourse::Deprecation, "Hidden site setting per env is no longer supported. Error setting: #{setting_name}"
           end
 
-          yield category, setting_name, value, hash.symbolize_keys!
+          yield category, setting_name, value, hash.deep_symbolize_keys!
         else
           # Simplest case. site_setting_name: 'default value'
           yield category, setting_name, hash, {}
