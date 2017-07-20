@@ -8,6 +8,9 @@
 pl_PL:
   site_settings:
     disable_discourse_narrative_bot_welcome_post: "Dezaktywuj wpis powitalny Discourse Narrative Bot"
+  badges:
+    certified:
+      name: Certyfikowany
   discourse_narrative_bot:
     quote:
       trigger: "cytuj"
@@ -17,6 +20,11 @@ pl_PL:
         author: "Mahatma Gandhi"
       '3':
         author: "Dr Seuss"
+      '5':
+        quote: "Uwierz w to że możesz, jesteś już w połowie drogi."
+      '6':
+        quote: "Życie jest jak pudełko czekoladek. Nigdy nie wiesz na co trafisz."
+        author: "Mama Forresta Gumpa"
       '8':
         author: "Eleanor Roosevelt"
       '9':

@@ -1519,41 +1519,9 @@ de:
   invite_mailer:
     title: "Einladung zu einem Thema"
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
-    text_body_template: |
-      %{invitee_name} hat dich eingeladen zur Diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Wenn du interessiert bist, klicke auf den folgenden Link:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
     subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} hat dich eingeladen zur Diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Mit dieser Notiz:
-
-      > %{user_custom_message}
-
-      Falls du Interesse hast, klicke auf den nachfolgenden Link:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
@@ -2100,26 +2068,6 @@ de:
     visit_link_to_respond: "[Rufe das Thema auf](%{base_url}%{url}), um zu antworten."
     visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}), um zu antworten."
     posted_by: "Erstellt von %{username} am %{post_date}"
-    invited_to_private_message_body: |
-      %{username} hat dich zu einer Unterhaltung eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      auf
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} hat dich zu einer Diskussion eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      auf
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Benutzer zu Nachricht eingeladen"
       subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"

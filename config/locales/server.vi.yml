@@ -1285,26 +1285,6 @@ vi:
       description: "Bạn không thích nhận mail giống mail này? Nhấn vào bỏ theo dõi để bỏ đăng ký ngay lập tức:"
     only_reply_by_email: "Trả lời email này để phản hồi."
     posted_by: "Đăng bởi %{{username} ngày %{post_date}"
-    invited_to_private_message_body: |
-      %{username} mời bạn xem
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tại
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} mời bạn thảo luận
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tại
-
-      > %{site_title} -- %{site_description}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:

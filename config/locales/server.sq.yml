@@ -1040,26 +1040,6 @@ sq:
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     visit_link_to_respond_pm: "[Shiko Mesazhin](%{base_url}%/{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
-    invited_to_private_message_body: |
-      %{username} ju ftoi tek mesazhi
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      në
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} ju ftoi në një bisedë
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}

@@ -27,29 +27,35 @@ pt:
   topics: "Tópicos"
   posts: "mensagens"
   loading: "A carregar"
+  powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, e melhor visualização com o JavaScript ativado'
   log_in: "Iniciar Sessão"
-  purge_reason: "Conta removida automaticamente como conta abandonada, desactivada."
-  disable_remote_images_download_reason: "O download remoto de imagens foi desativado por não haver espaço disponível no disco."
+  purge_reason: "Eliminada automaticamente como abandonada, conta desativada"
+  disable_remote_images_download_reason: "A transferência remota de imagens foi desativada por não haver espaço disponível no disco."
   anonymous: "Anónimo"
+  remove_posts_deleted_by_author: "Eliminado pelo autor"
+  themes:
+    bad_color_scheme: "Não é possível atualizar o tema, esquema de cor inválido"
+    other_error: "Ocorreu algo de errado ao atualizar o tema"
   emails:
     incoming:
+      default_subject: "Este tópico precisa de um título"
       show_trimmed_content: "Mostrar conteúdo aparado"
-      maximum_staged_user_per_email_reached: "Foi atingido o número máximo de utilizadores temporários por email."
+      maximum_staged_user_per_email_reached: "Foi atingido o número máximo de utilizadores temporários criados por e-mail."
       errors:
         empty_email_error: "Acontece quando a informação não processada do email recebido veio em branco."
-        no_message_id_error: "Acontece quando o email recebido não tem 'Message-Id' no cabeçalho da mensagem."
+        no_message_id_error: "Acontece quando o e-mail não tem 'Id. de Mensagem' no cabeçalho."
         auto_generated_email_error: "Acontece quando o cabeçalho 'precedence' é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
-        no_body_detected_error: "Acontece quando conseguimos obter um corpo de mensagem e não existem anexos."
-        inactive_user_error: "Acontece quando o remetente não está activo."
-        blocked_user_error: "Acontece quando o remetente está bloqueado."
+        no_body_detected_error: "Acontece quando nós não conseguimos extrair um corpo e não existiam anexos."
+        inactive_user_error: "Acontece quando o remetente não está ativo."
+        blocked_user_error: "Acontece quando o remetente foi bloqueado."
         bad_destination_address: "Acontece quando nenhum dos endereços de email nos campos para/cc/bcc coincide com um endereço de email configurado."
-        strangers_not_allowed_error: "Acontece quando um utilizador tenta criar um tópico numa categoria da qual não é membro."
-        insufficient_trust_level_error: "Acontece quando um utilizador tentar criar um tópico numa categoria para a qual não tem o nível de confiança necessário."
-        reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de email diferente do destinatário da notificação."
-        topic_not_found_error: "Acontece quando a resposta veio de um tópico relacionado mas o tópico relacionado foi apagado."
-        topic_closed_error: "Acontece quando uma resposta chegou mas o tópico relacionado foi fechado."
-        bounced_email_error: "O email é um relatório de email redirecionado."
-        screened_email_error: "Acontece quando a morada de email da pessoa que o enviou já foi confirmada."
+        strangers_not_allowed_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não é membro."
+        insufficient_trust_level_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não tem o nível de confiança necessário."
+        reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de e-mail diferente de onde a notificação foi enviada."
+        topic_not_found_error: "Acontece quando é recebida uma resposta, mas que o tópico relacionado foi eliminado."
+        topic_closed_error: "Acontece quando é recebida uma resposta, mas que o tópico relacionado foi encerrado."
+        bounced_email_error: "A mensagem é um relatório de mensagem redirecionado."
+        screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -103,6 +109,8 @@ pt:
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
+  invite:
+    not_found: "O seu código de convite é inválido. Por favor, contacte o administrador do site."
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
@@ -125,6 +133,8 @@ pt:
   embed:
     start_discussion: "Iniciar Discussão"
     continue: "Continuar Discussão"
+    no_hosts: "Não foram configurados anfitriões para incorporar."
+    configure: "Configurar Incorporação"
     more_replies:
       one: "mais 1 resposta"
       other: "mais %{count} respostas"
@@ -158,6 +168,7 @@ pt:
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
+  not_accepting_pms: "Desculpe, de momento, %{username} não está a aceitar mensagens."
   just_posted_that: "é demasiado semelhante ao que publicaste recentemente"
   invalid_characters: "contem caracteres inválidos"
   is_invalid: "parece pouco claro, é uma frase completa?"
@@ -177,6 +188,12 @@ pt:
     latest: "Tópicos recentes"
     hot: "Tópicos quentes"
     top: "Melhores tópicos"
+    top_all: "Melhores tópicos de todos os tempos"
+    top_yearly: "Melhores tópicos do ano"
+    top_quarterly: "Melhores tópicos do trimestre"
+    top_monthly: "Melhores tópicos do mês"
+    top_weekly: "Melhores tópicos da semana"
+    top_daily: "Melhores tópicos do dia"
     posts: "Últimas mensagens"
     private_posts: "Mensagens privadas recentes"
     group_posts: "Mensagens recentes em %{group_name}"
@@ -190,6 +207,8 @@ pt:
   queue:
     delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
+    success:
+      bulk_add: "%{users_added}utilizadores foram adicionados ao grupo."
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é membro deste grupo."
@@ -197,6 +216,7 @@ pt:
       invalid_incoming_email: "'%{email}' não é um endereço de email válido."
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
       email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
+      cant_allow_membership_requests: "Não pode permitir pedidos de adesão para um grupo sem quaisquer donos."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -207,6 +227,9 @@ pt:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    request_membership_pm:
+      title: "Pedido de Adesão para @%{group_name}"
+      body: "Eu gostaria de de solicitar a adesão em @%{group_name}."
   education:
     until_posts:
       one: "1 mensagem"
@@ -261,16 +284,28 @@ pt:
               same_as_username: "é a mesma que o seu nome de utilizador. Por favor utilize uma palavra-passe mais segura."
               same_as_email: "é a mesma que o seu email. Por favor utilize uma palavra-passe mais segura."
               same_as_current: "é a mesma que a sua palavra-passe atual."
+              unique_characters: "tem demasiados carateres repetidos. Por favor, utilize uma palavra-passe mais segura."
             ip_address:
               signup_not_allowed: "A inscrição não é permitida através desta conta."
         color_scheme_color:
           attributes:
             hex:
               invalid: "não é uma cor válida"
+        post_reply:
+          base:
+            different_topic: "A publicação e a resposta devem pertencer ao mesmo tópico."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL inválido. O URL deve incluir http:// ou https://. E espaços não são permitidos."
+        custom_emoji:
+          attributes:
+            name:
+              taken: já está a ser utilizado por outro emoji
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "deve estar no futuro."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
@@ -280,6 +315,9 @@ pt:
   meta_category_description: "Discussão sobre este sítio, a sua organização, como funciona, e como podemos melhorá-lo."
   staff_category_name: "Pessoal"
   staff_category_description: "Categoria privada para discussões do pessoal. Os tópicos estão apenas visíveis para administradores e moderadores."
+  assets_topic_title: "Ativos para o desenho do site"
+  discourse_welcome_topic:
+    title: "Bem-vindo ao Discourse"
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2+
@@ -433,6 +471,8 @@ pt:
         other: "há quase %{count} anos atrás"
   password_reset:
     no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
+    choose_new: "Escolha uma nova palavra-passe"
+    choose: "Escolha uma palavra-passe"
     update: 'Atualizar Palavra-passe'
     save: 'Definir Palavra-passe'
     title: 'Redefinir Palavra-passe'
@@ -455,43 +495,58 @@ pt:
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
     missing_session: "Não conseguimos detectar se a sua conta foi criada, pelo que pedimos que confirme que tem os cookies permitidos."
+    activated: "Desculpe, esta conta já foi ativada."
+    admin_confirm:
+      title: "Confirmar Conta de Administrador"
+      description: "Tem a certeza que o <b>%{target_username}</b> seja um administrador?"
+      grant: "Conceder Acesso de Administrador"
+      complete: "<b>%{target_username}</b> é agora um administrador."
+      back_to: "Voltar a %{title}"
   post_action_types:
     off_topic:
       title: 'Fora de Contexto'
       description: 'Esta mensagem não é relevante para a discussão corrente, conforme definido pelo título e pela primeira mensagem, e provavelmente deverá ser transferida para outro tópico.'
+      short_description: 'Não é relevante para a discussão'
       long_form: 'sinalizou isto como fora de contexto'
     spam:
       title: 'Spam'
+      short_description: 'É um anúncio ou vandalismo'
       long_form: 'sinalizou isto como spam'
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropriado'
       description: 'Esta mensagem contém conteúdo que uma pessoa sensata iria considerar ofensivo, abusivo, ou como uma violação das <a href="/guidelines"> orientações da nossa comunidade</a>.'
+      short_description: 'Uma violação das <a href="/guidelines">nossas orientações da comunidade</a>'
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
       title: 'Enviar uma mensagem a @{{username}}'
       description: 'Quero falar com esta pessoa diretamente e em privado acerca da sua mensagem.'
+      short_description: 'Eu quero falar com esta pessoa diretamente e em privado sobre a sua publicação.'
       long_form: 'utilizador com mensagens'
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo Mais"
       description: 'Esta mensagem requer a atenção do pessoal por outra razão não listada acima.'
+      short_description: 'Requer a atenção da equipa por outra razão'
       long_form: 'marcou isto para ser alvo da atenção do pessoal'
       email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Adicionar Marcador'
       description: 'Adicionar um marcador a esta mensagem'
+      short_description: 'Adicionar esta publicação aos marcadores'
       long_form: 'adicionou um marcador a esta mensagem'
     like:
       title: 'Gostar'
       description: 'Gostar desta mensagem'
+      short_description: 'Gostar desta publicação'
       long_form: 'gostou disto'
     vote:
       title: 'Votar'
       description: 'Votar nesta mensagem'
+      short_description: 'Votar para esta publicação'
       long_form: 'votou nesta mensagem'
   user_activity:
     no_bookmarks:
@@ -1708,29 +1763,6 @@ pt:
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visitar Mensagem](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} em %{post_date}"
-    invited_to_private_message_body: |+
-      %{username} convidou-o para uma mensagem
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-    invited_to_topic_body: |+
-      %{username} convidou-o para uma discussão
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
-
-
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
