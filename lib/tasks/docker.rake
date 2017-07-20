@@ -74,7 +74,7 @@ task 'docker:test' do
     end
 
     unless ENV["RUBY_ONLY"]
-      unless["SINGLE_PLUGIN"]
+      unless ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("eslint app/assets/javascripts")
         @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts")
         @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
