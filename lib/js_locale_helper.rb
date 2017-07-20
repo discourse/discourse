@@ -161,6 +161,7 @@ module JsLocaleHelper
   end
 
   def self.reset_context
+    @ctx.dispose
     @ctx = nil
   end
 
