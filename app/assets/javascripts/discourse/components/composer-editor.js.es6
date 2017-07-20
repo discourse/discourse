@@ -582,6 +582,7 @@ export default Ember.Component.extend({
       let inline = {};
       $('a.inline-onebox-loading', $preview).each(function(index, link) {
         let $link = $(link);
+        $link.removeClass('inline-onebox-loading');
         let text = $link.text();
         inline[text] = inline[text] || [];
         inline[text].push($link);
