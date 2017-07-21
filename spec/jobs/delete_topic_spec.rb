@@ -4,9 +4,7 @@ describe Jobs::DeleteTopic do
   let(:admin) { Fabricate(:admin) }
 
   let(:topic) do
-    Fabricate(:topic,
-      topic_timers: [Fabricate(:topic_timer, user: admin)]
-    )
+    Fabricate(:topic_timer, user: admin).topic
   end
 
   let(:first_post) { create_post(topic: topic) }
