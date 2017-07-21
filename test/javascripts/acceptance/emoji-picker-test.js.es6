@@ -1,22 +1,13 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from 'pretty-text/emoji';
-import {
-  keyValueStore,
-  EMOJI_USAGE,
-  EMOJI_SCROLL_Y,
-  EMOJI_SELECTED_DIVERSITY
-} from 'discourse/components/emoji-picker';
+import { resetCache } from 'discourse/components/emoji-picker';
 
 acceptance("EmojiPicker", {
   loggedIn: true,
-  beforeEach() {
-    keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
-    keyValueStore.setObject({ key: EMOJI_SCROLL_Y, value: 0 });
-    keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
-  }
+  beforeEach() { resetCache() }
 });
 
-QUnit.skip("emoji picker can be opened/closed", assert => {
+QUnit.test("emoji picker can be opened/closed", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
@@ -39,7 +30,7 @@ QUnit.skip("emoji picker can be opened/closed", assert => {
   });
 });
 
-QUnit.skip("emojis can be hovered to display info", assert => {
+QUnit.test("emojis can be hovered to display info", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
@@ -56,7 +47,7 @@ QUnit.skip("emojis can be hovered to display info", assert => {
   });
 });
 
-QUnit.skip("emoji picker has sections", assert => {
+QUnit.test("emoji picker has sections", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -68,16 +59,10 @@ QUnit.skip("emoji picker has sections", assert => {
       0,
       "it scrolls to section"
     );
-
-    assert.equal(
-      find(".emoji-picker .categories-column a[title='travel']").parent().hasClass('current'),
-      true,
-      "it highlights section icon"
-    );
   });
 });
 
-QUnit.skip("emoji picker triggers event when picking emoji", assert => {
+QUnit.test("emoji picker triggers event when picking emoji", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -92,7 +77,7 @@ QUnit.skip("emoji picker triggers event when picking emoji", assert => {
   });
 });
 
-QUnit.skip("emoji picker has a list of recently used emojis", assert => {
+QUnit.test("emoji picker has a list of recently used emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -135,7 +120,7 @@ QUnit.skip("emoji picker has a list of recently used emojis", assert => {
   });
 });
 
-QUnit.skip("emoji picker correctly orders recently used emojis", assert => {
+QUnit.test("emoji picker correctly orders recently used emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -159,7 +144,7 @@ QUnit.skip("emoji picker correctly orders recently used emojis", assert => {
   });
 });
 
-QUnit.skip("emoji picker lazy loads emojis", assert => {
+QUnit.test("emoji picker lazy loads emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
@@ -176,7 +161,7 @@ QUnit.skip("emoji picker lazy loads emojis", assert => {
 });
 
 
-QUnit.skip("emoji picker persists state", assert => {
+QUnit.test("emoji picker persists state", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 

@@ -5,16 +5,21 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { emojis } from "pretty-text/emoji/data";
 import { extendedEmojiList, isSkinTonableEmoji } from "pretty-text/emoji";
 
-const recentTemplate = findRawTemplate("emoji-picker-recent");
-const pickerTemplate = findRawTemplate("emoji-picker");
-export const keyValueStore = new KeyValueStore("discourse_emojis_");
-export const EMOJI_USAGE = "emojiUsage";
-export const EMOJI_SCROLL_Y = "emojiScrollY";
-export const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
+const keyValueStore = new KeyValueStore("discourse_emojis_");
+const EMOJI_USAGE = "emojiUsage";
+const EMOJI_SCROLL_Y = "emojiScrollY";
+const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const PER_ROW = 11;
 const customEmojis = _.map(_.keys(extendedEmojiList()), code => {
   return { code, src: emojiUrlFor(code) };
 });
+
+export function resetCache() {
+  keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
+  keyValueStore.setObject({ key: EMOJI_SCROLL_Y, value: 0 });
+  keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
+}
+
 let $picker, $filter, $results, $list;
 
 export default Ember.Component.extend({
@@ -22,7 +27,7 @@ export default Ember.Component.extend({
     this._super();
 
     this._unbindEvents();
-    this.appEvents.off('emoji-picker:close');
+    this.appEvents.off("emoji-picker:close");
   },
 
   didDestroyElement() {
@@ -34,7 +39,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
 
-    this.appEvents.on('emoji-picker:close', () => this.set("active", false));
+    this.appEvents.on("emoji-picker:close", () => this.set("active", false));
 
     $picker = this.$(".emoji-picker");
 
@@ -92,7 +97,7 @@ export default Ember.Component.extend({
       return { code, src: emojiUrlFor(code) };
     });
     const model = { recentEmojis };
-    const template = recentTemplate(model);
+    const template = findRawTemplate("emoji-picker-recent")(model);
     $recentSectionGroup.html(template);
     this._bindHover($recentSectionGroup);
   },
@@ -108,7 +113,7 @@ export default Ember.Component.extend({
   },
 
   show() {
-    const template = pickerTemplate({ customEmojis });
+    const template = findRawTemplate("emoji-picker")({ customEmojis });
     $picker.html(template);
     this.$().append("<div class='emoji-picker-modal'></div>");
 
@@ -121,7 +126,7 @@ export default Ember.Component.extend({
 
     this._bindEvents();
 
-    Ember.run.scheduleOnce('afterRender', this, function() {
+    Ember.run.scheduleOnce("afterRender", this, function() {
       this._setDiversity();
       this._positionPicker();
       this._scrollTo();
@@ -271,11 +276,11 @@ export default Ember.Component.extend({
         .off("touchstart")
         .on("touchstart", "a", (touchStartEvent) => {
           const $this = $(touchStartEvent.currentTarget);
-          $this.on('touchend', (touchEndEvent) => {
+          $this.on("touchend", (touchEndEvent) => {
             handler.bind(self)(touchEndEvent);
-            $this.off('touchend');
+            $this.off("touchend");
           });
-          $this.on('touchmove', () => $this.off('touchend') );
+          $this.on("touchmove", () => $this.off("touchend") );
         });
     } else {
       $emojisContainer.off("click").on("click", "a", e => handler.bind(this)(e) );
@@ -381,10 +386,9 @@ export default Ember.Component.extend({
         top: "50%",
         display: "flex"
       };
-      attributes = _.merge(attributes, options);
 
       this.$(".emoji-picker-modal").addClass("fadeIn");
-      $picker.css(attributes);
+      $picker.css(_.merge(attributes, options));
     };
 
     const mobilePositioning = options => {
@@ -397,10 +401,9 @@ export default Ember.Component.extend({
         top: "50%",
         display: "flex"
       };
-      attributes = _.merge(attributes, options);
 
       this.$(".emoji-picker-modal").addClass("fadeIn");
-      $picker.css(attributes);
+      $picker.css(_.merge(attributes, options));
     };
 
     const desktopPositioning = options => {
@@ -415,11 +418,15 @@ export default Ember.Component.extend({
         display:
         "flex"
       };
-      attributes = _.merge(attributes, options);
 
       this.$(".emoji-picker-modal").removeClass("fadeIn");
-      $picker.css(attributes);
+      $picker.css(_.merge(attributes, options));
     };
+
+    if(Ember.testing) {
+      desktopPositioning();
+      return;
+    }
 
     if(this.site.isMobileDevice) {
       mobilePositioning();
