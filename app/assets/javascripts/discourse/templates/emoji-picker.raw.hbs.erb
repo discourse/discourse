@@ -48,13 +48,9 @@
           <span class="title">{{i18n 'emoji_picker.<%= group["name"] %>'}}</span>
         </div>
         <div class='section-group'>
-          <% group["icons"].each.with_index  do |icon, icon_index| %>
+          <% group["icons"].each  do |icon| %>
             <a title='<%= icon["name"] %>'>
-              <% if group_index == 0 && icon_index <= 77 %>
-                <img src='<%= Emoji.url_for(icon['name']) %>' class='emoji <%= "diversity" if icon["diversity"] %>'>
-              <% else %>
-                <img src='' class='emoji <%= "diversity" if icon["diversity"] %>'>
-              <% end %>
+              <img src='' class='emoji <%= "diversity" if icon["diversity"] %>'>
             </a>
           <% end %>
         </div>
