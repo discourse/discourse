@@ -90,6 +90,7 @@ export default Ember.Component.extend({
     const $recentSection = $list.find(".section[data-section='recent']");
     const $recentSectionGroup = $recentSection.find(".section-group");
     const $recentCategory = $picker.find(".category-icon button[data-section='recent']").parent();
+    let persistScrollPosition = !$recentCategory.is(':visible') ? true : false;
 
     // we set height to 0 to avoid it being taken into account for scroll position
     if(_.isEmpty(this.get("recentEmojis"))) {
@@ -105,11 +106,12 @@ export default Ember.Component.extend({
     });
     const template = findRawTemplate("emoji-picker-recent")({recentEmojis});
     $recentSectionGroup.html(template);
-    this._bindHover($recentSectionGroup);
 
-    if(this.get("recentEmojis").length === 1) {
+    if(persistScrollPosition) {
       $list.scrollTop(previousScrollTop + $recentSection.outerHeight());
     }
+
+    this._bindHover($recentSectionGroup);
   },
 
   close() {
