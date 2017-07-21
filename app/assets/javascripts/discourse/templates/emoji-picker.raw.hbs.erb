@@ -1,23 +1,17 @@
 <div class='categories-column'>
   <div class='category-icon'>
-    <a href='#' title='recent'>
-      <img src='<%= Emoji.url_for("star") %>' class='emoji'>
-    </a>
+    <button type="button" class="emoji" tabindex="-1" title="star" data-section="recent"></button>
   </div>
 
   <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
     <div class='category-icon'>
-      <a href='#' title='<%= group["name"] %>'>
-        <img src='<%= Emoji.url_for(group["tabicon"]) %>' class='emoji'>
-      </a>
+      <button type="button" class="emoji" tabindex="-1" data-section="<%= group["name"] %>" title="<%= group["tabicon"] %>"></button>
     </div>
   <% end %>
 
   <% if !Emoji.custom.blank? %>
     <div class='category-icon'>
-      <a href='#' title='ungrouped'>
-        <img src='<%= Emoji.custom.first.url %>' class='emoji'>
-      </a>
+      <button data-section="ungrouped" type="button" class="emoji" tabindex="-1" title="<%= Emoji.custom.first.name %>"></button>
     </div>
   <% end %>
 </div>
@@ -49,9 +43,7 @@
         </div>
         <div class='section-group'>
           <% group["icons"].each  do |icon| %>
-            <a title='<%= icon["name"] %>'>
-              <img src='' class='emoji <%= "diversity" if icon["diversity"] %>'>
-            </a>
+            <button type="button" class="emoji <%= "diversity" if icon["diversity"] %>" tabindex="-1" title="<%= icon['name']%>"></button>
           <% end %>
         </div>
       </div>
@@ -64,9 +56,7 @@
         </div>
         <div class='section-group'>
           {{#each customEmojis as |emoji|}}
-            <a title='{{emoji.code}}'>
-              <img src='{{emoji.src}}' class='emoji'>
-            </a>
+            <button style="background-url: url("{{emoji.src}}")" type="button" class="emoji" tabindex="-1" title="{{emoji.code}}"></button>
           {{/each}}
         </div>
       </div>

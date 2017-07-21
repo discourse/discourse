@@ -1,3 +1,9 @@
+body img.emoji {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
 .emoji-picker {
   box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
@@ -27,6 +33,11 @@
   margin: 4px auto;
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
+
+  button.emoji {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .emoji-picker .category-icon.current, .emoji-picker .category-icon:hover {
@@ -46,10 +57,6 @@
   padding: 0px;
   flex: 1;
   flex-direction: column;
-}
-
-.emoji-picker .list .emoji {
-  margin: 5px;
 }
 
 .emoji-picker .section-header {
@@ -82,13 +89,6 @@
   align-items: center;
   justify-content: flex-start;
   padding: 4px;
-}
-
-.emoji-picker .section-group a:hover, .emoji-picker .results a:hover {
-  display: inline-block;
-  vertical-align: top;
-  border-radius: 50%;
-  background-color: lighten($tertiary, 30%);
 }
 
 .emoji-picker .footer {
@@ -146,10 +146,30 @@
   text-shadow: 0.5px 1.5px 0 rgba(0,0,0,0.3);
 }
 
-body img.emoji {
-  width: 20px;
+.emoji-picker button.emoji {
+  background: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  background-size: 20px 20px;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
   height: 20px;
-  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: top;
+  width: 20px;
+  outline: none;
+  padding: 3px;
+  margin: 2px;
+}
+
+.emoji-picker .section-group button.emoji:hover, .emoji-picker .results button.emoji:hover {
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  background-color: lighten($tertiary, 40%);
 }
 
 .wmd-emoji-button:before {
@@ -213,21 +233,17 @@ body img.emoji {
   flex: 1;
 }
 
-.emoji-picker .results .emoji {
-  margin: 5px;
-}
-
 .emoji-picker .filter .clear-filter {
   position: absolute;
   right: 5px;
   top: 12px;
   border: 0;
   background: none;
-  color: $primary;
+  color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
   outline: none;
   display: none;
 
   &:hover {
-    color: $tertiary;
+    color: $primary;
   }
 }
