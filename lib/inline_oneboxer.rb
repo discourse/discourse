@@ -26,7 +26,10 @@ class InlineOneboxer
 
         # Only public topics
         if Guardian.new.can_see?(topic)
-          onebox = { url: url, title: topic.title }
+          onebox = {
+            url: url,
+            title: Emoji.gsub_emoji_to_unicode(topic.title)
+          }
           Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
           return onebox
         end

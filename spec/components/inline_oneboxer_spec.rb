@@ -53,6 +53,15 @@ describe InlineOneboxer do
       expect(InlineOneboxer.lookup(nil)).to be_nil
       expect(InlineOneboxer.lookup("/test")).to be_nil
     end
+
+    it "will return the fancy title" do
+      topic = Fabricate(:topic, title: "Hello :pizza: with an emoji")
+      onebox = InlineOneboxer.lookup(topic.url)
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq(topic.url)
+      expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
+    end
+
   end
 
 
