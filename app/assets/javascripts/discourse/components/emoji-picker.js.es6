@@ -187,8 +187,10 @@ export default Ember.Component.extend({
       $results.empty().hide();
       $list.show();
     } else {
-      const regexp = new RegExp(this.get("filter"), "g");
-      const filteredCodes = _.filter(emojis.concat(_.keys(extendedEmojiList())), code => regexp.test(code)).slice(0, 30);
+      const filterableEmojis = emojis.concat(_.keys(extendedEmojiList()));
+      const filteredCodes = _.filter(filterableEmojis, code => {
+        return code.indexOf(this.get("filter")) > -1;
+      }).slice(0, 30);
       $results.empty().html(
         _.map(filteredCodes, (code) => {
           const hasDiversity = isSkinTonableEmoji(code);
