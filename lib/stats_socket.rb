@@ -20,7 +20,7 @@ class StatsSocket < SocketServer
             stats[k] = (stats[k] || 0) + v
           end
         end
-        PrettyText.v8.heap_stats.to_json
+        stats.to_json
       else
         "[\"UNKNOWN COMMAND\"]"
       end
