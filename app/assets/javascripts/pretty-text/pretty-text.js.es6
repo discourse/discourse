@@ -21,7 +21,8 @@ export function buildOptions(state) {
     lookupAvatarByPostNumber,
     emojiUnicodeReplacer,
     lookupInlineOnebox,
-    previewing
+    previewing,
+    linkify
   } = state;
 
   let features = {
@@ -33,6 +34,7 @@ export function buildOptions(state) {
     'html': true,
     'category-hashtag': true,
     'onebox': true,
+    'linkify': linkify !== false,
     'newline': !siteSettings.traditional_markdown_linebreaks
   };
 
