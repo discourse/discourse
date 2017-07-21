@@ -2,7 +2,7 @@
 # running it anywhere else will likely fail
 #
 # Environment Variables (specific to this rake task)
-# => SKIP CORE                 set to 1 to skip core rspec tests
+# => SKIP_CORE                 set to 1 to skip core rspec tests
 # => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
 # => JS_ONLY                   set to 1 to skip all rspec tests
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
