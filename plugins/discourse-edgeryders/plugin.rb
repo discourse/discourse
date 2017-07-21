@@ -13,35 +13,44 @@ after_initialize do
   require_dependency 'user_serializer'
   class ::UserSerializer
     attributes :consent_given
-
     def consent_given
       object.consent_given?
     end
   end
 
 
-  module ::EdgerydersConsentValidation
-    extend ActiveSupport::Concern
-    included do
-
-      validate :validate_user_consent
-
-      def validate_user_consent
-        errors.add(:base, 'consent required') unless user.consent_given?
+  require_dependency 'topics_controller'
+  module TopicsControllerPatch
+    def self.included(base)
+      base.send(:include, InstanceMethods)
+      base.class_eval do
+        before_filter :ensure_consent_given, only: [:update]
       end
-
+    end
+    module InstanceMethods
+      def ensure_consent_given
+        raise Discourse::InvalidAccess.new unless current_user && current_user.consent_given?
+      end
     end
   end
+  TopicsController.send :include, TopicsControllerPatch
 
 
-  class ::Post
-    include EdgerydersConsentValidation
+  require_dependency 'posts_controller'
+  module PostsControllerPatch
+    def self.included(base)
+      base.send(:include, InstanceMethods)
+      base.class_eval do
+        before_filter :ensure_consent_given, only: [:create, :update]
+      end
+    end
+    module InstanceMethods
+      def ensure_consent_given
+        raise Discourse::InvalidAccess.new unless current_user && current_user.consent_given?
+      end
+    end
   end
-
-
-  class ::Topic
-    include EdgerydersConsentValidation
-  end
+  PostsController.send :include, PostsControllerPatch
 
 
   class ::User
