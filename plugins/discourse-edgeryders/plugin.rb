@@ -47,7 +47,7 @@ after_initialize do
   class ::User
     # NOTE: A corresponding 'edgeryders_consent' field must be created in: Admin -> Customize -> User Fields.
     def consent_given?
-      UserCustomField.exists?(name: 'edgeryders_consent', value: '1')
+      UserCustomField.exists?(user_id: id, name: 'edgeryders_consent', value: '1')
     end
   end
 
