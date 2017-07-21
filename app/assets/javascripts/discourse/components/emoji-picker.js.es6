@@ -86,6 +86,7 @@ export default Ember.Component.extend({
 
   @observes("recentEmojis")
   recentEmojisChanged() {
+    const previousScrollTop = $list.scrollTop();
     const $recentSection = $list.find(".section[data-section='recent']");
     const $recentSectionGroup = $recentSection.find(".section-group");
     const $recentCategory = $picker.find(".category-icon button[data-section='recent']").parent();
@@ -105,6 +106,10 @@ export default Ember.Component.extend({
     const template = findRawTemplate("emoji-picker-recent")({recentEmojis});
     $recentSectionGroup.html(template);
     this._bindHover($recentSectionGroup);
+
+    if(this.get("recentEmojis").length === 1) {
+      $list.scrollTop(previousScrollTop + $recentSection.outerHeight());
+    }
   },
 
   close() {
