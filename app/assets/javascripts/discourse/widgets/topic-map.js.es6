@@ -17,7 +17,7 @@ function renderParticipants(userFilters, participants) {
 
 createWidget('topic-map-show-links', {
   tagName: 'div.link-summary',
-  html(attrs) {
+  html() {
     return h('span', this.attach('button', {
       title: 'topic_map.links_shown',
       icon: 'chevron-down',
