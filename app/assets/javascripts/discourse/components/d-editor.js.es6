@@ -77,7 +77,11 @@ class Toolbar {
       group: 'insertions',
       icon: 'quote-right',
       shortcut: 'Shift+9',
-      perform: e => e.applyList('> ', 'blockquote_text')
+      perform: e => e.applyList(
+        '> ',
+        'blockquote_text',
+        { applyEmptyLines: true, multiline: true }
+      )
     });
 
     this.addButton({id: 'code', group: 'insertions', shortcut: 'Shift+C', action: 'formatCode'});
@@ -440,11 +444,15 @@ export default Ember.Component.extend({
   },
 
   // perform the same operation over many lines of text
-  _getMultilineContents(lines, head, hval, hlen, tail, tlen) {
+  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
     let operation = OP.NONE;
 
+    const applyEmptyLines = opts && opts.applyEmptyLines;
+
     return lines.map(l => {
-      if (l.length === 0) { return l; }
+      if (!applyEmptyLines && l.length === 0) {
+        return l;
+      }
 
       if (operation !== OP.ADDED &&
           (l.slice(0, hlen) === hval && tlen === 0 || l.slice(-tlen) === tail)) {
@@ -500,8 +508,15 @@ export default Ember.Component.extend({
         this.set('value', `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`);
         this._selectText(sel.start - hlen, sel.value.length);
       } else {
-        const contents = this._getMultilineContents(lines, head, hval, hlen, tail, tlen);
-
+        const contents = this._getMultilineContents(
+          lines,
+          head,
+          hval,
+          hlen,
+          tail,
+          tlen,
+          opts
+        );
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
           this._selectText(sel.start + hlen, sel.value.length);
@@ -512,9 +527,9 @@ export default Ember.Component.extend({
     }
   },
 
-  _applyList(sel, head, exampleKey) {
+  _applyList(sel, head, exampleKey, opts) {
     if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(sel, head, '', exampleKey);
+      this._applySurround(sel, head, '', exampleKey, opts);
     } else {
 
       const [hval, hlen] = getHead(head);
@@ -622,7 +637,7 @@ export default Ember.Component.extend({
         selected,
         selectText: (from, length) => this._selectText(from, length),
         applySurround: (head, tail, exampleKey, opts) => this._applySurround(selected, head, tail, exampleKey, opts),
-        applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
+        applyList: (head, exampleKey, opts) => this._applyList(selected, head, exampleKey, opts),
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),

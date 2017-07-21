@@ -514,6 +514,32 @@ third line`
 });
 
 
+componentTest("quote button - empty lines", {
+  template: '{{d-editor value=value composerEvents=true}}',
+  beforeEach() {
+    this.set('value', "one\n\ntwo\n\nthree");
+  },
+  test(assert) {
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+
+    andThen(() => {
+      textarea.selectionStart = 0;
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "> one\n> \n> two\n> \n> three");
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 25);
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "one\n\ntwo\n\nthree");
+    });
+  }
+});
+
 testCase('quote button', function(assert, textarea) {
 
   andThen(() => {
