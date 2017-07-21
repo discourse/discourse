@@ -36,7 +36,7 @@ QUnit.test("emojis can be hovered to display info", assert => {
 
   click("button.emoji.btn");
   andThen(() => {
-    $(".emoji-picker a[title='grinning']").trigger('mouseover');
+    $(".emoji-picker button[title='grinning']").trigger('mouseover');
     andThen(() => {
       assert.equal(
         find('.emoji-picker .info').html().trim(),
@@ -52,7 +52,7 @@ QUnit.skip("emoji picker has sections", assert => {
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
 
-  click(".emoji-picker .categories-column a[title='travel']");
+  click(".emoji-picker .categories-column button[title='travel']");
   andThen(() => {
     assert.notEqual(
       find('.emoji-picker .list').scrollTop(),
@@ -67,7 +67,7 @@ QUnit.skip("emoji picker triggers event when picking emoji", assert => {
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
 
-  click(".emoji-picker a[title='grinning']");
+  click(".emoji-picker button[title='grinning']");
   andThen(() => {
     assert.equal(
       find('.d-editor-input').val(),
@@ -81,18 +81,18 @@ QUnit.test("emoji picker has a list of recently used emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
-  click(".emoji-picker .clear-recent");
 
-  click(".emoji-picker a[title='grinning']");
+  click(".emoji-picker .clear-recent");
+  click(".emoji-picker .section[data-section='people'] button.emoji[title='grinning']");
   andThen(() => {
     assert.equal(
-      find('.section[data-section="recent"]').css("display"),
+      find('.emoji-picker .section[data-section="recent"]').css("display"),
       "block",
       "it shows recent section"
     );
 
     assert.equal(
-      find('.section[data-section="recent"] .section-group img.emoji').length,
+      find('.emoji-picker .section[data-section="recent"] .section-group button.emoji').length,
       1,
       "it adds the emoji code to the recently used emojis list"
     );
@@ -101,19 +101,19 @@ QUnit.test("emoji picker has a list of recently used emojis", assert => {
   click(".emoji-picker .clear-recent");
   andThen(() => {
     assert.equal(
-      find('.section[data-section="recent"] .section-group img.emoji').length,
+      find('.emoji-picker .section[data-section="recent"] .section-group button.emoji').length,
       0,
       "it has cleared recent emojis"
     );
 
     assert.equal(
-      find('.section[data-section="recent"]').css("display"),
+      find('.emoji-picker .section[data-section="recent"]').css("display"),
       "none",
       "it hides recent section"
     );
 
     assert.equal(
-      find('.category-icon a[title="recent"]').parent().css("display"),
+      find('.emoji-picker .category-icon button.emoji[data-section="recent"]').parent().css("display"),
       "none",
       "it hides recent category icon"
     );
@@ -126,18 +126,18 @@ QUnit.skip("emoji picker correctly orders recently used emojis", assert => {
   click("button.emoji.btn");
   click(".emoji-picker .clear-recent");
 
-  click(".emoji-picker a[title='grinning']");
-  click(".emoji-picker a[title='sunglasses']");
-  click(".emoji-picker a[title='grinning']");
+  click(".emoji-picker button[title='grinning']");
+  click(".emoji-picker button[title='sunglasses']");
+  click(".emoji-picker button[title='grinning']");
   andThen(() => {
     assert.equal(
-      find('.section[data-section="recent"] .section-group img.emoji').length,
+      find('.section[data-section="recent"] .section-group button.emoji').length,
       2,
       "it has multiple recent emojis"
     );
 
     assert.equal(
-      find('.section[data-section="recent"] .section-group img.emoji').first().attr('src'),
+      find('.section[data-section="recent"] .section-group button.emoji').first().attr('src'),
       `/images/emoji/emoji_one/grinning.png?v=${v}`,
       "it puts the last used emoji in first"
     );
@@ -151,7 +151,7 @@ QUnit.skip("emoji picker lazy loads emojis", assert => {
   click("button.emoji.btn");
 
   andThen(() => {
-    const $emoji = $('.emoji-picker a[title="massage_woman"] img');
+    const $emoji = $('.emoji-picker button[title="massage_woman"] img');
     assert.equal(
       $emoji.attr('src'),
       "",

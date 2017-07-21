@@ -77,10 +77,10 @@ export default Ember.Component.extend({
   selectedDiversityChanged() {
     keyValueStore.setObject({key: EMOJI_SELECTED_DIVERSITY, value: this.get("selectedDiversity")});
 
-    $.each($list.find(".emoji.diversity[src!='']"), (_, icon) => this._setIconSrc(icon, true) );
+    $.each($list.find(".emoji.diversity"), (_, button) => this._setButtonBackground(button, true) );
 
     if(this.get("filter") !== "") {
-      $.each($results.find(".emoji.diversity"), (_, icon) => this._setIconSrc(icon, true) );
+      $.each($results.find(".emoji.diversity"), (_, button) => this._setButtonBackground(button, true) );
     }
   },
 
@@ -88,7 +88,7 @@ export default Ember.Component.extend({
   recentEmojisChanged() {
     const $recentSection = $list.find(".section[data-section='recent']");
     const $recentSectionGroup = $recentSection.find(".section-group");
-    const $recentCategory = $picker.find(".category-icon a[title='recent']").parent();
+    const $recentCategory = $picker.find(".category-icon button[data-section='recent']").parent();
 
     // we set height to 0 to avoid it being taken into account for scroll position
     if(_.isEmpty(this.get("recentEmojis"))) {
@@ -102,8 +102,7 @@ export default Ember.Component.extend({
     const recentEmojis = _.map(this.get("recentEmojis"), code => {
       return { code, src: emojiUrlFor(code) };
     });
-    const model = { recentEmojis };
-    const template = findRawTemplate("emoji-picker-recent")(model);
+    const template = findRawTemplate("emoji-picker-recent")({recentEmojis});
     $recentSectionGroup.html(template);
     this._bindHover($recentSectionGroup);
   },
@@ -136,6 +135,13 @@ export default Ember.Component.extend({
       this._setDiversity();
       this._positionPicker();
       this._scrollTo();
+      this._loadCategoriesEmojis();
+    });
+  },
+
+  _loadCategoriesEmojis() {
+    $.each($picker.find(".categories-column button.emoji"), (_, button) => {
+      this._setButtonBackground(button, false);
     });
   },
 
@@ -188,9 +194,7 @@ export default Ember.Component.extend({
           const hasDiversity = isSkinTonableEmoji(code);
           const diversity = hasDiversity ? "diversity" : "";
           const scaledCode = this._codeWithDiversity(code, hasDiversity);
-          return `<a title="${code}">
-                    <img src="${emojiUrlFor(scaledCode)}" data-code="${code}" class="emoji ${diversity}" />
-                  </a>`;
+          return `<button style="background-image: url('${emojiUrlFor(scaledCode)}')" type="button" class="emoji ${diversity}" tabindex="-1" title="${code}"></button>`;
         })
       ).show();
       this._bindHover($results);
@@ -214,15 +218,14 @@ export default Ember.Component.extend({
   },
 
   _bindCategoryClick() {
-    $picker.find(".category-icon").on("click", "a", (event) => {
+    $picker.find(".category-icon").on("click", "button.emoji", (event) => {
       this.set("filter", "");
       $results.empty();
       $list.show();
 
-      const section = $(event.currentTarget).attr("title");
+      const section = $(event.currentTarget).data("section");
       const $section = $list.find(`.section[data-section="${section}"]`);
       const scrollTop = $list.scrollTop() + ($section.offset().top - $list.offset().top);
-
       this._scrollTo(scrollTop);
       return false;
     });
@@ -233,12 +236,12 @@ export default Ember.Component.extend({
 
     ($hoverables || $list.find(".section-group")).on({
       mouseover: (event) => {
-        const code = this._codeForEmojiLink($(event.currentTarget));
+        const code = this._codeForEmojiButton($(event.currentTarget));
         const html = `<img src="${emojiUrlFor(code)}" class="emoji"> <span>:${code}:<span>`;
         replaceInfoContent(html);
       },
       mouseleave: () => replaceInfoContent()
-    }, "a");
+    }, "button.emoji");
   },
 
   _bindResizing() {
@@ -263,7 +266,7 @@ export default Ember.Component.extend({
 
   _bindEmojiClick($emojisContainer) {
     const handler = (event) => {
-      const code = this._codeForEmojiLink($(event.currentTarget));
+      const code = this._codeForEmojiButton($(event.currentTarget));
 
       if($(event.currentTarget).parents(".section[data-section='recent']").length === 0) {
         this._trackEmojiUsage(code);
@@ -283,7 +286,7 @@ export default Ember.Component.extend({
 
       $emojisContainer
         .off("touchstart")
-        .on("touchstart", "a", (touchStartEvent) => {
+        .on("touchstart", "button.emoji", (touchStartEvent) => {
           const $this = $(touchStartEvent.currentTarget);
           $this.on("touchend", (touchEndEvent) => {
             handler.bind(self)(touchEndEvent);
@@ -292,7 +295,7 @@ export default Ember.Component.extend({
           $this.on("touchmove", () => $this.off("touchend") );
         });
     } else {
-      $emojisContainer.off("click").on("click", "a", e => handler.bind(this)(e) );
+      $emojisContainer.off("click").on("click", "button.emoji", e => handler.bind(this)(e) );
     }
   },
 
@@ -336,7 +339,7 @@ export default Ember.Component.extend({
     if(selectedSection) {
       const sectionTitle = selectedSection.$section.data("section");
       $picker.find(".category-icon").removeClass("current");
-      $picker.find(`.category-icon a[title='${sectionTitle}']`)
+      $picker.find(`.category-icon button[data-section='${sectionTitle}']`)
              .parent()
              .addClass("current");
 
@@ -478,7 +481,7 @@ export default Ember.Component.extend({
   _loadSection($section) {
     const sectionName = $section.data("section");
     if(keyValueStore.getObject(EMOJI_CACHED_SECTIONS).indexOf(sectionName) > -1) {
-      $.each($section.find(".emoji[src='']"), (_, icon) => this._setIconSrc(icon) );
+      $.each($section.find(".emoji"), (_, button) => this._setButtonBackground(button) );
     } else {
       Ember.run.later(
         this, () => {
@@ -486,7 +489,7 @@ export default Ember.Component.extend({
             key: EMOJI_CACHED_SECTIONS,
             value: keyValueStore.getObject(EMOJI_CACHED_SECTIONS).concat(sectionName)
           });
-          $.each($section.find(".emoji[src='']"), (_, icon) => this._setIconSrc(icon) );
+          $.each($section.find(".emoji"), (_, button) => this._setButtonBackground(button) );
         },
         1500
       );
@@ -528,24 +531,23 @@ export default Ember.Component.extend({
     }
   },
 
-  _codeForEmojiLink($a) {
-    const title = $a.attr("title");
-    const $img = $a.find("img");
-    return this._codeWithDiversity(title, $img.hasClass("diversity"));
+  _codeForEmojiButton($button) {
+    const title = $button.attr("title");
+    return this._codeWithDiversity(title, $button.hasClass("diversity"));
   },
 
-  _setIconSrc(icon, diversity) {
-    const $icon = $(icon);
+  _setButtonBackground(button, diversity) {
+    const $button = $(button);
     const code = this._codeWithDiversity(
-      $icon.parent().attr("title"),
-      diversity || $icon.hasClass("diversity")
+      $button.attr("title"),
+      diversity || $button.hasClass("diversity")
     );
 
     // force visual reloading if needed
-    if($icon.attr("src") !== "") {
-      $icon.attr("src", "");
+    if($button.css("background-image") !== "none") {
+      $button.css("background-image", "");
     }
 
-    $icon.attr("src", emojiUrlFor(code));
+    $button.css("background-image", `url("${emojiUrlFor(code)}")`);
   },
 });

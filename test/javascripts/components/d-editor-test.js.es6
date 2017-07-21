@@ -766,7 +766,7 @@ componentTest('emoji', {
     jumpEnd(this.$('textarea.d-editor-input')[0]);
     click('button.emoji');
 
-    click('a[title=grinning]');
+    click('.emoji-picker .section[data-section="people"] button.emoji[title="grinning"]');
     andThen(() => {
       assert.equal(this.get('value'), 'hello world.:grinning:');
     });
