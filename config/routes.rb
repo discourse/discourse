@@ -440,6 +440,10 @@ Discourse::Application.routes.draw do
     get 'mentionable'
     get 'logs' => 'groups#histories'
 
+    collection do
+      get "search" => "groups#search"
+    end
+
     member do
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"

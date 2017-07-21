@@ -338,22 +338,19 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.lookup_group_ids(opts)
-    if group_ids = opts[:group_ids]
-      group_ids = group_ids.split(",").map(&:to_i)
-      group_ids = Group.where(id: group_ids).pluck(:id)
+  def self.lookup_groups(group_ids: [], group_names: [])
+    if group_ids.present?
+      group_ids = group_ids.split(",")
+      group_ids.map!(&:to_i)
+      groups = Group.where(id: group_ids) if group_ids.present?
     end
 
-    group_ids ||= []
-
-    if group_names = opts[:group_names]
+    if group_names.present?
       group_names = group_names.split(",")
-      if group_names.present?
-        group_ids += Group.where(name: group_names).pluck(:id)
-      end
+      groups = (groups || Group).where(name: group_names) if group_names.present?
     end
 
-    group_ids
+    groups || []
   end
 
   def self.desired_trust_level_groups(trust_level)

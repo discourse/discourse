@@ -6,7 +6,8 @@ class GroupsController < ApplicationController
     :update,
     :messages,
     :histories,
-    :request_membership
+    :request_membership,
+    :search
   ]
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -294,6 +295,22 @@ class GroupsController < ApplicationController
       logs: serialize_data(group_histories, BasicGroupHistorySerializer),
       all_loaded: group_histories.count < page_size
     )
+  end
+
+  def search
+    groups = Group.visible_groups(current_user)
+      .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
+      .order(:name)
+
+    if term = params[:term].to_s
+      groups = groups.where("name ILIKE :term OR full_name ILIKE :term", term: "%#{term}%")
+    end
+
+    if params[:ignore_automatic].to_s == "true"
+      groups = groups.where(automatic: false)
+    end
+
+    render_serialized(groups, BasicGroupSerializer)
   end
 
   private
