@@ -192,7 +192,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   } else {
 
     if (rule.before) {
-      rule.before.call(this, state, info.attrs, md, state.src.slice(initial, initial + info.length + 1));
+      rule.before.call(this, state, info, state.src.slice(initial, initial + info.length + 1));
     }
 
     let wrapTag;
@@ -235,7 +235,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     }
 
     if (rule.after) {
-      rule.after.call(this, state, lastToken, md, state.src.slice(start-2, start + closeTag.length - 1));
+      rule.after.call(this, state, lastToken, state.src.slice(start-2, start + closeTag.length - 1));
     }
   }
 
