@@ -1,10 +1,10 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from 'pretty-text/emoji';
-import { resetCache } from 'discourse/components/emoji-picker';
+import { resetCache } from 'discourse/components/emoji-picker';
 
 acceptance("EmojiPicker", {
   loggedIn: true,
-  beforeEach() { resetCache() }
+  beforeEach() { resetCache(); }
 });
 
 QUnit.test("emoji picker can be opened/closed", assert => {
