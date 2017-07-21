@@ -920,6 +920,9 @@ onebox:
   max_oneboxes_per_post:
     default: 50
     client: true
+  inline_onebox_domains_whitelist:
+    default: ''
+    type: list
 
 spam:
   add_rel_nofollow_to_user_content: true

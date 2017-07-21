@@ -3,17 +3,13 @@ require_dependency 'inline_oneboxer'
 
 describe InlineOneboxer do
 
-  before do
-    InlineOneboxer.clear_cache!
-  end
-
   it "should return nothing with empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank
   end
 
   it "can onebox a topic" do
     topic = Fabricate(:topic)
-    results = InlineOneboxer.new([topic.url]).process
+    results = InlineOneboxer.new([topic.url], skip_cache: true).process
     expect(results).to be_present
     expect(results[0][:url]).to eq(topic.url)
     expect(results[0][:title]).to eq(topic.title)
@@ -21,13 +17,18 @@ describe InlineOneboxer do
 
   it "doesn't onebox private messages" do
     topic = Fabricate(:private_message_topic)
-    results = InlineOneboxer.new([topic.url]).process
+    results = InlineOneboxer.new([topic.url], skip_cache: true).process
     expect(results).to be_blank
   end
 
   context "caching" do
+    let(:topic) { Fabricate(:topic) }
+
+    before do
+      InlineOneboxer.purge(topic.url)
+    end
+
     it "puts an entry in the cache" do
-      topic = Fabricate(:topic)
       expect(InlineOneboxer.cache_lookup(topic.url)).to be_blank
 
       result = InlineOneboxer.lookup(topic.url)
@@ -43,7 +44,7 @@ describe InlineOneboxer do
   context ".lookup" do
     it "can lookup one link at a time" do
       topic = Fabricate(:topic)
-      onebox = InlineOneboxer.lookup(topic.url)
+      onebox = InlineOneboxer.lookup(topic.url, skip_cache: true)
       expect(onebox).to be_present
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq(topic.title)
@@ -56,10 +57,28 @@ describe InlineOneboxer do
 
     it "will return the fancy title" do
       topic = Fabricate(:topic, title: "Hello :pizza: with an emoji")
-      onebox = InlineOneboxer.lookup(topic.url)
+      onebox = InlineOneboxer.lookup(topic.url, skip_cache: true)
       expect(onebox).to be_present
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
+    end
+
+    it "will not crawl domains that aren't whitelisted" do
+      onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
+      expect(onebox).to be_blank
+    end
+
+    it "will lookup whitelisted domains" do
+      SiteSetting.inline_onebox_domains_whitelist = "eviltrout.com"
+      RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
+
+      onebox = InlineOneboxer.lookup(
+        "https://eviltrout.com/some-path",
+        skip_cache: true
+      )
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
+      expect(onebox[:title]).to eq("Evil Trout's Blog")
     end
 
   end
