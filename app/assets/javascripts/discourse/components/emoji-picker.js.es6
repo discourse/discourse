@@ -259,7 +259,10 @@ export default Ember.Component.extend({
     const handler = (event) => {
       const code = this._codeForEmojiLink($(event.currentTarget));
 
-      this._trackEmojiUsage(code);
+      if($(event.currentTarget).parents(".section[data-section='recent']").length === 0) {
+        this._trackEmojiUsage(code);
+      }
+
       this.sendAction("emojiSelected", code);
 
       if(this.$(".emoji-picker-modal").hasClass("fadeIn")) {
