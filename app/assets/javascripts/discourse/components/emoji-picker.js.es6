@@ -9,12 +9,14 @@ const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
 const EMOJI_SCROLL_Y = "emojiScrollY";
 const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
+const EMOJI_CACHED_SECTIONS = "emojiCachedSections";
 const PER_ROW = 11;
 const customEmojis = _.map(_.keys(extendedEmojiList()), code => {
   return { code, src: emojiUrlFor(code) };
 });
 
 export function resetCache() {
+  keyValueStore.setObject({ key: EMOJI_CACHED_SECTIONS, value: [] });
   keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
   keyValueStore.setObject({ key: EMOJI_SCROLL_Y, value: 0 });
   keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
@@ -42,6 +44,10 @@ export default Ember.Component.extend({
     this.appEvents.on("emoji-picker:close", () => this.set("active", false));
 
     $picker = this.$(".emoji-picker");
+
+    if (!keyValueStore.getObject(EMOJI_CACHED_SECTIONS)) {
+      keyValueStore.setObject({ key: EMOJI_CACHED_SECTIONS, value: [] });
+    }
 
     if (!keyValueStore.getObject(EMOJI_USAGE)) {
       keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
@@ -328,14 +334,15 @@ export default Ember.Component.extend({
     }
 
     if(selectedSection) {
+      const sectionTitle = selectedSection.$section.data("section");
       $picker.find(".category-icon").removeClass("current");
-      $picker.find(`.category-icon a[title='${selectedSection.$section.data("section")}']`)
+      $picker.find(`.category-icon a[title='${sectionTitle}']`)
              .parent()
              .addClass("current");
 
       if(!selectedSection.$section.hasClass("loaded")) {
         selectedSection.$section.addClass("loaded");
-        this._loadVisibleEmojis(selectedSection.$section.find(".emoji[src='']"));
+        this._loadSection(selectedSection.$section);
       }
 
       //preload surrounding sections
@@ -343,8 +350,7 @@ export default Ember.Component.extend({
       const preloadedSection = sections[selectedSectionIndex + 1] || sections[selectedSectionIndex - 1];
       if(preloadedSection && !preloadedSection.$section.hasClass("loaded")) {
         preloadedSection.$section.addClass("loaded");
-        const $visibleEmojis = preloadedSection.$section.find(".emoji[src='']");
-        Ember.run.later(this, () => this._loadVisibleEmojis($visibleEmojis), 1500);
+        this._loadSection(preloadedSection.$section);
       }
     }
   },
@@ -469,8 +475,22 @@ export default Ember.Component.extend({
     $picker.find(".info").css("max-width", infoMaxWidth);
   },
 
-  _loadVisibleEmojis($visibleEmojis) {
-    $.each($visibleEmojis, (_, icon) => this._setIconSrc(icon) );
+  _loadSection($section) {
+    const sectionName = $section.data("section");
+    if(keyValueStore.getObject(EMOJI_CACHED_SECTIONS).indexOf(sectionName) > -1) {
+      $.each($section.find(".emoji[src='']"), (_, icon) => this._setIconSrc(icon) );
+    } else {
+      Ember.run.later(
+        this, () => {
+          keyValueStore.setObject({
+            key: EMOJI_CACHED_SECTIONS,
+            value: keyValueStore.getObject(EMOJI_CACHED_SECTIONS).concat(sectionName)
+          });
+          $.each($section.find(".emoji[src='']"), (_, icon) => this._setIconSrc(icon) );
+        },
+        1500
+      );
+    }
   },
 
   _codeWithDiversity(code, diversity) {
