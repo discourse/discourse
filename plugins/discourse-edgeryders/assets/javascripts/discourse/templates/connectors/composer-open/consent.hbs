@@ -91,10 +91,9 @@
 
 
 <script type="text/javascript">
-    // Create Quiz object using: DOM element id="quiz" by ID (rendered into form by edgeryders_consent.module), answers array
-    quiz = new Quiz('quiz', [
-        ['b'], // Question 1 answer b is correct (multiple choice question, using checkboxes).
-        'b',   // Question 2 answer b is correct (single-choice question, using radiobuttons).
+    quiz = new Quiz('quiz', [ // Use DOM element with id="quiz" as quiz form.
+        ['b'],                // Question 1 answer b is correct (multiple choice, using checkboxes).
+        'b',                  // Question 2 answer b is correct (single-choice, using radiobuttons).
     ]);
 
     $.ajax({
