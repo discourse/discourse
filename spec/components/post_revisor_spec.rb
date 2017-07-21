@@ -213,6 +213,22 @@ describe PostRevisor do
         end
       end
 
+      context "invalid description without paragraphs" do
+        before do
+          subject.revise!(post.user, { raw: "# This is a title" })
+          category.reload
+        end
+
+        it "returns a error for the user" do
+          expect(post.errors.present?).to eq(true)
+          expect(post.errors.messages[:base].first).to be I18n.t("category.errors.description_incomplete")
+        end
+
+        it "doesn't update the description of the category" do
+          expect(category.description).to eq(nil)
+        end
+      end
+
       context 'when updating back to the original paragraph' do
         before do
           category.update_column(:description, 'this is my description')
