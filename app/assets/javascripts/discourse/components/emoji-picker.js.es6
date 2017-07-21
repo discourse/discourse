@@ -148,7 +148,9 @@ export default Ember.Component.extend({
         .on("click", () => this.set("active", false));
 
     this.$(document).on("click.emoji-picker", (event) => {
-      if(event.target.className.indexOf("grippie") === -1) {
+      const onPicker = $(event.target).parents(".emoji-picker").length === 1;
+      const onGrippie = event.target.className.indexOf("grippie") > -1;
+      if(!onPicker && !onGrippie) {
         this.set("active", false);
         return false;
       }
