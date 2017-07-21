@@ -213,7 +213,7 @@ export function setup(opts, siteSettings, state) {
     html: true,
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
-    linkify: true,
+    linkify: opts.discourse.features.linkify,
     typographer: siteSettings.enable_markdown_typographer
   });
 

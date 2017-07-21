@@ -165,6 +165,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupInlineOnebox = __lookupInlineOnebox;
+        #{opts[:linkify] == false ? "__optInput.linkify = false;": ""}
       JS
 
       if opts[:topicId]
