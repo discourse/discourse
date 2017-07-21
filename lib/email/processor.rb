@@ -52,6 +52,7 @@ module Email
         when ActiveRecord::Rollback                       then :email_reject_invalid_post
         when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
         when Discourse::InvalidAccess                     then :email_reject_invalid_access
+        else                                                   :email_reject_unrecognized_error
       end
 
       template_args = {}
@@ -61,6 +62,14 @@ module Email
       if message_template == :email_reject_invalid_post && e.message.size > 6
         message_template = :email_reject_invalid_post_specified
         template_args[:post_error] = e.message
+      end
+
+      if message_template == :email_reject_unrecognized_error
+        msg  = "Unrecognized error type (#{e.class}: #{e.message}) when processing incoming email"
+        msg += "\n\nBacktrace:\n#{e.backtrace.map { |l| "  #{l}" }.join("\n")}"
+        msg += "\n\nMail:\n#{mail_string}"
+
+        Rails.logger.error(msg)
       end
 
       if message_template
@@ -76,18 +85,14 @@ module Email
         if can_send_rejection_email?(message.from, message_template)
           Email::Sender.new(client_message, message_template).send
         end
-      else
-        msg  = "Unrecognized error type (#{e.class}: #{e.message}) when processing incoming email"
-        msg += "\n\nBacktrace:\n#{e.backtrace.map { |l| "  #{l}" }.join("\n")}"
-        msg += "\n\nMail:\n#{mail_string}"
-
-        Rails.logger.error(msg)
       end
 
       client_message
     end
 
     def can_send_rejection_email?(email, type)
+      return true if type == :email_reject_unrecognized_error
+
       key = "rejection_email:#{email}:#{type}:#{Date.today}"
 
       if $redis.setnx(key, "1")
