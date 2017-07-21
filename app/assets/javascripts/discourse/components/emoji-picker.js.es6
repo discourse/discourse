@@ -7,7 +7,6 @@ import { extendedEmojiList, isSkinTonableEmoji } from "pretty-text/emoji";
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
-const EMOJI_SCROLL_Y = "emojiScrollY";
 const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const EMOJI_CACHED_SECTIONS = "emojiCachedSections";
 const PER_ROW = 11;
@@ -18,11 +17,10 @@ const customEmojis = _.map(_.keys(extendedEmojiList()), code => {
 export function resetCache() {
   keyValueStore.setObject({ key: EMOJI_CACHED_SECTIONS, value: [] });
   keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });
-  keyValueStore.setObject({ key: EMOJI_SCROLL_Y, value: 0 });
   keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
 }
 
-let $picker, $filter, $results, $list;
+let $picker, $filter, $results, $list, scrollPosition;
 
 export default Ember.Component.extend({
   willDestroyElement() {
@@ -55,6 +53,8 @@ export default Ember.Component.extend({
       // handle legacy format
       keyValueStore.setObject({ key: EMOJI_USAGE, value: _.keys(keyValueStore.getObject(EMOJI_USAGE)) });
     }
+
+    scrollPosition = 0;
   },
 
   didUpdateAttrs() {
@@ -302,7 +302,7 @@ export default Ember.Component.extend({
   _bindSectionsScroll() {
     $list.on("scroll", () => {
       Ember.run.debounce(this, this._checkVisibleSection, 150);
-      Ember.run.debounce(this, this._storeScrollPosition, 100);
+      scrollPosition = $list.scrollTop();
     });
   },
 
@@ -504,13 +504,6 @@ export default Ember.Component.extend({
     }
   },
 
-  _storeScrollPosition() {
-    keyValueStore.setObject({
-      key: EMOJI_SCROLL_Y,
-      value: $list.scrollTop()
-    });
-  },
-
   _trackEmojiUsage(code) {
     let recent = keyValueStore.getObject(EMOJI_USAGE) || [];
     recent = recent.filter(r => r !== code);
@@ -521,7 +514,7 @@ export default Ember.Component.extend({
   },
 
   _scrollTo(y) {
-    const yPosition = _.isUndefined(y) ? keyValueStore.getObject(EMOJI_SCROLL_Y) : y;
+    const yPosition = _.isUndefined(y) ? scrollPosition : y;
 
     $list.scrollTop(yPosition);
 

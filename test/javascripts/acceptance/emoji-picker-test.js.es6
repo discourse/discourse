@@ -167,20 +167,12 @@ QUnit.skip("emoji picker persists state", assert => {
 
   click("button.emoji.btn");
   andThen(() => {
-    $('.emoji-picker .list').scrollTop(2600);
     click('.emoji-picker a.diversity-scale.medium-dark');
   });
-
   click("button.emoji.btn");
 
   click("button.emoji.btn");
   andThen(() => {
-    assert.equal(
-      find('.emoji-picker .list').scrollTop() > 2500,
-      true,
-      "it stores scroll position"
-    );
-
     assert.equal(
       find('.emoji-picker .diversity-scale.medium-dark').hasClass('selected'),
       true,
