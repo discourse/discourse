@@ -159,6 +159,12 @@ class Emoji
     end.join
   end
 
+  def self.gsub_emoji_to_unicode(str)
+    if str
+      str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name }
+    end
+  end
+
   def self.lookup_unicode(name)
     @reverse_map ||= begin
       map = {}

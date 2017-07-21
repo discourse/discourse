@@ -426,7 +426,7 @@ class UserNotifications < ActionMailer::Base
     end
 
     email_opts = {
-      topic_title: gsub_emoji_to_unicode(title),
+      topic_title: Emoji.gsub_emoji_to_unicode(title),
       topic_title_url_encoded: title ? URI.encode(title) : title,
       message: message,
       url: post.url(without_slug: SiteSetting.private_email?),
