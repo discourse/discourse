@@ -46,15 +46,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # end
 
 
-    # import_users
+    import_users
     # import_categories
-    # import_topics
-    # import_replies
+    import_topics
+    import_replies
     # import_likes
     # import_tags
     # create_permalinks
-    # normalize_urls
-    # post_process_posts
+    normalize_urls
+    post_process_posts
 
 
     # Reset "New" topics counter for all users.
@@ -434,7 +434,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   def post_process_posts
     puts '', 'processing posts...'
 
-    Post.find_each do |post|
+    Post.where("id > 33287").find_each do |post|
       next if post.raw.nil?
       puts "processing post: ##{post.id}..."
 
