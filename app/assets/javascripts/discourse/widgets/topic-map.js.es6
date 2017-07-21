@@ -18,10 +18,15 @@ function renderParticipants(userFilters, participants) {
 createWidget('topic-map-show-links', {
   tagName: 'div.link-summary',
   html(attrs) {
-    return h('a', I18n.t('topic_map.links_shown', { totalLinks: attrs.totalLinks }));
+    return h('span', this.attach('button', {
+      title: 'topic_map.links_shown',
+      icon: 'chevron-down',
+      action: 'showLinks',
+      className: 'btn'
+    }));
   },
 
-  click() {
+  showLinks() {
     this.sendWidgetAction('showAllLinks');
   }
 });
@@ -179,7 +184,7 @@ createWidget('topic-map-expanded', {
       ];
 
       if (!state.allLinksShown && links.length < attrs.topicLinks.length) {
-        showAllLinksContent.push(this.attach('topic-map-show-links', { totalLinks: attrs.topicLinks.length }));
+        showAllLinksContent.push(this.attach('topic-map-show-links'));
       }
 
       const section = h('section.links', showAllLinksContent);

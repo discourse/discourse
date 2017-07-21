@@ -419,6 +419,16 @@ a.star {
       }
     }
   }
+
+  .link-summary .btn {
+    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+    background: blend-primary-secondary(5%);
+    width: 100%;
+    &:hover {
+      color: $primary;
+      background: dark-light-diff($primary, $secondary, 90%, -80%);
+    }
+  }
 }
 
 #topic-footer-buttons {

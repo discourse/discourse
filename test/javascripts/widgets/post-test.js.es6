@@ -765,7 +765,7 @@ widgetTest("topic map - links", {
       assert.equal(this.$('.topic-map-expanded .topic-link').length, 5, 'it limits the links displayed');
     });
 
-    click('.link-summary a');
+    click('.link-summary button');
     andThen(() => {
       assert.equal(this.$('.topic-map-expanded .topic-link').length, 6, 'all links now shown');
     });
