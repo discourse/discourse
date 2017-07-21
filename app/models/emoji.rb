@@ -54,7 +54,7 @@ class Emoji
   end
 
   def self.url_for(name)
-    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=5"
+    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
   end
 
   def self.cache_key(name)
