@@ -1135,7 +1135,7 @@ en:
       alt: 'Alt'
 
     emoji_picker:
-      filter_placeholder: Search an emoji
+      filter_placeholder: Search for emoji
       people: People
       nature: Nature
       food: Food
@@ -1144,7 +1144,7 @@ en:
       objects: Objects
       celebration: Celebration
       custom: Custom emojis
-      recent: Recently used emojis
+      recent: Recently used
 
     composer:
       emoji: "Emoji :)"

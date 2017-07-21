@@ -68,6 +68,12 @@
 
 .emoji-picker .section-header .clear-recent .fa{
   margin: 0;
+  padding: 0;
+  color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
+
+  &:hover {
+    color: $primary;
+  }
 }
 
 .emoji-picker .section-group {
@@ -171,7 +177,7 @@ body img.emoji {
 }
 
 .emoji-picker .filter .fa.fa-search {
-  color: $primary;
+  color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
   font-size: 16px;
   margin-left: 5px;
   margin-right: 5px;
