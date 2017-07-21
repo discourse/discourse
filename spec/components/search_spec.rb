@@ -802,4 +802,32 @@ describe Search do
     end
   end
 
+  context 'pagination' do
+    let(:number_of_results) { 2 }
+    before do
+      5.times { Fabricate(:post) }
+      Search.stubs(:per_filter).returns(number_of_results)
+    end
+
+    it 'returns more results flag' do
+      results = Search.execute('hello', type_filter: 'topic')
+      results2 = Search.execute('hello', type_filter: 'topic', page: 2)
+
+      expect(results.posts.length).to eq(number_of_results)
+      expect(results.more_full_page_results).to eq(true)
+      expect(results2.posts.length).to eq(number_of_results)
+      expect(results2.more_full_page_results).to eq(true)
+    end
+
+    it 'correctly search with page parameter' do
+      search = Search.new('hello', type_filter: 'topic', page: 3)
+      results = search.execute
+
+      expect(search.offset).to eq(2 * number_of_results)
+      expect(results.posts.length).to eq(1)
+      expect(results.more_full_page_results).to eq(nil)
+    end
+
+  end
+
 end
