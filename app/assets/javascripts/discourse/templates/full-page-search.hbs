@@ -125,9 +125,13 @@
     {{/each}}
 
     {{#if hasResults}}
-      <h3 class="search-footer">
-        {{i18n "search.no_more_results"}}
-      </h3>
+        <h3 class="search-footer">
+        {{#if model.grouped_search_result.more_full_page_results}}
+            {{i18n "search.more_results"}}
+        {{else}}
+            {{i18n "search.no_more_results"}}
+        {{/if}}
+        </h3>
     {{/if}}
 
   {{/conditional-loading-spinner}}
