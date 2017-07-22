@@ -1,17 +1,17 @@
 <div class='categories-column'>
   <div class='category-icon'>
-    <button type="button" class="emoji" tabindex="-1" title="star" data-section="recent"></button>
+    <button type="button" class="emoji" tabindex="-1" title="{{i18n 'emoji_picker.recent'}}" data-section="recent" data-tabicon="star"></button>
   </div>
 
   <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
     <div class='category-icon'>
-      <button type="button" class="emoji" tabindex="-1" data-section="<%= group["name"] %>" title="<%= group["tabicon"] %>"></button>
+      <button type="button" class="emoji" tabindex="-1" data-tabicon="<%= group["tabicon"] %>" data-section="<%= group["name"] %>" title="<%= group["fullname"] %>"></button>
     </div>
   <% end %>
 
   <% if !Emoji.custom.blank? %>
     <div class='category-icon'>
-      <button data-section="ungrouped" type="button" class="emoji" tabindex="-1" title="<%= Emoji.custom.first.name %>"></button>
+      <button data-tabicon="<%= Emoji.custom.first.name %>" type="button" class="emoji" tabindex="-1" data-section="ungrouped" title="{{i18n 'emoji_picker.custom'}}"></button>
     </div>
   <% end %>
 </div>
@@ -66,7 +66,7 @@
     <div class='info'></div>
     <div class='diversity-picker'>
       <% ['default', 'light', 'medium-light', 'medium', 'medium-dark', 'dark'].each.with_index do |diversity, index| %>
-        <a href='#' class='diversity-scale <%= diversity %>' data-level="<%= index + 1 %>">
+        <a href='#' title="{{i18n 'emoji_picker.<%= diversity.gsub('-', '_') %>_tone'}}" class='diversity-scale <%= diversity %>' data-level="<%= index + 1 %>">
           {{fa-icon "check"}}
         </a>
       <% end %>
