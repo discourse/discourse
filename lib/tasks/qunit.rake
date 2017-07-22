@@ -9,6 +9,9 @@ task "qunit:test", [:timeout] => :environment do |_, args|
     abort "PhantomJS is not installed. Download from http://phantomjs.org"
   end
 
+  puts "Purging cache before qunit"
+  `rm -fr #{Rails.root}/tmp/cache`
+
   # ensure we have this port available
   def port_available? port
     server = TCPServer.open port
@@ -95,6 +98,9 @@ task "qunit:test", [:timeout] => :environment do |_, args|
     # was having issues with HUP
     Process.kill "KILL", pid
   end
+
+  puts "Purging cache after qunit"
+  `rm -fr #{Rails.root}/tmp/cache`
 
   if success
     puts "\nTests Passed"
