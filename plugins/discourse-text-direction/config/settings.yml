@@ -1,0 +1,4 @@
+plugins:
+  discourse_text_direction_enabled:
+    default: true
+    client: true

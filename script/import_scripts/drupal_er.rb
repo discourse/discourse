@@ -520,7 +520,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(%r~<br\s*\/?>~, "\n")
       # Remove paragraphs.
       post.raw.gsub!(/<p.*?>/, '')
-      post.raw.gsub!('</p>', "\n")
+      post.raw.gsub!('</p>', "\n\n")
       # Remove line breaks.
       post.raw.gsub!(/<li>\n{1,}/, '<li>')
       # NOTE: Do not use \s to also match non-breaking spaces.
@@ -644,5 +644,3 @@ end
 if __FILE__==$0
   ImportScripts::DrupalER.new.perform
 end
-
-

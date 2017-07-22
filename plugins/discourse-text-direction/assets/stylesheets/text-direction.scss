@@ -1,0 +1,8 @@
+.tmp-rtl {
+  // Use `!important` so that `rtl` is not changed to `ltr` by the rtl gem.
+  direction: rtl !important;
+}
+
+.tmp-ltr {
+  direction: ltr !important;
+}
