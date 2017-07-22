@@ -139,16 +139,18 @@ export default Ember.Component.extend({
     this._bindEvents();
 
     Ember.run.scheduleOnce("afterRender", this, function() {
+      this._loadCategoriesEmojis();
       this._setDiversity();
       this._positionPicker();
       this._scrollTo();
-      this._loadCategoriesEmojis();
     });
   },
 
   _loadCategoriesEmojis() {
     $.each($picker.find(".categories-column button.emoji"), (_, button) => {
-      this._setButtonBackground(button, false);
+      const $button = $(button);
+      const code = this._codeWithDiversity($button.data("tabicon"), false);
+      $button.css("background-image", `url("${emojiUrlFor(code)}")`);
     });
   },
 

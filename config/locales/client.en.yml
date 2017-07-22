@@ -1145,6 +1145,12 @@ en:
       celebration: Celebration
       custom: Custom emojis
       recent: Recently used
+      default_tone: No skin tone
+      light_tone: Light skin tone
+      medium_light_tone: Medium light skin tone
+      medium_tone: Medium skin tone
+      medium_dark_tone: Medium dark skin tone
+      dark_tone: Dark skin tone
 
     composer:
       emoji: "Emoji :)"
