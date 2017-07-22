@@ -42,12 +42,15 @@ module Onebox
       end
 
       def data
+        title = CGI.unescapeHTML(raw.css("title").inner_text)
+        by_info = CGI.unescapeHTML(raw.css("span.rich_media_meta_text.rich_media_meta_nickname").inner_text)
+
         result = {
           link: extract_script_value("msg_link") || link,
-          title: extract_script_value("msg_title"),
+          title: title,
           image: image,
           description: extract_script_value("msg_desc"),
-          by_info: extract_script_value("nickname")
+          by_info: by_info
         }
 
         result
