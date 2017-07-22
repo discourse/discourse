@@ -108,17 +108,17 @@ after_initialize do
 
     def self.check_all(password, crypted_pass)
       return false unless password.present? && crypted_pass.present?
-        AlternativePassword::check_drupal7(password, crypted_pass) ||
-        AlternativePassword::check_vbulletin(password, crypted_pass) ||
-        AlternativePassword::check_vbulletin5(password, crypted_pass) ||
-        AlternativePassword::check_ipb(password, crypted_pass) ||
-        AlternativePassword::check_smf(password, crypted_pass) ||
-        AlternativePassword::check_md5(password, crypted_pass) ||
-        AlternativePassword::check_bcrypt(password, crypted_pass) ||
-        AlternativePassword::check_sha256(password, crypted_pass) ||
-        AlternativePassword::check_wordpress(password, crypted_pass) ||
-        AlternativePassword::check_wbblite(password, crypted_pass) ||
-        AlternativePassword::check_unixcrypt(password, crypted_pass)
+        AlternativePassword::check_drupal7(password, crypted_pass)
+        # AlternativePassword::check_vbulletin(password, crypted_pass) ||
+        # AlternativePassword::check_vbulletin5(password, crypted_pass) ||
+        # AlternativePassword::check_ipb(password, crypted_pass) ||
+        # AlternativePassword::check_smf(password, crypted_pass) ||
+        # AlternativePassword::check_md5(password, crypted_pass) ||
+        # AlternativePassword::check_bcrypt(password, crypted_pass) ||
+        # AlternativePassword::check_sha256(password, crypted_pass) ||
+        # AlternativePassword::check_wordpress(password, crypted_pass) ||
+        # AlternativePassword::check_wbblite(password, crypted_pass) ||
+        # AlternativePassword::check_unixcrypt(password, crypted_pass)
     end
 
     def self.check_bcrypt(password, crypted_pass)
