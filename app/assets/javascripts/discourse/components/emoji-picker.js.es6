@@ -196,9 +196,10 @@ export default Ember.Component.extend({
       $results.empty().hide();
       $list.show();
     } else {
+      const lowerCaseFilter = this.get("filter").toLowerCase();
       const filterableEmojis = emojis.concat(_.keys(extendedEmojiList()));
       const filteredCodes = _.filter(filterableEmojis, code => {
-        return code.indexOf(this.get("filter")) > -1;
+        return code.indexOf(lowerCaseFilter) > -1;
       }).slice(0, 30);
       $results.empty().html(
         _.map(filteredCodes, (code) => {
