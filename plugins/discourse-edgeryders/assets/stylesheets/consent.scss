@@ -5,6 +5,8 @@
 */
 #consent-panel {
   margin-right: 20px;
+  max-height:330px;
+  overflow:scroll;
 
   .card {
     padding: 8px;
