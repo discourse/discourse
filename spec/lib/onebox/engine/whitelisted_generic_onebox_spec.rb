@@ -84,7 +84,7 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
   end
 
   describe "cookie support" do
-    let(:url) { "http://cookie-test.com" }
+    let(:url) { "http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html" }
     before do
       fake(url, response('dailymail'))
     end
@@ -94,6 +94,23 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
       onebox.options = { cookie: "evil=trout" }
       expect(onebox.to_html).not_to be_empty
       expect(FakeWeb.last_request['Cookie']).to eq('evil=trout')
+    end
+  end
+
+  describe "uses canonical link" do
+    let(:mobile_url) { "http://m.imdb.com/title/tt0944947" }
+    let(:canonical_url) { "http://www.imdb.com/title/tt0944947/" }
+    before do
+      fake(mobile_url, response('imdb_mobile'))
+      fake(canonical_url, response('imdb'))
+    end
+
+    it 'fetches opengraph data from canonical link' do
+      onebox = described_class.new(mobile_url)
+      expect(onebox.to_html).not_to be_nil
+      expect(onebox.to_html).to include("Game of Thrones")
+      expect(onebox.to_html).to include("Nine noble families fight for control over the mythical lands of Westeros")
+      expect(onebox.to_html).to include("https://images-na.ssl-images-amazon.com/images/M/MV5BMjE3NTQ1NDg1Ml5BMl5BanBnXkFtZTgwNzY2NDA0MjI@._V1_UY1200_CR90,0,630,1200_AL_.jpg")
     end
   end
 

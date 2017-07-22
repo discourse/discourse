@@ -56,8 +56,17 @@ module Onebox
           headers = { 'Cookie' => options[:cookie] } if options[:cookie]
 
           response = (Onebox::Helpers.fetch_response(url, nil, nil, headers) rescue nil)
+          doc = Nokogiri::HTML(response)
 
-          @html_doc = Nokogiri::HTML(response)
+          # prefer canonical link
+          canonical_link = doc.at('//link[@rel="canonical"]/@href')
+          if canonical_link && "#{URI(canonical_link).host}#{URI(canonical_link).path}" != "#{URI(url).host}#{URI(url).path}"
+            response = (Onebox::Helpers.fetch_response(canonical_link, nil, nil, headers) rescue nil)
+            doc = Nokogiri::HTML(response) if response
+          end
+
+          @html_doc = doc
+          @html_doc
         end
 
         def get_oembed

@@ -5,6 +5,7 @@ describe Onebox::Engine::YoutubeOnebox do
     fake("https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", response("youtube"))
     fake("https://youtu.be/21Lk4YiASMo", response("youtube"))
     fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", response("youtube-channel"))
+    fake("http://www.youtube.com/user/googlechrome", response("youtube-channel"))
     fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", response("youtube-playlist"))
     fake("https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=21Lk4YiASMo", response("youtube-json"))
     fake("https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/playlist?list=PL5308B2E5749D1696", response("youtube-list-json"))
