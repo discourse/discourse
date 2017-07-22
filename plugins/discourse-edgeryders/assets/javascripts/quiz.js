@@ -5,11 +5,14 @@ var quiz;
 function showQuiz() {
   jQuery('#consent-panel').show();
   jQuery('#reply-control .reply-to, #reply-control .wmd-controls, #reply-control .form-element, #reply-control .d-editor, #reply-control .submit-panel').attr('style','display: none !important;');
+
+  jQuery('html.desktop-view #reply-control.open').attr('style','height: 600px;');
 }
 
 function hideQuiz() {
   jQuery('#consent-panel').hide();
   jQuery('#reply-control .reply-to, #reply-control .wmd-controls, #reply-control .form-element, #reply-control .d-editor, #reply-control .submit-panel').attr('style','display: block !important;');
+  jQuery('html.desktop-view #reply-control.open').attr('style','height: 350px;');
 }
 
 function submitQuiz() {
