@@ -4,9 +4,7 @@ describe Jobs::ToggleTopicClosed do
   let(:admin) { Fabricate(:admin) }
 
   let(:topic) do
-    Fabricate(:topic,
-      topic_timers: [Fabricate(:topic_timer, user: admin)]
-    )
+    Fabricate(:topic_timer, user: admin).topic
   end
 
   before do
