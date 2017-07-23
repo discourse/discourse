@@ -102,8 +102,10 @@ export function selectedText() {
   $div.find("img.emoji").replaceWith(function() { return this.title; });
   // replace br with newlines
   $div.find("br").replaceWith(() => "\n");
+  // enforce newline at the end of paragraphs
+  $div.find("p").append(() => "\n");
 
-  return String($div.text()).trim();
+  return String($div.text()).trim().replace(/(^\s*\n)+/gm, "\n");
 }
 
 // Determine the row and col of the caret in an element
