@@ -44,9 +44,7 @@ describe Jobs::DeleteTopic do
 
   describe "user isn't authorized to delete topics" do
     let(:topic) {
-      Fabricate(:topic,
-        topic_timers: [Fabricate(:topic_timer, user: Fabricate(:user))]
-      )
+      Fabricate(:topic_timer, user: Fabricate(:user)).topic
     }
 
     it "shouldn't delete the topic" do
