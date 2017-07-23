@@ -34,9 +34,7 @@ describe Jobs::DeleteTopic do
   end
 
   it "should do nothing if it's too early" do
-    t = Fabricate(:topic,
-      topic_timers: [Fabricate(:topic_timer, user: admin, execute_at: 5.hours.from_now)]
-    )
+    t = Fabricate(:topic_timer, user: admin, execute_at: 5.hours.from_now).topic
     create_post(topic: t)
     Timecop.freeze(4.hours.from_now) do
       described_class.new.execute(topic_timer_id: t.public_topic_timer.id)
