@@ -1169,7 +1169,7 @@ sq:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Welcome to %{title}](#welcome)
+      ## [Welcome to %{title}](#welcome)
       An account is required. Please create an account or log in to continue.
   terms_of_service:
     title: "Kushtet e shërbimit"
