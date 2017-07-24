@@ -162,11 +162,20 @@ class TopicCreator
     return unless @opts[:archetype] == Archetype.private_message
     topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
-    unless @opts[:target_usernames].present? || @opts[:target_group_names].present?
+    unless @opts[:target_usernames].present? || @opts[:target_emails].present? || @opts[:target_group_names].present?
       rollback_with!(topic, :no_user_selected)
     end
 
+    if @opts[:target_emails].present?
+      if !SiteSetting.reply_by_email_enabled? || !SiteSetting.enable_staged_users? then
+        rollback_with!(topic, :reply_by_email_disabled)
+      elsif @user.trust_level < SiteSetting.min_trust_to_send_email_messages then
+        rollback_with!(topic, :pm_email_tl_insufficient)
+      end
+    end
+
     add_users(topic, @opts[:target_usernames])
+    add_emails(topic, @opts[:target_emails])
     add_groups(topic, @opts[:target_group_names])
     topic.topic_allowed_users.build(user_id: @user.id)
   end
@@ -195,6 +204,23 @@ class TopicCreator
     rollback_with!(topic, :target_user_not_found) unless len == names.length
   end
 
+  def add_emails(topic, emails)
+    return unless emails
+
+    emails = emails.split(',').flatten
+    len = 0
+
+    emails.each do |email|
+      display_name = email.split("@").first
+      user = find_or_create_user(email, display_name)
+      @added_users << user
+      topic.topic_allowed_users.build(user_id: user.id)
+      len += 1
+    end
+
+    rollback_with!(topic, :target_user_not_found) unless len == emails.length
+  end
+
   def add_groups(topic, groups)
     return unless groups
     names = groups.split(',').flatten
@@ -213,4 +239,29 @@ class TopicCreator
   def check_can_send_permission!(topic, obj)
     rollback_with!(topic, :cant_send_pm) unless @opts[:skip_validations] || @guardian.can_send_private_message?(obj)
   end
+
+  def find_or_create_user(email, display_name)
+    user = nil
+
+    User.transaction do
+      begin
+        user = User.find_by_email(email)
+
+        if user.nil? && SiteSetting.enable_staged_users
+          username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
+          user = User.create!(
+            email: email,
+            username: UserNameSuggester.suggest(username.presence || email),
+            name: display_name.presence || User.suggest_name(email),
+            staged: true
+          )
+        end
+      rescue
+        user = nil
+      end
+    end
+
+    user
+  end
+
 end

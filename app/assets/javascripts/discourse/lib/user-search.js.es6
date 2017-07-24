@@ -46,6 +46,7 @@ function organizeResults(r, options) {
   var exclude = options.exclude || [],
       limit = options.limit || 5,
       users = [],
+      emails = [],
       groups = [],
       results = [];
 
@@ -57,6 +58,12 @@ function organizeResults(r, options) {
       }
       return results.length <= limit;
     });
+  }
+
+  if (options.term.match(/@/)) {
+    let e = { username: options.term };
+    emails = [ e ];
+    results.push(e);
   }
 
   if (r.groups) {
@@ -71,6 +78,7 @@ function organizeResults(r, options) {
   }
 
   results.users = users;
+  results.emails = emails;
   results.groups = groups;
   return results;
 }
@@ -94,7 +102,7 @@ export default function userSearch(options) {
 
   return new Ember.RSVP.Promise(function(resolve) {
     // TODO site setting for allowed regex in username
-    if (term.match(/[^\w\.\-]/)) {
+    if (term.match(/[^\w_\-\.@\+]/)) {
       resolve([]);
       return;
     }
