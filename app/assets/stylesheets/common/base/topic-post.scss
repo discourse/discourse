@@ -1,6 +1,6 @@
 .placeholder-avatar {
   display: inline-block;
-  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  background-color: $primary-low;
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -8,7 +8,7 @@
 
 .placeholder-text {
   display: inline-block;
-  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  background-color: $primary-low;
   width: 100%;
   height: 1.5em;
   margin-bottom: 0.6em;
@@ -92,7 +92,7 @@ aside.quote {
 }
 
 .cooked .highlight {
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
   padding: 2px;
   margin: -2px;
 }
@@ -137,7 +137,7 @@ aside.quote {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: dark-light-diff($primary, $secondary, 50%, -50%);
+  background-color: blend-primary-secondary(50%);
   color: dark-light-choose($secondary, $primary);
   padding: 10px;
   z-index: 401;
@@ -149,7 +149,7 @@ aside.quote {
   }
 
   &:hover {
-    background-color: dark-light-diff($primary, $secondary, 40%, -40%);
+    background-color: $primary-medium;
     cursor: pointer;
   }
 }
@@ -273,7 +273,7 @@ pre {
 kbd
 {
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   border-radius: 3px;
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;
@@ -395,15 +395,15 @@ blockquote > *:last-child {
   .topic-body {
     .cooked {
       font-style: italic;
-      color: dark-light-diff($primary, $secondary, 55%, -40%);
+      color: $primary-medium;
     }
   }
 }
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: dark-light-diff($primary, $secondary, 30%, -20%);
-  background: dark-light-diff($primary, $secondary, 95%, -60%);
+  color: $primary-medium;
+  background: $primary-low;
   border-radius: 8px;
   font-weight: bold;
   font-size: 0.93em;

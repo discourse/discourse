@@ -18,12 +18,12 @@
 }
 
 .directory .user {
-  border-top: 1px solid dark-light-diff($primary, $secondary, 80%, -20%);
+  border-top: 1px solid $primary-low;
   padding: 1em;
 
 
   &.me {
-    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
+    background-color: $highlight-low;
 
     .username a, .name, .title, .number, .time-read, .user-stat .label {
       color: scale-color($highlight, $lightness: -50%);
@@ -38,7 +38,7 @@
     }
     .label {
       margin-left: 0.2em;
-      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      color: blend-primary-secondary(50%);
     }
     i.fa-heart {
       color: $love;

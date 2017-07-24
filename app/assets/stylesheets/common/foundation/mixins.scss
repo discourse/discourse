@@ -97,7 +97,7 @@
 
 // Stuff we repeat
 @mixin post-aside {
-  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
+  border-left: 5px solid $primary-low;
   background-color: blend-primary-secondary(5%);
 }
 
