@@ -52,11 +52,11 @@ describe InvitesController do
 
   end
 
-  context '.create' do
+  context '#create' do
     it 'requires you to be logged in' do
-      expect {
+      expect do
         post :create, email: 'jake@adventuretime.ooo'
-      }.to raise_error(Discourse::NotLoggedIn)
+      end.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -74,6 +74,8 @@ describe InvitesController do
         invite.reload
         post :create, email: invite.email
         expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["failed"]).to be_present
       end
 
       it "allows admins to invite to groups" do
@@ -84,12 +86,32 @@ describe InvitesController do
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
+      it 'allows group owners to invite to groups' do
+        group = Fabricate(:group)
+        user = log_in
+        user.update!(trust_level: TrustLevel[2])
+        group.add_owner(user)
+
+        post :create, email: email, group_names: group.name
+
+        expect(response).to be_success
+        expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
+      end
+
       it "allows admin to send multiple invites to same email" do
         user = log_in(:admin)
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
         post :create, email: invite.email
         expect(response).to be_success
+      end
+
+      it "responds with error message in case of validation failure" do
+        log_in(:admin)
+        post :create, email: "test@mailinator.com"
+        expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to be_present
       end
     end
 
@@ -128,8 +150,8 @@ describe InvitesController do
       end
 
       it "allows multiple group invite" do
-        group_1 = Fabricate(:group, name: "security")
-        group_2 = Fabricate(:group, name: "support")
+        Fabricate(:group, name: "security")
+        Fabricate(:group, name: "support")
         log_in(:admin)
         post :create_invite_link, email: email, group_names: "security,support"
         expect(response).to be_success
@@ -273,7 +295,7 @@ describe InvitesController do
     context 'new registrations are disabled' do
       let(:topic) { Fabricate(:topic) }
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
-      before { SiteSetting.stubs(:allow_new_registrations).returns(false) }
+      before { SiteSetting.allow_new_registrations = false }
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
@@ -291,119 +313,6 @@ describe InvitesController do
         put :perform_accept_invitation, id: invite.invite_key
       end
     end
-  end
-
-  context '.create_disposable_invite' do
-    it 'requires you to be logged in' do
-      expect {
-        post :create, email: 'jake@adventuretime.ooo'
-      }.to raise_error(Discourse::NotLoggedIn)
-    end
-
-    context 'while logged in as normal user' do
-      let(:user) { Fabricate(:user) }
-
-      it "does not create disposable invitation" do
-        log_in
-        post :create_disposable_invite, email: user.email
-        expect(response).not_to be_success
-      end
-    end
-
-    context 'while logged in as admin' do
-      before do
-        log_in(:admin)
-      end
-      let(:user) { Fabricate(:user) }
-
-      it "creates disposable invitation" do
-        post :create_disposable_invite, email: user.email
-        expect(response).to be_success
-        expect(Invite.where(invited_by_id: user.id).count).to eq(1)
-      end
-
-      it "creates multiple disposable invitations" do
-        post :create_disposable_invite, email: user.email, quantity: 10
-        expect(response).to be_success
-        expect(Invite.where(invited_by_id: user.id).count).to eq(10)
-      end
-
-      it "allows group invite" do
-        group = Fabricate(:group)
-        post :create_disposable_invite, email: user.email, group_names: group.name
-        expect(response).to be_success
-        expect(Invite.find_by(invited_by_id: user.id).invited_groups.count).to eq(1)
-      end
-
-      it "allows multiple group invite" do
-        group_1 = Fabricate(:group, name: "security")
-        group_2 = Fabricate(:group, name: "support")
-        post :create_disposable_invite, email: user.email, group_names: "security,support"
-        expect(response).to be_success
-        expect(Invite.find_by(invited_by_id: user.id).invited_groups.count).to eq(2)
-      end
-
-    end
-
-  end
-
-  context '.redeem_disposable_invite' do
-
-    context 'with an invalid invite token' do
-      before do
-        get :redeem_disposable_invite, email: "name@example.com", token: "doesn't exist"
-      end
-
-      it "redirects to the root" do
-        expect(response).to redirect_to("/")
-      end
-
-      it "should not change the session" do
-        expect(session[:current_user_id]).to be_blank
-      end
-    end
-
-    context 'with a valid invite token' do
-      let(:topic) { Fabricate(:topic) }
-      let(:invitee) { Fabricate(:user) }
-      let(:invite) { Invite.create!(invited_by: invitee) }
-
-      it 'converts "space" to "+" in email parameter' do
-        Invite.expects(:redeem_from_token).with(invite.invite_key, "fname+lname@example.com", nil, nil, topic.id)
-        get :redeem_disposable_invite, email: "fname lname@example.com", token: invite.invite_key, topic: topic.id
-      end
-
-      it 'redeems the invite' do
-        Invite.expects(:redeem_from_token).with(invite.invite_key, "name@example.com", nil, nil, topic.id)
-        get :redeem_disposable_invite, email: "name@example.com", token: invite.invite_key, topic: topic.id
-      end
-
-      context 'when redeem returns a user' do
-        let(:user) { Fabricate(:user) }
-
-        before do
-          Invite.expects(:redeem_from_token).with(invite.invite_key, user.email, nil, nil, topic.id).returns(user)
-        end
-
-        it 'logs in user' do
-          events = DiscourseEvent.track_events do
-            get :redeem_disposable_invite,
-              email: user.email,
-              token: invite.invite_key,
-              topic: topic.id
-          end
-
-          expect(events.map { |event| event[:event_name] }).to include(
-            :user_logged_in, :user_first_logged_in
-          )
-
-          expect(session[:current_user_id]).to eq(user.id)
-        end
-
-      end
-
-    end
-
   end
 
   context '.resend_invite' do

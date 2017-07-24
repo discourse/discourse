@@ -265,6 +265,22 @@ describe PostCreator do
         expect(post.valid?).to eq(true)
       end
 
+      it 'allows notification email to be skipped' do
+        user_2 = Fabricate(:user)
+
+        creator = PostCreator.new(user,
+          title: 'hi there welcome to my topic',
+          raw: "this is my awesome message @#{user_2.username_lower}",
+          archetype: Archetype.private_message,
+          target_usernames: [user_2.username],
+          post_alert_options: { skip_send_email: true }
+        )
+
+        NotificationEmailer.expects(:process_notification).never
+
+        creator.create
+      end
+
       describe "topic's auto close" do
         before do
           SiteSetting.queue_jobs = true
@@ -285,13 +301,11 @@ describe PostCreator do
 
         it "updates topic's auto close date when it's based on last post" do
           Timecop.freeze do
-            topic = Fabricate(:topic,
-              topic_timers: [Fabricate(:topic_timer,
-                based_on_last_post: true,
-                execute_at: Time.zone.now - 12.hours,
-                created_at: Time.zone.now - 24.hours
-              )]
-            )
+            topic = Fabricate(:topic_timer,
+              based_on_last_post: true,
+              execute_at: Time.zone.now - 12.hours,
+              created_at: Time.zone.now - 24.hours
+            ).topic
 
             Fabricate(:post, topic: topic)
 
@@ -979,6 +993,59 @@ describe PostCreator do
       )
       expect(pc).to be_valid
       expect(pc.errors).to be_blank
+    end
+  end
+
+  context "private message recipients limit (max_allowed_message_recipients) reached" do
+    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user2) { Fabricate(:evil_trout) }
+    let(:target_user3) { Fabricate(:walter_white) }
+
+    before do
+      SiteSetting.max_allowed_message_recipients = 2
+    end
+
+    context "for normal user" do
+      it 'fails when sending message to multiple recipients' do
+        pc = PostCreator.new(
+          user,
+          title: 'this message is for multiple recipients!',
+          raw: "Lorem ipsum dolor sit amet, id elitr praesent mea, ut ius facilis fierent.",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username, target_user3.username].join(',')
+        )
+        expect(pc).not_to be_valid
+        expect(pc.errors).to be_present
+      end
+
+      it 'succeeds when sending message to multiple recipients if skip_validations is true' do
+        pc = PostCreator.new(
+          user,
+          title: 'this message is for multiple recipients!',
+          raw: "Lorem ipsum dolor sit amet, id elitr praesent mea, ut ius facilis fierent.",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username, target_user3.username].join(','),
+          skip_validations: true
+        )
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+
+    context "always succeeds if the user is staff" do
+      let(:staff_user) { Fabricate(:admin) }
+
+      it 'when sending message to multiple recipients' do
+        pc = PostCreator.new(
+          staff_user,
+          title: 'this message is for multiple recipients!',
+          raw: "Lorem ipsum dolor sit amet, id elitr praesent mea, ut ius facilis fierent.",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username, target_user3.username].join(',')
+        )
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
     end
   end
 end

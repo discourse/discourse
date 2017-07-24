@@ -19,7 +19,7 @@ function loadNext(ajax) {
     data: { url, refresh, user_id: userId },
     cache: true
   }).then(html => {
-    localCache[url] = html;
+    localCache[normalize(url)] = html;
     $elem.replaceWith(html);
   }, result => {
     if (result && result.jqXHR && result.jqXHR.status === 429) {
@@ -27,7 +27,7 @@ function loadNext(ajax) {
       removeLoading = false;
       loadingQueue.unshift({ url, refresh, $elem, userId });
     } else {
-      failedCache[url] = true;
+      failedCache[normalize(url)] = true;
     }
   }).finally(() => {
     timeout = Ember.run.later(() => loadNext(ajax), timeoutMs);
@@ -52,11 +52,11 @@ export function load(e, refresh, ajax, userId, synchronous) {
   // Unless we're forcing a refresh...
   if (!refresh) {
     // If we have it in our cache, return it.
-    const cached = localCache[url];
+    const cached = localCache[normalize(url)];
     if (cached) return cached;
 
     // If the request failed, don't do anything
-    const failed = failedCache[url];
+    const failed = failedCache[normalize(url)];
     if (failed) return;
   }
 
@@ -74,6 +74,12 @@ export function load(e, refresh, ajax, userId, synchronous) {
   }
 }
 
+// Sometimes jQuery will return URLs with trailing slashes when the
+// `href` didn't have them.
+function normalize(url) {
+  return url.replace(/\/$/, '');
+}
+
 export function lookupCache(url) {
-  return localCache[url];
+  return localCache[normalize(url)];
 }

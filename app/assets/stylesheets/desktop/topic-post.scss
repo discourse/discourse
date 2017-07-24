@@ -419,6 +419,16 @@ a.star {
       }
     }
   }
+
+  .link-summary .btn {
+    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+    background: blend-primary-secondary(5%);
+    width: 100%;
+    &:hover {
+      color: $primary;
+      background: dark-light-diff($primary, $secondary, 90%, -80%);
+    }
+  }
 }
 
 #topic-footer-buttons {
@@ -453,9 +463,7 @@ a.star {
     table-layout: fixed;
     margin-top: 10px;
   }
-  .topics {
-    padding-bottom: 15px;
-  }
+
   // this forces category to take less space in suggested topics
   // as the poster list is not present at all there.
   th.category {

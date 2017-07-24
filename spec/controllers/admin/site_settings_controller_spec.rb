@@ -30,20 +30,21 @@ describe Admin::SiteSettingsController do
       end
 
       it 'sets the value when the param is present' do
-        SiteSetting.expects(:'test_setting=').with('hello').once
         xhr :put, :update, id: 'test_setting', test_setting: 'hello'
+
+        expect(SiteSetting.test_setting).to eq('hello')
       end
 
       it 'allows value to be a blank string' do
-        SiteSetting.expects(:'test_setting=').with('').once
         xhr :put, :update, id: 'test_setting', test_setting: ''
+        expect(SiteSetting.test_setting).to eq('')
       end
 
       it 'logs the change' do
-        SiteSetting.stubs(:test_setting).returns('previous')
-        SiteSetting.expects(:'test_setting=').with('hello').once
+        SiteSetting.test_setting = 'previous'
         StaffActionLogger.any_instance.expects(:log_site_setting_change).with('test_setting', 'previous', 'hello')
         xhr :put, :update, id: 'test_setting', test_setting: 'hello'
+        expect(SiteSetting.test_setting).to eq('hello')
       end
 
       it 'does not allow changing of hidden settings' do

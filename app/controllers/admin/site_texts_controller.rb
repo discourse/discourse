@@ -43,12 +43,19 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def update
     site_text = find_site_text
-    site_text[:value] = params[:site_text][:value]
-    old_text = I18n.t(site_text[:id])
-    StaffActionLogger.new(current_user).log_site_text_change(site_text[:id], site_text[:value], old_text)
+    value = site_text[:value] = params[:site_text][:value]
+    id = site_text[:id]
+    old_value = I18n.t(id)
+    translation_override = TranslationOverride.upsert!(I18n.locale, id, value)
 
-    TranslationOverride.upsert!(I18n.locale, site_text[:id], site_text[:value])
-    render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
+    if translation_override.errors.empty?
+      StaffActionLogger.new(current_user).log_site_text_change(id, value, old_value)
+      render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
+    else
+      render json: failed_json.merge(
+        message: translation_override.errors.full_messages.join("\n\n")
+      ), status: 422
+    end
   end
 
   def revert

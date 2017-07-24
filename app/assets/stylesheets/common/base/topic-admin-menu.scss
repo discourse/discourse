@@ -5,7 +5,7 @@
   top: 120px;
   right: 10px;
   z-index: 999;
-  outline: 0;
+  height: 35px;
 }
 
 .popup-menu {
@@ -34,8 +34,12 @@
 }
 
 .modal-body.feature-topic {
+  overflow: visible;
   padding: 5px;
   max-height: 500px;
+  input.date-picker {
+    margin: 0;
+  }
   hr {
     margin: 10px 0;
   }

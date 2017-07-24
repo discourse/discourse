@@ -1,26 +1,26 @@
 import { default as PrettyText, buildOptions } from 'pretty-text/pretty-text';
 import { hrefAllowed } from 'pretty-text/sanitizer';
 
-module("lib:sanitizer");
+QUnit.module("lib:sanitizer");
 
-test("sanitize", function() {
+QUnit.test("sanitize", assert => {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
-  const cooked = (input, expected, text) => equal(pt.cook(input), expected.replace(/\/>/g, ">"), text);
+  const cooked = (input, expected, text) => assert.equal(pt.cook(input), expected.replace(/\/>/g, ">"), text);
 
-  equal(pt.sanitize("<i class=\"fa-bug fa-spin\">bug</i>"), "<i>bug</i>");
-  equal(pt.sanitize("<div><script>alert('hi');</script></div>"), "<div></div>");
-  equal(pt.sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
-  equal(pt.sanitize("<3 <3"), "&lt;3 &lt;3");
-  equal(pt.sanitize("<_<"), "&lt;_&lt;");
+  assert.equal(pt.sanitize("<i class=\"fa-bug fa-spin\">bug</i>"), "<i>bug</i>");
+  assert.equal(pt.sanitize("<div><script>alert('hi');</script></div>"), "<div></div>");
+  assert.equal(pt.sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p>hello</p></div>");
+  assert.equal(pt.sanitize("<3 <3"), "&lt;3 &lt;3");
+  assert.equal(pt.sanitize("<_<"), "&lt;_&lt;");
+
   cooked("hello<script>alert(42)</script>", "<p>hello</p>", "it sanitizes while cooking");
 
   cooked("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>",
          "<p><a href=\"http://disneyland.disney.go.com/\">disney</a> <a href=\"http://reddit.com\">reddit</a></p>",
          "we can embed proper links");
 
-  cooked("<center>hello</center>", "<p>hello</p>", "it does not allow centering");
-  cooked("<table><tr><td>hello</td></tr></table>\nafter", "<p>after</p>", "it does not allow tables");
-  cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n\n<br/>\n\n</blockquote>", "it does not double sanitize");
+  cooked("<center>hello</center>", "hello", "it does not allow centering");
+  cooked("<blockquote>a\n</blockquote>\n", "<blockquote>a\n</blockquote>", "it does not double sanitize");
 
   cooked("<iframe src=\"http://discourse.org\" width=\"100\" height=\"42\"></iframe>", "", "it does not allow most iframes");
 
@@ -32,15 +32,15 @@ test("sanitize", function() {
          "<iframe width=\"425\" height=\"350\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik\"></iframe>",
          "it allows iframe to OpenStreetMap");
 
-  equal(pt.sanitize("<textarea>hullo</textarea>"), "hullo");
-  equal(pt.sanitize("<button>press me!</button>"), "press me!");
-  equal(pt.sanitize("<canvas>draw me!</canvas>"), "draw me!");
-  equal(pt.sanitize("<progress>hello"), "hello");
-  equal(pt.sanitize("<mark>highlight</mark>"), "highlight");
+  assert.equal(pt.sanitize("<textarea>hullo</textarea>"), "hullo");
+  assert.equal(pt.sanitize("<button>press me!</button>"), "press me!");
+  assert.equal(pt.sanitize("<canvas>draw me!</canvas>"), "draw me!");
+  assert.equal(pt.sanitize("<progress>hello"), "hello");
+  assert.equal(pt.sanitize("<mark>highlight</mark>"), "highlight");
 
-  cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
+  cooked("[the answer](javascript:alert(42))", "<p>[the answer](javascript:alert(42))</p>", "it prevents XSS");
 
-  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i><br/></p>", "it doesn't circumvent XSS with comments");
+  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i></p>", "it doesn't circumvent XSS with comments");
 
   cooked("<span class=\"-bbcode-s fa fa-spin\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
   cooked("<span class=\"fa fa-spin -bbcode-s\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
@@ -60,26 +60,26 @@ test("sanitize", function() {
   cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
 });
 
-test("ids on headings", () => {
+QUnit.test("ids on headings", assert => {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
-  equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
-  equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h1>`), `<h1 id="test-heading">Test Heading</h1>`);
-  equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h2>`), `<h2 id="test-heading">Test Heading</h2>`);
-  equal(pt.sanitize(`<h3 id="test-heading">Test Heading</h3>`), `<h3 id="test-heading">Test Heading</h3>`);
-  equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h4>`), `<h4 id="test-heading">Test Heading</h4>`);
-  equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h5>`), `<h5 id="test-heading">Test Heading</h5>`);
-  equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h6>`), `<h6 id="test-heading">Test Heading</h6>`);
+  assert.equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
+  assert.equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h1>`), `<h1 id="test-heading">Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h2>`), `<h2 id="test-heading">Test Heading</h2>`);
+  assert.equal(pt.sanitize(`<h3 id="test-heading">Test Heading</h3>`), `<h3 id="test-heading">Test Heading</h3>`);
+  assert.equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h4>`), `<h4 id="test-heading">Test Heading</h4>`);
+  assert.equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h5>`), `<h5 id="test-heading">Test Heading</h5>`);
+  assert.equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h6>`), `<h6 id="test-heading">Test Heading</h6>`);
 });
 
-test("urlAllowed", () => {
-  const allowed = (url, msg) => equal(hrefAllowed(url), url, msg);
+QUnit.test("urlAllowed", assert => {
+  const allowed = (url, msg) => assert.equal(hrefAllowed(url), url, msg);
 
   allowed("/foo/bar.html", "allows relative urls");
   allowed("http://eviltrout.com/evil/trout", "allows full urls");
   allowed("https://eviltrout.com/evil/trout", "allows https urls");
   allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
 
-  equal(hrefAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
+  assert.equal(hrefAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
         "http://google.com/test%27onmouseover=alert(%27XSS!%27);//.swf",
         "escape single quotes");
 });

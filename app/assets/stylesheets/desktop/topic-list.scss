@@ -313,8 +313,18 @@ and (max-width : 850px) {
   .nav-pills {
     > li > a {
       font-size: 1em;
-      padding: 5px 10px ;
+      padding: 5px 10px;
       }
+  }
+
+  // new topic just a "+" no text
+  button#create-topic {
+    span {
+      display: none;
+    }
+    i {
+      margin-right: 0;
+    }
   }
 
   .topic-list {

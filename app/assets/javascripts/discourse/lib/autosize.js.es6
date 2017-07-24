@@ -132,15 +132,9 @@ function assign(ta, {setOverflowX = true, setOverflowY = true} = {}) {
 		set.delete(ta);
 
 		Object.keys(style).forEach(key => {
-			ta.style[key] = style[key];
+      ta.style[key] = style[key];
 		});
-	}.bind(ta, {
-		height: ta.style.height,
-		resize: ta.style.resize,
-		overflowY: ta.style.overflowY,
-		overflowX: ta.style.overflowX,
-		wordWrap: ta.style.wordWrap,
-	});
+	}
 
 	ta.addEventListener('autosize:destroy', destroy, false);
 

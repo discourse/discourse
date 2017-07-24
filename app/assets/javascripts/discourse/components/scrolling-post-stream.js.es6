@@ -1,5 +1,4 @@
 import DiscourseURL from 'discourse/lib/url';
-import { keyDirty } from 'discourse/widgets/widget';
 import MountWidget from 'discourse/components/mount-widget';
 import { cloak, uncloak } from 'discourse/widgets/post-stream';
 import { isWorkaroundActive } from 'discourse/lib/safari-hacks';
@@ -245,13 +244,13 @@ export default MountWidget.extend({
     this.appEvents.on('post-stream:refresh', args => {
       if (args) {
         if (args.id) {
-          keyDirty(`post-${args.id}`);
+          this.dirtyKeys.keyDirty(`post-${args.id}`);
 
           if (args.refreshLikes) {
-            keyDirty(`post-menu-${args.id}`, { onRefresh: 'refreshLikes' });
+            this.dirtyKeys.keyDirty(`post-menu-${args.id}`, { onRefresh: 'refreshLikes' });
           }
         } else if (args.force) {
-          keyDirty(`*`);
+          this.dirtyKeys.forceAll();
         }
       }
       this.queueRerender();

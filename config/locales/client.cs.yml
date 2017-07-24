@@ -119,6 +119,7 @@ cs:
           other: "za %{count} let"
       previous_month: 'Předchozí měsíc'
       next_month: 'Další měsíc'
+      placeholder: Vyber datum
     share:
       topic: 'sdílet odkaz na toto téma'
       post: 'příspěvek #%{postNumber}'
@@ -157,21 +158,24 @@ cs:
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile počet registrovaných uživatelů překročí %{min_users}."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
+    themes:
+      default_description: "Výchozí"
     s3:
       regions:
-        us_east_1: "Východ USA (S. Virginie)"
-        us_west_1: "Západ USA (S. Kalifornie)"
-        us_west_2: "Západ USA (Oregon)"
-        us_gov_west_1: "AWS GovCloud (USA)"
-        eu_west_1: "EU (Irsko)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Asia Pacific (Singapur)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
-        ap_south_1: "Asia Pacific (Bombaj)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Soul)"
-        sa_east_1: "Jižní Amerika (Sao Paulo)"
+        ap_south_1: "Asia Pacific (Bombaj)"
+        ap_southeast_1: "Asia Pacific (Singapur)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "Čína (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irsko)"
+        eu_west_2: "EU (Londýn)"
+        sa_east_1: "Jižní Amerika (Sao Paulo)"
+        us_east_1: "Východ USA (S. Virginie)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        us_west_1: "Západ USA (S. Kalifornie)"
+        us_west_2: "Západ USA (Oregon)"
     edit: 'upravit název a kategorii příspěvku'
     not_implemented: "Tato funkce ještě nebyla naprogramována, omlouváme se."
     no_value: "Ne"
@@ -351,6 +355,8 @@ cs:
         change_group_setting: "Změnit nastavení skupiny"
         add_user_to_group: "Přidat uživatele"
         remove_user_from_group: "Odebrat uživatele"
+        make_user_group_owner: "Udělej vlastníkem"
+        remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
       logs:
         title: "Logy"
@@ -364,14 +370,22 @@ cs:
       edit:
         title: 'Editovat skupinu'
         full_name: 'Celé jméno'
+        add_members: "Přidat členy"
+        delete_member_confirm: "Odstranit '%{username}' ze skupiny '%{group}'?"
+      name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
       add: "Přidat"
+      join: "Přidat se ke skupině"
+      leave: "Opustit skupinu"
+      request: "Požádat o členství ve skupině"
       automatic_group: Automatická skupina
+      closed_group: Uzavřená skupina
+      is_group_user: "Jsi členem této skupiny"
       membership: "Členství"
+      name: "Název"
       user_count: "Počet členů"
       bio: "O skupině"
       selector_placeholder: "Přidat členy"
       owner: "Vlastník"
-      visible: "Skupina je viditelná pro všechny uživatele"
       index:
         title: "Skupiny"
         empty: "Žádné viditelné skupiny."
@@ -385,6 +399,10 @@ cs:
       posts: "Odpovědi"
       mentions: "Zmínění"
       messages: "Zprávy"
+      visibility_levels:
+        title: "Kdo vidí tuto skupinu?"
+        public: "Všichni"
+        members: "Vlastníci skupiny, členové a správci"
       alias_levels:
         title: "Kdo může do této skupiny psát zprávy a @zmiňovat ji?"
         nobody: "Nikdo"
@@ -476,6 +494,11 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
+      download_archive:
+        button_text: "Stáhnout vše"
+        confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
+        success: "Stahování zahájeno, až bude dokončeno, přijde ti zpráva."
+        rate_limit_error: "Příspěvky mohou být staženy jen jednou za den. Zkus to, prosím, zítra."
       new_private_message: "Nová zpráva"
       private_message: "Zpráva"
       private_messages: "Zprávy"
@@ -573,12 +596,23 @@ cs:
         move_to_archive: "Archivovat"
         failed_to_move: "Nepodařilo se přesunout vybrané zprávy (možná vám spadlo připojení)"
         select_all: "Vybrat vše"
+      preferences_nav:
+        account: "Účet"
+        profile: "Profil"
+        emails: "Emaily"
+        notifications: "Upozornění"
+        categories: "Kategorie"
+        tags: "Tagy"
+        interface: "Rozhraní"
+        apps: "Aplikace"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
         error: "(chyba)"
         action: "Odeslat email na obnovu hesla"
         set_password: "Nastavit heslo"
+        choose_new: "Zvolte si nové heslo"
+        choose: "Vyber si heslo"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -628,9 +662,11 @@ cs:
         ok: "Parádní jméno"
       username:
         title: "Uživatelské jméno"
+        instructions: "jedinečné, bez mezer, krátké"
         short_instructions: "Lidé vás mohou zmínit pomocí @{{username}}"
         available: "Vaše uživatelské jméno je volné"
         not_available: "Není k dispozici. Co třeba {{suggestion}}?"
+        not_available_no_suggestion: "Není k dispozici"
         too_short: "Uživatelské jméno je moc krátké"
         too_long: "Uživatelské jméno je moc dlouhé"
         checking: "Zjišťuji, zda je uživatelské jméno volné..."
@@ -720,6 +756,8 @@ cs:
         expired: "Poznávka je už prošlá."
         rescind: "Smazat"
         rescinded: "Pozvánka odstraněna"
+        rescind_all: "Odstranit všechny pozvánky"
+        rescinded_all: "Všechny pozvánky odstraněny!"
         reinvite: "Znovu poslat pozvánku"
         reinvite_all: "Znovu poslat všechny pozvánky"
         reinvited: "Pozvánka byla opětovně odeslána."
@@ -740,6 +778,7 @@ cs:
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
         same_as_email: "Vaše heslo je stejné jako váš e-mail."
         ok: "Vaše heslo je v pořádku."
+        instructions: "alespoň %{count} znaků"
       summary:
         title: "Souhrn"
         stats: "Statistiky"
@@ -902,6 +941,8 @@ cs:
       complete_email_found: "Byl nalezen účet odpovídající emailu <b>%{email}</b>. Za chvilku obdržíte email s instrukcemi jak přenastavit vaše heslo."
       complete_username_not_found: "Nebyl nalezen účet s uživatelským jménem <b>%{username}</b>"
       complete_email_not_found: "Nebyl nalezen účet s odpovídající emailu <b>%{email}</b>"
+      button_ok: "OK"
+      button_help: "Nápověda"
     login:
       title: "Přihlásit se"
       username: "Uživatel"
@@ -921,6 +962,7 @@ cs:
       not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit."
       admin_not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit jako administrátor."
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
+      submit_new_email: "Aktualizovat emailovou adresu"
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>{{currentEmail}}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       to_continue: "Přihlaš se, prosím"
       preferences: "Pro to, aby jsi mohl měnit své uživatelské nastavení, se musíš přihlásit."
@@ -948,14 +990,22 @@ cs:
         message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
     invites:
       accept_title: "Pozvání"
+      welcome_to: "Vítejte na %{site_name}!"
       invited_by: "Pozvání od:"
+      accept_invite: "Přijmout pozvání"
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
+      name_label: "Jméno"
+      password_label: "Nastavit heslo"
+      optional_description: "(volitelné)"
+    password_reset:
+      continue: "Pokračovat na %{site_name}"
     emoji_set:
       apple_international: "Apple/Mezinárodní"
       google: "Google"
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Pouze kategorie"
       categories_with_featured_topics: "Kategorie a vybrané příspěvky"
@@ -970,6 +1020,7 @@ cs:
       options: "Možnosti"
       whisper: "šeptat"
       unlist: "neviditelné"
+      blockquote_text: "Bloková citace"
       add_warning: "Toto je oficiální varování."
       toggle_whisper: "Přepnout šeptání"
       toggle_unlisted: "Přepnout neviditelné"
@@ -1118,6 +1169,7 @@ cs:
       sort_by: "Seřadil"
       relevance: "Relevance"
       latest_post: "Poslední příspěvek"
+      latest_topic: "Nejnovější téma"
       most_viewed: "Nejzobrazovanější"
       most_liked: "Nejoblíbenější"
       select_all: "Vybrat vše"
@@ -1132,6 +1184,7 @@ cs:
       no_more_results: "Nenalezeny žádné další výsledky."
       searching: "Hledám ..."
       post_format: "#{{post_number}} od {{username}}"
+      results_page: "Výsledky hledání"
       context:
         user: "Vyhledat příspěvky od @{{username}}"
         category: "Hledat v kategorii #{{category}}"
@@ -1163,6 +1216,7 @@ cs:
           seen: jsem četl
           unseen: jsem nečetl
           wiki: jsou wiki
+          all_tags: Obsahuje všechny štítky
         statuses:
           label: Kde příspěvky
           open: jsou otevřeny
@@ -1198,8 +1252,10 @@ cs:
         dismiss_new: "Odbýt nová"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
+        change_category: "Nastavit kategorii"
         close_topics: "Zavřít téma"
         archive_topics: "Archivovat témata"
+        notification_level: "Upozornění"
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
           one: "Vybrali jste <b>1</b> téma."
@@ -1318,6 +1374,7 @@ cs:
         go: "go"
         jump_bottom: "na poslední příspěvek"
         jump_prompt: "přejít na..."
+        jump_prompt_of: "%{count} příspěvků"
         jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
@@ -1510,9 +1567,11 @@ cs:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Cituj"
       edit: "Editujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"
+      wiki_last_edited_on: "wiki naposledy upravena"
       last_edited_on: "příspěvek naposledy upraven"
       reply_as_new_topic: "Odpovědět v propojeném tématu"
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
@@ -1563,6 +1622,8 @@ cs:
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
+      wiki:
+        about: "toto je wiki příspěvek"
       archetypes:
         save: 'Uložit nastavení'
       few_likes_left: "Díky za šíření lásky! Zbývá ti pro dnešek už jen několi \"líbí se\"."
@@ -1572,6 +1633,7 @@ cs:
         has_liked: "tento příspěvek se mi líbí"
         undo_like: "už se mi to nelíbí"
         edit: "upravit příspěvek"
+        edit_action: "Upravit"
         edit_anonymous: "Omlouváme se, ale pro editaci tohoto příspěvku musíte být přihlášení."
         flag: "nahlásit příspěvek moderátorovi"
         delete: "smazat příspěvek"
@@ -1697,9 +1759,9 @@ cs:
           other: "Opravdu chcete odstranit všechny tyto příspěvky?"
       merge:
         confirm:
-          one: "Určite chcete sloučit tyto příspěvky?"
-          few: "Určite chcete sloučit tyto {{count}} příspěvky?"
-          other: "Určite chcete sloučit těchto {{count}} příspěvků?"
+          one: "Opravdu chceš sloučit tyto příspěvky?"
+          few: "Opravdu chceš sloučit {{count}} příspěvky?"
+          other: "Opravdu chceš sloučit {{count}} příspěvků?"
       revisions:
         controls:
           first: "První revize"
@@ -1709,14 +1771,26 @@ cs:
           hide: "Schovejte revizi"
           show: "Zobrazte revizi"
           revert: "Vrátit se k této revizi"
+          edit_wiki: "Upravit Wiki"
+          edit_post: "upravit příspěvek"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vykreslený příspěvek se změnami zobrazenými v textu"
+            button: 'HTML'
           side_by_side:
             title: "Rozdíli mezi vykreslenými příspěveky vedle sebe"
+            button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
+      raw_email:
+        displays:
+          text_part:
+            title: "Ukázat textovou část emailu"
+            button: 'Text'
+          html_part:
+            title: "Zobrazit html část emailu"
+            button: 'HTML'
     category:
       can: 'smí&hellip; '
       none: '(bez kategorie)'
@@ -1800,6 +1874,8 @@ cs:
         created: "Vytvořena"
       sort_ascending: 'Vzestupně'
       sort_descending: 'Sestupně'
+      subcategory_list_styles:
+        rows: "Řady"
     flagging:
       title: 'Děkujeme, že pomáháte udržovat komunitu zdvořilou!'
       action: 'Nahlásit příspěvek'
@@ -2330,6 +2406,8 @@ cs:
         description: "Popis"
         go_back: "Zpět na seznam"
         payload_url_placeholder: "https://example.com/postreceive"
+        content_type: "Typ obsahu"
+        wildcard_event: "Pošli mi vše."
         active: "Aktivní"
         delivery_status:
           inactive: "Neaktivní"
@@ -2440,6 +2518,9 @@ cs:
         color: "Barva"
         opacity: "Neprůhlednost"
         copy: "Kopírovat"
+        copy_to_clipboard: "Kopírovat do schránky"
+        copied_to_clipboard: "Zkopírováno do schránky"
+        theme_owner: "není editovatelné, vlastněno:"
         email_templates:
           title: "Šablona emailu"
           subject: "Předmět"
@@ -2448,6 +2529,12 @@ cs:
           none_selected: "Pro začátek editace zvolte šablonu emailu."
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
+        theme:
+          customize_desc: "Přizpůsobit:"
+          edit: "Upravit"
+          mobile: "Mobilní verze"
+          preview: "Náhled"
+          color_scheme: "Barevné schéma"
         colors:
           title: "Barvy"
           long_title: "Barevná schémata"
@@ -2511,6 +2598,8 @@ cs:
         delivery_method: "Způsob doručení"
         preview_digest_desc: "Zobraz náhled mailů se souhrnem posílaným neaktivním uživatelúm."
         refresh: "Aktualizovat"
+        send_digest: "Poslat"
+        sending_email: "Posílám email..."
         format: "Formát"
         html: "html"
         text: "text"
@@ -2563,6 +2652,8 @@ cs:
           block: "blokovat"
           do_nothing: "nedělat nic"
         staff_actions:
+          all: "vše"
+          filter: "Filtr:"
           title: "Akce redaktorů"
           clear_filters: "Zobrazit vše"
           staff_user: "Člen redakce"
@@ -2602,9 +2693,14 @@ cs:
             revoke_admin: "odebrat administrátorská práva"
             grant_moderation: "udělit moderátorská práva"
             revoke_moderation: "odebrat moderátorská práva"
+            backup_create: "vytvořit zálohu"
             deleted_tag: "smazaný štítek"
             renamed_tag: "přejmenovaný štítek"
             revoke_email: "Odebrat email"
+            activate_user: "aktivovat uživatele"
+            deactivate_user: "deaktivovat uživatele"
+            backup_download: "stáhnout zálohu"
+            backup_destroy: "smazat zálohu"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -2897,6 +2993,7 @@ cs:
           user_preferences: "Uživatelká nastavení"
           tags: "Tagy"
           search: "Vyhledávání"
+          groups: "Skupiny"
       badges:
         title: Odznaky
         new_badge: Nový odznak

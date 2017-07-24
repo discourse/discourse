@@ -21,6 +21,31 @@
   }
 }
 
+#topic-progress-wrapper {
+  .topic-admin-menu-button-container {
+    position: relative;
+    right: 38px;
+    top: 35px;
+
+    .widget-button {
+      height: 35px;
+      border-right: 1px solid dark-light-diff($primary, $secondary, 80%, -70%);
+    }
+  }
+
+  .topic-admin-popup-menu.right-side {
+    position: relative;
+    right: 35px;
+  }
+}
+
+#topic-progress-wrapper.docked {
+  .topic-admin-popup-menu.right-side {
+    right: 40px;
+  }
+}
+
+
 #topic-title {
   .title-wrapper {
     float: left;

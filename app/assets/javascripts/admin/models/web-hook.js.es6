@@ -37,7 +37,7 @@ export default RestModel.extend({
   },
 
   groupFinder(term) {
-    return Group.findAll({search: term, ignore_automatic: false});
+    return Group.findAll({ term: term, ignore_automatic: false });
   },
 
   @computed('wildcard_web_hook', 'web_hook_event_types.[]')
@@ -82,4 +82,3 @@ export default RestModel.extend({
     return this.createProperties();
   }
 });
-

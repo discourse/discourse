@@ -153,7 +153,7 @@ module Email
       if $redis.setnx(key, "1")
         $redis.expire(key, 25.hours)
 
-        if user = User.find_by(email: email)
+        if user = User.find_by_email(email)
           user.user_stat.bounce_score += score
           user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
           user.user_stat.save
@@ -374,6 +374,7 @@ module Email
 
         create_topic(user: user,
                      raw: body,
+                     elided: elided,
                      title: subject,
                      category: category.id,
                      skip_validations: user.staged?)
@@ -486,6 +487,8 @@ module Email
     end
 
     def find_related_post
+      return if SiteSetting.find_related_post_with_key
+
       message_ids = [@mail.in_reply_to, Email::Receiver.extract_references(@mail.references)]
       message_ids.flatten!
       message_ids.select!(&:present?)
@@ -577,7 +580,7 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          opts = { is_attachment_for_group_message: options[:is_group_message] }
+          opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(options[:user].id)
           if upload && upload.errors.empty?
             # try to inline images

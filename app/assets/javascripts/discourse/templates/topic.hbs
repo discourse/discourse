@@ -10,59 +10,53 @@
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
-      <div id="topic-title">
-        <div class="container">
+      {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
+        {{#if editingTopic}}
+          {{#if model.isPrivateMessage}}
+            <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+          {{/if}}
 
-          <div class="title-wrapper">
-            {{#if editingTopic}}
-              {{#if model.isPrivateMessage}}
+          {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+          {{#if showCategoryChooser}}
+            <br>
+            {{category-chooser valueAttribute="id" value=buffered.category_id}}
+          {{/if}}
+
+          {{#if canEditTags}}
+            <br>
+            {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
+          {{/if}}
+
+          {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+
+          <br>
+          {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
+          {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
+        {{else}}
+          <h1>
+            {{#unless model.is_warning}}
+              <a href={{pmPath}}>
                 <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-              {{/if}}
+              </a>
+            {{/unless}}
 
-              {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
-              {{#if showCategoryChooser}}
-                <br>
-                {{category-chooser valueAttribute="id" value=buffered.category_id}}
-              {{/if}}
-
-              {{#if canEditTags}}
-                <br>
-                {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
-              {{/if}}
-
-              {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
-
-              <br>
-              {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-              {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
-            {{else}}
-              <h1>
-                {{#unless model.is_warning}}
-                  <a href={{pmPath}}>
-                    <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-                  </a>
-                {{/unless}}
-
-                {{#if model.details.loaded}}
-                  {{topic-status topic=model}}
-                  <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
-                    {{{model.fancyTitle}}}
-                  </a>
-                {{/if}}
-
-                {{#if model.details.can_edit}}
-                  <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
-                {{/if}}
-              </h1>
-
-              {{#unless model.isPrivateMessage}}
-                {{topic-category topic=model class="topic-category"}}
-              {{/unless}}
+            {{#if model.details.loaded}}
+              {{topic-status topic=model}}
+              <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
+                {{{model.fancyTitle}}}
+              </a>
             {{/if}}
-          </div>
-          {{plugin-outlet name="topic-title" args=(hash model=model)}}
-        </div>
-      </div>
+
+            {{#if model.details.can_edit}}
+              <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
+            {{/if}}
+          </h1>
+
+          {{#unless model.isPrivateMessage}}
+            {{topic-category topic=model class="topic-category"}}
+          {{/unless}}
+        {{/if}}
+      {{/topic-title}}
     {{/if}}
 
     <div class="container posts">
@@ -71,24 +65,24 @@
       </div>
 
       {{#topic-navigation topic=model jumpToIndex=(action "jumpToIndex") as |info|}}
-        {{#if info.renderAdminMenuButton}}
-          {{topic-admin-menu-button
-            topic=model
-            fixed="true"
-            toggleMultiSelect=(action "toggleMultiSelect")
-            deleteTopic=(action "deleteTopic")
-            recoverTopic=(action "recoverTopic")
-            toggleClosed=(action "toggleClosed")
-            toggleArchived=(action "toggleArchived")
-            toggleVisibility=(action "toggleVisibility")
-            showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
-            showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
-            showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
-            convertToPublicTopic=(action "convertToPublicTopic")
-            convertToPrivateMessage=(action "convertToPrivateMessage")}}
-        {{/if}}
-
         {{#if info.renderTimeline}}
+          {{#if info.renderAdminMenuButton}}
+            {{topic-admin-menu-button
+              topic=model
+              fixed="true"
+              toggleMultiSelect=(action "toggleMultiSelect")
+              deleteTopic=(action "deleteTopic")
+              recoverTopic=(action "recoverTopic")
+              toggleClosed=(action "toggleClosed")
+              toggleArchived=(action "toggleArchived")
+              toggleVisibility=(action "toggleVisibility")
+              showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
+              showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+              showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+              convertToPublicTopic=(action "convertToPublicTopic")
+              convertToPrivateMessage=(action "convertToPrivateMessage")}}
+          {{/if}}
+
           {{topic-timeline
             topic=model
             prevEvent=info.prevEvent
@@ -113,11 +107,29 @@
             convertToPublicTopic=(action "convertToPublicTopic")
             convertToPrivateMessage=(action "convertToPrivateMessage")}}
         {{else}}
-          {{topic-progress
+          {{#topic-progress
             prevEvent=info.prevEvent
             topic=model
             expanded=info.topicProgressExpanded
             jumpToPost=(action "jumpToPost")}}
+            {{#if info.renderAdminMenuButton}}
+              {{topic-admin-menu-button
+                topic=model
+                openUpwards="true"
+                rightSide="true"
+                toggleMultiSelect=(action "toggleMultiSelect")
+                deleteTopic=(action "deleteTopic")
+                recoverTopic=(action "recoverTopic")
+                toggleClosed=(action "toggleClosed")
+                toggleArchived=(action "toggleArchived")
+                toggleVisibility=(action "toggleVisibility")
+                showTopicStatusUpdate=(action "topicRouteAction" "showTopicStatusUpdate")
+                showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+                showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                convertToPublicTopic=(action "convertToPublicTopic")
+                convertToPrivateMessage=(action "convertToPrivateMessage")}}
+            {{/if}}
+          {{/topic-progress}}
         {{/if}}
       {{/topic-navigation}}
 
@@ -206,7 +218,7 @@
                     replyToPost=(action "replyToPost")
                     }}
                 {{else}}
-                  <div id="topic-footer-button">
+                  <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action="showLogin" label="topic.reply.title"}}
                   </div>
                 {{/if}}

@@ -93,5 +93,19 @@ describe InviteRedeemer do
       expect(user.confirm_password?(password)).to eq(true)
       expect(user.approved).to eq(true)
     end
+
+    it "can set custom fields" do
+      required_field = Fabricate(:user_field)
+      optional_field= Fabricate(:user_field, required: false)
+      user_fields = {
+        required_field.id.to_s => 'value1',
+        optional_field.id.to_s => 'value2'
+      }
+      user = InviteRedeemer.new(invite, username, name, password, user_fields).redeem
+
+      expect(user).to be_present
+      expect(user.custom_fields["user_field_#{required_field.id}"]).to eq('value1')
+      expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq('value2')
+    end
   end
 end

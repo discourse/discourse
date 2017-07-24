@@ -175,6 +175,7 @@ he:
   user_is_suspended: "משתמשים מושעים אינם מורשים לפרסם."
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
   not_accepting_pms: "מצטעים,  %{username} לא מקבל הודעות כרגע."
+  max_pm_recepients: "מצטערים, אתם יכולים לשלוח הודעה לכל היותר ל-%{recipients_limit} נמענים."
   just_posted_that: "דומה מידי למה שפרסמתם לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
   is_invalid: "נראה לא ברור, האם זה משפט שלם?"
@@ -222,6 +223,7 @@ he:
       invalid_incoming_email: "'%{email}' אינה כתובת מייל תקפה."
       email_already_used_in_group: "'%{email}' כבר בשימוש על ידי הקבוצה '%{group_name}'."
       email_already_used_in_category: "'%{email}' כבר בשימוש על ידי הקטגוריה '%{category_name}'."
+      cant_allow_membership_requests: "אינכם יכולים לאפשר בקשות חברות לקבוצה ללא בעלים."
     default_names:
       everyone: "כולם"
       admins: "מנהלים"
@@ -232,6 +234,9 @@ he:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    request_membership_pm:
+      title: "בקשת חברות עבור @%{group_name}"
+      body: "ארצה לבקש חברות ב-@%{group_name}."
   education:
     until_posts:
       one: "פוסט אחד"
@@ -640,7 +645,6 @@ he:
         remove: "נושא זה כבר אינו באנר. הוא לא יופיע יותר בראש כל עמוד."
   unsubscribed:
     title: "בוטל המנוי!"
-    description: "הוסרתם מהרשימות. כדי לשנות את אפשרויות המייל שלכם <a href='%{url}'>בקרו בהגדרות המשתמש שלכם</a>."
     topic_description: "כדי להרשם מחדש ל %{link}, השתמשו בהגדרות ההתראות בתחתית או משמאל לנושא."
   unsubscribe:
     title: "בטלו את המנוי"
@@ -851,6 +855,8 @@ he:
     search_tokenize_chinese_japanese_korean: "אלצו את החיפוש לנתח סינית/יפנית/קוריאנית גם באתרים שאינם בשפות אלו"
     search_prefer_recent_posts: "אם חיפוש בפורום הגדול שלכם איטי, אופציה זו מנסה לאנדקס קודם כל את הפוסטים החדשים יותר"
     search_recent_posts_size: "כמה פוסטים חדשים לשמור באינדקס"
+    log_search_queries: "רישום שאילתות חיפוש שמתבצעות על ידי משתמשים"
+    search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
     allow_uncategorized_topics: "הרשה לפתוח נושאים ללא קטגוריה. אזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את האופציה. "
     allow_duplicate_topic_titles: "אשרו נושאים עם כותרות זהות או משוכפלות."
     unique_posts_mins: "כמה דקות לפני שמשתמש יכול לפרסם את אותו תוכן שוב"
@@ -918,7 +924,6 @@ he:
     notify_mods_when_user_blocked: "אם משתמש נחסם אוטומטית, שילחו הודעה לכל המנחים."
     flag_sockpuppets: "אם משתמשים חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפוסטים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
-    allow_html_tables: "אפשרו הכנסת טבלאות ב Markdown באמצעות תגיות HTML. התגיות TABLE, THEAD, TD, TR, TH יהיו ברשימה לבנה (מצריך אפייה מחדש של כל הפוסטים הישנים שכוללים טבלאות)"
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפוסט (לייק, סימון, וכו')."
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     pending_users_reminder_delay: "הודיעו למנחים אם משתמשים חדשים ממתינים לאישור למעלה מכמות זו של שעות. קבעו ל -1 כדי לנטרל התראות."
@@ -932,6 +937,7 @@ he:
     allow_moderators_to_create_categories: "אפשרו למנחים ליצור קטגוריות חדשות"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_whitelist: "מנהלים יכולים להתחבר רק אם הכתובת שלהם מופיע ברשימת ה IPs המסוננים (ניהול > לוגים > כתובות IP מסוננות)."
+    blacklist_ip_blocks: "רשימת כתובות IP פרטיות שלא אמורים אף פעם לסרוק עם דיסקורס"
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
     post_menu: "החליטו אילו פריטים מופיעים בתפריט הפוסט, ובאיזה סדר. למשל like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפוסט, אלא אם כן נלחץ לחצן ההרחבה."
@@ -1059,6 +1065,7 @@ he:
     twitter_summary_large_image_url: "URL של תמונה מסיכום ברירת המחדל מטוויטר (צריכה להיות ברוחב לפחות 280 פיקסלים ובגובה של לפחות 150 פיקסלים)."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
     png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 לניטרול)."
+    allow_staff_to_upload_any_file_in_pm: "אפשרו לחברי צוות להעלות כל קובץ בהודעה פרטית."
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) ב Oneboxes. אזהרה: עלול להביא לבעיות אבטחה באתר."
     default_invitee_trust_level: "ברירת מחדל של רמת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "רמת אמון (0-4) לכל המשתמשים החדשים. אזהרה! שינוי של משתנה זה שם אתכם בסיכון רציני לספאם."
@@ -1516,41 +1523,9 @@ he:
   invite_mailer:
     title: "שולח-מיילים להזמנה"
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} הזמין/ה אתכם לדיון
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      ב
-
-      > %{site_title} -- %{site_description}
-
-      אם אתם מעוניינים, לחצו על הקישור למטה:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "שולח-מיילים מותאם-אישית להזמנה"
     subject_template: "%{invitee_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} הזמין/ה אתכם לדיון
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      ב
-
-      > %{site_title} -- %{site_description}
-
-      עם הערה זו
-
-      > %{user_custom_message}
-
-      אם אתם מעוניינים, לחצו על הקישור למטה:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "שולח-מיילים להזמנה לפורום"
     subject_template: "%{invitee_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
@@ -2058,12 +2033,6 @@ he:
     new_user_of_the_month:
       title: "אתם המשתמשים החדשים של החודש!"
       subject_template: "אתם המשתמשים החדשים של החודש!"
-      text_body_template: |
-        ברכות, זכיתם ב-**פרס המשתמש החדש של החודש עבור %{month_year}**. :trophy:
-
-        פרס זה ניתן רק לשני משתמשים חדשים בכל חודש, והוא תמיד ייראה ב[דף המשתמש/ת שלכם](/my/badges).
-
-        הפכתם במהרה לחברים מוערכים בקהילה שלנו. תודה שהצטרפתם, והמשיכו בעבודה הנהדרת!
   unsubscribe_link: |
     כדי להפסיק את המיילים האלו, [לחצו כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2089,26 +2058,6 @@ he:
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     visit_link_to_respond_pm: "[בקרו בהודעה](%{base_url}%{url}) כדי לענות."
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
-    invited_to_private_message_body: |
-      %{username} הזמין אותך להודעה
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      באתר
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} הזמין/הזמינה אותך לדיון
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      באתר
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "משתמש/ת הוזמן/ה להודעה פרטית"
       subject_template: "[%{email_prefix}] %{username} הזמין אותך להודעה '%{topic_title}'"
@@ -2256,7 +2205,6 @@ he:
       popular_posts: "פוסטים פופולאריים"
       more_new: "חדש בשבילכם"
       subject_template: "[%{email_prefix}] סיכום"
-      unsubscribe: "סיכום זה נשלח מ %{site_link} כאשר אנחנו לא רואים אתכם לאורך זמן. כדי לבטל את המנוי %{unsubscribe_link}."
       click_here: "לחצו כאן"
       from: "סיכום %{site_name}"
       preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"

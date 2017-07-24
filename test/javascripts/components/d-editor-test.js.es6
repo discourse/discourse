@@ -21,7 +21,7 @@ componentTest('preview sanitizes HTML', {
   template: '{{d-editor value=value}}',
 
   test(assert) {
-    this.set('value', `"><svg onload="prompt(/xss/)"></svg>`);
+    fillIn('.d-editor-input', `"><svg onload="prompt(/xss/)"></svg>`);
     andThen(() => {
       assert.equal(this.$('.d-editor-preview').html().trim(), '<p>\"&gt;</p>');
     });
@@ -31,7 +31,7 @@ componentTest('preview sanitizes HTML', {
 componentTest('updating the value refreshes the preview', {
   template: '{{d-editor value=value}}',
 
-  setup() {
+  beforeEach() {
     this.set('value', 'evil trout');
   },
 
@@ -52,7 +52,7 @@ function jumpEnd(textarea) {
 function testCase(title, testFunc) {
   componentTest(title, {
     template: '{{d-editor value=value}}',
-    setup() {
+    beforeEach() {
       this.set('value', 'hello world.');
     },
     test(assert) {
@@ -65,7 +65,7 @@ function testCase(title, testFunc) {
 function composerTestCase(title, testFunc) {
   componentTest(title, {
     template: '{{d-editor value=value composerEvents=true}}',
-    setup() {
+    beforeEach() {
       this.set('value', 'hello world.');
     },
     test(assert) {
@@ -269,7 +269,7 @@ testCase('link modal (link with description)', function(assert) {
 
 componentTest('advanced code', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value',
 `
@@ -304,7 +304,7 @@ function xyz(x, y, z) {
 
 componentTest('code button', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.code_formatting_style = '4-spaces-indent';
   },
 
@@ -406,7 +406,7 @@ third line`
 
 componentTest('code fences', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     this.set('value', '');
   },
 
@@ -514,30 +514,64 @@ third line`
 });
 
 
+componentTest("quote button - empty lines", {
+  template: '{{d-editor value=value composerEvents=true}}',
+  beforeEach() {
+    this.set('value', "one\n\ntwo\n\nthree");
+  },
+  test(assert) {
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+
+    andThen(() => {
+      textarea.selectionStart = 0;
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "> one\n> \n> two\n> \n> three");
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 25);
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "one\n\ntwo\n\nthree");
+    });
+  }
+});
+
 testCase('quote button', function(assert, textarea) {
-  click('button.quote');
-  andThen(() => {
-    assert.equal(this.get('value'), 'hello world.');
-  });
 
   andThen(() => {
     textarea.selectionStart = 6;
-    textarea.selectionEnd = 11;
+    textarea.selectionEnd = 9;
   });
 
   click('button.quote');
   andThen(() => {
-    assert.equal(this.get('value'), 'hello > world.');
-    assert.equal(textarea.selectionStart, 6);
-    assert.equal(textarea.selectionEnd, 13);
+    assert.equal(this.get('value'), 'hello\n\n> wor\n\nld.');
+    assert.equal(textarea.selectionStart, 7);
+    assert.equal(textarea.selectionEnd, 12);
+  });
+
+  click('button.quote');
+
+  andThen(() => {
+    assert.equal(this.get('value'), 'hello\n\nwor\n\nld.');
+    assert.equal(textarea.selectionStart, 7);
+    assert.equal(textarea.selectionEnd, 10);
+  });
+
+  andThen(() => {
+    textarea.selectionStart = 15;
+    textarea.selectionEnd = 15;
   });
 
   click('button.quote');
   andThen(() => {
-    assert.equal(this.get('value'), 'hello world.');
-    assert.equal(textarea.selectionStart, 6);
-    assert.equal(textarea.selectionEnd, 11);
+    assert.equal(this.get('value'), 'hello\n\nwor\n\nld.\n\n> Blockquote');
   });
+
 });
 
 testCase(`bullet button with no selection`, function(assert, textarea) {
@@ -740,7 +774,7 @@ testCase(`doesn't jump to bottom with long text`, function(assert, textarea) {
 
 componentTest('emoji', {
   template: '{{d-editor value=value}}',
-  setup() {
+  beforeEach() {
     // Test adding a custom button
     withPluginApi('0.1', api => {
       api.onToolbarCreate(toolbar => {
@@ -755,19 +789,11 @@ componentTest('emoji', {
     this.set('value', 'hello world.');
   },
   test(assert) {
-    assert.equal($('.emoji-modal').length, 0);
-
     jumpEnd(this.$('textarea.d-editor-input')[0]);
     click('button.emoji');
-    andThen(() => {
-      assert.equal($('.emoji-modal').length, 1);
-    });
 
-    click('a[data-group-id=0]');
-    click('a[title=grinning]');
-
+    click('.emoji-picker .section[data-section="people"] button.emoji[title="grinning"]');
     andThen(() => {
-      assert.ok($('.emoji-modal').length === 0);
       assert.equal(this.get('value'), 'hello world.:grinning:');
     });
   }

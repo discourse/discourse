@@ -12,6 +12,12 @@
   .avatar-link {
     margin-right: 3px;
   }
+
+}
+.user-stream .item .expand-item {
+  float: right;
+  margin-right: 0.5em;
+  color: lighten($primary, 40%);
 }
 
 .user-main {
@@ -221,7 +227,7 @@
         width: 100%;
         height: 100%;
         display: block;
-        color: black;
+        color: $primary;
       }
     }
   }

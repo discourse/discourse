@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Search");
 
-test("search", (assert) => {
+QUnit.test("search", (assert) => {
   visit("/");
 
   click('#search-button');
@@ -25,29 +25,29 @@ test("search", (assert) => {
   });
 });
 
-test("search scope checkbox", () => {
+QUnit.test("search scope checkbox", assert => {
   visit("/c/bug");
   click('#search-button');
   andThen(() => {
-    ok(exists('.search-context input:checked'), 'scope to category checkbox is checked');
+    assert.ok(exists('.search-context input:checked'), 'scope to category checkbox is checked');
   });
   click('#search-button');
 
   visit("/t/internationalization-localization/280");
   click('#search-button');
   andThen(() => {
-    not(exists('.search-context input:checked'), 'scope to topic checkbox is not checked');
+    assert.not(exists('.search-context input:checked'), 'scope to topic checkbox is not checked');
   });
   click('#search-button');
 
   visit("/u/eviltrout");
   click('#search-button');
   andThen(() => {
-    ok(exists('.search-context input:checked'), 'scope to user checkbox is checked');
+    assert.ok(exists('.search-context input:checked'), 'scope to user checkbox is checked');
   });
 });
 
-test("Search with context", assert => {
+QUnit.test("Search with context", assert => {
   visit("/t/internationalization-localization/280/1");
 
   click('#search-button');

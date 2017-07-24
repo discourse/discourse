@@ -2,11 +2,13 @@ import EmailPreview from 'admin/models/email-preview';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend({
+  username: null,
+  lastSeen: null,
 
-  emailEmpty: Em.computed.empty('email'),
-  sendEmailDisabled: Em.computed.or('emailEmpty', 'sendingEmail'),
-  showSendEmailForm: Em.computed.notEmpty('model.html_content'),
-  htmlEmpty: Em.computed.empty('model.html_content'),
+  emailEmpty: Ember.computed.empty('email'),
+  sendEmailDisabled: Ember.computed.or('emailEmpty', 'sendingEmail'),
+  showSendEmailForm: Ember.computed.notEmpty('model.html_content'),
+  htmlEmpty: Ember.computed.empty('model.html_content'),
 
   actions: {
     refresh() {
@@ -14,7 +16,14 @@ export default Ember.Controller.extend({
 
       this.set('loading', true);
       this.set('sentEmail', false);
-      EmailPreview.findDigest(this.get('lastSeen'), this.get('username')).then(email => {
+
+      let username = this.get('username');
+      if (!username) {
+        username = this.currentUser.get('username');
+        this.set('username', username);
+      }
+
+      EmailPreview.findDigest(username, this.get('lastSeen')).then(email => {
         model.setProperties(email.getProperties('html_content', 'text_content'));
         this.set('loading', false);
       });
@@ -28,16 +37,14 @@ export default Ember.Controller.extend({
       this.set('sendingEmail', true);
       this.set('sentEmail', false);
 
-      const self = this;
-
-      EmailPreview.sendDigest(this.get('lastSeen'), this.get('username'), this.get('email')).then(result => {
+      EmailPreview.sendDigest(this.get('username'), this.get('lastSeen'), this.get('email')).then(result => {
         if (result.errors) {
           bootbox.alert(result.errors);
         } else {
-          self.set('sentEmail', true);
+          this.set('sentEmail', true);
         }
-      }).catch(popupAjaxError).finally(function() {
-        self.set('sendingEmail', false);
+      }).catch(popupAjaxError).finally(() => {
+        this.set('sendingEmail', false);
       });
     }
   }

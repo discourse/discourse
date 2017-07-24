@@ -1,5 +1,4 @@
 import debounce from 'discourse/lib/debounce';
-import { ajax } from 'discourse/lib/ajax';
 
 export default Ember.Controller.extend({
   filter: null,
@@ -71,36 +70,7 @@ export default Ember.Controller.extend({
 
     toggleMenu() {
       $('.admin-detail').toggleClass('mobile-closed mobile-open');
-    },
-
-    toggleReadOnlyMode() {
-      var self = this;
-      if (!this.site.get("isReadOnly")) {
-        bootbox.confirm(
-          I18n.t("admin.backups.read_only.enable.confirm"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          function(confirmed) {
-            if (confirmed) {
-              Discourse.User.currentProp("hideReadOnlyAlert", true);
-              self._toggleReadOnlyMode(true);
-            }
-          }
-        );
-      } else {
-        this._toggleReadOnlyMode(false);
-      }
     }
-  },
-
-  _toggleReadOnlyMode(enable) {
-    var site = this.site;
-    ajax("/admin/backups/readonly", {
-      type: "PUT",
-      data: { enable: enable }
-    }).then(() => {
-      site.set("isReadOnly", enable);
-    });
   }
 
 });

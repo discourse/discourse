@@ -1,25 +1,30 @@
 require 'rails_helper'
 require 'pretty_text'
+require 'html_normalize'
 
 describe PrettyText do
+
+  before do
+    SiteSetting.enable_markdown_typographer = false
+  end
+
+  def n(html)
+    HtmlNormalize.normalize(html)
+  end
+
+  def cook(*args)
+    n(PrettyText.cook(*args))
+  end
+
+  # see: https://github.com/sparklemotion/nokogiri/issues/1173
+  skip 'allows html entities correctly' do
+    expect(PrettyText.cook("&aleph;&pound;&#162;")).to eq("<p>&aleph;&pound;&#162;</p>")
+  end
 
   let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
   let(:wrapped_image_excerpt) {  }
 
-  describe "Cooking" do
-
-    describe "off topic quoting" do
-      it "can correctly populate topic title" do
-        topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
-        expected = <<HTML
-<aside class="quote" data-post="2" data-topic="#{topic.id}"><div class="title">
-<div class="quote-controls"></div><a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/emoji_one/slight_smile.png?v=3" title="slight_smile" alt="slight_smile" class="emoji"></a>
-</div>
-<blockquote><p>ddd</p></blockquote></aside>
-HTML
-        expect(PrettyText.cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]ddd\n[/quote]", topic_id: 1)).to match_html expected
-      end
-    end
+  describe "Quoting" do
 
     describe "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
@@ -29,31 +34,147 @@ HTML
         User.stubs(:default_template).returns(default_avatar)
       end
 
-      it "produces a quote even with new lines in it" do
-        expect(PrettyText.cook("[quote=\"#{user.username}, post:123, topic:456, full:true\"]ddd\n[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">#{user.username}:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+      it "do off topic quoting with emoji unescape" do
+
+        topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
+        expected = <<~HTML
+          <aside class="quote" data-topic="#{topic.id}" data-post="2">
+          <div class="title">
+            <div class="quote-controls"></div>
+            <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
+          </div>
+          <blockquote>
+            <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
-      it "should produce a quote" do
-        expect(PrettyText.cook("[quote=\"#{user.username}, post:123, topic:456, full:true\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">#{user.username}:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+      it "produces a quote even with new lines in it" do
+        md = <<~MD
+          [quote="#{user.username}, post:123, topic:456, full:true"]
+
+          ddd
+
+          [/quote]
+        MD
+        html = <<~HTML
+          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <blockquote>
+          <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(PrettyText.cook(md)).to eq(html.strip)
       end
+
 
       it "trims spaces on quote params" do
-        expect(PrettyText.cook("[quote=\"#{user.username}, post:555, topic: 666\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">#{user.username}:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
-      end
+        md = <<~MD
+          [quote="#{user.username}, post:555, topic: 666"]
+          ddd
+          [/quote]
+        MD
 
+        html = <<~HTML
+          <aside class="quote" data-post="555" data-topic="666">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <blockquote>
+          <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(PrettyText.cook(md)).to eq(html.strip)
+      end
     end
+
+    it "can handle quote edge cases" do
+      expect(PrettyText.cook("a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
+      expect(PrettyText.cook("- a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
+      expect(PrettyText.cook("[quote]\ntest")).not_to include('aside')
+      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
+      expect(PrettyText.cook("[quote]\ntest\n[/quote]z")).not_to include('aside')
+
+      nested = <<~QUOTE
+        [quote]
+        a
+        [quote]
+        b
+        [/quote]
+        c
+        [/quote]
+      QUOTE
+
+      cooked = PrettyText.cook(nested)
+      expect(cooked.scan('aside').length).to eq(4)
+      expect(cooked.scan('quote]').length).to eq(0)
+    end
+
+    describe "with letter avatar" do
+      let(:user) { Fabricate(:user) }
+
+      context "subfolder" do
+        before do
+          GlobalSetting.stubs(:relative_url_root).returns("/forum")
+          Discourse.stubs(:base_uri).returns("/forum")
+        end
+
+        it "should have correct avatar url" do
+          md = <<~MD
+            [quote="#{user.username}, post:123, topic:456, full:true"]
+            ddd
+            [/quote]
+          MD
+          expect(PrettyText.cook(md)).to include("/forum/letter_avatar_proxy")
+        end
+      end
+    end
+  end
+
+  describe "Mentions" do
 
     it "should handle 3 mentions in a row" do
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
-    it "should handle group mentions with a hyphen and without" do
-      expect(PrettyText.cook('@hello @hello-hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello-hello</span></p>"
+    it "can handle mention edge cases" do
+      expect(PrettyText.cook("hi\n@s")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span></p>")
+      expect(PrettyText.cook("hi\n@ss")).to eq("<p>hi<br>\n<span class=\"mention\">@ss</span></p>")
+      expect(PrettyText.cook("hi\n@s.")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span>.</p>")
+      expect(PrettyText.cook("hi\n@s.s")).to eq("<p>hi<br>\n<span class=\"mention\">@s.s</span></p>")
+      expect(PrettyText.cook("hi\n@.s.s")).to eq("<p>hi<br>\n@.s.s</p>")
+    end
+
+    it "can handle mention with hyperlinks" do
+      Fabricate(:user, username: "sam")
+      expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
+      expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
+    end
+
+    it "can handle mentions inside a hyperlink" do
+      expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
     end
 
 
-    it "should sanitize the html" do
-      expect(PrettyText.cook("<script>alert(42)</script>")).to match_html "<p></p>"
+    it "can handle mentions inside a hyperlink" do
+      expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="nofollow noopener">link @inner</a></p>'
+    end
+
+    it "can handle a list of mentions" do
+      expect(PrettyText.cook("@a,@b")).to match_html('<p><span class="mention">@a</span>,<span class="mention">@b</span></p>')
+    end
+
+    it "should handle group mentions with a hyphen and without" do
+      expect(PrettyText.cook('@hello @hello-hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello-hello</span></p>"
     end
 
     it 'should allow for @mentions to have punctuation' do
@@ -62,17 +183,63 @@ HTML
       )
     end
 
-    # see: https://github.com/sparklemotion/nokogiri/issues/1173
-    skip 'allows html entities correctly' do
-      expect(PrettyText.cook("&aleph;&pound;&#162;")).to eq("<p>&aleph;&pound;&#162;</p>")
+    it 'should not treat a medium link as a mention' do
+      expect(PrettyText.cook(". http://test/@sam")).not_to include('mention')
     end
 
   end
 
+  describe "code fences" do
+    it 'indents code correctly' do
+      code = <<~MD
+         X
+         ```
+              #
+              x
+         ```
+      MD
+      cooked = PrettyText.cook(code)
+
+      html = <<~HTML
+        <p>X</p>
+        <pre><code class="lang-auto">     #
+             x
+        </code></pre>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "doesn't replace emoji in code blocks with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("```\n💣`\n```\n")).not_to match(/\:bomb\:/)
+    end
+
+    it 'can include code class correctly' do
+      # keep in mind spaces should be trimmed per spec
+      expect(PrettyText.cook("```   ruby the mooby\n`````")).to eq('<pre><code class="lang-ruby"></code></pre>')
+      expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<pre><code class='lang-cpp'>cpp\n</code></pre>")
+      expect(PrettyText.cook("```\ncpp\n```")).to match_html("<pre><code class='lang-auto'>cpp\n</code></pre>")
+      expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-nohighlight'>cpp\n</code></pre>")
+
+    end
+
+    it 'indents code correctly' do
+      code = "X\n```\n\n    #\n    x\n```"
+      cooked = PrettyText.cook(code)
+      expect(cooked).to match_html("<p>X</p>\n<pre><code class=\"lang-auto\">\n    #\n    x\n</code></pre>")
+    end
+
+    it 'does censor code fences' do
+      SiteSetting.censored_words = 'apple|banana'
+      expect(PrettyText.cook("# banana")).not_to include('banana')
+    end
+  end
+
+
   describe "rel nofollow" do
     before do
-      SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
-      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com|bar.com")
+      SiteSetting.add_rel_nofollow_to_user_content = true
+      SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
     it "should inject nofollow in all user provided links" do
@@ -275,21 +442,21 @@ HTML
     end
 
     it "should have an option to preserve emoji images" do
-      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
+      emoji_image = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
       expect(PrettyText.excerpt(emoji_image, 100, { keep_emoji_images: true })).to match_html(emoji_image)
     end
 
     it "should have an option to remap emoji to code points" do
-      emoji_image = "I <img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'> you <img src='/images/emoji/emoji_one/heart.png?v=1' title=':unknown:' class='emoji' alt=':unknown:'> "
+      emoji_image = "I <img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'> you <img src='/images/emoji/twitter/heart.png?v=1' title=':unknown:' class='emoji' alt=':unknown:'> "
       expect(PrettyText.excerpt(emoji_image, 100, { remap_emoji: true })).to match_html("I ❤  you :unknown:")
     end
 
     it "should have an option to preserve emoji codes" do
-      emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
+      emoji_code = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
-    context 'option ot preserve onebox source' do
+    context 'option to preserve onebox source' do
       it "should return the right excerpt" do
         onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
@@ -307,7 +474,6 @@ HTML
         )).to eq("boom")
       end
     end
-
   end
 
   describe "strip links" do
@@ -379,20 +545,51 @@ HTML
     end
   end
 
-  it 'can escape *' do
-    expect(PrettyText.cook("***a***a")).to match_html("<p><strong><em>a</em></strong>a</p>")
-    expect(PrettyText.cook("***\\****a")).to match_html("<p><strong><em>*</em></strong>a</p>")
+  it 'Is smart about linebreaks and IMG tags' do
+    raw = <<~MD
+    a <img>
+    <img>
+
+    <img>
+    <img>
+
+    <img>
+    a
+
+    <img>
+    - li
+
+    <img>
+    ```
+    test
+    ```
+
+    ```
+    test
+    ```
+    MD
+
+    html = <<~HTML
+      <p>a <img><br>
+      <img></p>
+      <p><img><br>
+      <img></p>
+      <p><img></p>
+      <p>a</p>
+      <p><img></p>
+      <ul>
+      <li>li</li>
+      </ul>
+      <p><img></p>
+      <pre><code class="lang-auto">test
+      </code></pre>
+      <pre><code class="lang-auto">test
+      </code></pre>
+    HTML
+
+    expect(PrettyText.cook(raw)).to eq(html.strip)
   end
 
-  it 'can include code class correctly' do
-    expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<p></p><pre><code class='lang-cpp'>cpp</code></pre>")
-  end
-
-  it 'indents code correctly' do
-    code = "X\n```\n\n    #\n    x\n```"
-    cooked = PrettyText.cook(code)
-    expect(cooked).to match_html("<p>X<br></p>\n\n<p></p><pre><code class=\"lang-auto\">    #\n    x</code></pre>")
-  end
 
   it 'can substitute s3 cdn correctly' do
     SiteSetting.enable_s3_uploads = true
@@ -402,34 +599,21 @@ HTML
     SiteSetting.s3_cdn_url = "https://awesome.cdn"
 
     # add extra img tag to ensure it does not blow up
-    raw = <<HTML
-  <img>
-  <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-  <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-  <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+    raw = <<~HTML
+      <img>
+      <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+      <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+      <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+    HTML
 
-HTML
+    html = <<~HTML
+      <p><img><br>
+      <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
+      <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
+      <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
+    HTML
 
-    cooked = <<HTML
-<p>  <img><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
-HTML
-
-    expect(PrettyText.cook(raw)).to match_html(cooked)
-  end
-
-  describe 'tables' do
-    it 'allows table html' do
-      SiteSetting.allow_html_tables = true
-      table = "<table class='fa-spin'><thead><tr>\n<th class='fa-spin'>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
-      match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
-      expect(PrettyText.cook(table)).to match_html(match)
-    end
-
-    it 'allows no tables when not enabled' do
-      SiteSetting.allow_html_tables = false
-      table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
-      expect(PrettyText.cook(table)).to match_html("")
-    end
+    expect(PrettyText.cook(raw)).to eq(html.strip)
   end
 
   describe "emoji" do
@@ -441,10 +625,6 @@ HTML
       expect(PrettyText.cook("`💣`")).not_to match(/\:bomb\:/)
     end
 
-    it "doesn't replace emoji in code blocks with our emoji sets if emoji is enabled" do
-      expect(PrettyText.cook("```\n💣`\n```\n")).not_to match(/\:bomb\:/)
-    end
-
     it "replaces some glyphs that are not in the emoji range" do
       expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
     end
@@ -453,15 +633,13 @@ HTML
       SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
     end
-  end
 
-  describe "tag and category links" do
-    it "produces tag links" do
-      Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
-      expect(PrettyText.cook(" #unknown::tag #known::tag")).to match_html("<p> <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>")
+    it "replaces skin toned emoji" do
+      expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
+      expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
+      expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=5\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
+      expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
     end
-
-    # TODO does it make sense to generate hashtags for tags that are missing in action?
   end
 
   describe "custom emoji" do
@@ -479,6 +657,315 @@ HTML
       described_class.stubs(:markdown).raises(MiniRacer::ScriptTerminatedError)
       PrettyText.cook("Protect against it plz.") rescue nil
       expect(SiteSetting.censored_pattern).to be_blank
+    end
+  end
+
+  it "replaces skin toned emoji" do
+    expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
+    expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
+    expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=5\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\"></p>")
+    expect(PrettyText.cook("hello 🤷‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=5\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\"></p>")
+  end
+
+  it "should not treat a non emoji as an emoji" do
+    expect(PrettyText.cook(':email,class_name:')).not_to include('emoji')
+  end
+
+  it "supports href schemes" do
+    SiteSetting.allowed_href_schemes = "macappstore|steam"
+    cooked = cook("[Steam URL Scheme](steam://store/452530)")
+    expected = '<p><a href="steam://store/452530" rel="nofollow noopener">Steam URL Scheme</a></p>'
+    expect(cooked).to eq(n expected)
+  end
+
+  it "supports forbidden schemes" do
+    SiteSetting.allowed_href_schemes = "macappstore|itunes"
+    cooked = cook("[Steam URL Scheme](steam://store/452530)")
+    expected = '<p><a>Steam URL Scheme</a></p>'
+    expect(cooked).to eq(n expected)
+  end
+
+  it "produces tag links" do
+    Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
+
+    cooked = PrettyText.cook(" #unknown::tag #known::tag")
+
+    html = <<~HTML
+      <p><span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    cooked = PrettyText.cook("[`a` #known::tag here](http://somesite.com)")
+
+    html = <<~HTML
+      <p><a href="http://somesite.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    cooked = PrettyText.cook("<a href='http://somesite.com'>`a` #known::tag here</a>")
+
+    expect(cooked).to eq(html.strip)
+
+    cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
+    html = <<~HTML
+      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tags/known">#<span>known</span></a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # ensure it does not fight with the autolinker
+    expect(PrettyText.cook(' http://somewhere.com/#known')).not_to include('hashtag')
+    expect(PrettyText.cook(' http://somewhere.com/?#known')).not_to include('hashtag')
+    expect(PrettyText.cook(' http://somewhere.com/?abc#known')).not_to include('hashtag')
+
+  end
+
+  it "can handle mixed lists" do
+    # known bug in old md engine
+    cooked = PrettyText.cook("* a\n\n1. b")
+    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul><ol>\n<li>b</li>\n</ol>")
+  end
+
+  it "can handle traditional vs non traditional newlines" do
+    SiteSetting.traditional_markdown_linebreaks = true
+    expect(PrettyText.cook("1\n2")).to match_html "<p>1 2</p>"
+
+    SiteSetting.traditional_markdown_linebreaks = false
+    expect(PrettyText.cook("1\n2")).to match_html "<p>1<br>\n2</p>"
+  end
+
+
+  it "can handle emoji by name" do
+
+    expected = <<HTML
+<p><img src="/images/emoji/twitter/smile.png?v=5\" title=":smile:" class="emoji" alt=":smile:"><img src="/images/emoji/twitter/sunny.png?v=5" title=":sunny:" class="emoji" alt=":sunny:"></p>
+HTML
+    expect(PrettyText.cook(":smile::sunny:")).to eq(expected.strip)
+  end
+
+  it "handles emoji boundaries correctly" do
+    cooked = PrettyText.cook("a,:man:t2:,b")
+    expected = '<p>a,<img src="/images/emoji/twitter/man/2.png?v=5" title=":man:t2:" class="emoji" alt=":man:t2:">,b</p>'
+    expect(cooked).to match(expected.strip)
+  end
+
+  it "can handle emoji by translation" do
+    expected = '<p><img src="/images/emoji/twitter/wink.png?v=5" title=":wink:" class="emoji" alt=":wink:"></p>'
+    expect(PrettyText.cook(";)")).to eq(expected)
+  end
+
+  it "can handle multiple emojis by translation" do
+    cooked = PrettyText.cook(":) ;) :)")
+    expect(cooked.split("img").length-1).to eq(3)
+  end
+
+  it "handles emoji boundries correctly" do
+    expect(PrettyText.cook(",:)")).to include("emoji")
+    expect(PrettyText.cook(":-)\n")).to include("emoji")
+    expect(PrettyText.cook("a :)")).to include("emoji")
+    expect(PrettyText.cook(":),")).not_to include("emoji")
+    expect(PrettyText.cook("abcde ^:;-P")).to include("emoji")
+  end
+
+  it 'can censor words correctly' do
+    SiteSetting.censored_words = 'apple|banana'
+    expect(PrettyText.cook('yay banana yay')).not_to include('banana')
+    expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
+    expect(PrettyText.cook("# banana")).not_to include('banana')
+    expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
+  end
+
+  it 'supports typographer' do
+    SiteSetting.enable_markdown_typographer = true
+    expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+
+    SiteSetting.enable_markdown_typographer = false
+    expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+  end
+
+  it 'handles onebox correctly' do
+    expect(PrettyText.cook("http://a.com\nhttp://b.com").split("onebox").length).to eq(3)
+    expect(PrettyText.cook("http://a.com\n\nhttp://b.com").split("onebox").length).to eq(3)
+    expect(PrettyText.cook("a\nhttp://a.com")).to include('onebox')
+    expect(PrettyText.cook("> http://a.com")).not_to include('onebox')
+    expect(PrettyText.cook("a\nhttp://a.com a")).not_to include('onebox')
+    expect(PrettyText.cook("a\nhttp://a.com\na")).to include('onebox')
+    expect(PrettyText.cook("http://a.com")).to include('onebox')
+    expect(PrettyText.cook("http://a.com ")).to include('onebox')
+    expect(PrettyText.cook("http://a.com a")).not_to include('onebox')
+    expect(PrettyText.cook("- http://a.com")).not_to include('onebox')
+    expect(PrettyText.cook("<http://a.com>")).not_to include('onebox')
+    expect(PrettyText.cook(" http://a.com")).not_to include('onebox')
+    expect(PrettyText.cook("a\n http://a.com")).not_to include('onebox')
+    expect(PrettyText.cook("sam@sam.com")).not_to include('onebox')
+    expect(PrettyText.cook("<img src='a'>\nhttp://a.com")).to include('onebox')
+  end
+
+  it "can handle bbcode" do
+    expect(PrettyText.cook("a[b]b[/b]c")).to eq('<p>a<span class="bbcode-b">b</span>c</p>')
+    expect(PrettyText.cook("a[i]b[/i]c")).to eq('<p>a<span class="bbcode-i">b</span>c</p>')
+  end
+
+
+  it "can onebox local topics" do
+    op = Fabricate(:post)
+    reply = Fabricate(:post, topic_id: op.topic_id)
+
+
+    url = Discourse.base_url + reply.url
+    quote = create_post(topic_id: op.topic.id, raw: "This is a sample reply with a quote\n\n#{url}")
+    quote.reload
+
+    expect(quote.cooked).not_to include('[quote')
+  end
+
+  it "supports tables" do
+
+    markdown = <<~MD
+      | Tables        | Are           | Cool  |
+      | ------------- |:-------------:| -----:|
+      | col 3 is      | right-aligned | $1600 |
+    MD
+
+    expected = <<~HTML
+      <table>
+      <thead>
+      <tr>
+      <th>Tables</th>
+      <th style="text-align:center">Are</th>
+      <th style="text-align:right">Cool</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>col 3 is</td>
+      <td style="text-align:center">right-aligned</td>
+      <td style="text-align:right">$1600</td>
+      </tr>
+      </tbody>
+      </table>
+    HTML
+
+    expect(PrettyText.cook(markdown)).to eq(expected.strip)
+  end
+
+
+  it "supports img bbcode" do
+    cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
+    html = "<p><img src=\"http://www.image/test.png\" alt></p>"
+    expect(cooked).to eq(html)
+  end
+
+  it "provides safety for img bbcode" do
+    cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
+    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt></p>'
+    expect(cooked).to eq(html)
+  end
+
+  it "supports email bbcode" do
+    cooked = PrettyText.cook "[email]sam@sam.com[/email]"
+    html = '<p><a href="mailto:sam@sam.com" data-bbcode="true">sam@sam.com</a></p>'
+    expect(cooked).to eq(html)
+  end
+
+  it "supports url bbcode" do
+    cooked = PrettyText.cook "[url]http://sam.com[/url]"
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>';
+    expect(cooked).to eq(html)
+  end
+
+  it "supports nesting tags in url" do
+    cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>';
+    expect(cooked).to eq(html)
+  end
+
+  it "supports query params in bbcode url" do
+    cooked = PrettyText.cook("[url=https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse]BBcode link[/url]")
+    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="nofollow noopener">BBcode link</a></p>'
+    expect(cooked).to eq(html)
+  end
+
+  it "supports inline code bbcode" do
+    cooked = PrettyText.cook "Testing [code]codified **stuff** and `more` stuff[/code]"
+    html = "<p>Testing <code>codified **stuff** and `more` stuff</code></p>"
+    expect(cooked).to eq(html)
+  end
+
+  it "supports block code bbcode" do
+    cooked = PrettyText.cook "[code]\ncodified\n\n\n  **stuff** and `more` stuff\n[/code]"
+    html = "<pre><code class=\"lang-auto\">codified\n\n\n  **stuff** and `more` stuff</code></pre>"
+    expect(cooked).to eq(html)
+  end
+
+  it "support special handling for space in urls" do
+    cooked = PrettyText.cook "http://testing.com?a%20b"
+    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
+    expect(cooked).to eq(html)
+  end
+
+  it "supports onebox for decoded urls" do
+    cooked = PrettyText.cook "http://testing.com?a%50b"
+    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?aPb</a></p>'
+    expect(cooked).to eq(html)
+  end
+
+  it "should sanitize the html" do
+    expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
+  end
+
+  it "should not onebox magically linked urls" do
+    expect(PrettyText.cook('[url]site.com[/url]')).not_to include('onebox')
+  end
+
+  it "should sanitize the html" do
+    expect(PrettyText.cook("<p class='hi'>hi</p>")).to eq "<p>hi</p>"
+  end
+
+  it "should strip SCRIPT" do
+    expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
+  end
+
+  it "should allow sanitize bypass" do
+    expect(PrettyText.cook("<test>alert(42)</test>", sanitize: false)).to eq "<p><test>alert(42)</test></p>"
+  end
+
+  # custom rule used to specify image dimensions via alt tags
+  describe "image dimensions" do
+    it "allows title plus dimensions" do
+      cooked = PrettyText.cook <<~MD
+        ![title with | title|220x100](http://png.com/my.png)
+        ![](http://png.com/my.png)
+        ![|220x100](http://png.com/my.png)
+        ![stuff](http://png.com/my.png)
+        ![|220x100,50%](http://png.com/my.png)
+      MD
+
+      html = <<~HTML
+        <p><img src="http://png.com/my.png" alt="title with | title" width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt><br>
+        <img src="http://png.com/my.png" alt width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt="stuff"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+  end
+
+  describe "inline onebox" do
+    it "includes the topic title" do
+      topic = Fabricate(:topic)
+
+      raw = "Hello #{topic.url}"
+
+      cooked = <<~HTML
+        <p>Hello <a href="#{topic.url}">#{topic.title}</a></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
   end
 

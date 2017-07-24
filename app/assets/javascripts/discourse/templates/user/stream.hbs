@@ -3,8 +3,4 @@
     {{{model.noContentHelp}}}
   </div>
 {{/if}}
-{{#user-stream stream=model}}
-  {{#each model.content as |item|}}
-    {{stream-item item=item removeBookmark="removeBookmark"}}
-  {{/each}}
-{{/user-stream}}
+{{user-stream stream=model}}

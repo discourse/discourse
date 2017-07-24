@@ -53,7 +53,6 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def execute
 
-    SiteSetting.allow_html_tables = true
     @max_start_id = Post.maximum(:id)
 
     import_categories

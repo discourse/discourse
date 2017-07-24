@@ -2,6 +2,7 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import InputValidation from 'discourse/models/input-validation';
 import { load, lookupCache } from 'pretty-text/oneboxer';
 import { ajax } from 'discourse/lib/ajax';
+import afterTransition from 'discourse/lib/after-transition';
 
 export default Ember.Component.extend({
   classNames: ['title-input'],
@@ -10,7 +11,11 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
     if (this.get('focusTarget') === 'title') {
-      this.$('input').putCursorAtEnd();
+      const $input = this.$("input");
+
+      afterTransition(this.$().closest("#reply-control"), () => {
+        $input.putCursorAtEnd();
+      });
     }
   },
 

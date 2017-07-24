@@ -12,6 +12,7 @@ es:
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el Discourse Narrative Bot debe ignorar"
     discourse_narrative_bot_disable_public_replies: "Deshabilitar respuestas públicas del Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "Tipo de post de bienvenida que el Discourse Narrative Bot debería enviar"
+    discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar el post de bienvenida del Discourse Narrative Bot."
   badges:
     certified:
       name: Certificado
@@ -27,14 +28,14 @@ es:
     bio: "Hola, no soy una persona real. Soy un bot que puede enseñarte sobre este sitio. Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
     timeout:
       message: |-
-        Hey @%{username}, solo estoy verificando si estás porque no he oído de tí en un tiempo.
-        - Para continuar, responde en cualquier momento.
+        Hola @%{username}, tan solo por ver si estás ahí, no he oído de ti en un tiempo.
+        - Para continuar, coméntame en cualquier momento.
 
-        - Si gustas de saltar este paso, dime `%{skip_trigger}`.
+        - Si prefieres saltarte este paso, escribe `%{skip_trigger}`.
 
-        - Para empezar de nuevo, dime `%{reset_trigger}`.
+        - Para empezar de nuevo, escribe `%{reset_trigger}`.
 
-        Si prefieres no continuar, está OK también! Soy un robot. No herirás mis sentimientos. :sob:
+        Si prefieres no continuar, ¡perfecto! Soy un robot. No herirás mis sentimientos. :sob:
     dice:
       trigger: "tirar"
       invalid: |-
@@ -42,40 +43,40 @@ es:
       not_enough_dice: |-
         Solo tengo %{num_of_dice} dados para jugar. Es vergonsozo lo sé!
       out_of_range: |-
-        ¿Sabías que el máximo número de lados para que un dado, matemáticamente correcto, es de 120 lados?
+        ¿Sabías que [el máximo número de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para un dado matemáticamente correcto, es de 120?
       results: |-
-        > :game_die: tirada de dados: %{results}
+        > :game_die: %{results}
     quote:
       trigger: "citar"
       '1':
-        quote: "In the middle of every difficulty lies opportunity"
+        quote: "Entre las dificultades se esconde la oportunidad"
         author: "Albert Einstein"
       '2':
-        quote: "You must be the change you wish to see in the world."
+        quote: "Conviértete en el cambio que deseas ver en el mundo."
         author: "Mahatma Gandhi"
       '3':
-        quote: "Don’t cry because it’s over, smile because it happened."
+        quote: "No llores porque terminó, sonríe porque sucedió."
         author: "Dr Seuss"
       '4':
-        quote: "If you want something done right, do it yourself."
+        quote: "Si quieres algo bien hecho, hazlo tú mismo."
         author: "Charles-Guillaume Étienne"
       '5':
-        quote: "Believe you can and you’re halfway there."
+        quote: "Cree en poder lograr algo y tendrás la mitad del camino hecho."
         author: "Theodore Roosevelt"
       '6':
-        quote: "Life is like a box of chocolates. You never know what you’re gonna get."
-        author: "Forrest Gump’s Mom"
+        quote: "La vida es como una caja de bombones, nunca sabes qué te va a tocar."
+        author: "La mamá de Forrest Gump"
       '7':
-        quote: "That’s one small step for a man, a giant leap for mankind."
+        quote: "Es un pequeño paso para un hombre, pero un gran salto para la humanidad."
         author: "Neil Armstrong"
       '8':
-        quote: "Do one thing every day that scares you."
+        quote: "Todos los días haz algo que te dé miedo."
         author: "Eleanor Roosevelt"
       '9':
-        quote: "Mistakes are always forgivable, if one has the courage to admit them."
+        quote: "Los errores son siempre perdonables, si uno tiene el coraje de admitirlos."
         author: "Bruce Lee"
       '10':
-        quote: "Whatever the mind of man can conceive and believe, it can achieve."
+        quote: "Lo que la mente del hombre puede concebir y creer, es lo que la mente del hombre puede lograr."
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
@@ -157,6 +158,8 @@ es:
           - https://en.wikipedia.org/wiki/Inherently_funny_word
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
+        reply: |-
+          Genial! Esto funcionará en la mayoría de los <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda que debe ser colocado el enlace en una _linea aparte_, sin texto ni espacios delante ni atrás del enlace.
         not_found: |-
           Disculpa, no he podido encontrar el enlace en tu respuesta! :cry:
 
@@ -164,6 +167,14 @@ es:
 
           - https://en.wikipedia.org/wiki/Exotic_Shorthair
       images:
+        instructions: |-
+          Aquí la imagen de un unicornio:
+
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+
+          Si te gusta (y a quién no) presiona el botón :heart: debajo del post para hacerme saber que te ha gustado.
+
+          Además de darle "me gusta", puedes **responder con otra imagen??** Cualquier imagen! Arrastra y suelta la imagen desde tu PC al editor, o bien presiona el botón de subir imagen, o también puedes copiar y pegar la imagen al editor!
         reply: |-
           Elegante imagen – He presionado el botón :heart: "me gusta" para hacerte saber cuánto la aprecio :heart_eyes:
         like_not_found: |-
@@ -175,6 +186,7 @@ es:
       formatting:
         instructions: |-
           ¿Puedes hacer algunas letras en **negrita** o _cursiva_ en tu respuesta?
+
           - escribe `**negrita**` o `_cursiva_`
 
           - o, presiona los botones <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> en el editor
@@ -186,13 +198,15 @@ es:
           Puedes intentar de nuevo? Usa los botones <kbd><b>B</b></kbd> para negrita o <kbd><i>I</i></kbd> para cursiva en el editor si no recuerdas cómo formatear texto.
       quoting:
         instructions: |-
-          ¿Puedes intentar citarme cuando me respondes, así sé exactamente qué parte estás respondiendome?
+          ¿Puedes intentar citarme cuando me respondes, así sé exactamente en qué parte me estás respondiendo?
           > Si esto es café, por favor trae un poco de té; pero si es té, por favor trae un poco de café.
           >
           > Una de las ventajas de hablarse a sí mismo, es que tú sabes que al menos alguien está oyendo.
           >
           > Algunas personas tienen un camino con las palabras, y otras personas ... oh, oh, no tienen camino.
+
           Selecciona la parte del texto &uarr; que prefieres citar, y luego presiona el botón **citar** que aparece sobre tu selección del texto – o presiona el botón **Responder** debajo de este post.
+
           Debajo de la cita, escribe una palabra o dos sobre lo que escribí, porque soy curioso :thinking:
         reply: |-
           Buen trabajo, elegiste mi cita favorita! :left_speech_bubble:
@@ -200,11 +214,31 @@ es:
           Hmm me parece que no me has citado en tu respuesta!?
           Seleccionando cualquier texto de mi mensaje, aparecerá la palabra <kbd>**Citar**</kbd>, como si fuese un botón. Y si decides presionar **Responder** habiendo seleccionado el texto, funcionará igual! ¿Puedes intentarlo de nuevo?
       bookmark:
+        instructions: |-
+          Si quieres aprender más, selecciona el botón <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> debajo y presiona <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **para guardar como favorito este mensaje**.  Si lo haces, habrá un :gift: en tu futuro!
         reply: |-
           Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento, desde la [sección de marcadores de tu perfil](%{profile_page_url}/activity/bookmarks). Sólo debes seleccionar la foto de tu perfil en la parte superior derecha de la pantalla &#8599;
+        not_found: |-
+          Uh oh, no veo ningún favorito en este tema. Encontraste la forma de marcar como favorito debajo de cada mensaje? Usa el botón para mostrar más opciones <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> y aparecerán las otras opciones que necesitas.
       emoji:
+        instructions: |-
+          Me has visto usando pequeñas imágenes en mis respuestas :blue_car::dash: estos se llaman [emoji](https://es.wikipedia.org/wiki/Emoji). ¿Puedes **agregar un emoji** a tu próxima respuesta? Cualquiera de éstos funcionará:
+
+          - Escribe `:) ;) :D :P :O`
+
+          - Escribe <kbd>:</kbd> y luego puedes completar con la palabra para elegir el emoji `:tada:`
+
+          - O bien, presionas el botón <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> en el editor, o usas el teclado de tu móvil
         reply: |-
           Eso es :sparkles: _emojitastic!_ :sparkles:
+        not_found: |-
+          Oops, no veo ningún Emoji en tu respuesta! Oh no! :sob:
+
+          Prueba escribiendo primero <kbd>:</kbd> y de esa forma el foro te mostrará emojis para elegir, luego puedes seguir escribiendo el nombre del emoji que quieres seleccionar, por ejemplo `:bird:`
+
+          O, presiona en botón <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> en el editor.
+
+          (si estás en un dispositivo móvil, puedes introducir directamente un emoji desde el teclado del dispositivo.)
       mention:
         instructions: |-
           A veces, quieres captar la atención de alguien en un debate, incluso aunque no le estés respondiendo a su mensaje directamente. Para ésto, escribe `@` seguido del nombre del usuario que quieres mencionar.
@@ -216,9 +250,27 @@ es:
 
           (Sí! mi nombre de usuario se deletrea _disco_, como el baile de los 70s. Me [encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Nos gustan nuestras amistosas discusiones, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, por favor reporta anónimamente el mismo así el staff toma conocimiento o puedes contactar al [staff](%{about_url}), si así lo deseas.
+
+          >  :imp: Escribí algo asqueroso aquí
+
+          Me imagino que sabes qué hacer. Anímate, **reporta este mensaje** con el botón <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
         reply: |-
           [Nuestro staff](/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, será ocultado automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora.)
+        not_found: |-
+          Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando la **bandera** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón  <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> para ver otras opciones para cada mensaje.
       search:
+        instructions: |-
+          _psst_ … He ocultado una sorpresa en este tema. Si estás listo para el desafío, **selecciona el botón para buscar** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> que está arriba a la derecha &#8599; y ahí puedes buscar palabras.
+
+          Trata de buscar el término "capy&#8203;bara" en este tema. Dale, hazlo ahora.
+        hidden_message: |-
+          Cómo te pediste este capybara? :wink:
+
+          <img src="%{base_uri}/images/capybara-eating.gif"/>
+
+          Notaste que hemos vuelto al comienzo del tema? Alimenta este pobre y hambriento capybara **respondiendo con el emoji `:herb:`** y serás automáticamente enviado al final del tema.
         reply: |-
           Yay lo encontraste! :tada:
 
@@ -227,6 +279,8 @@ es:
           - Para saltar donde quieras en una discusión larga, intente los controles de la línea de tiempo del tema a la derecha (o por debajo, en el móvil)
 
           - Si tienes un :keyboard: físico, presiona la tecla <kbd>?</kbd> para ver nuestros prácticos atajos del teclado.
+        not_found: |-
+          Hmm… parece como que estamos teniendo un problema. Lo siendo, buscaste <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> el término  **capy&#8203;bara**?
       end:
         message: |-
           Gracias por quedarte conmigo @%{username}! Hice esto por tí, creo que te lo has ganado:
@@ -250,23 +304,40 @@ es:
         instructions: |-
           Todos cometemos errores. Pero no te preocupes, siempre podrás editar tus mensajes para solucionarlos!
           ¿Puedes empezar por **editar** el mensaje que acabo de crear en tu nombre?
+        not_found: |-
+          Parece que aún tienes que editar el [post](%{url}) que cree para ti. ¿Puedes intentar de nuevo?
+
+          Utiliza el icono <img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16"> para que aparezca el editor.
         reply: |-
           ¡Buen trabajo!
           Tenga en cuenta que las ediciones realizadas después de 5 minutos aparecerán como revisiones de edición pública y aparecerá un pequeño ícono de lápiz en la parte superior derecha con el recuento de revisiones.
       delete:
+        instructions: |-
+          Si quieres retirar el post que hiciste, puedes borrarlo.
+
+          Vamos! **borra** cualquiera de los posts utilizando el icono <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> para **borrar**. ¡No vayas a borrar todo el tema!
+        not_found: |-
+          ¡No veo que hayas borrado ningún post aún! Recuerda presionar <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> para ver más opciones y aparecerá el botón <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> para borrar.
         reply: |-
           Whoa! :boom:
 
           Para preservar la continuidad de las discusiones, las supresiones no son inmediatas, por lo que la publicación se eliminará después de algún tiempo.
       recover:
         deleted_post_raw: 'Por qué @%{discobot_username} borró mi mensaje? :anguished:'
+        instructions: |-
+          Oh no! Parece que accidentalmente borré un nuevo post que acababa de crear para ti.
+
+          ¿Puedes hacerme el favor y presionar el botón <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> para **recuperar** el post borrado?
+        not_found: |-
+          ¿Tienes problemas? Recuerda presionar el botón <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> para mostrar más opciones y aparecerá el botón <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> para recuperar un mensaje borrado.
         reply: |-
           Phew, ¡eso estuvo cerca! Gracias por solucionarlo :wink:
 
           Tenga en cuenta que sólo tiene 24 horas para recuperar una publicación.
       category_hashtag:
         instructions: |-
-          ¿Sabía que puede hacer referencia a categorías y etiquetas en su publicación? Por ejemplo, has visto la %{category} categoría?
+          ¿Sabías que puedes hacer referencia a categorías y etiquetas en la publicación? Por ejemplo, has visto la categoría %{category}?
+
           Escribe `#` en el medio de una oración y selecciona cualquier categoría o etiqueta.
         not_found: |-
           Hmm, no veo una categoría en ninguna parte. Nota que `#` no puede ser el primer carácter de la oración. ¿Puedes copiar esto en tu próxima respuesta?
@@ -279,14 +350,30 @@ es:
       change_topic_notification_level:
         instructions: |-
           Cada tema tiene un nivel de notificación. Comienza en 'normal', lo que significa que normalmente sólo se notificará cuando alguien está hablando directamente con usted.
-          De forma predeterminada, el nivel de notificación de un mensaje privado se establece en el nivel más alto de "observación", lo que significa que se le notificará cada nueva respuesta. Pero puede sobrescribir el nivel de notificación de _cualquier_ tema a 'vigilar', 'seguir' o 'silenciar'.
-          Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
+
+          De forma predeterminada, el nivel de notificación de un mensaje privado se establece en el nivel más alto de 'observación', lo que significa que se le notificará cada nueva respuesta. Pero puede sobrescribir el nivel de notificación de _cualquier_ tema a 'vigilar', 'seguir' o 'silenciar'.
+
+          Intentemos cambiar el nivel de notificación de este tema. Al final de todo, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
         not_found: |-
           Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, el mismo está debajo de todo el tema de debate.
         reply: |-
           ¡Impresionante trabajo! Espero que no silencies este tema ya que puedo ser un poco hablador a veces :grin:.
+
           Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](/my/preferences).
       poll:
+        instructions: |-
+          ¿Sabes que puedes agregar una encuesta en cualquier mensaje? Intenta usando el botón de engranaje <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor para **armar una encuesta**.
+        not_found: |-
+          Whoops! No hubo ninguna encuesta en tu respuesta.
+
+          Usa el ícono de engranaje: <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor, o bien copia y pega esta encuesta en tu próxima respuesta:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hey, ¡hermosa encuesta! ¿Cómo te enseñé?
           [poll]
@@ -294,6 +381,20 @@ es:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          A veces, tú puedes decidir **ocultar detalles** en tus respuestas:
+
+          - Cuando estás discutiendo puntos de trama de una película o programa de televisión que sería considerado un spoiler.
+
+          - Cuando su post necesita un montón de detalles opcionales que pueden ser abrumador cuando se lee todo a la vez.
+
+          [details=¡Clic aquí para ver cómo funciona!]
+          1. Selecciona el botón de engranaje <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor.
+          2. Selecciona "Hide Details".
+          3. Edita los detalles, y agrega el contenido que desees ocultar.
+          [/details]
+
+          ¿Puedes usar el botón de engranaje <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> en el editor para agregar datos ocultos en tu próxima respuesta?
         not_found: |-
           ¿Tiene problemas para crear un widget de detalles? Trate de incluir lo siguiente en su siguiente respuesta:
 
