@@ -47,7 +47,29 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
-      it "indifferent about curlies" do
+      it "indifferent about missing quotations" do
+        md = <<~MD
+          [quote=#{user.username}, post:123, topic:456, full:true]
+
+          ddd
+
+          [/quote]
+        MD
+        html = <<~HTML
+          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <blockquote>
+          <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(PrettyText.cook(md)).to eq(html.strip)
+      end
+
+      it "indifferent about curlies and no curlies" do
         md = <<~MD
           [quote=“#{user.username}, post:123, topic:456, full:true”]
 
