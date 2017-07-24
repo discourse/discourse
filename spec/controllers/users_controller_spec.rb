@@ -936,11 +936,13 @@ describe UsersController do
         expect(user.reload.username).to eq(new_username)
       end
 
-      skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+      it 'should fail if the user is old' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
-        user.stubs(:post_count).returns(200)
-        expect(Guardian.new(user).can_edit_username?(user)).to eq(false)
+        PostCreator.new(user,
+          title: 'This is a test topic',
+          raw: 'This is a test this is a test'
+        ).create
 
         xhr :put, :username, username: user.username, new_username: new_username
 
