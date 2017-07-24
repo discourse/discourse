@@ -137,6 +137,8 @@ module Scheduler
             sleep 5
             @thread.kill
           end
+
+          @thread.join
         end
       end
 
