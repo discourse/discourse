@@ -34,16 +34,7 @@ module Scheduler
         end
         @thread = Thread.new do
           while !@stopped
-            if @manager.enable_stats
-              begin
-                RailsMultisite::ConnectionManagement.establish_connection(db: "default")
-                process_queue
-              ensure
-                ActiveRecord::Base.connection_handler.clear_active_connections!
-              end
-            else
-              process_queue
-            end
+            process_queue
           end
         end
       end
@@ -69,6 +60,7 @@ module Scheduler
       end
 
       def process_queue
+
         klass = @queue.deq
         return unless klass
 
@@ -83,15 +75,23 @@ module Scheduler
         begin
           info.prev_result = "RUNNING"
           @mutex.synchronize { info.write! }
+
           if @manager.enable_stats
-            stat = SchedulerStat.create!(
-              name: klass.to_s,
-              hostname: hostname,
-              pid: Process.pid,
-              started_at: Time.zone.now,
-              live_slots_start: GC.stat[:heap_live_slots]
-            )
+            begin
+              RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+
+              stat = SchedulerStat.create!(
+                name: klass.to_s,
+                hostname: hostname,
+                pid: Process.pid,
+                started_at: Time.zone.now,
+                live_slots_start: GC.stat[:heap_live_slots]
+              )
+            ensure
+              ActiveRecord::Base.connection_handler.clear_active_connections!
+            end
           end
+
           klass.new.perform
         rescue => e
           if e.class != Jobs::HandledExceptionWrapper
@@ -120,6 +120,8 @@ module Scheduler
         Discourse.handle_job_exception(ex, {message: "Processing scheduled job queue"})
       ensure
         @running = false
+
+        ActiveRecord::Base.connection_handler.clear_active_connections!
       end
 
       def stop!

@@ -59,11 +59,11 @@ describe Scheduler::Manager do
   }
 
   before {
-    expect(ActiveRecord::Base.connection_pool.connections.length).to eq(1)
+    expect(ActiveRecord::Base.connection_pool.connections.reject{|c| !c.in_use?}.length).to eq(1)
   }
 
   after {
-    expect(ActiveRecord::Base.connection_pool.connections.length).to eq(1)
+    expect(ActiveRecord::Base.connection_pool.connections.reject{|c| !c.in_use?}.length).to eq(1)
   }
 
   it 'can disable stats' do
@@ -126,7 +126,7 @@ describe Scheduler::Manager do
       expect($redis.zcard(Scheduler::Manager.queue_key)).to eq(0)
     end
 
-    skip 'should recover from crashed manager' do
+    it 'should recover from crashed manager' do
 
       info = manager.schedule_info(Testing::SuperLongJob)
       info.next_run = Time.now.to_i - 1
@@ -145,7 +145,7 @@ describe Scheduler::Manager do
     end
 
     # something about logging jobs causing a leak in connection pool in test
-    skip 'should log when job finishes running' do
+    it 'should log when job finishes running' do
 
       Testing::RandomJob.runs = 0
 
