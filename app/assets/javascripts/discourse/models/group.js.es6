@@ -216,7 +216,7 @@ const Group = RestModel.extend({
 
 Group.reopenClass({
   findAll(opts) {
-    return ajax("/admin/groups.json", { data: opts }).then(function (groups){
+    return ajax("/groups/search.json", { data: opts }).then(groups => {
       return groups.map(g => Group.create(g));
     });
   },

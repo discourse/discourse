@@ -304,7 +304,7 @@ describe Guardian do
     end
 
     it 'returns true when the site requires approving users and is mod' do
-      SiteSetting.expects(:must_approve_users?).returns(true)
+      SiteSetting.must_approve_users = true
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
     end
 
@@ -328,6 +328,29 @@ describe Guardian do
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_falsey
     end
 
+    context 'with groups' do
+      let(:group) { Fabricate(:group) }
+      let(:another_group) { Fabricate(:group) }
+      let(:groups) { [group, another_group] }
+
+      before do
+        user.update!(trust_level: TrustLevel[2])
+        group.add_owner(user)
+      end
+
+      it 'returns false when user is not allowed to edit a group' do
+        expect(Guardian.new(user).can_invite_to_forum?(groups)).to eq(false)
+
+        expect(Guardian.new(Fabricate(:admin)).can_invite_to_forum?(groups))
+          .to eq(true)
+      end
+
+      it 'returns true when user is allowed to edit groups' do
+        another_group.add_owner(user)
+
+        expect(Guardian.new(user).can_invite_to_forum?(groups)).to eq(true)
+      end
+    end
   end
 
   describe 'can_invite_to?' do

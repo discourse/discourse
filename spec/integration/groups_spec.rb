@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Groups" do
   let(:user) { Fabricate(:user) }
-  let!(:group) { Fabricate(:group, users: [user]) }
+  let(:group) { Fabricate(:group, users: [user]) }
 
   describe 'viewing groups' do
     let!(:staff_group) do
@@ -19,6 +19,7 @@ describe "Groups" do
     end
 
     it 'should return the right response' do
+      group
       get "/groups.json"
 
       expect(response).to be_success
@@ -576,6 +577,98 @@ describe "Groups" do
       expect(topic.archetype).to eq(Archetype.private_message)
       expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
       expect(topic.allowed_groups).to eq([])
+    end
+  end
+
+  describe 'search for groups' do
+    let(:hidden_group) do
+      Fabricate(:group,
+        visibility_level: Group.visibility_levels[:owners],
+        name: 'KingOfTheNorth'
+      )
+    end
+
+    before do
+      group.update!(
+        name: 'GOT',
+        full_name: 'Daenerys Targaryen'
+      )
+
+      hidden_group
+    end
+
+    context 'as an anon user' do
+      it "returns the right response" do
+        expect { xhr :get, '/groups/search' }.to raise_error(Discourse::NotLoggedIn)
+      end
+    end
+
+    context 'as a normal user' do
+      it "returns the right response" do
+        sign_in(user)
+
+        xhr :get, '/groups/search'
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
+        expected_ids.delete(Group::AUTO_GROUPS[:everyone])
+        expected_ids << group.id
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
+
+        ['GO', 'nerys'].each do |term|
+          xhr :get, "/groups/search?term=#{term}"
+
+          expect(response).to be_success
+          groups = JSON.parse(response.body)
+
+          expect(groups.length).to eq(1)
+          expect(groups.first['id']).to eq(group.id)
+        end
+
+        xhr :get, "/groups/search?term=KingOfTheNorth"
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expect(groups).to eq([])
+      end
+    end
+
+    context 'as a group owner' do
+      before do
+        hidden_group.add_owner(user)
+      end
+
+      it "returns the right response" do
+        sign_in(user)
+
+        xhr :get, "/groups/search?term=north"
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expect(groups.length).to eq(1)
+        expect(groups.first['id']).to eq(hidden_group.id)
+      end
+    end
+
+    context 'as an admin' do
+      it "returns the right response" do
+        sign_in(Fabricate(:admin))
+
+        xhr :get, '/groups/search?ignore_automatic=true'
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expect(groups.length).to eq(2)
+
+        expect(groups.map { |group| group['id'] })
+          .to contain_exactly(group.id, hidden_group.id)
+      end
     end
   end
 end
