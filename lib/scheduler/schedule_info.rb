@@ -28,6 +28,9 @@ module Scheduler
       @next_run = @prev_run = @prev_result = @prev_duration = @current_owner = nil
     end
 
+    # this means the schedule is going to fire, it is setup correctly
+    # invalid schedules are fixed by running "schedule!"
+    # this happens automatically after if fire by the manager
     def valid?
       return false unless @next_run
       (!@prev_run && @next_run < Time.now.to_i + 5.minutes) || valid_every? || valid_daily?
@@ -42,8 +45,9 @@ module Scheduler
 
     def valid_daily?
       return false unless @klass.daily
+      return true if !@prev_run && @next_run && @next_run <= (Time.zone.now + 1.day).to_i
       !!@prev_run &&
-        @prev_run <= Time.now.to_i &&
+        @prev_run <= Time.zone.now.to_i &&
         @next_run < @prev_run + 1.day
     end
 
