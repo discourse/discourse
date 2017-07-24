@@ -18,12 +18,24 @@ class BulkImport::VBulletin < BulkImport::Base
 
     @client = Mysql2::Client.new(host: host, username: username, password: password, database: database)
     @client.query_options.merge!(as: :array, cache_rows: false)
+
+    @has_post_thanks = mysql_query(<<-SQL
+        SELECT `COLUMN_NAME`
+          FROM `INFORMATION_SCHEMA`.`COLUMNS`
+         WHERE `TABLE_SCHEMA`='#{database}'
+           AND `TABLE_NAME`='user'
+           AND `COLUMN_NAME` LIKE 'post_thanks_%'
+    SQL
+    ).to_a.count > 0
   end
 
   def execute
     import_groups
     import_users
     import_group_users
+
+    import_user_emails
+    import_user_stats
 
     import_user_passwords
     import_user_salts
@@ -73,7 +85,6 @@ class BulkImport::VBulletin < BulkImport::Base
       u = {
         imported_id: row[0],
         username: row[1],
-        email: row[2],
         created_at: Time.zone.at(row[3]),
         date_of_birth: parse_birthday(row[4]),
         primary_group_id: group_id_from_imported_id(row[6]),
@@ -84,6 +95,59 @@ class BulkImport::VBulletin < BulkImport::Base
         u[:suspended_till] = row[8] > 0 ? Time.zone.at(row[8]) : SUSPENDED_TILL
       end
       u
+    end
+  end
+
+  def import_user_emails
+    puts "Importing user emails..."
+
+    users = mysql_stream <<-SQL
+        SELECT user.userid, email, joindate
+          FROM user
+         WHERE user.userid > #{@last_imported_user_id}
+      ORDER BY user.userid
+    SQL
+
+    create_user_emails(users) do |row|
+      {
+        imported_id: row[0],
+        imported_user_id: row[0],
+        email: row[1],
+        created_at: Time.zone.at(row[2])
+      }
+    end
+  end
+
+  def import_user_stats
+    puts "Importing user stats..."
+
+    users = mysql_stream <<-SQL
+              SELECT user.userid, joindate, posts, COUNT(thread.threadid) AS threads, post.dateline
+                     #{", post_thanks_user_amount, post_thanks_thanked_times" if @has_post_thanks}
+                FROM user
+     LEFT OUTER JOIN post ON post.postid = user.lastpostid
+     LEFT OUTER JOIN thread ON user.userid = thread.postuserid
+               WHERE user.userid > #{@last_imported_user_id}
+            GROUP BY user.userid
+            ORDER BY user.userid
+    SQL
+
+    create_user_stats(users) do |row|
+      user = {
+        imported_id: row[0],
+        imported_user_id: row[0],
+        new_since: Time.zone.at(row[1]),
+        post_count: row[2],
+        topic_count: row[3],
+        first_post_created_at: row[4] && Time.zone.at(row[4])
+      }
+
+      if @has_post_thanks
+        user[:likes_given] = row[5]
+        user[:likes_received] = row[6]
+      end
+
+      user
     end
   end
 
