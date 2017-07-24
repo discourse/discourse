@@ -18,7 +18,7 @@ export function resetCache() {
   keyValueStore.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
 }
 
-let $picker, $filter, $results, $list, scrollPosition, $visibleSections;
+let $picker, $filter, $results, $list, scrollPosition, $visibleSections, _checkTimeout;
 
 export default Ember.Component.extend({
   willDestroyElement() {
@@ -119,7 +119,7 @@ export default Ember.Component.extend({
 
     this._unbindEvents();
 
-    this._unbindSectionLoadingCheck();
+    clearTimeout(_checkTimeout);
   },
 
   show() {
@@ -137,23 +137,16 @@ export default Ember.Component.extend({
     this._bindEvents();
 
     Ember.run.scheduleOnce("afterRender", this, function() {
+      this._sectionLoadingCheck();
       this._loadCategoriesEmojis();
       this._positionPicker();
       this._scrollTo();
-      this._sectionLoadingCheck();
     });
   },
 
-  _unbindSectionLoadingCheck() {
-    Ember.run.cancel(this.get("nextSectionloadingCheck"));
-  },
-
   _sectionLoadingCheck() {
-    const nextSectionloadingCheck = Ember.run.later(this, function() {
-      Ember.run.throttle(this, this._checkVisibleSection, 100);
-      this._sectionLoadingCheck();
-    }, 500);
-    this.set("nextSectionloadingCheck", nextSectionloadingCheck);
+    _checkTimeout = setTimeout(() => { this._sectionLoadingCheck(); }, 500);
+    Ember.run.throttle(this, this._checkVisibleSection, 100);
   },
 
   _loadCategoriesEmojis() {
