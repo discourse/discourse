@@ -137,20 +137,27 @@ describe PostAlerter do
       PostAction.act(admin, post, PostActionType.types[:like])
 
       # one like
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
 
-
-      post.user.user_option.update_columns(like_notification_frequency:
-                                           UserOption.like_notification_frequency_type[:always])
+      post.user.user_option.update_columns(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:always]
+      )
 
       admin2 = Fabricate(:admin)
+
+      # Travel 1 hour in time to test that order post_actions by `created_at`
+      Timecop.travel(Time.zone.now + 1.hour)
       PostAction.act(admin2, post, PostActionType.types[:like])
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
+
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
 
       # adds info to the notification
-      notification = Notification.find_by(post_number: 1,
-                                          topic_id: post.topic_id)
-
+      notification = Notification.find_by(
+        post_number: 1,
+        topic_id: post.topic_id
+      )
 
       expect(notification.data_hash["count"].to_i).to eq(2)
       expect(notification.data_hash["username2"]).to eq(evil_trout.username)
@@ -159,9 +166,13 @@ describe PostAlerter do
       PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
 
       # rebuilds the missing notification
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
-      notification = Notification.find_by(post_number: 1,
-                                          topic_id: post.topic_id)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
+
+      notification = Notification.find_by(
+        post_number: 1,
+        topic_id: post.topic_id
+      )
 
       expect(notification.data_hash["count"]).to eq(2)
       expect(notification.data_hash["username"]).to eq(admin2.username)
