@@ -125,20 +125,27 @@ module Scheduler
       end
 
       def stop!
+        return if @stopped
+
         @mutex.synchronize do
           @stopped = true
 
           @keep_alive_thread.kill
           @reschedule_orphans_thread.kill
 
+          @keep_alive_thread.join
+          @reschedule_orphans_thread.join
+
           enq(nil)
 
-          Thread.new do
+          kill_thread = Thread.new do
             sleep 0.5
             @thread.kill
           end
 
           @thread.join
+          kill_thread.kill
+          kill_thread.join
         end
       end
 
