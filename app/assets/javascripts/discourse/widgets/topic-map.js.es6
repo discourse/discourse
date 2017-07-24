@@ -165,7 +165,8 @@ createWidget('topic-map-expanded', {
           const domain = l.domain;
           if (domain && domain.length) {
             const s = domain.split('.');
-            host = h('span.domain', s[s.length-2] + "." + s[s.length-1]);
+            if (s[0] === 'www') s.shift();
+            host = h('span.domain', s.join('.'));
           }
         }
 
