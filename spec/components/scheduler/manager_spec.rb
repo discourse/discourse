@@ -152,7 +152,6 @@ describe Scheduler::Manager do
       manager.stop!
     end
 
-    # something about logging jobs causing a leak in connection pool in test
     it 'should log when job finishes running' do
 
       Testing::RandomJob.runs = 0
