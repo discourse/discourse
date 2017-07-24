@@ -93,6 +93,7 @@ class BulkImport::Base
 
     puts "Loading users indexes..."
     @last_user_id = User.unscoped.maximum(:id)
+    @last_user_email_id = UserEmail.unscoped.maximum(:id)
     @emails = User.unscoped.joins(:user_emails).pluck(:"user_emails.email").to_set
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @mapped_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("user_custom_fields.value", "users.username").to_h
@@ -143,6 +144,17 @@ class BulkImport::Base
     suspended_at suspended_till last_emailed_at created_at updated_at
   }
 
+  USER_EMAIL_COLUMNS ||= %i{
+    id user_id email primary created_at updated_at
+  }
+
+  USER_STAT_COLUMNS ||= %i{
+    user_id topics_entered time_read days_visited posts_read_count
+    likes_given likes_received topic_reply_count new_since read_faq
+    first_post_created_at post_count topic_count bounce_score
+    reset_bounce_score_after
+  }
+
   USER_PROFILE_COLUMNS ||= %i{
     user_id location website bio_raw bio_cooked views
   }
@@ -185,6 +197,8 @@ class BulkImport::Base
     end
   end
 
+  def create_user_emails(rows, &block) create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block); end
+  def create_user_stats(rows, &block) create_records(rows, "user_stat", USER_STAT_COLUMNS, &block); end
   def create_user_profiles(rows, &block); create_records(rows, "user_profile", USER_PROFILE_COLUMNS, &block); end
   def create_group_users(rows, &block); create_records(rows, "group_user", GROUP_USER_COLUMNS, &block); end
   def create_categories(rows, &block); create_records(rows, "category", CATEGORY_COLUMNS, &block); end
@@ -244,6 +258,38 @@ class BulkImport::Base
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
     user
+  end
+
+  def process_user_email(user_email)
+    user_email[:id] = @last_user_email_id += 1;
+    user_email[:user_id] = @users[user_email[:imported_user_id].to_s]
+    user_email[:primary] = true
+    user_email[:created_at] ||= NOW
+    user_email[:updated_at] ||= user_email[:created_at]
+    user_email[:email] ||= random_email
+    user_email[:email].downcase!
+
+    # unique email
+    user_email[:email] = random_email until user_email[:email] =~ EmailValidator.email_regex && @emails.add?(user_email[:email])
+
+    user_email
+  end
+
+  def process_user_stat(user_stat)
+    user_stat[:user_id] = @users[user_stat[:imported_user_id].to_s]
+    user_stat[:topic_reply_count] = user_stat[:post_count] - user_stat[:topic_count]
+    user_stat[:topics_entered] ||= 0
+    user_stat[:time_read] ||= 0
+    user_stat[:days_visited] ||= 0
+    user_stat[:posts_read_count] ||= 0
+    user_stat[:likes_given] ||= 0
+    user_stat[:likes_received] ||= 0
+    user_stat[:topic_reply_count] ||= 0
+    user_stat[:new_since] ||= NOW
+    user_stat[:post_count] ||= 0
+    user_stat[:topic_count] ||= 0
+    user_stat[:bounce_score] ||= 0
+    user_stat
   end
 
   def process_user_profile(user_profile)
@@ -428,10 +474,9 @@ class BulkImport::Base
 
   def create_records(rows, name, columns)
     start = Time.now
-
     imported_ids = []
     process_method_name = "process_#{name}"
-    sql = "COPY #{name.pluralize} (#{columns.join(",")}) FROM STDIN"
+    sql = "COPY #{name.pluralize} (#{columns.map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
