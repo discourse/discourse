@@ -12,46 +12,6 @@ describe Admin::GroupsController do
     expect(Admin::GroupsController < Admin::AdminController).to eq(true)
   end
 
-  context ".index" do
-
-    it "produces valid json for groups" do
-      group = Fabricate.build(:group, name: "test")
-      group.add(@admin)
-      group.save
-
-      xhr :get, :index
-      expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
-      expect(json.select { |r| r["id"] == Group::AUTO_GROUPS[:everyone] }).to be_empty
-      expect(json.select { |r| r["id"] == group.id }).to eq([{
-        "id"=>group.id,
-        "name"=>group.name,
-        "user_count"=>1,
-        "automatic"=>false,
-        "alias_level"=>0,
-        "visibility_level"=>0,
-        "automatic_membership_email_domains"=>nil,
-        "automatic_membership_retroactive"=>false,
-        "title"=>nil,
-        "primary_group"=>false,
-        "grant_trust_level"=>nil,
-        "incoming_email"=>nil,
-        "has_messages"=>false,
-        "flair_url"=>nil,
-        "flair_bg_color"=>nil,
-        "flair_color"=>nil,
-        "bio_raw"=>nil,
-        "bio_cooked"=>nil,
-        "public"=>false,
-        "allow_membership_requests"=>false,
-        "full_name"=>group.full_name,
-        "default_notification_level"=>3
-      }])
-
-    end
-
-  end
-
   context ".bulk" do
     it "can assign users to a group by email or username" do
       group = Fabricate(:group, name: "test", primary_group: true, title: 'WAT', grant_trust_level: 3)

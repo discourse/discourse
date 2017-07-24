@@ -61,9 +61,13 @@ class InvitesController < ApplicationController
   def create
     params.require(:email)
 
-    group_ids = Group.lookup_group_ids(params)
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
 
-    guardian.ensure_can_invite_to_forum!(group_ids)
+    guardian.ensure_can_invite_to_forum!(groups)
+    group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
@@ -71,7 +75,7 @@ class InvitesController < ApplicationController
     end
 
     begin
-      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids, params[:custom_message])
+      if Invite.invite_by_email(params[:email], current_user, nil, group_ids, params[:custom_message])
         render json: success_json
       else
         render json: failed_json, status: 422
@@ -83,9 +87,15 @@ class InvitesController < ApplicationController
 
   def create_invite_link
     params.require(:email)
-    group_ids = Group.lookup_group_ids(params)
+
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
+
+    guardian.ensure_can_invite_to_forum!(groups)
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_invite_to_forum!(group_ids)
+    group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)

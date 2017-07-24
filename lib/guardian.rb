@@ -242,16 +242,16 @@ class Guardian
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
       is_staff?
     ) &&
-    (groups.blank? || is_admin?)
+    (groups.blank? || is_admin? || groups.all? { |g| can_edit_group?(g) })
   end
 
-  def can_invite_to?(object, group_ids=nil)
+  def can_invite_to?(object, groups=nil)
     return false unless authenticated?
     return true if is_admin?
     return false unless SiteSetting.enable_private_messages?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false unless can_see?(object)
-    return false if group_ids.present?
+    return false if groups.present?
 
     if object.is_a?(Topic) && object.category
       if object.category.groups.any?
