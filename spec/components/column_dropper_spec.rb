@@ -49,77 +49,77 @@ RSpec.describe ColumnDropper do
 
   end
 
-  # describe '.mark_readonly' do
-  #   let(:table_name) { "table_with_readonly_column" }
-  #
-  #   before do
-  #     ActiveRecord::Base.exec_sql <<~SQL
-  #     CREATE TABLE #{table_name} (topic_id INTEGER, email TEXT);
-  #
-  #     INSERT INTO #{table_name} (topic_id, email)
-  #     VALUES (1, 'something@email.com');
-  #     SQL
-  #
-  #     described_class.mark_readonly(table_name, 'email')
-  #   end
-  #
-  #   after do
-  #     ActiveRecord::Base.exec_sql <<~SQL
-  #     DROP TABLE IF EXISTS #{table_name};
-  #     DROP TRIGGER IF EXISTS #{table_name}_email_readonly ON #{table_name};
-  #     SQL
-  #   end
-  #
-  #   it 'should prevent updates to the readonly column' do
-  #     expect do
-  #       ActiveRecord::Base.exec_sql <<~SQL
-  #       UPDATE #{table_name}
-  #       SET email = 'testing@email.com'
-  #       WHERE topic_id = 1;
-  #       SQL
-  #     end.to raise_error(
-  #       PG::RaiseException,
-  #       /Discourse: email in #{table_name} is readonly/
-  #     )
-  #
-  #     ActiveRecord::Base.exec_sql("ROLLBACK")
-  #   end
-  #
-  #   it 'should allow updates to the other columns' do
-  #     ActiveRecord::Base.exec_sql <<~SQL
-  #     UPDATE #{table_name}
-  #     SET topic_id = 2
-  #     WHERE topic_id = 1
-  #     SQL
-  #
-  #     expect(
-  #       ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name};").values
-  #     ).to include(["2", "something@email.com"])
-  #   end
-  #
-  #   it 'should prevent insertions to the readonly column' do
-  #     expect do
-  #       ActiveRecord::Base.exec_sql <<~SQL
-  #       INSERT INTO #{table_name} (topic_id, email)
-  #       VALUES (2, 'something@email.com');
-  #       SQL
-  #     end.to raise_error(
-  #       PG::RaiseException,
-  #       /Discourse: email in table_with_readonly_column is readonly/
-  #     )
-  #
-  #     ActiveRecord::Base.exec_sql("ROLLBACK")
-  #   end
-  #
-  #   it 'should allow insertions to the other columns' do
-  #     ActiveRecord::Base.exec_sql <<~SQL
-  #     INSERT INTO #{table_name} (topic_id)
-  #     VALUES (2);
-  #     SQL
-  #
-  #     expect(
-  #       ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name} WHERE topic_id = 2;").values
-  #     ).to include(["2", nil])
-  #   end
-  # end
+  describe '.mark_readonly' do
+    let(:table_name) { "table_with_readonly_column" }
+
+    before do
+      ActiveRecord::Base.exec_sql <<~SQL
+      CREATE TABLE #{table_name} (topic_id INTEGER, email TEXT);
+
+      INSERT INTO #{table_name} (topic_id, email)
+      VALUES (1, 'something@email.com');
+      SQL
+
+      described_class.mark_readonly(table_name, 'email')
+    end
+
+    after do
+      ActiveRecord::Base.exec_sql <<~SQL
+      DROP TABLE IF EXISTS #{table_name};
+      DROP TRIGGER IF EXISTS #{table_name}_email_readonly ON #{table_name};
+      SQL
+    end
+
+    it 'should prevent updates to the readonly column' do
+      expect do
+        ActiveRecord::Base.exec_sql <<~SQL
+        UPDATE #{table_name}
+        SET email = 'testing@email.com'
+        WHERE topic_id = 1;
+        SQL
+      end.to raise_error(
+        PG::RaiseException,
+        /Discourse: email in #{table_name} is readonly/
+      )
+
+      ActiveRecord::Base.exec_sql("ROLLBACK")
+    end
+
+    it 'should allow updates to the other columns' do
+      ActiveRecord::Base.exec_sql <<~SQL
+      UPDATE #{table_name}
+      SET topic_id = 2
+      WHERE topic_id = 1
+      SQL
+
+      expect(
+        ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name};").values
+      ).to include(["2", "something@email.com"])
+    end
+
+    it 'should prevent insertions to the readonly column' do
+      expect do
+        ActiveRecord::Base.exec_sql <<~SQL
+        INSERT INTO #{table_name} (topic_id, email)
+        VALUES (2, 'something@email.com');
+        SQL
+      end.to raise_error(
+        PG::RaiseException,
+        /Discourse: email in table_with_readonly_column is readonly/
+      )
+
+      ActiveRecord::Base.exec_sql("ROLLBACK")
+    end
+
+    it 'should allow insertions to the other columns' do
+      ActiveRecord::Base.exec_sql <<~SQL
+      INSERT INTO #{table_name} (topic_id)
+      VALUES (2);
+      SQL
+
+      expect(
+        ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name} WHERE topic_id = 2;").values
+      ).to include(["2", nil])
+    end
+  end
 end
