@@ -120,7 +120,6 @@ module Scheduler
         Discourse.handle_job_exception(ex, {message: "Processing scheduled job queue"})
       ensure
         @running = false
-
         ActiveRecord::Base.connection_handler.clear_active_connections!
       end
 
