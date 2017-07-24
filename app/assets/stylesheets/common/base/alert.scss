@@ -30,15 +30,15 @@
     -webkit-appearance: none;
   }
   &.alert-success {
-    background-color:  dark-light-diff($success, $secondary, 50%, -60%);
+    background-color:  $success-low;
     color: $primary;
   }
   &.alert-error {
-    background-color:  rgba(dark-light-diff($danger, $secondary, 50%, -60%), .5);
+    background-color:  rgba($danger-low, .5);
     color: $primary;
   }
   &.alert-info {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color: $tertiary-low;
     color: $primary;
     &.clickable {
       color: $tertiary;

@@ -1,5 +1,3 @@
 {{#each recentEmojis as |emoji|}}
-  <a title='{{emoji.code}}'>
-    <img src='{{emoji.src}}' class='emoji'>
-  </a>
+  <button style="background-image: url('{{emoji.src}}')" type="button" class="emoji" tabindex="-1" title="{{emoji.code}}"></button>
 {{/each}}

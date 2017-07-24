@@ -1,29 +1,24 @@
 <div class='categories-column'>
   <div class='category-icon'>
-    <a href='#' title='recent'>
-      <img src='<%= Emoji.url_for("star") %>' class='emoji'>
-    </a>
+    <button type="button" class="emoji" tabindex="-1" title="{{i18n 'emoji_picker.recent'}}" data-section="recent" data-tabicon="star"></button>
   </div>
 
   <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
     <div class='category-icon'>
-      <a href='#' title='<%= group["name"] %>'>
-        <img src='<%= Emoji.url_for(group["tabicon"]) %>' class='emoji'>
-      </a>
+      <button type="button" class="emoji" tabindex="-1" data-tabicon="<%= group["tabicon"] %>" data-section="<%= group["name"] %>" title="<%= group["fullname"] %>"></button>
     </div>
   <% end %>
 
   <% if !Emoji.custom.blank? %>
     <div class='category-icon'>
-      <a href='#' title='ungrouped'>
-        <img src='<%= Emoji.custom.first.url %>' class='emoji'>
-      </a>
+      <button data-tabicon="<%= Emoji.custom.first.name %>" type="button" class="emoji" tabindex="-1" data-section="ungrouped" title="{{i18n 'emoji_picker.custom'}}"></button>
     </div>
   <% end %>
 </div>
 
 <div class='main-column'>
   <div class='filter'>
+    {{fa-icon 'search'}}
     <input type='text' name="filter" placeholder="{{i18n 'emoji_picker.filter_placeholder'}}" autocomplete="off" autofocus/>
     <button class='clear-filter'>
       {{fa-icon 'times'}}
@@ -36,7 +31,7 @@
     <div class='section' data-section='recent'>
       <div class='section-header'>
         <span class="title">{{i18n 'emoji_picker.recent'}}</span>
-        <a href='#' class='clear-recent btn btn-default'>{{fa-icon 'trash'}}</a>
+        <a href='#' class='clear-recent'>{{fa-icon 'trash'}}</a>
       </div>
       <div class='section-group'></div>
     </div>
@@ -47,14 +42,8 @@
           <span class="title">{{i18n 'emoji_picker.<%= group["name"] %>'}}</span>
         </div>
         <div class='section-group'>
-          <% group["icons"].each.with_index  do |icon, icon_index| %>
-            <a title='<%= icon["name"] %>'>
-              <% if group_index == 0 && icon_index <= 77 %>
-                <img src='<%= Emoji.url_for(icon['name']) %>' class='emoji <%= "diversity" if icon["diversity"] %>'>
-              <% else %>
-                <img src='' class='emoji <%= "diversity" if icon["diversity"] %>'>
-              <% end %>
-            </a>
+          <% group["icons"].each  do |icon| %>
+            <button type="button" class="emoji <%= "diversity" if icon["diversity"] %>" tabindex="-1" title="<%= icon['name']%>"></button>
           <% end %>
         </div>
       </div>
@@ -67,9 +56,7 @@
         </div>
         <div class='section-group'>
           {{#each customEmojis as |emoji|}}
-            <a title='{{emoji.code}}'>
-              <img src='{{emoji.src}}' class='emoji'>
-            </a>
+            <button style="background-url: url("{{emoji.src}}")" type="button" class="emoji" tabindex="-1" title="{{emoji.code}}"></button>
           {{/each}}
         </div>
       </div>
@@ -79,7 +66,7 @@
     <div class='info'></div>
     <div class='diversity-picker'>
       <% ['default', 'light', 'medium-light', 'medium', 'medium-dark', 'dark'].each.with_index do |diversity, index| %>
-        <a href='#' class='diversity-scale <%= diversity %>' data-level="<%= index + 1 %>">
+        <a href='#' title="{{i18n 'emoji_picker.<%= diversity.gsub('-', '_') %>_tone'}}" class='diversity-scale <%= diversity %>' data-level="<%= index + 1 %>">
           {{fa-icon "check"}}
         </a>
       <% end %>

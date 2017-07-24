@@ -26,12 +26,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed
-  isAdmin() {
-    return Discourse.User.currentProp("admin");
-  },
-
-  @computed('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving', 'model.details.can_invite_to')
+  @computed('model.admin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving', 'model.details.can_invite_to')
   disabled(isAdmin, emailOrUsername, invitingToTopic, isPrivateTopic, groupNames, saving, can_invite_to) {
     if (saving) return true;
     if (Ember.isEmpty(emailOrUsername)) return true;
@@ -48,7 +43,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return false;
   },
 
-  @computed('isAdmin', 'emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames', 'hasCustomMessage')
+  @computed('model.admin', 'emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames', 'hasCustomMessage')
   disabledCopyLink(isAdmin, emailOrUsername, saving, isPrivateTopic, groupNames, hasCustomMessage) {
     if (hasCustomMessage) return true;
     if (saving) return true;
@@ -98,10 +93,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // Allow Existing Members? (username autocomplete)
   allowExistingMembers: Ember.computed.alias('invitingToTopic'),
 
+  @computed("model.admin", "model.group_users")
+  isGroupOwnerOrAdmin(isAdmin, groupUsers) {
+    return isAdmin || groupUsers.some(groupUser => groupUser.owner);
+  },
+
   // Show Groups? (add invited user to private group)
-  @computed('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic', 'canInviteViaEmail')
-  showGroups(isAdmin, emailOrUsername, isPrivateTopic, isMessage, invitingToTopic, canInviteViaEmail) {
-    return isAdmin &&
+  @computed('isGroupOwnerOrAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic', 'canInviteViaEmail')
+  showGroups(isGroupOwnerOrAdmin, emailOrUsername, isPrivateTopic, isMessage, invitingToTopic, canInviteViaEmail) {
+    return isGroupOwnerOrAdmin &&
            canInviteViaEmail &&
            !isMessage &&
            (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic);
@@ -113,7 +113,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   // Instructional text for the modal.
-  @computed('isMessage', 'invitingToTopic', 'emailOrUsername', 'isPrivateTopic', 'isAdmin', 'canInviteViaEmail')
+  @computed('isMessage', 'invitingToTopic', 'emailOrUsername', 'isPrivateTopic', 'model.admin', 'canInviteViaEmail')
   inviteInstructions(isMessage, invitingToTopic, emailOrUsername, isPrivateTopic, isAdmin, canInviteViaEmail) {
     if (!canInviteViaEmail) {
       // can't invite via email, only existing users
@@ -150,7 +150,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   groupFinder(term) {
-    return Group.findAll({search: term, ignore_automatic: true});
+    return Group.findAll({ term: term, ignore_automatic: true });
   },
 
   @computed('isMessage', 'emailOrUsername', 'invitingExistingUserToTopic')

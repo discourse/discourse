@@ -484,8 +484,14 @@ class TopicsController < ApplicationController
 
     topic = Topic.find_by(id: params[:topic_id])
 
-    group_ids = Group.lookup_group_ids(params)
-    guardian.ensure_can_invite_to!(topic,group_ids)
+
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
+
+    guardian.ensure_can_invite_to!(topic, groups)
+    group_ids = groups.map(&:id)
 
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])

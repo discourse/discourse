@@ -62,4 +62,4 @@ install:
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 
 script:
-  - bash -c "if [ '$QUNIT_RUN' == '0' ]; then bundle exec rspec && bundle exec rake plugin:spec; else LOAD_PLUGINS=1 bundle exec rake qunit:test['200000']; fi"
+  - bash -c "if [ '$QUNIT_RUN' == '0' ]; then bundle exec rspec && bundle exec rake plugin:spec; else LOAD_PLUGINS=1 bundle exec rake qunit:test['300000']; fi"

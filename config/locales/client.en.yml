@@ -1135,7 +1135,7 @@ en:
       alt: 'Alt'
 
     emoji_picker:
-      filter_placeholder: Search an emoji
+      filter_placeholder: Search for emoji
       people: People
       nature: Nature
       food: Food
@@ -1144,7 +1144,13 @@ en:
       objects: Objects
       celebration: Celebration
       custom: Custom emojis
-      recent: Recently used emojis
+      recent: Recently used
+      default_tone: No skin tone
+      light_tone: Light skin tone
+      medium_light_tone: Medium light skin tone
+      medium_tone: Medium skin tone
+      medium_dark_tone: Medium dark skin tone
+      dark_tone: Dark skin tone
 
     composer:
       emoji: "Emoji :)"
@@ -1325,8 +1331,8 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "1 result for <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} results for <span class='term'>\"{{term}}\"</span>"
+        one: "1 result for <span class='term'>{{term}}</span>"
+        other: "{{count}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."

@@ -230,9 +230,7 @@ module ApplicationHelper
   end
 
   def gsub_emoji_to_unicode(str)
-    if str
-      str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name }
-    end
+    Emoji.gsub_emoji_to_unicode(str)
   end
 
   def application_logo_url

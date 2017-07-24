@@ -1,3 +1,27 @@
+# rake docker:test is designed to be used inside the discourse/docker_test image
+# running it anywhere else will likely fail
+#
+# Environment Variables (specific to this rake task)
+# => SKIP_CORE                 set to 1 to skip core rspec tests
+# => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
+# => JS_ONLY                   set to 1 to skip all rspec tests
+# => RUBY_ONLY                 set to 1 to skip all qunit tests
+# => SINGLE_PLUGIN             set to plugin name to skip eslint, and only run plugin-specific rspec tests
+#
+# Other useful environment variables (not specific to this rake task)
+# => LOAD_PLUGINS   set to 1 to load all plugins when running tests
+# => MODULE         set to a qunit module name to run only those tests
+# => FILTER         set to a qunit filter string to run only those tests
+# => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
+#                   this can also be set to a branch, e.g. "origin/tests-passed"
+#
+# Example usage:
+#   Run all core tests:  
+#       docker run discourse/discourse_test:release
+#   Run only rspec tests:  
+#       docker run -e RUBY_ONLY=1 discourse/discourse_test:release
+#   Run all core and plugin tests (plugin mounted from host filesystem):
+#       docker run -e LOAD_PLUGINS=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release 
 
 def run_or_fail(command)
   pid = Process.spawn(command)
@@ -42,14 +66,22 @@ task 'docker:test' do
       end
 
       if ENV["LOAD_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rake plugin:spec")
+        if ENV["SINGLE_PLUGIN"]
+          @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
+        else
+          @good &&= run_or_fail("bundle exec rake plugin:spec")
+        end
       end
+      
     end
+
     unless ENV["RUBY_ONLY"]
-      @good &&= run_or_fail("eslint app/assets/javascripts")
-      @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts")
-      @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
-      @good &&= run_or_fail("eslint test/javascripts")
+      unless ENV["SINGLE_PLUGIN"]
+        @good &&= run_or_fail("eslint app/assets/javascripts")
+        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts")
+        @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
+        @good &&= run_or_fail("eslint test/javascripts")
+      end
       @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
     end
 

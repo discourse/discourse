@@ -357,7 +357,6 @@ fr:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Les clés d''interpolation suivantes sont invalides : « %{keys} »'
               missing_interpolation_keys: 'Les clés d''interpolation suivantes sont absentes : « %{keys} »'
       <<: *errors
   user_profile:
@@ -1527,41 +1526,9 @@ fr:
   invite_mailer:
     title: "Invitiation"
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      à
-
-      > %{site_title} -- %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Invitation personnalisée"
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      à
-
-      > %{site_title} -- %{site_description}
-
-      Avec ce message :
-
-      > %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Invitation sur le forum"
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
@@ -2091,26 +2058,6 @@ fr:
     visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre."
     posted_by: "Redigé par %{username} le %{post_date}"
-    invited_to_private_message_body: |
-      %{username} vous a invité(e) à un message
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Utilisateur invité au MP"
       subject_template: "[%{email_prefix}] %{username} vous a invité dans la conversation « %{topic_title} »"

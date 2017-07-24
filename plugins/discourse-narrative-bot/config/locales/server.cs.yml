@@ -5,4 +5,93 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-cs: {}
+cs:
+  badges:
+    certified:
+      name: Certifikován
+      description: "Dokončil náš tutorial pro nové uživatele"
+  discourse_narrative_bot:
+    dice:
+      trigger: "hodit"
+      invalid: |-
+        Omlouvám se, ale je matematicky nemožné hodit s touhle kombinací kostek. :confounded:
+      not_enough_dice: |-
+        Mám jen %{num_of_dice} kostek. Naprosto [ostudné](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php).
+      out_of_range: |-
+        Víš, že [maximální počet stěn](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pro matematicky férovou kostku je 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "citát"
+      '1':
+        author: "Albert Einstein"
+      '2':
+        author: "Mahatma Gandhi"
+      '3':
+        author: "Dr Seuss"
+      '4':
+        author: "Charles-Guillaume Étienne"
+      '5':
+        author: "Theodore Roosevelt"
+      '6':
+        author: "Máma Forresta Gumpa"
+      '7':
+        author: "Neil Armstrong"
+      '8':
+        author: "Eleanor Roosevelt"
+      '9':
+        author: "Bruce Lee"
+      '10':
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      answers:
+        '1': "To je jisté"
+        '2': "Naprostá pravda"
+        '3': "Bez zaváhání"
+        '4': "Rozhodně ano"
+        '5': "Na to se můžeš spolehnout"
+        '6': "Podle mě ano"
+        '7': "Asi jo"
+        '8': "Vypadá to dobře"
+        '9': "Ano"
+        '10': "Dle znamení ano"
+        '11': "Odpověď nejistá, zeptej se znovu"
+        '12': "Zeptej se jindy"
+        '13': "To ti teď raději neřeknu"
+        '14': "To nyní nedokážu předpovědět"
+        '15': "Soustřeď se a zeptej se znovu"
+        '16': "S tím nepočítej"
+        '17': "Moje odpověď zní ne"
+        '18': "Dle mých zdrojů ne"
+        '19': "To nevypadá dobře"
+        '20': "To sotva"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: 'začít'
+      skip_trigger: 'přeskočit'
+      help_trigger: 'zobrazit nápovědu'
+      random_mention:
+        reply: |-
+          Ahoj! Pokud chceš zjistit, co umím, napiš `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Zatím umím následující věci:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Začít jedním z následujících interaktivních průvodců: %{tracks}.
+      do_not_understand:
+        first_response: |-
+          Dík za odpověď!
+
+          Bohužel nejsem naprogramován nijak skvěle, takže jsem tomuhle neporozumněl. :frowning:
+    new_user_narrative:
+      reset_trigger: "nový uživatel"
+      hello:
+        title: ":robot: Zdravím!"
+      search:
+        not_found: |-
+          Hmm…vypadá to, že máš potíže. To mě mrzí. Hledal jsi <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> pro výraz **capy&#8203;bara**?
+    advanced_user_narrative:
+      reset_trigger: 'pokročilý uživatel'

@@ -123,6 +123,7 @@ module PrettyText
 
   def self.reset_context
     @ctx_init.synchronize do
+      @ctx&.dispose
       @ctx = nil
     end
   end
@@ -163,6 +164,8 @@ module PrettyText
         __optInput.mentionLookup = __mentionLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
+        __optInput.lookupInlineOnebox = __lookupInlineOnebox;
+        #{opts[:linkify] == false ? "__optInput.linkify = false;": ""}
       JS
 
       if opts[:topicId]

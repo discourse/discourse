@@ -1,19 +1,4 @@
 class Admin::GroupsController < Admin::AdminController
-
-  def index
-    groups = Group.order(:name).where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
-
-    if search = params[:search].to_s
-      groups = groups.where("name ILIKE ?", "%#{search}%")
-    end
-
-    if params[:ignore_automatic].to_s == "true"
-      groups = groups.where(automatic: false)
-    end
-
-    render_serialized(groups, BasicGroupSerializer)
-  end
-
   def show
     render nothing: true
   end
@@ -29,7 +14,11 @@ class Admin::GroupsController < Admin::AdminController
       users = (params[:users] || []).map {|u| u.downcase}
       valid_emails = {}
       valid_usernames = {}
-      valid_users = User.where("username_lower IN (:users) OR email IN (:users)", users: users).pluck(:id, :username_lower, :email)
+
+      valid_users = User.joins(:user_emails)
+        .where("username_lower IN (:users) OR user_emails.email IN (:users)", users: users)
+        .pluck(:id, :username_lower, :"user_emails.email")
+
       valid_users.map! do |id, username_lower, email|
         valid_emails[email] = valid_usernames[username_lower] = id
         id

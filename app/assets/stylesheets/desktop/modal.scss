@@ -16,7 +16,7 @@
   height: auto;
   margin: -250px 0 0 -305px;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low; 
 
   box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;

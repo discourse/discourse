@@ -11,7 +11,7 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
-const ATTR_REGEX = /(([a-z0-9]*)\s*=)/ig;
+const ATTR_REGEX = /((([a-z0-9]*)\s*)=)(["“”'].*["“”']|\S+)/ig;
 
 // parse a tag [test a=1 b=2] to a data structure
 // {tag: "test", attrs={a: "1", b: "2"}
@@ -76,20 +76,18 @@ export function parseBBCodeTag(src, start, max, multiline) {
       let match, key, val;
 
       while(match = ATTR_REGEX.exec(raw)) {
-        if (key) {
-          val = raw.slice(attrs[key],match.index) || '';
+        key = match[3];
+        if (key === '') {
+          key = '_default';
+        }
+
+        val = match[4];
+
+        if (val) {
           val = val.trim();
-          val = val.replace(/^["'](.*)["']$/, '$1');
+          val = val.replace(/^["'“”](.*)["'“”]$/, '$1');
           attrs[key] = val;
         }
-        key = match[2] || '_default';
-        attrs[key] = match.index + match[0].length;
-      }
-
-      if (key) {
-        val = raw.slice(attrs[key]);
-        val = val.replace(/^["'](.*)["']$/, '$1');
-        attrs[key] = val;
       }
     }
 
@@ -194,7 +192,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   } else {
 
     if (rule.before) {
-      rule.before.call(this, state, info.attrs, md, state.src.slice(initial, initial + info.length + 1));
+      rule.before.call(this, state, info, state.src.slice(initial, initial + info.length + 1));
     }
 
     let wrapTag;
@@ -237,7 +235,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     }
 
     if (rule.after) {
-      rule.after.call(this, state, lastToken, md, state.src.slice(start-2, start + closeTag.length - 1));
+      rule.after.call(this, state, lastToken, state.src.slice(start-2, start + closeTag.length - 1));
     }
   }
 

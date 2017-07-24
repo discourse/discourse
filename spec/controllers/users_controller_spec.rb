@@ -822,7 +822,7 @@ describe UsersController do
         it "should succeed without the optional field" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -834,7 +834,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = 'value3'
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -846,7 +846,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = ('x' * 3000)
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
 
           val = inserted.custom_fields["user_field_#{optional_field.id}"]
           expect(val.length).to eq(UserField.max_length)
@@ -868,7 +868,7 @@ describe UsersController do
         it "should succeed" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).not_to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
@@ -883,7 +883,7 @@ describe UsersController do
         xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd$$"
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
-        expect(User.find_by(email: staged.email).staged).to eq(false)
+        expect(User.find_by_email(staged.email).staged).to eq(false)
       end
     end
 
@@ -936,11 +936,13 @@ describe UsersController do
         expect(user.reload.username).to eq(new_username)
       end
 
-      skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+      it 'should fail if the user is old' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
-        user.stubs(:post_count).returns(200)
-        expect(Guardian.new(user).can_edit_username?(user)).to eq(false)
+        PostCreator.new(user,
+          title: 'This is a test topic',
+          raw: 'This is a test this is a test'
+        ).create
 
         xhr :put, :username, username: user.username, new_username: new_username
 
@@ -2033,6 +2035,7 @@ describe UsersController do
           password: 'qwerqwer123',
           email: user.email
         }
+
         expect(response).to_not be_success
       end
 

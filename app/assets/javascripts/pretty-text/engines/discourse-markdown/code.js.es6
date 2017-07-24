@@ -13,7 +13,7 @@ function render(tokens, idx, options, env, slf, md) {
 
   if (info) {
     // strip off any additional languages
-    info = info.split(/\s+/g)[0];
+    info = info.trim().split(/\s+/g)[0];
   }
 
   const acceptableCodeClasses = md.options.discourse.acceptableCodeClasses;
@@ -23,7 +23,7 @@ function render(tokens, idx, options, env, slf, md) {
 
   className = TEXT_CODE_CLASSES.indexOf(info) !== -1 ? 'lang-nohighlight' : 'lang-' + langName;
 
-  return `<pre><code class='${className}'>${escapedContent}</code></pre>\n`;
+  return `<pre><code class="${className}">${escapedContent}</code></pre>\n`;
 }
 
 export function setup(helper) {

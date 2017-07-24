@@ -54,7 +54,7 @@ class Emoji
   end
 
   def self.url_for(name)
-    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=5"
+    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
   end
 
   def self.cache_key(name)
@@ -157,6 +157,12 @@ class Emoji
         c
       end
     end.join
+  end
+
+  def self.gsub_emoji_to_unicode(str)
+    if str
+      str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name }
+    end
   end
 
   def self.lookup_unicode(name)

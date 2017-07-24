@@ -148,20 +148,21 @@ it:
       default_description: "Default"
     s3:
       regions:
-        us_east_1: "Stati Uniti Est (Virginia del Nord)"
-        us_west_1: "Stati Uniti Ovest (California del Nord)"
-        us_west_2: "Stati Uniti Ovest (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "Europa (Irlanda)"
-        eu_west_2: "EU (Londra)"
-        eu_central_1: "Europa (Francoforte)"
-        ap_southeast_1: "Asia Pacifico (Singapore)"
-        ap_southeast_2: "Asia Pacifico (Sidney)"
-        ap_south_1: "Asia Pacifico (Mumbai)"
         ap_northeast_1: "Asia Pacifico (Tokyo)"
         ap_northeast_2: "Asia Pacifico (Seoul)"
-        sa_east_1: "America del Sud (San Paolo)"
+        ap_south_1: "Asia Pacifico (Mumbai)"
+        ap_southeast_1: "Asia Pacifico (Singapore)"
+        ap_southeast_2: "Asia Pacifico (Sidney)"
         cn_north_1: "Cina (Beijing)"
+        eu_central_1: "Europa (Francoforte)"
+        eu_west_1: "Europa (Irlanda)"
+        eu_west_2: "EU (Londra)"
+        sa_east_1: "America del Sud (San Paolo)"
+        us_east_1: "Stati Uniti Est (Virginia del Nord)"
+        us_east_2: "USA Est (Ohio)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "Stati Uniti Ovest (California del Nord)"
+        us_west_2: "Stati Uniti Ovest (Oregon)"
     edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -352,6 +353,7 @@ it:
         add_members: "Aggiungi Membri"
         delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
       name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
+      public: "Permetti agli utenti di aggiungersi/togliersi liberamente dal gruppo (Richiede che il gruppo sia visibile a tutti)"
       empty:
         posts: "Non ci sono messaggi da membri di questo gruppo."
         members: "Non ci sono membri in questo gruppo."
@@ -386,6 +388,12 @@ it:
       mentions: "Menzioni"
       messages: "Messaggi"
       notification_level: "Livello di notifica predefinito per i messaggi di gruppo"
+      visibility_levels:
+        title: "Chi può vedere questo gruppo?"
+        public: "Chiunque"
+        members: "Proprietari del gruppo, membri e amministratori"
+        staff: "Proprietari del gruppo e staff"
+        owners: "Proprietari del gruppo e amministratori"
       alias_levels:
         title: "Chi può inviare @menzionare e inviare messaggi a questo gruppo?"
         nobody: "Nessuno"
@@ -748,6 +756,9 @@ it:
         expired: "L'invito è scaduto."
         rescind: "Rimuovi"
         rescinded: "Invito revocato"
+        rescind_all: "Rimuovi tutti gli Inviti"
+        rescinded_all: "Tutti gli inviti sono stati rimossi!"
+        rescind_all_confirm: "Sei sicuro di voler rimuovere tutti gli inviti?"
         reinvite: "Rinvia Invito"
         reinvite_all: "Rispedisci tutti gli Inviti"
         reinvite_all_confirm: "Sei sicuro di voler inviare nuovamente tutti gli inviti?"
@@ -761,10 +772,10 @@ it:
         link_generated: "Collegamento di invito generato con successo!"
         valid_for: "Questo collegamento di invito è valido solamente per il seguente indirizzo email: %{email}"
         bulk_invite:
-          none: "Non hai ancora invitato nessuno. Manda degli inviti individuali o invita più persone alla volta <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>caricando un file CVS</a>."
+          none: "Non hai ancora invitato nessuno. Puoi inviare degli inviti individuali o più persone alla volta <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>caricando un file CSV</a>."
           text: "Invito di Massa da File"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
-          error: "Spiacente, il file deve essere in formato CSV."
+          error: "Spiacenti, il file deve essere in formato CSV."
       password:
         title: "Password"
         too_short: "La password è troppo breve."
@@ -1002,6 +1013,8 @@ it:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Solo Categorie"
       categories_with_featured_topics: "Categorie con argomenti in evidenza"
@@ -1016,6 +1029,7 @@ it:
       options: "Opzioni"
       whisper: "sussurra"
       unlist: "invisibile"
+      blockquote_text: "Citazione"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
       toggle_unlisted: "Rendi Invisibile"
@@ -1121,6 +1135,7 @@ it:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Guadagnato '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nuovo Argomento</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} messaggio nella tua casella {{group_name}}</p>"
@@ -1204,13 +1219,13 @@ it:
           posted: ho pubblicato in
           watching: sto osservando
           tracking: sto seguendo
-          private: sono messaggi scritti da me
+          private: messaggi privati
           bookmarks: ho aggiunto ai segnalibri
           first: sono il primissimo post
           pinned: sono appuntati
           unpinned: non sono appuntati
-          seen: Ho letto
-          unseen: Non ho letto
+          seen: ho letto
+          unseen: non ho letto
           wiki: sono wiki
           all_tags: Contiene tutte le etichette
         statuses:
@@ -1238,6 +1253,7 @@ it:
         select_all: "Seleziona Tutti"
         clear_all: "Deseleziona Tutto"
         unlist_topics: "Deselezione Topics"
+        relist_topics: "Ripubblica Argomenti"
         reset_read: "Reimposta Lettura"
         delete: "Elimina Argomenti"
         dismiss: "Chiudi"
@@ -1541,6 +1557,7 @@ it:
         success_email: "Abbiamo inviato un invito via email a <b>{{emailOrUsername}}</b>. Ti avvertiremo quando l'invito verrà riscattato. Controlla la sezione \"inviti\" sulla tua pagina utente per tracciarne lo stato."
         success_username: "Abbiamo invitato l'utente a partecipare all'argomento."
         error: "Spiacenti, non siamo riusciti ad invitare questa persona. E' stata per caso già invitata (gli inviti sono limitati)? "
+        success_existing_email: "Esiste già un utente con email <b>{{emailOrUsername}}</b>. Lo abbiamo invitato a partecipare a questo argomento."
       login_reply: 'Connettiti per Rispondere'
       filters:
         n_posts:
@@ -1763,6 +1780,10 @@ it:
         confirm:
           one: "Sei sicuro di voler cancellare questo messaggio?"
           other: "Sei sicuro di voler cancellare tutti questi messaggi?"
+      merge:
+        confirm:
+          one: "Sicuro di voler unire questi messaggi?"
+          other: "Sicuro di voler unire questi {{count}} messaggi?"
       revisions:
         controls:
           first: "Prima revisione"
@@ -1902,6 +1923,7 @@ it:
       notify_action: 'Messaggio'
       official_warning: 'Avvertimento Ufficiale'
       delete_spammer: "Cancella Spammer"
+      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>1</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>1</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dall'indirizzo IP<b>{ip_address}</b>, e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco nero permanente. Sei veramente sicuro che questo utente sia uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -2626,6 +2648,9 @@ it:
           updating: "Aggiornamento..."
           up_to_date: "Il tema è aggiornato, ultima verifica:"
           add: "Aggiungi"
+          commits_behind:
+            one: "Il tema è indietro di 1 aggiornamento!"
+            other: "Il tema è indietro di {{count}} aggiornamenti!"
           scss:
             text: "CSS"
             title: "Inserire il CSS personalizzato, accettiamo tutti gli stili validi di CSS e SCSSpersonalizzato"

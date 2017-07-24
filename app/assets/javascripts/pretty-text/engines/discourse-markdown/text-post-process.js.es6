@@ -12,18 +12,45 @@ export class TextPostProcessRuler {
   getMatcher() {
     if (this.matcher) { return this.matcher; }
 
-    this.matcher = new RegExp(this.rules.map((r) =>
-      "(" + r.rule.matcher.toString().slice(1,-1) + ")"
-    ).join('|'), 'g');
+    this.matcherIndex = [];
 
+    let rules = this.rules.map((r) =>
+      "(" + r.rule.matcher.toString().slice(1,-1) + ")"
+    );
+
+    let i;
+    let regexString = "";
+    let last = 1;
+
+    // this code is a bit tricky, our matcher may have multiple capture groups
+    // we want to dynamically determine how many
+    for(i=0; i<rules.length; i++) {
+      this.matcherIndex[i] = last;
+
+      if (i === rules.length-1) {
+        break;
+      }
+
+      if (i>0) {
+        regexString = regexString + '|';
+      }
+      regexString = regexString + rules[i];
+
+      let regex = new RegExp(regexString + '|(x)');
+      last = 'x'.match(regex).length - 1;
+    }
+
+    this.matcher = new RegExp(rules.join('|'), 'g');
     return this.matcher;
   }
 
   applyRule(buffer, match, state) {
     let i;
     for(i=0; i<this.rules.length; i++) {
-      if (match[i+1]) {
-        this.rules[i].rule.onMatch(buffer, match[i+1], state);
+      let index = this.matcherIndex[i];
+
+      if (match[index]) {
+        this.rules[i].rule.onMatch(buffer, match.slice(index, this.matcherIndex[i+1]), state);
         break;
       }
     }

@@ -178,24 +178,23 @@ describe PostAction do
   describe "update_counters" do
 
     it "properly updates topic counters" do
-      Timecop.freeze(Date.today) do
-        # we need this to test it
-        TopicUser.change(codinghorror, post.topic, posted: true)
+      freeze_time Date.today
+      # we need this to test it
+      TopicUser.change(codinghorror, post.topic, posted: true)
 
-        expect(value_for(moderator.id, Date.today)).to eq(0)
+      expect(value_for(moderator.id, Date.today)).to eq(0)
 
-        PostAction.act(moderator, post, PostActionType.types[:like])
-        PostAction.act(codinghorror, second_post, PostActionType.types[:like])
+      PostAction.act(moderator, post, PostActionType.types[:like])
+      PostAction.act(codinghorror, second_post, PostActionType.types[:like])
 
-        post.topic.reload
-        expect(post.topic.like_count).to eq(2)
+      post.topic.reload
+      expect(post.topic.like_count).to eq(2)
 
-        expect(value_for(moderator.id, Date.today)).to eq(1)
+      expect(value_for(moderator.id, Date.today)).to eq(1)
 
-        tu = TopicUser.get(post.topic, codinghorror)
-        expect(tu.liked).to be true
-        expect(tu.bookmarked).to be false
-      end
+      tu = TopicUser.get(post.topic, codinghorror)
+      expect(tu.liked).to be true
+      expect(tu.bookmarked).to be false
     end
 
   end
@@ -249,33 +248,33 @@ describe PostAction do
     end
 
     it 'should increase the `like_count` and `like_score` when a user likes something' do
-      Timecop.freeze(Date.today) do
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-        expect(post.like_count).to eq(1)
-        expect(post.like_score).to eq(1)
-        post.topic.reload
-        expect(post.topic.like_count).to eq(1)
-        expect(value_for(codinghorror.id, Date.today)).to eq(1)
+      freeze_time Date.today
 
-        # When a staff member likes it
-        PostAction.act(moderator, post, PostActionType.types[:like])
-        post.reload
-        expect(post.like_count).to eq(2)
-        expect(post.like_score).to eq(4)
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      expect(post.like_count).to eq(1)
+      expect(post.like_score).to eq(1)
+      post.topic.reload
+      expect(post.topic.like_count).to eq(1)
+      expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
-        # Removing likes
-        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-        expect(post.like_count).to eq(1)
-        expect(post.like_score).to eq(3)
-        expect(value_for(codinghorror.id, Date.today)).to eq(0)
+      # When a staff member likes it
+      PostAction.act(moderator, post, PostActionType.types[:like])
+      post.reload
+      expect(post.like_count).to eq(2)
+      expect(post.like_score).to eq(4)
 
-        PostAction.remove_act(moderator, post, PostActionType.types[:like])
-        post.reload
-        expect(post.like_count).to eq(0)
-        expect(post.like_score).to eq(0)
-      end
+      # Removing likes
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      expect(post.like_count).to eq(1)
+      expect(post.like_score).to eq(3)
+      expect(value_for(codinghorror.id, Date.today)).to eq(0)
+
+      PostAction.remove_act(moderator, post, PostActionType.types[:like])
+      post.reload
+      expect(post.like_count).to eq(0)
+      expect(post.like_score).to eq(0)
     end
   end
 

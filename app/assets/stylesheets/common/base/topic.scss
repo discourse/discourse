@@ -91,7 +91,7 @@
 
 .has-pending-posts {
   padding: 0.5em;
-  background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+  background-color: $highlight-medium;
   a[href] {
     float: right;
   }
@@ -143,7 +143,7 @@
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    border-top: 1px solid $primary-low; 
   }
 
   .expand-links {
@@ -185,7 +185,7 @@
     &:hover {
       color: $tertiary;
       i {
-        background: dark-light-diff($tertiary, $secondary, 85%, -65%);
+        background: $tertiary-low;
       }
     }
   }

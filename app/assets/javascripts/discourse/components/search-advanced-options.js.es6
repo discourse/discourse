@@ -527,7 +527,7 @@ export default Em.Component.extend({
   },
 
   groupFinder(term) {
-    return Group.findAll({search: term, ignore_automatic: false});
+    return Group.findAll({ term: term, ignore_automatic: false });
   },
 
   badgeFinder(term) {

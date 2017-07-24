@@ -284,6 +284,8 @@ module SiteSettingExtension
   def add_override!(name, val)
     type = get_data_type(name, defaults[name.to_sym])
 
+    val = val.to_s if type == types[:string]
+
     if type == types[:bool] && val != true && val != false
       val = (val == "t" || val == "true") ? 't' : 'f'
     end

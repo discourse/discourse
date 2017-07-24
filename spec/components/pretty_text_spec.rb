@@ -52,9 +52,9 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
-      it "produces a quote even with new lines in it" do
+      it "indifferent about curlies" do
         md = <<~MD
-          [quote="#{user.username}, post:123, topic:456, full:true"]
+          [quote=“#{user.username}, post:123, topic:456, full:true”]
 
           ddd
 
@@ -146,10 +146,18 @@ describe PrettyText do
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
-    it "can handle mentions" do
+    it "can handle mention edge cases" do
+      expect(PrettyText.cook("hi\n@s")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span></p>")
+      expect(PrettyText.cook("hi\n@ss")).to eq("<p>hi<br>\n<span class=\"mention\">@ss</span></p>")
+      expect(PrettyText.cook("hi\n@s.")).to eq("<p>hi<br>\n<span class=\"mention\">@s</span>.</p>")
+      expect(PrettyText.cook("hi\n@s.s")).to eq("<p>hi<br>\n<span class=\"mention\">@s.s</span></p>")
+      expect(PrettyText.cook("hi\n@.s.s")).to eq("<p>hi<br>\n@.s.s</p>")
+    end
+
+    it "can handle mention with hyperlinks" do
       Fabricate(:user, username: "sam")
       expect(PrettyText.cook("hi @sam! hi")).to match_html '<p>hi <a class="mention" href="/u/sam">@sam</a>! hi</p>'
-      expect(PrettyText.cook("hi\n@sam")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a></p>")
+      expect(PrettyText.cook("hi\n@sam.")).to eq("<p>hi<br>\n<a class=\"mention\" href=\"/u/sam\">@sam</a>.</p>")
     end
 
     it "can handle mentions inside a hyperlink" do
@@ -207,9 +215,12 @@ describe PrettyText do
     end
 
     it 'can include code class correctly' do
+      # keep in mind spaces should be trimmed per spec
+      expect(PrettyText.cook("```   ruby the mooby\n`````")).to eq('<pre><code class="lang-ruby"></code></pre>')
       expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<pre><code class='lang-cpp'>cpp\n</code></pre>")
       expect(PrettyText.cook("```\ncpp\n```")).to match_html("<pre><code class='lang-auto'>cpp\n</code></pre>")
       expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-nohighlight'>cpp\n</code></pre>")
+
     end
 
     it 'indents code correctly' do
@@ -871,6 +882,12 @@ HTML
     expect(cooked).to eq(html)
   end
 
+  it "supports query params in bbcode url" do
+    cooked = PrettyText.cook("[url=https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse]BBcode link[/url]")
+    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="nofollow noopener">BBcode link</a></p>'
+    expect(cooked).to eq(html)
+  end
+
   it "supports inline code bbcode" do
     cooked = PrettyText.cook "Testing [code]codified **stuff** and `more` stuff[/code]"
     html = "<p>Testing <code>codified **stuff** and `more` stuff</code></p>"
@@ -938,5 +955,18 @@ HTML
     end
   end
 
+  describe "inline onebox" do
+    it "includes the topic title" do
+      topic = Fabricate(:topic)
+
+      raw = "Hello #{topic.url}"
+
+      cooked = <<~HTML
+        <p>Hello <a href="#{topic.url}">#{topic.title}</a></p>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+  end
 
 end
