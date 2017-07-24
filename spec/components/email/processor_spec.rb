@@ -44,13 +44,14 @@ describe Email::Processor do
         Email::Processor.process!(mail2)
       }.to change { EmailLog.count }.by(0)
 
-      Timecop.freeze(Date.today + 1)
-      key = "rejection_email:#{[from]}:email_reject_empty:#{Date.today}"
-      $redis.expire(key, 0)
+      Timecop.freeze(Date.today + 1) do
+        key = "rejection_email:#{[from]}:email_reject_empty:#{Date.today}"
+        $redis.expire(key, 0)
 
-      expect {
-        Email::Processor.process!(mail3)
-      }.to change { EmailLog.count }.by(1)
+        expect {
+          Email::Processor.process!(mail3)
+        }.to change { EmailLog.count }.by(1)
+      end
     end
   end
 
