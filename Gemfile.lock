@@ -363,7 +363,6 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.7)
-    timecop (0.8.1)
     trollop (2.1.2)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
@@ -476,7 +475,6 @@ DEPENDENCIES
   test_after_commit
   thor
   tilt
-  timecop
   uglifier
   unf
   unicorn

@@ -287,34 +287,32 @@ describe PostCreator do
         end
 
         it "doesn't update topic's auto close when it's not based on last post" do
-          Timecop.freeze do
-            topic = Fabricate(:topic).set_or_create_timer(TopicTimer.types[:close], 12)
+          freeze_time
 
-            PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
-            topic.reload
+          topic = Fabricate(:topic).set_or_create_timer(TopicTimer.types[:close], 12)
+          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          topic.reload
 
-            topic_status_update = TopicTimer.last
-            expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-            expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
-          end
+          topic_status_update = TopicTimer.last
+          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
+          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
         end
 
         it "updates topic's auto close date when it's based on last post" do
-          Timecop.freeze do
-            topic = Fabricate(:topic_timer,
-              based_on_last_post: true,
-              execute_at: Time.zone.now - 12.hours,
-              created_at: Time.zone.now - 24.hours
-            ).topic
+          freeze_time
+          topic = Fabricate(:topic_timer,
+            based_on_last_post: true,
+            execute_at: Time.zone.now - 12.hours,
+            created_at: Time.zone.now - 24.hours
+          ).topic
 
-            Fabricate(:post, topic: topic)
+          Fabricate(:post, topic: topic)
 
-            PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
 
-            topic_status_update = TopicTimer.last
-            expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
-            expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
-          end
+          topic_status_update = TopicTimer.last
+          expect(topic_status_update.execute_at).to be_within(1.second).of(Time.zone.now + 12.hours)
+          expect(topic_status_update.created_at).to be_within(1.second).of(Time.zone.now)
         end
 
       end

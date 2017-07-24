@@ -31,14 +31,13 @@ describe User do
   describe '#count_by_signup_date' do
     before(:each) do
       User.destroy_all
-      Timecop.freeze
+      freeze_time
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 2.days.ago)
       Fabricate(:user, created_at: 4.days.ago)
     end
-    after(:each) { Timecop.return }
     let(:signups_by_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1} }
 
     it 'collect closed interval signups' do
@@ -716,12 +715,8 @@ describe User do
       let!(:date) { Time.zone.now }
 
       before do
-        Timecop.freeze(date)
+        freeze_time date
         user.update_last_seen!
-      end
-
-      after do
-        Timecop.return
       end
 
       it "updates last_seen_at" do
@@ -740,14 +735,10 @@ describe User do
       context "called twice" do
 
         before do
-          Timecop.freeze(date)
+          freeze_time date
           user.update_last_seen!
           user.update_last_seen!
           user.reload
-        end
-
-        after do
-          Timecop.return
         end
 
         it "doesn't increase days_visited twice" do
@@ -760,12 +751,8 @@ describe User do
         let!(:future_date) { 3.days.from_now }
 
         before do
-          Timecop.freeze(future_date)
+          freeze_time future_date
           user.update_last_seen!
-        end
-
-        after do
-          Timecop.return
         end
 
         it "should log a second visited_at record when we log an update later" do
@@ -1498,7 +1485,7 @@ describe User do
 
   describe '.human_users' do
     it 'should only return users with a positive primary key' do
-      Fabricate(:user, id: -2)
+      Fabricate(:user, id: -1979)
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])

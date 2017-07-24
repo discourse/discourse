@@ -86,15 +86,13 @@ describe PostAlerter do
       post.revise(admin, {raw: 'I made a revision'})
 
       # skip this notification cause we already notified on a similar edit
-      Timecop.freeze(2.hours.from_now) do
-        post.revise(admin, {raw: 'I made another revision'})
-      end
+      freeze_time 2.hours.from_now
+      post.revise(admin, {raw: 'I made another revision'})
 
       post.revise(Fabricate(:admin), {raw: 'I made a revision'})
 
-      Timecop.freeze(4.hours.from_now) do
-        post.revise(admin, {raw: 'I made another revision'})
-      end
+      freeze_time 2.hours.from_now
+      post.revise(admin, {raw: 'I made another revision'})
 
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
     end
@@ -147,9 +145,8 @@ describe PostAlerter do
       admin2 = Fabricate(:admin)
 
       # Travel 1 hour in time to test that order post_actions by `created_at`
-      Timecop.freeze(1.hour.from_now) do
-        PostAction.act(admin2, post, PostActionType.types[:like])
-      end
+      freeze_time 1.hour.from_now
+      PostAction.act(admin2, post, PostActionType.types[:like])
 
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
         .to eq(1)
@@ -187,10 +184,10 @@ describe PostAlerter do
       admin3 = Fabricate(:admin)
       PostAction.act(admin3, post, PostActionType.types[:like])
 
-      Timecop.freeze(2.days.from_now) do
-        admin4 = Fabricate(:admin)
-        PostAction.act(admin4, post, PostActionType.types[:like])
-      end
+      freeze_time 2.days.from_now
+
+      admin4 = Fabricate(:admin)
+      PostAction.act(admin4, post, PostActionType.types[:like])
 
       # first happend within the same day, no need to notify
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(2)

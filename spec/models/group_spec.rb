@@ -100,15 +100,15 @@ describe Group do
   end
 
   def real_admins
-    Group[:admins].user_ids - [-1]
+    Group[:admins].user_ids.reject{|id| id < 0}
   end
 
   def real_moderators
-    Group[:moderators].user_ids - [-1]
+    Group[:moderators].user_ids.reject{|id| id < 0}
   end
 
   def real_staff
-    Group[:staff].user_ids - [-1]
+    Group[:staff].user_ids.reject{|id| id < 0}
   end
 
   it "Correctly handles primary groups" do
@@ -307,11 +307,11 @@ describe Group do
     user2 = Fabricate(:coding_horror)
     user2.change_trust_level!(TrustLevel[3])
 
-    expect(Group[:trust_level_2].user_ids.sort).to eq [-1, user.id, user2.id].sort
+    expect(Group[:trust_level_2].user_ids.sort.reject{|id| id < -1}).to eq [-1, user.id, user2.id].sort
   end
 
   it "Correctly updates all automatic groups upon request" do
-    Fabricate(:admin)
+    admin = Fabricate(:admin)
     user = Fabricate(:user)
     user.change_trust_level!(TrustLevel[2])
 
@@ -323,22 +323,22 @@ describe Group do
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:admins]}
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq(g.user_count)
+    expect(g.users.pluck(:id).sort.reject{|id| id < -1}).to eq([-1, admin.id])
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:staff]}
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq (g.user_count)
+    expect(g.users.pluck(:id).sort.reject{|id| id < -1}).to eq([-1, admin.id])
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_1]}
     # admin, system and user
-    expect(g.users.count).to eq 3
-    expect(g.user_count).to eq 3
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.where('users.id > -2').count).to eq 3
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_2]}
     # system and user
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.where('users.id > -2').count).to eq 2
 
   end
 
