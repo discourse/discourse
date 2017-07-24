@@ -51,10 +51,9 @@ export default Ember.Component.extend(BufferedContent, {
     this.$().off("keydown.site-setting-enter");
   }.on("willDestroyElement"),
 
-  _save(isUpdate = true) {
+  _save() {
     const setting = this.get('buffered'),
-      action = isUpdate ? SiteSetting.update(setting.get('setting'), setting.get('value')) :
-        SiteSetting.destroy(setting.get('setting'));
+      action = SiteSetting.update(setting.get('setting'), setting.get('value'));
     action.then(() => {
       this.set('validationMessage', null);
       this.commitBuffer();
@@ -74,7 +73,7 @@ export default Ember.Component.extend(BufferedContent, {
 
     resetDefault() {
       this.set('buffered.value', this.get('setting.default'));
-      this._save(false);
+      this._save();
     },
 
     cancel() {

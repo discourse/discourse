@@ -68,11 +68,6 @@ required:
     default: ''
 
 basic:
-  default_locale:
-    default: 'en'
-    enum: 'LocaleSiteSetting'
-    refresh: true
-    shadowed_by_global: true
   allow_user_locale:
     client: true
     default: false

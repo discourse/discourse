@@ -1,9 +1,14 @@
 require_dependency 'enum'
+require_dependency 'site_settings/defaults_provider'
 require_dependency 'site_settings/db_provider'
 require 'site_setting_validations'
 
 module SiteSettingExtension
   include SiteSettingValidations
+  extend Forwardable
+
+  def_delegator :defaults, :site_locale, :default_locale
+  def_delegator :defaults, :site_locale=, :default_locale=
 
   # For plugins, so they can tell if a feature is supported
   def supported_types
@@ -46,11 +51,7 @@ module SiteSettingExtension
   end
 
   def defaults
-    @defaults ||= {}
-  end
-
-  def locale_defaults
-    @locale_defaults ||= {}
+    @defaults ||= SiteSettings::DefaultsProvider.new(self)
   end
 
   def categories
@@ -96,12 +97,8 @@ module SiteSettingExtension
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
-      self.defaults[name] = default
+      defaults.load_setting(name, default, opts)
       categories[name] = opts[:category] || :uncategorized
-
-      if name != :default_locale && (locale_default = opts[:locale_default])
-        self.locale_defaults[name] = locale_default
-      end
 
       if (enum = opts[:enum])
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
@@ -159,7 +156,7 @@ module SiteSettingExtension
 
   def settings_hash
     result = {}
-    @defaults.each do |s, _|
+    defaults.each_key do |s|
       result[s] = send(s).to_s
     end
     result
@@ -177,15 +174,15 @@ module SiteSettingExtension
 
   # Retrieve all settings
   def all_settings(include_hidden = false)
-    @defaults
-      .reject { |s, _| hidden_settings.include?(s) && !include_hidden }
+    defaults
+      .reject{|s, _| hidden_settings.include?(s) && !include_hidden}
       .map do |s, v|
         value = send(s)
         type = types[get_data_type(s, value)]
         opts = {
           setting: s,
           description: description(s),
-          default: defaults[v].to_s,
+          default: defaults[s].to_s,
           type: type.to_s,
           value: value.to_s,
           category: categories[s],
@@ -202,7 +199,7 @@ module SiteSettingExtension
 
         opts[:choices] = choices[s] if choices.has_key? s
         opts
-      end
+    end.unshift(defaults.locale_setting_hash)
   end
 
   def description(setting)
@@ -221,11 +218,11 @@ module SiteSettingExtension
     mutex.synchronize do
       ensure_listen_for_changes
 
-      new_hash = Hash[*(provider.all.map { |s|
+      new_hash = Hash[*(defaults.db_all.map { |s|
         [s.name.intern, convert(s.value, s.data_type, s.name)]
       }.to_a.flatten)]
-      current_locale = current_default_locale(new_hash[:default_locale])
-      defaults_view = defaults.merge(locale_defaults.transform_values { |v| v[current_locale] }.compact)
+
+      defaults_view = defaults.all
 
       # add locale default and defaults based on default_locale, cause they are cached
       new_hash = defaults_view.merge(new_hash)
@@ -280,12 +277,7 @@ module SiteSettingExtension
 
   def remove_override!(name)
     provider.destroy(name)
-    if name == :default_locale
-      current[name] = defaults[name]
-      refresh!
-    else
-      current[name] = locale_defaults.dig(name, current_default_locale) || defaults[name]
-    end
+    current[name] = defaults[name]
     clear_cache!
   end
 
@@ -328,7 +320,6 @@ module SiteSettingExtension
 
     provider.save(name, val, type)
     current[name] = convert(val, type, name)
-    refresh! if name.to_sym == :default_locale
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
@@ -386,18 +377,6 @@ module SiteSettingExtension
     StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
   end
 
-  def reset_and_log(name, user=Discourse.system_user)
-    name = name.to_sym
-    prev_value = send(name)
-    if has_setting?(name)
-      remove_override!(name)
-      Discourse.request_refresh! if requires_refresh?(name)
-      StaffActionLogger.new(user).log_site_setting_change(name.to_s, prev_value, send(name))
-    else
-      raise ArgumentError, "no setting named '#{name}' exists"
-    end
-  end
-
   protected
 
   def clear_cache!
@@ -428,8 +407,6 @@ module SiteSettingExtension
     if static_type = static_types[name.to_sym]
       return types[static_type] if types.keys.include?(static_type)
     end
-
-    val = val[:default] if val.is_a?(Hash)
 
     case val
     when String
@@ -533,15 +510,6 @@ module SiteSettingExtension
       url = URI.parse(url).host
     end
     url
-  end
-
-  def current_default_locale(fetched = nil)
-    return fetched.to_sym if fetched
-    if (s = provider.find(:default_locale))
-      convert(s.value, s.data_type, s.name).to_sym
-    else
-      (defaults[:default_locale] || 'en').to_sym
-    end
   end
 
   private

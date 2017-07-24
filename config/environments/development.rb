@@ -59,7 +59,7 @@ Discourse::Application.configure do
   end
 
   config.after_initialize do
-    SiteSetting.defaults[:port] = 3000
+    SiteSetting.defaults.set_regardless_of_locale(:port, 3000)
     SiteSetting.refresh!
 
     if ENV['BULLET']

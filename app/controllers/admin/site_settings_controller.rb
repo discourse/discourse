@@ -17,14 +17,6 @@ class Admin::SiteSettingsController < Admin::AdminController
     render nothing: true
   end
 
-  def destroy
-    params.require(:id)
-    id = params[:id]
-    raise_access_hidden_setting(id)
-    SiteSetting.reset_and_log(id, current_user)
-    render nothing: true
-  end
-
   private
 
   def raise_access_hidden_setting(id)

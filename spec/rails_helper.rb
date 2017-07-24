@@ -80,8 +80,8 @@ Spork.prefork do
       #  and pretend they are default.
       # There are a bunch of settings that are seeded, they must be loaded as defaults
       SiteSetting.current.each do |k, v|
-        # skip setting defauls for settings that are in unloaded plugins
-        SiteSetting.defaults[k] = v if SiteSetting.respond_to? k
+        # skip setting defaults for settings that are in unloaded plugins
+        SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
       end
 
       require_dependency 'site_settings/local_process_provider'

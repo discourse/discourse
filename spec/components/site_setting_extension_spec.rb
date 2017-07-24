@@ -28,8 +28,6 @@ describe SiteSettingExtension do
     Class.new do
       extend SiteSettingExtension
       self.provider = provider
-    end.tap do |s|
-      s.setting(:default_locale, 'en')
     end
   end
 
@@ -394,12 +392,10 @@ describe SiteSettingExtension do
     end
   end
 
-  describe ".reset_and_log" do
+  describe ".set_and_log" do
     it "raises an error when set for an invalid setting name" do
-      settings.setting(:test_setting, 77)
-      settings.refresh!
       expect {
-        settings.reset_and_log("provider", "haxxed")
+        settings.set_and_log("provider", "haxxed")
       }.to raise_error(ArgumentError)
     end
   end
@@ -530,7 +526,6 @@ describe SiteSettingExtension do
     end
 
     after do
-      settings.remove_override!(:default_locale)
       settings.remove_override!(:test_override)
     end
 
@@ -548,22 +543,39 @@ describe SiteSettingExtension do
     end
   end
 
-  describe '.current_default_locale' do
-    it 'returns a symbol if given the fetched default_locale' do
-      expect(settings.send(:current_default_locale, :en)).to eq :en
-      expect(settings.send(:current_default_locale, 'en')).to eq :en
-    end
-
-    it 'returns overridden default_locale' do
-      settings.default_locale = 'zh_CN'
-      expect(settings.send(:current_default_locale)).to eq :zh_CN
-    end
-
-    it 'unconditionally returns the default_locale (:en)' do
-      expect(settings.send(:current_default_locale)).to eq :en
-      settings.defaults.delete(:default_locale)
-      expect(settings.send(:current_default_locale)).to eq :en
+  describe '.requires_refresh?' do
+    it 'always refresh default_locale always require refresh' do
+      expect(settings.requires_refresh?(:default_locale)).to be_truthy
     end
   end
+
+  describe '.default_locale' do
+    it 'is always loaded' do
+      expect(settings.default_locale).to eq 'en'
+    end
+  end
+
+  describe '.default_locale=' do
+    it 'can be changed' do
+      settings.default_locale = 'zh_CN'
+      expect(settings.default_locale).to eq 'zh_CN'
+    end
+
+    it 'refresh!' do
+      settings.expects(:refresh!)
+      settings.default_locale = 'zh_CN'
+    end
+
+    it 'expires the cache' do
+      settings.default_locale = 'zh_CN'
+      expect(Rails.cache.exist?(SiteSettingExtension.client_settings_cache_key)).to be_falsey
+    end
+
+    it 'refreshes the client' do
+      Discourse.expects(:request_refresh!)
+      settings.default_locale = 'zh_CN'
+    end
+  end
+
 
 end

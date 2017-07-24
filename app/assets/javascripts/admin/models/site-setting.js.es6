@@ -49,10 +49,6 @@ SiteSetting.reopenClass({
     const data = {};
     data[key] = value;
     return ajax(`/admin/site_settings/${key}`, { type: 'PUT', data });
-  },
-
-  destroy(key) {
-    return ajax(`/admin/site_settings/${key}`, { type: 'DELETE' });
   }
 });
 
