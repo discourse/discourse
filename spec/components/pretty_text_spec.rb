@@ -52,9 +52,9 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
-      it "produces a quote even with new lines in it" do
+      it "indifferent about curlies" do
         md = <<~MD
-          [quote="#{user.username}, post:123, topic:456, full:true"]
+          [quote=“#{user.username}, post:123, topic:456, full:true”]
 
           ddd
 

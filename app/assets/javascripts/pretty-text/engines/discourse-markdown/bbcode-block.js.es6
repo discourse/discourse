@@ -11,7 +11,7 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
-const ATTR_REGEX = /((([a-z0-9]*)\s*)=)(["'].*["']|\S+)/ig;
+const ATTR_REGEX = /((([a-z0-9]*)\s*)=)(["“”'].*["“”']|\S+)/ig;
 
 // parse a tag [test a=1 b=2] to a data structure
 // {tag: "test", attrs={a: "1", b: "2"}
@@ -85,7 +85,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
 
         if (val) {
           val = val.trim();
-          val = val.replace(/^["'](.*)["']$/, '$1');
+          val = val.replace(/^["'“”](.*)["'“”]$/, '$1');
           attrs[key] = val;
         }
       }
