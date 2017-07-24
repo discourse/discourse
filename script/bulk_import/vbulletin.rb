@@ -360,7 +360,8 @@ class BulkImport::VBulletin < BulkImport::Base
 
   def parse_birthday(birthday)
     return if birthday.blank?
-    date_of_birth = Date.strptime(birthday, "%m-%d-%Y")
+    date_of_birth = Date.strptime(birthday.gsub(/[^\d-]+/, ""), "%m-%d-%Y") rescue nil
+    return if date_of_birth.nil?
     date_of_birth.year < 1904 ? Date.new(1904, date_of_birth.month, date_of_birth.day) : date_of_birth
   end
 
