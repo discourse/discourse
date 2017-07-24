@@ -1155,9 +1155,7 @@ describe Topic do
     let(:topic) { Fabricate.build(:topic) }
 
     let(:closing_topic) do
-      Fabricate(:topic,
-        topic_timers: [Fabricate(:topic_timer, execute_at: 5.hours.from_now)]
-      )
+      Fabricate(:topic_timer, execute_at: 5.hours.from_now).topic
     end
 
     let(:admin) { Fabricate(:admin) }
