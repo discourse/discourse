@@ -63,7 +63,7 @@ module Scheduler
       return if valid?
 
       at = @klass.daily[:at] || 0
-      today_begin = Time.now.midnight.to_i
+      today_begin = Time.zone.now.midnight.to_i
       today_offset = DateTime.now.seconds_since_midnight
 
       # If it's later today

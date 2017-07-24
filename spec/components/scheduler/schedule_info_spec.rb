@@ -82,9 +82,13 @@ describe Scheduler::ScheduleInfo do
       expect(@info.valid?).to eq(false)
     end
 
-    skip "will have a due date at the appropriate time if blank" do
+    it "will have a due date at the appropriate time if blank" do
       expect(@info.next_run).to eq(nil)
       @info.schedule!
+
+      expect(JSON.parse($redis.get(@info.key))["next_run"])
+        .to eq((Time.zone.now.midnight + 2.hours).to_i)
+
       expect(@info.valid?).to eq(true)
     end
 
