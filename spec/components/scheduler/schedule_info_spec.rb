@@ -58,13 +58,15 @@ describe Scheduler::ScheduleInfo do
 
     class DailyJob
       extend ::Scheduler::Schedule
-      daily at: 2.hours
+      daily at: 11.hours
 
       def perform
       end
     end
 
     before do
+      freeze_time Time.parse("2010-01-10 10:00:00")
+
       @info = manager.schedule_info(DailyJob)
       @info.del!
     end
@@ -87,7 +89,7 @@ describe Scheduler::ScheduleInfo do
       @info.schedule!
 
       expect(JSON.parse($redis.get(@info.key))["next_run"])
-        .to eq((Time.zone.now.midnight + 2.hours).to_i)
+        .to eq((Time.now.midnight + 11.hours).to_i)
 
       expect(@info.valid?).to eq(true)
     end
