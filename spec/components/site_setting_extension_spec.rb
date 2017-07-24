@@ -278,7 +278,7 @@ describe SiteSettingExtension do
 
     class TestEnumClass
       def self.valid_value?(v)
-        true
+        self.values.include?(v)
       end
       def self.values
         ['en']
@@ -303,6 +303,10 @@ describe SiteSettingExtension do
 
     it 'should not hose all_settings' do
       expect(settings.all_settings.detect { |s| s[:setting] == :test_enum }).to be_present
+    end
+
+    it 'should report error when being set other values' do
+      expect { settings.test_enum = 'not_in_enum' }.to raise_error(Discourse::InvalidParameters)
     end
 
     context 'when overridden' do
