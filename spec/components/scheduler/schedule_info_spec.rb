@@ -89,7 +89,7 @@ describe Scheduler::ScheduleInfo do
       @info.schedule!
 
       expect(JSON.parse($redis.get(@info.key))["next_run"])
-        .to eq((Time.now.midnight + 11.hours).to_i)
+        .to eq((Time.zone.now.midnight + 11.hours).to_i)
 
       expect(@info.valid?).to eq(true)
     end
