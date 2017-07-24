@@ -147,8 +147,9 @@ describe PostAlerter do
       admin2 = Fabricate(:admin)
 
       # Travel 1 hour in time to test that order post_actions by `created_at`
-      Timecop.travel(Time.zone.now + 1.hour)
-      PostAction.act(admin2, post, PostActionType.types[:like])
+      Timecop.freeze(1.hour.from_now) do
+        PostAction.act(admin2, post, PostActionType.types[:like])
+      end
 
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
         .to eq(1)
