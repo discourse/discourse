@@ -94,7 +94,7 @@ nav.post-controls {
     font-size: inherit;
     span.badge-posts {color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
     &:hover {
-      background: dark-light-diff($primary, $secondary, 90%, -65%);
+      background: $primary-low;
       span.badge-posts {color: $primary;}
     }
     i {
@@ -122,7 +122,7 @@ nav.post-controls {
     margin-left: 3px;
 
     &.d-hover {
-      background: dark-light-diff($primary, $secondary, 90%, -60%);
+      background: $primary-low;
       color: $primary;
     }
 
@@ -144,7 +144,7 @@ nav.post-controls {
 
     &.like.d-hover {
       color: $love;
-      background: dark-light-diff($love, $secondary, 85%, -60%)
+      background: $love-low;
     }
 
     &.has-like {color: $love;}
@@ -179,7 +179,7 @@ nav.post-controls {
     background-color: $secondary;
     width: 205px;
     padding: 10px;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border: 1px solid $primary-low;
     position: absolute;
     text-align: left;
     bottom: -2px;
@@ -288,11 +288,11 @@ a.star {
 .topic-map {
   margin: 20px 0 0 0;
   background: blend-primary-secondary(5%);
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  border: 1px solid $primary-low;
   border-top: none; // would cause double top border
 
   section {
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    border-top: 1px solid $primary-low;
   }
 
   h3 {
@@ -402,11 +402,11 @@ a.star {
       padding: 0 23px;
       color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
       background: blend-primary-secondary(5%);
-      border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+      border-left: 1px solid $primary-low;
+      border-top: 1px solid $primary-low;
       &:hover {
         color: $primary;
-        background: dark-light-diff($primary, $secondary, 90%, -80%);
+        background: $primary-low;
       }
 
       &.collapsed {
@@ -575,7 +575,7 @@ video {
 
 .moderator {
   .topic-body {
-    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
+    background-color: $highlight-low;
   }
 }
 
@@ -625,7 +625,7 @@ blockquote {
   aside {
     .quote, .title, blockquote, .onebox, .onebox-result {
       background: blend-primary-secondary(5%);
-      border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
+      border-left: 5px solid $primary-low;
     }
 
     aside.quote>blockquote, aside.quote>.title {
@@ -645,12 +645,12 @@ $topic-avatar-width: 45px;
   float: left;
   position: relative;
   z-index: 2;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  border-top: 1px solid $primary-low;
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
 }
 
 .topic-avatar {
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  border-top: 1px solid $primary-low;
   padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
@@ -663,7 +663,7 @@ $topic-avatar-width: 45px;
 
 .small-action {
   max-width: 755px;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  border-top: 1px solid $primary-low;
 }
 
 .small-action.deleted {
@@ -706,7 +706,7 @@ $topic-avatar-width: 45px;
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
   span {
@@ -738,7 +738,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .active > a:hover {
   color: $primary;
   text-decoration: none;
-  background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+  background-color: $highlight-medium;
 
 }
 
@@ -746,7 +746,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
   cursor: default;
 }
 
@@ -765,7 +765,7 @@ $topic-avatar-width: 45px;
   width: 200px;
   position: fixed;
   z-index: 1000;
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
@@ -884,7 +884,7 @@ a.attachment:before {
   display: block;
   position: absolute;
   left: 767px;
-  color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
+  color: rgba($primary-low, .8);
   font: 6.429em/1 FontAwesome;
   content: "\f014";
   z-index: -5;
@@ -919,7 +919,7 @@ a.attachment:before {
 }
 
 span.highlighted {
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
 }
 
 .username.new-user a {

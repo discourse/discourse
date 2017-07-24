@@ -73,7 +73,7 @@ blockquote {
   display: inline-block;
   .topic-status {
     i {
-      color: dark-light-diff($secondary, $primary, 40%, -20%);
+      color: $secondary-medium;
     }
   }
 }
@@ -123,7 +123,7 @@ h2#site-text-logo
   }
   margin: 0;
   padding: 0;
-  background: dark-light-diff($primary, $secondary, 90%, -65%);
+  background: $primary-low; 
   list-style: none;
   overflow: visible;
   position: relative;
