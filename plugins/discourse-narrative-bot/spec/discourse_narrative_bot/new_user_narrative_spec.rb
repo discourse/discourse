@@ -37,6 +37,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
     end
 
     it 'should create the right message' do
+      NotificationEmailer.enable
+      NotificationEmailer.expects(:process_notification).once
+
       expect { narrative.notify_timeout(user) }.to change { Post.count }.by(1)
 
       expect(Post.last.raw).to eq(I18n.t(
@@ -299,23 +302,47 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
           end
         end
-      end
 
-      it 'should create the right reply' do
-        post.update!(raw: 'https://en.wikipedia.org/wiki/ROT13')
+        describe 'when emoji is disabled' do
+          before do
+            SiteSetting.enable_emoji = false
+          end
 
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
+          it 'should create the right reply' do
+            post.update!(raw: 'https://en.wikipedia.org/wiki/ROT13')
 
-        expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
+            narrative.input(:reply, user, post: post)
+            new_post = Post.last
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions', base_uri: '')}
-        RAW
+            expected_raw = <<~RAW
+              #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
 
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
+              #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.instructions',
+                discobot_username: discobot_user.username, base_uri: ''
+              )}
+            RAW
+
+            expect(new_post.raw).to eq(expected_raw.chomp)
+            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
+          end
+        end
+
+        it 'should create the right reply' do
+          post.update!(raw: 'https://en.wikipedia.org/wiki/ROT13')
+
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+          new_post = Post.last
+
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
+
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.instructions', base_uri: '')}
+          RAW
+
+          expect(new_post.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
+        end
       end
     end
 
@@ -582,25 +609,25 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             expect(new_post.raw).to include("/forum/images")
           end
         end
-      end
 
-      it 'should create the right reply' do
-        post.update!(
-          raw: '[quote="#{post.user}, post:#{post.post_number}, topic:#{topic.id}"]\n:monkey: :fries:\n[/quote]'
-        )
+        it 'should create the right reply' do
+          post.update!(
+            raw: "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]"
+          )
 
-        narrative.expects(:enqueue_timeout_job).with(user)
-        narrative.input(:reply, user, post: post)
-        new_post = Post.last
+          narrative.expects(:enqueue_timeout_job).with(user)
+          narrative.input(:reply, user, post: post)
+          new_post = Post.last
 
-        expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.reply', base_uri: '')}
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.quoting.reply', base_uri: '')}
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.images.instructions', base_uri: '')}
-        RAW
+            #{I18n.t('discourse_narrative_bot.new_user_narrative.images.instructions', base_uri: '')}
+          RAW
 
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
+          expect(new_post.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
+        end
       end
     end
 

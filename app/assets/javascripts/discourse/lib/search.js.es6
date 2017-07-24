@@ -6,13 +6,11 @@ import Category from 'discourse/models/category';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import userSearch from 'discourse/lib/user-search';
 import { userPath } from 'discourse/lib/url';
+import User from 'discourse/models/user';
+import Post from 'discourse/models/post';
+import Topic from 'discourse/models/topic';
 
 export function translateResults(results, opts) {
-
-  const User = require('discourse/models/user').default;
-  const Post = require('discourse/models/post').default;
-  const Topic = require('discourse/models/topic').default;
-
   if (!opts) opts = {};
 
   // Topics might not be included
@@ -94,9 +92,9 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  var promise = ajax('/search/query', { data: data });
+  let promise = ajax('/search/query', { data: data });
 
-  promise.then(function(results){
+  promise.then(results => {
     return translateResults(results, opts);
   });
 

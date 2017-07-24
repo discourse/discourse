@@ -5,12 +5,15 @@ RSpec.describe Jobs::PublishTopicToCategory do
   let(:another_category) { Fabricate(:category) }
 
   let(:topic) do
-    Fabricate(:topic, category: category, topic_timers: [
-      Fabricate(:topic_timer,
-        status_type: TopicTimer.types[:publish_to_category],
-        category_id: another_category.id
-      )
-    ])
+    topic = Fabricate(:topic, category: category)
+
+    Fabricate(:topic_timer,
+      status_type: TopicTimer.types[:publish_to_category],
+      category_id: another_category.id,
+      topic: topic
+    )
+
+    topic
   end
 
   before do

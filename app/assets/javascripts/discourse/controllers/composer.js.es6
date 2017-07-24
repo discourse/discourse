@@ -330,6 +330,11 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
+      if (Ember.$(".emoji-picker-modal").length === 1) {
+        this.appEvents.trigger('emoji-picker:close');
+        return;
+      }
+
       if ((this.get('messageCount') || 0) > 0) {
         this.appEvents.trigger('composer-messages:close');
         return;

@@ -204,7 +204,7 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:newuser_max_images).returns(1)
+        SiteSetting.newuser_max_images = 1
       end
 
       context 'newuser' do
@@ -252,7 +252,7 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:newuser_max_attachments).returns(1)
+        SiteSetting.newuser_max_attachments = 1
       end
 
       context 'newuser' do
@@ -376,7 +376,7 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:newuser_max_links).returns(1)
+        SiteSetting.newuser_max_links = 1
       end
 
       context 'newuser' do
@@ -414,12 +414,14 @@ describe Post do
       end
 
       it "ignores pre" do
-        post = Fabricate.build(:post, post_args.merge(raw: "<pre>@Jake</pre> @Finn"))
+        # we need to force an inline
+        post = Fabricate.build(:post, post_args.merge(raw: "p <pre>@Jake</pre> @Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "catches content between pre tags" do
-        post = Fabricate.build(:post, post_args.merge(raw: "<pre>hello</pre> @Finn <pre></pre>"))
+        # per common mark we need to force an inline
+        post = Fabricate.build(:post, post_args.merge(raw: "a <pre>hello</pre> @Finn <pre></pre>"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
@@ -429,7 +431,7 @@ describe Post do
       end
 
       it "ignores quotes" do
-        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]@Jake[/quote] @Finn"))
+        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n@Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
@@ -453,8 +455,8 @@ describe Post do
 
       context 'new user' do
         before do
-          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(1)
-          SiteSetting.stubs(:max_mentions_per_post).returns(5)
+          SiteSetting.newuser_max_mentions_per_post = 1
+          SiteSetting.max_mentions_per_post = 5
         end
 
         it "allows a new user to have newuser_max_mentions_per_post mentions" do
@@ -468,8 +470,8 @@ describe Post do
 
       context "not a new user" do
         before do
-          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(0)
-          SiteSetting.stubs(:max_mentions_per_post).returns(1)
+          SiteSetting.newuser_max_mentions_per_post = 0
+          SiteSetting.max_mentions_per_post = 1
         end
 
         it "allows vmax_mentions_per_post mentions" do
@@ -546,7 +548,7 @@ describe Post do
 
     describe 'ninja editing & edit windows' do
 
-      before { SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i) }
+      before { SiteSetting.editing_grace_period = 1.minute.to_i }
 
       it 'works' do
         revised_at = post.updated_at + 2.minutes
@@ -741,7 +743,7 @@ describe Post do
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
 
     it "returns the OP and posts above the threshold in summary mode" do
-      SiteSetting.stubs(:summary_percent_filter).returns(66)
+      SiteSetting.summary_percent_filter = 66
       expect(Post.summary.order(:post_number)).to eq([p1, p2])
     end
 
@@ -816,14 +818,14 @@ describe Post do
     end
 
     it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:tl3_links_no_follow).returns(false)
+      SiteSetting.tl3_links_no_follow = false
       post.user.trust_level = 3
       post.save
       expect(post.cooked).not_to match(/nofollow/)
     end
 
     it "when tl3_links_no_follow is true, should add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:tl3_links_no_follow).returns(true)
+      SiteSetting.tl3_links_no_follow = true
       post.user.trust_level = 3
       post.save
       expect(post.cooked).to match(/nofollow noopener/)
@@ -927,7 +929,7 @@ describe Post do
   end
 
   describe ".unhide!" do
-    before { SiteSetting.stubs(:unique_posts_mins).returns(5) }
+    before { SiteSetting.unique_posts_mins = 5 }
 
     it "will unhide the first post & make the topic visible" do
       hidden_topic = Fabricate(:topic, visible: false)

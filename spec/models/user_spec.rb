@@ -9,11 +9,10 @@ describe User do
     describe 'emails' do
       let(:user) { Fabricate.build(:user) }
 
-      it { is_expected.to validate_presence_of :email }
-
       describe 'when record has a valid email' do
         it "should be valid" do
           user.email = 'test@gmail.com'
+
           expect(user).to be_valid
         end
       end
@@ -21,7 +20,9 @@ describe User do
       describe 'when record has an invalid email' do
         it 'should not be valid' do
           user.email = 'test@gmailcom'
+
           expect(user).to_not be_valid
+          expect(user.errors.messages).to include(:primary_email)
         end
       end
     end
@@ -66,7 +67,7 @@ describe User do
     let(:admin) { Fabricate(:admin) }
 
     it "enqueues a 'signup after approval' email if must_approve_users is true" do
-      SiteSetting.stubs(:must_approve_users).returns(true)
+      SiteSetting.must_approve_users = true
       Jobs.expects(:enqueue).with(
         :critical_user_email, has_entries(type: :signup_after_approval)
       )
@@ -74,7 +75,7 @@ describe User do
     end
 
     it "doesn't enqueue a 'signup after approval' email if must_approve_users is false" do
-      SiteSetting.stubs(:must_approve_users).returns(false)
+      SiteSetting.must_approve_users = false
       Jobs.expects(:enqueue).never
       user.approve(admin)
     end
@@ -648,8 +649,8 @@ describe User do
     let!(:third_visit_date) { 5.hours.from_now }
 
     before do
-      SiteSetting.stubs(:active_user_rate_limit_secs).returns(0)
-      SiteSetting.stubs(:previous_visit_timeout_hours).returns(1)
+      SiteSetting.active_user_rate_limit_secs = 0
+      SiteSetting.previous_visit_timeout_hours = 1
     end
 
     it "should act correctly" do
@@ -969,7 +970,7 @@ describe User do
 
     before do
       # To make testing easier, say 1 reply is too much
-      SiteSetting.stubs(:newuser_max_replies_per_topic).returns(1)
+      SiteSetting.newuser_max_replies_per_topic = 1
       UserActionCreator.enable
     end
 
@@ -1220,29 +1221,16 @@ describe User do
       )
     }
 
-    it "doesn't automatically add inactive users" do
-      inactive_user = Fabricate(:user, active: false, email: "wat@wat.com")
-      group.reload
-      expect(group.users.include?(inactive_user)).to eq(false)
-    end
-
-    it "doesn't automatically add users with unconfirmed email" do
-      unconfirmed_email_user = Fabricate(:user, active: true, email: "wat@wat.com")
-      unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
-      group.reload
-      expect(group.users.include?(unconfirmed_email_user)).to eq(false)
-    end
-
     it "doesn't automatically add staged users" do
       staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
+      EmailToken.confirm(staged_user.email_tokens.last.token)
       group.reload
       expect(group.users.include?(staged_user)).to eq(false)
     end
 
     it "is automatically added to a group when the email matches" do
       user = Fabricate(:user, active: true, email: "foo@bar.com")
-      email_token = user.email_tokens.create(email: user.email).token
-      EmailToken.confirm(email_token)
+      EmailToken.confirm(user.email_tokens.last.token)
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1263,8 +1251,7 @@ describe User do
 
       user.password_required!
       user.save!
-      email_token = user.email_tokens.create(email: user.email).token
-      EmailToken.confirm(email_token)
+      EmailToken.confirm(user.email_tokens.last.token)
       user.reload
 
       expect(user.title).to eq("bars and wats")

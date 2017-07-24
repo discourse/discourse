@@ -297,7 +297,16 @@ export default Ember.Object.extend({
 
     if (existing) {
       delete obj.id;
-      const klass = this.register.lookupFactory('model:' + type) || RestModel;
+      let klass = this.register.lookupFactory('model:' + type);
+
+      if (klass && klass.class) {
+        klass = klass.class;
+      }
+
+      if (!klass) {
+        klass = RestModel;
+      }
+
       existing.setProperties(klass.munge(obj));
       obj.id = id;
       return existing;

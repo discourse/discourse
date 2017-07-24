@@ -15,22 +15,22 @@ describe TrustLevel3Requirements do
 
   describe "requirements" do
     it "time_period uses site setting" do
-      SiteSetting.stubs(:tl3_time_period).returns(80)
+      SiteSetting.tl3_time_period = 80
       expect(tl3_requirements.time_period).to eq(80)
     end
 
     it "min_days_visited uses site setting" do
-      SiteSetting.stubs(:tl3_requires_days_visited).returns(66)
+      SiteSetting.tl3_requires_days_visited = 66
       expect(tl3_requirements.min_days_visited).to eq(66)
     end
 
     it "min_topics_replied_to uses site setting" do
-      SiteSetting.stubs(:tl3_requires_topics_replied_to).returns(12)
+      SiteSetting.tl3_requires_topics_replied_to = 12
       expect(tl3_requirements.min_topics_replied_to).to eq(12)
     end
 
     it "min_topics_viewed depends on site setting and number of topics created" do
-      SiteSetting.stubs(:tl3_requires_topics_viewed).returns(75)
+      SiteSetting.tl3_requires_topics_viewed = 75
       described_class.stubs(:num_topics_in_time_period).returns(31)
       expect(tl3_requirements.min_topics_viewed).to eq(23)
     end
@@ -43,7 +43,7 @@ describe TrustLevel3Requirements do
     end
 
     it "min_posts_read depends on site setting and number of posts created" do
-      SiteSetting.stubs(:tl3_requires_posts_read).returns(66)
+      SiteSetting.tl3_requires_posts_read = 66
       described_class.stubs(:num_posts_in_time_period).returns(1234)
       expect(tl3_requirements.min_posts_read).to eq(814)
     end
@@ -56,27 +56,27 @@ describe TrustLevel3Requirements do
     end
 
     it "min_topics_viewed_all_time depends on site setting" do
-      SiteSetting.stubs(:tl3_requires_topics_viewed_all_time).returns(75)
+      SiteSetting.tl3_requires_topics_viewed_all_time = 75
       expect(tl3_requirements.min_topics_viewed_all_time).to eq(75)
     end
 
     it "min_posts_read_all_time depends on site setting" do
-      SiteSetting.stubs(:tl3_requires_posts_read_all_time).returns(1001)
+      SiteSetting.tl3_requires_posts_read_all_time = 1001
       expect(tl3_requirements.min_posts_read_all_time).to eq(1001)
     end
 
     it "max_flagged_posts depends on site setting" do
-      SiteSetting.stubs(:tl3_requires_max_flagged).returns(3)
+      SiteSetting.tl3_requires_max_flagged = 3
       expect(tl3_requirements.max_flagged_posts).to eq(3)
     end
 
     it "min_likes_given depends on site setting" do
-      SiteSetting.stubs(:tl3_requires_likes_given).returns(30)
+      SiteSetting.tl3_requires_likes_given = 30
       expect(tl3_requirements.min_likes_given).to eq(30)
     end
 
     it "min_likes_received depends on site setting" do
-      SiteSetting.stubs(:tl3_requires_likes_received).returns(20)
+      SiteSetting.tl3_requires_likes_received = 20
       expect(tl3_requirements.min_likes_received).to eq(20)
       expect(tl3_requirements.min_likes_received_days).to eq(7)
       expect(tl3_requirements.min_likes_received_users).to eq(5)

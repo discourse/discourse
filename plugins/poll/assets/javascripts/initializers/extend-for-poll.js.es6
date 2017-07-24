@@ -6,8 +6,7 @@ import WidgetGlue from 'discourse/widgets/glue';
 function initializePolls(api) {
   const register = getRegister(api);
 
-  const TopicController = api.container.lookupFactory('controller:topic');
-  TopicController.reopen({
+  api.modifyClass('controller:topic', {
     subscribe(){
       this._super();
       this.messageBus.subscribe("/polls/" + this.get("model.id"), msg => {
@@ -23,8 +22,7 @@ function initializePolls(api) {
     }
   });
 
-  const Post = api.container.lookupFactory('model:post');
-  Post.reopen({
+  api.modifyClass('model:post', {
     _polls: null,
     pollsObject: null,
 
@@ -95,6 +93,6 @@ export default {
   name: "extend-for-poll",
 
   initialize() {
-    withPluginApi('0.1', initializePolls);
+    withPluginApi('0.8.7', initializePolls);
   }
 };

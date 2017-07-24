@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Topic Notifications button", {
   loggedIn: true,
-  setup() {
+  beforeEach() {
     const response = object => {
       return [
         200,
@@ -16,13 +16,13 @@ acceptance("Topic Notifications button", {
   }
 });
 
-test("Updating topic notification level", () => {
+QUnit.test("Updating topic notification level", assert => {
   visit("/t/internationalization-localization/280");
 
   const notificationOptions = "#topic-footer-buttons .notification-options";
 
   andThen(() => {
-    ok(
+    assert.ok(
       exists(`${notificationOptions} .tracking`),
       "it should display the notification options button in the topic's footer"
     );
@@ -32,7 +32,7 @@ test("Updating topic notification level", () => {
   click(`${notificationOptions} .dropdown-menu .watching`);
 
   andThen(() => {
-    ok(
+    assert.ok(
       exists(`${notificationOptions} .watching`),
       "it should display the right notification level"
     );

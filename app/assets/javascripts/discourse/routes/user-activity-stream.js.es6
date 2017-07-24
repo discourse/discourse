@@ -19,26 +19,9 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   actions: {
-
     didTransition() {
       this.controllerFor("user-activity")._showFooter();
       return true;
-    },
-
-    removeBookmark(userAction) {
-      var user = this.modelFor("user");
-      Discourse.Post.updateBookmark(userAction.get("post_id"), false)
-        .then(function() {
-          // remove the user action from the stream
-          user.get("stream").remove(userAction);
-          // update the counts
-          user.get("stats").forEach(function (stat) {
-            if (stat.get("action_type") === userAction.action_type) {
-              stat.decrementProperty("count");
-            }
-          });
-        });
-    },
-
+    }
   }
 });

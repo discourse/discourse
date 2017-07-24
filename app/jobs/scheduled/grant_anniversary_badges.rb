@@ -4,6 +4,8 @@ module Jobs
 
     def execute(args)
       return unless SiteSetting.enable_badges?
+      badge = Badge.find_by(id: Badge::Anniversary, enabled: true)
+      return unless badge
 
       start_date = args[:start_date] || 1.year.ago
       end_date = start_date + 1.year
@@ -31,14 +33,12 @@ module Jobs
         HAVING COUNT(p.id) > 0 AND COUNT(ub.id) = 0
       SQL
 
-      badge = Badge.find(Badge::Anniversary)
-      user_ids = results.map {|r| r['user_id'].to_i }
+      user_ids = results.map { |r| r['user_id'].to_i }
 
-      User.where(id: user_ids).each do |user|
+      User.where(id: user_ids).find_each do |user|
         BadgeGranter.grant(badge, user, created_at: end_date)
       end
     end
 
   end
 end
-

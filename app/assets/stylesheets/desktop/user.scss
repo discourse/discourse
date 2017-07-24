@@ -1,5 +1,4 @@
 // styles that apply to the user page
-
 .groups {
   .group-link {
     color: $tertiary;
@@ -48,6 +47,9 @@
     margin-bottom: 10px;
     font-size: 80%;
     line-height: 1.4em;
+  }
+  .form-horizontal .instructions {
+    margin-left: 160px;
   }
   .avatar {
     margin-left: 3px;

@@ -631,7 +631,6 @@ nl:
         remove: "Dit topic is geen banner meer. Het zal niet meer bovenaan elke pagina verschijnen."
   unsubscribed:
     title: "Uitgeschreven!"
-    description: "U bent uitgeschreven. <a href='%{url}'>Bezoek uw gebruikersvoorkeuren</a> om uw e-mailinstellingen te wijzigen."
     topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw voor %{link} in te schrijven."
   unsubscribe:
     title: "Uitschrijven"
@@ -896,7 +895,6 @@ nl:
     notify_mods_when_user_blocked: "Als een gebruiker automatisch geblokkeerd is, stuur dan een bericht naar alle moderatoren."
     flag_sockpuppets: "Als een nieuwe gebruiker antwoord op een topic vanaf hetzelfde ip-adres als de nieuwe gebruiker die het topic opende, markeer dan beide berichten als potentiële spam."
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, welke 2 spaties aan het einde van een regel nodig heeft voor een regeleinde."
-    allow_html_tables: "Sta toe dat tabellen in Markdown mogen worden ingevoerd met behulp van HTML-tags. TABLE, TD, TR, TH zullen aan de whitelist worden toegevoegd (vereist volledig herbouwen van alle oude berichten met tabellen)"
     post_undo_action_window_mins: "Het aantal minuten waarin gebruikers hun recente acties op een bericht nog terug kunnen draaien (liken, markeren, etc)."
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de site mogen bezoeken. OPGELET: als dit wordt aangezet voor een actieve site wordt alle toegang voor bestaande niet stafleden ingetrokken."
     pending_users_reminder_delay: "Moderators informeren als nieuwe gebruikers al langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
@@ -1507,8 +1505,8 @@ nl:
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
       subject_template: "[%{email_prefix}] Samenvatting"
-      unsubscribe: "Deze samenvatting is verstuurd door %{site_link}, omdat we je al een tijdje niet gezien hebben. Om je af te melden van onze community e-mails, %{unsubscribe_link}."
       click_here: "klik hier"
+      from: "%{site_name} samenvatting"
       preheader: "Een korte samenvatting sinds uw laatste bezoek op %{last_seen_at}"
     set_password:
       title: "Wachtwoord instellen"

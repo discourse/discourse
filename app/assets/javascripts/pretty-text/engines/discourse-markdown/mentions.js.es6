@@ -1,49 +1,48 @@
-/**
-  Supports our custom @mention syntax for calling out a user in a post.
-  It will add a special class to them, and create a link if the user is found in a
-  local map.
-**/
+function addMention(buffer, matches, state) {
+  let username = matches[1] || matches[2];
+  let mentionLookup = state.md.options.discourse.mentionLookup;
+  let getURL = state.md.options.discourse.getURL;
+
+  let type = mentionLookup && mentionLookup(username);
+
+  let tag = 'a';
+  let className = 'mention';
+  let href = null;
+
+  if (type === 'user') {
+    href = getURL('/u/') + username.toLowerCase();
+  } else if (type === 'group') {
+    href = getURL('/groups/') + username;
+    className = 'mention-group';
+  } else {
+    tag = 'span';
+  }
+
+  let token = new state.Token('mention_open', tag, 1);
+  token.attrs = [['class', className]];
+  if (href) {
+    token.attrs.push(['href', href]);
+  }
+
+  buffer.push(token);
+
+  token = new state.Token('text', '', 0);
+  token.content = '@'+username;
+
+  buffer.push(token);
+
+  token = new state.Token('mention_close', tag, -1);
+  buffer.push(token);
+}
+
 export function setup(helper) {
+  helper.registerPlugin(md => {
 
-  // We have to prune @mentions that are within links.
-  helper.onParseNode(event => {
-    const node = event.node,
-    path = event.path;
+    const rule = {
+      matcher: /@(\w[\w.-]{0,58}\w)|@(\w)/,
+      onMatch: addMention
+    };
 
-    if (node[1] && node[1]["class"] === 'mention')  {
-      const parent = path[path.length - 1];
-
-      // If the parent is an 'a', remove it
-      if (parent && parent[0] === 'a') {
-        const name = node[2];
-        node.length = 0;
-        node[0] = "__RAW";
-        node[1] = name;
-      }
-    }
-  });
-
-  helper.inlineRegexp({
-    start: '@',
-    // NOTE: since we can't use SiteSettings here (they loads later in process)
-    // we are being less strict to account for more cases than allowed
-    matcher: /^@(\w[\w.-]{0,59})\b/i,
-    wordBoundary: true,
-
-    emitter(matches) {
-      const mention = matches[0].trim();
-      const name = matches[1];
-      const opts = helper.getOptions();
-      const mentionLookup = opts.mentionLookup;
-
-      const type = mentionLookup && mentionLookup(name);
-      if (type === "user") {
-        return ['a', {'class': 'mention', href: opts.getURL("/u/") + name.toLowerCase()}, mention];
-      } else if (type === "group") {
-        return ['a', {'class': 'mention-group', href: opts.getURL("/groups/") + name}, mention];
-      } else {
-        return ['span', {'class': 'mention'}, mention];
-      }
-    }
+    md.core.textPostProcess.ruler.push('mentions', rule);
   });
 }

@@ -139,19 +139,19 @@ bs_BA:
     bootstrap_mode_disabled: "Bootstrap mod će biti ugašen u sljedećih 24 sata."
     s3:
       regions:
-        us_east_1: "SAD Istok (Sjeverna Virdžinija)"
-        us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
-        us_west_2: "SAD Zapad (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "EU (Irska)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Azija Pacifik (Singapur)"
-        ap_southeast_2: "Azija Pacifik (Sidnej)"
-        ap_south_1: "Azija Pacifik (Mumai)"
         ap_northeast_1: "Azija Pacifik (Tokio)"
         ap_northeast_2: "Azija Pacifik (Seul)"
-        sa_east_1: "Južna Amerika (Sao Paulo)"
+        ap_south_1: "Azija Pacifik (Mumai)"
+        ap_southeast_1: "Azija Pacifik (Singapur)"
+        ap_southeast_2: "Azija Pacifik (Sidnej)"
         cn_north_1: "Kina (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irska)"
+        sa_east_1: "Južna Amerika (Sao Paulo)"
+        us_east_1: "SAD Istok (Sjeverna Virdžinija)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
+        us_west_2: "SAD Zapad (Oregon)"
     edit: 'izmjeni naslov i kategoriju ove teme'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "Ne"
@@ -349,11 +349,7 @@ bs_BA:
         full_name: 'Puno ime'
         add_members: "Dodaj Članove"
         delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
-      request_membership_pm:
-        title: "Zahtjev za članstvom"
-        body: "Želio bi da apliciram u članstvo @%{groupName}."
       name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
-      public: "Dozvolite korisnicima da se pridruže/napuste grupu slobodno (Zahtjeva da grupa bude vidljiva)"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
         members: "Nema članova u grupi."
@@ -374,7 +370,6 @@ bs_BA:
       bio: "O grupi"
       selector_placeholder: "Dodaj članove"
       owner: "vlasnik"
-      visible: "Grupa je vidljiva svim korisnicima"
       index:
         title: "Grupe"
         empty: "Vidljive grupe još ne postoje."

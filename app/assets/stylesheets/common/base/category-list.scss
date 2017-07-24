@@ -62,6 +62,12 @@
     }
   }
 
+  &.no-logos {
+    .category-box .category-box-inner > a {
+      padding: 3em 1em;
+    }
+  }
+
   .category-box-heading {
     padding: 1em 1em 0 1em;
   }
@@ -85,12 +91,6 @@
     line-height: 1.1em;
     text-align: center;
     color: $primary;
-  }
-
-  &.no-logos {
-    .category-box a {
-      padding: 3em 1em;
-    }
   }
 }
 

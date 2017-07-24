@@ -184,20 +184,20 @@ pl_PL:
       default_description: "Domyślny"
     s3:
       regions:
-        us_east_1: "US East (N. Virginia)"
-        us_west_1: "US West (N. California)"
-        us_west_2: "US West (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "EU (Irlandia)"
-        eu_west_2: "EU (Londyn)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Asia Pacific (Singapore)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
-        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
-        sa_east_1: "Ameryka Południowa (Sao Paulo)"
+        ap_south_1: "Asia Pacific (Mumbai)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "Chiny (Beijing)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irlandia)"
+        eu_west_2: "EU (Londyn)"
+        sa_east_1: "Ameryka Południowa (Sao Paulo)"
+        us_east_1: "US East (N. Virginia)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
     edit: 'edytuj tytuł i kategorię tego tematu'
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
@@ -403,11 +403,7 @@ pl_PL:
         full_name: 'Pełna nazwa'
         add_members: "Dodaj użytkowników"
         delete_member_confirm: "Czy usunąć użytkownika '%{username}' z grupy '%{group}'?"
-      request_membership_pm:
-        title: "Prośba o członkostwo"
-        body: "Chciałbym(-am) poprosić o członkostwo w grupie @%{groupName}."
       name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
-      public: "Zezwalaj użytkownikom na zapraszanie/opuszczanie grupy (Grupa musi być widoczna)"
       empty:
         posts: "Członkowie tej grupy nie opublikowali żadnych postów."
         members: "Nie ma użytkowników w tej grupie"
@@ -429,7 +425,6 @@ pl_PL:
       bio: "O grupie"
       selector_placeholder: "Dodaj członków"
       owner: "właściciel"
-      visible: "Grupa jest widoczna dla wszystkich użytkowników"
       index:
         title: "Grupy"
         empty: "Nie ma widocznych grup"
@@ -445,6 +440,12 @@ pl_PL:
       mentions: "Wzmianki"
       messages: "Wiadomości"
       notification_level: "Domyślny poziom powiadomień dla wiadomości grupy."
+      visibility_levels:
+        title: "Kto może widzieć grupę?"
+        public: "Wszyscy"
+        members: "Właściciele grupy, członkowie i administratorzy"
+        staff: "Właściciele grupy i zespół"
+        owners: "Właściciele grupy i administratorzy"
       alias_levels:
         title: "Kto może wysyłać wiadomości i używać @aliasu tej grupy?"
         nobody: "Nikt"
@@ -546,6 +547,7 @@ pl_PL:
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
+        button_text: "Pobierz Wszystko"
         confirm: "Czy na pewno chcesz pobrać swoje wszystkie wpisy?"
         success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
         rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
@@ -575,6 +577,7 @@ pl_PL:
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
+      theme_default_on_all_devices: "Ustaw ten motyw jako domyślny na wszystkich moich urządzeniach"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       change: "zmień"
@@ -613,6 +616,7 @@ pl_PL:
       watched_first_post_tags_instructions: "Zostaniesz powiadomiony tylko o pierwszym wpisie w każdym nowym temacie oznaczonym tymi tagami."
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
+      no_category_access: "Jako moderator masz limitowany dostęp do kategorii, możliwość zapisu jest wyłączona."
       delete_account: "Usuń moje konto"
       delete_account_confirm: "Czy na pewno chcesz usunąć swoje konto? To nieodwracalne!"
       deleted_yourself: "Twoje konto zostało usunięte."
@@ -811,8 +815,12 @@ pl_PL:
         expired: "To zaproszenie wygasło."
         rescind: "Usuń"
         rescinded: "Zaproszenie usunięte"
+        rescind_all: "Usuń wszystkie Zaproszenia"
+        rescinded_all: "Wszystkie Zaproszenia usunięte!"
+        rescind_all_confirm: "Jesteś pewny, że chcesz usunąć wszystkie zaproszenia?"
         reinvite: "Ponów zaproszenie"
         reinvite_all: "Wyślij ponownie wszystkie zaproszenia"
+        reinvite_all_confirm: "Jesteś pewny, że chcesz ponownie wysłać wszystkie zaproszenia?"
         reinvited: "Ponowne wysłanie zaproszenia"
         reinvited_all: "Wszystkie zaproszenia zostały ponownie wysłane!"
         time_read: "Czas odczytu"
@@ -1009,6 +1017,9 @@ pl_PL:
       complete_email_found: "Znaleziono konto przypisane do adresu <b>%{email}</b>,  wkrótce otrzymasz email z instrukcjami opisującymi reset hasła."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
+      help: "Email nie dotarł? Upewnij się najpierw czy sprawdziłeś folder spam.<p>Nie jesteś pewny jaki email został użyty? Wprowadz adres tutaj, a dowiemy się czy taki istnieje.</p><p>Jeśli nie masz już dostępu do adresu email zapisanego na twoim koncie, skontaktuj się z <a href='/about'>naszym pomocnym zespołem.</a></p>"
+      button_ok: "OK"
+      button_help: "Pomoc"
     login:
       title: "Logowanie"
       username: "Użytkownik"
@@ -1066,7 +1077,7 @@ pl_PL:
       your_email: "Adres e-mail przypisany do twojego konta to <b>%{email}</b>."
       accept_invite: "Akceptuj zaproszenie"
       success: "Twje konto zostało utworzone i zostałeś zalogowany."
-      password_label: "Ustaw hasło (opcjonalne)"
+      name_label: "Nazwa"
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -1328,6 +1339,7 @@ pl_PL:
         actions: "Operacje grupowe"
         close_topics: "Zamknij wpisy"
         archive_topics: "Zarchiwizuj tematy"
+        notification_level: "Powiadomienia"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
         selected:
           one: "Zaznaczono <b>1</b> temat."
@@ -1446,7 +1458,12 @@ pl_PL:
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
       auto_update_input:
+        later_today: "Później dzisiaj"
         tomorrow: "Jutro"
+        later_this_week: "Później w tym tygodniu"
+        this_weekend: "W ten weekend"
+        next_week: "Następny tydzień"
+        next_month: "Następny miesiąc"
         pick_date_and_time: "Wybierz datę i czas"
       publish_to_category:
         title: "Zaplanuj publikację"
@@ -1460,11 +1477,15 @@ pl_PL:
         title: "Automatycznie zamknij wątek"
         label: "Godziny automatycznego zamknięcia:"
         error: "Wprowadź poprawną wartość."
+        based_on_last_post: "Nie zamykaj tematu dopóki od ostatniego wpisu nie upłynie przynajmniej tyle czasu."
+      auto_delete:
+        title: "Automatycznie usuń wątek"
       status_update_notice:
         auto_open: "Ten wątek zostanie automatycznie otwarty po %{timeLeft}."
         auto_close: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_publish_to_category: "Wątek zostanie opublikowany w <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Ten watek zostanie automatycznie zamknięty po %{count} minutach od ostatniego wpisu."
+        auto_delete: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
       auto_close_title: 'Ustawienia automatycznego zamykania'
       auto_close_immediate:
         one: "Ostatni wpis w tym temacie został zamieszczony 1 godzinę temu, więc zostanie on natychmiastowo zamknięty."
@@ -1763,6 +1784,7 @@ pl_PL:
         has_liked: "lajkujesz ten wpis"
         undo_like: "wycofaj lajka"
         edit: "edytuj ten wpis"
+        edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
         flag: "oflaguj ten wpis lub wyślij powiadomienie o nim do moderatorów"
         delete: "usuń ten wpis"
@@ -1905,12 +1927,6 @@ pl_PL:
           few: "Jesteś pewny(-a), że chcesz usunąć te wszystkie wpisy?"
           many: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
           other: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
-      merge:
-        confirm:
-          one: "Czy na pewno chcesz scalić te posty?"
-          few: "Czy na pewno chcesz scalić te {{count}} postów?"
-          many: "Czy na pewno chcesz scalić te {{count}} postów?"
-          other: "Czy na pewno chcesz scalić te {{count}} postów?"
       revisions:
         controls:
           first: "Pierwsza wersja"
@@ -2804,11 +2820,6 @@ pl_PL:
           updating: "Trwa proces aktualizacji..."
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           add: "Dodaj"
-          commits_behind:
-            one: "Motyw jest nieaktualny - dostępna 1 poprawka!"
-            few: "Motyw jest nieaktualny - dostępne {{count}} poprawki!"
-            many: "Motyw jest nieaktualny - dostępne {{count}} poprawek!"
-            other: "Motyw jest nieaktualny - dostępne {{count}} poprawek!"
           scss:
             text: "CSS"
             title: "Wstaw własny CSS, przyjmujemy wszystkie prawidłowe style CSS i SCSS"

@@ -1,8 +1,11 @@
 require 'rails_helper'
 
 describe ApplicationRequest do
-
   before do
+    ApplicationRequest.clear_cache!
+  end
+
+  after do
     ApplicationRequest.clear_cache!
   end
 

@@ -245,7 +245,7 @@ module DiscourseNarrativeBot
 
     def bot_mentioned?
       @bot_mentioned ||= PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(
-        self.discobot_user.username.downcase
+        self.discobot_user.username_lower
       )
     end
 

@@ -6,7 +6,7 @@ export default {
   initialize(application) {
     Object.keys(requirejs.entries).forEach(entry => {
       if ((/\/helpers\//).test(entry)) {
-        require(entry, null, null, true);
+        requirejs(entry, null, null, true);
       }
     });
     registerHelpers(application);

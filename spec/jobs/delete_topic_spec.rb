@@ -4,9 +4,7 @@ describe Jobs::DeleteTopic do
   let(:admin) { Fabricate(:admin) }
 
   let(:topic) do
-    Fabricate(:topic,
-      topic_timers: [Fabricate(:topic_timer, user: admin)]
-    )
+    Fabricate(:topic_timer, user: admin).topic
   end
 
   let(:first_post) { create_post(topic: topic) }
@@ -36,9 +34,7 @@ describe Jobs::DeleteTopic do
   end
 
   it "should do nothing if it's too early" do
-    t = Fabricate(:topic,
-      topic_timers: [Fabricate(:topic_timer, user: admin, execute_at: 5.hours.from_now)]
-    )
+    t = Fabricate(:topic_timer, user: admin, execute_at: 5.hours.from_now).topic
     create_post(topic: t)
     Timecop.freeze(4.hours.from_now) do
       described_class.new.execute(topic_timer_id: t.public_topic_timer.id)
@@ -48,9 +44,7 @@ describe Jobs::DeleteTopic do
 
   describe "user isn't authorized to delete topics" do
     let(:topic) {
-      Fabricate(:topic,
-        topic_timers: [Fabricate(:topic_timer, user: Fabricate(:user))]
-      )
+      Fabricate(:topic_timer, user: Fabricate(:user)).topic
     }
 
     it "shouldn't delete the topic" do

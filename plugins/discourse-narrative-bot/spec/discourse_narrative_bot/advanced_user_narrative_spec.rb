@@ -303,6 +303,30 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         )
       end
 
+      describe 'when posts are configured to be deleted immediately' do
+        before do
+          SiteSetting.delete_removed_posts_after = 0
+        end
+
+        it 'should set up the tutorial correctly' do
+          narrative.set_data(user,
+            state: :tutorial_delete,
+            topic_id: topic.id,
+            track: described_class.to_s
+          )
+
+          PostDestroyer.new(user, post).destroy
+
+          post = Post.last
+
+          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+
+          PostDestroyer.destroy_stubs
+
+          expect(post.reload).to be_present
+        end
+      end
+
       describe 'when user replies to the topic' do
         it 'should create the right reply' do
           narrative.set_data(user, narrative.get_data(user).merge(
@@ -324,7 +348,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
             parent_category = Fabricate(:category, name: 'a')
-            category = Fabricate(:category, parent_category: parent_category, name: 'b')
+            _category = Fabricate(:category, parent_category: parent_category, name: 'b')
 
             post.update!(raw: skip_trigger)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
@@ -358,7 +382,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       describe 'when user recovers a post in the right topic' do
         it 'should create the right reply' do
           parent_category = Fabricate(:category, name: 'a')
-          category = Fabricate(:category, parent_category: parent_category, name: 'b')
+          _category = Fabricate(:category, parent_category: parent_category, name: 'b')
           post
 
           PostDestroyer.new(user, post).destroy
@@ -628,7 +652,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       it 'should create the right reply' do
-        post.update!(raw: "[details=\"This is a test\"]wooohoo[/details]")
+        post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
         narrative.input(:reply, user, post: post)
 
         expect(Post.offset(1).last.raw).to eq(I18n.t(

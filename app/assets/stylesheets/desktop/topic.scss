@@ -209,12 +209,12 @@
 }
 
 @media all
-and (max-width : 1000px) {
+and (min-width: 400px) {
 
   #topic-progress, #topic-progress-expanded {
-      right: 0;
-      left: 0;
-    }
+    right: 0;
+    left: 0;
+  }
 
   #topic-progress-wrapper {
     right: 160px;
@@ -228,7 +228,6 @@ and (max-width : 1000px) {
     max-width: 70%;
   }
 }
-
 
 @media all
 and (max-width : 485px) {

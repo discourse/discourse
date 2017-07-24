@@ -123,19 +123,19 @@ tr_TR:
     bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
     s3:
       regions:
-        us_east_1: "US East (N. Virginia)"
-        us_west_1: "US West (N. California)"
-        us_west_2: "US West (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "EU (Ireland)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Asia Pacific (Singapore)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
-        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
-        sa_east_1: "South America (Sao Paulo)"
+        ap_south_1: "Asia Pacific (Mumbai)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "China (Beijing)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Ireland)"
+        sa_east_1: "South America (Sao Paulo)"
+        us_east_1: "US East (N. Virginia)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
     edit: 'bu konunun başlığını ve kategorisini düzenleyin'
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
@@ -317,11 +317,7 @@ tr_TR:
         full_name: 'Tam İsim'
         add_members: "Üyeleri ekle"
         delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
-      request_membership_pm:
-        title: "Üyelik isteği"
-        body: "@%{groupName} adlı gruba üye olarak başvurmak istiyorum."
       name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
-      public: "Kullanıcıların gruptan serbest bir şekilde ayrılıp/katılmasına izin ver (grubun görünür olması gerekmekte)"
       empty:
         posts: "Bu grubun üyelerinden konu yok."
         members: "Bu grupta üye bulunmamaktır."
@@ -342,7 +338,6 @@ tr_TR:
       bio: "Grup Hakkında"
       selector_placeholder: "Üye ekle"
       owner: "sahip"
-      visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
       index:
         title: "Gruplar"
         empty: "Görünen hiç bir grup bulunmamaktadır."
@@ -1587,9 +1582,6 @@ tr_TR:
       delete:
         confirm:
           other: "Tüm bu gönderileri silmek istediğinize emin misiniz?"
-      merge:
-        confirm:
-          other: "{{count}} adet gönderiyi birleştirmek istediğinize emin misiniz?"
       revisions:
         controls:
           first: "İlk revizyon"

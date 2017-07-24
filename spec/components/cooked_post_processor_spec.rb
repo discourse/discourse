@@ -298,21 +298,21 @@ describe CookedPostProcessor do
 
     it "resizes when only width is specified" do
       img = { 'src' => 'http://foo.bar/image3.png', 'width' => 100}
-      SiteSetting.stubs(:crawl_images?).returns(true)
+      SiteSetting.crawl_images = true
       FastImage.expects(:size).returns([200, 400])
       expect(cpp.get_size_from_attributes(img)).to eq([100, 200])
     end
 
     it "resizes when only height is specified" do
       img = { 'src' => 'http://foo.bar/image3.png', 'height' => 100}
-      SiteSetting.stubs(:crawl_images?).returns(true)
+      SiteSetting.crawl_images = true
       FastImage.expects(:size).returns([100, 300])
       expect(cpp.get_size_from_attributes(img)).to eq([33, 100])
     end
 
     it "doesn't raise an error with a weird url" do
       img = { 'src' => nil, 'height' => 100}
-      SiteSetting.stubs(:crawl_images?).returns(true)
+      SiteSetting.crawl_images = true
       expect(cpp.get_size_from_attributes(img)).to be_nil
     end
 
@@ -346,7 +346,7 @@ describe CookedPostProcessor do
     end
 
     it "caches the results" do
-      SiteSetting.stubs(:crawl_images?).returns(true)
+      SiteSetting.crawl_images = true
       FastImage.expects(:size).returns([200, 400])
       cpp.get_size("http://foo.bar/image3.png")
       expect(cpp.get_size("http://foo.bar/image3.png")).to eq([200, 400])
@@ -354,7 +354,9 @@ describe CookedPostProcessor do
 
     context "when crawl_images is disabled" do
 
-      before { SiteSetting.stubs(:crawl_images?).returns(false) }
+      before do
+        SiteSetting.crawl_images = false
+      end
 
       it "doesn't call FastImage" do
         FastImage.expects(:size).never
@@ -457,7 +459,7 @@ describe CookedPostProcessor do
         <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
         <img src="http://foo.bar/image.png"><br>
         <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-        <img src="//test.localhost/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:">
+        <img src="//test.localhost/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:">
       </p>'
     end
 
@@ -471,7 +473,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:">
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:">
         </p>'
       end
 
@@ -483,7 +485,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="https://my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="https://my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:">
+          <img src="https://my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:">
         </p>'
       end
 
@@ -496,7 +498,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:">
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:">
         </p>'
       end
 
@@ -509,7 +511,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:">
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=5" title=":smile:" class="emoji" alt=":smile:">
         </p>'
       end
 
@@ -525,14 +527,15 @@ describe CookedPostProcessor do
     before { cpp.stubs(:available_disk_space).returns(90) }
 
     it "does not run when download_remote_images_to_local is disabled" do
-      SiteSetting.stubs(:download_remote_images_to_local).returns(false)
+      SiteSetting.download_remote_images_to_local = false
       Jobs.expects(:cancel_scheduled_job).never
       cpp.pull_hotlinked_images
     end
 
     context "when download_remote_images_to_local? is enabled" do
-
-      before { SiteSetting.stubs(:download_remote_images_to_local).returns(true) }
+      before do
+        SiteSetting.download_remote_images_to_local = true
+      end
 
       it "does not run when there is not enough disk space" do
         cpp.expects(:disable_if_low_on_disk_space).returns(true)
@@ -649,7 +652,7 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post) }
 
     context "emoji inside a quote" do
-      let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
+      let(:post) { Fabricate(:post, raw: "time to eat some sweet \n[quote]\n:candy:\n[/quote]\n mmmm") }
 
       it "doesn't award a badge when the emoji is in a quote" do
         cpp.grant_badges

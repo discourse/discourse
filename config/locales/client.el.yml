@@ -17,7 +17,7 @@ el:
           units:
             byte:
               one: Byte
-              other: Byte
+              other: Bytes
             gb: GB
             kb: KB
             mb: MB
@@ -66,8 +66,8 @@ el:
         almost_x_years:
           one: "1χ"
           other: "%{count}έ"
-        date_month: "DD ΜΜΜ"
-        date_year: "ΜΜΜ 'ΕΕ"
+        date_month: "DD MMM"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 λεπτό"
@@ -78,7 +78,7 @@ el:
         x_days:
           one: "1 ημέρα"
           other: "%{count} ημέρες"
-        date_year: "ΜΜΜ Η, 'ΕΕ"
+        date_year: "MMM Η, 'YY"
       medium_with_ago:
         x_minutes:
           one: "πριν από 1 λεπτό "
@@ -101,6 +101,7 @@ el:
           other: "%{count} χρόνια μετά"
       previous_month: 'Προηγούμενος μήνας'
       next_month: 'Επόμενος μήνας'
+      placeholder: Επιλέξτε ημερομηνία
     share:
       topic: 'κοινοποίησε έναν σύνδεσμο προς αυτό το νήμα'
       post: 'Ανάρτηση #%{postNumber}'
@@ -110,7 +111,7 @@ el:
       google+: 'κοινοποίησε τον σύνδεσμο στο Google+'
       email: 'στείλε αυτόν τον σύνδεσμο με ένα μήνυμα ηλεκτρονικού ταχυδρομείου'
     action_codes:
-      public_topic: "έκανε το θέμα δημόσιο στις ${when}"
+      public_topic: "έκανε το θέμα δημόσιο στις %{when}"
       private_topic: "έκανε το θέμα ιδιωτικό στις %{when}"
       split_topic: "διαχώρισε αυτό το θέμα στις %{when}"
       invited_user: "προσκάλεσε τον χρήστη %{who} στις %{when}"
@@ -136,28 +137,32 @@ el:
         enabled: 'καταχωρήθηκε %{when}'
         disabled: 'μη καταχωρημένο %{when}'
       banner:
-        enabled: 'έγινε μπάνερ %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από τον χρήστη.'
-        disabled: 'αφαιρέθηκε μπάνερ %{when}. Δεν θα εμφανίζεται πια στην κορυφή κάθε σελίδας.'
+        enabled: 'το έκανε μπάνερ στις %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από τον χρήστη.'
+        disabled: 'αφαίρεσε αυτό το μπάνερ %{when}. Δεν θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας.'
     topic_admin_menu: "Διαχείριση νήματος"
     wizard_required: "Καλώς ήλθατε στο νέο σας Discourse! Ας αρχίσουμε με τον <a href='%{url}' data-auto-route='true'>οδηγό εγκατάστασης</a> ✨"
     emails_are_disabled: "Τα εξερχόμενα μηνύματα ηλεκτρονικού ταχυδρομείου έχουν απενεργοποιηθεί από κάποιον διαχειριστή. Δε θα σταλεί κανένα μήνυμα ηλεκτρονικού ταχυδρομείου."
     bootstrap_mode_enabled: "Για να κάνουμε την έναρξη της νέα σας ιστοσελίδας ευκολότερη, βρίσκεστε σε λειτουργία εκκίνησης. Όλοι οι νέοι χρήστες θα χορηγούνται επίπεδο εμπιστοσύνης 1 και θα έχουν τις ενημερώσεις από καθημερινή συνοπτική συλλογή email ενεργοποιημένες. Αυτό θα απενεργοποιηθεί αυτόματα όταν ο συνολικός αριθμός των χρηστών ξεπεράσει τους %{min_users} χρήστες."
     bootstrap_mode_disabled: "Η λειτουργία εκκίνησης θα απενεργοποιηθεί αυτόματα στις επόμενες 24 ώρες."
+    themes:
+      default_description: "Προεπιλογή"
     s3:
       regions:
-        us_east_1: "Ανατολικές ΗΠΑ (Β. Βιρτζίνια)"
-        us_west_1: "Δυτικές ΗΠΑ (Β. Καλιφόρνια)"
-        us_west_2: "Δυτικές ΗΠΑ (Όρεγκον)"
-        us_gov_west_1: "AWS GovCloud (ΗΠΑ)"
-        eu_west_1: "ΕΕ (Ιρλανδία)"
-        eu_central_1: "ΕΕ (Φρανκφούρτη)"
-        ap_southeast_1: "Ασία-Ειρηνικός (Σιγκαπούρη)"
-        ap_southeast_2: "Ασία-Ειρηνικός (Σίδνεϊ)"
-        ap_south_1: "Ασία - Ειρηνικός (Μομβάη)"
         ap_northeast_1: "Ασία-Ειρηνικός (Τόκιο)"
         ap_northeast_2: "Ασία-Ειρηνικός (Σεούλ)"
-        sa_east_1: "Ασία-Ειρηνικός (Σάο Πάολο)"
-        cn_north_1: "Κίνα(Πεκίνο)"
+        ap_south_1: "Ασία - Ειρηνικός (Μομβάη)"
+        ap_southeast_1: "Ασία-Ειρηνικός (Σιγκαπούρη)"
+        ap_southeast_2: "Ασία-Ειρηνικός (Σίδνεϊ)"
+        cn_north_1: "Κίνα (Πεκίνο)"
+        eu_central_1: "ΕΕ (Φρανκφούρτη)"
+        eu_west_1: "ΕΕ (Ιρλανδία)"
+        eu_west_2: "EU (Λονδίνο)"
+        sa_east_1: "Νότια Αμερική (Σάο Πάολο)"
+        us_east_1: "Ανατολικές ΗΠΑ (Β. Βιρτζίνια)"
+        us_east_2: "Ανατολικές ΗΠΑ (Οχάιο)"
+        us_gov_west_1: "AWS GovCloud (ΗΠΑ)"
+        us_west_1: "Δυτικές ΗΠΑ (Β. Καλιφόρνια)"
+        us_west_2: "Δυτικές ΗΠΑ (Όρεγκον)"
     edit: 'αλλαγή του τίτλου και την κατηγορίας του νήματος'
     not_implemented: "Λυπούμαστε! Αυτή η λειτουργία δεν έχει υλοποιηθεί ακόμα."
     no_value: "Όχι"
@@ -175,11 +180,11 @@ el:
     links: "Σύνδεσμοι"
     links_lowercase:
       one: "Σύνδεσμος"
-      other: "Σύνδεσμοι"
+      other: "σύνδεσμοι"
     faq: "Συχνές ερωτήσεις"
     guidelines: "Οδηγίες"
-    privacy_policy: "Πολιτική προστασίας δεδομένων"
-    privacy: "Προστασία δεδομένων"
+    privacy_policy: "Πολιτική Απορρήτου"
+    privacy: "Ιδιωτικότητα"
     terms_of_service: "Όροι χρήσης"
     mobile_view: "Προβολή για κινητό"
     desktop_view: "Προβολή για σταθερό υπολογιστή"
@@ -218,7 +223,7 @@ el:
       topic_count: "Νήματα"
       post_count: "Αναρτήσεις"
       user_count: "Χρήστες"
-      active_user_count: "Ενεργός χρήστης"
+      active_user_count: "Ενεργοί Χρήστες"
       contact: "Επικοινώνησε μαζί μας"
       contact_info: "Σε περίπτωση που προκύψει κάποιο κρίσιμο πρόβλημα ή κάποιο επείγον θέμα που αφορά αυτόν τον ιστότοπο, παρακαλούμε να επικοινωνήσεις μαζί μας στο %{contact_info}."
     bookmarked:
@@ -261,7 +266,7 @@ el:
     switch_to_anon: "Έναρξη κατάστασης ανωνυμίας"
     switch_from_anon: "Τερματισμός κατάστασης ανωνυμίας"
     banner:
-      close: "Απομάκρυνε αυτή την εικόνα"
+      close: "Απομάκρυνε αυτό το banner"
       edit: "Επεξεργάσου αυτό το banner >>"
     choose_topic:
       none_found: "Δεν βρέθηκαν νήματα."
@@ -291,7 +296,7 @@ el:
           other: "Έχετε <strong>{{count}}</strong> εκκρεμείς αναρτήσεις."
         ok: "OK"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ανάρτησε το νήμα <a href='{{topicUrl}}'></a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ανάρτησε <a href='{{topicUrl}}'>το νήμα </a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ανάρτησες</a> αυτό <a href='{{topicUrl}}'>το νήμα</a>"
       user_replied_to_post: "Ο/Η <a href='{{userUrl}}'>{{user}}</a> απάντησε στο <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>Απάντησες</a> στο νήμα <a href='{{postUrl}}'>{{post_number}}</a>"
@@ -308,7 +313,7 @@ el:
       filter_name: "φιλτράρισμα με βάση το όνομα χρήστη"
       title: "Χρήστες"
       likes_given: "Δόθηκαν"
-      likes_received: "Λήφθηκαν"
+      likes_received: "Λήφθησαν"
       topics_entered: "Προβλήθηκαν"
       topics_entered_long: "Θέματα που προβλήθηκαν"
       time_read: "Ωρα ανάγνωσης"
@@ -323,21 +328,21 @@ el:
       posts_read_long: "Διαβασμένες αναρτήσεις"
       total_rows:
         one: "1 χειριστής"
-        other: "%{count} χειριστές"
+        other: "%{count} χρήστες"
     group_histories:
       actions:
         change_group_setting: "Αλλαγή ρυθμίσεων ομάδας"
         add_user_to_group: "Προσθήκη χρήστη"
         remove_user_from_group: "Αφαίρεση χρήστη"
         make_user_group_owner: "Κάνε ιδιοκτήτη"
-        remove_user_as_group_owner: "Απόσυρε ιδιοκτήτη"
+        remove_user_as_group_owner: "Απέσυρε ιδιοκτήτη"
     groups:
       logs:
         title: "Αρχεία καταγραφής"
         when: "Όταν"
         action: "Δράση"
-        acting_user: "Δραστήριοι χρήστες"
-        target_user: "Χρήστης στόχος"
+        acting_user: "Ενεργοί χρήστες"
+        target_user: "Επιδιοκώμενος χρήστη"
         subject: "Θέμα"
         details: "Λεπτομέρειες"
         from: "Από"
@@ -346,12 +351,9 @@ el:
         title: 'Επεξεργασία ομάδας'
         full_name: 'Ονοματεπώνυμο'
         add_members: "Προσθήκη μελών"
-        delete_member_confirm: "Ναι αφαιρεθεί ο/η '%{username}' από την '%{group}' ομάδα;"
-      request_membership_pm:
-        title: "Αίτηση μέλους"
-        body: "Θα ήθελα να κάνω αίτηση για να γίνω μέλος στο @% {groupname}"
+        delete_member_confirm: "Να αφαιρεθεί ο/η '%{username}' από την '%{group}' ομάδα;"
       name_placeholder: "Όνομα ομάδας, χωρίς κενά, ίδιοι κανόνες με τους κανόνες για το όνομα χρήστη"
-      public: "'Ολοι οι χρήστες μπορούν να συμετάσχουν/ αποχωρίσουν απο την ομάδα ελεύθερα. (Η ομάδα πρέπει να είναι φανερή)"
+      public: "Επέτρεψε στους χρήστες να συμμετέχουν/αποχωρούν ελεύθερα στην ομάδα (Απαιτεί δημόσια ορατή ομάδα)"
       empty:
         posts: "Δεν υπάρχουν δημοσιεύσεις από μέλη της ομάδας."
         members: "Δεν υπάρχουν μέλη σε αυτή την ομάδα."
@@ -361,18 +363,18 @@ el:
         logs: "Δεν υπάρχουν αρχεία καταγραφής για αυτή την ομάδα."
       add: "Προσθήκη"
       join: "Συμμετοχή στην ομάδα"
-      leave: "Απομάκρυνση από την ομάδα"
+      leave: "Αποχώρηση από την ομάδα"
       request: "Αίτημα για συμμετοχή στην ομάδα"
       automatic_group: Αυτόματη ομάδα
       closed_group: Κλειστή ομάδα
       is_group_user: "Είσαι μέλος αυτής της ομάδας"
+      allow_membership_requests: "Επιτρέψτε στα μέλη να στέλνουν αιτήματα συμμετοχής στους ιδιοκτήτες ομάδων"
       membership: "Ιδιότητα μέλους"
       name: "Όνομα"
       user_count: "Αριθμός μελών"
       bio: "Σχετικά με την ομάδα"
       selector_placeholder: "Προσθήκη μελών"
       owner: "ιδιοκτήτης"
-      visible: "Η ομάδα είναι ορατή σε όλους τους χρήστες"
       index:
         title: "Ομάδες"
         empty: "Δεν υπάρχουν ορατές ομάδες."
@@ -385,6 +387,13 @@ el:
       posts: "Αναρτήσεις"
       mentions: "Αναφορές"
       messages: "Μηνύματα"
+      notification_level: "Προκαθορισμένο επίπεδο ειδοποιήσεων για μηνύματα ομάδων"
+      visibility_levels:
+        title: "Ποιος μπορεί να δει αυτή την ομάδα;"
+        public: "Όλοι"
+        members: "Ιδιοκτήτες ομάδας, μέλη και διαχειριστές"
+        staff: "Ιδιοκτήτες ομάδας και προσωπικό"
+        owners: "Ιδιοκτήτες ομάδας και διαχειριστές"
       alias_levels:
         title: "Ποιός μπορεί να στείλει μήνυμα και να @αναφέρει αυτή την ομάδα?"
         nobody: "Κανένας"
@@ -412,12 +421,12 @@ el:
           title: "Σε σιγή"
           description: "Δε θα λαμβάνεις ποτέ ειδοποιήσεις για οτιδήποτε σχετικά με τις καινούριες δημοσιεύσεις της ομάδας."
       flair_url: "Avatar Flair εικόνα"
-      flair_url_placeholder: "( προαιρετικό) Εικόνα URL ή Font Awesome κατηγορία "
+      flair_url_placeholder: "(προαιρετικό) URL εικόνας ή Font Awesome κατηγορία "
       flair_bg_color: "Avatar Flair χρώμα φόντου"
       flair_bg_color_placeholder: "(Προαιρετικό) Τιμή χρώματος Hex"
       flair_color: "Avatar Flair χρώμα"
       flair_color_placeholder: "(Προαιρετικό) Τιμή χρώματος Hex"
-      flair_preview_icon: "Προεπισκόπηση εικονίσματος"
+      flair_preview_icon: "Προεπισκόπηση εικονιδίου"
       flair_preview_image: "Προεπισκόπηση εικόνας"
       flair_note: "Σημείωση: Το Flair θα εμφανιστεί μονο για την κύρια ομάδα του χρήστη"
     user_action_groups:
@@ -443,15 +452,15 @@ el:
         title: "Επαναταξινόμησε τις κατηγορίες"
         title_long: "Αναδιοργάνωση της λίστας κατηγοριών"
         fix_order: "Σταθερές θέσεις"
-        fix_order_tooltip: "Δε έχουν όλες οι κατηγορίες μοναδικό νούμερο θέσης, το οποίο ίσως προκαλέσει αναπάντεχα αποτελέσματα."
-        save: "Αποθήκευση εντολής"
+        fix_order_tooltip: "Δεν έχουν όλες οι κατηγορίες μοναδικό νούμερο θέσης, το οποίο ίσως προκαλέσει αναπάντεχα αποτελέσματα."
+        save: "Αποθήκευση Κατάταξης"
         apply_all: "Εφαρμογή"
         position: "Θέση"
       posts: "Αναρτήσεις"
       topics: "Νήματα"
-      latest: "Τελευταία νήματα"
-      latest_by: "τελευταία ανάρτηση από τον/την"
-      toggle_ordering: "Αλλαγή ταξινόμησης"
+      latest: "Πρόσφατες"
+      latest_by: "πρόσφατα από"
+      toggle_ordering: "εναλλαγή ταξινόμησης"
       subcategories: "Υποκατηγορίες"
       topic_sentence:
         one: "1 θέμα"
@@ -462,13 +471,13 @@ el:
     ip_lookup:
       title: Αναζήτηση διεύθυνσης IP
       hostname: Όνομα εξυπηρετητή
-      location: Διεύθυνση
+      location: Τοποθεσία
       location_not_found: (άγνωστο)
       organisation: Οργάνωση
       phone: Τηλέφωνο
       other_accounts: "Άλλοι λογαριασμοί με αυτή την IP διεύθυνση:"
       delete_other_accounts: "Διαγραφή %{count}"
-      username: "Όνομα χρήστη"
+      username: "χρηστώνυμο"
       trust_level: "TL"
       read_time: "χρόνος ανάγνωσης"
       topics_entered: "νήματα που είδες"
@@ -482,8 +491,9 @@ el:
       mute: "Σίγαση"
       edit: "Επεξεργασία ρυθμίσεων"
       download_archive:
+        button_text: "Λήψη Όλων"
         confirm: "Είσαι σίγουρος πως θέλεις να κάνεις λήψη των δημοσιεύσεων σου;"
-        success: "Όταν θα αρχίσει να κατεβαίνει το αρχείο, θα ειδοποιηθείται μέσω μυνήματος μόλις ολοκληρωθεί η διαδικασία."
+        success: "Ξεκίνησε η διαδικασία λήψης. Θα ειδοποιηθείτε ]μόλις ολοκληρωθεί η διαδικασία."
         rate_limit_error: "Μπορείς να κάνεις λήψη των δημοσιεύσεών σου μια φορά την ημέρα, προσπάθησε ξανά αύριο."
       new_private_message: "Νέο Μήνυμα"
       private_message: "Μήνυμα"
@@ -496,7 +506,7 @@ el:
       invited_by: "Προσκλήθηκε από τον/την"
       trust_level: "Επίπεδο εμπιστοσύνης"
       notifications: "Ειδοποιήσεις"
-      statistics: "Αναλυτικά στοιχεία"
+      statistics: "Στατιστικά"
       desktop_notifications:
         label: "Ειδοποιήσεις στην επιφάνεια εργασίας"
         not_supported: "Οι ειδοποιήσεις δεν υποστηρίζονται από αυτό το πρόγραμμα περιήγησης. Λυπάμαι."
@@ -505,12 +515,13 @@ el:
         perm_denied_expl: "Απορρίψατε την άδεια για ειδοποιήσεις. Επιτρέψτε τις ειδοποιήσεις μέσω των ρυθμίσεων του φυλλομετρητή σας."
         disable: "Απενεργοποίηση ειδοποιήσεων"
         enable: "Ενεργοποίηση ειδοποιήσεων"
-        each_browser_note: "Σημείωση: Έχετε αλλάξει αυτή τη ρύθμιση σε κάθε φυλλομετρητή που χρησιμοποιείτε."
-      dismiss_notifications: "Διώξτα όλα"
+        each_browser_note: "Σημείωση: Θα πρέπει να αλλάξετε αυτή τη ρύθμιση σε κάθε φυλλομετρητή που χρησιμοποιείτε."
+      dismiss_notifications: "Απόρριψη όλων"
       dismiss_notifications_tooltip: "Όλες οι αδιάβαστες ειδοποιήσεις να χαρακτηριστούν διαβασμένες"
       first_notification: "Η πρώτη σου ειδοποίηση! Επίλεξε την για να ξεκινήσεις."
       disable_jump_reply: "Να μην εστιάζεται η ανάρτηση μου αφ' ότου απαντήσω"
       dynamic_favicon: "Δείξε τον αριθμό νέων/ενημερωμένων αναρτήσεων στο εικονίδιο του προγράμματος περιήγησης"
+      theme_default_on_all_devices: "Αυτό να γίνει το προεπιλεγμένο θέμα σε όλες μου τις συσκευές"
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       change: "αλλαγή"
@@ -550,22 +561,25 @@ el:
       watched_first_post_tags_instructions: "Θα ειδοποιηθείς για την πρώτη δημοσίευση του κάθε καινούριου θέματος με αυτές τις ετικέτες. "
       muted_categories: "Σε σίγαση"
       muted_categories_instructions: "Δε θα λαμβάνεις ειδοποιήσεις για τίποτα σχετικά με τις καινούριες δημοσιεύσεις σε αυτές τις κατηγορίες, και δε θα εμφανίζονται στα τελευταία."
+      no_category_access: "Ως συντονιστής έχεις περιορισμένη πρόσβαση στην κατηγορία, η αποθήκευση είναι απενεργοποιημένη."
       delete_account: "Διαγραφή του λογαριασμού μου "
       delete_account_confirm: "Είσαι σίγουρος πως θέλεις να διαγράψεις μόνιμα τον λογαριασμό σου; Αυτή η πράξη είναι μη αναστρέψιμη."
       deleted_yourself: "Ο λογαριασμός σου διαγράφηκε."
       delete_yourself_not_allowed: "Δεν μπορείς να διαγράψεις τον λογαριασμό σου αυτή την στιγμή. Επικοινώνησε με έναν διαχειριστή για να τον διαγράψει αυτός για σένα."
       unread_message_count: "Μηνύματα"
       admin_delete: "Διαγραφή"
-      users: "χειριστές"
+      users: "Χρήστες"
       muted_users: "Σε σίγαση"
-      muted_users_instructions: "Αποσιώπησε όλες τις ειδοποιήσεις από αυτούς τους χειριστές"
+      muted_users_instructions: "Αποσιώπησε όλες τις ειδοποιήσεις από αυτούς τους χρήστες."
       muted_topics_link: "Δείξε τα νήματα που είναι σε σίγαση"
       watched_topics_link: "Δείξε τα νήματα που παρακολουθούνται"
+      tracked_topics_link: "Δείξτε τα νήματα που παρακολουθούνται"
       automatically_unpin_topics: "Τα νήματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος."
       apps: "Εφαρμογές"
       revoke_access: "Ανάκληση πρόσβασης"
       undo_revoke_access: "Απενεργοποίηση ανάκλησης πρόσβασης"
       api_approved: "Εγκεκριμένο:"
+      theme: "Θέμα"
       staff_counters:
         flags_given: "χρήσιμες σημάνσεις"
         flagged_posts: "Επισημασμένες αναρτήσεις"
@@ -583,6 +597,15 @@ el:
         move_to_archive: "Αρχείο"
         failed_to_move: "Αποτυχία μετακίνησης των επιλεγμένων μηνυμάτων (πιθανόν δεν υπάρχει σύνδεση στο δίκτυο)"
         select_all: "Επιλογή όλων"
+      preferences_nav:
+        account: "Λογαριασμός"
+        profile: "Προφίλ"
+        emails: "Emails"
+        notifications: "Ειδοποιήσεις"
+        categories: "Κατηγορίες"
+        tags: "Εττικέτες"
+        interface: "Διεπαφή"
+        apps: "Εφαρμογές"
       change_password:
         success: "(το μήνυμα ηλεκτρονικού ταχυδρομείου στάλθηκε)"
         in_progress: "(αποστολή μηνύματος ηλεκτρονικού ταχυδρομείου)"
@@ -624,7 +647,7 @@ el:
         instructions: "Οι εικόνες στο φόντο θα κεντραρίζονται και το προκαθορισμένο πλάτος τους είναι 590px."
       email:
         title: "Διεύθυνση ηλεκτρονικού ταχυδρομείου"
-        instructions: "Να μην εμφανίζεται ποτέ δημόσια"
+        instructions: "δεν εμφανίζεται ποτέ δημόσια"
         ok: "Για επιβεβαίωση θα σου στείλουμε ένα μήνυμα ηλεκτρονικού ταχυδρομείου"
         invalid: "Παρακαλώ δώσε μία έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου"
         authenticated: "Η διεύθυνση ηλεκτρονικού ταχυδρομείου σου ταυτοποιήθηκε από τον πάροχο {{provider}}"
@@ -661,7 +684,7 @@ el:
       last_seen: "Ειδώθηκε"
       created: "Μέλος από"
       log_out: "Αποσύνδεση"
-      location: "Διεύθυνση"
+      location: "Τοποθεσία"
       card_badge:
         title: "Παράσημο καρτέλας χρήστη"
       website: "Ιστοσελίδα"
@@ -674,7 +697,7 @@ el:
         never: "Ποτέ"
       email_previous_replies:
         title: "Συμπερίλαβε προηγούμενες απαντήσεις στο κάτω μέρος των ηλεκτρονικών μηνυμάτων"
-        unless_emailed: "Εάν δεν έχει σταλεί προηγουμένως"
+        unless_emailed: "εάν δεν έχει σταλεί προηγουμένως"
         always: "πάντα"
         never: "ποτέ"
       email_digests:
@@ -682,9 +705,9 @@ el:
         every_30_minutes: "κάθε 30 λεπτά"
         every_hour: "ωριαία"
         daily: "καθημερινά"
-        every_three_days: "Κάθε τρεις μέρες"
+        every_three_days: "κάθε τρεις μέρες"
         weekly: "εβδομαδιαία"
-        every_two_weeks: "Κάθε τρεις μέρες"
+        every_two_weeks: "κάθε δύο εβδομάδες"
       include_tl0_in_digests: "Συμπεριλάμβανε περιεχόμενο από νέους χρήστες σε περιληπτικά μηνύματα"
       email_in_reply_to: "Συμπερίλαβε ένα απόσπασμα της απάντησης για να το δημοσιεύσεις σέ ηλεκτρονικό μήνυμα"
       email_direct: "Στείλε μου ένα μήνυμα ηλεκτρονικού ταχυδρομείου όταν κάποιος παραθέσει ανάρτησή μου, απαντήσει σε ανάρτησή μου, αναφέρει το @username μου ή με προσκαλεί σε ένα νήμα."
@@ -696,10 +719,10 @@ el:
         label: "Τα νήματα να θεωρούνται νέα όταν"
         not_viewed: "Δεν τα έχω δει αυτά ακόμη"
         last_here: "δημιουργήθηκαν από την τελευταία επίσκεψή μου"
-        after_1_day: "δημιουργήθηκε την τελευταία ημέρα"
-        after_2_days: "δημιουργήθηκε τις 2 τελευταίες ημέρες"
+        after_1_day: "δημιουργήθηκαν την τελευταία ημέρα"
+        after_2_days: "δημιουργήθηκαν τις 2 τελευταίες ημέρες"
         after_1_week: "δημιουργήθηκαν την τελευταία εβδομάδα"
-        after_2_weeks: "δημιουργήθηκε τις 2 τελευταίες εβδομάδες"
+        after_2_weeks: "δημιουργήθηκαν τις 2 τελευταίες εβδομάδες"
       auto_track_topics: "Τα νήματα που βλέπω να παρακολουθούνται αυτόματα "
       auto_track_options:
         never: "ποτέ"
@@ -711,7 +734,7 @@ el:
         after_4_minutes: "μετά από 4 λεπτά"
         after_5_minutes: "μετά από 5 λεπτά"
         after_10_minutes: "μετά από 10 λεπτά"
-      notification_level_when_replying: "Όταν δημοσιοποιώ ένα νήμα, τοποθέτησε αυτό το νήμα σε"
+      notification_level_when_replying: "Όταν δημοσιοποιώ σε ένα νήμα, τοποθέτησε αυτό το νήμα σε"
       invited:
         search: "γράψε για να αναζητήσεις προσκλήσεις..."
         title: "Προσκλήσεις"
@@ -720,7 +743,7 @@ el:
         none: "Δεν υπάρχουν προσκλήσεις σε εκκρεμότητα να σου δείξω."
         truncated:
           one: "Δείχνοντας την πρώτη πρόσκληση."
-          other: "Δείχνοντας την πρώτη {{count}} προσκλήσεις."
+          other: "Προβάλονται οι πρώτες {{count}} προσκλήσεις."
         redeemed: "Προσκλήσεις που έγιναν αποδεκτές"
         redeemed_tab: "Εξοφλήθηκε"
         redeemed_tab_with_count: "Εξοφλήθηκε ({{count}})"
@@ -733,17 +756,21 @@ el:
         expired: "Αυτή η πρόσκληση έχει λήξει."
         rescind: "Αναίρεση πρόσκλησης"
         rescinded: "Η πρόσκληση αναιρέθηκε"
+        rescind_all: "Αναίρεσε όλες τις προσκλήσεις"
+        rescinded_all: "Όλες οι προσκλήσεις αναιρέθηκαν!"
+        rescind_all_confirm: "Θέλετε σίγουρα να αναιρέσετε όλες τις προσκλήσεις;"
         reinvite: "Επαναποστολή πρόσκλησης"
         reinvite_all: "Αποστολή ξανά όλων των προσκλήσεων"
+        reinvite_all_confirm: "Σίγουρα θέλετε να στείλετε ξανά όλες τις προσκλήσεις;"
         reinvited: "Η πρόσκληση στάλθηκε ξανά"
         reinvited_all: "Όλες οι προσκλήσεις ξανά-εστάλησαν!"
         time_read: "Χρόνος ανάγνωσης"
         days_visited: "Μέρες επίσκεψης"
         account_age_days: "Ηλικία λογαριασμού σε μέρες"
         create: "Αποστολή πρόσκλησης"
-        generate_link: "Αντιγραφή Πρόσκληση Σύνδεσμος"
-        link_generated: "Η πρόσκληση του συνδέσμου έγινε επιτυχώς!"
-        valid_for: "Η πρόσκληση συνδέσμου είναι έγκυρη μόνο για τη διεύθυνση ηλεκτρονικού μηνύματος: %{email}"
+        generate_link: "Αντιγραφή Συνδέσμου Πρόσκλησης"
+        link_generated: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
+        valid_for: "Ο σύνδεσμος πρόσκλησης είναι έγκυρος μόνο για αυτή τη διεύθυνση ηλεκτρονικού μηνύματος: %{email}"
         bulk_invite:
           none: "Δεν έχετε προσκαλέσει κανέναν ακόμα. Στείλτε ατομικές προσκλήσεις, ή καλέστε πολλά άτομα με τη μία <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> μεταφορτώνοντας ένα αρχείο CSV </a>."
           text: "Ομαδική πρόσκληση από αρχείο"
@@ -769,16 +796,16 @@ el:
           other: "οι δημοσιεύσεις δημιουργήθηκαν"
         likes_given:
           one: "<i class='fa fa-heart'></i> δεδομένο"
-          other: "<i class='fa fa-heart'></i> δεδομένο"
+          other: "<i class='fa fa-heart'></i> δόθηκαν"
         likes_received:
           one: "<i class='fa fa-heart'></i> ελήφθη"
-          other: "<i class='fa fa-heart'></i> ελήφθη"
+          other: "<i class='fa fa-heart'></i> ελήφθησαν"
         days_visited:
           one: "ημέρα που επισκέφτηκες"
           other: "ημέρες που επισκέφτηκες"
         posts_read:
           one: "η δημοσίευση διαβάστηκε"
-          other: "οι δημοσιεύσεις διαβάστηκαν"
+          other: "δημοσιεύσεις που διαβάστηκαν"
         bookmark_count:
           one: "σελιδοδείκτης"
           other: "σελιδοδείκτες"
@@ -812,11 +839,11 @@ el:
       stream:
         posted_by: "Αναρτήθηκε από"
         sent_by: "Στάλθηκε από"
-        private_message: "Μήνυμα"
+        private_message: "μήνυμα"
         the_topic: "το νήμα"
     loading: "Φόρτωση... "
     errors:
-      prev_page: "στο ανέβασμα"
+      prev_page: "κατά το φόρτωμα"
       reasons:
         network: "Σφάλμα δικτύου"
         server: "Σφάλμα διακομιστή"
@@ -843,11 +870,11 @@ el:
       login_disabled: "Η δυνατότητα σύνδεσης έχει απενεργοποιηθεί για όσο το φόρουμ είναι σε κατάσταση μόνο ανάγνωσης."
       logout_disabled: "Η αποσύνδεση δεν είναι διαθέσιμη ενώ η ιστοσελίδα είναι σε λειτουργία μόνο ανάγνωσης."
     too_few_topics_and_posts_notice: "Ας αρχίσουμε <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> αυτή την συζήτηση! </a> Υπάρχουν <strong>%{currentTopics} / %{requiredTopics}</strong> νήματα και <strong>%{currentPosts} / %{requiredPosts}</strong> δημοσιεύεις. Οι νέοι επισκέπτες χρειάζονται κάποιες συνομιλίες για να τις διαβάσουν και να απαντήσουν σε αυτές."
-    too_few_topics_notice: "Ας αρχίσουμε <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> αυτή την συζήτηση! </a> Υπάρχουν  <strong>%{currentTopics} / %{requiredTopics}</strong> νήματα και <strong>%{currentPosts} / %{requiredPosts}</strong> δημοσιεύεις. Οι νέοι επισκέπτες χρειάζονται κάποιες συνομιλίες για να τις διαβάσουν και να απαντήσουν σε αυτές."
-    too_few_posts_notice: "Ας <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>ξεκινήσουμε αυτή τη συζήτηση!</a> Υπάρχουν προσωρινά <strong>%{currentPosts} / %{requiredPosts}</strong> δημοσιεύσεις. Οι καινούριοι επισκέπτες χρειάζοντε να διαβάσουν και να απαντήσουν σε μερικές συζητήσεις."
+    too_few_topics_notice: "Ας αρχίσουμε <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> αυτή την συζήτηση! </a> Υπάρχουν  <strong>%{currentTopics} / %{requiredTopics}</strong> νήματα. Οι νέοι επισκέπτες χρειάζονται κάποιες συνομιλίες για να τις διαβάσουν και να απαντήσουν σε αυτές."
+    too_few_posts_notice: "Ας <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>ξεκινήσουμε αυτή τη συζήτηση!</a> Υπάρχουν <strong>%{currentPosts} / %{requiredPosts}</strong> δημοσιεύσεις. Οι καινούριοι επισκέπτες χρειάζοντε να διαβάσουν και να απαντήσουν σε μερικές συζητήσεις."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> έχει φτάσει το ορισμένο όριο της ιστοσελίδας των %{siteSettingRate}."
-      exceeded: "<b>&{relativeAge}</b> - <a href='%{url}' target='_blank'>%{rate}</a> υπερβαίνει το όριο των ρυθμίσεων της ιστοσελίδας %{siteSettingRate}. "
+      exceeded: "<b>%{relativeAge}</b> - <a href='%{url}' target='_blank'>%{rate}</a> υπερβαίνει το όριο των ρυθμίσεων της ιστοσελίδας %{siteSettingRate}. "
       rate:
         one: "1 σφάλματα/%{duration}"
         other: "%{count} σφάλματα/%{duration}"
@@ -873,14 +900,14 @@ el:
       sign_up: "Εγγραφή"
       hide_session: "Υπενθύμιση αύριο"
       hide_forever: "όχι ευχαριστώ"
-      hidden_for_session: "Εντάξει, θα σε ρωτήσω αύριο. Μπορείς πάντα να χρησιμοποιείς τη \"Σύνδεση\" και για να δημιουργήσεις ένα λογαριασμό."
-      intro: "Γεια σου! :heart_eyes: Φαίνεται να απολαμβάνεις τη συζήτηση, όμως δεν έχεις εγγραφεί σε ένα λογαριασμό."
+      hidden_for_session: "Εντάξει, θα σε ρωτήσω αύριο. Μπορείς πάντα να χρησιμοποιείς τη \"Σύνδεση\" για να δημιουργήσεις ένα λογαριασμό."
+      intro: "Γεια σου! :heart_eyes: Φαίνεται να απολαμβάνεις τη συζήτηση, όμως δεν έχεις δημιουργήσει ακόμα δικό σου λογαριασμό."
       value_prop: "Όταν δημιουργείς έναν λογαριασμό, θυμόμαστε ακριβώς τι έχεις διαβάσει, έτσι ώστε πάντα να επιστρέφεις όπου είχες μείνει. Επίσης, λαμβάνεις ειδοποιήσεις, εδώ και μέσω ηλεκτρονικού μηνύματος, κάθε φορά που δημιουργούνται καινούριες δημοσιεύσεις. Και μπορείς να πατήσεις \"μου αρέσει\" στις δημοσιεύσεις για να μοιραστείς την αγάπη. :heartbeat:"
     summary:
-      enabled_description: "Βλέπεις μια περίληψη αυτού του νήματος: οι πιο ενδιαφέρουσες αναρτήσεις όπως αυτές καθορίστηκαν από την κοινότητα."
+      enabled_description: "Βλέπεις μια περίληψη αυτού του νήματος: οι πιο ενδιαφέρουσες αναρτήσεις, όπως αυτές καθορίστηκαν από την κοινότητα."
       description: "Υπάρχουν <b>{{replyCount}}</b> απαντήσεις."
       description_time: "Υπάρχουν <b>{{replyCount}}</b> απαντήσεις με εκτιμώμενο χρόνο ανάγνωσης <b>{{readingTime}} λεπτών</b>."
-      enable: 'Κάνε  μια σύνοψη αυτού του νήματος'
+      enable: 'Σύνοψη αυτού του νήματος'
       disable: 'Εμφάνιση όλων των αναρτήσεων'
     deleted_filter:
       enabled_description: "Αυτό το νήμα περιέχει σβησμένες αναρτήσεις, οι οποίες αποκρύπτονται."
@@ -900,7 +927,7 @@ el:
     trust_level: 'Επίπεδο εμπιστοσύνης'
     search_hint: 'χρηστώνυμο, διεύθυνση ηλεκτρονικού ταχυδρομείου ή IP διεύθυνση'
     create_account:
-      disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='{{privacy_link}}'> πολιτική προστασίας προσωπικών δεδομένων</a> και <ahref='{{tos_link}}'> με τους όρους υπηρεσίας</a>."
+      disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='{{privacy_link}}'>πολιτική προστασίας προσωπικών δεδομένων</a> και <a href='{{tos_link}}'>με τους όρους χρήσης</a>."
       title: "Δημιουργία νέου λογαριασμού"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση ηλεκτρονικού ταχυδρομείου να είναι ήδη δηλωμένη. Δοκίμασε το σύνδεσμο «ξέχασα τον κωδικό μου»."
     forgot_password:
@@ -914,6 +941,9 @@ el:
       complete_email_found: "Βρήκαμε έναν λογαριασμό με τη διεύθυνση <b>%{email}</b>. Σε λίγο θα λάβεις ένα μήνυμα ηλεκτρονικού ταχυδρομείου με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το χρηστώνυμο <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
+      help: "Δεν λαμβάνετε το Email; Ελέγξτε αρχικά τον φάκελο spam.<p>Δεν γνωρίζετε ποια διεύθυνση email χρησιμοποιήσατε; Πείτε μας την διεύθυνση που θεωρείτε πιο πιθανή και θα σας πούμε αν υπάρχει στο σύστημα.</p><p>Αν δεν έχετε πλέον πρόσβαση στην διεύθυνση email του λογαριασμού σας, παρακαλούμε επικοινωνήστε<a href='/about'>με την ομάδα διαχείρισης.</a></p>"
+      button_ok: "OK"
+      button_help: "Βοήθεια"
     login:
       title: "Σύνδεση"
       username: "Χρηστώνυμο"
@@ -924,7 +954,7 @@ el:
       rate_limit: "Παρακαλώ περιμένετε προτού προσπαθήσετε ξανά να συνδεθείτε."
       blank_username_or_password: "Παρακαλώ δώσε την διεύθυνση ηλεκτρονικού ταχυδρομείου σου ή το χρηστώνυμό σου και τον κωδικό πρόσβασής σου."
       reset_password: 'Επαναφορά κωδικού πρόσβασης'
-      logging_in: "Συνδέεσε..."
+      logging_in: "Σύνδεση..."
       or: "Ή"
       authenticating: "Ταυτοποιώ..."
       awaiting_activation: "Ο λογαριασμός σας αναμένει ενεργοποίηση, χρησιμοποιήστε τον σύνδεσμο ξεχασμένου συνθηματικού για δημιουργία νέου email ενεργοποίησης."
@@ -934,6 +964,10 @@ el:
       not_allowed_from_ip_address: "Δεν μπορείς να συνδεθείς από αυτή τη διεύθυνση IP."
       admin_not_allowed_from_ip_address: "Από αυτή τη διεύθυνση IP δεν επιτρέπεται να συνδεθείς ως διαχειριστής."
       resend_activation_email: "Πάτησε εδώ για να σταλεί ξανά το μήνυμα ενεργοποίησης."
+      resend_title: "Στείλε ξανά το μήνυμα ενεργοποίησης"
+      change_email: "Αλλαγή διεύθυνσης ηλεκτρονικού ταχυδρομείου"
+      provide_new_email: "Καταχωρήστε μια νέα διεύθυνση και θα σας στείλουμε εκ νέου το μήνυμα ενεργοποίησης."
+      submit_new_email: "Ενημέρωση διεύθυνσης ηλεκτρονικού ταχυδρομείου"
       sent_activation_email_again: "Στάλθηκε ένα ακόμα μήνυμα ενεργοποίησης στο <b>{{currentEmail}}</b>. Θα χρειαστούν κάποια λεπτά για να το λάβεις, βεβαιώσου ότι έλεγξες και το φάκελο ανεπιθύμητης αλληλογραφίας."
       to_continue: "Παρακαλώ συνδεθείτε"
       preferences: "Πρέπει να συνδεθείς για να αλλάξεις τις προτιμήσεις χρήστη."
@@ -962,21 +996,25 @@ el:
         message: "Ταυτοποίηση μέσω του Github (βεβαιώσου πως δεν έχει ενεργοποιηθεί το μπλοκάρισμα των αναδυόμενων παραθύρων)"
     invites:
       accept_title: "Πρόσκληση"
-      welcome_to: "Καλώς ήλθατε στο %{site_name}!"
+      welcome_to: "Καλώς ήλθατε στην %{site_name}!"
       invited_by: "Προσκληθήκατε από:"
-      social_login_available: "Θα μπορούσατε επίσεις να συνδεθείτε μέσω οποιοδήποτε μέσoυ κοινωνικής δικτύωσης χρησημοποιώντας αυτή την διεύθυνση ηλεκτρονικού ταχυδρομείου."
+      social_login_available: "Μπορείτε επίσης να συνδεθείτε μέσω λογαριασμών κοινωνικής δικτύωσης χρησημοποιώντας αυτή την διεύθυνση ηλεκτρονικού ταχυδρομείου."
       your_email: "Η διεύθυνση ηλεκτρονικού ταχυδρομείου του λογαριασμού σας είναι <b>%{email}</b>."
       accept_invite: "Αποδοχή πρόσκλησης"
       success: "Ο λογαριασμός σας έχει δημιουργηθεί και έχετε συνδεθεί. "
-      password_label: "Ορισμός κωδικού πρόσβασης (προαιρετικό) "
+      name_label: "Όνομα"
+      password_label: "Θέσε κωδικό πρόσβασης"
+      optional_description: "(προεραιτικό)"
     password_reset:
-      continue: "Συνεχίστε σε %{όνομα_ιστοσελίδας}"
+      continue: "Συνεχίστε σε %{site_name}"
     emoji_set:
       apple_international: "Apple/Διεθνής"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "Emoji ένα"
-      win10: "Κερδισαι10"
+      emoji_one: "Emoji One"
+      win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Μόνο Κατηγορίες"
       categories_with_featured_topics: "Κατηγορίες με Προτεινόμενα Θέματα"
@@ -985,15 +1023,27 @@ el:
       shift: ' Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: Ψάξτε ένα emoji
+      people: Άνθρωποι
+      nature: Φύση
+      food: Τροφή
+      activity: Δραστηριότητα
+      travel: Ταξίδια
+      objects: Αντικείμενα
+      celebration: Γιορτή
+      custom: Προσαρμοσμένα emojis
+      recent: Πρόσφατα emojis
     composer:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα..."
       options: "Επιλογές"
       whisper: "ψιθυρίζω"
       unlist: "μη καταχωρημένος"
+      blockquote_text: "Blockquote"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
-      toggle_whisper: "Ανταλλαγή ψιθύρων"
-      toggle_unlisted: "Μεταβάλλω ακαταχώριστα"
+      toggle_whisper: "Εναλλαγή ψιθύρων"
+      toggle_unlisted: "Εναλλαγή ακαταχώρητων"
       posting_not_on_topic: "Σε ποιο νήμα θέλεις να απαντήσεις;"
       saving_draft_tip: "αποθήκευση..."
       saved_draft_tip: "αποθηκεύτηκε"
@@ -1002,17 +1052,18 @@ el:
       drafts_offline: "τοπικά πρόχειρα"
       group_mentioned:
         one: "Αναφέροντας {{group}}, πρόκειται να λάβει ειδοποίηση <a href='{{group_link}}'> 1 άτομο</a> - είσαι βέβαιος;"
-        other: "Αναφέροντας το {{group}}, πρόκειται να ειδοποίησεις <a href='{{group_link}}'>{{count}} άνθρωποι</a> - είσαι σίγουρος;"
+        other: "Αναφέροντας το {{group}}, πρόκειται να ειδοποίησεις <a href='{{group_link}}'>{{count}} μέλη</a> - είσαι σίγουρος;"
       cannot_see_mention:
         category: "Ανέφερες το {{username}} αλλά δε θα λάβουν ειδοποίηση, επειδή δεν έχουν πρόσβαση σε αυτή την κατηγορία. Θα πρέπει να τους προσθέσεις σε μια ομάδα που έχει πρόσβαση σε αυτή την κατηγορία."
         private: "Ανέφερες {{username}} αλλά δεν θα λάβουν ειδοποίηση, επειδή δεν μπορούν να δουν αυτό το προσωπικό μήνυμα. Πρέπει να τους προσκαλέσεις σε αυτό το ιδιωτικό μήνυμα."
+      duplicate_link: "Όπως φαίνετα ο σύνδεσμος σας προς <b>{{domain}}</b> έχει ήδη αναρτηθεί στο νήμα από <b>@{{username}}</b> σε μία <a href='{{post_url}}'>απάντηση πριν από {{ago}}</a> – θέλετε σίγουρα να αναρτήσετε τον σύνδεσμο ξανά;"
       error:
         title_missing: "Απαιτείται τίτλος"
         title_too_short: "Ο τίτλος πρέπει να έχει τουλάχιστον {{min}} χαρακτήρες"
         title_too_long: "Ο τίτλος δεν μπορεί να έχει πάνω από {{max}} χαρακτήρες"
         post_missing: "Μία ανάρτηση δεν μπορεί να είναι κενή"
         post_length: "Κάθε ανάρτηση πρέπει να περιέχει τουλάχιστον {{min}} χαρακτήρες"
-        try_like: 'Έχεις δοκιμάσει το κουμπί <i class="fa fa-heart"></i> ;'
+        try_like: 'Έχεις δοκιμάσει το κουμπί <i class="fa fa-heart"></i>;'
         category_missing: "Πρέπει να διαλέξεις μια κατηγορία"
       save_edit: "Αποθήκευση Επεξεργασίας"
       reply_original: "Απάντηση στο αρχικό νήμα"
@@ -1037,10 +1088,10 @@ el:
       show_preview: 'εμφάνιση της προεπισκόπησης &raquo;'
       hide_preview: '&laquo; απόκρυψη της προεπισκόπησης'
       quote_post_title: "Παράθεση ολόκληρης την ανάρτησης"
-      bold_label: "Β"
+      bold_label: "B"
       bold_title: "Έντονα"
       bold_text: "Έντονη γραφή"
-      italic_label: "Ι"
+      italic_label: "I"
       italic_title: "Έμφαση"
       italic_text: "κείμενο σε έμφαση"
       link_title: "Σύνδεσμος"
@@ -1058,7 +1109,7 @@ el:
       olist_title: "Αριθμημένη λίστα"
       ulist_title: "Κουκίδες"
       list_item: "Στοιχείο Λίστας"
-      heading_label: "Η"
+      heading_label: "H"
       heading_title: "Επικεφαλίδα"
       heading_text: "Επικεφαλίδα"
       hr_title: "Οριζόντια γραμμή"
@@ -1078,7 +1129,7 @@ el:
       more: "Εμφάνιση παλιότερων ειδοποιήσεων"
       total_flagged: "σύνολο επισημασμένων αναρτήσεων"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='goup mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p> "
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p> "
@@ -1095,6 +1146,7 @@ el:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p>ο χρήστης <span>{{username}}</span> μετέφερε το {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p> "
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> Κέρδισες το παράσημο '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Νέο θέμα</span> {{description}}</p> "
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} μηνύματα στα {{group_name}} εισερχόμενά σου</p>"
@@ -1112,11 +1164,11 @@ el:
         invitee_accepted: "Η πρόσκληση έγινε δεκτή από"
         moved_post: "Η δημοσίευση σου μετακινήθηκε από"
         linked: "Σύνδεση στη δημοσίευσή σου"
-        granted_badge: "Χορηγήθηκε σήμα"
+        granted_badge: "Χορηγήθηκε παράσημο"
         group_message_summary: "Μηνύματα στα εισερχόμενα ομάδας"
       popup:
         mentioned: 'Ο/Η {{username}} σε ανέφερε στο "{{topic}}" - {{site_title}}'
-        group_mentioned: '{{username}} ανέφερε εσένα σε "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} σε ανέφερε στο "{{topic}}" - {{site_title}}'
         quoted: 'Ο/Η {{username}} σε παράθεσε στο "{{topic}}" - {{site_title}}'
         replied: 'Ο/Η {{username}} σου απάντησε στο "{{topic}}" - {{site_title}}'
         posted: 'Ο/Η {{username}} ανάρτησε στο "{{topic}}" - {{site_title}}'
@@ -1128,34 +1180,36 @@ el:
       from_my_computer: "Από τη συσκευή μου"
       from_the_web: "Από το διαδίκτυο"
       remote_tip: "υπερσύνδεσμος προς μια εικόνα"
-      remote_tip_with_attachments: "σύνδεσμος σε μια εικόνα ή ένα φάκελο {{authorized_extensions}}"
+      remote_tip_with_attachments: "σύνδεσμος σε εικόνα ή φάκελο {{authorized_extensions}}"
       local_tip: "επιλογή εικόνων από τη συσκευή σου"
       local_tip_with_attachments: "επίλεξε εικόνες ή φακέλους από τη συσκευή σου {{authorized_extensions}}"
       hint: "(μπορείς να τα σύρεις με το ποντίκι στην περιοχή για να τα ανεβάσεις)"
       hint_for_supported_browsers: "μπορείς επίσης να μεταφέρεις ή να επικόλλησεις εικόνες από τον συντάκτη"
       uploading: "Ανεβαίνει"
-      select_file: "Επιλογή Φακέλου"
+      select_file: "Επιλογή Αρχείου"
       image_link: "υπερσύνδεσμος στον οποίο θα δείχνει η εικόνα σου"
     search:
       sort_by: "Ταξινόμηση κατά"
-      relevance: "συνάφεια"
+      relevance: "Συνάφεια"
       latest_post: "Τελευταίες Δημοσιεύσεις"
+      latest_topic: "Πρόσφατο Νήμα"
       most_viewed: "Περισσότερες εμφανίσεις"
       most_liked: "Περισσότερα \"μου αρέσει\""
       select_all: "Επιλογή όλων"
       clear_all: "Καθαρισμός όλων"
-      too_short: "Ο όρος στην αναζήτησή σου είναι πολύ μικρός."
+      too_short: "Ο όρος αναζήτησής σου είναι πολύ μικρός."
       result_count:
         one: "1 αποτέλεσμα για <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} αποτελέσματα για <span class='term'>\"{{term}}\"</span>"
       title: "ψάξε σε νήματα, αναρτήσεις, χρήστες ή κατηγορίες"
       no_results: "Δε βρέθηκε κάτι."
-      no_more_results: "Δε βρέθηκαν αποτελέσματα"
+      no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
       searching: "Ψάχνω ..."
       post_format: "#{{post_number}} από {{username}}"
+      results_page: "Αποτελέσματα Αναζήτησης"
       context:
         user: "Ψάξε στις αναρτήσεις του χρήστη @{{username}}"
-        category: "Αναζήτηση στην #{{category}} κατηγορία"
+        category: "Αναζήτηση στην κατηγορία #{{category}} "
         topic: "Ψάξε σε αυτό το νήμα"
         private_messages: "Αναζήτηση στα μηνύματα"
       advanced:
@@ -1175,7 +1229,7 @@ el:
           likes: Μου αρέσει
           posted: Δημοσίευσα σε
           watching: Παρακολουθώ
-          tracking: Παρακολουθώ
+          tracking: Ακολουθώ
           private: είναι στα μηνύματα μου
           bookmarks: Έχω βάλει σελιδοδείκτη
           first: είναι η πρώτη πρώτη δημοσίευση
@@ -1184,16 +1238,17 @@ el:
           seen: Διάβασα
           unseen: Δεν διάβασα
           wiki: ' είναι βίκι'
+          all_tags: Πειρέχει όλες τις ετικέτες
         statuses:
-          label: όπου θέματα
+          label: Τα οποία θέματα
           open: είναι ανοιχτά
           closed: είναι κλειστά
           archived: είναι αρχειοθετημένα
           noreplies: έχουν μηδέν απαντήσεις
-          single_user: περιέχει ένα μόνο χρήστη
+          single_user: περιέχουν ένα μόνο χρήστη
         post:
           count:
-            label: Ελάχιστη καταμέτρηση δημοσιεύσεων
+            label: Ελάχιστος αριθμός αναρτήσεων
           time:
             label: Δημοσιεύθηκε
             before: πριν
@@ -1208,26 +1263,29 @@ el:
       bulk:
         select_all: "Επιλογή όλων"
         clear_all: "Καθαρισμός όλων"
-        unlist_topics: "Μη καταχωρημένα θέματα"
-        reset_read: "Επαναφορά διαβασμένων"
+        unlist_topics: "Θέματα μη καταχωρημένα "
+        relist_topics: "Θέματα καταχωρημένα "
+        reset_read: "Μηδενισμός Διαβασμένων"
         delete: "Διαγραφή νημάτων"
         dismiss: "Απόρριψη"
         dismiss_read: "Απόρριψη όλων των μη αναγνωσμένων"
         dismiss_button: "Απόρριψη..."
-        dismiss_tooltip: "Απόρριψη μόνο των καινούριων δημοσιεύσεων ή διακοπή των νημάτων που παρακολουθούνται"
-        also_dismiss_topics: "Διακοπή παρακολούθησης αυτών των νημάτων ώστε να μην εμφανιστούν ξανά ως μη αναγνωσμένα σε εμένα"
+        dismiss_tooltip: "Απόρριψη μόνο των καινούριων δημοσιεύσεων ή διακοπή των νημάτων που ακολουθούνται"
+        also_dismiss_topics: "Διακοπή ακολούθησης αυτών των νημάτων ώστε να μην εμφανιστούν ξανά ως μη αναγνωσμένα σε εμένα"
         dismiss_new: "Αγνόησε τα νέα"
         toggle: "μαζική επιλογή νημάτων"
         actions: "Μαζικές ενέργειες"
+        change_category: "Θέσε Κατηγορία"
         close_topics: "Κλείσιμο νημάτων"
         archive_topics: "Αρχειοθέτηση νημάτων"
+        notification_level: "Ειδοποιήσεις"
         choose_new_category: "Διάλεξε τη νέα κατηγορία για τα νήματα:"
         selected:
           one: "Έχεις διαλέξει <b>1</b> νήμα."
           other: "Έχεις διαλέξει <b>{{count}}</b> νήματα."
         change_tags: "Αντικατάσταση ετικετών "
         append_tags: "Προσάρτηση ετικετών "
-        choose_new_tags: "Επίλεξε καινούριες ετικέτες από αυτά τα θέματα:"
+        choose_new_tags: "Επίλεξε καινούριες ετικέτες για αυτά τα θέματα:"
         choose_append_tags: "Επιλογή νέων ετικετών για την προσάρτηση τους σε αυτά τα νήματα"
         changed_tags: "Οι ετικέτες αυτών των θεμάτων έχουν αλλάξει."
       none:
@@ -1243,17 +1301,17 @@ el:
         search: "Δεν υπάρχουν αποτελέσματα σε αυτή την αναζήτηση."
         educate:
           new: '<p>Τα νέα σου θέματα εμφανίζονται εδώ.</p><p>Από προεπιλογή, τα θέματα θεωρούνται καινούρια και θα δείχνουν ένα <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">καινούριο</span> δείκτη εαν έχουν δημιουργηθεί τις τελευταίες 2 μέρες.</p><p>Επισκέψου τις <a href="%{userPrefsUrl}">προτιμήσεις σου</a> για να το αλλάξεις αυτό.</p>'
-          unread: '<p>Τα αδιάβαστα νήματά σου εμφανίζονται εδώ.</p><p>Από προεπιλογή, τα νήματα θεωρούνται αδιάβαστα και θα δείχνουν αδιάβαστα <span class="badge new-posts badge-notification">1</span> έαν:</p><ul><li> Δημιούργησες το νήμα</li><li>Απάντησεσ στο νήμα</li><li>Διάβασεσ το νήμα για περισσότερα από 4 λεπτά</li></ul><p>Ή εάν έχεις ορίσει το νήμα να παρακολουθήται μέσω έλεγχο ειδοποιήσης στο κάτω μέρος του κάθε νήματος.</p><p>Επισκέψου τις <a href="%{userPrefsUrl}">προτιμήσεις σου</a> για να το αλλάξεις αυτό.</p>'
+          unread: '<p>Τα αδιάβαστα νήματά σου εμφανίζονται εδώ.</p><p>Από προεπιλογή, τα νήματα θεωρούνται αδιάβαστα και θα δείχνουν αδιάβαστα <span class="badge new-posts badge-notification">1</span> έαν:</p><ul><li> Δημιούργησες το νήμα</li><li>Απάντησεσ στο νήμα</li><li>Διάβασες το νήμα για περισσότερα από 4 λεπτά</li></ul><p>Ή εάν έχεις ορίσει το νήμα να παρακολουθήται μέσω της επιλογής ειδοποιήσεων στο κάτω μέρος του κάθε νήματος.</p><p>Επισκέψου τις <a href="%{userPrefsUrl}">προτιμήσεις σου</a> για να το αλλάξεις αυτό.</p>'
       bottom:
-        latest: "Αυτά ήταν τα πρόσφατα νήματα."
-        hot: "Αυτά ήταν όλα τα δημοφιλή νήματα."
-        posted: "Αυτά ήταν όλα τα νήματα."
-        read: "Αυτά ήταν όλα τα διαβασμένα νήματα."
-        new: "Αυτά ήταν όλα τα νέα νήματα."
-        unread: "Αυτά ήταν όλα τα αδιάβαστα νήματα."
-        category: "Αυτά ήταν όλα τα νήματα στην κατηγορία {{category}}."
-        top: "Αυτά ήταν όλα τα κορυφαία νήματα."
-        bookmarks: "Αυτά ήταν όλα τα νήματα με σελιδοδείκτη."
+        latest: "Δεν υπάρχουν άλλα πρόσφατα νήματα."
+        hot: "Δεν υπάρχουν άλλα δημοφιλή νήματα."
+        posted: "Δεν υπάρχουν άλλα νήματα."
+        read: "Δεν υπάρχουν άλλα διαβασμένα νήματα."
+        new: "Δεν υπάρχουν άλλα νέα νήματα."
+        unread: "Δεν υπάρχουν άλλα αδιάβαστα νήματα."
+        category: "Δεν υπάρχουν άλλα νήματα στην κατηγορία {{category}}."
+        top: "Δεν υπάρχουν άλλα κορυφαία νήματα."
+        bookmarks: "Δεν υπάρχουν άλλα νήματα με σελιδοδείκτη."
         search: "Δεν υπάρχουν άλλα αποτελέσματα σε αυτή την αναζήτηση."
     topic:
       unsubscribe:
@@ -1309,13 +1367,28 @@ el:
       toggle_information: "Εμφάνιση ή απόκρυψη λεπτομερειών νήματος"
       read_more_in_category: "Θέλεις να διαβάσεις περισσότερα; Βρες άλλα νήματα στο {{catLink}} ή {{latestLink}}."
       read_more: "Θέλεις να διαβασεις περισσότερα; {{catLink}} ή {{latestLink}}."
-      read_more_MF: "Έχεις { UNREAD, plural, =0 {} one { is <a href='/unread'>1 αδιάβαστο</a> } other { are <a href='/unread'># αδιάβαστα</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {έχεις } other{}} <a href='/new'>1 νέο</a> νήμα} other { {BOTH, select, true{and } false {έχεις } other{}} <a href='/new'># νέα</a> νήματα} } ακόμη, ή {CATEGORY, select, true {περιηγήσου σε άλλα νήματα {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Έχεις { UNREAD, plural, =0 {} one { μόνο <a href='/unread'>1 αδιάβαστο</a> } other { <a href='/unread'># αδιάβαστα</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {έχεις } other{}} <a href='/new'>1 νέο</a> νήμα} other { {BOTH, select, true{and } false {έχεις } other{}} <a href='/new'># νέα</a> νήματα} } ακόμη, ή {CATEGORY, select, true {περιηγήσου σε άλλα νήματα {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Περιήγηση σε όλες τις κατηγορίες
       view_latest_topics: δες τα πρόσφατα νήματα
       suggest_create_topic: Γιατί δεν φτιάχνεις ένα νέο νήμα;
       jump_reply_up: μετάβαση στην απάντηση που προηγείται
       jump_reply_down: μετάβαση στην  απάντηση που ακολουθεί
       deleted: "Το νήμα έχει διαγραφεί "
+      topic_status_update:
+        title: "Ρύθμιση Χρονοδιακόπτη Νήματος"
+        save: "Ρύθμιση Χρονοδιακόπτη"
+        num_of_hours: "Ώρες:"
+        remove: "Αφαίρεση Χρονοδιακόπτη"
+        when: "Πότε:"
+      auto_update_input:
+        later_today: "Αργότερα σήμερα"
+        tomorrow: "Αύριο"
+        later_this_week: "Αργότερα αυτή την εβδομάδα"
+        this_weekend: "Αυτό το Σαββατοκύριακο"
+        next_week: "Την άλλη εβδομάδα"
+        next_month: "Τον άλλο μήνα"
+        pick_date_and_time: "Επέλεξε ημερομηνία και ώρα"
+        set_based_on_last_post: "Κλείσε ανάλογα με την τελευταία ανάρτηση"
       auto_close_title: 'Ρυθμίσεις για το αυτόματο κλείσιμο'
       auto_close_immediate:
         one: "Η τελευταία δημοσίευση στο νήμα είναι ήδη 1 ώρα παλιό, έτσι το νήμα θα κλείσει αμέσως."
@@ -1685,10 +1758,6 @@ el:
         confirm:
           one: "Είσαι σίγουρος ότι θέλεις να σβήσεις αυτή την ανάρτηση;"
           other: "Είσαι σίγουρος ότι θέλεις να σβήσεις όλες αυτές τις αναρτήσεις;"
-      merge:
-        confirm:
-          one: "Είσαι βέβαιος πως θέλεις να συγχωνεύσεις αυτές τις δημοσιεύσεις;"
-          other: "Είσαι βέβαιος πως θέλεις να συγχωνεύσεις αυτές {{count}} τις δημοσιεύσεις;"
       revisions:
         controls:
           first: "Πρώτη αναθεώρηση"
@@ -3081,12 +3150,12 @@ el:
         save: "Αποθήκευση ενσωματωμένων αλλαγών"
       permalink:
         title: "Μόνιμοι Σύνδεσμοι"
-        url: "διεύθυνση URL"
-        topic_id: "Ταυτότητα νήματος"
+        url: "URL"
+        topic_id: "ID νήματος"
         topic_title: "Νήμα"
-        post_id: "Ταυτότητα δημοσίευσης"
+        post_id: "ID ανάρτησης"
         post_title: "Δημοσίευση"
-        category_id: "Ταυτότητα Κατηγορίας"
+        category_id: "ID Κατηγορίας"
         category_title: "Κατηγορία"
         external_url: "Εξωτερική διεύθυνση URL"
         delete_confirm: Είσαι βέβαιος πως θέλεις να διαγράψεις αυτόν τον μόνιμο σύνδεσμο;
@@ -3099,17 +3168,17 @@ el:
       done: "Ολοκληρώθηκε"
       back: "Πίσω"
       next: "Επόμενο"
-      step: "%{current} του %{total}"
-      upload: "Μεταφόρτωση"
-      uploading: "Μεταφορτώνεται..."
+      step: "%{current} από %{total}"
+      upload: "Ανέβασμα"
+      uploading: "Ανεβαίνει..."
       quit: "Ίσως αργότερα"
       staff_count:
         one: "Η κοινότητά σου έχει 1 μέλος του προσωπικού."
         other: "Η κοινότητά σου έχει %{count} μέλη του προσωπικού."
       invites:
-        add_user: "προσθέτω"
+        add_user: "προσθήκη"
         none_added: "Δεν έχεις προσκαλέσει το προσωπικό. Είσαι βέβαιος πως θέλεις να συνεχίσεις;"
         roles:
           admin: "Διαχειριστής"
-          moderator: "Μεσολαβιτής"
+          moderator: "Συντονιστής"
           regular: "Τακτικός χρήστης"

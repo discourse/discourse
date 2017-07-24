@@ -317,7 +317,7 @@ blockquote > *:last-child {
 }
 
 
-table.md-table {
+.cooked table, .d-editor-preview table {
   thead {
     border-bottom: 2px solid lighten($primary, 80%);
     th {
@@ -412,5 +412,11 @@ a.mention, a.mention-group {
 .popup-menu {
   h3 {
     margin-top: 0;
+  }
+}
+
+#suggested-topics {
+  .topics {
+    padding-bottom: 15px;
   }
 }

@@ -147,7 +147,36 @@ describe I18n::Backend::DiscourseI18n do
       expect(I18n.translate('keys.magic', count: 2)).to eq("no magic keys")
     end
 
-    it 'supports ActiveModel::Naming#human' do
+    it "returns the overriden text when falling back" do
+      TranslationOverride.upsert!('en', 'got', "summer")
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got')).to eq('summer')
+      expect(I18n.with_locale(:zh_TW) { I18n.translate('got') }).to eq('summer')
+
+      TranslationOverride.upsert!('en', 'throne', "%{title} is the new queen")
+      I18n.backend.store_translations(:en, throne: "%{title} is the new king")
+
+      expect(I18n.t('throne', title: 'snow')).to eq('snow is the new queen')
+
+      expect(I18n.with_locale(:en) { I18n.t('throne', title: 'snow') })
+        .to eq('snow is the new queen')
+    end
+
+    it "returns override if it exists before falling back" do
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got', default: '')).to eq('winter')
+      expect(I18n.with_locale(:ru) { I18n.translate('got', default: '') }).to eq('winter')
+
+      TranslationOverride.upsert!('ru', 'got', "summer")
+      I18n.backend.store_translations(:en, got: 'winter')
+
+      expect(I18n.translate('got', default: '')).to eq('winter')
+      expect(I18n.with_locale(:ru) { I18n.translate('got', default: '') }).to eq('summer')
+    end
+
+    it 'does not affect ActiveModel::Naming#human' do
       Fish = Class.new(ActiveRecord::Base)
 
       TranslationOverride.upsert!('en', 'fish', "fake fish")

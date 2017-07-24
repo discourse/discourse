@@ -160,7 +160,7 @@ te:
               invalid: "ఇది చెల్లని రంగు"
       <<: *errors
   user_profile:
-    no_info_other: "<div class='missing-profile'>%{పేరు} ఇంకా వారి ప్రొఫైల్ లో ఎబౌట్ మీ స్థానంలో ఏమీ చేర్చలేదు</div>"
+    no_info_other: "<div class='missing-profile'>%{name} ఇంకా వారి ప్రొఫైల్ లో ఎబౌట్ మీ స్థానంలో ఏమీ చేర్చలేదు</div>"
   vip_category_name: "అడ్డా"
   vip_category_description: "నమ్మకం స్థాయి మూడు లేదా ఆపై ఉన్న సభ్యులకు మాత్రమే పరిమితమైన వర్గం"
   meta_category_description: "ఈ సైటు గురించి చర్చ. ఎలా మొదలైంది. ఎలా పని చేస్తుంది. ఇంకా ఎలా మెరుగు పరచవచ్చు."

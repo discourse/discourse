@@ -2,9 +2,13 @@ require 'rails_helper'
 
 describe Jobs::TopicReminder do
   let(:admin) { Fabricate(:admin) }
-  let(:topic) { Fabricate(:topic, topic_timers: [
-    Fabricate(:topic_timer, user: admin, status_type: TopicTimer.types[:reminder])
-  ]) }
+
+  let(:topic) do
+    Fabricate(:topic_timer,
+      user: admin,
+      status_type: TopicTimer.types[:reminder]
+    ).topic
+  end
 
   before do
     SiteSetting.queue_jobs = true
@@ -50,5 +54,5 @@ describe Jobs::TopicReminder do
       }.to_not change { Notification.count }
     end
   end
-  
+
 end
