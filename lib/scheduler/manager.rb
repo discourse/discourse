@@ -134,7 +134,7 @@ module Scheduler
           enq(nil)
 
           Thread.new do
-            sleep 5
+            sleep 0.5
             @thread.kill
           end
 
