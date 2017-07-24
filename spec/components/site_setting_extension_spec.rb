@@ -179,7 +179,6 @@ describe SiteSettingExtension do
       end
 
       it "should coerce int to string" do
-        skip "This test is not working on Rspec 2 even"
         settings.test_str = 100
         expect(settings.test_str).to eq("100")
       end
