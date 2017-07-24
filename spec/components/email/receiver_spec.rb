@@ -47,8 +47,16 @@ describe Email::Receiver do
     expect { process(:blocked_sender) }.to raise_error(Email::Receiver::BlockedUserError)
   end
 
-  skip "doesn't raise an InactiveUserError when the sender is staged" do
-    Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+  it "doesn't raise an InactiveUserError when the sender is staged" do
+    user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+
+    email_log = Fabricate(:email_log,
+      to_address: 'reply+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bar.com',
+      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      user: user,
+      post: Fabricate(:post)
+    )
+
     expect { process(:staged_sender) }.not_to raise_error
   end
 
