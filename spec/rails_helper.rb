@@ -142,16 +142,39 @@ Spork.prefork do
 
   end
 
+  class TrackTimeStub
+    def self.stubbed
+      false
+    end
+  end
+
   def freeze_time(now=Time.now)
     datetime = DateTime.parse(now.to_s)
     time = Time.parse(now.to_s)
 
     if block_given?
-      raise "Don't use a block with freeze_time"
+      raise "nested freeze time not supported" if TrackTimeStub.stubbed
     end
 
     DateTime.stubs(:now).returns(datetime)
     Time.stubs(:now).returns(time)
+    Date.stubs(:today).returns(datetime.to_date)
+    TrackTimeStub.stubs(:stubbed).returns(true)
+
+    if block_given?
+      begin
+        yield
+      ensure
+        unfreeze_time
+      end
+    end
+  end
+
+  def unfreeze_time
+    DateTime.unstub(:now)
+    Time.unstub(:now)
+    Date.unstub(:today)
+    TrackTimeStub.unstub(:stubbed)
   end
 
   def file_from_fixtures(filename, directory="images")

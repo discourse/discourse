@@ -97,13 +97,13 @@ describe Email::Receiver do
       expect(email_log.bounced).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(2)
 
-      Timecop.freeze(2.days.from_now) do
-        expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+      freeze_time 2.days.from_now
 
-        email_log_2.reload
-        expect(email_log_2.bounced).to eq(true)
-        expect(email_log_2.user.user_stat.bounce_score).to eq(4)
-      end
+      expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log_2.reload
+      expect(email_log_2.user.user_stat.bounce_score).to eq(4)
+      expect(email_log_2.bounced).to eq(true)
     end
 
   end

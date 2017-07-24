@@ -14,7 +14,7 @@ describe Jobs::ToggleTopicClosed do
   it 'should be able to close a topic' do
     topic
 
-    Timecop.travel(1.hour.from_now) do
+    freeze_time(1.hour.from_now) do
       described_class.new.execute(
         topic_timer_id: topic.public_topic_timer.id,
         state: true
@@ -31,7 +31,7 @@ describe Jobs::ToggleTopicClosed do
   it 'should be able to open a topic' do
     topic.update!(closed: true)
 
-    Timecop.travel(1.hour.from_now) do
+    freeze_time(1.hour.from_now) do
       described_class.new.execute(
         topic_timer_id: topic.public_topic_timer.id,
         state: false
