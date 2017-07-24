@@ -60,9 +60,7 @@ describe Jobs::ToggleTopicClosed do
 
   describe 'when user is not authorized to close topics' do
     let(:topic) do
-      Fabricate(:topic,
-        topic_timers: [Fabricate(:topic_timer, execute_at: 2.hours.from_now)]
-      )
+      Fabricate(:topic_timer, execute_at: 2.hours.from_now).topic
     end
 
     it 'should not do anything' do

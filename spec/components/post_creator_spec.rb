@@ -301,13 +301,11 @@ describe PostCreator do
 
         it "updates topic's auto close date when it's based on last post" do
           Timecop.freeze do
-            topic = Fabricate(:topic,
-              topic_timers: [Fabricate(:topic_timer,
-                based_on_last_post: true,
-                execute_at: Time.zone.now - 12.hours,
-                created_at: Time.zone.now - 24.hours
-              )]
-            )
+            topic = Fabricate(:topic_timer,
+              based_on_last_post: true,
+              execute_at: Time.zone.now - 12.hours,
+              created_at: Time.zone.now - 24.hours
+            ).topic
 
             Fabricate(:post, topic: topic)
 
