@@ -7,7 +7,7 @@ moduleForWidget('base');
 widgetTest('widget attributes are passed in via args', {
   template: `{{mount-widget widget="hello-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('hello-test', {
       tagName: 'div.test',
 
@@ -27,7 +27,7 @@ widgetTest('widget attributes are passed in via args', {
 widgetTest('buildClasses', {
   template: `{{mount-widget widget="classname-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('classname-test', {
       tagName: 'div.test',
 
@@ -47,7 +47,7 @@ widgetTest('buildClasses', {
 widgetTest('buildAttributes', {
   template: `{{mount-widget widget="attributes-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('attributes-test', {
       tagName: 'div.test',
 
@@ -68,7 +68,7 @@ widgetTest('buildAttributes', {
 widgetTest('buildId', {
   template: `{{mount-widget widget="id-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('id-test', {
       buildId(attrs) {
         return `test-${attrs.id}`;
@@ -86,7 +86,7 @@ widgetTest('buildId', {
 widgetTest('widget state', {
   template: `{{mount-widget widget="state-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('state-test', {
       tagName: 'button.test',
       buildKey: () => `button-test`,
@@ -119,7 +119,7 @@ widgetTest('widget state', {
 widgetTest('widget update with promise', {
   template: `{{mount-widget widget="promise-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('promise-test', {
       tagName: 'button.test',
       buildKey: () => 'promise-test',
@@ -152,7 +152,7 @@ widgetTest('widget update with promise', {
 widgetTest('widget attaching', {
   template: `{{mount-widget widget="attach-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('test-embedded', { tagName: 'div.embedded' });
 
     createWidget('attach-test', {
@@ -172,7 +172,7 @@ widgetTest('widget attaching', {
 widgetTest('widget decorating', {
   template: `{{mount-widget widget="decorate-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('decorate-test', {
       tagName: 'div.decorate',
       html() {
@@ -201,7 +201,7 @@ widgetTest('widget decorating', {
 widgetTest('widget settings', {
   template: `{{mount-widget widget="settings-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('settings-test', {
       tagName: 'div.settings',
 
@@ -223,7 +223,7 @@ widgetTest('widget settings', {
 widgetTest('override settings', {
   template: `{{mount-widget widget="ov-settings-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('ov-settings-test', {
       tagName: 'div.settings',
 

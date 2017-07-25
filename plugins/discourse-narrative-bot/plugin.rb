@@ -148,7 +148,6 @@ after_initialize do
     SiteSetting.discourse_narrative_bot_enabled &&
       self.id > 0 &&
       !self.anonymous? &&
-      !self.user_option.mailing_list_mode &&
       !self.staged &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
   end

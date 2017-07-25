@@ -43,7 +43,7 @@ describe Jobs::PendingUsersReminder do
 
   context 'must_approve_users is false' do
     before do
-      SiteSetting.stubs(:must_approve_users).returns(false)
+      SiteSetting.must_approve_users = false
     end
 
     it "doesn't send a message to anyone when there are pending users" do

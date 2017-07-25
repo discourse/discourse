@@ -6,9 +6,9 @@ class InvitesController < ApplicationController
   skip_before_filter :preload_json, except: [:show]
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :upload_csv]
-  before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
-  before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
+  before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
+  before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
 
   def show
     expires_now
@@ -30,12 +30,12 @@ class InvitesController < ApplicationController
 
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:username, :name, :password)
+    params.permit(:username, :name, :password, :user_custom_fields)
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
       begin
-        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password])
+        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields])
         if user.present?
           log_on_user(user)
           post_process_invite(user)
@@ -61,9 +61,13 @@ class InvitesController < ApplicationController
   def create
     params.require(:email)
 
-    group_ids = Group.lookup_group_ids(params)
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
 
-    guardian.ensure_can_invite_to_forum!(group_ids)
+    guardian.ensure_can_invite_to_forum!(groups)
+    group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
@@ -71,21 +75,27 @@ class InvitesController < ApplicationController
     end
 
     begin
-      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids, params[:custom_message])
+      if Invite.invite_by_email(params[:email], current_user, nil, group_ids, params[:custom_message])
         render json: success_json
       else
         render json: failed_json, status: 422
       end
-    rescue Invite::UserExists => e
+    rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
       render json: {errors: [e.message]}, status: 422
     end
   end
 
   def create_invite_link
     params.require(:email)
-    group_ids = Group.lookup_group_ids(params)
+
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
+
+    guardian.ensure_can_invite_to_forum!(groups)
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_invite_to_forum!(group_ids)
+    group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
@@ -104,42 +114,6 @@ class InvitesController < ApplicationController
     end
   end
 
-  def create_disposable_invite
-    guardian.ensure_can_create_disposable_invite!(current_user)
-    params.permit(:username, :email, :quantity, :group_names)
-
-    username_or_email = params[:username] ? fetch_username : fetch_email
-    user = User.find_by_username_or_email(username_or_email)
-
-    # generate invite tokens
-    invite_tokens = Invite.generate_disposable_tokens(user, params[:quantity], params[:group_names])
-
-    render_json_dump(invite_tokens)
-  end
-
-  def redeem_disposable_invite
-    params.require(:email)
-    params.permit(:username, :name, :topic)
-    params[:email] = params[:email].split(' ').join('+')
-
-    invite = Invite.find_by(invite_key: params[:token])
-
-    if invite.present?
-      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name], params[:topic].to_i)
-      if user.present?
-        log_on_user(user)
-        post_process_invite(user)
-        topic = invite.topics.first
-        if topic.present?
-          redirect_to path("#{topic.relative_url}")
-          return
-        end
-      end
-    end
-
-    redirect_to path("/")
-  end
-
   def destroy
     params.require(:email)
 
@@ -147,6 +121,13 @@ class InvitesController < ApplicationController
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.trash!(current_user)
 
+    render nothing: true
+  end
+
+  def rescind_all_invites
+    guardian.ensure_can_rescind_all_invites!(current_user)
+
+    Invite.rescind_all_invites_from(current_user)
     render nothing: true
   end
 

@@ -53,12 +53,7 @@ describe Discourse do
     let!(:another_admin) { Fabricate(:admin) }
 
     it 'returns the user specified by the site setting site_contact_username' do
-      SiteSetting.stubs(:site_contact_username).returns(another_admin.username)
-      expect(Discourse.site_contact_user).to eq(another_admin)
-    end
-
-    it 'returns the user specified by the site setting site_contact_username regardless of its case' do
-      SiteSetting.stubs(:site_contact_username).returns(another_admin.username.upcase)
+      SiteSetting.site_contact_username = another_admin.username
       expect(Discourse.site_contact_user).to eq(another_admin)
     end
 
@@ -211,4 +206,3 @@ describe Discourse do
   end
 
 end
-

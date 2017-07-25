@@ -164,6 +164,7 @@ cs:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -187,6 +188,8 @@ cs:
     attributes:
       category:
         name: "Název kategorie"
+      topic:
+        title: 'Nadpis'
       post:
         raw: "Tělo"
       user_profile:
@@ -206,12 +209,17 @@ cs:
               common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
               same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
+              same_as_current: "je stejné jako vaše současné heslo."
+              unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
         color_scheme_color:
           attributes:
             hex:
               invalid: "není platná barva"
+        post_reply:
+          base:
+            different_topic: "Příspěvek a odpověď musí patřit ke stejnému tématu."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -724,7 +732,6 @@ cs:
       join_the_discussion: "Číst dále"
       popular_posts: "Populární příspěvky"
       subject_template: "[%{email_prefix}] Přehled"
-      unsubscribe: "Přehled zaslán z webu %{site_link}, protože jsi jej již nějaký čas nenavštívil. Pro zrušení zasílání %{unsubscribe_link}."
       click_here: "klikněte zde"
       from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"

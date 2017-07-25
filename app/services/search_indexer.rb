@@ -151,4 +151,3 @@ class SearchIndexer
     end
   end
 end
-

@@ -5,4 +5,10 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
   ga('create', '<%= SiteSetting.ga_universal_tracking_code %>', <%= ga_universal_json %>);
+
+  <% if SiteSetting.ga_universal_auto_link_domains.present? %>
+  ga('require', 'linker');
+  ga('linker:autoLink', <%= raw SiteSetting.ga_universal_auto_link_domains.split('|').to_json %>);
+  <% end %>
+
 </script>

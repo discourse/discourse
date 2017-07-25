@@ -42,7 +42,7 @@ export default Combobox.extend({
 
   @computed("rootNone", "rootNoneLabel")
   none(rootNone, rootNoneLabel) {
-    if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('allowUncategorized')) {
+    if (this.siteSettings.allow_uncategorized_topics || this.get('allowUncategorized')) {
       if (rootNone) {
         return rootNoneLabel || "category.none";
       } else {

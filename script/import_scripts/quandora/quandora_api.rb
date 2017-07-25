@@ -1,6 +1,5 @@
 require 'base64'
 require 'json'
-require 'rest-client'
 
 class QuandoraApi
 
@@ -31,10 +30,10 @@ class QuandoraApi
     url
   end
 
-  def request url
-    JSON.parse(RestClient.get url, auth_header(@username, @password))
+  def request(url)
+    JSON.parse(Excon.get(url, headers: auth_header(@username, @password)))
   end
-  
+
   def list_bases
     response = request list_bases_url
     response['data']

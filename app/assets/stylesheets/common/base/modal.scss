@@ -13,11 +13,11 @@
 
 .input-hint-text {
   margin-left: 0.5em;
-  color: dark-light-diff($secondary, $primary, 30%, -35%);
+  color: $secondary-medium;
 }
 
 .modal-header {
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-bottom: 1px solid $primary-low; 
 }
 
 .modal-backdrop {
@@ -96,7 +96,7 @@
 }
 .modal-footer {
   padding: 14px 15px 15px;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid $primary-low; 
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -118,11 +118,11 @@
 .modal {
   .nav {
     padding: 10px 30px 10px 15px;
-    background-color: dark-light-diff($secondary, $primary, 10%, -15%);
+    background-color: $secondary;
     li > a {
       font-size: 1em;
     }
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid $primary-low; 
 
   }
 
@@ -212,6 +212,11 @@
     display: inline-block;
     margin-right: 10px;
   }
+
+  // password reset modal
+  .modal-body.forgot-password-modal p {
+    font-size: 14px;
+  }
 }
 
 .reply-where-modal {
@@ -230,7 +235,7 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        background: dark-light-diff($primary, $secondary, 90%, -60%);
+        background: $primary-low; 
         text-shadow: none;
         color: $primary;
       }
@@ -351,7 +356,7 @@
       font-weight: bold;
     }
     &:focus {
-      outline: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      outline: 2px solid $primary-low; 
     }
   }
   .incoming-email-tabs {
@@ -362,7 +367,7 @@
     textarea, .incoming-email-html-part {
       height: 95%;
       border: none;
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-top: 1px solid $primary-low; 
       padding-top: 10px;
     }
     textarea {

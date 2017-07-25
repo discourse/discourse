@@ -5,7 +5,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :display_name,
              :user_count,
              :alias_level,
-             :visible,
+             :visibility_level,
              :automatic_membership_email_domains,
              :automatic_membership_retroactive,
              :primary_group,

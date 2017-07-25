@@ -50,7 +50,7 @@ describe Jobs::ProcessPost do
 
     it "extracts links to quoted posts" do
       quoted_post = Fabricate(:post, raw: "This is a post with a link to https://www.discourse.org", post_number: 42)
-      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]#{quoted_post.excerpt}[/quote]")
+      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]\n#{quoted_post.excerpt}\n[/quote]")
       # when creating a quote, we also create the reflexion link
       expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
     end

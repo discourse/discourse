@@ -37,7 +37,7 @@ PLUGIN_API_JS
       name = node["name"] || node["data-template-name"] || "broken"
       is_raw = name =~ /\.raw$/
       if is_raw
-        template = "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
+        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
         node.replace <<COMPILED
           <script>
             (function() {

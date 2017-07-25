@@ -309,7 +309,9 @@ Discourse::Application.routes.draw do
   get "user_preferences" => "users#user_preferences_redirect"
 
   %w{users u}.each_with_index do |root_path, index|
-    resources :users, except: [:show, :update, :destroy], path: root_path do
+    get "#{root_path}" => "users#index", constraints: { format: 'html' }
+
+    resources :users, except: [:index, :new, :show, :update, :destroy], path: root_path do
       collection do
         get "check_username"
         get "is_local_username"
@@ -430,7 +432,6 @@ Discourse::Application.routes.draw do
     get 'activity' => "groups#show"
     get 'activity/:filter' => "groups#show"
     get 'members'
-    get 'owners'
     get 'posts'
     get 'topics'
     get 'mentions'
@@ -439,9 +440,14 @@ Discourse::Application.routes.draw do
     get 'mentionable'
     get 'logs' => 'groups#histories'
 
+    collection do
+      get "search" => "groups#search"
+    end
+
     member do
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
+      post "request_membership" => "groups#request_membership"
       post "notifications" => "groups#set_notifications"
     end
   end
@@ -548,6 +554,7 @@ Discourse::Application.routes.draw do
   get "top" => "list#top"
   get "search/query" => "search#query"
   get "search" => "search#show"
+  post "search/click" => "search#click"
 
   # Topics resource
   get "t/:id" => "topics#show"
@@ -644,11 +651,10 @@ Discourse::Application.routes.draw do
 
   resources :invites
   post "invites/upload_csv" => "invites#upload_csv"
+  post "invites/rescind-all" => "invites#rescind_all_invites"
   post "invites/reinvite" => "invites#resend_invite"
   post "invites/reinvite-all" => "invites#resend_all_invites"
   post "invites/link" => "invites#create_invite_link"
-  post "invites/disposable" => "invites#create_disposable_invite"
-  get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
   put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
 
@@ -662,6 +668,7 @@ Discourse::Application.routes.draw do
   end
 
   get "onebox" => "onebox#show"
+  get "inline-onebox" => "inline_onebox#show"
 
   get "exception" => "list#latest"
 

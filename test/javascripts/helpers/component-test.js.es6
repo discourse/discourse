@@ -35,8 +35,8 @@ export default function(name, opts) {
 
     this.registry.register('store:main', store, { instantiate: false });
 
-    if (opts.setup) {
-      opts.setup.call(this, store);
+    if (opts.beforeEach) {
+      opts.beforeEach.call(this, store);
     }
 
     andThen(() => {

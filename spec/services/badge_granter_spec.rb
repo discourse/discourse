@@ -38,8 +38,10 @@ describe BadgeGranter do
   describe 'preview' do
     it 'can correctly preview' do
       Fabricate(:user, email: 'sam@gmail.com')
-      result = BadgeGranter.preview('select id user_id, null post_id, created_at granted_at from users
-                                     where email like \'%gmail.com\'', explain: true)
+      result = BadgeGranter.preview('select u.id user_id, null post_id, u.created_at granted_at from users u
+                                     join user_emails ue on ue.user_id = u.id AND ue.primary
+                                     where ue.email like \'%gmail.com\'', explain: true)
+
       expect(result[:grant_count]).to eq(1)
       expect(result[:query_plan]).to be_present
     end
@@ -143,13 +145,11 @@ describe BadgeGranter do
     end
 
     it 'sets granted_at' do
-      time = Time.zone.now
-      Timecop.freeze time
+      time = 1.day.ago
+      freeze_time time
 
       user_badge = BadgeGranter.grant(badge, user)
-      expect(user_badge.granted_at).to eq(time)
-
-      Timecop.return
+      expect(user_badge.granted_at).to be_within(1.second).of(time)
     end
 
     it 'sets granted_by if the option is present' do

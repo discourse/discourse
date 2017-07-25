@@ -177,8 +177,8 @@ describe TopicsController do
     context "allow_user_locale disabled" do
       context "accept-language header differs from default locale" do
         before do
-          SiteSetting.stubs(:allow_user_locale).returns(false)
-          SiteSetting.stubs(:default_locale).returns("en")
+          SiteSetting.allow_user_locale = false
+          SiteSetting.default_locale = "en"
           set_accept_language("fr")
         end
 
@@ -206,9 +206,9 @@ describe TopicsController do
     context "set_locale_from_accept_language_header enabled" do
       context "accept-language header differs from default locale" do
         before do
-          SiteSetting.stubs(:allow_user_locale).returns(true)
-          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
-          SiteSetting.stubs(:default_locale).returns("en")
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_accept_language_header = true
+          SiteSetting.default_locale = "en"
           set_accept_language("fr")
         end
 
@@ -234,8 +234,9 @@ describe TopicsController do
 
       context "the preferred locale includes a region" do
         it "returns the locale and region separated by an underscore" do
-          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
-          SiteSetting.stubs(:default_locale).returns("en")
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_accept_language_header = true
+          SiteSetting.default_locale = "en"
           set_accept_language("zh-CN")
 
           get :show, {topic_id: topic.id}
@@ -246,8 +247,8 @@ describe TopicsController do
 
       context 'accept-language header is not set' do
         it 'uses the site default locale' do
-          SiteSetting.stubs(:allow_user_locale).returns(true)
-          SiteSetting.stubs(:default_locale).returns('en')
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = 'en'
           set_accept_language('')
 
           get :show, {topic_id: topic.id}

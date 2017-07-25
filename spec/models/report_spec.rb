@@ -40,7 +40,7 @@ describe Report do
 
       context "with #{pluralized}" do
         before(:each) do
-          Timecop.freeze
+          freeze_time
           fabricator = case arg
           when :signup
             :user
@@ -57,7 +57,6 @@ describe Report do
           Fabricate(fabricator, created_at: 30.days.ago)
           Fabricate(fabricator, created_at: 35.days.ago)
         end
-        after(:each) { Timecop.return }
 
         context 'returns a report with data'
           it "returns today's data" do
@@ -87,15 +86,13 @@ describe Report do
 
       context "with #{request_type}" do
         before(:each) do
-          Timecop.freeze
+          freeze_time
           ApplicationRequest.create(date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35)
           ApplicationRequest.create(date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8)
           ApplicationRequest.create(date: Date.today.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
           ApplicationRequest.create(date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2)
           ApplicationRequest.create(date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3)
         end
-        after(:each) { Timecop.return }
-
 
         context 'returns a report with data' do
           it "returns expected number of recoords" do

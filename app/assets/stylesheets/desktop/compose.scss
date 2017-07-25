@@ -36,14 +36,14 @@
   padding: 10px;
 
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
-  background: dark-light-diff($highlight, $secondary, 50%, -80%);
+  background: $highlight-medium;
 
   &.urgent {
-    background: dark-light-diff($danger, $secondary, 50%, -40%);
+    background: $danger-low;
   }
 
   &.education-message {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color: $tertiary-low;
   }
 
   h3 {
@@ -79,17 +79,17 @@
 }
 
 .custom-body {
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
   p {
     max-width: 98%;
   }
 }
 
 .similar-topics {
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
 
   a[href] {
-    color: dark-light-diff($primary, $secondary, -10%, 10%);
+    color: $primary-medium;
   }
 
   .posts-count {
@@ -140,21 +140,16 @@
   width: 100%;
   z-index: 999;
   height: 0;
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+  background-color: $primary-low;
   bottom: 0;
   font-size: 1em;
   position: fixed;
   .toggler {
-    width: 15px;
     right: 1px;
     position: absolute;
-    font-size: 1.071em;
+    i { font-size: 1.1em; }
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     padding: 0 10px 5px 10px;
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f078";
-    }
   }
   a.cancel {
     padding-left: 7px;
@@ -184,7 +179,7 @@
   &.draft {
     height: 40px !important;
     cursor: pointer;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-top: 1px solid $primary-low;
     .draft-text {
       display: block;
 
@@ -192,24 +187,12 @@
         color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
     }
-    .toggler {
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f00d";
-      }
-    }
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-top: 1px solid $primary-low;
     .saving-text {
       display: block;
-    }
-    .toggler {
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f00d";
-      }
     }
   }
   .reply-area {
@@ -299,7 +282,7 @@
       margin-right: 10px;
       float: left;
       &:disabled {
-        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+        background-color: $primary-low;
       }
     }
     #topic-featured-link {
@@ -308,14 +291,14 @@
       width: 400px;
     }
     .d-editor-input:disabled {
-      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+      background-color: $primary-low;
     }
     .d-editor-input, .d-editor-preview {
       color: $primary;
     }
 
     .d-editor-preview {
-      border: 1px dashed dark-light-diff($primary, $secondary, 90%, -60%);
+      border: 1px dashed $primary-low;
       overflow: auto;
       visibility: visible;
       cursor: default;
@@ -353,7 +336,7 @@
   .show-admin-options {
     vertical-align: top;
     margin-top: 8px;
-    background: dark-light-diff($primary, $secondary, 90%, -60%);
+    background: $primary-low;
   &:hover {
     color: $secondary;
     background: $primary;

@@ -1,7 +1,7 @@
 import { acceptance, waitFor } from "helpers/qunit-helpers";
 acceptance("Search - Full Page", {
   settings: {tagging_enabled: true},
-  setup() {
+  beforeEach() {
     const response = (object) => {
       return [
         200,
@@ -39,12 +39,12 @@ acceptance("Search - Full Page", {
   }
 });
 
-test("perform various searches", assert => {
+QUnit.test("perform various searches", assert => {
   visit("/search");
 
   andThen(() => {
-    ok($('body.search-page').length, "has body class");
-    ok(exists('.search-container'), "has container class");
+    assert.ok($('body.search-page').length, "has body class");
+    assert.ok(exists('.search-container'), "has container class");
     assert.ok(find('input.search').length > 0);
     assert.ok(find('.fps-topic').length === 0);
   });
@@ -60,7 +60,7 @@ test("perform various searches", assert => {
   andThen(() => assert.ok(find('.fps-topic').length === 1, 'has one post'));
 });
 
-test("open advanced search", assert => {
+QUnit.test("open advanced search", assert => {
   visit("/search");
 
   andThen(() => assert.ok(exists('.search .search-advanced'), 'shows advanced search panel'));
@@ -95,7 +95,7 @@ test("open advanced search", assert => {
 //   });
 // });
 
-test("escape search term", (assert) => {
+QUnit.test("escape search term", (assert) => {
   visit("/search");
   fillIn('.search input.full-page-search', '@<script>prompt(1337)</script>gmail.com');
   click('.search-advanced-btn');
@@ -105,7 +105,7 @@ test("escape search term", (assert) => {
   });
 });
 
-test("update username through advanced search ui", assert => {
+QUnit.test("update username through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -114,7 +114,7 @@ test("update username through advanced search ui", assert => {
   keyEvent('.search-advanced-options .user-selector', 'keydown', 8);
 
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(visible('.search-advanced-options .autocomplete'), '"autocomplete" popup is visible');
       assert.ok(exists('.search-advanced-options .autocomplete ul li a span.username:contains("admin")'), '"autocomplete" popup has an entry for "admin"');
 
@@ -128,7 +128,7 @@ test("update username through advanced search ui", assert => {
   });
 });
 
-test("update category through advanced search ui", assert => {
+QUnit.test("update category through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -209,7 +209,7 @@ test("update category through advanced search ui", assert => {
 //   });
 // });
 
-test("update in:likes filter through advanced search ui", assert => {
+QUnit.test("update in:likes filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -221,7 +221,7 @@ test("update in:likes filter through advanced search ui", assert => {
   });
 });
 
-test("update in:private filter through advanced search ui", assert => {
+QUnit.test("update in:private filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -233,7 +233,7 @@ test("update in:private filter through advanced search ui", assert => {
   });
 });
 
-test("update in:seen filter through advanced search ui", assert => {
+QUnit.test("update in:seen filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -248,7 +248,7 @@ test("update in:seen filter through advanced search ui", assert => {
   });
 });
 
-test("update in filter through advanced search ui", assert => {
+QUnit.test("update in filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -261,7 +261,7 @@ test("update in filter through advanced search ui", assert => {
   });
 });
 
-test("update status through advanced search ui", assert => {
+QUnit.test("update status through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -274,7 +274,7 @@ test("update status through advanced search ui", assert => {
   });
 });
 
-test("update post time through advanced search ui", assert => {
+QUnit.test("update post time through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -289,7 +289,7 @@ test("update post time through advanced search ui", assert => {
   });
 });
 
-test("update min post count through advanced search ui", assert => {
+QUnit.test("update min post count through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -301,7 +301,7 @@ test("update min post count through advanced search ui", assert => {
   });
 });
 
-test("validate advanced search when initially empty", assert => {
+QUnit.test("validate advanced search when initially empty", assert => {
   visit("/search?expanded=true");
   click('.search-advanced-options .in-likes');
 

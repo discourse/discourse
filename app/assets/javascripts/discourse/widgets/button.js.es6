@@ -1,7 +1,8 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon-node';
 
-export default createWidget('button', {
+
+const ButtonClass = {
   tagName: 'button.widget-button',
 
   buildClasses(attrs) {
@@ -59,4 +60,10 @@ export default createWidget('button', {
     }
     return this.sendWidgetAction(attrs.action);
   }
-});
+};
+
+export default createWidget('button', ButtonClass);
+
+createWidget('flat-button', jQuery.extend(ButtonClass, {
+  tagName: 'button.widget-button.btn-flat'
+}));

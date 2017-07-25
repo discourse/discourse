@@ -102,8 +102,10 @@ export function selectedText() {
   $div.find("img.emoji").replaceWith(function() { return this.title; });
   // replace br with newlines
   $div.find("br").replaceWith(() => "\n");
+  // enforce newline at the end of paragraphs
+  $div.find("p").append(() => "\n");
 
-  return String($div.text()).trim();
+  return String($div.text()).trim().replace(/(^\s*\n)+/gm, "\n");
 }
 
 // Determine the row and col of the caret in an element
@@ -172,7 +174,7 @@ export function validateUploadedFiles(files, opts) {
   }
 
   opts = opts || {};
-  opts["type"] = uploadTypeFromFileName(upload.name);
+  opts.type = uploadTypeFromFileName(upload.name);
 
   return validateUploadedFile(upload, opts);
 }
@@ -185,12 +187,18 @@ export function validateUploadedFile(file, opts) {
   if (!name) { return false; }
 
   // check that the uploaded file is authorized
-  if (opts["imagesOnly"]) {
+  if (opts.allowStaffToUploadAnyFileInPm && opts.isPrivateMessage) {
+    if (Discourse.User.current("staff")) {
+      return true;
+    }
+  }
+
+  if (opts.imagesOnly) {
     if (!isAnImage(name) && !isAuthorizedImage(name)) {
       bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedImagesExtensions() }));
       return false;
     }
-  } else if (opts["csvOnly"]) {
+  } else if (opts.csvOnly) {
     if (!(/\.csv$/i).test(name)) {
       bootbox.alert(I18n.t('user.invited.bulk_invite.error'));
       return false;
@@ -202,10 +210,10 @@ export function validateUploadedFile(file, opts) {
     }
   }
 
-  if (!opts["bypassNewUserRestriction"]) {
+  if (!opts.bypassNewUserRestriction) {
     // ensures that new users can upload a file
-    if (!Discourse.User.current().isAllowedToUploadAFile(opts["type"])) {
-      bootbox.alert(I18n.t(`post.errors.${opts["type"]}_upload_not_allowed_for_new_user`));
+    if (!Discourse.User.current().isAllowedToUploadAFile(opts.type)) {
+      bootbox.alert(I18n.t(`post.errors.${opts.type}_upload_not_allowed_for_new_user`));
       return false;
     }
   }

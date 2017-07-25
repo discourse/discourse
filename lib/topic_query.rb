@@ -315,7 +315,7 @@ class TopicQuery
     if page == 0
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
-      offset = (page * per_page) - pinned_topics.count - 1
+      offset = (page * per_page) - pinned_topics.count
       offset = 0 unless offset > 0
       unpinned_topics.offset(offset).to_a
     end

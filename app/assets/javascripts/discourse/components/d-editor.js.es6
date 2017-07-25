@@ -1,14 +1,13 @@
 /*global Mousetrap:true */
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import { showSelector } from "discourse/lib/emoji/toolbar";
 import Category from 'discourse/models/category';
 import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
 import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import { SEPARATOR } from 'discourse/lib/category-hashtags';
-import { cook } from 'discourse/lib/text';
+import { cookAsync } from 'discourse/lib/text';
 import { translations } from 'pretty-text/emoji/data';
-import { emojiSearch } from 'pretty-text/emoji';
+import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
@@ -78,7 +77,11 @@ class Toolbar {
       group: 'insertions',
       icon: 'quote-right',
       shortcut: 'Shift+9',
-      perform: e => e.applySurround('> ', '', 'code_text')
+      perform: e => e.applyList(
+        '> ',
+        'blockquote_text',
+        { applyEmptyLines: true, multiline: true }
+      )
     });
 
     this.addButton({id: 'code', group: 'insertions', shortcut: 'Shift+C', action: 'formatCode'});
@@ -138,7 +141,7 @@ class Toolbar {
       label: button.label,
       icon: button.label ? null : button.icon || button.id,
       action: button.action || 'toolbarButton',
-      perform: button.perform || Ember.K,
+      perform: button.perform || function() { },
       trimLeading: button.trimLeading
     };
 
@@ -198,6 +201,7 @@ export default Ember.Component.extend({
   linkText: '',
   lastSel: null,
   _mouseTrap: null,
+  emojiPickerIsActive: false,
 
   @computed('placeholder')
   placeholderTranslated(placeholder) {
@@ -247,6 +251,7 @@ export default Ember.Component.extend({
     });
 
     if (this.get('composerEvents')) {
+      this.appEvents.on('composer:insert-block', text => this._addBlock(this._getSelected(), text));
       this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
       this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
     }
@@ -279,14 +284,14 @@ export default Ember.Component.extend({
     const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
 
-    markdownOptions.siteSettings = this.siteSettings;
-
-    this.set('preview', cook(value));
-    Ember.run.scheduleOnce('afterRender', () => {
-      if (this._state !== "inDOM") { return; }
-      const $preview = this.$('.d-editor-preview');
-      if ($preview.length === 0) return;
-      this.sendAction('previewUpdated', $preview);
+    cookAsync(value, markdownOptions).then(cooked => {
+      this.set('preview', cooked);
+      Ember.run.scheduleOnce('afterRender', () => {
+        if (this._state !== "inDOM") { return; }
+        const $preview = this.$('.d-editor-preview');
+        if ($preview.length === 0) return;
+        this.sendAction('previewUpdated', $preview);
+      });
     });
   },
 
@@ -327,7 +332,6 @@ export default Ember.Component.extend({
   _applyEmojiAutocomplete($editorInput) {
     if (!this.siteSettings.enable_emoji) { return; }
 
-    const register = this.register;
     const self = this;
 
     $editorInput.autocomplete({
@@ -337,24 +341,16 @@ export default Ember.Component.extend({
         self.set('value', text);
       },
 
+      onKeyUp(text, cp) {
+        return text.substring(0, cp).match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/g);
+      },
+
       transformComplete(v) {
         if (v.code) {
           return `${v.code}:`;
         } else {
-          showSelector({
-            appendTo: self.$(),
-            register,
-            onSelect: title => {
-              // Remove the previously type characters when a new emoji is selected from the selector.
-              let selected = self._getSelected();
-              let newPre = selected.pre.replace(/:[^:]+$/, ":");
-              let numOfRemovedChars = selected.pre.length - newPre.length;
-              selected.pre = newPre;
-              selected.start -= numOfRemovedChars;
-              selected.end -= numOfRemovedChars;
-              self._addText(selected, `${title}:`);
-            }
-          });
+          $editorInput.autocomplete({cancel: true});
+          self.set('emojiPickerIsActive', true);
           return "";
         }
       },
@@ -370,6 +366,20 @@ export default Ember.Component.extend({
 
           if (translations[full]) {
             return resolve([translations[full]]);
+          }
+
+          const match = term.match(/^:?(.*?):t(\d)?$/);
+          if (match) {
+            let name = match[1];
+            let scale = match[2];
+
+            if (isSkinTonableEmoji(name)) {
+              if (scale) {
+                return resolve([`${name}:t${scale}`]);
+              } else {
+                return resolve([2, 3, 4, 5, 6].map(x => `${name}:t${x}`));
+              }
+            }
           }
 
           const options = emojiSearch(term, {maxResults: 5});
@@ -434,11 +444,15 @@ export default Ember.Component.extend({
   },
 
   // perform the same operation over many lines of text
-  _getMultilineContents(lines, head, hval, hlen, tail, tlen) {
+  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
     let operation = OP.NONE;
 
+    const applyEmptyLines = opts && opts.applyEmptyLines;
+
     return lines.map(l => {
-      if (l.length === 0) { return l; }
+      if (!applyEmptyLines && l.length === 0) {
+        return l;
+      }
 
       if (operation !== OP.ADDED &&
           (l.slice(0, hlen) === hval && tlen === 0 || l.slice(-tlen) === tail)) {
@@ -494,8 +508,15 @@ export default Ember.Component.extend({
         this.set('value', `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`);
         this._selectText(sel.start - hlen, sel.value.length);
       } else {
-        const contents = this._getMultilineContents(lines, head, hval, hlen, tail, tlen);
-
+        const contents = this._getMultilineContents(
+          lines,
+          head,
+          hval,
+          hlen,
+          tail,
+          tlen,
+          opts
+        );
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
           this._selectText(sel.start + hlen, sel.value.length);
@@ -506,9 +527,9 @@ export default Ember.Component.extend({
     }
   },
 
-  _applyList(sel, head, exampleKey) {
+  _applyList(sel, head, exampleKey, opts) {
     if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(sel, head, '', exampleKey);
+      this._applySurround(sel, head, '', exampleKey, opts);
     } else {
 
       const [hval, hlen] = getHead(head);
@@ -553,6 +574,36 @@ export default Ember.Component.extend({
     this._selectText(newSelection.start, newSelection.end - newSelection.start);
   },
 
+  _addBlock(sel, text) {
+    text = (text || '').trim();
+    if (text.length === 0) {
+      return;
+    }
+
+    let pre = sel.pre;
+    let post = sel.value + sel.post;
+
+    if (pre.length > 0) {
+      pre = pre.replace(/\n*$/, "\n\n");
+    }
+
+    if (post.length > 0) {
+      post = post.replace(/^\n*/, "\n\n");
+    }
+
+
+    const value = pre + text + post;
+    const $textarea = this.$('textarea.d-editor-input');
+
+    this.set('value', value);
+
+    $textarea.val(value);
+    $textarea.prop("selectionStart", (pre+text).length + 2);
+    $textarea.prop("selectionEnd", (pre+text).length + 2);
+
+    Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
+  },
+
   _addText(sel, text) {
     const $textarea = this.$('textarea.d-editor-input');
     const insert = `${sel.pre}${text}`;
@@ -565,13 +616,28 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    emojiSelected(code) {
+      let selected = this._getSelected();
+      const captures = selected.pre.match(/\B:(\w*)$/);
+
+      if(_.isEmpty(captures)) {
+        this._addText(selected, `:${code}:`);
+      } else {
+        let numOfRemovedChars = selected.pre.length - captures[1].length;
+        selected.pre = selected.pre.slice(0, selected.pre.length - captures[1].length);
+        selected.start -= numOfRemovedChars;
+        selected.end -= numOfRemovedChars;
+        this._addText(selected, `${code}:`);
+      }
+    },
+
     toolbarButton(button) {
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
         selectText: (from, length) => this._selectText(from, length),
         applySurround: (head, tail, exampleKey, opts) => this._applySurround(selected, head, tail, exampleKey, opts),
-        applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
+        applyList: (head, exampleKey, opts) => this._applyList(selected, head, exampleKey, opts),
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),
@@ -643,11 +709,7 @@ export default Ember.Component.extend({
     },
 
     emoji() {
-      showSelector({
-        appendTo: this.$(),
-        register: this.register,
-        onSelect: title => this._addText(this._getSelected(), `:${title}:`)
-      });
+      this.set('emojiPickerIsActive', !this.get('emojiPickerIsActive'));
     }
   }
 });

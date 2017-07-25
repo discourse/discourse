@@ -11,10 +11,10 @@ shared_examples_for 'stats cachable' do
     end
 
     it 'returns fetches the stats if stats has not been cached' do
-      Timecop.freeze do
-        $redis.del(described_class.stats_cache_key)
-        expect(described_class.fetch_cached_stats).to eq(JSON.parse(described_class.fetch_stats.to_json))
-      end
+      freeze_time
+
+      $redis.del(described_class.stats_cache_key)
+      expect(described_class.fetch_cached_stats).to eq(JSON.parse(described_class.fetch_stats.to_json))
     end
   end
 

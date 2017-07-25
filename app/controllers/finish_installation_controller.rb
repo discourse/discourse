@@ -15,7 +15,7 @@ class FinishInstallationController < ApplicationController
       email = params[:email].strip
       raise Discourse::InvalidParameters.new unless @allowed_emails.include?(email)
 
-      return redirect_confirm(email) if User.where(email: email).exists?
+      return redirect_confirm(email) if UserEmail.exists?(email: email)
 
       @user.email = email
       @user.username = params[:username]
@@ -37,7 +37,7 @@ class FinishInstallationController < ApplicationController
 
   def resend_email
     @email = session[:registered_email]
-    @user = User.where(email: @email).first
+    @user = User.find_by_email(@email)
     if @user.present?
       @email_token = @user.email_tokens.unconfirmed.active.first
       if @email_token.present?

@@ -12,6 +12,7 @@ de:
     discourse_narrative_bot_ignored_usernames: "Benutzernamen, die vom Discourse Narrative Bot ignoriert werden sollen"
     discourse_narrative_bot_disable_public_replies: "Öffentliche Antworten von Discourse Narrative Bot deaktivieren"
     discourse_narrative_bot_welcome_post_type: "Die Art der Willkommensnachricht, die vom Discourse Narrative Bot versendet werden soll."
+    discourse_narrative_bot_welcome_post_delay: "Warte (n) Sekunden bevor Discourse Narrative Bot seine Willkommensnachricht schickt"
   badges:
     certified:
       name: Zertifiziert
@@ -160,6 +161,8 @@ de:
           - https://de.wikipedia.org/wiki/Antiwitz
           - https://de.wikipedia.org/wiki/Tetraphobie
           - https://de.wikipedia.org/wiki/Beghilos
+        reply: |-
+          Super! Dies funktioniert mit den meisten <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> Links. Aber denk dran: er muss _ganz alleine_ in der Zeile stehen, mit nichts davor und nichts dahinter.
         not_found: |-
           Entschuldige bitte, ich konnte keinen Link in deiner Antwort finden! :cry:
 
@@ -167,6 +170,14 @@ de:
 
           - https://de.wikipedia.org/wiki/Hauskatze
       images:
+        instructions: |-
+          Hier ist ein Bild von einem Einhorn:
+
+          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+
+          Wenn es dir gefällt (und wie kann jemand das nicht mögen!), drücke den "Gefällt-mir" Knopf :heart: unter diesem Beitrag, um mich das wissen zu lassen.
+
+          Kannst du mir **mit einem Bild antworten?** Nimm irgendein Bild, es ist ganz egal welches. Du kannst mit der Maus ziehen und loslassen, oder den Hochlade-Knopf drücken, und sogar  kopieren und einfügen funktioniert.
         reply: |-
           Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-
@@ -210,11 +221,31 @@ de:
 
           Das Auswählen von beliebigem Text in meinem Beitrag lässt die <kbd>**Zitat**</kbd>-Schaltfläche erscheinen. Und das Drücken von **Antworten** mit einem beliebigen ausgewählten Text wird auch funktionieren! Kannst du es nochmal versuchen?
       bookmark:
+        instructions: |-
+          Wenn Du gerne mehr erfahren möchtest, wähle <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> unten und <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **setze ein Lesezeichen für diese private Nachricht**. Wenn Du das tust, habe ich ein kleines :gift: für dich!
         reply: |-
           Hervorragend! Jetzt kannst du jederzeit über [den Lesezeichen-Reiter in deinem Profil](%{profile_page_url}/activity/bookmarks) zu unserer Unterhaltung zurückkehren. Gehe dazu einfach auf dein Profilbild oben rechts &#8599;.
+        not_found: |-
+          Oh je! Ich sehe gar keine Lesezeichen in diesem Thema. Hast du das Lesezeichen-Symbol unter jedem Beitrag gefunden? Falls du es nicht siehst, benutze das "Zeige mehr"-Symbol <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> um weitere Aktionsmöglichkeiten sichtbar zu machen.
       emoji:
+        instructions: |-
+          Du hast vielleicht bemerkt, dass ich kleine Bilder in meinen Antworten verwendet habe :blue_car::dash:. Die heißen [Emoji](https://de.wikipedia.org/wiki/Emoji) heißen. Kannst du in deiner Antwort **ein Emoji hinzufügen**? Du kannst das auf verschiedene Weise tun:
+
+          - Gib `:) ;) :D :P :O` ein
+
+          - Gib einen Doppelpunkt <kbd>:</kbd> gefolgt vom Emoji-Namen ein `:tada:`
+
+          - Drücke die Emoji-Schaltfläche <img src="/images/font-awesome-smile.png" width="16" height="16"> im Editor oder auf der Tastatur deines mobilen Geräts.
         reply: |-
           Das ist :sparkles: _emojitastisch!_ :sparkles:
+        not_found: |-
+          Hoppla, ich sehe kein Emoji in deinem Beitrag. Warum bloß? :sob:
+
+          Versuche einen Doppelpunkt <kbd>:</kbd> einzugeben, um damit die Emoji-Auswahl zu öffnen. Dann gib die ersten Buchstaben vom gesuchten Emoji ein; also zum Beispiel `:bird:`
+
+          Oder drücke die Emoji-Schaltfläche <img src="/images/font-awesome-smile.png" width="16" height="16"> im Editor.
+
+          (Auf einem mobilen Gerät kannst du Emojis auch direkt über deine Tastatur eingeben.)
       mention:
         instructions: |-
           Manchmal möchtest du vielleicht die Aufmerksamkeit einer Person haben, auch wenn du ihr nicht direkt antwortest. Gib `@` ein und vervollständige dann ihren Benutzernamen, um sie zu erwähnen.
@@ -227,9 +258,27 @@ de:
 
           (Und ja, mein Benutzername wird wirklich _disco_ geschrieben. Genau wie die Tanzmusik aus den 1970er Jahren. Ich [liebe das Nachtleben!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Wir mögen freundliche Diskussionen, und wir benötigen deine Hilfe, damit [alles zivilisiert bleibt](%{guidelines_url}). Wenn du ein Problem bemerkst, melde dies bitte und lass es diskret den Autor oder [unser hilfreiches Team](%{about_url}) wissen.
+
+          > :imp: Ich habe dir hier etwas anstößiges geschrieben
+
+          Ich denke, du weißt was zu tun ist. Los, **melde diesen Beitrag** <img src="/images/font-awesome-flag.png" width="16" height="16"> als unangemessen!
         reply: |-
           [Unser Team](/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
+        not_found: |-
+          Oh nein, mein widerlicher Beitrag wurde nicht gemeldet. :worried: Kannst du ihn als unangemessen **melden** <img src="/images/font-awesome-flag.png" width="16" height="16">? Vergiss nicht, die „Mehr anzeigen“-Schaltfläche <img src="/images/font-awesome-ellipsis.png" width="16" height="16"> zu verwenden, damit für jeden Beitrag weitere Aktionsmöglichkeiten sichtbar werden.
       search:
+        instructions: |-
+          _Psst_… ich habe in diesem Thema eine Überraschung versteckt. Wenn du für eine Herausforderung zu haben bist, dann **wähle das Such-Symbol** <img src="/images/font-awesome-search.png" width="16" height="16"> oben rechts &#8599; aus und suche danach.
+
+          Probier mal, in diesem Thema nach dem Begriff „Capy&#8203;bara“ zu suchen.
+        hidden_message: |-
+          Wie konntest du das Capybara übersehen? :wink:
+
+          <img src="/images/capybara-eating.gif"/>
+
+          Hast du bemerkt, dass du jetzt zurück am Anfang bist? Füttere dieses arme, hungrige Capybara, indem du **mit dem `:herb:`-Emoji antwortest** und du wirst automatisch wieder zum Ende gebracht.
         reply: |-
           Juhu! Du hast es gefunden :tada:
 
@@ -238,6 +287,8 @@ de:
           - Um in einer langen Diskussion an eine beliebige Position zu springen, probiere die Zeitleiste rechts neben dem Thema aus. Auf mobilen Geräten findest du die Zeitleiste rechts unten.
 
           - Wenn du eine physische Tastatur verwendest, gib <kbd>?</kbd> ein, um eine nützliche Übersicht über Tastenkombinationen anzuzeigen.
+        not_found: |-
+          Hm… es sieht so aus, als hättest du Schwierigkeiten. Das tut mir leid. Hast du nach dem Begriff **capy&#8203;bara** gesucht <img src="/images/font-awesome-search.png" width="16" height="16">?
       end:
         message: |-
           Danke, dass du mir treu geblieben bist, @%{username}! Ich habe dies für dich gemacht. Ich denke, du hast es verdient:
@@ -263,6 +314,10 @@ de:
           Jeder macht Fehler. Aber keine Sorge, du kannst deine Beiträge immer bearbeiten, um sie zu korrigieren!
 
           Kannst du beginnen, indem du den Beitrag **bearbeitest**, den ich gerade in deinem Namen erstellt habe?
+        not_found: |-
+          Es sieht so aus, als hättest Du den [Beitrag](%{url}), den ich für dich erstellt habe, noch gar nicht bearbeitet. Kannst du es nochmal versuchen?
+
+          Verwende das <img src="/images/font-awesome-pencil.png" width="16" height="16">-Symbol, um den Editor zu öffnen.
         reply: |-
           Gut gemacht!
 

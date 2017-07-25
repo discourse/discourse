@@ -30,9 +30,9 @@
     <div class="span10 page-not-found-search">
       <h2><%= t 'page_not_found.search_title' %></h2>
       <p>
-        <form action='//google.com/search' id='google-search' onsubmit="return google_button_clicked()">
-          <input type="text" id='user-query' value="<%= @slug %>">
-          <input type='hidden' id='google-query' name="q">
+        <form action='//google.com/search' id='google-search'>
+          <input type="text" name="q" value="<%= @slug %>">
+          <input type='hidden'name="as_sitesearch" value="<%= local_domain %>">
           <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>
         </form>
       </p>
@@ -40,12 +40,6 @@
   </div>
 
   <script language="Javascript">
-    function google_button_clicked(e) {
-      var searchValue = document.getElementById('user-query').value;
-      document.getElementById('google-query').value = 'site:<%= local_domain %> ' + searchValue;
-      return true;
-    }
-
     window.onpopstate = function(event) {
       if (event.state && !window.hasOwnProperty("Discourse")) {  //check if Discourse object exists if not take care of back navigation
         window.location = document.location;

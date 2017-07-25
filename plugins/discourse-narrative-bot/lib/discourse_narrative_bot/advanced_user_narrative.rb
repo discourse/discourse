@@ -74,7 +74,7 @@ module DiscourseNarrativeBot
           action: :reply_to_topic_notification_level_changed
         },
         reply: {
-          next_state: :tutorial_notification_level,
+          next_state: :tutorial_change_topic_notification_level,
           action: :missing_topic_notification_level_change
         }
       },
@@ -144,7 +144,23 @@ module DiscourseNarrativeBot
       })
 
       set_state_data(:post_id, post.id)
-      PostDestroyer.new(@user, post, skip_bot: true).destroy
+
+      opts = { skip_bot: true }
+
+      if SiteSetting.delete_removed_posts_after < 1
+        opts[:delete_removed_posts_after] = 1
+
+        # Flag it and defer so the stub doesn't get destroyed
+        flag = PostAction.create!(
+          user: self.discobot_user,
+          post: post, post_action_type_id:
+          PostActionType.types[:off_topic]
+        )
+
+        PostAction.defer_flags!(post, self.discobot_user)
+      end
+
+      PostDestroyer.new(@user, post, opts).destroy
     end
 
     def start_advanced_track

@@ -382,7 +382,6 @@ sq:
         remove: "Kjo temë nuk është më banderolë. Nuk do të shfaqet më në majë të çdo faqeje të sitit. "
   unsubscribed:
     title: "U çregjistruat!"
-    description: "U çregjistruat. Për të ndryshuar rregullimet e email-it <a href='%{url}'> shkoni tek preferencat e përdoruesit</a>."
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
     title: "Çregjistrohuni"
@@ -1041,26 +1040,6 @@ sq:
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     visit_link_to_respond_pm: "[Shiko Mesazhin](%{base_url}%/{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
-    invited_to_private_message_body: |
-      %{username} ju ftoi tek mesazhi
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      në
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} ju ftoi në një bisedë
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
@@ -1170,7 +1149,6 @@ sq:
         %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
-      unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
     notify_old_email:
@@ -1191,7 +1169,7 @@ sq:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Welcome to %{title}](#welcome)
+      ## [Welcome to %{title}](#welcome)
       An account is required. Please create an account or log in to continue.
   terms_of_service:
     title: "Kushtet e shërbimit"

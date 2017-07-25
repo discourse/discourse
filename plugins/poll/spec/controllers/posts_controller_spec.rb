@@ -29,23 +29,23 @@ describe PostsController do
     end
 
     it "should have different options" do
-      xhr :post, :create, { title: title, raw: "[poll]\n- A\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll]\n- A\n- A\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_different_options"))
     end
 
     it "should have at least 2 options" do
-      xhr :post, :create, { title: title, raw: "[poll]\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll]\n- A\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_2_options"))
     end
 
     it "should have at most 'SiteSetting.poll_maximum_options' options" do
-      raw = "[poll]"
+      raw = "[poll]\n"
       (SiteSetting.poll_maximum_options + 1).times { |n| raw << "\n- #{n}" }
-      raw << "[/poll]"
+      raw << "\n[/poll]"
 
       xhr :post, :create, { title: title, raw: raw }
 
@@ -55,7 +55,7 @@ describe PostsController do
     end
 
     it "should have valid parameters" do
-      xhr :post, :create, { title: title, raw: "[poll type=multiple min=5]\n- A\n- B[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll type=multiple min=5]\n- A\n- B\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"))
@@ -66,7 +66,8 @@ describe PostsController do
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
-      expect(json["polls"]["&lt;script&gt;alert(xss)&lt;/script&gt;"]).to be
+      expect(json["cooked"]).to include("&lt;script&gt;")
+      expect(json["polls"]["&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;"]).to be
     end
 
     it "also works whe there is a link starting with '[poll'" do
@@ -91,7 +92,7 @@ describe PostsController do
       describe "within the first 5 minutes" do
 
         let(:post_id) do
-          Timecop.freeze(4.minutes.ago) do
+          freeze_time(4.minutes.ago) do
             xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }
             ::JSON.parse(response.body)["id"]
           end
@@ -116,12 +117,12 @@ describe PostsController do
 
       describe "after the poll edit window has expired" do
 
-        let(:poll) { "[poll]\n- A\n- B[/poll]" }
-        let(:new_option) { "[poll]\n- A\n- C[/poll]" }
-        let(:updated) { "before\n\n[poll]\n- A\n- B[/poll]\n\nafter" }
+        let(:poll) { "[poll]\n- A\n- B\n[/poll]" }
+        let(:new_option) { "[poll]\n- A\n- C\n[/poll]" }
+        let(:updated) { "before\n\n[poll]\n- A\n- B\n[/poll]\n\nafter" }
 
         let(:post_id) do
-          Timecop.freeze(6.minutes.ago) do
+          freeze_time(6.minutes.ago) do
             xhr :post, :create, { title: title, raw: poll }
             ::JSON.parse(response.body)["id"]
           end
@@ -220,14 +221,14 @@ describe PostsController do
   describe "named polls" do
 
     it "should have different options" do
-      xhr :post, :create, { title: title, raw: "[poll name=""foo""]\n- A\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll name=""foo""]\n- A\n- A\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_different_options", name: "foo"))
     end
 
     it "should have at least 2 options" do
-      xhr :post, :create, { title: title, raw: "[poll name='foo']\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll name='foo']\n- A\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_2_options", name: "foo"))

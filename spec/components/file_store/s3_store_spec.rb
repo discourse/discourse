@@ -209,13 +209,13 @@ describe FileStore::S3Store do
     end
 
     it "uses the proper endpoint" do
-      SiteSetting.stubs(:s3_region).returns("us-east-1")
+      SiteSetting.s3_region = "us-east-1"
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.amazonaws.com")
 
-      SiteSetting.stubs(:s3_region).returns("us-east-2")
-      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3-us-east-2.amazonaws.com")
+      SiteSetting.s3_region = "us-west-2"
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3-us-west-2.amazonaws.com")
 
-      SiteSetting.stubs(:s3_region).returns("cn-north-1")
+      SiteSetting.s3_region = "cn-north-1"
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.cn-north-1.amazonaws.com.cn")
 
     end

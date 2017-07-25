@@ -3,7 +3,7 @@ const RestModel = Ember.Object.extend({
   isCreated: Ember.computed.equal('__state', 'created'),
   isSaving: false,
 
-  afterUpdate: Ember.K,
+  afterUpdate() { },
 
   update(props) {
     if (this.get('isSaving')) { return Ember.RSVP.reject(); }

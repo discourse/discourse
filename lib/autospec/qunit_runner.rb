@@ -159,7 +159,12 @@ module Autospec
         if m = /moduleFor\(['"]([^'"]+)/i.match(line)
           return m[1]
         end
+        if m = /moduleForComponent\(['"]([^"']+)/i.match(line)
+          return m[1]
+        end
       end
+
+      nil
     end
 
   end

@@ -1,6 +1,6 @@
-module("Discourse.UserAction");
+QUnit.module("Discourse.UserAction");
 
-test("collapsing likes", function () {
+QUnit.test("collapsing likes", assert => {
   var actions = Discourse.UserAction.collapseStream([
     Discourse.UserAction.create({
       action_type: Discourse.UserAction.TYPES.likes_given,
@@ -20,8 +20,8 @@ test("collapsing likes", function () {
     })
   ]);
 
-  equal(actions.length, 2);
+  assert.equal(actions.length, 2);
 
-  equal(actions[0].get('children.length'), 1);
-  equal(actions[0].get('children')[0].items.length, 2);
+  assert.equal(actions[0].get('children.length'), 1);
+  assert.equal(actions[0].get('children')[0].items.length, 2);
 });

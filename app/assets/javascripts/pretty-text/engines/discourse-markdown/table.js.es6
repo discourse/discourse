@@ -1,33 +1,28 @@
-import { registerOption } from 'pretty-text/pretty-text';
-
-function tableFlattenBlocks(blocks) {
-  let result = "";
-
-  blocks.forEach(b => {
-    result += b;
-    if (b.trailing) { result += b.trailing; }
-  });
-
-  // bypass newline insertion
-  return result.replace(/[\n\r]/g, " ");
-};
-
-registerOption((siteSettings, opts) => {
-  opts.features.table = !!siteSettings.allow_html_tables;
-});
-
 export function setup(helper) {
+  // this is built in now
+  // TODO: sanitizer needs fixing, does not properly support this yet
 
-  helper.whiteList(['table', 'table.md-table', 'tbody', 'thead', 'tr', 'th', 'td']);
+  // we need a custom callback for style handling
+  helper.whiteList({
+    custom: function(tag,attr,val) {
+      if (tag !== 'th' && tag !== 'td') {
+        return false;
+      }
 
-  helper.replaceBlock({
-    start: /(<table[^>]*>)([\S\s]*)/igm,
-    stop: /<\/table>/igm,
-    rawContents: true,
-    priority: 1,
+      if (attr !== 'style') {
+        return false;
+      }
 
-    emitter(contents) {
-      return ['table', {"class": "md-table"}, tableFlattenBlocks.apply(this, [contents])];
+      return (val === 'text-align:right' || val === 'text-align:left' || val === 'text-align:center');
     }
   });
+
+  helper.whiteList([
+      'table',
+      'tbody',
+      'thead',
+      'tr',
+      'th',
+      'td',
+  ]);
 }

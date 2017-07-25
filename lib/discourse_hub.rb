@@ -1,4 +1,3 @@
-require_dependency 'rest_client'
 require_dependency 'version'
 
 module DiscourseHub
@@ -41,11 +40,21 @@ module DiscourseHub
   end
 
   def self.singular_action(action, rel_url, params={})
-    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", {params: params, accept: accepts, referer: referer } )
+    JSON.parse(Excon.send(action,
+      "#{hub_base_url}#{rel_url}",
+      headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
+      query: params,
+      omit_default_port: true
+    ).body)
   end
 
   def self.collection_action(action, rel_url, params={})
-    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", params, content_type: :json, accept: accepts, referer: referer )
+    JSON.parse(Excon.send(action,
+      "#{hub_base_url}#{rel_url}",
+      body: JSON[params],
+      headers: { 'Referer' => referer, 'Accept' => accepts.join(', '), "Content-Type" => "application/json" },
+      omit_default_port: true
+    ).body)
   end
 
   def self.hub_base_url
@@ -57,7 +66,7 @@ module DiscourseHub
   end
 
   def self.accepts
-    [:json, 'application/vnd.discoursehub.v1']
+    ['application/json', 'application/vnd.discoursehub.v1']
   end
 
   def self.referer
