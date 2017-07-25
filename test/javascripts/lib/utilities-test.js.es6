@@ -119,7 +119,7 @@ var testUploadMarkdown = function(filename) {
 };
 
 QUnit.test("getUploadMarkdown", assert => {
-  assert.ok(testUploadMarkdown("lolcat.gif") === '<img src="/uploads/123/abcdef.ext" width="100" height="200">');
+  assert.equal(testUploadMarkdown("lolcat.gif"),'![lolcat|100x200](/uploads/123/abcdef.ext)');
   assert.ok(testUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n');
 });
 
