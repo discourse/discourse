@@ -115,7 +115,7 @@ describe AdminUserIndexQuery do
     it "shows nil values first with asc" do
       users = ::AdminUserIndexQuery.new({ order: "last_emailed", ascending: true }).find_users
 
-      expect(users.count).to eq(2)
+      expect(users.where('users.id > -2').count).to eq(2)
       expect(users.first.username).to eq("system")
       expect(users.first.last_emailed_at).to eq(nil)
     end
@@ -123,7 +123,7 @@ describe AdminUserIndexQuery do
     it "shows nil values last with desc" do
       users = ::AdminUserIndexQuery.new({ order: "last_emailed"}).find_users
 
-      expect(users.count).to eq(2)
+      expect(users.where('users.id > -2').count).to eq(2)
       expect(users.first.last_emailed_at).to_not eq(nil)
     end
 
