@@ -987,7 +987,9 @@ developer:
   enable_long_polling:
     client: true
     default: true
-  long_polling_interval: 25000
+  long_polling_interval:
+    default: 25000
+    max: 25000
   long_polling_base_url:
     client: true
     default: '/'
@@ -1120,9 +1122,13 @@ search:
 
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
-  search_recent_posts_size: 100000
+  search_recent_posts_size:
+    default: 100000
+    max: 100000
   log_search_queries: true
-  search_query_log_max_size: 1000000
+  search_query_log_max_size:
+    default: 1000000
+    max: 1000000
 
 uncategorized:
   version_checks:
@@ -1296,7 +1302,7 @@ user_preferences:
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
     enum: 'MailingListModeSiteSetting'
-    default: 0
+    default: 1
   disable_mailing_list_mode:
     default: false
     client: true

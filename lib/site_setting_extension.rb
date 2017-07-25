@@ -146,7 +146,7 @@ module SiteSettingExtension
       opts[:validator] = opts[:validator].try(:constantize)
       type = opts[:type] || get_data_type(name, defaults[name])
 
-      if (validator_type = opts[:validator] || validator_for(type))
+      if (validator_type = (opts[:validator] || validator_for(type)))
         validators[name] = { class: validator_type, opts: opts }
       end
 
@@ -281,7 +281,7 @@ module SiteSettingExtension
     clear_cache!
   end
 
-  def add_override!(name, val)
+  def normalize_and_validate_setting(name, val)
     type = get_data_type(name, defaults[name.to_sym])
 
     val = val.to_s if type == types[:string]
@@ -317,6 +317,12 @@ module SiteSettingExtension
     if self.respond_to? "validate_#{name}"
       send("validate_#{name}", val)
     end
+
+    [val, type]
+  end
+
+  def add_override!(name, val)
+    val, type = normalize_and_validate_setting(name, val)
 
     provider.save(name, val, type)
     current[name] = convert(val, type, name)
@@ -377,6 +383,27 @@ module SiteSettingExtension
     StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
   end
 
+  def convert(value, type, name)
+    case type
+    when types[:float]
+      value.to_f
+    when types[:integer]
+      value.to_i
+    when types[:bool]
+      value == true || value == "t" || value == "true"
+    when types[:null]
+      nil
+    when types[:enum]
+      defaults[name.to_sym].is_a?(Integer) ? value.to_i : value
+    when types[:string]
+      value.to_s
+    else
+      return value if types[type]
+      # Otherwise it's a type error
+      raise ArgumentError.new :type
+    end
+  end
+
   protected
 
   def clear_cache!
@@ -419,27 +446,6 @@ module SiteSettingExtension
       types[:bool]
     else
       raise ArgumentError.new :val
-    end
-  end
-
-  def convert(value, type, name)
-    case type
-    when types[:float]
-      value.to_f
-    when types[:integer]
-      value.to_i
-    when types[:bool]
-      value == true || value == "t" || value == "true"
-    when types[:null]
-      nil
-    when types[:enum]
-      defaults[name.to_sym].is_a?(Integer) ? value.to_i : value
-    when types[:string]
-      value.to_s
-    else
-      return value if types[type]
-      # Otherwise it's a type error
-      raise ArgumentError.new :type
     end
   end
 

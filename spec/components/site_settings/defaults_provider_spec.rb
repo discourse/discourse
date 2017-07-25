@@ -41,8 +41,9 @@ describe SiteSettings::DefaultsProvider do
 
   describe 'expose default cache according to locale' do
     before do
-      settings.defaults.load_setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
-      settings.defaults.load_setting(:test_default, 'test')
+      settings.setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
+      settings.setting(:test_default, 'test', regex: '^\S+$')
+      settings.refresh!
     end
 
     describe '.all' do
@@ -71,11 +72,34 @@ describe SiteSettings::DefaultsProvider do
 
     describe '.set_regardless_of_locale' do
       let(:val) { 'env_overriden' }
+
       it 'sets the default value to a site setting regardless the locale' do
         settings.defaults.set_regardless_of_locale(:test_override, val)
         expect(settings.defaults.get(:test_override)).to eq val
         settings.defaults.site_locale = 'zh_CN'
         expect(settings.defaults.get(:test_override)).to eq val
+      end
+
+      it 'handles the string' do
+        settings.defaults.set_regardless_of_locale('test_override', val)
+        expect(settings.defaults.get(:test_override)).to eq val
+      end
+
+      it 'converts the data type' do
+        settings.defaults.set_regardless_of_locale(:test_override, 1)
+        expect(settings.defaults.get(:test_override)).to eq '1'
+      end
+
+      it 'raises when the setting does not exists' do
+        expect {
+          settings.defaults.set_regardless_of_locale(:not_exist, 1)
+        }.to raise_error(ArgumentError)
+      end
+
+      it 'raises when the value is not valid' do
+        expect {
+          settings.defaults.set_regardless_of_locale(:test_default, 'regex will fail')
+        }.to raise_error(Discourse::InvalidParameters)
       end
     end
 

@@ -24,9 +24,10 @@ class SiteSettings::DefaultsProvider
     @defaults[DEFAULT_LOCALE.to_sym][name] = value
 
     if (locale_default = opts[:locale_default])
-      locale_default.each do |locale, value|
+      locale_default.each do |locale, v|
+        locale = locale.to_sym
         @defaults[locale] ||= {}
-        @defaults[locale][name] = value
+        @defaults[locale][name] = v
       end
     end
     refresh_cache!
@@ -44,13 +45,18 @@ class SiteSettings::DefaultsProvider
     @cached[name.to_sym]
   end
 
+  # Used to override site settings in dev/test env
   def set_regardless_of_locale(name, value)
     name = name.to_sym
-    @defaults.each do |_, hash|
-      hash.delete(name)
+    if @site_setting.has_setting?(name)
+      @defaults.each { |_, hash| hash.delete(name) }
+      @defaults[DEFAULT_LOCALE.to_sym][name] = value
+      value, type = @site_setting.normalize_and_validate_setting(name, value)
+      value = @site_setting.convert(value, type, name)
+      @cached[name] = value
+    else
+      raise ArgumentError.new("No setting named '#{name}' exists")
     end
-    @defaults[DEFAULT_LOCALE.to_sym][name] = value
-    @cached[name] = value
   end
 
   alias [] get
