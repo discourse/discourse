@@ -64,6 +64,8 @@ RSpec.describe ColumnDropper do
     end
 
     after do
+      ActiveRecord::Base.connection.reset!
+
       ActiveRecord::Base.exec_sql <<~SQL
       DROP TABLE IF EXISTS #{table_name};
       DROP TRIGGER IF EXISTS #{table_name}_email_readonly ON #{table_name};
@@ -81,8 +83,6 @@ RSpec.describe ColumnDropper do
         PG::RaiseException,
         /Discourse: email in #{table_name} is readonly/
       )
-
-      ActiveRecord::Base.exec_sql("ROLLBACK")
     end
 
     it 'should allow updates to the other columns' do
@@ -107,8 +107,6 @@ RSpec.describe ColumnDropper do
         PG::RaiseException,
         /Discourse: email in table_with_readonly_column is readonly/
       )
-
-      ActiveRecord::Base.exec_sql("ROLLBACK")
     end
 
     it 'should allow insertions to the other columns' do
