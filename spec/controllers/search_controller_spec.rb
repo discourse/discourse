@@ -49,6 +49,12 @@ describe SearchController do
       )
       expect(response).to be_success
       data = JSON.parse(response.body)
+      unless (data && data['topics'] && data['topics'][0] && data['topics'][0]['id'])
+        puts "FLAKY TEST"
+        p data
+        p my_post.topic
+        p my_post
+      end
       expect(data['topics'][0]['id']).to eq(my_post.topic_id)
     end
   end
