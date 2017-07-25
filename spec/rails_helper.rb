@@ -64,7 +64,6 @@ Spork.prefork do
     config.infer_base_class_for_anonymous_controllers = true
 
     config.before(:suite) do
-
       Sidekiq.error_handlers.clear
 
       # Ugly, but needed until we have a user creator
@@ -81,7 +80,8 @@ Spork.prefork do
       #  and pretend they are default.
       # There are a bunch of settings that are seeded, they must be loaded as defaults
       SiteSetting.current.each do |k,v|
-        SiteSetting.defaults[k] = v
+        # skip setting defauls for settings that are in unloaded plugins
+        SiteSetting.defaults[k] = v if SiteSetting.respond_to? k
       end
 
       require_dependency 'site_settings/local_process_provider'
