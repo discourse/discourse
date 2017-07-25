@@ -44,9 +44,7 @@ class User < ActiveRecord::Base
   has_many :user_auth_tokens, dependent: :destroy
   has_many :user_emails, dependent: :destroy
 
-  has_one :primary_email, -> { where(primary: true)  },
-    dependent: :destroy,
-    class_name: 'UserEmail'
+  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
