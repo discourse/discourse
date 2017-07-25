@@ -402,7 +402,7 @@ blockquote > *:last-child {
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: $primary;
+  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
   background: $primary-low;
   border-radius: 8px;
   font-weight: bold;
