@@ -109,9 +109,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          if FileHelper.is_image?(File.basename(path))
-            ImageOptim.new.optimize_image!(path)
-          end
+          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)

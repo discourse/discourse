@@ -1206,6 +1206,8 @@ en:
 
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
 
+    strip_image_metadata: "Strip image metadata."
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
