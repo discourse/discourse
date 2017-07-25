@@ -100,7 +100,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("isAdmin", "model.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
-    debugger;
     return isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner));
   },
 
