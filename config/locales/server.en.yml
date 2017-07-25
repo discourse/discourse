@@ -485,6 +485,7 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      description_incomplete: "The category description post must have at least one paragraph."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."

@@ -442,11 +442,13 @@ class PostRevisor
     doc = Nokogiri::HTML.fragment(@post.cooked)
     doc.css("img").remove
 
-    html = doc.css("p").first.inner_html.strip
-    new_description = html unless html.starts_with?(Category.post_template[0..50])
-
-    category.update_column(:description, new_description)
-    @category_changed = category
+    if html = doc.css("p").first&.inner_html&.strip
+      new_description = html unless html.starts_with?(Category.post_template[0..50])
+      category.update_column(:description, new_description)
+      @category_changed = category
+    else
+      @post.errors[:base] << I18n.t("category.errors.description_incomplete")
+    end
   end
 
   def advance_draft_sequence
