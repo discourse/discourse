@@ -138,9 +138,15 @@ window.asyncTestDiscourse = helpers.asyncTestDiscourse;
 window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
 
-var params = (new URL(document.location)).searchParams;
-var skipCore = (params.get('qunit_skip_core') == '1');
-var pluginPath = params.get('qunit_single_plugin') ? "\/"+params.get('qunit_single_plugin')+"\/" : "\/plugins\/";
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
+var skipCore = (getUrlParameter('qunit_skip_core') == '1');
+var pluginPath = getUrlParameter('qunit_single_plugin') ? "\/"+getUrlParameter('qunit_single_plugin')+"\/" : "\/plugins\/";
 
 Object.keys(requirejs.entries).forEach(function(entry) {
   var isTest = (/\-test/).test(entry);
