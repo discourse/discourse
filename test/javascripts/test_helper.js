@@ -35,7 +35,7 @@
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
-//= require_tree ./helpers
+//= require_tree ./lib
 //= require_tree .
 //= require plugin_tests
 //= require_self
@@ -138,13 +138,14 @@ window.asyncTestDiscourse = helpers.asyncTestDiscourse;
 window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
 
+var params = (new URL(document.location)).searchParams;
+var skipCore = (params.get('qunit_skip_core') == '1');
+var pluginPath = params.get('qunit_single_plugin') ? "\/"+params.get('qunit_single_plugin')+"\/" : "\/plugins\/";
+
 Object.keys(requirejs.entries).forEach(function(entry) {
   var isTest = (/\-test/).test(entry);
-
-  var pluginPath = "<%= ENV['QUNIT_SINGLE_PLUGIN'] ? "\/plugins\/#{ENV['QUNIT_SINGLE_PLUGIN']}" : "\/plugins\/" %>";
   var regex =  new RegExp(pluginPath)
   var isPlugin = regex.test(entry);
-  var skipCore = <%= ENV['QUNIT_SKIP_CORE'] ? 'true' : 'false' %>;
 
   if (isTest && (!skipCore || isPlugin)) {
     require(entry, null, null, true);
