@@ -44,7 +44,7 @@ task "qunit:test", [:timeout] => :environment do |_, args|
     end
 
     if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20')}"
+      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
     end
 
     if args[:timeout].present?
