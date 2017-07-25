@@ -157,14 +157,14 @@ after_initialize do
           # extract attributes
           p.attributes.values.each do |attribute|
             if attribute.name.start_with?(DATA_PREFIX)
-              poll[attribute.name[DATA_PREFIX.length..-1]] = CGI::escapeHTML(attribute.value || "")
+              poll[attribute.name[DATA_PREFIX.length..-1]] = CGI.escapeHTML(attribute.value || "")
             end
           end
 
           # extract options
           p.css("li[#{DATA_PREFIX}option-id]").each do |o|
-            option_id = CGI::escapeHTML(o.attributes[DATA_PREFIX + "option-id"].value || "")
-            poll["options"] << { "id" => option_id, "html" => CGI::escapeHTML(o.inner_html), "votes" => 0 }
+            option_id = o.attributes[DATA_PREFIX + "option-id"].value || ""
+            poll["options"] << { "id" => option_id, "html" => o.inner_html, "votes" => 0 }
           end
 
           # add the poll
