@@ -61,10 +61,8 @@
   }
   button.bulk-select {
     padding: 0;
-    background: transparent;
-    &:hover {
-      color: $primary-low; 
-    }
+    font-size: 1.05em;
+    margin-right: 0.3em;
   }
 
   .star {
