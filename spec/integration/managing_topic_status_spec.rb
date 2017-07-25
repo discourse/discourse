@@ -60,7 +60,7 @@ RSpec.describe "Managing a topic's status update", type: :request do
     end
 
     it 'should be able to delete a topic status update' do
-      topic.update!(topic_timers: [Fabricate(:topic_timer)])
+      Fabricate(:topic_timer, topic: topic)
 
       post "/t/#{topic.id}/timer.json",
         time: nil,

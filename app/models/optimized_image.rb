@@ -107,6 +107,9 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
+  def self.thumbnail_or_resize
+    SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
+  end
 
   def self.resize_instructions(from, to, dimensions, opts={})
     ensure_safe_paths!(from, to)
@@ -118,7 +121,7 @@ class OptimizedImage < ActiveRecord::Base
       -auto-orient
       -gravity center
       -background transparent
-      -thumbnail #{dimensions}^
+      -#{thumbnail_or_resize} #{dimensions}^
       -extent #{dimensions}
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
@@ -151,7 +154,7 @@ class OptimizedImage < ActiveRecord::Base
       -auto-orient
       -gravity north
       -background transparent
-      -thumbnail #{opts[:width]}
+      -#{thumbnail_or_resize} #{opts[:width]}
       -crop #{dimensions}+0+0
       -unsharp 2x0.5+0.7+0
       -interlace none
@@ -223,7 +226,7 @@ class OptimizedImage < ActiveRecord::Base
       return false
     end
 
-    ImageOptim.new.optimize_image!(to)
+    FileHelper.optimize_image!(to)
     true
   rescue
     Rails.logger.error("Could not optimize image: #{to}")
@@ -268,7 +271,7 @@ class OptimizedImage < ActiveRecord::Base
             optimized_image.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          ImageOptim.new.optimize_image!(path)
+          FileHelper.optimize_image!(path)
           # store to new location & update the filesize
           File.open(path) do |f|
             optimized_image.url = Discourse.store.store_optimized_image(f, optimized_image)

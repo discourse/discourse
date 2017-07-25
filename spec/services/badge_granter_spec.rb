@@ -145,13 +145,11 @@ describe BadgeGranter do
     end
 
     it 'sets granted_at' do
-      time = Time.zone.now
-      Timecop.freeze time
+      time = 1.day.ago
+      freeze_time time
 
       user_badge = BadgeGranter.grant(badge, user)
-      expect(user_badge.granted_at).to eq(time)
-
-      Timecop.return
+      expect(user_badge.granted_at).to be_within(1.second).of(time)
     end
 
     it 'sets granted_by if the option is present' do

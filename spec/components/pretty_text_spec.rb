@@ -16,11 +16,6 @@ describe PrettyText do
     n(PrettyText.cook(*args))
   end
 
-  # see: https://github.com/sparklemotion/nokogiri/issues/1173
-  skip 'allows html entities correctly' do
-    expect(PrettyText.cook("&aleph;&pound;&#162;")).to eq("<p>&aleph;&pound;&#162;</p>")
-  end
-
   let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
   let(:wrapped_image_excerpt) {  }
 
@@ -52,9 +47,31 @@ describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
-      it "produces a quote even with new lines in it" do
+      it "indifferent about missing quotations" do
         md = <<~MD
-          [quote="#{user.username}, post:123, topic:456, full:true"]
+          [quote=#{user.username}, post:123, topic:456, full:true]
+
+          ddd
+
+          [/quote]
+        MD
+        html = <<~HTML
+          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <blockquote>
+          <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(PrettyText.cook(md)).to eq(html.strip)
+      end
+
+      it "indifferent about curlies and no curlies" do
+        md = <<~MD
+          [quote=“#{user.username}, post:123, topic:456, full:true”]
 
           ddd
 

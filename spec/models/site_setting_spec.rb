@@ -128,10 +128,6 @@ describe SiteSetting do
       SiteSetting.force_https = true
     end
 
-    after do
-      SiteSetting.force_https = false
-    end
-
     describe '#use_https' do
       it 'should act as a proxy to the new methods' do
         expect(SiteSetting.use_https).to eq(true)

@@ -47,8 +47,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
       const model = this.get('model'),
             userFields = this.get('userFields');
 
-      model.set('name', this.get('newNameInput'));
-
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
         const modelFields = model.get('user_fields');

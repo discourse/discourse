@@ -267,7 +267,7 @@ class ImportScripts::Base
     merge = opts.delete(:merge)
     post_create_action = opts.delete(:post_create_action)
 
-    existing = User.where("email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
+    existing = User.joins(:user_emails).where("user_emails.email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
     return existing if existing && (merge || existing.custom_fields["import_id"].to_i == import_id.to_i)
 
     bio_raw = opts.delete(:bio_raw)
@@ -323,7 +323,7 @@ class ImportScripts::Base
       end
     rescue => e
       # try based on email
-      if e.try(:record).try(:errors).try(:messages).try(:[], :email).present?
+      if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?
         if existing = User.find_by_email(opts[:email].downcase)
           existing.custom_fields["import_id"] = import_id
           existing.save!

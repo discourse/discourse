@@ -63,7 +63,7 @@
     padding: 0;
     background: transparent;
     &:hover {
-      color: dark-light-diff($primary, $secondary, 90%, -60%);
+      color: $primary-low; 
     }
   }
 
@@ -115,7 +115,7 @@
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+      background-color: $primary-low; 
     }
     @include unselectable;
   }

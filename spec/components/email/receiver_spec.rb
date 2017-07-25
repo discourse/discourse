@@ -47,8 +47,16 @@ describe Email::Receiver do
     expect { process(:blocked_sender) }.to raise_error(Email::Receiver::BlockedUserError)
   end
 
-  skip "doesn't raise an InactiveUserError when the sender is staged" do
-    Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+  it "doesn't raise an InactiveUserError when the sender is staged" do
+    user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+
+    email_log = Fabricate(:email_log,
+      to_address: 'reply+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bar.com',
+      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      user: user,
+      post: Fabricate(:post)
+    )
+
     expect { process(:staged_sender) }.not_to raise_error
   end
 
@@ -89,13 +97,13 @@ describe Email::Receiver do
       expect(email_log.bounced).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(2)
 
-      Timecop.freeze(2.days.from_now) do
-        expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+      freeze_time 2.days.from_now
 
-        email_log_2.reload
-        expect(email_log_2.bounced).to eq(true)
-        expect(email_log_2.user.user_stat.bounce_score).to eq(4)
-      end
+      expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log_2.reload
+      expect(email_log_2.user.user_stat.bounce_score).to eq(4)
+      expect(email_log_2.bounced).to eq(true)
     end
 
   end

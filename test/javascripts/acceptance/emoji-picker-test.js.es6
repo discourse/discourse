@@ -47,22 +47,7 @@ QUnit.test("emojis can be hovered to display info", assert => {
   });
 });
 
-QUnit.skip("emoji picker has sections", assert => {
-  visit("/t/internationalization-localization/280");
-  click("#topic-footer-buttons .btn.create");
-  click("button.emoji.btn");
-
-  click(".emoji-picker .categories-column button[title='travel']");
-  andThen(() => {
-    assert.notEqual(
-      find('.emoji-picker .list').scrollTop(),
-      0,
-      "it scrolls to section"
-    );
-  });
-});
-
-QUnit.skip("emoji picker triggers event when picking emoji", assert => {
+QUnit.test("emoji picker triggers event when picking emoji", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
@@ -82,7 +67,6 @@ QUnit.test("emoji picker has a list of recently used emojis", assert => {
   click("#topic-footer-buttons .btn.create");
   click("button.emoji.btn");
 
-  click(".emoji-picker .clear-recent");
   click(".emoji-picker .section[data-section='people'] button.emoji[title='grinning']");
   andThen(() => {
     assert.equal(
@@ -120,48 +104,47 @@ QUnit.test("emoji picker has a list of recently used emojis", assert => {
   });
 });
 
-QUnit.skip("emoji picker correctly orders recently used emojis", assert => {
+QUnit.test("emoji picker correctly orders recently used emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
+
   click("button.emoji.btn");
-  click(".emoji-picker .clear-recent");
-
-  click(".emoji-picker button[title='grinning']");
-  click(".emoji-picker button[title='sunglasses']");
-  click(".emoji-picker button[title='grinning']");
   andThen(() => {
-    assert.equal(
-      find('.section[data-section="recent"] .section-group button.emoji').length,
-      2,
-      "it has multiple recent emojis"
-    );
+    click(".emoji-picker button[title='sunglasses']");
+    click(".emoji-picker button[title='grinning']");
+    andThen(() => {
+      assert.equal(
+        find('.section[data-section="recent"] .section-group button.emoji').length,
+        2,
+        "it has multiple recent emojis"
+      );
 
-    assert.equal(
-      find('.section[data-section="recent"] .section-group button.emoji').first().attr('src'),
-      `/images/emoji/emoji_one/grinning.png?v=${v}`,
-      "it puts the last used emoji in first"
-    );
+      assert.equal(
+        /grinning/.test(find('.section[data-section="recent"] .section-group button.emoji').first().css('background-image')),
+        true,
+        "it puts the last used emoji in first"
+      );
+    });
   });
 });
 
-QUnit.skip("emoji picker lazy loads emojis", assert => {
+QUnit.test("emoji picker lazy loads emojis", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 
   click("button.emoji.btn");
 
   andThen(() => {
-    const $emoji = $('.emoji-picker button[title="massage_woman"] img');
     assert.equal(
-      $emoji.attr('src'),
-      "",
+      find('.emoji-picker button[title="massage_woman"]').css("background-image"),
+      "none",
       "it doesn't load invisible emojis"
     );
   });
 });
 
 
-QUnit.skip("emoji picker persists state", assert => {
+QUnit.test("emoji picker persists state", assert => {
   visit("/t/internationalization-localization/280");
   click("#topic-footer-buttons .btn.create");
 

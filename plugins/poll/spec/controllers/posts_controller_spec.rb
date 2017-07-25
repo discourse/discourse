@@ -92,7 +92,7 @@ describe PostsController do
       describe "within the first 5 minutes" do
 
         let(:post_id) do
-          Timecop.freeze(4.minutes.ago) do
+          freeze_time(4.minutes.ago) do
             xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }
             ::JSON.parse(response.body)["id"]
           end
@@ -122,7 +122,7 @@ describe PostsController do
         let(:updated) { "before\n\n[poll]\n- A\n- B\n[/poll]\n\nafter" }
 
         let(:post_id) do
-          Timecop.freeze(6.minutes.ago) do
+          freeze_time(6.minutes.ago) do
             xhr :post, :create, { title: title, raw: poll }
             ::JSON.parse(response.body)["id"]
           end

@@ -16,12 +16,13 @@
 # Example usage:
 #   Run all core and plugin tests:  
 #       docker run discourse/discourse_test:release
-#   Run only rspec tests:  
+#   Run only rspec tests:
 #       docker run -e RUBY_ONLY=1 discourse/discourse_test:release
 #   Run all plugin tests (with a plugin mounted from host filesystem):
 #       docker run -e SKIP_CORE=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 #   Run tests for a specific plugin (with a plugin mounted from host filesystem):
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
+
 
 def run_or_fail(command)
   pid = Process.spawn(command)
@@ -72,7 +73,7 @@ task 'docker:test' do
           @good &&= run_or_fail("bundle exec rake plugin:spec")
         end
       end
-      
+
     end
 
     unless ENV["RUBY_ONLY"]
@@ -83,7 +84,7 @@ task 'docker:test' do
         @good &&= run_or_fail("eslint test/javascripts")
         @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
       end
-
+      
       unless ENV["SKIP_PLUGINS"]
         if ENV["SINGLE_PLUGIN"]
           @good &&= run_or_fail("bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','600000']")
@@ -91,7 +92,7 @@ task 'docker:test' do
           @good &&= run_or_fail("bundle exec rake plugin:qunit['*','600000']")
         end
       end
-      
+     
     end
 
   ensure
