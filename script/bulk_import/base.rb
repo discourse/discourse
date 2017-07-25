@@ -120,6 +120,7 @@ class BulkImport::Base
     puts "Updating primary key sequences..."
     @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
     @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
+    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
     @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
     @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
     @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
