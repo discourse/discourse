@@ -64,7 +64,7 @@ module Helpers
   def wait_for(&blk)
     i = 0
     result = false
-    while !result && i < 300
+    while !result && i < 1000
       result = blk.call
       i += 1
       sleep 0.001
