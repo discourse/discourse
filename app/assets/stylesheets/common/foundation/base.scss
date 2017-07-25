@@ -59,6 +59,11 @@ dd {
   clear: both;
 }
 
+.cooked ul, .d-editor-preview ul {
+  margin: 0;
+  padding-left: 40px;
+}
+
 li {
   > ul,
   > ol {
