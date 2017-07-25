@@ -33,11 +33,7 @@ describe Topic do
     context 'jobs may be queued' do
       before do
         SiteSetting.queue_jobs = true
-        Timecop.freeze(Time.zone.now)
-      end
-
-      after do
-        Timecop.return
+        freeze_time
       end
 
       context 'category has a default auto-close' do
@@ -78,14 +74,14 @@ describe Topic do
 
           context 'topic is closed manually' do
             it 'should remove the schedule to auto-close the topic' do
-              Timecop.freeze do
-                topic_timer_id = staff_topic.public_topic_timer.id
+              freeze_time
 
-                staff_topic.update_status('closed', true, admin)
+              topic_timer_id = staff_topic.public_topic_timer.id
 
-                expect(TopicTimer.with_deleted.find(topic_timer_id).deleted_at)
-                  .to be_within(1.second).of(Time.zone.now)
-              end
+              staff_topic.update_status('closed', true, admin)
+
+              expect(TopicTimer.with_deleted.find(topic_timer_id).deleted_at)
+                .to be_within(1.second).of(Time.zone.now)
             end
           end
         end

@@ -130,20 +130,20 @@ zh_CN:
       default_description: "默认"
     s3:
       regions:
-        us_east_1: "美国东部（N. Virginia）"
-        us_west_1: "美国西部（N. California）"
-        us_west_2: "美国西部（Oregon）"
-        us_gov_west_1: "政府专用（US）"
-        eu_west_1: "欧洲（Ireland）"
-        eu_west_2: "欧洲（London）"
-        eu_central_1: "欧洲（Frankfurt）"
-        ap_southeast_1: "亚太地区（Singapore）"
-        ap_southeast_2: "亚太地区（Sydney）"
-        ap_south_1: "亚太地区（Mumbai）"
         ap_northeast_1: "亚太地区（Tokyo）"
         ap_northeast_2: "亚太地区（Seoul）"
-        sa_east_1: "南美（Sao Paulo）"
+        ap_south_1: "亚太地区（Mumbai）"
+        ap_southeast_1: "亚太地区（Singapore）"
+        ap_southeast_2: "亚太地区（Sydney）"
         cn_north_1: "中国（Beijing）"
+        eu_central_1: "欧洲（Frankfurt）"
+        eu_west_1: "欧洲（Ireland）"
+        eu_west_2: "欧洲（London）"
+        sa_east_1: "南美（Sao Paulo）"
+        us_east_1: "美国东部（N. Virginia）"
+        us_gov_west_1: "政府专用（US）"
+        us_west_1: "美国西部（N. California）"
+        us_west_2: "美国西部（Oregon）"
     edit: '编辑标题和分类'
     not_implemented: "非常抱歉，这个功能仍在开发中！"
     no_value: "否"
@@ -204,7 +204,7 @@ zh_CN:
       user_count: "用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "重要事件或紧急事件，请通过 %{contact_info} 联系我们。"
+      contact_info: "如有重要问题或网站紧急事件，请以 %{contact_info} 联系我们。"
     bookmarked:
       title: "收藏"
       clear_bookmarks: "取消收藏"
@@ -325,11 +325,7 @@ zh_CN:
         full_name: '名字'
         add_members: "增加组员"
         delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
-      request_membership_pm:
-        title: "成员申请"
-        body: "我想申请 @%{groupName} 的成员资格。"
       name_placeholder: "群组名，没有空格，和用户名一样的规则"
-      public: "允许用户自由加入/离开群组（需要群组是可见）"
       empty:
         posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
@@ -351,7 +347,6 @@ zh_CN:
       bio: "关于群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
-      visible: "群组对所有用户可见"
       index:
         title: "群组"
         empty: "没有可见的群组。"
@@ -459,6 +454,7 @@ zh_CN:
       mute: "防打扰"
       edit: "修改设置"
       download_archive:
+        button_text: "全部下载"
         confirm: "你确定要下载你的帖子吗？"
         success: "下载开始，完成后将有私信通知你。"
         rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
@@ -528,6 +524,7 @@ zh_CN:
       watched_first_post_tags_instructions: "在有了这些标签的每一个新主题，第一帖会通知你。"
       muted_categories: "静音"
       muted_categories_instructions: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。"
+      no_category_access: "无法保存，作为审核人您仅具有受限的 分类 访问权限"
       delete_account: "删除我的帐号"
       delete_account_confirm: "你真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被删除。"
@@ -853,8 +850,8 @@ zh_CN:
       hide_session: "明天提醒我"
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
-      intro: "嘿！:heart_eyes: 看起来你正欣赏讨论，但你没有注册帐号。"
-      value_prop: "你创建一个帐号后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
+      intro: "嘿！:heart_eyes: 看来你很欣赏该讨论，但你没有注册帐号。"
+      value_prop: "你创建一个 账号 后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -952,8 +949,6 @@ zh_CN:
       accept_invite: "接受邀请"
       success: "已创建您的帐号，您现在可以登录了。"
       name_label: "昵称"
-      name_label_optional: "昵称（可选）"
-      password_label: "设置密码(可选)"
     password_reset:
       continue: "转入到 %{site_name}"
     emoji_set:
@@ -1726,6 +1721,8 @@ zh_CN:
       settings: '设置'
       topic_template: "主题模板"
       tags: "标签"
+      tags_allowed_tags: "仅在该 分类 内可以使用的标签"
+      tags_allowed_tag_groups: "仅在该 分类 内可以使用的标签组"
       tags_placeholder: "（可选）允许使用的标签列表"
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
       topic_featured_link_allowed: "运行在该分类中发布特色链接"

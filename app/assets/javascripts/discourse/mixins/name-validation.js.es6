@@ -3,6 +3,11 @@ import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Mixin.create({
 
+  @computed()
+  nameInstructions() {
+    return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+  },
+
   // Validate the name.
   @computed('accountName')
   nameValidation() {

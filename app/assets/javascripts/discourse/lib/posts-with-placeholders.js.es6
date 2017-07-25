@@ -56,7 +56,7 @@ export default Ember.Object.extend(Ember.Array, {
   },
 
   finishedPrepending(postIds) {
-    this._changeArray(Ember.K, 0, 0, postIds.length);
+    this._changeArray(function() { }, 0, 0, postIds.length);
   },
 
   objectAt(index) {

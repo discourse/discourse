@@ -2,7 +2,6 @@ import { createWidget } from 'discourse/widgets/widget';
 import transformPost from 'discourse/lib/transform-post';
 import { Placeholder } from 'discourse/lib/posts-with-placeholders';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { keyDirty } from 'discourse/widgets/widget';
 
 let transformCallbacks = null;
 function postTransformCallbacks(transformed) {
@@ -36,14 +35,15 @@ export function cloak(post, component) {
   const $post = $(`#post_${post.post_number}`);
   _cloaked[post.id] = true;
   _heights[post.id] = $post.outerHeight();
-  keyDirty(`post-${post.id}`);
+
+  component.dirtyKeys.keyDirty(`post-${post.id}`);
   Ember.run.debounce(component, 'queueRerender', 1000);
 }
 
 export function uncloak(post, component) {
   if (!CLOAKING_ENABLED || !_cloaked[post.id]) { return; }
   _cloaked[post.id] = null;
-  keyDirty(`post-${post.id}`);
+  component.dirtyKeys.keyDirty(`post-${post.id}`);
   component.queueRerender();
 }
 

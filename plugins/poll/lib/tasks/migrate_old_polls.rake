@@ -25,7 +25,6 @@ end
 
 desc "Migrate old polls to new syntax"
 task "poll:migrate_old_polls" => :environment do
-  require "timecop"
   # iterate over all polls
   PluginStoreRow.where(plugin_name: "poll")
                 .where("key LIKE 'poll_options_%'")
@@ -39,7 +38,7 @@ task "poll:migrate_old_polls" => :environment do
       # skip if already migrated
       next if post.custom_fields.include?("polls")
       # go back in time
-      Timecop.freeze(post.created_at + 1.minute) do
+      freeze_time(post.created_at + 1.minute) do
         raw = post.raw.gsub(/\n\n([ ]*[-\*\+] )/, "\n\\1") + "\n\n"
         # fix the RAW when needed
         if raw !~ /\[poll\]/

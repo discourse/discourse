@@ -35,6 +35,8 @@ class CookedPostProcessor
       optimize_urls
       pull_hotlinked_images(bypass_bump)
       grant_badges
+      DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
+      nil
     end
   end
 

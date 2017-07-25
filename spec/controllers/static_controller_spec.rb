@@ -54,9 +54,9 @@ describe StaticController do
   context 'show' do
     before do
       post = create_post
-      SiteSetting.stubs(:tos_topic_id).returns(post.topic.id)
-      SiteSetting.stubs(:guidelines_topic_id).returns(post.topic.id)
-      SiteSetting.stubs(:privacy_topic_id).returns(post.topic.id)
+      SiteSetting.tos_topic_id = post.topic.id
+      SiteSetting.guidelines_topic_id = post.topic.id
+      SiteSetting.privacy_topic_id = post.topic.id
     end
 
     context "with a static file that's present" do
@@ -87,7 +87,7 @@ describe StaticController do
         end
 
         context "when #{setting_name} site setting is set" do
-          before  { SiteSetting.stubs(setting_name).returns('http://example.com/page') }
+          before  { SiteSetting.public_send("#{setting_name}=", 'http://example.com/page') }
 
           it "redirects to the #{setting_name}" do
             expect(subject).to redirect_to('http://example.com/page')
@@ -110,7 +110,7 @@ describe StaticController do
     end
 
     it "should display the login template when login is required" do
-      SiteSetting.stubs(:login_required).returns(true)
+      SiteSetting.login_required = true
       xhr :get, :show, id: 'login'
       expect(response).to be_success
     end

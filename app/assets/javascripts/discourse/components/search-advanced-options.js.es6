@@ -1,5 +1,7 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 import { escapeExpression } from 'discourse/lib/utilities';
+import Group from 'discourse/models/group';
+import Badge from 'discourse/models/badge';
 
 const REGEXP_BLOCKS                = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -77,7 +79,8 @@ export default Em.Component.extend({
             likes: false,
             private: false,
             seen: false
-          }
+          },
+          all_tags: false
         },
         status: '',
         min_post_count: '',
@@ -230,13 +233,15 @@ export default Em.Component.extend({
 
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tags = this.get('searchedTerms.tags');
+    const contain_all_tags = this.get('searchedTerms.special.all_tags');
 
     if (match.length !== 0) {
-      const existingInput = _.isArray(tags) ? tags.join(',') : tags;
+      const join_char = contain_all_tags ? '+' : ',';
+      const existingInput = _.isArray(tags) ? tags.join(join_char) : tags;
       const userInput = match[0].replace(REGEXP_TAGS_REPLACE, '');
 
       if (existingInput !== userInput) {
-        this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(',') : []);
+        this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(join_char) : []);
       }
     } else if (tags.length !== 0) {
       this.set('searchedTerms.tags', []);
@@ -365,14 +370,16 @@ export default Em.Component.extend({
     }
   },
 
-  @observes('searchedTerms.tags')
+  @observes('searchedTerms.tags', 'searchedTerms.special.all_tags')
   updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get('searchedTerms.tags');
     let searchTerm = this.get('searchTerm') || '';
+    const contain_all_tags = this.get('searchedTerms.special.all_tags');
 
     if (tagFilter && tagFilter.length !== 0) {
-      const tags = tagFilter.join(',');
+      const join_char = contain_all_tags ? '+' : ',';
+      const tags = tagFilter.join(join_char);
 
       if (match.length !== 0) {
         searchTerm = searchTerm.replace(match[0], `tags:${tags}`);
@@ -520,12 +527,10 @@ export default Em.Component.extend({
   },
 
   groupFinder(term) {
-    const Group = require('discourse/models/group').default;
-    return Group.findAll({search: term, ignore_automatic: false});
+    return Group.findAll({ term: term, ignore_automatic: false });
   },
 
   badgeFinder(term) {
-    const Badge = require('discourse/models/badge').default;
     return Badge.findAll({search: term});
   }
 });

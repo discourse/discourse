@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
     @category_list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
     @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
-    @title = I18n.t('js.filters.categories.title') unless category_options[:is_homepage]
+    @title = "#{I18n.t('js.filters.categories.title')} - #{SiteSetting.title}" unless category_options[:is_homepage]
 
     respond_to do |format|
       format.html do

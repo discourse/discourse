@@ -10,7 +10,12 @@ class FinalDestination
   attr_reader :cookie
 
   def initialize(url, opts=nil)
-    @uri = URI(url) rescue nil
+    @uri =
+      begin
+        URI(URI.escape(url)) if url
+      rescue URI::InvalidURIError
+      end
+
     @opts = opts || {}
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda do |host|
@@ -20,6 +25,7 @@ class FinalDestination
         nil
       end
     end
+    @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
     @limit = @opts[:max_redirects]
     @status = :ready
     @cookie = nil
@@ -63,6 +69,13 @@ class FinalDestination
       return nil
     end
 
+    @ignored.each do |host|
+      if hostname_matches?(host)
+        @status = :resolved
+        return @uri
+      end
+    end
+
     return nil unless validate_uri
     headers = request_headers
     response = Excon.head(
@@ -76,7 +89,7 @@ class FinalDestination
     when 200
       @status = :resolved
       return @uri
-    when 405, 501
+    when 405, 409, 501
       get_response = small_get(headers)
 
       if get_response.code.to_i == 200
@@ -124,17 +137,24 @@ class FinalDestination
     (IPAddr.new(@uri.hostname) rescue nil).nil?
   end
 
+  def hostname_matches?(url)
+    @uri && url.present? && @uri.hostname == (URI(url) rescue nil)&.hostname
+  end
+
   def is_dest_valid?
 
-    # CDNs are always allowed
-    return true if SiteSetting.s3_cdn_url.present? &&
-      @uri.hostname == URI(SiteSetting.s3_cdn_url).hostname
-
-    global_cdn = GlobalSetting.try(:cdn_url)
-    return true if global_cdn.present? &&
-      @uri.hostname == URI(global_cdn).hostname
-
     return false unless @uri && @uri.host
+
+    # Whitelisted hosts
+    return true if hostname_matches?(SiteSetting.s3_cdn_url) ||
+      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
+      hostname_matches?(Discourse.base_url_no_prefix)
+
+    if SiteSetting.whitelist_internal_hosts.present?
+      SiteSetting.whitelist_internal_hosts.split('|').each do |h|
+        return true if @uri.hostname.downcase == h.downcase
+      end
+    end
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
     return false unless address_s

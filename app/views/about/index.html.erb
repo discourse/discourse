@@ -1,6 +1,6 @@
 <% if crawler_layout? %>
 
-<% content_for :title do %><%=t "about" %><% end %>
+<% content_for :title do %><%=t "about" %> - <%= SiteSetting.title %><% end %>
 
 <section itemscope itemtype="https://schema.org/AboutPage">
   <h1 itemprop="name">

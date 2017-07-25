@@ -20,7 +20,7 @@ export default Ember.Component.extend({
 
   @computed('postStream.loaded', 'topic.currentPost', 'postStream.filteredPostsCount')
   hideProgress(loaded, currentPost, filteredPostsCount) {
-    return (!loaded) || (!currentPost) || (filteredPostsCount < 2);
+    return (!loaded) || (!currentPost) || (!this.site.mobileView && filteredPostsCount < 2);
   },
 
   @computed('postStream.filteredPostsCount')
@@ -52,8 +52,14 @@ export default Ember.Component.extend({
   },
 
   _topicScrolled(event) {
-    this.set('progressPosition', event.postIndex);
-    this._streamPercentage = event.percent;
+    if (this.get('docked')) {
+      this.set('progressPosition', this.get('postStream.filteredPostsCount'));
+      this._streamPercentage = 1.0;
+    } else {
+      this.set('progressPosition', event.postIndex);
+      this._streamPercentage = event.percent;
+    }
+
     this._updateBar();
   },
 
@@ -110,11 +116,10 @@ export default Ember.Component.extend({
   },
 
   _dock() {
-    const maximumOffset = $('#topic-footer-buttons').offset(),
+    const maximumOffset = $('#topic-bottom').offset(),
           composerHeight = $('#reply-control').height() || 0,
           $topicProgressWrapper = this.$(),
-          offset = window.pageYOffset || $('html').scrollTop(),
-          topicProgressHeight = $('#topic-progress').height();
+          offset = window.pageYOffset || $('html').scrollTop();
 
     if (!$topicProgressWrapper || $topicProgressWrapper.length === 0) {
       return;
@@ -124,7 +129,13 @@ export default Ember.Component.extend({
     if (maximumOffset) {
       const threshold = maximumOffset.top;
       const windowHeight = $(window).height();
-      isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
+      const headerHeight = $('header').outerHeight(true);
+
+      if (this.capabilities.isIOS) {
+        isDocked = offset >= (threshold - windowHeight - headerHeight + composerHeight);
+      } else {
+        isDocked = offset >= (threshold - windowHeight + composerHeight);
+      }
     }
 
     const dockPos = $(document).height() - $('#topic-bottom').offset().top;

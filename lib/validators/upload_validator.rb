@@ -5,8 +5,13 @@ module Validators; end
 class Validators::UploadValidator < ActiveModel::Validator
 
   def validate(upload)
+    # staff can upload any file in PM
+    if upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm
+      return true if upload.user&.staff?
+    end
+
     # check the attachment blacklist
-    if upload.is_attachment_for_group_message && SiteSetting.allow_all_attachments_for_group_messages
+    if upload.for_group_message && SiteSetting.allow_all_attachments_for_group_messages
       return upload.original_filename =~ SiteSetting.attachment_filename_blacklist_regex
     end
 

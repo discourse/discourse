@@ -74,6 +74,7 @@ ar:
         insert: أدرج التصويت
         help:
           options_count: أدخل خيارين على الأقل
+          invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
         poll_type:
           label: النوع
           regular: اختيار من متعدد

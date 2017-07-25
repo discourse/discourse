@@ -14,6 +14,7 @@ const SERVER_SIDE_ONLY = [
   /^\/raw\//,
   /^\/posts\/\d+\/raw/,
   /^\/raw\/\d+/,
+  /^\/wizard/,
   /\.rss$/,
   /\.json$/,
 ];
@@ -221,6 +222,11 @@ const DiscourseURL = Ember.Object.extend({
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path, opts)) { return; }
 
+    // Navigating to empty string is the same as root
+    if (path === '') {
+      path = '/';
+    }
+
     return this.handleURL(path, opts);
   },
 
@@ -367,7 +373,7 @@ const DiscourseURL = Ember.Object.extend({
         discoveryTopics.resetParams();
       }
 
-      router.router.updateURL(path);
+      router._routerMicrolib.updateURL(path);
     }
 
     const split = path.split('#');

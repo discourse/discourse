@@ -36,8 +36,8 @@ $mobile-breakpoint: 700px;
   tr {text-align: left;}
   td, th {padding: 8px;}
   td {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid $primary-low; 
+    border-top: 1px solid $primary-low; 
   }
   th {
     text-align: left;
@@ -94,11 +94,11 @@ td.flaggers td {
 
   .site-text {
     cursor: pointer;
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid $primary-low; 
     margin-bottom: 0.5em;
 
     &.overridden {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
+      background-color: $highlight-medium;
     }
 
     h3 {
@@ -112,7 +112,7 @@ td.flaggers td {
     .site-text-value {
       margin: 0.5em 5em 0.5em 0;
       max-height: 100px;
-      color: dark-light-diff($primary, $secondary, 40%, -10%);
+      color: $primary-medium; 
     }
 
   }
@@ -136,7 +136,7 @@ td.flaggers td {
   font-size: 0.857em;
   float: right;
   margin-right: 10px;
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+  background-color: $primary-low; 
   padding: 2px 5px;
   border-radius: 5px;
   color: $primary;
@@ -222,16 +222,16 @@ td.flaggers td {
 }
 
 .admin-controls {
-  background-color: dark-light-diff($primary, $secondary, 90%, -65%);
+  background-color: $primary-low; 
   padding: 10px 10px 3px 0;
   @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
-        border-color: dark-light-diff($primary, $secondary, 90%, -90%);
-        background-color: dark-light-diff($primary, $secondary, 40%, -10%);
+        border-color: $primary-low; 
+        background-color: $primary-medium; 
         &:hover {
-          background-color: dark-light-diff($primary, $secondary, 40%, -10%);
+          background-color: $primary-medium; 
         }
       }
     }
@@ -316,6 +316,17 @@ td.flaggers td {
   }
 }
 
+.email-preview {
+  .ac-wrap {
+    .item {
+      margin: 0.2em 0 0 0.4em;
+    }
+    // input[type=text] {
+    //   margin-left: 0.4em;
+    // }
+  }
+}
+
 .paste-users {
   width: 400px;
   height: 150px;
@@ -385,7 +396,7 @@ td.flaggers td {
   // Todo: set this properly - it needs to be >= the menu height
   min-height: 875px;
   margin-left: 0;
-  border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
+  border-left: solid 1px $primary-low; 
   padding: 30px 0 30px 30px;
   @media (max-width: $mobile-breakpoint) {
     padding: 30px 0;
@@ -450,7 +461,7 @@ td.flaggers td {
     .setting-controls {
       float: left;
     }
-    .input-setting-string {
+    .input-setting-string, .input-setting-textarea {
       box-sizing: border-box;
       height: 30px;
       width: 100%;
@@ -458,13 +469,16 @@ td.flaggers td {
         width: 100%;
       }
     }
+    .input-setting-textarea {
+      height: 150px;
+    }
     .input-setting-list {
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
       padding: 1px;
       background-color: $secondary;
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border: 1px solid $primary-low; 
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -520,8 +534,8 @@ td.flaggers td {
   }
 
   .setting.overridden.string {
-    input[type=text] {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
+    input[type=text], textarea {
+      background-color: $highlight-medium;
     }
   }
 }
@@ -532,7 +546,7 @@ section.details {
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
-    border-bottom: 5px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 5px solid $primary-low; 
   }
 }
 
@@ -575,7 +589,7 @@ section.details {
   &.highlight-danger {
     background-color: scale-color($danger, $lightness: 50%);
   }
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid $primary-low; 
   &:before, &:after {
     display: table;
     content: "";
@@ -695,14 +709,14 @@ section.details {
     font-size: 1em;
     line-height: 16px;
     padding: 4px;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    background-color: $primary-low; 
   }
 
   .badge-query-plan {
     font-size: 0.857em;
     line-height: 13px;
     padding: 4px;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    background-color: $primary-low; 
   }
 
   .count-warning {
@@ -765,8 +779,8 @@ section.details {
     background-color: scale-color($danger, $lightness: 70%);
   }
 
-  .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
-  .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
+  .message { background-color: $highlight-medium; }
+  .message:hover { background-color: $highlight-low; }
 
   .flagged-post-avatar {
     margin-right: 10px;
@@ -901,7 +915,7 @@ table.api-keys {
     th {
       font-weight: normal;
       text-align: center;
-      background: dark-light-diff($primary, $secondary, 80%, -65%);
+      background: $primary-low; 
     }
     th.title {
       text-align: left;
@@ -951,7 +965,7 @@ table.api-keys {
   }
 
   &.detected-problems {
-    background: dark-light-diff($primary, $secondary, 90%, -75%);
+    background: $primary-low; 
     margin-bottom: 20px;
 
     .look-here {
@@ -976,7 +990,7 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background: dark-light-diff($primary, $secondary, 80%, -85%);
+        background: $primary-low; 
       }
       ul {
         margin-left: 0;
@@ -1026,7 +1040,7 @@ table.api-keys {
 }
 
 .commits-widget {
-  border: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
+  border: solid 1px $primary-low; 
   height: 180px;
   margin-bottom: 36px;
 
@@ -1049,7 +1063,7 @@ table.api-keys {
     color: $primary;
     font-weight: bold;
     height: 30px;
-    background: dark-light-diff($primary, $secondary, 80%, -75%);
+    background: $primary-low; 
     cursor: pointer;
 
     h1 {
@@ -1072,7 +1086,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    background-color: $primary-low; 
       .left {
         float: left;
       }
@@ -1082,7 +1096,7 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
+        border: solid 1px $primary-low; 
         padding: 2px;
         background-color: $secondary;
       }
@@ -1113,11 +1127,11 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background: dark-light-diff($primary, $secondary, 90%, -75%);
+    background: $primary-low; 
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
+    border-left: solid 1px $primary-low; 
   }
 }
 
@@ -1292,7 +1306,7 @@ table.api-keys {
     color: $primary;
     &:hover {
       color: $primary;
-      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+      background-color: $primary-low; 
 
 
     }
@@ -1322,7 +1336,7 @@ table.api-keys {
 
   .heading-container {
     width: 100%;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    background-color: $primary-low; 
   }
   .col.heading {
     font-weight: bold;
@@ -1338,7 +1352,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
+    border-top: solid 1px $primary-low; 
   }
 }
 
@@ -1471,7 +1485,7 @@ and (max-width : 500px) {
   div.ac-wrap {
     width: 100% !important;
     box-sizing: border-box;
-    }
+  }
 
   .admin-container {
     h2 {
@@ -1528,7 +1542,7 @@ tr.not-activated {
   .user-field {
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid $primary-low; 
 
     .form-display {
       width: 25%;
@@ -1918,11 +1932,11 @@ table#user-badges {
 .dbox20 { background: dark-light-diff($primary, $secondary, 20%, -20%); }
 .dbox30 { background: dark-light-diff($primary, $secondary, 30%, -30%); }
 .dbox40 { background: dark-light-diff($primary, $secondary, 40%, -40%); }
-.dbox50 { background: dark-light-diff($primary, $secondary, 50%, -50%); }
+.dbox50 { background: blend-primary-secondary(50%); }
 .dbox60 { background: dark-light-diff($primary, $secondary, 60%, -60%); }
 .dbox70 { background: dark-light-diff($primary, $secondary, 70%, -70%); }
 .dbox80 { background: dark-light-diff($primary, $secondary, 80%, -80%); }
-.dbox90 { background: dark-light-diff($primary, $secondary, 90%, -90%); }
+.dbox90 { background: $primary-low;  }
 .dbox100 { background: dark-light-diff($primary, $secondary, 100%, -100%); }
 .dbox5 { background: dark-light-diff($primary, $secondary, 5%, -5%); }
 .dbox15 { background: dark-light-diff($primary, $secondary, 15%, -15%); }

@@ -630,7 +630,6 @@ da:
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: "Frameldt!"
-    description: "Du er blevet frameldt. For at ændre i dine email settings <a href='%{url}'> besøg din profil</a>."
     topic_description: "For at følge %{link}, brug notifikationsindstillinger i bunden, eller til højre for emnet."
   unsubscribe:
     title: "Frameld"
@@ -904,7 +903,6 @@ da:
     notify_mods_when_user_blocked: "Send en besked til alle moderatorer hvis en bruger blokeres automatisk"
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP adresse som den der startede emnet, så rapporter begge at deres indlæg potentielt er spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
-    allow_html_tables: "Tillad tabeller at blive oprettet i Markdown med brug af HTML tags. TABLE, THEAD, TD, TR, TH vil blive tilladt (kræver en fuld re-indeksering af gamle indlæg som benytter tabeller) "
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg (like, flag, etc)."
     must_approve_users: "Personale skal godkende alle nye bruger konti inden de kan tilgå sitet. ADVARSEL: aktivering af dette for et live site vil medføre en ophævning af adgang for eksisterende ikke-personale brugere."
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
@@ -1152,40 +1150,8 @@ da:
 
   invite_mailer:
     subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} inviterede dig til en debat om
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      på
-
-      > %{site_title} -- %{site_description}
-
-      Hvis du er interesseret, så klik på linket herunder:
-
-      %{invite_link}
   custom_invite_mailer:
     subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} inviterede dig til en debat
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      på
-
-      > %{site_title} -- %{site_description}
-
-      Med denne besked
-
-      > %{user_custom_message}
-
-      Hvis du er interesseret, så klik på linket herunder:
-
-      %{invite_link}
   invite_forum_mailer:
     subject_template: "%{invitee_name} inviterede dig til at oprette dig på %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -1460,12 +1426,6 @@ da:
     new_user_of_the_month:
       title: "Du er månedens nye bruger!"
       subject_template: "Du er månedens nye bruger!"
-      text_body_template: |
-        Tillykke, du er blevet tildelt **Månedens nye bruger-pris i %{month_year}**. :trophy:
-
-        Denne pris bliver kun tildelt to nye brugere per måned, og den vil altid kunne ses på [din brugerside](/my/badges).
-
-        Du er hurtigt blevet et værdsat medlem af vores forum. Tak, fordi du har sluttet dig til os, og fortsæt endelig på samme vis!
   unsubscribe_link: |
     [Klik her](%{unsubscribe_url}) hvis du ikke længere vil modtage disse emails.
   unsubscribe_link_and_mail: |
@@ -1631,7 +1591,6 @@ da:
       popular_posts: "Populære indlæg"
       more_new: "Nyt for dig"
       subject_template: "[%{email_prefix}] Sammendrag"
-      unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} resumé"
       preheader: "Et kort resume siden de sidste besøg %{last_seen_at}"

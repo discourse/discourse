@@ -60,7 +60,7 @@ describe UserSerializer do
 
     context "with `enable_names` false" do
       before do
-        SiteSetting.stubs(:enable_names?).returns(false)
+        SiteSetting.enable_names = false
       end
 
       it "has a name" do
@@ -192,7 +192,7 @@ describe UserSerializer do
     end
 
     it "serializes the fields listed in public_user_custom_fields site setting" do
-      SiteSetting.stubs(:public_user_custom_fields).returns('public_field')
+      SiteSetting.public_user_custom_fields = 'public_field'
       expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
       expect(json[:custom_fields]['secret_field']).to eq(nil)
     end

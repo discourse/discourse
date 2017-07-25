@@ -13,8 +13,9 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
 
-  attr_accessor :is_attachment_for_group_message
+  attr_accessor :for_group_message
   attr_accessor :for_theme
+  attr_accessor :for_private_message
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -104,9 +105,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          if FileHelper.is_image?(File.basename(path))
-            ImageOptim.new.optimize_image!(path)
-          end
+          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)

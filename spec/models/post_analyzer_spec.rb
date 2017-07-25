@@ -85,11 +85,6 @@ describe PostAnalyzer do
         post_analyzer = PostAnalyzer.new(raw_three_links, default_topic_id)
         expect(post_analyzer.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
       end
-
-      it 'returns blank for ipv6 output' do
-        post_analyzer = PostAnalyzer.new('PING www.google.com(lb-in-x93.1e100.net) 56 data bytes', default_topic_id)
-        expect(post_analyzer.linked_hosts).to be_blank
-      end
     end
   end
 
@@ -181,12 +176,14 @@ describe PostAnalyzer do
     end
 
     it "ignores pre" do
-      post_analyzer = PostAnalyzer.new("<pre>@Jake</pre> @Finn", default_topic_id)
+      # note, CommonMark has rules for dealing with HTML, if your paragraph starts with it
+      # it will no longer be an "inline" so this means that @Finn in this case would not be a mention
+      post_analyzer = PostAnalyzer.new(". <pre>@Jake</pre> @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
     it "catches content between pre tags" do
-      post_analyzer = PostAnalyzer.new("<pre>hello</pre> @Finn <pre></pre>", default_topic_id)
+      post_analyzer = PostAnalyzer.new(". <pre>hello</pre> @Finn <pre></pre>", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
@@ -201,7 +198,7 @@ describe PostAnalyzer do
     end
 
     it "ignores quotes" do
-      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]@Jake[/quote] @Finn", default_topic_id)
+      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 

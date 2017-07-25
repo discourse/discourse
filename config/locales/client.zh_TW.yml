@@ -123,19 +123,19 @@ zh_TW:
     bootstrap_mode_disabled: "初始化模式將會在24小時後關閉。"
     s3:
       regions:
-        us_east_1: "美國東部 (北維珍尼亞州)"
-        us_west_1: "美國西部 (北加州)"
-        us_west_2: "美國西部 (奧勒岡州)"
-        us_gov_west_1: "AWS GovCloud (美國)"
-        eu_west_1: "歐洲 (愛爾蘭)"
-        eu_central_1: "歐洲 (法蘭克福)"
-        ap_southeast_1: "亞太地區 (新加坡)"
-        ap_southeast_2: "亞太地區 (悉尼)"
-        ap_south_1: "亞太地區 (孟買)"
         ap_northeast_1: "亞太地區 (東京)"
         ap_northeast_2: "亞太地區 (首爾)"
-        sa_east_1: "南美洲 (聖保羅)"
+        ap_south_1: "亞太地區 (孟買)"
+        ap_southeast_1: "亞太地區 (新加坡)"
+        ap_southeast_2: "亞太地區 (悉尼)"
         cn_north_1: "中國 (北京)"
+        eu_central_1: "歐洲 (法蘭克福)"
+        eu_west_1: "歐洲 (愛爾蘭)"
+        sa_east_1: "南美洲 (聖保羅)"
+        us_east_1: "美國東部 (北維珍尼亞州)"
+        us_gov_west_1: "AWS GovCloud (美國)"
+        us_west_1: "美國西部 (北加州)"
+        us_west_2: "美國西部 (奧勒岡州)"
     edit: '編輯此討論話題的標題與分類'
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
@@ -317,11 +317,7 @@ zh_TW:
         full_name: '全名'
         add_members: "增加成員"
         delete_member_confirm: "從「%{group}」群組移除「%{username}」？"
-      request_membership_pm:
-        title: "請求會員資格"
-        body: "我想申請 @%{groupName} 的成員資格。"
       name_placeholder: "群組名，沒有空格，和用戶名一樣的規則"
-      public: "允許用戶自由加入/離開群組（需要群組是可見）"
       empty:
         posts: "群組成員沒有發佈帖子。"
         members: "這個團隊裡面沒有成員"
@@ -342,7 +338,6 @@ zh_TW:
       bio: "關於群組"
       selector_placeholder: "新增成員"
       owner: "擁有者"
-      visible: "群組可被所有用戶看到"
       index:
         title: "群組"
         empty: "沒有可看見的群組。"
@@ -923,7 +918,6 @@ zh_TW:
       your_email: "您帳號的電郵地址是 <b>%{email}</b>"
       accept_invite: "接受邀請"
       success: "你的帳號已被建立，且您已經登入了。"
-      password_label: "設定密碼(選填)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -1593,9 +1587,6 @@ zh_TW:
       delete:
         confirm:
           other: "你確定要刪除這些文章?"
-      merge:
-        confirm:
-          other: "確定要合併這 {{count}} 個帖子嗎？"
       revisions:
         controls:
           first: "第一版"

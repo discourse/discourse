@@ -24,33 +24,65 @@ pt_BR:
       long_description: |
         Este emblema é adquirido após finalizar com sucesso o tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão -e agora você está totalmente licenciado!
   discourse_narrative_bot:
+    bio: "Olá, Eu não sou uma pessoa real. Eu sou um robô que pode te ensinar sobre este site. Para interagir comigo, me envie uma mensagem ou faça uma menção **`@%{discobot_username}`** em qualquer lugar."
+    timeout:
+      message: |-
+        Oi @%{username}, apenas verificando se você ainda está aí; por que não te escuto faz um tempo.
+
+        - Para continuar, me responda a qualquer momento.
+
+        - Se você preferir pular esse passo, diga `%{skip_trigger}`.
+
+        - Para iniciar novamente, diga `%{reset_trigger}`.
+
+        Se você não quiser falar nada, não tem problema também. Eu sou um robô. Você não vai ferir meus sentimentos. :sob:
     dice:
+      trigger: "rolar"
+      invalid: |-
+        Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
+      not_enough_dice: |-
+        Eu tenho apenas um dado de %{num_of_dice} lados. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Eu sei!
+      out_of_range: |-
+        Você sabia que [o número máximo de lados] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para um dado matematicamente justo é 120?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "citação"
       '1':
+        quote: "No meio de toda dificuldade reside a oportunidade"
         author: "Albert Einstein"
       '2':
         quote: "Você deve ser a mudança que quer ver no mundo."
         author: "Mahatma Gandhi"
       '3':
+        quote: "Não chore por que acabou, sorria por que aconteceu."
         author: "Dr Seuss"
       '4':
         quote: "Se você quer que algo seja feito corretamente, faça você mesmo."
         author: "Charles-Guillaume Étienne"
       '5':
+        quote: "Acredite você pode e está quase lá."
         author: "Theodore Roosevelt"
       '6':
+        quote: "A vida é como uma caixa de chocolates. Você nunca sabe o que vai conseguir."
         author: "Mãe do Forrest Gump"
       '7':
+        quote: "Um pequeno passo para um homem, uma grande salto para a humanidade."
         author: "Neil Armstrong"
       '8':
+        quote: "Faça uma coisa por dia que te assuste."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Erros são sempre perdoáveis se você tiver a coragem de adimiti-los."
         author: "Bruce Lee"
       '10':
+        quote: "Tudo que a mente humana pode conceber e acreditar, ela pode conquistar."
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      answers:
+        '1': "É certo"
+        '3': "sem dúvida"
       result: |-
         > :crystal_ball: %{result}

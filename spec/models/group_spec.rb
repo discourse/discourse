@@ -100,15 +100,15 @@ describe Group do
   end
 
   def real_admins
-    Group[:admins].user_ids - [-1]
+    Group[:admins].user_ids.reject{|id| id < 0}
   end
 
   def real_moderators
-    Group[:moderators].user_ids - [-1]
+    Group[:moderators].user_ids.reject{|id| id < 0}
   end
 
   def real_staff
-    Group[:staff].user_ids - [-1]
+    Group[:staff].user_ids.reject{|id| id < 0}
   end
 
   it "Correctly handles primary groups" do
@@ -180,7 +180,29 @@ describe Group do
   describe '.refresh_automatic_group!' do
     it "makes sure the everyone group is not visible" do
       g = Group.refresh_automatic_group!(:everyone)
-      expect(g.visible).to eq(false)
+      expect(g.visibility_level).to eq(Group.visibility_levels[:owners])
+    end
+
+    it "does not reset the localized name" do
+      begin
+        default_locale = SiteSetting.default_locale
+        I18n.locale = SiteSetting.default_locale = 'fi'
+
+        group = Group.find(Group::AUTO_GROUPS[:everyone])
+        group.update!(name: I18n.t("groups.default_names.everyone"))
+
+        Group.refresh_automatic_group!(:everyone)
+
+        expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
+
+        I18n.locale = SiteSetting.default_locale = 'en'
+
+        Group.refresh_automatic_group!(:everyone)
+
+        expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
+      ensure
+        I18n.locale = SiteSetting.default_locale = default_locale
+      end
     end
 
     it "uses the localized name if name has not been taken" do
@@ -285,11 +307,11 @@ describe Group do
     user2 = Fabricate(:coding_horror)
     user2.change_trust_level!(TrustLevel[3])
 
-    expect(Group[:trust_level_2].user_ids.sort).to eq [-1, user.id, user2.id].sort
+    expect(Group[:trust_level_2].user_ids.sort.reject{|id| id < -1}).to eq [-1, user.id, user2.id].sort
   end
 
   it "Correctly updates all automatic groups upon request" do
-    Fabricate(:admin)
+    admin = Fabricate(:admin)
     user = Fabricate(:user)
     user.change_trust_level!(TrustLevel[2])
 
@@ -301,22 +323,22 @@ describe Group do
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:admins]}
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq(g.user_count)
+    expect(g.users.pluck(:id).sort.reject{|id| id < -1}).to eq([-1, admin.id])
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:staff]}
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq (g.user_count)
+    expect(g.users.pluck(:id).sort.reject{|id| id < -1}).to eq([-1, admin.id])
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_1]}
     # admin, system and user
-    expect(g.users.count).to eq 3
-    expect(g.user_count).to eq 3
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.where('users.id > -2').count).to eq 3
 
     g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_2]}
     # system and user
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.where('users.id > -2').count).to eq 2
 
   end
 
@@ -432,44 +454,54 @@ describe Group do
   end
 
   describe ".visible_groups" do
-    let(:group) { Fabricate(:group, visible: false) }
-    let(:group_2) { Fabricate(:group, visible: true) }
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
 
-    before do
-      group
-      group_2
+    def can_view?(user, group)
+      Group.visible_groups(user).where(id: group.id).exists?
     end
 
-    describe 'when user is an admin' do
-      it 'should return the right groups' do
-        expect(Group.visible_groups(admin).pluck(:id).sort)
-          .to eq([group.id, group_2.id].concat(Group::AUTO_GROUP_IDS.keys - [0]).sort)
-      end
+    it 'correctly restricts group visibility' do
+      group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+      member = Fabricate(:user)
+      group.add(member)
+      group.save!
+
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+
+      moderator = Fabricate(:user, moderator: true)
+      admin = Fabricate(:user, admin: true)
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:staff])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(false)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:members])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(false)
+
+      group.update_columns(visibility_level: Group.visibility_levels[:public])
+
+      expect(can_view?(admin, group)).to eq(true)
+      expect(can_view?(owner, group)).to eq(true)
+      expect(can_view?(moderator, group)).to eq(true)
+      expect(can_view?(member, group)).to eq(true)
+      expect(can_view?(nil, group)).to eq(true)
     end
 
-    describe 'when user is owner of a group' do
-      it 'should return the right groups' do
-        group.add_owner(user)
-
-        expect(Group.visible_groups(user).pluck(:id).sort)
-          .to eq([group.id, group_2.id])
-      end
-    end
-
-    describe 'when user is not the owner of any group' do
-      it 'should return the right groups' do
-        expect(Group.visible_groups(user).pluck(:id).sort)
-          .to eq([group_2.id])
-      end
-    end
-
-    describe 'user is nil' do
-      it 'should return the right groups' do
-        expect(Group.visible_groups(nil).pluck(:id).sort).to eq([group_2.id])
-      end
-    end
   end
 
   describe '#add' do
@@ -485,6 +517,20 @@ describe Group do
         expect(message.data[:categories].first[:id]).to eq(category.id)
         expect(message.user_ids).to eq([user.id])
       end
+    end
+  end
+
+  describe '.search_group' do
+    let(:group) { Fabricate(:group, name: 'tEsT', full_name: 'eSTt') }
+
+    it 'should return the right groups' do
+      group
+
+      expect(Group.search_group('te')).to eq([group])
+      expect(Group.search_group('TE')).to eq([group])
+      expect(Group.search_group('es')).to eq([group])
+      expect(Group.search_group('ES')).to eq([group])
+      expect(Group.search_group('test2')).to eq([])
     end
   end
 end

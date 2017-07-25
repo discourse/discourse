@@ -51,6 +51,25 @@ task "qunit:test", [:timeout] => :environment do |_, args|
       cmd += " #{args[:timeout]}"
     end
 
+    @now = Time.now
+    def elapsed
+      Time.now - @now
+    end
+
+    # wait for server to accept connections
+    require 'net/http'
+    uri = URI("http://localhost:#{port}/assets/test_helper.js")
+    puts "Warming up Rails server"
+    begin
+      Net::HTTP.get(uri)
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL
+      sleep 1
+      retry unless elapsed() > 60
+      puts "Timed out. Can no connect to forked server!"
+      exit 1
+    end
+    puts "Rails server is warmed up"
+
     # wait for server to respond, will exception out on failure
     tries = 0
     begin

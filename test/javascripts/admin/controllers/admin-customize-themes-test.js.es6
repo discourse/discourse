@@ -2,13 +2,13 @@ import { mapRoutes } from 'discourse/mapping-router';
 import Theme from 'admin/models/theme';
 
 moduleFor('controller:admin-customize-themes', {
-  setup() {
+  beforeEach() {
     this.registry.register('router:main', mapRoutes());
   },
   needs: ['controller:adminUser']
 });
 
-test("can list sorted themes", function() {
+QUnit.test("can list sorted themes", function(assert) {
 
   const defaultTheme = Theme.create({id: 2, 'default': true, name: 'default'});
   const userTheme = Theme.create({id: 3, 'user_selectable': true, name: 'name'});
@@ -23,7 +23,7 @@ test("can list sorted themes", function() {
   });
 
 
-  deepEqual(controller.get('sortedThemes').map(t=>t.get('name')), [
+  assert.deepEqual(controller.get('sortedThemes').map(t=>t.get('name')), [
     defaultTheme,
     userTheme,
     strayTheme1,
