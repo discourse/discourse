@@ -38,6 +38,8 @@ class ColumnDropper
         DROP TRIGGER IF EXISTS #{readonly_trigger_name(table, column)} ON #{table};
         SQL
       end
+
+      Discourse.reset_active_record_cache
     end
   end
 
