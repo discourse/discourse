@@ -60,7 +60,7 @@ RSpec.describe ColumnDropper do
       VALUES (1, 'something@email.com');
       SQL
 
-      described_class.mark_readonly(table_name, 'email')
+      ColumnDropper.mark_readonly(table_name, 'email')
     end
 
     after do
@@ -74,7 +74,7 @@ RSpec.describe ColumnDropper do
 
     it 'should prevent updates to the readonly column' do
       expect do
-        ActiveRecord::Base.exec_sql <<~SQL
+        ActiveRecord::Base.connection.raw_connection.exec <<~SQL
         UPDATE #{table_name}
         SET email = 'testing@email.com'
         WHERE topic_id = 1;
@@ -99,7 +99,7 @@ RSpec.describe ColumnDropper do
 
     it 'should prevent insertions to the readonly column' do
       expect do
-        ActiveRecord::Base.exec_sql <<~SQL
+        ActiveRecord::Base.connection.raw_connection.exec <<~SQL
         INSERT INTO #{table_name} (topic_id, email)
         VALUES (2, 'something@email.com');
         SQL
