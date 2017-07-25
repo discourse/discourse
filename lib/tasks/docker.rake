@@ -7,6 +7,8 @@
 # => JS_ONLY                   set to 1 to skip all rspec tests
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => SINGLE_PLUGIN             set to plugin name to skip eslint, and only run plugin-specific rspec tests
+# => BISECT                    set to 1 to run rspec --bisect
+# => RSPEC_SEED                set to seed to use for rspec tests
 #
 # Other useful environment variables (not specific to this rake task)
 # => LOAD_PLUGINS   set to 1 to load all plugins when running tests
@@ -62,7 +64,14 @@ task 'docker:test' do
     unless ENV["JS_ONLY"]
 
       unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("bundle exec rspec")
+        params = []
+        if ENV["BISECT"]
+          params << "--bisect"
+        end
+        if ENV["RSPEC_SEED"]
+          params << "--seed #{ENV["RSPEC_SEED"]}"
+        end
+        @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
       end
 
       if ENV["LOAD_PLUGINS"]
