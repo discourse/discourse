@@ -6,7 +6,7 @@
       <h2><a href='<%= c.url %>' itemprop='item'>
         <span itemprop='name'><%= c.name %></span>
       </a></h2>
-      <span itemprop='description'><%= c.description %></span>
+      <span itemprop='description'><%= c.description.html_safe %></span>
     </div>
   <% end %>
 </div>
