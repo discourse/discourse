@@ -8,6 +8,8 @@
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => JS_ONLY                   set to 1 to skip all rspec tests
 # => SINGLE_PLUGIN             set to plugin name to only run plugin-specific rspec tests (you'll probably want to SKIP_CORE as well)
+# => BISECT                    set to 1 to run rspec --bisect (applies to core rspec tests only)
+# => RSPEC_SEED                set to seed to use for rspec tests (applies to core rspec tests only)
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -63,7 +65,14 @@ task 'docker:test' do
     unless ENV["JS_ONLY"]
 
       unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("bundle exec rspec")
+        params = []
+        if ENV["BISECT"]
+          params << "--bisect"
+        end
+        if ENV["RSPEC_SEED"]
+          params << "--seed #{ENV["RSPEC_SEED"]}"
+        end
+        @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
       end
 
       unless ENV["SKIP_PLUGINS"]
