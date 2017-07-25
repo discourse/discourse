@@ -26,7 +26,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed('model.admin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving', 'model.details.can_invite_to')
+  @computed
+  isAdmin() {
+    return this.currentUser.admin;
+  },
+
+  @computed('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving', 'model.details.can_invite_to')
   disabled(isAdmin, emailOrUsername, invitingToTopic, isPrivateTopic, groupNames, saving, can_invite_to) {
     if (saving) return true;
     if (Ember.isEmpty(emailOrUsername)) return true;
@@ -43,7 +48,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return false;
   },
 
-  @computed('model.admin', 'emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames', 'hasCustomMessage')
+  @computed('isAdmin', 'emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames', 'hasCustomMessage')
   disabledCopyLink(isAdmin, emailOrUsername, saving, isPrivateTopic, groupNames, hasCustomMessage) {
     if (hasCustomMessage) return true;
     if (saving) return true;
@@ -93,9 +98,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // Allow Existing Members? (username autocomplete)
   allowExistingMembers: Ember.computed.alias('invitingToTopic'),
 
-  @computed("model.admin", "model.group_users")
+  @computed("isAdmin", "model.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
-    return isAdmin || groupUsers.some(groupUser => groupUser.owner);
+    debugger;
+    return isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner));
   },
 
   // Show Groups? (add invited user to private group)
@@ -113,7 +119,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   // Instructional text for the modal.
-  @computed('isMessage', 'invitingToTopic', 'emailOrUsername', 'isPrivateTopic', 'model.admin', 'canInviteViaEmail')
+  @computed('isMessage', 'invitingToTopic', 'emailOrUsername', 'isPrivateTopic', 'isAdmin', 'canInviteViaEmail')
   inviteInstructions(isMessage, invitingToTopic, emailOrUsername, isPrivateTopic, isAdmin, canInviteViaEmail) {
     if (!canInviteViaEmail) {
       // can't invite via email, only existing users
