@@ -45,32 +45,23 @@
     </div>
   {{/if}}
 
-  {{#conditional-loading-spinner condition=loading}}
-
-    {{#unless hasResults}}
-      <h3>
-        {{#if searchActive}}
-          {{i18n "search.no_results"}}
-        {{/if}}
-      </h3>
-    {{/unless}}
-
-    {{#if hasResults}}
-      <div class='search-title clearfix'>
-        <div class='result-count'>
-          <span>
-            {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
-          </span>
-        </div>
-        <div class='sort-by'>
-          <span class='desc'>
-            {{i18n "search.sort_by"}}
-          </span>
-          {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
-        </div>
+  {{#if hasResults}}
+    <div class='search-title clearfix'>
+      <div class='result-count'>
+        <span>
+          {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
+        </span>
       </div>
-    {{/if}}
+      <div class='sort-by'>
+        <span class='desc'>
+          {{i18n "search.sort_by"}}
+        </span>
+        {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
+      </div>
+    </div>
+  {{/if}}
 
+  {{#load-more selector=".fps-result" action="loadMore"}}
     {{#each model.posts as |result|}}
       <div class='fps-result'>
         <div class='author'>
@@ -124,15 +115,30 @@
       </div>
     {{/each}}
 
-    {{#if hasResults}}
-        <h3 class="search-footer">
-        {{#if model.grouped_search_result.more_full_page_results}}
-            {{i18n "search.more_results"}}
-        {{else}}
-            {{i18n "search.no_more_results"}}
-        {{/if}}
+    {{#conditional-loading-spinner condition=loading }}
+      {{#unless hasResults}}
+        <h3>
+          {{#if searchActive}}
+              {{i18n "search.no_results"}}
+          {{/if}}
         </h3>
-    {{/if}}
+      {{/unless}}
 
-  {{/conditional-loading-spinner}}
+      {{#if hasResults}}
+        {{#unless loading}}
+          <h3 class="search-footer">
+            {{#if model.grouped_search_result.more_full_page_results}}
+              {{#if isLastPage }}
+                {{i18n "search.more_results"}}
+              {{/if}}
+            {{else}}
+              {{i18n "search.no_more_results"}}
+            {{/if}}
+          </h3>
+        {{/unless}}
+      {{/if}}
+    {{/conditional-loading-spinner}}
+
+  {{/load-more}}
+
 {{/d-section}}
