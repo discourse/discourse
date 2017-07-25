@@ -12,6 +12,9 @@
 # shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
 #                      exists it will be used instead of the setting and the setting will be hidden.
 #                      Useful for things like API keys on multisite.
+# locale_default     - A hash which overrides according to `SiteSetting.default_locale`.
+#                      The key should be as the same as possible value of default_locale.
+#
 #
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.

@@ -40,7 +40,7 @@ describe SiteSettings::DefaultsProvider do
   end
 
   describe 'expose default cache according to locale' do
-    before do
+    before(:each) do
       settings.setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
       settings.setting(:test_default, 'test', regex: '^\S+$')
       settings.refresh!
@@ -48,9 +48,10 @@ describe SiteSettings::DefaultsProvider do
 
     describe '.all' do
       it 'returns all values according to the current locale' do
-        expect(settings.defaults.all).to eq({ test_default: 'test', test_override: 'default' })
+        expect(settings.defaults.all).to eq({ test_override: 'default', test_default: 'test' })
         settings.defaults.site_locale = 'zh_CN'
-        expect(settings.defaults.all).to eq({ test_default: 'test', test_override: 'cn' })
+        settings.defaults.refresh_site_locale!
+        expect(settings.defaults.all).to eq({ test_override: 'cn', test_default: 'test' })
       end
     end
 
@@ -236,18 +237,31 @@ describe SiteSettings::DefaultsProvider do
     end
   end
 
-  describe '.has_key?' do
+  describe '.has_setting?' do
+    before do
+      settings.setting(:r, 1)
+      settings.setting(:question?, 1)
+    end
+
     it "returns true when it's present in the cache" do
-      settings.defaults.load_setting(:r, 1)
-      expect(settings.defaults.has_key?(:r)).to be_truthy
+      expect(settings.defaults.has_setting?(:r)).to be_truthy
+    end
+
+    it '"responds when the arg is string' do
+      expect(settings.defaults.has_setting?('r')).to be_truthy
     end
 
     it 'default_locale always exists' do
-      expect(settings.defaults.has_key?(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY)).to be_truthy
+      expect(settings.defaults.has_setting?(SiteSettings::DefaultsProvider::DEFAULT_LOCALE_KEY)).to be_truthy
     end
 
     it 'returns false when the key is not exist' do
-      expect(settings.defaults.has_key?('no_key')).to be_falsey
+      expect(settings.defaults.has_setting?('no_key')).to be_falsey
+    end
+
+    it 'checks name with question mark' do
+      expect(settings.defaults.has_setting?(:question)).to be_truthy
+      expect(settings.defaults.has_setting?('question')).to be_truthy
     end
   end
 

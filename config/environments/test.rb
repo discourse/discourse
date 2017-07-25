@@ -49,6 +49,7 @@ Discourse::Application.configure do
 
   config.after_initialize do
     SiteSetting.defaults.tap do |s|
+      s.set_regardless_of_locale(:s3_upload_bucket, 'bucket')
       s.set_regardless_of_locale(:min_post_length, 5)
       s.set_regardless_of_locale(:min_first_post_length, 5)
       s.set_regardless_of_locale(:min_private_message_post_length, 10)

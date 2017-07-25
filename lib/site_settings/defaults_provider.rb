@@ -4,6 +4,7 @@ module SiteSettings; end
 class SiteSettings::DefaultsProvider
   include Enumerable
 
+  CONSUMED_OPTS = %i[default locale_default].freeze
   DEFAULT_LOCALE_KEY = :default_locale
   DEFAULT_LOCALE = 'en'.freeze
   DEFAULT_CATEGORY = 'required'.freeze
@@ -51,9 +52,8 @@ class SiteSettings::DefaultsProvider
     if @site_setting.has_setting?(name)
       @defaults.each { |_, hash| hash.delete(name) }
       @defaults[DEFAULT_LOCALE.to_sym][name] = value
-      value, type = @site_setting.normalize_and_validate_setting(name, value)
-      value = @site_setting.convert(value, type, name)
-      @cached[name] = value
+      value, type = @site_setting.type_supervisor.to_db_value(name, value)
+      @cached[name] = @site_setting.type_supervisor.to_rb_value(name, value, type)
     else
       raise ArgumentError.new("No setting named '#{name}' exists")
     end
@@ -64,8 +64,8 @@ class SiteSettings::DefaultsProvider
   attr_reader :site_locale
 
   def site_locale=(val)
-    raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
     val = val.to_s
+    raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
 
     if val != @site_locale
       @site_setting.provider.save(DEFAULT_LOCALE_KEY, val, SiteSetting.types[:string])
@@ -109,11 +109,15 @@ class SiteSettings::DefaultsProvider
     @site_locale
   end
 
-  def has_key?(key)
-    @cached.key?(key) || key == DEFAULT_LOCALE_KEY
+  def has_setting?(name)
+    has_key?(name.to_sym) || has_key?("#{name.to_s}?".to_sym)
   end
 
   private
+
+  def has_key?(key)
+    @cached.key?(key) || key == DEFAULT_LOCALE_KEY
+  end
 
   def refresh_cache!
     @cached = @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults.fetch(@site_locale.to_sym, {}))

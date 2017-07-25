@@ -119,6 +119,7 @@ Spork.prefork do
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
       end
+      SiteSetting.defaults.site_locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
       # very expensive IO operations
       SiteSetting.automatically_download_gravatars = false
