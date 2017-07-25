@@ -230,7 +230,7 @@ export default createWidget('post-menu', {
     if (builder) {
       const buttonAtts = builder(attrs, this.state, this.siteSettings);
       if (buttonAtts) {
-        return this.attach('button', buttonAtts);
+        return this.attach('flat-button', buttonAtts);
       }
     }
   },

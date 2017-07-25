@@ -53,17 +53,23 @@ section.post-menu-area {
 
 nav.post-controls {
 
-    .like-count {
-      font-size: inherit;
-      margin-right: -5px;
-    }
+  padding: 0;
 
-    padding: 0;
-    .highlight-action {
-      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
-    }
-    a, button {
+  .like-count {
+    font-size: inherit;
+    margin-right: -5px;
+  }
+
+  .highlight-action {
+    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+  }
+
+  a, button {
     color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+
+    i.fa {
+      opacity: 1.0;
+    }
     margin-right: 2px;
     display: inline-block;
   }
