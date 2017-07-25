@@ -5,6 +5,44 @@ require "htmlentities"
 class BulkImport::VBulletin < BulkImport::Base
 
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
+  CHARSET_MAP = {
+    "armscii8" => nil,
+    "ascii"    => Encoding::US_ASCII,
+    "big5"     => Encoding::Big5,
+    "binary"   => Encoding::ASCII_8BIT,
+    "cp1250"   => Encoding::Windows_1250,
+    "cp1251"   => Encoding::Windows_1251,
+    "cp1256"   => Encoding::Windows_1256,
+    "cp1257"   => Encoding::Windows_1257,
+    "cp850"    => Encoding::CP850,
+    "cp852"    => Encoding::CP852,
+    "cp866"    => Encoding::IBM866,
+    "cp932"    => Encoding::Windows_31J,
+    "dec8"     => nil,
+    "eucjpms"  => Encoding::EucJP_ms,
+    "euckr"    => Encoding::EUC_KR,
+    "gb2312"   => Encoding::EUC_CN,
+    "gbk"      => Encoding::GBK,
+    "geostd8"  => nil,
+    "greek"    => Encoding::ISO_8859_7,
+    "hebrew"   => Encoding::ISO_8859_8,
+    "hp8"      => nil,
+    "keybcs2"  => nil,
+    "koi8r"    => Encoding::KOI8_R,
+    "koi8u"    => Encoding::KOI8_U,
+    "latin1"   => Encoding::ISO_8859_1,
+    "latin2"   => Encoding::ISO_8859_2,
+    "latin5"   => Encoding::ISO_8859_9,
+    "latin7"   => Encoding::ISO_8859_13,
+    "macce"    => Encoding::MacCentEuro,
+    "macroman" => Encoding::MacRoman,
+    "sjis"     => Encoding::SHIFT_JIS,
+    "swe7"     => nil,
+    "tis620"   => Encoding::TIS_620,
+    "ucs2"     => Encoding::UTF_16BE,
+    "ujis"     => Encoding::EucJP_ms,
+    "utf8"     => Encoding::UTF_8,
+  }
 
   def initialize
     super
@@ -13,10 +51,19 @@ class BulkImport::VBulletin < BulkImport::Base
     username = ENV["DB_USERNAME"] || "root"
     password = ENV["DB_PASSWORD"]
     database = ENV["DB_NAME"] || "vbulletin"
+    charset  = ENV["DB_CHARSET"] || "utf8"
 
     @html_entities = HTMLEntities.new
+    @encoding = CHARSET_MAP[charset]
 
-    @client = Mysql2::Client.new(host: host, username: username, password: password, database: database)
+    @client = Mysql2::Client.new(
+      host: host,
+      username: username,
+      password: password,
+      database: database,
+      encoding: charset
+    )
+
     @client.query_options.merge!(as: :array, cache_rows: false)
 
     @has_post_thanks = mysql_query(<<-SQL
@@ -63,9 +110,9 @@ class BulkImport::VBulletin < BulkImport::Base
     create_groups(groups) do |row|
       {
         imported_id: row[0],
-        name: html_decode(row[1]),
-        bio_raw: html_decode(row[2]),
-        title: html_decode(row[3]),
+        name: normalize_text(row[1]),
+        bio_raw: normalize_text(row[2]),
+        title: normalize_text(row[3]),
       }
     end
   end
@@ -84,7 +131,7 @@ class BulkImport::VBulletin < BulkImport::Base
     create_users(users) do |row|
       u = {
         imported_id: row[0],
-        username: row[1],
+        username: normalize_text(row[1]),
         created_at: Time.zone.at(row[3]),
         date_of_birth: parse_birthday(row[4]),
         primary_group_id: group_id_from_imported_id(row[6]),
@@ -253,8 +300,8 @@ class BulkImport::VBulletin < BulkImport::Base
     create_categories(parent_categories) do |row|
       {
         imported_id: row[0],
-        name: html_decode(row[2]),
-        description: html_decode(row[3]),
+        name: normalize_text(row[2]),
+        description: normalize_text(row[3]),
         position: row[4],
       }
     end
@@ -263,8 +310,8 @@ class BulkImport::VBulletin < BulkImport::Base
     create_categories(children_categories) do |row|
       {
         imported_id: row[0],
-        name: html_decode(row[2]),
-        description: html_decode(row[3]),
+        name: normalize_text(row[2]),
+        description: normalize_text(row[3]),
         position: row[4],
         parent_category_id: category_id_from_imported_id(row[1]),
       }
@@ -287,7 +334,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
       t = {
         imported_id: row[0],
-        title: html_decode(row[1]),
+        title: normalize_text(row[1]),
         category_id: category_id_from_imported_id(row[2]),
         user_id: user_id_from_imported_id(row[3]),
         closed: row[4] == 0,
@@ -325,7 +372,7 @@ class BulkImport::VBulletin < BulkImport::Base
         user_id: user_id_from_imported_id(row[3]),
         created_at: Time.zone.at(row[4]),
         hidden: row[5] == 0,
-        raw: html_decode(row[6]),
+        raw: normalize_text(row[6]),
       }
     end
   end
@@ -353,7 +400,7 @@ class BulkImport::VBulletin < BulkImport::Base
       {
         archetype: Archetype.private_message,
         imported_id: row[0] + PRIVATE_OFFSET,
-        title: title,
+        title: normalize_text(title),
         user_id: user_id_from_imported_id(row[2]),
         created_at: Time.zone.at(row[4]),
       }
@@ -409,17 +456,22 @@ class BulkImport::VBulletin < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row[2]),
         created_at: Time.zone.at(row[4]),
-        raw: html_decode(row[5]),
+        raw: normalize_text(row[5]),
       }
     end
   end
 
   def extract_pm_title(title)
-    html_decode(title).scrub.gsub(/^Re\s*:\s*/i, "")
+    normalize_text(title).scrub.gsub(/^Re\s*:\s*/i, "")
   end
 
-  def html_decode(text)
-    @html_entities.decode((text.presence || "").scrub)
+  def normalize_text(text)
+    @html_entities.decode(normalize_charset(text.presence || "").scrub)
+  end
+
+  def normalize_charset(text)
+    return text if @encoding == Encoding::UTF_8
+    return text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
   end
 
   def parse_birthday(birthday)
