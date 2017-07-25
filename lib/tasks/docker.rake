@@ -16,12 +16,12 @@
 #                   this can also be set to a branch, e.g. "origin/tests-passed"
 #
 # Example usage:
-#   Run all core tests:  
+#   Run all core tests:
 #       docker run discourse/discourse_test:release
-#   Run only rspec tests:  
+#   Run only rspec tests:
 #       docker run -e RUBY_ONLY=1 discourse/discourse_test:release
 #   Run all core and plugin tests (plugin mounted from host filesystem):
-#       docker run -e LOAD_PLUGINS=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release 
+#       docker run -e LOAD_PLUGINS=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 
 def run_or_fail(command)
   pid = Process.spawn(command)
@@ -72,7 +72,7 @@ task 'docker:test' do
           @good &&= run_or_fail("bundle exec rake plugin:spec")
         end
       end
-      
+
     end
 
     unless ENV["RUBY_ONLY"]
@@ -82,7 +82,7 @@ task 'docker:test' do
         @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
         @good &&= run_or_fail("eslint test/javascripts")
       end
-      @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
+      @good &&= run_or_fail("LOAD_PLUGINS=#{ENV["LOAD_PLUGINS"]} bundle exec rake qunit:test['600000']")
     end
 
   ensure
