@@ -77,7 +77,9 @@ describe Scheduler::Manager do
       ActiveRecord::Base.connection_pool.remove(c)
     end
     expect(ActiveRecord::Base.connection_pool.connections.length).to eq(1)
-    expect(@thread_count).to eq(Thread.list.count)
+    wait_for do
+      @thread_count == Thread.list.count
+    end
   end
 
   it 'can disable stats' do
