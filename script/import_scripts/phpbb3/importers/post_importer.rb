@@ -56,6 +56,7 @@ module ImportScripts::PhpBB3
       mapped[:pinned_globally] = row[:topic_type] == Constants::POST_GLOBAL
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])
+        @permalink_importer.create_for_post(post, row[:post_id])
       end
 
       add_poll(row, mapped) if @settings.import_polls
