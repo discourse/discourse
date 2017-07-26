@@ -29,7 +29,7 @@ export function registerIconRenderer(renderer) {
 
 // Support for font awesome icons
 function faClasses(id, params) {
-  let classNames = `fa fa-${id}`;
+  let classNames = `fa fa-${id} d-icon d-icon-${id}`;
   if (params) {
     if (params.modifier) { classNames += " fa-" + params.modifier; }
     if (params['class']) { classNames += ' ' + params['class']; }

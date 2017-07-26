@@ -133,7 +133,7 @@
   <div class='buttons'>
     <button {{action "save"}} disabled={{disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
     {{#unless model.automatic}}
-      <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
+      <button {{action "destroy"}} class='btn btn-danger'>{{d-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
     {{/unless}}
 
     <span class="saving {{unless savingStatus 'hidden'}}">{{savingStatus}}</span>
