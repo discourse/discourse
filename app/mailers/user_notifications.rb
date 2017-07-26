@@ -311,7 +311,7 @@ class UserNotifications < ActionMailer::Base
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
     original_username = notification_data[:original_username] || notification_data[:display_username]
 
-    send_notification_email(
+    email_options = {
       title: notification_data[:topic_title],
       post: post,
       username: original_username,
@@ -323,7 +323,13 @@ class UserNotifications < ActionMailer::Base
       notification_type: notification_type,
       use_invite_template: opts[:use_invite_template],
       user: user
-    )
+    }
+
+    if group_id = notification_data[:group_id]
+      email_options[:group_name] = Group.find_by(id: group_id)&.name
+    end
+
+    send_notification_email(email_options)
   end
 
   def send_notification_email(opts)
@@ -337,12 +343,18 @@ class UserNotifications < ActionMailer::Base
     from_alias = opts[:from_alias]
     notification_type = opts[:notification_type]
     user = opts[:user]
+    group_name = opts[:group_name]
     locale = user_locale(user)
 
     template = "user_notifications.user_#{notification_type}"
     if post.topic.private_message?
       template << "_pm"
-      template << "_staged" if user.staged?
+
+      if group_name
+        template << "_group"
+      elsif user.staged
+        template << "_staged"
+      end
     end
 
     # category name
@@ -376,17 +388,33 @@ class UserNotifications < ActionMailer::Base
       end
     end
 
-    translation_override_exists = TranslationOverride.where(locale: SiteSetting.default_locale, translation_key: "#{template}.text_body_template").exists?
+    translation_override_exists = TranslationOverride.where(
+      locale: SiteSetting.default_locale,
+      translation_key: "#{template}.text_body_template"
+    ).exists?
 
     if opts[:use_invite_template]
-      if post.topic.private_message?
-        invite_template = "user_notifications.invited_to_private_message_body"
-      else
-        invite_template = "user_notifications.invited_to_topic_body"
-      end
+      invite_template = "user_notifications.invited"
+      invite_template << "_group" if group_name
+
+      invite_template <<
+        if post.topic.private_message?
+          "_to_private_message_body"
+        else
+          "_to_topic_body"
+        end
+
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
       topic_excerpt = "" if SiteSetting.private_email?
-      message = I18n.t(invite_template, username: username, topic_title: gsub_emoji_to_unicode(title), topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
+
+      message = I18n.t(invite_template,
+        username: username,
+        group_name: group_name,
+        topic_title: gsub_emoji_to_unicode(title),
+        topic_excerpt: topic_excerpt,
+        site_title: SiteSetting.title,
+        site_description: SiteSetting.site_description
+      )
 
       unless translation_override_exists
         html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
@@ -434,6 +462,7 @@ class UserNotifications < ActionMailer::Base
       topic_id: post.topic_id,
       context: context,
       username: username,
+      group_name: group_name,
       add_unsubscribe_link: !user.staged,
       mailing_list_mode: user.user_option.mailing_list_mode,
       unsubscribe_url: post.unsubscribe_url(user),
