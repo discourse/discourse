@@ -52,7 +52,8 @@ class SearchController < ApplicationController
     search_args[:include_blurbs] = params[:include_blurbs] == "true" if params[:include_blurbs].present?
     search_args[:search_for_id] = true                               if params[:search_for_id].present?
 
-    context,type = lookup_search_context
+    context, type = lookup_search_context
+
     if context
       search_args[:search_context] = context
       search_args[:type_filter] = type if type

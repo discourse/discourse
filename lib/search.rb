@@ -201,7 +201,6 @@ class Search
 
   # Query a term
   def execute
-
     if SiteSetting.log_search_queries?
       status, search_log_id = SearchLog.log(
         term: @term,
@@ -212,7 +211,7 @@ class Search
       @results.search_log_id = search_log_id unless status == :error
     end
 
-    unless @filters.present?
+    unless @filters.present? || @opts[:search_for_id]
       min_length = @opts[:min_search_term_length] || SiteSetting.min_search_term_length
       terms = (@term || '').split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject {|t| t.length < min_length }
 
