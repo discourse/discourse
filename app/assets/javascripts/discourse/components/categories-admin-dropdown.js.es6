@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import DropdownButton from 'discourse/components/dropdown-button';
 import computed from "ember-addons/ember-computed-decorators";
 
