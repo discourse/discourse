@@ -161,19 +161,19 @@ ro:
       default_description: "Implicit"
     s3:
       regions:
-        us_east_1: "US East (N. Virginia)"
-        us_west_1: "US West (N. California)"
-        us_west_2: "US West (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "EU (Irlanda)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Asia Pacific (Singapore)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
-        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
-        sa_east_1: "South America (Sao Paulo)"
+        ap_south_1: "Asia Pacific (Mumbai)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "China (Beijing)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irlanda)"
+        sa_east_1: "South America (Sao Paulo)"
+        us_east_1: "US East (N. Virginia)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
     edit: 'Editează titlul și categoria acestui subiect'
     not_implemented: "Această funcționalitate nu a fost implementată încă."
     no_value: "Nu"
@@ -371,11 +371,7 @@ ro:
         full_name: 'Nume complet'
         add_members: "Adaugă membri"
         delete_member_confirm: "Șterge utilizatorul '%{username}' din grupul '%{group}'?"
-      request_membership_pm:
-        title: "Cerere de adăugare ca membru"
-        body: "Aș dori să fac o cerere de adăugare ca membru în @%{groupName}."
       name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
-      public: "Permite utilizatorilor să intre/iasă din grup fără restricții. (Presupune ca grupul să fie vizibil)"
       empty:
         posts: "Nu există postări ale membrilor acestui grup."
         members: "Nu există nici un membru în acest grup."
@@ -396,7 +392,6 @@ ro:
       bio: "Despre grup"
       selector_placeholder: "Adaugă membri"
       owner: "Proprietar"
-      visible: "Grupul este vizibil tuturor utilizatorilor"
       index:
         title: "Grupuri"
         empty: "Nu există nici un grup vizibil."
@@ -509,7 +504,6 @@ ro:
       mute: "Silențios"
       edit: "Editează preferințe"
       download_archive:
-        button_text: "Descarcă postările mele"
         confirm: "Ești sigur că vrei să îți descarci postările?"
         success: "Descărcarea a început, vei fi notificat printr-un mesaj atunci când procesul se va termina."
         rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi, te rugăm să încerci din nou mâine."
@@ -626,7 +620,6 @@ ro:
         title: "Schimbă numele utilizatorului"
         confirm: "Dacă îți schimbi numele de utilizator, toate citările anterioare ale posturilor tale și toate mențiunile @numelui se vor pierde. Ești absolut sigur că vrei asta?"
         taken: "Acest nume de utilizator este deja folosit."
-        error: "A apărut o eroare la schimbarea numelui de utilizator."
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       change_email:
         title: "Schimbă email"
@@ -1743,11 +1736,6 @@ ro:
           one: "Ești sigur că vrei să ștergi acest mesaj?"
           few: "Ești sigur că vrei să ștergi toate aceste mesaje?"
           other: "Ești sigur că vrei să ștergi toate aceste mesaje?"
-      merge:
-        confirm:
-          one: "Ești sigur că vrei să aduni laolaltă această postare?"
-          few: "Ești sigur că vrei să comasezi aceste {{count}} postări?"
-          other: "Ești sigur că vrei să comasezi aceste {{count}} de postări?"
       revisions:
         controls:
           first: "Prima revizie"
@@ -1777,8 +1765,6 @@ ro:
       settings: 'Setări'
       topic_template: "Șablon subiect"
       tags: "Etichete"
-      tags_allowed_tags: "În această categorie se pot folosi numai etichetele:"
-      tags_allowed_tag_groups: "În această categorie se pot folosi numai grupurile de etichete:"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."

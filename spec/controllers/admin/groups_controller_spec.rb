@@ -12,46 +12,6 @@ describe Admin::GroupsController do
     expect(Admin::GroupsController < Admin::AdminController).to eq(true)
   end
 
-  context ".index" do
-
-    it "produces valid json for groups" do
-      group = Fabricate.build(:group, name: "test")
-      group.add(@admin)
-      group.save
-
-      xhr :get, :index
-      expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
-      expect(json.select { |r| r["id"] == Group::AUTO_GROUPS[:everyone] }).to be_empty
-      expect(json.select { |r| r["id"] == group.id }).to eq([{
-        "id"=>group.id,
-        "name"=>group.name,
-        "user_count"=>1,
-        "automatic"=>false,
-        "alias_level"=>0,
-        "visible"=>true,
-        "automatic_membership_email_domains"=>nil,
-        "automatic_membership_retroactive"=>false,
-        "title"=>nil,
-        "primary_group"=>false,
-        "grant_trust_level"=>nil,
-        "incoming_email"=>nil,
-        "has_messages"=>false,
-        "flair_url"=>nil,
-        "flair_bg_color"=>nil,
-        "flair_color"=>nil,
-        "bio_raw"=>nil,
-        "bio_cooked"=>nil,
-        "public"=>false,
-        "allow_membership_requests"=>false,
-        "full_name"=>group.full_name,
-        "default_notification_level"=>3
-      }])
-
-    end
-
-  end
-
   context ".bulk" do
     it "can assign users to a group by email or username" do
       group = Fabricate(:group, name: "test", primary_group: true, title: 'WAT', grant_trust_level: 3)
@@ -100,23 +60,22 @@ describe Admin::GroupsController do
 
       expect do
         xhr :put, :update, { id: group.id, group: {
-          visible: "false",
+          visibility_level: Group.visibility_levels[:owners],
           allow_membership_requests: "true"
         } }
+
       end.to change { GroupHistory.count }.by(2)
 
       expect(response).to be_success
 
       group.reload
-      expect(group.visible).to eq(false)
+
+      expect(group.visibility_level).to eq( Group.visibility_levels[:owners])
       expect(group.allow_membership_requests).to eq(true)
     end
 
     it "ignore name change on automatic group" do
-      expect do
-        xhr :put, :update, { id: 1, group: { name: "WAT" } }
-      end.to change { GroupHistory.count }.by(1)
-
+      xhr :put, :update, { id: 1, group: { name: "WAT" } }
       expect(response).to be_success
 
       group = Group.find(1)

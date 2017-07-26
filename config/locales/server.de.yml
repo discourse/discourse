@@ -359,9 +359,8 @@ de:
   meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Team"
-  staff_category_description: "Geschützte Kategorie für das Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
+  staff_category_description: "Geschützte Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   assets_topic_title: "Mediendateien für das Seitendesign"
-  assets_topic_body: "Dies ist ein fester Beitrag, der nur für das Team sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Willkommen bei Discourse"
     body: |2
@@ -645,7 +644,6 @@ de:
         remove: "Dieses Thema ist jetzt kein Banner mehr. Es wird nicht mehr auf jeder Seite ganz oben angezeigt."
   unsubscribed:
     title: "Abbestellt!"
-    description: "Du hast die Benachrichtigungen erfolgreich abbestellt. Um deine E-Mail-Einstellungen zu ändern, <a href='%{url}%'>besuche deine Einstellungen</a>."
     topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen, die du am Ende und rechts von jedem Thema findest."
   unsubscribe:
     title: "Abbestellen"
@@ -923,7 +921,6 @@ de:
     notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Nachricht an alle Moderatoren."
     flag_sockpuppets: "Wenn ein neuer Benutzer auf ein Thema antwortet, das von einem anderen neuen Benutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als potenziellen Spam."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, die zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
-    allow_html_tables: "Erlaube es, Tabellen in Markdown mit HTML-Tags einzugeben. TABLE, THEAD, TD, TR, TH werden erlaubt (alle Beiträge mit Tabellen müssen ihr HTML erneuern)"
     post_undo_action_window_mins: "Minuten, die ein Benutzer hat, um Aktionen auf einen Beitrag rückgängig zu machen (Gefällt mir, Meldung, usw.)."
     must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer außer für Team-Mitglieder!"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
@@ -1522,41 +1519,9 @@ de:
   invite_mailer:
     title: "Einladung zu einem Thema"
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
-    text_body_template: |
-      %{invitee_name} hat dich eingeladen zur Diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Wenn du interessiert bist, klicke auf den folgenden Link:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
     subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} hat dich eingeladen zur Diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Mit dieser Notiz:
-
-      > %{user_custom_message}
-
-      Falls du Interesse hast, klicke auf den nachfolgenden Link:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
@@ -2078,12 +2043,6 @@ de:
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"
-      text_body_template: |
-        Glückwunsch, du hast die Auszeichnung **Neuer Benutzer des Monats %{month_year}** erhalten. :trophy:
-
-        Diese Auszeichnung wird nur zwei neuen Benutzern pro Monat verliehen, und wird dauerhaft sichtbar sein auf [deiner Profilseite](/my/badges).
-
-        Du bist schnell ein wertvolles Mitglied unserer Community geworden. Danke, dass du dazugekommen bist, und mache weiter mit der großartigen Arbeit!
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2109,26 +2068,6 @@ de:
     visit_link_to_respond: "[Rufe das Thema auf](%{base_url}%{url}), um zu antworten."
     visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}), um zu antworten."
     posted_by: "Erstellt von %{username} am %{post_date}"
-    invited_to_private_message_body: |
-      %{username} hat dich zu einer Unterhaltung eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      auf
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} hat dich zu einer Diskussion eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      auf
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Benutzer zu Nachricht eingeladen"
       subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung '%{topic_title}' eingeladen"
@@ -2276,7 +2215,6 @@ de:
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
       subject_template: "[%{email_prefix}] Zusammenfassung"
-      unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"

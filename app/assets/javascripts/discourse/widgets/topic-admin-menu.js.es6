@@ -28,19 +28,26 @@ createWidget('topic-admin-menu-button', {
     if (!this.currentUser || !this.currentUser.get('canManageTopic')) { return; }
 
     const result = [];
-    result.push(this.attach('button', {
-      className: 'btn ' + (attrs.fixed ? " show-topic-admin" : ""),
-      title: 'topic_admin_menu',
-      icon: 'wrench',
-      action: 'showAdminMenu',
-      sendActionEvent: true
-    }));
+
+    // We don't show the button when expanded on the right side
+    if (!(attrs.rightSide && state.expanded)) {
+      result.push(this.attach('button', {
+        className: 'btn ' + (attrs.fixed ? " show-topic-admin" : ""),
+        title: 'topic_admin_menu',
+        icon: 'wrench',
+        action: 'showAdminMenu',
+        sendActionEvent: true
+      }));
+    }
 
     if (state.expanded) {
-      result.push(this.attach('topic-admin-menu', { position: state.position,
-                                                    fixed: attrs.fixed,
-                                                    topic: attrs.topic,
-                                                    openUpwards: attrs.openUpwards }));
+      result.push(this.attach('topic-admin-menu', {
+        position: state.position,
+        fixed: attrs.fixed,
+        topic: attrs.topic,
+        openUpwards: attrs.openUpwards,
+        rightSide: attrs.rightSide
+      }));
     }
 
     return result;
@@ -69,9 +76,19 @@ createWidget('topic-admin-menu-button', {
 export default createWidget('topic-admin-menu', {
   tagName: 'div.popup-menu.topic-admin-popup-menu',
 
+  buildClasses(attrs) {
+    if (attrs.rightSide) {
+      return 'right-side';
+    }
+  },
+
   buildAttributes(attrs) {
-    const { top, left, outerHeight } = attrs.position;
+    let { top, left, outerHeight } = attrs.position;
     const position = attrs.fixed ? 'fixed' : 'absolute';
+
+    if (attrs.rightSide) {
+      return;
+    }
 
     if (attrs.openUpwards) {
       const documentHeight = $(document).height();

@@ -245,7 +245,6 @@ tr_TR:
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece yönetici ve moderatörlere gözükür."
-  assets_topic_body: "Bu kalıcı bir konudur, sadece görevlilere gözükür, site tasarımında kullanılan resim ve dosyaların depolanması için kullanılır. Sakın silmeyin!\n\n\nŞöyle ki:\n\n1. Bu konuyu cevaplayın.\n2. Görseller, simgecikler vb. kullanmak istediğiniz resimleri buraya yükleyin. (Gönderi düzenleyicisindeki yükleme düğmesini kullanabilir, resimleri sürükleyip bırakabilir veya kopyalayıp yapıştırabilirsiniz.)\n3. Cevabı gönderin.\n4. Yeni gönderinizdeki resimlere sağ tıklayarak ya da düzenleme ikonuna tıklayıp gönderinizi düzenleyerek resimlerin bağlantılarına ulaşabilirsiniz. Bağlantıları kopyalayın.\n5. Bağlantıları [basit ayarlarda](/admin/site_settings/category/required) ilgili bölümlere yapıştırın.\n\n\nEğer farklı dosya tipleri yükleyebilmek istiyorsanız, [dosya ayarları](/admin/site_settings/category/files) sayfasındaki `authorized_extensions` ayarını düzenleyin."
   lounge_welcome:
     title: "Lobiye hoş geldiniz"
     body: |2
@@ -706,7 +705,6 @@ tr_TR:
     notify_mods_when_user_blocked: "Eğer bir kullanıcı otomatik olarak engellendiyse, tüm moderatörlere ileti yolla."
     flag_sockpuppets: "Eğer, yeni kullanıcı konuya, konuyu başlatan yeni kullanıcı ile aynı IP adresinden cevap yazarsa, her iki gönderiyi de potansiyel istenmeyen olarak bildir. "
     traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan."
-    allow_html_tables: "Tabloların HTML etiketleri kullanılarak Markdown ile oluşturulmasına izin verin. TABLE, THEAD, TD, TR, TH kabul edilir (tablo içeren tüm eski gönderilerin yenilenmesini gerektirir) "
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
@@ -1326,26 +1324,6 @@ tr_TR:
     visit_link_to_respond: "Cevaplamak için [konuyu ziyaret edin](%{base_url}%{url})."
     visit_link_to_respond_pm: "Cevaplamak için [iletiyi ziyaret edin](%{base_url}%{url})."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
-    invited_to_private_message_body: |
-      %{username} sizi bir iletiye davet etti
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      şurada
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} sizi bir tartışmaya davet etti
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      şurada
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
@@ -1463,7 +1441,6 @@ tr_TR:
       follow_topic: "Bu konuyu takip et"
       join_the_discussion: "Devamını Oku"
       popular_posts: "Gözde Gönderiler"
-      unsubscribe: "Bir süredir görünmediğiniz için bu e-posta size %{site_link} topluluğundan gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       click_here: "buraya tıklayın"
       from: "%{site_name} özeti"
       preheader: "%{last_seen_at} tarihindeki ziyaretinizden bu yana olanların kısa bir özeti"

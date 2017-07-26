@@ -354,7 +354,6 @@ pl_PL:
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
-  assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Witaj w Discourse"
     body: |2
@@ -603,6 +602,7 @@ pl_PL:
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy jesteś pewny, że chcesz nadać użytkownikowi <b>%{target_username}</b> uprawnienia administratora?"
+      grant: "Przynaj prawa Admina"
       complete: "<b>%{target_username}</b> jest teraz administratorem."
       back_to: "Wróć do %{title}"
   post_action_types:
@@ -634,14 +634,17 @@ pl_PL:
     bookmark:
       title: 'Zakładka'
       description: 'Dodaj ten wpis do zakładek'
+      short_description: 'Dodaj do zakładek ten wpis'
       long_form: 'dodano ten wpis do zakładek'
     like:
       title: 'Polub'
       description: 'Polub ten wpis'
+      short_description: 'Polub ten wpis'
       long_form: 'polubiono to'
     vote:
       title: 'Głosuj'
       description: 'Głosuj za tym wpisem'
+      short_description: 'Zagłosuj na ten wpis'
       long_form: 'zagłosowano za tym wpisem'
   user_activity:
     no_bookmarks:
@@ -678,7 +681,6 @@ pl_PL:
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: "Od subskrybuj!"
-    description: "Zostałeś wypisany. Aby zmienić ustawienia swojego emaila  <a href='%{url}'>zajrzyj na ustawienia użytkownika</a>."
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
   unsubscribe:
     title: "Wypisz"
@@ -954,7 +956,6 @@ pl_PL:
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na dany temat z tego samego adresu IP co nowy użytkownik, który założył temat, oznacz ich posty jako potencjalny spam."
     traditional_markdown_linebreaks: "Używaj tradycyjnych znaków końca linii w Markdown, to znaczy dwóch spacji na końcu linii."
-    allow_html_tables: "Pozwalaj tabelom być zamieszczanym w Markdown przy użyciu tagów HTML. TABLE, THEAD, TD, TR, TH będą dozwolone (wymaga pełnego rebake na wszystkich starych postach zawierających tabele)."
     post_undo_action_window_mins: "Przez tyle minut użytkownicy mogą cofnąć swoje ostatnie działania przy danym poście (lajki, flagowanie, itd.)."
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu. UWAGA: włączenie tego dla już udostępnionej strony sprawi, że zostanie odebrany dostęp wszystkim istniejącym użytkownikom spoza zespołu."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
@@ -1347,40 +1348,8 @@ pl_PL:
     subject_template: "Potwierdź, że nie chcesz już otrzymywać powiadomień mailowych ze strony %{site_title}"
   invite_mailer:
     subject_template: "%{invitee_name} zaprosił cię do '%{topic_title}' na %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} zaprosił cię do dyskusji
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      w serwisie
-
-      > %{site_title} -- %{site_description}
-
-      Jeśli jesteś zainteresowany, kliknij w link:
-
-      %{invite_link}
   custom_invite_mailer:
     subject_template: "%{invitee_name} zaprosił cię do dyskusji '%{topic_title}' w serwisie %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} zaprosił cię do dyskusji
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      w serwisie
-
-      > %{site_title} -- %{site_description}
-
-      Informacja od zapraszającego:
-
-      > %{user_custom_message}
-
-      Jeśli jesteś zainteresowany, kliknij w link:
-
-      %{invite_link}
   invite_forum_mailer:
     subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
     text_body_template: |
@@ -1655,25 +1624,6 @@ pl_PL:
     visit_link_to_respond: "[Zobacz Temat](%{base_url}%{url}) aby odpowiedzieć."
     visit_link_to_respond_pm: "[Zobacz wiadomość](%{base_url}%{url}) aby odpowiedzieć."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
-    invited_to_private_message_body: |
-      %{username} zaprosił cię do wiadomści
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      w
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} zaprosił cię do dyskusji
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      w
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Użytkownik zaprosił do PW"
       text_body_template: |

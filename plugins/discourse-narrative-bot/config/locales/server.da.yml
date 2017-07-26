@@ -5,4 +5,30 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-da: {}
+da:
+  badges:
+    certified:
+      name: Certificeret
+      description: "Fuldførte vores \"ny bruger\" vejledning"
+    licensed:
+      name: Licenseret
+      description: "Gennemført vores advancerede bruger vejledning"
+  discourse_narrative_bot:
+    bio: "Hej, jeg er ikke en rigtigt person. Jeg er en bot der kan lære dig om dette site. For at interaggere med mig, send mig en besked, eller nævn **`@%{discobot_username}`** overalt."
+    timeout:
+      message: |-
+        Hey @%{username}, jeg skriver fordi jeg ikke har hørt fra dig i et stykke tid.
+
+        - For at fortsætte, så kan du altid svare mig.
+
+        - Hvis du vil springe dette skridt over, så sig `%{skip_trigger}`.
+
+        - For at starte forfra, så sig `%{reset_trigger}`.
+
+        Hvis du helst vil være fri, så er det også okay. Jeg er en robot. Du sårer ikke mine følelser. :sob:
+    dice:
+      trigger: "Rul"
+      invalid: |-
+        Jeg beklager, det er matematisk umuligt at rulle den kombination af terninger. :confounded:
+      not_enough_dice: |-
+        I only have %{num_of_dice} dice. [Skamfuldt](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!

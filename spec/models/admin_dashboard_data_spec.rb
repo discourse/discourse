@@ -128,37 +128,37 @@ describe AdminDashboardData do
     shared_examples 'problem detection for login providers' do
       context 'when disabled' do
         it 'returns nil' do
-          SiteSetting.stubs(enable_setting).returns(false)
+          SiteSetting.public_send("#{enable_setting}=", false)
           expect(subject).to be_nil
         end
       end
 
       context 'when enabled' do
         before do
-          SiteSetting.stubs(enable_setting).returns(true)
+          SiteSetting.public_send("#{enable_setting}=", true)
         end
 
         it 'returns nil when key and secret are set' do
-          SiteSetting.stubs(key).returns('12313213')
-          SiteSetting.stubs(secret).returns('12312313123')
+          SiteSetting.public_send("#{key}=", '12313213')
+          SiteSetting.public_send("#{secret}=", '12312313123')
           expect(subject).to be_nil
         end
 
         it 'returns a string when key is not set' do
-          SiteSetting.stubs(key).returns('')
-          SiteSetting.stubs(secret).returns('12312313123')
+          SiteSetting.public_send("#{key}=", '')
+          SiteSetting.public_send("#{secret}=", '12312313123')
           expect(subject).to_not be_nil
         end
 
         it 'returns a string when secret is not set' do
-          SiteSetting.stubs(key).returns('123123')
-          SiteSetting.stubs(secret).returns('')
+          SiteSetting.public_send("#{key}=", '123123')
+          SiteSetting.public_send("#{secret}=", '')
           expect(subject).to_not be_nil
         end
 
         it 'returns a string when key and secret are not set' do
-          SiteSetting.stubs(key).returns('')
-          SiteSetting.stubs(secret).returns('')
+          SiteSetting.public_send("#{key}=", '')
+          SiteSetting.public_send("#{secret}=", '')
           expect(subject).to_not be_nil
         end
       end
@@ -200,7 +200,7 @@ describe AdminDashboardData do
         ['a', ''].repeated_permutation(keys.size) do |*values|
           hash = Hash[keys.zip(values)]
           hash.each do |key,value|
-            SiteSetting.stubs(key).returns(value)
+            SiteSetting.public_send("#{key}=", value)
           end
           yield hash
         end
@@ -209,8 +209,8 @@ describe AdminDashboardData do
       context 'when setting is enabled' do
         let(:setting_enabled) { true }
         before do
-          SiteSetting.stubs(setting_key).returns(setting_enabled)
-          SiteSetting.stubs(bucket_key).returns(bucket_value)
+          SiteSetting.public_send("#{setting_key}=", setting_enabled)
+          SiteSetting.public_send("#{bucket_key}=", bucket_value)
         end
 
         context 'when bucket is blank' do
@@ -226,7 +226,7 @@ describe AdminDashboardData do
         context 'when bucket is filled in' do
           let(:bucket_value) { 'a' }
           before do
-            SiteSetting.stubs(:s3_use_iam_profile).returns(use_iam_profile)
+            SiteSetting.public_send("s3_use_iam_profile=", use_iam_profile)
           end
 
           context 'when using iam profile' do
@@ -257,7 +257,7 @@ describe AdminDashboardData do
 
       context 'when setting is not enabled' do
         before do
-          SiteSetting.stubs(setting_key).returns(false)
+          SiteSetting.public_send("#{setting_key}=", false)
         end
 
         it "always returns nil" do

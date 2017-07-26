@@ -317,7 +317,6 @@ zh_TW:
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   assets_topic_title: "站點設計資料"
-  assets_topic_body: "這是一個永久主題，僅對管理人員可見，用於存儲論壇設計使用的圖像和檔案。不要刪除它！\n\n\n詳細教程：\n\n\n1. 回覆到這個主題。\n2. 上傳你想用作站點標誌、表徵圖和其他所有圖片到這兒。（使用帖子編輯器工具欄中的上傳表徵圖，或者拖拽或者粘貼圖像。）\n3. 提交你的回覆添加帖子。\n4. 在你的新帖子裡右鍵點擊圖片獲得這些已上傳圖片的連結，或者點擊編輯按鈕來編輯帖子，獲得到圖片的相對地址。複製這些相對地址。\n5. 粘貼這些圖像的路徑到[基礎設置](/admin/site_settings/category/required)。\n\n\n如果你需要運行額外的上傳檔案類型，在[檔案設置](/admin/site_settings/category/files)中編輯 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "歡迎來到 Discourse"
     body: |2
@@ -558,7 +557,6 @@ zh_TW:
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: "退訂！"
-    description: "你已經退訂。要更改你的郵件設置，<a href='%{url}'>訪問你的用戶設置頁面</a>。"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
   unsubscribe:
     title: "退訂"
@@ -834,7 +832,6 @@ zh_TW:
     notify_mods_when_user_blocked: "若有用戶被自動封鎖，將發送訊息給所有板主。"
     flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
-    allow_html_tables: "允許在輸入 Markdown 文本時使用表格 HTML 標籤。標籤 TABLE、THEAD、TD、TR、TH 將被允許使用，即白名單這些標籤（需要重置所有包含表格的老帖子的 HTML）"
     post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（讚、標記等）所需等待的時間分隔（分鐘）"
     must_approve_users: "新用戶在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員用戶的訪問權限！"
     pending_users_reminder_delay: "如果新用戶等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
@@ -1377,41 +1374,9 @@ zh_TW:
   invite_mailer:
     title: "邀請 Mailer"
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
-    text_body_template: |
-      %{invitee_name} 邀請你參與位於
-
-      > %{site_title} -- %{site_description}
-
-      的以下討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      如果你有興趣，請點擊下面的連結：
-
-      %{invite_link}
   custom_invite_mailer:
     title: "客製邀請 Mailer"
     subject_template: "%{invitee_name}邀請你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} 留下以下留言
-
-      > %{user_custom_message}
-
-      邀請你參與位於
-
-      > %{site_title} -- %{site_description}
-
-      的討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      如果你有興趣，請點擊下面的連結：
-
-      %{invite_link}
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
@@ -1860,26 +1825,6 @@ zh_TW:
     visit_link_to_respond: "[訪問主題](%{base_url}%{url})以回覆。"
     visit_link_to_respond_pm: "[訪問\"私訊\"](%{base_url}%{url})以回覆。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
-    invited_to_private_message_body: |
-      %{username} 邀請你至消息交流：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      論壇：
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} 邀請你參與討論：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      論壇：
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "用戶被邀請至私人訊息"
       text_body_template: |
@@ -2014,7 +1959,6 @@ zh_TW:
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
-      unsubscribe: "這是封來自%{site_link}的摘要郵件，因為你長時間沒有訪問而發送。%{unsubscribe_link}取消訂閲。"
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"

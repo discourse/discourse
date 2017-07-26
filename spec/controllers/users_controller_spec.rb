@@ -307,12 +307,23 @@ describe UsersController do
         expect(user.user_auth_tokens.count).to eq(1)
       end
 
+      it "doesn't redirect to wizard on get" do
+        user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
+        token = user.email_tokens.create(email: user.email).token
+        get :password_reset, token: token
+        expect(response).not_to redirect_to(wizard_path)
+      end
+
       it "redirects to the wizard if you're the first admin" do
         user = Fabricate(:admin)
+        UserAuthToken.generate!(user_id: user.id)
+
         token = user.email_tokens.create(email: user.email).token
         get :password_reset, token: token
         put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
-        expect(response).to be_redirect
+        expect(response).to redirect_to(wizard_path)
       end
 
       it "doesn't invalidate the token when loading the page" do
@@ -459,6 +470,17 @@ describe UsersController do
 
     def post_user
       xhr :post, :create, post_user_params
+    end
+
+    context 'when email params is missing' do
+      it 'should raise the right error' do
+        expect do
+          xhr :post, :create,
+            name: @user.name,
+            username: @user.username,
+            passsword: 'tesing12352343'
+        end.to raise_error(ActionController::ParameterMissing)
+      end
     end
 
     context 'when creating a user' do
@@ -800,7 +822,7 @@ describe UsersController do
         it "should succeed without the optional field" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -812,7 +834,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = 'value3'
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -824,7 +846,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = ('x' * 3000)
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
 
           val = inserted.custom_fields["user_field_#{optional_field.id}"]
           expect(val.length).to eq(UserField.max_length)
@@ -846,7 +868,7 @@ describe UsersController do
         it "should succeed" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).not_to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
@@ -861,13 +883,13 @@ describe UsersController do
         xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd$$"
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
-        expect(User.find_by(email: staged.email).staged).to eq(false)
+        expect(User.find_by_email(staged.email).staged).to eq(false)
       end
     end
 
   end
 
-  context '.username' do
+  context '#username' do
     it 'raises an error when not logged in' do
       expect { xhr :put, :username, username: 'somename' }.to raise_error(Discourse::NotLoggedIn)
     end
@@ -894,10 +916,17 @@ describe UsersController do
         expect(user.reload.username).to eq(old_username)
       end
 
-      # Bad behavior, this should give a real JSON error, not an InvalidParameters
       it 'raises an error when change_username fails' do
-        User.any_instance.expects(:save).returns(false)
-        expect { xhr :put, :username, username: user.username, new_username: new_username }.to raise_error(Discourse::InvalidParameters)
+        xhr :put, :username, username: user.username, new_username: '@'
+
+        expect(response).to_not be_success
+
+        body = JSON.parse(response.body)
+
+        expect(body['errors'].first).to include(I18n.t(
+          'user.username.short', min: User.username_length.begin
+        ))
+
         expect(user.reload.username).to eq(old_username)
       end
 
@@ -907,11 +936,13 @@ describe UsersController do
         expect(user.reload.username).to eq(new_username)
       end
 
-      skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+      it 'should fail if the user is old' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
-        user.stubs(:post_count).returns(200)
-        expect(Guardian.new(user).can_edit_username?(user)).to eq(false)
+        PostCreator.new(user,
+          title: 'This is a test topic',
+          raw: 'This is a test this is a test'
+        ).create
 
         xhr :put, :username, username: user.username, new_username: new_username
 
@@ -2004,6 +2035,7 @@ describe UsersController do
           password: 'qwerqwer123',
           email: user.email
         }
+
         expect(response).to_not be_success
       end
 

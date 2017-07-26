@@ -148,20 +148,21 @@ fi:
       default_description: "Oletus"
     s3:
       regions:
-        us_east_1: "itäinen USA (Pohjois-Virginia)"
-        us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
-        us_west_2: "Läntinen USA (Oregon)"
-        us_gov_west_1: "AWS GovCloud (USA)"
-        eu_west_1: "EU (Irlanti)"
-        eu_west_2: "EU (Lontoo)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
-        ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
-        ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
         ap_northeast_2: "Aasia ja Tyynimeri (Soul)"
-        sa_east_1: "Etelä-Amerikka (Sao Paulo)"
+        ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
+        ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
+        ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
         cn_north_1: "Kiina (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irlanti)"
+        eu_west_2: "EU (Lontoo)"
+        sa_east_1: "Etelä-Amerikka (Sao Paulo)"
+        us_east_1: "itäinen USA (Pohjois-Virginia)"
+        us_east_2: "Itäinen USA (Ohio)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
+        us_west_2: "Läntinen USA (Oregon)"
     edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -351,11 +352,8 @@ fi:
         full_name: 'Täysimittainen nimi'
         add_members: "Lisää jäseniä"
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
-      request_membership_pm:
-        title: "Jäsenhakemus"
-        body: "Haluaisin ryhmään @%{groupName}."
       name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
-      public: "Salli jäsenten liittyä/poistua ryhmästä vapaasti (ryhmän tulee olla näkyvillä)"
+      public: "Salli käyttäjien liittyä ryhmään ja poistua siitä vapaasti (ryhmän täytyy olla julkisesti näkyvillä)"
       empty:
         posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä."
         members: "Ryhmässä ei ole jäseniä."
@@ -376,8 +374,7 @@ fi:
       user_count: "Jäsenmäärä"
       bio: "Tietoa ryhmästä"
       selector_placeholder: "Lisää jäseniä"
-      owner: "omistaja"
-      visible: "Ryhmä näkyy kaikille käyttäjille"
+      owner: "isäntä"
       index:
         title: "Ryhmät"
         empty: "Näkyvillä olevia ryhmiä ei ole."
@@ -391,6 +388,12 @@ fi:
       mentions: "Maininnat"
       messages: "Viestit"
       notification_level: "Ryhmäviestien oletusilmoitusasetus"
+      visibility_levels:
+        title: "Ketkä näkevät tämän ryhmän?"
+        public: "Kaikk"
+        members: "Ryhmän isännät, jäsenet ja ylläpitäjät"
+        staff: "Ryhmän isännät ja henkilökunta"
+        owners: "Ryhmän isännät ja ylläpitäjät"
       alias_levels:
         title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @mainita sen?"
         nobody: "Ei kukaan"
@@ -488,7 +491,7 @@ fi:
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive:
-        button_text: "Lataa viestini"
+        button_text: "Lataa kaikki"
         confirm: "Haluatko varmasti ladata viestisi?"
         success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
         rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Yritä huomenna uudelleen."
@@ -559,6 +562,7 @@ fi:
       watched_first_post_tags_instructions: "Saat ilmoituksen uusista ketjuista, joilla on joku näistä tunnisteista."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa ilmoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
+      no_category_access: "Valvojana sinulla on rajoitetut oikeudet alueisiin, et voi tallentaa."
       delete_account: "Poista tilini"
       delete_account_confirm: "Oletko varma, että haluat lopullisesti poistaa käyttäjätilisi? Tätä toimintoa ei voi perua!"
       deleted_yourself: "Käyttäjätilisi on poistettu."
@@ -618,7 +622,6 @@ fi:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
         taken: "Pahoittelut, tuo nimi on jo käytössä."
-        error: "Käyttäjätunnuksen vaihdossa tapahtui virhe."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
       change_email:
         title: "Vaihda sähköposti"
@@ -754,6 +757,9 @@ fi:
         expired: "Tämä kutsu on rauennut."
         rescind: "Poista"
         rescinded: "Kutsu poistettu"
+        rescind_all: "Peru kaikki kutsut"
+        rescinded_all: "Kaikki kutsut peruttu!"
+        rescind_all_confirm: "Haluatko varmasti perua kaikki kutsut?"
         reinvite: "Lähetä kutsu uudestaan"
         reinvite_all: "Lähetä kaikki kutsut uudestaan"
         reinvite_all_confirm: "Haluatko varmasti lähettää kaikki kutsut uudelleen?"
@@ -936,6 +942,9 @@ fi:
       complete_email_found: "Sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_username_not_found: "Käyttäjänimeä <b>%{username}</b> ei ole rekisteröity"
       complete_email_not_found: "Sähköpostiosoitetta <b>%{email}</b> vastaavaa tiliä ei ole"
+      help: "Eikö sähköposti saavu? Ensiksi tarkasta roskapostikansiosi.<p>Etkö ole varma sähköpostiosoitteesta? Syötä sähköpostiosoite niin saat tietää onko sillä luotu tunnusta.</p><p>Jos et enää hallitse sähköpostiosoitettasi, ota yhteyttä <a href='/about'>avuliaaseen henkilökuntaamme.</a></p>"
+      button_ok: "OK"
+      button_help: "Apua"
     login:
       title: "Kirjaudu"
       username: "Käyttäjä"
@@ -995,8 +1004,8 @@ fi:
       accept_invite: "Hyväksy kutsu"
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
-      name_label_optional: "Nimi (valinnainen)"
-      password_label: "Aseta salasana (valinnainen)"
+      password_label: "Aseta salasana"
+      optional_description: "(valinnainen)"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
     emoji_set:
@@ -1005,6 +1014,8 @@ fi:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vain alueet"
       categories_with_featured_topics: "Alueet, joiden yhteydessä ketjuja"
@@ -1013,6 +1024,17 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: Etsi emojia
+      people: Ihmiset
+      nature: Luonto
+      food: Ruoka
+      activity: Harrasteet
+      travel: Matkustelu
+      objects: Esineet
+      celebration: Juhlinta
+      custom: Mukautetut emojit
+      recent: Hiljattain käyttämäni emojit
     composer:
       emoji: "Emoji :)"
       more_emoji: "lisää..."
@@ -1043,7 +1065,7 @@ fi:
         post_length: "Viestissä täytyy olla vähintään {{min}} merkkiä"
         try_like: 'Oletko jo kokeillut <i class="fa fa-heart"></i>-nappia?'
         category_missing: "Sinun täytyy valita viestille alue"
-      save_edit: "Tallenna muokkaus"
+      save_edit: "Tallenna"
       reply_original: "Vastaa alkuperäiseen ketjuun"
       reply_here: "Vastaa tänne"
       reply: "Vastaa"
@@ -1216,6 +1238,7 @@ fi:
           seen: jotka olen lukenut
           unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä
+          all_tags: Ketjulla on kaikki tunnisteet
         statuses:
           label: Ketju/Ketjuun
           open: on avoin
@@ -1662,6 +1685,7 @@ fi:
         has_liked: "tykkäsit tästä viestistä"
         undo_like: "peru tykkäys"
         edit: "muokkaa viestiä"
+        edit_action: "Muokkaa"
         edit_anonymous: "Pahoittelut, sinun täytyy ensin kirjautua sisään voidaksesi muokata tätä viestiä."
         flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisesti siihen liittyvä huomio"
         delete: "poista tämä viesti"
@@ -1768,8 +1792,8 @@ fi:
           other: "Oletko varma, että haluat poistaa kaikki nämä viestit?"
       merge:
         confirm:
-          one: "Oletko varma, että haluat yhdistää viestit?"
-          other: "Oletko varma, että haluat yhdistää {{count}} viestiä?"
+          one: "Oletko varma, että haluat yhdistää nämä viestit?"
+          other: "Oletko varma, että haluat yhdistää nämä {{count}} viestiä?"
       revisions:
         controls:
           first: "Ensimmäinen revisio"
@@ -1815,8 +1839,8 @@ fi:
       settings: 'Asetukset'
       topic_template: "Ketjun sapluuna"
       tags: "Tunnisteet"
-      tags_allowed_tags: "Tällä alueella sallitut tunnisteet:"
-      tags_allowed_tag_groups: "Tällä alueella sallitut tunnisteryhmät:"
+      tags_allowed_tags: "Salli vain nämä tunnisteet tällä alueella:"
+      tags_allowed_tag_groups: "Salli vain näiden tunnisteryhmien tunnisteet tällä alueella:"
       tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
       tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
@@ -2614,7 +2638,7 @@ fi:
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
           color_scheme: "Värimalli"
-          color_scheme_select: "Valitse värit, joita teema käyttä"
+          color_scheme_select: "Valitse teemalle värit"
           custom_sections: "Mukautetut osiot:"
           theme_components: "Teeman osat"
           uploads: "Lataukset"
@@ -2785,6 +2809,8 @@ fi:
           block: "estä"
           do_nothing: "älä tee mitään"
         staff_actions:
+          all: "kaikki"
+          filter: "Suodata:"
           title: "Henkilökunnan toimet"
           clear_filters: "Näytä kaikki"
           staff_user: "Palstan edustaja"
@@ -2838,6 +2864,8 @@ fi:
             change_readonly_mode: "muuta vain luku -tilaa"
             backup_download: "lataa varmuuskopio"
             backup_destroy: "tuhoa varmuuskopio"
+            reviewed_post: "arvioi viestin"
+            custom_staff: "lisäosan mukautettu toiminto"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."

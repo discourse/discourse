@@ -16,7 +16,7 @@ pt:
         other: "total de votos"
       average_rating: "Classificação média: <strong>%{average}</strong>."
       public:
-        title: "Votos são públicos."
+        title: "Os votos são públicos."
       multiple:
         help:
           at_least_min_options:
@@ -41,23 +41,23 @@ pt:
       open:
         title: "Abrir a sondagem"
         label: "Abrir"
-        confirm: "Tem a certeza que quer abrir esta sondagem?"
+        confirm: "Tem a certeza que deseja abrir esta sondagem?"
       close:
         title: "Fechar a sondagem"
         label: "Fechar"
-        confirm: "Tem a certeza que quer fechar esta sondagem?"
-      error_while_toggling_status: "Pedimos desculpa, ocorreu um erro ao mudar o estado desta sondagem."
-      error_while_casting_votes: "Pedimos desculpa, ocorreu um erro ao submeter os seus votos."
+        confirm: "Tem a certeza que deseja fechar esta sondagem?"
+      error_while_toggling_status: "Desculpe, ocorreu um erro ao alternar o estado desta sondagem."
+      error_while_casting_votes: "Desculpe, ocorreu um erro ao submeter os seus votos."
       error_while_fetching_voters: "Pedimos desculpa, ocorreu um erro ao apresentar os eleitores."
       ui_builder:
         title: Criar Sondagem
         insert: Inserir sondagem
         help:
-          options_count: Indique pelo menos 2 opções
+          options_count: Insira pelo menos 2 opções
         poll_type:
           label: Tipo
           regular: Escolha Única
-          multiple: Multipla escolha
+          multiple: Escolha Múltipla
           number: Cotação numérica
         poll_config:
           max: Máximo

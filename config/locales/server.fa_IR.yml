@@ -220,6 +220,9 @@ fa_IR:
       trust_level_2: "سطح اعتماد 2"
       trust_level_3: "سطح اعتماد 3"
       trust_level_4: "سطح اعتماد 4"
+    request_membership_pm:
+      title: "درخواست عضویت در @%{group_name}"
+      body: "میخواهم برای عضویت در @%{group_name} اقدام کنم."
   education:
     until_posts:
       other: "%{count} نوشته"
@@ -348,7 +351,6 @@ fa_IR:
   staff_category_name: "همکاران"
   staff_category_description: "بخش خصوصی برای گفتگوی مدیران. موضوعات فقط برای مدیران ارشد و مدیران قابل رویت است."
   assets_topic_title: "منابع مورد نیاز طراحی سایت"
-  assets_topic_body: "این یک موضوع ثابت است که فقط به کارمندان نمایش داده می‌شود، برای ذخیره تصاویر و فایل‌های استفاده شده در طراحی سایت. این موضوع را حذف نکنید.\n\n\nنحوه کار:\n\n\n1. به موضوع پاسخ دهید.\n2. تمام تصاویر مورد دنیاز برای لوگو، فاو‌آیکن و... را بارگذاری کنید. ( از آیکن نوار ابزار در ویرایشگر نوشته استفاده کنید، یا تصاویر را در ویرایشگر بکشید و یا آن ها را بچسبانید)\n3. پاسخ خود را برای ارسال نوشته ثبت کنید.\n4. در نوشته‌های جدید روی تصاویر کلیک راست کنیدتا مسیر تصویر بارگذاری شده را دریافت کنید، یا روی آیکن ویرایشنوشته کلیک کنید تا مسیر تصاویر را بازیابی کنید. مسیر تصویر را کپی کنید.\n5. مسیر تصاویر کپی شده را در [تنظیمات اولیه](/admin/site_settings/category/required) وارد کنید.\n\n\nاگر نیاز به فعالسازی انواع دیگری از فایل‌ها دارید قسمت  `authorized_extensions`  در [تنظیمات فایل](/admin/site_settings/category/files) را ویرایش کنید."
   discourse_welcome_topic:
     title: "به دیسکورس خوش آمدید"
     body: |2
@@ -606,7 +608,6 @@ fa_IR:
         remove: "این موضوع دیگر در بنر نیست. دیگر در بالای تمام صفحات به نمایش در نمی‌آید. "
   unsubscribed:
     title: "اشتراک لغو شد!"
-    description: "لغو اشتراک انجام شد. برای تغییر تنظیمات ایمیل <a href='%{url}'>تنظیمات را ببینید</a>."
     topic_description: "اشتراک مجدد در %{link}، استفاده از مدیریت اعلانات در قسمت پایین یا راست موضوع."
   unsubscribe:
     title: "لغو اشتراک"
@@ -883,7 +884,6 @@ fa_IR:
     notify_mods_when_user_blocked: "اگر کاربر به‌طور خودکار مسدود شد، به تمام مدیران پیام بفرست."
     flag_sockpuppets: "اگر کاربری به موضوع با ای پی برابر با کاربری که نوشته را شروع کرده ٬ آنها را به عنوان هرزنامه پرچم گزاری کن."
     traditional_markdown_linebreaks: "در مدل‌های نشانه گزاری از خط جدید سنتی استفاده کن،‌ که برای linebreak نیاز به دو فضای انتهایی دارد ."
-    allow_html_tables: "اجازه ارسال جدول به صورت markdown با تگ های HTML. TABLE, THEAD, TD, TR, TH قابل استفاده هستند. (نیازمند ایجا دوباره در نوشته‌های قدیمی که شامل جدول هستند)"
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری،‌ چیزهای دیگر)."
     must_approve_users: "همکاران باید تمامی حساب‌های کاربری را قبل از اجازه دسترسی به سایت تایید کنند. اخطار: فعال‌سازی این گزینه ممکن است باعث جلوگیری از دسترسی کاربرانی که قبلا عضو شده‌اند نیز بشود!"
     pending_users_reminder_delay: "اگر کاربر‌ها بیشتر از این مقدار ساعت منتظر تایید بودند به مدیران اعلام کن. مقدار -1 برای غیرفعال‌سازی."
@@ -1024,6 +1024,7 @@ fa_IR:
     twitter_summary_large_image_url: "لینک پیشفرض خلاصه توییتر و تصویر (باید حداقل 280 در 150 پیکسل باشد)"
     allow_all_attachments_for_group_messages: "اجازه‌ی ضمیمه فایل در ایمیل پیام‌های گروهی."
     png_to_jpg_quality: "کیفیت تبدیل فایل‌های JPG (1 کمترین کیفیت، 99 بالاترین کیفیت، 100 برای غیر‌فعال)"
+    allow_staff_to_upload_any_file_in_pm: "به مدیران اجازه بده که هر فایلی در پیغام خصوصی آپلود کنند."
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید باعث ایجاد خطرات امنیتی شود."
     default_invitee_trust_level: "سطح اعتماد پیشفرض (0-4) برای دعوت کاربران"
     default_trust_level: "سطح اعتماد پیشفرض(0-4) برای تمام کاربران جدید. اخطار! تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
@@ -1463,41 +1464,9 @@ fa_IR:
   invite_mailer:
     title: "دعوت نامه‌رسان"
     subject_template: "%{invitee_name} شما را به %{topic_title}' در  %{site_domain_name}  دعوت کرده"
-    text_body_template: |
-      %{invitee_name} شما را به گفتگو دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      اگر علاقه‌مند هستید روی لینک زیر کلیک کنید:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "دعوت سفارشی نامه‌رسان"
     subject_template: "%{invitee_name} شما را به '%{topic_title}' در %{site_domain_name} دعوت کرده"
-    text_body_template: |
-      %{invitee_name} شما را به گفتگو دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      با این یادداشت
-
-      > %{user_custom_message}
-
-      اگر علاقه‌مند هستید روی لینک زیر کلیک کنید:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "دعوت نامه‌رسان انجمن"
     subject_template: "%{invitee_name} به عضویت در %{site_domain_name} دعوت شدید"
@@ -1975,12 +1944,6 @@ fa_IR:
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
       subject_template: "شما کاربر جدید ماه هستید!"
-      text_body_template: |
-        تبریک عرض میکنم، شما **جایزه کاربر جدید ماه %{month_year}** را بدست آوردید! :trophy:
-
-        این جایزه فقط به دو کاربر در ماه تعلق می‌گیرد و به صورت ثابت در [حساب کاربری شما](/my/badges) باقی می‌ماند.
-
-        شما خیلی زود به یک عضو ارزشمند برای انجمن ما تبدیل شدید. از پیوستن شما متشکریم، به کار خود ادامه دهید!
   unsubscribe_link: |
     برای لغو اشتراک از این ایمیل‌ها،  [کلیک کنید](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2005,26 +1968,6 @@ fa_IR:
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     visit_link_to_respond_pm: "[پیام را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
-    invited_to_private_message_body: |
-      %{username} شما را به یک پیام دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} شما را به یک بحث دعوت کرده
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "کاربر دعوت شده به پیام خصوصی"
       subject_template: "[%{email_prefix}] %{username} شما را به پیام '%{topic_title}' دعوت کرده"
@@ -2172,7 +2115,6 @@ fa_IR:
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
       subject_template: "[%{email_prefix}] خلاصه"
-      unsubscribe: "این خلاصه از %{site_link} به دلیل اینکه مدتی است شما را ندیده ایم ارسال شده است. برای لغو اشتراک %{unsubscribe_link}"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name} خلاصه"
       preheader: "یک خلاصه مختصر  به دلیل اینکه آخرین بازدیدتان در %{last_seen_at} بوده."

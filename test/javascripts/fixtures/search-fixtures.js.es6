@@ -1413,6 +1413,7 @@ export default {
       }
     ],
     "grouped_search_result": {
+      "term": "dev",
       "more_posts": true,
       "more_users": true,
       "more_categories": null,

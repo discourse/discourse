@@ -5,7 +5,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export const CLOSE_STATUS_TYPE = 'close';
 const OPEN_STATUS_TYPE = 'open';
-const PUBLISH_TO_CATEGORY_STATUS_TYPE = 'publish_to_category';
+export const PUBLISH_TO_CATEGORY_STATUS_TYPE = 'publish_to_category';
 const DELETE_STATUS_TYPE = 'delete';
 const REMINDER_TYPE = 'reminder';
 
@@ -33,9 +33,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     ];
   },
 
-  @computed('updateTime', 'loading')
-  saveDisabled(updateTime, loading) {
-    return Ember.isEmpty(updateTime) || loading;
+  @computed('updateTime', 'loading', 'publishToCategory', 'topicTimer.category_id')
+  saveDisabled(updateTime, loading, publishToCategory, topicTimerCategoryId) {
+    return Ember.isEmpty(updateTime) ||
+      loading ||
+      (publishToCategory && !topicTimerCategoryId);
   },
 
   @computed("model.visible")
@@ -70,7 +72,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       time,
       this.get('topicTimer.based_on_last_post'),
       statusType,
-      this.get('categoryId')
+      this.get('topicTimer.category_id')
     ).then(result => {
       if (time) {
         this.send('closeModal');

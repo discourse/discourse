@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require_dependency 'enum'
+
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
@@ -62,17 +66,56 @@ class Group < ActiveRecord::Base
     :everyone => 99
   }
 
+  def self.visibility_levels
+    @visibility_levels = Enum.new(
+      public: 0,
+      members: 1,
+      staff: 2,
+      owners: 3
+    )
+  end
+
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
   scope :visible_groups, ->(user) {
     groups = Group.order(name: :asc).where("groups.id > 0")
 
-    if !user || !user.admin
-      owner_group_ids = GroupUser.where(user: user, owner: true).pluck(:group_id)
+    unless user&.admin
+      sql =  <<~SQL
+        groups.id IN (
+          SELECT g.id FROM groups g WHERE g.visibility_level = :public
 
-      groups = groups.where("
-        (groups.automatic = false AND groups.visible = true) OR groups.id IN (?)
-      ", owner_group_ids)
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id
+          WHERE g.visibility_level = :members
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          LEFT JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.visibility_level = :staff AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id FROM groups g
+          JOIN group_users gu ON gu.group_id = g.id AND
+                                 gu.user_id = :user_id AND
+                                 gu.owner
+          WHERE g.visibility_level = :owners
+
+        )
+      SQL
+
+      groups = groups.where(
+        sql,
+        Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      )
+
     end
 
     groups
@@ -181,17 +224,14 @@ class Group < ActiveRecord::Base
     localized_name = I18n.t("groups.default_names.#{name}").downcase
     validator = UsernameValidator.new(localized_name)
 
-    group.name =
-      if !Group.where("LOWER(name) = ?", localized_name).exists? && validator.valid_format?
-        localized_name
-      else
-        name
-      end
+    if !Group.where("LOWER(name) = ?", localized_name).exists? && validator.valid_format?
+      group.name = localized_name
+    end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
     if name == :everyone
-      group.visible = false
+      group.visibility_level = Group.visibility_levels[:owners]
       group.save!
       return group
     end
@@ -282,7 +322,9 @@ class Group < ActiveRecord::Base
   end
 
   def self.search_group(name)
-    Group.where(visible: true).where("name ILIKE :term_like", term_like: "#{name}%")
+    Group.where(visibility_level: visibility_levels[:public]).where(
+      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "#{name}%"
+    )
   end
 
   def self.lookup_group(name)
@@ -296,22 +338,19 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.lookup_group_ids(opts)
-    if group_ids = opts[:group_ids]
-      group_ids = group_ids.split(",").map(&:to_i)
-      group_ids = Group.where(id: group_ids).pluck(:id)
+  def self.lookup_groups(group_ids: [], group_names: [])
+    if group_ids.present?
+      group_ids = group_ids.split(",")
+      group_ids.map!(&:to_i)
+      groups = Group.where(id: group_ids) if group_ids.present?
     end
 
-    group_ids ||= []
-
-    if group_names = opts[:group_names]
+    if group_names.present?
       group_names = group_names.split(",")
-      if group_names.present?
-        group_ids += Group.where(name: group_names).pluck(:id)
-      end
+      groups = (groups || Group).where(name: group_names) if group_names.present?
     end
 
-    group_ids
+    groups || []
   end
 
   def self.desired_trust_level_groups(trust_level)
@@ -399,24 +438,37 @@ class Group < ActiveRecord::Base
 
   def bulk_add(user_ids)
     if user_ids.present?
-      Group.exec_sql("INSERT INTO group_users
-                                  (group_id, user_id, created_at, updated_at)
-                     SELECT #{self.id},
-                            u.id,
-                            CURRENT_TIMESTAMP,
-                            CURRENT_TIMESTAMP
-                     FROM users AS u
-                     WHERE u.id IN (#{user_ids.join(', ')})
-                       AND NOT EXISTS(SELECT 1 FROM group_users AS gu
-                                      WHERE gu.user_id = u.id AND
-                                            gu.group_id = #{self.id})")
+      sql = <<~SQL
+      INSERT INTO group_users
+        (group_id, user_id, created_at, updated_at)
+      SELECT
+        #{self.id},
+        u.id,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+      FROM users AS u
+      WHERE u.id IN (:user_ids)
+      AND NOT EXISTS (
+        SELECT 1 FROM group_users AS gu
+        WHERE gu.user_id = u.id AND
+        gu.group_id = :group_id
+      )
+      SQL
+
+      Group.exec_sql(sql, group_id: self.id, user_ids: user_ids)
+
+      new_attributes = {}
 
       if self.primary_group?
-        User.where(id: user_ids).update_all(primary_group_id: self.id)
+        new_attributes[:primary_group_id] = self.id
       end
 
       if self.title.present?
-        User.where(id: user_ids).update_all(title: self.title)
+        new_attributes[:title] = self.title
+      end
+
+      if new_attributes.present?
+        User.where(id: user_ids).update_all(new_attributes)
       end
 
       if self.grant_trust_level.present?
@@ -485,11 +537,11 @@ class Group < ActiveRecord::Base
       return if new_record? && !self.primary_group?
 
       if self.primary_group_changed?
-        sql = <<SQL
-        UPDATE users
-        /*set*/
-        /*where*/
-SQL
+        sql = <<~SQL
+          UPDATE users
+          /*set*/
+          /*where*/
+        SQL
 
         builder = SqlBuilder.new(sql)
         builder.where("
@@ -537,7 +589,6 @@ end
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
 #  alias_level                        :integer          default(0)
-#  visible                            :boolean          default(TRUE), not null
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
@@ -554,6 +605,7 @@ end
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
+#  visibility_level                   :integer          default(0), not null
 #
 # Indexes
 #

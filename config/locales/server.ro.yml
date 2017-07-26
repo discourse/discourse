@@ -320,7 +320,6 @@ ro:
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătăți."
   staff_category_name: "Echipa"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Subiectele sunt vizibile numai pentru admini și moderatori."
-  assets_topic_body: "Acesta este un subiect permanent, vizibil doar pentru admini și echipă, care are ca scop stocarea imaginilor și fișierelor folosite la designul forumului. Nu îl șterge!\n\n\nIată cum se lucrează:\n\n\n1. Răspunde la acest subiect.\n2. Încarcă aici toate imaginile dorite pentru logouri, iconițe și așa mai departe. (Folosește iconița de încărcare din bara editorului de discuție, folosește drag-and-drop sau lipește imaginile.)\n3. Aprobă răspunsul pentru a-l posta.\n4. Click dreapta pe imaginile din noua postare pentru a obține calea spre imaginile încărcate, sau click pe icoana de editare pentru a edita postarea și a obține calea către imagini. Copiază calea imaginii.\n5. Lipește calea imaginii în [Setări principale](/admin/site_settings/category/required).\n\n\nDacă dorești să activezi încărcarea unor tipuri multiple de fișiere, editează `extensii_autorizate` în secțiunea [setări fișiere](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bine ai venit în sufragerie"
     body: |2
@@ -604,7 +603,6 @@ ro:
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
     title: "Te-ai dezabonat!"
-    description: "Te-ai dezabonat. Pentru a-ți schimba adresa de email <a href='%{url}'>vizitează preferințe utilizator</a>."
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -880,7 +878,6 @@ ro:
     notify_mods_when_user_blocked: "Dacă un utilizator este blocat automat, trimite un mesaj tuturor moderatorilor."
     flag_sockpuppets: "Dacă un utilizator nou răspunde unui subiect de la același IP ca utilizatorul ce a pornit subiectul, marchează ambele postări ca potențial spam."
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
-    allow_html_tables: "Permite introducerea de tabele în Markdown prin folosirea de etichete HTML. HEAD, TD, TR, TH vor fi autorizate (necesită un rebake pe toate postările vechi ce conțin tabele)"
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: "Membrii echipei trebuie să aprobe toate conturile noilor utilizatori înainte ca aceștia să poată accesa site-ul. ATENȚIE: activarea acestei opțiuni pentru un site în producție va revoca accesul tuturor utilizatorilor care nu sunt membri ai echipei!"
     pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
@@ -1802,26 +1799,6 @@ ro:
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
     visit_link_to_respond_pm: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
     posted_by: "Postat de %{username} pe data %{post_date}"
-    invited_to_private_message_body: |
-      %{username} te-a invitat la un mesaj
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} te-a invitat la o discuție
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
@@ -1942,7 +1919,6 @@ ro:
       follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
-      unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Pentru a te dezabona, %{unsubscribe_link}."
       click_here: "click aici"
       from: "%{site_name} rezumat"
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"

@@ -46,6 +46,14 @@ export default Ember.Controller.extend({
     return Em.isEmpty(q);
   },
 
+
+  @computed('q')
+  highlightQuery(q) {
+    if (!q) { return; }
+    // remove l which can be used for sorting
+    return _.reject(q.split(/\s+/), t => t === 'l').join(' ');
+  },
+
   @computed('skip_context', 'context')
   searchContextEnabled: {
     get(skip,context){
@@ -186,6 +194,11 @@ export default Ember.Controller.extend({
 
     ajax("/search", { data: args }).then(results => {
       const model = translateResults(results) || {};
+
+      if (results.grouped_search_result) {
+        this.set('q', results.grouped_search_result.term);
+      }
+
       setTransient('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
     }).finally(() => this.set("searching", false));

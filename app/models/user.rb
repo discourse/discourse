@@ -42,7 +42,9 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+  has_many :user_emails, dependent: :destroy
 
+  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -74,16 +76,13 @@ class User < ActiveRecord::Base
 
   delegate :last_sent_email_address, :to => :email_logs
 
-  before_validation :strip_downcase_email
-
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
-  validates :email, presence: true, uniqueness: true
-  validates :email, format: { with: EmailValidator.email_regex }, if: :email_changed?
-  validates :email, email: true, if: :should_validate_email?
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
+  validates :primary_email, presence: true, if: :should_validate_primary_email?
+  validates_associated :primary_email, if: :should_validate_primary_email?
 
   after_initialize :add_trust_level
 
@@ -98,7 +97,6 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
 
   after_save :expire_tokens_if_password_changed
-  after_save :automatic_group_membership
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
@@ -123,6 +121,8 @@ class User < ActiveRecord::Base
 
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
+
+  scope :with_email, ->(email) { joins(:user_emails).where(user_emails: { email: email }) }
 
   scope :human_users, -> { where('users.id > 0') }
 
@@ -233,7 +233,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    find_by(email: Email.downcase(email))
+    self.with_email(Email.downcase(email)).first
   end
 
   def self.find_by_username(username)
@@ -268,8 +268,8 @@ class User < ActiveRecord::Base
     used_invite.try(:invited_by)
   end
 
-  def should_validate_email?
-    return !skip_email_validation && !staged? && email_changed?
+  def should_validate_primary_email?
+    !skip_email_validation && !staged?
   end
 
   # Approve this user
@@ -574,6 +574,7 @@ class User < ActiveRecord::Base
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
+      url = "#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
       url.gsub! "{color}", letter_avatar_color(username.downcase)
       url.gsub! "{username}", username
       url.gsub! "{first_letter}", username[0].downcase
@@ -689,8 +690,7 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    email_token = self.email_tokens.active.first
-    if email_token
+    if email_token = self.email_tokens.active.first
       EmailToken.confirm(email_token.token)
     else
       self.active = true
@@ -920,6 +920,34 @@ class User < ActiveRecord::Base
     end
   end
 
+  def set_automatic_groups
+    return unless active && email_confirmed? && !staged
+
+    Group.where(automatic: false)
+         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
+         .each do |group|
+
+      domains = group.automatic_membership_email_domains.gsub('.', '\.')
+
+      if email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
+        group.add(self)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+      end
+    end
+  end
+
+  def email
+    primary_email.email
+  end
+
+  def email=(email)
+    if primary_email
+      self.new_record? ? primary_email.email = email : primary_email.update(email: email)
+    else
+      build_primary_email(email: email)
+    end
+  end
+
   protected
 
   def badge_grant
@@ -947,23 +975,6 @@ class User < ActiveRecord::Base
 
   def ensure_in_trust_level_group
     Group.user_trust_level_change!(id, trust_level)
-  end
-
-  def automatic_group_membership
-    user = User.find(self.id)
-    return unless user && user.active && user.email_confirmed? && !user.staged
-
-    Group.where(automatic: false)
-         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
-         .each do |group|
-
-      domains = group.automatic_membership_email_domains.gsub('.', '\.')
-
-      if user.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
-        group.add(user)
-        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
-      end
-    end
   end
 
   def create_user_stat
@@ -1011,13 +1022,6 @@ class User < ActiveRecord::Base
 
   def update_username_lower
     self.username_lower = username.downcase
-  end
-
-  def strip_downcase_email
-    if self.email
-      self.email = self.email.strip
-      self.email = self.email.downcase
-    end
   end
 
   def username_validator
@@ -1106,7 +1110,7 @@ end
 #  name                    :string
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
-#  email                   :string(513)      not null
+#  email                   :string(513)
 #  password_hash           :string(64)
 #  salt                    :string(32)
 #  active                  :boolean          default(FALSE), not null

@@ -36,6 +36,7 @@ end
 
 gem 'mail'
 gem 'mime-types', require: 'mime/types/columnar'
+gem 'mini_mime'
 
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
@@ -48,10 +49,9 @@ gem 'onebox'
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source', '2.10.0'
+gem 'ember-source'
 gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
-gem 'babel-transpiler'
 
 gem 'message_bus'
 
@@ -74,6 +74,10 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+
+# this may end up deprecating nokogiri
+gem 'oga', require: false
+
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'
@@ -94,13 +98,13 @@ gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 gem 'thor', require: false
-gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sidekiq'
 
 # for sidekiq web
-gem 'sinatra', require: false
+gem 'tilt', require: false
+
 gem 'execjs', require: false
 gem 'mini_racer'
 gem 'highline', require: false
@@ -118,7 +122,6 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  gem 'timecop'
   # TODO: Remove once we upgrade to Rails 5.
   gem 'test_after_commit'
 end

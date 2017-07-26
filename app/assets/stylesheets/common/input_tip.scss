@@ -7,7 +7,7 @@
   padding: 5px 10px;
   z-index: 101;
   &.bad {
-    background: dark-light-diff($danger, $secondary, 20%, -40%);
+    background: $danger-medium;
     color: white;
     box-shadow: 1px 1px 5px rgba(0,0,0, .7);
   }

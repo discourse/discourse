@@ -33,7 +33,8 @@ describe Jobs::Tl3Promotions do
 
     it "demotes if was promoted more than X days ago" do
       user = nil
-      Timecop.freeze(4.days.ago) do
+
+      freeze_time 4.days.ago do
         user = create_leader_user
       end
 
@@ -45,7 +46,7 @@ describe Jobs::Tl3Promotions do
 
     it "doesn't demote if user was promoted recently" do
       user = nil
-      Timecop.freeze(1.day.ago) do
+      freeze_time 1.day.ago do
         user = create_leader_user
       end
 
@@ -57,7 +58,7 @@ describe Jobs::Tl3Promotions do
 
     it "doesn't demote if user hasn't lost requirements (low water mark)" do
       user = nil
-      Timecop.freeze(4.days.ago) do
+      freeze_time(4.days.ago) do
         user = create_leader_user
       end
 

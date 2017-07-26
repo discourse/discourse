@@ -1,6 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import { url } from 'discourse/lib/computed';
-import AdminPost from 'discourse/models/admin-post';
+import UserAction from 'discourse/models/user-action';
 
 export default Discourse.Model.extend({
   loaded: false,
@@ -36,7 +36,7 @@ export default Discourse.Model.extend({
 
     return ajax(this.get("url"), { cache: false }).then(function (result) {
       if (result) {
-        const posts = result.map(function (post) { return AdminPost.create(post); });
+        const posts = result.map(function (post) { return UserAction.create(post); });
         self.get("content").pushObjects(posts);
         self.setProperties({
           loaded: true,

@@ -26,12 +26,6 @@ source_file = plugins/poll/config/locales/server.en.yml
 source_lang = en
 type = YML
 
-[discourse-org.imgurserverenyml]
-file_filter = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.<lang>.yml
-source_file = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.en.yml
-source_lang = en
-type = YML
-
 [discourse-org.narrativeclientenyml]
 file_filter = plugins/discourse-narrative-bot/config/locales/client.<lang>.yml
 source_file = plugins/discourse-narrative-bot/config/locales/client.en.yml

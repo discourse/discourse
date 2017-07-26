@@ -26,9 +26,9 @@ ro:
             few: "Trebuie să alegi cel puțin <strong>%{count}</strong> opțiuni."
             other: "Trebuie să alegi cel puțin <strong>%{count}</strong> opțiuni."
           up_to_max_options:
-            one: "Trebuie să alegi maxim <strong>o</strong> opțiune."
-            few: "Trebuie să alegi maxim <strong>%{count}</strong> opțiuni."
-            other: "Trebuie să alegi maxim <strong>%{count}</strong> opțiuni."
+            one: "Poți alege maximum <strong>o</strong> opțiune."
+            few: "Poți alege până la <strong>%{count}</strong> opțiuni."
+            other: "Poți alege până la <strong>%{count}</strong> de opțiuni."
           x_options:
             one: "Trebuie să alegi <strong>o</strong> opțiune."
             few: "Trebuie să alegi <strong>%{count}</strong> opțiuni."

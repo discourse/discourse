@@ -163,7 +163,6 @@ sq:
       <<: *errors
   meta_category_name: "Reagimet e Faqes"
   staff_category_name: "Stafi"
-  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Mirë se vini në Lounge"
     body: |2
@@ -383,7 +382,6 @@ sq:
         remove: "Kjo temë nuk është më banderolë. Nuk do të shfaqet më në majë të çdo faqeje të sitit. "
   unsubscribed:
     title: "U çregjistruat!"
-    description: "U çregjistruat. Për të ndryshuar rregullimet e email-it <a href='%{url}'> shkoni tek preferencat e përdoruesit</a>."
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
     title: "Çregjistrohuni"
@@ -1042,26 +1040,6 @@ sq:
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     visit_link_to_respond_pm: "[Shiko Mesazhin](%{base_url}%/{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
-    invited_to_private_message_body: |
-      %{username} ju ftoi tek mesazhi
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      në
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} ju ftoi në një bisedë
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
@@ -1171,7 +1149,6 @@ sq:
         %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
-      unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
     notify_old_email:
@@ -1192,7 +1169,7 @@ sq:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Welcome to %{title}](#welcome)
+      ## [Welcome to %{title}](#welcome)
       An account is required. Please create an account or log in to continue.
   terms_of_service:
     title: "Kushtet e shërbimit"

@@ -1,19 +1,4 @@
 class Admin::GroupsController < Admin::AdminController
-
-  def index
-    groups = Group.order(:name).where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
-
-    if search = params[:search].to_s
-      groups = groups.where("name ILIKE ?", "%#{search}%")
-    end
-
-    if params[:ignore_automatic].to_s == "true"
-      groups = groups.where(automatic: false)
-    end
-
-    render_serialized(groups, BasicGroupSerializer)
-  end
-
   def show
     render nothing: true
   end
@@ -29,7 +14,11 @@ class Admin::GroupsController < Admin::AdminController
       users = (params[:users] || []).map {|u| u.downcase}
       valid_emails = {}
       valid_usernames = {}
-      valid_users = User.where("username_lower IN (:users) OR email IN (:users)", users: users).pluck(:id, :username_lower, :email)
+
+      valid_users = User.joins(:user_emails)
+        .where("username_lower IN (:users) OR user_emails.email IN (:users)", users: users)
+        .pluck(:id, :username_lower, :"user_emails.email")
+
       valid_users.map! do |id, username_lower, email|
         valid_emails[email] = valid_usernames[username_lower] = id
         id
@@ -59,7 +48,11 @@ class Admin::GroupsController < Admin::AdminController
 
   def save_group(group)
     group.alias_level = group_params[:alias_level].to_i if group_params[:alias_level].present?
-    group.visible = group_params[:visible] == "true"
+
+    if group_params[:visibility_level]
+      group.visibility_level = group_params[:visibility_level]
+    end
+
     grant_trust_level = group_params[:grant_trust_level].to_i
     group.grant_trust_level = (grant_trust_level > 0 && grant_trust_level <= 4) ? grant_trust_level : nil
 
@@ -160,7 +153,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def group_params
     params.require(:group).permit(
-      :name, :alias_level, :visible, :automatic_membership_email_domains,
+      :name, :alias_level, :visibility_level, :automatic_membership_email_domains,
       :automatic_membership_retroactive, :title, :primary_group,
       :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
       :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name,

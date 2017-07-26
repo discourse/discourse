@@ -342,6 +342,16 @@ describe PostMover do
           expect(new_post.post_actions.size).to eq(1)
         end
 
+        it "preserves the custom_fields in the new post" do
+          custom_fields = { "some_field" => 'payload' }
+          p1.custom_fields = custom_fields
+          p1.save_custom_fields
+
+          new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
+
+          expect(new_topic.first_post.custom_fields).to eq(custom_fields)
+        end
+
       end
 
       context "to an existing topic with a deleted post" do
@@ -381,6 +391,19 @@ describe PostMover do
         end
       end
 
+      context "to an existing closed topic" do
+        let!(:destination_topic) { Fabricate(:topic, closed: true) }
+
+        it "works correctly for admin" do
+          admin = Fabricate(:admin)
+          moved_to = topic.move_posts(admin, [p1.id, p2.id], destination_topic_id: destination_topic.id)
+          expect(moved_to).to be_present
+
+          moved_to.reload
+          expect(moved_to.posts_count).to eq(2)
+          expect(moved_to.highest_post_number).to eq(2)
+        end
+      end
 
     end
   end

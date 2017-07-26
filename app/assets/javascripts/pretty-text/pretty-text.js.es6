@@ -1,17 +1,13 @@
-import { cook, setup } from 'pretty-text/engines/discourse-markdown';
-import { sanitize } from 'pretty-text/sanitizer';
-import WhiteLister from 'pretty-text/white-lister';
+import { cook as cookIt, setup as setupIt } from 'pretty-text/engines/discourse-markdown-it';
 
-const _registerFns = [];
-const identity = value => value;
-
-export function registerOption(fn) {
-  _registerFns.push(fn);
+export function registerOption() {
+  // TODO next major version deprecate this
+  // if (window.console) {
+  //   window.console.log("registerOption is deprecated");
+  // }
 }
 
 export function buildOptions(state) {
-  setup();
-
   const {
     siteSettings,
     getURL,
@@ -21,10 +17,15 @@ export function buildOptions(state) {
     categoryHashtagLookup,
     userId,
     getCurrentUser,
-    currentUser
+    currentUser,
+    lookupAvatarByPostNumber,
+    emojiUnicodeReplacer,
+    lookupInlineOnebox,
+    previewing,
+    linkify
   } = state;
 
-  const features = {
+  let features = {
     'bold-italics': true,
     'auto-link': true,
     'mentions': true,
@@ -33,8 +34,13 @@ export function buildOptions(state) {
     'html': true,
     'category-hashtag': true,
     'onebox': true,
-    'newline': true
+    'linkify': linkify !== false,
+    'newline': !siteSettings.traditional_markdown_linebreaks
   };
+
+  if (state.features) {
+    features = _.merge(features, state.features);
+  }
 
   const options = {
     sanitize: true,
@@ -47,31 +53,43 @@ export function buildOptions(state) {
     userId,
     getCurrentUser,
     currentUser,
+    lookupAvatarByPostNumber,
     mentionLookup: state.mentionLookup,
-    allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null
+    emojiUnicodeReplacer,
+    lookupInlineOnebox,
+    allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
+    markdownIt: true,
+    previewing
   };
 
-  _registerFns.forEach(fn => fn(siteSettings, options, state));
+  // note, this will mutate options due to the way the API is designed
+  // may need a refactor
+  setupIt(options, siteSettings, state);
 
   return options;
 }
 
 export default class {
   constructor(opts) {
-    this.opts = opts || {};
-    this.opts.features = this.opts.features || {};
-    this.opts.sanitizer = (!!this.opts.sanitize) ? (this.opts.sanitizer || sanitize) : identity;
-    setup();
+    if (!opts) {
+      opts = buildOptions({ siteSettings: {}});
+    }
+    this.opts = opts;
+  }
+
+  disableSanitizer() {
+    this.opts.sanitizer = this.opts.discourse.sanitizer = ident => ident;
   }
 
   cook(raw) {
     if (!raw || raw.length === 0) { return ""; }
 
-    const result = cook(raw, this.opts);
+    let result;
+    result = cookIt(raw, this.opts);
     return result ? result : "";
   }
 
   sanitize(html) {
-    return this.opts.sanitizer(html, new WhiteLister(this.opts));
+    return this.opts.sanitizer(html).trim();
   }
 };

@@ -6,15 +6,47 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 sk:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Povoliť Rozprávacieho Robota Discourse'
+    disable_discourse_narrative_bot_welcome_post: "Vypnúť uvítací príspevok Rozprávacieho Robota Discourse"
+    discourse_narrative_bot_ignored_usernames: "Používateľské mená, ktoré má Rozprávací Robot Discourse ignorovať"
+    discourse_narrative_bot_disable_public_replies: "Vypnúť verejné odpovede Rozprávacieho Robota Discourse"
+    discourse_narrative_bot_welcome_post_type: "Typ uvítacieho príspevku, ktorý má Rozprávací Robot Discourse posielať"
+    discourse_narrative_bot_welcome_post_delay: "Počkať (n) sekúnd pred poslaním uvítacieho príspevku od Rozprávacieho Robota Discourse"
   badges:
+    certified:
+      name: Certifikovaný
+      description: "Ukončený manuál nového používateľa"
+      long_description: |
+        Tento odznak sa udeľuje po úspešnom ukončení interaktívneho manuálu nového používateľa.  Zahájili ste iniciatívu na naučenie sa základným nástrojom diskusie a teraz ste certifikovaný!
     licensed:
+      name: Licencovaný
       description: "Dokončili sme náš tutoriál pre pokročilých používateľov"
+      long_description: |
+        Tento odznak sa udeľuje po úspešnom ukončení interaktívneho manuálu pokročilého používateľa. Zvládli ste pokročilé nástroje diskusie — a teraz ste plne certifikovaný!
   discourse_narrative_bot:
+    bio: "Ahoji, ja nie som skutočná osoba. Som robot, ktorý Ťa môže naučiť o tejto stránke. Komunikovať so mnou môžeš poslaním správy, alebo zmienkou **`@%{discobot_username}`** kdekoľvek."
+    timeout:
+      message: |-
+        Hej @%{username}, iba kontrolujem, pretože nejaký čas som od Ťeba nič nepočul .
+
+        - Ak chceš pokračovať, kedzkoľvek mi odpovedz.
+
+        - Ak chceš tento krok vynechať, napíš  `%{skip_trigger}`.
+
+        - Ak chceš začať od začiatku, povedz `%{reset_trigger}`.
+
+        Ak nie, tak je to tiež OK. Som robot. Moje pocity nezraníš. :sob:
     dice:
+      trigger: "zahrať"
       invalid: |-
         Je mi to ľúto, ale je matematicky nemožné zahrať túto kombináciu kociek. :confounded:
       not_enough_dice: |-
         Ja mám len %{num_of_dice} kocky. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ja viem!
+      out_of_range: |-
+        Vieš, že [maximálny počet strán](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pre matematicky férovú kocku je 120?
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "citácia"
       '1':
@@ -42,9 +74,13 @@ sk:
         quote: "Každý deň spravte niečo, čo vás straší."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Chyby sa vždy dajú ospravedlňiť, ak má človek odvahu si ich priznať."
         author: "Bruce Lee"
       '10':
+        quote: "Čokoľvek čo ľudská myseľ dokáže pochopiť a uveriť tomu, dokáže i dosiahnuť"
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: 'šťastie'
       answers:
@@ -57,14 +93,19 @@ sk:
         '7': "Pravdepodobne"
         '8': "Výhľad je dobrý"
         '9': "Áno"
+        '10': "Znamenia ukazujú na Áno"
+        '11': "Nejasná odpoveď, skús znovu"
         '12': "Opýtajte sa neskôr"
         '13': "Radšej ti to teraz nepoviem"
         '14': "Teraz to nie je možné predpovedať"
+        '15': "Koncentruj sa a spýtaj sa znovu"
         '16': "Nepočítajte s tým"
         '17': "Moja odpoveď je nie"
         '18': "Moje zdroje hovoria nie"
         '19': "Výhľad nie je tak dobrý"
         '20': "Veľmi pochybné"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: 'začať'
       skip_trigger: 'preskočiť'
@@ -72,11 +113,45 @@ sk:
       random_mention:
         reply: |-
           Ahoj! Ak chcete zistiť, čo dokážem urobiť, povedzte `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          V súčasnosti viem ako robiť nasledujúce veci:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Zahájiť jednu z nasledujúcich interaktívnych konverzácií: %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _Vykonaj náhodný milosrdný skutok, bez akýchkoľvek očakávaní, a buď si istý, že jedného dňa niekto může urobiť to isté pre Teba_ &mdash; Princezná Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Na to sa môžeš spoľahnúť
+      do_not_understand:
+        first_response: |-
+          Hej, ďakujem za odpoveď!
+
+          Žiaľ, ako úboho naprogramovaný robot tomu nedokážem porozumieť.. :frowning:
+        track_response: Môžeš skúsiť znovu, alebo ak chceš tento krok preskočiť, napíš `%{skip_trigger}`. Inak, aby si začal znovu, povedz `%{reset_trigger}`.
+        second_response: |-
+          Ach, prepáč, stále to chechápem. :anguished:
+
+          Som iba robot, ale ak chceš kontaktovať reálnu osobu, skús [našu kontaktnú stránku](/about).
+
+          Zatiaľ sa Ti nebudem pliesť do cesty.
     new_user_narrative:
       reset_trigger: "nový používateľ"
+      hello:
+        title: ":robot: Zdravím!"
       quoting:
         reply: |-
           Pekná práca, vybrali ste môj obľúbený citát! :left_speech_bubble:
+      emoji:
+        reply: |-
+          To je :sparkles: _emojitastic!_ :sparkles:
     advanced_user_narrative:
       reset_trigger: 'pokročilý používateľ'
       title: ':arrow_up: Pokročilé funkcie používateľa'
+      details:
+        reply: |-
+          Super práca — vaše zameranie na _detail_ je obdivuhodné!

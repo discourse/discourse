@@ -6,7 +6,37 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 nb_NO:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Aktiver Discourse Fortellerbot'
+    disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomstinnlegget fra Discourse Fortellerbot"
+    discourse_narrative_bot_ignored_usernames: "Brukernavn som Discourse Fortellerbot skal ignorere"
+    discourse_narrative_bot_disable_public_replies: "Deaktiver åpne svar fra Discourse Fortellerbot"
+    discourse_narrative_bot_welcome_post_type: "Type velkomstinnlegg som Discourse Fortellerbot skal sende ut"
+    discourse_narrative_bot_welcome_post_delay: "Vent (n) sekunder før Discourse Fortellerbot sender ut velkomstinnlegg."
+  badges:
+    certified:
+      name: Sertifisert
+      description: "Fullførte vår opplæring for nye brukere"
+      long_description: |
+        Dette merket er tildelt ved fullførelse av den interaktive opplæringen for nye brukere. Du har vist initiativ til å lære de grunnleggende verktøyene for diskusjoner, og er nå sertifisert!
+    licensed:
+      name: Linsensiert
+      description: "Fullførte vår opplæring for avanserte brukere"
+      long_description: |
+        Dette merket er tildelt ved fullførelse av den interaktive opplæringen for avanserte brukere. Du har mestret de avanserte verktøyene for diskusjoner — og er nå fullstendig lisensiert!
   discourse_narrative_bot:
+    bio: "Hei, jeg er ikke en virkelig person. Jeg er en robot som kan lære deg om dette nettstedet. For å kommunisere med meg, send meg en melding eller nevn **`@%{discobot_username}`** hvor som helst."
+    timeout:
+      message: |-
+        Hei @%{username}, jeg bare sjekker opp på deg fordi jeg har ikke hørt fra deg på en stund.
+
+        - For å fortsette, svar meg når som helst.
+
+        - Hvis du ønsker å hoppe over dette steget, si `%{skip_trigger}`.
+
+        - For å begynne på nytt, si `%{reset_trigger}`.
+
+        Hvis du helst ikke vil er det også OK. Jeg er en robot. Du sårer ikke følelsene mine. :sob:
     quote:
       trigger: "sitat"
       '1':

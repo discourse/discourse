@@ -6,7 +6,7 @@ describe UserFullNameValidator do
   let(:record) { Fabricate.build(:user, name: @name) }
 
   context "name not required" do
-    before { SiteSetting.stubs(:full_name_required).returns(false) }
+    before { SiteSetting.full_name_required = false }
 
     it "allows no name" do
       @name = nil
@@ -22,7 +22,7 @@ describe UserFullNameValidator do
   end
 
   context "name required" do
-    before { SiteSetting.stubs(:full_name_required).returns(true) }
+    before { SiteSetting.full_name_required = true }
 
     it "adds error for nil name" do
       @name = nil

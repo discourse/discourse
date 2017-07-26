@@ -41,6 +41,9 @@
       <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
       <div class="controls">
         {{tag-chooser tags=searchedTerms.tags blacklist=searchedTerms.tags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true" width="70%"}}
+      <section class="field">
+          <label>{{ input type="checkbox" class="all-tags" checked=searchedTerms.special.all_tags}} {{i18n "search.advanced.filters.all_tags"}} </label>
+      </section>
       </div>
     </div>
   </div>

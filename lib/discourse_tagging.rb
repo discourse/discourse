@@ -64,9 +64,8 @@ module DiscourseTagging
   def self.filter_allowed_tags(query, guardian, opts={})
     term = opts[:term]
     if term.present?
-      term.downcase!
-      term.gsub!(/[^a-z0-9\.\-\_]*/, '')
       term.gsub!("_", "\\_")
+      term = clean_tag(term)
       query = query.where('tags.name like ?', "%#{term}%")
     end
 

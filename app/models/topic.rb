@@ -372,8 +372,11 @@ class Topic < ActiveRecord::Base
     # Remove muted tags
     muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     unless muted_tag_ids.empty?
-      topics = topics.joins("LEFT OUTER JOIN topic_tags ON topic_tags.topic_id = topics.id")
-                     .where("topic_tags.tag_id NOT IN (?)", muted_tag_ids)
+      # If multiple tags per topic, include topics with tags that aren't muted,
+      # and don't forget untagged topics.
+      topics = topics.where(
+        "EXISTS ( SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id AND tag_id NOT IN (?) )
+        OR NOT EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id)", muted_tag_ids)
     end
 
     topics
@@ -719,6 +722,24 @@ SQL
       # ensure all the notifications are out
       PostAlerter.new.after_save_post(last_post)
       add_small_action(user, "invited_group", group.name)
+
+      group_id = group.id
+
+      group.users.where(
+        "group_users.notification_level > ?", NotificationLevels.all[:muted]
+      ).find_each do |u|
+
+        u.notifications.create!(
+          notification_type: Notification.types[:invited_to_private_message],
+          topic_id: self.id,
+          post_number: 1,
+          data: {
+            topic_title: self.title,
+            display_username: user.username,
+            group_id: group_id
+          }.to_json
+        )
+      end
     end
 
     true
@@ -726,9 +747,10 @@ SQL
 
   # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids=nil, custom_message=nil)
+    user = User.find_by_username_or_email(username_or_email)
+
     if private_message?
       # If the user exists, add them to the message.
-      user = User.find_by_username_or_email(username_or_email)
       raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
@@ -746,18 +768,27 @@ SQL
     end
 
     if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
-      # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
-      # NOTE callers expect an invite object if an invite was sent via email
-      invite_by_email(invited_by, username_or_email, group_ids, custom_message)
+      if user.present?
+        # add existing users
+        Invite.extend_permissions(self, user, invited_by)
+
+        # Notify the user they've been invited
+        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
+                                  topic_id: id,
+                                  post_number: 1,
+                                  data: { topic_title: title,
+                                          display_username: invited_by.username }.to_json)
+        return true
+      else
+        # NOTE callers expect an invite object if an invite was sent via email
+        invite_by_email(invited_by, username_or_email, group_ids, custom_message)
+      end
     else
-      # invite existing member to a topic
-      user = User.find_by_username(username_or_email)
       raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
-        # rate limit topic invite
         RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
         # Notify the user they've been invited
@@ -782,7 +813,7 @@ SQL
   end
 
   def grant_permission_to_user(lower_email)
-    user = User.find_by(email: lower_email)
+    user = User.find_by_email(lower_email)
     topic_allowed_users.create!(user_id: user.id)
   end
 
@@ -964,8 +995,6 @@ SQL
 
   # Valid arguments for the time:
   #  * An integer, which is the number of hours from now to update the topic's status.
-  #  * A time, like "12:00", which is the time at which the topic's status will update in the current day
-  #    or the next day if that time has already passed today.
   #  * A timestamp, like "2013-11-25 13:00", when the topic's status should update.
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
   #  * `nil` to delete the topic's status update.
@@ -975,9 +1004,10 @@ SQL
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
   def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
-    topic_timer_options = { status_type: status_type, topic: self }
+    topic_timer_options = { topic: self }
     topic_timer_options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
+    topic_timer.status_type = status_type
 
     if time.blank?
       topic_timer.trash!(trashed_by: by_user || Discourse.system_user)

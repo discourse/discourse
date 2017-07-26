@@ -1,8 +1,10 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import Group from 'discourse/models/group';
+import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Component.extend({
+  loading: false,
+
   @computed("model.public")
   canJoinGroup(publicGroup) {
     return publicGroup;
@@ -14,22 +16,6 @@ export default Ember.Component.extend({
       return isGroupUser;
     } else {
       return !!groupUserIds && groupUserIds.includes(groupId);
-    }
-  },
-
-  @computed
-  disableRequestMembership() {
-    if (this.currentUser) {
-      return this.currentUser.trust_level < this.siteSettings.min_trust_to_send_messages;
-    } else {
-      return false;
-    }
-  },
-
-  @computed("disableRequestMembership")
-  requestMembershipButtonTitle(disableRequestMembership) {
-    if (disableRequestMembership) {
-      return "groups.request_membership_pm.disabled";
     }
   },
 
@@ -67,13 +53,12 @@ export default Ember.Component.extend({
 
     requestMembership() {
       if (this.currentUser) {
-        const groupName = this.get('model.name');
+        this.set('loading', true);
 
-        Group.loadOwners(groupName).then(result => {
-          const names = result.map(owner => owner.username).join(",");
-          const title = I18n.t('groups.request_membership_pm.title');
-          const body = I18n.t('groups.request_membership_pm.body', { groupName });
-          this.sendAction("createNewMessageViaParams", names, title, body);
+        this.get('model').requestMembership().then(result => {
+          DiscourseURL.routeTo(result.relative_url);
+        }).catch(popupAjaxError).finally(() => {
+          this.set('loading', false);
         });
       } else {
         this._showLoginModal();

@@ -17,7 +17,8 @@ class TopicConverter
         else
           Category.where(read_restricted: false)
             .where.not(id: SiteSetting.uncategorized_category_id)
-            .first.id
+            .order('id asc')
+            .pluck(:id).first
         end
 
       @topic.archetype = Archetype.default

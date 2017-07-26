@@ -44,10 +44,12 @@ class PostDestroyer
   end
 
   def destroy
-    if @user.staff? || SiteSetting.delete_removed_posts_after < 1
+    delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
+
+    if @user.staff? || delete_removed_posts_after < 1
       perform_delete
     elsif @user.id == @post.user_id
-      mark_for_deletion
+      mark_for_deletion(delete_removed_posts_after)
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
 
@@ -115,11 +117,14 @@ class PostDestroyer
   end
 
   # When a user 'deletes' their own post. We just change the text.
-  def mark_for_deletion
+  def mark_for_deletion(delete_removed_posts_after = SiteSetting.delete_removed_posts_after)
     I18n.with_locale(SiteSetting.default_locale) do
 
       # don't call revise from within transaction, high risk of deadlock
-      @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
+      @post.revise(@user,
+        { raw: I18n.t('js.post.deleted_by_author', count: delete_removed_posts_after) },
+        force_new_version: true
+      )
 
       Post.transaction do
         @post.update_column(:user_deleted, true)

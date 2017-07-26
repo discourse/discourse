@@ -21,7 +21,7 @@ class StylesheetsController < ApplicationController
 
     target,digest = params[:name].split(/_([a-f0-9]{40})/)
 
-    if Rails.env == "development"
+    if !Rails.env.production?
       # TODO add theme
       # calling this method ensures we have a cache for said target
       # we hold of re-compilation till someone asks for asset
@@ -90,4 +90,3 @@ class StylesheetsController < ApplicationController
   end
 
 end
-

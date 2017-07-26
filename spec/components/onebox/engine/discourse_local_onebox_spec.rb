@@ -5,7 +5,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
   before { SiteSetting.external_system_avatars_enabled = false }
 
   def build_link(url)
-    %|<a href="#{url}" target="_blank" rel="nofollow noopener">#{url}</a>|
+    %|<a href="#{url}" rel="nofollow noopener">#{url}</a>|
   end
 
   context "for a link to a post" do

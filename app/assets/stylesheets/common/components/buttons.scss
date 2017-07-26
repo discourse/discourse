@@ -46,17 +46,17 @@
   border: none;
   color: $primary;
   font-weight: normal;
-  background: dark-light-diff($primary, $secondary, 90%, -65%);
+  background: $primary-low; 
 
   &[href] {
     color: $primary;
   }
   &:hover {
-    background: dark-light-diff($primary, $secondary, 65%, -75%);
+    background: $primary-medium; 
     color: $secondary;
   }
   &[disabled], &.disabled {
-    background: dark-light-diff($primary, $secondary, 90%, -60%);
+    background: $primary-low; 
     &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
     cursor: not-allowed;
   }
@@ -188,4 +188,13 @@
   padding: 9px 18px;
   font-size: 1.143em;
   line-height: 20px;
+}
+
+.btn-flat {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  i.fa {
+    opacity: 0.7;
+  }
 }

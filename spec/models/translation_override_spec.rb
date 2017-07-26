@@ -1,6 +1,26 @@
 require 'rails_helper'
 
 describe TranslationOverride do
+  context 'validations' do
+    describe '#value' do
+      before do
+        I18n.backend.store_translations(:en, some_key: '%{first} %{second}')
+      end
+
+      describe 'when interpolation keys are missing' do
+        it 'should not be valid' do
+          translation_override = TranslationOverride.upsert!(
+            I18n.locale, 'some_key', '%{first}'
+          )
+
+          expect(translation_override.errors.full_messages).to include(I18n.t(
+            'activerecord.errors.models.translation_overrides.attributes.value.missing_interpolation_keys',
+            keys: 'second'
+          ))
+        end
+      end
+    end
+  end
 
   it "upserts values" do
     TranslationOverride.upsert!('en', 'some.key', 'some value')
@@ -19,4 +39,3 @@ describe TranslationOverride do
   end
 
 end
-

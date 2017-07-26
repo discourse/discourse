@@ -92,6 +92,12 @@ class PostCreator
       return false
     end
 
+    # Make sure max_allowed_message_recipients setting is respected
+    if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
+      errors[:base] << I18n.t(:max_pm_recepients, recipients_limit: SiteSetting.max_allowed_message_recipients) if @opts[:target_usernames].split(',').length > SiteSetting.max_allowed_message_recipients
+      return false if errors[:base].present?
+    end
+
     # Make sure none of the users have muted the creator
     names = @opts[:target_usernames]
     if names.present? && !skip_validations? && !@user.staff?
@@ -190,7 +196,11 @@ class PostCreator
 
   def enqueue_jobs
     return unless @post && !@post.errors.present?
-    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
+
+    PostJobsEnqueuer.new(@post, @topic, new_topic?,
+      import_mode: @opts[:import_mode],
+      post_alert_options: @opts[:post_alert_options]
+    ).enqueue_jobs
   end
 
   def self.track_post_stats

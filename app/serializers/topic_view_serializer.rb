@@ -95,8 +95,8 @@ class TopicViewSerializer < ApplicationSerializer
     end
 
     if object.suggested_topics.try(:topics).present?
-      result[:suggested_topics] = object.suggested_topics.topics.map do |topic|
-        SuggestedTopicSerializer.new(topic, scope: scope, root: false)
+      result[:suggested_topics] = object.suggested_topics.topics.map do |t|
+        SuggestedTopicSerializer.new(t, scope: scope, root: false)
       end
     end
 
@@ -277,7 +277,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def unicode_title
-    gsub_emoji_to_unicode(object.topic.title)
+    Emoji.gsub_emoji_to_unicode(object.topic.title)
   end
 
   def include_pm_with_non_human_user?
