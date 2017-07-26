@@ -61,10 +61,19 @@ Create a test account, and enable it with:
     u.grant_admin!
     exit
 
-Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
+Now, you can finally run Discourse. However, for a better development environment it's recommended to start Mailcatcher and Sidekiq.
+* Mailcatcher is a tool that can "catch" the email sent by Discourse to any recipient.
+* Sidekiq processes jobs like sending emails, granting badges, etc.
 
-    ruby $(mailcatcher) # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
-    bundle exec sidekiq # open http://localhost:3000/sidekiq to see queues
+    # Read emails using the web interface at http://localhost:1080.
+    # Stop with `pkill -f mailcatcher`.
+    mailcatcher
+
+    # View scheduled job using the web interface at http://localhost:3000/sidekiq.
+    # Add '-d' to run Sidekiq as daemon.
+    bundle exec sidekiq -q critical -q low -q default -l log/sidekiq.log
+
+    # Finally, start Discourse.
     bundle exec rails server
 
 And happy hacking!
