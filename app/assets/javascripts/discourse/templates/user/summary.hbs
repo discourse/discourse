@@ -54,7 +54,7 @@
                 {{format-date reply.createdAt format="tiny" noTitle="true"}}
                 {{#if reply.like_count}}
                   &middot;
-                  {{fa-icon 'heart'}}&nbsp;<span class='like-count'>{{number reply.like_count}}</span>
+                  {{d-icon 'heart'}}&nbsp;<span class='like-count'>{{number reply.like_count}}</span>
                 {{/if}}
               </span>
               <br>
@@ -79,7 +79,7 @@
                 {{format-date topic.createdAt format="tiny" noTitle="true"}}
                 {{#if topic.like_count}}
                   &middot;
-                  {{fa-icon 'heart'}}&nbsp;<span class='like-count'>{{number topic.like_count}}</span>
+                  {{d-icon 'heart'}}&nbsp;<span class='like-count'>{{number topic.like_count}}</span>
                 {{/if}}
               </span>
               <br>
@@ -127,7 +127,7 @@
           {{#each model.most_replied_to_users as |user|}}
             <li>
               {{#user-info user=user}}
-                {{fa-icon "reply"}}
+                {{d-icon "reply"}}
                 <span class='replies'>{{number user.count}}</span>
               {{/user-info}}
             </li>
@@ -147,7 +147,7 @@
           {{#each model.most_liked_by_users as |user|}}
             <li>
               {{#user-info user=user}}
-                {{fa-icon "heart"}}
+                {{d-icon "heart"}}
                 <span class='likes'>{{number user.count}}</span>
               {{/user-info}}
             </li>
@@ -164,7 +164,7 @@
           {{#each model.most_liked_users as |user|}}
             <li>
               {{#user-info user=user}}
-                {{fa-icon "heart"}}
+                {{d-icon "heart"}}
                 <span class='likes'>{{number user.count}}</span>
               {{/user-info}}
             </li>

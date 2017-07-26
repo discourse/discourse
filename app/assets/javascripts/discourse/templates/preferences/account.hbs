@@ -34,7 +34,7 @@
       <div class="controls">
         <span class='static'>{{model.email}}</span>
         {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -53,7 +53,7 @@
   <label class="control-label">{{i18n 'user.password.title'}}</label>
   <div class="controls">
     <a href {{action "changePassword"}} class='btn'>
-      {{fa-icon "envelope"}}
+      {{d-icon "envelope"}}
       {{#if model.no_password}}
         {{i18n 'user.change_password.set_password'}}
       {{else}}
@@ -81,7 +81,7 @@
     <label class="control-label">{{i18n 'user.title.title'}}</label>
     <div class="controls">
       <span class="static">{{model.title}}</span>
-      {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+      {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
     </div>
   </div>
 {{/if}}

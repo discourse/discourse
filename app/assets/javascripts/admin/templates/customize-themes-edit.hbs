@@ -19,7 +19,7 @@
         <li>
           {{#link-to 'adminCustomizeThemes.edit' model.id 'desktop' fieldName replace=true title=field.title}}
             {{i18n 'admin.customize.theme.desktop'}}
-            {{fa-icon 'desktop'}}
+            {{d-icon 'desktop'}}
           {{/link-to}}
         </li>
         {{/if}}
@@ -27,7 +27,7 @@
         <li class='mobile'>
           {{#link-to 'adminCustomizeThemes.edit' model.id 'mobile' fieldName replace=true title=field.title}}
             {{i18n 'admin.customize.theme.mobile'}}
-            {{fa-icon 'mobile'}}
+            {{d-icon 'mobile'}}
           {{/link-to}}
         </li>
         {{/if}}
@@ -46,7 +46,7 @@
         {{#each fields as |field|}}
           <li>
             {{#link-to 'adminCustomizeThemes.edit' model.id currentTargetName field.name replace=true title=field.title}}
-              {{#if field.icon}}{{fa-icon field.icon}} {{/if}}
+              {{#if field.icon}}{{d-icon field.icon}} {{/if}}
               {{i18n field.key}}
             {{/link-to}}
           </li>

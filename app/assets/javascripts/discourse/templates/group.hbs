@@ -35,7 +35,7 @@
         {{#each getTabs as |tab|}}
           <li>
             {{#link-to tab.location model title=tab.message}}
-              {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
+              {{#if tab.icon}}{{d-icon tab.icon}}{{/if}}
               {{tab.message}}
               {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
             {{/link-to}}

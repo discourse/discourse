@@ -1,10 +1,10 @@
 <div class="web-hook-direction">
   {{#link-to 'adminWebHooks' tagName='button' classNames='btn'}}
-    {{fa-icon 'list'}} {{i18n 'admin.web_hooks.events.go_list'}}
+    {{d-icon 'list'}} {{i18n 'admin.web_hooks.events.go_list'}}
   {{/link-to}}
   {{d-button icon="send" label="admin.web_hooks.events.ping" action="ping" disabled=pingDisabled}}
   {{#link-to 'adminWebHooks.show' model.extras.web_hook_id tagName='button' classNames='btn'}}
-    {{fa-icon 'edit'}} {{i18n 'admin.web_hooks.events.go_details'}}
+    {{d-icon 'edit'}} {{i18n 'admin.web_hooks.events.go_details'}}
   {{/link-to}}
 </div>
 

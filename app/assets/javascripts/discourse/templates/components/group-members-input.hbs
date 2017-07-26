@@ -2,9 +2,9 @@
 
 {{#if model.members}}
   <div>
-    <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
+    <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{d-icon "fast-backward"}}</a>
     {{currentPage}}/{{totalPages}}
-    <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{fa-icon "fast-forward"}}</a>
+    <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{d-icon "fast-forward"}}</a>
   </div>
   <div class="ac-wrap clearfix">
     {{#each model.members as |member|}}

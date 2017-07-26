@@ -10,7 +10,7 @@
 
   {{#if item.deleted_by}}
     <span class="delete-info">
-      {{fa-icon "trash-o"}}
+      {{d-icon "trash-o"}}
       {{avatar item.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}
       {{format-date item.deleted_at leaveAgo="true"}}
     </span>
@@ -31,7 +31,7 @@
     {{#each child.items as |grandChild|}}
       {{#if grandChild.removableBookmark}}
         <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>
-          {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
+          {{d-icon 'times'}} {{i18n "bookmarks.remove"}}
         </button>
       {{else}}
           <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
