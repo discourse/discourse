@@ -3,6 +3,7 @@ module Jobs
   class CreateAvatarThumbnails < Jobs::Base
 
     def execute(args)
+      return if Rails.env.test?
       upload_id = args[:upload_id]
 
       raise Discourse::InvalidParameters.new(:upload_id) if upload_id.blank?

@@ -156,18 +156,18 @@ sk:
     bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
     s3:
       regions:
-        us_east_1: "USA Východ (S. Virginia)"
-        us_west_1: "USA Západ (S. Kalifornia)"
-        us_west_2: "USA Západ (Oregon)"
-        us_gov_west_1: "AWS GovCloud (USA)"
-        eu_west_1: "EU (Írsko)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Ázia Tichomorie (Singapur)"
-        ap_southeast_2: "Ázia Tichomorie (Sydney)"
         ap_northeast_1: "Ázia Tichomorie (Tokio)"
         ap_northeast_2: "Asia Pacific (Soul)"
-        sa_east_1: "Južná Amerika (Sao Paulo)"
+        ap_southeast_1: "Ázia Tichomorie (Singapur)"
+        ap_southeast_2: "Ázia Tichomorie (Sydney)"
         cn_north_1: "Čína (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Írsko)"
+        sa_east_1: "Južná Amerika (Sao Paulo)"
+        us_east_1: "USA Východ (S. Virginia)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        us_west_1: "USA Západ (S. Kalifornia)"
+        us_west_2: "USA Západ (Oregon)"
     edit: 'upraviť názov a kategóriu témy'
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
     no_value: "Nie"
@@ -363,9 +363,6 @@ sk:
         title: 'Upraviť skupinu'
         full_name: 'Celé meno'
         add_members: "Pridať používateľov"
-      request_membership_pm:
-        title: "Žiadosť o pridanie"
-        body: "Chcel by som sa stať členom skupiny @%{groupName}."
       add: "Pridať"
       closed_group: Uzavretá skupina
       membership: "Členstvo"
@@ -374,7 +371,6 @@ sk:
       bio: "O skupine"
       selector_placeholder: "Pridať členov"
       owner: "vlastník"
-      visible: "Skupina je viditeľná všetkým používateľom"
       index:
         title: "Skupiny"
         empty: "Nenašli sa viditeľné skupiny."
@@ -478,7 +474,6 @@ sk:
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
-        button_text: "Uložiť moje príspevky"
         confirm: "Si si istý, že si chceš uložiť svoje príspevky na disk?"
         success: "Sťahovanie bolo spustené, o jeho ukončení budeš informovaný správou."
         rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
@@ -590,7 +585,6 @@ sk:
         title: "Zmeniť používateľské meno"
         confirm: "Ak zmeníte svoje používateľské meno, všetky predchádzajúce citácie Vašich príspevkov a všetky @zmienky búdú porušené. Ste si absolútne istý, že to chcete?"
         taken: "Ľutujeme, toto používateľské meno je obsadené."
-        error: "Pri zmene používateľského mena prišlo k chybe."
         invalid: "Toto používateľské meno nie je platné. Musí obsahovať iba znaky a čísla."
       change_email:
         title: "Zmeniť email"
@@ -947,7 +941,6 @@ sk:
       accept_title: "Pozvánka"
       accept_invite: "Prijať pozvánku"
       success: "Váš účet bol vytvorený a ste prihlásený."
-      password_label: "Nastaviť heslo (voliteľne)"
     emoji_set:
       apple_international: "Apple/Medzinárodné"
       google: "Google"
@@ -1671,8 +1664,6 @@ sk:
       settings: 'Nastavenia'
       topic_template: "Formulár témy"
       tags: "Štítky"
-      tags_allowed_tags: "Štítky, ktoré môžu byť použité iba v tejto kategórii:"
-      tags_allowed_tag_groups: "Skupiny štítkov, ktoré môžu byť použité iba v tejto kategórii:"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"
       delete: 'Odstrániť kategóriu'

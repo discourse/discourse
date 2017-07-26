@@ -445,7 +445,7 @@ class PostsController < ApplicationController
                                    .where(disagreed_at: nil)
                                    .select(:post_id))
 
-    render_serialized(posts, AdminPostSerializer)
+    render_serialized(posts, AdminUserActionSerializer)
   end
 
   def deleted_posts
@@ -458,7 +458,7 @@ class PostsController < ApplicationController
 
     posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 
-    render_serialized(posts, AdminPostSerializer)
+    render_serialized(posts, AdminUserActionSerializer)
   end
 
   protected

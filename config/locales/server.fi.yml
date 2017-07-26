@@ -175,6 +175,7 @@ fi:
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
   not_accepting_pms: "Pahoittelut, %{username} ei ota vastaan yksityisviestejä tällä hetkellä."
+  max_pm_recepients: "Pahoittelut, voit lähettää viestin enintään %{recipients_limit} vastaanottajalle."
   just_posted_that: "on liian samanlainen kuin aiempi viestisi"
   invalid_characters: "sisältää epäkelpoja merkkejä"
   is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
@@ -222,6 +223,7 @@ fi:
       invalid_incoming_email: "'%{email}' ei ole käypä sähköpostiosoite."
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
+      cant_allow_membership_requests: "Et voi sallia ryhmäjäsenyyden hakemista, jos ryhmällä ei ole isäntää."
     default_names:
       everyone: "kaikki"
       admins: "yllapitajat"
@@ -232,6 +234,9 @@ fi:
       trust_level_2: "luottamustaso_2"
       trust_level_3: "luottamustaso_3"
       trust_level_4: "luottamustaso_4"
+    request_membership_pm:
+      title: "Jäsenhakemus ryhmään @%{group_name}"
+      body: "Haluaisin liittyä ryhmään @%{group_name}."
   education:
     until_posts:
       one: "ensimmäisen viestisi"
@@ -351,6 +356,10 @@ fi:
           attributes:
             execute_at:
               in_the_past: "täytyy olla tulevaisuudessa."
+        translation_overrides:
+          attributes:
+            value:
+              missing_interpolation_keys: 'Nämä interpolaatioavaimet puuttuvat: "%{keys}"'
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Tietoa minusta -kenttä käyttäjätiedoissasi on täyttämättä. <a href='/u/%{username_lower}/preferences/about-me'>Haluaisitko täyttää sen nyt?</a></div>"
@@ -362,7 +371,7 @@ fi:
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   assets_topic_title: "Sivuston designiin liittyviä hyödykkeitä"
-  assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
+  assets_topic_body: "Tämä ketju näkyy ainoastaan henkilökunnalle, ja se on tarkoitettu sivuston tyyliin liittyvien kuvien ja muiden tiedostojen säilömiseen. Älä poista sitä!\n\n\nTässä ohjeet sen käyttämiseen:\n\n\n1. Vastaa ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Julkaise viesti.\n4. Klikkaa kuvia hiiren oikealla näppäimellä tai klikkaa viestin muokkauspainiketta, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nJos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `authorized_extensions`-listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Tervetuloa käyttämään Discoursea"
     body: |2
@@ -646,7 +655,7 @@ fi:
         remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
   unsubscribed:
     title: "Tilaus peruttu!"
-    description: "Tilauksesi on peruttu. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
+    description: "Tilaus osoitteeseen <b>%{email}</b> on peruttu. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
   unsubscribe:
     title: "Peru tilaus"
@@ -857,6 +866,8 @@ fi:
     search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
+    log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"
+    search_query_log_max_size: "Kuinka monta hakukyselyä säilötään enintään"
     allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun luominen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
@@ -877,7 +888,7 @@ fi:
     delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos asetetaan 0, viestit poistetaan välittömästi."
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
-    fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
+    fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjestetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun luomisen dialogissa (edellyttää fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Lista verkkotunnuksista, johon osoittaviin linkkeihin nofollow:ta ei lisätä. tld.com sallii automaattisesti myös sub.tld.comin. Sinun tulisi vähintäänkin lisätä tämän sivuston domain, jotta hakurobotit löytävät kaiken sisällön. Jos sivustosi muut osat ovat toisen domainin takan, lisää myös ne."
@@ -923,7 +934,7 @@ fi:
     notify_mods_when_user_blocked: "Jos käyttäjä estetään automaattisesti, lähetä viesti kaikille valvojille."
     flag_sockpuppets: "Jos uuden käyttäjän luomaan ketjuun vastaa toinen uusi käyttäjä samasta IP-osoitteesta, liputa molemmat viestit mahdolliseksi roskapostiksi."
     traditional_markdown_linebreaks: "Käytä perinteisiä rivinvaihtoja Markdownissa, joka vaatii kaksi perättäistä välilyöntiä rivin vaihtoon."
-    allow_html_tables: "Salli taulukoiden syöttäminen Markdowniin käyttäen HTML tageja. TABLE, THEAD, TD, TR, TH valkolistataan (edellyttää kaikkien taulukoita sisältävien vanhojen viestien uudelleen rakentamisen)"
+    enable_markdown_typographer: "Käytetään tavanomaisia typografisia sääntöjä parantamaan tekstikappaleiden luettavuutta, (c), (tm) ym. korvataan symboleilla, kysymysmerkkien määrää vähennetään jne."
     post_undo_action_window_mins: "Kuinka monta minuuttia käyttäjällä on aikaa perua viestiin kohdistuva toimi (tykkäys, liputus, etc)."
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet tilit, ennen uusien käyttäjien päästämistä sivustolle. VAROITUS: tämän asetuksen valitseminen poistaa pääsyn kaikilta jo olemassa olevilta henkilökuntaan kuulumattomilta käyttäjiltä."
     pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
@@ -1064,6 +1075,7 @@ fi:
     twitter_summary_large_image_url: "Oletuksena käytettävän Twitter-tiivistelmäkortin kuva (tulisi olla leveydeltään ainakin 280 px leveä ja 150 px korkea)."
     allow_all_attachments_for_group_messages: "Salli kaikki sähköpostiliitteet ryhmäviesteissä."
     png_to_jpg_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 99 on paras laatu, 100 ottaa pois käytöstä)."
+    allow_staff_to_upload_any_file_in_pm: "Salli henkilökunnan ladata minkätyyppisiä liitteitä tahansa yksityisviesteihin."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
@@ -1200,6 +1212,7 @@ fi:
     email_in_min_trust: "Alin luottamustaso, jonka käyttäjä tarvitsee voidakseen luoda uusia ketjuja sähköpostitse."
     email_prefix: "Sähköpostin otsikossa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
     email_site_title: "Sähköpostin lähettäjänä käytettävä nimi. Jos arvoa ei ole asetettu, oletuksena käytetään 'title'. Jos 'title' sisältää merkkejä joita ei sallita sähköpostin lähettäjän nimessä, käytä tätä asetusta."
+    find_related_post_with_key: "Käytä vain vastausavainta tunnistettaessa, mihin viestiin viesti on vastaus. (Suositellaan, jos käytössä on Amazon SES)"
     minimum_topics_similar: "Kuinka monta ketjua täytyy olla olemassa, ennen kuin samankaltaisia ketjuja näytetään uutta ketjua luotaessa."
     relative_date_duration: "Monenako päivänä viestin lähettämisen jälkeen päivämäärät näytetään suhteellisina (7p) eikä absoluuttisina (20 Huhti)."
     delete_user_max_post_age: "Älä salli käyttäjien poistamista, joiden ensimmäinen viesti on vanhempi kuin (x) päivää."
@@ -1286,6 +1299,7 @@ fi:
     auto_close_messages_post_count: "Maksimimäärä viestejä yksityisketjussa, kunnes se suljetaan automaattisesti (0 poistaaksesi käytöstä)"
     auto_close_topics_post_count: "Maksimimäärä viestejä ketjussa, kunnes se suljetaan automaattisesti (0 poistaaksesi käytöstä)"
     code_formatting_style: "Viestikentän koodipainike käyttää oletuksena tätä koodimuotoilutyyliä"
+    max_allowed_message_recipients: "Kuinka monta vastaanottajaa yksityisviestillä voi olla."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään sähköpostikooste oletuksena."
     default_include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin oletuksena. Tätä voi muuttaa käyttäjäasetuksissa."
     default_email_private_messages: "Lähetä oletuksena sähköposti, kun joku lähettää käyttäjälle viestin."
@@ -1354,6 +1368,8 @@ fi:
       email_polling_disabled: "Sinun täytyy ottaa käyttöön joko manuaalinen tai POP3 pollaus ennen sähköpostivastauksia."
       user_locale_not_enabled: "'allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
       invalid_regex: "Säännöllinen lauseke ei kelpaa tai ei ole sallittu."
+      email_editable_enabled: "Asetus 'email editable' on otettava pois käytöstä ennen tämän asetuksen käyttöönottoa."
+      enable_sso_disabled: "Asetus 'enable sso' on otettava käyttöön ennen tämän asetuksen käyttöönottoa."
   search:
     within_post: "#%{post_number} käyttäjältä %{username}"
     types:
@@ -1390,7 +1406,7 @@ fi:
       one: "Yksi viesti siirrettiin toiseen ketjuun: %{topic_link}"
       other: "%{count} viestiä siirrettiin toiseen ketjuun: %{topic_link}"
   change_owner:
-    post_revision_text: "Omistus vaihdettu käyttäjältä %{old_user} käyttäjälle %{new_user}"
+    post_revision_text: "Omistus siirrettiin käyttäjältä %{old_user} käyttäjälle %{new_user}"
     deleted_user: "poistettu käyttäjä"
   topic_statuses:
     archived_enabled: "Tämä ketju on arkistoitu. Se on jäädytetty eikä sitä voi muuttaa millään tavalla."
@@ -1518,36 +1534,35 @@ fi:
   invite_mailer:
     title: "Kutsu keskusteluun"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
-    text_body_template: |+
+    text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
-      keskustelupalstalla
+      sivustolla
 
       > %{site_title} -- %{site_description}
 
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
-
   custom_invite_mailer:
     title: "Kutsu keskusteluun saatesanoilla"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
-      keskustelupalstalla
+      sivustolla
 
       > %{site_title} -- %{site_description}
 
-      tällaisin saatesanoin:
+      tällaisin saatesanoin
 
       > %{user_custom_message}
 
@@ -2080,7 +2095,7 @@ fi:
       text_body_template: |
         Onneksi olkoon, olet ansainnut Kuukauden tulokas -palkinnon %{month_year}** :trophy:
 
-        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](/my/badges).
+        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](%{base_url}/my/badges).
 
         Sinusta on äkkiä tullut tärkeä osa yhteisöä. Kiitos kun liityit, ja jatka samaa rataa!
   unsubscribe_link: |
@@ -2111,7 +2126,7 @@ fi:
     invited_to_private_message_body: |
       %{username} kutsui sinut yksityiskeskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
@@ -2119,9 +2134,9 @@ fi:
 
       > %{site_title} -- %{site_description}
     invited_to_topic_body: |
-      %{username} kutsui sinut keskusteluun
+      %{username} kustui sinut keskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
@@ -2275,7 +2290,7 @@ fi:
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
       subject_template: "[%{email_prefix}] Kooste"
-      unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä %{unsubscribe_link}."
+      unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla <a href='%{email_settings_url}'>sähköpostiasetuksiasi</a> tai %{unsubscribe_link}."
       click_here: "klikkaa tästä"
       from: "%{site_name} kooste"
       preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"

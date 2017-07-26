@@ -2,8 +2,6 @@ module DiscourseNarrativeBot
   class Base
     include Actions
 
-    TIMEOUT_DURATION = 900 # 15 mins
-
     class InvalidTransitionError < StandardError; end
 
     def input(input, user, post: nil, topic_id: nil, skip: false)
@@ -21,6 +19,21 @@ module DiscourseNarrativeBot
 
         begin
           opts = transition
+
+          loop do
+            next_state = opts[:next_state]
+
+            break if next_state == :end
+
+            next_opts = self.class::TRANSITION_TABLE.fetch(next_state)
+            prerequisite = next_opts[:prerequisite]
+
+            break if !prerequisite || instance_eval(&prerequisite)
+
+            [:next_state, :next_instructions].each do |key|
+              opts[key] = next_opts[key]
+            end
+          end
         rescue InvalidTransitionError
           # For given input, no transition for current state
           return
@@ -96,7 +109,7 @@ module DiscourseNarrativeBot
             skip_trigger: TrackSelector.skip_trigger,
             reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}"
           )
-        ))
+        ), {}, { skip_send_email: false })
       end
     end
 

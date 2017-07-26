@@ -4,6 +4,7 @@ import RawHtml from 'discourse/widgets/raw-html';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon-node';
+import highlightText from 'discourse/lib/highlight-text';
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -12,24 +13,30 @@ class Highlighted extends RawHtml {
   }
 
   decorate($html) {
-    if (this.term) {
-      $html.highlight(this.term.split(/\s+/), { className: 'search-highlight' });
-    }
+    highlightText($html, this.term);
   }
 }
 
-function createSearchResult(type, linkField, fn) {
+function createSearchResult({ type, linkField, builder }) {
   return createWidget(`search-result-${type}`, {
     html(attrs) {
       return attrs.results.map(r => {
+
+        let searchResultId;
+        if (type === "topic") {
+          searchResultId = r.get('topic_id');
+        }
         return h('li', this.attach('link', {
           href: r.get(linkField),
-          contents: () => fn.call(this, r, attrs.term),
+          contents: () => builder.call(this, r, attrs.term),
           className: 'search-link',
-          searchContextEnabled: this.attrs.searchContextEnabled
+          searchResultId,
+          searchResultType: type,
+          searchContextEnabled: attrs.searchContextEnabled,
+          searchLogId: attrs.searchLogId
         }));
       });
-    }
+    },
   });
 }
 
@@ -45,27 +52,43 @@ function postResult(result, link, term) {
   return html;
 }
 
-createSearchResult('user', 'path', function(u) {
-  return [ avatarImg('small', { template: u.avatar_template, username: u.username }), ' ', h('span.user-results', h('b', u.username)), ' ',  h('span.user-results', u.name ? u.name : '') ];
+createSearchResult({
+  type: 'user',
+  linkField: 'path',
+  builder(u) {
+    return [ avatarImg('small', { template: u.avatar_template, username: u.username }), ' ', h('span.user-results', h('b', u.username)), ' ',  h('span.user-results', u.name ? u.name : '') ];
+  }
 });
 
-createSearchResult('topic', 'url', function(result, term) {
-  const topic = result.topic;
-  const link = h('span.topic', [
-    this.attach('topic-status', { topic, disableActions: true }),
-    h('span.topic-title', new Highlighted(topic.get('fancyTitle'), term)),
-    this.attach('category-link', { category: topic.get('category'), link: false })
-  ]);
+createSearchResult({
+  type: 'topic',
+  linkField: 'url',
+  builder(result, term) {
+    const topic = result.topic;
+    const link = h('span.topic', [
+      this.attach('topic-status', { topic, disableActions: true }),
+      h('span.topic-title', new Highlighted(topic.get('fancyTitle'), term)),
+      this.attach('category-link', { category: topic.get('category'), link: false })
+    ]);
 
-  return postResult.call(this, result, link, term);
+    return postResult.call(this, result, link, term);
+  }
 });
 
-createSearchResult('post', 'url', function(result, term) {
-  return postResult.call(this, result, I18n.t('search.post_format', result), term);
+createSearchResult({
+  type: 'post',
+  linkField: 'url',
+  builder(result, term) {
+    return postResult.call(this, result, I18n.t('search.post_format', result), term);
+  }
 });
 
-createSearchResult('category', 'url', function (c) {
-  return this.attach('category-link', { category: c, link: false });
+createSearchResult({
+  type: 'category',
+  linkField: 'url',
+  builder(c) {
+    return this.attach('category-link', { category: c, link: false });
+  }
 });
 
 createWidget('search-menu-results', {
@@ -100,7 +123,8 @@ createWidget('search-menu-results', {
 
       return [
         h('ul', this.attach(rt.componentName, {
-          searchContextEnabled: this.attrs.searchContextEnabled,
+          searchContextEnabled: attrs.searchContextEnabled,
+          searchLogId: attrs.results.grouped_search_result.search_log_id,
           results: rt.results,
           term: attrs.term
         })),

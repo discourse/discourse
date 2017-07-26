@@ -43,7 +43,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def include_is_special?
-    [SiteSetting.lounge_category_id, SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
+    [SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
     .include? object.id
   end
 

@@ -145,20 +145,20 @@ pt:
       default_description: "Predefinido"
     s3:
       regions:
-        us_east_1: "Este dos E.U.A. (Virgínia do Norte)"
-        us_west_1: "Oeste dos E.U.A. (California do Norte)"
-        us_west_2: "Oeste dos E.U.A. (Óregon)"
-        us_gov_west_1: "AWS GovCloud (E.U.A.)"
-        eu_west_1: "U.E. (Irlanda)"
-        eu_west_2: "EU (Londres)"
-        eu_central_1: "U.E. (Francoforte)"
-        ap_southeast_1: "Ásia-Pacífico (Singapura)"
-        ap_southeast_2: "Ásia-Pacífico (Sydney)"
-        ap_south_1: "Ásia Pacifico (Bombaim)"
         ap_northeast_1: "Ásia-Pacífico (Tóquio)"
         ap_northeast_2: "Ásia-Pacífico (Seoul)"
-        sa_east_1: "América do Sul (São Paulo)"
+        ap_south_1: "Ásia Pacifico (Bombaim)"
+        ap_southeast_1: "Ásia-Pacífico (Singapura)"
+        ap_southeast_2: "Ásia-Pacífico (Sydney)"
         cn_north_1: "China (Beijing)"
+        eu_central_1: "U.E. (Francoforte)"
+        eu_west_1: "U.E. (Irlanda)"
+        eu_west_2: "UE (Londres)"
+        sa_east_1: "América do Sul (São Paulo)"
+        us_east_1: "Este dos E.U.A. (Virgínia do Norte)"
+        us_gov_west_1: "AWS GovCloud (E.U.A.)"
+        us_west_1: "Oeste dos E.U.A. (California do Norte)"
+        us_west_2: "Oeste dos E.U.A. (Óregon)"
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -348,46 +348,47 @@ pt:
         full_name: 'Nome Completo'
         add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
-      request_membership_pm:
-        title: "Pedido de Adesão"
-        body: "Eu gostaria de aderir a @%{groupName}."
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
-      public: "Permitir aos utilizadores de se juntarem/saírem do grupo livremente (Requere que o grupo seja visível)"
       empty:
         posts: "Não existem publicações por membros deste grupo."
         members: "Não existem membros neste grupo."
-        mentions: "Não há menções deste grupo."
+        mentions: "Não existem menções deste grupo."
         messages: "Não existem mensagens para este grupo."
         topics: "Não existem tópicos por membros deste grupo."
         logs: "Não existem registos para este grupo."
       add: "Adicionar"
-      join: "Juntar ao Grupo"
+      join: "Aderir ao Grupo"
       leave: "Sair do Grupo"
-      request: "Pedir para Entrar no Grupo."
+      request: "Pedir para Aderir ao Grupo"
       automatic_group: Grupo Automático
       closed_group: Grupo fechado
-      is_group_user: "Você é membro deste grupo"
-      allow_membership_requests: "Permitir aos utilizadores enviar pedidos de adesão aos donos do grupo"
+      is_group_user: "É um membro deste grupo"
+      allow_membership_requests: "Permitir que os utilizadores enviem pedidos de adesão aos donos do grupo"
       membership: "Adesão"
       name: "Nome"
-      user_count: "Numero de Membros"
-      bio: "Acerca do Grupo"
+      user_count: "Número de Membros"
+      bio: "Sobre o Grupo"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
-      visible: "O grupo é visível para todos os utilizadores"
       index:
         title: "Grupos"
         empty: "Não existem grupos visíveis."
       title:
         one: "grupo"
         other: "grupos"
-      activity: "Actividade"
+      activity: "Atividade"
       members: "Membros"
       topics: "Tópicos"
       posts: "Publicações"
       mentions: "Menções"
       messages: "Mensagens"
-      notification_level: "Nível de notificação por omissão para mensagens de grupo"
+      notification_level: "Nível de notificação predefinido para mensagens de grupo"
+      visibility_levels:
+        title: "Quem pode ver este grupo?"
+        public: "Toda a gente"
+        members: "Donos do grupo, membros e administradores"
+        staff: "Donos do grupo e equipa"
+        owners: "Donos do grupo e administradores"
       alias_levels:
         title: "Quem pode mandar mensagens e @mencionar este grupo?"
         nobody: "Ninguém"
@@ -416,9 +417,11 @@ pt:
           description: "Não será notificado de nada relacionado com novos tópicos neste grupo."
       flair_url: "Imagem da Marca de Avatar"
       flair_bg_color: "Cor de Fundo da Marca de Avatar"
-      flair_bg_color_placeholder: "(Opcional) Valor hexadecimal de cor"
+      flair_bg_color_placeholder: "(Opcional) Valor hexadecimal da cor"
       flair_color: "Cor da Marca de Avatar"
-      flair_color_placeholder: "(Opcional) Valor hexadecimal de cor"
+      flair_color_placeholder: "(Opcional) Valor hexadecimal da cor"
+      flair_preview_icon: "Pré-visualizar Ícone"
+      flair_preview_image: "Pré-visualizar Imagem"
     user_action_groups:
       '1': "Gostos Dados"
       '2': "Gostos Recebidos"
@@ -481,7 +484,7 @@ pt:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive:
-        button_text: "Descarregar As Minhas Publicações"
+        button_text: "Transferir Tudo"
         confirm: "Tem a certeza que deseja descarregar as suas publicações?"
         success: "Descarregamento iniciado, será notificado via mensagem assim que o processo estiver concluído."
         rate_limit_error: "As publicações podem ser descarregadas uma vez por dia, por favor, tente novamente amanhã."
@@ -599,7 +602,6 @@ pt:
         title: "Alterar Nome de Utilizador"
         confirm: "Se mudar o seu nome de utilizador, todas as citações das suas publicações e menções @nome serão quebradas. Tem a certeza absoluta de que o quer fazer?"
         taken: "Pedimos desculpa, esse nome de utilizador já está a ser utilizado."
-        error: "Ocorreu um erro ao alterar o seu nome de utilizador."
         invalid: "Esse nome de utilizador é inválido. Deve conter apenas números e letras."
       change_email:
         title: "Alterar Email"
@@ -1310,7 +1312,7 @@ pt:
         go_bottom: "fim"
         go: "ir"
         jump_bottom: "ir para a última publicação"
-        jump_prompt: "saltar para..."
+        jump_prompt: "ir para..."
         jump_prompt_of: "de %{count} publicações"
         jump_prompt_long: "Para que publicação gostaria de ir?"
         jump_bottom_with_number: "ir para a publicação %{post_number}"
@@ -1659,10 +1661,6 @@ pt:
         confirm:
           one: "Tem a certeza que quer eliminar essa publicação?"
           other: "Tem a certeza que quer eliminar todas essas publicações?"
-      merge:
-        confirm:
-          one: "Tem a certeza que quer juntar estas publicações?"
-          other: "Tem a certeza que quer unir estas {{count}} publicações?"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -1673,7 +1671,7 @@ pt:
           show: "Mostrar revisão"
           revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
-          edit_post: "Editar publicação"
+          edit_post: "Editar Publicação"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1697,8 +1695,6 @@ pt:
       settings: 'Configurações'
       topic_template: "Modelo do Tópico"
       tags: "Etiquetas"
-      tags_allowed_tags: "Etiquetas que só podem ser usadas nesta categoria:"
-      tags_allowed_tag_groups: "Grupos de etiquetas que só podem ser usados nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas perimitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       delete: 'Eliminar Categoria'

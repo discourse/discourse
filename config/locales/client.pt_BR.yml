@@ -148,20 +148,20 @@ pt_BR:
       default_description: "Padrão"
     s3:
       regions:
-        us_east_1: "Leste dos EUA (N. da Virgínia)"
-        us_west_1: "Oeste dos EUA (N. da Califórnia)"
-        us_west_2: "Leste dos EUA (Oregon)"
-        us_gov_west_1: "AWS GovCloud (EUA)"
-        eu_west_1: "EU (Irlanda)"
-        eu_west_2: "UE (Londres)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Ásia Pacífico (Singapura)"
-        ap_southeast_2: "Ásia Pacífico (Sidney)"
-        ap_south_1: "Ásia-Pacífico (Mumbai)"
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
         ap_northeast_2: "Ásia Pacífico (Seul)"
-        sa_east_1: "América do Sul (São Paulo)"
+        ap_south_1: "Ásia-Pacífico (Mumbai)"
+        ap_southeast_1: "Ásia Pacífico (Singapura)"
+        ap_southeast_2: "Ásia Pacífico (Sidney)"
         cn_north_1: "China (Beijing)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irlanda)"
+        eu_west_2: "UE (Londres)"
+        sa_east_1: "América do Sul (São Paulo)"
+        us_east_1: "Leste dos EUA (N. da Virgínia)"
+        us_gov_west_1: "AWS GovCloud (EUA)"
+        us_west_1: "Oeste dos EUA (N. da Califórnia)"
+        us_west_2: "Leste dos EUA (Oregon)"
     edit: 'edite o título e a categoria deste tópico'
     not_implemented: "Esse recurso ainda não foi implementado, desculpe!"
     no_value: "Não"
@@ -351,11 +351,7 @@ pt_BR:
         full_name: 'Nome Completo'
         add_members: "Adicionar Membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
-      request_membership_pm:
-        title: "Pedido de adesão"
-        body: "Eu gostaria de solicitar a adesão no grupo @%{groupName}."
       name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
-      public: "Permitir que usuários entrem e saiam do grupo livremente (Requer que o grupo seja visível)"
       empty:
         posts: "Não há publicações de membros deste grupo."
         members: "Não há membros neste grupo."
@@ -377,7 +373,6 @@ pt_BR:
       bio: "Sobre o Grupo"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
-      visible: "Grupo é visível para todos os usuários"
       index:
         title: "Grupos"
         empty: "Não há grupos visíveis."
@@ -488,7 +483,6 @@ pt_BR:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive:
-        button_text: "Baixar Minhas Publicações"
         confirm: "Você tem certeza de que quer baixar as suas publicações?"
         success: "Download iniciado, você será notificado por mensagem quando o processo estiver completo."
         rate_limit_error: "Publicações podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
@@ -615,7 +609,6 @@ pt_BR:
         title: "Alterar Nome de Usuário"
         confirm: "Se você mudar seu Nome de Usuário, todas as citações das suas respostas e as menções ao seu @nome serão desfeitas. Você tem certeza?"
         taken: "Desculpe, esse Nome de Usuário já está sendo usado."
-        error: "Houve um erro ao alterar o seu Nome de Usuário."
         invalid: "Esse Nome de Usuário é inválido. Deve conter apenas números e letras."
       change_email:
         title: "Alterar Email"
@@ -990,7 +983,6 @@ pt_BR:
       your_email: "O endereço de email da sua conta é <b>%{email}</b>."
       accept_invite: "Aceitar Convite"
       success: "Sua conta foi criada e você já está logado."
-      password_label: "Configurar Senha (opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -1737,10 +1729,6 @@ pt_BR:
         confirm:
           one: "Tem certeza que quer apagar esta resposta?"
           other: "Tem certeza que quer apagar todos essas respostas?"
-      merge:
-        confirm:
-          one: "Você tem certeza que quer fundir essas postagens?"
-          other: "Você tem certeza que quer fundir essas {{count}} postagens?"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -1786,8 +1774,6 @@ pt_BR:
       settings: 'Configurações'
       topic_template: "Modelo de Tópico"
       tags: "Etiquetas"
-      tags_allowed_tags: "Etiquetas que só podem ser usadas nesta categoria:"
-      tags_allowed_tag_groups: "Grupos de etiquetas que só podem ser usados nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"

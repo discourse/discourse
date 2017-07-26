@@ -889,7 +889,7 @@ describe PostsController do
 
     context "when edit history is not visible to the public" do
 
-      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(false) }
+      before { SiteSetting.edit_history_visible_to_public = false }
 
       it "ensures anonymous cannot see the revisions" do
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
@@ -926,7 +926,7 @@ describe PostsController do
 
     context "when edit history is visible to everyone" do
 
-      before { SiteSetting.stubs(:edit_history_visible_to_public).returns(true) }
+      before { SiteSetting.edit_history_visible_to_public = true }
 
       it "ensures anyone can see the revisions" do
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number

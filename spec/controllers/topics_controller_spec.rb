@@ -996,7 +996,7 @@ describe TopicsController do
 
         context "allow_uncategorized_topics is false" do
           before do
-            SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
+            SiteSetting.allow_uncategorized_topics = false
           end
 
           it "can add a category to an uncategorized topic" do

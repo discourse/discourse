@@ -19,7 +19,7 @@ input {
   padding: 4px;
   border-radius: 3px;
   box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low; 
 }
 input[type=radio], input[type=checkbox] {
   box-shadow: none;
@@ -38,28 +38,19 @@ input[type=radio], input[type=checkbox] {
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+  background-color: $primary-low; 
   bottom: 0;
   font-size: 1em;
   position: fixed;
   .toggle-toolbar, .toggler {
-    width: 15px;
     right: 1px;
     position: absolute;
     font-size: 1.071em;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    padding: 0 10px 5px 10px;
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f078";
-    }
   }
 
   .toggle-toolbar {
     right: 30px;
-    &:before {
-      content: "\f0c9";
-    }
   }
 
   a.cancel {
@@ -97,7 +88,7 @@ input[type=radio], input[type=checkbox] {
   &.draft {
     height: 35px !important;
     cursor: pointer;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-top: 1px solid $primary-low; 
     .draft-text {
       display: block;
       position: absolute;
@@ -111,24 +102,12 @@ input[type=radio], input[type=checkbox] {
         color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
     }
-    .toggler {
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f00d";
-      }
-    }
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-top: 1px solid $primary-low;
     .saving-text {
       display: block;
-    }
-    .toggler {
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f00d";
-      }
     }
   }
 
@@ -207,6 +186,12 @@ input[type=radio], input[type=checkbox] {
       position: absolute;
       display: block;
       bottom: 0;
+      white-space: nowrap;
+      .btn {
+        max-width: 120px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     }
   }
   .category-input {

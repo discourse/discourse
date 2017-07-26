@@ -22,6 +22,10 @@ class SearchController < ApplicationController
       search_args[:type_filter] = type if type
     end
 
+    search_args[:search_type] = :full_page
+    search_args[:ip_address] = request.remote_ip
+    search_args[:user_id] = current_user.id if current_user.present?
+
     search = Search.new(params[:q], search_args)
     result = search.execute
 
@@ -37,7 +41,6 @@ class SearchController < ApplicationController
         render_json_dump(serializer)
       end
     end
-
   end
 
   def query
@@ -49,15 +52,41 @@ class SearchController < ApplicationController
     search_args[:include_blurbs] = params[:include_blurbs] == "true" if params[:include_blurbs].present?
     search_args[:search_for_id] = true                               if params[:search_for_id].present?
 
-    context,type = lookup_search_context
+    context, type = lookup_search_context
+
     if context
       search_args[:search_context] = context
       search_args[:type_filter] = type if type
     end
 
-    search = Search.new(params[:term], search_args.symbolize_keys)
+    search_args[:search_type] = :header
+    search_args[:ip_address] = request.remote_ip
+    search_args[:user_id] = current_user.id if current_user.present?
+
+    search = Search.new(params[:term], search_args)
     result = search.execute
     render_serialized(result, GroupedSearchResultSerializer, result: result)
+  end
+
+  def click
+    params.require(:search_log_id)
+    params.require(:search_result_type)
+    params.require(:search_result_id)
+
+    if params[:search_result_type] == 'topic'
+      where = { id: params[:search_log_id] }
+      if current_user.present?
+        where[:user_id] = current_user.id
+      else
+        where[:ip_address] = request.remote_ip
+      end
+
+      SearchLog.where(where).update_all(
+        clicked_topic_id: params[:search_result_id]
+      )
+    end
+
+    render json: success_json
   end
 
   protected

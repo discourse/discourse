@@ -2,12 +2,15 @@ require 'rails_helper'
 require 'stylesheet/compiler'
 
 describe Stylesheet::Compiler do
-  it "can compile desktop mobile and desktop css" do
-    css,_map = Stylesheet::Compiler.compile_asset("desktop")
-    expect(css.length).to be > 1000
+  describe 'compilation' do
+    Dir["#{Rails.root.join("app/assets/stylesheets")}/*.scss"].each do |path|
+      path = File.basename(path, '.scss')
 
-    css,_map = Stylesheet::Compiler.compile_asset("mobile")
-    expect(css.length).to be > 1000
+      it "can compile '#{path}' css" do
+        css, _map = Stylesheet::Compiler.compile_asset(path)
+        expect(css.length).to be > 1000
+      end
+    end
   end
 
   it "supports asset-url" do
@@ -24,5 +27,3 @@ describe Stylesheet::Compiler do
     expect(css).not_to include('image-url')
   end
 end
-
-

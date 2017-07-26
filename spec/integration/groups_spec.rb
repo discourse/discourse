@@ -5,13 +5,8 @@ describe "Groups" do
   let(:group) { Fabricate(:group, users: [user]) }
 
   describe 'viewing groups' do
-    let(:other_group) do
-      Fabricate(:group, name: '0000', visible: true, automatic: false)
-    end
-
-    before do
-      other_group
-      group.update_attributes!(automatic: true, visible: true)
+    let!(:staff_group) do
+      Fabricate(:group, name: '0000', visibility_level: Group.visibility_levels[:staff])
     end
 
     context 'when group directory is disabled' do
@@ -24,6 +19,7 @@ describe "Groups" do
     end
 
     it 'should return the right response' do
+      group
       get "/groups.json"
 
       expect(response).to be_success
@@ -33,8 +29,8 @@ describe "Groups" do
       group_ids = response_body["groups"].map { |g| g["id"] }
 
       expect(response_body["extras"]["group_user_ids"]).to eq([])
-      expect(group_ids).to include(other_group.id)
-      expect(group_ids).to_not include(group.id)
+      expect(group_ids).to include(group.id)
+      expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
       expect(response_body["total_rows_groups"]).to eq(1)
     end
@@ -54,7 +50,7 @@ describe "Groups" do
         group_ids = response_body["groups"].map { |g| g["id"] }
 
         expect(response_body["extras"]["group_user_ids"]).to eq([group.id])
-        expect(group_ids).to include(group.id, other_group.id)
+        expect(group_ids).to include(group.id, staff_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
         expect(response_body["total_rows_groups"]).to eq(10)
       end
@@ -148,26 +144,6 @@ describe "Groups" do
 
         expect(response.status).to eq(403)
       end
-    end
-  end
-
-  describe 'owners' do
-    let(:user1) { Fabricate(:user, last_seen_at: Time.zone.now) }
-    let(:user2) { Fabricate(:user, last_seen_at: Time.zone.now - 1 .day) }
-    let(:group) { Fabricate(:group, users: [user, user1, user2]) }
-
-    it 'should return the right list of owners' do
-      group.add_owner(user1)
-      group.add_owner(user2)
-
-      xhr :get, "/groups/#{group.name}/owners"
-
-      expect(response).to be_success
-
-      owners = JSON.parse(response.body)
-
-      expect(owners.count).to eq(2)
-      expect(owners.map { |o| o["id"] }.sort).to eq([user1.id, user2.id])
     end
   end
 
@@ -336,6 +312,13 @@ describe "Groups" do
 
         it "adds by id" do
           expect { xhr :put, "/groups/#{group.id}/members", user_ids: [user1.id, user2.id].join(",") }
+            .to change { group.users.count }.by(2)
+
+          expect(response).to be_success
+        end
+
+        it "adds by email" do
+          expect { xhr :put, "/groups/#{group.id}/members", user_emails: [user1.email, user2.email].join(",") }
             .to change { group.users.count }.by(2)
 
           expect(response).to be_success
@@ -552,6 +535,139 @@ describe "Groups" do
           expect(logs.count).to eq(1)
           expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
         end
+      end
+    end
+  end
+
+  describe "requesting membership for a group" do
+    let(:new_user) { Fabricate(:user) }
+
+    it 'requires the user to log in' do
+      expect do
+        xhr :post, "/groups/#{group.name}/request_membership"
+      end.to raise_error(Discourse::NotLoggedIn)
+    end
+
+    it 'should create the right PM' do
+      owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
+      owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1 .day)
+      [owner1, owner2].each { |owner| group.add_owner(owner) }
+
+      sign_in(user)
+
+      xhr :post, "/groups/#{group.name}/request_membership"
+
+      expect(response).to be_success
+
+      post = Post.last
+      topic = post.topic
+      body = JSON.parse(response.body)
+
+      expect(body['relative_url']).to eq(topic.relative_url)
+      expect(post.user).to eq(user)
+
+      expect(topic.title).to eq(I18n.t('groups.request_membership_pm.title',
+        group_name: group.name
+      ))
+
+      expect(post.raw).to eq(I18n.t(
+        'groups.request_membership_pm.body', group_name: group.name
+      ))
+
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
+      expect(topic.allowed_groups).to eq([])
+    end
+  end
+
+  describe 'search for groups' do
+    let(:hidden_group) do
+      Fabricate(:group,
+        visibility_level: Group.visibility_levels[:owners],
+        name: 'KingOfTheNorth'
+      )
+    end
+
+    before do
+      group.update!(
+        name: 'GOT',
+        full_name: 'Daenerys Targaryen'
+      )
+
+      hidden_group
+    end
+
+    context 'as an anon user' do
+      it "returns the right response" do
+        expect { xhr :get, '/groups/search' }.to raise_error(Discourse::NotLoggedIn)
+      end
+    end
+
+    context 'as a normal user' do
+      it "returns the right response" do
+        sign_in(user)
+
+        xhr :get, '/groups/search'
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
+        expected_ids.delete(Group::AUTO_GROUPS[:everyone])
+        expected_ids << group.id
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
+
+        ['GO', 'nerys'].each do |term|
+          xhr :get, "/groups/search?term=#{term}"
+
+          expect(response).to be_success
+          groups = JSON.parse(response.body)
+
+          expect(groups.length).to eq(1)
+          expect(groups.first['id']).to eq(group.id)
+        end
+
+        xhr :get, "/groups/search?term=KingOfTheNorth"
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expect(groups).to eq([])
+      end
+    end
+
+    context 'as a group owner' do
+      before do
+        hidden_group.add_owner(user)
+      end
+
+      it "returns the right response" do
+        sign_in(user)
+
+        xhr :get, "/groups/search?term=north"
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expect(groups.length).to eq(1)
+        expect(groups.first['id']).to eq(hidden_group.id)
+      end
+    end
+
+    context 'as an admin' do
+      it "returns the right response" do
+        sign_in(Fabricate(:admin))
+
+        xhr :get, '/groups/search?ignore_automatic=true'
+
+        expect(response).to be_success
+        groups = JSON.parse(response.body)
+
+        expect(groups.length).to eq(2)
+
+        expect(groups.map { |group| group['id'] })
+          .to contain_exactly(group.id, hidden_group.id)
       end
     end
   end

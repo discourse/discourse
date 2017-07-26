@@ -217,6 +217,40 @@ describe DiscoursePoll::PollsUpdater do
       end
     end
 
+    it 'should be able to edit multiple polls with votes' do
+      DiscoursePoll::Poll.vote(
+        post_with_two_polls.id,
+        "poll",
+        [two_polls["poll"]["options"].first["id"]],
+        user
+      )
+
+      raw = <<-RAW.strip_heredoc
+      [poll]
+      * 12
+      * 34
+      [/poll]
+
+      [poll name=test]
+      * 12
+      * 34
+      [/poll]
+      RAW
+
+      different_post = Fabricate(:post, raw: raw)
+      different_polls = DiscoursePoll::PollsValidator.new(different_post).validate_polls
+
+      message = MessageBus.track_publish do
+        described_class.update(post_with_two_polls.reload, different_polls)
+      end.first
+
+      expect(post_with_two_polls.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
+        .to eq(different_polls)
+
+      expect(message.data[:post_id]).to eq(post_with_two_polls.id)
+      expect(message.data[:polls]).to eq(different_polls)
+    end
+
     describe "when poll edit window has expired" do
       let(:poll_edit_window_mins) { 6 }
       let(:another_post) { Fabricate(:post, created_at: Time.zone.now - poll_edit_window_mins.minutes) }

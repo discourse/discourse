@@ -102,6 +102,24 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(Post.last.raw).to eq(expected_raw.chomp)
           end
+
+          it 'should not enqueue any user email' do
+            NotificationEmailer.enable
+            user.user_option.update!(email_always: true)
+
+            post.update!(
+              raw: 'show me what you can do',
+              reply_to_post_number: first_post.post_number
+            )
+
+            NotificationEmailer.expects(:process_notification).never
+
+            described_class.new(:reply, user, post_id: post.id).select
+
+            expect(Post.last.raw).to eq(I18n.t(
+              "discourse_narrative_bot.new_user_narrative.formatting.not_found"
+            ))
+          end
         end
 
         context 'when a non regular post is created' do
@@ -186,6 +204,19 @@ describe DiscourseNarrativeBot::TrackSelector do
                     .to eq("tutorial_formatting")
               end
             end
+          end
+        end
+
+        context 'when a new user is added into the topic' do
+          before do
+            topic.allowed_users << Fabricate(:user)
+          end
+
+          it 'should stop the new user track' do
+            post
+
+            expect { described_class.new(:reply, user, post_id: post.id).select }
+              .to_not change { Post.count }
           end
         end
       end
@@ -414,6 +445,16 @@ describe DiscourseNarrativeBot::TrackSelector do
           expect(new_post.raw).to eq(random_mention_reply)
         end
 
+        it "should be case insensitive towards discobot's username" do
+          discobot_user.update!(username: 'DisCoBot')
+
+          post.update!(raw: 'Show me what you can do @discobot')
+          described_class.new(:reply, user, post_id: post.id).select
+          new_post = Post.last
+          expect(new_post.raw).to eq(random_mention_reply)
+        end
+
+
         describe 'rate limiting random reply message in public topic' do
           let(:topic) { Fabricate(:topic) }
           let(:other_post) { Fabricate(:post, raw: '@discobot show me something', topic: topic) }
@@ -521,7 +562,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           describe 'when roll dice command is present inside a quote' do
             it 'should ignore the command' do
               user
-              post.update!(raw: '[quote="Donkey, post:6, topic:1"]@discobot roll 2d1[/quote]')
+              post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot roll 2d1\n[/quote]")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }
@@ -558,7 +599,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           describe 'when quote command is present inside a onebox or quote' do
             it 'should ignore the command' do
               user
-              post.update!(raw: '[quote="Donkey, post:6, topic:1"]@discobot quote[/quote]')
+              post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot quote\n[/quote]")
 
               expect { described_class.new(:reply, user, post_id: post.id).select }
                 .to_not change { Post.count }

@@ -1,5 +1,5 @@
 .select2-results .select2-highlighted {
-    background: dark-light-diff($highlight, $secondary, 50%, -80%);
+    background: $highlight-medium;
     color: $primary;
 }
 
@@ -36,7 +36,7 @@
 
 .select2-container {
   border-radius: 3px;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low; 
   min-width: 200px;
 
   &.select2-dropdown-open {
@@ -71,7 +71,7 @@
   border-color: $tertiary;
 }
 .select2-drop {
-  color: dark-light-diff($primary, $secondary, -50%, 50%);
+  color: $primary;
 }
 .select2-drop-active {
   border: 1px solid $tertiary;

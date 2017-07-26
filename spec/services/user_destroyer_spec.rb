@@ -2,11 +2,6 @@ require 'rails_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do
-
-  before do
-    RestClient.stubs(:delete).returns( {success: 'OK'}.to_json )
-  end
-
   describe 'new' do
     it 'raises an error when user is nil' do
       expect { UserDestroyer.new(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -59,10 +54,9 @@ describe UserDestroyer do
       end
 
       it "adds email to block list if block_email is true" do
-        b = Fabricate.build(:screened_email, email: @user.email)
-        ScreenedEmail.expects(:block).with(@user.email, has_key(:ip_address)).returns(b)
-        b.expects(:record_match!).once.returns(true)
-        UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge({block_email: true}))
+        expect {
+          UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge(block_email: true))
+        }.to change { ScreenedEmail.count }.by(1)
       end
     end
 
@@ -233,15 +227,8 @@ describe UserDestroyer do
       context 'and destroy fails' do
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
 
-        before do
-          @user.stubs(:destroy).returns(false)
-        end
-
-        it 'should return false' do
-          expect(destroy).to eq(false)
-        end
-
         it 'should not log the action' do
+          @user.stubs(:destroy).returns(false)
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
           destroy
         end

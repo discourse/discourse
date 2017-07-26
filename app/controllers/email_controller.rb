@@ -9,51 +9,42 @@ class EmailController < ApplicationController
   end
 
   def unsubscribe
-    key = UnsubscribeKey.find_by(key: params[:key])
+    @not_found = true
+    @watched_count = nil
 
-    if key
-      @user = key.user
-      post = key.post
-      @topic = (post && post.topic) || key.topic
-      @type = key.unsubscribe_key_type
+    if key = UnsubscribeKey.find_by(key: params[:key])
+      if @user = key.user
+        post = key.post
+        @topic = post&.topic || key.topic
+        @type = key.unsubscribe_key_type
+        @not_found = false
 
-      if current_user.present? && (@user != current_user)
-        @different_user = @user.name
-        @return_url = request.original_url
-      end
+        if current_user.present? && (@user != current_user)
+          @different_user = @user.name
+          @return_url = request.original_url
+        end
 
-      @watching_topic = @topic && TopicUser.exists?(user_id: @user.id,
-                                                    notification_level: TopicUser.notification_levels[:watching],
-                                                    topic_id: @topic.id)
+        watching = TopicUser.notification_levels[:watching]
 
-      @watched_count = nil
-      if @topic && @topic.category_id
-        if CategoryUser.exists?(user_id: @user.id,
-                                notification_level: CategoryUser.watching_levels,
-                                category_id: @topic.category_id)
-          @watched_count = TopicUser.joins(:topic)
-                                    .where(:user => @user,
-                                           :notification_level => TopicUser.notification_levels[:watching],
-                                           "topics.category_id" => @topic.category_id
-                                          ).count
+        if @topic
+          @watching_topic = TopicUser.exists?(user_id: @user.id, notification_level: watching, topic_id: @topic.id)
+          if @topic.category_id
+            if CategoryUser.exists?(user_id: @user.id, notification_level: CategoryUser.watching_levels, category_id: @topic.category_id)
+              @watched_count = TopicUser.joins(:topic)
+                                        .where(user: @user, notification_level: watching, "topics.category_id" => @topic.category_id)
+                                        .count
+            end
+          end
         end
       end
     end
-
-    if @user.blank?
-      @not_found = true
-    end
-
   end
 
   def perform_unsubscribe
-
     key = UnsubscribeKey.find_by(key: params[:key])
-    unless key && key.user
-      raise Discourse::NotFound
-    end
+    raise Discourse::NotFound unless key && key.user
 
-    topic = (key.post && key.post.topic) || key.topic
+    topic = key&.post&.topic || key.topic
     user = key.user
 
     updated = false
@@ -109,15 +100,16 @@ class EmailController < ApplicationController
       redirect_to :back
     else
       if topic
-        redirect_to path("/email/unsubscribed?topic_id=#{topic.id}")
+        redirect_to path("/email/unsubscribed?topic_id=#{topic.id}&email=#{user.email}")
       else
-        redirect_to path("/email/unsubscribed")
+        redirect_to path("/email/unsubscribed?email=#{user.email}")
       end
     end
 
   end
 
   def unsubscribed
+    @email = params[:email]
     @topic = Topic.find_by(id: params[:topic_id].to_i) if params[:topic_id]
   end
 

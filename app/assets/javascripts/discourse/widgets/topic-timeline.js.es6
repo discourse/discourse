@@ -345,7 +345,11 @@ export default createWidget('topic-timeline', {
     }
 
     if (stream.length < 3) {
-      return result;
+      const topicHeight = $('#topic').height();
+      const windowHeight = $(window).height();
+      if ((topicHeight / windowHeight) < 2.0) {
+        return result;
+      }
     }
 
     const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });

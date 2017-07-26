@@ -148,20 +148,20 @@ de:
       default_description: "Standard"
     s3:
       regions:
-        us_east_1: "USA Ost (Nord-Virginia)"
-        us_west_1: "USA West (Nordkalifornien)"
-        us_west_2: "USA West (Oregon)"
-        us_gov_west_1: "AWS GovCloud (USA)"
-        eu_west_1: "EU (Irland)"
-        eu_west_2: "EU (London)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Asien-Pazifik (Singapur)"
-        ap_southeast_2: "Asien-Pazifik (Sydney)"
-        ap_south_1: "Asien-Pazifik (Mumbai)"
         ap_northeast_1: "Asien-Pazifik (Tokio)"
         ap_northeast_2: "Asien-Pazifik (Seoul)"
-        sa_east_1: "Südamerika (São Paulo)"
+        ap_south_1: "Asien-Pazifik (Mumbai)"
+        ap_southeast_1: "Asien-Pazifik (Singapur)"
+        ap_southeast_2: "Asien-Pazifik (Sydney)"
         cn_north_1: "China (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irland)"
+        eu_west_2: "EU (London)"
+        sa_east_1: "Südamerika (São Paulo)"
+        us_east_1: "USA Ost (Nord-Virginia)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        us_west_1: "USA West (Nordkalifornien)"
+        us_west_2: "USA West (Oregon)"
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -351,11 +351,8 @@ de:
         full_name: 'Vollständiger Name'
         add_members: "Mitglieder hinzufügen"
         delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
-      request_membership_pm:
-        title: "Mitgliedschaftsanfrage"
-        body: "Ich möchte mich um eine Mitgliedschaft in @%{groupName} bewerben."
       name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
-      public: "Benutzern erlauben, die Gruppenzugehörigkeit frei zu wechseln (Erfordert, dass die Gruppe sichtbar ist)"
+      public: "Nutzenden erlauben, die Gruppe eigenständig zu betreten/zu verlassen (nur bei öffentlich sichtbaren Gruppen) "
       empty:
         posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe."
         members: "Es gibt keine Mitglieder in dieser Gruppe."
@@ -377,7 +374,6 @@ de:
       bio: "Über die Gruppe"
       selector_placeholder: "Mitglieder hinzufügen"
       owner: "Eigentümer"
-      visible: "Gruppe ist für alle Benutzer sichtbar"
       index:
         title: "Gruppen"
         empty: "Es gibt keine sichtbaren Gruppen."
@@ -391,6 +387,12 @@ de:
       mentions: "Erwähnungen"
       messages: "Nachrichten"
       notification_level: "Standard-Benachrichtigungsstufe für Gruppen-Nachrichten"
+      visibility_levels:
+        title: "Wer kann diese Gruppe sehen?"
+        public: "Alle"
+        members: "Gruppenbesitzer, Mitglieder und Admins"
+        staff: "Gruppenbesitzer und Team"
+        owners: "Gruppenbesitzer und Admins"
       alias_levels:
         title: "Wer kann diese Gruppe kontaktieren und per @Gruppenname erwähnen?"
         nobody: "Niemand"
@@ -488,7 +490,7 @@ de:
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
-        button_text: "Meine Beiträge herunterladen"
+        button_text: "Alle herunterladen"
         confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
@@ -558,6 +560,7 @@ de:
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
+      no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
@@ -617,7 +620,6 @@ de:
         title: "Benutzernamen ändern"
         confirm: "Wenn du deinen Benutzernamen änderst, werden alle vorherigen Zitate deiner Beiträge und Erwähnungen deines vorherigen @Namens nicht mehr funktonieren. Bist du dir ganz sicher, dass du das tun möchtest?"
         taken: "Der Benutzername ist bereits vergeben."
-        error: "Bei der Änderung deines Benutzernamens ist ein Fehler aufgetreten."
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
       change_email:
         title: "E-Mail-Adresse ändern"
@@ -753,6 +755,9 @@ de:
         expired: "Diese Einladung ist abgelaufen."
         rescind: "Einladung zurücknehmen"
         rescinded: "Einladung zurückgenommen"
+        rescind_all: "Alle Eingeladungen entfernen"
+        rescinded_all: "Alle Einladungen wurden entfernt!"
+        rescind_all_confirm: "Alle Einladungen wirklich entfernen?"
         reinvite: "Einladung erneut senden"
         reinvite_all: "Alle Einladungen erneut senden"
         reinvite_all_confirm: "Bist Du dir sicher alle Einladungen nochmals zu senden?"
@@ -935,6 +940,8 @@ de:
       complete_email_found: "Wir haben ein zu <b>%{email}</b> gehörendes Benutzerkonto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_username_not_found: "Es gibt kein Konto mit dem Benutzernamen <b>%{username}</b>"
       complete_email_not_found: "Es gibt kein Benutzerkonto für <b>%{email}</b>"
+      button_ok: "OK"
+      button_help: "Hilfe"
     login:
       title: "Anmelden"
       username: "Benutzername"
@@ -993,7 +1000,9 @@ de:
       your_email: "Die E-Mail-Adresse deines Benutzerkontos ist <b>%{email}</b>"
       accept_invite: "Einladung annehmen"
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
-      password_label: "Passwort setzen (optional)"
+      name_label: "Name"
+      password_label: "Wähle ein Passwort"
+      optional_description: "(optional)"
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
@@ -1002,6 +1011,7 @@ de:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Windows 10"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "nur Kategorien"
       categories_with_featured_topics: "Kategorien mit empfohlenen Themen"
@@ -1016,6 +1026,7 @@ de:
       options: "Optionen"
       whisper: "flüstern"
       unlist: "unsichtbar"
+      blockquote_text: "Blockquote"
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
       toggle_unlisted: "Unsichtbar umschalten"
@@ -1213,6 +1224,7 @@ de:
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis
+          all_tags: Enthält alle Schlagwörter
         statuses:
           label: 'Themen einschränken:'
           open: Offene Themen
@@ -1659,6 +1671,7 @@ de:
         has_liked: "dir gefällt dieser Beitrag"
         undo_like: "gefällt mir nicht mehr"
         edit: "diesen Beitrag bearbeiten"
+        edit_action: "Bearbeiten"
         edit_anonymous: "Entschuldige, du musst angemeldet sein, um diesen Beitrag zu bearbeiten."
         flag: "Diesen Beitrag den Moderatoren melden oder eine Nachricht senden."
         delete: "diesen Beitrag löschen"
@@ -1763,10 +1776,6 @@ de:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
           other: "Möchtest du wirklich all diese Beiträge löschen?"
-      merge:
-        confirm:
-          one: "Möchtest du diese Beiträge wirklich zusammenführen?"
-          other: "Möchtest du diese {{count}} Beiträge wirklich zusammenführen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -1812,8 +1821,6 @@ de:
       settings: 'Einstellungen'
       topic_template: "Themenvorlage"
       tags: "Schlagwörter"
-      tags_allowed_tags: "Schlagwörter, die nur in dieser Kategorie verwendet werden können:"
-      tags_allowed_tag_groups: "Schlagwortgruppen, die nur in dieser Kategorie verwendet werden können:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
@@ -2631,9 +2638,6 @@ de:
           updating: "Wird aktualisiert..."
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           add: "Hinzufügen"
-          commits_behind:
-            one: "Theme ist 1 Commit hinterher!"
-            other: "Theme ist {{count}} Commits hinterher!"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"
@@ -2780,6 +2784,8 @@ de:
           block: "blockieren"
           do_nothing: "nichts tun"
         staff_actions:
+          all: "alle"
+          filter: "Filter:"
           title: "Team-Aktionen"
           clear_filters: "Alles anzeigen"
           staff_user: "Team-Mitglied"
@@ -2833,6 +2839,8 @@ de:
             change_readonly_mode: "Nur-Lesen-Modus ändern"
             backup_download: "Backup herunterladen"
             backup_destroy: "Backup löschen"
+            reviewed_post: "Geprüfter Beitrag"
+            custom_staff: "plugin-spezifische Aktion"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -3005,6 +3013,7 @@ de:
         reset_bounce_score:
           label: "Zurücksetzen"
           title: "Anzahl unzustellbarer E-Mails auf 0 zurücksetzen"
+        visit_profile: "Besuche die <a href='%{url}'>Benutzer-Einstellungen</a>, um dieses Profil zu bearbeiten"
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."

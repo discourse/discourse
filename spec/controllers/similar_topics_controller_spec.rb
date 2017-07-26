@@ -16,7 +16,7 @@ describe SimilarTopicsController do
 
     it "returns no results if the title length is below the minimum" do
       Topic.expects(:similar_to).never
-      SiteSetting.stubs(:min_title_similar_length).returns(100)
+      SiteSetting.min_title_similar_length = 100
       xhr :get, :index, title: title, raw: raw
       json = ::JSON.parse(response.body)
       expect(json["similar_topics"].size).to eq(0)
@@ -24,7 +24,7 @@ describe SimilarTopicsController do
 
     it "returns no results if the body length is below the minimum" do
       Topic.expects(:similar_to).never
-      SiteSetting.stubs(:min_body_similar_length).returns(100)
+      SiteSetting.min_body_similar_length = 100
       xhr :get, :index, title: title, raw: raw
       json = ::JSON.parse(response.body)
       expect(json["similar_topics"].size).to eq(0)
@@ -33,7 +33,7 @@ describe SimilarTopicsController do
     describe "minimum_topics_similar" do
 
       before do
-        SiteSetting.stubs(:minimum_topics_similar).returns(30)
+        SiteSetting.minimum_topics_similar = 30
       end
 
       after do
@@ -69,4 +69,3 @@ describe SimilarTopicsController do
   end
 
 end
-

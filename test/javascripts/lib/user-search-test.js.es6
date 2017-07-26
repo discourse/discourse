@@ -1,7 +1,7 @@
 import userSearch from 'discourse/lib/user-search';
 
-module("lib:user-search", {
-  setup() {
+QUnit.module("lib:user-search", {
+  beforeEach() {
     const response = (object) => {
       return [
         200,
@@ -57,8 +57,8 @@ module("lib:user-search", {
   }
 });
 
-test("it places groups unconditionally for exact match", function() {
+QUnit.test("it places groups unconditionally for exact match", assert => {
   return userSearch({term: 'Team'}).then((results)=>{
-     equal(results[results.length-1]["name"], "team");
+     assert.equal(results[results.length-1]["name"], "team");
   });
 });

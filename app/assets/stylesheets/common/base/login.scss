@@ -91,8 +91,18 @@ $input-width: 220px;
     button.btn-primary {
       margin-top: 10px;
     }
-    label {
+    label:not(.checkbox-label) {
       font-weight: bold;
+    }
+    .controls, .input {
+      margin-bottom: 10px;
+    }
+    .instructions {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      margin: 0;
+      font-size: 0.929em;
+      font-weight: normal;
+      line-height: 18px;
     }
   }
 }

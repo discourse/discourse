@@ -22,6 +22,7 @@
 //= require vendor
 //= require ember-shim
 //= require pretty-text-bundle
+//= require markdown-it-bundle
 //= require application
 //= require plugin
 //= require htmlparser.js
@@ -51,6 +52,8 @@ var d = document;
 d.write('<script src="/javascripts/ace/ace.js"></script>');
 d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
 d.write('<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>');
+
+Ember.Test.adapter = window.QUnitAdapter.create();
 
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
@@ -108,7 +111,7 @@ QUnit.testStart(function(ctx) {
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 
   // Unless we ever need to test this, let's leave it off.
-  $.fn.autocomplete = Ember.K;
+  $.fn.autocomplete = function() { };
 
   // Don't debounce in test unless we're testing debouncing
   if (ctx.module.indexOf('debounce') === -1) {
@@ -135,11 +138,25 @@ window.asyncTestDiscourse = helpers.asyncTestDiscourse;
 window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
 
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
+var skipCore = (getUrlParameter('qunit_skip_core') == '1');
+var pluginPath = getUrlParameter('qunit_single_plugin') ? "\/"+getUrlParameter('qunit_single_plugin')+"\/" : "\/plugins\/";
+
 Object.keys(requirejs.entries).forEach(function(entry) {
-  if ((/\-test/).test(entry)) {
+  var isTest = (/\-test/).test(entry);
+  var regex =  new RegExp(pluginPath)
+  var isPlugin = regex.test(entry);
+
+  if (isTest && (!skipCore || isPlugin)) {
     require(entry, null, null, true);
   }
 });
-require('mdtest/mdtest', null, null, true);
+
 resetSite();
 

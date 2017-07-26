@@ -14,7 +14,7 @@ describe TopicCreator do
       before do
         TopicCreator.any_instance.expects(:save_topic).returns(true)
         TopicCreator.any_instance.expects(:watch_topic).returns(true)
-        SiteSetting.stubs(:allow_duplicate_topic_titles?).returns(true)
+        SiteSetting.allow_duplicate_topic_titles = true
       end
 
       it "should be possible for an admin to create a topic" do
@@ -26,7 +26,7 @@ describe TopicCreator do
       end
 
       context 'regular user' do
-        before { SiteSetting.stubs(:min_trust_to_create_topic).returns(TrustLevel[0]) }
+        before { SiteSetting.min_trust_to_create_topic = TrustLevel[0] }
 
         it "should be possible for a regular user to create a topic" do
           expect(TopicCreator.create(user, Guardian.new(user), valid_attrs)).to be_valid
@@ -57,7 +57,7 @@ describe TopicCreator do
         before do
           TopicCreator.any_instance.expects(:save_topic).returns(true)
           TopicCreator.any_instance.expects(:watch_topic).returns(true)
-          SiteSetting.stubs(:allow_duplicate_topic_titles?).returns(true)
+          SiteSetting.allow_duplicate_topic_titles = true
         end
 
         it "should be possible for a regular user to send private message" do

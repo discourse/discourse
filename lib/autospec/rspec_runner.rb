@@ -19,6 +19,11 @@ module Autospec
 
     watch(%r{^spec/fabricators/.+_fabricator\.rb$})     { "spec" }
 
+    watch(%r{^app/assets/javascripts/pretty-text/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb"}
+    watch(%r{^plugins/.*/discourse-markdown/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb"}
+
+    watch(%r{^plugins/.*/spec/.*\.rb})
+
     RELOADERS = Set.new
     def self.reload(pattern); RELOADERS << pattern; end
     def reloaders; RELOADERS; end

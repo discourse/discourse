@@ -16,10 +16,10 @@ RSpec.describe Jobs::DiscourseNarrativeBot::GrantBadges do
 
     expect(user.badges.count).to eq(2)
 
-    expect(user.badges.map(&:name)).to eq([
+    expect(user.badges.map(&:name)).to contain_exactly(
       DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME,
       DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME,
-    ])
+    )
 
     expect(other_user.badges.count).to eq(0)
   end

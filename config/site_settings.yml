@@ -103,6 +103,9 @@ basic:
   ga_universal_domain_name:
     client: true
     default: 'auto'
+  ga_universal_auto_link_domains:
+    default: ''
+    type: list
   ga_tracking_code:
     client: true
     default: ''
@@ -304,7 +307,9 @@ login:
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
   sso_overrides_bio: false
-  sso_overrides_email: false
+  sso_overrides_email:
+    default: false
+    validator: "SsoOverridesEmailValidator"
   sso_overrides_username: false
   sso_overrides_name: false
   sso_overrides_avatar:
@@ -493,9 +498,9 @@ posting:
   traditional_markdown_linebreaks:
     client: true
     default: false
-  allow_html_tables:
+  enable_markdown_typographer:
     client: true
-    default: false
+    default: true
   suppress_reply_directly_below:
     client: true
     default: true
@@ -564,7 +569,7 @@ posting:
     default: true
     client: true
   emoji_set:
-    default: 'emoji_one'
+    default: 'twitter'
     client: true
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
@@ -594,6 +599,9 @@ posting:
     client: true
     default: ''
     type: list
+  max_allowed_message_recipients:
+    default: 30
+    min: 1
 
 email:
   email_time_window_mins:
@@ -629,6 +637,8 @@ email:
   alternative_reply_by_email_addresses:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
+  find_related_post_with_key:
+    default: false
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -798,6 +808,10 @@ files:
     default: 95
     min: 1
     max: 100
+  allow_staff_to_upload_any_file_in_pm:
+    default: true
+    client: true
+  strip_image_metadata: true
 
 trust:
   default_trust_level:
@@ -821,7 +835,6 @@ trust:
   min_trust_to_send_messages:
     default: 1
     enum: 'TrustLevelSetting'
-    client: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30
@@ -895,6 +908,9 @@ security:
     default: ''
     type: list
     shadowed_by_global: true
+  whitelist_internal_hosts:
+    default: ''
+    type: list
 
 onebox:
   enable_flash_video_onebox: false
@@ -905,6 +921,9 @@ onebox:
   max_oneboxes_per_post:
     default: 50
     client: true
+  inline_onebox_domains_whitelist:
+    default: ''
+    type: list
 
 spam:
   add_rel_nofollow_to_user_content: true
@@ -1095,7 +1114,7 @@ legal:
 
 backups:
   readonly_mode_during_backup:
-    default: true
+    default: false
   allow_restore:
     default: false
   maximum_backups:
@@ -1132,11 +1151,14 @@ search:
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size: 100000
+  log_search_queries: true
+  search_query_log_max_size: 1000000
 
 uncategorized:
   version_checks:
     client: true
     default: true
+    shadowed_by_global: true
   new_version_emails: true
   send_welcome_message: true
 

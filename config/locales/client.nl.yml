@@ -148,22 +148,23 @@ nl:
       default_description: "Standaard"
     s3:
       regions:
-        us_east_1: "VS Oost (N. Virginia)"
-        us_west_1: "VS West (N. Californië)"
-        us_west_2: "VS West (Oregon)"
-        us_gov_west_1: "AWS GovCloud (VS)"
-        eu_west_1: "EU (Ierland)"
-        eu_west_2: "EU (Londen)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Azië Pacifisch (Singapore)"
-        ap_southeast_2: "Azië Pacifisch (Sydney)"
-        ap_south_1: "Azië Pacifisch (Bombay)"
         ap_northeast_1: "Azië Pacifisch (Tokio)"
         ap_northeast_2: "Azië Pacifisch (Seoel)"
-        sa_east_1: "Zuid-Amerika (Sao Paulo)"
+        ap_south_1: "Azië Pacifisch (Bombay)"
+        ap_southeast_1: "Azië Pacifisch (Singapore)"
+        ap_southeast_2: "Azië Pacifisch (Sydney)"
         cn_north_1: "China (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Ierland)"
+        eu_west_2: "EU (Londen)"
+        sa_east_1: "Zuid-Amerika (Sao Paulo)"
+        us_east_1: "VS Oost (N. Virginia)"
+        us_east_2: "VS Oost (Ohio)"
+        us_gov_west_1: "AWS GovCloud (VS)"
+        us_west_1: "VS West (N. Californië)"
+        us_west_2: "VS West (Oregon)"
     edit: 'de titel en categorie van dit topic bewerken'
-    not_implemented: "Die functie is nog niet geïmplementeerd, sorry!"
+    not_implemented: "Deze functie is helaas nog niet beschikbaar, sorry!"
     no_value: "Nee"
     yes_value: "Ja"
     generic_error: "Sorry, er is iets fout gegaan."
@@ -351,11 +352,8 @@ nl:
         full_name: 'Volledige naam'
         add_members: "Leden toevoegen"
         delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
-      request_membership_pm:
-        title: "Lidmaatschapsverzoek"
-        body: "Ik zou graag lid willen worden van @%{groupName}."
       name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
-      public: "Gebruikers toestaan om vrij aan de groep deel te nemen of deze te verlaten (Groep moet hiervoor zichtbaar zijn)"
+      public: "Gebruikers toestaan om bij groepen aan te melden of deze te verlaten (Groep moet hiervoor publiekelijk zichtbaar zijn)"
       empty:
         posts: "Er zijn geen berichten van leden van deze groep."
         members: "Er zijn geen leden in deze groep."
@@ -377,7 +375,6 @@ nl:
       bio: "Over groep"
       selector_placeholder: "Leden toevoegen"
       owner: "eigenaar"
-      visible: "Groep is zichtbaar voor alle gebruikers"
       index:
         title: "Groepen"
         empty: "Er zijn geen zichtbare groepen."
@@ -391,6 +388,12 @@ nl:
       mentions: "Vermeldingen"
       messages: "Berichten"
       notification_level: "Standaard meldingsniveau voor groepsberichten"
+      visibility_levels:
+        title: "Voor wie is deze groep zichtbaar?"
+        public: "Iedereen"
+        members: "Groepseigenaars, -beheerders en -leden"
+        staff: "Groepseigenaars en -personeel"
+        owners: "Groepeigenaars en -beheerders"
       alias_levels:
         title: "Wie kan deze groep een bericht sturen en taggen?"
         nobody: "Niemand"
@@ -488,7 +491,7 @@ nl:
       mute: "Negeren"
       edit: "Voorkeuren bewerken"
       download_archive:
-        button_text: "Mijn berichten downloaden"
+        button_text: "Alles downloaden"
         confirm: "Weet u zeker dat u uw berichten wilt downloaden?"
         success: "Downloaden is gestart; u ontvangt een melding zodra het proces is voltooid."
         rate_limit_error: "Berichten kunnen maar één keer per dag worden gedownload; probeer het morgen opnieuw."
@@ -558,6 +561,7 @@ nl:
       watched_first_post_tags_instructions: "U ontvangt een melding bij het eerste bericht in elk nieuw topic met deze tags."
       muted_categories: "Genegeerd"
       muted_categories_instructions: "U ontvangt geen melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet in Nieuwste."
+      no_category_access: "Als een beheerder heeft u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
       deleted_yourself: "Uw account is met succes verwijderd."
@@ -617,7 +621,6 @@ nl:
         title: "Gebruikersnaam wijzigen"
         confirm: "Als u uw gebruikersnaam wijzigt, kloppen alle eerdere citaten van uw berichten en vermeldingen van uw @naam niet meer. Weet u dit echt zeker?"
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
-        error: "Er is een fout opgetreden bij het wijzigen van uw gebruikersnaam."
         invalid: "Die gebruikersnaam is ongeldig. Hij mag alleen cijfers en letters bevatten."
       change_email:
         title: "E-mailadres wijzigen"
@@ -753,6 +756,9 @@ nl:
         expired: "Deze uitnodiging is verlopen."
         rescind: "Verwijderen"
         rescinded: "Uitnodiging verwijderd"
+        rescind_all: "Verwijder alle uitnodigingen"
+        rescinded_all: "Alle uitnodigingen verwijderd!"
+        rescind_all_confirm: "Weet u zeker dat u alle uitnodigingen wilt verwijderen?"
         reinvite: "Uitnodiging opnieuw versturen"
         reinvite_all: "Alle uitnodigingen opnieuw versturen"
         reinvite_all_confirm: "Weet u zeker dat u alle uitnodigingen opnieuw wilt versturen?"
@@ -935,6 +941,8 @@ nl:
       complete_email_found: "We hebben een account gevonden met het e-mailadres <b>%{email}<b/>. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_username_not_found: "Geen account met de gebruikersnaam <b>%{username}</b> gevonden"
       complete_email_not_found: "Geen account met het e-mailadres <b>%{email}</b> gevonden"
+      button_ok: "OK"
+      button_help: "Help"
     login:
       title: "Aanmelden"
       username: "Gebruiker"
@@ -993,7 +1001,9 @@ nl:
       your_email: "Het e-mailadres van uw account is <b>%{email}</b>."
       accept_invite: "Uitnodiging accepteren"
       success: "Uw account is gemaakt en u bent nu aangemeld."
-      password_label: "Wachtwoord instellen (optioneel)"
+      name_label: "Naam"
+      password_label: "Wachtwoord instellen"
+      optional_description: "(optioneel)"
     password_reset:
       continue: "Doorgaan naar %{site_name}"
     emoji_set:
@@ -1002,6 +1012,8 @@ nl:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Klassiek"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Alleen categorieën"
       categories_with_featured_topics: "Categorieën met aanbevolen topics"
@@ -1016,6 +1028,7 @@ nl:
       options: "Opties"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
+      blockquote_text: "Citaat"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluistermodus in-/uitschakelen"
       toggle_unlisted: "Onzichtbaar in-/uitschakelen"
@@ -1213,6 +1226,7 @@ nl:
           seen: die ik heb gelezen
           unseen: die ik niet heb gelezen
           wiki: die een wiki zijn
+          all_tags: Bevat alle tags
         statuses:
           label: Waarin topics
           open: open zijn
@@ -1542,6 +1556,7 @@ nl:
         success_email: "Er is een uitnodiging naar <b>{{emailOrUsername}}</b> gemaild. We stellen u op de hoogte als op de uitnodiging is ingegaan. Controleer het uitnodigingentabblad op uw gebruikerspagina om uw uitnodigingen bij te houden."
         success_username: "We hebben die gebruiker uitgenodigd om aan dit topic deel te nemen."
         error: "Sorry, we konden deze persoon niet uitnodigen. Misschien is deze al uitgenodigd? (Uitnodigingen zijn in aantal beperkt)"
+        success_existing_email: "Een gebruiker met de e-mail <b>{{emailOrUsername}}</b> bestaat al. We hebben deze gebruiker uitgenodigd om aan dit topic deel te nemen."
       login_reply: 'Meld u aan om te antwoorden'
       filters:
         n_posts:
@@ -1659,6 +1674,7 @@ nl:
         has_liked: "u hebt dit bericht geliket"
         undo_like: "like ongedaan maken"
         edit: "dit bericht bewerken"
+        edit_action: "Bewerken"
         edit_anonymous: "Sorry, maar u dient aangemeld te zijn om dit bericht te bewerken."
         flag: "een privémarkering aan dit topic geven of er een privébericht over sturen"
         delete: "dit bericht verwijderen"
@@ -1763,10 +1779,6 @@ nl:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
           other: "Weet u zeker dat u al die berichten wilt verwijderen?"
-      merge:
-        confirm:
-          one: "Weet u zeker dat u die berichten wilt samenvoegen?"
-          other: "Weet u zeker dat u die {{count}} berichten wilt samenvoegen?"
       revisions:
         controls:
           first: "Eerste revisie"
@@ -1812,8 +1824,7 @@ nl:
       settings: 'Instellingen'
       topic_template: "Topic-sjabloon"
       tags: "Tags"
-      tags_allowed_tags: "Tags die alleen in deze categorie kunnen worden gebruikt:"
-      tags_allowed_tag_groups: "Tag-groepen die alleen in deze categorie kunnen worden gebruikt:"
+      tags_allowed_tags: "Tags die in deze categorie kunnen worden gebruikt:"
       tags_placeholder: "(Optioneel) lijst van toegestane tags"
       tag_groups_placeholder: "(Optioneel) lijst van toegestane tag-groepen"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"
@@ -2635,9 +2646,6 @@ nl:
           updating: "Bijwerken..."
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           add: "Toevoegen"
-          commits_behind:
-            one: "Thema loopt 1 doorvoering achter!"
-            other: "Thema loopt {{count}} doorvoeringen achter!"
           scss:
             text: "CSS"
             title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"
@@ -2784,6 +2792,8 @@ nl:
           block: "blokkeren"
           do_nothing: "niets doen"
         staff_actions:
+          all: "alle"
+          filter: "Filter:"
           title: "Stafacties"
           clear_filters: "Alles tonen"
           staff_user: "Staflid"

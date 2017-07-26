@@ -222,6 +222,7 @@ fr:
       invalid_incoming_email: "« %{email} » n'est pas une adresse de courriel valide."
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
+      cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaires."
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -232,6 +233,9 @@ fr:
       trust_level_2: "niveau_confiance_2"
       trust_level_3: "niveau_confiance_3"
       trust_level_4: "niveau_confiance_4"
+    request_membership_pm:
+      title: "Demande d'adhésion pour @%{group_name}"
+      body: "Je souhaiterais adhérer à @%{group_name}."
   education:
     until_posts:
       one: "1 message"
@@ -350,6 +354,10 @@ fr:
           attributes:
             execute_at:
               in_the_past: "Doit être dans le futur"
+        translation_overrides:
+          attributes:
+            value:
+              missing_interpolation_keys: 'Les clés d''interpolation suivantes sont absentes : « %{keys} »'
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
@@ -361,7 +369,7 @@ fr:
   staff_category_name: "Responsables"
   staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
   assets_topic_title: "Ressources pour le style du site"
-  assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
+  assets_topic_body: "Ce sujet, visible uniquement par les responsables, permet de stocker les images et fichiers utilisés pour le design du site. Ne le supprimez pas !\n\n\nVoici comment :\n\n1. Répondez à ce sujet.\n2. Envoyez toutes les images que vous voulez utiliser comme logos, favicons, etc. sur ce sujet. (Utiliser l'icône dans la barre d'édition, glisser-déposer ou coller les images.)\n3. Envoyez votre réponse.\n4. Faites un clic droit afin d'obtenir le chemin vers vos images ou modifier votre message pour récupérer le chemin. Copiez le chemin.\n5. Collez les chemins des images dans les [paramètres requis](/admin/site_settings/category/required).\n\n\nSi vous avez besoin d'activer d'autres formats de fichier, modifiez l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Bienvenue sur Discourse"
     body: |2
@@ -571,12 +579,15 @@ fr:
       long_form: 'signalé comme hors-sujet'
     spam:
       title: 'Spam'
+      description: 'Ce message est une publicité, ou du vandalisme. Il n''est pas utile ou pertinent pour le sujet actuel.'
+      short_description: 'C''est de la publicité ou du vandalisme'
       long_form: 'signalé comme spam'
       email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapproprié'
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="/guidelines">charte de notre communauté</a>.'
+      short_description: 'Une violation de <a href="/guidelines">la charte de notre communauté</a>'
       long_form: 'signalé comme inapproprié'
     notify_user:
       title: 'Envoyer un message à @{{username}} '
@@ -595,6 +606,7 @@ fr:
     bookmark:
       title: 'Mettre un signet'
       description: 'Mettre un signet'
+      short_description: 'Mettre un signet'
       long_form: 'signet ajouté'
     like:
       title: 'J''aime'
@@ -641,7 +653,7 @@ fr:
         remove: "Ce sujet n'est plus à la une. Il ne sera plus affiché en haut de chaque page."
   unsubscribed:
     title: "Désabonné !"
-    description: "Vous avez été désabonné. Pour modifier vos paramètres de courriel, <a href='%{url}'>visitez vos préférences utilisateurs</a>."
+    description: "<b>%{email}</b> a été désabonné. Pour modifier vos paramètres de courriel, <a href='%{url}'>visitez vos préférences utilisateurs</a>."
     topic_description: "Pour vous ré-abonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
   unsubscribe:
     title: "Se désabonner"
@@ -918,7 +930,6 @@ fr:
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
-    allow_html_tables: "Autoriser la saisie des tableaux dans le Markdown en utilisant les tags HTML : TABLE, THEAD, TD, TR, TH sont autorisés (nécessite un rebake de tous les anciens messages contenant des tableaux)"
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (J'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
@@ -932,6 +943,8 @@ fr:
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP surveillées (Admin > Journaux > IP surveillés)."
+    blacklist_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être crawlés par Discourse"
+    whitelist_internal_hosts: "Une liste de domaines internes que Discourse peut crawler en sécurité pour les Onebox et autres"
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
@@ -965,6 +978,7 @@ fr:
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "Les inscriptions sont désactivées, elles ne peuvent se faire uniquement sur invitation par le staff."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
+    reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée. Le symbole « * » peut être utilisé pour représenter n'importe quel caractère 0 ou plusieurs fois."
     min_password_length: "Longueur minimale du mot de passe."
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
     password_unique_characters: "Nombre minimum de caractères uniques qu'un mot de passe doit avoir."
@@ -1055,6 +1069,7 @@ fr:
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
     twitter_summary_large_image_url: "URL de l'image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280px en largeur et 150px en hauteur). "
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
+    png_to_jpg_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1112,6 +1127,7 @@ fr:
     max_image_size_kb: "La taille maximale des images en Ko. Doit être configuré dans nginx (client_max_body_size) / apache ou proxy aussi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. Doit être configurer dans nginx (client_max_body_size) / apache ou proxy aussi."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre '*' pour autoriser tous les types)"
+    theme_authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois de thème (mettre « * » pour autoriser tous les types de fichier)"
     max_similar_results: "Combien de sujets similaires sont afficher lorsqu'un utilisateur est en train de créer un nouveau sujet. La comparaison se base sur le titre et le contenu."
     max_image_megapixels: "Nombre maximum autorisé de mégapixels pour une image."
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
@@ -1175,6 +1191,7 @@ fr:
     attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     enable_forwarded_emails: "[BÊTA] Autoriser les utilisateurs de créer des sujets en transferant un courriel."
     always_show_trimmed_content: "Toujours montrer la partie réduite des courriels entrants. ATTENTION : cela peut révéler les adresses courriels."
+    private_email: "Ne pas inclure du contenu des messages ou des sujets dans les courriels pour plus de confidentialité."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connections au serveur POP3. (Recommandé)"
@@ -1247,8 +1264,8 @@ fr:
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances) voir : https://highlightjs.org/static/demo/ pour une démo"
-    feed_polling_enabled: "EMBARQUER UNIQUEMENT: Embarqué le flux RSS/ATOM en tant que messages."
-    feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
+    feed_polling_enabled: "INTÉGRATION UNIQUEMENT : Détermine l'intégration d'un flux RSS/ATOM en tant que messages."
+    feed_polling_url: "INTÉGRATION UNIQUEMENT : URL du flux RSS/ATOM à intégrer."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
     embed_title_scrubber: "Expression régulière pour nettoyer les titres intégrables."
@@ -1258,6 +1275,7 @@ fr:
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
+    notify_about_flags_after: "S'il y a des signalements qui n'ont pas été traités après ce nombre d'heures, envoyer un message privé aux responsables. Mettre 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
@@ -1436,6 +1454,7 @@ fr:
     pinned_globally_disabled: "Ce sujet est maintenant désépinglé. Il n'apparaîtra plus en haut de sa catégorie."
     visible_enabled: "Ce sujet est maintenant visible. Il sera affiché dans la liste des sujets."
     visible_disabled: "Ce sujet est maintenant invisible. Il ne sera plus affiché dans la liste des sujets. Le seul moyen d'y accéder est par lien direct."
+    auto_deleted_by_timer: "Automatiquement supprimé par planification"
   login:
     not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par courriel quand cela sera fait."
     incorrect_username_email_or_password: "pseudo, adresse de courriel ou mot de passe incorrect"
@@ -1487,10 +1506,14 @@ fr:
     website:
       domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
   flags_reminder:
+    flags_were_submitted:
+      one: "Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](/admin/flags)."
+      other: "Des signalements ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](/admin/flags)."
     subject_template:
       one: "un signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement."
   unsubscribe_mailer:
+    title: "Désinscription"
     subject_template: "Confirmez que vous ne souhaitez plus recevoir de courriels de mises à jour de %{site_title}"
     text_body_template: |
       Quelqu'un (peut-être vous ?) a demandé à ne plus recevoir d'emails de mises à jour pour %{site_domain_name} sur cette adresse email.
@@ -1501,42 +1524,13 @@ fr:
 
       Si vous souhaitez continuer à recevoir ces emails, vous pouvez ignorer ce message.
   invite_mailer:
+    title: "Invitiation"
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      à
-
-      > %{site_title} -- %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   custom_invite_mailer:
+    title: "Invitation personnalisée"
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      à
-
-      > %{site_title} -- %{site_description}
-
-      Avec ce message :
-
-      > %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   invite_forum_mailer:
+    title: "Invitation sur le forum"
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
     text_body_template: |
       %{invitee_name} vous invite à rejoindre :
@@ -1549,6 +1543,7 @@ fr:
 
       %{invite_link}
   custom_invite_forum_mailer:
+    title: "Invitation personnalisée sur le forum"
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
     text_body_template: |
       %{invitee_name} vous invite à rejoindre :
@@ -1565,6 +1560,7 @@ fr:
 
       %{invite_link}
   invite_password_instructions:
+    title: "Instructions du mot de passe d'invité"
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
     text_body_template: |
       Merci d'avoir accepté l'invitation sur %{site_name} -- Bienvenue !
@@ -1574,6 +1570,7 @@ fr:
 
       (Si le lien est expiré, cliquez sur "J'ai oublié mon mot de passe" au moment de s'identifier avec adresse email)
   download_backup_mailer:
+    title: "Téléchargement de la sauvegarde"
     subject_template: "[%{email_prefix}] Lien Téléchargement Sauvegarde"
     text_body_template: |
       Voici le [site backup download](%{backup_file_path}) que vous avez demandé.
@@ -1636,6 +1633,7 @@ fr:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
     text_body_template: |+
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
@@ -1650,6 +1648,7 @@ fr:
       - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
 
   new_version_mailer_with_notes:
+    title: "Nouvelle version avec notes"
     subject_template: "[%{email_prefix}] mise à jour disponible"
     text_body_template: |
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
@@ -1667,6 +1666,7 @@ fr:
 
       %{notes}
   queued_posts_reminder:
+    title: "Messages dans la file d'attente"
     subject_template:
       one: "[%{email_prefix}] 1 message en attente de modération"
       other: "[%{email_prefix}] %{count} messages en attente de modération"
@@ -1718,8 +1718,31 @@ fr:
     welcome_user:
       title: "Bienvenue Utilisateur"
       subject_template: "Bienvenue sur %{site_name} !"
+      text_body_template: |
+        Merci d'avoir rejoint %{site_name}, et bienvenue !
+
+        %{new_user_tips}
+
+        Nous croyons constamment au [comportement communautaire civilisé](%{base_url}/guidelines).
+
+        Amusez-vous bien !
     welcome_invite:
+      title: "Bienvenue invité"
       subject_template: "Bienvenue sur %{site_name} !"
+      text_body_template: |
+        Merci d'avoir accepté l'invitation sur %{site_name} — bienvenue !
+
+        - Nous avons créé ce nouveau compte **%{username}** pour vous. Modifiez votre nom ou mot de passe en visitant [votre profil utilisateur][prefs].
+
+        - Au moment de vous connecter, merci **d'indiquer l'adresse courriel utilisée pour l'invitation** — autrement, nous ne pourrons pas vous reconnaître !
+
+        %{new_user_tips}
+
+        Nous croyons  constamment au [comportement communautaire civilisé](%{base_url}/guidelines).
+
+        Amusez-vous bien !
+
+        [prefs] : %{user_preferences_url}
     backup_succeeded:
       title: "Sauvegarde réussie"
       subject_template: "Sauvegarde terminée avec succès"
@@ -1767,9 +1790,11 @@ fr:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
       text_body_template: "Votre envoi d'invitations en masse a été effectué. %{sent} invitations envoyées."
     bulk_invite_failed:
+      title: "Invitation en masse échouée"
       subject_template: "Envoi des invitations en masse effectué avec des erreurs"
       text_body_template: |
         Votre envoi d'invitations en masse a été effectué. %{sent} invitations envoyées avec %{failed} erreur(s).
@@ -1791,6 +1816,7 @@ fr:
 
         Les données sont compressées au format gzip. Si le fichier ne s'extrait pas au moment de l'ouvrir, utilisez les outils suivants : http://www.gzip.org/#faq4
     csv_export_failed:
+      title: "Export CSV échoué"
       subject_template: "Échec de l'exportation des données "
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consulter les journaux ou contacter un responsable."
     email_reject_insufficient_trust_level:
@@ -2007,12 +2033,6 @@ fr:
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur du mois !"
       subject_template: "Vous êtes un nouvel utilisateur du mois !"
-      text_body_template: |
-        Félicitations, vous avez gagné le **prix du Nouveau Membre du Mois de %{month_year}**. :trophy:
-
-        Ce prix est seulement décerné à deux nouveaux membres par mois et sera visible sur [your user page](/my/badges).
-
-        Vous êtes devenu rapidement un membre précieux pour notre communauté. Merci de nous avoir rejoint et continuez à participer !
   unsubscribe_link: |
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2025,6 +2045,9 @@ fr:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Réponses précédentes"
+    reached_limit:
+      one: "Rappel : nous envoyons un maximum de 1 courriel quotidien. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
+      other: "Rappel : nous envoyons un maximum de %{count} courriels quotidiens. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
     in_reply_to: "En réponse à"
     unsubscribe:
       title: "Se désabonner"
@@ -2035,26 +2058,6 @@ fr:
     visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre."
     posted_by: "Redigé par %{username} le %{post_date}"
-    invited_to_private_message_body: |
-      %{username} vous a invité(e) à un message
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Utilisateur invité au MP"
       subject_template: "[%{email_prefix}] %{username} vous a invité dans la conversation « %{topic_title} »"
@@ -2198,7 +2201,6 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
-      unsubscribe: "Ce résumé est envoyé depuis %{site_link} lorsque nous ne vous voyons plus depuis un moment. Pour se désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "résumé de %{site_name}"
       preheader: "Un bref résumé depuis votre dernière visite le %{last_seen_at}"
@@ -2269,6 +2271,22 @@ fr:
     signup_after_approval:
       title: "Inscription après approbation"
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
+      text_body_template: |+
+        Bienvenue sur %{site_name} !
+
+        Un responsable a approuvé votre compte sur %{site_name}.
+
+        Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte :
+        %{base_url}/u/activate-account/%{email_token}
+
+        Si le lien ci-dessus n'est pas cliquable, essayez de le copier/coller dans la barre d'adresse de votre navigateur internet.
+
+        %{new_user_tips}
+
+        Nous croyons constamment au [comportement communautaire civilisé](%{base_url}/guidelines).
+
+        Amusez-vous bien !
+
     signup:
       title: "Inscription"
       subject_template: "[%{email_prefix}] Activez votre nouveau compte"
@@ -2301,6 +2319,7 @@ fr:
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} pour l'utilisateur #%{user_id}."
     file_missing: "Désolé, il faut fournir un fichier à envoyer."
+    empty: "Désolé, mais le fichier que vous avez fourni est vide."
     attachments:
       too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (taille maximale de %{max_size_kb} Ko)."
     images:

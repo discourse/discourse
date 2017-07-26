@@ -79,6 +79,7 @@ module DiscoursePoll
             if previous_option["id"] != option["id"]
               if votes_fields = post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
                 votes_fields.each do |key, value|
+                  next unless value[poll_name]
                   index = value[poll_name].index(previous_option["id"])
                   votes_fields[key][poll_name][index] = option["id"] if index
                 end

@@ -39,17 +39,36 @@ task "qunit:test", [:timeout] => :environment do |_, args|
 
     options = {}
 
-    %w{module filter}.each do |arg|
+    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
     if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20')}"
+      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
     end
 
     if args[:timeout].present?
       cmd += " #{args[:timeout]}"
     end
+
+    @now = Time.now
+    def elapsed
+      Time.now - @now
+    end
+
+    # wait for server to accept connections
+    require 'net/http'
+    uri = URI("http://localhost:#{port}/assets/test_helper.js")
+    puts "Warming up Rails server"
+    begin
+      Net::HTTP.get(uri)
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL
+      sleep 1
+      retry unless elapsed() > 60
+      puts "Timed out. Can no connect to forked server!"
+      exit 1
+    end
+    puts "Rails server is warmed up"
 
     # wait for server to respond, will exception out on failure
     tries = 0

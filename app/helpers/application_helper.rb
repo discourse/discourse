@@ -23,6 +23,9 @@ module ApplicationHelper
     if current_user.present?
       result[:userId] = current_user.id
     end
+    if SiteSetting.ga_universal_auto_link_domains.present?
+      result[:allowLinker] = true
+    end
     result.to_json.html_safe
   end
 
@@ -72,9 +75,17 @@ module ApplicationHelper
   end
 
   def body_classes
+    result = []
+
     if @category && @category.url.present?
-      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+      result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
     end
+
+    if current_user.present? && primary_group_name = current_user.primary_group&.name
+      result << "primary-group-#{primary_group_name.downcase}"
+    end
+
+    result.join(' ')
   end
 
   def rtl_class
@@ -219,9 +230,7 @@ module ApplicationHelper
   end
 
   def gsub_emoji_to_unicode(str)
-    if str
-      str.gsub(/:([\w\-+]*):/) { |name| Emoji.lookup_unicode($1) || name }
-    end
+    Emoji.gsub_emoji_to_unicode(str)
   end
 
   def application_logo_url

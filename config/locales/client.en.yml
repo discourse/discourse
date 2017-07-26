@@ -180,20 +180,21 @@ en:
 
     s3:
       regions:
-        us_east_1: "US East (N. Virginia)"
-        us_west_1: "US West (N. California)"
-        us_west_2: "US West (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "EU (Ireland)"
-        eu_west_2: "EU (London)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Asia Pacific (Singapore)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
-        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
-        sa_east_1: "South America (Sao Paulo)"
+        ap_south_1: "Asia Pacific (Mumbai)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
         cn_north_1: "China (Beijing)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Ireland)"
+        eu_west_2: "EU (London)"
+        sa_east_1: "South America (Sao Paulo)"
+        us_east_1: "US East (N. Virginia)"
+        us_east_2: "US East (Ohio)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -407,12 +408,8 @@ en:
         full_name: 'Full Name'
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
-      request_membership_pm:
-        title: "Membership Request"
-        body: "I would like to apply for membership in @%{groupName}."
-        disabled: "Insufficient trust level to request for group membership"
       name_placeholder: "Group name, no spaces, same as username rule"
-      public: "Allow users to join/leave the group freely (Requires group to be visible)"
+      public: "Allow users to join/leave the group freely (Requires publicly visible group)"
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
@@ -434,7 +431,6 @@ en:
       bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
-      visible: "Group is visible to all users"
       index:
         title: "Groups"
         empty: "There are no visible groups."
@@ -448,6 +444,12 @@ en:
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
+      visibility_levels:
+        title: "Who can see this group?"
+        public: "Everyone"
+        members: "Group owners, members and admins"
+        staff: "Group owners and staff"
+        owners: "Group owners and admins"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"
@@ -689,7 +691,6 @@ en:
         title: "Change Username"
         confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
 
       change_email:
@@ -841,6 +842,9 @@ en:
         expired: "This invite has expired."
         rescind: "Remove"
         rescinded: "Invite removed"
+        rescind_all: "Remove all Invites"
+        rescinded_all: "All Invites removed!"
+        rescind_all_confirm: "Are you sure you want to remove all invites?"
         reinvite: "Resend Invite"
         reinvite_all: "Resend all Invites"
         reinvite_all_confirm: "Are you sure you want to resend all invites?"
@@ -1041,6 +1045,9 @@ en:
 
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
+      help: "Email not arriving? Be sure to check your spam folder first.<p>Not sure which email address you used? Enter an email address and we’ll let you know if it exists here.</p><p>If you no longer have access to the email address on your account, please contact <a href='/about'>our helpful staff.</a></p>"
+      button_ok: "OK"
+      button_help: "Help"
     login:
       title: "Log In"
       username: "User"
@@ -1102,8 +1109,8 @@ en:
       accept_invite: "Accept Invitation"
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
-      name_label_optional: "Name (optional)"
-      password_label: "Set Password (optional)"
+      password_label: "Set Password"
+      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -1114,6 +1121,8 @@ en:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
 
     category_page_style:
       categories_only: "Categories Only"
@@ -1125,12 +1134,31 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    emoji_picker:
+      filter_placeholder: Search for emoji
+      people: People
+      nature: Nature
+      food: Food
+      activity: Activity
+      travel: Travel
+      objects: Objects
+      celebration: Celebration
+      custom: Custom emojis
+      recent: Recently used
+      default_tone: No skin tone
+      light_tone: Light skin tone
+      medium_light_tone: Medium light skin tone
+      medium_tone: Medium skin tone
+      medium_dark_tone: Medium dark skin tone
+      dark_tone: Dark skin tone
+
     composer:
       emoji: "Emoji :)"
       more_emoji: "more..."
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
+      blockquote_text: "Blockquote"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
@@ -1303,8 +1331,8 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "1 result for <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} results for <span class='term'>\"{{term}}\"</span>"
+        one: "1 result for <span class='term'>{{term}}</span>"
+        other: "{{count}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -1345,6 +1373,7 @@ en:
           unseen: I've not read
           wiki: are wiki
           images: includes image(s)
+          all_tags: Contains all tags
         statuses:
           label: Where topics
           open: are open
@@ -1714,6 +1743,7 @@ en:
         success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
         success_username: "We've invited that user to participate in this topic."
         error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
+        success_existing_email: "A user with email <b>{{emailOrUsername}}</b> already exists. We've invited that user to participate in this topic."
 
       login_reply: 'Log In to Reply'
 
@@ -1850,6 +1880,7 @@ en:
         has_liked: "you've liked this post"
         undo_like: "undo like"
         edit: "edit this post"
+        edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
@@ -1959,7 +1990,7 @@ en:
 
       merge:
         confirm:
-          one: "Are you sure you want merge those posts?"
+          one: "Are you sure you want to merge those posts?"
           other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:
@@ -2009,8 +2040,8 @@ en:
       settings: 'Settings'
       topic_template: "Topic Template"
       tags: "Tags"
-      tags_allowed_tags: "Tags that can only be used in this category:"
-      tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
+      tags_allowed_tags: "Only allow these tags to be used in this category:"
+      tags_allowed_tag_groups: "Only allow tags from these groups to be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       topic_featured_link_allowed: "Allow featured links in this category"
@@ -2879,7 +2910,7 @@ en:
           add: "Add"
           commits_behind:
             one: "Theme is 1 commit behind!"
-            other: "Theme is {{count}} commit behind!"
+            other: "Theme is {{count}} commits behind!"
           scss:
             text: "CSS"
             title: "Enter custom CSS, we accept all valid CSS and SCSS styles"

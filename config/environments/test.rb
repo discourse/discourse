@@ -41,4 +41,9 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.eager_load = false
+
+  unless ENV['RAILS_ENABLE_TEST_LOG']
+    config.logger = Logger.new(nil)
+    config.log_level = :fatal
+  end
 end

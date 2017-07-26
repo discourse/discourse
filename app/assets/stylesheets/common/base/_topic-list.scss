@@ -16,8 +16,8 @@
   }
 }
 
-html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-light-diff($primary, $secondary, 45%, -30%);}
-.topic-list a.title.visited:not(.badge-notification) {color: dark-light-diff($primary, $secondary, 45%, -30%);}
+html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-medium; }
+.topic-list a.title.visited:not(.badge-notification) {color: $primary-medium; }
 
 .topic-list {
   width: 100%;
@@ -28,7 +28,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border-bottom: 1px solid $primary-low; 
 
     &.last-visit {
       border-bottom: none;
@@ -58,7 +58,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
   }
 
   > tbody > tr:first-of-type {
-    border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border-top: 3px solid $primary-low; 
   }
 
   th,
@@ -238,7 +238,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low; 
   background-color: $secondary;
   z-index: 100;
 
@@ -300,7 +300,7 @@ ol.category-breadcrumb {
     @include unselectable;
 
     font-size: 1.2em;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border: 1px solid $primary-low; 
     padding: 5px;
     background: $secondary;
     position: absolute;
@@ -326,7 +326,7 @@ ol.category-breadcrumb {
           font-size: 0.8em;
         }
         &:hover {
-          background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+          background-color: $highlight-medium;
         }
       }
     }

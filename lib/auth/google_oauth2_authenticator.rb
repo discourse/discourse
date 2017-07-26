@@ -31,6 +31,10 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
   def after_create_account(user, auth)
     data = auth[:extra_data]
     GoogleUserInfo.create({user_id: user.id}.merge(data))
+    if auth[:email_valid].to_s == 'true'
+      EmailToken.confirm(user.email_tokens.first.token)
+      user.set_automatic_groups
+    end
   end
 
   def register_middleware(omniauth)

@@ -83,6 +83,7 @@ module Discourse
                                  browser-update.js break_string.js ember_jquery.js
                                  pretty-text-bundle.js wizard-application.js
                                  wizard-vendor.js plugin.js plugin-third-party.js
+                                 markdown-it-bundle.js
                                  }
 
     # Precompile all available locales

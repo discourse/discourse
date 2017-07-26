@@ -2,6 +2,7 @@
 # about: Introduces staff to Discourse
 # version: 0.0.1
 # authors: Nick Sahler (@nicksahler)
+# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 
 enabled_site_setting :discourse_narrative_bot_enabled
 
@@ -147,7 +148,6 @@ after_initialize do
     SiteSetting.discourse_narrative_bot_enabled &&
       self.id > 0 &&
       !self.anonymous? &&
-      !self.user_option.mailing_list_mode &&
       !self.staged &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
   end

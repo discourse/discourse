@@ -57,6 +57,8 @@ SQL
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
     builder.where('ft.deleted_at IS NULL')
+    # note that ILIKE means "case insensitive LIKE"
+    builder.where("NOT(ftl.url ILIKE '%.png' OR ftl.url ILIKE '%.jpg' OR ftl.url ILIKE '%.gif')")
     builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
     builder.secure_category(guardian.secure_category_ids)
@@ -122,16 +124,11 @@ SQL
           internal = false
           topic_id = nil
           post_number = nil
-          parsed_path = parsed.path || ""
 
           if Discourse.store.has_been_uploaded?(url)
             internal = Discourse.store.internal?
-          elsif (parsed.host == Discourse.current_hostname && parsed_path.start_with?(Discourse.base_uri)) || !parsed.host
+          elsif route = Discourse.route_for(parsed)
             internal = true
-
-            parsed_path.slice!(Discourse.base_uri)
-
-            route = Rails.application.routes.recognize_path(parsed_path)
 
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'

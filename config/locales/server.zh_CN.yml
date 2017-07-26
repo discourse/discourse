@@ -171,8 +171,8 @@ zh_CN:
   page_num: "第%{num}页"
   home_title: "首页"
   topics_in_category: "“%{category}”分类中的主题"
-  rss_posts_in_topic: "“%{topic}”的 RSS 内容聚合"
-  rss_topics_in_category: "分类“%{category}”中主题的 RSS 内容聚合"
+  rss_posts_in_topic: " '%{topic}'的RSS源"
+  rss_topics_in_category: "分类'%{category}' 中主题的RSS源"
   author_wrote: "%{author}写道："
   num_posts: "帖子："
   num_participants: "参与者："
@@ -348,7 +348,6 @@ zh_CN:
   staff_category_name: "管理人员"
   staff_category_description: "管理人员可见的分类。只有管理员和版主才能阅览主题。"
   assets_topic_title: "站点设计资料"
-  assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传你想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交你的回复添加帖子。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "欢迎来到 Discourse"
     body: |2
@@ -606,7 +605,6 @@ zh_CN:
         remove: "本主题已经不再是横幅主题。它将不在每个页面的顶部显示。"
   unsubscribed:
     title: "退订！"
-    description: "你已经退订。要更改你的邮件设置，<a href='%{url}'>访问你的用户设置页面</a>。"
     topic_description: "点击链接 %{link} 重新订阅，或是使用主题底部或右侧的通知控制。"
   unsubscribe:
     title: "退订"
@@ -883,7 +881,6 @@ zh_CN:
     notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个私信给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
-    allow_html_tables: "允许在输入 Markdown 文本时使用表格 HTML 标签。标签 TABLE、THEAD、TD、TR、TH 将被允许使用，即白名单这些标签（需要重置所有包含表格的老帖子的 HTML）"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
@@ -1464,37 +1461,9 @@ zh_CN:
   invite_mailer:
     title: "要求发件人"
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
-    text_body_template: |
-      %{invitee_name}邀请你参与讨论：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      社区：
-
-      > %{site_title} -- %{site_description}
-
-      如果你有兴趣，点击下方的链接：
-
-      %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
     subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀请你参与讨论：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      社区：
-
-      > %{site_title} -- %{site_description}
-
-      如果你有兴趣，点击下方的链接：
-
-      %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
@@ -1539,11 +1508,11 @@ zh_CN:
     title: "下载备份邮件发件人"
     subject_template: "[%{email_prefix}] 站点备份下载"
     text_body_template: |
-      这是你需要的[站点备份下载](%{backup_file_path})。
+      这是你[站点备份文件](%{backup_file_path})。
 
-      我们处于安全原因把下载链接发到你确认过的邮箱。
+      出于安全原因我们把下载链接直接发到你确认过的邮箱。
 
-      （如果你**没有**请求下载，你需要认真考虑了——有管理员请求下载）
+      （如果你**没有**请求下载，你需要认真想想了——有个管理员请求了备份文件）
     no_token: |
       抱歉，这个备份下载链接已经被使用或已经过期。
   admin_confirmation_mailer:
@@ -2011,12 +1980,6 @@ zh_CN:
     new_user_of_the_month:
       title: "你是这个月的最佳新用户！"
       subject_template: "你是这个月的最佳新用户！"
-      text_body_template: |
-        恭喜，你获得了**%{month_year}月最佳新用户**。 :trophy:
-
-        该奖项每月只授予给两位新用户，并且你永远都可以在[你的用户页](/my/badges)找到。
-
-        你迅速成为了我们社区中的一员。感谢你参与，未来继续努力！
   unsubscribe_link: |
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -2041,26 +2004,6 @@ zh_CN:
     visit_link_to_respond: "[访问主题](%{base_url}%{url})以回复."
     visit_link_to_respond_pm: "[访问私信](%{base_url}%{url})以回复."
     posted_by: "%{username}发表于%{post_date}"
-    invited_to_private_message_body: |
-      %{username} 邀请你至私信交流：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      论坛：
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} 邀请你参与讨论：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      论坛：
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "邀请用户至私信"
       subject_template: "[%{email_prefix}] %{username}邀请你至私信“%{topic_title}”"
@@ -2208,7 +2151,6 @@ zh_CN:
       popular_posts: "流行帖子"
       more_new: "你关注的新帖"
       subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "这是封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。%{unsubscribe_link}取消订阅。"
       click_here: "点击此处"
       from: "%{site_name}的摘要"
       preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"
@@ -2216,12 +2158,12 @@ zh_CN:
       title: "忘记密码"
       subject_template: "[%{email_prefix}] 密码重置"
       text_body_template: |
-        有人尝试重置你在[%{site_name}](%{base_url})的账户。
+        在[%{site_name}](%{base_url})上有人要求重置你的密码。
 
-        如果不是你在操作，你可以安全地忽略这封邮件。
+        如果不是你，你可以安全地忽略此邮件。
 
-        点击下面的链接设置新密码：
-        %{base_url}/u/admin-login/%{email_token}
+        点击以下链接设置新密码：
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "设置密码"
       subject_template: "[%{email_prefix}] 设置密码"
@@ -2236,11 +2178,11 @@ zh_CN:
       title: "管理员登陆"
       subject_template: "[%{email_prefix}] 登录"
       text_body_template: |
-        有人尝试登录你在[%{site_name}](%{base_url})的账户。
+        在[%{site_name}](%{base_url})上有人要求登录你的帐号。
 
-        如果不是你在操作，你可以安全地忽略这封邮件。
+        如果你没有提出此请求，你可以安全地忽略此邮件。
 
-        点击下面的链接设置新密码：
+        点击以下链接登录：
         %{base_url}/u/admin-login/%{email_token}
     account_created:
       title: "帐号已创建"

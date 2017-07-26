@@ -8,7 +8,7 @@ class InviteMailer < ActionMailer::Base
     include EmailHelper
   end
 
-  def send_invite(invite, custom_message=nil)
+  def send_invite(invite)
     # Find the first topic they were invited to
     first_topic = invite.topics.order(:created_at).first
 
@@ -27,7 +27,7 @@ class InviteMailer < ActionMailer::Base
       end
 
       template = 'invite_mailer'
-      if custom_message.present?
+      if invite.custom_message.present?
         template = 'custom_invite_mailer'
       end
 
@@ -46,10 +46,10 @@ class InviteMailer < ActionMailer::Base
                   topic_excerpt: topic_excerpt,
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title,
-                  user_custom_message: custom_message)
+                  user_custom_message: invite.custom_message)
     else
       template = 'invite_forum_mailer'
-      if custom_message.present?
+      if invite.custom_message.present?
         template = 'custom_invite_forum_mailer'
       end
 
@@ -60,7 +60,7 @@ class InviteMailer < ActionMailer::Base
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title,
-                  user_custom_message: custom_message)
+                  user_custom_message: invite.custom_message)
     end
   end
 

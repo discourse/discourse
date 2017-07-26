@@ -90,11 +90,15 @@ class PostMover
       raw: post.raw,
       topic_id: destination_topic.id,
       acting_user: user,
-      skip_validations: true
+      skip_validations: true,
+      guardian: Guardian.new(user)
     )
 
     PostAction.copy(post, new_post)
     new_post.update_column(:reply_count, @reply_count[1] || 0)
+    new_post.custom_fields = post.custom_fields
+    new_post.save_custom_fields
+    new_post
   end
 
   def move(post)

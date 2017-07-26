@@ -95,3 +95,19 @@ ColumnDropper.drop(
     STDERR.puts "Removing superflous topic columns!"
   }
 )
+
+ColumnDropper.drop(
+  table: 'topics',
+  after_migration: 'RemoveAutoCloseColumnsFromTopics',
+  columns: %w{
+    auto_close_at
+    auto_close_user_id
+    auto_close_started_at
+    auto_close_based_on_last_post
+    auto_close_hours
+  },
+  on_drop: ->(){
+    STDERR.puts "Removing superflous topic columns!"
+  },
+  delay: 3600
+)

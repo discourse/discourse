@@ -1,127 +1,622 @@
-EMOJI_LIST_URL ||= "http://unicode.org/emoji/charts/full-emoji-list.html"
-EMOJI_KEYWORDS_URL ||= "https://raw.githubusercontent.com/muan/emojilib/master/emojis.json"
+require "active_support/test_case"
+require "fileutils"
+require "json"
+require "nokogiri"
+require "open-uri"
 
-# until MS release the emoji flags, we'll use custom made flags
-WINDOWS_FLAGS ||= Set.new ["1f1e8_1f1f3", "1f1e9_1f1ea", "1f1ea_1f1f8", "1f1eb_1f1f7", "1f1ec_1f1e7", "1f1ee_1f1f9", "1f1ef_1f1f5", "1f1f0_1f1f7", "1f1f7_1f1fa", "1f1fa_1f1f8"]
+EMOJI_GROUPS_PATH ||= "lib/emoji/groups.json"
+
+EMOJI_DB_PATH ||= "lib/emoji/db.json"
+
+EMOJI_IMAGES_PATH ||= "public/images/emoji"
+
+EMOJI_ORDERING_URL ||= "http://www.unicode.org/emoji/charts/emoji-ordering.html"
+
+EMOJI_ALIASES ||= {
+  "right_anger_bubble" => [ "anger_right" ],
+  "ballot_box" => [ "ballot_box_with_ballot" ],
+  "basketball_man" => [ "basketball_player", "person_with_ball" ],
+  "beach_umbrella" => [ "umbrella_on_ground", "beach", "beach_with_umbrella" ],
+  "parasol_on_ground" => [ "umbrella_on_ground" ],
+  "bellhop_bell" => [ "bellhop" ],
+  "biohazard" => [ "biohazard_sign" ],
+  "bow_and_arrow" => [ "archery" ],
+  "spiral_calendar" => [ "calendar_spiral", "spiral_calendar_pad" ],
+  "card_file_box" => [ "card_box" ],
+  "champagne" => [ "bottle_with_popping_cork" ],
+  "cheese" => [ "cheese_wedge" ],
+  "city_sunset" => [ "city_dusk" ],
+  "couch_and_lamp" => [ "couch" ],
+  "crayon" => [ "lower_left_crayon" ],
+  "cricket_bat_and_ball" => [ "cricket_bat_ball" ],
+  "latin_cross" => [ "cross" ],
+  "dagger" => [ "dagger_knife" ],
+  "desktop_computer" => [ "desktop" ],
+  "card_index_dividers" => [ "dividers" ],
+  "dove" => [ "dove_of_peace" ],
+  "footprints" => [ "feet" ],
+  "fire" => [ "flame" ],
+  "black_flag" => [ "flag_black", "waving_black_flag" ],
+  "cn" => [ "flag_cn" ],
+  "de" => [ "flag_de" ],
+  "es" => [ "flag_es" ],
+  "fr" => [ "flag_fr" ],
+  "uk" => [ "gb", "flag_gb" ],
+  "it" => [ "flag_it" ],
+  "jp" => [ "flag_jp" ],
+  "kr" => [ "flag_kr" ],
+  "ru" => [ "flag_ru" ],
+  "us" => [ "flag_us" ],
+  "white_flag" => [ "flag_white", "waving_white_flag" ],
+  "plate_with_cutlery" => [ "fork_knife_plate", "fork_and_knife_with_plate" ],
+  "framed_picture" => [ "frame_photo", "frame_with_picture" ],
+  "hammer_and_pick" => [ "hammer_pick" ],
+  "heavy_heart_exclamation" => [ "heart_exclamation", "heavy_heart_exclamation_mark_ornament" ],
+  "houses" => [ "homes", "house_buildings" ],
+  "hotdog" => [ "hot_dog" ],
+  "derelict_house" => [ "house_abandoned", "derelict_house_building" ],
+  "desert_island" => [ "island" ],
+  "old_key" => [ "key2" ],
+  "laughing" => [ "satisfied" ],
+  "business_suit_levitating" => [ "levitate", "man_in_business_suit_levitating" ],
+  "weight_lifting_man" => [ "lifter", "weight_lifter" ],
+  "medal_sports" => [ "medal", "sports_medal" ],
+  "metal" => [ "sign_of_the_horns" ],
+  "fu" => [ "middle_finger", "reversed_hand_with_middle_finger_extended" ],
+  "motorcycle" => [ "racing_motorcycle" ],
+  "mountain_snow" => [ "snow_capped_mountain" ],
+  "newspaper_roll" => [ "newspaper2", "rolled_up_newspaper" ],
+  "spiral_notepad" => [ "notepad_spiral", "spiral_note_pad" ],
+  "oil_drum" => [ "oil" ],
+  "older_woman" => [ "grandma" ],
+  "paintbrush" => [ "lower_left_paintbrush" ],
+  "paperclips" => [ "linked_paperclips" ],
+  "pause_button" => [ "double_vertical_bar" ],
+  "peace_symbol" => [ "peace" ],
+  "fountain_pen" => [ "pen_fountain", "lower_left_fountain_pen" ],
+  "ping_pong" => [ "table_tennis" ],
+  "place_of_worship" => [ "worship_symbol" ],
+  "poop" => [ "shit", "hankey", "poo" ],
+  "radioactive" => [ "radioactive_sign" ],
+  "railway_track" => [ "railroad_track" ],
+  "robot" => [ "robot_face" ],
+  "skull" => [ "skeleton" ],
+  "skull_and_crossbones" => [ "skull_crossbones" ],
+  "speaking_head" => [ "speaking_head_in_silhouette" ],
+  "male_detective" => [ "spy", "sleuth_or_spy" ],
+  "thinking" => [ "thinking_face" ],
+  "-1" => [ "thumbsdown" ],
+  "+1" => [ "thumbsup" ],
+  "cloud_with_lightning_and_rain" => [ "thunder_cloud_rain", "thunder_cloud_and_rain" ],
+  "tickets" => [ "admission_tickets" ],
+  "next_track_button" => [ "track_next", "next_track" ],
+  "previous_track_button" => [ "track_previous", "previous_track" ],
+  "unicorn" => [ "unicorn_face" ],
+  "funeral_urn" => [ "urn" ],
+  "sun_behind_large_cloud" => [ "white_sun_cloud", "white_sun_behind_cloud" ],
+  "sun_behind_rain_cloud" => [ "white_sun_rain_cloud", "white_sun_behind_cloud_with_rain" ],
+  "partly_sunny" => [ "white_sun_small_cloud", "white_sun_with_small_cloud" ],
+  "open_umbrella" => [ "umbrella2" ],
+  "hammer_and_wrench" => [ "tools" ],
+  "face_with_thermometer" => [ "thermometer_face" ],
+  "timer_clock" => [ "timer" ],
+  "keycap_ten" => [ "ten" ],
+  "memo" => [ "pencil" ],
+  "rescue_worker_helmet" => [ "helmet_with_cross", "helmet_with_white_cross" ],
+  "slightly_smiling_face" => [ "slightly_smiling", "slight_smile"],
+  "construction_worker_man" => [ "construction_worker" ],
+  "upside_down_face" => [ "upside_down" ],
+  "money_mouth_face" => [ "money_mouth" ],
+  "nerd_face" => [ "nerd" ],
+  "hugs" => [ "hugging", "hugging_face" ],
+  "roll_eyes" => [ "rolling_eyes", "face_with_rolling_eyes" ],
+  "slightly_frowning_face" => [ "slight_frown" ],
+  "frowning_face" => [ "frowning2", "white_frowning_face" ],
+  "zipper_mouth_face" => [ "zipper_mouth" ],
+  "face_with_head_bandage" => [ "head_bandage" ],
+  "raised_hand_with_fingers_splayed" => [ "hand_splayed" ],
+  "raised_hand" => [ "hand" ],
+  "vulcan_salute" => [ "vulcan", "raised_hand_with_part_between_middle_and_ring_fingers" ],
+  "policeman" => [ "cop" ],
+  "running_man" => [ "runner" ],
+  "walking_man" => [ "walking" ],
+  "bowing_man" => [ "bow" ],
+  "no_good_woman" => [ "no_good" ],
+  "raising_hand_woman" => [ "raising_hand" ],
+  "pouting_woman" => [ "person_with_pouting_face" ],
+  "frowning_woman" => [ "person_frowning" ],
+  "haircut_woman" => [ "haircut" ],
+  "massage_woman" => [ "massage" ],
+  "tshirt" => [ "shirt" ],
+  "biking_man" => [ "bicyclist" ],
+  "mountain_biking_man" => [ "mountain_bicyclist" ],
+  "passenger_ship" => [ "cruise_ship" ],
+  "motor_boat" => [ "motorboat", "boat" ],
+  "flight_arrival" => [ "airplane_arriving" ],
+  "flight_departure" => [ "airplane_departure" ],
+  "small_airplane" => [ "airplane_small" ],
+  "racing_car" => [ "race_car" ],
+  "family_man_woman_boy_boy" => [ "family_man_woman_boys" ],
+  "family_man_woman_girl_girl" => [ "family_man_woman_girls" ],
+  "family_woman_woman_boy" => [ "family_women_boy" ],
+  "family_woman_woman_girl" => [ "family_women_girl" ],
+  "family_woman_woman_girl_boy" => [ "family_women_girl_boy" ],
+  "family_woman_woman_boy_boy" => [ "family_women_boys" ],
+  "family_woman_woman_girl_girl" => [ "family_women_girls" ],
+  "family_man_man_boy" => [ "family_men_boy" ],
+  "family_man_man_girl" => [ "family_men_girl" ],
+  "family_man_man_girl_boy" => [ "family_men_girl_boy" ],
+  "family_man_man_boy_boy" => [ "family_men_boys" ],
+  "family_man_man_girl_girl" => [ "family_men_girls" ],
+  "cloud_with_lightning" => [ "cloud_lightning" ],
+  "tornado" => [ "cloud_tornado", "cloud_with_tornado" ],
+  "cloud_with_rain" => [ "cloud_rain" ],
+  "cloud_with_snow" => [ "cloud_snow" ],
+  "asterisk" => [ "keycap_star" ],
+  "studio_microphone" => [ "microphone2" ],
+  "medal_military" => [ "military_medal" ],
+  "couple_with_heart_woman_woman" => [ "female_couple_with_heart" ],
+  "couple_with_heart_man_man" => [ "male_couple_with_heart" ],
+  "couplekiss_woman_woman" => [ "female_couplekiss" ],
+  "couplekiss_man_man" => [ "male_couplekiss" ],
+  "honeybee" => [ "bee" ],
+  "lion" => [ "lion_face" ],
+  "artificial_satellite" => [ "satellite_orbital" ],
+  "computer_mouse" => [ "mouse_three_button", "three_button_mouse" ],
+  "hocho" => [ "knife" ],
+  "swimming_man" => [ "swimmer" ],
+  "wind_face" => [ "wind_blowing_face" ],
+  "golfing_man" => [ "golfer" ],
+  "facepunch" => [ "punch" ],
+  "building_construction" => [ "construction_site" ],
+  "family_man_woman_girl_boy" => [ "family" ],
+  "ice_hockey" => [ "hockey" ],
+  "snowman_with_snow" => [ "snowman2" ],
+  "play_or_pause_button" => [ "play_pause" ],
+  "film_projector" => [ "projector" ],
+  "shopping" => [ "shopping_bags" ],
+  "open_book" => [ "book" ],
+  "national_park" => [ "park" ],
+  "world_map" => [ "map" ],
+  "pen" => [ "pen_ballpoint", "lower_left_ballpoint_pen" ],
+  "email" => [ "envelope", "e-mail" ],
+  "phone" => [ "telephone" ],
+  "atom_symbol" => [ "atom" ],
+  "mantelpiece_clock" => [ "clock" ],
+  "camera_flash" => [ "camera_with_flash" ],
+  "film_strip" => [ "film_frames" ],
+  "balance_scale" => [ "scales" ],
+  "surfing_man" => [ "surfer" ],
+  "couplekiss_man_woman" => [ "couplekiss" ],
+  "couple_with_heart_woman_man" => [ "couple_with_heart" ],
+  "clamp" => [ "compression" ],
+  "dancing_women" => [ "dancers" ],
+  "blonde_man" => [ "person_with_blond_hair" ],
+  "sleeping_bed" => [ "sleeping_accommodation" ],
+  "om" => [ "om_symbol" ],
+  "tipping_hand_woman" => [ "information_desk_person" ],
+  "rowing_man" => [ "rowboat" ],
+  "new_moon" => [ "moon" ],
+  "oncoming_automobile" => [ "car", "automobile" ],
+  "fleur_de_lis" => [ "fleur-de-lis" ],
+}
+
+EMOJI_GROUPS ||= [
+  {
+    "name" => "people",
+    "fullname" => "People",
+    "tabicon" => "grinning",
+    "sections" => [
+      "face-positive",
+      "face-neutral",
+      "face-negative",
+      "face-sick",
+      "face-role",
+      "face-fantasy",
+      "cat-face",
+      "monkey-face",
+      "skin-tone",
+      "person",
+      "person-role",
+      "person-fantasy",
+      "person-gesture",
+      "family",
+      "body"
+    ]
+  },
+  {
+    "name" => "nature",
+    "fullname" => "Nature",
+    "tabicon" => "evergreen_tree",
+    "sections" => [
+      "animal-mammal",
+      "animal-bird",
+      "animal-amphibian",
+      "animal-reptile",
+      "animal-marine",
+      "animal-bug",
+      "plant-flower",
+      "plant-other",
+      "sky_&_weather",
+
+    ]
+  },
+  {
+    "name" => "food",
+    "fullname" => "Food & Drink",
+    "tabicon" => "hamburger",
+    "sections" => [
+      "food-fruit",
+      "food-vegetable",
+      "food-prepared",
+      "food-asian",
+      "food-sweet",
+      "drink",
+      "dishware"
+    ]
+  },
+  {
+    "name" => "celebration",
+    "fullname" => "Celebration",
+    "tabicon" => "gift",
+    "sections" => [
+      "event",
+      "emotion"
+    ]
+  },
+  {
+    "name" => "activity",
+    "fullname" => "Activities",
+    "tabicon" => "soccer",
+    "sections" => [
+      "person-activity",
+      "person-sport",
+      "sport",
+      "game",
+      "music",
+      "musical-instrument"
+    ]
+  },
+  {
+    "name" => "travel",
+    "fullname" => "Travel & Places",
+    "tabicon" => "airplane",
+    "sections" => [
+      "place-map",
+      "place-geographic",
+      "place-building",
+      "place-religious",
+      "place-other",
+      "transport-ground",
+      "transport-water",
+      "transport-air",
+      "hotel",
+      "flag",
+      "country-flag",
+      "subdivision-flag"
+    ]
+  },
+  {
+    "name" => "objects",
+    "fullname" => "Objects & Symbols",
+    "tabicon" => "eyeglasses",
+    "sections" => [
+      "clothing",
+      "award-medal",
+      "sound",
+      "phone",
+      "computer",
+      "light_&_video",
+      "book-paper",
+      "money",
+      "mail",
+      "writing",
+      "office",
+      "lock",
+      "tool",
+      "medical",
+      "other-object",
+      "transport-sign",
+      "warning",
+      "arrow",
+      "religion",
+      "zodiac",
+      "av-symbol",
+      "other-symbol",
+      "keycap",
+      "alphanum",
+      "geometric",
+      "time"
+    ]
+  }
+]
+
+FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
+
+DEFAULT_SET ||= "twitter"
+
+# Replace the platform by another when downloading the image (accepts names or categories)
+EMOJI_IMAGES_PATCH ||= {
+  "windows" => {
+    "hash" => "apple",
+    "zero" => "apple",
+    "one" => "apple",
+    "two" => "apple",
+    "three" => "apple",
+    "four" => "apple",
+    "five" => "apple",
+    "six" => "apple",
+    "seven" => "apple",
+    "eight" => "apple",
+    "nine" => "apple",
+    "asterisk" => "apple"
+  },
+  "apple" => {
+    "snowboarder" => "twitter"
+  },
+  "emoji_one" => {
+    "country-flag" => "twitter"
+  }
+}
+
+EMOJI_SETS ||= {
+  "apple" => "apple",
+  "google" => "google",
+  "google_blob" => "google_classic",
+  "facebook_messenger" => "facebook_messenger",
+  "twitter" => "twitter",
+  "emoji_one" => "emoji_one",
+  "windows" => "win10",
+}
+
+EMOJI_DB_REPO ||= "git@github.com:jjaffeux/emoji-db.git"
+
+EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
+
+GENERATED_PATH ||= File.join(EMOJI_DB_REPO_PATH, "generated")
 
 desc "update emoji images"
-task "emoji:update" => :environment do
-  emojis = {}
+task "emoji:update" do
+  copy_emoji_db
 
-  puts "Loading local emoji database..."
-  db = JSON.parse(File.read("lib/emoji/db.json"))
-  db["emojis"].each do |e|
-    emojis[e["code"].tr("-", "_")] = { name: e["name"] }
-  end
-  aliases = db["aliases"].to_h
+  json_db = open(File.join(GENERATED_PATH, "db.json")).read
+  keywords = JSON.parse(json_db)
 
-  puts "Enhancing emoji database with emojilib keywords..."
-  keywords = JSON.parse(open(EMOJI_KEYWORDS_URL).read)
-  keywords.keys.each do |k|
-    next unless char = keywords[k]["char"].presence
+  write_db_json(keywords)
+  fix_incomplete_sets(keywords)
+  write_aliases
+  groups = generate_emoji_groups(keywords)
+  write_js_groups(keywords, groups)
 
-    code = char.codepoints
-               .map { |c| c.to_s(16).rjust(4, "0") }
-               .join("_")
-               .downcase
-               .gsub(/_fe0f$/, "")
+  TestEmojiUpdate.run_and_summarize
 
-    emojis[code] ||= { name: k }
-  end
-
-  puts "Retrieving remote emoji list..."
-  list = open(EMOJI_LIST_URL).read
-
-  puts "Parsing remote emoji list..."
-  doc = Nokogiri::HTML(list)
-  doc.css("tr").each do |row|
-    cells = row.css("td")
-    next if cells.size == 0
-
-    code = cells[1].at_css("a")["name"]
-
-    unless emojis[code]
-      code = code.gsub(/_fe0f/, "")
-      next unless emojis[code]
-    end
-
-    apple = cell_to_image(cells[4])
-    google = cell_to_image(cells[5])
-    twitter = cell_to_image(cells[6])
-    one = cell_to_image(cells[7])
-
-    if WINDOWS_FLAGS.include?(code)
-      windows = custom_windows_flag(code)
-    else
-      windows = cell_to_image(cells[11])
-    end
-
-    if apple.blank? || google.blank? || twitter.blank? || one.blank? || windows.blank?
-      emojis.delete(code)
-      next
-    end
-
-    emojis[code][:apple] = apple
-    emojis[code][:google] = google
-    emojis[code][:twitter] = twitter
-    emojis[code][:one] = one
-    emojis[code][:windows] = windows
-  end
-
-  puts "Writing emojis..."
-  write_emojis(emojis, aliases, :apple, "apple")
-  write_emojis(emojis, aliases, :google, "google")
-  write_emojis(emojis, aliases, :twitter, "twitter")
-  write_emojis(emojis, aliases, :one, "emoji_one")
-  write_emojis(emojis, aliases, :windows, "win10")
-
-  puts "Updating db.json..."
-  db = {
-    "emojis" => emojis.keys.map { |k| { "code" => k.tr("_", "-"), "name" => emojis[k][:name] } },
-    "aliases" => aliases,
-  }
-
-  File.write("lib/emoji/db.json", JSON.pretty_generate(db))
-
-  puts "Done!"
+  FileUtils.rm_rf(EMOJI_DB_REPO_PATH)
 end
 
-def cell_to_image(cell)
-  return unless img = cell.at_css("img")
-  Base64.decode64(img["src"][/base64,(.+)$/, 1])
+desc "test the emoji generation script"
+task "emoji:test" do
+  ENV['EMOJI_TEST'] = "1"
+  Rake::Task["emoji:update"].invoke
 end
 
-def custom_windows_flag(code)
-  name = code.upcase.tr("_", "-")
-  open("https://github.com/discourse/discourse-emoji-extractor/raw/master/win10/72x72/windows_#{name}.png").read
+def copy_emoji_db
+  `rm -rf tmp/emoji-db && git clone #{EMOJI_DB_REPO} tmp/emoji-db`
+
+  path = "#{EMOJI_IMAGES_PATH}/**/*"
+  confirm_overwrite(path)
+  puts "Cleaning emoji folder..."
+  FileUtils.rm_rf(Dir.glob(path))
+
+  EMOJI_SETS.each do |set_name, set_destination|
+    origin = File.join(GENERATED_PATH, set_name)
+    destination = File.join(EMOJI_IMAGES_PATH, set_destination)
+    FileUtils.mv(origin, destination)
+  end
 end
 
-def write_emojis(emojis, aliases, style, folder)
-  path = "public/images/emoji/#{folder}"
+def fix_incomplete_sets(emojis)
+  emojis.each do |code, config|
+    EMOJI_SETS.each do |set_name, set_destination|
+      patch_set = EMOJI_SETS[EMOJI_IMAGES_PATCH.dig(set_name, config["name"])] ||
+        EMOJI_SETS[EMOJI_IMAGES_PATCH.dig(set_name, config["category"])]
 
-  # Uncomment to recreate all emojis
-  # FileUtils.rm_f Dir.glob("#{path}/*")
+      if patch_set || !File.exist?(File.join(EMOJI_IMAGES_PATH, set_destination, "#{config['name']}.png"))
+        origin = File.join(EMOJI_IMAGES_PATH, patch_set || EMOJI_SETS[DEFAULT_SET], config['name'])
 
-  puts folder
-
-  emojis.values.each do |emoji|
-    next if emoji[style].nil?
-
-    write_emoji("#{path}/#{emoji[:name]}.png", emoji[style])
-    if aliases[emoji[:name]]
-      aliases[emoji[:name]].each do |new_name|
-        write_emoji("#{path}/#{new_name}.png", emoji[style])
+        FileUtils.cp("#{origin}.png", File.join(EMOJI_IMAGES_PATH, set_destination, "#{config['name']}.png"))
+        if File.directory?(origin)
+          FileUtils.cp_r(origin, File.join(EMOJI_IMAGES_PATH, set_destination, config['name']))
+        end
       end
     end
   end
-
-  puts
 end
 
-def write_emoji(path, emoji)
-    open(path, "wb") { |f| f << emoji }
-    `pngout #{path}`
-    putc "."
-ensure
-  raise "Failed to write emoji: #{path}" if File.exists?(path) && !File.size?(path)
+def generate_emoji_groups(keywords)
+  puts "Generating groups..."
+
+  list = open(EMOJI_ORDERING_URL).read
+  doc = Nokogiri::HTML(list)
+  table = doc.css("table")[0]
+
+  EMOJI_GROUPS.map do |group|
+    group["icons"] ||= []
+    group["sections"].each do |section|
+      title_section = table.css("tr th a[@name='#{section}']")
+      emoji_list_section = title_section.first.parent.parent.next_element
+      emoji_list_section.css("a.plain img").each do |link|
+        emoji_code = link.attr("title")
+                         .scan(/U\+(.{4,5})\b/)
+                         .flatten
+                         .map { |code| code.downcase.strip }
+                         .join("_")
+
+        emoji_char = code_to_emoji(emoji_code)
+
+        if emoji = keywords[emoji_char]
+          group["icons"] << { name: emoji["name"], diversity: emoji["fitzpatrick_scale"] }
+        end
+      end
+    end
+    group.delete("sections")
+    group
+  end
+end
+
+def write_aliases
+  EMOJI_ALIASES.each do |original, aliases|
+    aliases.each do |emoji_alias|
+      EMOJI_SETS.each do |set_name, set_destination|
+        origin_file = File.join(EMOJI_IMAGES_PATH, set_destination, "#{original}.png")
+        origin_dir = File.join(EMOJI_IMAGES_PATH, set_destination, original)
+        FileUtils.cp(origin_file, File.join(EMOJI_IMAGES_PATH, set_destination, "#{emoji_alias}.png"))
+
+        if File.directory?(origin_dir)
+          FileUtils.cp_r(origin_dir, File.join(EMOJI_IMAGES_PATH, set_destination, emoji_alias))
+        end
+      end
+    end
+  end
+end
+
+def write_db_json(emojis)
+  puts "Writing #{EMOJI_DB_PATH}..."
+
+  confirm_overwrite(EMOJI_DB_PATH)
+
+  FileUtils.mkdir_p(File.expand_path("..", EMOJI_DB_PATH))
+
+  # skin tones variations of emojis shouldn’t appear in autocomplete
+  emojis_without_tones = emojis
+    .select { |char, config|
+      !FITZPATRICK_SCALE.any? { |scale|
+        codepoints_to_code(char.codepoints, config["fitzpatrick_scale"])[scale]
+      }
+    }
+    .map { |char, config|
+      {
+        "code" => codepoints_to_code(char.codepoints, config["fitzpatrick_scale"]).tr("_", "-"),
+        "name" => config["name"]
+      }
+    }
+
+  emoji_with_tones = emojis
+    .select { |code, config| config["fitzpatrick_scale"] }
+    .map { |code, config| config["name"] }
+
+  db = {
+    "emojis" => emojis_without_tones,
+    "tonableEmojis" => emoji_with_tones,
+    "aliases" => EMOJI_ALIASES
+  }
+
+  File.write(EMOJI_DB_PATH, JSON.pretty_generate(db))
+end
+
+def write_js_groups(emojis, groups)
+  puts "Writing #{EMOJI_GROUPS_PATH}..."
+
+  confirm_overwrite(EMOJI_GROUPS_PATH)
+
+  template = JSON.pretty_generate(groups)
+  FileUtils.mkdir_p(File.expand_path("..", EMOJI_GROUPS_PATH))
+  File.write(EMOJI_GROUPS_PATH, template)
+end
+
+def code_to_emoji(code)
+  code
+    .split("_")
+    .map { |e| e.to_i(16) }
+    .pack "U*"
+end
+
+def codepoints_to_code(codepoints, fitzpatrick_scale)
+  codepoints = codepoints
+                .map { |c| c.to_s(16).rjust(4, "0") }
+                .join("_")
+                .downcase
+
+  if !fitzpatrick_scale
+    codepoints.gsub!(/_fe0f$/, "")
+  end
+
+  codepoints
+end
+
+def confirm_overwrite(path)
+  return if ENV['EMOJI_TEST']
+
+  STDOUT.puts("[!] You are about to overwrite #{path}, are you sure? [CTRL+c] to cancel, [ENTER] to continue")
+  STDIN.gets.chomp
+end
+
+class TestEmojiUpdate < MiniTest::Test
+  def self.run_and_summarize
+    puts "Runnings tests..."
+    reporter = Minitest::SummaryReporter.new
+    TestEmojiUpdate.run(reporter)
+    puts reporter.to_s
+  end
+
+  def image_path(style, name)
+    File.join("public", "images", "emoji", style, "#{name}.png")
+  end
+
+  def test_code_to_emoji
+    assert_equal "😎", code_to_emoji("1f60e")
+  end
+
+  def test_codepoints_to_code
+    assert_equal "1f6b5_200d_2640", codepoints_to_code([128693, 8205, 9792, 65039], false)
+  end
+
+  def test_codepoints_to_code_with_scale
+    assert_equal "1f6b5_200d_2640_fe0f", codepoints_to_code([128693, 8205, 9792, 65039], true)
+  end
+
+  def test_groups_js_es6_creation
+    assert File.exists?(EMOJI_GROUPS_PATH)
+    assert File.size?(EMOJI_GROUPS_PATH)
+  end
+
+  def test_db_json_creation
+    assert File.exists?(EMOJI_DB_PATH)
+    assert File.size?(EMOJI_DB_PATH)
+  end
+
+  def test_alias_creation
+    original_image = image_path("apple", "right_anger_bubble")
+    alias_image = image_path("apple", "anger_right")
+
+    assert_equal File.size(original_image), File.size(alias_image)
+  end
+
+  def test_cell_index_patch
+    original_image = image_path("apple", "snowboarder")
+    alias_image = image_path("twitter", "snowboarder")
+
+    assert_equal File.size(original_image), File.size(alias_image)
+  end
+
+  def test_scales
+    original_image = image_path("apple", "blonde_woman")
+    assert File.exists?(original_image)
+    assert File.size?(original_image)
+
+    (2..6).each do |scale|
+      image = image_path("apple", "blonde_woman/#{scale}")
+      assert File.exists?(image)
+      assert File.size?(image)
+    end
+  end
+
+  def test_default_set
+    original_image = image_path("twitter", "macau")
+
+    alias_image = image_path("emoji_one", "macau")
+    assert_equal File.size(original_image), File.size(alias_image)
+
+    alias_image = image_path("win10", "macau")
+    assert_equal File.size(original_image), File.size(alias_image)
+  end
 end
