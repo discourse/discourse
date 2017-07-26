@@ -281,9 +281,11 @@
     <div class="controls">
       {{#if model.canLockTrustLevel}}
         {{#if model.trust_level_locked}}
-          <i title='{{i18n 'admin.user.trust_level_locked_tip'}}' class='fa fa-lock'></i> {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
+          {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
+          {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
-          <i title='{{i18n 'admin.user.trust_level_unlocked_tip'}}' class='fa fa-unlock'></i> {{d-button action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
+          {{d-icon "unlock" title="admin.user.trust_level_unlocked_tip"}}
+          {{d-button action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
         {{/if}}
       {{/if}}
       {{#if model.tl3Requirements}}

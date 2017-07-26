@@ -27,7 +27,7 @@
 
 {{#each item.children as |child|}}
   <div class='child-actions'>
-    <i class="icon {{child.icon}}"></i>
+    {{d-icon child.icon class="icon"}}
     {{#each child.items as |grandChild|}}
       {{#if grandChild.removableBookmark}}
         <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>

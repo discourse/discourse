@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import RestModel from 'discourse/models/rest';
 import Topic from 'discourse/models/topic';
 import { throwAjaxError } from 'discourse/lib/ajax-error';
@@ -191,7 +192,7 @@ const Composer = RestModel.extend({
         const replyUsername = post.get('reply_to_user.username');
         const replyAvatarTemplate = post.get('reply_to_user.avatar_template');
         if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
-          postDescription += " <i class='fa fa-mail-forward reply-to-glyph'></i> " + tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
+          postDescription += ` ${iconHTML('mail-forward', { class: 'reply-to-glyph' })} ` + tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
         }
       }
     }
@@ -242,10 +243,10 @@ const Composer = RestModel.extend({
   // The icon for the save button
   saveIcon: function () {
     switch (this.get('action')) {
-      case EDIT: return '<i class="fa fa-pencil"></i>';
-      case REPLY: return '<i class="fa fa-reply"></i>';
-      case CREATE_TOPIC: return '<i class="fa fa-plus"></i>';
-      case PRIVATE_MESSAGE: return '<i class="fa fa-envelope"></i>';
+      case EDIT: return iconHTML('pencil');
+      case REPLY: return iconHTML('reply');
+      case CREATE_TOPIC: iconHTML('plus');
+      case PRIVATE_MESSAGE: iconHTML('envelope');
     }
   }.property('action'),
 

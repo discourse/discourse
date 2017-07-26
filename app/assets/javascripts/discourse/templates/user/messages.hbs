@@ -26,7 +26,7 @@
     {{#if group.has_messages}}
     <li>
       {{#link-to 'userPrivateMessages.group' group.name}}
-        <i class='glyph fa fa-group'></i>
+        {{d-icon "group" class="glyph"}}
         {{capitalize-string group.name}}
       {{/link-to}}
     </li>
@@ -44,7 +44,7 @@
 
 <div class="clearfix list-actions">
     <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
-      <i class="fa fa-list"></i>
+      {{d-icon "list"}}
     </button>
 
     {{#if site.mobileView}}

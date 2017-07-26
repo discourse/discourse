@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 import Category from 'discourse/models/category';
 
@@ -35,7 +36,7 @@ export default Ember.Component.extend(bufferedRender({
 
     let autoCloseHours = this.get("duration") || 0;
 
-    buffer.push('<h3><i class="fa fa-clock-o"></i> ');
+    buffer.push(`<h3>${iconHTML('clock-o')} `);
 
     let options = {
       timeLeft: duration.humanize(true),

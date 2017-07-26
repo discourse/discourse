@@ -22,7 +22,8 @@ export default DropdownButton.extend({
         id: l.id,
         title: I18n.t(`${start}.title`),
         description: I18n.t(`${start}.description`),
-        styleClasses: `${l.key.dasherize()} fa fa-${l.icon}`
+        icon: l.icon,
+        iconClass: l.key.dasherize(),
       };
     });
   },

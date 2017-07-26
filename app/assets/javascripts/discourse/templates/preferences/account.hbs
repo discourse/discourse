@@ -3,7 +3,8 @@
   <div class="controls">
     <span class='static'>{{model.username}}</span>
     {{#if model.can_edit_username}}
-      {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+      {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}
+      {{d-icon "pencil"}} {{/link-to}}
     {{/if}}
   </div>
   <div class='instructions'>

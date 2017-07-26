@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { topicLevels, buttonDetails } from 'discourse/lib/notification-levels';
 import { h } from 'virtual-dom';
 import RawHTML from 'discourse/widgets/raw-html';
+import { iconNode } from 'discourse-common/lib/icon-library';
 
 createWidget('notification-option', {
   buildKey: attrs => `topic-notifications-button-${attrs.id}`,
@@ -9,7 +10,7 @@ createWidget('notification-option', {
 
   html(attrs) {
     return h('a', [
-        h('span.icon', { className: `fa fa-${attrs.icon} ${attrs.key}`}),
+        iconNode(attrs.icon, { class: attrs.key }),
         h('div', [
           h('span.title', I18n.t(`topic.notifications.${attrs.key}.title`)),
           h('span.desc', I18n.t(`topic.notifications.${attrs.key}.description`)),
