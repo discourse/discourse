@@ -804,8 +804,12 @@ describe Search do
 
   context 'pagination' do
     let(:number_of_results) { 2 }
+    let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello')}
+    let!(:post2) { Fabricate(:post, raw: 'hello hello hello hello')}
+    let!(:post3) { Fabricate(:post, raw: 'hello hello hello')}
+    let!(:post4) { Fabricate(:post, raw: 'hello hello')}
+    let!(:post5) { Fabricate(:post, raw: 'hello')}
     before do
-      5.times { Fabricate(:post) }
       Search.stubs(:per_filter).returns(number_of_results)
     end
 
@@ -814,8 +818,10 @@ describe Search do
       results2 = Search.execute('hello', type_filter: 'topic', page: 2)
 
       expect(results.posts.length).to eq(number_of_results)
+      expect(results.posts.map(&:id)).to eq([post1.id, post2.id])
       expect(results.more_full_page_results).to eq(true)
       expect(results2.posts.length).to eq(number_of_results)
+      expect(results2.posts.map(&:id)).to eq([post3.id, post4.id])
       expect(results2.more_full_page_results).to eq(true)
     end
 
@@ -825,6 +831,7 @@ describe Search do
 
       expect(search.offset).to eq(2 * number_of_results)
       expect(results.posts.length).to eq(1)
+      expect(results.posts).to eq([post5])
       expect(results.more_full_page_results).to eq(nil)
     end
 

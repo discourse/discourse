@@ -164,7 +164,7 @@ export default Ember.Controller.extend({
 
   @computed('page')
   isLastPage(page) {
-    return page == PAGE_LIMIT;
+    return page === PAGE_LIMIT;
   },
 
   _search() {
