@@ -105,16 +105,16 @@ task 'plugin:qunit', [:plugin, :timeout] do |t, args|
 
   cmd = 'LOAD_PLUGINS=1 '
   cmd += 'QUNIT_SKIP_CORE=1 '
-  
+
   if args[:plugin] == "*"
     puts "Running qunit tests for all plugins"
   else
     puts "Running qunit tests for #{args[:plugin]}"
     cmd += "QUNIT_SINGLE_PLUGIN='#{args[:plugin]}' "
   end
-  
+
   cmd += "#{rake} qunit:test"
-  cmd += "[#{args[:timeout]}" if args[:timeout]
+  cmd += "[#{args[:timeout]}]" if args[:timeout]
 
   sh cmd
 end
