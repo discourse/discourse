@@ -1,6 +1,9 @@
 require 'benchmark/ips'
 require File.expand_path('../../../../config/environment', __FILE__)
 
+# set any flags here
+# MiniRacer::Platform.set_flags! :noturbo
+
 
 tests = [
   ["tiny post", "**hello**"],
@@ -100,3 +103,32 @@ end
 #                           1.410k (± 6.5%) i/s -      7.112k in   5.070053s
 # markdown it no extensions commonmark lots of mentions
 #                           1.934k (± 6.4%) i/s -      9.672k in   5.025858s
+#
+# v8 noturbo 5.9
+#
+#
+# tiny post sanitize: true
+#                         105.152  (±17.1%) i/s -    512.000  in   5.034419s
+# giant post sanitize: true
+#                          97.002  (±12.4%) i/s -    480.000  in   5.038382s
+# most features sanitize: true
+#                          46.355  (±12.9%) i/s -    228.000  in   5.009251s
+# lots of mentions sanitize: true
+#                           0.278  (± 0.0%) i/s -      2.000  in   7.205837s
+# tiny post sanitize: false
+#                         201.166  (±13.4%) i/s -    990.000  in   5.017725s
+# giant post sanitize: false
+#                         174.212  (±10.9%) i/s -    867.000  in   5.040859s
+# most features sanitize: false
+#                          60.272  (±14.9%) i/s -    295.000  in   5.029353s
+# lots of mentions sanitize: false
+#                           0.309  (± 0.0%) i/s -      2.000  in   6.483433s
+# markdown it no extensions commonmark tiny post
+#                           6.331k (±13.8%) i/s -     31.065k in   5.023613s
+# markdown it no extensions commonmark giant post
+#                           1.045k (± 9.6%) i/s -      5.208k in   5.053733s
+# markdown it no extensions commonmark most features
+#                           1.448k (± 6.7%) i/s -      7.239k in   5.024831s
+# markdown it no extensions commonmark lots of mentions
+#                           1.986k (± 5.2%) i/s -      9.990k in   5.044624s
+
