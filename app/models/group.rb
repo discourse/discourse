@@ -457,12 +457,18 @@ class Group < ActiveRecord::Base
 
       Group.exec_sql(sql, group_id: self.id, user_ids: user_ids)
 
+      new_attributes = {}
+
       if self.primary_group?
-        User.where(id: user_ids).update_all(primary_group_id: self.id)
+        new_attributes[:primary_group_id] = self.id
       end
 
       if self.title.present?
-        User.where(id: user_ids).update_all(title: self.title)
+        new_attributes[:title] = self.title
+      end
+
+      if new_attributes.present?
+        User.where(id: user_ids).update_all(new_attributes)
       end
 
       if self.grant_trust_level.present?
