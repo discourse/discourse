@@ -18,7 +18,7 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://store.steampowered.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com','http://store.steampowered.com', Discourse.base_url]
   end
 
   def self.preview(url, options=nil)
