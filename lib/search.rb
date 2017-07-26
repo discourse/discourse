@@ -75,21 +75,16 @@ class Search
     nil
   end
 
-  def self.prepare_data(search_data)
+  def self.prepare_data(search_data, purpose = :query)
     data = search_data.squish
-    # TODO rmmseg is designed for chinese, we need something else for Korean / Japanese
+    # TODO cppjieba_rb is designed for chinese, we need something else for Korean / Japanese
     if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
-      unless defined? RMMSeg
-        require 'rmmseg'
-        RMMSeg::Dictionary.load_dictionaries
+      unless defined? CppjiebaRb
+        require 'cppjieba_rb'
       end
-
-      algo = RMMSeg::Algorithm.new(search_data)
-
-      data = ""
-      while token = algo.next_token
-        data << token.text << " "
-      end
+      mode = (purpose == :query ? :query : :mix)
+      data = CppjiebaRb.segment(search_data, mode: mode)
+      data = CppjiebaRb.filter_stop_word(data).join(' ')
     end
 
     data.force_encoding("UTF-8")
@@ -764,7 +759,7 @@ class Search
         t.split(/[\)\(&']/)[0]
       end.compact!
 
-      query = Post.sanitize(all_terms.map {|t| "'#{PG::Connection.escape_string(t)}':*" }.join(" #{joiner} "))
+      query = Post.sanitize(all_terms.map { |t| "'#{PG::Connection.escape_string(t)}':*" }.join(" #{joiner} "))
       "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
     end
 

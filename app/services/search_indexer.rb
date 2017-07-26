@@ -15,7 +15,7 @@ class SearchIndexer
   end
 
   def self.update_index(table, id, raw_data)
-    raw_data = Search.prepare_data(raw_data)
+    raw_data = Search.prepare_data(raw_data, :index)
 
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"

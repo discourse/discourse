@@ -71,6 +71,7 @@ GEM
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
+    cppjieba_rb (0.3.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.2)
@@ -286,7 +287,6 @@ GEM
     redis-namespace (1.5.3)
       redis (~> 3.0, >= 3.0.4)
     rinku (2.0.2)
-    rmmseg-cpp (0.2.9)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
@@ -394,6 +394,7 @@ DEPENDENCIES
   bullet
   byebug
   certified
+  cppjieba_rb
   discourse-qunit-rails
   discourse_image_optim
   email_reply_trimmer (= 0.1.6)
@@ -458,7 +459,6 @@ DEPENDENCIES
   redis
   redis-namespace
   rinku
-  rmmseg-cpp
   rspec
   rspec-html-matchers
   rspec-rails

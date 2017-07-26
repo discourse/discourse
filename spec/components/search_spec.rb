@@ -440,10 +440,31 @@ describe Search do
   end
 
   describe 'Chinese search' do
-    it 'splits English / Chinese' do
+    let(:sentence) { 'Discourse中国的基础设施网络正在组装' }
+    let(:sentence_t) { 'Discourse太平山森林遊樂區' }
+
+    it 'splits English / Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
-      data = Search.prepare_data('Discourse社区指南').split(' ')
-      expect(data).to eq(['Discourse', '社区', '指南'])
+      data = Search.prepare_data(sentence).split(' ')
+      expect(data).to eq(["Discourse", "中国", "基础", "设施", "基础设施", "网络", "正在", "组装"])
+    end
+
+    it 'splits for indexing and filter out stop words' do
+      SiteSetting.default_locale = 'zh_CN'
+      data = Search.prepare_data(sentence, :index).split(' ')
+      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
+    end
+
+    it 'splits English / Traditional Chinese and filter out stop words' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data(sentence_t).split(' ')
+      expect(data).to eq(["Discourse", "太平", "平山", "太平山", "森林", "遊樂區"])
+    end
+
+    it 'splits for indexing and filter out stop words' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data(sentence_t, :index).split(' ')
+      expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
     end
 
     it 'finds chinese topic based on title' do
