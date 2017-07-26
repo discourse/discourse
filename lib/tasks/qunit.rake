@@ -39,12 +39,12 @@ task "qunit:test", [:timeout] => :environment do |_, args|
 
     options = {}
 
-    %w{module filter}.each do |arg|
+    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
     if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20')}"
+      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
     end
 
     if args[:timeout].present?
