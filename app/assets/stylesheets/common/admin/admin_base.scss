@@ -1847,6 +1847,47 @@ table#user-badges {
   }
 }
 
+.watched-word-box {
+  display: inline-block;
+  width: 250px;
+  margin-bottom: 1em;
+  float: left;
+}
+
+.watched-words-list {
+  margin-top: 40px;
+}
+.watched-word {
+  display: inline-block;
+  cursor: pointer;
+  i.fa {
+    margin-right: 0.25em;
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
+  }
+  &:hover i.fa {
+    color: $primary;
+  }
+}
+.watched-word-form {
+  display: inline-block;
+  .success-message {
+    margin-left: 1em;
+  }
+}
+.watched-words-uploader {
+  float: right;
+  text-align: right;
+  .instructions {
+    font-size: 12px;
+  }
+}
+.watched-words-detail {
+  .about {
+    margin-top: 24px;
+    margin-bottom: 40px;
+  }
+}
+
 // Mobile specific styles
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {

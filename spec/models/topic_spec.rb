@@ -30,9 +30,13 @@ describe Topic do
       end
 
       describe 'censored words' do
+        after do
+          $redis.flushall
+        end
+
         describe 'when title contains censored words' do
           it 'should not be valid' do
-            SiteSetting.censored_words = 'pineapple|pen'
+            ['pineapple', 'pen'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
 
             topic.title = 'pen PinEapple apple pen is a complete sentence'
 
@@ -46,7 +50,7 @@ describe Topic do
 
         describe 'titles with censored words not on boundaries' do
           it "should be valid" do
-            SiteSetting.censored_words = 'apple'
+            Fabricate(:watched_word, word: 'apple', action: WatchedWord.actions[:censor])
             topic.title = "Pineapples are great fruit! Applebee's is a great restaurant"
             expect(topic).to be_valid
           end
@@ -62,10 +66,12 @@ describe Topic do
 
         describe 'escape special characters in censored words' do
           before do
-            SiteSetting.censored_words = 'co(onut|coconut|a**le'
+            ['co(onut', 'coconut', 'a**le'].each do |w|
+              Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
+            end
           end
 
-          it 'should not valid' do
+          it 'should not be valid' do
             topic.title = "I have a co(onut a**le"
 
             expect(topic.valid?).to eq(false)

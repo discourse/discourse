@@ -555,11 +555,6 @@ posting:
     type: list
     client: true
   delete_old_hidden_posts: true
-  censored_words:
-    client: true
-    default: ''
-    refresh: true
-    type: list
   censored_pattern:
     client: true
     default: ''

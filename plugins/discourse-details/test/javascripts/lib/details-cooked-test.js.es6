@@ -8,8 +8,8 @@ const defaultOpts = buildOptions({
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
-    censored_words: ''
   },
+  censoredWords: 'shucks|whiz|whizzer',
   getURL: url => url
 });
 

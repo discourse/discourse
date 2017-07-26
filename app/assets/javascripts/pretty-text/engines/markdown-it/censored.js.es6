@@ -23,6 +23,9 @@ function censorTree(state, censor) {
 }
 
 export function setup(helper) {
+
+  if (!helper.markdownIt) { return; }
+
   helper.registerOptions((opts, siteSettings) => {
     opts.censoredPattern = siteSettings.censored_pattern;
   });
