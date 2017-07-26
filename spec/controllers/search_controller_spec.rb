@@ -37,25 +37,43 @@ describe SearchController do
       expect(data['users'][0]['id']).to eq(user.id)
     end
 
-    it "can search for id" do
-      user = Fabricate(:user)
-      my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
-      xhr(
-        :get,
-        :query,
-        term: my_post.topic_id,
-        type_filter: 'topic',
-        search_for_id: true
-      )
-      expect(response).to be_success
-      data = JSON.parse(response.body)
-      unless (data && data['topics'] && data['topics'][0] && data['topics'][0]['id'])
-        puts "FLAKY TEST"
-        p data
-        p my_post.topic
-        p my_post
+    context 'searching by topic id' do
+      it 'should not be restricted by minimum search term length' do
+        SiteSetting.min_search_term_length = 20000
+
+        post = Fabricate(:post)
+
+        xhr(
+          :get,
+          :query,
+          term: post.topic_id,
+          type_filter: 'topic',
+          search_for_id: true
+        )
+
+        expect(response).to be_success
+        data = JSON.parse(response.body)
+
+        expect(data['topics'][0]['id']).to eq(post.topic_id)
       end
-      expect(data['topics'][0]['id']).to eq(my_post.topic_id)
+
+      it "should return the right result" do
+        user = Fabricate(:user)
+        my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
+
+        xhr(
+          :get,
+          :query,
+          term: my_post.topic_id,
+          type_filter: 'topic',
+          search_for_id: true
+        )
+
+        expect(response).to be_success
+        data = JSON.parse(response.body)
+
+        expect(data['topics'][0]['id']).to eq(my_post.topic_id)
+      end
     end
   end
 
