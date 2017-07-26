@@ -101,14 +101,20 @@ desc 'run plugin qunit tests'
 task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   args.with_defaults(plugin: "*")
 
-  ENV['LOAD_PLUGINS'] = '1'
-  ENV['QUNIT_SKIP_CORE'] = '1'
+  rake = `which rake`.strip
+
+  cmd = 'LOAD_PLUGINS=1 '
+  cmd += 'QUNIT_SKIP_CORE=1 '
+  
   if args[:plugin] == "*"
     puts "Running qunit tests for all plugins"
   else
     puts "Running qunit tests for #{args[:plugin]}"
-    ENV['QUNIT_SINGLE_PLUGIN'] = args[:plugin]
+    cmd += "QUNIT_SINGLE_PLUGIN='#{args[:plugin]}' "
   end
   
-  Rake::Task["qunit:test"].invoke(args[:timeout])
+  cmd += "#{rake} qunit:test"
+  cmd += "[#{args[:timeout]}" if args[:timeout]
+
+  sh cmd
 end
