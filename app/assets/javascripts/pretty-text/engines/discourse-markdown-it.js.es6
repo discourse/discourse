@@ -104,7 +104,7 @@ function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
-const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(,([1-9][0-9]?)%)?$/;
+const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*([1-9][0-9]?)%)?$/;
 function renderImage(tokens, idx, options, env, slf) {
   var token = tokens[idx];
 
