@@ -42,10 +42,11 @@ registerIconRenderer({
   name: 'font-awesome',
 
   string(id, params) {
-    let html = `<i class='${faClasses(id, params)}'`;
+    let tagName = params.tagName || 'i';
+    let html = `<${tagName} class='${faClasses(id, params)}'`;
     if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
     if (params.label) { html += " aria-hidden='true'"; }
-    html += "></i>";
+    html += `></${tagName}>`;
     if (params.label) {
       html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
     }

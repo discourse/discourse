@@ -1,4 +1,6 @@
 import { setting } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
+
 var get = Ember.get;
 
 export default Ember.Component.extend({
@@ -8,10 +10,10 @@ export default Ember.Component.extend({
 
   tagName: 'li',
 
-  iconClass: function() {
-    if (this.get('expanded')) { return "fa fa-caret-down"; }
-    return "fa fa-caret-right";
-  }.property('expanded'),
+  @computed('expanded')
+  expandIcon(expanded) {
+    return expanded ? 'caret-down' : 'caret-right';
+  },
 
   allCategoriesUrl: function() {
     if (this.get('subCategory')) {

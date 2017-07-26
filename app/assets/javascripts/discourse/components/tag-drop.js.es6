@@ -21,9 +21,8 @@ export default Ember.Component.extend({
   },
 
   @computed('expanded')
-  iconClass() {
-    if (this.get('expanded')) { return "fa fa-caret-down"; }
-    return "fa fa-caret-right";
+  expandedIcon(expanded) {
+    return expanded ? 'caret-down' : 'caret-right';
   },
 
   @computed('tagId')

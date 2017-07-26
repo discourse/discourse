@@ -9,9 +9,9 @@
       // This id must be present in the `share_links` site setting too
       id: 'twitter',
 
-      // The icon that will be displayed, choose between font awesome class name `faIcon` and custom HTML `htmlIcon`.
-      // When both provided, prefer `faIcon`
-      faIcon: 'fa-twitter-square'
+      // The icon that will be displayed, choose between icon name `icon` and custom HTML `htmlIcon`.
+      // When both provided, prefer `icon`
+      icon: 'twitter-square'
       htmlIcon: '<img src="example.com/example.jpg">',
 
       // A callback for generating the remote link from the `link` and `title`
@@ -30,6 +30,12 @@ var _sources = {};
 
 export default {
   addSource(source) {
+    // backwards compatibility for plugins
+    if (source.faIcon) {
+      source.icon = source.faIcon.replace('fa-', '');
+      delete source.faIcon;
+    }
+
     _sources[source.id] = source;
   },
 

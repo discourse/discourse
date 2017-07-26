@@ -10,7 +10,9 @@
   {{/if}}
 
   {{#if tags}}
-    <a href {{action "expand"}} class={{dropdownButtonClass}}><i class={{iconClass}}></i></a>
+    <a href {{action "expand"}} class={{dropdownButtonClass}}>
+      {{d-icon expandedIcon}}
+    </a>
     <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser">
       <div class='cat'><a href={{allTagsUrl}} data-drop-close="true" class='badge-category home'>{{allTagsLabel}}</a></div>
       <div class='cat'><a href={{noTagsUrl}}  data-drop-close="true" class='badge-category home'>{{noTagsLabel}}</a></div>

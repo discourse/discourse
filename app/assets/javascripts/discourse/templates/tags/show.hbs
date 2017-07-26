@@ -16,7 +16,7 @@
       {{d-button action="renameTag" actionParam=tag icon="pencil" class="admin-tag"}}
     {{else}}
       {{#if canCreateTopic}}
-        <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
+      <button id="create-topic" class='btn btn-default' {{action "createTopic"}}>{{d-icon "plus"}}{{i18n 'topic.create'}}</button>
       {{/if}}
     {{/if}}
 

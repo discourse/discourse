@@ -14,7 +14,7 @@ export default DropdownButton.extend({
       { id: 'manageGroups',
         title: I18n.t('tagging.manage_groups'),
         description: I18n.t('tagging.manage_groups_description'),
-        styleClasses: 'fa fa-wrench' }
+        icon: 'wrench' }
     ];
     return items;
   },
