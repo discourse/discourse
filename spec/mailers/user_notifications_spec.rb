@@ -468,6 +468,7 @@ describe UserNotifications do
   shared_examples "notification email building" do
     let(:post) { Fabricate(:post, user: user) }
     let(:mail_type) { "user_#{notification_type}"}
+    let(:mail_template) { "user_notifications.#{mail_type}" }
     let(:username) { "walterwhite"}
     let(:notification) do
       Fabricate(:notification,
@@ -488,7 +489,7 @@ describe UserNotifications do
       end
 
       it "has a template" do
-        expects_build_with(has_entry(:template, "user_notifications.#{mail_type}"))
+        expects_build_with(has_entry(:template, mail_template))
       end
 
       it "overrides the html part" do
@@ -549,7 +550,11 @@ describe UserNotifications do
         end
 
         before do
-          TranslationOverride.upsert!("en", "user_notifications.user_#{notification_type}.text_body_template", custom_body)
+          TranslationOverride.upsert!(
+            "en",
+            "#{mail_template}.text_body_template",
+            custom_body
+          )
         end
 
         it "shouldn't use the default html_override" do
@@ -598,6 +603,33 @@ describe UserNotifications do
   describe "user invited to a private message" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_private_message }
+      let(:post) { Fabricate(:private_message_post) }
+      let(:user) { post.user }
+      let(:mail_template) { "user_notifications.user_#{notification_type}_pm" }
+
+      include_examples "respect for private_email"
+      include_examples "no reply by email"
+      include_examples "sets user locale"
+    end
+  end
+
+  describe "group invited to a private message" do
+    include_examples "notification email building" do
+      let(:notification_type) { :invited_to_private_message }
+      let(:post) { Fabricate(:private_message_post) }
+      let(:user) { post.user }
+      let(:group) { Fabricate(:group) }
+      let(:mail_template) { "user_notifications.user_#{notification_type}_pm_group" }
+
+      before do
+        notification.data_hash[:group_id] = group.id
+        notification.save!
+      end
+
+      it "should include the group name" do
+        expects_build_with(has_entry(:group_name, group.name))
+      end
+
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"

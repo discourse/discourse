@@ -723,6 +723,8 @@ SQL
       PostAlerter.new.after_save_post(last_post)
       add_small_action(user, "invited_group", group.name)
 
+      group_id = group.id
+
       group.users.where(
         "group_users.notification_level > ?", NotificationLevels.all[:muted]
       ).find_each do |u|
@@ -733,7 +735,8 @@ SQL
           post_number: 1,
           data: {
             topic_title: self.title,
-            display_username: user.username
+            display_username: user.username,
+            group_id: group_id
           }.to_json
         )
       end

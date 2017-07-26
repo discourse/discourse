@@ -2424,6 +2424,17 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
+    invited_group_to_private_message_body: |
+      %{username} invited @%{group_name} to a message
+
+      > #### %{topic_title}
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
     invited_to_private_message_body: |
       %{username} invited you to a message
 
@@ -2445,6 +2456,16 @@ en:
       at
 
       > %{site_title} -- %{site_description}
+
+    user_invited_to_private_message_pm_group:
+      title: "User Invited Group to PM"
+      subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
 
     user_invited_to_private_message_pm:
       title: "User Invited to PM"
