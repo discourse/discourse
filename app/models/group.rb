@@ -438,17 +438,24 @@ class Group < ActiveRecord::Base
 
   def bulk_add(user_ids)
     if user_ids.present?
-      Group.exec_sql("INSERT INTO group_users
-                                  (group_id, user_id, created_at, updated_at)
-                     SELECT #{self.id},
-                            u.id,
-                            CURRENT_TIMESTAMP,
-                            CURRENT_TIMESTAMP
-                     FROM users AS u
-                     WHERE u.id IN (#{user_ids.join(', ')})
-                       AND NOT EXISTS(SELECT 1 FROM group_users AS gu
-                                      WHERE gu.user_id = u.id AND
-                                            gu.group_id = #{self.id})")
+      sql = <<~SQL
+      INSERT INTO group_users
+        (group_id, user_id, created_at, updated_at)
+      SELECT
+        #{self.id},
+        u.id,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+      FROM users AS u
+      WHERE u.id IN (:user_ids)
+      AND NOT EXISTS (
+        SELECT 1 FROM group_users AS gu
+        WHERE gu.user_id = u.id AND
+        gu.group_id = :group_id
+      )
+      SQL
+
+      Group.exec_sql(sql, group_id: self.id, user_ids: user_ids)
 
       if self.primary_group?
         User.where(id: user_ids).update_all(primary_group_id: self.id)
