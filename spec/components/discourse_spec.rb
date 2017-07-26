@@ -103,17 +103,25 @@ describe Discourse do
       expect($redis.get(key)).to eq(nil)
     end
 
+    def get_readonly_message
+      messages = MessageBus.track_publish do
+        yield
+      end
+
+      messages.first{|m| m.channel == Discourse.readonly_channel}
+    end
+
     describe ".enable_readonly_mode" do
       it "adds a key in redis and publish a message through the message bus" do
         expect($redis.get(readonly_mode_key)).to eq(nil)
-        message = MessageBus.track_publish { Discourse.enable_readonly_mode }.first
+        message = get_readonly_message { Discourse.enable_readonly_mode }
         assert_readonly_mode(message, readonly_mode_key, readonly_mode_ttl)
       end
 
       context 'user enabled readonly mode' do
         it "adds a key in redis and publish a message through the message bus" do
           expect($redis.get(user_readonly_mode_key)).to eq(nil)
-          message = MessageBus.track_publish { Discourse.enable_readonly_mode(user_readonly_mode_key) }.first
+          message = get_readonly_message { Discourse.enable_readonly_mode(user_readonly_mode_key) }
           assert_readonly_mode(message, user_readonly_mode_key)
         end
       end
@@ -123,9 +131,9 @@ describe Discourse do
       it "removes a key from redis and publish a message through the message bus" do
         Discourse.enable_readonly_mode
 
-        message = MessageBus.track_publish do
+        message = get_readonly_message do
           Discourse.disable_readonly_mode
-        end.first
+        end
 
         assert_readonly_mode_disabled(message, readonly_mode_key)
       end
@@ -133,7 +141,7 @@ describe Discourse do
       context 'user disabled readonly mode' do
         it "removes readonly key in redis and publish a message through the message bus" do
           Discourse.enable_readonly_mode(user_enabled: true)
-          message = MessageBus.track_publish { Discourse.disable_readonly_mode(user_enabled: true) }.first
+          message = get_readonly_message { Discourse.disable_readonly_mode(user_enabled: true) }
           assert_readonly_mode_disabled(message, user_readonly_mode_key)
         end
       end
