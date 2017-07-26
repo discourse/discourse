@@ -970,6 +970,21 @@ HTML
 
       expect(cooked).to eq(html.strip)
     end
+
+    it "allows whitespace before the percent scaler" do
+      cooked = PrettyText.cook <<~MD
+        ![|220x100, 50%](http://png.com/my.png)
+        ![|220x100 , 50%](http://png.com/my.png)
+        ![|220x100 ,50%](http://png.com/my.png)
+      MD
+
+      html = <<~HTML
+        <p><img src="http://png.com/my.png" alt width="110" height="50">
+        <img src="http://png.com/my.png" alt width="110" height="50">
+        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+      HTML
+    end
+
   end
 
   describe "inline onebox" do
