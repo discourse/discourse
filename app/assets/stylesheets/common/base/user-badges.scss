@@ -150,6 +150,7 @@
     display: flex;
     flex-direction: row;
     min-height: 128px;
+    height: 100%;
 
     .badge-icon {
       min-width: 90px;
@@ -228,10 +229,21 @@
     display: flex;
     align-items: center;
     margin-left: 1em;
+    &.hidden {
+      display: none;
+    }
   }
   .grant-info-item {
     margin-bottom: 1em;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+  }
+
+  .badge-title .form-horizontal .controls {
+    margin-left: 20px;
+  }
+
+  .close-btn {
+    margin: -20px 0 0 20px;
   }
 }
 
