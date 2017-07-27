@@ -130,7 +130,7 @@ const Group = RestModel.extend({
   },
 
   asJSON() {
-    return {
+    const attrs = {
       name: this.get('name'),
       alias_level: this.get('alias_level'),
       visibility_level: this.get('visibility_level'),
@@ -149,13 +149,26 @@ const Group = RestModel.extend({
       full_name: this.get('full_name'),
       default_notification_level: this.get('default_notification_level')
     };
+
+    if (!this.get('id')) {
+      attrs['usernames'] = this.get('usernames');
+      attrs['owner_usernames'] = this.get('ownerUsernames');
+    }
+
+    return attrs;
   },
 
   create() {
-    var self = this;
-    return ajax("/admin/groups", { type: "POST", data:  { group: this.asJSON() } }).then(function(resp) {
-      self.set('id', resp.basic_group.id);
-    });
+    return ajax("/admin/groups", { type: "POST", data:  { group: this.asJSON() } })
+      .then(resp => {
+        this.setProperties({
+          id: resp.basic_group.id,
+          usernames: null,
+          ownerUsernames: null
+        });
+
+        this.findMembers();
+      });
   },
 
   save() {

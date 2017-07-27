@@ -37,10 +37,10 @@ class Group < ActiveRecord::Base
   end
 
   validate :name_format_validator
-  validates_uniqueness_of :name, case_sensitive: false
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
-  validate :can_allow_membership_requests
+  validate :can_allow_membership_requests, if: :allow_membership_requests
   validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0,3] != 'fa-' }
 
   AUTO_GROUPS = {
@@ -426,9 +426,9 @@ class Group < ActiveRecord::Base
 
   def add_owner(user)
     if group_user = self.group_users.find_by(user: user)
-      group_user.update_attributes!(owner: true) if !group_user.owner
+      group_user.update!(owner: true) if !group_user.owner
     else
-      GroupUser.create!(user: user, group: self, owner: true)
+      self.group_users.create!(user: user, owner: true)
     end
   end
 
@@ -437,7 +437,9 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_add(user_ids)
-    if user_ids.present?
+    return unless user_ids.present?
+
+    Group.transaction do
       sql = <<~SQL
       INSERT INTO group_users
         (group_id, user_id, created_at, updated_at)
@@ -470,12 +472,16 @@ class Group < ActiveRecord::Base
       if user_attributes.present?
         User.where(id: user_ids).update_all(user_attributes)
       end
-
-      if self.grant_trust_level.present?
-        Jobs.enqueue(:bulk_grant_trust_level, user_ids: user_ids, trust_level: self.grant_trust_level)
-      end
     end
-    true
+
+    if self.grant_trust_level.present?
+      Jobs.enqueue(:bulk_grant_trust_level,
+        user_ids: user_ids,
+        trust_level: self.grant_trust_level
+      )
+    end
+
+    self
   end
 
   def staff?
@@ -485,6 +491,7 @@ class Group < ActiveRecord::Base
   protected
 
     def name_format_validator
+      self.name.strip!
       UsernameValidator.perform_validation(self, 'name')
     end
 
@@ -565,7 +572,16 @@ class Group < ActiveRecord::Base
   private
 
     def can_allow_membership_requests
-      if self.allow_membership_requests && !self.group_users.where(owner: true).exists?
+      valid = true
+
+      valid =
+        if self.persisted?
+          self.group_users.where(owner: true).exists?
+        else
+          self.group_users.any?(&:owner)
+        end
+
+      if !valid
         self.errors.add(:base, I18n.t('groups.errors.cant_allow_membership_requests'))
       end
     end

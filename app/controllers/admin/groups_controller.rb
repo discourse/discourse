@@ -32,10 +32,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def create
-    group = Group.new
-
-    group.name = (group_params[:name] || '').strip
-    save_group(group)
+    save_group(Group.new)
   end
 
   def update
@@ -47,6 +44,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def save_group(group)
+    group.name = group_params[:name] if group_params[:name].present? && !group.automatic
     group.alias_level = group_params[:alias_level].to_i if group_params[:alias_level].present?
 
     if group_params[:visibility_level]
@@ -81,8 +79,27 @@ class Admin::GroupsController < Admin::AdminController
       group.allow_membership_requests = group_params[:allow_membership_requests]
     end
 
+    if group_params[:owner_usernames].present?
+      owner_ids = User.where(
+        username: group_params[:owner_usernames].split(",")
+      ).pluck(:id)
+
+      owner_ids.each do |user_id|
+        group.group_users.build(user_id: user_id, owner: true)
+      end
+    end
+
+    if group_params[:usernames].present?
+      user_ids = User.where(username: group_params[:usernames].split(",")).pluck(:id)
+      user_ids -= owner_ids if owner_ids
+
+      user_ids.each do |user_id|
+        group.group_users.build(user_id: user_id)
+      end
+    end
+
     if group.save
-      Group.reset_counters(group.id, :group_users)
+      group.restore_user_count!
 
       yield(group) if block_given?
 
@@ -111,8 +128,7 @@ class Admin::GroupsController < Admin::AdminController
   def add_owners
     group = Group.find(params.require(:id))
     return can_not_modify_automatic if group.automatic
-
-    users = User.where(username: params[:usernames].split(","))
+    users = User.where(username: group_params[:usernames].split(","))
 
     users.each do |user|
       group_action_logger = GroupActionLogger.new(current_user, group)
@@ -125,7 +141,7 @@ class Admin::GroupsController < Admin::AdminController
       group_action_logger.log_make_user_group_owner(user)
     end
 
-    Group.reset_counters(group.id, :group_users)
+    group.restore_user_count!
 
     render json: success_json
   end
@@ -157,7 +173,7 @@ class Admin::GroupsController < Admin::AdminController
       :automatic_membership_retroactive, :title, :primary_group,
       :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
       :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name,
-      :default_notification_level
+      :default_notification_level, :usernames, :owner_usernames
     )
   end
 end
