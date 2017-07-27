@@ -54,6 +54,8 @@ registerIconRenderer({
   },
 
   node(id, params) {
+    let tagName = params.tagName || 'i';
+
     const properties = {
       className: faClasses(id, params),
       attributes: { "aria-hidden": true }
@@ -61,9 +63,9 @@ registerIconRenderer({
 
     if (params.title) { properties.attributes.title = params.title; }
     if (params.label) {
-      return h('i', properties, h('span.sr-only', I18n.t(params.label)));
+      return h(tagName, properties, h('span.sr-only', I18n.t(params.label)));
     } else {
-      return h('i', properties);
+      return h(tagName, properties);
     }
   }
 });
