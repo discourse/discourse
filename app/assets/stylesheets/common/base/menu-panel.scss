@@ -226,7 +226,7 @@
       }
     }
     .is-warning {
-      i.fa-envelope-o {
+      .d-icon-envelope-o {
         &:before {
           content: "\f0e0";
         }
@@ -301,7 +301,7 @@ div.menu-links-header {
   a {
     font-size: 1.1em;
   }
-  .fa-user {
+  .d-icon-user {
     margin-right: 0.2em;
   }
 }
