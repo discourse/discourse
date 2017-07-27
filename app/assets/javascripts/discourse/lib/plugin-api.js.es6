@@ -23,7 +23,7 @@ import { registerIconRenderer } from 'discourse-common/lib/icon-library';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.7';
+const PLUGIN_API_VERSION = '0.8.8';
 
 class PluginApi {
   constructor(version, container) {
@@ -550,7 +550,7 @@ function cmpVersions (a, b) {
 
 function getPluginApi(version) {
   version = version.toString();
-  if (cmpVersions(version,PLUGIN_API_VERSION) <= 0) {
+  if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
