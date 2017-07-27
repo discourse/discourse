@@ -39,21 +39,6 @@ describe Admin::GroupsController do
     end
   end
 
-  context "#create" do
-
-    it "strip spaces on the group name" do
-      xhr :post, :create, { group: { name: " bob " } }
-
-      expect(response.status).to eq(200)
-
-      groups = Group.where(name: "bob").to_a
-
-      expect(groups.count).to eq(1)
-      expect(groups[0].name).to eq("bob")
-    end
-
-  end
-
   context "#update" do
     it 'should update a group' do
       group.add_owner(user)
