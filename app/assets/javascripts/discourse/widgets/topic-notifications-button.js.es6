@@ -10,7 +10,7 @@ createWidget('notification-option', {
 
   html(attrs) {
     return h('a', [
-        iconNode(attrs.icon, { class: attrs.key }),
+        iconNode(attrs.icon, { class: `icon ${attrs.key}`, tagName: 'span' }),
         h('div', [
           h('span.title', I18n.t(`topic.notifications.${attrs.key}.title`)),
           h('span.desc', I18n.t(`topic.notifications.${attrs.key}.description`)),
