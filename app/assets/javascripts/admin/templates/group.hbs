@@ -9,19 +9,18 @@
     {{/if}}
   </div>
 
-  {{#if model.id}}
-    {{#unless model.automatic}}
-      <div>
-        <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
-        {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
-      </div>
+  {{#unless model.automatic}}
+    <div>
+      <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
+      {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
+    </div>
 
-      <div>
-        <label for="bio">{{i18n 'groups.bio'}}</label>
-        {{d-editor value=model.bio_raw}}
-      </div>
+    <div>
+      <label for="bio">{{i18n 'groups.bio'}}</label>
+      {{d-editor value=model.bio_raw}}
+    </div>
 
-      {{#if model.hasOwners}}
+    {{#if model.hasOwners}}
       <div>
         <label for='owner-list'>{{i18n 'admin.groups.group_owners'}}</label>
         <div class="ac-wrap clearfix" id='owner-list'>
@@ -30,17 +29,28 @@
           {{/each}}
         </div>
       </div>
-      {{/if}}
-      <div>
-        <label for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
-        {{user-selector usernames=model.ownerUsernames placeholderKey="admin.groups.selector_placeholder" id="owner-selector"}}
-        {{d-button action="addOwners" class="add" icon="plus" label="admin.groups.add"}}
-      </div>
-    {{/unless}}
+    {{/if}}
+
     <div>
-      {{group-members-input model=model}}
+      <label for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
+
+      {{user-selector usernames=model.ownerUsernames
+          placeholderKey="admin.groups.selector_placeholder"
+          id="owner-selector"}}
+
+      {{#if model.id}}
+        {{d-button
+            action="addOwners"
+            class="add"
+            icon="plus"
+            label="admin.groups.add"}}
+      {{/if}}
     </div>
-  {{/if}}
+  {{/unless}}
+
+  <div>
+    {{group-members-input model=model addButton=model.id}}
+  </div>
 
   <div>
     <label for="visiblity">{{i18n 'groups.visibility_levels.title'}}</label>
