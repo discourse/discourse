@@ -140,7 +140,7 @@ body img.emoji {
   display: none;
 }
 
-.emoji-picker .diversity-picker i.fa {
+.emoji-picker .diversity-picker .d-icon {
   color: #fff;
   font-size: 12px;
   text-shadow: 0.5px 1.5px 0 rgba(0,0,0,0.3);
@@ -196,7 +196,7 @@ body img.emoji {
   align-items: center;
 }
 
-.emoji-picker .filter .fa.fa-search {
+.emoji-picker .filter .d-icon-search {
   color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
   font-size: 16px;
   margin-left: 5px;
