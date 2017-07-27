@@ -43,6 +43,14 @@
         {{/each}}
       {{/mobile-nav}}
 
+      {{#if displayGroupMessageButton}}
+        {{d-button
+            action="messageGroup"
+            class="btn-primary group-message-button"
+            icon="envelope"
+            label="groups.message"}}
+      {{/if}}
+
       {{group-membership-button model=model showLogin='showLogin'}}
     </div>
   </div>

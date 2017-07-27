@@ -421,6 +421,7 @@ en:
       join: "Join Group"
       leave: "Leave Group"
       request: "Request to Join Group"
+      message: "Message"
       automatic_group: Automatic Group
       closed_group: Closed Group
       is_group_user: "You are a member of this group"

@@ -48,6 +48,11 @@ export default Ember.Controller.extend({
     };
   },
 
+  @computed("model.mentionable")
+  displayGroupMessageButton(mentionable) {
+    return this.currentUser && mentionable;
+  },
+
   @observes('model.user_count')
   _setMembersTabCount() {
     this.get('tabs')[0].set('count', this.get('model.user_count'));
@@ -66,5 +71,11 @@ export default Ember.Controller.extend({
 
       return canSee;
     });
+  },
+
+  actions: {
+    messageGroup() {
+      this.send('createNewMessageViaParams', this.get('model.name'));
+    }
   }
 });
