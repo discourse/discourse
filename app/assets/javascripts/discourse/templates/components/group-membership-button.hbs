@@ -2,13 +2,13 @@
   {{#if userIsGroupUser}}
     {{d-button action="leaveGroup"
         class="btn-danger group-index-leave"
-        icon="minus"
+        icon="user-times"
         label="groups.leave"
         disabled=updatingMembership}}
   {{else}}
     {{d-button action="joinGroup"
         class="group-index-join"
-        icon="plus"
+        icon="user-plus"
         label="groups.join"
         disabled=updatingMembership}}
   {{/if}}
@@ -25,7 +25,7 @@
     {{d-button action="requestMembership"
         class="group-index-request"
         disabled=loading
-        icon="envelope"
+        icon="user-plus"
         label="groups.request"}}
 
     {{#if loading}}
