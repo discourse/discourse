@@ -1,6 +1,6 @@
 Fabricator(:post) do
   user
-  topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
+  topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
 end
@@ -17,13 +17,13 @@ Fabricator(:post_with_youtube, from: :post) do
 end
 
 Fabricator(:old_post, from: :post) do
-  topic {|attrs| Fabricate(:topic, user: attrs[:user], created_at: (DateTime.now - 100) ) }
+  topic { |attrs| Fabricate(:topic, user: attrs[:user], created_at: (DateTime.now - 100)) }
   created_at (DateTime.now - 100)
 end
 
 Fabricator(:moderator_post, from: :post) do
   user
-  topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
+  topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   post_type Post.types[:moderator_action]
   raw "Hello world"
 end
@@ -121,7 +121,7 @@ end
 Fabricator(:private_message_post, from: :post) do
   user
   topic do |attrs|
-    Fabricate( :private_message_topic,
+    Fabricate(:private_message_topic,
       user: attrs[:user],
       created_at: attrs[:created_at],
       subtype: TopicSubtype.user_to_user,

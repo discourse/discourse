@@ -8,7 +8,7 @@ class UserOption < ActiveRecord::Base
   def self.ensure_consistency!
     exec_sql("SELECT u.id FROM users u
               LEFT JOIN user_options o ON o.user_id = u.id
-              WHERE o.user_id IS NULL").values.each do |id,_|
+              WHERE o.user_id IS NULL").values.each do |id, _|
       UserOption.create(user_id: id.to_i)
     end
   end
@@ -94,7 +94,6 @@ class UserOption < ActiveRecord::Base
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
 
-
     # not enough topics
     return unless period = SiteSetting.min_redirected_to_top_period(1.days.ago)
 
@@ -118,14 +117,18 @@ class UserOption < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
-    times = [case duration
+    times = [
+      case duration
       when User::NewTopicDuration::ALWAYS
         user.created_at
       when User::NewTopicDuration::LAST_VISIT
         user.previous_visit_at || user.user_stat.new_since
       else
         duration.minutes.ago
-    end, user.user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime]
+      end,
+      user.user_stat.new_since,
+      Time.at(SiteSetting.min_new_topics_time).to_datetime
+    ]
 
     times.max
   end

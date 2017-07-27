@@ -6,10 +6,10 @@ class PostDestroyer
 
   def self.destroy_old_hidden_posts
     Post.where(deleted_at: nil, hidden: true)
-        .where("hidden_at < ?", 30.days.ago)
-        .find_each do |post|
-        PostDestroyer.new(Discourse.system_user, post).destroy
-      end
+      .where("hidden_at < ?", 30.days.ago)
+      .find_each do |post|
+      PostDestroyer.new(Discourse.system_user, post).destroy
+    end
   end
 
   def self.destroy_stubs
@@ -17,26 +17,26 @@ class PostDestroyer
 
     # exclude deleted topics and posts that are actively flagged
     Post.where(deleted_at: nil, user_deleted: true)
-        .where("NOT EXISTS (
+      .where("NOT EXISTS (
             SELECT 1 FROM topics t
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
         )")
-        .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
-        .where("NOT EXISTS (
+      .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
+      .where("NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
                   WHERE pa.post_id = posts.id AND
                         pa.deleted_at IS NULL AND
                         pa.post_action_type_id IN (?)
               )", PostActionType.notify_flag_type_ids)
-        .find_each do |post|
+      .find_each do |post|
 
       PostDestroyer.new(Discourse.system_user, post, context: context).destroy
     end
   end
 
-  def initialize(user, post, opts={})
+  def initialize(user, post, opts = {})
     @user = user
     @post = post
     @topic = post.topic if post

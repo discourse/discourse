@@ -70,7 +70,7 @@ class DiscoursePluginRegistry
 
   end
 
-  def register_js(filename, options={})
+  def register_js(filename, options = {})
     # If we have a server side option, add that too.
     self.class.javascripts << filename
   end
@@ -79,15 +79,15 @@ class DiscoursePluginRegistry
     self.class.stylesheets << filename
   end
 
-  def register_archetype(name, options={})
+  def register_archetype(name, options = {})
     Archetype.register(name, options)
   end
 
-  def self.register_glob(root, extension, options=nil)
+  def self.register_glob(root, extension, options = nil)
     self.asset_globs << [root, extension, options || {}]
   end
 
-  def self.each_globbed_asset(each_options=nil)
+  def self.each_globbed_asset(each_options = nil)
     each_options ||= {}
 
     self.asset_globs.each do |g|
@@ -108,7 +108,7 @@ class DiscoursePluginRegistry
   JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
   HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
 
-  def self.register_asset(asset, opts=nil)
+  def self.register_asset(asset, opts = nil)
     if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
@@ -140,7 +140,7 @@ class DiscoursePluginRegistry
     html_builders[name] = block
   end
 
-  def self.build_html(name, ctx=nil)
+  def self.build_html(name, ctx = nil)
     html_builders[name]&.call(ctx)
   end
 

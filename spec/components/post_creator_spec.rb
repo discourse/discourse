@@ -9,12 +9,12 @@ describe PostCreator do
 
   context "new topic" do
     let(:category) { Fabricate(:category, user: user) }
-    let(:basic_topic_params) { {title: "hello world topic", raw: "my name is fred", archetype_id: 1} }
-    let(:image_sizes) { {'http://an.image.host/image.jpg' => {"width" => 111, "height" => 222}} }
+    let(:basic_topic_params) { { title: "hello world topic", raw: "my name is fred", archetype_id: 1 } }
+    let(:image_sizes) { { 'http://an.image.host/image.jpg' => { "width" => 111, "height" => 222 } } }
 
     let(:creator) { PostCreator.new(user, basic_topic_params) }
-    let(:creator_with_category) { PostCreator.new(user, basic_topic_params.merge(category: category.id )) }
-    let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
+    let(:creator_with_category) { PostCreator.new(user, basic_topic_params.merge(category: category.id)) }
+    let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: { hello: "world" })) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
     let(:creator_with_featured_link) { PostCreator.new(user, title: "featured link topic", archetype_id: 1, featured_link: "http://www.discourse.org", raw: "http://www.discourse.org") }
 
@@ -34,12 +34,12 @@ describe PostCreator do
       cat = Fabricate(:category)
       cat.all_topics_wiki = true
       cat.save
-      post = PostCreator.create(user, basic_topic_params.merge(category: cat.id ))
+      post = PostCreator.create(user, basic_topic_params.merge(category: cat.id))
       expect(post.wiki).to eq(true)
     end
 
     it "ensures the user can create the topic" do
-      Guardian.any_instance.expects(:can_create?).with(Topic,nil).returns(false)
+      Guardian.any_instance.expects(:can_create?).with(Topic, nil).returns(false)
       expect { creator.create }.to raise_error(Discourse::InvalidAccess)
     end
 
@@ -100,8 +100,8 @@ describe PostCreator do
         end
         # don't notify on system messages they introduce too much noise
         channels = messages.map(&:channel)
-        expect(channels.find{|s| s =~ /unread/}).to eq(nil)
-        expect(channels.find{|s| s =~ /new/}).to eq(nil)
+        expect(channels.find { |s| s =~ /unread/ }).to eq(nil)
+        expect(channels.find { |s| s =~ /new/ }).to eq(nil)
       end
 
       it "generates the correct messages for a secure topic" do
@@ -111,7 +111,7 @@ describe PostCreator do
         admin = Fabricate(:admin)
 
         cat = Fabricate(:category)
-        cat.set_permissions(:admins => :full)
+        cat.set_permissions(admins: :full)
         cat.save
 
         created_post = nil
@@ -122,9 +122,8 @@ describe PostCreator do
           reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
-
         # 2 for topic, one to notify of new topic another for tracking state
-        expect(messages.map{|m| m.channel}.sort).to eq([ "/new",
+        expect(messages.map { |m| m.channel }.sort).to eq([ "/new",
                                                      "/u/#{admin.username}",
                                                      "/u/#{admin.username}",
                                                      "/unread/#{admin.id}",
@@ -136,7 +135,7 @@ describe PostCreator do
                                                    ].sort)
         admin_ids = [Group[:admins].id]
 
-        expect(messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}).to eq(false)
+        expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -148,16 +147,16 @@ describe PostCreator do
           p = creator.create
         end
 
-        latest = messages.find{|m| m.channel == "/latest"}
+        latest = messages.find { |m| m.channel == "/latest" }
         expect(latest).not_to eq(nil)
 
-        latest = messages.find{|m| m.channel == "/new"}
+        latest = messages.find { |m| m.channel == "/new" }
         expect(latest).not_to eq(nil)
 
-        read = messages.find{|m| m.channel == "/unread/#{p.user_id}"}
+        read = messages.find { |m| m.channel == "/unread/#{p.user_id}" }
         expect(read).not_to eq(nil)
 
-        user_action = messages.find{|m| m.channel == "/u/#{p.user.username}"}
+        user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
         expect(messages.length).to eq(5)
@@ -191,7 +190,7 @@ describe PostCreator do
         Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
         Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-        creator.opts[:image_sizes] = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
+        creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
         creator.create
       end
 
@@ -344,14 +343,14 @@ describe PostCreator do
             end
 
             it "can create all tags if none exist" do
-              expect { @post = creator_with_tags.create }.to change { Tag.count }.by( tag_names.size )
+              expect { @post = creator_with_tags.create }.to change { Tag.count }.by(tag_names.size)
               expect(@post.topic.tags.map(&:name).sort).to eq(tag_names.sort)
             end
 
             it "creates missing tags if some exist" do
               existing_tag1 = Fabricate(:tag, name: tag_names[0])
               existing_tag1 = Fabricate(:tag, name: tag_names[1])
-              expect { @post = creator_with_tags.create }.to change { Tag.count }.by( tag_names.size - 2 )
+              expect { @post = creator_with_tags.create }.to change { Tag.count }.by(tag_names.size - 2)
               expect(@post.topic.tags.map(&:name).sort).to eq(tag_names.sort)
             end
           end
@@ -400,7 +399,6 @@ describe PostCreator do
       expect(whisper).to be_present
       expect(whisper.post_type).to eq(Post.types[:whisper])
 
-
       whisper_reply = PostCreator.new(user,
                                       topic_id: topic.id,
                                       reply_to_post_number: whisper.post_number,
@@ -412,7 +410,6 @@ describe PostCreator do
 
       # date is not precise enough in db
       whisper_reply.reload
-
 
       first.reload
       # does not leak into the OP
@@ -426,8 +423,8 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
 
-      topic.update_columns(highest_staff_post_number:0,
-                           highest_post_number:0,
+      topic.update_columns(highest_staff_post_number: 0,
+                           highest_post_number: 0,
                            posts_count: 0,
                            last_posted_at: 1.year.ago)
 
@@ -444,7 +441,7 @@ describe PostCreator do
   context 'uniqueness' do
 
     let!(:topic) { Fabricate(:topic, user: user) }
-    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4} }
+    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4 } }
     let(:creator) { PostCreator.new(user, basic_topic_params) }
 
     context "disabled" do
@@ -502,11 +499,10 @@ describe PostCreator do
 
   end
 
-
   context "host spam" do
 
     let!(:topic) { Fabricate(:topic, user: user) }
-    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4} }
+    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4 } }
     let(:creator) { PostCreator.new(user, basic_topic_params) }
 
     before do
@@ -523,7 +519,7 @@ describe PostCreator do
 
     it "sends a message to moderators" do
       GroupMessage.expects(:create).with do |group_name, msg_type, params|
-        group_name == Group[:moderators].name and msg_type == :spam_post_blocked and params[:user].id == user.id
+        group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) && params[:user].id == (user.id)
       end
       creator.create
     end
@@ -631,7 +627,7 @@ describe PostCreator do
       # if an admin replies they should be added to the allowed user list
       admin = Fabricate(:admin)
       PostCreator.create(admin, raw: 'hi there welcome topic, I am a mod',
-                         topic_id: post.topic_id)
+                                topic_id: post.topic_id)
 
       post.topic.reload
       expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
@@ -817,11 +813,11 @@ describe PostCreator do
     it "should give credit to creator" do
       post = create_post
       expect(PostTiming.find_by(topic_id: post.topic_id,
-                         post_number: post.post_number,
-                         user_id: post.user_id).msecs).to be > 0
+                                post_number: post.post_number,
+                                user_id: post.user_id).msecs).to be > 0
 
       expect(TopicUser.find_by(topic_id: post.topic_id,
-                        user_id: post.user_id).last_read_post_number).to eq(1)
+                               user_id: post.user_id).last_read_post_number).to eq(1)
     end
   end
 
@@ -829,14 +825,14 @@ describe PostCreator do
     it "does not allow suspended users to create topics" do
       user = Fabricate(:user, suspended_at: 1.month.ago, suspended_till: 1.month.from_now)
 
-      creator = PostCreator.new(user, {title: "my test title 123", raw: "I should not be allowed to post"} )
+      creator = PostCreator.new(user, title: "my test title 123", raw: "I should not be allowed to post")
       creator.create
       expect(creator.errors.count).to be > 0
     end
   end
 
   it "doesn't strip starting whitespaces" do
-    pc = PostCreator.new(user, { title: "testing whitespace stripping", raw: "    <-- whitespaces -->    " })
+    pc = PostCreator.new(user, title: "testing whitespace stripping", raw: "    <-- whitespaces -->    ")
     post = pc.create
     expect(post.raw).to eq("    <-- whitespaces -->")
   end

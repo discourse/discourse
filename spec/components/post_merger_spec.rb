@@ -40,14 +40,14 @@ describe PostMerger do
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
 
-      expect{ PostMerger.new(admin, [reply2, post, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      expect { PostMerger.new(admin, [reply2, post, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "should only allow staff user to merge posts" do
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
 
-      expect{ PostMerger.new(user, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      expect { PostMerger.new(user, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "should not allow posts from different topics to be merged" do
@@ -67,4 +67,3 @@ describe PostMerger do
     end
   end
 end
-

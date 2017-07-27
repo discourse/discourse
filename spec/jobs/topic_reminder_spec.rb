@@ -21,8 +21,8 @@ describe Jobs::TopicReminder do
     expect {
       described_class.new.execute(topic_timer_id: topic_timer.id)
     }.to change { Notification.count }.by(1)
-    expect( admin.notifications.where(notification_type: Notification.types[:topic_reminder]).first&.topic_id ).to eq(topic.id)
-    expect( TopicTimer.where(id: topic_timer.id).first ).to be_nil
+    expect(admin.notifications.where(notification_type: Notification.types[:topic_reminder]).first&.topic_id).to eq(topic.id)
+    expect(TopicTimer.where(id: topic_timer.id).first).to be_nil
   end
 
   it "does nothing if it was trashed before the scheduled time" do

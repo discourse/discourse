@@ -151,16 +151,16 @@ describe NewPostManager do
     let(:default_handler) { NewPostManager.method(:default_handler) }
 
     it "adds in order by default" do
-      handler = ->{ nil }
+      handler = -> { nil }
 
       NewPostManager.add_handler(&handler)
       expect(NewPostManager.handlers).to eq([default_handler, handler])
     end
 
     it "can be added in high priority" do
-      a = ->{ nil }
-      b = ->{ nil }
-      c = ->{ nil }
+      a = -> { nil }
+      b = -> { nil }
+      c = -> { nil }
 
       NewPostManager.add_handler(100, &a)
       NewPostManager.add_handler(50, &b)
@@ -241,7 +241,6 @@ describe NewPostManager do
 
   end
 
-
   context "user needs approval?" do
 
     let :user do
@@ -251,11 +250,9 @@ describe NewPostManager do
       user
     end
 
-
-
     it "handles post_needs_approval? correctly" do
       u = user
-      default = NewPostManager.new(u,{})
+      default = NewPostManager.new(u, {})
       expect(NewPostManager.post_needs_approval?(default)).to eq(false)
 
       with_check = NewPostManager.new(u, first_post_checks: true)

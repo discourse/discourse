@@ -10,7 +10,6 @@ class Array
   end
 end
 
-
 # based on https://gist.github.com/zaius/2643079
 def unbundled_require(gem)
   if defined?(::Bundler)
@@ -111,4 +110,3 @@ end
 # no sidekiq so update some stuff
 Category.update_stats
 Jobs::PeriodicalUpdates.new.execute(nil)
-

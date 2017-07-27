@@ -141,11 +141,9 @@ describe TagUser do
         TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 1)
         expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
 
-
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), [watched_tag.name])
         post.topic.save!
         expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
-
 
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), [])
         post.topic.save!

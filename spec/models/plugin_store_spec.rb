@@ -2,7 +2,7 @@ require "rails_helper"
 require_dependency "plugin_store"
 
 describe PluginStore do
-  def set(k,v)
+  def set(k, v)
     PluginStore.set("my_plugin", k, v)
   end
 
@@ -38,10 +38,9 @@ describe PluginStore do
     expect(get("hello")).to eq(nil)
   end
 
-
   it "handles hashes correctly" do
 
-    val = {"hi" => "there", "1" => 1}
+    val = { "hi" => "there", "1" => 1 }
     set("hello", val)
     result = get("hello")
 
@@ -53,7 +52,7 @@ describe PluginStore do
 
   it "handles nested hashes correctly" do
 
-    val = {"hi" => "there", "nested" => {"a" => "b", "with list" => ["a", "b", 3] }}
+    val = { "hi" => "there", "nested" => { "a" => "b", "with list" => ["a", "b", 3] } }
     set("hello", val)
     result = get("hello")
 
@@ -67,7 +66,7 @@ describe PluginStore do
 
   it "handles arrays correctly" do
 
-    val = ["a", "b", {"hash"=> "inside", "c"=> 1}]
+    val = ["a", "b", { "hash" => "inside", "c" => 1 }]
     set("hello", val)
     result = get("hello")
 

@@ -7,19 +7,19 @@ class UserActionCreator
     @disabled = false
   end
 
-  def self.log_notification(post, user, notification_type, acting_user_id=nil)
+  def self.log_notification(post, user, notification_type, acting_user_id = nil)
     return if @disabled
 
     action =
       case notification_type
-        when Notification.types[:quoted]
-          UserAction::QUOTE
-        when Notification.types[:replied]
-          UserAction::RESPONSE
-        when Notification.types[:mentioned]
-          UserAction::MENTION
-        when Notification.types[:edited]
-          UserAction::EDIT
+      when Notification.types[:quoted]
+        UserAction::QUOTE
+      when Notification.types[:replied]
+        UserAction::RESPONSE
+      when Notification.types[:mentioned]
+        UserAction::MENTION
+      when Notification.types[:edited]
+        UserAction::EDIT
       end
 
     # skip any invalid items, eg failed to save post and so on

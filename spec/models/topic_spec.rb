@@ -4,7 +4,7 @@ require 'rails_helper'
 require_dependency 'post_destroyer'
 
 describe Topic do
-  let(:now) { Time.zone.local(2013,11,20,8,0) }
+  let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   let(:user) { Fabricate(:user) }
 
   context 'validations' do
@@ -265,12 +265,12 @@ describe Topic do
   context 'html in title' do
 
     def build_topic_with_title(title)
-      build(:topic, title: title).tap{ |t| t.valid? }
+      build(:topic, title: title).tap { |t| t.valid? }
     end
 
-    let(:topic_bold) { build_topic_with_title("Topic with <b>bold</b> text in its title" ) }
-    let(:topic_image) { build_topic_with_title("Topic with <img src='something'> image in its title" ) }
-    let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title" ) }
+    let(:topic_bold) { build_topic_with_title("Topic with <b>bold</b> text in its title") }
+    let(:topic_image) { build_topic_with_title("Topic with <img src='something'> image in its title") }
+    let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title") }
     let(:topic_emoji) { build_topic_with_title("I 💖 candy alot") }
 
     it "escapes script contents" do
@@ -292,7 +292,7 @@ describe Topic do
   end
 
   context 'fancy title' do
-    let(:topic) { Fabricate.build(:topic, title: "\"this topic\" -- has ``fancy stuff''" ) }
+    let(:topic) { Fabricate.build(:topic, title: "\"this topic\" -- has ``fancy stuff''") }
 
     context 'title_fancy_entities disabled' do
       before do
@@ -367,7 +367,6 @@ describe Topic do
     end
   end
 
-
   context 'similar_to' do
 
     it 'returns blank with nil params' do
@@ -429,7 +428,6 @@ describe Topic do
     end
 
   end
-
 
   context 'private message' do
     let(:coding_horror) { User.find_by(username: "CodingHorror") }
@@ -532,9 +530,9 @@ describe Topic do
       it "should set up actions correctly" do
         UserActionCreator.enable
 
-        expect(actions.map{|a| a.action_type}).not_to include(UserAction::NEW_TOPIC)
-        expect(actions.map{|a| a.action_type}).to include(UserAction::NEW_PRIVATE_MESSAGE)
-        expect(coding_horror.user_actions.map{|a| a.action_type}).to include(UserAction::GOT_PRIVATE_MESSAGE)
+        expect(actions.map { |a| a.action_type }).not_to include(UserAction::NEW_TOPIC)
+        expect(actions.map { |a| a.action_type }).to include(UserAction::NEW_PRIVATE_MESSAGE)
+        expect(coding_horror.user_actions.map { |a| a.action_type }).to include(UserAction::GOT_PRIVATE_MESSAGE)
       end
 
     end
@@ -601,21 +599,21 @@ describe Topic do
 
       it "bumps the topic when a new version is made of the last post" do
         expect {
-          @last_post.revise(Fabricate(:moderator), { raw: 'updated contents' })
+          @last_post.revise(Fabricate(:moderator), raw: 'updated contents')
           @topic.reload
         }.to change(@topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
         expect {
-          @earlier_post.revise(Fabricate(:moderator), { raw: 'updated contents' })
+          @earlier_post.revise(Fabricate(:moderator), raw: 'updated contents')
           @topic.reload
         }.not_to change(@topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post have invalid topic title while edit" do
         expect {
-          @last_post.revise(Fabricate(:moderator), { title: 'invalid title' })
+          @last_post.revise(Fabricate(:moderator), title: 'invalid title')
           @topic.reload
         }.not_to change(@topic, :bumped_at)
       end
@@ -655,7 +653,6 @@ describe Topic do
       end
     end
   end
-
 
   context 'update_status' do
     before do
@@ -801,7 +798,7 @@ describe Topic do
 
       context 'topic was set to close when it was created' do
         it 'puts the autoclose duration in the moderator post' do
-          freeze_time(Time.new(2000,1,1))
+          freeze_time(Time.new(2000, 1, 1))
           @topic.created_at = 3.days.ago
           @topic.update_status(status, true, @user)
           expect(@topic.posts.last.raw).to include "closed after 3 days"
@@ -810,7 +807,7 @@ describe Topic do
 
       context 'topic was set to close after it was created' do
         it 'puts the autoclose duration in the moderator post' do
-          freeze_time(Time.new(2000,1,1))
+          freeze_time(Time.new(2000, 1, 1))
 
           @topic.created_at = 7.days.ago
 
@@ -878,7 +875,6 @@ describe Topic do
 
     end
 
-
   end
 
   context 'last_poster info' do
@@ -926,7 +922,7 @@ describe Topic do
   end
 
   describe 'meta data' do
-    let(:topic) { Fabricate(:topic, meta_data: {'hello' => 'world'}) }
+    let(:topic) { Fabricate(:topic, meta_data: { 'hello' => 'world' }) }
 
     it 'allows us to create a topic with meta data' do
       expect(topic.meta_data['hello']).to eq('world')
@@ -971,7 +967,6 @@ describe Topic do
         end
       end
 
-
     end
 
   end
@@ -1014,7 +1009,7 @@ describe Topic do
       end
 
       it 'should not change the topic_count when not changed' do
-       expect { topic.change_category_to_id(topic.category.id); category.reload }.not_to change(category, :topic_count)
+        expect { topic.change_category_to_id(topic.category.id); category.reload }.not_to change(category, :topic_count)
       end
 
       it "doesn't change the category when it can't be found" do
@@ -1125,7 +1120,7 @@ describe Topic do
         b = Fabricate(:topic, created_at: now)
         c = Fabricate(:topic, created_at: now)
         d = Fabricate(:topic, created_at: now - 2.minutes)
-        expect(Topic.by_newest).to eq([c,b,d,a])
+        expect(Topic.by_newest).to eq([c, b, d, a])
       end
     end
 
@@ -1178,7 +1173,7 @@ describe Topic do
 
     it 'can take a number of hours as an integer, with timezone offset' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], 72, {by_user: admin, timezone_offset: 240})
+      topic.set_or_create_timer(TopicTimer.types[:close], 72, by_user: admin, timezone_offset: 240)
       expect(topic.topic_timers.first.execute_at).to eq(3.days.from_now)
     end
 
@@ -1190,54 +1185,54 @@ describe Topic do
 
     it 'can take a number of hours as a string, with timezone offset' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '18', {by_user: admin, timezone_offset: 240})
+      topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, timezone_offset: 240)
       expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
     end
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '18', {by_user: admin, based_on_last_post: true})
+      topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, based_on_last_post: true)
       expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
     end
 
     it "can take a timestamp for a future time" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', {by_user: admin})
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,22,5,0))
+      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin)
+      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 5, 0))
     end
 
     it "can take a timestamp for a future time, with timezone offset" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', {by_user: admin, timezone_offset: 240})
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,22,9,0))
+      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin, timezone_offset: 240)
+      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 9, 0))
     end
 
     it "sets a validation error when given a timestamp in the past" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', {by_user: admin})
+      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', by_user: admin)
 
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013,11,19,5,0))
+      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 19, 5, 0))
       expect(topic.topic_timers.first.errors[:execute_at]).to be_present
     end
 
     it "can take a timestamp with timezone" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-25T01:35:00-08:00', {by_user: admin})
-      expect(topic.topic_timers.first.execute_at).to eq(Time.utc(2013,11,25,9,35))
+      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-25T01:35:00-08:00', by_user: admin)
+      expect(topic.topic_timers.first.execute_at).to eq(Time.utc(2013, 11, 25, 9, 35))
     end
 
     it 'sets topic status update user to given user if it is a staff or TL4 user' do
-      topic.set_or_create_timer(TopicTimer.types[:close], 3, {by_user: admin})
+      topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: admin)
       expect(topic.topic_timers.first.user).to eq(admin)
     end
 
     it 'sets topic status update user to given user if it is a TL4 user' do
-      topic.set_or_create_timer(TopicTimer.types[:close], 3, {by_user: trust_level_4})
+      topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: trust_level_4)
       expect(topic.topic_timers.first.user).to eq(trust_level_4)
     end
 
     it 'sets topic status update user to system user if given user is not staff or a TL4 user' do
-      topic.set_or_create_timer(TopicTimer.types[:close], 3, {by_user: Fabricate.build(:user, id: 444)})
+      topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: Fabricate.build(:user, id: 444))
       expect(topic.topic_timers.first.user).to eq(admin)
     end
 
@@ -1281,7 +1276,7 @@ describe Topic do
     end
 
     it "does not update topic's topic status created_at it was already set to close" do
-      expect{
+      expect {
         closing_topic.set_or_create_timer(TopicTimer.types[:close], 14)
       }.to_not change { closing_topic.topic_timers.first.created_at }
     end
@@ -1423,9 +1418,9 @@ describe Topic do
 
     it "sorts by category notification levels" do
       category1, category2 = Fabricate(:category), Fabricate(:category)
-      2.times {|i| Fabricate(:topic, category: category1) }
+      2.times { |i| Fabricate(:topic, category: category1) }
       topic1 = Fabricate(:topic, category: category2)
-      2.times {|i| Fabricate(:topic, category: category1) }
+      2.times { |i| Fabricate(:topic, category: category1) }
       CategoryUser.create(user: user, category: category2, notification_level: CategoryUser.notification_levels[:watching])
       for_digest = Topic.for_digest(user, 1.year.ago, top_order: true)
       expect(for_digest.first).to eq(topic1)
@@ -1433,7 +1428,7 @@ describe Topic do
 
     it "sorts by topic notification levels" do
       topics = []
-      3.times {|i| topics << Fabricate(:topic) }
+      3.times { |i| topics << Fabricate(:topic) }
       user = Fabricate(:user)
       TopicUser.create(user_id: user.id, topic_id: topics[0].id, notification_level: TopicUser.notification_levels[:tracking])
       TopicUser.create(user_id: user.id, topic_id: topics[2].id, notification_level: TopicUser.notification_levels[:watching])
@@ -1516,29 +1511,29 @@ describe Topic do
       Fabricate(:topic, created_at: 4.days.ago)
     end
 
-    let(:listable_topics_count_per_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 } }
+    let(:listable_topics_count_per_day) { { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 } }
 
     it 'collect closed interval listable topics count' do
       expect(Topic.listable_count_per_day(2.days.ago, Time.now)).to include(listable_topics_count_per_day)
-      expect(Topic.listable_count_per_day(2.days.ago, Time.now)).not_to include({4.days.ago.to_date => 1})
+      expect(Topic.listable_count_per_day(2.days.ago, Time.now)).not_to include(4.days.ago.to_date => 1)
     end
   end
 
   describe '#secure_category?' do
-    let(:category){ Category.new }
+    let(:category) { Category.new }
 
     it "is true if the category is secure" do
       category.stubs(:read_restricted).returns(true)
-      expect(Topic.new(:category => category)).to be_read_restricted_category
+      expect(Topic.new(category: category)).to be_read_restricted_category
     end
 
     it "is false if the category is not secure" do
       category.stubs(:read_restricted).returns(false)
-      expect(Topic.new(:category => category)).not_to be_read_restricted_category
+      expect(Topic.new(category: category)).not_to be_read_restricted_category
     end
 
     it "is false if there is no category" do
-      expect(Topic.new(:category => nil)).not_to be_read_restricted_category
+      expect(Topic.new(category: nil)).not_to be_read_restricted_category
     end
   end
 
@@ -1708,7 +1703,7 @@ describe Topic do
     topic.save
 
     topic = Topic.find(topic.id)
-    expect(topic.custom_fields).to eq({"bob" => "marley", "jack" => "black"})
+    expect(topic.custom_fields).to eq("bob" => "marley", "jack" => "black")
   end
 
   it "doesn't validate the title again if it isn't changing" do

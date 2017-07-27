@@ -16,7 +16,7 @@ class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
   def start(example_count)
     super
     File.delete(RSPEC_RESULT) if File.exists?(RSPEC_RESULT)
-    @fail_file = File.open(RSPEC_RESULT,"w")
+    @fail_file = File.open(RSPEC_RESULT, "w")
   end
 
   def example_passed(_notification)

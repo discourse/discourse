@@ -20,7 +20,6 @@ module ImportExport
       self
     end
 
-
     USER_ATTRS = [:id, :email, :username, :name, :created_at, :trust_level, :active, :last_emailed_at]
 
     def export_users
@@ -33,11 +32,9 @@ module ImportExport
           u = post.user
           unless @exported_user_ids.include?(u.id)
             x = USER_ATTRS.inject({}) { |h, a| h[a] = u.send(a); h; }
-            @export_data[:users] << x.merge({
-              bio_raw: u.user_profile.bio_raw,
-              website: u.user_profile.website,
-              location: u.user_profile.location
-            })
+            @export_data[:users] << x.merge(bio_raw: u.user_profile.bio_raw,
+                                            website: u.user_profile.website,
+                                            location: u.user_profile.location)
             @exported_user_ids << u.id
           end
         end
@@ -45,7 +42,6 @@ module ImportExport
 
       self
     end
-
 
     def export_topics
       @topic_ids.each do |topic_id|
@@ -55,7 +51,6 @@ module ImportExport
       end
       puts ""
     end
-
 
     TOPIC_ATTRS = [:id, :title, :created_at, :views, :category_id, :closed, :archived, :archetype]
     POST_ATTRS = [:id, :user_id, :post_number, :raw, :created_at, :reply_to_post_number,
@@ -81,8 +76,7 @@ module ImportExport
       self
     end
 
-
-    def save_to_file(filename=nil)
+    def save_to_file(filename = nil)
       require 'json'
       output_basename = filename || File.join("topic-export-#{Time.now.strftime("%Y-%m-%d-%H%M%S")}.json")
       File.open(output_basename, "w:UTF-8") do |f|

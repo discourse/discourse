@@ -41,7 +41,7 @@ describe UserBlocker do
       it 'sends that message to the user' do
         SystemMessage.unstub(:create)
         SystemMessage.expects(:create).with(user, :the_custom_message).returns(true)
-        UserBlocker.block(user, Fabricate.build(:admin), {message: :the_custom_message})
+        UserBlocker.block(user, Fabricate.build(:admin), message: :the_custom_message)
       end
     end
 

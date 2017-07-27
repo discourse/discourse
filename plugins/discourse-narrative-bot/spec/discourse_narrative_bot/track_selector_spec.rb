@@ -42,7 +42,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
       let(:topic) do
         Fabricate(:private_message_topic, first_post: first_post,
-          topic_allowed_users: [
+                                          topic_allowed_users: [
             Fabricate.build(:topic_allowed_user, user: discobot_user),
             Fabricate.build(:topic_allowed_user, user: user),
           ]
@@ -453,7 +453,6 @@ describe DiscourseNarrativeBot::TrackSelector do
           new_post = Post.last
           expect(new_post.raw).to eq(random_mention_reply)
         end
-
 
         describe 'rate limiting random reply message in public topic' do
           let(:topic) { Fabricate(:topic) }

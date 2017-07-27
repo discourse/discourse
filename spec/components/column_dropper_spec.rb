@@ -17,8 +17,8 @@ RSpec.describe ColumnDropper do
   it "can correctly drop columns after correct delay" do
     Topic.exec_sql "ALTER TABLE topics ADD COLUMN junk int"
     name = Topic
-            .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
-            .getvalue(0,0)
+      .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
+      .getvalue(0, 0)
 
     Topic.exec_sql("UPDATE schema_migration_details SET created_at = :created_at WHERE name = :name",
                   name: name, created_at: 15.minutes.ago)
@@ -30,7 +30,7 @@ RSpec.describe ColumnDropper do
       after_migration: name,
       columns: ['junk'],
       delay: 20.minutes,
-      on_drop: ->(){dropped_proc_called = true}
+      on_drop: ->() { dropped_proc_called = true }
     )
 
     expect(has_column?('topics', 'junk')).to eq(true)
@@ -41,7 +41,7 @@ RSpec.describe ColumnDropper do
       after_migration: name,
       columns: ['junk'],
       delay: 10.minutes,
-      on_drop: ->(){dropped_proc_called = true}
+      on_drop: ->() { dropped_proc_called = true }
     )
 
     expect(has_column?('topics', 'junk')).to eq(false)

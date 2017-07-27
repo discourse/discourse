@@ -77,7 +77,7 @@ class Admin::UsersController < Admin::AdminController
       @user.logged_out
       render json: success_json
     else
-      render json: {error: I18n.t('admin_js.admin.users.id_not_found')}, status: 404
+      render json: { error: I18n.t('admin_js.admin.users.id_not_found') }, status: 404
     end
   end
 
@@ -154,8 +154,7 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_change_trust_level!(@user)
     level = params[:level].to_i
 
-
-    if !@user.trust_level_locked && [0,1,2].include?(level) && Promotion.send("tl#{level+1}_met?", @user)
+    if !@user.trust_level_locked && [0, 1, 2].include?(level) && Promotion.send("tl#{level + 1}_met?", @user)
       @user.trust_level_locked = true
       @user.save
     end
@@ -187,7 +186,7 @@ class Admin::UsersController < Admin::AdminController
 
     unless @user.trust_level_locked
       p = Promotion.new(@user)
-      2.times{ p.review }
+      2.times { p.review }
       p.review_tl2
       if @user.trust_level == 3 && Promotion.tl3_lost?(@user)
         @user.change_trust_level!(2, log_action_for: current_user)
@@ -242,7 +241,7 @@ class Admin::UsersController < Admin::AdminController
     d = UserDestroyer.new(current_user)
 
     User.where(id: params[:users]).each do |u|
-      success_count += 1 if guardian.can_delete_user?(u) and d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
+      success_count += 1 if guardian.can_delete_user?(u) && d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
     end
 
     render json: {
@@ -339,12 +338,12 @@ class Admin::UsersController < Admin::AdminController
     user.save!
     user.grant_admin!
     user.change_trust_level!(4)
-    user.email_tokens.update_all  confirmed: true
+    user.email_tokens.update_all confirmed: true
 
     email_token = user.email_tokens.create(email: user.email)
 
     unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue( :critical_user_email,
+      Jobs.enqueue(:critical_user_email,
                     type: :account_created,
                     user_id: user.id,
                     email_token: email_token.token)

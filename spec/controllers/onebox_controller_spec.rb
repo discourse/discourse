@@ -49,7 +49,7 @@ describe OneboxController do
 
     describe "found onebox" do
 
-      let(:body) { "this is the onebox body"}
+      let(:body) { "this is the onebox body" }
 
       before do
         Oneboxer.expects(:preview).with(url, invalidate_oneboxes: false).returns(body)

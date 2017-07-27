@@ -13,8 +13,8 @@ module Autospec
               "-f", "Autospec::Formatter", specs.split].flatten.join(" ")
       # launch rspec
       Dir.chdir(Rails.root) do
-        env = {"RAILS_ENV" => "test"}
-        if specs.split(' ').any?{|s| s =~ /^(.\/)?plugins/}
+        env = { "RAILS_ENV" => "test" }
+        if specs.split(' ').any? { |s| s =~ /^(.\/)?plugins/ }
           env["LOAD_PLUGINS"] = "1"
           puts "Loading plugins while running specs"
         end

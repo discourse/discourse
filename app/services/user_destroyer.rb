@@ -7,14 +7,14 @@ class UserDestroyer
 
   def initialize(actor)
     @actor = actor
-    raise Discourse::InvalidParameters.new('acting user is nil') unless @actor and @actor.is_a?(User)
+    raise Discourse::InvalidParameters.new('acting user is nil') unless @actor && @actor.is_a?(User)
     @guardian = Guardian.new(actor)
   end
 
   # Returns false if the user failed to be deleted.
   # Returns a frozen instance of the User if the delete succeeded.
-  def destroy(user, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
+  def destroy(user, opts = {})
+    raise Discourse::InvalidParameters.new('user is nil') unless user && user.is_a?(User)
     raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
     @guardian.ensure_can_delete_user!(user)
 

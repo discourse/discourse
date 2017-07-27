@@ -5,7 +5,7 @@ module Helpers
     @next_seq = (@next_seq || 0) + 1
   end
 
-  def log_in(fabricator=nil)
+  def log_in(fabricator = nil)
     user = Fabricate(fabricator || :user)
     log_in_user(user)
     user
@@ -13,7 +13,7 @@ module Helpers
 
   def log_in_user(user)
     provider = Discourse.current_user_provider.new(request.env)
-    provider.log_on_user(user,session,cookies)
+    provider.log_on_user(user, session, cookies)
   end
 
   def fixture_file(filename)
@@ -26,7 +26,7 @@ module Helpers
     Fabricate.build(*args)
   end
 
-  def create_topic(args={})
+  def create_topic(args = {})
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     user = args.delete(:user) || Fabricate(:user)
     guardian = Guardian.new(user)
@@ -34,7 +34,7 @@ module Helpers
     TopicCreator.create(user, guardian, args)
   end
 
-  def create_post(args={})
+  def create_post(args = {})
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
     args[:topic_id] = args[:topic].id if args[:topic]
@@ -50,9 +50,9 @@ module Helpers
     post
   end
 
-  def generate_username(length=10)
+  def generate_username(length = 10)
     range = [*'a'..'z']
-    Array.new(length){range.sample}.join
+    Array.new(length) { range.sample }.join
   end
 
   def stub_guardian(user)

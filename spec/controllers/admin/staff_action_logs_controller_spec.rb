@@ -22,7 +22,7 @@ describe Admin::StaffActionLogsController do
       expect(json["staff_action_logs"].length).to eq(1)
       expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
 
-      expect(json["user_history_actions"]).to include({"id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic'})
+      expect(json["user_history_actions"]).to include("id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic')
 
     end
   end

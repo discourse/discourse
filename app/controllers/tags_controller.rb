@@ -14,18 +14,18 @@ class TagsController < ::ApplicationController
     :tag_feed,
     :search,
     :check_hashtag,
-    Discourse.anonymous_filters.map { |f| :"show_#{f}"}
+    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   ].flatten
   before_filter :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
     categories = Category.where("id in (select category_id from category_tags)")
-                         .where("id in (?)", guardian.allowed_category_ids)
-                         .preload(:tags)
+      .where("id in (?)", guardian.allowed_category_ids)
+      .preload(:tags)
     category_tag_counts = categories.map do |c|
       h = Tag.category_tags_by_count_query(c, limit: 300).count(Tag::COUNT_ARG)
-      h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum,t| sum[t.name] = 0; sum }) # unused tags
-      {id: c.id, tags: self.class.tag_counts_json(h)}
+      h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum, t| sum[t.name] = 0; sum }) # unused tags
+      { id: c.id, tags: self.class.tag_counts_json(h) }
     end
 
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count(Tag::COUNT_ARG)
@@ -91,7 +91,7 @@ class TagsController < ::ApplicationController
     tag.name = new_tag_name
     if tag.save
       StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: params[:tag_id], new_value: new_tag_name)
-      render json: { tag: { id: new_tag_name }}
+      render json: { tag: { id: new_tag_name } }
     else
       render_json_error tag.errors.full_messages
     end
@@ -116,7 +116,7 @@ class TagsController < ::ApplicationController
     @title = "#{SiteSetting.title} - #{@description}"
     @atom_link = "#{Discourse.base_url}/tags/#{tag_id}.rss"
 
-    query = TopicQuery.new(current_user, {tags: [tag_id]})
+    query = TopicQuery.new(current_user, tags: [tag_id])
     latest_results = query.latest_results
     @topic_list = query.create_list(:by_tag, {}, latest_results)
 
@@ -129,15 +129,13 @@ class TagsController < ::ApplicationController
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
       Tag.tags_by_count_query(params.slice(:limit)),
       guardian,
-      {
-        for_input: params[:filterForInput],
-        term: params[:q],
-        category: category,
-        selected_tags: params[:selected_tags]
-      }
+      for_input: params[:filterForInput],
+      term: params[:q],
+      category: category,
+      selected_tags: params[:selected_tags]
     )
 
-    tags = tags_with_counts.count(Tag::COUNT_ARG).map {|t, c| { id: t, text: t, count: c } }
+    tags = tags_with_counts.count(Tag::COUNT_ARG).map { |t, c| { id: t, text: t, count: c } }
 
     json_response = { results: tags }
 
@@ -161,7 +159,7 @@ class TagsController < ::ApplicationController
     raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
-    render json: {notification_level: level}
+    render json: { notification_level: level }
   end
 
   def check_hashtag
@@ -180,12 +178,12 @@ class TagsController < ::ApplicationController
       raise Discourse::NotFound unless SiteSetting.tagging_enabled?
     end
 
-    def self.tags_by_count(guardian, opts={})
+    def self.tags_by_count(guardian, opts = {})
       guardian.filter_allowed_categories(Tag.tags_by_count_query(opts))
     end
 
     def self.tag_counts_json(tag_counts)
-      tag_counts.map {|t, c| { id: t, text: t, count: c } }
+      tag_counts.map { |t, c| { id: t, text: t, count: c } }
     end
 
     def set_category_from_params
@@ -201,13 +199,13 @@ class TagsController < ::ApplicationController
         parent_category_id = nil
         if parent_slug_or_id.present?
           parent_category_id = Category.query_parent_category(parent_slug_or_id)
-          category_redirect_or_not_found and return if parent_category_id.blank?
+          category_redirect_or_not_found && (return) if parent_category_id.blank?
         end
 
         @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
       end
 
-      category_redirect_or_not_found and return if !@filter_on_category
+      category_redirect_or_not_found && (return) if !@filter_on_category
 
       guardian.ensure_can_see!(@filter_on_category)
     end
@@ -236,7 +234,7 @@ class TagsController < ::ApplicationController
       end
     end
 
-    def url_method(opts={})
+    def url_method(opts = {})
       if opts[:parent_category] && opts[:category]
         "tag_parent_category_category_#{action_name}_path"
       elsif opts[:category]
@@ -254,7 +252,7 @@ class TagsController < ::ApplicationController
       else # :next
         public_send(method, opts.merge(next_page_params(opts)))
       end
-      url.sub('.json?','?')
+      url.sub('.json?', '?')
     end
 
     def build_topic_list_options

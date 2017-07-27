@@ -11,11 +11,11 @@ module BackupRestore
   METADATA_FILE = "meta.json"
   LOGS_CHANNEL = "/admin/backups/logs"
 
-  def self.backup!(user_id, opts={})
+  def self.backup!(user_id, opts = {})
     start! BackupRestore::Backuper.new(user_id, opts)
   end
 
-  def self.restore!(user_id, opts={})
+  def self.restore!(user_id, opts = {})
     start! BackupRestore::Restorer.new(user_id, opts)
   end
 

@@ -9,7 +9,7 @@ ColumnDropper.drop(
   table: 'groups',
   after_migration: 'AddVisibleBackToGroups',
   columns:  %w[visible],
-  on_drop: ->(){
+  on_drop: ->() {
     STDERR.puts 'Removing superflous visible group column!'
   }
 )

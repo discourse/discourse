@@ -14,7 +14,7 @@ class Admin::SiteTextsController < Admin::AdminController
     query = params[:q] || ""
     if query.blank? && !overridden
       extras[:recommended] = true
-      results = self.class.preferred_keys.map {|k| record_for(k) }
+      results = self.class.preferred_keys.map { |k| record_for(k) }
     else
       results = []
       translations = I18n.search(query, overridden: overridden)
@@ -69,14 +69,14 @@ class Admin::SiteTextsController < Admin::AdminController
 
   protected
 
-    def record_for(k, value=nil)
+    def record_for(k, value = nil)
       if k.ends_with?("_MF")
         ovr = TranslationOverride.where(translation_key: k).pluck(:value)
         value = ovr[0] if ovr.present?
       end
 
       value ||= I18n.t(k)
-      {id: k, value: value}
+      { id: k, value: value }
     end
 
     def find_site_text

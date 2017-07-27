@@ -7,7 +7,6 @@ class Promotion
     @user = user
   end
 
-
   # Review a user for a promotion. Delegates work to a review_#{trust_level} method.
   # Returns true if the user was promoted, false otherwise.
   def review
@@ -16,7 +15,6 @@ class Promotion
 
     # Promotion beyond basic requires some expensive queries, so don't do that here.
     return false if @user.trust_level >= TrustLevel[2]
-
 
     review_method = :"review_tl#{@user.trust_level}"
     return send(review_method) if respond_to?(review_method)
@@ -43,7 +41,7 @@ class Promotion
     new_level = level
 
     if new_level < old_level && !@user.trust_level_locked
-      next_up = new_level+1
+      next_up = new_level + 1
       key = "tl#{next_up}_met?"
       if self.class.respond_to?(key) && self.class.send(key, @user)
         raise Discourse::InvalidAccess.new, I18n.t('trust_levels.change_failed_explanation',
@@ -62,10 +60,10 @@ class Promotion
       if admin
         StaffActionLogger.new(admin).log_trust_level_change(@user, old_level, new_level)
       else
-        UserHistory.create!( action: UserHistory.actions[:auto_trust_level_change],
-                             target_user_id: @user.id,
-                             previous_value: old_level,
-                             new_value: new_level)
+        UserHistory.create!(action: UserHistory.actions[:auto_trust_level_change],
+                            target_user_id: @user.id,
+                            previous_value: old_level,
+                            new_value: new_level)
       end
       @user.save!
       @user.user_profile.recook_bio
@@ -76,7 +74,6 @@ class Promotion
 
     true
   end
-
 
   def self.tl2_met?(user)
     stat = user.user_stat

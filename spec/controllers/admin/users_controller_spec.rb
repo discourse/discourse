@@ -543,7 +543,6 @@ describe Admin::UsersController do
 
   end
 
-
   context '#sync_sso' do
     let(:sso) { SingleSignOn.new }
     let(:sso_secret) { "sso secret" }
@@ -560,7 +559,6 @@ describe Admin::UsersController do
       sso.sso_secret = sso_secret
     end
 
-
     it 'can sync up with the sso' do
       sso.name = "Bob The Bob"
       sso.username = "bob"
@@ -568,7 +566,7 @@ describe Admin::UsersController do
       sso.external_id = "1"
 
       user = DiscourseSingleSignOn.parse(sso.payload)
-                                  .lookup_or_create_user
+        .lookup_or_create_user
 
       sso.name = "Bill"
       sso.username = "Hokli$$!!"

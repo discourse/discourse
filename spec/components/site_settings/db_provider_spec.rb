@@ -22,7 +22,6 @@ describe SiteSettings::DbProvider do
     expect(provider.all.length).to eq(0)
     expect(provider.find("test")).to eq(nil)
 
-
     provider.save("test", "one", 1)
     found = provider.find("test")
 
@@ -35,7 +34,7 @@ describe SiteSettings::DbProvider do
 
     provider.save("test2", "three", 3)
 
-    all = provider.all.sort{|a,b| a.name <=> b.name}
+    all = provider.all.sort { |a, b| a.name <=> b.name }
 
     expect_same_setting(all[0], setting.new("test", "two", 2))
     expect_same_setting(all[1], setting.new("test2", "three", 3))

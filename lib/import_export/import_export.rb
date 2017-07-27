@@ -6,7 +6,7 @@ require "json"
 
 module ImportExport
 
-  def self.export_category(category_id, filename=nil)
+  def self.export_category(category_id, filename = nil)
     ImportExport::CategoryExporter.new(category_id).perform.save_to_file(filename)
   end
 

@@ -52,8 +52,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   def register_middleware(omniauth)
     omniauth.provider :facebook,
-           :setup => lambda { |env|
-              strategy = env["omniauth.strategy"]
+           setup: lambda { |env|
+             strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.facebook_app_id
               strategy.options[:client_secret] = SiteSetting.facebook_app_secret
               strategy.options[:info_fields] = 'gender,email,name,about,first_name,link,last_name,website,location'
@@ -61,7 +61,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
                 strategy.options[:scope] = 'email,user_about_me,user_location,user_website'
               end
            },
-           :scope => "email"
+           scope: "email"
   end
 
   protected

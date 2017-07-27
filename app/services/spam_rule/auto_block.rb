@@ -21,17 +21,17 @@ class SpamRule::AutoBlock
     return false if @user.staged?
     return false if @user.has_trust_level?(TrustLevel[1])
 
-    if SiteSetting.num_spam_flags_to_block_new_user > 0 and
-        SiteSetting.num_users_to_block_new_user > 0 and
-        num_spam_flags_against_user >= SiteSetting.num_spam_flags_to_block_new_user and
-        num_users_who_flagged_spam_against_user >= SiteSetting.num_users_to_block_new_user
+    if SiteSetting.num_spam_flags_to_block_new_user > (0) &&
+        SiteSetting.num_users_to_block_new_user > (0) &&
+        num_spam_flags_against_user >= (SiteSetting.num_spam_flags_to_block_new_user) &&
+        num_users_who_flagged_spam_against_user >= (SiteSetting.num_users_to_block_new_user)
       return true
     end
 
-    if SiteSetting.num_tl3_flags_to_block_new_user > 0 and
-        SiteSetting.num_tl3_users_to_block_new_user > 0 and
-        num_tl3_flags_against_user >= SiteSetting.num_tl3_flags_to_block_new_user and
-        num_tl3_users_who_flagged >= SiteSetting.num_tl3_users_to_block_new_user
+    if SiteSetting.num_tl3_flags_to_block_new_user > (0) &&
+        SiteSetting.num_tl3_users_to_block_new_user > (0) &&
+        num_tl3_flags_against_user >= (SiteSetting.num_tl3_flags_to_block_new_user) &&
+        num_tl3_users_who_flagged >= (SiteSetting.num_tl3_users_to_block_new_user)
       return true
     end
 
@@ -66,14 +66,14 @@ class SpamRule::AutoBlock
 
   def flagged_post_ids
     Post.where(user_id: @user.id)
-        .where('spam_count > ? OR off_topic_count > ? OR inappropriate_count > ?', 0, 0, 0)
-        .pluck(:id)
+      .where('spam_count > ? OR off_topic_count > ? OR inappropriate_count > ?', 0, 0, 0)
+      .pluck(:id)
   end
 
   def block_user
     Post.transaction do
       if UserBlocker.block(@user, Discourse.system_user, message: :too_many_spam_flags) && SiteSetting.notify_mods_when_user_blocked
-        GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
+        GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, user: @user, limit_once_per: false)
       end
     end
   end

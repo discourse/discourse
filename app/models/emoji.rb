@@ -78,7 +78,7 @@ class Emoji
   end
 
   def self.load_standard
-    db['emojis'].map {|e| Emoji.create_from_db_item(e) }
+    db['emojis'].map { |e| Emoji.create_from_db_item(e) }
   end
 
   def self.load_custom
@@ -135,7 +135,7 @@ class Emoji
       if is_tonable_emojis.include?(name)
         fitzpatrick_scales.each_with_index do |scale, index|
           toned_code = code.codepoints.insert(1, scale).pack("U*".freeze)
-          @unicode_replacements[toned_code] = "#{name}:t#{index+2}"
+          @unicode_replacements[toned_code] = "#{name}:t#{index + 2}"
         end
       end
     end
@@ -180,7 +180,7 @@ class Emoji
         if is_tonable_emojis.include?(e['name'])
           FITZPATRICK_SCALE.each_with_index do |scale, index|
             toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
-            map["#{e['name']}:t#{index+2}"] = toned_code
+            map["#{e['name']}:t#{index + 2}"] = toned_code
           end
         end
       end

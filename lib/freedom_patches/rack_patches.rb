@@ -4,7 +4,7 @@ class Rack::ETag
   private
 
    def digest_body(body)
-    parts = []
+     parts = []
     has_body = false
 
     body.each do |part|
@@ -28,15 +28,15 @@ end
 class Rack::ConditionalGet
   private
    def to_rfc2822(since)
-    # shortest possible valid date is the obsolete: 1 Nov 97 09:55 A
-    # anything shorter is invalid, this avoids exceptions for common cases
-    # most common being the empty string
-    if since && since.length >= 16
-      # NOTE: there is no trivial way to write this in a non execption way
-      #   _rfc2822 returns a hash but is not that usable
-      Time.rfc2822(since) rescue nil
-    else
-      nil
-    end
+     # shortest possible valid date is the obsolete: 1 Nov 97 09:55 A
+     # anything shorter is invalid, this avoids exceptions for common cases
+     # most common being the empty string
+     if since && since.length >= 16
+       # NOTE: there is no trivial way to write this in a non execption way
+       #   _rfc2822 returns a hash but is not that usable
+       Time.rfc2822(since) rescue nil
+     else
+       nil
+     end
   end
 end

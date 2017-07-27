@@ -21,4 +21,3 @@ module TopicListResponder
   end
 
 end
-

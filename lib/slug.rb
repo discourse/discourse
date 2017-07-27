@@ -5,11 +5,12 @@ module Slug
   CHAR_FILTER_REGEXP = /[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/ # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
 
   def self.for(string, default = 'topic')
-    slug = case (SiteSetting.slug_generation_method || :ascii).to_sym
-           when :ascii then self.ascii_generator(string)
-           when :encoded then self.encoded_generator(string)
-           when :none then self.none_generator(string)
-           end
+    slug =
+      case (SiteSetting.slug_generation_method || :ascii).to_sym
+      when :ascii then self.ascii_generator(string)
+      when :encoded then self.encoded_generator(string)
+      when :none then self.none_generator(string)
+      end
     # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
     slug = (slug =~ /[^\d]/ ? slug : '')
     slug.blank? ? default : slug
@@ -23,8 +24,8 @@ module Slug
 
   def self.ascii_generator(string)
     string.tr("'", "")
-          .parameterize
-          .tr("_", "-")
+      .parameterize
+      .tr("_", "-")
   end
 
   def self.encoded_generator(string)
@@ -32,10 +33,10 @@ module Slug
     # including reserved characters from RFC3986.
     # See also URI::REGEXP::PATTERN.
     string.strip
-          .gsub(/\s+/, '-')
-          .gsub(CHAR_FILTER_REGEXP, '')
-          .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
-          .squeeze('-') # squeeze continuous dashes to prettify slug
+      .gsub(/\s+/, '-')
+      .gsub(CHAR_FILTER_REGEXP, '')
+      .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
+      .squeeze('-') # squeeze continuous dashes to prettify slug
   end
 
   def self.none_generator(string)

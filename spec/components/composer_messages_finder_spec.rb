@@ -127,7 +127,7 @@ describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users who have been notified already" do
-      UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: user.id )
+      UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: user.id)
       expect(finder.check_avatar_notification).to be_blank
     end
 
@@ -179,12 +179,12 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify a user it has already notified about sequential replies" do
-        UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id )
+        UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id)
         expect(finder.check_sequential_replies).to be_blank
       end
 
       it "will notify you if it hasn't in the current topic" do
-        UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id+1 )
+        UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id + 1)
         expect(finder.check_sequential_replies).to be_present
       end
 
@@ -259,12 +259,12 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify a user it has already notified in this topic" do
-        UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id, target_user_id: user.id )
+        UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id, target_user_id: user.id)
         expect(finder.check_dominating_topic).to be_blank
       end
 
       it "notifies a user if the topic is different" do
-        UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id+1, target_user_id: user.id )
+        UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id + 1, target_user_id: user.id)
         expect(finder.check_dominating_topic).to be_present
       end
 
@@ -359,7 +359,7 @@ describe ComposerMessagesFinder do
         UserHistory.create!(
           action: UserHistory.actions[:notified_about_get_a_room],
           target_user_id: user.id,
-          topic_id: topic.id+1
+          topic_id: topic.id + 1
         )
         expect(finder.check_get_a_room(min_users_posted: 2)).to be_present
       end
@@ -419,7 +419,6 @@ describe ComposerMessagesFinder do
     end
 
   end
-
 
   context '.check_reviving_old_topic' do
     let(:user)  { Fabricate(:user) }

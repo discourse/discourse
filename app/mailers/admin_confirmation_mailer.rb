@@ -12,4 +12,3 @@ class AdminConfirmationMailer < ActionMailer::Base
     )
   end
 end
-

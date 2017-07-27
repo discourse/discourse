@@ -45,19 +45,19 @@ class Mapping
   attr_accessor :swap
   attr_accessor :pss
 
-  def initialize( lines )
+  def initialize(lines)
 
     FIELDS.each do |field|
       self.send("#{field}=", 0)
     end
 
-    parse_first_line( lines.shift )
+    parse_first_line(lines.shift)
     lines.each do |l|
       parse_field_line(l)
     end
   end
 
-  def parse_first_line( line )
+  def parse_first_line(line)
     parts = line.strip.split
     @address_start, @address_end = parts[0].split("-")
     @perms = parts[1]
@@ -67,26 +67,26 @@ class Mapping
     @region = parts[5] || "anonymous"
   end
 
-  def parse_field_line( line )
+  def parse_field_line(line)
     parts = line.strip.split
-    field = parts[0].downcase.sub(':','')
+    field = parts[0].downcase.sub(':', '')
     if respond_to? "#{field}="
       value = Float(parts[1]).to_i
-      self.send( "#{field}=", value )
+      self.send("#{field}=", value)
     end
   end
 end
 
-def consume_mapping( map_lines, totals )
-  m = Mapping.new( map_lines )
+def consume_mapping(map_lines, totals)
+  m = Mapping.new(map_lines)
 
   Mapping::FIELDS.each do |field|
-    totals[field] += m.send( field )
+    totals[field] += m.send(field)
   end
   return m
 end
 
-def create_memstats_not_available( totals )
+def create_memstats_not_available(totals)
   Mapping::FIELDS.each do |field|
     totals[field] += Float::NAN
   end
@@ -98,7 +98,7 @@ totals = Hash.new(0)
 mappings = []
 
 begin
-  File.open( "/proc/#{pid}/smaps" ) do |smaps|
+  File.open("/proc/#{pid}/smaps") do |smaps|
 
     map_lines = []
 
@@ -110,7 +110,7 @@ begin
         map_lines << line
       when /[0-9a-f]+:[0-9a-f]+\s+/
         if map_lines.size > 0 then
-          mappings << consume_mapping( map_lines, totals )
+          mappings << consume_mapping(map_lines, totals)
         end
         map_lines.clear
         map_lines << line
@@ -120,16 +120,16 @@ begin
     end
   end
 rescue
-  create_memstats_not_available( totals )
+  create_memstats_not_available(totals)
 end
 
 # http://rubyforge.org/snippet/download.php?type=snippet&id=511
-def format_number( n )
-  n.to_s.gsub(/(\d)(?=\d{3}+(?:\.|$))(\d{3}\..*)?/,'\1,\2')
+def format_number(n)
+  n.to_s.gsub(/(\d)(?=\d{3}+(?:\.|$))(\d{3}\..*)?/, '\1,\2')
 end
 
-def get_commandline( pid )
-  commandline = IO.read( "/proc/#{pid}/cmdline" ).split("\0")
+def get_commandline(pid)
+  commandline = IO.read("/proc/#{pid}/cmdline").split("\0")
   if commandline.first =~ /java$/ then
     loop { break if commandline.shift == "-jar" }
     return "[java] #{commandline.shift}"
@@ -139,7 +139,7 @@ end
 
 if ARGV.include? '--yaml'
   require 'yaml'
-  puts Hash[*totals.map do |k,v|
+  puts Hash[*totals.map do |k, v|
     [k + '_kb', v]
   end.flatten].to_yaml
 else
@@ -147,8 +147,6 @@ else
   puts "#{"Command Line:".ljust(20)} #{get_commandline(pid)}"
   puts "Memory Summary:"
   totals.keys.sort.each do |k|
-    puts "  #{k.ljust(20)} #{format_number( totals[k] ).rjust(12)} kB"
+    puts "  #{k.ljust(20)} #{format_number(totals[k]).rjust(12)} kB"
   end
 end
-
-

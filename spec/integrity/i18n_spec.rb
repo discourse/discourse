@@ -36,7 +36,6 @@ def is_yaml_compatible?(english, translated)
   true
 end
 
-
 describe "i18n integrity checks" do
 
   it 'has an i18n key for each Trust Levels' do

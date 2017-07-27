@@ -10,8 +10,6 @@
 # that was done using import_scripts/support/convert_mysql_xml_to_mysql.rb
 #
 
-
-
 require 'mysql2'
 require 'csv'
 require 'reverse_markdown'
@@ -19,7 +17,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
 
 # remove table conversion
-[:table,:td,:tr,:th,:thead,:tbody].each do |tag|
+[:table, :td, :tr, :th, :thead, :tbody].each do |tag|
   ReverseMarkdown::Converters.unregister(tag)
 end
 
@@ -101,7 +99,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       break if users.size < 1
 
-      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
+      next if all_records_exist? :users, users.map { |u| u["id"].to_i }
 
       create_users(users, total: user_count, offset: offset) do |user|
 
@@ -123,7 +121,7 @@ class ImportScripts::Lithium < ImportScripts::Base
   end
 
   def unix_time(t)
-    Time.at(t/1000.0)
+    Time.at(t / 1000.0)
   end
 
   def import_profile_picture(old_user, imported_user)
@@ -191,7 +189,6 @@ class ImportScripts::Lithium < ImportScripts::Base
     top_level_ids = Set.new
     child_ids = Set.new
 
-
     parent = nil
     CSV.foreach(CATEGORY_CSV) do |row|
       display_id = row[2].strip
@@ -216,7 +213,6 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     top_level_categories = categories.select { |c| top_level_ids.include? c["display_id"] }
 
-
     create_categories(top_level_categories) do |category|
       info = category_info[category["display_id"]]
       info[:id] = category["node_id"]
@@ -227,7 +223,6 @@ class ImportScripts::Lithium < ImportScripts::Base
         position: category["position"]
       }
     end
-
 
     puts "", "importing children categories..."
 
@@ -246,7 +241,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     end
 
     puts "", "securing categories"
-    category_info.each do |_,info|
+    category_info.each do |_, info|
       if info[:secure]
         id = category_id_from_imported_category_id(info[:id])
         if id
@@ -278,7 +273,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       break if topics.size < 1
 
-      next if all_records_exist? :posts, topics.map {|topic| "#{topic["node_id"]} #{topic["id"]}"}
+      next if all_records_exist? :posts, topics.map { |topic| "#{topic["node_id"]} #{topic["id"]}" }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
@@ -295,7 +290,7 @@ class ImportScripts::Lithium < ImportScripts::Base
             raw: raw,
             created_at: unix_time(topic["post_date"]),
             views: topic["views"],
-            custom_fields: {import_unique_id: topic["unique_id"]},
+            custom_fields: { import_unique_id: topic["unique_id"] },
             import_mode: true
           }
         else
@@ -326,7 +321,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       break if posts.size < 1
 
-      next if all_records_exist? :posts, posts.map {|post| "#{post["node_id"]} #{post["root_id"]} #{post["id"]}"}
+      next if all_records_exist? :posts, posts.map { |post| "#{post["node_id"]} #{post["root_id"]} #{post["id"]}" }
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         raw = post["raw"]
@@ -340,7 +335,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           topic_id: topic[:topic_id],
           raw: raw,
           created_at: unix_time(post["post_date"]),
-          custom_fields: {import_unique_id: post["unique_id"]},
+          custom_fields: { import_unique_id: post["unique_id"] },
           import_mode: true
         }
 
@@ -365,7 +360,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     "smileysurprised" => "dizzy_face",
     "smileytongue" => "stuck_out_tongue",
     "smileyvery-happy" => "grin",
-    "smileywink"  => "wink",
+    "smileywink" => "wink",
     "smileyfrustrated" => "confounded",
     "smileyembarrassed" => "flushed",
     "smileylol" => "laughing",
@@ -382,7 +377,6 @@ class ImportScripts::Lithium < ImportScripts::Base
     "catlol" => "joy_cat"
   }
 
-
   def import_likes
     puts "\nimporting likes..."
 
@@ -394,8 +388,6 @@ class ImportScripts::Lithium < ImportScripts::Base
     PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
       existing_map[import_id] = post_id
     end
-
-
 
     puts "loading data into temp table"
     PostAction.exec_sql("create temp table like_data(user_id int, post_id int, created_at timestamp without time zone)")
@@ -435,7 +427,6 @@ class ImportScripts::Lithium < ImportScripts::Base
 
              WHERE ua.id IS NULL AND pa.post_action_type_id = 2
     SQL
-
 
     # reverse action
     UserAction.exec_sql <<-SQL
@@ -490,7 +481,6 @@ class ImportScripts::Lithium < ImportScripts::Base
       existing_map[import_id] = post_id
     end
 
-
     puts "loading data into temp table"
     PostAction.exec_sql("create temp table accepted_data(post_id int primary key)")
     PostAction.transaction do
@@ -506,7 +496,6 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       end
     end
-
 
     puts "deleting dupe answers"
     PostAction.exec_sql <<-SQL
@@ -553,7 +542,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     users = {}
 
-    [inbox,outbox].each do |r|
+    [inbox, outbox].each do |r|
       r.each do |row|
         ary = (users[row["note_id"]] ||= Set.new)
         user_id = user_id_from_imported_user_id(row["user_id"])
@@ -567,7 +556,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     subject_to_first_note = {}
 
     mysql_query("SELECT note_id, subject, sender_user_id FROM tblia_notes_content order by note_id").each do |row|
-        user_id = user_id_from_imported_user_id(row["sender_user_id"])
+      user_id = user_id_from_imported_user_id(row["sender_user_id"])
         ary = (users[row["note_id"]] ||= Set.new)
         if user_id
           ary << user_id
@@ -581,7 +570,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     puts "Loading user_id to username map"
     user_map = {}
-    User.pluck(:id, :username).each do |id,username|
+    User.pluck(:id, :username).each do |id, username|
       user_map[id] = username
     end
 
@@ -596,17 +585,16 @@ class ImportScripts::Lithium < ImportScripts::Base
           OFFSET #{offset}
       SQL
 
-
       break if topics.size < 1
 
-      next if all_records_exist? :posts, topics.map {|topic| "pm_#{topic["note_id"]}"}
+      next if all_records_exist? :posts, topics.map { |topic| "pm_#{topic["note_id"]}" }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
         user_id = user_id_from_imported_user_id(topic["sender_user_id"]) || Discourse::SYSTEM_USER_ID
         participants = users[topic["note_id"]]
 
-        usernames = (participants - [user_id]).map{|id| user_map[id]}
+        usernames = (participants - [user_id]).map { |id| user_map[id] }
 
         subject = topic["subject"]
         topic_id = nil
@@ -646,7 +634,6 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def close_topics
 
-
     puts "\nclosing closed topics..."
 
     sql = "select unique_id post_id from message2 where root_id = id AND (attributes & 0x0002 ) != 0;"
@@ -658,8 +645,8 @@ class ImportScripts::Lithium < ImportScripts::Base
       existing_map[import_id.to_i] = post_id.to_i
     end
 
-    results.map{|r| r["post_id"]}.each_slice(500) do |ids|
-      mapped = ids.map{|id| existing_map[id]}.compact
+    results.map { |r| r["post_id"] }.each_slice(500) do |ids|
+      mapped = ids.map { |id| existing_map[id] }.compact
       Topic.exec_sql("
                      UPDATE topics SET closed = true
                      WHERE id IN (SELECT topic_id FROM posts where id in (:ids))
@@ -667,7 +654,6 @@ class ImportScripts::Lithium < ImportScripts::Base
     end
 
   end
-
 
   def create_permalinks
     puts "Creating permalinks"
@@ -739,7 +725,6 @@ SQL
   def post_process_posts
     puts "", "Postprocessing posts..."
 
-
     current = 0
     max = Post.count
 
@@ -765,7 +750,6 @@ SQL
       end
     end
   end
-
 
   def postprocess_post_raw(raw, user_id)
 
@@ -827,7 +811,7 @@ SQL
       ":#{SMILEY_SUBS[$1] || $1}:"
     end
     # nbsp central
-    raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/,"\\1 \\2")
+    raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/, "\\1 \\2")
     raw
   end
 

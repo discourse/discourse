@@ -5,7 +5,7 @@ class SocialcastApi
 
   attr_accessor :domain, :username, :password
 
-  def initialize domain, username, password
+  def initialize(domain, username, password)
     @domain = domain
     @username = username
     @password = password
@@ -17,22 +17,22 @@ class SocialcastApi
 
   def headers
     encoded = Base64.encode64 "#{@username}:#{@password}"
-    {:Authorization => "Basic #{encoded.strip!}", :Accept => "application/json"}
+    { Authorization: "Basic #{encoded.strip!}", Accept: "application/json" }
   end
 
-  def request url
-    JSON.parse(Excon.get(url, headers: headers)
+  def request(url)
+    JSON.parse(Excon.get(url, headers: headers))
   end
 
-  def list_users(opts={})
+  def list_users(opts = {})
     page = opts[:page] ? opts[:page] : 1
     response = request "#{base_url}/users?page=#{page}"
-    response['users'].sort {|u| u['id']}
+    response['users'].sort { |u| u['id'] }
   end
 
-  def list_messages(opts={})
+  def list_messages(opts = {})
     page = opts[:page] ? opts[:page] : 1
     response = request "#{base_url}/messages?page=#{page}"
-    response['messages'].sort {|m| m['id']}
+    response['messages'].sort { |m| m['id'] }
   end
 end

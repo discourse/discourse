@@ -82,7 +82,7 @@ class Wizard
         username = Discourse.system_user.username if username.blank?
         contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
 
-        User.where(admin: true).pluck(:username).each {|c| contact.add_choice(c) }
+        User.where(admin: true).pluck(:username).each { |c| contact.add_choice(c) }
 
         step.on_update do |updater|
           updater.apply_settings(:contact_email, :contact_url)
@@ -120,8 +120,8 @@ class Wizard
         themes = step.add_field(id: 'base_scheme_id', type: 'dropdown', required: true, value: scheme_id)
         ColorScheme.base_color_scheme_colors.each do |t|
           with_hash = t[:colors].dup
-          with_hash.map{|k,v| with_hash[k] = "##{v}"}
-          themes.add_choice(t[:id], data: {colors: with_hash})
+          with_hash.map { |k, v| with_hash[k] = "##{v}" }
+          themes.add_choice(t[:id], data: { colors: with_hash })
         end
         step.add_field(id: 'theme_preview', type: 'component')
 
@@ -187,12 +187,10 @@ class Wizard
       end
 
       @wizard.append_step('emoji') do |step|
-        sets = step.add_field({
-          id: 'emoji_set',
-          type: 'radio',
-          required: true,
-          value: SiteSetting.emoji_set
-        })
+        sets = step.add_field(id: 'emoji_set',
+                              type: 'radio',
+                              required: true,
+                              value: SiteSetting.emoji_set)
 
         emoji = ["smile", "+1", "tada", "poop"]
 
@@ -201,10 +199,8 @@ class Wizard
             "<img src='/images/emoji/#{set[:value]}/#{e}.png'>"
           end
 
-          sets.add_choice(set[:value], {
-            label: I18n.t("js.#{set[:name]}"),
-            extra_label: "<span class='emoji-preview'>#{imgs.join}</span>"
-          })
+          sets.add_choice(set[:value],             label: I18n.t("js.#{set[:name]}"),
+                                                   extra_label: "<span class='emoji-preview'>#{imgs.join}</span>")
 
           step.on_update do |updater|
             updater.apply_settings(:emoji_set)

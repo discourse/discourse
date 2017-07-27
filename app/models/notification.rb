@@ -8,9 +8,9 @@ class Notification < ActiveRecord::Base
   validates_presence_of :notification_type
 
   scope :unread, lambda { where(read: false) }
-  scope :recent, lambda { |n=nil| n ||= 10; order('notifications.created_at desc').limit(n) }
+  scope :recent, lambda { |n = nil| n ||= 10; order('notifications.created_at desc').limit(n) }
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
-                            .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
+    .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
   attr_accessor :skip_send_email
 
@@ -76,20 +76,20 @@ class Notification < ActiveRecord::Base
 
   def self.read(user, notification_ids)
     count = Notification.where(user_id: user.id)
-                        .where(id: notification_ids)
-                        .where(read: false)
-                        .update_all(read: true)
+      .where(id: notification_ids)
+      .where(read: false)
+      .update_all(read: true)
 
     user.publish_notifications_state if count > 0
   end
 
   def self.interesting_after(min_date)
-    result =  where("created_at > ?", min_date)
-              .includes(:topic)
-              .visible
-              .unread
-              .limit(20)
-              .order("CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
+    result = where("created_at > ?", min_date)
+      .includes(:topic)
+      .visible
+      .unread
+      .limit(20)
+      .order("CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
                            WHEN notification_type = #{Notification.types[:mentioned]} THEN 2
                            ELSE 3
                       END, created_at DESC").to_a
@@ -107,7 +107,7 @@ class Notification < ActiveRecord::Base
           seen[r.notification_type] << r.topic_id
         end
       end
-      result.reject! {|r| to_remove.include?(r.id) }
+      result.reject! { |r| to_remove.include?(r.id) }
     end
 
     result
@@ -145,9 +145,9 @@ class Notification < ActiveRecord::Base
 
     count ||= 10
     notifications = user.notifications
-                        .visible
-                        .recent(count)
-                        .includes(:topic)
+      .visible
+      .recent(count)
+      .includes(:topic)
 
     if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
       notifications = notifications.where('notification_type <> ?', Notification.types[:liked])
@@ -165,7 +165,7 @@ class Notification < ActiveRecord::Base
            NOT read
         ORDER BY n.id ASC
         LIMIT #{count.to_i}
-      ").values.map do |x,_|
+      ").values.map do |x, _|
         x.to_i
       end
 
@@ -178,7 +178,7 @@ class Notification < ActiveRecord::Base
           .limit(count)
       end
 
-      notifications.uniq(&:id).sort do |x,y|
+      notifications.uniq(&:id).sort do |x, y|
         if x.unread_pm? && !y.unread_pm?
           -1
         elsif y.unread_pm? && !x.unread_pm?
