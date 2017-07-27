@@ -209,6 +209,17 @@ module Discourse
       if plugins = Discourse.plugins
         plugins.each{|plugin| plugin.notify_after_initialize}
       end
+
+      # This nasty hack is required for not precompiling QUnit assets
+      # in test mode. see: https://github.com/rails/sprockets-rails/issues/299#issuecomment-167701012
+      ActiveSupport.on_load(:action_view) do
+        default_checker = ActionView::Base.precompiled_asset_checker
+
+        ActionView::Base.precompiled_asset_checker = -> logical_path do
+          default_checker[logical_path] ||
+            %w{qunit.js qunit.css test_helper.css test_helper.js wizard/test/test_helper.js}.include?(logical_path)
+        end
+      end
     end
 
     if ENV['RBTRACE'] == "1"
