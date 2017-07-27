@@ -114,11 +114,26 @@ describe PrettyText do
       end
     end
 
+    it "can handle inline block bbcode" do
+      cooked = PrettyText.cook("[quote]te **s** t[/quote]")
+
+      html = <<~HTML
+        <aside class="quote">
+        <blockquote>
+        <p>te <strong>s</strong> t</p>
+        </blockquote>
+        </aside>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
     it "can handle quote edge cases" do
+      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
+      expect(PrettyText.cook("[quote]  \ntest\n[/quote]  ")).to include('aside')
       expect(PrettyText.cook("a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
       expect(PrettyText.cook("- a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
       expect(PrettyText.cook("[quote]\ntest")).not_to include('aside')
-      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
       expect(PrettyText.cook("[quote]\ntest\n[/quote]z")).not_to include('aside')
 
       nested = <<~QUOTE
@@ -987,10 +1002,12 @@ HTML
       MD
 
       html = <<~HTML
-        <p><img src="http://png.com/my.png" alt width="110" height="50">
-        <img src="http://png.com/my.png" alt width="110" height="50">
+        <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"></p>
       HTML
+
+      expect(cooked).to eq(html.strip)
     end
 
   end
