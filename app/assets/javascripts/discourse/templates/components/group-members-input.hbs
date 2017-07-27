@@ -17,10 +17,12 @@
   <div class="group-members-input-selector">
     {{user-selector usernames=model.usernames}}
 
-    {{d-button action="addMembers"
-        class="add"
-        icon="plus"
-        disabled=disableAddButton
-        label="groups.edit.add_members"}}
+    {{#if addButton}}
+      {{d-button action="addMembers"
+          class="add"
+          icon="plus"
+          disabled=disableAddButton
+          label="groups.edit.add_members"}}
+    {{/if}}
   </div>
 {{/unless}}

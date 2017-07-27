@@ -47,6 +47,13 @@ describe Group do
       expect(group.valid?).to eq false
     end
 
+    it 'strips trailing and leading spaces' do
+      group.name = '  dragon  '
+
+      expect(group.save).to eq(true)
+      expect(group.reload.name).to eq('dragon')
+    end
+
     it "is invalid for case-insensitive existing names" do
       build(:group, name: 'this_is_a_name').save
       group.name = 'This_Is_A_Name'
@@ -79,6 +86,22 @@ describe Group do
     end
 
     context 'when a group has no owners' do
+      describe 'group has not been persisted' do
+        it 'should not allow membership requests' do
+          group = Fabricate.build(:group, allow_membership_requests: true)
+
+          expect(group.valid?).to eq(false)
+
+          expect(group.errors.full_messages).to include(I18n.t(
+            "groups.errors.cant_allow_membership_requests"
+          ))
+
+          group.group_users.build(user_id: user.id, owner: true)
+
+          expect(group.valid?).to eq(true)
+        end
+      end
+
       it 'should not allow membership requests' do
         group.allow_membership_requests = true
 
@@ -531,6 +554,14 @@ describe Group do
       expect(Group.search_group('es')).to eq([group])
       expect(Group.search_group('ES')).to eq([group])
       expect(Group.search_group('test2')).to eq([])
+    end
+  end
+
+  describe '#bulk_add' do
+    it 'should be able to add multiple users' do
+      group.bulk_add([user.id, admin.id])
+
+      expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
     end
   end
 end
