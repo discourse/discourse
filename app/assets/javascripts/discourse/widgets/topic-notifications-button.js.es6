@@ -43,7 +43,7 @@ export default createWidget('topic-notifications-button', {
     const details = buttonDetails(level);
 
     const button = {
-      className: `btn`,
+      className: `btn toggle-notification-options`,
       label: null,
       icon: details.icon,
       action: 'toggleDropdown',
@@ -53,7 +53,7 @@ export default createWidget('topic-notifications-button', {
     if (this.attrs.showFullTitle) {
       button.label = `topic.notifications.${details.key}.title`;
     } else {
-      button.className = 'btn notifications-dropdown';
+      button.className = 'btn toggle-notifications-options notifications-dropdown';
     }
 
     return this.attach('button', button);
