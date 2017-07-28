@@ -59,16 +59,28 @@ export default Ember.Component.extend({
   }.property('category'),
 
   badgeStyle: function() {
-    var category = this.get('category');
+    let category = this.get('category');
+
+    const categoryStyle = this.siteSettings.category_style;
+    if (categoryStyle === 'bullet') {
+      return;
+    }
 
     if (category) {
-      var color = get(category, 'color'),
-          textColor = get(category, 'text_color');
+      let color = get(category, 'color');
+      let textColor = get(category, 'text_color');
 
       if (color || textColor) {
-        var style = "";
-        if (color) { style += "background-color: #" + color + "; border-color: #" + color + ";"; }
-        if (textColor) { style += "color: #" + textColor + "; "; }
+        let style = "";
+        if (color) { 
+          if (categoryStyle === "bar") {
+            style += `border-color: #${color};`;
+          } else if (categoryStyle === "box") {
+            style += `background-color: #${color};`;
+            if (textColor) { style += "color: #" + textColor + "; "; }
+          }
+        }
+
         return style.htmlSafe();
       }
     }
