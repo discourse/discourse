@@ -51,7 +51,7 @@ class QueuedPost < ActiveRecord::Base
   end
 
   def create_options
-    opts = {raw: raw}
+    opts = { raw: raw }
     opts.merge!(post_options.symbolize_keys)
 
     opts[:cooking_options].symbolize_keys! if opts[:cooking_options]
@@ -102,7 +102,7 @@ class QueuedPost < ActiveRecord::Base
       end
 
       # Update the record in memory too, and clear the dirty flag
-      updates.each {|k, v| send("#{k}=", v) }
+      updates.each { |k, v| send("#{k}=", v) }
       changes_applied
 
       QueuedPost.broadcast_new! if visible?

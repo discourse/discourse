@@ -1,14 +1,14 @@
 class UserBlocker
 
-  def initialize(user, by_user=nil, opts={})
+  def initialize(user, by_user = nil, opts = {})
     @user, @by_user, @opts = user, by_user, opts
   end
 
-  def self.block(user, by_user=nil, opts={})
+  def self.block(user, by_user = nil, opts = {})
     UserBlocker.new(user, by_user, opts).block
   end
 
-  def self.unblock(user, by_user=nil, opts={})
+  def self.unblock(user, by_user = nil, opts = {})
     UserBlocker.new(user, by_user, opts).unblock
   end
 
@@ -20,7 +20,7 @@ class UserBlocker
         message_type = @opts[:message] || :blocked_by_staff
         post = SystemMessage.create(@user, message_type)
         if post && @by_user
-          StaffActionLogger.new(@by_user).log_block_user(@user, {context: "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"})
+          StaffActionLogger.new(@by_user).log_block_user(@user, context: "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}")
         end
       end
     else

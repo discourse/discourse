@@ -7,7 +7,7 @@ describe "CommonMark" do
     SiteSetting.traditional_markdown_linebreaks = true
     SiteSetting.enable_markdown_typographer = false
 
-    html,state,md = nil
+    html, state, md = nil
     failed = 0
 
     File.readlines(Rails.root + 'spec/fixtures/md/spec.txt').each do |line|
@@ -49,7 +49,7 @@ describe "CommonMark" do
           puts md
           puts
         end
-        html,state,md = nil
+        html, state, md = nil
         next
       end
 
@@ -65,7 +65,6 @@ describe "CommonMark" do
       if state == :html
         html = (html || String.new) << line
       end
-
 
     end
 

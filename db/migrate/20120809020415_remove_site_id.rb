@@ -9,7 +9,7 @@ class RemoveSiteId < ActiveRecord::Migration
 
     remove_index 'expression_types', name: 'index_expression_types_on_site_id_and_expression_index'
     remove_index 'expression_types', name: 'index_expression_types_on_site_id_and_name'
-    remove_column 'expression_types','site_id'
+    remove_column 'expression_types', 'site_id'
     add_index "expression_types", ["expression_index"], unique: true
     add_index "expression_types", ["name"], unique: true
 

@@ -11,7 +11,7 @@ class ChangeIpToInetInTopicLinkClicks < ActiveRecord::Migration
       (ip >>  0 & 255)
     );"
 
-    change_column :topic_link_clicks, :ip_address, :inet, { :null => false }
+    change_column :topic_link_clicks, :ip_address, :inet, null: false
     remove_column :topic_link_clicks, :ip
   end
 

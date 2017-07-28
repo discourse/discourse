@@ -38,11 +38,11 @@ describe User do
       Fabricate(:user, created_at: 2.days.ago)
       Fabricate(:user, created_at: 4.days.ago)
     end
-    let(:signups_by_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1} }
+    let(:signups_by_day) { { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 } }
 
     it 'collect closed interval signups' do
       expect(User.count_by_signup_date(2.days.ago, Time.now)).to include(signups_by_day)
-      expect(User.count_by_signup_date(2.days.ago, Time.now)).not_to include({4.days.ago.to_date => 1})
+      expect(User.count_by_signup_date(2.days.ago, Time.now)).not_to include(4.days.ago.to_date => 1)
     end
   end
 
@@ -105,7 +105,6 @@ describe User do
       end
     end
   end
-
 
   describe 'bookmark' do
     before do
@@ -283,7 +282,6 @@ describe User do
 
     end
 
-
   end
 
   describe 'staff and regular users' do
@@ -453,12 +451,12 @@ describe User do
     end
 
     it "should not allow saving if username is reused" do
-       @codinghorror.username = @user.username
+      @codinghorror.username = @user.username
        expect(@codinghorror.save).to eq(false)
     end
 
     it "should not allow saving if username is reused in different casing" do
-       @codinghorror.username = @user.username.upcase
+      @codinghorror.username = @user.username.upcase
        expect(@codinghorror.save).to eq(false)
     end
   end
@@ -782,7 +780,7 @@ describe User do
 
     context 'when user has no email tokens for some reason' do
       it 'should return false' do
-        user.email_tokens.each {|t| t.destroy}
+        user.email_tokens.each { |t| t.destroy }
         user.reload
         expect(user.email_confirmed?).to eq(true)
       end
@@ -877,8 +875,8 @@ describe User do
 
   describe "#new_user_posting_on_first_day?" do
 
-    def test_user?(opts={})
-      Fabricate.build(:user, {created_at: Time.zone.now}.merge(opts)).new_user_posting_on_first_day?
+    def test_user?(opts = {})
+      Fabricate.build(:user, { created_at: Time.zone.now }.merge(opts)).new_user_posting_on_first_day?
     end
 
     it "handles when user has never posted" do
@@ -1107,7 +1105,6 @@ describe User do
     end
   end
 
-
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
       SiteSetting.external_system_avatars_enabled = false
@@ -1140,7 +1137,7 @@ describe User do
       user.save
       user = User.find(user.id)
 
-      expect(user.custom_fields).to eq({"jack" => "jill"})
+      expect(user.custom_fields).to eq("jack" => "jill")
     end
   end
 

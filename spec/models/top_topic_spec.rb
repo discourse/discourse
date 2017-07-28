@@ -47,7 +47,7 @@ describe TopTopic do
     let(:coding_horror) { Fabricate(:coding_horror) }
 
     let!(:topic_1) { Fabricate(:topic, posts_count: 10, like_count: 28) }
-    let!(:t1_post_1) { Fabricate(:post, topic: topic_1, like_count: 28, post_number: 1)}
+    let!(:t1_post_1) { Fabricate(:post, topic: topic_1, like_count: 28, post_number: 1) }
 
     let!(:topic_2) { Fabricate(:topic, posts_count: 10, like_count: 20) }
     let!(:t2_post_1) { Fabricate(:post, topic: topic_2, like_count: 10, post_number: 1) }

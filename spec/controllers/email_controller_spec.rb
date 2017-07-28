@@ -30,9 +30,9 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(user, "all")
 
       user.user_option.update_columns(email_always: true,
-                                     email_digests: true,
-                                     email_direct: true,
-                                     email_private_messages: true)
+                                      email_digests: true,
+                                      email_direct: true,
+                                      email_private_messages: true)
 
       post :perform_unsubscribe, key: key, unsubscribe_all: "1"
       expect(response.status).to eq(302)
@@ -101,8 +101,8 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(p.user, p)
 
       cu = CategoryUser.create!(user_id: p.user.id,
-                          category_id: p.topic.category_id,
-                          notification_level: CategoryUser.notification_levels[:watching])
+                                category_id: p.topic.category_id,
+                                notification_level: CategoryUser.notification_levels[:watching])
 
       post :perform_unsubscribe, key: key, unwatch_category: "1"
       expect(response.status).to eq(302)
@@ -115,8 +115,8 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(p.user, p)
 
       cu = CategoryUser.create!(user_id: p.user.id,
-                          category_id: p.topic.category_id,
-                          notification_level: CategoryUser.notification_levels[:watching_first_post])
+                                category_id: p.topic.category_id,
+                                notification_level: CategoryUser.notification_levels[:watching_first_post])
 
       post :perform_unsubscribe, key: key, unwatch_category: "1"
       expect(response.status).to eq(302)
@@ -197,9 +197,8 @@ describe EmailController do
       post = Fabricate(:post)
       user = post.user
       cu = CategoryUser.create!(user_id: user.id,
-                          category_id: post.topic.category_id,
-                          notification_level: CategoryUser.notification_levels[:watching])
-
+                                category_id: post.topic.category_id,
+                                notification_level: CategoryUser.notification_levels[:watching])
 
       key = UnsubscribeKey.create_key_for(user, post)
       get :unsubscribe, key: key
@@ -216,9 +215,8 @@ describe EmailController do
       post = Fabricate(:post)
       user = post.user
       cu = CategoryUser.create!(user_id: user.id,
-                          category_id: post.topic.category_id,
-                          notification_level: CategoryUser.notification_levels[:watching_first_post])
-
+                                category_id: post.topic.category_id,
+                                notification_level: CategoryUser.notification_levels[:watching_first_post])
 
       key = UnsubscribeKey.create_key_for(user, post)
       get :unsubscribe, key: key

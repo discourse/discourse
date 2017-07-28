@@ -35,10 +35,9 @@ class IncomingLink < ActiveRecord::Base
       post_id = opts[:post_id]
       post_id ||= Post.where(topic_id: opts[:topic_id],
                              post_number: opts[:post_number] || 1)
-                            .pluck(:id).first
+        .pluck(:id).first
 
       cid = current_user ? (current_user.id) : (nil)
-
 
       unless cid && cid == user_id
 
@@ -52,7 +51,6 @@ class IncomingLink < ActiveRecord::Base
     end
 
   end
-
 
   def referer=(referer)
     self.incoming_referer_id = nil
@@ -86,7 +84,6 @@ class IncomingLink < ActiveRecord::Base
       incoming_referer.incoming_domain.name
     end
   end
-
 
   # Internal: Update appropriate link counts.
   def update_link_counts

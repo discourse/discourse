@@ -67,7 +67,7 @@ SQL
 
   end
 
-  def self.counts_for(guardian,topic, posts)
+  def self.counts_for(guardian, topic, posts)
     return {} if posts.blank?
 
     # Sam: I don't know how to write this cleanly in AR,
@@ -93,13 +93,13 @@ SQL
     builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
     builder.secure_category(guardian.secure_category_ids)
 
-    builder.map_exec(OpenStruct).each_with_object({}) do |l,result|
+    builder.map_exec(OpenStruct).each_with_object({}) do |l, result|
       result[l.post_id] ||= []
-      result[l.post_id] << {url: l.url,
-                            clicks: l.clicks,
-                            title: l.title,
-                            internal: l.internal,
-                            reflection: l.reflection}
+      result[l.post_id] << { url: l.url,
+                             clicks: l.clicks,
+                             title: l.title,
+                             internal: l.internal,
+                             reflection: l.reflection }
     end
   end
 
@@ -189,14 +189,14 @@ SQL
 
               unless tl
                 tl = TopicLink.create(user_id: post.user_id,
-                                    topic_id: topic_id,
-                                    post_id: reflected_post.try(:id),
-                                    url: reflected_url,
-                                    domain: Discourse.current_hostname,
-                                    reflection: true,
-                                    internal: true,
-                                    link_topic_id: post.topic_id,
-                                    link_post_id: post.id)
+                                      topic_id: topic_id,
+                                      post_id: reflected_post.try(:id),
+                                      url: reflected_url,
+                                      domain: Discourse.current_hostname,
+                                      reflection: true,
+                                      internal: true,
+                                      link_topic_id: post.topic_id,
+                                      link_post_id: post.id)
 
               end
 
@@ -235,11 +235,11 @@ SQL
 
   def self.duplicate_lookup(topic)
     results = TopicLink
-                .includes(:post, :user)
-                .joins(:post, :user)
-                .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
-                .where(topic_id: topic.id, reflection: false)
-                .last(200)
+      .includes(:post, :user)
+      .joins(:post, :user)
+      .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+      .where(topic_id: topic.id, reflection: false)
+      .last(200)
 
     lookup = {}
     results.each do |tl|

@@ -10,7 +10,7 @@ describe Draft do
   end
 
   it "uses the user id and key correctly" do
-    Draft.set(@user, "test", 0,"data")
+    Draft.set(@user, "test", 0, "data")
     expect(Draft.get(Fabricate.build(:coding_horror), "test", 0)).to eq nil
   end
 
@@ -38,19 +38,19 @@ describe Draft do
     user = Fabricate(:user)
     key = Draft::NEW_TOPIC
 
-    Draft.set(user,key,0,'draft')
+    Draft.set(user, key, 0, 'draft')
     Draft.cleanup!
     expect(Draft.count).to eq 1
 
     seq = DraftSequence.next!(user, key)
 
-    Draft.set(user,key,seq,'draft')
+    Draft.set(user, key, seq, 'draft')
     DraftSequence.update_all('sequence = sequence + 1')
 
     Draft.cleanup!
 
     expect(Draft.count).to eq 0
-    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, seq+1, 'draft')
+    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, seq + 1, 'draft')
 
     Draft.cleanup!
 
@@ -63,7 +63,6 @@ describe Draft do
     Draft.cleanup!
     expect(Draft.count).to eq 0
   end
-
 
   context 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
@@ -95,7 +94,7 @@ describe Draft do
       user = Fabricate(:user)
       topic = Fabricate(:topic)
       p = PostCreator.new(user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create
-      Draft.set(p.user, p.topic.draft_key, 0,'hello')
+      Draft.set(p.user, p.topic.draft_key, 0, 'hello')
 
       PostCreator.new(user, raw: Fabricate.build(:post).raw).create
       expect(Draft.get(p.user, p.topic.draft_key, DraftSequence.current(p.user, p.topic.draft_key))).to eq nil
@@ -103,8 +102,8 @@ describe Draft do
 
     it 'nukes the post draft when a post is revised' do
       p = Fabricate(:post)
-      Draft.set(p.user, p.topic.draft_key, 0,'hello')
-      p.revise(p.user, { raw: 'another test' })
+      Draft.set(p.user, p.topic.draft_key, 0, 'hello')
+      p.revise(p.user, raw: 'another test')
       s = DraftSequence.current(p.user, p.topic.draft_key)
       expect(Draft.get(p.user, p.topic.draft_key, s)).to eq nil
     end

@@ -19,7 +19,7 @@ class PostMover
     end
   end
 
-  def to_new_topic(title, category_id=nil)
+  def to_new_topic(title, category_id = nil)
     @move_type = PostMover.move_types[:new_topic]
 
     post = Post.find_by(id: post_ids.first)

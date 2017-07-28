@@ -10,7 +10,7 @@ module BulkImport; end
 class BulkImport::Base
 
   NOW ||= "now()".freeze
-  PRIVATE_OFFSET ||= 2 ** 30
+  PRIVATE_OFFSET ||= 2**30
 
   def initialize
     db = ActiveRecord::Base.connection_config
@@ -477,7 +477,7 @@ class BulkImport::Base
     start = Time.now
     imported_ids = []
     process_method_name = "process_#{name}"
-    sql = "COPY #{name.pluralize} (#{columns.map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
+    sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|

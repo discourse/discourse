@@ -41,29 +41,29 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0,3] != 'fa-' }
+  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0, 3] != 'fa-' }
 
   AUTO_GROUPS = {
-    :everyone => 0,
-    :admins => 1,
-    :moderators => 2,
-    :staff => 3,
-    :trust_level_0 => 10,
-    :trust_level_1 => 11,
-    :trust_level_2 => 12,
-    :trust_level_3 => 13,
-    :trust_level_4 => 14
+    everyone: 0,
+    admins: 1,
+    moderators: 2,
+    staff: 3,
+    trust_level_0: 10,
+    trust_level_1: 11,
+    trust_level_2: 12,
+    trust_level_3: 13,
+    trust_level_4: 14
   }
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
   STAFF_GROUPS = [:admins, :moderators, :staff]
 
   ALIAS_LEVELS = {
-    :nobody => 0,
-    :only_admins => 1,
-    :mods_and_admins => 2,
-    :members_mods_and_admins => 3,
-    :everyone => 99
+    nobody: 0,
+    only_admins: 1,
+    mods_and_admins: 2,
+    members_mods_and_admins: 3,
+    everyone: 99
   }
 
   def self.visibility_levels
@@ -75,13 +75,13 @@ class Group < ActiveRecord::Base
     )
   end
 
-  validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
+  validates :alias_level, inclusion: { in: ALIAS_LEVELS.values }
 
   scope :visible_groups, ->(user) {
     groups = Group.order(name: :asc).where("groups.id > 0")
 
     unless user&.admin
-      sql =  <<~SQL
+      sql = <<~SQL
         groups.id IN (
           SELECT g.id FROM groups g WHERE g.visibility_level = :public
 
@@ -121,7 +121,7 @@ class Group < ActiveRecord::Base
     groups
   }
 
-  scope :mentionable, lambda {|user|
+  scope :mentionable, lambda { |user|
 
     levels = [ALIAS_LEVELS[:everyone]]
 
@@ -140,7 +140,7 @@ class Group < ActiveRecord::Base
           (
             alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
-          )", levels: levels, user_id: user && user.id )
+          )", levels: levels, user_id: user && user.id)
   }
 
   def downcase_incoming_email
@@ -168,38 +168,38 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def posts_for(guardian, before_post_id=nil)
+  def posts_for(guardian, before_post_id = nil)
     user_ids = group_users.map { |gu| gu.user_id }
     result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where(user_id: user_ids)
-                 .where('topics.archetype <> ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
+      .references(:posts, :topics, :category)
+      .where(user_id: user_ids)
+      .where('topics.archetype <> ?', Archetype.private_message)
+      .where(post_type: Post.types[:regular])
 
     result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
     result.order('posts.created_at desc')
   end
 
-  def messages_for(guardian, before_post_id=nil)
+  def messages_for(guardian, before_post_id = nil)
     result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where('topics.archetype = ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
-                 .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
+      .references(:posts, :topics, :category)
+      .where('topics.archetype = ?', Archetype.private_message)
+      .where(post_type: Post.types[:regular])
+      .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
 
     result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
     result.order('posts.created_at desc')
   end
 
-  def mentioned_posts_for(guardian, before_post_id=nil)
+  def mentioned_posts_for(guardian, before_post_id = nil)
     result = Post.joins(:group_mentions)
-                 .includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
-                 .where('topics.archetype <> ?', Archetype.private_message)
-                 .where(post_type: Post.types[:regular])
-                 .where('group_mentions.group_id = ?', self.id)
+      .includes(:user, :topic, topic: :category)
+      .references(:posts, :topics, :category)
+      .where('topics.archetype <> ?', Archetype.private_message)
+      .where(post_type: Post.types[:regular])
+      .where('group_mentions.group_id = ?', self.id)
 
     result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
@@ -237,16 +237,17 @@ class Group < ActiveRecord::Base
     end
 
     # Remove people from groups they don't belong in.
-    remove_subquery = case name
-                      when :admins
-                        "SELECT id FROM users WHERE NOT admin"
-                      when :moderators
-                        "SELECT id FROM users WHERE NOT moderator"
-                      when :staff
-                        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
-                      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-                        "SELECT id FROM users WHERE trust_level < #{id - 10}"
-                      end
+    remove_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE NOT admin"
+      when :moderators
+        "SELECT id FROM users WHERE NOT moderator"
+      when :staff
+        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
+      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE trust_level < #{id - 10}"
+      end
 
     exec_sql <<-SQL
       DELETE FROM group_users
@@ -256,18 +257,19 @@ class Group < ActiveRecord::Base
     SQL
 
     # Add people to groups
-    insert_subquery = case name
-                      when :admins
-                        "SELECT id FROM users WHERE admin"
-                      when :moderators
-                        "SELECT id FROM users WHERE moderator"
-                      when :staff
-                        "SELECT id FROM users WHERE moderator OR admin"
-                      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-                        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
-                      when :trust_level_0
-                        "SELECT id FROM users"
-                      end
+    insert_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE admin"
+      when :moderators
+        "SELECT id FROM users WHERE moderator"
+      when :staff
+        "SELECT id FROM users WHERE moderator OR admin"
+      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
+      when :trust_level_0
+        "SELECT id FROM users"
+      end
 
     exec_sql <<-SQL
       INSERT INTO group_users (group_id, user_id, created_at, updated_at)
@@ -388,11 +390,11 @@ class Group < ActiveRecord::Base
     additions = expected - current
     deletions = current - expected
 
-    map = Hash[*User.where(username: additions+deletions)
-                 .select('id,username')
-                 .map{|u| [u.username,u.id]}.flatten]
+    map = Hash[*User.where(username: additions + deletions)
+      .select('id,username')
+      .map { |u| [u.username, u.id] }.flatten]
 
-    deletions = Set.new(deletions.map{|d| map[d]})
+    deletions = Set.new(deletions.map { |d| map[d] })
 
     @deletions = []
     group_users.each do |gu|

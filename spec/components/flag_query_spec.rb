@@ -53,7 +53,7 @@ describe FlagQuery do
 
       # chuck post in category a mod can not see and make sure its missing
       category = Fabricate(:category)
-      category.set_permissions(:admins => :full)
+      category.set_permissions(admins: :full)
       category.save
       post2.topic.category_id = category.id
       post2.topic.save

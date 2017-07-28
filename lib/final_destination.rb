@@ -9,7 +9,7 @@ class FinalDestination
   attr_reader :status
   attr_reader :cookie
 
-  def initialize(url, opts=nil)
+  def initialize(url, opts = nil)
     @uri =
       begin
         URI(URI.escape(url)) if url
@@ -161,7 +161,7 @@ class FinalDestination
 
     address = IPAddr.new(address_s)
 
-    if private_ranges.any? {|r| r === address }
+    if private_ranges.any? { |r| r === address }
       @status = :invalid_address
       return false
     end
@@ -178,7 +178,7 @@ class FinalDestination
 
   def private_ranges
     FinalDestination.standard_private_ranges +
-      SiteSetting.blacklist_ip_blocks.split('|').map {|r| IPAddr.new(r) rescue nil }.compact
+      SiteSetting.blacklist_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
   end
 
   def self.standard_private_ranges

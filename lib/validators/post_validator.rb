@@ -24,7 +24,7 @@ class Validators::PostValidator < ActiveModel::Validator
       post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
 
-    if post.new_record? and post.user_id.nil?
+    if post.new_record? && post.user_id.nil?
       post.errors.add(:user_id, :blank, options)
     end
   end

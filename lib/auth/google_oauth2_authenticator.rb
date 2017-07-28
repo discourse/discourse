@@ -21,7 +21,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     if !result.user && !result.email.blank? && result.email_valid
       result.user = User.find_by_email(result.email)
       if result.user
-        ::GoogleUserInfo.create({user_id: result.user.id}.merge(google_hash))
+        ::GoogleUserInfo.create({ user_id: result.user.id }.merge(google_hash))
       end
     end
 
@@ -30,7 +30,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
 
   def after_create_account(user, auth)
     data = auth[:extra_data]
-    GoogleUserInfo.create({user_id: user.id}.merge(data))
+    GoogleUserInfo.create({ user_id: user.id }.merge(data))
     if auth[:email_valid].to_s == 'true'
       EmailToken.confirm(user.email_tokens.first.token)
       user.set_automatic_groups
@@ -41,8 +41,8 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     # jwt encoding is causing auth to fail in quite a few conditions
     # skipping
     omniauth.provider :google_oauth2,
-           :setup => lambda { |env|
-              strategy = env["omniauth.strategy"]
+           setup: lambda { |env|
+             strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
               strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
            },

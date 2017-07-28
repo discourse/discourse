@@ -1,4 +1,4 @@
-MessageBus.site_id_lookup do |env=nil|
+MessageBus.site_id_lookup do |env = nil|
   if env
     setup_message_bus_env(env)
     env["__mb"][:site_id]

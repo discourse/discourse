@@ -3,7 +3,7 @@ class StylesheetCache < ActiveRecord::Base
 
   MAX_TO_KEEP = 50
 
-  def self.add(target,digest,content,source_map)
+  def self.add(target, digest, content, source_map)
 
     return false if where(target: target, digest: digest).exists?
 
@@ -13,11 +13,11 @@ class StylesheetCache < ActiveRecord::Base
     if count > MAX_TO_KEEP
 
       remove_lower = StylesheetCache
-                     .where(target: target)
-                     .limit(MAX_TO_KEEP)
-                     .order('id desc')
-                     .pluck(:id)
-                     .last
+        .where(target: target)
+        .limit(MAX_TO_KEEP)
+        .order('id desc')
+        .pluck(:id)
+        .last
 
       exec_sql("DELETE FROM stylesheet_cache where id < :id", id: remove_lower)
     end

@@ -31,7 +31,7 @@ class AdminDashboardData
 
   USER_REPORTS ||= ['users_by_trust_level']
 
-  MOBILE_REPORTS ||= ['mobile_visits'] + ApplicationRequest.req_types.keys.select {|r| r =~ /mobile/}.map { |r| r + "_reqs" }
+  MOBILE_REPORTS ||= ['mobile_visits'] + ApplicationRequest.req_types.keys.select { |r| r =~ /mobile/ }.map { |r| r + "_reqs" }
 
   def self.add_problem_check(*syms, &blk)
     @problem_syms.push(*syms) if syms
@@ -120,7 +120,7 @@ class AdminDashboardData
     $redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key) : nil
   end
 
-  def self.add_problem_message(i18n_key, expire_seconds=nil)
+  def self.add_problem_message(i18n_key, expire_seconds = nil)
     if expire_seconds.to_i > 0
       $redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
     else

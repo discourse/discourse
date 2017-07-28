@@ -108,7 +108,7 @@ describe Discourse do
         yield
       end
 
-      messages.first{|m| m.channel == Discourse.readonly_channel}
+      messages.first { |m| m.channel == Discourse.readonly_channel }
     end
 
     describe ".enable_readonly_mode" do
@@ -207,7 +207,7 @@ describe Discourse do
     it "correctly passes extra context" do
       exception = StandardError.new
 
-      Discourse.handle_job_exception(exception, {message: "Doing a test", post_id: 31}, nil)
+      Discourse.handle_job_exception(exception, { message: "Doing a test", post_id: 31 }, nil)
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys.sort).to eq([:current_db, :current_hostname, :message, :post_id].sort)
     end

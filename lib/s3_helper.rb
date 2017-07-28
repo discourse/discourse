@@ -6,7 +6,7 @@ class S3Helper
 
   attr_reader :s3_bucket_name
 
-  def initialize(s3_upload_bucket, tombstone_prefix='', options={})
+  def initialize(s3_upload_bucket, tombstone_prefix = '', options = {})
     @s3_options = default_s3_options.merge(options)
 
     @s3_bucket_name, @s3_bucket_folder_path = begin
@@ -24,14 +24,14 @@ class S3Helper
     check_missing_options
   end
 
-  def upload(file, path, options={})
+  def upload(file, path, options = {})
     path = get_path_for_s3_upload(path)
     obj = s3_bucket.object(path)
     obj.upload_file(file, options)
     path
   end
 
-  def remove(s3_filename, copy_to_tombstone=false)
+  def remove(s3_filename, copy_to_tombstone = false)
     bucket = s3_bucket
 
     # copy the file in tombstone
@@ -50,9 +50,8 @@ class S3Helper
     return if @tombstone_prefix.blank?
 
     # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
-    s3_resource.client.put_bucket_lifecycle({
-      bucket: @s3_bucket_name,
-      lifecycle_configuration: {
+    s3_resource.client.put_bucket_lifecycle(bucket: @s3_bucket_name,
+                                            lifecycle_configuration: {
         rules: [
           {
             id: "purge-tombstone",
@@ -61,8 +60,7 @@ class S3Helper
             prefix: @tombstone_prefix
           }
         ]
-      }
-    })
+      })
   end
 
   private

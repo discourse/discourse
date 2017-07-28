@@ -137,7 +137,7 @@ class CurrentUserSerializer < BasicUserSerializer
   def muted_category_ids
     @muted_category_ids ||= CategoryUser.where(user_id: object.id,
                                                notification_level: TopicUser.notification_levels[:muted])
-                                         .pluck(:category_id)
+      .pluck(:category_id)
   end
 
   def dismissed_banner_key

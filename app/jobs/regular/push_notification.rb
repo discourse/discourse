@@ -13,11 +13,9 @@ module Jobs
       }
 
       clients = args["clients"]
-      clients.group_by{|r| r[1]}.each do |push_url, group|
+      clients.group_by { |r| r[1] }.each do |push_url, group|
         notifications = group.map do |client_id, _|
-          notification.merge({
-            client_id: client_id
-          })
+          notification.merge(client_id: client_id)
         end
 
         result = Excon.post(push_url,

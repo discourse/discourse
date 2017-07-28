@@ -9,7 +9,7 @@ module Autospec; end
 
 class Autospec::Manager
 
-  def self.run(opts={})
+  def self.run(opts = {})
     self.new(opts).run
   end
 
@@ -66,10 +66,10 @@ class Autospec::Manager
     Autospec::QunitRunner.new
   end
 
-  def ensure_all_specs_will_run(current_runner=nil)
+  def ensure_all_specs_will_run(current_runner = nil)
     puts "@@@@@@@@@@@@ ensure_all_specs_will_run" if @debug
 
-    @queue.reject!{|_,s,_| s == "spec"}
+    @queue.reject! { |_, s, _| s == "spec" }
 
     if current_runner
       @queue.concat [['spec', 'spec', current_runner]]
@@ -151,14 +151,14 @@ class Autospec::Manager
 
     # try focus tag
     if failed_specs.length > 0
-      filename,_ = failed_specs[0].split(":")
+      filename, _ = failed_specs[0].split(":")
       if filename && File.exist?(filename) && !File.directory?(filename)
         spec = File.read(filename)
-        start,_ =  spec.split(/\S*#focus\S*$/)
+        start, _ = spec.split(/\S*#focus\S*$/)
         if start.length < spec.length
           line = start.scan(/\n/).length + 1
           puts "Found #focus tag on line #{line}!"
-          failed_specs = ["#{filename}:#{line+1}"]
+          failed_specs = ["#{filename}:#{line + 1}"]
         end
       end
     end
@@ -188,7 +188,7 @@ class Autospec::Manager
       FileUtils.rm_f(socket_path)
       server = SocketServer.new(socket_path)
       server.start do |line|
-        file,line = line.split(' ')
+        file, line = line.split(' ')
         file = file.sub(Rails.root.to_s << "/", "")
         # process_change can aquire a mutex and block
         # the acceptor
@@ -196,7 +196,7 @@ class Autospec::Manager
           if file =~ /(es6|js)$/
             process_change([[file]])
           else
-            process_change([[file,line]])
+            process_change([[file, line]])
           end
         end
         "OK"
@@ -213,7 +213,7 @@ class Autospec::Manager
           listener = Listen.to("#{path}/#{watch}", options) do |modified, added, _|
             paths = [modified, added].flatten
             paths.compact!
-            paths.map!{|long| long[(path.length+1)..-1]}
+            paths.map! { |long| long[(path.length + 1)..-1] }
             process_change(paths)
           end
           listener.start
@@ -246,7 +246,7 @@ class Autospec::Manager
           end
         end
         # watchers
-        runner.watchers.each do |k,v|
+        runner.watchers.each do |k, v|
           if m = k.match(file)
             puts "@@@@@@@@@@@@ #{file} matched a watcher for #{runner}" if @debug
             hit = true

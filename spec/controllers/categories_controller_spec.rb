@@ -57,8 +57,8 @@ describe CategoriesController do
 
           expect(response.status).to eq(200)
           category = Category.find_by(name: "hello")
-          expect(category.category_groups.map{|g| [g.group_id, g.permission_type]}.sort).to eq([
-            [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
+          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
+            [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
           ])
           expect(category.name).to eq("hello")
           expect(category.slug).to eq("hello-cat")
@@ -73,7 +73,7 @@ describe CategoriesController do
   describe "destroy" do
 
     it "requires the user to be logged in" do
-      expect { xhr :delete, :destroy, id: "category"}.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :delete, :destroy, id: "category" }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe "logged in" do
@@ -90,7 +90,7 @@ describe CategoriesController do
 
       it "deletes the record" do
         Guardian.any_instance.expects(:can_delete_category?).returns(true)
-        expect { xhr :delete, :destroy, id: @category.slug}.to change(Category, :count).by(-1)
+        expect { xhr :delete, :destroy, id: @category.slug }.to change(Category, :count).by(-1)
         expect(UserHistory.count).to eq(1)
       end
     end
@@ -136,12 +136,11 @@ describe CategoriesController do
   describe "update" do
 
     it "requires the user to be logged in" do
-      expect { xhr :put, :update, id: 'category'}.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :update, id: 'category' }.to raise_error(Discourse::NotLoggedIn)
     end
 
-
     describe "logged in" do
-      let(:valid_attrs) { {id: @category.id, name: "hello", color: "ff0", text_color: "fff"} }
+      let(:valid_attrs) { { id: @category.id, name: "hello", color: "ff0", text_color: "fff" } }
 
       before do
         @user = log_in(:admin)
@@ -168,7 +167,7 @@ describe CategoriesController do
 
       describe "failure" do
         before do
-          @other_category = Fabricate(:category, name: "Other", user: @user )
+          @other_category = Fabricate(:category, name: "Other", user: @user)
           xhr :put, :update, id: @category.id, name: @other_category.name, color: "ff0", text_color: "fff"
         end
 
@@ -182,7 +181,7 @@ describe CategoriesController do
       end
 
       it "returns 422 if email_in address is already in use for other category" do
-        @other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com" )
+        @other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
         xhr :put, :update, id: @category.id, name: "Email", email_in: "mail@examle.com", color: "ff0", text_color: "fff"
 
         expect(response).not_to be_success
@@ -196,35 +195,34 @@ describe CategoriesController do
           create_post = CategoryGroup.permission_types[:create_post]
 
           xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff", slug: "hello-category",
-                              auto_close_hours: 72,
-                              permissions: {
+                             auto_close_hours: 72,
+                             permissions: {
                                 "everyone" => readonly,
                                 "staff" => create_post
                               },
-                              custom_fields: {
+                             custom_fields: {
                                 "dancing" => "frogs"
                               }
 
-
           expect(response.status).to eq(200)
           @category.reload
-          expect(@category.category_groups.map{|g| [g.group_id, g.permission_type]}.sort).to eq([
-            [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
+          expect(@category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
+            [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
           ])
           expect(@category.name).to eq("hello")
           expect(@category.slug).to eq("hello-category")
           expect(@category.color).to eq("ff0")
           expect(@category.auto_close_hours).to eq(72)
-          expect(@category.custom_fields).to eq({"dancing" => "frogs"})
+          expect(@category.custom_fields).to eq("dancing" => "frogs")
         end
 
         it 'logs the changes correctly' do
           @category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
 
           xhr :put , :update, id: @category.id, name: 'new name',
-            color: @category.color, text_color: @category.text_color,
-            slug: @category.slug,
-            permissions: {
+                              color: @category.color, text_color: @category.text_color,
+                              slug: @category.slug,
+                              permissions: {
               "everyone" => CategoryGroup.permission_types[:create_post]
             }
 
@@ -233,16 +231,15 @@ describe CategoriesController do
       end
     end
 
-
   end
 
   describe 'update_slug' do
     it 'requires the user to be logged in' do
-      expect { xhr :put, :update_slug, category_id: 'category'}.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :update_slug, category_id: 'category' }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'logged in' do
-      let(:valid_attrs) { {id: @category.id, slug: 'fff'} }
+      let(:valid_attrs) { { id: @category.id, slug: 'fff' } }
 
       before do
         @user = log_in(:admin)

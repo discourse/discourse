@@ -33,7 +33,6 @@ UserOption.where(user_id: -1).update_all(
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
 
-
 ColumnDropper.drop(
   table: 'users',
   after_migration: 'AddUserAuthTokens',
@@ -55,7 +54,7 @@ ColumnDropper.drop(
       last_redirected_to_top_at
       auth_token
       auth_token_updated_at ],
-  on_drop: ->(){
+  on_drop: ->() {
     STDERR.puts 'Removing superflous users columns!'
   }
 )

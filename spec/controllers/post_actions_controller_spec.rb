@@ -53,28 +53,28 @@ describe PostActionsController do
 
       it "passes a list of taken actions through" do
         PostAction.create(post_id: @post.id, user_id: @user.id, post_action_type_id: PostActionType.types[:inappropriate])
-        Guardian.any_instance.expects(:post_can_act?).with(@post, :off_topic, has_entry({:taken_actions => has_key(PostActionType.types[:inappropriate])}))
+        Guardian.any_instance.expects(:post_can_act?).with(@post, :off_topic, has_entry(taken_actions: has_key(PostActionType.types[:inappropriate])))
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:off_topic]
       end
 
       it 'passes the message through' do
-        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {message: 'action message goes here'})
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], message: 'action message goes here')
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], message: 'action message goes here'
       end
 
       it 'passes the message through as warning' do
-        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {message: 'action message goes here', is_warning: true})
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], message: 'action message goes here', is_warning: true)
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], message: 'action message goes here', is_warning: true
       end
 
       it "doesn't create message as a warning if the user isn't staff" do
         Guardian.any_instance.stubs(:is_staff?).returns(false)
-        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {message: 'action message goes here'})
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], message: 'action message goes here')
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], message: 'action message goes here', is_warning: true
       end
 
       it 'passes take_action through' do
-        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {take_action: true})
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], take_action: true)
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], take_action: 'true'
       end
 
@@ -109,7 +109,7 @@ describe PostActionsController do
       end
 
       context 'with a post_action record ' do
-        let!(:post_action) { PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1)}
+        let!(:post_action) { PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1) }
 
         it 'returns success' do
           xhr :delete, :destroy, id: post.id, post_action_type_id: 1

@@ -16,7 +16,7 @@ module JsLocaleHelper
     end
   end
 
-  def self.load_translations(locale, opts=nil)
+  def self.load_translations(locale, opts = nil)
     opts ||= {}
 
     @loaded_translations = nil if opts[:force]
@@ -149,7 +149,7 @@ module JsLocaleHelper
   end
 
   def self.generate_message_format(message_formats, locale_str)
-    formats = message_formats.map { |k,v| k.inspect << " : " << compile_message_format(locale_str, v) }.join(", ")
+    formats = message_formats.map { |k, v| k.inspect << " : " << compile_message_format(locale_str, v) }.join(", ")
 
     filename = "#{Rails.root}/lib/javascripts/locale/#{locale_str}.js"
     filename = "#{Rails.root}/lib/javascripts/locale/en.js" unless File.exists?(filename)

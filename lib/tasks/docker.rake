@@ -16,7 +16,7 @@
 #                   this can also be set to a branch, e.g. "origin/tests-passed"
 #
 # Example usage:
-#   Run all core and plugin tests:  
+#   Run all core and plugin tests:
 #       docker run discourse/discourse_test:release
 #   Run only rspec tests:
 #       docker run -e RUBY_ONLY=1 discourse/discourse_test:release
@@ -24,7 +24,6 @@
 #       docker run -e SKIP_CORE=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 #   Run tests for a specific plugin (with a plugin mounted from host filesystem):
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
-
 
 def run_or_fail(command)
   pid = Process.spawn(command)
@@ -52,7 +51,6 @@ task 'docker:test' do
 
     puts "Starting postgres"
     @pg_pid = Process.spawn("#{@postgres_bin}postmaster -D tmp/test_data/pg")
-
 
     ENV["RAILS_ENV"] = "test"
 

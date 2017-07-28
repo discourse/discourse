@@ -2,7 +2,7 @@ module TopicsHelper
   include ApplicationHelper
 
   def render_topic_title(topic)
-    link_to(Emoji.gsub_emoji_to_unicode(topic.title),topic.relative_url)
+    link_to(Emoji.gsub_emoji_to_unicode(topic.title), topic.relative_url)
   end
 
   def categories_breadcrumb(topic)

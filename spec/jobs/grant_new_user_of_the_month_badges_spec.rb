@@ -62,7 +62,6 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_blank
   end
 
-
   it "does nothing if it's been awarded recently" do
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
     BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0)

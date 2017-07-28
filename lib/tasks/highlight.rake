@@ -1,7 +1,7 @@
 desc "download latest version of highlight and prepare it"
 task "highlightjs:update" do
 
-  def run(cmd, opts={})
+  def run(cmd, opts = {})
     puts cmd
     system(cmd, opts.merge(out: $stdout, err: :out))
   end

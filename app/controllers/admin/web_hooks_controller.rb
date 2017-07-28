@@ -6,10 +6,10 @@ class Admin::WebHooksController < Admin::AdminController
     offset = params[:offset].to_i
 
     web_hooks = WebHook.limit(limit)
-                       .offset(offset)
-                       .includes(:web_hook_event_types)
-                       .includes(:categories)
-                       .includes(:groups)
+      .offset(offset)
+      .includes(:web_hook_event_types)
+      .includes(:categories)
+      .includes(:groups)
 
     json = {
       web_hooks: serialize_data(web_hooks, AdminWebHookSerializer),

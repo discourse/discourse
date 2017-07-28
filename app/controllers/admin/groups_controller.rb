@@ -11,7 +11,7 @@ class Admin::GroupsController < Admin::AdminController
     group = Group.find(params[:group_id].to_i)
     users_added = 0
     if group.present?
-      users = (params[:users] || []).map {|u| u.downcase}
+      users = (params[:users] || []).map { |u| u.downcase }
       valid_emails = {}
       valid_usernames = {}
 
@@ -162,7 +162,7 @@ class Admin::GroupsController < Admin::AdminController
   protected
 
   def can_not_modify_automatic
-    render json: {errors: I18n.t('groups.errors.can_not_modify_automatic')}, status: 422
+    render json: { errors: I18n.t('groups.errors.can_not_modify_automatic') }, status: 422
   end
 
   private

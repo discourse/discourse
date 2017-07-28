@@ -33,8 +33,8 @@ class SiteSettings::DbProvider
     model ||= @model.new
 
     model.name = name
-    model.value =  value
-    model.data_type =  data_type
+    model.value = value
+    model.data_type = data_type
 
     # save! used to ensure after_commit is called
     model.save!

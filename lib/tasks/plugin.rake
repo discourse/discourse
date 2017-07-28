@@ -49,7 +49,7 @@ task 'plugin:install', :repo do |t, args|
 
   plugin_path = File.expand_path('plugins/' + name)
   if File.directory?(File.expand_path(plugin_path))
-   abort('Plugin directory, ' + plugin_path + ', already exists.')
+    abort('Plugin directory, ' + plugin_path + ', already exists.')
   end
 
   clone_status = system('git clone ' + repo + ' ' + plugin_path)

@@ -123,15 +123,15 @@ describe Group do
   end
 
   def real_admins
-    Group[:admins].user_ids.reject{|id| id < 0}
+    Group[:admins].user_ids.reject { |id| id < 0 }
   end
 
   def real_moderators
-    Group[:moderators].user_ids.reject{|id| id < 0}
+    Group[:moderators].user_ids.reject { |id| id < 0 }
   end
 
   def real_staff
-    Group[:staff].user_ids.reject{|id| id < 0}
+    Group[:staff].user_ids.reject { |id| id < 0 }
   end
 
   it "Correctly handles primary groups" do
@@ -287,7 +287,7 @@ describe Group do
 
     expect(real_admins).to eq [admin.id]
     expect(real_moderators).to eq [moderator.id]
-    expect(real_staff.sort).to eq [moderator.id,admin.id].sort
+    expect(real_staff.sort).to eq [moderator.id, admin.id].sort
 
     admin.admin = false
     admin.save
@@ -330,7 +330,7 @@ describe Group do
     user2 = Fabricate(:coding_horror)
     user2.change_trust_level!(TrustLevel[3])
 
-    expect(Group[:trust_level_2].user_ids.sort.reject{|id| id < -1}).to eq [-1, user.id, user2.id].sort
+    expect(Group[:trust_level_2].user_ids.sort.reject { |id| id < -1 }).to eq [-1, user.id, user2.id].sort
   end
 
   it "Correctly updates all automatic groups upon request" do
@@ -345,20 +345,20 @@ describe Group do
     groups = Group.includes(:users).to_a
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:admins]}
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }
     expect(g.users.count).to eq(g.user_count)
-    expect(g.users.pluck(:id).sort.reject{|id| id < -1}).to eq([-1, admin.id])
+    expect(g.users.pluck(:id).sort.reject { |id| id < -1 }).to eq([-1, admin.id])
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:staff]}
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:staff] }
     expect(g.users.count).to eq (g.user_count)
-    expect(g.users.pluck(:id).sort.reject{|id| id < -1}).to eq([-1, admin.id])
+    expect(g.users.pluck(:id).sort.reject { |id| id < -1 }).to eq([-1, admin.id])
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_1]}
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_1] }
     # admin, system and user
     expect(g.users.count).to eq g.user_count
     expect(g.users.where('users.id > -2').count).to eq 3
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_2]}
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_2] }
     # system and user
     expect(g.users.count).to eq g.user_count
     expect(g.users.where('users.id > -2').count).to eq 2
@@ -400,7 +400,6 @@ describe Group do
     expect(GroupUser.where(group_id: g.id).count).to eq 0
   end
 
-
   it "has custom fields" do
     group = Fabricate(:group)
     expect(group.custom_fields["a"]).to be_nil
@@ -410,7 +409,7 @@ describe Group do
     group.save
 
     group = Group.find(group.id)
-    expect(group.custom_fields).to eq({"hugh" => "jackman", "jack" => "black"})
+    expect(group.custom_fields).to eq("hugh" => "jackman", "jack" => "black")
   end
 
   it "allows you to lookup a new group by name" do
@@ -420,14 +419,14 @@ describe Group do
   end
 
   it "can find desired groups correctly" do
-    expect(Group.desired_trust_level_groups(2).sort).to eq [10,11,12]
+    expect(Group.desired_trust_level_groups(2).sort).to eq [10, 11, 12]
   end
 
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    expect(user.groups.map(&:name).sort).to eq ["trust_level_0","trust_level_1", "trust_level_2"]
+    expect(user.groups.map(&:name).sort).to eq ["trust_level_0", "trust_level_1", "trust_level_2"]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
@@ -435,7 +434,7 @@ describe Group do
   end
 
   context "group management" do
-    let(:group) {Fabricate(:group)}
+    let(:group) { Fabricate(:group) }
 
     it "by default has no managers" do
       expect(group.group_users.where('group_users.owner')).to be_empty

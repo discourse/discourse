@@ -2,13 +2,13 @@ require_dependency 'retrieve_title'
 
 class InlineOneboxer
 
-  def initialize(urls, opts=nil)
+  def initialize(urls, opts = nil)
     @urls = urls
     @opts = opts || {}
   end
 
   def process
-    @urls.map {|url| InlineOneboxer.lookup(url, @opts) }.compact
+    @urls.map { |url| InlineOneboxer.lookup(url, @opts) }.compact
   end
 
   def self.purge(url)
@@ -19,7 +19,7 @@ class InlineOneboxer
     Rails.cache.read(cache_key(url))
   end
 
-  def self.lookup(url, opts=nil)
+  def self.lookup(url, opts = nil)
     opts ||= {}
 
     unless opts[:skip_cache]
@@ -44,7 +44,7 @@ class InlineOneboxer
         uri.hostname.present? &&
         domains.include?(uri.hostname) &&
         title = RetrieveTitle.crawl(url)
-          return onebox_for(url, title, opts)
+        return onebox_for(url, title, opts)
       end
     end
 
@@ -70,4 +70,3 @@ class InlineOneboxer
     end
 
 end
-

@@ -3,16 +3,15 @@ require "nokogiri"
 class HtmlToMarkdown
 
   class Block < Struct.new(:name, :head, :body, :opened, :markdown)
-    def initialize(name, head="", body="", opened=false, markdown=""); super; end
+    def initialize(name, head = "", body = "", opened = false, markdown = ""); super; end
   end
 
-  def initialize(html, opts={})
+  def initialize(html, opts = {})
     @opts = opts || {}
     @doc = fix_span_elements(Nokogiri::HTML(html))
 
     remove_whitespaces!
   end
-
 
   # If a `<div>` is within a `<span>` that's invalid, so let's hoist the `<div>` up
   def fix_span_elements(node)
@@ -20,7 +19,7 @@ class HtmlToMarkdown
       node.swap(node.children)
     end
 
-    node.children.each {|c| fix_span_elements(c)}
+    node.children.each { |c| fix_span_elements(c) }
     node
   end
 

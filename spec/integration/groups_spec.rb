@@ -62,7 +62,7 @@ describe "Groups" do
       sign_in(user)
       group.update_attributes!(name: 'test')
 
-      get "/groups/test/mentionable.json", { name: group.name }
+      get "/groups/test/mentionable.json", name: group.name
 
       expect(response).to be_success
 
@@ -71,7 +71,7 @@ describe "Groups" do
 
       group.update_attributes!(alias_level: Group::ALIAS_LEVELS[:everyone])
 
-      get "/groups/test/mentionable.json", { name: group.name }
+      get "/groups/test/mentionable.json", name: group.name
       expect(response).to be_success
 
       response_body = JSON.parse(response.body)
@@ -96,7 +96,7 @@ describe "Groups" do
         group.update!(allow_membership_requests: false)
 
         expect do
-          xhr :put, "/groups/#{group.id}", { group: {
+          xhr :put, "/groups/#{group.id}", group: {
             flair_bg_color: 'FFF',
             flair_color: 'BBB',
             flair_url: 'fa-adjust',
@@ -104,7 +104,7 @@ describe "Groups" do
             full_name: 'awesome team',
             public: true,
             allow_membership_requests: true
-          } }
+          }
         end.to change { GroupHistory.count }.by(7)
 
         expect(response).to be_success
@@ -129,7 +129,7 @@ describe "Groups" do
       end
 
       it 'should be able to update the group' do
-        xhr :put, "/groups/#{group.id}", { group: { flair_color: 'BBB' } }
+        xhr :put, "/groups/#{group.id}", group: { flair_color: 'BBB' }
 
         expect(response).to be_success
         expect(group.reload.flair_color).to eq('BBB')
@@ -140,7 +140,7 @@ describe "Groups" do
       it 'should not be able to update the group' do
         sign_in(user)
 
-        xhr :put, "/groups/#{group.id}", { group: { name: 'testing' } }
+        xhr :put, "/groups/#{group.id}", group: { name: 'testing' }
 
         expect(response.status).to eq(403)
       end

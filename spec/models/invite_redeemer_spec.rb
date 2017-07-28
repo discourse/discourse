@@ -36,7 +36,7 @@ describe InviteRedeemer do
     let(:invite) { Fabricate(:invite) }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
-    let(:password) { 'know5nOthiNG'}
+    let(:password) { 'know5nOthiNG' }
     let(:invite_redeemer) { InviteRedeemer.new(invite, username, name) }
 
     it "should redeem the invite if invited by staff" do
@@ -96,7 +96,7 @@ describe InviteRedeemer do
 
     it "can set custom fields" do
       required_field = Fabricate(:user_field)
-      optional_field= Fabricate(:user_field, required: false)
+      optional_field = Fabricate(:user_field, required: false)
       user_fields = {
         required_field.id.to_s => 'value1',
         optional_field.id.to_s => 'value2'

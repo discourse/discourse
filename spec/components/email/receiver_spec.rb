@@ -507,10 +507,10 @@ describe Email::Receiver do
       SiteSetting.always_show_trimmed_content = true
 
       Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
+      expect { process(:forwarded_email_to_category) }.to change { Topic.count }.by(1) # Topic created
 
       new_post, = Post.last
-      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?","<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>","Discoursing much today?")
+      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?", "<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>", "Discoursing much today?")
     end
 
     it "works when approving is enabled" do

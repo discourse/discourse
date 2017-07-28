@@ -5,9 +5,7 @@ describe DiscourseRedis do
   let(:slave_port) { 1234 }
 
   let(:config) do
-    DiscourseRedis.config.dup.merge({
-      slave_host: 'testhost', slave_port: 1234, connector: DiscourseRedis::Connector
-    })
+    DiscourseRedis.config.dup.merge(slave_host: 'testhost', slave_port: 1234, connector: DiscourseRedis::Connector)
   end
 
   let(:fallback_handler) { DiscourseRedis::FallbackHandler.instance }

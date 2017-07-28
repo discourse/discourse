@@ -66,12 +66,12 @@ class NotificationEmailer
 
     EMAILABLE_POST_TYPES ||= Set.new [Post.types[:regular], Post.types[:whisper]]
 
-    def enqueue(type, delay=default_delay)
+    def enqueue(type, delay = default_delay)
       return unless notification.user.user_option.email_direct?
       perform_enqueue(type, delay)
     end
 
-    def enqueue_private(type, delay=private_delay)
+    def enqueue_private(type, delay = private_delay)
       return unless notification.user.user_option.email_private_messages?
       perform_enqueue(type, delay)
     end

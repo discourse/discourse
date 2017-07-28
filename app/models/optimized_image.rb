@@ -9,7 +9,7 @@ class OptimizedImage < ActiveRecord::Base
   # BUMP UP if optimized image algorithm changes
   VERSION = 1
 
-  def self.create_for(upload, width, height, opts={})
+  def self.create_for(upload, width, height, opts = {})
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
@@ -90,7 +90,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def local?
-   !(url =~ /^(https?:)?\/\//)
+    !(url =~ /^(https?:)?\/\//)
   end
 
   def self.safe_path?(path)
@@ -111,7 +111,7 @@ class OptimizedImage < ActiveRecord::Base
     SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
   end
 
-  def self.resize_instructions(from, to, dimensions, opts={})
+  def self.resize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
     # NOTE: ORDER is important!
@@ -132,7 +132,7 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.resize_instructions_animated(from, to, dimensions, opts={})
+  def self.resize_instructions_animated(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
     %W{
@@ -145,7 +145,7 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.crop_instructions(from, to, dimensions, opts={})
+  def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
     %W{
@@ -164,7 +164,7 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.crop_instructions_animated(from, to, dimensions, opts={})
+  def self.crop_instructions_animated(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
     %W{
@@ -177,7 +177,7 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.downsize_instructions(from, to, dimensions, opts={})
+  def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
     %W{
@@ -193,24 +193,24 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.downsize_instructions_animated(from, to, dimensions, opts={})
+  def self.downsize_instructions_animated(from, to, dimensions, opts = {})
     resize_instructions_animated(from, to, dimensions, opts)
   end
 
-  def self.resize(from, to, width, height, opts={})
+  def self.resize(from, to, width, height, opts = {})
     optimize("resize", from, to, "#{width}x#{height}", opts)
   end
 
-  def self.crop(from, to, width, height, opts={})
+  def self.crop(from, to, width, height, opts = {})
     opts[:width] = width
     optimize("crop", from, to, "#{width}x#{height}", opts)
   end
 
-  def self.downsize(from, to, dimensions, opts={})
+  def self.downsize(from, to, dimensions, opts = {})
     optimize("downsize", from, to, dimensions, opts)
   end
 
-  def self.optimize(operation, from, to, dimensions, opts={})
+  def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
     if !!opts[:allow_animation] && (from =~ /\.GIF$/i || opts[:filename] =~ /\.GIF$/i)
       method_name += "_animated"
@@ -233,7 +233,7 @@ class OptimizedImage < ActiveRecord::Base
     false
   end
 
-  def self.migrate_to_new_scheme(limit=nil)
+  def self.migrate_to_new_scheme(limit = nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme

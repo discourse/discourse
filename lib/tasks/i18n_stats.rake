@@ -9,7 +9,7 @@ task "i18n:stats" => :environment do
 
       # detect pluralizable string
       if (source["other"] != nil)
-        target[namespace] = {pluralizable: true, content: source}
+        target[namespace] = { pluralizable: true, content: source }
         return
       end
 
@@ -36,7 +36,7 @@ task "i18n:stats" => :environment do
     same = []
     total = a.count
 
-    a.each do |key,value|
+    a.each do |key, value|
       if b[key] == nil
         minus << key
       end
@@ -45,13 +45,13 @@ task "i18n:stats" => :environment do
       end
     end
 
-    b.each do |key,value|
+    b.each do |key, value|
       if a[key] == nil
         plus << key
       end
     end
 
-    a.each do |key,value|
+    a.each do |key, value|
       if value.kind_of?(Hash)
         if value[:pluralizable]
           plural_keys.each do |pl|
@@ -61,7 +61,7 @@ task "i18n:stats" => :environment do
           end
 
           if b[key] != nil && b[key].kind_of?(Hash)
-            b[key][:content].each do |pl,val|
+            b[key][:content].each do |pl, val|
               if ! plural_keys.include?(pl)
                 if a[key][:content]["zero"] == nil
                   plus << "#{key}.#{pl}"
@@ -80,11 +80,11 @@ task "i18n:stats" => :environment do
       end
     end
 
-    return plus,minus,same,total
+    return plus, minus, same, total
   end
 
   def get_plurals(locale)
-    I18n.t("i18n.plural.keys", :locale => locale).map { |x| x.to_s }
+    I18n.t("i18n.plural.keys", locale: locale).map { |x| x.to_s }
   end
 
   puts "Discourse Translation Status Script"

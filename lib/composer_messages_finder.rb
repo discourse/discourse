@@ -7,7 +7,7 @@ class ComposerMessagesFinder
   end
 
   def self.check_methods
-    @check_methods ||= instance_methods.find_all {|m| m =~ /^check\_/}
+    @check_methods ||= instance_methods.find_all { |m| m =~ /^check\_/ }
   end
 
   def find
@@ -70,7 +70,7 @@ class ComposerMessagesFinder
     return if SiteSetting.disable_avatar_education_message || SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
 
     # If we got this far, log that we've nagged them about the avatar
-    UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: @user.id )
+    UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: @user.id)
 
     # Return the message
     {
@@ -86,19 +86,19 @@ class ComposerMessagesFinder
 
     # Count the topics made by this user in the last day
     recent_posts_user_ids = Post.where(topic_id: @details[:topic_id])
-                                .where("created_at > ?", 1.day.ago)
-                                .order('created_at desc')
-                                .limit(SiteSetting.sequential_replies_threshold)
-                                .pluck(:user_id)
+      .where("created_at > ?", 1.day.ago)
+      .order('created_at desc')
+      .limit(SiteSetting.sequential_replies_threshold)
+      .pluck(:user_id)
 
     # Did we get back as many posts as we asked for, and are they all by the current user?
     return if recent_posts_user_ids.size != SiteSetting.sequential_replies_threshold ||
-              recent_posts_user_ids.detect {|u| u != @user.id }
+              recent_posts_user_ids.detect { |u| u != @user.id }
 
     # If we got this far, log that we've nagged them about the sequential replies
     UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies],
                         target_user_id: @user.id,
-                        topic_id: @details[:topic_id] )
+                        topic_id: @details[:topic_id])
 
     {
       id: 'sequential_replies',
@@ -149,7 +149,7 @@ class ComposerMessagesFinder
       order('created_at desc').
       limit(SiteSetting.get_a_room_threshold).
       pluck(:reply_to_user_id).
-      find_all {|uid| uid != @user.id && uid == reply_to_user_id}
+      find_all { |uid| uid != @user.id && uid == reply_to_user_id }
 
     return unless last_x_replies.size == SiteSetting.get_a_room_threshold
     return unless @topic.posts.count('distinct user_id') >= min_users_posted

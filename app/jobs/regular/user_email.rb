@@ -56,7 +56,7 @@ module Jobs
       quoted
     }
 
-    def message_for_email(user, post, type, notification, notification_type=nil, notification_data_hash=nil, email_token=nil, to_address=nil)
+    def message_for_email(user, post, type, notification, notification_type = nil, notification_data_hash = nil, email_token = nil, to_address = nil)
       set_skip_context(type, user.id, to_address || user.email, post.try(:id))
 
       return skip_message(I18n.t("email_log.anonymous_user"))   if user.anonymous?
@@ -90,8 +90,8 @@ module Jobs
            user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
            (!post.try(:topic).try(:private_message?)) &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
-           # no need to log a reason when the mail was already sent via the mailing list job
-           return [nil, nil]
+          # no need to log a reason when the mail was already sent via the mailing list job
+          return [nil, nil]
         end
 
         unless user.user_option.email_always?
@@ -141,7 +141,7 @@ module Jobs
 
     # extracted from sidekiq
     def self.seconds_to_delay(count)
-      (count ** 4) + 15 + (rand(30) * (count + 1))
+      (count**4) + 15 + (rand(30) * (count + 1))
     end
 
     private

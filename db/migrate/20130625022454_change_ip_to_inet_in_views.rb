@@ -12,7 +12,7 @@ class ChangeIpToInetInViews < ActiveRecord::Migration
       (ip >>  0 & 255)
     );"
 
-    change_column table, :ip_address, :inet, { :null => false }
+    change_column table, :ip_address, :inet, null: false
     remove_column table, :ip
   end
 

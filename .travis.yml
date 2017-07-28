@@ -36,7 +36,7 @@ cache:
     - vendor/bundle
 
 before_install:
-  - gem install bundler
+  - gem install bundler rubocop
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
   - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
@@ -48,6 +48,7 @@ before_install:
   - eslint --ext .es6 test/javascripts
   - eslint --ext .es6 plugins/**/assets/javascripts
   - eslint test/javascripts
+  - rubocop --parallel
 
 before_script:
   - bundle exec rake db:create db:migrate

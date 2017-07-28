@@ -6,4 +6,3 @@ task "add_topic_to_quotes" => :environment do
     Post.update_all ["raw = ?, cooked = ?", new_raw, new_cooked], ["id = ?", p.id]
   end
 end
-

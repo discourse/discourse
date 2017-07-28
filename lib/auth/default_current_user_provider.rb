@@ -44,7 +44,7 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN ,60)
+      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN , 60)
 
       if limiter.can_perform?
         @user_token = UserAuthToken.lookup(auth_token,
@@ -127,8 +127,8 @@ class Auth::DefaultCurrentUserProvider
 
       if !@user_token.legacy && needs_rotation
         if @user_token.rotate!(user_agent: @env['HTTP_USER_AGENT'],
-                              client_ip: @request.ip,
-                              path: @env['REQUEST_PATH'])
+                               client_ip: @request.ip,
+                               path: @env['REQUEST_PATH'])
           cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
         end
       elsif @user_token.legacy
@@ -199,7 +199,6 @@ class Auth::DefaultCurrentUserProvider
     end
     cookies.delete(TOKEN_COOKIE)
   end
-
 
   # api has special rights return true if api was detected
   def is_api?

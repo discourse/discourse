@@ -17,8 +17,8 @@ class QuotedPost < ActiveRecord::Base
       post_number = a['data-post'].to_i
 
       next if topic_id == 0 || post_number == 0
-      next if uniq[[topic_id,post_number]]
-      uniq[[topic_id,post_number]] = true
+      next if uniq[[topic_id, post_number]]
+      uniq[[topic_id, post_number]] = true
 
       begin
         # It would be so much nicer if we used post_id in quotes

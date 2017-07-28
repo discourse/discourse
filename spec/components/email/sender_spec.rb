@@ -126,7 +126,7 @@ describe Email::Sender do
       let(:topic) { Fabricate(:topic) }
       let(:post) { Fabricate(:post, topic: topic) }
 
-      before do 
+      before do
         message.header['X-Discourse-Post-Id']  = post.id
         message.header['X-Discourse-Topic-Id'] = topic.id
       end
@@ -309,7 +309,6 @@ describe Email::Sender do
         expect(email_log.reply_key).to eq(reply_key)
       end
     end
-
 
     context 'email parts' do
       it 'should contain the right message' do

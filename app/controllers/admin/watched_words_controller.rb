@@ -28,7 +28,7 @@ class Admin::WatchedWordsController < Admin::AdminController
         File.open(file.tempfile, encoding: "ISO-8859-1").each_line do |line|
           WatchedWord.create_or_update_word(word: line, action_key: action_key) unless line.empty?
         end
-        data = {url: '/ok'}
+        data = { url: '/ok' }
       rescue => e
         data = failed_json.merge(errors: [e.message])
       end

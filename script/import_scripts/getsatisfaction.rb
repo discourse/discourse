@@ -37,7 +37,6 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     super
   end
 
-
   def execute
     c = Category.find_by(name: 'Old Forum') ||
       Category.create!(name: 'Old Forum', user: Discourse.system_user)
@@ -61,7 +60,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     end
 
     def initialize(cols)
-      cols.each_with_index do |col,idx|
+      cols.each_with_index do |col, idx|
         self.class.send(:define_method, col) do
           @row[idx]
         end
@@ -134,7 +133,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   def total_rows(table)
     # In case of Excel export file, I converted it to CSV and used:
     # CSV.foreach("#{@path}/#{table}.csv", encoding:'iso-8859-1:utf-8').inject(0) {|c, line| c+1} - 1
-    File.foreach("#{@path}/#{table}.csv").inject(0) {|c, line| c+1} - 1
+    File.foreach("#{@path}/#{table}.csv").inject(0) { |c, line| c + 1 } - 1
   end
 
   def import_users
@@ -191,7 +190,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   def import_categories
     rows = []
     csv_parse("categories") do |row|
-      rows << {id: row.id, name: row.name, description: row.description}
+      rows << { id: row.id, name: row.name, description: row.description }
     end
 
     create_categories(rows) do |row|
@@ -209,7 +208,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       code = $2
       hoist = SecureRandom.hex
       # tidy code, wow, this is impressively crazy
-      code.gsub!(/  (\s*)/,"\n\\1")
+      code.gsub!(/  (\s*)/, "\n\\1")
       code.gsub!(/^\s*\n$/, "\n")
       code.gsub!(/\n+/m, "\n")
       code.strip!
@@ -231,47 +230,46 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   end
 
   def import_post_batch!(posts, topics, offset, total)
-      create_posts(posts, total: total, offset: offset) do |post|
+    create_posts(posts, total: total, offset: offset) do |post|
 
-        mapped = {}
+      mapped = {}
 
-        mapped[:id] = post[:id]
-        mapped[:user_id] = user_id_from_imported_user_id(post[:user_id]) || -1
-        mapped[:raw] = post[:body]
-        mapped[:created_at] = post[:created_at]
+      mapped[:id] = post[:id]
+      mapped[:user_id] = user_id_from_imported_user_id(post[:user_id]) || -1
+      mapped[:raw] = post[:body]
+      mapped[:created_at] = post[:created_at]
 
-        topic = topics[post[:topic_id]]
+      topic = topics[post[:topic_id]]
 
-        unless topic
-          p "MISSING TOPIC #{post[:topic_id]}"
-          p post
-          next
-        end
+      unless topic
+        p "MISSING TOPIC #{post[:topic_id]}"
+        p post
+        next
+      end
 
+      unless topic[:post_id]
+        mapped[:title] = post[:title] || "Topic title missing"
+        topic[:post_id] = post[:id]
+        mapped[:category] = post[:category]
+      else
+        parent = topic_lookup_from_imported_post_id(topic[:post_id])
+        next unless parent
 
-        unless topic[:post_id]
-          mapped[:title] = post[:title] || "Topic title missing"
-          topic[:post_id] = post[:id]
-          mapped[:category] = post[:category]
-        else
-          parent = topic_lookup_from_imported_post_id(topic[:post_id])
-          next unless parent
+        mapped[:topic_id] = parent[:topic_id]
 
-          mapped[:topic_id] = parent[:topic_id]
-
-          reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
-          if reply_to_post_id
-            reply_to_post_number = @post_number_map[reply_to_post_id]
-            if reply_to_post_number && reply_to_post_number > 1
-              mapped[:reply_to_post_number] = reply_to_post_number
-            end
+        reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
+        if reply_to_post_id
+          reply_to_post_number = @post_number_map[reply_to_post_id]
+          if reply_to_post_number && reply_to_post_number > 1
+            mapped[:reply_to_post_number] = reply_to_post_number
           end
         end
-
-        next if topic[:deleted] or post[:deleted]
-
-        mapped
       end
+
+      next if topic[:deleted] || post[:deleted]
+
+      mapped
+    end
 
       posts.clear
   end
@@ -324,7 +322,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
         created_at: DateTime.parse(row.created_at)
       }
       posts << row
-      count+=1
+      count += 1
 
       if posts.length > 0 && posts.length % BATCH_SIZE == 0
         import_post_batch!(posts, topic_map, count - posts.length, total)

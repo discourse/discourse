@@ -88,7 +88,7 @@ describe UsersEmailController do
       end
 
       context 'when new email is different case of existing email' do
-        let!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com')}
+        let!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com') }
 
         it 'raises an error' do
           xhr :put, :update, username: user.username, email: other_user.email.upcase

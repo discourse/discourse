@@ -14,20 +14,20 @@ describe Auth::GithubAuthenticator do
       user = Fabricate(:user)
 
       hash = {
-        :extra => {
-          :all_emails => [{
-            :email => user.email,
-            :primary => true,
-            :verified => true,
+        extra: {
+          all_emails: [{
+            email: user.email,
+            primary: true,
+            verified: true,
           }]
         },
-        :info => {
-          :email => user.email,
-          :email_verified => true,
-          :nickname => user.username,
-          :name => user.name,
+        info: {
+          email: user.email,
+          email_verified: true,
+          nickname: user.username,
+          name: user.name,
         },
-        :uid => "100"
+        uid: "100"
       }
 
       authenticator = Auth::GithubAuthenticator.new
@@ -44,20 +44,20 @@ describe Auth::GithubAuthenticator do
       user = Fabricate(:user)
 
       hash = {
-        :extra => {
-          :all_emails => [{
-            :email => user.email,
-            :primary => true,
-            :verified => false,
+        extra: {
+          all_emails: [{
+            email: user.email,
+            primary: true,
+            verified: false,
           }]
         },
-        :info => {
-          :email => user.email,
-          :email_verified => false,
-          :nickname => user.username,
-          :name => user.name,
+        info: {
+          email: user.email,
+          email_verified: false,
+          nickname: user.username,
+          name: user.name,
         },
-        :uid => "100"
+        uid: "100"
       }
 
       authenticator = Auth::GithubAuthenticator.new
@@ -72,20 +72,20 @@ describe Auth::GithubAuthenticator do
 
     it 'can create a proper result for non existing users' do
       hash = {
-        :extra => {
-          :all_emails => [{
-            :email => "person@example.com",
-            :primary => true,
-            :verified => true,
+        extra: {
+          all_emails: [{
+            email: "person@example.com",
+            primary: true,
+            verified: true,
           }]
         },
-        :info => {
-          :email => "person@example.com",
-          :email_verified => true,
-          :nickname => "person",
-          :name => "Person Lastname",
+        info: {
+          email: "person@example.com",
+          email_verified: true,
+          nickname: "person",
+          name: "Person Lastname",
         },
-        :uid => "100"
+        uid: "100"
       }
 
       authenticator = Auth::GithubAuthenticator.new
@@ -100,24 +100,24 @@ describe Auth::GithubAuthenticator do
 
     it 'will skip blacklisted domains for non existing users' do
       hash = {
-        :extra => {
-          :all_emails => [{
-            :email => "not_allowed@blacklist.com",
-            :primary => true,
-            :verified => true,
-          },{
-            :email => "allowed@whitelist.com",
-            :primary => false,
-            :verified => true,
+        extra: {
+          all_emails: [{
+            email: "not_allowed@blacklist.com",
+            primary: true,
+            verified: true,
+          }, {
+            email: "allowed@whitelist.com",
+            primary: false,
+            verified: true,
           }]
         },
-        :info => {
-          :email => "not_allowed@blacklist.com",
-          :email_verified => true,
-          :nickname => "person",
-          :name => "Person Lastname",
+        info: {
+          email: "not_allowed@blacklist.com",
+          email_verified: true,
+          nickname: "person",
+          name: "Person Lastname",
         },
-        :uid => "100"
+        uid: "100"
       }
 
       authenticator = Auth::GithubAuthenticator.new
@@ -133,28 +133,28 @@ describe Auth::GithubAuthenticator do
 
     it 'will find whitelisted domains for non existing users' do
       hash = {
-        :extra => {
-          :all_emails => [{
-            :email => "person@example.com",
-            :primary => true,
-            :verified => true,
-          },{
-            :email => "not_allowed@blacklist.com",
-            :primary => true,
-            :verified => true,
-          },{
-            :email => "allowed@whitelist.com",
-            :primary => false,
-            :verified => true,
+        extra: {
+          all_emails: [{
+            email: "person@example.com",
+            primary: true,
+            verified: true,
+          }, {
+            email: "not_allowed@blacklist.com",
+            primary: true,
+            verified: true,
+          }, {
+            email: "allowed@whitelist.com",
+            primary: false,
+            verified: true,
           }]
         },
-        :info => {
-          :email => "person@example.com",
-          :email_verified => true,
-          :nickname => "person",
-          :name => "Person Lastname",
+        info: {
+          email: "person@example.com",
+          email_verified: true,
+          nickname: "person",
+          name: "Person Lastname",
         },
-        :uid => "100"
+        uid: "100"
       }
 
       authenticator = Auth::GithubAuthenticator.new

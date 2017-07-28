@@ -53,7 +53,7 @@ class DirectoryItemsController < ApplicationController
     # Put yourself at the top of the first page
     if result.present? && current_user.present? && page == 0
 
-      position = result.index {|r| r.user_id == current_user.id }
+      position = result.index { |r| r.user_id == current_user.id }
 
       # Don't show the record unless you're not in the top positions already
       if (position || 10) >= 10

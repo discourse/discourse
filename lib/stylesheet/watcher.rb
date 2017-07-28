@@ -3,7 +3,7 @@ require 'listen'
 module Stylesheet
   class Watcher
 
-    def self.watch(paths=nil)
+    def self.watch(paths = nil)
       watcher = new(paths)
       watcher.start
       watcher
@@ -26,7 +26,6 @@ module Stylesheet
         end
       end
 
-
       root = Rails.root.to_s
       @paths.each do |watch|
         Thread.new do
@@ -34,7 +33,7 @@ module Stylesheet
             listener = Listen.to("#{root}/#{watch}", ignore: /xxxx/) do |modified, added, _|
               paths = [modified, added].flatten
               paths.compact!
-              paths.map!{|long| long[(root.length+1)..-1]}
+              paths.map! { |long| long[(root.length + 1)..-1] }
               process_change(paths)
             end
           rescue => e
@@ -55,7 +54,7 @@ module Stylesheet
       Stylesheet::Manager.cache.clear
 
       message = ["desktop", "mobile", "admin"].map do |name|
-        {target: name, new_href: Stylesheet::Manager.stylesheet_href(name.to_sym) , theme_key: SiteSetting.default_theme_key}
+        { target: name, new_href: Stylesheet::Manager.stylesheet_href(name.to_sym) , theme_key: SiteSetting.default_theme_key }
       end
 
       MessageBus.publish '/file-change', message
