@@ -619,11 +619,12 @@ end
 #  flair_color                        :string
 #  bio_raw                            :text
 #  bio_cooked                         :text
-#  public                             :boolean          default(FALSE), not null
+#  public_admission                   :boolean          default(FALSE), not null
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
 #  visibility_level                   :integer          default(0), not null
+#  public_exit                        :boolean          default(FALSE), not null
 #
 # Indexes
 #
