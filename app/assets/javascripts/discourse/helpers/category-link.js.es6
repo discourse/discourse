@@ -24,20 +24,20 @@ export function categoryBadgeHTML(category, opts) {
 
   if ((!category) ||
         (!opts.allowUncategorized &&
-         Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id") &&
+         Ember.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id") &&
          Discourse.SiteSettings.suppress_uncategorized_badge
         )
      ) return "";
 
-  var description = get(category, 'description_text'),
-      restricted = get(category, 'read_restricted'),
-      url = opts.url ? opts.url : Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
-      href = (opts.link === false ? '' : url),
-      tagName = (opts.link === false || opts.link === "false" ? 'span' : 'a'),
-      extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
-      color = get(category, 'color'),
-      html = "",
-      parentCat = null;
+  let description = get(category, 'description_text');
+  let restricted = get(category, 'read_restricted');
+  let url = opts.url ? opts.url : Discourse.getURL("/c/") + Discourse.Category.slugFor(category);
+  let href = (opts.link === false ? '' : url);
+  let tagName = (opts.link === false || opts.link === "false" ? 'span' : 'a');
+  let extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : '');
+  let color = get(category, 'color');
+  let html = "";
+  let parentCat = null;
 
   if (!opts.hideParent) {
     parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
@@ -49,32 +49,36 @@ export function categoryBadgeHTML(category, opts) {
 
   html += categoryStripe(color, "badge-category-bg");
 
-  var classNames = "badge-category clear-badge";
+  let classNames = "badge-category clear-badge";
   if (restricted) { classNames += " restricted"; }
 
-  var textColor = "#" + get(category, 'text_color');
+  const categoryStyle = Discourse.SiteSettings.category_style;
 
-  html += "<span" + ' style="color: ' + textColor + ';" '+
+  let style = "";
+  if (categoryStyle === "box") {
+    style = `style="color: #${get(category, 'text_color')};"`;
+  }
+
+  html += `<span ${style} ` +
              'data-drop-close="true" class="' + classNames + '"' +
              (description ? 'title="' + escapeExpression(description) + '" ' : '') +
           ">";
 
-  var name = escapeExpression(get(category, 'name'));
+  let categoryName = escapeExpression(get(category, 'name'));
 
   if (restricted) {
-    html += iconHTML('lock') + " " + name;
+    html += iconHTML('lock') + " " + categoryName;
   } else {
-    html += name;
+    html += categoryName;
   }
   html += "</span>";
 
-  if(href){
-    href = " href='" + href + "' ";
+  if (href) {
+    href = ` href="${href}" `;
   }
 
-  extraClasses = Discourse.SiteSettings.category_style ? Discourse.SiteSettings.category_style + extraClasses : extraClasses;
-
-  return "<" + tagName + " class='badge-wrapper " + extraClasses + "' " + href + ">" + html + "</" + tagName + ">";
+  extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
+  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>`;
 }
 
 export function categoryLinkHTML(category, options) {

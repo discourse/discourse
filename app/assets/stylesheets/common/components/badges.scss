@@ -28,7 +28,7 @@
     display: inline-flex;
 
     span.badge-category {
-      color: $primary !important;
+      color: $primary;
       padding: 3px;
       vertical-align: text-top;
       margin-top: -2px; //vertical alignment fix
@@ -37,7 +37,7 @@
       text-overflow: ellipsis;
 
       .extra-info-wrapper & {
-        color: $header-primary !important;
+        color: $header-primary;
       }
     }
 
@@ -59,7 +59,7 @@
     line-height: 15px;
 
     span.badge-category {
-      color: $primary !important;
+      color: $primary;
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -69,7 +69,7 @@
       }
 
       .extra-info-wrapper & {
-        color: $header-primary !important;
+        color: $header-primary;
       }
     }
 
@@ -169,13 +169,13 @@
     }
 
     li.bar>.badge-category {
-      background: $primary-low !important;
-      color: $primary !important;
+      background: $primary-low;
+      color: $primary;
     }
 
     li.bullet>.badge-category {
-      background: $primary-low !important;
-      color: $primary !important;
+      background: $primary-low;
+      color: $primary;
 
       .badge-category-bg {
         width: 10px;
