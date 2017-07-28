@@ -35,7 +35,7 @@ export default Ember.Component.extend({
   }.property('category'),
 
   dropdownButtonClass: function() {
-    var result = 'badge-category category-dropdown-button';
+    let result = 'dropdown-header category-dropdown-button';
     if (Em.isNone(this.get('category'))) {
       result += ' home';
     }
@@ -85,7 +85,9 @@ export default Ember.Component.extend({
       }
     }
 
-    return "background-color: #eee; color: #333".htmlSafe();
+    if (categoryStyle === 'box') {
+      return "background-color: #eee; color: #333".htmlSafe();
+    }
   }.property('category'),
 
   clickEventName: function() {
