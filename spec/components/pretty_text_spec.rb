@@ -113,11 +113,26 @@ describe PrettyText do
       end
     end
 
+    it "can handle inline block bbcode" do
+      cooked = PrettyText.cook("[quote]te **s** t[/quote]")
+
+      html = <<~HTML
+        <aside class="quote">
+        <blockquote>
+        <p>te <strong>s</strong> t</p>
+        </blockquote>
+        </aside>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
     it "can handle quote edge cases" do
+      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
+      expect(PrettyText.cook("[quote]  \ntest\n[/quote]  ")).to include('aside')
       expect(PrettyText.cook("a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
       expect(PrettyText.cook("- a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
       expect(PrettyText.cook("[quote]\ntest")).not_to include('aside')
-      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
       expect(PrettyText.cook("[quote]\ntest\n[/quote]z")).not_to include('aside')
 
       nested = <<~QUOTE
@@ -245,9 +260,12 @@ describe PrettyText do
     end
 
     it 'does censor code fences' do
-      ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
-      expect(PrettyText.cook("# banana")).not_to include('banana')
-      $redis.flushall
+      begin
+        ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
+        expect(PrettyText.cook("# banana")).not_to include('banana')
+      ensure
+        $redis.flushall
+      end
     end
   end
 
@@ -783,12 +801,15 @@ HTML
   end
 
   it 'can censor words correctly' do
-    ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
-    expect(PrettyText.cook('yay banana yay')).not_to include('banana')
-    expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
-    expect(PrettyText.cook("# banana")).not_to include('banana')
-    expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
-    $redis.flushall
+    begin
+      ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
+      expect(PrettyText.cook('yay banana yay')).not_to include('banana')
+      expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
+      expect(PrettyText.cook("# banana")).not_to include('banana')
+      expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
+    ensure
+      $redis.flushall
+    end
   end
 
   it 'supports typographer' do
@@ -973,10 +994,12 @@ HTML
       MD
 
       html = <<~HTML
-        <p><img src="http://png.com/my.png" alt width="110" height="50">
-        <img src="http://png.com/my.png" alt width="110" height="50">
+        <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"></p>
       HTML
+
+      expect(cooked).to eq(html.strip)
     end
 
   end

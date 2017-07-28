@@ -12,6 +12,10 @@ describe WatchedWord do
   let(:flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }
   let(:block_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
 
+  after do
+    $redis.flushall
+  end
+
   context "block" do
     def should_block_post(manager)
       expect {

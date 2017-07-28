@@ -4,6 +4,7 @@
   {{navigation-bar navItems=navItems filterMode=filterMode}}
 
   {{#if canCreateTopic}}
-    <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i><span>{{i18n 'topic.create'}}</span></button>
+    <button id="create-topic" class='btn btn-default' {{action "createTopic"}}>
+      {{d-icon "plus"}} <span>{{i18n 'topic.create'}}</span></button>
   {{/if}}
 {{/d-section}}

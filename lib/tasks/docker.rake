@@ -90,6 +90,7 @@ task 'docker:test' do
         @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
         @good &&= run_or_fail("eslint test/javascripts")
         @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
+        @good &&= run_or_fail("bundle exec rake qunit:test['600000','/wizard/qunit']")
       end
 
       unless ENV["SKIP_PLUGINS"]

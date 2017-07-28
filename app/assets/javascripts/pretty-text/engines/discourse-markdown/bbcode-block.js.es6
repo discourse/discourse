@@ -102,10 +102,94 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 }
 
+function findBlockCloseTag(state, openTag, startLine, endLine) {
+
+  let nesting = 0,
+    line = startLine-1,
+    start,
+    closeTag,
+    max;
+
+  for (;;) {
+    line++;
+    if (line >= endLine) {
+      // unclosed bbcode block should not be autoclosed by end of document.
+      return;
+    }
+
+    start = state.bMarks[line] + state.tShift[line];
+    max = state.eMarks[line];
+
+    if (start < max && state.sCount[line] < state.blkIndent) {
+      // non-empty line with negative indent should stop the list:
+      // - ```
+      //  test
+      break;
+    }
+
+
+    // bbcode close [ === 91
+    if (91 !== state.src.charCodeAt(start)) { continue; }
+
+    if (state.sCount[line] - state.blkIndent >= 4) {
+      // closing bbcode less than 4 spaces
+      continue;
+    }
+
+    closeTag = parseBBCodeTag(state.src, start, max, true);
+
+    if (closeTag && closeTag.closing && closeTag.tag === openTag.tag) {
+      if (nesting === 0) {
+        closeTag.line = line;
+        closeTag.block = true;
+        break;
+      }
+      nesting--;
+    }
+
+    if (closeTag && !closeTag.closing && closeTag.tag === openTag.tag) {
+      nesting++;
+    }
+
+    closeTag = null;
+  }
+
+  return closeTag;
+}
+
+function findInlineCloseTag(state, openTag, start, max) {
+
+  let closeTag;
+  let possibleTag = false;
+
+  for(let j=max-1;j>start;j--){
+    if (!possibleTag) {
+      if (state.src.charCodeAt(j) === 93 /* ] */) {
+        possibleTag = true;
+        continue;
+      }
+      if(!isWhiteSpace(state.src.charCodeAt(j))) {
+        break;
+      }
+    } else {
+      if (state.src.charCodeAt(j) === 91 /* [ */) {
+        closeTag = parseBBCodeTag(state.src, j, max);
+        if (!closeTag || closeTag.tag !== openTag.tag || !closeTag.closing) {
+          closeTag = null;
+        }
+        closeTag.start = j;
+        break;
+      }
+    }
+  }
+
+  return closeTag;
+}
+
 function applyBBCode(state, startLine, endLine, silent, md) {
 
   var nextLine,
-      old_parent, old_line_max, rule,
+      oldParent, oldLineMax, rule,
       start = state.bMarks[startLine] + state.tShift[startLine],
       initial = start,
       max = state.eMarks[startLine];
@@ -113,7 +197,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   // [ === 91
   if (91 !== state.src.charCodeAt(start)) { return false; }
 
-  let info = parseBBCodeTag(state.src, start, max, true);
+  let info = parseBBCodeTag(state.src, start, max);
 
   if (!info || info.closing) {
     return false;
@@ -130,59 +214,28 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   // Search for the end of the block
   nextLine = startLine;
 
-  let closeTag;
-  let nesting = 0;
+  // We might have a single inline bbcode
 
-  for (;;) {
-    nextLine++;
-    if (nextLine >= endLine) {
-      // unclosed bbcode block should not be autoclosed by end of document.
+  let closeTag = findInlineCloseTag(state, info, start + info.length, max);
+
+  if (!closeTag) {
+    if (!trailingSpaceOnly(state.src, start + info.length, max)) {
       return false;
     }
-
-    start = state.bMarks[nextLine] + state.tShift[nextLine];
-    max = state.eMarks[nextLine];
-
-    if (start < max && state.sCount[nextLine] < state.blkIndent) {
-      // non-empty line with negative indent should stop the list:
-      // - ```
-      //  test
-      break;
-    }
-
-
-    // bbcode close [ === 91
-    if (91 !== state.src.charCodeAt(start)) { continue; }
-
-    if (state.sCount[nextLine] - state.blkIndent >= 4) {
-      // closing fence should be indented less than 4 spaces
-      continue;
-    }
-
-    closeTag = parseBBCodeTag(state.src, start, max, true);
-
-    if (closeTag && closeTag.closing && closeTag.tag === info.tag) {
-      if (nesting === 0) {
-        break;
-      }
-      nesting--;
-    }
-
-    if (closeTag && !closeTag.closing && closeTag.tag === info.tag) {
-      nesting++;
-    }
-
-    closeTag = null;
+    closeTag = findBlockCloseTag(state, info, nextLine+1, endLine);
   }
 
   if (!closeTag) {
     return false;
   }
 
-  old_parent = state.parentType;
-  old_line_max = state.lineMax;
+  nextLine = closeTag.line || startLine;
+
+  oldParent = state.parentType;
+  oldLineMax = state.lineMax;
 
   // this will prevent lazy continuations from ever going past our end marker
+  // which can happen if we are parsing a bbcode block
   state.lineMax = nextLine;
 
   if (rule.replace) {
@@ -229,7 +282,19 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     let lastToken = state.tokens[state.tokens.length-1];
     lastToken.map    = [ startLine, nextLine ];
 
-    state.md.block.tokenize(state, startLine + 1, nextLine);
+    if (closeTag.block) {
+      state.md.block.tokenize(state, startLine + 1, nextLine);
+    } else {
+      let token = state.push('paragraph_open', 'p', 1);
+      token.map = [startLine, startLine];
+
+      token = state.push('inline', '', 0);
+      token.children = [];
+      token.map = [startLine, startLine];
+      token.content = state.src.slice(start + info.length, closeTag.start);
+
+      state.push('paragraph_close', 'p', -1);
+    }
 
     if (rule.wrap) {
       state.push('wrap_bbcode', wrapTag, -1);
@@ -240,8 +305,8 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     }
   }
 
-  state.parentType = old_parent;
-  state.lineMax = old_line_max;
+  state.parentType = oldParent;
+  state.lineMax = oldLineMax;
   state.line = nextLine+1;
 
   return true;

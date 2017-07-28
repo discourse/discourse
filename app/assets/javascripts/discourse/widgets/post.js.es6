@@ -88,7 +88,7 @@ createWidget('post-avatar', {
   html(attrs) {
     let body;
     if (!attrs.user_id) {
-      body = h('i', { className: 'fa fa-trash-o deleted-user-avatar' });
+      body = iconNode('trash-o', { class: 'deleted-user-avatar' });
     } else {
       body = avatarFor.call(this, this.settings.size, {
         template: attrs.avatar_template,

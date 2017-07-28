@@ -6,11 +6,12 @@ export default {
       "name":"discourse",
       "full_name":"Awesome Team",
       "user_count":8,
-      "alias_level":0,
+      "alias_level":99,
       "visible":true,
       "public":true,
       "flair_url": 'fa-adjust',
-      "is_group_owner":true
+      "is_group_owner":true,
+      "mentionable":true
     }
   },
   "/groups/discourse/counts.json":{

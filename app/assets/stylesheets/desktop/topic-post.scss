@@ -67,7 +67,7 @@ nav.post-controls {
   a, button {
     color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
 
-    i.fa {
+    .d-icon {
       opacity: 1.0;
     }
     margin-right: 2px;
@@ -207,7 +207,7 @@ nav.post-controls {
       width: 176px;
       margin-bottom: 5px;
 
-      i.fa {
+      .d-icon {
         width: 14px;
         margin-right: 14px;
       }
@@ -261,7 +261,7 @@ nav.post-controls {
   }
 
   .post-date { color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
-  .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
+  .d-icon-arrow-up, .d-icon-arrow-down { margin-left: 5px; }
   .reply:first-of-type .row { border-top: none; }
 
   .topic-meta-data {
@@ -385,7 +385,7 @@ a.star {
       font-weight: bold;
       font-size: 0.929em;
     }
-    i.fa-times {
+    .d-icon-times {
       color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
     }
   }
@@ -446,10 +446,10 @@ a.star {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .fa-bookmark.bookmarked { color: $tertiary; }
+    .d-icon-bookmark.bookmarked { color: $tertiary; }
   }
 
-  .bookmark.bookmarked .fa-bookmark {
+  .bookmark.bookmarked .d-icon-bookmark {
     color: $tertiary;
   }
 
@@ -526,7 +526,7 @@ video {
 
   .topic-statuses {
     i { color: $header_primary; }
-    i.fa-envelope { color: $danger; }
+    .d-icon-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
   }
 

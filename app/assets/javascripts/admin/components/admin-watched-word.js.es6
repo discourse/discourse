@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
 export default Ember.Component.extend(bufferedRender({
@@ -13,7 +13,7 @@ export default Ember.Component.extend(bufferedRender({
     this.get('word').destroy().then(() => {
       this.sendAction('action', this.get('word'));
     }).catch(e => {
-      bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+      bootbox.alert(I18n.t("generic_error_with_reason", {error: `http: ${e.status} - ${e.body}`}));
     });;
   }
 }));

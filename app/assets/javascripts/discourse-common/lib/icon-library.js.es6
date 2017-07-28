@@ -29,7 +29,7 @@ export function registerIconRenderer(renderer) {
 
 // Support for font awesome icons
 function faClasses(id, params) {
-  let classNames = `fa fa-${id}`;
+  let classNames = `fa fa-${id} d-icon d-icon-${id}`;
   if (params) {
     if (params.modifier) { classNames += " fa-" + params.modifier; }
     if (params['class']) { classNames += ' ' + params['class']; }
@@ -42,10 +42,11 @@ registerIconRenderer({
   name: 'font-awesome',
 
   string(id, params) {
-    let html = `<i class='${faClasses(id, params)}'`;
+    let tagName = params.tagName || 'i';
+    let html = `<${tagName} class='${faClasses(id, params)}'`;
     if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
     if (params.label) { html += " aria-hidden='true'"; }
-    html += "></i>";
+    html += `></${tagName}>`;
     if (params.label) {
       html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
     }
@@ -53,6 +54,8 @@ registerIconRenderer({
   },
 
   node(id, params) {
+    let tagName = params.tagName || 'i';
+
     const properties = {
       className: faClasses(id, params),
       attributes: { "aria-hidden": true }
@@ -60,9 +63,9 @@ registerIconRenderer({
 
     if (params.title) { properties.attributes.title = params.title; }
     if (params.label) {
-      return h('i', properties, h('span.sr-only', I18n.t(params.label)));
+      return h(tagName, properties, h('span.sr-only', I18n.t(params.label)));
     } else {
-      return h('i', properties);
+      return h(tagName, properties);
     }
   }
 });

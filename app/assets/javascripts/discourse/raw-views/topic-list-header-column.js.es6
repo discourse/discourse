@@ -7,8 +7,8 @@ export default Ember.Object.extend({
     return I18n.t(this.name);
   }.property(),
 
-  sortClass: function(){
-    return "fa fa-chevron-" + (this.parent.ascending ? "up" : "down");
+  sortIcon: function() {
+    return "chevron-" + (this.parent.ascending ? "up" : "down");
   }.property(),
 
   isSorting: function(){
