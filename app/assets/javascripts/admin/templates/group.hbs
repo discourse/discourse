@@ -61,10 +61,19 @@
     <div>
       <label>
         {{input type="checkbox"
-            checked=model.public
+            checked=model.public_admission
             disabled=disablePublicSetting}}
 
-        {{i18n 'groups.public'}}
+        {{i18n 'groups.public_admission'}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type='checkbox'
+            checked=model.public_exit}}
+
+        {{i18n 'groups.public_exit'}}
       </label>
     </div>
 

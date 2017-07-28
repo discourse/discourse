@@ -51,3 +51,18 @@ class WatchedWord < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: watched_words
+#
+#  id         :integer          not null, primary key
+#  word       :string           not null
+#  action     :integer          not null
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_watched_words_on_action_and_word  (action,word) UNIQUE
+#
