@@ -73,19 +73,6 @@ class Plugin::Instance
 
   delegate :name, to: :metadata
 
-  def serve_public_dir
-    public_dir = "#{directory}/public"
-    if File.exist?(public_dir)
-      Rails.application.config.before_initialize do |app|
-        app.middleware.insert_before(
-          ::Rack::Runtime,
-          ::ActionDispatch::Static,
-          public_dir
-        )
-      end
-    end
-  end
-
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
     klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
