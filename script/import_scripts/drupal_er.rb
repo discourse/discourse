@@ -46,10 +46,10 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # end
 
 
-    # import_users
+    import_users
     # import_categories
-    # import_topics
-    # import_replies
+    import_topics
+    import_replies
     # import_likes
     # import_tags
     # create_permalinks
@@ -434,27 +434,27 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   def post_process_posts
     puts '', 'processing posts...'
 
-    Post.find_each do |post|
+    Post.where("id > 33691").find_each do |post|
       next if post.raw.nil?
       puts "processing post: ##{post.id}..."
 
       doc = Nokogiri::HTML.fragment(post.raw)
 
-      # # NOTE: The order is important.
-      # # 1. Replace media divs.
-      # doc.css('div.media_embed').each { |node| node.replace node.inner_html }
-      #
-      # # 2. Replace youtube and vimeo iframes with onebox links.
-      # doc.css('iframe').each do |node|
-      #   if 'youtube.com'.in?(node['src']) || 'player.vimeo.com'.in?(node['src'])
-      #     u = URI.parse(node['src'])
-      #     u.scheme = 'https'
-      #     node.replace u.to_s
-      #   end
-      # end
-      #
-      # # 3. Replace twitter blockquotes with onebox links.
-      # doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
+      # NOTE: The order is important.
+      # 1. Replace media divs.
+      doc.css('div.media_embed').each { |node| node.replace node.inner_html }
+
+      # 2. Replace youtube and vimeo iframes with onebox links.
+      doc.css('iframe').each do |node|
+        if 'youtube.com'.in?(node['src']) || 'player.vimeo.com'.in?(node['src'])
+          u = URI.parse(node['src'])
+          u.scheme = 'https'
+          node.replace u.to_s
+        end
+      end
+
+      # 3. Replace twitter blockquotes with onebox links.
+      doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
 
 
       # 4. Upload images.
@@ -490,14 +490,13 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
           if cf = PostCustomField.find_by(name: 'import_id', value: "cid:#{cid}")
             link.attributes['href'].value = cf.post.url
           end
-        elsif pl = Permalink.find_by_url(link['href'].sub(/^\//, ''))
+        elsif pl = Permalink.find_by_url(link['href'].sub(/^\//, '').sub(/^en\//, ''))
           # Permalinks
-          link.attributes['href'].value = pl.target_url
-        elsif link['href'].match(/^\/(?:en\/)?users\/([0-9]*)/)
+          link.attributes['href'].value = pl.target_url if pl.target_url.present?
+        elsif uid = link['href'].match(/^\/(?:en\/)?user(?:s)?\/([0-9]*)/).try(:captures).try(:first)
           # User URLs
-          uid = link['href'].match(/users\/([0-9]*)/).try(:captures).try(:first)
           if uf = UserCustomField.find_by(name: 'import_id', value: "#{uid}")
-            link.attributes['href'].value = uf.user.url
+            link.attributes['href'].value = "/u/#{uf.user.username}"
           end
         end
       end
@@ -505,37 +504,37 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw = doc.to_s
 
 
-      # # HTML cleanup.
-      # post.raw.gsub!('<meta charset="utf-8">', '')
-      # post.raw.gsub!('<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>', '')
-      # post.raw.gsub!(' dir="ltr"', '')
-      # post.raw.gsub!('<p>&nbsp;</p>', '')
-      # post.raw.gsub!('<li>&nbsp;</li>', '')
-      # # Remove html attributes in opening tags.
-      # post.raw.gsub!(/<ul.*?>/, '<ul>')
-      # post.raw.gsub!(/<span.*?>/, '<span>')
-      # post.raw.gsub!(/<li.*?>/, '<li>')
-      # # Normalize line breaks.
-      # post.raw.gsub!(/\r/, "\n")
-      # post.raw.gsub!(%r~<br\s*\/?>~, "\n")
-      # # Remove paragraphs.
-      # post.raw.gsub!(/<p.*?>/, '')
-      # post.raw.gsub!('</p>', "\n\n")
-      # # Remove line breaks.
-      # post.raw.gsub!(/<li>\n{1,}/, '<li>')
-      # # NOTE: Do not use \s to also match non-breaking spaces.
-      # # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
-      # post.raw.gsub!(/\n[[:space:]]*<\/li>/, '</li>')
-      # # Replace three or more consecutive linebreaks with two.
-      # post.raw.gsub!(/\n{3,}/, "\n\n")
-      # # Remove trailing tabs.
-      # post.raw.gsub!(/\n\t{1,}/, "\n")
-      # # Remove trailing whitespaces.
-      # post.raw.gsub!(/\n[[:space:]]{1,}/, "\n")
-      # # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
-      # post.raw.gsub!(/\n#/, "\n\\#")
-      # # Escape hash signs after a whitespace to prevent markdown messing up the html formatting.
-      # post.raw.gsub!(/[[:space:]]#/, " \\#")
+      # HTML cleanup.
+      post.raw.gsub!('<meta charset="utf-8">', '')
+      post.raw.gsub!('<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>', '')
+      post.raw.gsub!(' dir="ltr"', '')
+      post.raw.gsub!('<p>&nbsp;</p>', '')
+      post.raw.gsub!('<li>&nbsp;</li>', '')
+      # Remove html attributes in opening tags.
+      post.raw.gsub!(/<ul.*?>/, '<ul>')
+      post.raw.gsub!(/<span.*?>/, '<span>')
+      post.raw.gsub!(/<li.*?>/, '<li>')
+      # Normalize line breaks.
+      post.raw.gsub!(/\r/, "\n")
+      post.raw.gsub!(%r~<br\s*\/?>~, "\n")
+      # Remove paragraphs.
+      post.raw.gsub!(/<p.*?>/, '')
+      post.raw.gsub!('</p>', "\n\n")
+      # Remove line breaks.
+      post.raw.gsub!(/<li>\n{1,}/, '<li>')
+      # NOTE: Do not use \s to also match non-breaking spaces.
+      # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
+      post.raw.gsub!(/\n[[:space:]]*<\/li>/, '</li>')
+      # Replace three or more consecutive linebreaks with two.
+      post.raw.gsub!(/\n{3,}/, "\n\n")
+      # Remove trailing tabs.
+      post.raw.gsub!(/\n\t{1,}/, "\n")
+      # Remove trailing whitespaces.
+      post.raw.gsub!(/\n[[:space:]]{1,}/, "\n")
+      # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
+      post.raw.gsub!(/\n#/, "\n\\#")
+      # Escape hash signs after a whitespace to prevent markdown messing up the html formatting.
+      post.raw.gsub!(/[[:space:]]#/, " \\#")
 
       post.save!(validate: false)
     end
