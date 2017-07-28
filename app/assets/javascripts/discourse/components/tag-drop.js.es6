@@ -69,7 +69,7 @@ export default Ember.Component.extend({
 
   @computed('tag')
   dropdownButtonClass() {
-    let result = 'badge-category category-dropdown-button';
+    let result = 'dropdown-header category-dropdown-button';
     if (Em.isNone(this.get('tag'))) {
       result += ' home';
     }
