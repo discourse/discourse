@@ -48,10 +48,10 @@ describe SiteSettings::DefaultsProvider do
 
     describe '.all' do
       it 'returns all values according to the current locale' do
-        expect(settings.defaults.all).to eq({ test_override: 'default', test_default: 'test' })
+        expect(settings.defaults.all).to eq(test_override: 'default', test_default: 'test')
         settings.defaults.site_locale = 'zh_CN'
         settings.defaults.refresh_site_locale!
-        expect(settings.defaults.all).to eq({ test_override: 'cn', test_default: 'test' })
+        expect(settings.defaults.all).to eq(test_override: 'cn', test_default: 'test')
       end
     end
 
@@ -204,7 +204,7 @@ describe SiteSettings::DefaultsProvider do
     end
 
     it 'takes care of locale default' do
-      settings.defaults.load_setting(:new_b, 1, locale_default: { zh_CN: 2, zh_TW: 2 } )
+      settings.defaults.load_setting(:new_b, 1, locale_default: { zh_CN: 2, zh_TW: 2 })
       expect(settings.defaults[:new_b]).to eq 1
     end
   end

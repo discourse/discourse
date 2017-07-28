@@ -577,5 +577,4 @@ describe SiteSettingExtension do
     end
   end
 
-
 end

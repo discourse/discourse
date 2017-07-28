@@ -127,9 +127,9 @@ class SiteSettings::TypeSupervisor
 
     if type == :enum
       if (klass = enum_class(name))
-        result.merge!({ valid_values: klass.values, translate_names: klass.translate_names? })
+        result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
-        result.merge!({ valid_values: @choices[name].map { |c| { name: c, value: c } }, translate_names: false })
+        result.merge!(valid_values: @choices[name].map { |c| { name: c, value: c } }, translate_names: false)
       end
     end
 

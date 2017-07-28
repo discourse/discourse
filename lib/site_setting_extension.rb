@@ -125,19 +125,19 @@ module SiteSettingExtension
   # Retrieve all settings
   def all_settings(include_hidden = false)
     defaults
-      .reject{|s, _| !include_hidden && hidden_settings.include?(s) }
+      .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
-        value = send(s)
-        opts = {
-          setting: s,
-          description: description(s),
-          default: defaults[s].to_s,
-          value: value.to_s,
-          category: categories[s],
-          preview: previews[s]
-        }.merge(type_supervisor.type_hash(s))
+      value = send(s)
+      opts = {
+        setting: s,
+        description: description(s),
+        default: defaults[s].to_s,
+        value: value.to_s,
+        category: categories[s],
+        preview: previews[s]
+      }.merge(type_supervisor.type_hash(s))
 
-        opts
+      opts
     end.unshift(defaults.locale_setting_hash)
   end
 

@@ -51,9 +51,9 @@ describe SiteSettings::YamlLoader do
   end
 
   it "can load client settings" do
-    receiver.expects(:setting).with('category1', 'title', 'Discourse', { client: true })
-    receiver.expects(:setting).with('category2', 'tos_url', '', { client: true })
-    receiver.expects(:setting).with('category2', 'must_approve_users', false, { client: true })
+    receiver.expects(:setting).with('category1', 'title', 'Discourse', client: true)
+    receiver.expects(:setting).with('category2', 'tos_url', '', client: true)
+    receiver.expects(:setting).with('category2', 'must_approve_users', false, client: true)
     receiver.load_yaml(client)
   end
 
@@ -64,7 +64,7 @@ describe SiteSettings::YamlLoader do
 
   it "can load enum client settings" do
     receiver.expects(:setting).with do |category, name, default, opts|
-      category == ('basics') and name == ('default_locale') and default == ('en') and opts[:enum] == ('LocaleSiteSetting') and opts[:client] == true
+      category == ('basics') && name == ('default_locale') && default == ('en') && opts[:enum] == ('LocaleSiteSetting') && opts[:client] == true
     end
     receiver.load_yaml(enum_client)
   end
