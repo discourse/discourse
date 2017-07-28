@@ -67,7 +67,13 @@ class Admin::GroupsController < Admin::AdminController
     group.flair_url      = group_params[:flair_url].presence
     group.flair_bg_color = group_params[:flair_bg_color].presence
     group.flair_color    = group_params[:flair_color].presence
-    group.public = group_params[:public] if group_params[:public]
+
+    %i{public_admission public_exit}.each do |key|
+      if group_params[key]
+        group.public_send("#{key}=", group_params[key])
+      end
+    end
+
     group.bio_raw = group_params[:bio_raw] if group_params[:bio_raw]
     group.full_name = group_params[:full_name] if group_params[:full_name]
 
@@ -169,11 +175,26 @@ class Admin::GroupsController < Admin::AdminController
 
   def group_params
     params.require(:group).permit(
-      :name, :alias_level, :visibility_level, :automatic_membership_email_domains,
-      :automatic_membership_retroactive, :title, :primary_group,
-      :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
-      :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name,
-      :default_notification_level, :usernames, :owner_usernames
+      :name,
+      :alias_level,
+      :visibility_level,
+      :automatic_membership_email_domains,
+      :automatic_membership_retroactive,
+      :title,
+      :primary_group,
+      :grant_trust_level,
+      :incoming_email,
+      :flair_url,
+      :flair_bg_color,
+      :flair_color,
+      :bio_raw,
+      :public_admission,
+      :public_exit,
+      :allow_membership_requests,
+      :full_name,
+      :default_notification_level,
+      :usernames,
+      :owner_usernames
     )
   end
 end

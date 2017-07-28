@@ -144,7 +144,8 @@ const Group = RestModel.extend({
       flair_bg_color: this.get('flairBackgroundHexColor'),
       flair_color: this.get('flairHexColor'),
       bio_raw: this.get('bio_raw'),
-      public: this.get('public'),
+      public_admission: this.get('public_admission'),
+      public_exit: this.get('public_exit'),
       allow_membership_requests: this.get('allow_membership_requests'),
       full_name: this.get('full_name'),
       default_notification_level: this.get('default_notification_level')

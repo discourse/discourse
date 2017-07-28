@@ -31,10 +31,10 @@ export default Ember.Controller.extend({
     ];
   }.property(),
 
-  @computed('model.visibility_level', 'model.public')
-  disableMembershipRequestSetting(visibility_level, publicGroup) {
+  @computed('model.visibility_level', 'model.public_admission')
+  disableMembershipRequestSetting(visibility_level, publicAdmission) {
     visibility_level = parseInt(visibility_level);
-    return (visibility_level !== 0) || publicGroup;
+    return (visibility_level !== 0) || publicAdmission;
   },
 
   @computed('model.visibility_level', 'model.allow_membership_requests')
