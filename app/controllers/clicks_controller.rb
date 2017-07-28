@@ -8,7 +8,7 @@ class ClicksController < ApplicationController
     params = track_params.merge(ip: request.remote_ip)
 
     if params[:topic_id].present? || params[:post_id].present?
-      params.merge!({ user_id: current_user.id }) if current_user.present?
+      params.merge!(user_id: current_user.id) if current_user.present?
       @redirect_url = TopicLinkClick.create_from(params)
     end
 

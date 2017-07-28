@@ -277,7 +277,17 @@ export default Ember.Controller.extend({
 
     // Toggle the reply view
     toggle() {
-      this.toggle();
+      this.closeAutocomplete();
+      if (this.get('model.composeState') === Composer.OPEN) {
+        if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
+          this.close();
+        } else {
+          this.shrink();
+        }
+      } else {
+        this.close();
+      }
+      return false;
     },
 
     togglePreview() {
@@ -389,20 +399,6 @@ export default Ember.Controller.extend({
   categories: function() {
     return Discourse.Category.list();
   }.property(),
-
-  toggle() {
-    this.closeAutocomplete();
-    if (this.get('model.composeState') === Composer.OPEN) {
-      if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
-        this.close();
-      } else {
-        this.shrink();
-      }
-    } else {
-      this.close();
-    }
-    return false;
-  },
 
   disableSubmit: Ember.computed.or("model.loading", "isUploading"),
 

@@ -20,16 +20,22 @@ QUnit.test("disablePublicSetting", function(assert) {
 
 QUnit.test("disableMembershipRequestSetting", function(assert) {
   this.subject().setProperties({
-    model: { visibility_level: 1, public: false, canEveryoneMention: true }
+    model: { visibility_level: 1, public_admission: false, canEveryoneMention: true }
   });
 
   assert.equal(this.subject().get("disableMembershipRequestSetting"), true, "it should disable setting");
 
   this.subject().set("model.visibility_level", 0);
 
-  assert.equal(this.subject().get("disableMembershipRequestSetting"), false, "it should enable setting");
+  assert.equal(
+    this.subject().get("disableMembershipRequestSetting"), false,
+    "it should enable setting"
+  );
 
-  this.subject().set("model.public", true);
+  this.subject().set("model.public_admission", true);
 
-  assert.equal(this.subject().get("disableMembershipRequestSetting"), true, "it should disalbe setting");
+  assert.equal(
+    this.subject().get("disableMembershipRequestSetting"), true,
+    "it should disable setting"
+  );
 });

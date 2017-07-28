@@ -58,14 +58,14 @@ class Plugin::Instance
     }
   end
 
-  def initialize(metadata=nil, path=nil)
+  def initialize(metadata = nil, path = nil)
     @metadata = metadata
     @path = path
     @idx = 0
   end
 
   def add_admin_route(label, location)
-    @admin_route = {label: label, location: location}
+    @admin_route = { label: label, location: location }
   end
 
   def enabled?
@@ -74,7 +74,7 @@ class Plugin::Instance
 
   delegate :name, to: :metadata
 
-  def add_to_serializer(serializer, attr, define_include_method=true, &block)
+  def add_to_serializer(serializer, attr, define_include_method = true, &block)
     klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
     klass.attributes(attr) unless attr.to_s.start_with?("include_")
@@ -164,7 +164,7 @@ class Plugin::Instance
   def delete_extra_automatic_assets(good_paths)
     return unless Dir.exists? auto_generated_path
 
-    filenames = good_paths.map{|f| File.basename(f)}
+    filenames = good_paths.map { |f| File.basename(f) }
     # nuke old files
     Dir.foreach(auto_generated_path) do |p|
       next if [".", ".."].include?(p)
@@ -242,13 +242,13 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_html_builder(name, &block)
   end
 
-  def register_asset(file, opts=nil)
+  def register_asset(file, opts = nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << [full_path, opts]
   end
 
   def register_color_scheme(name, colors)
-    color_schemes << {name: name, colors: colors}
+    color_schemes << { name: name, colors: colors }
   end
 
   def register_seed_data(key, value)
@@ -362,13 +362,12 @@ JS
       target = Rails.root.to_s + "/public/plugins/"
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
-      target << name.gsub(/\s/,"_")
+      target << name.gsub(/\s/, "_")
       # TODO a cleaner way of registering and unregistering
       Discourse::Utils.execute_command('rm', '-f', target)
       Discourse::Utils.execute_command('ln', '-s', public_data, target)
     end
   end
-
 
   def auth_provider(opts)
     provider = Plugin::AuthProvider.new
@@ -378,7 +377,6 @@ JS
     end
     auth_providers << provider
   end
-
 
   # shotgun approach to gem loading, in future we need to hack bundler
   #  to at least determine dependencies do not clash before loading
@@ -390,7 +388,7 @@ JS
     PluginGem.load(path, name, version, opts)
   end
 
-  def enabled_site_setting(setting=nil)
+  def enabled_site_setting(setting = nil)
     if setting
       @enabled_site_setting = setting
     else
@@ -421,9 +419,9 @@ JS
 
       Dir.glob("#{root_path}/**/*") do |f|
         if File.directory?(f)
-          yield [f,true]
+          yield [f, true]
         elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs")
-          yield [f,false]
+          yield [f, false]
         end
       end
     end
@@ -442,7 +440,7 @@ JS
   def write_asset(path, contents)
     unless File.exists?(path)
       ensure_directory(path)
-      File.open(path,"w") { |f| f.write(contents) }
+      File.open(path, "w") { |f| f.write(contents) }
     end
   end
 

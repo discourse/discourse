@@ -31,15 +31,15 @@ describe Enum do
 
   describe ".only" do
     it "returns only the values we ask for" do
-      expect(array_enum.only(:jake, :princess_bubblegum)).to eq({ jake: 1, princess_bubblegum: 3 })
-      expect(hash_enum.only(:jake, :princess_bubblegum)).to eq({ jake: 1, princess_bubblegum: 3 })
+      expect(array_enum.only(:jake, :princess_bubblegum)).to eq(jake: 1, princess_bubblegum: 3)
+      expect(hash_enum.only(:jake, :princess_bubblegum)).to eq(jake: 1, princess_bubblegum: 3)
     end
   end
 
   describe ".except" do
     it "returns everything but the values we ask to delete" do
-      expect(array_enum.except(:jake, :princess_bubblegum)).to eq({ finn: 2, peppermint_butler: 4 })
-      expect(hash_enum.except(:jake, :princess_bubblegum)).to eq({ finn: 2, peppermint_butler: 4 })
+      expect(array_enum.except(:jake, :princess_bubblegum)).to eq(finn: 2, peppermint_butler: 4)
+      expect(hash_enum.except(:jake, :princess_bubblegum)).to eq(finn: 2, peppermint_butler: 4)
     end
   end
 

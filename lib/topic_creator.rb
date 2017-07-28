@@ -80,13 +80,16 @@ class TopicCreator
     topic.topic_allowed_groups(true).each do |tag|
       tag.group.group_users.each do |gu|
         next if gu.user_id == -1 || gu.user_id == topic.user_id
-        action = case gu.notification_level
-                 when TopicUser.notification_levels[:tracking] then "track!"
-                 when TopicUser.notification_levels[:regular]  then "regular!"
-                 when TopicUser.notification_levels[:muted]    then "mute!"
-                 when TopicUser.notification_levels[:watching] then "watch!"
-                 else "track!"
-                 end
+
+        action =
+          case gu.notification_level
+          when TopicUser.notification_levels[:tracking] then "track!"
+          when TopicUser.notification_levels[:regular]  then "regular!"
+          when TopicUser.notification_levels[:muted]    then "mute!"
+          when TopicUser.notification_levels[:watching] then "watch!"
+          else "track!"
+          end
+
         topic.notifier.send(action, gu.user_id)
       end
     end
@@ -152,7 +155,7 @@ class TopicCreator
   def setup_auto_close_time(topic)
     return unless @opts[:auto_close_time].present?
     return unless @guardian.can_moderate?(topic)
-    topic.set_auto_close(@opts[:auto_close_time], {by_user: @user})
+    topic.set_auto_close(@opts[:auto_close_time], by_user: @user)
   end
 
   def process_private_message(topic)
@@ -163,8 +166,8 @@ class TopicCreator
       rollback_with!(topic, :no_user_selected)
     end
 
-    add_users(topic,@opts[:target_usernames])
-    add_groups(topic,@opts[:target_group_names])
+    add_users(topic, @opts[:target_usernames])
+    add_groups(topic, @opts[:target_group_names])
     topic.topic_allowed_users.build(user_id: @user.id)
   end
 

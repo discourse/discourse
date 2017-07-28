@@ -34,4 +34,3 @@ describe InlineOneboxController do
   end
 
 end
-

@@ -26,7 +26,7 @@ describe Jobs::NotifyMailingListSubscribers do
       events = DiscourseEvent.track_events do
         Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
       end
-      expect(events).to include({ event_name: :notify_mailing_list_subscribers, params: [[mailing_list_user], post] })
+      expect(events).to include(event_name: :notify_mailing_list_subscribers, params: [[mailing_list_user], post])
     end
   end
 

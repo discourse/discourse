@@ -1,6 +1,5 @@
 require "rails_helper"
 
-
 describe HasCustomFields do
 
   context "custom_fields" do
@@ -48,7 +47,7 @@ describe HasCustomFields do
       test_item.save
       test_item = CustomFieldsTestItem.find(test_item.id)
 
-      expect(test_item.custom_fields).to eq({"jack" => "jill"})
+      expect(test_item.custom_fields).to eq("jack" => "jill")
     end
 
     it "casts integers to string without error" do
@@ -88,35 +87,35 @@ describe HasCustomFields do
 
     it "double save actually saves" do
       test_item = CustomFieldsTestItem.new
-      test_item.custom_fields = {"a" => "b"}
+      test_item.custom_fields = { "a" => "b" }
       test_item.save
 
       test_item.custom_fields["c"] = "d"
       test_item.save
 
       db_item = CustomFieldsTestItem.find(test_item.id)
-      expect(db_item.custom_fields).to eq({"a" => "b", "c" => "d"})
+      expect(db_item.custom_fields).to eq("a" => "b", "c" => "d")
     end
 
     it "handles arrays properly" do
       test_item = CustomFieldsTestItem.new
-      test_item.custom_fields = {"a" => ["b", "c", "d"]}
+      test_item.custom_fields = { "a" => ["b", "c", "d"] }
       test_item.save
 
       db_item = CustomFieldsTestItem.find(test_item.id)
-      expect(db_item.custom_fields).to eq({"a" => ["b", "c", "d"]})
+      expect(db_item.custom_fields).to eq("a" => ["b", "c", "d"])
 
       db_item.custom_fields.update('a' => ['c', 'd'])
       db_item.save
-      expect(db_item.custom_fields).to eq({"a" => ["c", "d"]})
+      expect(db_item.custom_fields).to eq("a" => ["c", "d"])
 
       # It can be updated to the exact same value
       db_item.custom_fields.update('a' => ['c'])
       db_item.save
-      expect(db_item.custom_fields).to eq({"a" => "c"})
+      expect(db_item.custom_fields).to eq("a" => "c")
       db_item.custom_fields.update('a' => ['c'])
       db_item.save
-      expect(db_item.custom_fields).to eq({"a" => "c"})
+      expect(db_item.custom_fields).to eq("a" => "c")
 
       db_item.custom_fields.delete('a')
       expect(db_item.custom_fields).to eq({})
@@ -124,12 +123,12 @@ describe HasCustomFields do
 
     it "casts integers in arrays properly without error" do
       test_item = CustomFieldsTestItem.new
-      test_item.custom_fields = {"a" => ["b", 10, "d"]}
+      test_item.custom_fields = { "a" => ["b", 10, "d"] }
       test_item.save
-      expect(test_item.custom_fields).to eq({"a" => ["b", "10", "d"]})
+      expect(test_item.custom_fields).to eq("a" => ["b", "10", "d"])
 
       db_item = CustomFieldsTestItem.find(test_item.id)
-      expect(db_item.custom_fields).to eq({"a" => ["b", "10", "d"]})
+      expect(db_item.custom_fields).to eq("a" => ["b", "10", "d"])
     end
 
     it "supportes type coersion" do
@@ -138,11 +137,11 @@ describe HasCustomFields do
       CustomFieldsTestItem.register_custom_field_type("int", :integer)
       CustomFieldsTestItem.register_custom_field_type("json", :json)
 
-      test_item.custom_fields = {"bool" => true, "int" => 1, "json" => { "foo" => "bar" }}
+      test_item.custom_fields = { "bool" => true, "int" => 1, "json" => { "foo" => "bar" } }
       test_item.save
       test_item.reload
 
-      expect(test_item.custom_fields).to eq({"bool" => true, "int" => 1, "json" => { "foo" => "bar" }})
+      expect(test_item.custom_fields).to eq("bool" => true, "int" => 1, "json" => { "foo" => "bar" })
     end
 
     it "simple modifications don't interfere" do
@@ -165,17 +164,17 @@ describe HasCustomFields do
       test_item = CustomFieldsTestItem.find(test_item.id)
       test_item2 = CustomFieldsTestItem.find(test_item2.id)
 
-      expect(test_item.custom_fields).to eq({"jack" => "black", "bob" => "marley"})
-      expect(test_item2.custom_fields).to eq({"sixto" => "rodriguez", "de" => "la playa"})
+      expect(test_item.custom_fields).to eq("jack" => "black", "bob" => "marley")
+      expect(test_item2.custom_fields).to eq("sixto" => "rodriguez", "de" => "la playa")
     end
 
     it "supports bulk retrieval with a list of ids" do
       item1 = CustomFieldsTestItem.new
-      item1.custom_fields = {"a" => ["b", "c", "d"], 'not_whitelisted' => 'secret'}
+      item1.custom_fields = { "a" => ["b", "c", "d"], 'not_whitelisted' => 'secret' }
       item1.save
 
       item2 = CustomFieldsTestItem.new
-      item2.custom_fields = {"e" => 'hallo'}
+      item2.custom_fields = { "e" => 'hallo' }
       item2.save
 
       fields = CustomFieldsTestItem.custom_fields_for_ids([item1.id, item2.id], ['a', 'e'])

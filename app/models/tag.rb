@@ -18,23 +18,23 @@ class Tag < ActiveRecord::Base
   # fetch the result with .count(Tag::COUNT_ARG).
   #
   # e.g., Tag.tags_by_count_query.where("topics.category_id = ?", category.id).count(Tag::COUNT_ARG)
-  def self.tags_by_count_query(opts={})
+  def self.tags_by_count_query(opts = {})
     q = Tag.joins("LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id")
-           .joins("LEFT JOIN topics ON topics.id = topic_tags.topic_id")
-           .group("tags.id, tags.name")
-           .order('count_topic_tags_id DESC')
+      .joins("LEFT JOIN topics ON topics.id = topic_tags.topic_id")
+      .group("tags.id, tags.name")
+      .order('count_topic_tags_id DESC')
     q = q.limit(opts[:limit]) if opts[:limit]
     q
   end
 
-  def self.category_tags_by_count_query(category, opts={})
+  def self.category_tags_by_count_query(category, opts = {})
     tags_by_count_query(opts).where("tags.id in (select tag_id from category_tags where category_id = ?)", category.id)
-                             .where("topics.category_id = ?", category.id)
+      .where("topics.category_id = ?", category.id)
   end
 
   def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
-    scope_category_ids = (guardian||Guardian.new).allowed_category_ids
+    scope_category_ids = (guardian || Guardian.new).allowed_category_ids
 
     if category
       scope_category_ids &= ([category.id] + category.subcategories.pluck(:id))
@@ -46,7 +46,7 @@ class Tag < ActiveRecord::Base
       category: category
     )
 
-    tags.count(COUNT_ARG).map {|name, _| name}
+    tags.count(COUNT_ARG).map { |name, _| name }
   end
 
   def self.include_tags?

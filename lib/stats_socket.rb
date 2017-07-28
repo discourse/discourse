@@ -16,7 +16,7 @@ class StatsSocket < SocketServer
       when "v8_stat"
         stats = {}
         ObjectSpace.each_object(MiniRacer::Context) do |context|
-          context.heap_stats.each do |k,v|
+          context.heap_stats.each do |k, v|
             stats[k] = (stats[k] || 0) + v
           end
         end

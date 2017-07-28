@@ -30,7 +30,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
     end
 
     it "returns some onebox goodness if post exists and can be seen" do
-      url = "#{Discourse.base_url}#{post2.url}?source_topic_id=#{post2.topic_id+1}"
+      url = "#{Discourse.base_url}#{post2.url}?source_topic_id=#{post2.topic_id + 1}"
       html = Onebox.preview(url).to_s
       expect(html).to include(post2.excerpt)
       expect(html).to include(post2.topic.title)
@@ -108,7 +108,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
       let(:post2) { Fabricate(:post, topic: post.topic, post_number: 2) }
 
       it "returns some onebox goodness if post exists and can be seen" do
-        url = "#{Discourse.base_url}#{post2.url}?source_topic_id=#{post2.topic_id+1}"
+        url = "#{Discourse.base_url}#{post2.url}?source_topic_id=#{post2.topic_id + 1}"
         html = Onebox.preview(url).to_s
         expect(html).to include(post2.excerpt)
         expect(html).to include(post2.topic.title)

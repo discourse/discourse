@@ -37,7 +37,6 @@ describe Scheduler::Defer do
 
     @defer.resume
 
-
     @defer.later do
       x = 3
     end

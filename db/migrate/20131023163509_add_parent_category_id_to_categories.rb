@@ -3,4 +3,3 @@ class AddParentCategoryIdToCategories < ActiveRecord::Migration
     add_column :categories, :parent_category_id, :integer
   end
 end
-

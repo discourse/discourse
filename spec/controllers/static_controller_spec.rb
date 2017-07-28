@@ -5,7 +5,7 @@ describe StaticController do
   context 'brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
 
-        get :brotli_asset, path: 'missing.js'
+      get :brotli_asset, path: 'missing.js'
 
         expect(response.status).to eq(404)
         expect(response.headers['Content-Encoding']).not_to eq('br')

@@ -109,7 +109,7 @@ module DiscourseNarrativeBot
             skip_trigger: TrackSelector.skip_trigger,
             reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}"
           )
-        ), {}, { skip_send_email: false })
+        ), {}, skip_send_email: false)
       end
     end
 
@@ -168,8 +168,8 @@ module DiscourseNarrativeBot
       end
     end
 
-    def i18n_post_args(extra={})
-      {base_uri: Discourse.base_uri}.merge(extra)
+    def i18n_post_args(extra = {})
+      { base_uri: Discourse.base_uri }.merge(extra)
     end
 
     def valid_topic?(topic_id)

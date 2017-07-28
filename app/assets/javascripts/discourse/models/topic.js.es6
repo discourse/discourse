@@ -50,11 +50,7 @@ const Topic = RestModel.extend({
 
   @computed('fancy_title')
   fancyTitle(title) {
-    // TODO: `siteSettings` should always be present, but there are places in the code
-    // that call Discourse.Topic.create instead of using the store.
-    // When the store is used, remove this.
-    const siteSettings = this.siteSettings || Discourse.SiteSettings;
-    return censor(emojiUnescape(title || ""), siteSettings.censored_words);
+    return censor(emojiUnescape(title || ""), Discourse.Site.currentProp('censored_words'));
   },
 
   // returns createdAt if there's no bumped date

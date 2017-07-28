@@ -35,7 +35,7 @@ class ContentBuffer
       end
 
       # fix last line
-      @lines[start_row] << @lines[finish_row][finish_col-1..-1]
+      @lines[start_row] << @lines[finish_row][finish_col - 1..-1]
     end
 
     if transform[:operation] == :insert

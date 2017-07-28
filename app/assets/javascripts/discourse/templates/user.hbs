@@ -39,13 +39,13 @@
               {{#if model.can_send_private_message_to_user}}
               <li>
                 <a class='btn btn-primary' {{action "composePrivateMessage" model}}>
-                  {{fa-icon "envelope"}}
+                  {{d-icon "envelope"}}
                   {{i18n 'user.private_message'}}
                 </a>
               </li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
+                <li><a href={{model.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
                               connectorTagName="li"
@@ -53,7 +53,7 @@
 
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
-              <li><a {{action "expandProfile"}} href class="btn">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
+              <li><a {{action "expandProfile"}} href class="btn">{{d-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
               {{/if}}
               {{/if}}
 
@@ -68,9 +68,9 @@
             {{/if}}
             {{plugin-outlet name="user-post-names" args=(hash model=model)}}
             <h3>
-            {{#if model.location}}{{fa-icon "map-marker"}} {{model.location}}{{/if}}
+            {{#if model.location}}{{d-icon "map-marker"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
-              {{fa-icon "globe"}}
+              {{d-icon "globe"}}
               {{#if linkWebsite}}
                 <a href={{model.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{model.website_name}}</a>
               {{else}}
@@ -83,7 +83,7 @@
             <div class='bio'>
               {{#if model.isSuspended}}
                 <div class='suspended'>
-                  {{fa-icon "ban"}}
+                  {{d-icon "ban"}}
                   <b>{{i18n 'user.suspended_notice' date=model.suspendedTillDate}}</b><br/>
                   <b>{{i18n 'user.suspended_reason'}}</b> {{model.suspend_reason}}
                 </div>
@@ -167,22 +167,22 @@
       {{#if showNotificationsTab}}
         <li>
           {{#link-to 'userNotifications'}}
-            {{fa-icon "comment" class="glyph"}}{{i18n 'user.notifications'}}
+            {{d-icon "comment" class="glyph"}}{{i18n 'user.notifications'}}
           {{/link-to}}
         </li>
       {{/if}}
       {{#if showPrivateMessages}}
-        <li>{{#link-to 'userPrivateMessages'}}{{fa-icon "envelope-o"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
+        <li>{{#link-to 'userPrivateMessages'}}{{d-icon "envelope-o"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
       {{/if}}
       {{#if canInviteToForum}}
-        <li>{{#link-to 'userInvited'}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+        <li>{{#link-to 'userInvited'}}{{d-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
       {{/if}}
       {{#if showBadges}}
-        <li>{{#link-to 'user.badges'}}{{fa-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
+        <li>{{#link-to 'user.badges'}}{{d-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
       {{/if}}
       {{plugin-outlet name="user-main-nav" connectorTagName='li' args=(hash model=model)}}
       {{#if model.can_edit}}
-        <li>{{#link-to 'preferences'}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+        <li>{{#link-to 'preferences'}}{{d-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}
     {{/mobile-nav}}
 

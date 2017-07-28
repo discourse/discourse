@@ -11,7 +11,7 @@ class UserHistory < ActiveRecord::Base
 
   validates_presence_of :action
 
-  scope :only_staff_actions, ->{ where("action IN (?)", UserHistory.staff_action_ids) }
+  scope :only_staff_actions, -> { where("action IN (?)", UserHistory.staff_action_ids) }
 
   before_save :set_admin_only
 
@@ -121,7 +121,7 @@ class UserHistory < ActiveRecord::Base
     query = query.where(custom_type: filters[:custom_type]) if filters[:custom_type].present?
 
     [:acting_user, :target_user].each do |key|
-      if filters[key] and obj_id = User.where(username_lower: filters[key].downcase).pluck(:id)
+      if filters[key] && (obj_id = User.where(username_lower: filters[key].downcase).pluck(:id))
         query = query.where("#{key}_id = ?", obj_id)
       end
     end
@@ -133,7 +133,7 @@ class UserHistory < ActiveRecord::Base
     self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
   end
 
-  def self.exists_for_user?(user, action_type, opts=nil)
+  def self.exists_for_user?(user, action_type, opts = nil)
     opts = opts || {}
     result = self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
     result = result.where(topic_id: opts[:topic_id]) if opts[:topic_id]
@@ -144,13 +144,12 @@ class UserHistory < ActiveRecord::Base
     [:action_id, :custom_type, :acting_user, :target_user, :subject]
   end
 
-  def self.staff_action_records(viewer, opts=nil)
+  def self.staff_action_records(viewer, opts = nil)
     opts ||= {}
     query = self.with_filters(opts.slice(*staff_filters)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
     query = query.where(admin_only: false) unless viewer && viewer.admin?
     query
   end
-
 
   def set_admin_only
     self.admin_only = UserHistory.admin_only_action_ids.include?(self.action)

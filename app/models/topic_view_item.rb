@@ -6,7 +6,7 @@ class TopicViewItem < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :topic_id, :ip_address, :viewed_at
 
-  def self.add(topic_id, ip, user_id=nil, at=nil, skip_redis=false)
+  def self.add(topic_id, ip, user_id = nil, at = nil, skip_redis = false)
     # Only store a view once per day per thing per user per ip
     at ||= Date.today
     redis_key = "view:#{topic_id}:#{at}"
@@ -27,7 +27,6 @@ class TopicViewItem < ActiveRecord::Base
                  SELECT 1 FROM topic_views
                  /*where*/
                )"
-
 
         builder = SqlBuilder.new(sql)
 

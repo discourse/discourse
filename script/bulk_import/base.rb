@@ -10,7 +10,7 @@ module BulkImport; end
 class BulkImport::Base
 
   NOW ||= "now()".freeze
-  PRIVATE_OFFSET ||= 2 ** 30
+  PRIVATE_OFFSET ||= 2**30
 
   def initialize
     db = ActiveRecord::Base.connection_config
@@ -120,6 +120,7 @@ class BulkImport::Base
     puts "Updating primary key sequences..."
     @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
     @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
+    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
     @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
     @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
     @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
@@ -476,7 +477,7 @@ class BulkImport::Base
     start = Time.now
     imported_ids = []
     process_method_name = "process_#{name}"
-    sql = "COPY #{name.pluralize} (#{columns.map {|c| "\"#{c}\""}.join(",")}) FROM STDIN"
+    sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|

@@ -13,7 +13,7 @@
       {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
         {{#if editingTopic}}
           {{#if model.isPrivateMessage}}
-            <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
           {{/if}}
 
           {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
@@ -36,7 +36,7 @@
           <h1>
             {{#unless model.is_warning}}
               <a href={{pmPath}}>
-                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                <span class="private-message-glyph">{{d-icon "envelope"}}</span>
               </a>
             {{/unless}}
 
@@ -48,7 +48,7 @@
             {{/if}}
 
             {{#if model.details.can_edit}}
-              <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
+              <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{d-icon "pencil"}}</a>
             {{/if}}
           </h1>
 
@@ -230,7 +230,7 @@
 
                   {{#if currentUser.show_queued_posts}}
                     {{#link-to "queued-posts"}}
-                      {{fa-icon "check"}}
+                      {{d-icon "check"}}
                       {{i18n "queue.view_pending"}}
                     {{/link-to}}
                   {{/if}}

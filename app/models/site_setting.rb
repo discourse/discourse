@@ -34,7 +34,7 @@ class SiteSetting < ActiveRecord::Base
   client_settings << :available_locales
 
   def self.available_locales
-    LocaleSiteSetting.values.map{ |e| e[:value] }.join('|')
+    LocaleSiteSetting.values.map { |e| e[:value] }.join('|')
   end
 
   def self.topic_title_length
@@ -71,8 +71,8 @@ class SiteSetting < ActiveRecord::Base
 
   def self.anonymous_homepage
     top_menu_items.map { |item| item.name }
-                  .select { |item| anonymous_menu_items.include?(item) }
-                  .first
+      .select { |item| anonymous_menu_items.include?(item) }
+      .first
   end
 
   def self.should_download_images?(src)

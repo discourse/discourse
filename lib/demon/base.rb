@@ -7,7 +7,7 @@ class Demon::Base
     @demons
   end
 
-  def self.start(count=1)
+  def self.start(count = 1)
     @demons ||= {}
     count.times do |i|
       (@demons["#{prefix}_#{i}"] ||= new(i)).start
@@ -50,7 +50,7 @@ class Demon::Base
     "#{Rails.root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
   end
 
-  def alive?(pid=nil)
+  def alive?(pid = nil)
     pid ||= @pid
     if pid
       Demon::Base.alive?(pid)
@@ -63,14 +63,14 @@ class Demon::Base
     @started = false
     if @pid
       # TODO configurable stop signal
-      Process.kill("HUP",@pid)
+      Process.kill("HUP", @pid)
 
       wait_for_stop = lambda {
         timeout = @stop_timeout
 
         while alive? && timeout > 0
-          timeout -= (@stop_timeout/10.0)
-          sleep(@stop_timeout/10.0)
+          timeout -= (@stop_timeout / 10.0)
+          sleep(@stop_timeout / 10.0)
           Process.waitpid(@pid, Process::WNOHANG) rescue -1
         end
 
@@ -85,7 +85,6 @@ class Demon::Base
       end
 
       wait_for_stop.call
-
 
       @pid = nil
       @started = false
@@ -116,7 +115,7 @@ class Demon::Base
     if existing = already_running?
       # should not happen ... so kill violently
       STDERR.puts "Attempting to kill pid #{existing}"
-      Process.kill("TERM",existing)
+      Process.kill("TERM", existing)
     end
 
     @started = true
@@ -156,7 +155,7 @@ class Demon::Base
 
   def write_pid_file
     FileUtils.mkdir_p(Rails.root + "tmp/pids")
-    File.open(pid_file,'w') do |f|
+    File.open(pid_file, 'w') do |f|
       f.write(@pid)
     end
   end
@@ -181,7 +180,6 @@ class Demon::Base
       end
     end
   end
-
 
   def suppress_stdout
     true

@@ -3,7 +3,6 @@ module DiscourseTagging
   TAGS_FIELD_NAME = "tags"
   TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
 
-
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if SiteSetting.tagging_enabled
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -33,11 +32,9 @@ module DiscourseTagging
 
         # guardian is explicitly nil cause we don't want to strip all
         # staff tags that already passed validation
-        tags = filter_allowed_tags(Tag.where(name: tag_names), nil, {
-          for_input: true,
-          category: category,
-          selected_tags: tag_names
-        }).to_a
+        tags = filter_allowed_tags(Tag.where(name: tag_names), nil,           for_input: true,
+                                                                              category: category,
+                                                                              selected_tags: tag_names).to_a
 
         if tags.size < tag_names.size && (category.nil? || category.tags.count == 0)
           tag_names.each do |name|
@@ -51,7 +48,7 @@ module DiscourseTagging
       else
         topic.tags = []
       end
-      topic.tags_changed=true
+      topic.tags_changed = true
     end
     true
   end
@@ -61,7 +58,7 @@ module DiscourseTagging
   #   category: a Category to which the object being tagged belongs
   #   for_input: result is for an input field, so only show permitted tags
   #   selected_tags: an array of tag names that are in the current selection
-  def self.filter_allowed_tags(query, guardian, opts={})
+  def self.filter_allowed_tags(query, guardian, opts = {})
     term = opts[:term]
     if term.present?
       term.gsub!("_", "\\_")
@@ -124,9 +121,9 @@ module DiscourseTagging
       else
         # One tag per group restriction
         exclude_group_ids = TagGroup.where(one_per_topic: true)
-                                    .joins(:tag_group_memberships)
-                                    .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
-                                    .pluck(:id)
+          .joins(:tag_group_memberships)
+          .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
+          .pluck(:id)
 
         if exclude_group_ids.empty?
           sql = "tags.id NOT IN (#{select_sql} WHERE tg.parent_tag_id NOT IN (?))"
@@ -135,9 +132,9 @@ module DiscourseTagging
           # It's possible that the selected tags violate some one-tag-per-group restrictions,
           # so filter them out by picking one from each group.
           limit_tag_ids = TagGroupMembership.select('distinct on (tag_group_id) tag_id')
-                                            .where(tag_id: selected_tag_ids)
-                                            .where(tag_group_id: exclude_group_ids)
-                                            .map(&:tag_id)
+            .where(tag_id: selected_tag_ids)
+            .where(tag_group_id: exclude_group_ids)
+            .map(&:tag_id)
           sql = "(tags.id NOT IN (#{select_sql} WHERE (tg.parent_tag_id NOT IN (?) OR tg.id in (?))) OR tags.id IN (?))"
           query = query.where(sql, selected_tag_ids, exclude_group_ids, limit_tag_ids)
         end
@@ -149,8 +146,8 @@ module DiscourseTagging
 
   def self.clean_tag(tag)
     tag.downcase.strip
-       .gsub(/\s+/, '-').squeeze('-')
-       .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
+      .gsub(/\s+/, '-').squeeze('-')
+      .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
   end
 
   def self.staff_only_tags(tags)
@@ -164,7 +161,7 @@ module DiscourseTagging
     tag_diff.present? ? tag_diff : nil
   end
 
-  def self.tags_for_saving(tags_arg, guardian, opts={})
+  def self.tags_for_saving(tags_arg, guardian, opts = {})
 
     return [] unless guardian.can_tag_topics? && tags_arg.present?
 
@@ -179,7 +176,7 @@ module DiscourseTagging
     return opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
   end
 
-  def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts={})
+  def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})
     tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user), opts) || []
     if taggable.tags.pluck(:name).sort != tag_names.sort
       taggable.tags = Tag.where(name: tag_names).all

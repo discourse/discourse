@@ -10,7 +10,7 @@ class TopicFeaturedUsers
   end
 
   # Chooses which topic users to feature
-  def choose(args={})
+  def choose(args = {})
     self.class.ensure_consistency!(topic.id.to_i)
     update_participant_count
   end
@@ -22,7 +22,7 @@ class TopicFeaturedUsers
      topic.featured_user4_id].uniq.compact
   end
 
-  def self.ensure_consistency!(topic_id=nil)
+  def self.ensure_consistency!(topic_id = nil)
 
     filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
     filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"

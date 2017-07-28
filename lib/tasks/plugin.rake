@@ -49,7 +49,7 @@ task 'plugin:install', :repo do |t, args|
 
   plugin_path = File.expand_path('plugins/' + name)
   if File.directory?(File.expand_path(plugin_path))
-   abort('Plugin directory, ' + plugin_path + ', already exists.')
+    abort('Plugin directory, ' + plugin_path + ', already exists.')
   end
 
   clone_status = system('git clone ' + repo + ' ' + plugin_path)
@@ -95,4 +95,26 @@ task 'plugin:spec', :plugin do |t, args|
   else
     abort "No specs found."
   end
+end
+
+desc 'run plugin qunit tests'
+task 'plugin:qunit', [:plugin, :timeout] do |t, args|
+  args.with_defaults(plugin: "*")
+
+  rake = `which rake`.strip
+
+  cmd = 'LOAD_PLUGINS=1 '
+  cmd += 'QUNIT_SKIP_CORE=1 '
+
+  if args[:plugin] == "*"
+    puts "Running qunit tests for all plugins"
+  else
+    puts "Running qunit tests for #{args[:plugin]}"
+    cmd += "QUNIT_SINGLE_PLUGIN='#{args[:plugin]}' "
+  end
+
+  cmd += "#{rake} qunit:test"
+  cmd += "[#{args[:timeout]}]" if args[:timeout]
+
+  sh cmd
 end

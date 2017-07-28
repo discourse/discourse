@@ -446,10 +446,10 @@ def generate_emoji_groups(keywords)
       emoji_list_section = title_section.first.parent.parent.next_element
       emoji_list_section.css("a.plain img").each do |link|
         emoji_code = link.attr("title")
-                         .scan(/U\+(.{4,5})\b/)
-                         .flatten
-                         .map { |code| code.downcase.strip }
-                         .join("_")
+          .scan(/U\+(.{4,5})\b/)
+          .flatten
+          .map { |code| code.downcase.strip }
+          .join("_")
 
         emoji_char = code_to_emoji(emoji_code)
 
@@ -489,16 +489,16 @@ def write_db_json(emojis)
   # skin tones variations of emojis shouldn’t appear in autocomplete
   emojis_without_tones = emojis
     .select { |char, config|
-      !FITZPATRICK_SCALE.any? { |scale|
-        codepoints_to_code(char.codepoints, config["fitzpatrick_scale"])[scale]
-      }
-    }
+                           !FITZPATRICK_SCALE.any? { |scale|
+                             codepoints_to_code(char.codepoints, config["fitzpatrick_scale"])[scale]
+                           }
+                         }
     .map { |char, config|
-      {
-        "code" => codepoints_to_code(char.codepoints, config["fitzpatrick_scale"]).tr("_", "-"),
-        "name" => config["name"]
-      }
+    {
+      "code" => codepoints_to_code(char.codepoints, config["fitzpatrick_scale"]).tr("_", "-"),
+      "name" => config["name"]
     }
+  }
 
   emoji_with_tones = emojis
     .select { |code, config| config["fitzpatrick_scale"] }
@@ -532,9 +532,9 @@ end
 
 def codepoints_to_code(codepoints, fitzpatrick_scale)
   codepoints = codepoints
-                .map { |c| c.to_s(16).rjust(4, "0") }
-                .join("_")
-                .downcase
+    .map { |c| c.to_s(16).rjust(4, "0") }
+    .join("_")
+    .downcase
 
   if !fitzpatrick_scale
     codepoints.gsub!(/_fe0f$/, "")

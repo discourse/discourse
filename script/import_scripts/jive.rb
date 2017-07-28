@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 class ImportScripts::Jive < ImportScripts::Base
 
   BATCH_SIZE = 1000
-  CATEGORY_IDS = [2023,2003,2004,2042,2036,2029] # categories that should be imported
+  CATEGORY_IDS = [2023, 2003, 2004, 2042, 2036, 2029] # categories that should be imported
 
   def initialize(path)
     @path = path
@@ -45,7 +45,7 @@ class ImportScripts::Jive < ImportScripts::Base
     end
 
     def initialize(cols)
-      cols.each_with_index do |col,idx|
+      cols.each_with_index do |col, idx|
         self.class.send(:define_method, col) do
           @row[idx]
         end
@@ -72,7 +72,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
     File.open(filename).each_line do |line|
 
-      line.gsub!(/\\(.{1})/){|m| m[-1] == '"'? '""': m[-1]}
+      line.gsub!(/\\(.{1})/) { |m| m[-1] == '"' ? '""' : m[-1] }
       line.strip!
 
       current_row << "\n" unless current_row.empty?
@@ -120,7 +120,7 @@ class ImportScripts::Jive < ImportScripts::Base
   end
 
   def total_rows(table)
-    File.foreach("#{@path}/#{table}.csv").inject(0) {|c, line| c+1} - 1
+    File.foreach("#{@path}/#{table}.csv").inject(0) { |c, line| c + 1 } - 1
   end
 
   def import_groups
@@ -128,7 +128,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
     rows = []
     csv_parse("groups") do |row|
-      rows << {id: row.groupid, name: row.name}
+      rows << { id: row.groupid, name: row.name }
     end
 
     create_groups(rows) do |row|
@@ -204,7 +204,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
     csv_parse("communities") do |row|
       next unless CATEGORY_IDS.include?(row.communityid.to_i)
-      rows << {id: row.communityid, name: "#{row.name} (#{row.communityid})"}
+      rows << { id: row.communityid, name: "#{row.name} (#{row.communityid})" }
     end
 
     create_categories(rows) do |row|
@@ -228,46 +228,46 @@ class ImportScripts::Jive < ImportScripts::Base
   end
 
   def import_post_batch!(posts, topics, offset, total)
-      create_posts(posts, total: total, offset: offset) do |post|
+    create_posts(posts, total: total, offset: offset) do |post|
 
-        mapped = {}
+      mapped = {}
 
-        mapped[:id] = post[:id]
-        mapped[:user_id] = user_id_from_imported_user_id(post[:user_id]) || -1
-        mapped[:raw] = post[:body]
-        mapped[:created_at] = post[:created_at]
+      mapped[:id] = post[:id]
+      mapped[:user_id] = user_id_from_imported_user_id(post[:user_id]) || -1
+      mapped[:raw] = post[:body]
+      mapped[:created_at] = post[:created_at]
 
-        topic = topics[post[:topic_id]]
+      topic = topics[post[:topic_id]]
 
-        unless topic
-          p "MISSING TOPIC #{post[:topic_id]}"
-          p post
-          next
-        end
+      unless topic
+        p "MISSING TOPIC #{post[:topic_id]}"
+        p post
+        next
+      end
 
-        unless topic[:post_id]
-          mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
-          mapped[:title] = post[:title]
-          topic[:post_id] = post[:id]
-        else
-          parent = topic_lookup_from_imported_post_id(topic[:post_id])
-          next unless parent
+      unless topic[:post_id]
+        mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
+        mapped[:title] = post[:title]
+        topic[:post_id] = post[:id]
+      else
+        parent = topic_lookup_from_imported_post_id(topic[:post_id])
+        next unless parent
 
-          mapped[:topic_id] = parent[:topic_id]
+        mapped[:topic_id] = parent[:topic_id]
 
-          reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
-          if reply_to_post_id
-            reply_to_post_number = @post_number_map[reply_to_post_id]
-            if reply_to_post_number && reply_to_post_number > 1
-              mapped[:reply_to_post_number] = reply_to_post_number
-            end
+        reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
+        if reply_to_post_id
+          reply_to_post_number = @post_number_map[reply_to_post_id]
+          if reply_to_post_number && reply_to_post_number > 1
+            mapped[:reply_to_post_number] = reply_to_post_number
           end
         end
-
-        next if topic[:deleted] or post[:deleted]
-
-        mapped
       end
+
+      next if topic[:deleted] || post[:deleted]
+
+      mapped
+    end
 
       posts.clear
   end
@@ -290,14 +290,14 @@ class ImportScripts::Jive < ImportScripts::Base
         #IMAGE UPLOADER
         if thread.imagecount
           Dir.foreach("/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}") do |item|
-          next if item == '.' or item == '..' or item == '.DS_Store'
+            next if item == ('.') || item == ('..') || item == ('.DS_Store')
             photo_path = "/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}/#{item}"
             upload = create_upload(thread.userid, photo_path, File.basename(photo_path))
                if upload.persisted?
-                  puts "Image upload is successful for #{photo_path}, new path is #{upload.url}!"
-                  thread.body.gsub!(item,upload.url)
+                 puts "Image upload is successful for #{photo_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item, upload.url)
                else
-                  puts "Error: Image upload is not successful for #{photo_path}!"
+                 puts "Error: Image upload is not successful for #{photo_path}!"
                end
           end
         end
@@ -305,15 +305,15 @@ class ImportScripts::Jive < ImportScripts::Base
         #ATTACHMENT UPLOADER
         if thread.attachmentcount
           Dir.foreach("/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}") do |item|
-          next if item == '.' or item == '..' or item == '.DS_Store'
+            next if item == ('.') || item == ('..') || item == ('.DS_Store')
             attach_path = "/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}/#{item}"
             upload = create_upload(thread.userid, attach_path, File.basename(attach_path))
                if upload.persisted?
-                  puts "Attachment upload is successful for #{attach_path}, new path is #{upload.url}!"
-                  thread.body.gsub!(item,upload.url)
-                  thread.body << "<br/><br/> #{attachment_html(upload,item)}"
+                 puts "Attachment upload is successful for #{attach_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item, upload.url)
+                  thread.body << "<br/><br/> #{attachment_html(upload, item)}"
                else
-                  puts "Error: Attachment upload is not successful for #{attach_path}!"
+                 puts "Error: Attachment upload is not successful for #{attach_path}!"
                end
           end
         end
@@ -337,7 +337,7 @@ class ImportScripts::Jive < ImportScripts::Base
 
     topic_map.each do |_, topic|
       posts << topic if topic[:body]
-      count+=1
+      count += 1
     end
 
     csv_parse("messages") do |thread|
@@ -350,14 +350,14 @@ class ImportScripts::Jive < ImportScripts::Base
         #IMAGE UPLOADER
         if thread.imagecount
           Dir.foreach("/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}") do |item|
-          next if item == '.' or item == '..' or item == '.DS_Store'
+            next if item == ('.') || item == ('..') || item == ('.DS_Store')
             photo_path = "/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}/#{item}"
             upload = create_upload(thread.userid, photo_path, File.basename(photo_path))
                if upload.persisted?
-                  puts "Image upload is successful for #{photo_path}, new path is #{upload.url}!"
-                  thread.body.gsub!(item,upload.url)
+                 puts "Image upload is successful for #{photo_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item, upload.url)
                else
-                  puts "Error: Image upload is not successful for #{photo_path}!"
+                 puts "Error: Image upload is not successful for #{photo_path}!"
                end
           end
         end
@@ -365,15 +365,15 @@ class ImportScripts::Jive < ImportScripts::Base
         #ATTACHMENT UPLOADER
         if thread.attachmentcount
           Dir.foreach("/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}") do |item|
-          next if item == '.' or item == '..' or item == '.DS_Store'
+            next if item == ('.') || item == ('..') || item == ('.DS_Store')
             attach_path = "/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}/#{item}"
             upload = create_upload(thread.userid, attach_path, File.basename(attach_path))
                if upload.persisted?
-                  puts "Attachment upload is successful for #{attach_path}, new path is #{upload.url}!"
-                  thread.body.gsub!(item,upload.url)
-                  thread.body << "<br/><br/> #{attachment_html(upload,item)}"
+                 puts "Attachment upload is successful for #{attach_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item, upload.url)
+                  thread.body << "<br/><br/> #{attachment_html(upload, item)}"
                else
-                  puts "Error: Attachment upload is not successful for #{attach_path}!"
+                 puts "Error: Attachment upload is not successful for #{attach_path}!"
                end
           end
         end
@@ -387,7 +387,7 @@ class ImportScripts::Jive < ImportScripts::Base
           created_at: DateTime.parse(thread.creationdate)
         }
         posts << row
-        count+=1
+        count += 1
 
         if posts.length > 0 && posts.length % BATCH_SIZE == 0
           import_post_batch!(posts, topic_map, count - posts.length, total)

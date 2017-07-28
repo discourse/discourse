@@ -136,7 +136,7 @@ after_initialize do
 
           post.save_custom_fields(true)
 
-          MessageBus.publish("/polls/#{post.topic_id}", {post_id: post.id, polls: polls })
+          MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
 
           polls[poll_name]
         end
@@ -157,14 +157,14 @@ after_initialize do
           # extract attributes
           p.attributes.values.each do |attribute|
             if attribute.name.start_with?(DATA_PREFIX)
-              poll[attribute.name[DATA_PREFIX.length..-1]] = CGI::escapeHTML(attribute.value || "")
+              poll[attribute.name[DATA_PREFIX.length..-1]] = CGI.escapeHTML(attribute.value || "")
             end
           end
 
           # extract options
           p.css("li[#{DATA_PREFIX}option-id]").each do |o|
-            option_id = CGI::escapeHTML(o.attributes[DATA_PREFIX + "option-id"].value || "")
-            poll["options"] << { "id" => option_id, "html" => CGI::escapeHTML(o.inner_html), "votes" => 0 }
+            option_id = o.attributes[DATA_PREFIX + "option-id"].value || ""
+            poll["options"] << { "id" => option_id, "html" => o.inner_html, "votes" => 0 }
           end
 
           # add the poll
@@ -230,7 +230,7 @@ after_initialize do
           end
 
           next unless option["voter_ids"]
-          user_ids << option["voter_ids"].slice((params[:offset].to_i || 0)  * 25, 25)
+          user_ids << option["voter_ids"].slice((params[:offset].to_i || 0) * 25, 25)
         end
 
         user_ids.flatten!
@@ -295,7 +295,7 @@ after_initialize do
     end
   end
 
-  validate(:post, :validate_polls) do |force=nil|
+  validate(:post, :validate_polls) do |force = nil|
     return if !SiteSetting.poll_enabled? && (self.user && !self.user.staff?)
 
     # only care when raw has changed!
@@ -360,9 +360,8 @@ after_initialize do
   # tells the front-end we have a poll for that post
   on(:post_created) do |post|
     next if post.is_first_post? || post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].blank?
-    MessageBus.publish("/polls/#{post.topic_id}", {
-                         post_id: post.id,
-                         polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]})
+    MessageBus.publish("/polls/#{post.topic_id}",                          post_id: post.id,
+                                                                           polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
   end
 
   add_to_serializer(:post, :polls, false) do

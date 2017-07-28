@@ -134,5 +134,4 @@ describe Jobs::GrantAnniversaryBadges do
     end
   end
 
-
 end

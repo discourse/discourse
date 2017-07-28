@@ -1,7 +1,6 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
 =begin
@@ -125,7 +124,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     end
 
     # gather every existent username
-    anon_posts.each do |id,post|
+    anon_posts.each do |id, post|
       anon_names[post['name']] = Hash.new if not anon_names[post['name']]
       # overwriting email address, one user can only use one email address
       anon_names[post['name']]['email'] = post['email']
@@ -133,14 +132,13 @@ class ImportScripts::Bbpress < ImportScripts::Base
     end
 
     # make sure every user name has a unique email address
-    anon_names.each do |k,name|
+    anon_names.each do |k, name|
       if not emails.include? name['email']
         emails.push ( name['email'])
       else
         name['email'] = "anonymous_#{SecureRandom.hex}@no-email.invalid"
       end
     end
-
 
     create_users(anon_names) do |k, n|
       {

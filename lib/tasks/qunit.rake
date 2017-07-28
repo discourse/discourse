@@ -1,6 +1,6 @@
 desc "Runs the qunit test suite"
 
-task "qunit:test", [:timeout] => :environment do |_, args|
+task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
 
   require "rack"
   require "socket"
@@ -10,7 +10,7 @@ task "qunit:test", [:timeout] => :environment do |_, args|
   end
 
   # ensure we have this port available
-  def port_available? port
+  def port_available?(port)
     server = TCPServer.open port
     server.close
     true
@@ -26,25 +26,26 @@ task "qunit:test", [:timeout] => :environment do |_, args|
 
   unless pid = fork
     Discourse.after_fork
-    Rack::Server.start(:config => "config.ru",
-                       :AccessLog => [],
-                       :Port => port)
+    Rack::Server.start(config: "config.ru",
+                       AccessLog: [],
+                       Port: port)
     exit
   end
 
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
+    qunit_path = args[:qunit_path] || "/qunit"
+    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
 
     options = {}
 
-    %w{module filter}.each do |arg|
+    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
     if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20')}"
+      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
     end
 
     if args[:timeout].present?
@@ -62,7 +63,7 @@ task "qunit:test", [:timeout] => :environment do |_, args|
     puts "Warming up Rails server"
     begin
       Net::HTTP.get(uri)
-    rescue Errno::ECONNREFUSED
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL
       sleep 1
       retry unless elapsed() > 60
       puts "Timed out. Can no connect to forked server!"

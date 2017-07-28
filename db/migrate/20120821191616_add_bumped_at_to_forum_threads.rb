@@ -5,6 +5,6 @@ class AddBumpedAtToForumThreads < ActiveRecord::Migration
     change_column :forum_threads, :bumped_at, :datetime, null: false
 
     remove_index :forum_threads, :last_posted_at
-    add_index :forum_threads, :bumped_at, order: {bumped_at: :desc}
+    add_index :forum_threads, :bumped_at, order: { bumped_at: :desc }
   end
 end

@@ -359,7 +359,6 @@ describe DiscourseSingleSignOn do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>new profile</p>")
 
-
       # yes override if site setting
       sso.bio = "new profile 2"
       SiteSetting.sso_overrides_bio = true

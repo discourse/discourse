@@ -51,7 +51,7 @@ module I18n
 
       protected
 
-        def find_results(regexp, results, translations, path=nil)
+        def find_results(regexp, results, translations, path = nil)
           return results if translations.blank?
 
           translations.each do |k_sym, v|

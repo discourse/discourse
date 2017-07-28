@@ -5,7 +5,7 @@ describe PostAlerter do
   let!(:evil_trout) { Fabricate(:evil_trout) }
   let(:user) { Fabricate(:user) }
 
-  def create_post_with_alerts(args={})
+  def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
     PostAlerter.post_created(post)
   end
@@ -43,7 +43,6 @@ describe PostAlerter do
       # yes notification cause we were replied to
       expect(Notification.where(user_id: pm.user_id).count).to eq(1)
 
-
     end
 
     it "triggers :before_create_notifications_for_users" do
@@ -57,8 +56,8 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(op)
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user1], op] })
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user2], op] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
     end
   end
 
@@ -66,11 +65,10 @@ describe PostAlerter do
     it "does not return whispers as unread posts" do
       op = Fabricate(:post)
       _whisper = Fabricate(:post, raw: 'this is a whisper post',
-                                 user: Fabricate(:admin),
-                                 topic: op.topic,
-                                 reply_to_post_number: op.post_number,
-                                 post_type: Post.types[:whisper])
-
+                                  user: Fabricate(:admin),
+                                  topic: op.topic,
+                                  reply_to_post_number: op.post_number,
+                                  post_type: Post.types[:whisper])
 
       expect(PostAlerter.new.first_unread_post(op.user, op.topic)).to be_blank
     end
@@ -83,16 +81,16 @@ describe PostAlerter do
       post = Fabricate(:post, raw: 'I love waffles')
 
       admin = Fabricate(:admin)
-      post.revise(admin, {raw: 'I made a revision'})
+      post.revise(admin, raw: 'I made a revision')
 
       # skip this notification cause we already notified on a similar edit
       freeze_time 2.hours.from_now
-      post.revise(admin, {raw: 'I made another revision'})
+      post.revise(admin, raw: 'I made another revision')
 
-      post.revise(Fabricate(:admin), {raw: 'I made a revision'})
+      post.revise(Fabricate(:admin), raw: 'I made a revision')
 
       freeze_time 2.hours.from_now
-      post.revise(admin, {raw: 'I made another revision'})
+      post.revise(admin, raw: 'I made another revision')
 
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
     end
@@ -176,7 +174,6 @@ describe PostAlerter do
       expect(notification.data_hash["username"]).to eq(admin2.username)
       expect(notification.data_hash["username2"]).to eq(admin.username)
 
-
       post.user.user_option.update_columns(like_notification_frequency:
                                            UserOption.like_notification_frequency_type[:first_time_and_daily])
 
@@ -215,7 +212,7 @@ describe PostAlerter do
     it "won't notify the user a second time on revision" do
       p1 = create_post_with_alerts(raw: '[quote="Evil Trout, post:1"]whatup[/quote]')
       expect {
-        p1.revise(p1.user, { raw: '[quote="Evil Trout, post:1"]whatup now?[/quote]' })
+        p1.revise(p1.user, raw: '[quote="Evil Trout, post:1"]whatup now?[/quote]')
       }.not_to change(evil_trout.notifications, :count)
     end
 
@@ -231,7 +228,7 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(post)
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[evil_trout], post] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], post])
     end
   end
 
@@ -267,7 +264,7 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         linking_post
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], linking_post] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], linking_post])
     end
   end
 
@@ -304,13 +301,13 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         post
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[evil_trout], post] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], post])
     end
   end
 
   context '@mentions' do
 
-    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout')}
+    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout') }
     let(:topic) { mention_post.topic }
 
     it 'notifies a user' do
@@ -322,7 +319,7 @@ describe PostAlerter do
     it "won't notify the user a second time on revision" do
       mention_post
       expect {
-        mention_post.revise(mention_post.user, { raw: "New raw content that still mentions @eviltrout" })
+        mention_post.revise(mention_post.user, raw: "New raw content that still mentions @eviltrout")
       }.not_to change(evil_trout.notifications, :count)
     end
 
@@ -338,18 +335,18 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         mention_post
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[evil_trout], mention_post] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], mention_post])
     end
 
   it "notification comes from editor is mention is added later" do
-      admin = Fabricate(:admin)
+    admin = Fabricate(:admin)
       post = create_post_with_alerts(user: user, raw: 'No mention here.')
       expect {
-        post.revise(admin, { raw: "Mention @eviltrout in this edit." })
+        post.revise(admin, raw: "Mention @eviltrout in this edit.")
       }.to change(evil_trout.notifications, :count)
       n = evil_trout.notifications.last
       expect(n.data_hash["original_username"]).to eq(admin.username)
-    end
+  end
   end
 
   describe ".create_notification" do
@@ -387,12 +384,12 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         PostAlerter.new.create_notification(user, type, post, {})
       end
-      expect(events).to include({ event_name: :before_create_notification, params: [user, type, post, {}] })
+      expect(events).to include(event_name: :before_create_notification, params: [user, type, post, {}])
     end
   end
 
   describe "push_notification" do
-    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:')}
+    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:') }
     let(:topic) { mention_post.topic }
 
     it "pushes nothing to suspended users" do
@@ -428,7 +425,7 @@ describe PostAlerter do
       body = nil
       headers = nil
 
-      Excon.expects(:post).with{|_req, _body|
+      Excon.expects(:post).with { |_req, _body|
         headers = _body[:headers]
         body = _body[:body]
       }.returns("OK")
@@ -521,7 +518,7 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         PostAlerter.new.after_save_post(post, true)
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], post] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
     end
   end
 
@@ -534,7 +531,7 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(reply)
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], reply] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], reply])
     end
   end
 
@@ -549,7 +546,7 @@ describe PostAlerter do
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(post)
       end
-      expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], post] })
+      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
     end
   end
 
@@ -565,7 +562,7 @@ describe PostAlerter do
         events = DiscourseEvent.track_events do
           PostAlerter.post_created(post)
         end
-        expect(events).to include({ event_name: :before_create_notifications_for_users, params: [[user], post] })
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
       end
     end
   end

@@ -110,7 +110,6 @@ class SearchIndexer
     end
   end
 
-
   class HtmlScrubber < Nokogiri::XML::SAX::Document
     attr_reader :scrubbed
 
@@ -130,7 +129,7 @@ class SearchIndexer
       me.scrubbed
     end
 
-    def start_element(name, attributes=[])
+    def start_element(name, attributes = [])
       attributes = Hash[*attributes.flatten]
       if attributes["alt"]
         scrubbed << " "

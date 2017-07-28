@@ -8,18 +8,18 @@ module Jobs
 
     sidekiq_options retry: false
 
-    HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new({
-      user_archive:   ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at'],
-      user_list:      ['id','name','username','email','title','created_at','last_seen_at','last_posted_at','last_emailed_at','trust_level','approved','suspended_at','suspended_till','blocked','active','admin','moderator','ip_address'],
-      user_stats:     ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received'],
-      user_profile:   ['location','website','views'],
-      user_sso:       ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url'],
-      staff_action:   ['staff_user','action','subject','created_at','details', 'context'],
-      screened_email: ['email','action','match_count','last_match_at','created_at','ip_address'],
-      screened_ip:    ['ip_address','action','match_count','last_match_at','created_at'],
-      screened_url:   ['domain','action','match_count','last_match_at','created_at'],
-      report:         ['date', 'value'],
-    })
+    HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
+      user_archive:   ['topic_title', 'category', 'sub_category', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
+      user_list:      ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'blocked', 'active', 'admin', 'moderator', 'ip_address'],
+      user_stats:     ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
+      user_profile:   ['location', 'website', 'views'],
+      user_sso:       ['external_id', 'external_email', 'external_username', 'external_name', 'external_avatar_url'],
+      staff_action:   ['staff_user', 'action', 'subject', 'created_at', 'details', 'context'],
+      screened_email: ['email', 'action', 'match_count', 'last_match_at', 'created_at', 'ip_address'],
+      screened_ip:    ['ip_address', 'action', 'match_count', 'last_match_at', 'created_at'],
+      screened_url:   ['domain', 'action', 'match_count', 'last_match_at', 'created_at'],
+      report:         ['date', 'value']
+    )
 
     def execute(args)
       @entity = args[:entity]
@@ -58,11 +58,11 @@ module Jobs
       return enum_for(:user_archive_export) unless block_given?
 
       Post.includes(topic: :category)
-          .where(user_id: @current_user.id)
-          .select(:topic_id, :post_number, :raw, :like_count, :reply_count, :created_at)
-          .order(:created_at)
-          .with_deleted
-          .each do |user_archive|
+        .where(user_id: @current_user.id)
+        .select(:topic_id, :post_number, :raw, :like_count, :reply_count, :created_at)
+        .order(:created_at)
+        .with_deleted
+        .each do |user_archive|
         yield get_user_archive_fields(user_archive)
       end
     end
@@ -132,9 +132,9 @@ module Jobs
       return enum_for(:screened_url_export) unless block_given?
 
       ScreenedUrl.select("domain, sum(match_count) as match_count, max(last_match_at) as last_match_at, min(created_at) as created_at")
-                 .group(:domain)
-                 .order('last_match_at DESC')
-                 .each do |screened_url|
+        .group(:domain)
+        .order('last_match_at DESC')
+        .each do |screened_url|
         yield get_screened_url_fields(screened_url)
       end
     end
@@ -181,14 +181,14 @@ module Jobs
 
       def get_base_user_array(user)
         user_array = []
-        user_array.push(user.id,escape_comma(user.name),user.username,user.email,escape_comma(user.title),user.created_at,user.last_seen_at,user.last_posted_at,user.last_emailed_at,user.trust_level,user.approved,user.suspended_at,user.suspended_till,user.blocked,user.active,user.admin,user.moderator,user.ip_address,user.user_stat.topics_entered,user.user_stat.posts_read_count,user.user_stat.time_read,user.user_stat.topic_count,user.user_stat.post_count,user.user_stat.likes_given,user.user_stat.likes_received,escape_comma(user.user_profile.location),user.user_profile.website,user.user_profile.views)
+        user_array.push(user.id, escape_comma(user.name), user.username, user.email, escape_comma(user.title), user.created_at, user.last_seen_at, user.last_posted_at, user.last_emailed_at, user.trust_level, user.approved, user.suspended_at, user.suspended_till, user.blocked, user.active, user.admin, user.moderator, user.ip_address, user.user_stat.topics_entered, user.user_stat.posts_read_count, user.user_stat.time_read, user.user_stat.topic_count, user.user_stat.post_count, user.user_stat.likes_given, user.user_stat.likes_received, escape_comma(user.user_profile.location), user.user_profile.website, user.user_profile.views)
       end
 
       def add_single_sign_on(user, user_info_array)
         if user.single_sign_on_record
-          user_info_array.push(user.single_sign_on_record.external_id,user.single_sign_on_record.external_email,user.single_sign_on_record.external_username,escape_comma(user.single_sign_on_record.external_name),user.single_sign_on_record.external_avatar_url)
+          user_info_array.push(user.single_sign_on_record.external_id, user.single_sign_on_record.external_email, user.single_sign_on_record.external_username, escape_comma(user.single_sign_on_record.external_name), user.single_sign_on_record.external_avatar_url)
         else
-          user_info_array.push(nil,nil,nil,nil,nil)
+          user_info_array.push(nil, nil, nil, nil, nil)
         end
         user_info_array
       end
@@ -233,7 +233,7 @@ module Jobs
         is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
         url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
-        topic_hash = {"post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category, "is_pm" => is_pm, "url" => url}
+        topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category, "is_pm" => is_pm, "url" => url }
         user_archive.merge!(topic_hash)
 
         HEADER_ATTRS_FOR['user_archive'].each do |attr|

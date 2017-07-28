@@ -6,7 +6,7 @@ import { propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
 import { postUrl } from 'discourse/lib/utilities';
-import { cook } from 'discourse/lib/text';
+import { cookAsync } from 'discourse/lib/text';
 import { userPath } from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
 
@@ -170,13 +170,15 @@ const Post = RestModel.extend({
       });
     } else {
 
-      this.setProperties({
-        cooked: cook(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})),
-        can_delete: false,
-        version: this.get('version') + 1,
-        can_recover: true,
-        can_edit: false,
-        user_deleted: true
+      cookAsync(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})).then(cooked => {
+        this.setProperties({
+          cooked: cooked,
+          can_delete: false,
+          version: this.get('version') + 1,
+          can_recover: true,
+          can_edit: false,
+          user_deleted: true
+        });
       });
     }
   },

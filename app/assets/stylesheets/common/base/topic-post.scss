@@ -242,7 +242,7 @@ aside.quote {
 .post-info {
   &.via-email, &.whisper {
     margin-right: 5px;
-    i.fa {
+    .d-icon {
       font-size: 1em;
     }
   }
@@ -402,7 +402,7 @@ blockquote > *:last-child {
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: $primary-medium;
+  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
   background: $primary-low;
   border-radius: 8px;
   font-weight: bold;

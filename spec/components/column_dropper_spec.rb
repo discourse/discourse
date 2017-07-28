@@ -17,8 +17,8 @@ RSpec.describe ColumnDropper do
   it "can correctly drop columns after correct delay" do
     Topic.exec_sql "ALTER TABLE topics ADD COLUMN junk int"
     name = Topic
-            .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
-            .getvalue(0,0)
+      .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
+      .getvalue(0, 0)
 
     Topic.exec_sql("UPDATE schema_migration_details SET created_at = :created_at WHERE name = :name",
                   name: name, created_at: 15.minutes.ago)
@@ -30,7 +30,7 @@ RSpec.describe ColumnDropper do
       after_migration: name,
       columns: ['junk'],
       delay: 20.minutes,
-      on_drop: ->(){dropped_proc_called = true}
+      on_drop: ->() { dropped_proc_called = true }
     )
 
     expect(has_column?('topics', 'junk')).to eq(true)
@@ -41,7 +41,7 @@ RSpec.describe ColumnDropper do
       after_migration: name,
       columns: ['junk'],
       delay: 10.minutes,
-      on_drop: ->(){dropped_proc_called = true}
+      on_drop: ->() { dropped_proc_called = true }
     )
 
     expect(has_column?('topics', 'junk')).to eq(false)
@@ -60,10 +60,12 @@ RSpec.describe ColumnDropper do
       VALUES (1, 'something@email.com');
       SQL
 
-      described_class.mark_readonly(table_name, 'email')
+      ColumnDropper.mark_readonly(table_name, 'email')
     end
 
     after do
+      ActiveRecord::Base.connection.reset!
+
       ActiveRecord::Base.exec_sql <<~SQL
       DROP TABLE IF EXISTS #{table_name};
       DROP TRIGGER IF EXISTS #{table_name}_email_readonly ON #{table_name};
@@ -72,7 +74,7 @@ RSpec.describe ColumnDropper do
 
     it 'should prevent updates to the readonly column' do
       expect do
-        ActiveRecord::Base.exec_sql <<~SQL
+        ActiveRecord::Base.connection.raw_connection.exec <<~SQL
         UPDATE #{table_name}
         SET email = 'testing@email.com'
         WHERE topic_id = 1;
@@ -81,8 +83,6 @@ RSpec.describe ColumnDropper do
         PG::RaiseException,
         /Discourse: email in #{table_name} is readonly/
       )
-
-      ActiveRecord::Base.exec_sql("ROLLBACK")
     end
 
     it 'should allow updates to the other columns' do
@@ -99,7 +99,7 @@ RSpec.describe ColumnDropper do
 
     it 'should prevent insertions to the readonly column' do
       expect do
-        ActiveRecord::Base.exec_sql <<~SQL
+        ActiveRecord::Base.connection.raw_connection.exec <<~SQL
         INSERT INTO #{table_name} (topic_id, email)
         VALUES (2, 'something@email.com');
         SQL
@@ -107,8 +107,6 @@ RSpec.describe ColumnDropper do
         PG::RaiseException,
         /Discourse: email in table_with_readonly_column is readonly/
       )
-
-      ActiveRecord::Base.exec_sql("ROLLBACK")
     end
 
     it 'should allow insertions to the other columns' do

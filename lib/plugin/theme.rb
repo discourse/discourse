@@ -27,4 +27,3 @@ class Plugin::Theme
     end
   end
 end
-

@@ -113,7 +113,7 @@ class TopicEmbed < ActiveRecord::Base
     response.title = title
     doc = Nokogiri::HTML(read_doc.content)
 
-    tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
+    tags = { 'img' => 'src', 'script' => 'src', 'a' => 'href' }
     doc.search(tags.keys.join(',')).each do |node|
       url_param = tags[node.name]
       src = node[url_param]
@@ -132,7 +132,7 @@ class TopicEmbed < ActiveRecord::Base
       # only allow classes in the whitelist
       allowed_classes = if embed_classname_whitelist.blank? then [] else embed_classname_whitelist.split(/[ ,]+/i) end
       doc.search('[class]:not([class=""])').each do |classnode|
-        classes = classnode[:class].split(' ').select{ |classname| allowed_classes.include?(classname) }
+        classes = classnode[:class].split(' ').select { |classname| allowed_classes.include?(classname) }
         if classes.length === 0
           classnode.delete('class')
         else
@@ -145,7 +145,7 @@ class TopicEmbed < ActiveRecord::Base
     response
   end
 
-  def self.import_remote(import_user, url, opts=nil)
+  def self.import_remote(import_user, url, opts = nil)
     opts = opts || {}
     response = find_remote(url)
     response.title = opts[:title] if opts[:title].present?

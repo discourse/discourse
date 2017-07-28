@@ -8,10 +8,10 @@ describe I18n::Backend::DiscourseI18n do
 
   before do
     I18n.reload!
-    backend.store_translations(:en, :foo => 'Foo in :en', :bar => 'Bar in :en', :wat => "Hello %{count}")
-    backend.store_translations(:en, :items => {:one => 'one item', :other => "%{count} items" })
-    backend.store_translations(:de, :bar => 'Bar in :de')
-    backend.store_translations(:'de-AT', :baz => 'Baz in :de-AT')
+    backend.store_translations(:en, foo: 'Foo in :en', bar: 'Bar in :en', wat: "Hello %{count}")
+    backend.store_translations(:en, items: { one: 'one item', other: "%{count} items" })
+    backend.store_translations(:de, bar: 'Bar in :de')
+    backend.store_translations(:'de-AT', baz: 'Baz in :de-AT')
   end
 
   after do
@@ -27,11 +27,11 @@ describe I18n::Backend::DiscourseI18n do
   end
 
   it 'can be searched by key or value' do
-    expect(backend.search(:en, 'fo')).to eq({'foo' => 'Foo in :en'})
-    expect(backend.search(:en, 'foo')).to eq({'foo' => 'Foo in :en' })
-    expect(backend.search(:en, 'Foo')).to eq({'foo' => 'Foo in :en' })
-    expect(backend.search(:en, 'hello')).to eq({'wat' => 'Hello %{count}' })
-    expect(backend.search(:en, 'items.one')).to eq({'items.one' => 'one item' })
+    expect(backend.search(:en, 'fo')).to eq('foo' => 'Foo in :en')
+    expect(backend.search(:en, 'foo')).to eq('foo' => 'Foo in :en')
+    expect(backend.search(:en, 'Foo')).to eq('foo' => 'Foo in :en')
+    expect(backend.search(:en, 'hello')).to eq('wat' => 'Hello %{count}')
+    expect(backend.search(:en, 'items.one')).to eq('items.one' => 'one item')
   end
 
   it 'can return multiple results' do
@@ -42,8 +42,8 @@ describe I18n::Backend::DiscourseI18n do
   end
 
   it 'uses fallback locales for searching' do
-    expect(backend.search(:de, 'bar')).to eq({'bar' => 'Bar in :de'})
-    expect(backend.search(:de, 'foo')).to eq({'foo' => 'Foo in :en'})
+    expect(backend.search(:de, 'bar')).to eq('bar' => 'Bar in :de')
+    expect(backend.search(:de, 'foo')).to eq('foo' => 'Foo in :en')
   end
 
   describe '#exists?' do
@@ -98,8 +98,8 @@ describe I18n::Backend::DiscourseI18n do
 
     it "can be searched" do
       TranslationOverride.upsert!('en', 'wat', 'Overwritten value')
-      expect(I18n.search('wat', backend: backend)).to eq({'wat' => 'Overwritten value'})
-      expect(I18n.search('Overwritten', backend: backend)).to eq({'wat' => 'Overwritten value'})
+      expect(I18n.search('wat', backend: backend)).to eq('wat' => 'Overwritten value')
+      expect(I18n.search('Overwritten', backend: backend)).to eq('wat' => 'Overwritten value')
       expect(I18n.search('Hello', backend: backend)).to eq({})
     end
 

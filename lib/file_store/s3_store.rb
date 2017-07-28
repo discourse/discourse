@@ -9,7 +9,7 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
-    def initialize(s3_helper=nil)
+    def initialize(s3_helper = nil)
       @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
     end
 
@@ -27,7 +27,7 @@ module FileStore
     #   - filename
     #   - content_type
     #   - cache_locally
-    def store_file(file, path, opts={})
+    def store_file(file, path, opts = {})
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]

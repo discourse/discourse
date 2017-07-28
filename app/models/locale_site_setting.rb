@@ -9,7 +9,7 @@ class LocaleSiteSetting < EnumSiteSetting
   def self.values
     supported_locales.map do |l|
       lang = language_names[l] || language_names[l[0..1]]
-      {name: lang ? lang['nativeName'] : l, value: l}
+      { name: lang ? lang['nativeName'] : l, value: l }
     end
   end
 
@@ -25,7 +25,7 @@ class LocaleSiteSetting < EnumSiteSetting
 
   def self.supported_locales
     @lock.synchronize do
-      @supported_locales ||= Dir.glob( File.join(Rails.root, 'config', 'locales', 'client.*.yml') ).map {|x| x.split('.')[-2]}.sort
+      @supported_locales ||= Dir.glob(File.join(Rails.root, 'config', 'locales', 'client.*.yml')).map { |x| x.split('.')[-2] }.sort
     end
   end
 

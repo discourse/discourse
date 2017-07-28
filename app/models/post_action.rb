@@ -42,27 +42,27 @@ class PostAction < ActiveRecord::Base
     nil
   end
 
-  def self.flag_count_by_date(start_date, end_date, category_id=nil)
+  def self.flag_count_by_date(start_date, end_date, category_id = nil)
     result = where('post_actions.created_at >= ? AND post_actions.created_at <= ?', start_date, end_date)
     result = result.where(post_action_type_id: PostActionType.flag_types.values)
     result = result.joins(post: :topic).where("topics.category_id = ?", category_id) if category_id
     result.group('date(post_actions.created_at)')
-          .order('date(post_actions.created_at)')
-          .count
+      .order('date(post_actions.created_at)')
+      .count
   end
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.active
-                                    .flags
-                                    .joins(post: :topic)
-                                    .where('posts.deleted_at' => nil)
-                                    .where('topics.deleted_at' => nil)
-                                    .where('posts.user_id > 0')
-                                    .count('DISTINCT posts.id')
+      .flags
+      .joins(post: :topic)
+      .where('posts.deleted_at' => nil)
+      .where('topics.deleted_at' => nil)
+      .where('posts.user_id > 0')
+      .count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)
     user_ids = User.staff.pluck(:id)
-    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: user_ids })
+    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, user_ids: user_ids)
   end
 
   def self.flagged_posts_count
@@ -107,7 +107,6 @@ SQL
       (map[row.topic_id] ||= []) << row.post_number
     end
 
-
     map
   end
 
@@ -128,21 +127,21 @@ SQL
     user_actions
   end
 
-  def self.count_per_day_for_type(post_action_type, opts=nil)
+  def self.count_per_day_for_type(post_action_type, opts = nil)
     opts ||= {}
     result = unscoped.where(post_action_type_id: post_action_type)
     result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
     result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id]) if opts[:category_id]
     result.group('date(post_actions.created_at)')
-          .order('date(post_actions.created_at)')
-          .count
+      .order('date(post_actions.created_at)')
+      .count
   end
 
-  def self.agree_flags!(post, moderator, delete_post=false)
+  def self.agree_flags!(post, moderator, delete_post = false)
     actions = PostAction.active
-                        .where(post_id: post.id)
-                        .where(post_action_type_id: PostActionType.flag_types.values)
+      .where(post_id: post.id)
+      .where(post_action_type_id: PostActionType.flag_types.values)
 
     trigger_spam = false
     actions.each do |action|
@@ -169,7 +168,7 @@ SQL
       end
 
     actions = PostAction.where(post_id: post.id)
-                        .where(post_action_type_id: action_type_ids)
+      .where(post_action_type_id: action_type_ids)
 
     actions.each do |action|
       action.disagreed_at = Time.zone.now
@@ -186,10 +185,10 @@ SQL
     update_flagged_posts_count
   end
 
-  def self.defer_flags!(post, moderator, delete_post=false)
+  def self.defer_flags!(post, moderator, delete_post = false)
     actions = PostAction.active
-                        .where(post_id: post.id)
-                        .where(post_action_type_id: PostActionType.flag_types.values)
+      .where(post_id: post.id)
+      .where(post_action_type_id: PostActionType.flag_types.values)
 
     actions.each do |action|
       action.deferred_at = Time.zone.now
@@ -202,7 +201,7 @@ SQL
     update_flagged_posts_count
   end
 
-  def add_moderator_post_if_needed(moderator, disposition, delete_post=false)
+  def add_moderator_post_if_needed(moderator, disposition, delete_post = false)
     return if !SiteSetting.auto_respond_to_flag_actions
     return if related_post.nil? || related_post.topic.nil?
     return if staff_already_replied?(related_post.topic)
@@ -237,33 +236,35 @@ SQL
       opts[:target_group_names] = target_moderators
     else
       opts[:subtype] = TopicSubtype.notify_user
-      opts[:target_usernames] = if post_action_type == :notify_user
-                                  post.user.username
-                                elsif post_action_type != :notify_moderators
-                                  # this is a hack to allow a PM with no recipients, we should think through
-                                  # a cleaner technique, a PM with myself is valid for flagging
-                                  'x'
-                                end
+
+      opts[:target_usernames] =
+        if post_action_type == :notify_user
+          post.user.username
+        elsif post_action_type != :notify_moderators
+          # this is a hack to allow a PM with no recipients, we should think through
+          # a cleaner technique, a PM with myself is valid for flagging
+          'x'
+        end
     end
 
     PostCreator.new(user, opts).create.try(:id)
   end
 
-  def self.limit_action!(user,post,post_action_type_id)
+  def self.limit_action!(user, post, post_action_type_id)
     RateLimiter.new(user, "post_action-#{post.id}_#{post_action_type_id}", 4, 1.minute).performed!
   end
 
   def self.act(user, post, post_action_type_id, opts = {})
 
-    limit_action!(user,post,post_action_type_id)
+    limit_action!(user, post, post_action_type_id)
 
     related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
     staff_took_action = opts[:take_action] || false
 
-    targets_topic = if opts[:flag_topic] && post.topic
-                      post.topic.reload
-                      post.topic.posts_count != 1
-                    end
+    targets_topic =
+      if opts[:flag_topic] && post.topic
+        post.topic.reload.posts_count != 1
+      end
 
     where_attrs = {
       post_id: post.id,
@@ -279,9 +280,9 @@ SQL
 
     # First try to revive a trashed record
     post_action = PostAction.where(where_attrs)
-                            .with_deleted
-                            .where("deleted_at IS NOT NULL")
-                            .first
+      .with_deleted
+      .where("deleted_at IS NOT NULL")
+      .first
 
     if post_action
       post_action.recover!
@@ -324,7 +325,7 @@ SQL
 
   def self.remove_act(user, post, post_action_type_id)
 
-    limit_action!(user,post,post_action_type_id)
+    limit_action!(user, post, post_action_type_id)
 
     finder = PostAction.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id)
     finder = finder.with_deleted.includes(:post) if user.try(:staff?)
@@ -374,10 +375,10 @@ SQL
           multiplier = SiteSetting.send("tl#{user.trust_level}_additional_likes_per_day_multiplier").to_f
           multiplier = 1.0 if multiplier < 1.0
 
-          limit = (limit * multiplier ).to_i
+          limit = (limit * multiplier).to_i
         end
 
-        @rate_limiter = RateLimiter.new(user, "create_#{type}",limit, 1.day.to_i)
+        @rate_limiter = RateLimiter.new(user, "create_#{type}", limit, 1.day.to_i)
         return @rate_limiter
       end
     end
@@ -386,12 +387,12 @@ SQL
   before_create do
     post_action_type_ids = is_flag? ? PostActionType.flag_types.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
-                                    .where(post_id: post_id)
-                                    .where(post_action_type_id: post_action_type_ids)
-                                    .where(deleted_at: nil)
-                                    .where(disagreed_at: nil)
-                                    .where(targets_topic: targets_topic)
-                                    .exists?
+        .where(post_id: post_id)
+        .where(post_action_type_id: post_action_type_ids)
+        .where(deleted_at: nil)
+        .where(disagreed_at: nil)
+        .where(targets_topic: targets_topic)
+        .exists?
   end
 
   # Returns the flag counts for a post, taking into account that some users
@@ -427,8 +428,8 @@ SQL
     # Update denormalized counts
     column = "#{post_action_type_key}_count"
     count = PostAction.where(post_id: post_id)
-                      .where(post_action_type_id: post_action_type_id)
-                      .count
+      .where(post_action_type_id: post_action_type_id)
+      .count
 
     # We probably want to refactor this method to something cleaner.
     case post_action_type_key
@@ -438,18 +439,17 @@ SQL
     when :like
       # 'like_score' is weighted higher for staff accounts
       score = PostAction.joins(:user)
-                        .where(post_id: post_id)
-                        .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
+        .where(post_id: post_id)
+        .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
       Post.where(id: post_id).update_all ["like_count = :count, like_score = :score", count: count, score: score]
     else
       Post.where(id: post_id).update_all ["#{column} = ?", count]
     end
 
-
     topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
 
     # topic_user
-    if [:like,:bookmark].include? post_action_type_key
+    if [:like, :bookmark].include? post_action_type_key
       TopicUser.update_post_action_cache(user_id: user_id,
                                          topic_id: topic_id,
                                          post_action_type: post_action_type_key)
@@ -501,12 +501,12 @@ SQL
     return if topic.nil? || topic.closed?
 
     flags = PostAction.active
-                      .flags
-                      .joins(:post)
-                      .where("posts.topic_id = ?", topic.id)
-                      .where("post_actions.user_id > 0")
-                      .group("post_actions.user_id")
-                      .pluck("post_actions.user_id, COUNT(post_id)")
+      .flags
+      .joins(:post)
+      .where("posts.topic_id = ?", topic.id)
+      .where("post_actions.user_id > 0")
+      .group("post_actions.user_id")
+      .pluck("post_actions.user_id, COUNT(post_id)")
 
     # we need a minimum number of unique flaggers
     return if flags.count < SiteSetting.num_flaggers_to_close_topic
@@ -535,7 +535,7 @@ SQL
        acting_user.has_trust_level?(TrustLevel[3]) &&
        post.user.trust_level == TrustLevel[0]
 
-       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
+      hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
 
     elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
           SiteSetting.flags_required_to_hide_post > 0
@@ -548,7 +548,7 @@ SQL
     end
   end
 
-  def self.hide_post!(post, post_action_type, reason=nil)
+  def self.hide_post!(post, post_action_type, reason = nil)
     return if post.hidden
 
     unless reason

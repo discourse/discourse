@@ -130,11 +130,11 @@ class TrustLevel3Requirements
 
   def num_flagged_posts
     PostAction.with_deleted
-              .where(post_id: flagged_post_ids)
-              .where.not(user_id: @user.id)
-              .where.not(agreed_at: nil)
-              .pluck(:post_id)
-              .uniq.count
+      .where(post_id: flagged_post_ids)
+      .where.not(user_id: @user.id)
+      .where.not(agreed_at: nil)
+      .pluck(:post_id)
+      .uniq.count
   end
 
   def max_flagged_posts
@@ -143,11 +143,11 @@ class TrustLevel3Requirements
 
   def num_flagged_by_users
     @_num_flagged_by_users ||= PostAction.with_deleted
-                                         .where(post_id: flagged_post_ids)
-                                         .where.not(user_id: @user.id)
-                                         .where.not(agreed_at: nil)
-                                         .pluck(:user_id)
-                                         .uniq.count
+      .where(post_id: flagged_post_ids)
+      .where.not(user_id: @user.id)
+      .where.not(agreed_at: nil)
+      .pluck(:user_id)
+      .uniq.count
   end
 
   def max_flagged_by_users
@@ -194,12 +194,10 @@ class TrustLevel3Requirements
     (min_likes_received.to_f / 4.0).ceil
   end
 
-
   def self.clear_cache
     $redis.del NUM_TOPICS_KEY
     $redis.del NUM_POSTS_KEY
   end
-
 
   CACHE_DURATION = 1.day.seconds - 60
   NUM_TOPICS_KEY = "tl3_num_topics"
@@ -223,8 +221,8 @@ class TrustLevel3Requirements
 
   def flagged_post_ids
     @_flagged_post_ids ||= @user.posts
-                                .with_deleted
-                                .where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', time_period.days.ago)
-                                .pluck(:id)
+      .with_deleted
+      .where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', time_period.days.ago)
+      .pluck(:id)
   end
 end

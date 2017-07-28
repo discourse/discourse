@@ -37,7 +37,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   end
 
   def execute
-    SiteSetting.disable_emails=true
+    SiteSetting.disable_emails = true
     import_users
     import_categories
     import_posts
@@ -66,7 +66,7 @@ class ImportScripts::MyBB < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :users, results.map {|u| u["id"].to_i}
+      next if all_records_exist? :users, results.map { |u| u["id"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
         { id: user['id'],
@@ -87,7 +87,7 @@ class ImportScripts::MyBB < ImportScripts::Base
     ")
 
     create_categories(results) do |row|
-      h = {id: row['id'], name: CGI.unescapeHTML(row['name']), description: CGI.unescapeHTML(row['description'])}
+      h = { id: row['id'], name: CGI.unescapeHTML(row['name']), description: CGI.unescapeHTML(row['description']) }
       if row['parent_id'].to_i > 0
         h[:parent_category_id] = category_id_from_imported_category_id(row['parent_id'])
       end
@@ -120,7 +120,7 @@ class ImportScripts::MyBB < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|m| m['id'].to_i}
+      next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
@@ -235,7 +235,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   def create_permalinks
     puts '', 'Creating redirects...', ''
 
-    SiteSetting.permalink_normalizations= '/(\\w+)-(\\d+)[-.].*/\\1-\\2.html'
+    SiteSetting.permalink_normalizations = '/(\\w+)-(\\d+)[-.].*/\\1-\\2.html'
     puts '', 'Users...', ''
     total_users = User.count
     start_time = Time.now
@@ -244,7 +244,7 @@ class ImportScripts::MyBB < ImportScripts::Base
       ucf = u.custom_fields
       count += 1
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create(url: "#{BASE}/user-#{ucf['import_id']}.html", external_url: "/u/#{u.username}" ) rescue nil
+        Permalink.create(url: "#{BASE}/user-#{ucf['import_id']}.html", external_url: "/u/#{u.username}") rescue nil
       end
       print_status(count, total_users, start_time)
     end
@@ -260,7 +260,7 @@ class ImportScripts::MyBB < ImportScripts::Base
       unless QUIET
         puts ("forum-#{id}.html --> /c/#{cat.id}")
       end
-      Permalink.create( url: "#{BASE}/forum-#{id}.html", category_id: cat.id ) rescue nil
+      Permalink.create(url: "#{BASE}/forum-#{id}.html", category_id: cat.id) rescue nil
       print_status(count, total_categories, start_time)
     end
 
@@ -286,7 +286,7 @@ class ImportScripts::MyBB < ImportScripts::Base
         count += 1
         if topic = topic_lookup_from_imported_post_id(post['id'])
           id = post['topic_id']
-          Permalink.create( url: "#{BASE}/thread-#{id}.html", topic_id: topic[:topic_id] ) rescue nil
+          Permalink.create(url: "#{BASE}/thread-#{id}.html", topic_id: topic[:topic_id]) rescue nil
           unless QUIET
             puts ("#{BASE}/thread-#{id}.html --> http://localhost:3000/t/#{topic[:topic_id]}")
           end
@@ -295,8 +295,6 @@ class ImportScripts::MyBB < ImportScripts::Base
       end
     end
   end
-
-
 
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)

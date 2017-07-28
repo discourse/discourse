@@ -10,8 +10,8 @@ describe Admin::ColorSchemesController do
     let(:valid_params) { { color_scheme: {
         name: 'Such Design',
         colors: [
-          {name: 'primary', hex: 'FFBB00'},
-          {name: 'secondary', hex: '888888'}
+          { name: 'primary', hex: 'FFBB00' },
+          { name: 'secondary', hex: '888888' }
         ]
       }
     } }

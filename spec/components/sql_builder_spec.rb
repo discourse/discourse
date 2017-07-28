@@ -64,11 +64,11 @@ describe SqlBuilder do
 
     it "should allow order by" do
       expect(@builder.order_by("A desc").limit(1)
-        .exec(a:1, b:2).values[0][0]).to eq("2")
+        .exec(a: 1, b: 2).values[0][0]).to eq("2")
     end
     it "should allow offset" do
       expect(@builder.order_by("A desc").offset(1)
-        .exec(a:1, b:2).values[0][0]).to eq("1")
+        .exec(a: 1, b: 2).values[0][0]).to eq("1")
     end
   end
 

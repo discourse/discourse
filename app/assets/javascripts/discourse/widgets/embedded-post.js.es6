@@ -2,7 +2,7 @@ import PostCooked from 'discourse/widgets/post-cooked';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import DiscourseURL from 'discourse/lib/url';
 
 createWidget('post-link-arrow', {

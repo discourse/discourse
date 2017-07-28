@@ -7,7 +7,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
   let(:topic) do
     Fabricate(:private_message_topic, first_post: first_post,
-      topic_allowed_users: [
+                                      topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
         Fabricate.build(:topic_allowed_user, user: user),
       ]
@@ -79,15 +79,13 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         new_post = Post.offset(1).last
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => topic.id,
-          "state" => "tutorial_edit",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s,
-          "tutorial_edit" => {
+        expect(narrative.get_data(user)).to eq("topic_id" => topic.id,
+                                               "state" => "tutorial_edit",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s,
+                                               "tutorial_edit" => {
             "post_id" => Post.last.id
-          }
-        })
+          })
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to eq(topic.id)
@@ -111,15 +109,13 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         new_post = Post.offset(1).last
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => new_post.topic.id,
-          "state" => "tutorial_edit",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s,
-          "tutorial_edit" => {
+        expect(narrative.get_data(user)).to eq("topic_id" => new_post.topic.id,
+                                               "state" => "tutorial_edit",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s,
+                                               "tutorial_edit" => {
             "post_id" => Post.last.id
-          }
-        })
+          })
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to_not eq(topic.id)
@@ -659,11 +655,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           'discourse_narrative_bot.advanced_user_narrative.details.reply', base_uri: ''
         ))
 
-        expect(narrative.get_data(user)).to eq({
-          "state" => "end",
-          "topic_id" => topic.id,
-          "track" => described_class.to_s
-        })
+        expect(narrative.get_data(user)).to eq("state" => "end",
+                                               "topic_id" => topic.id,
+                                               "track" => described_class.to_s)
 
         expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME).exists?)
           .to eq(true)

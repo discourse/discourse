@@ -65,19 +65,15 @@ export default Ember.Component.extend({
   selectedDiversityChanged() {
     keyValueStore.setObject({key: EMOJI_SELECTED_DIVERSITY, value: this.get("selectedDiversity")});
 
-    $.each($list.find(".emoji[data-loaded='1'].diversity"), (_, button) => this._setButtonBackground(button, true) );
+    $.each($list.find(".emoji[data-loaded='1'].diversity"), (_, button) => {
+      $(button).css("background-image", "").removeAttr("data-loaded");
+    });
 
     if(this.get("filter") !== "") {
       $.each($results.find(".emoji.diversity"), (_, button) => this._setButtonBackground(button, true) );
     }
 
-    $picker
-      .find(".diversity-picker .diversity-scale")
-      .removeClass("selected");
-
-    $picker
-      .find(`.diversity-picker .diversity-scale[data-level="${this.get("selectedDiversity")}"]`)
-      .addClass("selected");
+    this._updateSelectedDiversity();
   },
 
   @observes("recentEmojis")
@@ -141,7 +137,17 @@ export default Ember.Component.extend({
       this._loadCategoriesEmojis();
       this._positionPicker();
       this._scrollTo();
+      this._updateSelectedDiversity();
     });
+  },
+
+  _updateSelectedDiversity() {
+    const $diversityPicker = $picker.find(".diversity-picker");
+
+    $diversityPicker.find(".diversity-scale").removeClass("selected");
+    $diversityPicker
+      .find(`.diversity-scale[data-level="${this.get("selectedDiversity")}"]`)
+      .addClass("selected");
   },
 
   _sectionLoadingCheck() {

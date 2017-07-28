@@ -1,7 +1,6 @@
 class Backfill < Thor
   desc "link_titles", "Backfills link titles"
 
-
   def link_titles
     require './config/environment'
     topic_links = TopicLink.where(crawled_at: nil, internal: false)
@@ -13,4 +12,3 @@ class Backfill < Thor
     end
   end
 end
-

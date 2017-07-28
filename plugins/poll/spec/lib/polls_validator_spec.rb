@@ -71,7 +71,6 @@ describe ::DiscoursePoll::PollsValidator do
       )
     end
 
-
     it 'should ensure that polls have at least 2 options' do
       raw = <<~RAW
       [poll]

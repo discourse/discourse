@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
-  def rescue_discourse_actions(type, status_code, include_ember=false)
+  def rescue_discourse_actions(type, status_code, include_ember = false)
 
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
@@ -175,7 +175,7 @@ class ApplicationController < ActionController::Base
 
   def set_current_user_for_logs
     if current_user
-      Logster.add_to_env(request.env,"username",current_user.username)
+      Logster.add_to_env(request.env, "username", current_user.username)
       response.headers["X-Discourse-Username"] = current_user.username
     end
     response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
@@ -298,9 +298,9 @@ class ApplicationController < ActionController::Base
     current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
   end
 
-  def serialize_data(obj, serializer, opts=nil)
+  def serialize_data(obj, serializer, opts = nil)
     # If it's an array, apply the serializer as an each_serializer to the elements
-    serializer_opts = {scope: guardian}.merge!(opts || {})
+    serializer_opts = { scope: guardian }.merge!(opts || {})
     if obj.respond_to?(:to_ary)
       serializer_opts[:each_serializer] = serializer
       ActiveModel::ArraySerializer.new(obj.to_ary, serializer_opts).as_json
@@ -313,11 +313,11 @@ class ApplicationController < ActionController::Base
   # 20% slower than calling MultiJSON.dump ourselves. I'm not sure why
   # Rails doesn't call MultiJson.dump when you pass it json: obj but
   # it seems we don't need whatever Rails is doing.
-  def render_serialized(obj, serializer, opts=nil)
+  def render_serialized(obj, serializer, opts = nil)
     render_json_dump(serialize_data(obj, serializer, opts), opts)
   end
 
-  def render_json_dump(obj, opts=nil)
+  def render_json_dump(obj, opts = nil)
     opts ||= {}
     if opts[:rest_serializer]
       obj['__rest_serializer'] = "1"
@@ -341,7 +341,7 @@ class ApplicationController < ActionController::Base
     Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
-  def fetch_user_from_params(opts=nil, eager_load = [])
+  def fetch_user_from_params(opts = nil, eager_load = [])
     opts ||= {}
     user = if params[:username]
       username_lower = params[:username].downcase.chomp('.json')
@@ -361,9 +361,9 @@ class ApplicationController < ActionController::Base
   end
 
   def post_ids_including_replies
-    post_ids = params[:post_ids].map {|p| p.to_i}
+    post_ids = params[:post_ids].map { |p| p.to_i }
     if params[:reply_post_ids]
-      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
+      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map { |p| p.to_i }).pluck(:reply_id)
     end
     post_ids
   end
@@ -393,7 +393,6 @@ class ApplicationController < ActionController::Base
       raise Discourse::NotFound
     end
   end
-
 
   def secure_session
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
@@ -433,14 +432,16 @@ class ApplicationController < ActionController::Base
 
     def custom_html_json
       target = view_context.mobile_view? ? :mobile : :desktop
-      data = if @theme_key
-               {
-                top: Theme.lookup_field(@theme_key, target, "after_header"),
-                footer: Theme.lookup_field(@theme_key, target, "footer")
-               }
-             else
-                {}
-             end
+
+      data =
+        if @theme_key
+          {
+           top: Theme.lookup_field(@theme_key, target, "after_header"),
+           footer: Theme.lookup_field(@theme_key, target, "footer")
+          }
+        else
+          {}
+        end
 
       if DiscoursePluginRegistry.custom_html
         data.merge! DiscoursePluginRegistry.custom_html
@@ -480,7 +481,7 @@ class ApplicationController < ActionController::Base
     # opts:
     #   type   - a machine-readable description of the error
     #   status - HTTP status code to return
-    def render_json_error(obj, opts={})
+    def render_json_error(obj, opts = {})
       opts = { status: opts } if opts.is_a?(Integer)
       render json: MultiJson.dump(create_errors_json(obj, opts[:type])), status: opts[:status] || 422
     end
@@ -493,7 +494,7 @@ class ApplicationController < ActionController::Base
       { failed: 'FAILED' }
     end
 
-    def json_result(obj, opts={})
+    def json_result(obj, opts = {})
       if yield(obj)
         json = success_json
 
@@ -574,21 +575,20 @@ class ApplicationController < ActionController::Base
       raise Discourse::ReadOnly.new if !(request.get? || request.head?) && Discourse.readonly_mode?
     end
 
-    def build_not_found_page(status=404, layout=false)
+    def build_not_found_page(status = 404, layout = false)
       category_topic_ids = Category.pluck(:topic_id).compact
       @container_class = "wrap not-found-container"
-      @top_viewed = TopicQuery.new(nil, {except_topic_ids: category_topic_ids}).list_top_for("monthly").topics.first(10)
+      @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
-      @slug.tr!('-',' ')
+      @slug.tr!('-', ' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 
-
   protected
 
-    def render_post_json(post, add_raw=true)
+    def render_post_json(post, add_raw = true)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.add_raw = add_raw
 

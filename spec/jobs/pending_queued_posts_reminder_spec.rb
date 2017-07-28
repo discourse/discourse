@@ -24,7 +24,7 @@ describe Jobs::PendingQueuedPostReminder do
     end
 
     it "emails if there are new queued posts" do
-      described_class.any_instance.stubs(:should_notify_ids).returns([1,2])
+      described_class.any_instance.stubs(:should_notify_ids).returns([1, 2])
       described_class.any_instance.stubs(:last_notified_id).returns(nil)
       Email::Sender.any_instance.expects(:send).once
       described_class.new.execute({})

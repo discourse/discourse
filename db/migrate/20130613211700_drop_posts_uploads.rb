@@ -7,7 +7,7 @@ class DropPostsUploads < ActiveRecord::Migration
     create_table :posts_uploads, id: false do |t|
       t.integer :post_id
       t.integer :upload_id
-  end
+    end
 
     add_index :posts_uploads, :post_id
     add_index :posts_uploads, :upload_id

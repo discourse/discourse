@@ -131,8 +131,8 @@ describe SpamRule::AutoBlock do
     subject       { described_class.new(user) }
 
     before do
-      described_class.stubs(:block?).with {|u| u.id != user.id }.returns(false)
-      described_class.stubs(:block?).with {|u| u.id == user.id }.returns(true)
+      described_class.stubs(:block?).with { |u| u.id != user.id }.returns(false)
+      described_class.stubs(:block?).with { |u| u.id == user.id }.returns(true)
       subject.stubs(:block?).returns(true)
     end
 
@@ -150,7 +150,7 @@ describe SpamRule::AutoBlock do
         SiteSetting.notify_mods_when_user_blocked = true
         moderator = Fabricate(:moderator)
         GroupMessage.expects(:create).with do |group, msg_type, params|
-          group == Group[:moderators].name and msg_type == :user_automatically_blocked and params[:user].id == user.id
+          group == (Group[:moderators].name) && msg_type == (:user_automatically_blocked) && params[:user].id == (user.id)
         end
         subject.block_user
       end

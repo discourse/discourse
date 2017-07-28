@@ -27,7 +27,6 @@ class PostRevisionSerializer < ApplicationSerializer
              :wiki,
              :can_edit
 
-
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
   def self.add_compared_field(field)
@@ -59,8 +58,8 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def previous_revision
     @previous_revision ||= revisions.select { |r| r["revision"] >= first_revision }
-                                    .select { |r| r["revision"] < current_revision }
-                                    .last.try(:[], "revision")
+      .select { |r| r["revision"] < current_revision }
+      .last.try(:[], "revision")
   end
 
   def current_revision
@@ -69,8 +68,8 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def next_revision
     @next_revision ||= revisions.select { |r| r["revision"] <= last_revision }
-                                .select { |r| r["revision"] > current_revision }
-                                .first.try(:[], "revision")
+      .select { |r| r["revision"] > current_revision }
+      .first.try(:[], "revision")
   end
 
   def last_revision

@@ -30,7 +30,6 @@ describe InvitesController do
       let!(:invite) { Fabricate(:invite, invited_by: user) }
       let(:another_invite) { Fabricate(:invite, email: 'anotheremail@address.com') }
 
-
       it 'raises an error when the email is missing' do
         expect { delete :destroy }.to raise_error(ActionController::ParameterMissing)
       end
@@ -359,7 +358,7 @@ describe InvitesController do
     context 'while logged in' do
       let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
       let(:file) do
-        ActionDispatch::Http::UploadedFile.new({ filename: 'discourse.csv', tempfile: csv_file })
+        ActionDispatch::Http::UploadedFile.new(filename: 'discourse.csv', tempfile: csv_file)
       end
       let(:filename) { 'discourse.csv' }
 

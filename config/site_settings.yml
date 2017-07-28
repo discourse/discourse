@@ -555,11 +555,6 @@ posting:
     type: list
     client: true
   delete_old_hidden_posts: true
-  censored_words:
-    client: true
-    default: ''
-    refresh: true
-    type: list
   censored_pattern:
     client: true
     default: ''
@@ -811,6 +806,7 @@ files:
   allow_staff_to_upload_any_file_in_pm:
     default: true
     client: true
+  strip_image_metadata: true
 
 trust:
   default_trust_level:
