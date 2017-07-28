@@ -80,7 +80,14 @@ describe "Groups" do
   end
 
   describe "group can be updated" do
-    let(:group) { Fabricate(:group, name: 'test', users: [user], public: false) }
+    let(:group) do
+      Fabricate(:group,
+        name: 'test',
+        users: [user],
+        public_admission: false,
+        public_exit: false
+      )
+    end
 
     before do
       sign_in(user)
@@ -102,10 +109,11 @@ describe "Groups" do
             flair_url: 'fa-adjust',
             bio_raw: 'testing',
             full_name: 'awesome team',
-            public: true,
+            public_admission: true,
+            public_exit: true,
             allow_membership_requests: true
           }
-        end.to change { GroupHistory.count }.by(7)
+        end.to change { GroupHistory.count }.by(8)
 
         expect(response).to be_success
 
@@ -116,7 +124,8 @@ describe "Groups" do
         expect(group.flair_url).to eq('fa-adjust')
         expect(group.bio_raw).to eq('testing')
         expect(group.full_name).to eq('awesome team')
-        expect(group.public).to eq(true)
+        expect(group.public_admission).to eq(true)
+        expect(group.public_exit).to eq(true)
         expect(group.allow_membership_requests).to eq(true)
         expect(GroupHistory.last.subject).to eq('allow_membership_requests')
       end
@@ -225,7 +234,10 @@ describe "Groups" do
 
       context 'public group' do
         it 'should be fobidden' do
-          group.update_attributes!(public: true)
+          group.update_attributes!(
+            public_admission: true,
+            public_exit: true
+          )
 
           expect { xhr :put, "/groups/#{group.id}/members", usernames: "bob" }
             .to raise_error(Discourse::NotLoggedIn)
@@ -341,7 +353,10 @@ describe "Groups" do
         let(:other_user) { Fabricate(:user) }
 
         before do
-          group.update!(public: true)
+          group.update!(
+            public_admission: true,
+            public_exit: true
+          )
         end
 
         context 'admin' do
@@ -424,11 +439,7 @@ describe "Groups" do
 
         context 'public group' do
           let(:other_user) { Fabricate(:user) }
-          let(:group) { Fabricate(:group, users: [other_user]) }
-
-          before do
-            group.update!(public: true)
-          end
+          let(:group) { Fabricate(:public_group, users: [other_user]) }
 
           context "admin" do
             it "removes by username" do
@@ -484,7 +495,12 @@ describe "Groups" do
       context 'public group' do
         before do
           group.add_owner(user)
-          group.update_attributes!(public: true)
+
+          group.update_attributes!(
+            public_admission: true,
+            public_exit: true
+          )
+
           GroupActionLogger.new(user, group).log_change_group_settings
           sign_in(user)
         end
@@ -497,7 +513,7 @@ describe "Groups" do
           result = JSON.parse(response.body)["logs"].first
 
           expect(result["action"]).to eq(GroupHistory.actions[1].to_s)
-          expect(result["subject"]).to eq('public')
+          expect(result["subject"]).to eq('public_exit')
           expect(result["prev_value"]).to eq('f')
           expect(result["new_value"]).to eq('t')
         end

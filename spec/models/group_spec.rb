@@ -531,7 +531,7 @@ describe Group do
       let(:category) { Fabricate(:category) }
 
       it "should publish the group's categories to the client" do
-        group.update!(public: true, categories: [category])
+        group.update!(public_admission: true, categories: [category])
 
         message = MessageBus.track_publish { group.add(user) }.first
 

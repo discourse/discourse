@@ -409,7 +409,8 @@ en:
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       name_placeholder: "Group name, no spaces, same as username rule"
-      public: "Allow users to join/leave the group freely (Requires publicly visible group)"
+      public_admission: "Allow users to join the group freely (Requires publicly visible group)"
+      public_exit: "Allow users to leave the group freely"
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
