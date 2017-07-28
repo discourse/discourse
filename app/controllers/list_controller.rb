@@ -205,7 +205,7 @@ class ListController < ApplicationController
     render 'list', formats: [:rss]
   end
 
-  def top(options=nil)
+  def top(options = nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
     send("top_#{period}", options)
@@ -308,7 +308,7 @@ class ListController < ApplicationController
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      permalink_redirect_or_not_found and return if parent_category_id.blank? && !id
+      permalink_redirect_or_not_found && (return) if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
@@ -319,7 +319,7 @@ class ListController < ApplicationController
       (redirect_to category.url, status: 301) && return if category
     end
 
-    permalink_redirect_or_not_found and return if !@category
+    permalink_redirect_or_not_found && (return) if !@category
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
@@ -362,23 +362,23 @@ class ListController < ApplicationController
     else # :next
       public_send(method, opts.merge(next_page_params(opts)))
     end
-    url.sub('.json?','?')
+    url.sub('.json?', '?')
   end
 
-  def get_excluded_category_ids(current_category=nil)
+  def get_excluded_category_ids(current_category = nil)
     exclude_category_ids = Category.where(suppress_from_homepage: true)
     exclude_category_ids = exclude_category_ids.where.not(id: current_category) if current_category
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
+  def self.best_period_for(previous_visit_at, category_id = nil)
     default_period = ((category_id && Category.where(id: category_id).pluck(:default_top_period).first) ||
           SiteSetting.top_page_default_timeframe).to_sym
 
     best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
   end
 
-  def self.best_period_with_topics_for(previous_visit_at, category_id=nil, default_period=SiteSetting.top_page_default_timeframe)
+  def self.best_period_with_topics_for(previous_visit_at, category_id = nil, default_period = SiteSetting.top_page_default_timeframe)
     best_periods_for(previous_visit_at, default_period.to_sym).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
@@ -389,12 +389,12 @@ class ListController < ApplicationController
     false
   end
 
-  def self.best_periods_for(date, default_period=:all)
+  def self.best_periods_for(date, default_period = :all)
     date ||= 1.year.ago
     periods = []
     periods << default_period if :all     != default_period
-    periods << :daily         if :daily   != default_period && date >   8.days.ago
-    periods << :weekly        if :weekly  != default_period && date >  35.days.ago
+    periods << :daily         if :daily   != default_period && date > 8.days.ago
+    periods << :weekly        if :weekly  != default_period && date > 35.days.ago
     periods << :monthly       if :monthly != default_period && date > 180.days.ago
     periods << :yearly        if :yearly  != default_period
     periods

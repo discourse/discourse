@@ -30,7 +30,7 @@ class TranslationOverride < ActiveRecord::Base
 
     def self.i18n_changed
       I18n.reload!
-      MessageBus.publish('/i18n-flush', { refresh: true })
+      MessageBus.publish('/i18n-flush', refresh: true)
     end
 
     def check_interpolation_keys

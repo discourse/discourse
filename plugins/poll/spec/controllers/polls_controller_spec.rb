@@ -13,7 +13,7 @@ describe ::DiscoursePoll::PollsController do
     it "works" do
       MessageBus.expects(:publish)
 
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
 
       expect(response).to be_success
       json = ::JSON.parse(response.body)
@@ -23,7 +23,7 @@ describe ::DiscoursePoll::PollsController do
     end
 
     it "requires at least 1 valid option" do
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A", "B"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["A", "B"]
 
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
@@ -31,10 +31,10 @@ describe ::DiscoursePoll::PollsController do
     end
 
     it "supports vote changes" do
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
       expect(response).to be_success
 
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["e89dec30bbd9bf50fabf6a05b4324edf"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["e89dec30bbd9bf50fabf6a05b4324edf"]
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["poll"]["voters"]).to eq(1)
@@ -44,13 +44,13 @@ describe ::DiscoursePoll::PollsController do
 
     it "works even if topic is closed" do
       topic.update_attribute(:closed, true)
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
       expect(response).to be_success
     end
 
     it "ensures topic is not archived" do
       topic.update_attribute(:archived, true)
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["A"]
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.topic_must_be_open_to_vote"))
@@ -58,21 +58,21 @@ describe ::DiscoursePoll::PollsController do
 
     it "ensures post is not trashed" do
       poll.trash!
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["A"]
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
     end
 
     it "ensures polls are associated with the post" do
-      xhr :put, :vote, { post_id: Fabricate(:post).id, poll_name: "foobar", options: ["A"] }
+      xhr :put, :vote, post_id: Fabricate(:post).id, poll_name: "foobar", options: ["A"]
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.no_polls_associated_with_this_post"))
     end
 
     it "checks the name of the poll" do
-      xhr :put, :vote, { post_id: poll.id, poll_name: "foobar", options: ["A"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "foobar", options: ["A"]
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.no_poll_with_this_name", name: "foobar"))
@@ -80,7 +80,7 @@ describe ::DiscoursePoll::PollsController do
 
     it "ensures poll is open" do
       closed_poll = create_post(raw: "[poll status=closed]\n- A\n- B\n[/poll]")
-      xhr :put, :vote, { post_id: closed_poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      xhr :put, :vote, post_id: closed_poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.poll_must_be_open_to_vote"))
@@ -88,9 +88,9 @@ describe ::DiscoursePoll::PollsController do
 
     it "doesn't discard anonymous votes when someone votes" do
       default_poll = poll.custom_fields["polls"]["poll"]
-      add_anonymous_votes(poll, default_poll, 17, {"5c24fc1df56d764b550ceae1b9319125" => 11, "e89dec30bbd9bf50fabf6a05b4324edf" => 6})
+      add_anonymous_votes(poll, default_poll, 17, "5c24fc1df56d764b550ceae1b9319125" => 11, "e89dec30bbd9bf50fabf6a05b4324edf" => 6)
 
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      xhr :put, :vote, post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
       expect(response).to be_success
 
       json = ::JSON.parse(response.body)
@@ -148,7 +148,7 @@ describe ::DiscoursePoll::PollsController do
     it "works for OP" do
       MessageBus.expects(:publish)
 
-      xhr :put, :toggle_status, { post_id: poll.id, poll_name: "poll", status: "closed" }
+      xhr :put, :toggle_status, post_id: poll.id, poll_name: "poll", status: "closed"
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
@@ -158,7 +158,7 @@ describe ::DiscoursePoll::PollsController do
       log_in(:moderator)
       MessageBus.expects(:publish)
 
-      xhr :put, :toggle_status, { post_id: poll.id, poll_name: "poll", status: "closed" }
+      xhr :put, :toggle_status, post_id: poll.id, poll_name: "poll", status: "closed"
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
@@ -166,7 +166,7 @@ describe ::DiscoursePoll::PollsController do
 
     it "ensures post is not trashed" do
       poll.trash!
-      xhr :put, :toggle_status, { post_id: poll.id, poll_name: "poll", status: "closed" }
+      xhr :put, :toggle_status, post_id: poll.id, poll_name: "poll", status: "closed"
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))

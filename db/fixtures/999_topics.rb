@@ -6,9 +6,9 @@ staff = Category.find_by(id: SiteSetting.staff_category_id)
 seed_welcome_topics = (Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not null)').count == 0 && !Rails.env.test?)
 
 unless Rails.env.test?
-  def create_static_page_topic(site_setting_key, title_key, body_key, body_override, category, description, params={})
+  def create_static_page_topic(site_setting_key, title_key, body_key, body_override, category, description, params = {})
     unless SiteSetting.send(site_setting_key) > 0
-      creator = PostCreator.new( Discourse.system_user,
+      creator = PostCreator.new(Discourse.system_user,
                                  title: I18n.t(title_key, default: I18n.t(title_key, locale: :en)),
                                  raw: body_override.present? ? body_override : I18n.t(body_key, params.merge(default: I18n.t(body_key, params.merge(locale: :en)))),
                                  skip_validations: true,
@@ -19,18 +19,16 @@ unless Rails.env.test?
 
       SiteSetting.send("#{site_setting_key}=", post.topic_id)
 
-      _reply = PostCreator.create( Discourse.system_user,
+      _reply = PostCreator.create(Discourse.system_user,
                                   raw: I18n.t('static_topic_first_reply', page_name: I18n.t(title_key, default: I18n.t(title_key, locale: :en))),
                                   skip_validations: true,
-                                  topic_id: post.topic_id )
+                                  topic_id: post.topic_id)
     end
   end
 
-  create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service", {
-    company_domain: "company_domain",
-    company_full_name: "company_full_name",
-    company_name: "company_short_name"
-  })
+  create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service",     company_domain: "company_domain",
+                                                                                                                    company_full_name: "company_full_name",
+                                                                                                                    company_name: "company_short_name")
 
   create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body", nil, staff, "guidelines")
 
@@ -57,14 +55,12 @@ if seed_welcome_topics
   end
 
   welcome = File.read(filename)
-  PostCreator.create( Discourse.system_user,
+  PostCreator.create(Discourse.system_user,
                       raw: welcome,
                       title: DiscoursePluginRegistry.seed_data["admin_quick_start_title"] || "READ ME FIRST: Admin Quick Start Guide",
                       skip_validations: true,
                       category: staff ? staff.name : nil)
 end
-
-
 
 # run this later, cause we need to make sure new application controller resilience is in place first
 
@@ -74,7 +70,7 @@ ColumnDropper.drop(
   columns: %w{
     first_topic_unread_at
   },
-  on_drop: ->(){
+  on_drop: ->() {
     STDERR.puts "Removing superflous user stats columns!"
     ActiveRecord::Base.exec_sql "DROP FUNCTION IF EXISTS first_unread_topic_for(int)"
   }
@@ -91,7 +87,7 @@ ColumnDropper.drop(
     notify_user_count
     last_unread_at
   },
-  on_drop: ->(){
+  on_drop: ->() {
     STDERR.puts "Removing superflous topic columns!"
   }
 )
@@ -106,7 +102,7 @@ ColumnDropper.drop(
     auto_close_based_on_last_post
     auto_close_hours
   },
-  on_drop: ->(){
+  on_drop: ->() {
     STDERR.puts "Removing superflous topic columns!"
   },
   delay: 3600

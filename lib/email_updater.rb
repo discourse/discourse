@@ -7,12 +7,12 @@ class EmailUpdater
 
   attr_reader :user
 
-  def initialize(guardian=nil, user=nil)
+  def initialize(guardian = nil, user = nil)
     @guardian = guardian
     @user = user
   end
 
-  def self.human_attribute_name(name, options={})
+  def self.human_attribute_name(name, options = {})
     User.human_attribute_name(name, options)
   end
 
@@ -68,8 +68,8 @@ class EmailUpdater
         @user = token.user
 
         change_req = user.email_change_requests
-                          .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', { token_id: token.id})
-                          .first
+          .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', token_id: token.id)
+          .first
 
         # Simple state machine
         case change_req.try(:change_state)

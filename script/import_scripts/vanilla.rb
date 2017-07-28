@@ -69,10 +69,10 @@ class ImportScripts::Vanilla < ImportScripts::Base
     def read_file
       puts "reading file..."
       string = File.read(@vanilla_file).gsub("\\N", "")
-                                       .gsub(/\\$\n/m, "\\n")
-                                       .gsub("\\,", ",")
-                                       .gsub(/(?<!\\)\\"/, '""')
-                                       .gsub(/\\\\\\"/, '\\""')
+        .gsub(/\\$\n/m, "\\n")
+        .gsub("\\,", ",")
+        .gsub(/(?<!\\)\\"/, '""')
+        .gsub(/\\\\\\"/, '\\""')
       StringIO.new(string)
     end
 
@@ -192,10 +192,10 @@ class ImportScripts::Vanilla < ImportScripts::Base
 
         # list all other user ids in the conversation
         user_ids_in_conversation = @user_conversations.select { |uc| uc[:conversation_id] == conversation[:conversation_id] && uc[:user_id] != conversation[:insert_user_id] }
-                                                      .map { |uc| uc[:user_id] }
+          .map { |uc| uc[:user_id] }
         # retrieve their emails
         user_emails_in_conversation = @users.select { |u| user_ids_in_conversation.include?(u[:user_id]) }
-                                            .map { |u| u[:email] }
+          .map { |u| u[:email] }
         # retrieve their usernames from the database
         target_usernames = User.where("email IN (?)", user_emails_in_conversation).pluck(:username).to_a
 
@@ -243,10 +243,10 @@ class ImportScripts::Vanilla < ImportScripts::Base
     def clean_up(raw)
       return "" if raw.blank?
       raw.gsub("\\n", "\n")
-         .gsub(/<\/?pre\s*>/i, "\n```\n")
-         .gsub(/<\/?code\s*>/i, "`")
-         .gsub("&lt;", "<")
-         .gsub("&gt;", ">")
+        .gsub(/<\/?pre\s*>/i, "\n```\n")
+        .gsub(/<\/?code\s*>/i, "`")
+        .gsub("&lt;", "<")
+        .gsub("&gt;", ">")
     end
 
 end

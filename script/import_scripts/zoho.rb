@@ -1,6 +1,4 @@
 
-
-
 ###
 ###
 ### The output of this importer is bad.
@@ -11,14 +9,6 @@
 ### Consider leaving data in Zoho and starting fresh in Discourse.
 ###
 ###
-
-
-
-
-
-
-
-
 
 # Import from Zoho.
 # Be sure to get the posts CSV file, AND the user list csv file with people's email addresses.
@@ -64,7 +54,7 @@ class ImportScripts::Zoho < ImportScripts::Base
 
   def import_users
     puts "", "Importing users"
-    create_users( CSV.parse(File.read(File.join(@path, 'users.csv'))) ) do |u|
+    create_users(CSV.parse(File.read(File.join(@path, 'users.csv')))) do |u|
       username = cleanup_zoho_username(u[0])
       {
         id: username,
@@ -105,10 +95,10 @@ class ImportScripts::Zoho < ImportScripts::Base
 
     # Create categories
     @categories.each do |parent, subcats|
-      c = create_category({name: parent}, parent)
+      c = create_category({ name: parent }, parent)
       subcats.each do |subcat|
         next if subcat == "Uncategorized" || subcat == "Uncategorised"
-        create_category({name: subcat, parent_category_id: c.id}, "#{parent}:#{subcat}")
+        create_category({ name: subcat, parent_category_id: c.id }, "#{parent}:#{subcat}")
       end
     end
 
@@ -216,7 +206,6 @@ class ImportScripts::Zoho < ImportScripts::Base
 
     CGI.unescapeHTML(x)
   end
-
 
   def import_post_id(row)
     # Try to make up a unique id based on the data Zoho gives us.

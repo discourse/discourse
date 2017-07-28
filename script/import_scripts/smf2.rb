@@ -53,7 +53,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     if options.password == :ask
       require 'highline'
       $stderr.print "Enter password for MySQL database `#{options.database}`: "
-      options.password = HighLine.new.ask('') {|q| q.echo = false }
+      options.password = HighLine.new.ask('') { |q| q.echo = false }
     end
 
     @default_db_connection = create_db_connection
@@ -76,7 +76,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       WHERE min_posts = -1 AND group_type IN (1, 2)
     SQL
 
-    create_groups(query(<<-SQL), total: total) {|group| group }
+    create_groups(query(<<-SQL), total: total) { |group| group }
       SELECT id_group AS id, group_name AS name
       FROM {prefix}membergroups
       WHERE min_posts = -1 AND group_type IN (1, 2)
@@ -124,12 +124,12 @@ class ImportScripts::Smf2 < ImportScripts::Base
           user.save
           GroupUser.transaction do
             group_ids.each do |gid|
-              group_id = group_id_from_imported_group_id(gid) and
+              (group_id = group_id_from_imported_group_id(gid)) &&
                 GroupUser.find_or_create_by(user: user, group_id: group_id)
             end
           end
-          if options.smfroot and member[:id_attach].present? and user.uploaded_avatar_id.blank?
-            path = find_smf_attachment_path(member[:id_attach], member[:file_hash], member[:filename]) and begin
+          if options.smfroot && member[:id_attach].present? && user.uploaded_avatar_id.blank?
+            (path = find_smf_attachment_path(member[:id_attach], member[:file_hash], member[:filename])) && begin
               upload = create_upload(user.id, path, member[:filename])
               if upload.persisted?
                 user.update(uploaded_avatar_id: upload.id)
@@ -160,7 +160,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         post_create_action: restricted && proc do |category|
           category.update(read_restricted: true)
           groups.each do |imported_group_id|
-            group_id = group_id_from_imported_group_id(imported_group_id) and
+            (group_id = group_id_from_imported_group_id(imported_group_id)) &&
             CategoryGroup.find_or_create_by(category: category, group_id: group_id) do |cg|
               cg.permission_type = CategoryGroup.permission_types[:full]
             end
@@ -184,11 +184,10 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
     end
 
-
     db2 = create_db_connection
 
     create_posts(query(<<-SQL), total: total) do |message|
-      SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, 
+      SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body,
              m.subject, t.id_board, t.id_first_msg, COUNT(a.id_attach) AS attachment_count
       FROM {prefix}messages AS m
       LEFT JOIN {prefix}topics AS t ON t.id_topic = m.id_topic
@@ -226,7 +225,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         WHERE attachment_type = 0 AND id_msg = #{message[:id_msg]}
         ORDER BY id_attach ASC
       SQL
-      attachments.map! {|a| import_attachment(post, a) rescue (puts $! ; nil) }
+      attachments.map! { |a| import_attachment(post, a) rescue (puts $! ; nil) }
       post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)
       next post
     end
@@ -265,7 +264,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
   def create_db_connection
     Mysql2::Client.new(host: options.host, username: options.username,
-      password: options.password, database: options.database)
+                       password: options.password, database: options.database)
   end
 
   def query(sql, **opts, &block)
@@ -278,7 +277,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
   def __query(db, sql, **opts)
     db.query(sql.gsub('{prefix}', options.prefix),
-      {symbolize_keys: true, cache_rows: false}.merge(opts))
+      { symbolize_keys: true, cache_rows: false }.merge(opts))
   end
 
   TRTR_TABLE = begin
@@ -289,14 +288,14 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
   def find_smf_attachment_path(attachment_id, file_hash, filename)
     cleaned_name = filename.dup
-    TRTR_TABLE.each {|from,to| cleaned_name.gsub!(from, to) }
+    TRTR_TABLE.each { |from, to| cleaned_name.gsub!(from, to) }
     cleaned_name.gsub!(/\s/, '_')
     cleaned_name.gsub!(/[^\w_\.\-]/, '')
     legacy_name = "#{attachment_id}_#{cleaned_name.gsub('.', '_')}#{Digest::MD5.hexdigest(cleaned_name)}"
 
     [ filename, "#{attachment_id}_#{file_hash}", legacy_name ]
-      .map {|name| File.join(options.smfroot, 'attachments', name) }
-      .detect {|file| File.exists?(file) }
+      .map { |name| File.join(options.smfroot, 'attachments', name) }
+      .detect { |file| File.exists?(file) }
   end
 
   def decode_entities(*args)
@@ -313,7 +312,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end
     body.gsub!(XListPattern) do |s|
       r = "\n[ul]"
-      s.lines.each {|l| r << '[li]' << l.strip.sub(/^\[x\]\s*/, '') << '[/li]' }
+      s.lines.each { |l| r << '[li]' << l.strip.sub(/^\[x\]\s*/, '') << '[/li]' }
       r << "[/ul]\n"
     end
 
@@ -331,8 +330,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
       if use_count.keys.length < attachments.select(&:present?).length
         body << "\n\n---"
         attachments.each_with_index do |upload, num|
-          if upload.present? and use_count[num] == 0
-            body << ( "\n\n" + get_upload_markdown(upload) )
+          if upload.present? && use_count[num] == (0)
+            body << ("\n\n" + get_upload_markdown(upload))
           end
         end
       end
@@ -378,7 +377,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
   # => {'param1' => 'value1=still1 value1', 'param2' => 'value2 ...'}
   def parse_tag_params(params)
     params.to_s.strip.scan(/(?<param>\w+)=(?<value>(?:(?>\S+)|\s+(?!\w+=))*)/).
-      inject({}) {|h,e| h[e[0]] = e[1]; h }
+      inject({}) { |h, e| h[e[0]] = e[1]; h }
   end
 
   class << self
@@ -391,7 +390,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     # => match[:params] == 'param=value param2=value2'
     #    match[:inner] == "\n  text\n  [tag nested=true]text[/tag]\n"
     def build_nested_tag_regex(ltag, rtag = nil)
-      rtag ||= '/'+ltag
+      rtag ||= '/' + ltag
       %r{
         \[#{ltag}(?-x:[ =](?<params>[^\]]*))?\]            # consume open tag, followed by...
           (?<inner>(?:
@@ -422,10 +421,9 @@ class ImportScripts::Smf2 < ImportScripts::Base
   ColorPattern = build_nested_tag_regex('color')
   ListPattern = build_nested_tag_regex('list')
   AttachmentPatterns = [
-    [/^\[attach(?:|img|url|mini)=(?<num>\d+)\]$/, ->(u) { "\n"+get_upload_markdown(u)+"\n" }],
+    [/^\[attach(?:|img|url|mini)=(?<num>\d+)\]$/, ->(u) { "\n" + get_upload_markdown(u) + "\n" }],
     [/\[attach(?:|img|url|mini)=(?<num>\d+)\]/, ->(u) { get_upload_markdown(u) }]
   ]
-
 
   # Provides command line options and parses the SMF settings file.
   class Options
@@ -494,17 +492,16 @@ class ImportScripts::Smf2 < ImportScripts::Base
       @parser ||= OptionParser.new(nil, 12) do |o|
         o.banner = "Usage:\t#{File.basename($0)} <SMFROOT> [options]\n"
         o.banner << "\t#{File.basename($0)} -d <DATABASE> [options]"
-        o.on('-h HOST', :REQUIRED, "MySQL server hostname [\"#{self.host}\"]") {|s| self.host = s }
-        o.on('-u USER', :REQUIRED, "MySQL username [\"#{self.username}\"]") {|s| self.username = s }
-        o.on('-p [PASS]', :OPTIONAL, 'MySQL password. Without argument, reads password from STDIN.') {|s| self.password = s || :ask }
-        o.on('-d DBNAME', :REQUIRED, 'Name of SMF database') {|s| self.database = s }
-        o.on('-f PREFIX', :REQUIRED, "Table names prefix [\"#{self.prefix}\"]") {|s| self.prefix = s }
-        o.on('-t TIMEZONE', :REQUIRED, 'Timezone used by SMF2 [auto-detected from PHP]') {|s| self.timezone = s }
+        o.on('-h HOST', :REQUIRED, "MySQL server hostname [\"#{self.host}\"]") { |s| self.host = s }
+        o.on('-u USER', :REQUIRED, "MySQL username [\"#{self.username}\"]") { |s| self.username = s }
+        o.on('-p [PASS]', :OPTIONAL, 'MySQL password. Without argument, reads password from STDIN.') { |s| self.password = s || :ask }
+        o.on('-d DBNAME', :REQUIRED, 'Name of SMF database') { |s| self.database = s }
+        o.on('-f PREFIX', :REQUIRED, "Table names prefix [\"#{self.prefix}\"]") { |s| self.prefix = s }
+        o.on('-t TIMEZONE', :REQUIRED, 'Timezone used by SMF2 [auto-detected from PHP]') { |s| self.timezone = s }
       end
     end
 
   end #Options
-
 
   # Framework around TSort, used to build a dependency graph over messages
   # to find and solve cyclic quotations.
@@ -532,9 +529,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end
 
     def cycles
-      strongly_connected_components.select {|c| c.length > 1 }.to_a
+      strongly_connected_components.select { |c| c.length > 1 }.to_a
     end
-
 
     class Node
       attr_reader :id
@@ -551,7 +547,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
 
       def quoted
-        @quoted.map {|id| @graph[id] }.reject(&:nil?)
+        @quoted.map { |id| @graph[id] }.reject(&:nil?)
       end
 
       def ignore_quotes?

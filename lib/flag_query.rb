@@ -1,6 +1,6 @@
 module FlagQuery
 
-  def self.flagged_posts_report(current_user, filter, offset=0, per_page=25)
+  def self.flagged_posts_report(current_user, filter, offset = 0, per_page = 25)
     actions = flagged_post_actions(filter)
 
     guardian = Guardian.new(current_user)
@@ -12,11 +12,11 @@ module FlagQuery
     end
 
     post_ids = actions.limit(per_page)
-                      .offset(offset)
-                      .group(:post_id)
-                      .order('MIN(post_actions.created_at) DESC')
-                      .pluck(:post_id)
-                      .uniq
+      .offset(offset)
+      .group(:post_id)
+      .order('MIN(post_actions.created_at) DESC')
+      .pluck(:post_id)
+      .uniq
 
     return nil if post_ids.blank?
 
@@ -47,8 +47,8 @@ module FlagQuery
     end
 
     post_actions = actions.order('post_actions.created_at DESC')
-                          .includes(related_post: { topic: { ordered_posts: :user }})
-                          .where(post_id: post_ids)
+      .includes(related_post: { topic: { ordered_posts: :user } })
+      .where(post_id: post_ids)
 
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]
@@ -111,10 +111,10 @@ module FlagQuery
 
   def self.flagged_post_actions(filter)
     post_actions = PostAction.flags
-                             .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
-                             .joins("INNER JOIN topics ON topics.id = posts.topic_id")
-                             .joins("LEFT JOIN users ON users.id = posts.user_id")
-                             .where("posts.user_id > 0")
+      .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
+      .joins("INNER JOIN topics ON topics.id = posts.topic_id")
+      .joins("LEFT JOIN users ON users.id = posts.user_id")
+      .where("posts.user_id > 0")
 
     if filter == "old"
       post_actions.where("post_actions.disagreed_at IS NOT NULL OR
@@ -122,8 +122,8 @@ module FlagQuery
                           post_actions.agreed_at IS NOT NULL")
     else
       post_actions.active
-                  .where("posts.deleted_at" => nil)
-                  .where("topics.deleted_at" => nil)
+        .where("posts.deleted_at" => nil)
+        .where("topics.deleted_at" => nil)
     end
 
   end

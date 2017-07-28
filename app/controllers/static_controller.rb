@@ -13,9 +13,9 @@ class StaticController < ApplicationController
     return redirect_to path('/login') if SiteSetting.login_required? && current_user.nil? && (params[:id] == 'faq' || params[:id] == 'guidelines')
 
     map = {
-      "faq" => {redirect: "faq_url", topic_id: "guidelines_topic_id"},
-      "tos" => {redirect: "tos_url", topic_id: "tos_topic_id"},
-      "privacy" => {redirect: "privacy_policy_url", topic_id: "privacy_topic_id"}
+      "faq" => { redirect: "faq_url", topic_id: "guidelines_topic_id" },
+      "tos" => { redirect: "tos_url", topic_id: "tos_topic_id" },
+      "privacy" => { redirect: "privacy_policy_url", topic_id: "privacy_topic_id" }
     }
 
     @page = params[:id]
@@ -100,7 +100,7 @@ class StaticController < ApplicationController
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
 
-    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*30) do
+    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60 * 30) do
       begin
         file = FileHelper.download(
           SiteSetting.favicon_url,
@@ -137,20 +137,18 @@ class StaticController < ApplicationController
     end
   end
 
-
   def cdn_asset
     serve_asset
   end
 
   protected
 
-  def serve_asset(suffix=nil)
+  def serve_asset(suffix = nil)
 
     path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
 
     # SECURITY what if path has /../
     raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
-
 
     response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]

@@ -20,8 +20,8 @@ describe TopicLink do
 
   it "can't link to the same topic" do
     ftl = TopicLink.new(url: "/t/#{topic.id}",
-                              topic_id: topic.id,
-                              link_topic_id: topic.id)
+                        topic_id: topic.id,
+                        link_topic_id: topic.id)
     expect(ftl.valid?).to eq(false)
   end
 
@@ -30,8 +30,8 @@ describe TopicLink do
       post = Fabricate(:post, raw: "
 http://a.com/
 http://b.com/b
-http://#{'a'*200}.com/invalid
-http://b.com/#{'a'*500}
+http://#{'a' * 200}.com/invalid
+http://b.com/#{'a' * 500}
                         ", user: user, topic: topic)
 
       TopicLink.extract_from(post)
@@ -72,7 +72,6 @@ http://b.com/#{'a'*500}
       # should be the canonical URL
       expect(link.url).to eq(url)
     end
-
 
     context 'topic link' do
 
@@ -131,7 +130,7 @@ http://b.com/#{'a'*500}
         TopicLink.extract_from(linked_post)
         expect(topic.topic_links.first.url).to eq(url)
 
-        linked_post.revise(post.user, { raw: "no more linkies https://eviltrout.com" })
+        linked_post.revise(post.user, raw: "no more linkies https://eviltrout.com")
         expect(other_topic.topic_links.where(link_post_id: linked_post.id)).to be_blank
       end
     end
@@ -300,7 +299,7 @@ http://b.com/#{'a'*500}
         TopicLinkClick.create(topic_link: topic_link, ip_address: '192.168.1.1')
 
         expect(counts_for[post.id]).to be_present
-        expect(counts_for[post.id].find {|l| l[:url] == 'http://google.com'}[:clicks]).to eq(0)
+        expect(counts_for[post.id].find { |l| l[:url] == 'http://google.com' }[:clicks]).to eq(0)
         expect(counts_for[post.id].first[:clicks]).to eq(1)
 
         array = TopicLink.topic_map(Guardian.new, post.topic_id)
@@ -319,7 +318,7 @@ http://b.com/#{'a'*500}
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(1)
         expect(TopicLink.counts_for(Guardian.new, post.topic, [post]).length).to eq(1)
 
-        category.set_permissions(:staff => :full)
+        category.set_permissions(staff: :full)
         category.save
 
         admin = Fabricate(:admin)

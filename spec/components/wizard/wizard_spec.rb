@@ -131,7 +131,7 @@ describe Wizard do
       admin = Fabricate(:admin)
       wizard = build_simple(admin)
 
-      wizard.max_topics_to_require_completion = Topic.count-1
+      wizard.max_topics_to_require_completion = Topic.count - 1
 
       expect(wizard.requires_completion?).to eq(false)
       expect(SiteSetting.bypass_wizard_check).to eq(true)
@@ -148,7 +148,7 @@ describe Wizard do
 
     it "is false for staff when complete" do
       wizard = build_simple(Fabricate(:admin))
-      updater =  wizard.create_updater('simple', name: 'Evil Trout')
+      updater = wizard.create_updater('simple', name: 'Evil Trout')
       updater.update
 
       expect(wizard.requires_completion?).to eq(false)

@@ -15,10 +15,8 @@ describe Admin::ThemesController do
       render_views
 
       let(:upload) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'test.woff2',
-          tempfile: file_from_fixtures("fake.woff2", "woff2")
-        })
+        ActionDispatch::Http::UploadedFile.new(filename: 'test.woff2',
+                                               tempfile: file_from_fixtures("fake.woff2", "woff2"))
       end
 
       it 'can create a theme upload' do
@@ -32,10 +30,8 @@ describe Admin::ThemesController do
 
     context '.import' do
       let(:theme_file) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'sam-s-simple-theme.dcstyle.json',
-          tempfile: file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json")
-        })
+        ActionDispatch::Http::UploadedFile.new(filename: 'sam-s-simple-theme.dcstyle.json',
+                                               tempfile: file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"))
       end
 
       it 'imports a theme' do
@@ -79,7 +75,7 @@ describe Admin::ThemesController do
         json = ::JSON.parse(response.body)
 
         expect(json["extras"]["color_schemes"].length).to eq(2)
-        theme_json = json["themes"].find{|t| t["id"] == theme.id}
+        theme_json = json["themes"].find { |t| t["id"] == theme.id }
         expect(theme_json["theme_fields"].length).to eq(2)
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
@@ -87,7 +83,7 @@ describe Admin::ThemesController do
 
     context ' .create' do
       it 'creates a theme' do
-        xhr :post, :create, theme: {name: 'my test name', theme_fields: [name: 'scss', target: 'common', value: 'body{color: red;}']}
+        xhr :post, :create, theme: { name: 'my test name', theme_fields: [name: 'scss', target: 'common', value: 'body{color: red;}'] }
         expect(response).to be_success
 
         json = ::JSON.parse(response.body)
@@ -107,7 +103,7 @@ describe Admin::ThemesController do
       it 'can unset default theme' do
         theme = Theme.create(name: 'my name', user_id: -1)
         SiteSetting.default_theme_key = theme.key
-        xhr :put, :update, id: theme.id, theme: { default: false}
+        xhr :put, :update, id: theme.id, theme: { default: false }
         expect(SiteSetting.default_theme_key).to be_blank
       end
 
@@ -121,7 +117,7 @@ describe Admin::ThemesController do
         upload = Fabricate(:upload)
 
         xhr :put, :update, id: theme.id,
-            theme: {
+                           theme: {
           child_theme_ids: [child_theme.id],
           name: 'my test name',
           theme_fields: [
@@ -134,7 +130,7 @@ describe Admin::ThemesController do
 
         json = ::JSON.parse(response.body)
 
-        fields = json["theme"]["theme_fields"].sort{|a,b| a["value"] <=> b["value"]}
+        fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
 
         expect(fields[0]["value"]).to eq('')
         expect(fields[0]["upload_id"]).to eq(upload.id)

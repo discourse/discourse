@@ -31,7 +31,6 @@ class UserActionSerializer < ApplicationSerializer
              :closed,
              :archived
 
-
   def avatar_template
     User.avatar_template(object.username, object.uploaded_avatar_id)
   end

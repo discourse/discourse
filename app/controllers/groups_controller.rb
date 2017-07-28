@@ -124,13 +124,13 @@ class GroupsController < ApplicationController
     members = group.users
       .order('NOT group_users.owner')
       .order(order)
-      .order(:username_lower => dir)
+      .order(username_lower: dir)
       .limit(limit)
       .offset(offset)
 
     owners = group.users
       .order(order)
-      .order(:username_lower => dir)
+      .order(username_lower: dir)
       .where('group_users.owner')
 
     render json: {
@@ -274,8 +274,8 @@ class GroupsController < ApplicationController
     end
 
     GroupUser.where(group_id: group.id)
-             .where(user_id: user_id)
-             .update_all(notification_level: notification_level)
+      .where(user_id: user_id)
+      .update_all(notification_level: notification_level)
 
     render json: success_json
   end

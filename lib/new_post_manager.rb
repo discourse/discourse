@@ -17,16 +17,16 @@ class NewPostManager
   end
 
   def self.handlers
-    sorted_handlers.map {|h| h[:proc]}
+    sorted_handlers.map { |h| h[:proc] }
   end
 
   def self.clear_handlers!
     @sorted_handlers = [{ priority: 0, proc: method(:default_handler) }]
   end
 
-  def self.add_handler(priority=0, &block)
+  def self.add_handler(priority = 0, &block)
     sorted_handlers << { priority: priority, proc: block }
-    @sorted_handlers.sort_by! {|h| -h[:priority]}
+    @sorted_handlers.sort_by! { |h| -h[:priority] }
   end
 
   def self.is_first_post?(manager)
@@ -129,7 +129,7 @@ class NewPostManager
 
   def initialize(user, args)
     @user = user
-    @args = args.delete_if {|_, v| v.nil?}
+    @args = args.delete_if { |_, v| v.nil? }
   end
 
   def perform
@@ -158,11 +158,11 @@ class NewPostManager
   end
 
   # Enqueue this post in a queue
-  def enqueue(queue, reason=nil)
+  def enqueue(queue, reason = nil)
     result = NewPostResult.new(:enqueued)
     enqueuer = PostEnqueuer.new(@user, queue)
 
-    queued_args = {post_options: @args.dup}
+    queued_args = { post_options: @args.dup }
     queued_args[:raw] = queued_args[:post_options].delete(:raw)
     queued_args[:topic_id] = queued_args[:post_options].delete(:topic_id)
 

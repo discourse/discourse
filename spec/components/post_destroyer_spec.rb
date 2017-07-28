@@ -213,7 +213,7 @@ describe PostDestroyer do
         expect(post2.deleted_at).to be_blank
         expect(post2.deleted_by).to be_blank
         expect(post2.user_deleted).to eq(true)
-        expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', {count: 24}))
+        expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', count: 24))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
 
@@ -360,7 +360,7 @@ describe PostDestroyer do
       it "creates a new user history entry" do
         expect {
           PostDestroyer.new(admin, post).destroy
-        }.to change { UserHistory.count}.by(1)
+        }.to change { UserHistory.count }.by(1)
       end
     end
   end
@@ -441,13 +441,11 @@ describe PostDestroyer do
     let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
 
     def create_user_action(action_type)
-      UserAction.log_action!({
-        action_type: action_type,
-        user_id: codinghorror.id,
-        acting_user_id: codinghorror.id,
-        target_topic_id: second_post.topic_id,
-        target_post_id: second_post.id
-      })
+      UserAction.log_action!(action_type: action_type,
+                             user_id: codinghorror.id,
+                             acting_user_id: codinghorror.id,
+                             target_topic_id: second_post.topic_id,
+                             target_post_id: second_post.id)
     end
 
     it "should delete the user actions" do

@@ -53,7 +53,7 @@ describe Post do
   end
 
   # Help us build a post with a raw body
-  def post_with_body(body, user=nil)
+  def post_with_body(body, user = nil)
     args = post_args.merge(raw: body)
     args[:user] = user if user.present?
     Fabricate.build(:post, args)
@@ -220,7 +220,7 @@ describe Post do
           post_no_images.user.trust_level = TrustLevel[0]
           post_no_images.save
           expect {
-            post_no_images.revise(post_no_images.user, { raw: post_two_images.raw })
+            post_no_images.revise(post_no_images.user, raw: post_two_images.raw)
             post_no_images.reload
           }.not_to change(post_no_images, :raw)
         end
@@ -268,7 +268,7 @@ describe Post do
           post_no_attachments.user.trust_level = TrustLevel[0]
           post_no_attachments.save
           expect {
-            post_no_attachments.revise(post_no_attachments.user, { raw: post_two_attachments.raw })
+            post_no_attachments.revise(post_no_attachments.user, raw: post_two_attachments.raw)
             post_no_attachments.reload
           }.not_to change(post_no_attachments, :raw)
         end
@@ -287,8 +287,8 @@ describe Post do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
-    let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser)}
-    let(:three_links) { post_with_body("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369", newuser)}
+    let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser) }
+    let(:three_links) { post_with_body("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369", newuser) }
 
     describe "raw_links" do
       it "returns a blank collection for a post with no links" do
@@ -314,11 +314,11 @@ describe Post do
       end
 
       it "returns the host and a count for links" do
-        expect(two_links.linked_hosts).to eq({"disneyland.disney.go.com" => 1, "reddit.com" => 1})
+        expect(two_links.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
       it "it counts properly with more than one link on the same host" do
-        expect(three_links.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
+        expect(three_links.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
     end
 
@@ -339,16 +339,14 @@ describe Post do
         end
 
         it "contains the new post's links, PLUS the previous one" do
-          expect(two_links.total_hosts_usage).to eq({'disneyland.disney.go.com' => 2, 'reddit.com' => 1})
+          expect(two_links.total_hosts_usage).to eq('disneyland.disney.go.com' => 2, 'reddit.com' => 1)
         end
 
       end
 
     end
 
-
   end
-
 
   describe "maximum links" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
@@ -397,7 +395,6 @@ describe Post do
     end
 
   end
-
 
   describe "@mentions" do
 
@@ -485,7 +482,6 @@ describe Post do
         end
       end
 
-
     end
 
   end
@@ -502,7 +498,7 @@ describe Post do
 
   context "raw_hash" do
 
-    let(:raw) { "this is our test post body"}
+    let(:raw) { "this is our test post body" }
     let(:post) { post_with_body(raw) }
 
     it "returns a value" do
@@ -535,13 +531,13 @@ describe Post do
     it 'has no revision' do
       expect(post.revisions.size).to eq(0)
       expect(first_version_at).to be_present
-      expect(post.revise(post.user, { raw: post.raw })).to eq(false)
+      expect(post.revise(post.user, raw: post.raw)).to eq(false)
     end
 
     describe 'with the same body' do
 
       it "doesn't change version" do
-        expect { post.revise(post.user, { raw: post.raw }); post.reload }.not_to change(post, :version)
+        expect { post.revise(post.user, raw: post.raw); post.reload }.not_to change(post, :version)
       end
 
     end
@@ -594,13 +590,13 @@ describe Post do
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
-        post.revise(changed_by, { raw: 'updated body' })
+        post.revise(changed_by, raw: 'updated body')
       end
     end
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { post.revise(changed_by, { raw: 'updated body' }) }
+      let!(:result) { post.revise(changed_by, raw: 'updated body') }
 
       it 'acts correctly' do
         expect(result).to eq(true)
@@ -674,7 +670,7 @@ describe Post do
       end
 
       it "doesn't find the quote in a different topic" do
-        reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id+1}\"]hello[/quote]"
+        reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id + 1}\"]hello[/quote]"
         reply.extract_quoted_post_numbers
         expect(reply.quoted_post_numbers).to be_blank
       end
@@ -685,9 +681,9 @@ describe Post do
 
       let(:topic) { Fabricate(:topic) }
       let(:other_user) { Fabricate(:coding_horror) }
-      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!"}
+      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
-      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number ).create }
+      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number).create }
 
       it 'has a quote' do
         expect(reply.quote_count).to eq(1)
@@ -710,7 +706,6 @@ describe Post do
       it 'is the child of the parent post' do
         expect(post.replies).to eq([reply])
       end
-
 
       it "doesn't change the post count when you edit the reply" do
         reply.raw = 'updated raw'
@@ -748,7 +743,6 @@ describe Post do
     end
 
   end
-
 
   context 'sort_order' do
     context 'regular topic' do
@@ -788,7 +782,7 @@ describe Post do
     it 'finds urls for posts presented' do
       p1 = Fabricate(:post)
       p2 = Fabricate(:post)
-      expect(Post.urls([p1.id, p2.id])).to eq({p1.id => p1.url, p2.id => p2.url})
+      expect(Post.urls([p1.id, p2.id])).to eq(p1.id => p1.url, p2.id => p2.url)
     end
   end
 
@@ -840,12 +834,11 @@ describe Post do
     end
   end
 
-
   describe "has_host_spam" do
     it "correctly detects host spam" do
       post = Fabricate(:post, raw: "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}")
 
-      expect(post.total_hosts_usage).to eq({"www.somesite.com" => 1})
+      expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
       post.acting_user.trust_level = 0
 
       expect(post.has_host_spam?).to eq(false)
@@ -868,7 +861,7 @@ describe Post do
     post.save
 
     post = Post.find(post.id)
-    expect(post.custom_fields).to eq({"Tommy" => "Hanks", "Vincent" => "Vega"})
+    expect(post.custom_fields).to eq("Tommy" => "Hanks", "Vincent" => "Vega")
   end
 
   describe "#rebake!" do
@@ -915,7 +908,7 @@ describe Post do
   describe ".rebake_old" do
     it "will catch posts it needs to rebake" do
       post = create_post
-      post.update_columns(baked_at: Time.new(2000,1,1), baked_version: -1)
+      post.update_columns(baked_at: Time.new(2000, 1, 1), baked_version: -1)
       Post.rebake_old(100)
 
       post.reload

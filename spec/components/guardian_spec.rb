@@ -57,11 +57,11 @@ describe Guardian do
     end
 
     it "returns false when you've already done it" do
-      expect(Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.types[:like] => 1})).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :like, taken_actions: { PostActionType.types[:like] => 1 })).to be_falsey
     end
 
     it "returns false when you already flagged a post" do
-      expect(Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.types[:spam] => 1})).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: { PostActionType.types[:spam] => 1 })).to be_falsey
     end
 
     it "returns false for notify_user if private messages are disabled" do
@@ -108,7 +108,6 @@ describe Guardian do
       end
     end
   end
-
 
   describe "can_defer_flags" do
     let(:post) { Fabricate(:post) }
@@ -244,7 +243,7 @@ describe Guardian do
 
   describe 'can_see_post_actors?' do
 
-    let(:topic) { Fabricate(:topic, user: coding_horror)}
+    let(:topic) { Fabricate(:topic, user: coding_horror) }
 
     it 'displays visibility correctly' do
       guardian = Guardian.new(user)
@@ -418,7 +417,6 @@ describe Guardian do
       end
     end
   end
-
 
   describe 'can_invite_via_email?' do
     it 'returns true for all (tl2 and above) users when sso is disabled, local logins are enabled, user approval is not required' do
@@ -691,34 +689,34 @@ describe Guardian do
     describe 'a Topic' do
       it 'does not allow moderators to create topics in readonly categories' do
         category = Fabricate(:category)
-        category.set_permissions(:everyone => :read)
+        category.set_permissions(everyone: :read)
         category.save
 
-        expect(Guardian.new(moderator).can_create?(Topic,category)).to be_falsey
+        expect(Guardian.new(moderator).can_create?(Topic, category)).to be_falsey
       end
 
       it 'should check for full permissions' do
         category = Fabricate(:category)
-        category.set_permissions(:everyone => :create_post)
+        category.set_permissions(everyone: :create_post)
         category.save
-        expect(Guardian.new(user).can_create?(Topic,category)).to be_falsey
+        expect(Guardian.new(user).can_create?(Topic, category)).to be_falsey
       end
 
       it "is true for new users by default" do
-        expect(Guardian.new(user).can_create?(Topic,Fabricate(:category))).to be_truthy
+        expect(Guardian.new(user).can_create?(Topic, Fabricate(:category))).to be_truthy
       end
 
       it "is false if user has not met minimum trust level" do
         SiteSetting.min_trust_to_create_topic = 1
-        expect(Guardian.new(build(:user, trust_level: 0)).can_create?(Topic,Fabricate(:category))).to be_falsey
+        expect(Guardian.new(build(:user, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_falsey
       end
 
       it "is true if user has met or exceeded the minimum trust level" do
         SiteSetting.min_trust_to_create_topic = 1
-        expect(Guardian.new(build(:user, trust_level: 1)).can_create?(Topic,Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:user, trust_level: 2)).can_create?(Topic,Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic,Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic,Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:user, trust_level: 1)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:user, trust_level: 2)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_truthy
       end
     end
 
@@ -727,7 +725,7 @@ describe Guardian do
       it "is false on readonly categories" do
         category = Fabricate(:category)
         topic.category = category
-        category.set_permissions(:everyone => :readonly)
+        category.set_permissions(everyone: :readonly)
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey
@@ -856,28 +854,26 @@ describe Guardian do
         Guardian.new(user)
       end
 
-
       it "isn't allowed when not logged in" do
-        expect(Guardian.new(nil).post_can_act?(post,:vote)).to be_falsey
+        expect(Guardian.new(nil).post_can_act?(post, :vote)).to be_falsey
       end
 
       it "is allowed as a regular user" do
-        expect(guardian.post_can_act?(post,:vote)).to be_truthy
+        expect(guardian.post_can_act?(post, :vote)).to be_truthy
       end
 
       it "doesn't allow voting if the user has an action from voting already" do
-        expect(guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:vote] => 1})).to be_falsey
+        expect(guardian.post_can_act?(post, :vote, taken_actions: { PostActionType.types[:vote] => 1 })).to be_falsey
       end
 
       it "allows voting if the user has performed a different action" do
-        expect(guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:like] => 1})).to be_truthy
+        expect(guardian.post_can_act?(post, :vote, taken_actions: { PostActionType.types[:like] => 1 })).to be_truthy
       end
 
       it "isn't allowed on archived topics" do
         topic.archived = true
-        expect(Guardian.new(user).post_can_act?(post,:like)).to be_falsey
+        expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       end
-
 
       describe 'multiple voting' do
 
@@ -1080,7 +1076,7 @@ describe Guardian do
 
       it "returns false if a wiki but the user can't create a post" do
         c = Fabricate(:category)
-        c.set_permissions(:everyone => :readonly)
+        c.set_permissions(everyone: :readonly)
         c.save
 
         topic = Fabricate(:topic, category: c)
@@ -1665,7 +1661,6 @@ describe Guardian do
       expect(Guardian.new(moderator).can_approve?(user)).to be_truthy
     end
 
-
   end
 
   context 'can_grant_admin?' do
@@ -2038,7 +2033,6 @@ describe Guardian do
       expect(Guardian.new(admin).can_grant_title?(nil)).to be_falsey
     end
   end
-
 
   describe 'can_change_trust_level?' do
 

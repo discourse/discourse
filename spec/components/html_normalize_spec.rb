@@ -20,7 +20,7 @@ HTML
 
   it "Can handle aside" do
 
-      source = <<~HTML
+    source = <<~HTML
         <aside class="quote" data-topic="2" data-post="1">
           <div class="title">
           <div class="quote-controls"></div>

@@ -10,7 +10,7 @@ module Email
 
     delegate :css, to: :fragment
 
-    def initialize(html, opts=nil)
+    def initialize(html, opts = nil)
       @html = html
       @opts = opts || {}
       @fragment = Nokogiri::HTML.fragment(@html)
@@ -41,7 +41,7 @@ module Email
           img['width'] = img['height'] = 20
         else
           # use dimensions of original iPhone screen for 'too big, let device rescale'
-          if img['width'].to_i > 320 or img['height'].to_i > 480
+          if img['width'].to_i > (320) || img['height'].to_i > (480)
             img['width'] = img['height'] = 'auto'
           end
         end
@@ -246,7 +246,7 @@ module Email
         linknum = 0
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
-          if footernum == 0 and linknum == 0
+          if footernum == (0) && linknum == (0)
             inner['style'] = "background-color: #006699; color:#ffffff; border-top: 4px solid #006699; border-right: 6px solid #006699; border-bottom: 4px solid #006699; border-left: 6px solid #006699; display: inline-block;"
           else
             inner['style'] = "color:#666;"
@@ -271,7 +271,7 @@ module Email
     def style(selector, style, attribs = {})
       @fragment.css(selector).each do |element|
         add_styles(element, style) if style
-        attribs.each do |k,v|
+        attribs.each do |k, v|
           element[k] = v
         end
       end

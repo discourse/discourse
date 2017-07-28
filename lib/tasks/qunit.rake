@@ -10,7 +10,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
   end
 
   # ensure we have this port available
-  def port_available? port
+  def port_available?(port)
     server = TCPServer.open port
     server.close
     true
@@ -26,9 +26,9 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
 
   unless pid = fork
     Discourse.after_fork
-    Rack::Server.start(:config => "config.ru",
-                       :AccessLog => [],
-                       :Port => port)
+    Rack::Server.start(config: "config.ru",
+                       AccessLog: [],
+                       Port: port)
     exit
   end
 

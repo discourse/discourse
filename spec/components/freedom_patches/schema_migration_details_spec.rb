@@ -14,7 +14,7 @@ describe FreedomPatches::SchemaMigrationDetails do
   end
 
   it "logs information on migration" do
-    migration = TestMigration.new("awesome_migration","20160225050318")
+    migration = TestMigration.new("awesome_migration", "20160225050318")
 
     ActiveRecord::Base.connection_pool.with_connection do |conn|
       migration.exec_migration(conn, :up)

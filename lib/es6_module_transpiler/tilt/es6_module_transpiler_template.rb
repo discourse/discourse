@@ -14,7 +14,7 @@ module Tilt
       source = input[:data]
       context = input[:environment].context_class.new(input)
 
-      result = new(filename){source}.render(context)
+      result = new(filename) { source }.render(context)
       context.metadata.merge(data: result)
     end
 
@@ -28,8 +28,8 @@ module Tilt
       ctx = MiniRacer::Context.new(timeout: 15000)
       ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
       ctx.eval("module = {}; exports = {};");
-      ctx.attach("rails.logger.info", proc{|err| Rails.logger.info(err.to_s)})
-      ctx.attach("rails.logger.error", proc{|err| Rails.logger.error(err.to_s)})
+      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
       ctx.eval <<JS
       console = {
         prefix: "",
@@ -155,7 +155,7 @@ JS
       @output
     end
 
-    def babel_source(source, opts=nil)
+    def babel_source(source, opts = nil)
 
       opts ||= {}
 
@@ -178,7 +178,7 @@ JS
       if root_path =~ /(.*\/#{root_base}\/plugins\/[^\/]+)\//
         plugin_path = "#{Regexp.last_match[1]}/plugin.rb"
 
-        plugin = Discourse.plugins.find {|p| p.path == plugin_path }
+        plugin = Discourse.plugins.find { |p| p.path == plugin_path }
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 

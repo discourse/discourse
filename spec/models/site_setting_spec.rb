@@ -111,7 +111,6 @@ describe SiteSetting do
       SiteSetting.force_https = true
     end
 
-
     it "returns http when ssl is disabled" do
       SiteSetting.force_https = false
       expect(SiteSetting.scheme).to eq("http")

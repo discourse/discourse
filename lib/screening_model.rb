@@ -24,7 +24,7 @@ module ScreeningModel
   end
 
   def action_name=(arg)
-    raise ArgumentError.new("Invalid action type #{arg}") if arg.nil? or !self.class.actions.has_key?(arg.to_sym)
+    raise ArgumentError.new("Invalid action type #{arg}") if arg.nil? || !self.class.actions.has_key?(arg.to_sym)
     self.action_type = self.class.actions[arg.to_sym]
   end
 

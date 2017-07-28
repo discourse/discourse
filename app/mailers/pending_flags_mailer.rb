@@ -23,14 +23,14 @@ class PendingFlagsMailer < ActionMailer::Base
 
     @hours = SiteSetting.notify_about_flags_after
 
-    subject = "[#{SiteSetting.title}] " + I18n.t('flags_reminder.subject_template', { count: PostAction.flagged_posts_count })
+    subject = "[#{SiteSetting.title}] " + I18n.t('flags_reminder.subject_template', count: PostAction.flagged_posts_count)
     build_email(SiteSetting.contact_email, subject: subject)
   end
 
   private
 
   def flag_reason_counts(post)
-    post[:post_actions].inject({}) do |h,v|
+    post[:post_actions].inject({}) do |h, v|
       h[v[:name_key]] ||= 0
       h[v[:name_key]] += 1
       h

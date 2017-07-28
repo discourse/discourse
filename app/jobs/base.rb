@@ -71,11 +71,11 @@ module Jobs
       ctx
     end
 
-    def self.delayed_perform(opts={})
+    def self.delayed_perform(opts = {})
       self.new.perform(opts)
     end
 
-    def execute(opts={})
+    def execute(opts = {})
       raise "Overwrite me!"
     end
 
@@ -113,7 +113,6 @@ module Jobs
           return retval
         end
       end
-
 
       dbs =
         if opts[:current_site_id]
@@ -203,7 +202,7 @@ module Jobs
     end
   end
 
-  def self.enqueue(job_name, opts={})
+  def self.enqueue(job_name, opts = {})
     klass = "Jobs::#{job_name.to_s.camelcase}".constantize
 
     # Unless we want to work on all sites
@@ -227,20 +226,20 @@ module Jobs
 
   end
 
-  def self.enqueue_in(secs, job_name, opts={})
+  def self.enqueue_in(secs, job_name, opts = {})
     enqueue(job_name, opts.merge!(delay_for: secs))
   end
 
-  def self.enqueue_at(datetime, job_name, opts={})
+  def self.enqueue_at(datetime, job_name, opts = {})
     secs = [(datetime - Time.zone.now).to_i, 0].max
     enqueue_in(secs, job_name, opts)
   end
 
-  def self.cancel_scheduled_job(job_name, opts={})
+  def self.cancel_scheduled_job(job_name, opts = {})
     scheduled_for(job_name, opts).each(&:delete)
   end
 
-  def self.scheduled_for(job_name, opts={})
+  def self.scheduled_for(job_name, opts = {})
     opts = opts.with_indifferent_access
     unless opts.delete(:all_sites)
       opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
@@ -265,6 +264,6 @@ module Jobs
   end
 end
 
-Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each {|file| require_dependency file }
-Dir["#{Rails.root}/app/jobs/regular/*.rb"].each {|file| require_dependency file }
-Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each {|file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each { |file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/regular/*.rb"].each { |file| require_dependency file }
+Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each { |file| require_dependency file }

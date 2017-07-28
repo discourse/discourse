@@ -36,5 +36,3 @@ describe RetrieveTitle do
   end
 
 end
-
-

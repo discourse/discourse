@@ -12,11 +12,11 @@ describe Gaps do
   end
 
   it 'returns no gaps when all elements are present' do
-    expect(Gaps.new([1,2,3], [1,2,3])).to be_blank
+    expect(Gaps.new([1, 2, 3], [1, 2, 3])).to be_blank
   end
 
   context "single element gap" do
-    let(:gap) { Gaps.new([1,3], [1,2,3]) }
+    let(:gap) { Gaps.new([1, 3], [1, 2, 3]) }
 
     it 'has a gap for post 3' do
       expect(gap).not_to be_blank
@@ -26,28 +26,28 @@ describe Gaps do
   end
 
   context "larger gap" do
-    let(:gap) { Gaps.new([1,2,3,6,7], [1,2,3,4,5,6,7]) }
+    let(:gap) { Gaps.new([1, 2, 3, 6, 7], [1, 2, 3, 4, 5, 6, 7]) }
 
     it 'has a gap for post 6' do
       expect(gap).not_to be_blank
-      expect(gap.before[6]).to eq([4,5])
+      expect(gap.before[6]).to eq([4, 5])
       expect(gap.after).to be_blank
     end
   end
 
   context "multiple gaps" do
-    let(:gap) { Gaps.new([1,5,6,7,10], [1,2,3,4,5,6,7,8,9,10]) }
+    let(:gap) { Gaps.new([1, 5, 6, 7, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) }
 
     it 'has both gaps' do
       expect(gap).not_to be_blank
-      expect(gap.before[5]).to eq([2,3,4])
-      expect(gap.before[10]).to eq([8,9])
+      expect(gap.before[5]).to eq([2, 3, 4])
+      expect(gap.before[10]).to eq([8, 9])
       expect(gap.after).to be_blank
     end
   end
 
   context "a gap in the beginning" do
-    let(:gap) { Gaps.new([2,3,4], [1,2,3,4]) }
+    let(:gap) { Gaps.new([2, 3, 4], [1, 2, 3, 4]) }
 
     it 'has the gap' do
       expect(gap).not_to be_blank
@@ -57,7 +57,7 @@ describe Gaps do
   end
 
   context "a gap in the ending" do
-    let(:gap) { Gaps.new([1,2,3], [1,2,3,4]) }
+    let(:gap) { Gaps.new([1, 2, 3], [1, 2, 3, 4]) }
 
     it 'has the gap' do
       expect(gap).not_to be_blank
@@ -67,14 +67,13 @@ describe Gaps do
   end
 
   context "a large gap in the ending" do
-    let(:gap) { Gaps.new([1,2,3], [1,2,3,4,5,6]) }
+    let(:gap) { Gaps.new([1, 2, 3], [1, 2, 3, 4, 5, 6]) }
 
     it 'has the gap' do
       expect(gap).not_to be_blank
       expect(gap.before).to be_blank
-      expect(gap.after[3]).to eq([4,5,6])
+      expect(gap.after[3]).to eq([4, 5, 6])
     end
   end
-
 
 end

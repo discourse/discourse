@@ -128,7 +128,7 @@ module PrettyText
     end
   end
 
-  def self.markdown(text, opts={})
+  def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
     baked = nil
@@ -165,7 +165,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupInlineOnebox = __lookupInlineOnebox;
-        #{opts[:linkify] == false ? "__optInput.linkify = false;": ""}
+        #{opts[:linkify] == false ? "__optInput.linkify = false;" : ""}
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 
@@ -178,7 +178,6 @@ module PrettyText
       end
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
-
 
       buffer << ("__pt = new __PrettyText(__textOptions);")
 
@@ -225,7 +224,7 @@ module PrettyText
     end
   end
 
-  def self.cook(text, opts={})
+  def self.cook(text, opts = {})
     options = opts.dup
 
     # we have a minor inconsistency
@@ -281,7 +280,7 @@ module PrettyText
         if !uri.host.present? ||
            uri.host == site_uri.host ||
            uri.host.ends_with?("." << site_uri.host) ||
-           whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
+           whitelist.any? { |u| uri.host == u || uri.host.ends_with?("." << u) }
           # we are good no need for nofollow
         else
           l["rel"] = "nofollow noopener"
@@ -328,7 +327,7 @@ module PrettyText
     links
   end
 
-  def self.excerpt(html, max_length, options={})
+  def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
     strip_image_wrapping(doc)
@@ -342,7 +341,7 @@ module PrettyText
 
     # If the user is not basic, strip links from their bio
     fragment = Nokogiri::HTML.fragment(string)
-    fragment.css('a').each {|a| a.replace(a.inner_html) }
+    fragment.css('a').each { |a| a.replace(a.inner_html) }
     fragment.to_html
   end
 

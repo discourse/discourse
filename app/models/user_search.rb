@@ -3,7 +3,7 @@ require_dependency 'search'
 
 class UserSearch
 
-  def initialize(term, opts={})
+  def initialize(term, opts = {})
     @term = term
     @term_like = "#{term.downcase.gsub("_", "\\_")}%"
     @topic_id = opts[:topic_id]
@@ -34,8 +34,8 @@ class UserSearch
 
       if topic.category && topic.category.read_restricted
         users = users.includes(:secure_categories)
-                     .where("users.admin = TRUE OR categories.id = ?", topic.category.id)
-                     .references(:categories)
+          .where("users.admin = TRUE OR categories.id = ?", topic.category.id)
+          .references(:categories)
       end
     end
 
@@ -50,9 +50,9 @@ class UserSearch
         query = Search.ts_query(@term, "simple")
 
         users = users.includes(:user_search_data)
-                     .references(:user_search_data)
-                     .where("user_search_data.search_data @@ #{query}")
-                     .order(User.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
+          .references(:user_search_data)
+          .where("user_search_data.search_data @@ #{query}")
+          .order(User.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
 
       else
         users = users.where("username_lower LIKE :term_like", term_like: @term_like)
@@ -68,9 +68,9 @@ class UserSearch
     # 1. exact username matches
     if @term.present?
       scoped_users.where(username_lower: @term.downcase)
-                  .limit(@limit)
-                  .pluck(:id)
-                  .each { |id| users << id }
+        .limit(@limit)
+        .pluck(:id)
+        .each { |id| users << id }
 
     end
 
@@ -79,19 +79,19 @@ class UserSearch
     # 2. in topic
     if @topic_id
       filtered_by_term_users.where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
-                            .order('last_seen_at DESC')
-                            .limit(@limit - users.length)
-                            .pluck(:id)
-                            .each { |id| users << id }
+        .order('last_seen_at DESC')
+        .limit(@limit - users.length)
+        .pluck(:id)
+        .each { |id| users << id }
     end
 
     return users.to_a if users.length >= @limit
 
     # 3. global matches
     filtered_by_term_users.order('last_seen_at DESC')
-                            .limit(@limit - users.length)
-                            .pluck(:id)
-                            .each { |id| users << id }
+      .limit(@limit - users.length)
+      .pluck(:id)
+      .each { |id| users << id }
 
     users.to_a
   end
@@ -103,7 +103,7 @@ class UserSearch
     User.joins("JOIN (SELECT unnest uid, row_number() OVER () AS rn
       FROM unnest('{#{ids.join(",")}}'::int[])
     ) x on uid = users.id")
-        .order("rn")
+      .order("rn")
   end
 
 end

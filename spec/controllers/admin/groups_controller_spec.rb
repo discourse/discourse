@@ -44,10 +44,10 @@ describe Admin::GroupsController do
       group.add_owner(user)
 
       expect do
-        xhr :put, :update, { id: group.id, group: {
+        xhr :put, :update, id: group.id, group: {
           visibility_level: Group.visibility_levels[:owners],
           allow_membership_requests: "true"
-        } }
+        }
 
       end.to change { GroupHistory.count }.by(2)
 
@@ -55,12 +55,12 @@ describe Admin::GroupsController do
 
       group.reload
 
-      expect(group.visibility_level).to eq( Group.visibility_levels[:owners])
+      expect(group.visibility_level).to eq(Group.visibility_levels[:owners])
       expect(group.allow_membership_requests).to eq(true)
     end
 
     it "ignore name change on automatic group" do
-      xhr :put, :update, { id: 1, group: { name: "WAT" } }
+      xhr :put, :update, id: 1, group: { name: "WAT" }
       expect(response).to be_success
 
       group = Group.find(1)
@@ -70,14 +70,14 @@ describe Admin::GroupsController do
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
       Jobs.expects(:enqueue).never
       group = Fabricate(:group)
-      xhr :put, :update, { id: group.id, group: { automatic_membership_retroactive: "false" } }
+      xhr :put, :update, id: group.id, group: { automatic_membership_retroactive: "false" }
       expect(response).to be_success
     end
 
     it "launches the 'automatic group membership' job when it's retroactive" do
       group = Fabricate(:group)
       Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: group.id)
-      xhr :put, :update, { id: group.id, group: { automatic_membership_retroactive: "true" } }
+      xhr :put, :update, id: group.id, group: { automatic_membership_retroactive: "true" }
       expect(response).to be_success
     end
 

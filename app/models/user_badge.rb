@@ -5,7 +5,7 @@ class UserBadge < ActiveRecord::Base
   belongs_to :notification, dependent: :destroy
   belongs_to :post
 
-  validates :badge_id, presence: true, uniqueness: {scope: :user_id}, if: 'badge.single_grant?'
+  validates :badge_id, presence: true, uniqueness: { scope: :user_id }, if: 'badge.single_grant?'
   validates :user_id, presence: true
   validates :granted_at, presence: true
   validates :granted_by, presence: true

@@ -8,7 +8,7 @@ module BackupRestore
   class Restorer
     attr_reader :success
 
-    def initialize(user_id, opts={})
+    def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
       @filename = opts[:filename]

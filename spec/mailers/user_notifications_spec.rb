@@ -13,7 +13,7 @@ describe UserNotifications do
       _post5 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:moderator_action])
       _post6 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:small_action])
       _post7 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:whisper])
-      last  = Fabricate(:post, topic: post1.topic)
+      last = Fabricate(:post, topic: post1.topic)
 
       post1.user.user_option.email_previous_replies = UserOption.previous_replies_type[:always]
 
@@ -29,8 +29,8 @@ describe UserNotifications do
 
     it "allows users to control context" do
       post1 = create_post
-      _post2  = Fabricate(:post, topic: post1.topic)
-      post3  = Fabricate(:post, topic: post1.topic)
+      _post2 = Fabricate(:post, topic: post1.topic)
+      post3 = Fabricate(:post, topic: post1.topic)
 
       user = Fabricate(:user)
       TopicUser.change(user.id, post1.topic_id, last_emailed_post_number: 1)
@@ -185,7 +185,7 @@ describe UserNotifications do
     let(:category) { Fabricate(:category, name: 'India') }
     let(:topic) { Fabricate(:topic, category: category) }
     let(:post) { Fabricate(:post, topic: topic, raw: 'This is My super duper cool topic') }
-    let(:response) { Fabricate(:post, reply_to_post_number: 1, topic: post.topic, user: response_by_user)}
+    let(:response) { Fabricate(:post, reply_to_post_number: 1, topic: post.topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:notification, user: user) }
 
@@ -223,7 +223,6 @@ describe UserNotifications do
       tu = TopicUser.get(post.topic_id, response.user)
       expect(tu.last_emailed_post_number).to eq(response.post_number)
 
-
       # no In Reply To if user opts out
       response.user.user_option.email_in_reply_to = false
       mail = UserNotifications.user_replied(response.user,
@@ -231,7 +230,6 @@ describe UserNotifications do
                                              notification_type: notification.notification_type,
                                              notification_data_hash: notification.data_hash
                                            )
-
 
       expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
 
@@ -248,7 +246,6 @@ describe UserNotifications do
                                              notification_type: notification.notification_type,
                                              notification_data_hash: notification.data_hash
                                            )
-
 
       mail_html = mail.html_part.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
@@ -286,9 +283,9 @@ describe UserNotifications do
   describe '.user_posted' do
     let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
     let(:post) { Fabricate(:post) }
-    let(:response) { Fabricate(:post, topic: post.topic, user: response_by_user)}
+    let(:response) { Fabricate(:post, topic: post.topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
-    let(:notification) { Fabricate(:notification, user: user, data: {original_username: response_by_user.username}.to_json) }
+    let(:notification) { Fabricate(:notification, user: user, data: { original_username: response_by_user.username }.to_json) }
 
     it 'generates a correct email' do
       SiteSetting.enable_names = false
@@ -335,9 +332,9 @@ describe UserNotifications do
   describe '.user_private_message' do
     let(:response_by_user) { Fabricate(:user, name: "", username: "john") }
     let(:topic) { Fabricate(:private_message_topic) }
-    let(:response) { Fabricate(:post, topic: topic, user: response_by_user)}
+    let(:response) { Fabricate(:post, topic: topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
-    let(:notification) { Fabricate(:notification, user: user, data: {original_username: response_by_user.username}.to_json) }
+    let(:notification) { Fabricate(:notification, user: user, data: { original_username: response_by_user.username }.to_json) }
 
     it 'generates a correct email' do
       SiteSetting.enable_names = true
@@ -384,7 +381,6 @@ describe UserNotifications do
     end
   end
 
-
   it 'adds a warning when mail limit is reached' do
     SiteSetting.max_emails_per_day_per_user = 2
     user = Fabricate(:user)
@@ -394,7 +390,7 @@ describe UserNotifications do
     reply = Fabricate(:post, topic_id: post.topic_id)
 
     notification = Fabricate(:notification, topic_id: post.topic_id, post_number: reply.post_number,
-                             user: post.user, data: {original_username: 'bob'}.to_json)
+                                            user: post.user, data: { original_username: 'bob' }.to_json)
 
     mail = UserNotifications.user_replied(
       user,
@@ -467,16 +463,16 @@ describe UserNotifications do
 
   shared_examples "notification email building" do
     let(:post) { Fabricate(:post, user: user) }
-    let(:mail_type) { "user_#{notification_type}"}
+    let(:mail_type) { "user_#{notification_type}" }
     let(:mail_template) { "user_notifications.#{mail_type}" }
-    let(:username) { "walterwhite"}
+    let(:username) { "walterwhite" }
     let(:notification) do
       Fabricate(:notification,
                 user: user,
                 topic: post.topic,
                 notification_type: Notification.types[notification_type],
                 post_number: post.post_number,
-                data: {original_username: username}.to_json )
+                data: { original_username: username }.to_json)
     end
 
     describe 'email building' do

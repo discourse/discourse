@@ -17,7 +17,6 @@ class AddUncategorizedCategory < ActiveRecord::Migration
     execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
              VALUES ('uncategorized_category_id', 3, #{category_id}, now(), now())"
 
-
     execute "DELETE from site_settings where name in ('uncategorized_name', 'uncategorized_text_color', 'uncategorized_color')"
 
     execute "UPDATE topics SET category_id = #{category_id} WHERE archetype = 'regular' AND category_id IS NULL"

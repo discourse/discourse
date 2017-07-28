@@ -133,44 +133,44 @@ SQL
   GROUP BY acting_user_id
 SQL
 
-  def self.invite_badge(count,trust_level)
-"
-  SELECT u.id user_id, current_timestamp granted_at
-  FROM users u
-  WHERE u.id IN (
-    SELECT invited_by_id
-    FROM invites i
-    JOIN users u2 ON u2.id = i.user_id
-    WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND not u2.blocked
-    GROUP BY invited_by_id
-    HAVING COUNT(*) >= #{count.to_i}
-  ) AND u.active AND NOT u.blocked AND u.id > 0 AND
-    (:backfill OR u.id IN (:user_ids) )
-"
+  def self.invite_badge(count, trust_level)
+    "
+      SELECT u.id user_id, current_timestamp granted_at
+      FROM users u
+      WHERE u.id IN (
+        SELECT invited_by_id
+        FROM invites i
+        JOIN users u2 ON u2.id = i.user_id
+        WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND not u2.blocked
+        GROUP BY invited_by_id
+        HAVING COUNT(*) >= #{count.to_i}
+      ) AND u.active AND NOT u.blocked AND u.id > 0 AND
+        (:backfill OR u.id IN (:user_ids) )
+    "
   end
 
   def self.like_badge(count, is_topic)
     # we can do better with dates, but its hard work
-"
-  SELECT p.user_id, p.id post_id, p.updated_at granted_at
-  FROM badge_posts p
-  WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1" } AND p.like_count >= #{count.to_i} AND
-    (:backfill OR p.id IN (:post_ids) )
-"
+    "
+      SELECT p.user_id, p.id post_id, p.updated_at granted_at
+      FROM badge_posts p
+      WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1" } AND p.like_count >= #{count.to_i} AND
+        (:backfill OR p.id IN (:post_ids) )
+    "
   end
 
   def self.trust_level(level)
     # we can do better with dates, but its hard work figuring this out historically
-"
-  SELECT u.id user_id, current_timestamp granted_at FROM users u
-  WHERE trust_level >= #{level.to_i} AND (
-    :backfill OR u.id IN (:user_ids)
-  )
-"
+    "
+      SELECT u.id user_id, current_timestamp granted_at FROM users u
+      WHERE trust_level >= #{level.to_i} AND (
+        :backfill OR u.id IN (:user_ids)
+      )
+    "
   end
 
   def self.sharing_badge(count)
-<<SQL
+    <<SQL
   SELECT views.user_id, i2.post_id, current_timestamp granted_at
   FROM
   (

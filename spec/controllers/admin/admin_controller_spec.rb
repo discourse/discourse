@@ -16,5 +16,4 @@ describe Admin::AdminController do
 
   end
 
-
 end

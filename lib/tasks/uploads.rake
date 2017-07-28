@@ -27,8 +27,8 @@ def gather_uploads
   puts "", "Gathering uploads for '#{current_db}'...", ""
 
   Upload.where("url ~ '^\/uploads\/'")
-        .where("url !~ '^\/uploads\/#{current_db}'")
-        .find_each do |upload|
+    .where("url !~ '^\/uploads\/#{current_db}'")
+    .find_each do |upload|
     begin
       old_db = upload.url[/^\/uploads\/([^\/]+)\//, 1]
       from = upload.url.dup
@@ -100,7 +100,7 @@ def guess_filename(url, raw)
     filename ||= File.basename(url)
     filename
   rescue
-      nil
+    nil
   ensure
     f.try(:close!) rescue nil
   end
@@ -203,8 +203,8 @@ def migrate_to_s3
 
   # Migrate all uploads
   Upload.where.not(sha1: nil)
-        .where("url NOT LIKE '#{s3.absolute_base_url}%'")
-        .find_each do |upload|
+    .where("url NOT LIKE '#{s3.absolute_base_url}%'")
+    .find_each do |upload|
     # remove invalid uploads
     if upload.url.blank?
       upload.destroy!
@@ -215,7 +215,7 @@ def migrate_to_s3
     # retrieve the path to the local file
     path = local.path_for(upload)
     # make sure the file exists locally
-    if !path or !File.exists?(path)
+    if !path || !File.exists?(path)
       putc "X"
       next
     end

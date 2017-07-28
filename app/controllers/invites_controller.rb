@@ -16,11 +16,12 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
-      store_preloaded("invite_info", MultiJson.dump({
+      store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: invite.email,
-        username: UserNameSuggester.suggest(invite.email)
-      }))
+        username: UserNameSuggester.suggest(invite.email))
+      )
+
       render layout: 'application'
     else
       flash.now[:error] = I18n.t('invite.not_found')
@@ -81,7 +82,7 @@ class InvitesController < ApplicationController
         render json: failed_json, status: 422
       end
     rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
-      render json: {errors: [e.message]}, status: 422
+      render json: { errors: [e.message] }, status: 422
     end
   end
 
@@ -110,7 +111,7 @@ class InvitesController < ApplicationController
         render json: failed_json, status: 422
       end
     rescue => e
-      render json: {errors: [e.message]}, status: 422
+      render json: { errors: [e.message] }, status: 422
     end
   end
 
@@ -163,7 +164,7 @@ class InvitesController < ApplicationController
         data = if extension.downcase == ".csv"
           path = Invite.create_csv(file, name)
           Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
-          {url: path}
+          { url: path }
         else
           failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
         end

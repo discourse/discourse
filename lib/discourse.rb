@@ -63,7 +63,7 @@ module Discourse
   # When they don't have permission to do something
   class InvalidAccess < StandardError
     attr_reader :obj
-    def initialize(msg=nil, obj=nil)
+    def initialize(msg = nil, obj = nil)
       super(msg)
       @obj = obj
     end
@@ -115,7 +115,6 @@ module Discourse
     set
   end
 
-
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
@@ -144,11 +143,11 @@ module Discourse
   end
 
   def self.official_plugins
-    plugins.find_all{|p| p.metadata.official?}
+    plugins.find_all { |p| p.metadata.official? }
   end
 
   def self.unofficial_plugins
-    plugins.find_all{|p| !p.metadata.official?}
+    plugins.find_all { |p| !p.metadata.official? }
   end
 
   def self.assets_digest
@@ -378,7 +377,7 @@ module Discourse
     Rails.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown{|c| nil}
+    Sidekiq.redis_pool.shutdown { |c| nil }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
     start_connection_reaper
@@ -402,7 +401,7 @@ module Discourse
           sleep GlobalSetting.connection_reaper_interval
           reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
         rescue => e
-          Discourse.handle_exception(e, {message: "Error reaping connections"})
+          Discourse.handle_exception(e, message: "Error reaping connections")
         end
       end
     end
@@ -410,7 +409,7 @@ module Discourse
 
   def self.reap_connections(idle, max_age)
     pools = []
-    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
+    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
 
     pools.each do |pool|
       pool.drain(idle.seconds, max_age.seconds)
@@ -433,7 +432,7 @@ module Discourse
 
   def self.reset_active_record_cache_if_needed(e)
     last_cache_reset = Discourse.last_ar_cache_reset
-    if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil?  || last_cache_reset < 30.seconds.ago)
+    if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
       Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
       Discourse.last_ar_cache_reset = Time.zone.now
       Discourse.reset_active_record_cache
@@ -447,6 +446,5 @@ module Discourse
     end
     nil
   end
-
 
 end

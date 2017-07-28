@@ -35,7 +35,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def available_groups
-    Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
+    Group.order(:name).pluck(:name) - group_permissions.map { |g| g[:group_name] }
   end
 
   def can_delete
@@ -44,7 +44,7 @@ class CategorySerializer < BasicCategorySerializer
 
   def include_is_special?
     [SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
-    .include? object.id
+      .include? object.id
   end
 
   def is_special
@@ -76,7 +76,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def notification_level
-   user = scope && scope.user
+    user = scope && scope.user
    object.notification_level ||
      (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
   end

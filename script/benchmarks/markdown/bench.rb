@@ -4,7 +4,6 @@ require File.expand_path('../../../../config/environment', __FILE__)
 # set any flags here
 # MiniRacer::Platform.set_flags! :noturbo
 
-
 tests = [
   ["tiny post", "**hello**"],
   ["giant post", File.read("giant_post.md")],
@@ -28,7 +27,7 @@ PrettyText.v8.eval("window.commonmark = window.markdownit('commonmark')")
 # exit
 
 Benchmark.ips do |x|
-  [true,false].each do |sanitize|
+  [true, false].each do |sanitize|
     tests.each do |test, text|
       x.report("#{test} sanitize: #{sanitize}") do
         PrettyText.markdown(text, sanitize: sanitize)
@@ -36,14 +35,12 @@ Benchmark.ips do |x|
     end
   end
 
-
   tests.each do |test, text|
     x.report("markdown it no extensions commonmark #{test}") do
       PrettyText.v8.eval("window.commonmark.render(#{text.inspect})")
     end
   end
 end
-
 
 # 27-07-2017 - Sam's NUC
 #
@@ -131,4 +128,3 @@ end
 #                           1.448k (± 6.7%) i/s -      7.239k in   5.024831s
 # markdown it no extensions commonmark lots of mentions
 #                           1.986k (± 5.2%) i/s -      9.990k in   5.044624s
-

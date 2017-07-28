@@ -30,7 +30,6 @@ class WatchedWord < ActiveRecord::Base
 
   scope :by_action, -> { order("action ASC, word ASC") }
 
-
   def self.normalize_word(w)
     w.strip.downcase.squeeze('*')
   end

@@ -1,6 +1,6 @@
 class AvatarLookup
 
-  def initialize(user_ids=[])
+  def initialize(user_ids = [])
     @user_ids = user_ids.tap(&:compact!).tap(&:uniq!).tap(&:flatten!)
   end
 
@@ -23,9 +23,9 @@ class AvatarLookup
     # adding tap here is a personal taste thing
     hash = {}
     User.joins(:user_emails)
-        .where(id: @user_ids)
-        .select(AvatarLookup.lookup_columns)
-        .each{ |user| hash[user.id] = user }
+      .where(id: @user_ids)
+      .select(AvatarLookup.lookup_columns)
+      .each { |user| hash[user.id] = user }
     hash
   end
 end

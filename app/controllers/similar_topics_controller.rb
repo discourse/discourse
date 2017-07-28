@@ -26,7 +26,7 @@ class SimilarTopicsController < ApplicationController
     return render json: [] if invalid_length || !Topic.count_exceeds_minimum?
 
     topics = Topic.similar_to(title, raw, current_user).to_a
-    topics.map! {|t| SimilarTopic.new(t) }
+    topics.map! { |t| SimilarTopic.new(t) }
     render_serialized(topics, SimilarTopicSerializer, root: :similar_topics, rest_serializer: true)
   end
 

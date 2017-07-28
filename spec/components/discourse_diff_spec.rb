@@ -11,7 +11,7 @@ describe DiscourseDiff do
       prev = "<div>#{CGI::escapeHTML(a)}</div>"
       cur = "<div>#{CGI::escapeHTML(b)}</div>"
 
-      diff = DiscourseDiff.new(prev,cur)
+      diff = DiscourseDiff.new(prev, cur)
       expect(diff.inline_html).not_to match(/<\/?test>/)
       expect(diff.side_by_side_html).not_to match(/<\/?test>/)
     end

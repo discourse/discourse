@@ -34,7 +34,7 @@ class CreateTitle
   end
 
   def self.first_long_line(text)
-    lines = text.split("\n").select {|t| t.strip.size >= 20}
+    lines = text.split("\n").select { |t| t.strip.size >= 20 }
     return if lines.empty?
     lines[0].strip
   end

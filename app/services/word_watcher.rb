@@ -26,7 +26,7 @@ class WordWatcher
   end
 
   def self.clear_cache!
-    WatchedWord.actions.sum do |a,i|
+    WatchedWord.actions.sum do |a, i|
       Discourse.cache.delete word_matcher_regexp_key(a)
     end
   end

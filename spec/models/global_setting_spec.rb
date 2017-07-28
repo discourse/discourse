@@ -85,13 +85,13 @@ describe GlobalSetting::FileProvider do
 
     provider = GlobalSetting::FileProvider.from(f.path)
 
-    expect(provider.lookup(:a,"")).to eq 1000
-    expect(provider.lookup(:b,"")).to eq "10 # = 00"
-    expect(provider.lookup(:c,"")).to eq "10 # = 00"
-    expect(provider.lookup(:d,"bob")).to eq nil
-    expect(provider.lookup(:e,"bob")).to eq "bob"
-    expect(provider.lookup(:f,"bob")).to eq "bob"
-    expect(provider.lookup(:a1,"")).to eq 1
+    expect(provider.lookup(:a, "")).to eq 1000
+    expect(provider.lookup(:b, "")).to eq "10 # = 00"
+    expect(provider.lookup(:c, "")).to eq "10 # = 00"
+    expect(provider.lookup(:d, "bob")).to eq nil
+    expect(provider.lookup(:e, "bob")).to eq "bob"
+    expect(provider.lookup(:f, "bob")).to eq "bob"
+    expect(provider.lookup(:a1, "")).to eq 1
 
     expect(provider.keys.sort).to eq [:a, :a1, :b, :c, :d]
 
@@ -105,7 +105,7 @@ describe GlobalSetting::FileProvider do
 
     provider = GlobalSetting::FileProvider.from(f.path)
 
-    expect(provider.lookup(:a,"")).to eq 500
+    expect(provider.lookup(:a, "")).to eq 500
 
     f.unlink
   end

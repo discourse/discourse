@@ -40,7 +40,7 @@ class UserApiKeysController < ApplicationController
     @client_id = params[:client_id]
     @auth_redirect = params[:auth_redirect]
     @push_url = params[:push_url]
-    @localized_scopes = params[:scopes].split(",").map{|s| I18n.t("user_api_key.scopes.#{s}")}
+    @localized_scopes = params[:scopes].split(",").map { |s| I18n.t("user_api_key.scopes.#{s}") }
     @scopes = params[:scopes]
 
   rescue Discourse::InvalidAccess
@@ -52,10 +52,10 @@ class UserApiKeysController < ApplicationController
     require_params
 
     unless SiteSetting.allowed_user_api_auth_redirects
-                      .split('|')
-                      .any?{|u| params[:auth_redirect] == u}
+        .split('|')
+        .any? { |u| params[:auth_redirect] == u }
 
-        raise Discourse::InvalidAccess
+      raise Discourse::InvalidAccess
     end
 
     raise Discourse::InvalidAccess unless meets_tl?
@@ -126,7 +126,7 @@ class UserApiKeysController < ApplicationController
      :client_id,
      :auth_redirect,
      :application_name
-    ].each{|p| params.require(p)}
+    ].each { |p| params.require(p) }
   end
 
   def validate_params
