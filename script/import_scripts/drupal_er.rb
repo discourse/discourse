@@ -48,8 +48,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
     # import_users
     # import_categories
-    import_topics
-    import_replies
+    # import_topics
+    # import_replies
     # import_likes
     # import_tags
     # create_permalinks
@@ -437,51 +437,51 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   def post_process_posts
     puts '', 'processing posts...'
 
-    Post.where("id > 33691").find_each do |post|
+    Post.find_each do |post|
       next if post.raw.nil?
       puts "processing post: ##{post.id}..."
 
       doc = Nokogiri::HTML.fragment(post.raw)
 
-      # NOTE: The order is important.
-      # 1. Replace media divs.
-      doc.css('div.media_embed').each { |node| node.replace node.inner_html }
+      # # NOTE: The order is important.
+      # # 1. Replace media divs.
+      # doc.css('div.media_embed').each { |node| node.replace node.inner_html }
+      #
+      # # 2. Replace youtube and vimeo iframes with onebox links.
+      # doc.css('iframe').each do |node|
+      #   if 'youtube.com'.in?(node['src']) || 'player.vimeo.com'.in?(node['src'])
+      #     u = URI.parse(node['src'])
+      #     u.scheme = 'https'
+      #     node.replace u.to_s
+      #   end
+      # end
+      #
+      # # 3. Replace twitter blockquotes with onebox links.
+      # doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
 
-      # 2. Replace youtube and vimeo iframes with onebox links.
-      doc.css('iframe').each do |node|
-        if 'youtube.com'.in?(node['src']) || 'player.vimeo.com'.in?(node['src'])
-          u = URI.parse(node['src'])
-          u.scheme = 'https'
-          node.replace u.to_s
-        end
-      end
 
-      # 3. Replace twitter blockquotes with onebox links.
-      doc.css('blockquote.twitter-tweet').each { |node| node.replace node.css('a').last['href'] }
-
-
-      # 4. Upload images.
-      doc.css('img').each do |img|
-        if img['src'].present?
-          if '/sites/edgeryders.eu/files'.in?(img['src']) || '/sites/default/files'.in?(img['src'])
-            filename = img['src'].gsub(/.*(#{Regexp.quote('/sites/edgeryders.eu/files')}|#{Regexp.quote('/sites/default/files')})/, DRUPAL_FILES_DIR).gsub(/\?.*/, '')
-            # Decode URL characters.
-            filename = URI.decode_www_form_component(filename)
-
-            if File.exists?(filename)
-              upload = create_upload(post.user_id, filename, File.basename(filename))
-              if upload.nil? || upload.invalid?
-                puts "Upload not valid :(  #{filename}"
-                puts upload.errors.inspect if upload
-              else
-                img.replace "\n" + embedded_image_html(upload)
-              end
-            else
-              puts "Image doesn't exist: #{filename}"
-            end
-          end
-        end
-      end
+      # # 4. Upload images.
+      # doc.css('img').each do |img|
+      #   if img['src'].present?
+      #     if '/sites/edgeryders.eu/files'.in?(img['src']) || '/sites/default/files'.in?(img['src'])
+      #       filename = img['src'].gsub(/.*(#{Regexp.quote('/sites/edgeryders.eu/files')}|#{Regexp.quote('/sites/default/files')})/, DRUPAL_FILES_DIR).gsub(/\?.*/, '')
+      #       # Decode URL characters.
+      #       filename = URI.decode_www_form_component(filename)
+      #
+      #       if File.exists?(filename)
+      #         upload = create_upload(post.user_id, filename, File.basename(filename))
+      #         if upload.nil? || upload.invalid?
+      #           puts "Upload not valid :(  #{filename}"
+      #           puts upload.errors.inspect if upload
+      #         else
+      #           img.replace "\n" + embedded_image_html(upload)
+      #         end
+      #       else
+      #         puts "Image doesn't exist: #{filename}"
+      #       end
+      #     end
+      #   end
+      # end
 
       # 5. Remap URLs.
       doc.css('a').each do |link|
@@ -496,10 +496,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         elsif pl = Permalink.find_by_url(link['href'].sub(/^\//, '').sub(/^en\//, ''))
           # Permalinks
           link.attributes['href'].value = pl.target_url if pl.target_url.present?
-        elsif uid = link['href'].match(/^\/(?:en\/)?user(?:s)?\/([0-9]*)/).try(:captures).try(:first)
+        elsif uid = link['href'].match(/^\/(?:en\/)?user\/([0-9]*)/).try(:captures).try(:first)
           # User URLs
           if uf = UserCustomField.find_by(name: 'import_id', value: "#{uid}")
             link.attributes['href'].value = "/u/#{uf.user.username}"
+          end
+        elsif uid = link['href'].match(/^\/(?:en\/)?users\/(.*)/).try(:captures).try(:first)
+          # User URLs
+          if u = User.find_by_username(uid.underscore)
+            link.attributes['href'].value = "/u/#{u.username}"
           end
         end
       end
@@ -507,37 +512,37 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw = doc.to_s
 
 
-      # HTML cleanup.
-      post.raw.gsub!('<meta charset="utf-8">', '')
-      post.raw.gsub!('<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>', '')
-      post.raw.gsub!(' dir="ltr"', '')
-      post.raw.gsub!('<p>&nbsp;</p>', '')
-      post.raw.gsub!('<li>&nbsp;</li>', '')
-      # Remove html attributes in opening tags.
-      post.raw.gsub!(/<ul.*?>/, '<ul>')
-      post.raw.gsub!(/<span.*?>/, '<span>')
-      post.raw.gsub!(/<li.*?>/, '<li>')
-      # Normalize line breaks.
-      post.raw.gsub!(/\r/, "\n")
-      post.raw.gsub!(%r~<br\s*\/?>~, "\n")
-      # Remove paragraphs.
-      post.raw.gsub!(/<p.*?>/, '')
-      post.raw.gsub!('</p>', "\n\n")
-      # Remove line breaks.
-      post.raw.gsub!(/<li>\n{1,}/, '<li>')
-      # NOTE: Do not use \s to also match non-breaking spaces.
-      # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
-      post.raw.gsub!(/\n[[:space:]]*<\/li>/, '</li>')
-      # Replace three or more consecutive linebreaks with two.
-      post.raw.gsub!(/\n{3,}/, "\n\n")
-      # Remove trailing tabs.
-      post.raw.gsub!(/\n\t{1,}/, "\n")
-      # Remove trailing whitespaces.
-      post.raw.gsub!(/\n[[:space:]]{1,}/, "\n")
-      # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
-      post.raw.gsub!(/\n#/, "\n\\#")
-      # Escape hash signs after a whitespace to prevent markdown messing up the html formatting.
-      post.raw.gsub!(/[[:space:]]#/, " \\#")
+      # # HTML cleanup.
+      # post.raw.gsub!('<meta charset="utf-8">', '')
+      # post.raw.gsub!('<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>', '')
+      # post.raw.gsub!(' dir="ltr"', '')
+      # post.raw.gsub!('<p>&nbsp;</p>', '')
+      # post.raw.gsub!('<li>&nbsp;</li>', '')
+      # # Remove html attributes in opening tags.
+      # post.raw.gsub!(/<ul.*?>/, '<ul>')
+      # post.raw.gsub!(/<span.*?>/, '<span>')
+      # post.raw.gsub!(/<li.*?>/, '<li>')
+      # # Normalize line breaks.
+      # post.raw.gsub!(/\r/, "\n")
+      # post.raw.gsub!(%r~<br\s*\/?>~, "\n")
+      # # Remove paragraphs.
+      # post.raw.gsub!(/<p.*?>/, '')
+      # post.raw.gsub!('</p>', "\n\n")
+      # # Remove line breaks.
+      # post.raw.gsub!(/<li>\n{1,}/, '<li>')
+      # # NOTE: Do not use \s to also match non-breaking spaces.
+      # # See: https://stackoverflow.com/questions/3473817/gsub-ascii-code-characters-from-a-string-in-ruby
+      # post.raw.gsub!(/\n[[:space:]]*<\/li>/, '</li>')
+      # # Replace three or more consecutive linebreaks with two.
+      # post.raw.gsub!(/\n{3,}/, "\n\n")
+      # # Remove trailing tabs.
+      # post.raw.gsub!(/\n\t{1,}/, "\n")
+      # # Remove trailing whitespaces.
+      # post.raw.gsub!(/\n[[:space:]]{1,}/, "\n")
+      # # Escape hash signs at the beginning of a line to prevent markdown interpreting it as a headline.
+      # post.raw.gsub!(/\n#/, "\n\\#")
+      # # Escape hash signs after a whitespace to prevent markdown messing up the html formatting.
+      # post.raw.gsub!(/[[:space:]]#/, " \\#")
 
       post.save!(validate: false)
     end
