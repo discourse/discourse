@@ -62,10 +62,17 @@ describe FinalDestination do
 
       it "escapes url" do
         url = 'https://eviltrout.com?s=180&#038;d=mm&#038;r=g'
-        escaped_url = URI.escape(url)
+        escaped_url = URI.escape(CGI.unescapeHTML(url), Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]"))
         stub_request(:head, escaped_url).to_return(doc_response)
 
         expect(fd(url).resolve.to_s).to eq(escaped_url)
+      end
+
+      it "preserves url fragment identifier" do
+        url = 'https://eviltrout.com/2016/02/25/fixing-android-performance.html#discourse-comments'
+        stub_request(:head, 'https://eviltrout.com/2016/02/25/fixing-android-performance.html').to_return(doc_response)
+
+        expect(fd(url).resolve.to_s).to eq(url)
       end
 
       it "returns the final url" do
