@@ -46,7 +46,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # end
 
 
-    import_users
+    # import_users
     # import_categories
     import_topics
     import_replies
@@ -202,12 +202,15 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         LEFT JOIN field_data_field_date AS fd on n.nid = fd.entity_id
         LEFT JOIN field_data_field_offsite_url AS fou on n.nid = fou.entity_id
       # Category
-        LEFT JOIN og_membership AS om on n.nid = om.etid
+        LEFT JOIN (
+                  SELECT id, etid, gid
+                  FROM og_membership
+                  WHERE og_membership.entity_type = 'node' AND og_membership.group_type = 'node'
+              ) om on n.nid = om.etid
         LEFT JOIN field_data_og_challenge_ref AS cref on n.nid = cref.entity_id
       WHERE
         n.type IN('challenge_response', 'post', 'wiki', 'document', 'group', 'minisite_page', 'page', 'task', 'infopage',
-                  'event', 'document', 'journal') AND
-        ((om.entity_type = 'node' or om.entity_type is null) AND (om.group_type = 'node' or om.group_type is null))
+                  'event', 'document', 'journal')
       ORDER BY om.id ASC
     SQL
 
