@@ -829,7 +829,7 @@
       "name": "bowing_man"
     },
     {
-      "code": "1f926",
+      "code": "1f926-200d-2642-fe0f",
       "name": "man_facepalming"
     },
     {
@@ -6142,7 +6142,23 @@
     "business_suit_levitating",
     "woman_juggling",
     "man_juggling",
-    "sleeping_bed"
+    "sleeping_bed",
+    "child",
+    "adult",
+    "older_adult",
+    "woman_with_headscarf",
+    "bearded_person",
+    "breast_feeding",
+    "mage",
+    "fairy",
+    "vampire",
+    "merperson",
+    "elf",
+    "person_in_steamy_room",
+    "person_climbing",
+    "person_in_lotus_position",
+    "love_you_gesture",
+    "palms_up_together"
   ],
   "aliases": {
     "right_anger_bubble": [
