@@ -10,9 +10,10 @@ class FinalDestination
   attr_reader :cookie
 
   def initialize(url, opts = nil)
+    @url = url
     @uri =
       begin
-        URI(URI.escape(CGI.unescapeHTML(url), Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]"))) if url
+        URI(escape_url) if @url
       rescue URI::InvalidURIError
       end
 
@@ -174,6 +175,10 @@ class FinalDestination
     true
   rescue RateLimiter::LimitExceeded
     false
+  end
+
+  def escape_url
+    URI.escape(CGI.unescapeHTML(@url), Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]"))
   end
 
   def private_ranges
