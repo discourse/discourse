@@ -12,7 +12,7 @@ class FinalDestination
   def initialize(url, opts = nil)
     @uri =
       begin
-        URI(URI.escape(url)) if url
+        URI(URI.escape(CGI.unescapeHTML(url), Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]"))) if url
       rescue URI::InvalidURIError
       end
 
