@@ -448,7 +448,7 @@ export default Ember.Component.extend({
       $picker.css(_.merge(attributes, options));
     };
 
-    if(Ember.testing) {
+    if(Ember.testing || this.get('noPositioning')) {
       desktopPositioning();
       return;
     }
