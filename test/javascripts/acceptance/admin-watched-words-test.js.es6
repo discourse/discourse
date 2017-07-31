@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Admin - Watched Words", { loggedIn: true });
 
 QUnit.test("list words in groups", assert => {
-  visit("/admin/watched_words/action/block");
+  visit("/admin/logs/watched_words/action/block");
   andThen(() => {
     assert.ok(exists('.watched-words-list'));
     assert.ok(!exists('.watched-words-list .watched-word'), "Don't show bad words by default.");
@@ -31,7 +31,7 @@ QUnit.test("list words in groups", assert => {
 });
 
 QUnit.test("add words", assert => {
-  visit("/admin/watched_words/action/block");
+  visit("/admin/logs/watched_words/action/block");
   andThen(() => {
     click('.show-words-checkbox');
     fillIn('.watched-word-form input', 'poutine');
@@ -49,7 +49,7 @@ QUnit.test("add words", assert => {
 });
 
 QUnit.test("remove words", assert => {
-  visit("/admin/watched_words/action/block");
+  visit("/admin/logs/watched_words/action/block");
   click('.show-words-checkbox');
 
   let word = null;

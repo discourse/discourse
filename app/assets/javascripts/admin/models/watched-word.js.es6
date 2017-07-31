@@ -2,7 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 
 const WatchedWord = Discourse.Model.extend({
   save() {
-    return ajax("/admin/watched_words" + (this.id ? '/' + this.id : '') + ".json", {
+    return ajax("/admin/logs/watched_words" + (this.id ? '/' + this.id : '') + ".json", {
       type: this.id ? 'PUT' : 'POST',
       data: {word: this.get('word'), action_key: this.get('action')},
       dataType: 'json'
@@ -10,13 +10,13 @@ const WatchedWord = Discourse.Model.extend({
   },
 
   destroy() {
-    return ajax("/admin/watched_words/" + this.get('id') + ".json", {type: 'DELETE'});
+    return ajax("/admin/logs/watched_words/" + this.get('id') + ".json", {type: 'DELETE'});
   }
 });
 
 WatchedWord.reopenClass({
   findAll() {
-    return ajax("/admin/watched_words").then(function (list) {
+    return ajax("/admin/logs/watched_words").then(function (list) {
       const actions = {};
       list.words.forEach(s => {
         if (!actions[s.action]) { actions[s.action] = []; }
