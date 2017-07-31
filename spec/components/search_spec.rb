@@ -738,6 +738,23 @@ describe Search do
       end
     end
 
+    it "can find posts which contains filetypes" do
+      post1 = Fabricate(:post,
+                        raw: "http://example.com/image.png")
+      post2 = Fabricate(:post,
+                         raw: "Discourse logo\n"\
+                              "http://example.com/logo.png\n"\
+                              "http://example.com/vector_image.svg")
+      post_with_upload = Fabricate(:post, uploads: [Fabricate(:upload)])
+      Fabricate(:post)
+
+      TopicLink.extract_from(post1)
+      TopicLink.extract_from(post2)
+
+      expect(Search.execute('filetype:svg').posts).to eq([post2])
+      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id, post_with_upload.id)
+      expect(Search.execute('logo filetype:png').posts.map(&:id)).to eq([post2.id])
+    end
   end
 
   it 'can parse complex strings using ts_query helper' do

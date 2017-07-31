@@ -95,7 +95,7 @@ module FileStore
     end
 
     def get_path_for_upload(upload)
-      get_path_for("original".freeze, upload.id, upload.sha1, upload.extension)
+      get_path_for("original".freeze, upload.id, upload.sha1, "."+upload.extension)
     end
 
     def get_path_for_optimized_image(optimized_image)
