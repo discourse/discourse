@@ -290,7 +290,7 @@ describe Email::Receiver do
 
     it "handles inline reply" do
       expect { process(:inline_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
+      expect(topic.posts.last.raw).to eq("And this is *my* reply :+1:")
     end
 
     it "retrieves the first part of multiple replies" do
