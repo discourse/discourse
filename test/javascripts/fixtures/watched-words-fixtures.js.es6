@@ -1,5 +1,5 @@
 export default {
-  "/admin/watched_words.json": {
+  "/admin/logs/watched_words.json": {
     "actions": ["block", "censor", "require_approval", "flag"],
     "words": [
       {id: 1, word: "liquorice", action: "block"},

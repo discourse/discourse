@@ -4,7 +4,7 @@ import UploadMixin from "discourse/mixins/upload";
 export default Em.Component.extend(UploadMixin, {
   type: 'csv',
   classNames: 'watched-words-uploader',
-  uploadUrl: '/admin/watched_words/upload',
+  uploadUrl: '/admin/logs/watched_words/upload',
   addDisabled: Em.computed.alias("uploading"),
 
   validateUploadedFilesOptions() {
