@@ -400,7 +400,9 @@ describe Email::Receiver do
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
-    it "associates email replies using both 'In-Reply-To' and 'References' headers" do
+    it "associates email replies using both 'In-Reply-To' and 'References' headers when 'find_related_post_with_key' is disabled" do
+      SiteSetting.find_related_post_with_key = false
+
       expect { process(:email_reply_1) }.to change(Topic, :count)
 
       topic = Topic.last

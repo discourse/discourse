@@ -1389,7 +1389,7 @@ en:
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
 
-    find_related_post_with_key: "Only use the reply key to find the replied-to post. (Recommended if using Amazon SES)"
+    find_related_post_with_key: "Only use the 'reply key' to find the replied-to post. WARNING: disabling this allows user impersonation based on email address."
 
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
 
