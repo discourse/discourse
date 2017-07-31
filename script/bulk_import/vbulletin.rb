@@ -495,3 +495,5 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
 end
+
+BulkImport::VBulletin.new.run

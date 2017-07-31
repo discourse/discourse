@@ -544,7 +544,7 @@ class BulkImport::Base
     cooked = raw
 
     # Convert YouTube URLs to lazyYT DOMs before being transformed into links
-    cooked.gsub!(/\nhttps\:\/\/www.youtube.com\/watch\?v=(\w+)\n/m) do
+    cooked.gsub!(/\nhttps\:\/\/www.youtube.com\/watch\?v=(\w+)\n/) do
       video_id = $1
       result = <<-HTML
         <div class="lazyYT" data-youtube-id="#{video_id}" data-width="480" data-height="270" data-parameters="feature=oembed&amp;wmode=opaque"></div>
