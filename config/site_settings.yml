@@ -633,7 +633,7 @@ email:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
   find_related_post_with_key:
-    default: false
+    default: true
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
