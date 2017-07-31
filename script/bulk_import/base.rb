@@ -521,8 +521,8 @@ class BulkImport::Base
   end
 
   def fix_name(name)
+    name.scrub! if name.valid_encoding? == false
     return if name.blank?
-    name.scrub!
     name = ActiveSupport::Inflector.transliterate(name)
     name.gsub!(/[^\w.-]+/, "_")
     name.gsub!(/^\W+/, "")
