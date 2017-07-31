@@ -501,7 +501,7 @@ class Search
       SELECT post_uploads.post_id FROM uploads
       JOIN post_uploads ON post_uploads.upload_id = uploads.id
       WHERE lower(uploads.extension) IN (:file_extensions)
-      )", {file_extensions: file_extensions})
+      )", file_extensions: file_extensions)
   end
 
   private
