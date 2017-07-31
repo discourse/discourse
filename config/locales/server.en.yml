@@ -1774,7 +1774,7 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -1792,7 +1792,7 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -2443,7 +2443,7 @@ en:
     invited_to_private_message_body: |
       %{username} invited you to a message
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -2454,7 +2454,7 @@ en:
     invited_to_topic_body: |
       %{username} invited you to a discussion
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
