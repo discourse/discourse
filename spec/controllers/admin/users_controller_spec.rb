@@ -416,6 +416,19 @@ describe Admin::UsersController do
         json = ::JSON.parse(response.body)
         expect(json['success']).to eq("OK")
       end
+
+      it "should confirm email even when the tokens are expired" do
+        @reg_user.email_tokens.update_all(confirmed: false, expired: true)
+
+        @reg_user.reload
+        expect(@reg_user.email_confirmed?).to eq(false)
+
+        xhr :put, :activate, user_id: @reg_user.id
+        expect(response).to be_success
+
+        @reg_user.reload
+        expect(@reg_user.email_confirmed?).to eq(true)
+      end
     end
 
     context 'log_out' do
