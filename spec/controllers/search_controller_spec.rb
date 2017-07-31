@@ -37,19 +37,43 @@ describe SearchController do
       expect(data['users'][0]['id']).to eq(user.id)
     end
 
-    it "can search for id" do
-      user = Fabricate(:user)
-      my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
-      xhr(
-        :get,
-        :query,
-        term: my_post.topic_id,
-        type_filter: 'topic',
-        search_for_id: true
-      )
-      expect(response).to be_success
-      data = JSON.parse(response.body)
-      expect(data['topics'][0]['id']).to eq(my_post.topic_id)
+    context 'searching by topic id' do
+      it 'should not be restricted by minimum search term length' do
+        SiteSetting.min_search_term_length = 20000
+
+        post = Fabricate(:post)
+
+        xhr(
+          :get,
+          :query,
+          term: post.topic_id,
+          type_filter: 'topic',
+          search_for_id: true
+        )
+
+        expect(response).to be_success
+        data = JSON.parse(response.body)
+
+        expect(data['topics'][0]['id']).to eq(post.topic_id)
+      end
+
+      it "should return the right result" do
+        user = Fabricate(:user)
+        my_post = Fabricate(:post, raw: "#{user.username} is a cool person")
+
+        xhr(
+          :get,
+          :query,
+          term: my_post.topic_id,
+          type_filter: 'topic',
+          search_for_id: true
+        )
+
+        expect(response).to be_success
+        data = JSON.parse(response.body)
+
+        expect(data['topics'][0]['id']).to eq(my_post.topic_id)
+      end
     end
   end
 
@@ -97,13 +121,13 @@ describe SearchController do
   context "search context" do
     it "raises an error with an invalid context type" do
       expect {
-        xhr :get, :query, term: 'test', search_context: {type: 'security', id: 'hole'}
+        xhr :get, :query, term: 'test', search_context: { type: 'security', id: 'hole' }
       }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "raises an error with a missing id" do
       expect {
-        xhr :get, :query, term: 'test', search_context: {type: 'user'}
+        xhr :get, :query, term: 'test', search_context: { type: 'user' }
       }.to raise_error(Discourse::InvalidParameters)
     end
 
@@ -111,12 +135,12 @@ describe SearchController do
       let(:user) { Fabricate(:user) }
       it "raises an error if the user can't see the context" do
         Guardian.any_instance.expects(:can_see?).with(user).returns(false)
-        xhr :get, :query, term: 'test', search_context: {type: 'user', id: user.username}
+        xhr :get, :query, term: 'test', search_context: { type: 'user', id: user.username }
         expect(response).not_to be_success
       end
 
       it 'performs the query with a search context' do
-        xhr :get, :query, term: 'test', search_context: {type: 'user', id: user.username}
+        xhr :get, :query, term: 'test', search_context: { type: 'user', id: user.username }
         expect(response).to be_success
       end
     end
@@ -140,11 +164,9 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      xhr :post, :click, {
-        search_log_id: search_log_id,
-        search_result_id: 12345,
-        search_result_type: 'topic'
-      }
+      xhr :post, :click,         search_log_id: search_log_id,
+                                 search_result_id: 12345,
+                                 search_result_type: 'topic'
       expect(response).to be_success
 
       expect(SearchLog.find(search_log_id).clicked_topic_id).to be_blank
@@ -160,11 +182,9 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      xhr :post, :click, {
-        search_log_id: search_log_id,
-        search_result_id: 12345,
-        search_result_type: 'topic'
-      }
+      xhr :post, :click,         search_log_id: search_log_id,
+                                 search_result_id: 12345,
+                                 search_result_type: 'topic'
       expect(response).to be_success
 
       expect(SearchLog.find(search_log_id).clicked_topic_id).to eq(12345)
@@ -179,11 +199,9 @@ describe SearchController do
         ip_address: '192.168.0.1'
       )
 
-      xhr :post, :click, {
-        search_log_id: search_log_id,
-        search_result_id: 22222,
-        search_result_type: 'topic'
-      }
+      xhr :post, :click,         search_log_id: search_log_id,
+                                 search_result_id: 22222,
+                                 search_result_type: 'topic'
       expect(response).to be_success
 
       expect(SearchLog.find(search_log_id).clicked_topic_id).to eq(22222)
@@ -198,11 +216,9 @@ describe SearchController do
         ip_address: '192.168.0.1'
       )
 
-      xhr :post, :click, {
-        search_log_id: search_log_id,
-        search_result_id: 22222,
-        search_result_type: 'topic'
-      }
+      xhr :post, :click,         search_log_id: search_log_id,
+                                 search_result_id: 22222,
+                                 search_result_type: 'topic'
       expect(response).to be_success
 
       expect(SearchLog.find(search_log_id).clicked_topic_id).to be_blank

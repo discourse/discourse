@@ -8,7 +8,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
   let(:topic) do
     Fabricate(:private_message_topic, first_post: first_post,
-      topic_allowed_users: [
+                                      topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
         Fabricate.build(:topic_allowed_user, user: user),
       ]
@@ -83,12 +83,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         new_post = Post.last
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => topic.id,
-          "state" => "tutorial_bookmark",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s
-        })
+        expect(narrative.get_data(user)).to eq("topic_id" => topic.id,
+                                               "state" => "tutorial_bookmark",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s)
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to eq(topic.id)
@@ -111,12 +109,10 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         new_post = Post.last
 
-        expect(narrative.get_data(user)).to eq({
-          "topic_id" => new_post.topic.id,
-          "state" => "tutorial_bookmark",
-          "last_post_id" => new_post.id,
-          "track" => described_class.to_s
-        })
+        expect(narrative.get_data(user)).to eq("topic_id" => new_post.topic.id,
+                                               "state" => "tutorial_bookmark",
+                                               "last_post_id" => new_post.id,
+                                               "track" => described_class.to_s)
 
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(new_post.topic.id).to_not eq(topic.id)
@@ -612,7 +608,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         it 'should create the right reply' do
           post.update!(
-            raw: '[quote="#{post.user}, post:#{post.post_number}, topic:#{topic.id}"]\n:monkey: :fries:\n[/quote]'
+            raw: "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]"
           )
 
           narrative.expects(:enqueue_timeout_job).with(user)
@@ -922,11 +918,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(first_post.reload.raw).to eq('Hello world')
 
-          expect(narrative.get_data(user)).to include({
-            "state" => "end",
-            "topic_id" => new_post.topic_id,
-            "track" => described_class.to_s,
-          })
+          expect(narrative.get_data(user)).to include("state" => "end",
+                                                      "topic_id" => new_post.topic_id,
+                                                      "track" => described_class.to_s)
 
           expect(user.badges.where(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME).exists?)
             .to eq(true)

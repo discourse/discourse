@@ -5,7 +5,7 @@ describe Email::MessageBuilder do
 
   let(:to_address) { "jake@adventuretime.ooo" }
   let(:subject) { "Tree Trunks has made some apple pie!" }
-  let(:body) { "oh my glob Jake, Tree Trunks just made the tastiest apple pie ever!"}
+  let(:body) { "oh my glob Jake, Tree Trunks just made the tastiest apple pie ever!" }
   let(:builder) { Email::MessageBuilder.new(to_address, subject: subject, body: body) }
   let(:build_args) { builder.build_args }
   let(:header_args) { builder.header_args }

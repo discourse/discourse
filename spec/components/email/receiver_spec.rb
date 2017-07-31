@@ -47,8 +47,16 @@ describe Email::Receiver do
     expect { process(:blocked_sender) }.to raise_error(Email::Receiver::BlockedUserError)
   end
 
-  skip "doesn't raise an InactiveUserError when the sender is staged" do
-    Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+  it "doesn't raise an InactiveUserError when the sender is staged" do
+    user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
+
+    email_log = Fabricate(:email_log,
+      to_address: 'reply+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bar.com',
+      reply_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      user: user,
+      post: Fabricate(:post)
+    )
+
     expect { process(:staged_sender) }.not_to raise_error
   end
 
@@ -89,13 +97,13 @@ describe Email::Receiver do
       expect(email_log.bounced).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(2)
 
-      Timecop.freeze(2.days.from_now) do
-        expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+      freeze_time 2.days.from_now
 
-        email_log_2.reload
-        expect(email_log_2.bounced).to eq(true)
-        expect(email_log_2.user.user_stat.bounce_score).to eq(4)
-      end
+      expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log_2.reload
+      expect(email_log_2.user.user_stat.bounce_score).to eq(4)
+      expect(email_log_2.bounced).to eq(true)
     end
 
   end
@@ -282,7 +290,7 @@ describe Email::Receiver do
 
     it "handles inline reply" do
       expect { process(:inline_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
+      expect(topic.posts.last.raw).to eq("And this is *my* reply :+1:")
     end
 
     it "retrieves the first part of multiple replies" do
@@ -381,7 +389,7 @@ describe Email::Receiver do
 
     it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
       expect { process(:cc) }.to change(Topic, :count)
-      emails = Topic.last.allowed_users.pluck(:email)
+      emails = Topic.last.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
       expect(emails.size).to eq(3)
       expect(emails).to include("someone@else.com", "discourse@bar.com", "wat@bar.com")
     end
@@ -498,11 +506,11 @@ describe Email::Receiver do
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
-      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
+      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      expect { process(:forwarded_email_to_category) }.to change { Topic.count }.by(1) # Topic created
 
       new_post, = Post.last
-      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?","<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>","Discoursing much today?")
+      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?", "<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>", "Discoursing much today?")
     end
 
     it "works when approving is enabled" do

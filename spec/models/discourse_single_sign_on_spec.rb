@@ -271,7 +271,7 @@ describe DiscourseSingleSignOn do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
 
-      user.update_columns(email: 'xXx@themovie.com')
+      user.primary_email.update_columns(email: 'xXx@themovie.com')
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.email).to eq(old_email)
@@ -358,7 +358,6 @@ describe DiscourseSingleSignOn do
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>new profile</p>")
-
 
       # yes override if site setting
       sso.bio = "new profile 2"

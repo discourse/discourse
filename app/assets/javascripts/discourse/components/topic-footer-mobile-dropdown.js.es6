@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import Combobox from 'discourse-common/components/combo-box';
 import { observes } from 'ember-addons/ember-computed-decorators';
 

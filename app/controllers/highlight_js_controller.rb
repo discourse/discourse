@@ -26,4 +26,3 @@ class HighlightJsController < ApplicationController
     end
   end
 end
-

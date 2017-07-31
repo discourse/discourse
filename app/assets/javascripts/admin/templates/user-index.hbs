@@ -3,7 +3,7 @@
   <div class='user-controls'>
     {{#if model.canViewProfile}}
       {{#link-to 'user' model class="btn"}}
-        {{fa-icon "user"}}
+        {{d-icon "user"}}
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
     {{/if}}
@@ -151,7 +151,7 @@
         {{i18n 'badges.badge_count' count=model.badge_count}}
       </div>
       <div class='controls'>
-        {{#link-to 'adminUser.badges' model class="btn"}}{{fa-icon "certificate"}}{{i18n 'admin.badges.edit_badges'}}{{/link-to}}
+        {{#link-to 'adminUser.badges' model class="btn"}}{{d-icon "certificate"}}{{i18n 'admin.badges.edit_badges'}}{{/link-to}}
       </div>
     </div>
   {{/if}}
@@ -281,9 +281,11 @@
     <div class="controls">
       {{#if model.canLockTrustLevel}}
         {{#if model.trust_level_locked}}
-          <i title='{{i18n 'admin.user.trust_level_locked_tip'}}' class='fa fa-lock'></i> {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
+          {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
+          {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
-          <i title='{{i18n 'admin.user.trust_level_unlocked_tip'}}' class='fa fa-unlock'></i> {{d-button action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
+          {{d-icon "unlock" title="admin.user.trust_level_unlocked_tip"}}
+          {{d-button action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
         {{/if}}
       {{/if}}
       {{#if model.tl3Requirements}}
@@ -487,7 +489,7 @@
     <div class="clearfix"></div>
     <br/>
     <div class="pull-right">
-      {{fa-icon "exclamation-triangle"}} {{model.deleteExplanation}}
+      {{d-icon "exclamation-triangle"}} {{model.deleteExplanation}}
     </div>
   {{/if}}
 </section>

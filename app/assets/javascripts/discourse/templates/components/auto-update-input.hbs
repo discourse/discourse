@@ -14,11 +14,11 @@
 
   {{#if isCustom}}
     <div class="control-group">
-      {{fa-icon "calendar"}} {{date-picker-future value=date defaultDate=date}}
+      {{d-icon "calendar"}} {{date-picker-future value=date defaultDate=date}}
     </div>
 
     <div class="control-group">
-      {{fa-icon "clock-o"}}
+      {{d-icon "clock-o"}}
       {{input type="time" value=time}}
     </div>
   {{/if}}
@@ -33,7 +33,7 @@
 
     {{#if willCloseImmediately}}
       <div class="warning">
-        {{fa-icon "warning"}}
+        {{d-icon "warning"}}
         {{willCloseI18n}}
       </div>
     {{/if}}

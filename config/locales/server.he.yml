@@ -175,6 +175,7 @@ he:
   user_is_suspended: "משתמשים מושעים אינם מורשים לפרסם."
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
   not_accepting_pms: "מצטעים,  %{username} לא מקבל הודעות כרגע."
+  max_pm_recepients: "מצטערים, אתם יכולים לשלוח הודעה לכל היותר ל-%{recipients_limit} נמענים."
   just_posted_that: "דומה מידי למה שפרסמתם לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
   is_invalid: "נראה לא ברור, האם זה משפט שלם?"
@@ -854,6 +855,8 @@ he:
     search_tokenize_chinese_japanese_korean: "אלצו את החיפוש לנתח סינית/יפנית/קוריאנית גם באתרים שאינם בשפות אלו"
     search_prefer_recent_posts: "אם חיפוש בפורום הגדול שלכם איטי, אופציה זו מנסה לאנדקס קודם כל את הפוסטים החדשים יותר"
     search_recent_posts_size: "כמה פוסטים חדשים לשמור באינדקס"
+    log_search_queries: "רישום שאילתות חיפוש שמתבצעות על ידי משתמשים"
+    search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
     allow_uncategorized_topics: "הרשה לפתוח נושאים ללא קטגוריה. אזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את האופציה. "
     allow_duplicate_topic_titles: "אשרו נושאים עם כותרות זהות או משוכפלות."
     unique_posts_mins: "כמה דקות לפני שמשתמש יכול לפרסם את אותו תוכן שוב"
@@ -1520,41 +1523,9 @@ he:
   invite_mailer:
     title: "שולח-מיילים להזמנה"
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} הזמין/ה אתכם לדיון
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      ב
-
-      > %{site_title} -- %{site_description}
-
-      אם אתם מעוניינים, לחצו על הקישור למטה:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "שולח-מיילים מותאם-אישית להזמנה"
     subject_template: "%{invitee_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} הזמין/ה אתכם לדיון
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      ב
-
-      > %{site_title} -- %{site_description}
-
-      עם הערה זו
-
-      > %{user_custom_message}
-
-      אם אתם מעוניינים, לחצו על הקישור למטה:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "שולח-מיילים להזמנה לפורום"
     subject_template: "%{invitee_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
@@ -2087,26 +2058,6 @@ he:
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     visit_link_to_respond_pm: "[בקרו בהודעה](%{base_url}%{url}) כדי לענות."
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
-    invited_to_private_message_body: |
-      %{username} הזמין אותך להודעה
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      באתר
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} הזמין/הזמינה אותך לדיון
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      באתר
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "משתמש/ת הוזמן/ה להודעה פרטית"
       subject_template: "[%{email_prefix}] %{username} הזמין אותך להודעה '%{topic_title}'"

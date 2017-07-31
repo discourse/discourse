@@ -5,13 +5,13 @@
       {{#unless model.theme_id}}
       <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'admin.customize.save'}}</button>
       {{/unless}}
-      <button {{action "copy" model}} class='btn'><i class="fa fa-copy"></i> {{i18n 'admin.customize.copy'}}</button>
-      <button {{action "copyToClipboard" model}} class='btn'><i class="fa fa-clipboard"></i> {{i18n 'admin.customize.copy_to_clipboard'}}</button>
+      <button {{action "copy" model}} class='btn'>{{d-icon "copy"}} {{i18n 'admin.customize.copy'}}</button>
+      <button {{action "copyToClipboard" model}} class='btn'>{{d-icon "clipboard"}} {{i18n 'admin.customize.copy_to_clipboard'}}</button>
       {{#if model.theme_id}}
       {{i18n "admin.customize.theme_owner"}}
       {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}
       {{else}}
-      <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n 'admin.customize.delete'}}</button>
+      <button {{action "destroy"}} class='btn btn-danger'>{{d-icon "trash-o"}} {{i18n 'admin.customize.delete'}}</button>
       {{/if}}
       <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
     </div>

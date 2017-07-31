@@ -3,6 +3,10 @@ require 'distributed_cache'
 
 describe DistributedCache do
 
+  before :all do
+    $redis.flushall
+  end
+
   let! :cache1 do
     DistributedCache.new("test")
   end

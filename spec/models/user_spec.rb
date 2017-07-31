@@ -5,15 +5,15 @@ describe User do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :username }
+    it { is_expected.to validate_presence_of :primary_email }
 
     describe 'emails' do
       let(:user) { Fabricate.build(:user) }
 
-      it { is_expected.to validate_presence_of :email }
-
       describe 'when record has a valid email' do
         it "should be valid" do
           user.email = 'test@gmail.com'
+
           expect(user).to be_valid
         end
       end
@@ -21,7 +21,19 @@ describe User do
       describe 'when record has an invalid email' do
         it 'should not be valid' do
           user.email = 'test@gmailcom'
+
           expect(user).to_not be_valid
+          expect(user.errors.messages).to include(:primary_email)
+        end
+      end
+
+      describe 'when user is staged' do
+        it 'should still validate primary_email' do
+          user.staged = true
+          user.primary_email = nil
+
+          expect(user).to_not be_valid
+          expect(user.errors.messages).to include(:primary_email)
         end
       end
     end
@@ -30,19 +42,18 @@ describe User do
   describe '#count_by_signup_date' do
     before(:each) do
       User.destroy_all
-      Timecop.freeze
+      freeze_time
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 2.days.ago)
       Fabricate(:user, created_at: 4.days.ago)
     end
-    after(:each) { Timecop.return }
-    let(:signups_by_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1} }
+    let(:signups_by_day) { { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 } }
 
     it 'collect closed interval signups' do
       expect(User.count_by_signup_date(2.days.ago, Time.now)).to include(signups_by_day)
-      expect(User.count_by_signup_date(2.days.ago, Time.now)).not_to include({4.days.ago.to_date => 1})
+      expect(User.count_by_signup_date(2.days.ago, Time.now)).not_to include(4.days.ago.to_date => 1)
     end
   end
 
@@ -105,7 +116,6 @@ describe User do
       end
     end
   end
-
 
   describe 'bookmark' do
     before do
@@ -283,7 +293,6 @@ describe User do
 
     end
 
-
   end
 
   describe 'staff and regular users' do
@@ -453,12 +462,12 @@ describe User do
     end
 
     it "should not allow saving if username is reused" do
-       @codinghorror.username = @user.username
+      @codinghorror.username = @user.username
        expect(@codinghorror.save).to eq(false)
     end
 
     it "should not allow saving if username is reused in different casing" do
-       @codinghorror.username = @user.username.upcase
+      @codinghorror.username = @user.username.upcase
        expect(@codinghorror.save).to eq(false)
     end
   end
@@ -715,12 +724,8 @@ describe User do
       let!(:date) { Time.zone.now }
 
       before do
-        Timecop.freeze(date)
+        freeze_time date
         user.update_last_seen!
-      end
-
-      after do
-        Timecop.return
       end
 
       it "updates last_seen_at" do
@@ -739,14 +744,10 @@ describe User do
       context "called twice" do
 
         before do
-          Timecop.freeze(date)
+          freeze_time date
           user.update_last_seen!
           user.update_last_seen!
           user.reload
-        end
-
-        after do
-          Timecop.return
         end
 
         it "doesn't increase days_visited twice" do
@@ -759,12 +760,8 @@ describe User do
         let!(:future_date) { 3.days.from_now }
 
         before do
-          Timecop.freeze(future_date)
+          freeze_time future_date
           user.update_last_seen!
-        end
-
-        after do
-          Timecop.return
         end
 
         it "should log a second visited_at record when we log an update later" do
@@ -794,7 +791,7 @@ describe User do
 
     context 'when user has no email tokens for some reason' do
       it 'should return false' do
-        user.email_tokens.each {|t| t.destroy}
+        user.email_tokens.each { |t| t.destroy }
         user.reload
         expect(user.email_confirmed?).to eq(true)
       end
@@ -889,8 +886,8 @@ describe User do
 
   describe "#new_user_posting_on_first_day?" do
 
-    def test_user?(opts={})
-      Fabricate.build(:user, {created_at: Time.zone.now}.merge(opts)).new_user_posting_on_first_day?
+    def test_user?(opts = {})
+      Fabricate.build(:user, { created_at: Time.zone.now }.merge(opts)).new_user_posting_on_first_day?
     end
 
     it "handles when user has never posted" do
@@ -1119,7 +1116,6 @@ describe User do
     end
   end
 
-
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
       SiteSetting.external_system_avatars_enabled = false
@@ -1152,7 +1148,7 @@ describe User do
       user.save
       user = User.find(user.id)
 
-      expect(user.custom_fields).to eq({"jack" => "jill"})
+      expect(user.custom_fields).to eq("jack" => "jill")
     end
   end
 
@@ -1497,7 +1493,7 @@ describe User do
 
   describe '.human_users' do
     it 'should only return users with a positive primary key' do
-      Fabricate(:user, id: -2)
+      Fabricate(:user, id: -1979)
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])

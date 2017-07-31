@@ -83,7 +83,7 @@ JSON
 
       expect(@theme.theme_fields.length).to eq(6)
 
-      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
+      mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq(scss_data)
@@ -106,14 +106,12 @@ JSON
 
       `cd #{initial_repo} && git commit -am "update"`
 
-
       time = Time.new('2001')
       freeze_time time
 
       remote.update_remote_version
       expect(remote.commits_behind).to eq(1)
       expect(remote.remote_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
-
 
       remote.update_from_remote
       @theme.save
@@ -123,7 +121,7 @@ JSON
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
 
-      mapped = Hash[*@theme.theme_fields.map{|f| ["#{f.target_id}-#{f.name}", f.value]}.flatten]
+      mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
       expect(mapped["0-header"]).to eq("I AM UPDATED")
       expect(mapped["1-scss"]).to eq(scss_data)

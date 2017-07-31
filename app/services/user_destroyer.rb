@@ -7,14 +7,14 @@ class UserDestroyer
 
   def initialize(actor)
     @actor = actor
-    raise Discourse::InvalidParameters.new('acting user is nil') unless @actor and @actor.is_a?(User)
+    raise Discourse::InvalidParameters.new('acting user is nil') unless @actor && @actor.is_a?(User)
     @guardian = Guardian.new(actor)
   end
 
   # Returns false if the user failed to be deleted.
   # Returns a frozen instance of the User if the delete succeeded.
-  def destroy(user, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
+  def destroy(user, opts = {})
+    raise Discourse::InvalidParameters.new('user is nil') unless user && user.is_a?(User)
     raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
     @guardian.ensure_can_delete_user!(user)
 
@@ -31,18 +31,16 @@ class UserDestroyer
           # block all external urls
           if opts[:block_urls]
             post.topic_links.each do |link|
-              unless link.internal ||
-                (Oneboxer.engine(link.url) != Onebox::Engine::WhitelistedGenericOnebox)
-
-                ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address)&.record_match!
-              end
+              next if link.internal
+              next if Oneboxer.engine(link.url) != Onebox::Engine::WhitelistedGenericOnebox
+              ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address)&.record_match!
             end
           end
 
           PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
 
           if post.topic && post.is_first_post?
-            Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
+            Topic.unscoped.where(id: post.topic_id).update_all(user_id: nil)
           end
         end
       end
@@ -51,39 +49,39 @@ class UserDestroyer
         post_action.remove_act!(Discourse.system_user)
       end
 
+      # keep track of emails used
+      user_emails = user.user_emails.pluck(:email)
+
       user.destroy.tap do |u|
         if u
-
           if opts[:block_email]
-            b = ScreenedEmail.block(u.email, ip_address: u.ip_address)
-            b.record_match! if b
-          end
-
-          if opts[:block_ip] && u.ip_address
-            b = ScreenedIpAddress.watch(u.ip_address)
-            b.record_match! if b
-            if u.registration_ip_address && u.ip_address != u.registration_ip_address
-              b = ScreenedIpAddress.watch(u.registration_ip_address)
-              b.record_match! if b
+            user_emails.each do |email|
+              ScreenedEmail.block(email, ip_address: u.ip_address)&.record_match!
             end
           end
 
-          Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
+          if opts[:block_ip] && u.ip_address
+            ScreenedIpAddress.watch(u.ip_address)&.record_match!
+            if u.registration_ip_address && u.ip_address != u.registration_ip_address
+              ScreenedIpAddress.watch(u.registration_ip_address)&.record_match!
+            end
+          end
+
+          Post.unscoped.where(user_id: u.id).update_all(user_id: nil)
 
           # If this user created categories, fix those up:
-          categories = Category.where(user_id: user.id)
-          categories.each do |c|
-            c.user_id = Discourse.system_user.id
+          Category.where(user_id: u.id).each do |c|
+            c.user_id = Discourse::SYSTEM_USER_ID
             c.save!
-            if topic = Topic.with_deleted.find_by(id: c.topic_id)
-              topic.try(:recover!)
-              topic.user_id = Discourse.system_user.id
+            if topic = Topic.unscoped.find_by(id: c.topic_id)
+              topic.recover!
+              topic.user_id = Discourse::SYSTEM_USER_ID
               topic.save!
             end
           end
 
           StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
-          MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+          MessageBus.publish "/file-change", ["refresh"], user_ids: [u.id]
         end
       end
     end

@@ -10,14 +10,14 @@ describe Auth::DefaultCurrentUserProvider do
     end
   end
 
-  def provider(url, opts=nil)
-    opts ||= {method: "GET"}
+  def provider(url, opts = nil)
+    opts ||= { method: "GET" }
     env = Rack::MockRequest.env_for(url, opts)
     TestProvider.new(env)
   end
 
   it "raises errors for incorrect api_key" do
-    expect{
+    expect {
       provider("/?api_key=INCORRECT").current_user
     }.to raise_error(Discourse::InvalidAccess)
   end
@@ -29,13 +29,13 @@ describe Auth::DefaultCurrentUserProvider do
 
     user.update_columns(active: false)
 
-    expect{
+    expect {
       provider("/?api_key=hello").current_user
     }.to raise_error(Discourse::InvalidAccess)
 
     user.update_columns(active: true, suspended_till: 1.day.from_now)
 
-    expect{
+    expect {
       provider("/?api_key=hello").current_user
     }.to raise_error(Discourse::InvalidAccess)
   end
@@ -45,7 +45,7 @@ describe Auth::DefaultCurrentUserProvider do
     user2 = Fabricate(:user)
     ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
 
-    expect{
+    expect {
       provider("/?api_key=hello&api_username=#{user2.username.downcase}").current_user
     }.to raise_error(Discourse::InvalidAccess)
   end
@@ -54,7 +54,7 @@ describe Auth::DefaultCurrentUserProvider do
     user = Fabricate(:user)
     ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['10.0.0.0/24'])
 
-    expect{
+    expect {
       provider("/?api_key=hello&api_username=#{user.username.downcase}", "REMOTE_ADDR" => "10.1.0.1").current_user
     }.to raise_error(Discourse::InvalidAccess)
 
@@ -68,7 +68,6 @@ describe Auth::DefaultCurrentUserProvider do
                           "REMOTE_ADDR" => "100.0.0.22").current_user
 
     expect(found_user.id).to eq(user.id)
-
 
     found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
                           "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
@@ -208,7 +207,7 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   it "correctly removes invalid cookies" do
-    cookies = {"_t" => SecureRandom.hex}
+    cookies = { "_t" => SecureRandom.hex }
     provider('/').refresh_session(nil, {}, cookies)
     expect(cookies.key?("_t")).to eq(false)
   end
@@ -229,7 +228,6 @@ describe Auth::DefaultCurrentUserProvider do
     user = Fabricate(:user)
     cookies = {}
     provider('/').log_on_user(user, {}, cookies)
-
 
     expect(cookies["_t"][:same_site]).to eq("Lax")
     expect(cookies["_t"][:httponly]).to eq(true)
@@ -286,9 +284,8 @@ describe Auth::DefaultCurrentUserProvider do
       expect(good_provider.is_user_api?).to eq(true)
 
       expect {
-        provider("/", params.merge({"REQUEST_METHOD" => "POST"})).current_user
+        provider("/", params.merge("REQUEST_METHOD" => "POST")).current_user
       }.to raise_error(Discourse::InvalidAccess)
-
 
       user.update_columns(suspended_till: 1.year.from_now)
 
@@ -322,7 +319,6 @@ describe Auth::DefaultCurrentUserProvider do
         provider("/", params).current_user
       }.to raise_error(RateLimiter::LimitExceeded)
 
-
       SiteSetting.max_user_api_reqs_per_day = 4
       SiteSetting.max_user_api_reqs_per_minute = 3
 
@@ -340,4 +336,3 @@ describe Auth::DefaultCurrentUserProvider do
     end
   end
 end
-

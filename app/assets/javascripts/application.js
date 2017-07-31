@@ -69,8 +69,6 @@
 //= require ./discourse/components/notifications-button
 //= require ./discourse/lib/link-mentions
 //= require ./discourse/components/site-header
-//= require ./discourse/lib/emoji/groups
-//= require ./discourse/lib/emoji/toolbar
 //= require ./discourse/components/d-editor
 //= require ./discourse/lib/screen-track
 //= require ./discourse/routes/discourse

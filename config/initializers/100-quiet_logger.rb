@@ -6,7 +6,7 @@ Rails::Rack::Logger.class_eval do
   def call_with_quiet_assets(env)
 
     override = false
-    if (env['PATH_INFO'].index("/assets/") == 0) or
+    if (env['PATH_INFO'].index("/assets/") == 0) ||
        (env['PATH_INFO'].index("mini-profiler-resources") == 0)
       if ::Logster::Logger === Rails.logger
         override = true

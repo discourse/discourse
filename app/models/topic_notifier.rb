@@ -3,10 +3,10 @@ class TopicNotifier
     @topic = topic
   end
 
-  { :watch!   => :watching,
-    :track!   => :tracking,
-    :regular! => :regular,
-    :mute!    => :muted }.each_pair do |method_name, level|
+  { watch!: :watching,
+    track!: :tracking,
+    regular!: :regular,
+    mute!: :muted }.each_pair do |method_name, level|
 
     define_method method_name do |user_id|
       change_level user_id, level
@@ -34,8 +34,8 @@ class TopicNotifier
     @notification_levels ||= TopicUser.notification_levels
   end
 
-  def change_level(user_id, level, reason=nil)
-    attrs = {notification_level: levels[level]}
+  def change_level(user_id, level, reason = nil)
+    attrs = { notification_level: levels[level] }
     attrs.merge!(notifications_reason_id: TopicUser.notification_reasons[reason]) if reason
     TopicUser.change(user_id, @topic.id, attrs)
   end

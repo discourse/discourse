@@ -5,6 +5,7 @@ import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse
 import { linkSeenTagHashtags, fetchUnseenTagHashtags } from 'discourse/lib/link-tag-hashtag';
 import Composer from 'discourse/models/composer';
 import { load } from 'pretty-text/oneboxer';
+import { applyInlineOneboxes } from 'pretty-text/inline-oneboxer';
 import { ajax } from 'discourse/lib/ajax';
 import InputValidation from 'discourse/models/input-validation';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
@@ -58,6 +59,8 @@ export default Ember.Component.extend({
   @computed
   markdownOptions() {
     return {
+      previewing: true,
+
       lookupAvatarByPostNumber: (postNumber, topicId) => {
         const topic = this.get('topic');
         if (!topic) { return; }
@@ -169,6 +172,10 @@ export default Ember.Component.extend({
     fetchUnseenTagHashtags(unseen).then(() => {
       linkSeenTagHashtags($preview);
     });
+  },
+
+  _loadInlineOneboxes(inline) {
+    applyInlineOneboxes(inline, ajax);
   },
 
   _loadOneboxes($oneboxes) {
@@ -570,6 +577,18 @@ export default Ember.Component.extend({
       const $oneboxes = $('a.onebox', $preview);
       if ($oneboxes.length > 0 && $oneboxes.length <= this.siteSettings.max_oneboxes_per_post) {
         Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
+      }
+
+      let inline = {};
+      $('a.inline-onebox-loading', $preview).each(function(index, link) {
+        let $link = $(link);
+        $link.removeClass('inline-onebox-loading');
+        let text = $link.text();
+        inline[text] = inline[text] || [];
+        inline[text].push($link);
+      });
+      if (Object.keys(inline).length > 0) {
+        Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
       this.trigger('previewRefreshed', $preview);

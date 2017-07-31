@@ -132,4 +132,3 @@ describe EmailUpdater do
     end
   end
 end
-

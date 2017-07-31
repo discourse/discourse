@@ -4,7 +4,7 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import Category from 'discourse/models/category';
 import { escapeExpression } from 'discourse/lib/utilities';
 import { setTransient } from 'discourse/lib/page-tracker';
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 
 const SortOrders = [
   {name: I18n.t('search.relevance'), id: 0},

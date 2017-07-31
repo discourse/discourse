@@ -109,7 +109,7 @@ describe TagsController do
         xhr :get, :search, q: 'stu'
         expect(response).to be_success
         json = ::JSON.parse(response.body)
-        expect(json["results"].map{|j| j["id"]}.sort).to eq(['stuff', 'stumped'])
+        expect(json["results"].map { |j| j["id"] }.sort).to eq(['stuff', 'stumped'])
       end
 
       it "can say if given tag is not allowed" do
@@ -118,7 +118,7 @@ describe TagsController do
         xhr :get, :search, q: 'nope', categoryId: category.id
         expect(response).to be_success
         json = ::JSON.parse(response.body)
-        expect(json["results"].map{|j| j["id"]}.sort).to eq([])
+        expect(json["results"].map { |j| j["id"] }.sort).to eq([])
         expect(json["forbidden"]).to be_present
       end
 
@@ -128,7 +128,7 @@ describe TagsController do
         xhr :get, :search, q: "cool"
         expect(response).to be_success
         json = ::JSON.parse(response.body)
-        expect(json["results"].map{|j| j["id"]}).to eq(['cooltag'])
+        expect(json["results"].map { |j| j["id"] }).to eq(['cooltag'])
       end
 
       it "supports Chinese and Russian" do
@@ -138,12 +138,12 @@ describe TagsController do
         xhr :get, :search, q: '房'
         expect(response).to be_success
         json = ::JSON.parse(response.body)
-        expect(json["results"].map{|j| j["id"]}).to eq(['房地产'])
+        expect(json["results"].map { |j| j["id"] }).to eq(['房地产'])
 
         xhr :get, :search, q: 'тема'
         expect(response).to be_success
         json = ::JSON.parse(response.body)
-        expect(json["results"].map{|j| j["id"]}).to eq(['тема-в-разработке'])
+        expect(json["results"].map { |j| j["id"] }).to eq(['тема-в-разработке'])
       end
     end
   end

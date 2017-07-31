@@ -10,17 +10,14 @@ describe UserUpdater do
       u2 = Fabricate(:user)
       u3 = Fabricate(:user)
 
-
       updater = UserUpdater.new(u1, u1)
       updater.update_muted_users("#{u2.username},#{u3.username}")
 
       updater = UserUpdater.new(u2, u2)
       updater.update_muted_users("#{u3.username},#{u1.username}")
 
-
       updater = UserUpdater.new(u3, u3)
       updater.update_muted_users("")
-
 
       expect(MutedUser.where(user_id: u2.id).count).to eq 2
       expect(MutedUser.where(user_id: u1.id).count).to eq 2
@@ -71,15 +68,15 @@ describe UserUpdater do
       seq = user.user_option.theme_key_seq
 
       val = updater.update(bio_raw: 'my new bio',
-                     email_always: 'true',
-                     mailing_list_mode: true,
-                     digest_after_minutes: "45",
-                     new_topic_duration_minutes: 100,
-                     auto_track_topics_after_msecs: 101,
-                     notification_level_when_replying: 3,
-                     email_in_reply_to: false,
-                     date_of_birth: date_of_birth,
-                     theme_key: theme.key
+                           email_always: 'true',
+                           mailing_list_mode: true,
+                           digest_after_minutes: "45",
+                           new_topic_duration_minutes: 100,
+                           auto_track_topics_after_msecs: 101,
+                           notification_level_when_replying: 3,
+                           email_in_reply_to: false,
+                           date_of_birth: date_of_birth,
+                           theme_key: theme.key
                     )
       expect(val).to be_truthy
 
@@ -94,7 +91,7 @@ describe UserUpdater do
       expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
       expect(user.user_option.theme_key).to eq theme.key
-      expect(user.user_option.theme_key_seq).to eq(seq+1)
+      expect(user.user_option.theme_key_seq).to eq(seq + 1)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
@@ -189,12 +186,12 @@ describe UserUpdater do
     context 'when custom_fields is empty string' do
       it "update is successful" do
         user = Fabricate(:user)
-        user.custom_fields = {'import_username' => 'my_old_username'}
+        user.custom_fields = { 'import_username' => 'my_old_username' }
         user.save
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: 'example.com', custom_fields: '')
-        expect(user.reload.custom_fields).to eq({'import_username' => 'my_old_username'})
+        expect(user.reload.custom_fields).to eq('import_username' => 'my_old_username')
       end
     end
 

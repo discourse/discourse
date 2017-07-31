@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import RawHtml from 'discourse/widgets/raw-html';
 import { ajax } from 'discourse/lib/ajax';
 import evenRound from "discourse/plugins/poll/lib/even-round";

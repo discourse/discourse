@@ -28,7 +28,7 @@ module ImportExport
         external_id = g.delete(:id)
         new_group = Group.find_by_name(g[:name]) || Group.create!(g)
         user_ids.each do |external_user_id|
-          new_group.add( User.find(@topic_importer.new_user_id(external_user_id)) ) rescue ActiveRecord::RecordNotUnique
+          new_group.add(User.find(@topic_importer.new_user_id(external_user_id))) rescue ActiveRecord::RecordNotUnique
         end
       end
     end
@@ -47,7 +47,7 @@ module ImportExport
         parent = Category.new(@export_data[:category])
         parent.user_id = @topic_importer.new_user_id(@export_data[:category][:user_id]) # imported user's new id
         parent.custom_fields["import_id"] = id
-        parent.permissions = permissions.present? ? permissions : {"everyone" => CategoryGroup.permission_types[:full]}
+        parent.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
         parent.save!
         set_category_description(parent, @export_data[:category][:description])
       end
@@ -62,7 +62,7 @@ module ImportExport
           subcategory.parent_category_id = parent.id
           subcategory.user_id = @topic_importer.new_user_id(cat_attrs[:user_id])
           subcategory.custom_fields["import_id"] = id
-          subcategory.permissions = permissions.present? ? permissions : {"everyone" => CategoryGroup.permission_types[:full]}
+          subcategory.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
           subcategory.save!
           set_category_description(subcategory, cat_attrs[:description])
         end

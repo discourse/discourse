@@ -175,6 +175,7 @@ fi:
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
   not_accepting_pms: "Pahoittelut, %{username} ei ota vastaan yksityisviestejä tällä hetkellä."
+  max_pm_recepients: "Pahoittelut, voit lähettää viestin enintään %{recipients_limit} vastaanottajalle."
   just_posted_that: "on liian samanlainen kuin aiempi viestisi"
   invalid_characters: "sisältää epäkelpoja merkkejä"
   is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
@@ -358,7 +359,6 @@ fi:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Nämä interpolaatioavaimet eivät kelpaa: "%{keys}"'
               missing_interpolation_keys: 'Nämä interpolaatioavaimet puuttuvat: "%{keys}"'
       <<: *errors
   user_profile:
@@ -655,6 +655,7 @@ fi:
         remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
   unsubscribed:
     title: "Tilaus peruttu!"
+    description: "Tilaus osoitteeseen <b>%{email}</b> on peruttu. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
   unsubscribe:
     title: "Peru tilaus"
@@ -865,6 +866,8 @@ fi:
     search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
+    log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"
+    search_query_log_max_size: "Kuinka monta hakukyselyä säilötään enintään"
     allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun luominen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
@@ -1296,6 +1299,7 @@ fi:
     auto_close_messages_post_count: "Maksimimäärä viestejä yksityisketjussa, kunnes se suljetaan automaattisesti (0 poistaaksesi käytöstä)"
     auto_close_topics_post_count: "Maksimimäärä viestejä ketjussa, kunnes se suljetaan automaattisesti (0 poistaaksesi käytöstä)"
     code_formatting_style: "Viestikentän koodipainike käyttää oletuksena tätä koodimuotoilutyyliä"
+    max_allowed_message_recipients: "Kuinka monta vastaanottajaa yksityisviestillä voi olla."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään sähköpostikooste oletuksena."
     default_include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin oletuksena. Tätä voi muuttaa käyttäjäasetuksissa."
     default_email_private_messages: "Lähetä oletuksena sähköposti, kun joku lähettää käyttäjälle viestin."
@@ -1364,6 +1368,8 @@ fi:
       email_polling_disabled: "Sinun täytyy ottaa käyttöön joko manuaalinen tai POP3 pollaus ennen sähköpostivastauksia."
       user_locale_not_enabled: "'allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
       invalid_regex: "Säännöllinen lauseke ei kelpaa tai ei ole sallittu."
+      email_editable_enabled: "Asetus 'email editable' on otettava pois käytöstä ennen tämän asetuksen käyttöönottoa."
+      enable_sso_disabled: "Asetus 'enable sso' on otettava käyttöön ennen tämän asetuksen käyttöönottoa."
   search:
     within_post: "#%{post_number} käyttäjältä %{username}"
     types:
@@ -1528,36 +1534,35 @@ fi:
   invite_mailer:
     title: "Kutsu keskusteluun"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
-    text_body_template: |+
+    text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
-      keskustelupalstalla
+      sivustolla
 
       > %{site_title} -- %{site_description}
 
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
-
   custom_invite_mailer:
     title: "Kutsu keskusteluun saatesanoilla"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
-      keskustelupalstalla
+      sivustolla
 
       > %{site_title} -- %{site_description}
 
-      tällaisin saatesanoin:
+      tällaisin saatesanoin
 
       > %{user_custom_message}
 
@@ -2121,7 +2126,7 @@ fi:
     invited_to_private_message_body: |
       %{username} kutsui sinut yksityiskeskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
@@ -2129,9 +2134,9 @@ fi:
 
       > %{site_title} -- %{site_description}
     invited_to_topic_body: |
-      %{username} kutsui sinut keskusteluun
+      %{username} kustui sinut keskusteluun
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 

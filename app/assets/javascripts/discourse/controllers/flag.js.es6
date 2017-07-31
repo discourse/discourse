@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
@@ -83,9 +84,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   submitText: function(){
     if (this.get('selected.is_custom_flag')) {
-      return "<i class='fa fa-envelope'></i>" + (I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action"));
+      return iconHTML('envelope') + (I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action"));
     } else {
-      return "<i class='fa fa-flag'></i>" + (I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action"));
+      return iconHTML('flag') + (I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action"));
     }
   }.property('selected.is_custom_flag'),
 

@@ -22,15 +22,14 @@ module ImportExport
       self
     end
 
-
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,
                       :auto_close_hours, :auto_close_based_on_last_post,
                       :topic_template, :suppress_from_homepage, :all_topics_wiki, :permissions_params]
 
     def export_categories
-      @export_data[:category] = CATEGORY_ATTRS.inject({}) { |h,a| h[a] = @category.send(a); h }
+      @export_data[:category] = CATEGORY_ATTRS.inject({}) { |h, a| h[a] = @category.send(a); h }
       @subcategories.find_each do |subcat|
-        @export_data[:subcategories] << CATEGORY_ATTRS.inject({}) { |h,a| h[a] = subcat.send(a); h }
+        @export_data[:subcategories] << CATEGORY_ATTRS.inject({}) { |h, a| h[a] = subcat.send(a); h }
       end
 
       # export groups that are mentioned in category permissions
@@ -49,7 +48,6 @@ module ImportExport
       self
     end
 
-
     GROUP_ATTRS = [ :id, :name, :created_at, :alias_level, :visible,
                     :automatic_membership_email_domains, :automatic_membership_retroactive,
                     :primary_group, :title, :grant_trust_level, :incoming_email]
@@ -57,7 +55,7 @@ module ImportExport
     def export_groups(group_names)
       group_names.each do |name|
         group = Group.find_by_name(name)
-        group_attrs = GROUP_ATTRS.inject({}) { |h,a| h[a] = group.send(a); h }
+        group_attrs = GROUP_ATTRS.inject({}) { |h, a| h[a] = group.send(a); h }
         group_attrs[:user_ids] = group.users.pluck(:id)
         @export_data[:groups] << group_attrs
       end
@@ -75,7 +73,7 @@ module ImportExport
       self
     end
 
-    def save_to_file(filename=nil)
+    def save_to_file(filename = nil)
       require 'json'
       output_basename = filename || File.join("category-export-#{Time.now.strftime("%Y-%m-%d-%H%M%S")}.json")
       File.open(output_basename, "w:UTF-8") do |f|

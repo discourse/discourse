@@ -26,7 +26,7 @@
     position: relative;
   }
   .nav-pills .drop {
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    border: 1px solid $primary-low; 
     position: absolute;
     z-index: 1000;
     background-color: $secondary;
@@ -47,8 +47,8 @@
 
   }
   .nav-pills > li {
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
-    i.fa-caret-down {
+    background: $primary-low;
+    .d-icon-caret-down {
       margin-left: 8px;
     }
   }
@@ -146,9 +146,9 @@
 
   tbody {
     tr {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+      border-bottom: 1px solid $primary-low; 
       &:first-of-type {
-        border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+        border-top: 3px solid $primary-low; 
       }
     }
     .category {

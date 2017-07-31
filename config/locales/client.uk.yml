@@ -55,6 +55,7 @@ uk:
           other: "%{count} днів тому"
       previous_month: 'Попередній місяць'
       next_month: 'Наступний місяць'
+      placeholder: Виберіть дату
     share:
       topic: 'поширити посилання на цю тему'
       post: 'допис #%{postNumber}'
@@ -67,16 +68,16 @@ uk:
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     s3:
       regions:
-        us_west_2: "США Захід (Орегон)"
-        eu_west_1: "ЄС (Ірландія)"
-        eu_central_1: "ЄС (Франкфурт)"
-        ap_southeast_1: "Азія (Сингапур)"
-        ap_southeast_2: "Азія (Сідней)"
-        ap_south_1: "Азія (Мумбай)"
         ap_northeast_1: "Азія (Токіо)"
         ap_northeast_2: "Азія (Сеул)"
-        sa_east_1: "Південна Америка (Сан Паоло)"
+        ap_south_1: "Азія (Мумбай)"
+        ap_southeast_1: "Азія (Сингапур)"
+        ap_southeast_2: "Азія (Сідней)"
         cn_north_1: "Китай (Пекін)"
+        eu_central_1: "ЄС (Франкфурт)"
+        eu_west_1: "ЄС (Ірландія)"
+        sa_east_1: "Південна Америка (Сан Паоло)"
+        us_west_2: "США Захід (Орегон)"
     edit: 'редагувати назву та категорію цієї теми'
     not_implemented: "Цей функціонал ще не реалізовано, даруйте!"
     no_value: "Ні"
@@ -1320,6 +1321,18 @@ uk:
           body: "Тіло"
           revert: "Повернути зміни"
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
+        theme:
+          upload: "Завантажити"
+          about_theme: "Про тему"
+          license: "Ліцензія"
+          update_to_latest: "Оновити до останьої"
+          add: "Додати"
+          scss:
+            text: "CSS"
+          head_tag:
+            text: "</head>"
+          body_tag:
+            text: "</body>"
         colors:
           title: "Кольори"
           long_title: "Схеми Кольорів"
@@ -1328,6 +1341,7 @@ uk:
           delete_confirm: "Видалити цю кольорову схему?"
           undo: "скасувати"
           undo_title: "Скасувати ваші зміни цього кольору з часу останнього збереження."
+          revert: "Повернути"
           primary:
             name: 'основний'
           secondary:
@@ -1345,6 +1359,7 @@ uk:
           success:
             name: 'успіх'
           love:
+            name: 'любов'
             description: "Колір кнопки \"Подобається\"."
       email:
         title: "Листів"
@@ -1415,6 +1430,8 @@ uk:
           block: "block"
           do_nothing: "do nothing"
         staff_actions:
+          all: "всі"
+          filter: "Filter:"
           title: "Дії персоналу"
           clear_filters: "Показати все"
           staff_user: "Член персоналу"
@@ -1453,6 +1470,8 @@ uk:
             revoke_admin: "відкликати адміністраторство"
             grant_moderation: "зробити модератором"
             revoke_moderation: "відкликати модераторство"
+            deleted_tag: "видалити тег"
+            lock_trust_level: "заблокувати рівень довіри"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -1609,6 +1628,7 @@ uk:
           confirm: 'Підтвердження'
       site_text:
         edit: 'редагувати'
+        revert: "Повернути зміни"
         go_back: "Повернутись до пошуку"
         show_overriden: 'Показувати тільки перевизначені'
       site_settings:
@@ -1639,9 +1659,14 @@ uk:
           uncategorized: 'Інше'
           backups: "Backups"
           login: "Вхід"
+          plugins: "Плагіни"
           user_preferences: "Налаштування"
+          tags: "Теги"
           search: "Пошук"
+          groups: "Групи"
       badges:
+        title: Значки
+        new_badge: Новий значок
         new: Новий
         name: Ім'я
         badge: Значок

@@ -2,7 +2,7 @@ require_dependency 'current_user'
 
 class AdminConstraint
 
-  def initialize(options={})
+  def initialize(options = {})
     @require_master = options[:require_master]
   end
 

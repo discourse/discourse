@@ -5,7 +5,7 @@ class DraftController < ApplicationController
 
   def show
     seq = params[:sequence] || DraftSequence.current(current_user, params[:draft_key])
-    render json: {draft: Draft.get(current_user, params[:draft_key], seq), draft_sequence: seq}
+    render json: { draft: Draft.get(current_user, params[:draft_key], seq), draft_sequence: seq }
   end
 
   def update

@@ -1,3 +1,5 @@
+require_dependency 'inline_oneboxer'
+
 module PrettyText
   module Helpers
     extend self
@@ -9,7 +11,7 @@ module PrettyText
         I18n.t(key)
       else
         str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each { |k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+        opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
         str
       end
     end
@@ -41,6 +43,10 @@ module PrettyText
       else
         nil
       end
+    end
+
+    def lookup_inline_onebox(url)
+      InlineOneboxer.lookup(url)
     end
 
     def get_topic_info(topic_id)

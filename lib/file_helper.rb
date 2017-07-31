@@ -48,14 +48,32 @@ class FileHelper
     downloaded&.close
   end
 
+  def self.optimize_image!(filename)
+    ImageOptim.new(
+      # GLOBAL
+      timeout: 15,
+      skip_missing_workers: true,
+      # PNG
+      optipng: { level: 2, strip: SiteSetting.strip_image_metadata },
+      advpng: false,
+      pngcrush: false,
+      pngout: false,
+      pngquant: false,
+      # JPG
+      jpegoptim: { strip: SiteSetting.strip_image_metadata ? "all" : "none" },
+      jpegtran: false,
+      jpegrecompress: false,
+    ).optimize_image!(filename)
+  end
+
   private
 
-  def self.images
-    @@images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
-  end
+    def self.images
+      @@images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
+    end
 
-  def self.images_regexp
-    @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
-  end
+    def self.images_regexp
+      @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
+    end
 
 end

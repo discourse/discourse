@@ -12,17 +12,17 @@ describe Admin::UserFieldsController do
     context '.create' do
       it "creates a user field" do
         expect {
-          xhr :post, :create, {user_field: {name: 'hello', description: 'hello desc', field_type: 'text'} }
+          xhr :post, :create, user_field: { name: 'hello', description: 'hello desc', field_type: 'text' }
           expect(response).to be_success
         }.to change(UserField, :count).by(1)
       end
 
       it "creates a user field with options" do
         expect {
-          xhr :post, :create, {user_field: {name: 'hello',
+          xhr :post, :create, user_field: { name: 'hello',
                                             description: 'hello desc',
                                             field_type: 'dropdown',
-                                            options: ['a', 'b', 'c']} }
+                                            options: ['a', 'b', 'c'] }
           expect(response).to be_success
         }.to change(UserField, :count).by(1)
 
@@ -56,7 +56,7 @@ describe Admin::UserFieldsController do
       let!(:user_field) { Fabricate(:user_field) }
 
       it "updates the user field" do
-        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle', field_type: 'confirm', description: 'muppet'}
+        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle', field_type: 'confirm', description: 'muppet' }
         expect(response).to be_success
         user_field.reload
         expect(user_field.name).to eq('fraggle')
@@ -64,10 +64,10 @@ describe Admin::UserFieldsController do
       end
 
       it "updates the user field options" do
-        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle',
-                                                           field_type: 'dropdown',
-                                                           description: 'muppet',
-                                                           options: ['hello', 'hello', 'world']}
+        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle',
+                                                            field_type: 'dropdown',
+                                                            description: 'muppet',
+                                                            options: ['hello', 'hello', 'world'] }
         expect(response).to be_success
         user_field.reload
         expect(user_field.name).to eq('fraggle')
@@ -76,19 +76,19 @@ describe Admin::UserFieldsController do
       end
 
       it "keeps options when updating the user field" do
-        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle',
-                                                           field_type: 'dropdown',
-                                                           description: 'muppet',
-                                                           options: ['hello', 'hello', 'world'],
-                                                           position: 1}
+        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle',
+                                                            field_type: 'dropdown',
+                                                            description: 'muppet',
+                                                            options: ['hello', 'hello', 'world'],
+                                                            position: 1 }
         expect(response).to be_success
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
 
-        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle',
-                                                           field_type: 'dropdown',
-                                                           description: 'muppet',
-                                                           position: 2}
+        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle',
+                                                            field_type: 'dropdown',
+                                                            description: 'muppet',
+                                                            position: 2 }
         expect(response).to be_success
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
@@ -97,4 +97,3 @@ describe Admin::UserFieldsController do
   end
 
 end
-

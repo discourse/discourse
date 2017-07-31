@@ -57,7 +57,8 @@ SQL
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
     builder.where('ft.deleted_at IS NULL')
-    builder.where("NOT(ftl.url LIKE '%.png' OR ftl.url LIKE '%.jpg' OR ftl.url LIKE '%.gif')")
+    # note that ILIKE means "case insensitive LIKE"
+    builder.where("NOT(ftl.url ILIKE '%.png' OR ftl.url ILIKE '%.jpg' OR ftl.url ILIKE '%.gif')")
     builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
     builder.secure_category(guardian.secure_category_ids)
@@ -66,7 +67,7 @@ SQL
 
   end
 
-  def self.counts_for(guardian,topic, posts)
+  def self.counts_for(guardian, topic, posts)
     return {} if posts.blank?
 
     # Sam: I don't know how to write this cleanly in AR,
@@ -92,13 +93,13 @@ SQL
     builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
     builder.secure_category(guardian.secure_category_ids)
 
-    builder.map_exec(OpenStruct).each_with_object({}) do |l,result|
+    builder.map_exec(OpenStruct).each_with_object({}) do |l, result|
       result[l.post_id] ||= []
-      result[l.post_id] << {url: l.url,
-                            clicks: l.clicks,
-                            title: l.title,
-                            internal: l.internal,
-                            reflection: l.reflection}
+      result[l.post_id] << { url: l.url,
+                             clicks: l.clicks,
+                             title: l.title,
+                             internal: l.internal,
+                             reflection: l.reflection }
     end
   end
 
@@ -123,16 +124,11 @@ SQL
           internal = false
           topic_id = nil
           post_number = nil
-          parsed_path = parsed.path || ""
 
           if Discourse.store.has_been_uploaded?(url)
             internal = Discourse.store.internal?
-          elsif (parsed.host == Discourse.current_hostname && parsed_path.start_with?(Discourse.base_uri)) || !parsed.host
+          elsif route = Discourse.route_for(parsed)
             internal = true
-
-            parsed_path.slice!(Discourse.base_uri)
-
-            route = Rails.application.routes.recognize_path(parsed_path)
 
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
@@ -165,6 +161,7 @@ SQL
           added_urls << url
 
           unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
+            file_extension = File.extname(parsed.path)[1..10].downcase unless File.extname(parsed.path).empty?
             begin
               TopicLink.create!(post_id: post.id,
                                 user_id: post.user_id,
@@ -174,7 +171,8 @@ SQL
                                 internal: internal,
                                 link_topic_id: topic_id,
                                 link_post_id: reflected_post.try(:id),
-                                quote: link.is_quote)
+                                quote: link.is_quote,
+                                extension: file_extension)
             rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
               # it's fine
             end
@@ -193,14 +191,14 @@ SQL
 
               unless tl
                 tl = TopicLink.create(user_id: post.user_id,
-                                    topic_id: topic_id,
-                                    post_id: reflected_post.try(:id),
-                                    url: reflected_url,
-                                    domain: Discourse.current_hostname,
-                                    reflection: true,
-                                    internal: true,
-                                    link_topic_id: post.topic_id,
-                                    link_post_id: post.id)
+                                      topic_id: topic_id,
+                                      post_id: reflected_post.try(:id),
+                                      url: reflected_url,
+                                      domain: Discourse.current_hostname,
+                                      reflection: true,
+                                      internal: true,
+                                      link_topic_id: post.topic_id,
+                                      link_post_id: post.id)
 
               end
 
@@ -239,11 +237,11 @@ SQL
 
   def self.duplicate_lookup(topic)
     results = TopicLink
-                .includes(:post, :user)
-                .joins(:post, :user)
-                .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
-                .where(topic_id: topic.id, reflection: false)
-                .last(200)
+      .includes(:post, :user)
+      .joins(:post, :user)
+      .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+      .where(topic_id: topic.id, reflection: false)
+      .last(200)
 
     lookup = {}
     results.each do |tl|

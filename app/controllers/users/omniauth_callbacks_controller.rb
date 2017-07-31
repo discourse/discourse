@@ -36,7 +36,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
-    provider = Discourse.auth_providers && Discourse.auth_providers.find{|p| p.name == params[:provider]}
+    provider = Discourse.auth_providers && Discourse.auth_providers.find { |p| p.name == params[:provider] }
 
     @auth_result = authenticator.after_authenticate(auth)
 
@@ -82,7 +82,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     flash[:error] = I18n.t("login.omniauth_error")
     render layout: 'no_ember'
   end
-
 
   def self.find_authenticator(name)
     BUILTIN_AUTH.each do |authenticator|

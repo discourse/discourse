@@ -38,9 +38,9 @@ export default function loadScript(url, opts) {
   $('script').each((i, tag) => {
     const src = tag.getAttribute('src');
 
-    // For some reason, a script tag with `url` as the source is appended into
-    // the head tag while loading the script. 
-    if (src && src !== url) _loaded[tag.getAttribute('src')] = true;
+    if (src && (opts.scriptTag || src !== url)) {
+      _loaded[tag.getAttribute('src')] = true;
+    }
   });
 
 

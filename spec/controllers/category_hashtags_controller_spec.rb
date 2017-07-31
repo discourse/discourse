@@ -12,7 +12,7 @@ describe CategoryHashtagsController do
         xhr :get, :check, category_slugs: [category.slug, 'none']
 
         expect(JSON.parse(response.body)).to eq(
-          { "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url_with_id }] }
+          "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url_with_id }]
         )
       end
 
@@ -21,7 +21,7 @@ describe CategoryHashtagsController do
         private_category = Fabricate(:private_category, group: group)
         xhr :get, :check, category_slugs: [private_category.slug]
 
-        expect(JSON.parse(response.body)).to eq({ "valid" => [] })
+        expect(JSON.parse(response.body)).to eq("valid" => [])
       end
 
       it 'returns restricted categories for an admin' do
@@ -32,7 +32,7 @@ describe CategoryHashtagsController do
         xhr :get, :check, category_slugs: [private_category.slug]
 
         expect(JSON.parse(response.body)).to eq(
-          { "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url_with_id }] }
+          "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url_with_id }]
         )
       end
     end

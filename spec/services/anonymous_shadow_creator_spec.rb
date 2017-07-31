@@ -48,7 +48,6 @@ describe AnonymousShadowCreator do
 
       expect(shadow.created_at).not_to eq(user.created_at)
 
-
       p = create_post
       expect(Guardian.new(shadow).post_can_act?(p, :like)).to eq(false)
       expect(Guardian.new(user).post_can_act?(p, :like)).to eq(true)

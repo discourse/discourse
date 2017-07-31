@@ -282,7 +282,6 @@ describe Invite do
           expect(invite).to be_redeemed
         end
 
-
         context 'again' do
           context "without a passthrough" do
             before do

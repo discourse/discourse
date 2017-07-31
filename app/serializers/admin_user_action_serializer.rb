@@ -75,8 +75,8 @@ class AdminUserActionSerializer < ApplicationSerializer
 
   def action_type
     object.user_actions.select { |ua| ua.user_id = object.user_id }
-                       .select { |ua| [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type }
-                       .first.try(:action_type)
+      .select { |ua| [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type }
+      .first.try(:action_type)
   end
 
   private

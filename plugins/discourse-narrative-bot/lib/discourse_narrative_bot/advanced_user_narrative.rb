@@ -101,7 +101,7 @@ module DiscourseNarrativeBot
 
     def reset_bot(user, post)
       if pm_to_bot?(post)
-        reset_data(user, { topic_id: post.topic_id })
+        reset_data(user, topic_id: post.topic_id)
       else
         reset_data(user)
       end
@@ -116,15 +116,13 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(@user, {
-        raw: I18n.t(
+      post = PostCreator.create!(@user,         raw: I18n.t(
           "#{I18N_KEY}.edit.bot_created_post_raw",
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
-        topic_id: data[:topic_id],
-        skip_bot: true,
-        skip_validations: true
-      })
+                                                topic_id: data[:topic_id],
+                                                skip_bot: true,
+                                                skip_validations: true)
 
       set_state_data(:post_id, post.id)
       post
@@ -133,15 +131,13 @@ module DiscourseNarrativeBot
     def init_tutorial_recover
       data = get_data(@user)
 
-      post = PostCreator.create!(@user, {
-        raw: I18n.t(
+      post = PostCreator.create!(@user,         raw: I18n.t(
           "#{I18N_KEY}.recover.deleted_post_raw",
           i18n_post_args(discobot_username: self.discobot_user.username)
         ),
-        topic_id: data[:topic_id],
-        skip_bot: true,
-        skip_validations: true
-      })
+                                                topic_id: data[:topic_id],
+                                                skip_bot: true,
+                                                skip_validations: true)
 
       set_state_data(:post_id, post.id)
 

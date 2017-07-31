@@ -70,7 +70,7 @@ describe UsersController do
 
         it "skips tracking" do
           UserProfileView.expects(:add).never
-          xhr :get, :show, { username: user.username, skip_track_visit: true }
+          xhr :get, :show, username: user.username, skip_track_visit: true
         end
       end
 
@@ -723,7 +723,7 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns('abc')
       end
-      let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, password_confirmation: 'wrong'} }
+      let(:create_params) { { name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, password_confirmation: 'wrong' } }
       include_examples 'honeypot fails'
     end
 
@@ -731,14 +731,14 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:challenge_value).returns('abc')
       end
-      let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, challenge: 'abc'} }
+      let(:create_params) { { name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, challenge: 'abc' } }
       include_examples 'honeypot fails'
     end
 
     context "when 'invite only' setting is enabled" do
       before { SiteSetting.invite_only = true }
 
-      let(:create_params) {{
+      let(:create_params) { {
         name: @user.name,
         username: @user.username,
         password: 'strongpassword',
@@ -765,22 +765,22 @@ describe UsersController do
     end
 
     context 'when password is blank' do
-      let(:create_params) { {name: @user.name, username: @user.username, password: "", email: @user.email} }
+      let(:create_params) { { name: @user.name, username: @user.username, password: "", email: @user.email } }
       include_examples 'failed signup'
     end
 
     context 'when password is too long' do
-      let(:create_params) { {name: @user.name, username: @user.username, password: "x" * (User.max_password_length + 1), email: @user.email} }
+      let(:create_params) { { name: @user.name, username: @user.username, password: "x" * (User.max_password_length + 1), email: @user.email } }
       include_examples 'failed signup'
     end
 
     context 'when password param is missing' do
-      let(:create_params) { {name: @user.name, username: @user.username, email: @user.email} }
+      let(:create_params) { { name: @user.name, username: @user.username, email: @user.email } }
       include_examples 'failed signup'
     end
 
     context 'with a reserved username' do
-      let(:create_params) { {name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20} }
+      let(:create_params) { { name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20 } }
       before { SiteSetting.reserved_usernames = 'a|reserved|b' }
       after { SiteSetting.reserved_usernames = nil }
       include_examples 'failed signup'
@@ -791,7 +791,7 @@ describe UsersController do
 
       let(:create_params) {
         { name: @user.name, username: @user.username,
-          password: "strongpassword", email: @user.email}
+          password: "strongpassword", email: @user.email }
       }
 
       include_examples 'failed signup'
@@ -803,7 +803,7 @@ describe UsersController do
       let!(:optional_field) { Fabricate(:user_field, required: false) }
 
       context "without a value for the fields" do
-        let(:create_params) { {name: @user.name, password: 'watwatwat', username: @user.username, email: @user.email} }
+        let(:create_params) { { name: @user.name, password: 'watwatwat', username: @user.username, email: @user.email } }
         include_examples 'failed signup'
       end
 
@@ -822,7 +822,7 @@ describe UsersController do
         it "should succeed without the optional field" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -834,7 +834,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = 'value3'
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq('value1')
@@ -846,7 +846,7 @@ describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = ('x' * 3000)
           xhr :post, :create, create_params.merge(create_params)
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
 
           val = inserted.custom_fields["user_field_#{optional_field.id}"]
           expect(val.length).to eq(UserField.max_length)
@@ -868,7 +868,7 @@ describe UsersController do
         it "should succeed" do
           xhr :post, :create, create_params
           expect(response).to be_success
-          inserted = User.where(email: @user.email).first
+          inserted = User.find_by_email(@user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).not_to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
@@ -883,7 +883,7 @@ describe UsersController do
         xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd$$"
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
-        expect(User.find_by(email: staged.email).staged).to eq(false)
+        expect(User.find_by_email(staged.email).staged).to eq(false)
       end
     end
 
@@ -936,11 +936,13 @@ describe UsersController do
         expect(user.reload.username).to eq(new_username)
       end
 
-      skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+      it 'should fail if the user is old' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
-        user.stubs(:post_count).returns(200)
-        expect(Guardian.new(user).can_edit_username?(user)).to eq(false)
+        PostCreator.new(user,
+          title: 'This is a test topic',
+          raw: 'This is a test this is a test'
+        ).create
 
         xhr :put, :username, username: user.username, new_username: new_username
 
@@ -1254,7 +1256,7 @@ describe UsersController do
           put :update,
                 username: user.username,
                 name: 'Jim Tom',
-                custom_fields: {test: :it},
+                custom_fields: { test: :it },
                 muted_usernames: "#{user2.username},#{user3.username}"
 
           expect(response).to be_success
@@ -1263,7 +1265,7 @@ describe UsersController do
 
           expect(user.name).to eq 'Jim Tom'
           expect(user.custom_fields['test']).to eq 'it'
-          expect(user.muted_users.pluck(:username).sort).to eq [user2.username,user3.username].sort
+          expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
 
           theme = Theme.create(name: "test", user_selectable: true, user_id: -1)
 
@@ -1295,7 +1297,7 @@ describe UsersController do
         context "with user fields" do
           context "an editable field" do
             let!(:user_field) { Fabricate(:user_field) }
-            let!(:optional_field) { Fabricate(:user_field, required: false ) }
+            let!(:optional_field) { Fabricate(:user_field, required: false) }
 
             it "should update the user field" do
               put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }
@@ -1546,7 +1548,7 @@ describe UsersController do
 
       context 'without an existing email_token' do
         before do
-          user.email_tokens.each {|t| t.destroy}
+          user.email_tokens.each { |t| t.destroy }
           user.reload
         end
 
@@ -1554,7 +1556,7 @@ describe UsersController do
           expect {
             session[SessionController::ACTIVATE_USER_KEY] = user.id
             xhr :post, :send_activation_email, username: user.username
-          }.to change{ user.email_tokens(true).count }.by(1)
+          }.to change { user.email_tokens(true).count }.by(1)
         end
 
         it 'should send an email' do
@@ -1831,11 +1833,11 @@ describe UsersController do
   end
 
   describe '.topic_tracking_state' do
-    let(:user){Fabricate(:user)}
+    let(:user) { Fabricate(:user) }
 
     context 'anon' do
       it "raises an error on anon for topic_tracking_state" do
-        expect{
+        expect {
           xhr :get, :topic_tracking_state, username: user.username, format: :json
         }.to raise_error(Discourse::NotLoggedIn)
       end
@@ -1869,7 +1871,6 @@ describe UsersController do
       expect(json["user_summary"]["post_count"]).to eq(1)
     end
   end
-
 
   describe ".confirm_admin" do
     it "fails without a valid token" do
@@ -1935,28 +1936,27 @@ describe UsersController do
 
   end
 
-
   describe '.update_activation_email' do
 
     context "with a session variable" do
 
       it "raises an error with an invalid session value" do
         session[SessionController::ACTIVATE_USER_KEY] = 1234
-        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        xhr :put, :update_activation_email, email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
       it "raises an error for an active user" do
         user = Fabricate(:walter_white)
         session[SessionController::ACTIVATE_USER_KEY] = user.id
-        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        xhr :put, :update_activation_email, email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
       it "raises an error when logged in" do
         moderator = log_in(:moderator)
         session[SessionController::ACTIVATE_USER_KEY] = moderator.id
-        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        xhr :put, :update_activation_email, email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
@@ -1964,7 +1964,7 @@ describe UsersController do
         active_user = Fabricate(:user)
         user = Fabricate(:inactive_user)
         session[SessionController::ACTIVATE_USER_KEY] = user.id
-        xhr :put, :update_activation_email, { email: active_user.email }
+        xhr :put, :update_activation_email, email: active_user.email
         expect(response).to_not be_success
       end
 
@@ -1973,7 +1973,7 @@ describe UsersController do
         token = user.email_tokens.first
 
         session[SessionController::ACTIVATE_USER_KEY] = user.id
-        xhr :put, :update_activation_email, { email: 'updatedemail@example.com' }
+        xhr :put, :update_activation_email, email: 'updatedemail@example.com'
 
         expect(response).to be_success
 
@@ -1988,51 +1988,42 @@ describe UsersController do
 
     context "with a username and password" do
       it "raises an error with an invalid username" do
-        xhr :put, :update_activation_email, {
-          username: 'eviltrout',
-          password: 'invalid-password',
-          email: 'updatedemail@example.com'
-        }
+        xhr :put, :update_activation_email,           username: 'eviltrout',
+                                                      password: 'invalid-password',
+                                                      email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
       it "raises an error with an invalid password" do
-        xhr :put, :update_activation_email, {
-          username: Fabricate(:inactive_user).username,
-          password: 'invalid-password',
-          email: 'updatedemail@example.com'
-        }
+        xhr :put, :update_activation_email,           username: Fabricate(:inactive_user).username,
+                                                      password: 'invalid-password',
+                                                      email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
       it "raises an error for an active user" do
-        xhr :put, :update_activation_email, {
-          username: Fabricate(:walter_white).username,
-          password: 'letscook',
-          email: 'updatedemail@example.com'
-        }
+        xhr :put, :update_activation_email,           username: Fabricate(:walter_white).username,
+                                                      password: 'letscook',
+                                                      email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
       it "raises an error when logged in" do
         log_in(:moderator)
 
-        xhr :put, :update_activation_email, {
-          username: Fabricate(:inactive_user).username,
-          password: 'qwerqwer123',
-          email: 'updatedemail@example.com'
-        }
+        xhr :put, :update_activation_email,           username: Fabricate(:inactive_user).username,
+                                                      password: 'qwerqwer123',
+                                                      email: 'updatedemail@example.com'
         expect(response).to_not be_success
       end
 
       it "raises an error when the new email is taken" do
         user = Fabricate(:user)
 
-        xhr :put, :update_activation_email, {
-          username: Fabricate(:inactive_user).username,
-          password: 'qwerqwer123',
-          email: user.email
-        }
+        xhr :put, :update_activation_email,           username: Fabricate(:inactive_user).username,
+                                                      password: 'qwerqwer123',
+                                                      email: user.email
+
         expect(response).to_not be_success
       end
 
@@ -2040,11 +2031,9 @@ describe UsersController do
         user = Fabricate(:inactive_user)
         token = user.email_tokens.first
 
-        xhr :put, :update_activation_email, {
-          username: user.username,
-          password: 'qwerqwer123',
-          email: 'updatedemail@example.com'
-        }
+        xhr :put, :update_activation_email,           username: user.username,
+                                                      password: 'qwerqwer123',
+                                                      email: 'updatedemail@example.com'
 
         expect(response).to be_success
 

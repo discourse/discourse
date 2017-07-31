@@ -46,6 +46,11 @@ describe Upload do
 
   end
 
+  it "extracts file extension" do
+    created_upload = UploadCreator.new(image, image_filename).create_for(user_id)
+    expect(created_upload.extension).to eq("png")
+  end
+
   context ".get_from_url" do
     let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
     let(:upload) { Fabricate(:upload, url: url) }

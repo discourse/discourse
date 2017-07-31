@@ -148,20 +148,21 @@ fi:
       default_description: "Oletus"
     s3:
       regions:
-        us_east_1: "itäinen USA (Pohjois-Virginia)"
-        us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
-        us_west_2: "Läntinen USA (Oregon)"
-        us_gov_west_1: "AWS GovCloud (USA)"
-        eu_west_1: "EU (Irlanti)"
-        eu_west_2: "EU (Lontoo)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
-        ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
-        ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
         ap_northeast_2: "Aasia ja Tyynimeri (Soul)"
-        sa_east_1: "Etelä-Amerikka (Sao Paulo)"
+        ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
+        ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
+        ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
         cn_north_1: "Kiina (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irlanti)"
+        eu_west_2: "EU (Lontoo)"
+        sa_east_1: "Etelä-Amerikka (Sao Paulo)"
+        us_east_1: "itäinen USA (Pohjois-Virginia)"
+        us_east_2: "Itäinen USA (Ohio)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
+        us_west_2: "Läntinen USA (Oregon)"
     edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -1013,6 +1014,8 @@ fi:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vain alueet"
       categories_with_featured_topics: "Alueet, joiden yhteydessä ketjuja"
@@ -1021,6 +1024,17 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: Etsi emojia
+      people: Ihmiset
+      nature: Luonto
+      food: Ruoka
+      activity: Harrasteet
+      travel: Matkustelu
+      objects: Esineet
+      celebration: Juhlinta
+      custom: Mukautetut emojit
+      recent: Hiljattain käyttämäni emojit
     composer:
       emoji: "Emoji :)"
       more_emoji: "lisää..."

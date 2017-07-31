@@ -43,6 +43,8 @@ ko:
         미안, 수학적으로 그 조합의 주사위는 돌릴 수 없어. :confounded:
       not_enough_dice: |-
         난 주사위 %{num_of_dice} 개밖에 안 남았어. [으으,](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), 그래, 나도 알아 안다고!
+      out_of_range: |-
+        수학적으로 공평하면서도 [가장 큰 수](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)를 가진 주사위의 면 수가 120이라는 거 아니?
       results: |-
         > :game_die: %{results}
     quote:
@@ -82,26 +84,26 @@ ko:
     magic_8_ball:
       trigger: '운세'
       answers:
-        '1': "그것은 틀림없이"
-        '2': "그건 확실히"
-        '3': "의심 없이"
-        '4': "응, 당연히"
-        '5': "날 믿어도 돼"
-        '6': "내가 보기에는 그래"
-        '7': "분명히"
-        '8': "나쁘지 않아"
-        '9': "응"
-        '10': "정황을 살펴보니 'Yes'야"
-        '11': "모호한 답변이야. 다시 해보렴."
-        '12': "다음에 다시 물어봐"
-        '13': "지금은 알려주지 않는 게 좋겠어"
-        '14': "지금은 예측할 수 없어"
-        '15': "정신차리고 다시 물어보렴"
-        '16': "너무 믿지는 말고"
-        '17': "내 답은 'No'야"
-        '18': "내 정보에 의하면 'No'야"
-        '19': "전망이 별로"
-        '20': "매우 의심스럽군"
+        '1': "이건 확실해."
+        '2': "이건 분명히 돼."
+        '3': "의심할 여지가 없지."
+        '4': "응, 당연히 그래."
+        '5': "믿어도 좋아."
+        '6': "맞아."
+        '7': "거의 확실해."
+        '8': "좋을 전망."
+        '9': "응."
+        '10': "괜찮아 보이는군."
+        '11': "흐릿하게 보이는군. 다시..."
+        '12': "다음에 다시 물어봐."
+        '13': "지금은 말하지 않는 편이 낫겠어."
+        '14': "지금은 예측할 수 없어."
+        '15': "집중해서 다시 물어봐."
+        '16': "꿈도 꾸지마."
+        '17': "내 대답은 '아니다'야."
+        '18': "내 정보에 의하면 '아니오'야."
+        '19': "안좋을 전망."
+        '20': "아주 의심스러워."
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -111,6 +113,20 @@ ko:
       random_mention:
         reply: |-
           내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
+        tracks: |-
+          나는 아래의 일을 할 수 있어.
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > 아래의 서로 이야기하기 중 하나를 골라서 시작해봐. %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _언젠가 다른 누군가도 당신이 그랬던 것 처럼 친절한 행동을 할 거라고 믿으면서, 보상에 대한 어떠한 기대도 없이 친절한 행동을 하라._ &mdash; 다이애나비
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 믿어도 좋아.
       do_not_understand:
         first_response: |-
           우와, 답글을 써줘서 고마워!
@@ -209,6 +225,8 @@ ko:
           더 알고 싶다면 아래에 있는 이걸<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> 선택한 다음 <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인메시지 북마크**를 하렴.  너의 미래에 보내는 좋은 선물:gift:이 되겠지!
         reply: |-
           대단해! 이제는 [프로필의 북마크 탭](%{profile_page_url}/activity/bookmarks)만 눌러도 우리의 개인적인 대화를 손쉽게 뒤돌아 볼 수 있어. 우측 상단에 있는 프로필 사진만 선택하면 돼. &#8599;
+        not_found: |-
+          어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
       emoji:
         instructions: |-
           내가 답글에서 조그마한 그림을 쓰는 걸 봤겠지?:blue_car::dash: 이런 걸 [이모지 (emoji)](https://en.wikipedia.org/wiki/Emoji)라고 해. 너도 답글에 **이모지를 추가**해 볼래? 아래 중에서 아무거나 해도 돼.
@@ -241,17 +259,49 @@ ko:
           (그래, 내 아이디는 _disco_, 라고 써. 1970년대 토요일밤의 열기처럼 말이야. 난 [밤을 사랑하는 댄서라고!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          친근한 토론이 싫은 사람이 누가있겠어.그래서 [질서를 유지](%{guidelines_url})해야 해. 문제가 보인다면, 신고하기를 눌러서 작성자에게 개인적으로 알려주거나, 우리의[친절한 운영진](%{about_url})들에게 알려주렴.
+          나는 우리 커뮤니티의 토론이 친근해서 좋단다. 계속 그렇게 되려면 [질서를 유지](%{guidelines_url})하는 데 너의 도움이 필요해. 문제가 보인다면, 신고하기를 눌러서 작성자에게 개인적으로 알려주거나, 우리의[친절한 운영진](%{about_url})들에게 알려주렴.
 
-          >  :imp: 어쩌고 저쩌고 나쁜 글
+          > :imp: 어쩌고 저쩌고 나쁜 글
 
           뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
         reply: |-
           [우리의 운영진](/groups/staff)은 니가 한 신고내용을 개인 메시지로 알림받게 될 거야. 충분한 커뮤니티 회원들이 신고를 하면, 포스트의 내용이 숨겨지고 사전경고가 걸리게 돼.(난 실제로 나쁜 글을 쓴 건 아니니까:angel:, 이제 신고를 지울게.)
+        not_found: |-
+          아이고, 나의 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
+      search:
+        instructions: |-
+          이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16">  선택해서 &#8599; 찾아봐.
+
+          이 토픽에서  "capy&#8203;bara"를 찾으면 돼.
+        hidden_message: |-
+          어떻게 이 capybara를 놓칠 수 있어? :wink:
+
+          <img src="%{base_uri}/images/capybara-eating.gif"/>
+
+          다시 처음으로 온 걸 눈치챘어? 이 배고픈 불쌍한 capybara에게 **`:herb:` emoji로 답을 해서** 먹이를 주렴. 그러면 자동으로 끝으로 가게 될거야.
+        reply: |-
+          예이, 찾았네! :tada:
+
+          - 더 자세히 검색하려면, [전체 검색 페이지](%{search_url})로 가보렴.
+
+          - 긴 대화에서 원하는 곳으로 건너 뛰려면, 우측에 있는 토픽 타임라인 컨트롤을 사용해봐 (모바일 기기에는 아래쪽에 있어).
+
+          - 진짜 실물 :keyboard:가 있다면, <kbd>?</kbd>를 눌러서 간편한 단축키가 뭐가 있는지 알아봐.
+        not_found: |-
+          흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
       certificate:
         alt: '목표달성 인증'
     advanced_user_narrative:
       reset_trigger: '고급 사용자'
+      cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
       title: ':arrow_up: 고급 사용자 기능'
+      edit:
+        bot_created_post_raw: "@%{discobot_username}는 내가 아는 한, 현존하는 가장 쿨한 봇이지:wink:"
+        instructions: |-
+          누구나 실수해. 걱정마, 편집을 하면 그 실수를 언제든지 바로잡을 수 있거든!
+
+          내가 너 대신 만든 이 포스트를 **편집**하는 걸로 시작해 볼래 ?
+      recover:
+        deleted_post_raw: '왜 @%{discobot_username}가 내 포스트를 지웠지? :anguished:'
       certificate:
         alt: '고급 사용자 추적 인증'

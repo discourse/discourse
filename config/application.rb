@@ -22,7 +22,6 @@ if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
 
-
 module Discourse
   class Application < Rails::Application
 
@@ -169,7 +168,7 @@ module Discourse
 
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx
-    config.action_dispatch.rack_cache =  nil
+    config.action_dispatch.rack_cache = nil
 
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
@@ -177,7 +176,7 @@ module Discourse
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     require 'auth'
-    Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
+    Discourse.activate_plugins! unless Rails.env.test? && ENV['LOAD_PLUGINS'] != ("1")
 
     if GlobalSetting.relative_url_root.present?
       config.relative_url_root = GlobalSetting.relative_url_root
@@ -207,7 +206,18 @@ module Discourse
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
       if plugins = Discourse.plugins
-        plugins.each{|plugin| plugin.notify_after_initialize}
+        plugins.each { |plugin| plugin.notify_after_initialize }
+      end
+
+      # This nasty hack is required for not precompiling QUnit assets
+      # in test mode. see: https://github.com/rails/sprockets-rails/issues/299#issuecomment-167701012
+      ActiveSupport.on_load(:action_view) do
+        default_checker = ActionView::Base.precompiled_asset_checker
+
+        ActionView::Base.precompiled_asset_checker = -> logical_path do
+          default_checker[logical_path] ||
+            %w{qunit.js qunit.css test_helper.css test_helper.js wizard/test/test_helper.js}.include?(logical_path)
+        end
       end
     end
 

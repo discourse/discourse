@@ -1649,26 +1649,6 @@ sv:
     visit_link_to_respond: "[Besök ämnet](%{base_url}%{url}) för att ge din respons. "
     visit_link_to_respond_pm: "[Besök meddelanden](%{base_url}%{url}) för att ge din respons."
     posted_by: "Postat av %{username} den %{post_date}"
-    invited_to_private_message_body: |
-      %{username} bjöd in dit till ett meddelande
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      vid
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} bjöd in dig till en diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      vid
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Användare invitera personligt"
       text_body_template: |

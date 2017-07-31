@@ -9,7 +9,7 @@ class CategoryList
                 :draft_key,
                 :draft_sequence
 
-  def initialize(guardian=nil, options={})
+  def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
     @options = options
 
@@ -63,9 +63,9 @@ class CategoryList
         @categories = @categories.order(:position, :id)
       else
         @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
-                                 .order('COALESCE(categories.posts_month, 0) DESC')
-                                 .order('COALESCE(categories.posts_year, 0) DESC')
-                                 .order('id ASC')
+          .order('COALESCE(categories.posts_month, 0) DESC')
+          .order('COALESCE(categories.posts_year, 0) DESC')
+          .order('id ASC')
       end
 
       @categories = @categories.to_a

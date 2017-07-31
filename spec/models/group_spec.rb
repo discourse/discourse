@@ -47,6 +47,13 @@ describe Group do
       expect(group.valid?).to eq false
     end
 
+    it 'strips trailing and leading spaces' do
+      group.name = '  dragon  '
+
+      expect(group.save).to eq(true)
+      expect(group.reload.name).to eq('dragon')
+    end
+
     it "is invalid for case-insensitive existing names" do
       build(:group, name: 'this_is_a_name').save
       group.name = 'This_Is_A_Name'
@@ -79,6 +86,22 @@ describe Group do
     end
 
     context 'when a group has no owners' do
+      describe 'group has not been persisted' do
+        it 'should not allow membership requests' do
+          group = Fabricate.build(:group, allow_membership_requests: true)
+
+          expect(group.valid?).to eq(false)
+
+          expect(group.errors.full_messages).to include(I18n.t(
+            "groups.errors.cant_allow_membership_requests"
+          ))
+
+          group.group_users.build(user_id: user.id, owner: true)
+
+          expect(group.valid?).to eq(true)
+        end
+      end
+
       it 'should not allow membership requests' do
         group.allow_membership_requests = true
 
@@ -100,15 +123,15 @@ describe Group do
   end
 
   def real_admins
-    Group[:admins].user_ids - [-1]
+    Group[:admins].user_ids.reject { |id| id < 0 }
   end
 
   def real_moderators
-    Group[:moderators].user_ids - [-1]
+    Group[:moderators].user_ids.reject { |id| id < 0 }
   end
 
   def real_staff
-    Group[:staff].user_ids - [-1]
+    Group[:staff].user_ids.reject { |id| id < 0 }
   end
 
   it "Correctly handles primary groups" do
@@ -264,7 +287,7 @@ describe Group do
 
     expect(real_admins).to eq [admin.id]
     expect(real_moderators).to eq [moderator.id]
-    expect(real_staff.sort).to eq [moderator.id,admin.id].sort
+    expect(real_staff.sort).to eq [moderator.id, admin.id].sort
 
     admin.admin = false
     admin.save
@@ -307,11 +330,11 @@ describe Group do
     user2 = Fabricate(:coding_horror)
     user2.change_trust_level!(TrustLevel[3])
 
-    expect(Group[:trust_level_2].user_ids.sort).to eq [-1, user.id, user2.id].sort
+    expect(Group[:trust_level_2].user_ids.sort.reject { |id| id < -1 }).to eq [-1, user.id, user2.id].sort
   end
 
   it "Correctly updates all automatic groups upon request" do
-    Fabricate(:admin)
+    admin = Fabricate(:admin)
     user = Fabricate(:user)
     user.change_trust_level!(TrustLevel[2])
 
@@ -322,23 +345,23 @@ describe Group do
     groups = Group.includes(:users).to_a
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:admins]}
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }
+    expect(g.users.count).to eq(g.user_count)
+    expect(g.users.pluck(:id).sort.reject { |id| id < -1 }).to eq([-1, admin.id])
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:staff]}
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:staff] }
+    expect(g.users.count).to eq (g.user_count)
+    expect(g.users.pluck(:id).sort.reject { |id| id < -1 }).to eq([-1, admin.id])
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_1]}
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_1] }
     # admin, system and user
-    expect(g.users.count).to eq 3
-    expect(g.user_count).to eq 3
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.where('users.id > -2').count).to eq 3
 
-    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_2]}
+    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_2] }
     # system and user
-    expect(g.users.count).to eq 2
-    expect(g.user_count).to eq 2
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.where('users.id > -2').count).to eq 2
 
   end
 
@@ -377,7 +400,6 @@ describe Group do
     expect(GroupUser.where(group_id: g.id).count).to eq 0
   end
 
-
   it "has custom fields" do
     group = Fabricate(:group)
     expect(group.custom_fields["a"]).to be_nil
@@ -387,7 +409,7 @@ describe Group do
     group.save
 
     group = Group.find(group.id)
-    expect(group.custom_fields).to eq({"hugh" => "jackman", "jack" => "black"})
+    expect(group.custom_fields).to eq("hugh" => "jackman", "jack" => "black")
   end
 
   it "allows you to lookup a new group by name" do
@@ -397,14 +419,14 @@ describe Group do
   end
 
   it "can find desired groups correctly" do
-    expect(Group.desired_trust_level_groups(2).sort).to eq [10,11,12]
+    expect(Group.desired_trust_level_groups(2).sort).to eq [10, 11, 12]
   end
 
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    expect(user.groups.map(&:name).sort).to eq ["trust_level_0","trust_level_1", "trust_level_2"]
+    expect(user.groups.map(&:name).sort).to eq ["trust_level_0", "trust_level_1", "trust_level_2"]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
@@ -412,7 +434,7 @@ describe Group do
   end
 
   context "group management" do
-    let(:group) {Fabricate(:group)}
+    let(:group) { Fabricate(:group) }
 
     it "by default has no managers" do
       expect(group.group_users.where('group_users.owner')).to be_empty
@@ -509,7 +531,7 @@ describe Group do
       let(:category) { Fabricate(:category) }
 
       it "should publish the group's categories to the client" do
-        group.update!(public: true, categories: [category])
+        group.update!(public_admission: true, categories: [category])
 
         message = MessageBus.track_publish { group.add(user) }.first
 
@@ -531,6 +553,14 @@ describe Group do
       expect(Group.search_group('es')).to eq([group])
       expect(Group.search_group('ES')).to eq([group])
       expect(Group.search_group('test2')).to eq([])
+    end
+  end
+
+  describe '#bulk_add' do
+    it 'should be able to add multiple users' do
+      group.bulk_add([user.id, admin.id])
+
+      expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
     end
   end
 end

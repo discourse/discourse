@@ -1,4 +1,6 @@
 import { setting } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
+
 var get = Ember.get;
 
 export default Ember.Component.extend({
@@ -8,10 +10,10 @@ export default Ember.Component.extend({
 
   tagName: 'li',
 
-  iconClass: function() {
-    if (this.get('expanded')) { return "fa fa-caret-down"; }
-    return "fa fa-caret-right";
-  }.property('expanded'),
+  @computed('expanded')
+  expandIcon(expanded) {
+    return expanded ? 'caret-down' : 'caret-right';
+  },
 
   allCategoriesUrl: function() {
     if (this.get('subCategory')) {
@@ -33,7 +35,7 @@ export default Ember.Component.extend({
   }.property('category'),
 
   dropdownButtonClass: function() {
-    var result = 'badge-category category-dropdown-button';
+    let result = 'dropdown-header category-dropdown-button';
     if (Em.isNone(this.get('category'))) {
       result += ' home';
     }
@@ -57,21 +59,35 @@ export default Ember.Component.extend({
   }.property('category'),
 
   badgeStyle: function() {
-    var category = this.get('category');
+    let category = this.get('category');
+
+    const categoryStyle = this.siteSettings.category_style;
+    if (categoryStyle === 'bullet') {
+      return;
+    }
 
     if (category) {
-      var color = get(category, 'color'),
-          textColor = get(category, 'text_color');
+      let color = get(category, 'color');
+      let textColor = get(category, 'text_color');
 
       if (color || textColor) {
-        var style = "";
-        if (color) { style += "background-color: #" + color + "; border-color: #" + color + ";"; }
-        if (textColor) { style += "color: #" + textColor + "; "; }
+        let style = "";
+        if (color) { 
+          if (categoryStyle === "bar") {
+            style += `border-color: #${color};`;
+          } else if (categoryStyle === "box") {
+            style += `background-color: #${color};`;
+            if (textColor) { style += "color: #" + textColor + "; "; }
+          }
+        }
+
         return style.htmlSafe();
       }
     }
 
-    return "background-color: #eee; color: #333".htmlSafe();
+    if (categoryStyle === 'box') {
+      return "background-color: #eee; color: #333".htmlSafe();
+    }
   }.property('category'),
 
   clickEventName: function() {

@@ -58,7 +58,7 @@ describe SiteSettingExtension do
       settings.hello = 100
       expect(settings.hello).to eq(100)
 
-      settings.provider.save(:hello, 99, SiteSetting.types[:integer] )
+      settings.provider.save(:hello, 99, SiteSetting.types[:integer])
       settings.refresh!
 
       expect(settings.hello).to eq(99)
@@ -97,7 +97,7 @@ describe SiteSettingExtension do
     end
 
     it "should have a key in all_settings" do
-      expect(settings.all_settings.detect {|s| s[:setting] == :test_setting }).to be_present
+      expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }).to be_present
     end
 
     it "should have the correct desc" do
@@ -179,7 +179,6 @@ describe SiteSettingExtension do
       end
 
       it "should coerce int to string" do
-        skip "This test is not working on Rspec 2 even"
         settings.test_str = 100
         expect(settings.test_str).to eq("100")
       end
@@ -190,7 +189,6 @@ describe SiteSettingExtension do
       end
     end
   end
-
 
   describe "string setting with regex" do
     it "Supports custom validation errors" do
@@ -257,7 +255,7 @@ describe SiteSettingExtension do
         true
       end
       def self.values
-        [1,2,3]
+        [1, 2, 3]
       end
     end
 
@@ -298,7 +296,7 @@ describe SiteSettingExtension do
     end
 
     it 'should not hose all_settings' do
-      expect(settings.all_settings.detect {|s| s[:setting] == :test_enum }).to be_present
+      expect(settings.all_settings.detect { |s| s[:setting] == :test_enum }).to be_present
     end
 
     context 'when overridden' do
@@ -314,19 +312,19 @@ describe SiteSettingExtension do
 
       it 'rejects invalid values' do
         test_enum_class.expects(:valid_value?).with('gg').returns(false)
-        expect {settings.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
+        expect { settings.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
       end
     end
   end
 
   describe 'a setting with a category' do
     before do
-      settings.setting(:test_setting, 88, {category: :tests})
+      settings.setting(:test_setting, 88, category: :tests)
       settings.refresh!
     end
 
     it "should return the category in all_settings" do
-      expect(settings.all_settings.find {|s| s[:setting] == :test_setting }[:category]).to eq(:tests)
+      expect(settings.all_settings.find { |s| s[:setting] == :test_setting }[:category]).to eq(:tests)
     end
 
     context "when overidden" do
@@ -341,14 +339,14 @@ describe SiteSettingExtension do
 
       it "should still have the correct category" do
         settings.test_setting = 102
-        expect(settings.all_settings.find {|s| s[:setting] == :test_setting }[:category]).to eq(:tests)
+        expect(settings.all_settings.find { |s| s[:setting] == :test_setting }[:category]).to eq(:tests)
       end
     end
   end
 
   describe "setting with a validator" do
     before do
-      settings.setting(:validated_setting, "info@example.com", {type: 'email'})
+      settings.setting(:validated_setting, "info@example.com", type: 'email')
       settings.refresh!
     end
 
@@ -418,11 +416,11 @@ describe SiteSettingExtension do
     end
 
     it "is not present in all_settings by default" do
-      expect(settings.all_settings.find {|s| s[:setting] == :superman_identity }).to be_blank
+      expect(settings.all_settings.find { |s| s[:setting] == :superman_identity }).to be_blank
     end
 
     it "is present in all_settings when we ask for hidden" do
-      expect(settings.all_settings(true).find {|s| s[:setting] == :superman_identity }).to be_present
+      expect(settings.all_settings(true).find { |s| s[:setting] == :superman_identity }).to be_present
     end
   end
 

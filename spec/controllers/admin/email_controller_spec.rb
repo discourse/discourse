@@ -10,10 +10,8 @@ describe Admin::EmailController do
 
   context '.index' do
     before do
-      subject.expects(:action_mailer_settings).returns({
-        username: 'username',
-        password: 'secret'
-      })
+      subject.expects(:action_mailer_settings).returns(username: 'username',
+                                                       password: 'secret')
 
       xhr :get, :index
     end

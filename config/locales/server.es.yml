@@ -357,7 +357,6 @@ es:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Las siguientes claves de interpolación no son válidas: "%{keys}"'
               missing_interpolation_keys: 'Las siguientes claves de interpolación se perdieron: "%{keys}"'
       <<: *errors
   user_profile:
@@ -1534,45 +1533,9 @@ es:
   invite_mailer:
     title: "Invitar Usuario"
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te invitó a un debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
-
-      Si estás interesado, haz clic en el siguiente enlace:
-
-      %{invite_link}
-
-      Esta invitación proviene de un usuario de confianza, por lo que puedes comentar en el tema inmediatamente.
   custom_invite_mailer:
     title: "Personalizar Invitar Usuario"
     subject_template: "%{invitee_name} te ha invitado a '%{topic_title}' en %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te ha invitado a un debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
-
-      Mensaje de %{invitee_name}:
-
-      %{user_custom_message}
-
-      Si estás interesado en participar, haz clic en el enlace debajo:
-
-      %{invite_link}
-
-      Esta invitación viene de un usuario en el que confiamos, por lo que podrás responder inmediatamente.
   invite_forum_mailer:
     title: "Invitación suscripción del foro"
     subject_template: "%{invitee_name} te invitó a unirte a %{site_domain_name}"
@@ -2137,26 +2100,6 @@ es:
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} el %{post_date}"
-    invited_to_private_message_body: |
-      %{username} te invitó a un mensaje directo
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} te invitó a un tema de debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Usuario invitado a MP"
       subject_template: "[%{email_prefix}] %{username} te ha invitado a un hilo de mensajes en '%{topic_title}'"

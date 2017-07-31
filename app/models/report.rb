@@ -14,7 +14,7 @@ class Report
     @end_date ||= Time.zone.now.end_of_day
   end
 
-  def as_json(options=nil)
+  def as_json(options = nil)
     {
      type: type,
      title: I18n.t("reports.#{type}.title"),
@@ -34,7 +34,7 @@ class Report
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
   end
 
-  def self.find(type, opts=nil)
+  def self.find(type, opts = nil)
     opts ||= {}
 
     # Load the report
@@ -56,11 +56,11 @@ class Report
     report
   end
 
-  def self.req_report(report, filter=nil)
+  def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
         ApplicationRequest.where(req_type: [
-          ApplicationRequest.req_types.reject{|k,v| k =~ /mobile/}.map{|k,v| v if k =~ /page_view/}.compact
+          ApplicationRequest.req_types.reject { |k, v| k =~ /mobile/ }.map { |k, v| v if k =~ /page_view/ }.compact
         ].flatten)
       else
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
@@ -68,18 +68,18 @@ class Report
 
     report.data = []
     data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
-                    .order(date: :asc)
-                    .group(:date)
-                    .sum(:count)
-                    .each do |date, count|
+      .order(date: :asc)
+      .group(:date)
+      .sum(:count)
+      .each do |date, count|
       report.data << { x: date, y: count }
     end
 
     report.total      = data.sum(:count)
     report.prev30Days = data.where('date >= ? AND date <= ?',
                                                (report.start_date - 31.days).to_date,
-                                               (report.end_date - 31.days).to_date )
-                                        .sum(:count)
+                                               (report.end_date - 31.days).to_date)
+      .sum(:count)
   end
 
   def self.report_visits(report)
@@ -128,7 +128,7 @@ class Report
 
   def self.report_time_to_first_response(report)
     report.data = []
-    Topic.time_to_first_response_per_day(report.start_date, report.end_date, {category_id: report.category_id}).each do |r|
+    Topic.time_to_first_response_per_day(report.start_date, report.end_date, category_id: report.category_id).each do |r|
       report.data << { x: Date.parse(r["date"]), y: r["hours"].to_f.round(2) }
     end
     report.total = Topic.time_to_first_response_total(category_id: report.category_id)

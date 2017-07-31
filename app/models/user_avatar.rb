@@ -67,7 +67,7 @@ class UserAvatar < ActiveRecord::Base
     "#{upload_id}_#{OptimizedImage::VERSION}"
   end
 
-  def self.import_url_for_user(avatar_url, user, options=nil)
+  def self.import_url_for_user(avatar_url, user, options = nil)
     tempfile = FileHelper.download(
       avatar_url,
       max_file_size: SiteSetting.max_image_size_kb.kilobytes,

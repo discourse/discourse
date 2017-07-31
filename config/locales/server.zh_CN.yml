@@ -1461,37 +1461,9 @@ zh_CN:
   invite_mailer:
     title: "要求发件人"
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
-    text_body_template: |
-      %{invitee_name}邀请你参与讨论：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      社区：
-
-      > %{site_title} -- %{site_description}
-
-      如果你有兴趣，点击下方的链接：
-
-      %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
     subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀请你参与讨论：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      社区：
-
-      > %{site_title} -- %{site_description}
-
-      如果你有兴趣，点击下方的链接：
-
-      %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
@@ -2032,26 +2004,6 @@ zh_CN:
     visit_link_to_respond: "[访问主题](%{base_url}%{url})以回复."
     visit_link_to_respond_pm: "[访问私信](%{base_url}%{url})以回复."
     posted_by: "%{username}发表于%{post_date}"
-    invited_to_private_message_body: |
-      %{username} 邀请你至私信交流：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      论坛：
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} 邀请你参与讨论：
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      论坛：
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "邀请用户至私信"
       subject_template: "[%{email_prefix}] %{username}邀请你至私信“%{topic_title}”"

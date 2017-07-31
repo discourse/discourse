@@ -40,7 +40,7 @@ class GlobalSetting
         token = $redis.without_namespace.get(REDIS_SECRET_KEY)
         unless token && token =~ VALID_SECRET_KEY
           token = SecureRandom.hex(64)
-          $redis.without_namespace.set(REDIS_SECRET_KEY,token)
+          $redis.without_namespace.set(REDIS_SECRET_KEY, token)
         end
       end
       if !secret_key_base.blank? && token != secret_key_base
@@ -74,7 +74,7 @@ class GlobalSetting
   end
 
   def self.database_config
-    hash = {"adapter" => "postgresql"}
+    hash = { "adapter" => "postgresql" }
     %w{pool timeout socket host port username password replica_host replica_port}.each do |s|
       if val = self.send("db_#{s}")
         hash[s] = val
@@ -91,7 +91,7 @@ class GlobalSetting
 
     hash["prepared_statements"] = !!self.db_prepared_statements
 
-    {"production" => hash}
+    { "production" => hash }
   end
 
   # For testing purposes
@@ -118,8 +118,8 @@ class GlobalSetting
 
         if redis_sentinels.present?
           c[:sentinels] = redis_sentinels.split(",").map do |address|
-            host,port = address.split(":")
-            {host: host, port: port}
+            host, port = address.split(":")
+            { host: host, port: port }
           end.to_a
         end
 
@@ -133,7 +133,6 @@ class GlobalSetting
       return $1.to_i if setting.to_s.strip =~ /^([0-9]+)$/
       setting
     end
-
 
     def resolve(current, default)
       BaseProvider.coerce(
@@ -167,8 +166,7 @@ class GlobalSetting
       end
     end
 
-
-    def lookup(key,default)
+    def lookup(key, default)
       var = @data[key]
       resolve(var, var.nil? ? default : "")
     end
@@ -193,7 +191,7 @@ class GlobalSetting
     end
 
     def keys
-      ENV.keys.select{|k| k =~ /^DISCOURSE_/}.map{|k| k[10..-1].downcase.to_sym}
+      ENV.keys.select { |k| k =~ /^DISCOURSE_/ }.map { |k| k[10..-1].downcase.to_sym }
     end
   end
 
@@ -206,7 +204,6 @@ class GlobalSetting
       []
     end
   end
-
 
   class << self
     attr_accessor :provider

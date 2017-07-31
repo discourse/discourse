@@ -10,7 +10,7 @@ describe TrustLevel3Requirements do
   end
 
   def make_view(id, at, user_id)
-    TopicViewItem.add(id, '11.22.33.44', user_id, at, _skip_redis=true)
+    TopicViewItem.add(id, '11.22.33.44', user_id, at, _skip_redis = true)
   end
 
   describe "requirements" do
@@ -125,12 +125,12 @@ describe TrustLevel3Requirements do
 
       _not_a_reply = create_post(user: user) # user created the topic, so it doesn't count
 
-      topic1      = create_post.topic
+      topic1 = create_post.topic
       _reply1      = create_post(topic: topic1, user: user)
       _reply_again = create_post(topic: topic1, user: user) # two replies in one topic
 
-      topic2      = create_post(created_at: 101.days.ago).topic
-      _reply2      = create_post(topic: topic2, user: user, created_at: 101.days.ago) # topic is over 100 days old
+      topic2 = create_post(created_at: 101.days.ago).topic
+      _reply2 = create_post(topic: topic2, user: user, created_at: 101.days.ago) # topic is over 100 days old
 
       expect(tl3_requirements.num_topics_replied_to).to eq(1)
     end

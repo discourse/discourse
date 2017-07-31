@@ -16,11 +16,12 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
-      store_preloaded("invite_info", MultiJson.dump({
+      store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: invite.email,
-        username: UserNameSuggester.suggest(invite.email)
-      }))
+        username: UserNameSuggester.suggest(invite.email))
+      )
+
       render layout: 'application'
     else
       flash.now[:error] = I18n.t('invite.not_found')
@@ -61,9 +62,13 @@ class InvitesController < ApplicationController
   def create
     params.require(:email)
 
-    group_ids = Group.lookup_group_ids(params)
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
 
-    guardian.ensure_can_invite_to_forum!(group_ids)
+    guardian.ensure_can_invite_to_forum!(groups)
+    group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
@@ -71,21 +76,27 @@ class InvitesController < ApplicationController
     end
 
     begin
-      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids, params[:custom_message])
+      if Invite.invite_by_email(params[:email], current_user, nil, group_ids, params[:custom_message])
         render json: success_json
       else
         render json: failed_json, status: 422
       end
     rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
-      render json: {errors: [e.message]}, status: 422
+      render json: { errors: [e.message] }, status: 422
     end
   end
 
   def create_invite_link
     params.require(:email)
-    group_ids = Group.lookup_group_ids(params)
+
+    groups = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    )
+
+    guardian.ensure_can_invite_to_forum!(groups)
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_invite_to_forum!(group_ids)
+    group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
@@ -100,7 +111,7 @@ class InvitesController < ApplicationController
         render json: failed_json, status: 422
       end
     rescue => e
-      render json: {errors: [e.message]}, status: 422
+      render json: { errors: [e.message] }, status: 422
     end
   end
 
@@ -153,7 +164,7 @@ class InvitesController < ApplicationController
         data = if extension.downcase == ".csv"
           path = Invite.create_csv(file, name)
           Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
-          {url: path}
+          { url: path }
         else
           failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
         end

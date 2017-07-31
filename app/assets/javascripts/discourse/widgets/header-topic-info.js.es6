@@ -1,6 +1,6 @@
 import { applyDecorators, createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import DiscourseURL from 'discourse/lib/url';
 import RawHtml from 'discourse/widgets/raw-html';
 import renderTags from 'discourse/lib/render-tags';

@@ -11,7 +11,7 @@ describe TopicConverter do
     context 'success' do
       it "converts private message to regular topic" do
         SiteSetting.allow_uncategorized_topics = true
-        topic = described_class.new(private_message, admin).convert_to_public_topic
+        topic = TopicConverter.new(private_message, admin).convert_to_public_topic
         topic.reload
 
         expect(topic).to be_valid
@@ -26,18 +26,22 @@ describe TopicConverter do
         end
 
         it 'should convert private message into the right category' do
-          topic = described_class.new(private_message, admin).convert_to_public_topic
+          topic = TopicConverter.new(private_message, admin).convert_to_public_topic
           topic.reload
 
           expect(topic).to be_valid
           expect(topic.archetype).to eq("regular")
-          expect(topic.category_id).to eq(category.id)
+
+          first_category = Category.where.not(id: SiteSetting.uncategorized_category_id)
+            .where(read_restricted: false).order('id asc').first
+
+          expect(topic.category_id).to eq(first_category.id)
         end
       end
 
       describe 'when a custom category_id is given' do
         it 'should convert private message into the right category' do
-          topic = described_class.new(private_message, admin).convert_to_public_topic(category.id)
+          topic = TopicConverter.new(private_message, admin).convert_to_public_topic(category.id)
 
           expect(topic.reload.category).to eq(category)
         end

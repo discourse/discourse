@@ -27,10 +27,10 @@ class DiscoursePlugin
   # Find the modules defined in the plugin with "Mixin" in their name.
   def self.mixins
     constants.map { |const_name| const_get(const_name) }
-             .select { |const| const.class == Module && const.name["Mixin"] }
+      .select { |const| const.class == Module && const.name["Mixin"] }
   end
 
-  def register_js(file, opts={})
+  def register_js(file, opts = {})
     @registry.register_js(file, opts)
   end
 
@@ -38,7 +38,7 @@ class DiscoursePlugin
     @registry.register_css(file)
   end
 
-  def register_archetype(name, options={})
+  def register_archetype(name, options = {})
     @registry.register_archetype(name, options)
   end
 
@@ -48,4 +48,3 @@ class DiscoursePlugin
   end
 
 end
-

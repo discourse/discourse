@@ -28,14 +28,14 @@ es:
     bio: "Hola, no soy una persona real. Soy un bot que puede enseñarte sobre este sitio. Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
     timeout:
       message: |-
-        Hey @%{username}, solo estoy verificando si estás porque no he oído de tí en un tiempo.
-        - Para continuar, responde en cualquier momento.
+        Hola @%{username}, tan solo por ver si estás ahí, no he oído de ti en un tiempo.
+        - Para continuar, coméntame en cualquier momento.
 
-        - Si gustas de saltar este paso, dime `%{skip_trigger}`.
+        - Si prefieres saltarte este paso, escribe `%{skip_trigger}`.
 
-        - Para empezar de nuevo, dime `%{reset_trigger}`.
+        - Para empezar de nuevo, escribe `%{reset_trigger}`.
 
-        Si prefieres no continuar, está OK también! Soy un robot. No herirás mis sentimientos. :sob:
+        Si prefieres no continuar, ¡perfecto! Soy un robot. No herirás mis sentimientos. :sob:
     dice:
       trigger: "tirar"
       invalid: |-
@@ -43,40 +43,40 @@ es:
       not_enough_dice: |-
         Solo tengo %{num_of_dice} dados para jugar. Es vergonsozo lo sé!
       out_of_range: |-
-        ¿Sabías que el máximo número de lados para que un dado, matemáticamente correcto, es de 120 lados?
+        ¿Sabías que [el máximo número de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para un dado matemáticamente correcto, es de 120?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "citar"
       '1':
-        quote: "In the middle of every difficulty lies opportunity"
+        quote: "Entre las dificultades se esconde la oportunidad"
         author: "Albert Einstein"
       '2':
-        quote: "You must be the change you wish to see in the world."
+        quote: "Conviértete en el cambio que deseas ver en el mundo."
         author: "Mahatma Gandhi"
       '3':
-        quote: "Don’t cry because it’s over, smile because it happened."
+        quote: "No llores porque terminó, sonríe porque sucedió."
         author: "Dr Seuss"
       '4':
-        quote: "If you want something done right, do it yourself."
+        quote: "Si quieres algo bien hecho, hazlo tú mismo."
         author: "Charles-Guillaume Étienne"
       '5':
-        quote: "Believe you can and you’re halfway there."
+        quote: "Cree en poder lograr algo y tendrás la mitad del camino hecho."
         author: "Theodore Roosevelt"
       '6':
-        quote: "Life is like a box of chocolates. You never know what you’re gonna get."
-        author: "Forrest Gump’s Mom"
+        quote: "La vida es como una caja de bombones, nunca sabes qué te va a tocar."
+        author: "La mamá de Forrest Gump"
       '7':
-        quote: "That’s one small step for a man, a giant leap for mankind."
+        quote: "Es un pequeño paso para un hombre, pero un gran salto para la humanidad."
         author: "Neil Armstrong"
       '8':
-        quote: "Do one thing every day that scares you."
+        quote: "Todos los días haz algo que te dé miedo."
         author: "Eleanor Roosevelt"
       '9':
-        quote: "Mistakes are always forgivable, if one has the courage to admit them."
+        quote: "Los errores son siempre perdonables, si uno tiene el coraje de admitirlos."
         author: "Bruce Lee"
       '10':
-        quote: "Whatever the mind of man can conceive and believe, it can achieve."
+        quote: "Lo que la mente del hombre puede concebir y creer, es lo que la mente del hombre puede lograr."
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
@@ -270,7 +270,7 @@ es:
 
           <img src="%{base_uri}/images/capybara-eating.gif"/>
 
-          Notaste que hemos vuelto al comienzo del tema? Alimenta este pobre y hambriento capybara **respondiendo con el emoji `:herb:` ** y serás automáticamente enviado al final del tema.
+          Notaste que hemos vuelto al comienzo del tema? Alimenta este pobre y hambriento capybara **respondiendo con el emoji `:herb:`** y serás automáticamente enviado al final del tema.
         reply: |-
           Yay lo encontraste! :tada:
 
@@ -336,7 +336,8 @@ es:
           Tenga en cuenta que sólo tiene 24 horas para recuperar una publicación.
       category_hashtag:
         instructions: |-
-          ¿Sabía que puede hacer referencia a categorías y etiquetas en su publicación? Por ejemplo, has visto la %{category} categoría?
+          ¿Sabías que puedes hacer referencia a categorías y etiquetas en la publicación? Por ejemplo, has visto la categoría %{category}?
+
           Escribe `#` en el medio de una oración y selecciona cualquier categoría o etiqueta.
         not_found: |-
           Hmm, no veo una categoría en ninguna parte. Nota que `#` no puede ser el primer carácter de la oración. ¿Puedes copiar esto en tu próxima respuesta?
@@ -349,12 +350,15 @@ es:
       change_topic_notification_level:
         instructions: |-
           Cada tema tiene un nivel de notificación. Comienza en 'normal', lo que significa que normalmente sólo se notificará cuando alguien está hablando directamente con usted.
-          De forma predeterminada, el nivel de notificación de un mensaje privado se establece en el nivel más alto de "observación", lo que significa que se le notificará cada nueva respuesta. Pero puede sobrescribir el nivel de notificación de _cualquier_ tema a 'vigilar', 'seguir' o 'silenciar'.
-          Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
+
+          De forma predeterminada, el nivel de notificación de un mensaje privado se establece en el nivel más alto de 'observación', lo que significa que se le notificará cada nueva respuesta. Pero puede sobrescribir el nivel de notificación de _cualquier_ tema a 'vigilar', 'seguir' o 'silenciar'.
+
+          Intentemos cambiar el nivel de notificación de este tema. Al final de todo, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
         not_found: |-
           Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, el mismo está debajo de todo el tema de debate.
         reply: |-
           ¡Impresionante trabajo! Espero que no silencies este tema ya que puedo ser un poco hablador a veces :grin:.
+
           Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](/my/preferences).
       poll:
         instructions: |-

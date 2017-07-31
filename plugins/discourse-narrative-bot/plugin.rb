@@ -96,7 +96,7 @@ after_initialize do
           end
 
         respond_to do |format|
-          format.svg { render inline: svg}
+          format.svg { render inline: svg }
         end
       end
     end

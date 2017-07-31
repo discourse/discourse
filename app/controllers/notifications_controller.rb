@@ -37,9 +37,9 @@ class NotificationsController < ApplicationController
       offset = params[:offset].to_i
 
       notifications = Notification.where(user_id: user.id)
-                                  .visible
-                                  .includes(:topic)
-                                  .order(created_at: :desc)
+        .visible
+        .includes(:topic)
+        .order(created_at: :desc)
 
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)

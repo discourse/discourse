@@ -91,7 +91,7 @@ class YamlAliasFinder < LocaleFileWalker
   def parse_file(filename)
     document = Psych.parse_file(filename)
     handle_document(document)
-    {anchors: @anchors, aliases: @aliases}
+    { anchors: @anchors, aliases: @aliases }
   end
 
   private
@@ -143,11 +143,11 @@ class YamlAliasSynchronizer < LocaleFileWalker
   end
 
   def add_needed_node(keys)
-    @required_keys[keys] = {mapping: nil, scalar: nil, alias: nil}
+    @required_keys[keys] = { mapping: nil, scalar: nil, alias: nil }
   end
 
   def write_yaml(stream, filename)
-    yaml = stream.to_yaml(nil, {:line_width => -1})
+    yaml = stream.to_yaml(nil, line_width: -1)
 
     File.open(filename, 'w') do |file|
       file.write(yaml)

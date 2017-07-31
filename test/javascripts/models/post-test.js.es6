@@ -64,9 +64,9 @@ QUnit.test('destroy by non-staff', assert => {
       user = Discourse.User.create({username: 'evil trout'}),
       post = buildPost({user: user, cooked: originalCooked});
 
-  post.destroy(user);
-
-  assert.ok(!post.get('can_delete'), "the post can't be deleted again in this session");
-  assert.ok(post.get('cooked') !== originalCooked, "the cooked content changed");
-  assert.equal(post.get('version'), 2, "the version number increased");
+  return post.destroy(user).then(() => {
+    assert.ok(!post.get('can_delete'), "the post can't be deleted again in this session");
+    assert.ok(post.get('cooked') !== originalCooked, "the cooked content changed");
+    assert.equal(post.get('version'), 2, "the version number increased");
+  });
 });

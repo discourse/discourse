@@ -19,8 +19,8 @@ module Autospec
 
     watch(%r{^spec/fabricators/.+_fabricator\.rb$})     { "spec" }
 
-    watch(%r{^app/assets/javascripts/pretty-text/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb"}
-    watch(%r{^plugins/.*/discourse-markdown/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb"}
+    watch(%r{^app/assets/javascripts/pretty-text/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb" }
+    watch(%r{^plugins/.*/discourse-markdown/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb" }
 
     watch(%r{^plugins/.*/spec/.*\.rb})
 

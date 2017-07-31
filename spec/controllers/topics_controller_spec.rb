@@ -24,7 +24,7 @@ describe TopicsController do
     let!(:user) { log_in(:moderator) }
     let(:p1) { Fabricate(:post, user: user) }
     let(:topic) { p1.topic }
-    let!(:p2) { Fabricate(:post, topic: topic, user:user )}
+    let!(:p2) { Fabricate(:post, topic: topic, user: user) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
       SiteSetting.external_system_avatars_enabled = false
@@ -60,7 +60,7 @@ describe TopicsController do
 
   context 'move_posts' do
     it 'needs you to be logged in' do
-      expect { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1, 2, 3] }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'moving to a new topic' do
@@ -74,7 +74,7 @@ describe TopicsController do
 
       it "raises an error when the user doesn't have permission to move the posts" do
         Guardian.any_instance.expects(:can_move_posts?).returns(false)
-        xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [1,2,3]
+        xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [1, 2, 3]
         expect(response).to be_forbidden
       end
 
@@ -146,7 +146,7 @@ describe TopicsController do
       let!(:user) { log_in(:moderator) }
       let!(:p1) { Fabricate(:post, user: user) }
       let!(:topic) { p1.topic }
-      let!(:p2) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number ) }
+      let!(:p2) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number) }
 
       context 'success' do
 
@@ -240,20 +240,19 @@ describe TopicsController do
         end
       end
 
-
     end
 
   end
 
   context 'change_post_owners' do
     it 'needs you to be logged in' do
-      expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3] }.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1, 2, 3] }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'forbidden to moderators' do
       let!(:moderator) { log_in(:moderator) }
       it 'correctly denies' do
-        xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3]
+        xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1, 2, 3]
         expect(response).to be_forbidden
       end
     end
@@ -262,7 +261,7 @@ describe TopicsController do
       let!(:trust_level_4) { log_in(:trust_level_4) }
 
       it 'correctly denies' do
-        xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3]
+        xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1, 2, 3]
         expect(response).to be_forbidden
       end
     end
@@ -275,7 +274,7 @@ describe TopicsController do
       let(:p2) { Fabricate(:post, topic_id: topic.id) }
 
       it "raises an error with a parameter missing" do
-        expect { xhr :post, :change_post_owners, topic_id: 111, post_ids: [1,2,3] }.to raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :change_post_owners, topic_id: 111, post_ids: [1, 2, 3] }.to raise_error(ActionController::ParameterMissing)
         expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a' }.to raise_error(ActionController::ParameterMissing)
       end
 
@@ -301,7 +300,7 @@ describe TopicsController do
         t2.save
         p3.save
 
-        UserDestroyer.new(editor).destroy(deleted_user, { delete_posts: true, context: 'test', delete_as_spammer: true })
+        UserDestroyer.new(editor).destroy(deleted_user, delete_posts: true, context: 'test', delete_as_spammer: true)
 
         xhr :post, :change_post_owners, topic_id: t2.id, username: user_a.username_lower, post_ids: [p3.id]
         expect(response).to be_success
@@ -453,15 +452,14 @@ describe TopicsController do
 
   end
 
-
   describe 'mute/unmute' do
 
     it 'needs you to be logged in' do
-      expect { xhr :put, :mute, topic_id: 99}.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :mute, topic_id: 99 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     it 'needs you to be logged in' do
-      expect { xhr :put, :unmute, topic_id: 99}.to raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :unmute, topic_id: 99 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -676,13 +674,13 @@ describe TopicsController do
 
       context 'anonymous' do
         expected = {
-          :normal_topic => 200,
-          :secure_topic => 403,
-          :private_topic => 302,
-          :deleted_topic => 410,
-          :deleted_secure_topic => 403,
-          :deleted_private_topic => 302,
-          :nonexist => 404
+          normal_topic: 200,
+          secure_topic: 403,
+          private_topic: 302,
+          deleted_topic: 410,
+          deleted_secure_topic: 403,
+          deleted_private_topic: 302,
+          nonexist: 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
       end
@@ -692,13 +690,13 @@ describe TopicsController do
           SiteSetting.login_required = true
         end
         expected = {
-          :normal_topic => 302,
-          :secure_topic => 302,
-          :private_topic => 302,
-          :deleted_topic => 302,
-          :deleted_secure_topic => 302,
-          :deleted_private_topic => 302,
-          :nonexist => 302
+          normal_topic: 302,
+          secure_topic: 302,
+          private_topic: 302,
+          deleted_topic: 302,
+          deleted_secure_topic: 302,
+          deleted_private_topic: 302,
+          nonexist: 302
         }
         topics_controller_show_gen_perm_tests(expected, self)
       end
@@ -709,13 +707,13 @@ describe TopicsController do
         end
 
         expected = {
-          :normal_topic => 200,
-          :secure_topic => 403,
-          :private_topic => 403,
-          :deleted_topic => 410,
-          :deleted_secure_topic => 403,
-          :deleted_private_topic => 403,
-          :nonexist => 404
+          normal_topic: 200,
+          secure_topic: 403,
+          private_topic: 403,
+          deleted_topic: 410,
+          deleted_secure_topic: 403,
+          deleted_private_topic: 403,
+          nonexist: 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
       end
@@ -726,13 +724,13 @@ describe TopicsController do
         end
 
         expected = {
-          :normal_topic => 200,
-          :secure_topic => 200,
-          :private_topic => 200,
-          :deleted_topic => 410,
-          :deleted_secure_topic => 410,
-          :deleted_private_topic => 410,
-          :nonexist => 404
+          normal_topic: 200,
+          secure_topic: 200,
+          private_topic: 200,
+          deleted_topic: 410,
+          deleted_secure_topic: 410,
+          deleted_private_topic: 410,
+          nonexist: 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
       end
@@ -743,13 +741,13 @@ describe TopicsController do
         end
 
         expected = {
-          :normal_topic => 200,
-          :secure_topic => 403,
-          :private_topic => 403,
-          :deleted_topic => 200,
-          :deleted_secure_topic => 403,
-          :deleted_private_topic => 403,
-          :nonexist => 404
+          normal_topic: 200,
+          secure_topic: 403,
+          private_topic: 403,
+          deleted_topic: 200,
+          deleted_secure_topic: 403,
+          deleted_private_topic: 403,
+          nonexist: 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
       end
@@ -760,13 +758,13 @@ describe TopicsController do
         end
 
         expected = {
-          :normal_topic => 200,
-          :secure_topic => 200,
-          :private_topic => 200,
-          :deleted_topic => 200,
-          :deleted_secure_topic => 200,
-          :deleted_private_topic => 200,
-          :nonexist => 404
+          normal_topic: 200,
+          secure_topic: 200,
+          private_topic: 200,
+          deleted_topic: 200,
+          deleted_secure_topic: 200,
+          deleted_private_topic: 200,
+          nonexist: 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
       end
@@ -800,7 +798,7 @@ describe TopicsController do
 
     it 'records redirects' do
       @request.env['HTTP_REFERER'] = 'http://twitter.com'
-      get :show, { id: topic.id }
+      get :show, id: topic.id
 
       @request.env['HTTP_REFERER'] = nil
       get :show, topic_id: topic.id, slug: topic.slug
@@ -1101,14 +1099,14 @@ describe TopicsController do
         it 'should work as expected' do
           xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
           expect(response).to be_success
-          expect(::JSON.parse(response.body)).to eq({'success' => 'OK'})
+          expect(::JSON.parse(response.body)).to eq('success' => 'OK')
           expect(Invite.where(invited_by_id: admin.id).count).to eq(1)
         end
 
         it 'should fail on shoddy email' do
           xhr :post, :invite, topic_id: @topic.id, user: 'i_am_not_an_email'
           expect(response).not_to be_success
-          expect(::JSON.parse(response.body)).to eq({'failed' => 'FAILED'})
+          expect(::JSON.parse(response.body)).to eq('failed' => 'FAILED')
         end
 
       end
@@ -1180,24 +1178,24 @@ describe TopicsController do
 
     describe "when logged in" do
       let!(:user) { log_in }
-      let(:operation) { {type: 'change_category', category_id: '1'} }
-      let(:topic_ids) { [1,2,3] }
+      let(:operation) { { type: 'change_category', category_id: '1' } }
+      let(:topic_ids) { [1, 2, 3] }
 
       it "requires a list of topic_ids or filter" do
         expect { xhr :put, :bulk, operation: operation }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "requires an operation param" do
-        expect { xhr :put, :bulk, topic_ids: topic_ids}.to raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :bulk, topic_ids: topic_ids }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a type field for the operation param" do
-        expect { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.to raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :bulk, topic_ids: topic_ids, operation: {} }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "can find unread" do
         # mark all unread muted
-        xhr :put, :bulk, filter: 'unread', operation: {type: :change_notification_level, notification_level_id: 0}
+        xhr :put, :bulk, filter: 'unread', operation: { type: :change_notification_level, notification_level_id: 0 }
         expect(response.status).to eq(200)
       end
 
@@ -1236,7 +1234,6 @@ describe TopicsController do
       expect(response).to be_forbidden
     end
   end
-
 
   describe 'reset_new' do
     it 'needs you to be logged in' do
@@ -1301,11 +1298,10 @@ describe TopicsController do
 
       random_post = Fabricate(:post)
 
-
       xhr :get, :excerpts, topic_id: first_post.topic_id, post_ids: [first_post.id, second_post.id, random_post.id]
 
       json = JSON.parse(response.body)
-      json.sort!{|a,b| a["post_id"] <=> b["post_id"]}
+      json.sort! { |a, b| a["post_id"] <=> b["post_id"] }
 
       # no random post
       expect(json.length).to eq(2)
@@ -1316,7 +1312,6 @@ describe TopicsController do
       expect(json[0]["post_id"]).to eq(first_post.id)
 
       expect(json[1]["excerpt"]).to match(/second post/)
-
 
     end
 

@@ -9,7 +9,7 @@ class CookedPostProcessor
 
   attr_reader :cooking_options
 
-  def initialize(post, opts={})
+  def initialize(post, opts = {})
     @dirty = false
     @opts = opts
     @post = post
@@ -63,7 +63,7 @@ class CookedPostProcessor
 
     upload_ids |= oneboxed_image_uploads.pluck(:id)
 
-    values = upload_ids.map{ |u| "(#{@post.id},#{u})" }.join(",")
+    values = upload_ids.map { |u| "(#{@post.id},#{u})" }.join(",")
     PostUpload.transaction do
       PostUpload.delete_all(post_id: @post.id)
       if upload_ids.length > 0
@@ -80,8 +80,6 @@ class CookedPostProcessor
       limit_size!(img)
       convert_to_link!(img)
     end
-
-    update_post_image
   end
 
   def extract_images
@@ -102,8 +100,6 @@ class CookedPostProcessor
     @doc.css("img[src]") -
     # minus, emojis
     @doc.css("img.emoji") -
-    # minus, image inside oneboxes
-    oneboxed_images -
     # minus, images inside quotes
     @doc.css(".quote img")
   end
@@ -142,11 +138,11 @@ class CookedPostProcessor
       original_width, original_height = original_image_size.map(&:to_f)
 
       if w > 0
-        ratio = w/original_width
-        [w.floor, (original_height*ratio).floor]
+        ratio = w / original_width
+        [w.floor, (original_height * ratio).floor]
       else
-        ratio = h/original_height
-        [(original_width*ratio).floor, h.floor]
+        ratio = h / original_height
+        [(original_width * ratio).floor, h.floor]
       end
     end
   end
@@ -238,7 +234,7 @@ class CookedPostProcessor
     false
   end
 
-  def add_lightbox!(img, original_width, original_height, upload=nil)
+  def add_lightbox!(img, original_width, original_height, upload = nil)
     # first, create a div to hold our lightbox
     lightbox = Nokogiri::XML::Node.new("div", @doc)
     lightbox["class"] = "lightbox-wrapper"
@@ -283,7 +279,7 @@ class CookedPostProcessor
     return I18n.t("upload.pasted_image_filename")
   end
 
-  def create_span_node(klass, content=nil)
+  def create_span_node(klass, content = nil)
     span = Nokogiri::XML::Node.new("span", @doc)
     span.content = content if content
     span["class"] = klass
@@ -292,6 +288,8 @@ class CookedPostProcessor
 
   def update_post_image
     img = extract_images_for_post.first
+    return if img.blank?
+
     if img["src"].present?
       @post.update_column(:image_url, img["src"][0...255]) # post
       @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
@@ -309,6 +307,11 @@ class CookedPostProcessor
       @has_oneboxes = true
       Oneboxer.onebox(url, args)
     end
+
+    update_post_image
+
+    # make sure we grab dimensions for oneboxed images
+    oneboxed_images.each { |img| limit_size!(img) }
 
     uploads = oneboxed_image_uploads.select(:url, :origin)
     oneboxed_images.each do |img|
@@ -374,7 +377,7 @@ class CookedPostProcessor
     # log the site setting change
     reason = I18n.t("disable_remote_images_download_reason")
     staff_action_logger = StaffActionLogger.new(Discourse.system_user)
-    staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, { details: reason })
+    staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, details: reason)
 
     # also send a private message to the site contact user
     notify_about_low_disk_space
