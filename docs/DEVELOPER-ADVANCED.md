@@ -50,7 +50,8 @@ If everything goes alright, let's clone Discourse and start hacking:
     git clone https://github.com/discourse/discourse.git ~/discourse
     cd ~/discourse
     bundle install
-    bundle exec rake db:migrate db:test:prepare
+    bundle exec rake db:migrate
+    RAILS_ENV=test bundle exec rake db:migrate
     
     # run the specs (optional)
     bundle exec rake autospec # CTRL + C to stop
