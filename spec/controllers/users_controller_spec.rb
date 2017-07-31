@@ -1498,7 +1498,7 @@ describe UsersController do
           unconfirmed_email_user = Fabricate(:user, active: true)
           unconfirmed_email_user.email_tokens.create(email: unconfirmed_email_user.email)
           session[SessionController::ACTIVATE_USER_KEY] = unconfirmed_email_user.id
-          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, to_address: unconfirmed_email_user.email))
           xhr :post, :send_activation_email, username: unconfirmed_email_user.username
 
           expect(response.status).to eq(200)
