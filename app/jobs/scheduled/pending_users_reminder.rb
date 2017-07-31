@@ -12,7 +12,7 @@ module Jobs
           query = query.where('users.created_at < ?', SiteSetting.pending_users_reminder_delay.hours.ago)
         end
 
-        newest_username = query.limit(1).pluck(:username).first
+        newest_username = query.limit(1).select(:username).first&.username
 
         return true if newest_username == previous_newest_username # already notified
 
