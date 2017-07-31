@@ -5,6 +5,7 @@ describe User do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :username }
+    it { is_expected.to validate_presence_of :primary_email }
 
     describe 'emails' do
       let(:user) { Fabricate.build(:user) }

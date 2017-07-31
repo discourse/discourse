@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
-  validates :primary_email, presence: true, if: :should_validate_primary_email?
+  validates :primary_email, presence: true
   validates_associated :primary_email, if: :should_validate_primary_email?
 
   after_initialize :add_trust_level
