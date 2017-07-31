@@ -72,7 +72,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     font-size: 1em;
-    button i.fa {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));}
+    button .d-icon {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));}
 
   }
   td {
@@ -247,7 +247,7 @@ ol.category-breadcrumb {
     overflow:hidden;
     margin-bottom: 0;
   }
-  a.badge-category {
+  a.badge-category, .dropdown-header {
     font-size: 0.929em;
     font-weight: bold;
     float: none;
@@ -257,7 +257,7 @@ ol.category-breadcrumb {
   }
 }
 
-.fa-thumb-tack.unpinned {
+.d-icon-thumb-tack.unpinned {
   @include fa-icon-rotate(180deg, 1);
   color: $primary;
   /* because it is rotated, right becomes left! */

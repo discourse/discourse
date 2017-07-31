@@ -70,29 +70,30 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil, custom_message=nil)
-    create_invite_by_email(email, invited_by, {
+  def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
+    create_invite_by_email(email, invited_by,
       topic: topic,
       group_ids: group_ids,
       custom_message: custom_message,
       send_email: true
-    })
+    )
   end
 
   # generate invite link
-  def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
-    invite = create_invite_by_email(email, invited_by, {
+  def self.generate_invite_link(email, invited_by, topic = nil, group_ids = nil)
+    invite = create_invite_by_email(email, invited_by,
       topic: topic,
       group_ids: group_ids,
       send_email: false
-    })
-    return "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
+    )
+
+    "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
   end
 
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.create_invite_by_email(email, invited_by, opts=nil)
+  def self.create_invite_by_email(email, invited_by, opts = nil)
     opts ||= {}
 
     topic = opts[:topic]
@@ -107,9 +108,9 @@ class Invite < ActiveRecord::Base
     end
 
     invite = Invite.with_deleted
-                   .where(email: lower_email, invited_by_id: invited_by.id)
-                   .order('created_at DESC')
-                   .first
+      .where(email: lower_email, invited_by_id: invited_by.id)
+      .order('created_at DESC')
+      .first
 
     if invite && (invite.expired? || invite.deleted_at)
       invite.destroy
@@ -161,23 +162,23 @@ class Invite < ActiveRecord::Base
     group_ids
   end
 
-  def self.find_all_invites_from(inviter, offset=0, limit=SiteSetting.invites_per_page)
+  def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
-          .where('invites.email IS NOT NULL')
-          .includes(:user => :user_stat)
-          .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
+      .where('invites.email IS NOT NULL')
+      .includes(user: :user_stat)
+      .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
                  'user_stats.time_read DESC',
                  'invites.redeemed_at DESC')
-          .limit(limit)
-          .offset(offset)
-          .references('user_stats')
+      .limit(limit)
+      .offset(offset)
+      .references('user_stats')
   end
 
-  def self.find_pending_invites_from(inviter, offset=0)
+  def self.find_pending_invites_from(inviter, offset = 0)
     find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.created_at DESC')
   end
 
-  def self.find_redeemed_invites_from(inviter, offset=0)
+  def self.find_redeemed_invites_from(inviter, offset = 0)
     find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL').order('invites.redeemed_at DESC')
   end
 

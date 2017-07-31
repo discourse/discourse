@@ -17,7 +17,7 @@ describe PrettyText do
   end
 
   let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
-  let(:wrapped_image_excerpt) {  }
+  let(:wrapped_image_excerpt) {}
 
   describe "Quoting" do
 
@@ -91,7 +91,6 @@ describe PrettyText do
         expect(PrettyText.cook(md)).to eq(html.strip)
       end
 
-
       it "trims spaces on quote params" do
         md = <<~MD
           [quote="#{user.username}, post:555, topic: 666"]
@@ -114,11 +113,26 @@ describe PrettyText do
       end
     end
 
+    it "can handle inline block bbcode" do
+      cooked = PrettyText.cook("[quote]te **s** t[/quote]")
+
+      html = <<~HTML
+        <aside class="quote">
+        <blockquote>
+        <p>te <strong>s</strong> t</p>
+        </blockquote>
+        </aside>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
     it "can handle quote edge cases" do
+      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
+      expect(PrettyText.cook("[quote]  \ntest\n[/quote]  ")).to include('aside')
       expect(PrettyText.cook("a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
       expect(PrettyText.cook("- a\n[quote]\ntest\n[/quote]\n\n\na")).to include('aside')
       expect(PrettyText.cook("[quote]\ntest")).not_to include('aside')
-      expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
       expect(PrettyText.cook("[quote]\ntest\n[/quote]z")).not_to include('aside')
 
       nested = <<~QUOTE
@@ -180,7 +194,6 @@ describe PrettyText do
     it "can handle mentions inside a hyperlink" do
       expect(PrettyText.cook("<a> @inner</a> ")).to match_html '<p><a> @inner</a></p>'
     end
-
 
     it "can handle mentions inside a hyperlink" do
       expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="nofollow noopener">link @inner</a></p>'
@@ -247,11 +260,14 @@ describe PrettyText do
     end
 
     it 'does censor code fences' do
-      SiteSetting.censored_words = 'apple|banana'
-      expect(PrettyText.cook("# banana")).not_to include('banana')
+      begin
+        ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
+        expect(PrettyText.cook("# banana")).not_to include('banana')
+      ensure
+        $redis.flushall
+      end
     end
   end
-
 
   describe "rel nofollow" do
     before do
@@ -305,7 +321,7 @@ describe PrettyText do
     context "images" do
 
       it "should dump images" do
-        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100)).to eq("[image]")
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100)).to eq("[image]")
       end
 
       context 'alt tags' do
@@ -347,32 +363,32 @@ describe PrettyText do
     end
 
     it "should have an option to strip links" do
-      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100, strip_links: true)).to eq("cnn")
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100, strip_links: true)).to eq("cnn")
     end
 
     it "should preserve links" do
-      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100)).to match_html "<a href='http://cnn.com'>cnn</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100)).to match_html "<a href='http://cnn.com'>cnn</a>"
     end
 
     it "should deal with special keys properly" do
-      expect(PrettyText.excerpt("<pre><b></pre>",100)).to eq("")
+      expect(PrettyText.excerpt("<pre><b></pre>", 100)).to eq("")
     end
 
     it "should truncate stuff properly" do
-      expect(PrettyText.excerpt("hello world",5)).to eq("hello&hellip;")
-      expect(PrettyText.excerpt("<p>hello</p><p>world</p>",6)).to eq("hello w&hellip;")
+      expect(PrettyText.excerpt("hello world", 5)).to eq("hello&hellip;")
+      expect(PrettyText.excerpt("<p>hello</p><p>world</p>", 6)).to eq("hello w&hellip;")
     end
 
     it "should insert a space between to Ps" do
-      expect(PrettyText.excerpt("<p>a</p><p>b</p>",5)).to eq("a b")
+      expect(PrettyText.excerpt("<p>a</p><p>b</p>", 5)).to eq("a b")
     end
 
     it "should strip quotes" do
-      expect(PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom",5)).to eq("boom")
+      expect(PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom", 5)).to eq("boom")
     end
 
     it "should not count the surrounds of a link" do
-      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",3)).to match_html "<a href='http://cnn.com'>cnn</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 3)).to match_html "<a href='http://cnn.com'>cnn</a>"
     end
 
     it "uses an ellipsis instead of html entities if provided with the option" do
@@ -380,7 +396,7 @@ describe PrettyText do
     end
 
     it "should truncate links" do
-      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",2)).to match_html "<a href='http://cnn.com'>cn&hellip;</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2)).to match_html "<a href='http://cnn.com'>cn&hellip;</a>"
     end
 
     it "doesn't extract empty quotes as links" do
@@ -433,22 +449,22 @@ describe PrettyText do
     end
 
     it "should not preserve tags in code blocks" do
-      expect(PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",100)).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
+      expect(PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>", 100)).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
     end
 
     it "should handle nil" do
-      expect(PrettyText.excerpt(nil,100)).to eq('')
+      expect(PrettyText.excerpt(nil, 100)).to eq('')
     end
 
     it "handles span excerpt at the beginning of a post" do
-      expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test",100)).to eq('hi')
+      expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test", 100)).to eq('hi')
       post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
       expect(post.excerpt).to eq("hi")
     end
 
     it "ignores max excerpt length if a span excerpt is specified" do
       two_hundred = "123456789 " * 20 + "."
-      text =  two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
+      text = two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
       expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
       post = Fabricate(:post, raw: text)
       expect(post.excerpt).to eq(two_hundred)
@@ -460,12 +476,12 @@ describe PrettyText do
 
     it "should have an option to preserve emoji images" do
       emoji_image = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
-      expect(PrettyText.excerpt(emoji_image, 100, { keep_emoji_images: true })).to match_html(emoji_image)
+      expect(PrettyText.excerpt(emoji_image, 100, keep_emoji_images: true)).to match_html(emoji_image)
     end
 
     it "should have an option to remap emoji to code points" do
       emoji_image = "I <img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'> you <img src='/images/emoji/twitter/heart.png?v=1' title=':unknown:' class='emoji' alt=':unknown:'> "
-      expect(PrettyText.excerpt(emoji_image, 100, { remap_emoji: true })).to match_html("I ❤  you :unknown:")
+      expect(PrettyText.excerpt(emoji_image, 100, remap_emoji: true)).to match_html("I ❤  you :unknown:")
     end
 
     it "should have an option to preserve emoji codes" do
@@ -607,7 +623,6 @@ describe PrettyText do
     expect(PrettyText.cook(raw)).to eq(html.strip)
   end
 
-
   it 'can substitute s3 cdn correctly' do
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_access_key_id = "XXX"
@@ -703,7 +718,7 @@ describe PrettyText do
   end
 
   it "produces tag links" do
-    Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
+    Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
 
     cooked = PrettyText.cook(" #unknown::tag #known::tag")
 
@@ -753,7 +768,6 @@ describe PrettyText do
     expect(PrettyText.cook("1\n2")).to match_html "<p>1<br>\n2</p>"
   end
 
-
   it "can handle emoji by name" do
 
     expected = <<HTML
@@ -775,7 +789,7 @@ HTML
 
   it "can handle multiple emojis by translation" do
     cooked = PrettyText.cook(":) ;) :)")
-    expect(cooked.split("img").length-1).to eq(3)
+    expect(cooked.split("img").length - 1).to eq(3)
   end
 
   it "handles emoji boundries correctly" do
@@ -787,11 +801,15 @@ HTML
   end
 
   it 'can censor words correctly' do
-    SiteSetting.censored_words = 'apple|banana'
-    expect(PrettyText.cook('yay banana yay')).not_to include('banana')
-    expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
-    expect(PrettyText.cook("# banana")).not_to include('banana')
-    expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
+    begin
+      ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
+      expect(PrettyText.cook('yay banana yay')).not_to include('banana')
+      expect(PrettyText.cook('yay `banana` yay')).not_to include('banana')
+      expect(PrettyText.cook("# banana")).not_to include('banana')
+      expect(PrettyText.cook("# banana")).to include("\u25a0\u25a0")
+    ensure
+      $redis.flushall
+    end
   end
 
   it 'supports typographer' do
@@ -825,11 +843,9 @@ HTML
     expect(PrettyText.cook("a[i]b[/i]c")).to eq('<p>a<span class="bbcode-i">b</span>c</p>')
   end
 
-
   it "can onebox local topics" do
     op = Fabricate(:post)
     reply = Fabricate(:post, topic_id: op.topic_id)
-
 
     url = Discourse.base_url + reply.url
     quote = create_post(topic_id: op.topic.id, raw: "This is a sample reply with a quote\n\n#{url}")
@@ -867,7 +883,6 @@ HTML
 
     expect(PrettyText.cook(markdown)).to eq(expected.strip)
   end
-
 
   it "supports img bbcode" do
     cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
@@ -970,6 +985,23 @@ HTML
 
       expect(cooked).to eq(html.strip)
     end
+
+    it "allows whitespace before the percent scaler" do
+      cooked = PrettyText.cook <<~MD
+        ![|220x100, 50%](http://png.com/my.png)
+        ![|220x100 , 50%](http://png.com/my.png)
+        ![|220x100 ,50%](http://png.com/my.png)
+      MD
+
+      html = <<~HTML
+        <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
   end
 
   describe "inline onebox" do

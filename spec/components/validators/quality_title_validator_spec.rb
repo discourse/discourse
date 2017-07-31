@@ -7,20 +7,20 @@ require 'ostruct'
 module QualityTitleValidatorSpec
   class Validatable < OpenStruct
     include ActiveModel::Validations
-    validates :title, :quality_title => { :unless => :private_message? }
+    validates :title, quality_title: { unless: :private_message? }
   end
 end
 
 describe "A record validated with QualityTitleValidator" do
-  let(:valid_title){ "hello this is my cool topic! welcome: all;" }
-  let(:short_title){ valid_title.slice(0, SiteSetting.min_topic_title_length - 1) }
-  let(:long_title ){ valid_title.center(SiteSetting.max_topic_title_length + 1, 'x') }
-  let(:xxxxx_title){ valid_title.gsub(/./,'x')}
+  let(:valid_title) { "hello this is my cool topic! welcome: all;" }
+  let(:short_title) { valid_title.slice(0, SiteSetting.min_topic_title_length - 1) }
+  let(:long_title) { valid_title.center(SiteSetting.max_topic_title_length + 1, 'x') }
+  let(:xxxxx_title) { valid_title.gsub(/./, 'x') }
 
-  subject(:topic){ QualityTitleValidatorSpec::Validatable.new }
+  subject(:topic) { QualityTitleValidatorSpec::Validatable.new }
 
   before(:each) do
-    topic.stubs(:private_message? => false)
+    topic.stubs(private_message?: false)
   end
 
   it "allows a regular title with a few ascii characters" do
@@ -39,7 +39,7 @@ describe "A record validated with QualityTitleValidator" do
   end
 
   it "allows anything in a private message" do
-    topic.stubs(:private_message? => true)
+    topic.stubs(private_message?: true)
     [short_title, long_title, xxxxx_title].each do |bad_title|
       topic.title = bad_title
       expect(topic).to be_valid
@@ -75,4 +75,3 @@ describe "A record validated with QualityTitleValidator" do
   #   end
   # end
 end
-

@@ -12,9 +12,9 @@ class Demon::RailsAutospec < Demon::Base
     require "rack"
     ENV["RAILS_ENV"] = "test"
     Rack::Server.start(
-      :config => "config.ru",
-      :AccessLog => [],
-      :Port => ENV["TEST_SERVER_PORT"] || 60099,
+      config: "config.ru",
+      AccessLog: [],
+      Port: ENV["TEST_SERVER_PORT"] || 60099,
     )
   rescue => e
     STDERR.puts e.message

@@ -51,7 +51,7 @@ class HtmlNormalize
     Oga::XML::Text === node || !BLOCK.include?(node.name.downcase)
   end
 
-  def dump_node(node, indent=0, buffer)
+  def dump_node(node, indent = 0, buffer)
 
     if Oga::XML::Text === node
       if node.parent&.name
@@ -70,7 +70,7 @@ class HtmlNormalize
 
     attrs = node&.attributes
     if (attrs && attrs.length > 0)
-      attrs.sort!{|x,y| x.name <=> y.name}
+      attrs.sort! { |x, y| x.name <=> y.name }
       attrs.each do |a|
         buffer << " "
         buffer << a.name
@@ -94,20 +94,20 @@ class HtmlNormalize
     children&.each do |child|
       if block && inline?(child)
         inline_buffer ||= String.new
-        dump_node(child, indent+1, inline_buffer)
+        dump_node(child, indent + 1, inline_buffer)
       else
         if inline_buffer
-          buffer << " " * (indent+1) * 2
+          buffer << " " * (indent + 1) * 2
           buffer << inline_buffer.strip
           inline_buffer = nil
         else
-          dump_node(child, indent+1, buffer)
+          dump_node(child, indent + 1, buffer)
         end
       end
     end
 
     if inline_buffer
-      buffer << " " * (indent+1) * 2
+      buffer << " " * (indent + 1) * 2
       buffer << inline_buffer.strip
       inline_buffer = nil
     end
@@ -145,6 +145,5 @@ class HtmlNormalize
 
     nodes[start...finish]
   end
-
 
 end

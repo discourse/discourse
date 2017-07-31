@@ -98,7 +98,7 @@ class SearchController < ApplicationController
     search_context = params[:search_context]
     unless search_context
       if (context = params[:context]) && (id = params[:context_id])
-        search_context = {type: context, id: id}
+        search_context = { type: context, id: id }
       end
     end
 
@@ -108,7 +108,7 @@ class SearchController < ApplicationController
 
       # A user is found by username
       context_obj = nil
-      if ['user','private_messages'].include? search_context[:type]
+      if ['user', 'private_messages'].include? search_context[:type]
         context_obj = User.find_by(username_lower: search_context[:id].downcase)
       elsif 'category' == search_context[:type]
         context_obj = Category.find_by(id: search_context[:id].to_i)

@@ -12,7 +12,6 @@ Fabricator(:queued_post) do
       custom_fields: { hello: 'world' },
       cooking_options: { cat: 'hat' },
       cook_method: Post.cook_methods[:raw_html],
-      image_sizes: {"http://foo.bar/image.png" => {"width" => 0, "height" => 222}} }
+      image_sizes: { "http://foo.bar/image.png" => { "width" => 0, "height" => 222 } } }
   end
 end
-

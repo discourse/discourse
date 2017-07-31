@@ -293,7 +293,6 @@ def update_posts
        AND reply_count <> Y.replies
   SQL
 
-
   # -- TODO: ensure this is how this works!
   # WITH X AS (
   #   SELECT pr.post_id, p.user_id

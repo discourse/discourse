@@ -60,7 +60,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     @users = nil
 
     create_categories(@client.query("SELECT id, #{PARENT_FIELD} as parent_id, name, description, ordering FROM #{KUNENA_PREFIX}kunena_categories ORDER BY #{PARENT_FIELD}, id;")) do |c|
-      h = {id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i}
+      h = { id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i }
       if c['parent_id'].to_i > 0
         h[:parent_category_id] = category_id_from_imported_category_id(c['parent_id'])
       end
@@ -83,12 +83,12 @@ class ImportScripts::Kunena < ImportScripts::Base
     puts "fetching Joomla users data from mysql"
     results = @client.query("SELECT id, username, email, registerDate FROM #{KUNENA_PREFIX}users;", cache_rows: false)
     results.each do |u|
-      next unless u['id'].to_i > 0 and u['username'].present? and u['email'].present?
-      username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0,User.username_length.end]
+      next unless u['id'].to_i > (0) && u['username'].present? && u['email'].present?
+      username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0, User.username_length.end]
       if username.length < User.username_length.first
         username = username * User.username_length.first
       end
-      @users[u['id'].to_i] = {id: u['id'].to_i, username: username, email: u['email'], created_at: u['registerDate']}
+      @users[u['id'].to_i] = { id: u['id'].to_i, username: username, email: u['email'], created_at: u['registerDate'] }
     end
 
     puts "fetching Kunena user data from mysql"
@@ -131,7 +131,7 @@ class ImportScripts::Kunena < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| p['id'].to_i}
+      next if all_records_exist? :posts, results.map { |p| p['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false

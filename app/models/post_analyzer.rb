@@ -3,7 +3,7 @@ require_dependency 'oneboxer'
 class PostAnalyzer
 
   def initialize(raw, topic_id)
-    @raw  = raw
+    @raw = raw
     @topic_id = topic_id
     @found_oneboxes = false
   end
@@ -51,11 +51,11 @@ class PostAnalyzer
     return @raw_mentions if @raw_mentions.present?
 
     raw_mentions = cooked_stripped.css('.mention, .mention-group').map do |e|
-       if name = e.inner_text
-         name = name[1..-1]
-         name.downcase! if name
-         name
-       end
+      if name = e.inner_text
+        name = name[1..-1]
+        name.downcase! if name
+        name
+      end
     end
 
     raw_mentions.compact!

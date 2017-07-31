@@ -13,7 +13,7 @@ class Admin::EmailController < Admin::AdminController
       Jobs::TestEmail.new.execute(to_address: params[:email_address])
       render nothing: true
     rescue => e
-      render json: {errors: [e.message]}, status: 422
+      render json: { errors: [e.message] }, status: 422
     end
   end
 
@@ -55,17 +55,17 @@ class Admin::EmailController < Admin::AdminController
     params.require(:username)
     params.require(:email)
     user = User.find_by_username(params[:username])
-    message, skip_reason = UserNotifications.send(:digest, user, {since: params[:last_seen_at]})
+    message, skip_reason = UserNotifications.send(:digest, user, since: params[:last_seen_at])
     if message
       message.to = params[:email]
       begin
         Email::Sender.new(message, :digest).send
         render json: success_json
       rescue => e
-        render json: {errors: [e.message]}, status: 422
+        render json: { errors: [e.message] }, status: 422
       end
     else
-      render json: {errors: skip_reason}
+      render json: { errors: skip_reason }
     end
   end
 
@@ -131,18 +131,18 @@ class Admin::EmailController < Admin::AdminController
       serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
       render_json_dump(serializer)
     rescue => e
-      render json: {errors: [e.message]}, status: 404
+      render json: { errors: [e.message] }, status: 404
     end
   end
 
   private
 
   def filter_email_logs(email_logs, params)
-    email_logs = email_logs.includes(:user, { post: :topic })
-                           .references(:user)
-                           .order(created_at: :desc)
-                           .offset(params[:offset] || 0)
-                           .limit(50)
+    email_logs = email_logs.includes(:user, post: :topic)
+      .references(:user)
+      .order(created_at: :desc)
+      .offset(params[:offset] || 0)
+      .limit(50)
 
     email_logs = email_logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
     email_logs = email_logs.where("email_logs.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
@@ -154,10 +154,10 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def filter_incoming_emails(incoming_emails, params)
-    incoming_emails = incoming_emails.includes(:user, { post: :topic })
-                                     .order(created_at: :desc)
-                                     .offset(params[:offset] || 0)
-                                     .limit(50)
+    incoming_emails = incoming_emails.includes(:user, post: :topic)
+      .order(created_at: :desc)
+      .offset(params[:offset] || 0)
+      .limit(50)
 
     incoming_emails = incoming_emails.where("from_address ILIKE ?", "%#{params[:from]}%") if params[:from].present?
     incoming_emails = incoming_emails.where("to_addresses ILIKE :to OR cc_addresses ILIKE :to", to: "%#{params[:to]}%") if params[:to].present?
@@ -170,7 +170,7 @@ class Admin::EmailController < Admin::AdminController
   def delivery_settings
     action_mailer_settings
       .reject { |k, _| k == :password }
-      .map    { |k, v| { name: k, value: v }}
+      .map    { |k, v| { name: k, value: v } }
   end
 
   def delivery_method

@@ -11,7 +11,7 @@ module PrettyText
         I18n.t(key)
       else
         str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each { |k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+        opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
         str
       end
     end

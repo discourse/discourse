@@ -3,7 +3,7 @@ class AddShowSubcategoryListToCategories < ActiveRecord::Migration
     add_column :categories, :show_subcategory_list, :boolean, default: false
 
     result = execute("select count(1) from site_settings where name = 'show_subcategory_list' and value = 't'")
-    if result[0] and result[0]["count"].to_i > 0
+    if result[0] && result[0]["count"].to_i > (0)
       execute "UPDATE categories SET show_subcategory_list = true WHERE parent_category_id IS NULL"
     end
   end

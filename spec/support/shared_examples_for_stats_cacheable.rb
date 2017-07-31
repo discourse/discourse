@@ -20,7 +20,7 @@ shared_examples_for 'stats cachable' do
 
   describe 'fetch_stats' do
     it 'has not been implemented' do
-      expect{ described_class.fetch_stats }.to_not raise_error
+      expect { described_class.fetch_stats }.to_not raise_error
     end
   end
 end

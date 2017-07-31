@@ -42,4 +42,3 @@ describe StepsController do
   end
 
 end
-

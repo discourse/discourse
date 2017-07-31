@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { ajax } from 'discourse/lib/ajax';
 import { isValidLink } from 'discourse/lib/click-track';
 import { number } from 'discourse/lib/formatter';
@@ -140,7 +141,7 @@ export default class PostCooked {
         $blockQuote.showHtml(div, 'fast', finished);
       }).catch((e) => {
         if (e.jqXHR.status === 404) {
-          $blockQuote.showHtml($("<div class='expanded-quote'><i class='fa fa-trash-o'></i></div>"), 'fast', finished);
+          $blockQuote.showHtml($(`<div class='expanded-quote'>${iconHTML('trash-o')}</div>`), 'fast', finished);
         }
       });
     } else {
@@ -178,7 +179,7 @@ export default class PostCooked {
     // Only add the expand/contract control if it's not a full post
     let expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = `<i class='fa fa-${desc}' title='${I18n.t("post.expand_collapse")}'></i>`;
+      expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $('.title', $aside).css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html(expandContract + navLink);

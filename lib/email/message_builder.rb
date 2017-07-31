@@ -17,7 +17,7 @@ module Email
   class MessageBuilder
     attr_reader :template_args
 
-    def initialize(to, opts=nil)
+    def initialize(to, opts = nil)
       @to = to
       @opts = opts || {}
 
@@ -166,7 +166,6 @@ module Email
       result
     end
 
-
     protected
 
     def reply_key
@@ -195,11 +194,13 @@ module Email
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
       @reply_by_email_address.gsub!("%{reply_key}", reply_key)
-      @reply_by_email_address = if private_reply?
-                                  alias_email(@reply_by_email_address)
-                                else
-                                  site_alias_email(@reply_by_email_address)
-                                end
+
+      @reply_by_email_address =
+        if private_reply?
+          alias_email(@reply_by_email_address)
+        else
+          site_alias_email(@reply_by_email_address)
+        end
     end
 
     def alias_email(source)

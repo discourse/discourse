@@ -72,7 +72,7 @@ class RateLimiter
 
     arr = $redis.lrange(@key, 0, @max) || []
     t0 = Time.now.to_i
-    arr.reject! {|a| (t0 - a.to_i) > @secs}
+    arr.reject! { |a| (t0 - a.to_i) > @secs }
     @max - arr.size
   end
 

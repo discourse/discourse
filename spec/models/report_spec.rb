@@ -42,12 +42,12 @@ describe Report do
         before(:each) do
           freeze_time
           fabricator = case arg
-          when :signup
-            :user
-          when :email
-            :email_log
+                       when :signup
+                         :user
+                       when :email
+                         :email_log
           else
-            arg
+                         arg
           end
           Fabricate(fabricator)
           Fabricate(fabricator, created_at: 1.hours.ago)
@@ -70,9 +70,9 @@ describe Report do
           it "returns previous 30 day's data" do
             expect(report.prev30Days).to be_present
           end
-        end
       end
     end
+  end
 
   [:http_total, :http_2xx, :http_background, :http_3xx, :http_4xx, :http_5xx, :page_view_crawler, :page_view_logged_in, :page_view_anon].each do |request_type|
     describe "#{request_type} request reports" do
@@ -200,9 +200,9 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data).to be_present
-        expect(report.data.find {|d| d[:x] == TrustLevel[0]}[:y]).to eq 3
-        expect(report.data.find {|d| d[:x] == TrustLevel[2]}[:y]).to eq 2
-        expect(report.data.find {|d| d[:x] == TrustLevel[4]}[:y]).to eq 1
+        expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:y]).to eq 3
+        expect(report.data.find { |d| d[:x] == TrustLevel[2] }[:y]).to eq 2
+        expect(report.data.find { |d| d[:x] == TrustLevel[4] }[:y]).to eq 1
       end
     end
   end

@@ -10,11 +10,11 @@ class Admin::FlagsController < Admin::AdminController
     if posts.blank?
       render json: { posts: [], topics: [], users: [] }
     else
-      render json: MultiJson.dump({
+      render json: MultiJson.dump(
         posts: posts,
         topics: serialize_data(topics, FlaggedTopicSerializer),
         users: serialize_data(users, FlaggedUserSerializer)
-      })
+      )
     end
   end
 

@@ -3,14 +3,13 @@ require 'rails_helper'
 describe DirectoryItemsController do
 
   it "requires a `period` param" do
-    expect{ xhr :get, :index }.to raise_error(ActionController::ParameterMissing)
+    expect { xhr :get, :index }.to raise_error(ActionController::ParameterMissing)
   end
 
   it "requires a proper `period` param" do
     xhr :get, :index, period: 'eviltrout'
     expect(response).not_to be_success
   end
-
 
   context "without data" do
 
@@ -25,7 +24,6 @@ describe DirectoryItemsController do
     end
 
   end
-
 
   context "with data" do
     before do

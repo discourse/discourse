@@ -5,11 +5,13 @@ import { sanitize as textSanitize } from 'pretty-text/sanitizer';
 import loadScript from 'discourse/lib/load-script';
 
 function getOpts(opts) {
-  const siteSettings = Discourse.__container__.lookup('site-settings:main');
+  const siteSettings = Discourse.__container__.lookup('site-settings:main'),
+        site = Discourse.__container__.lookup('site:main');
 
   opts = _.merge({
     getURL: Discourse.getURLWithCDN,
     currentUser: Discourse.__container__.lookup('current-user:main'),
+    censoredWords: site.censored_words,
     siteSettings
   }, opts);
 

@@ -13,7 +13,6 @@ class MigrateTosSetting < ActiveRecord::Migration
         label = res[0]['value']
       end
 
-
       label = PG::Connection.escape_string(label)
       execute("INSERT INTO user_fields (name, field_type, editable) VALUES ('#{label}', 'confirm', false)")
     end

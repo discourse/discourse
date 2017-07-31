@@ -1,10 +1,10 @@
 class UserAnonymizer
-  def initialize(user, actor=nil)
+  def initialize(user, actor = nil)
     @user = user
     @actor = actor
   end
 
-  def self.make_anonymous(user, actor=nil)
+  def self.make_anonymous(user, actor = nil)
     self.new(user, actor).make_anonymous
   end
 
@@ -48,11 +48,11 @@ class UserAnonymizer
       @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_key.try(:destroy)
 
-      UserHistory.create( action: UserHistory.actions[:anonymize_user],
-                          target_user_id: @user.id,
-                          acting_user_id: @actor ? @actor.id : @user.id,
-                          email: prev_email,
-                          details: "username: #{prev_username}" )
+      UserHistory.create(action: UserHistory.actions[:anonymize_user],
+                         target_user_id: @user.id,
+                         acting_user_id: @actor ? @actor.id : @user.id,
+                         email: prev_email,
+                         details: "username: #{prev_username}")
     end
     @user
   end

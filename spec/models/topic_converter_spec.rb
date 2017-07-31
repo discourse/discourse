@@ -33,7 +33,7 @@ describe TopicConverter do
           expect(topic.archetype).to eq("regular")
 
           first_category = Category.where.not(id: SiteSetting.uncategorized_category_id)
-                                   .where(read_restricted: false).order('id asc').first
+            .where(read_restricted: false).order('id asc').first
 
           expect(topic.category_id).to eq(first_category.id)
         end

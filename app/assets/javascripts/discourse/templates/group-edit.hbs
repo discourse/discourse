@@ -21,11 +21,22 @@
     <div class="control-group">
       <label>
         {{input type='checkbox'
-            checked=model.public
-            class="group-edit-public"
+            checked=model.public_admission
+            class="group-edit-public-admission"
             disabled=model.allow_membership_requests}}
 
-        {{i18n 'groups.public'}}
+        {{i18n 'groups.public_admission'}}
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label>
+        {{input type='checkbox'
+            checked=model.public_exit
+            class="group-edit-public-exit"
+            disabled=model.allow_membership_requests}}
+
+        {{i18n 'groups.public_exit'}}
       </label>
     </div>
 
@@ -34,7 +45,7 @@
         {{input type='checkbox'
             checked=model.allow_membership_requests
             class="group-edit-allow-membership-requests"
-            disabled=model.public}}
+            disabled=model.public_admission}}
 
         {{i18n 'groups.allow_membership_requests'}}
       </label>

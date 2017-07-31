@@ -1,6 +1,6 @@
 class CensoredWordsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    if SiteSetting.censored_words.present? && (censored_words = censor_words(value, censored_words_regexp)).present?
+    if WordWatcher.words_for_action(:censor).present? && (censored_words = censor_words(value, censored_words_regexp)).present?
       record.errors.add(
         attribute, :contains_censored_words,
         censored_words: join_censored_words(censored_words)
@@ -32,9 +32,6 @@ class CensoredWordsValidator < ActiveModel::EachValidator
     end
 
     def censored_words_regexp
-      Regexp.new(
-        '\b(' + SiteSetting.censored_words.split('|'.freeze).map! { |w| Regexp.escape(w) }.join('|'.freeze) + ')\b',
-        true
-      )
+      WordWatcher.word_matcher_regexp :censor
     end
 end

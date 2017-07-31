@@ -21,9 +21,8 @@ export default Ember.Component.extend({
   },
 
   @computed('expanded')
-  iconClass() {
-    if (this.get('expanded')) { return "fa fa-caret-down"; }
-    return "fa fa-caret-right";
+  expandedIcon(expanded) {
+    return expanded ? 'caret-down' : 'caret-right';
   },
 
   @computed('tagId')
@@ -70,7 +69,7 @@ export default Ember.Component.extend({
 
   @computed('tag')
   dropdownButtonClass() {
-    var result = 'badge-category category-dropdown-button';
+    let result = 'dropdown-header category-dropdown-button';
     if (Em.isNone(this.get('tag'))) {
       result += ' home';
     }

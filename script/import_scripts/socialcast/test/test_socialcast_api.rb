@@ -7,7 +7,7 @@ class TestSocialcastApi < Minitest::Test
 
   DEBUG = false
 
-  def initialize args
+  def initialize(args)
     config = YAML::load_file(File.join(__dir__, 'config.ex.yml'))
     @domain = config['domain']
     @username = config['username']
@@ -39,40 +39,40 @@ class TestSocialcastApi < Minitest::Test
 
   def test_list_users
     users = @socialcast.list_users
-    expected = JSON.parse(USERS)['users'].sort {|u| u['id']}
+    expected = JSON.parse(USERS)['users'].sort { |u| u['id'] }
     assert_equal 15, users.size
     assert_equal expected[0], users[0]
   end
 
   def test_list_users_next_page
-    users = @socialcast.list_users({page: 2})
+    users = @socialcast.list_users(page: 2)
     assert_equal 0, users.size
   end
 
   def test_list_messages
     messages = @socialcast.list_messages
-    expected = JSON.parse(MESSAGES)['messages'].sort {|m| m['id']}
+    expected = JSON.parse(MESSAGES)['messages'].sort { |m| m['id'] }
     assert_equal 20, messages.size
     check_keys expected[0], messages[0]
   end
 
   def test_messages_next_page
-    messages = @socialcast.list_messages({page: 2})
-    expected = JSON.parse(MESSAGES_PG_2)['messages'].sort {|m| m['id']}
+    messages = @socialcast.list_messages(page: 2)
+    expected = JSON.parse(MESSAGES_PG_2)['messages'].sort { |m| m['id'] }
     assert_equal 20, messages.size
     check_keys expected[0], messages[0]
   end
 
   private
 
-  def check_keys expected, actual
+  def check_keys(expected, actual)
     msg = "### caller[0]:\nKey not found in actual keys: #{actual.keys}\n"
     expected.keys.each do |k|
       assert (actual.keys.include? k), "#{k}"
     end
   end
 
-  def debug message, show=false
+  def debug(message, show = false)
     if show || DEBUG
       puts '### ' + caller[0]
       puts ''

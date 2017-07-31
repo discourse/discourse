@@ -16,7 +16,7 @@ class Stylesheet::Manager
   end
 
   def self.clear_theme_cache!
-    cache.hash.keys.select{|k| k =~ /theme/}.each{|k|cache.delete(k)}
+    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
   end
 
   def self.stylesheet_href(target = :desktop, theme_key = :missing)
@@ -54,9 +54,9 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    themes = Theme.where('user_selectable OR key = ?', SiteSetting.default_theme_key).pluck(:key,:name)
+    themes = Theme.where('user_selectable OR key = ?', SiteSetting.default_theme_key).pluck(:key, :name)
     themes << nil
-    themes.each do |key,name|
+    themes.each do |key, name|
       [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
         theme_key = key || SiteSetting.default_theme_key
         cache_key = "#{target}_#{theme_key}"
@@ -104,7 +104,7 @@ class Stylesheet::Manager
     @theme_key = theme_key
   end
 
-  def compile(opts={})
+  def compile(opts = {})
     unless opts[:force]
       if File.exists?(stylesheet_fullpath)
         unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
@@ -120,7 +120,7 @@ class Stylesheet::Manager
     end
 
     rtl = @target.to_s =~ /_rtl$/
-    css,source_map = begin
+    css, source_map = begin
       Stylesheet::Compiler.compile_asset(
         @target,
          rtl: rtl,
@@ -216,7 +216,7 @@ class Stylesheet::Manager
   end
 
   def stylesheet_filename_no_digest
-    stylesheet_filename(_with_digest=false)
+    stylesheet_filename(_with_digest = false)
   end
 
   def is_theme?

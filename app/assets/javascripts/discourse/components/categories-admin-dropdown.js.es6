@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import DropdownButton from 'discourse/components/dropdown-button';
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -15,14 +15,14 @@ export default DropdownButton.extend({
       { id: 'create',
         title: I18n.t('category.create'),
         description: I18n.t('category.create_long'),
-        styleClasses: 'fa fa-plus' }
+        icon: 'plus' }
     ];
     if (includeReorder) {
       items.push({
         id: 'reorder',
         title: I18n.t('categories.reorder.title'),
         description: I18n.t('categories.reorder.title_long'),
-        styleClasses: 'fa fa-random'
+        icon: 'random'
       });
     }
     return items;

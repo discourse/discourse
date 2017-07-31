@@ -18,7 +18,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :flair_color,
              :bio_raw,
              :bio_cooked,
-             :public,
+             :public_admission,
+             :public_exit,
              :allow_membership_requests,
              :full_name,
              :default_notification_level

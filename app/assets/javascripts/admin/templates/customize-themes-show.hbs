@@ -5,7 +5,7 @@
       {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
       {{d-button action="cancelEditingName" class="btn-small cancel-edit" icon="times"}}
     {{else}}
-      {{model.name}} <a {{action "startEditingName"}}>{{fa-icon "pencil"}}</a>
+      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
   </h2>
 
@@ -15,7 +15,7 @@
   </p>
   {{#if model.remote_theme.license_url}}
   <p>
-    <a href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{fa-icon "copyright"}}</a>
+    <a href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "copyright"}}</a>
   </p>
   {{/if}}
   {{/if}}
@@ -133,8 +133,8 @@
     {{/if}}
   {{/if}}
 
-  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn'>{{fa-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
-  <a class="btn export" target="_blank" href={{downloadUrl}}>{{fa-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
+  <a class="btn export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
 </div>

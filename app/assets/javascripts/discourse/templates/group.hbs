@@ -35,13 +35,21 @@
         {{#each getTabs as |tab|}}
           <li>
             {{#link-to tab.location model title=tab.message}}
-              {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
+              {{#if tab.icon}}{{d-icon tab.icon}}{{/if}}
               {{tab.message}}
               {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
             {{/link-to}}
           </li>
         {{/each}}
       {{/mobile-nav}}
+
+      {{#if displayGroupMessageButton}}
+        {{d-button
+            action="messageGroup"
+            class="btn-primary group-message-button"
+            icon="envelope"
+            label="groups.message"}}
+      {{/if}}
 
       {{group-membership-button model=model showLogin='showLogin'}}
     </div>

@@ -1,5 +1,5 @@
 TopicStatusUpdater = Struct.new(:topic, :user) do
-  def update!(status, enabled, opts={})
+  def update!(status, enabled, opts = {})
     status = Status.new(status, enabled)
 
     @topic_status_update = topic.public_topic_timer
@@ -19,7 +19,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
 
   private
 
-  def change(status, opts={})
+  def change(status, opts = {})
     result = true
 
     if status.pinned? || status.pinned_globally?
@@ -30,7 +30,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       result = false if rc == 0
     else
       rc = Topic.where(:id => topic.id, status.name => !status.enabled)
-                .update_all(status.name => status.enabled?)
+        .update_all(status.name => status.enabled?)
 
       topic.send("#{status.name}=", status.enabled?)
       result = false if rc == 0
@@ -55,7 +55,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     result
   end
 
-  def create_moderator_post_for(status, message=nil)
+  def create_moderator_post_for(status, message = nil)
     topic.add_moderator_post(user, message || message_for(status), options_for(status))
     topic.reload
   end

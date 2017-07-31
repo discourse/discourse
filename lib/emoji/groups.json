@@ -438,7 +438,7 @@
       },
       {
         "name": "child",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "boy",
@@ -450,7 +450,7 @@
       },
       {
         "name": "adult",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "man",
@@ -462,7 +462,7 @@
       },
       {
         "name": "older_adult",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "older_man",
@@ -654,11 +654,11 @@
       },
       {
         "name": "woman_with_headscarf",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "bearded_person",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "blonde_man",
@@ -682,7 +682,7 @@
       },
       {
         "name": "breast_feeding",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "angel",
@@ -698,23 +698,23 @@
       },
       {
         "name": "mage",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "fairy",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "vampire",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "merperson",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "elf",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "genie",
@@ -1030,7 +1030,7 @@
       },
       {
         "name": "love_you_gesture",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "writing_hand",
@@ -1050,7 +1050,7 @@
       },
       {
         "name": "palms_up_together",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "pray",
@@ -2414,15 +2414,15 @@
       },
       {
         "name": "person_in_steamy_room",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "person_climbing",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "person_in_lotus_position",
-        "diversity": false
+        "diversity": true
       },
       {
         "name": "bath",

@@ -8,7 +8,7 @@ class UserEmail < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
 
   validates :email, email: true, format: { with: EmailValidator.email_regex },
-    if: :skip_email_validation?
+                    if: :skip_email_validation?
 
   validates :primary, uniqueness: { scope: [:user_id] }
 

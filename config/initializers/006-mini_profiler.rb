@@ -6,7 +6,7 @@ if Rails.configuration.respond_to?(:load_mini_profiler) && Rails.configuration.l
   begin
     require 'memory_profiler'
   rescue => e
-     STDERR.put "#{e} failed to require mini profiler"
+    STDERR.put "#{e} failed to require mini profiler"
   end
 
   # initialization is skipped so trigger it
@@ -48,7 +48,7 @@ if defined?(Rack::MiniProfiler)
     path = env['PATH_INFO']
 
     (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Android/) &&
-    !skip.any?{|re| re =~ path}
+    !skip.any? { |re| re =~ path }
   end
 
   # without a user provider our results will use the ip address for namespacing
@@ -67,7 +67,6 @@ if defined?(Rack::MiniProfiler)
   Rack::MiniProfiler.config.backtrace_ignores << /lib\/rack\/message_bus.rb/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/silence_logger/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/quiet_logger/
-
 
   # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
   # Rack::MiniProfiler.counter_method(Array, 'uniq')
@@ -97,9 +96,8 @@ if defined?(Rack::MiniProfiler)
   # Rack::MiniProfiler.profile_method ActionView::PathResolver, 'find_templates'
 end
 
-
 if ENV["PRINT_EXCEPTIONS"]
-  trace      = TracePoint.new(:raise) do |tp|
+  trace = TracePoint.new(:raise) do |tp|
     puts tp.raised_exception
     puts tp.raised_exception.backtrace.join("\n")
     puts

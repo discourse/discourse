@@ -28,16 +28,16 @@ describe PostTiming do
     end
 
     it 'works correctly' do
-      timing(1,1)
-      timing(2,1)
-      timing(2,2)
-      timing(3,1)
-      timing(3,2)
-      timing(3,3)
+      timing(1, 1)
+      timing(2, 1)
+      timing(2, 2)
+      timing(3, 1)
+      timing(3, 2)
+      timing(3, 3)
 
-      _tu_one = topic_user(1,1,1)
-      _tu_two = topic_user(2,2,2)
-      _tu_three = topic_user(3,3,3)
+      _tu_one = topic_user(1, 1, 1)
+      _tu_two = topic_user(2, 2, 2)
+      _tu_three = topic_user(3, 3, 3)
 
       PostTiming.pretend_read(topic_id, 2, 3)
 
@@ -105,7 +105,7 @@ describe PostTiming do
       @post = Fabricate(:post)
       @topic = @post.topic
       @coding_horror = Fabricate(:coding_horror)
-      @timing_attrs = {msecs: 1234, topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number}
+      @timing_attrs = { msecs: 1234, topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number }
     end
 
     it 'adds a view to the post' do

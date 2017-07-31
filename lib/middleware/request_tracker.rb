@@ -2,11 +2,11 @@ require_dependency 'middleware/anonymous_cache'
 
 class Middleware::RequestTracker
 
-  def initialize(app, settings={})
+  def initialize(app, settings = {})
     @app = app
   end
 
-  def self.log_request_on_site(data,host)
+  def self.log_request_on_site(data, host)
     RailsMultisite::ConnectionManagement.with_hostname(host) do
       log_request(data)
     end
@@ -46,8 +46,8 @@ class Middleware::RequestTracker
 
   TRACK_VIEW = "HTTP_DISCOURSE_TRACK_VIEW".freeze
   CONTENT_TYPE = "Content-Type".freeze
-  def self.get_data(env,result)
-    status,headers = result
+  def self.get_data(env, result)
+    status, headers = result
     status = status.to_i
 
     helper = Middleware::AnonymousCache::Helper.new(env)
@@ -74,21 +74,21 @@ class Middleware::RequestTracker
   ensure
 
     # we got to skip this on error ... its just logging
-    data = self.class.get_data(env,result) rescue nil
+    data = self.class.get_data(env, result) rescue nil
     host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
-      if result && (headers=result[1])
+      if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
       end
-      log_later(data,host)
+      log_later(data, host)
     end
 
   end
 
-  def log_later(data,host)
-    Scheduler::Defer.later("Track view", _db=nil) do
-      self.class.log_request_on_site(data,host)
+  def log_later(data, host)
+    Scheduler::Defer.later("Track view", _db = nil) do
+      self.class.log_request_on_site(data, host)
     end
   end
 

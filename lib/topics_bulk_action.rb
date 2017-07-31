@@ -1,6 +1,6 @@
 class TopicsBulkAction
 
-  def initialize(user, topic_ids, operation, options={})
+  def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids
     @operation = operation
@@ -45,7 +45,7 @@ class TopicsBulkAction
           if group
             GroupArchivedMessage.move_to_inbox!(group.id, t.id)
           else
-            UserArchivedMessage.move_to_inbox!(@user.id,t.id)
+            UserArchivedMessage.move_to_inbox!(@user.id, t.id)
           end
         end
       end
@@ -177,6 +177,4 @@ class TopicsBulkAction
       @topics ||= Topic.where(id: @topic_ids)
     end
 
-
 end
-

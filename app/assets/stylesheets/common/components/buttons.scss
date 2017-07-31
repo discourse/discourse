@@ -61,10 +61,10 @@
     cursor: not-allowed;
   }
 
-  i.fa {
+  .d-icon {
     opacity: 0.7;
   }
-  &.btn-primary i.fa {
+  &.btn-primary .d-icon {
     opacity: 1;
   }
 }
@@ -194,7 +194,7 @@
   background: transparent;
   border: 0;
   outline: 0;
-  i.fa {
+  .d-icon {
     opacity: 0.7;
   }
 }

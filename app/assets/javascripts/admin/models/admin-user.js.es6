@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 import { propertyNotEqual } from 'discourse/lib/computed';
@@ -108,7 +109,7 @@ const AdminUser = Discourse.User.extend({
             "class": "cancel-inline",
             "link":  true
           }, {
-            "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
+            "label": `${iconHTML('exclamation-triangle')} ` + I18n.t("admin.user.delete_all_posts"),
             "class": "btn btn-danger",
             "callback": function() {
               ajax("/admin/users/" + user.get('id') + "/delete_all_posts", {
@@ -337,7 +338,7 @@ const AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.block_accept'),
+      "label": `${iconHTML('exclamation-triangle')} ` + I18n.t('admin.user.block_accept'),
       "class": "btn btn-danger",
       "callback": function() { performBlock(); }
     }];
@@ -386,7 +387,7 @@ const AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.anonymize_yes'),
+      "label": `${iconHTML('exclamation-triangle')} ` + I18n.t('admin.user.anonymize_yes'),
       "class": "btn btn-danger",
       "callback": function() { performAnonymize(); }
     }];
@@ -450,7 +451,7 @@ const AdminUser = Discourse.User.extend({
       "class": "btn",
       "link":  true
     }, {
-      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.delete_and_block'),
+      "label": `${iconHTML('exclamation-triangle')} ` + I18n.t('admin.user.delete_and_block'),
       "class": "btn btn-danger",
       "callback": function(){ performDestroy(true); }
     }, {
@@ -479,7 +480,7 @@ const AdminUser = Discourse.User.extend({
         "class": "cancel-inline",
         "link":  true
       }, {
-        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
+        "label": `${iconHTML('exclamation-triangle')} ` + I18n.t("flagging.yes_delete_spammer"),
         "class": "btn btn-danger",
         "callback": function() {
           return ajax("/admin/users/" + user.get('id') + '.json', {

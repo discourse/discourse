@@ -1,6 +1,6 @@
 class UserVisit < ActiveRecord::Base
 
-  def self.counts_by_day_query(start_date, end_date, group_id=nil)
+  def self.counts_by_day_query(start_date, end_date, group_id = nil)
     result = where('visited_at >= ? and visited_at <= ?', start_date.to_date, end_date.to_date)
 
     if group_id
@@ -12,11 +12,11 @@ class UserVisit < ActiveRecord::Base
   end
 
   # A count of visits in a date range by day
-  def self.by_day(start_date, end_date, group_id=nil)
+  def self.by_day(start_date, end_date, group_id = nil)
     counts_by_day_query(start_date, end_date, group_id).count
   end
 
-  def self.mobile_by_day(start_date, end_date, group_id=nil)
+  def self.mobile_by_day(start_date, end_date, group_id = nil)
     counts_by_day_query(start_date, end_date, group_id).where(mobile: true).count
   end
 

@@ -5,9 +5,14 @@ import DiscourseURL from 'discourse/lib/url';
 export default Ember.Component.extend({
   loading: false,
 
-  @computed("model.public")
-  canJoinGroup(publicGroup) {
-    return publicGroup;
+  @computed("model.public_admission", "userIsGroupUser")
+  canJoinGroup(publicAdmission, userIsGroupUser) {
+    return publicAdmission && !userIsGroupUser;
+  },
+
+  @computed("model.public_exit", "userIsGroupUser")
+  canLeaveGroup(publicExit, userIsGroupUser) {
+    return publicExit && userIsGroupUser;
   },
 
   @computed("model.is_group_user", "model.id", "groupUserIds")

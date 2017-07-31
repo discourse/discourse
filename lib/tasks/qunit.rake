@@ -1,6 +1,6 @@
 desc "Runs the qunit test suite"
 
-task "qunit:test", [:timeout] => :environment do |_, args|
+task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
 
   require "rack"
   require "socket"
@@ -10,7 +10,7 @@ task "qunit:test", [:timeout] => :environment do |_, args|
   end
 
   # ensure we have this port available
-  def port_available? port
+  def port_available?(port)
     server = TCPServer.open port
     server.close
     true
@@ -26,16 +26,17 @@ task "qunit:test", [:timeout] => :environment do |_, args|
 
   unless pid = fork
     Discourse.after_fork
-    Rack::Server.start(:config => "config.ru",
-                       :AccessLog => [],
-                       :Port => port)
+    Rack::Server.start(config: "config.ru",
+                       AccessLog: [],
+                       Port: port)
     exit
   end
 
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
+    qunit_path = args[:qunit_path] || "/qunit"
+    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
 
     options = {}
 

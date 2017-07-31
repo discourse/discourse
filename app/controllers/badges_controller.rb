@@ -14,7 +14,7 @@ class BadgesController < ApplicationController
     if (params[:only_listable] == "true") || !request.xhr?
       # NOTE: this is sorted client side if needed
       badges = badges.includes(:badge_grouping)
-                     .where(enabled: true, listable: true)
+        .where(enabled: true, listable: true)
 
     end
 

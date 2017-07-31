@@ -22,7 +22,8 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupInlineOnebox,
     previewing,
-    linkify
+    linkify,
+    censoredWords
   } = state;
 
   let features = {
@@ -57,6 +58,7 @@ export function buildOptions(state) {
     mentionLookup: state.mentionLookup,
     emojiUnicodeReplacer,
     lookupInlineOnebox,
+    censoredWords,
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
     markdownIt: true,
     previewing

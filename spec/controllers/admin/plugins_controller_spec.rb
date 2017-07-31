@@ -17,4 +17,3 @@ describe Admin::PluginsController do
   end
 
 end
-

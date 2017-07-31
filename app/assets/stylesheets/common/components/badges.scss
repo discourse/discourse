@@ -28,7 +28,7 @@
     display: inline-flex;
 
     span.badge-category {
-      color: $primary !important;
+      color: $primary;
       padding: 3px;
       vertical-align: text-top;
       margin-top: -2px; //vertical alignment fix
@@ -37,7 +37,7 @@
       text-overflow: ellipsis;
 
       .extra-info-wrapper & {
-        color: $header-primary !important;
+        color: $header-primary;
       }
     }
 
@@ -59,7 +59,7 @@
     line-height: 15px;
 
     span.badge-category {
-      color: $primary !important;
+      color: $primary;
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -69,7 +69,7 @@
       }
 
       .extra-info-wrapper & {
-        color: $header-primary !important;
+        color: $header-primary;
       }
     }
 
@@ -149,7 +149,7 @@
 
 .list-controls {
 .category-breadcrumb {
-  a.badge-category {
+  a.badge-category, .dropdown-header {
       display: inline-block;
       padding: 5px 8px;
       line-height: 20px;
@@ -158,24 +158,25 @@
       padding: 5px;
       width: 13px;
 
-      .fa-caret-right {
+      .d-icon-caret-right {
         margin-left: 2px;
         }
       }
     }
 
-    li.bar>.badge-category:not(.home):first-child {
+    li.bar>.dropdown-header:not(.home):first-child {
       border-left: 5px solid;
+      font-size: 1em;
     }
 
-    li.bar>.badge-category {
-      background: $primary-low !important;
-      color: $primary !important;
+    li.bar>.dropdown-header {
+      background: $primary-low;
+      color: $primary;
     }
 
-    li.bullet>.badge-category {
-      background: $primary-low !important;
-      color: $primary !important;
+    li.bullet>.dropdown-header {
+      background: $primary-low;
+      color: $primary;
 
       .badge-category-bg {
         width: 10px;
@@ -189,7 +190,7 @@
   }
 
   .category-dropdown-menu {
-    .badge-category {
+    .dropdown-header {
       &.home {
         margin-left: 4px;
         padding-left: 0;

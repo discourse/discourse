@@ -83,6 +83,4 @@ describe InlineOneboxer do
 
   end
 
-
 end
-

@@ -7,8 +7,8 @@ describe TopicTitleLengthValidator do
 
   # simulate Rails behavior (singleton)
   def validate
-    @validator ||= TopicTitleLengthValidator.new({ attributes: :title })
-    @validator.validate_each(record,:title,record.title)
+    @validator ||= TopicTitleLengthValidator.new(attributes: :title)
+    @validator.validate_each(record, :title, record.title)
   end
 
   shared_examples "validating any topic title" do

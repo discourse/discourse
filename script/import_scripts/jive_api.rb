@@ -334,7 +334,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
     SQL
   end
 
-  def get(url_or_path, authenticated=false)
+  def get(url_or_path, authenticated = false)
     tries ||= 3
 
     command = ["curl", "--silent"]

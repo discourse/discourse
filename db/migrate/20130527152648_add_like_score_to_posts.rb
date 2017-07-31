@@ -15,5 +15,3 @@ class AddLikeScoreToPosts < ActiveRecord::Migration
               WHERE x.post_id = p.id"
   end
 end
-
-

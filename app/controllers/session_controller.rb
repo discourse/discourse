@@ -9,7 +9,7 @@ class SessionController < ApplicationController
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
-    render json: {csrf: form_authenticity_token }
+    render json: { csrf: form_authenticity_token }
   end
 
   def sso
@@ -35,7 +35,7 @@ class SessionController < ApplicationController
     end
   end
 
-  def sso_provider(payload=nil)
+  def sso_provider(payload = nil)
     payload ||= request.query_string
     if SiteSetting.enable_sso_provider
       sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
@@ -112,7 +112,7 @@ class SessionController < ApplicationController
           activation = UserActivator.new(user, request, session, cookies)
           activation.finish
           session["user_created_message"] = activation.message
-          redirect_to users_account_created_path and return
+          redirect_to(users_account_created_path) && (return)
         else
           if SiteSetting.verbose_sso_logging
             Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
@@ -292,11 +292,11 @@ class SessionController < ApplicationController
   end
 
   def invalid_credentials
-    render json: {error: I18n.t("login.incorrect_username_email_or_password")}
+    render json: { error: I18n.t("login.incorrect_username_email_or_password") }
   end
 
   def login_not_approved
-    render json: {error: I18n.t("login.not_approved")}
+    render json: { error: I18n.t("login.not_approved") }
   end
 
   def not_activated(user)
@@ -310,19 +310,19 @@ class SessionController < ApplicationController
   end
 
   def not_allowed_from_ip_address(user)
-    render json: {error: I18n.t("login.not_allowed_from_ip_address", username: user.username)}
+    render json: { error: I18n.t("login.not_allowed_from_ip_address", username: user.username) }
   end
 
   def admin_not_allowed_from_ip_address(user)
-    render json: {error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)}
+    render json: { error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username) }
   end
 
   def failed_to_login(user)
     message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
 
     render json: {
-      error: I18n.t(message, { date: I18n.l(user.suspended_till, format: :date_only),
-                               reason: Rack::Utils.escape_html(user.suspend_reason) }),
+      error: I18n.t(message, date: I18n.l(user.suspended_till, format: :date_only),
+                             reason: Rack::Utils.escape_html(user.suspend_reason)),
       reason: 'suspended'
     }
   end
@@ -336,7 +336,6 @@ class SessionController < ApplicationController
     end
     render_serialized(user, UserSerializer)
   end
-
 
   def render_sso_error(status:, text:)
     @sso_error = text

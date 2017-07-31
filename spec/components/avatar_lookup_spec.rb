@@ -4,7 +4,7 @@ require 'rails_helper'
 require_dependency 'avatar_lookup'
 
 describe AvatarLookup do
-  let!(:user){ Fabricate(:user) }
+  let!(:user) { Fabricate(:user) }
 
   describe '#[]' do
     before do
