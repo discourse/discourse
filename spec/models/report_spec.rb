@@ -40,14 +40,14 @@ describe Report do
 
       context "with #{pluralized}" do
         before(:each) do
-          Timecop.freeze
+          freeze_time
           fabricator = case arg
-          when :signup
-            :user
-          when :email
-            :email_log
+                       when :signup
+                         :user
+                       when :email
+                         :email_log
           else
-            arg
+                         arg
           end
           Fabricate(fabricator)
           Fabricate(fabricator, created_at: 1.hours.ago)
@@ -57,7 +57,6 @@ describe Report do
           Fabricate(fabricator, created_at: 30.days.ago)
           Fabricate(fabricator, created_at: 35.days.ago)
         end
-        after(:each) { Timecop.return }
 
         context 'returns a report with data'
           it "returns today's data" do
@@ -71,9 +70,9 @@ describe Report do
           it "returns previous 30 day's data" do
             expect(report.prev30Days).to be_present
           end
-        end
       end
     end
+  end
 
   [:http_total, :http_2xx, :http_background, :http_3xx, :http_4xx, :http_5xx, :page_view_crawler, :page_view_logged_in, :page_view_anon].each do |request_type|
     describe "#{request_type} request reports" do
@@ -87,15 +86,13 @@ describe Report do
 
       context "with #{request_type}" do
         before(:each) do
-          Timecop.freeze
+          freeze_time
           ApplicationRequest.create(date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35)
           ApplicationRequest.create(date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8)
           ApplicationRequest.create(date: Date.today.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1)
           ApplicationRequest.create(date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2)
           ApplicationRequest.create(date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3)
         end
-        after(:each) { Timecop.return }
-
 
         context 'returns a report with data' do
           it "returns expected number of recoords" do
@@ -203,9 +200,9 @@ describe Report do
 
       it "returns a report with data" do
         expect(report.data).to be_present
-        expect(report.data.find {|d| d[:x] == TrustLevel[0]}[:y]).to eq 3
-        expect(report.data.find {|d| d[:x] == TrustLevel[2]}[:y]).to eq 2
-        expect(report.data.find {|d| d[:x] == TrustLevel[4]}[:y]).to eq 1
+        expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:y]).to eq 3
+        expect(report.data.find { |d| d[:x] == TrustLevel[2] }[:y]).to eq 2
+        expect(report.data.find { |d| d[:x] == TrustLevel[4] }[:y]).to eq 1
       end
     end
   end

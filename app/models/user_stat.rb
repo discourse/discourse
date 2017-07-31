@@ -10,8 +10,8 @@ class UserStat < ActiveRecord::Base
 
   def self.reset_bounce_scores
     UserStat.where("reset_bounce_score_after < now()")
-            .where("bounce_score > 0")
-            .update_all(bounce_score: 0)
+      .where("bounce_score > 0")
+      .update_all(bounce_score: 0)
   end
 
   # Updates the denormalized view counts for all users
@@ -55,14 +55,14 @@ class UserStat < ActiveRecord::Base
   def update_topic_reply_count
     self.topic_reply_count =
         Topic
-        .where(['id in (
+      .where(['id in (
               SELECT topic_id FROM posts p
               JOIN topics t2 ON t2.id = p.topic_id
               WHERE p.deleted_at IS NULL AND
                 t2.user_id <> p.user_id AND
                 p.user_id = ?
               )', self.user_id])
-        .count
+      .count
   end
 
   MAX_TIME_READ_DIFF = 100

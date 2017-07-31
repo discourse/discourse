@@ -8,18 +8,18 @@
     </li>
     <li>
       {{#link-to 'userActivity.replies'}}
-        <i class="glyph fa fa-reply"></i>{{i18n 'user_action_groups.5'}}
+        {{d-icon "reply" class="glyph"}}{{i18n 'user_action_groups.5'}}
       {{/link-to}}
     </li>
     <li>
       {{#link-to 'userActivity.likesGiven'}}
-        <i class="glyph fa fa-heart"></i>{{i18n 'user_action_groups.1'}}
+        {{d-icon "heart" class="glyph"}}{{i18n 'user_action_groups.1'}}
       {{/link-to}}
     </li>
     {{#if showBookmarks}}
     <li>
       {{#link-to 'userActivity.bookmarks'}}
-        <i class="glyph fa fa-bookmark"></i>{{i18n 'user_action_groups.3'}}
+        {{d-icon "bookmark" class="glyph"}}{{i18n 'user_action_groups.3'}}
       {{/link-to}}
     </li>
     {{/if}}

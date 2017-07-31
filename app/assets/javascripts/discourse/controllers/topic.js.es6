@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
@@ -113,7 +114,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   @computed('model')
   suggestedTitle(model) {
     return model.get('isPrivateMessage') ?
-      `<a href="${this.get('pmPath')}"><i class='private-message-glyph fa fa-envelope'></i></a> ${I18n.t("suggested_topics.pm_title")}` :
+      `<a href="${this.get('pmPath')}">${iconHTML('envelope', { class: 'private-message-glyph' })}</a> ${I18n.t("suggested_topics.pm_title")}` :
       I18n.t("suggested_topics.title");
   },
 

@@ -1324,26 +1324,6 @@ tr_TR:
     visit_link_to_respond: "Cevaplamak için [konuyu ziyaret edin](%{base_url}%{url})."
     visit_link_to_respond_pm: "Cevaplamak için [iletiyi ziyaret edin](%{base_url}%{url})."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
-    invited_to_private_message_body: |
-      %{username} sizi bir iletiye davet etti
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      şurada
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} sizi bir tartışmaya davet etti
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      şurada
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}

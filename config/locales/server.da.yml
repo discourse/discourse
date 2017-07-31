@@ -1150,40 +1150,8 @@ da:
 
   invite_mailer:
     subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} inviterede dig til en debat om
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      på
-
-      > %{site_title} -- %{site_description}
-
-      Hvis du er interesseret, så klik på linket herunder:
-
-      %{invite_link}
   custom_invite_mailer:
     subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} inviterede dig til en debat
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      på
-
-      > %{site_title} -- %{site_description}
-
-      Med denne besked
-
-      > %{user_custom_message}
-
-      Hvis du er interesseret, så klik på linket herunder:
-
-      %{invite_link}
   invite_forum_mailer:
     subject_template: "%{invitee_name} inviterede dig til at oprette dig på %{site_domain_name}"
   custom_invite_forum_mailer:

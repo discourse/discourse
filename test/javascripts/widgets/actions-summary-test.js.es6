@@ -74,7 +74,7 @@ widgetTest('post deleted', {
     });
   },
   test(assert) {
-    assert.ok(this.$('.post-action .fa-trash-o').length === 1, 'it has the deleted icon');
+    assert.ok(this.$('.post-action .d-icon-trash-o').length === 1, 'it has the deleted icon');
     assert.ok(this.$('.avatar[title=eviltrout]').length === 1, 'it has the deleted by avatar');
   }
 });

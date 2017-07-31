@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { topicLevels, buttonDetails } from 'discourse/lib/notification-levels';
 import { h } from 'virtual-dom';
 import RawHTML from 'discourse/widgets/raw-html';
+import { iconNode } from 'discourse-common/lib/icon-library';
 
 createWidget('notification-option', {
   buildKey: attrs => `topic-notifications-button-${attrs.id}`,
@@ -9,7 +10,7 @@ createWidget('notification-option', {
 
   html(attrs) {
     return h('a', [
-        h('span.icon', { className: `fa fa-${attrs.icon} ${attrs.key}`}),
+        iconNode(attrs.icon, { class: `icon ${attrs.key}`, tagName: 'span' }),
         h('div', [
           h('span.title', I18n.t(`topic.notifications.${attrs.key}.title`)),
           h('span.desc', I18n.t(`topic.notifications.${attrs.key}.description`)),
@@ -42,7 +43,7 @@ export default createWidget('topic-notifications-button', {
     const details = buttonDetails(level);
 
     const button = {
-      className: `btn`,
+      className: `btn toggle-notification-options`,
       label: null,
       icon: details.icon,
       action: 'toggleDropdown',
@@ -52,7 +53,7 @@ export default createWidget('topic-notifications-button', {
     if (this.attrs.showFullTitle) {
       button.label = `topic.notifications.${details.key}.title`;
     } else {
-      button.className = 'btn notifications-dropdown';
+      button.className = 'btn toggle-notifications-options notifications-dropdown';
     }
 
     return this.attach('button', button);

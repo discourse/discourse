@@ -3,9 +3,10 @@ import { performEmojiUnescape } from 'pretty-text/emoji';
 const rule = {
   tag: 'quote',
 
-  before: function(state, attrs, md) {
+  before: function(state, tagInfo) {
 
-    let options = md.options.discourse;
+    const attrs = tagInfo.attrs;
+    let options = state.md.options.discourse;
 
     let quoteInfo = attrs['_default'];
     let username, postNumber, topicId, avatarImg, full;

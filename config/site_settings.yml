@@ -555,11 +555,6 @@ posting:
     type: list
     client: true
   delete_old_hidden_posts: true
-  censored_words:
-    client: true
-    default: ''
-    refresh: true
-    type: list
   censored_pattern:
     client: true
     default: ''
@@ -811,6 +806,7 @@ files:
   allow_staff_to_upload_any_file_in_pm:
     default: true
     client: true
+  strip_image_metadata: true
 
 trust:
   default_trust_level:
@@ -920,6 +916,9 @@ onebox:
   max_oneboxes_per_post:
     default: 50
     client: true
+  inline_onebox_domains_whitelist:
+    default: ''
+    type: list
 
 spam:
   add_rel_nofollow_to_user_content: true

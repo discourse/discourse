@@ -22,4 +22,3 @@ module PostItemExcerpt
   end
 
 end
-

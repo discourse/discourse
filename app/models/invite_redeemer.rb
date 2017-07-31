@@ -18,7 +18,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite, username, name, password=nil, user_custom_fields=nil)
+  def self.create_user_from_invite(invite, username, name, password = nil, user_custom_fields = nil)
     if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
       available_username = username
     else
@@ -91,9 +91,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def get_existing_user
-    User.where(admin: false).find_by(email: invite.email)
+    User.where(admin: false).find_by_email(invite.email)
   end
-
 
   def add_to_private_topics_if_invited
     invite.topics.private_messages.each do |t|
@@ -102,7 +101,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def add_user_to_invited_topics
-    Invite.where('invites.email = ? and invites.id != ?', invite.email, invite.id).includes(:topics).where(topics: {archetype: Archetype::private_message}).each do |i|
+    Invite.where('invites.email = ? and invites.id != ?', invite.email, invite.id).includes(:topics).where(topics: { archetype: Archetype::private_message }).each do |i|
       i.topics.each do |t|
         t.topic_allowed_users.create(user_id: invited_user.id)
       end
@@ -130,8 +129,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   def notify_invitee
     if inviter = invite.invited_by
-        inviter.notifications.create(notification_type: Notification.types[:invitee_accepted],
-                                     data: {display_username: invited_user.username}.to_json)
+      inviter.notifications.create(notification_type: Notification.types[:invitee_accepted],
+                                   data: { display_username: invited_user.username }.to_json)
     end
   end
 

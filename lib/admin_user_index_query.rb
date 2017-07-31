@@ -4,7 +4,7 @@ class AdminUserIndexQuery
 
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
     @params = params
-    @query = initialize_query_with_order(klass)
+    @query = initialize_query_with_order(klass).joins(:user_emails)
     @trust_levels = trust_levels
   end
 
@@ -24,10 +24,10 @@ class AdminUserIndexQuery
     'read_time' => 'user_stats.time_read'
   }
 
-  def find_users(limit=100)
+  def find_users(limit = 100)
     page = params[:page].to_i - 1
     if page < 0
-        page = 0
+      page = 0
     end
     find_users_query.limit(limit).offset(page * limit)
   end
@@ -52,7 +52,7 @@ class AdminUserIndexQuery
 
     if !custom_order.present?
       if params[:query] == "active"
-        order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
+        order << "COALESCE(users.last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
       else
         order << "users.created_at DESC"
       end
@@ -81,22 +81,22 @@ class AdminUserIndexQuery
     where_conds << "user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1"
 
     @query.activated
-          .references(:user_stats)
-          .includes(:user_profile)
-          .where("COALESCE(user_profiles.bio_raw, '') != ''")
-          .where('users.created_at <= ?', 1.day.ago)
-          .where(where_conds.map {|c| "(#{c})"}.join(" OR "))
+      .references(:user_stats)
+      .includes(:user_profile)
+      .where("COALESCE(user_profiles.bio_raw, '') != ''")
+      .where('users.created_at <= ?', 1.day.ago)
+      .where(where_conds.map { |c| "(#{c})" }.join(" OR "))
   end
 
   def filter_by_query_classification
     case params[:query]
-      when 'staff'      then @query.where("admin or moderator")
-      when 'admins'     then @query.where(admin: true)
-      when 'moderators' then @query.where(moderator: true)
-      when 'blocked'    then @query.blocked
-      when 'suspended'  then @query.suspended
-      when 'pending'    then @query.not_suspended.where(approved: false)
-      when 'suspect'    then suspect_users
+    when 'staff'      then @query.where("admin or moderator")
+    when 'admins'     then @query.where(admin: true)
+    when 'moderators' then @query.where(moderator: true)
+    when 'blocked'    then @query.blocked
+    when 'suspended'  then @query.suspended
+    when 'pending'    then @query.not_suspended.where(approved: false)
+    when 'suspect'    then suspect_users
     end
   end
 
@@ -106,7 +106,7 @@ class AdminUserIndexQuery
       if ip = IPAddr.new(params[:filter]) rescue nil
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
-        @query.where('username_lower ILIKE :filter OR email ILIKE :filter', filter: "%#{params[:filter]}%")
+        @query.where('username_lower ILIKE :filter OR user_emails.email ILIKE :filter', filter: "%#{params[:filter]}%")
       end
     end
   end
@@ -119,7 +119,7 @@ class AdminUserIndexQuery
 
   def filter_exclude
     if params[:exclude].present?
-      @query.where('id != ?', params[:exclude])
+      @query.where('users.id != ?', params[:exclude])
     end
   end
 

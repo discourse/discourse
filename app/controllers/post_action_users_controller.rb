@@ -12,10 +12,9 @@ class PostActionUsersController < ApplicationController
     post = finder.first
     guardian.ensure_can_see!(post)
 
-
     post_actions = post.post_actions.where(post_action_type_id: post_action_type_id)
-                       .includes(:user)
-                       .order('post_actions.created_at asc')
+      .includes(:user)
+      .order('post_actions.created_at asc')
 
     if !guardian.can_see_post_actors?(post.topic, post_action_type_id)
       if !current_user

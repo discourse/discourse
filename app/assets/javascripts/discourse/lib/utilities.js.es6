@@ -102,8 +102,10 @@ export function selectedText() {
   $div.find("img.emoji").replaceWith(function() { return this.title; });
   // replace br with newlines
   $div.find("br").replaceWith(() => "\n");
+  // enforce newline at the end of paragraphs
+  $div.find("p").append(() => "\n");
 
-  return String($div.text()).trim();
+  return String($div.text()).trim().replace(/(^\s*\n)+/gm, "\n");
 }
 
 // Determine the row and col of the caret in an element
@@ -294,7 +296,9 @@ export function uploadLocation(url) {
 
 export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
-    return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
+    const split = upload.original_filename.split('.');
+    const name = split[split.length-2];
+    return `![${name}|${upload.width}x${upload.height}](${upload.url})`;
   } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i).test(upload.original_filename)) {
     return uploadLocation(upload.url);
   } else {

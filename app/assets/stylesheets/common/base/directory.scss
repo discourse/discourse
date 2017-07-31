@@ -12,7 +12,7 @@
     float: right;
   }
   .total-rows {
-    color: dark-light-diff($primary, $secondary, 50%, -50%);
+    color: blend-primary-secondary(50%);
     text-align: right;
   }
   .spinner {
@@ -26,17 +26,17 @@
     td, th {
       padding: 0.5em;
       text-align: left;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-bottom: 1px solid $primary-low; 
 
       .number, .time-read {
         font-size: 1.4em;
-        color: dark-light-diff($primary, $secondary, 50%, -20%);
+        color: $primary-medium; 
       }
     }
 
     tr.me {
       td {
-        background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
+        background-color: $highlight-low;
 
         .username a, .name, .title, .number, .time-read {
           color: dark-light-choose(scale-color($highlight, $lightness: -50%), scale-color($highlight, $lightness: 50%));
@@ -49,16 +49,16 @@
       white-space: nowrap;
 
       width: 13%;
-      i.fa-heart {
+      .d-icon-heart {
         color: $love;
         margin-right: 0.5em;
       }
-      i.fa-chevron-down, i.fa-chevron-up {
+      .d-icon-chevron-down, .d-icon-chevron-up {
         margin-left: 0.5em;
       }
 
       &:hover {
-        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+        background-color: $primary-low; 
       }
     }
   }

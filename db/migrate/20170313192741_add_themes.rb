@@ -20,16 +20,15 @@ class AddThemes < ActiveRecord::Migration
     remove_column :color_schemes, :versioned_id
 
     enabled_theme_count = execute("SELECT count(*) FROM themes WHERE enabled")
-        .to_a[0]["count"].to_i
-
+      .to_a[0]["count"].to_i
 
     enabled_scheme_id = execute("SELECT id FROM color_schemes WHERE enabled")
-        .to_a[0]&.fetch("id")
+      .to_a[0]&.fetch("id")
 
     theme_key, theme_id =
       execute("SELECT key, id FROM themes WHERE enabled").to_a[0]&.values
 
-    if (enabled_theme_count == 0  && enabled_scheme_id) || enabled_theme_count > 1
+    if (enabled_theme_count == 0 && enabled_scheme_id) || enabled_theme_count > 1
 
       puts "Creating a new default theme!"
 
@@ -66,8 +65,6 @@ SQL
       sql = ActiveRecord::Base.sql_fragment(sql, now: Time.zone.now, key: theme_key)
       execute(sql)
     end
-
-
 
     remove_column :themes, :enabled
     remove_column :color_schemes, :enabled

@@ -12,11 +12,9 @@ RSpec.describe "Managing custom emojis" do
     describe 'when upload is invalid' do
       it 'should publish the right error' do
         message = MessageBus.track_publish do
-          post("/admin/customize/emojis.json", {
-            name: 'test',
-            file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg")
-          })
-        end.find{|m| m.channel == "/uploads/emoji"}
+          post("/admin/customize/emojis.json",             name: 'test',
+                                                           file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg"))
+        end.find { |m| m.channel == "/uploads/emoji" }
 
         expect(message.channel).to eq("/uploads/emoji")
         expect(message.data["errors"]).to eq([I18n.t('upload.images.size_not_found')])
@@ -28,11 +26,9 @@ RSpec.describe "Managing custom emojis" do
         CustomEmoji.create!(name: 'test', upload: upload)
 
         message = MessageBus.track_publish do
-          post("/admin/customize/emojis.json", {
-            name: 'test',
-            file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
-          })
-        end.find{|m| m.channel == "/uploads/emoji"}
+          post("/admin/customize/emojis.json",             name: 'test',
+                                                           file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"))
+        end.find { |m| m.channel == "/uploads/emoji" }
 
         expect(message.channel).to eq("/uploads/emoji")
 
@@ -43,14 +39,12 @@ RSpec.describe "Managing custom emojis" do
     end
 
     it 'should allow an admin to add a custom emoji' do
-        Emoji.expects(:clear_cache)
+      Emoji.expects(:clear_cache)
 
         message = MessageBus.track_publish do
-          post("/admin/customize/emojis.json", {
-            name: 'test',
-            file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
-          })
-        end.find{|m| m.channel == "/uploads/emoji"}
+          post("/admin/customize/emojis.json",             name: 'test',
+                                                           file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"))
+        end.find { |m| m.channel == "/uploads/emoji" }
 
         custom_emoji = CustomEmoji.last
         upload = custom_emoji.upload

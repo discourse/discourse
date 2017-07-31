@@ -10,7 +10,7 @@ RSpec.describe "Post rake tasks" do
     it 'should remap posts' do
       post = Fabricate(:post, raw: "The quick brown fox jumps over the lazy dog")
 
-      Rake::Task['posts:remap'].invoke("brown","red")
+      Rake::Task['posts:remap'].invoke("brown", "red")
       post.reload
       expect(post.raw).to eq('The quick red fox jumps over the lazy dog')
     end

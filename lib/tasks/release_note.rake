@@ -55,14 +55,14 @@ end
 
 def escape_brackets(line)
   line.gsub("<", "`<")
-      .gsub(">", ">`")
-      .gsub("[", "`[")
-      .gsub("]", "]`")
+    .gsub(">", ">`")
+    .gsub("[", "`[")
+    .gsub("]", "]`")
 end
 
 def split_comments(text)
   text = normalize_terms(text)
-  terms = ["FIX:", "FEATURE:", "UX:", "SECURITY:" ,"PERF:"]
+  terms = ["FIX:", "FEATURE:", "UX:", "SECURITY:" , "PERF:"]
   terms.each do |term|
     text = newlines_at_term(text, term)
   end
@@ -79,7 +79,7 @@ end
 
 def newlines_at_term(text, term)
   if text.include?(term)
-    text = text.split(term).map{ |l| l.strip }.join("\n#{term} ")
+    text = text.split(term).map { |l| l.strip }.join("\n#{term} ")
   end
   text
 end

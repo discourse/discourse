@@ -16,7 +16,7 @@
       {{d-button action="renameTag" actionParam=tag icon="pencil" class="admin-tag"}}
     {{else}}
       {{#if canCreateTopic}}
-        <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
+      <button id="create-topic" class='btn btn-default' {{action "createTopic"}}>{{d-icon "plus"}}{{i18n 'topic.create'}}</button>
       {{/if}}
     {{/if}}
 
@@ -30,7 +30,7 @@
     {{else}}
       <h2 class="tag-show-heading">
         {{#link-to 'tags'}}{{i18n "tagging.tags"}}{{/link-to}}
-        {{fa-icon "angle-right"}}
+        {{d-icon "angle-right"}}
         {{discourse-tag-bound tagRecord=tag style="simple"}}
         {{#each additionalTags as |tag|}}
           <span>&amp;</span>

@@ -48,16 +48,15 @@ describe Admin::BadgesController do
 
         groupings.shuffle!
 
-        names = groupings.map{|g| g.name}
-        ids = groupings.map{|g| g.id.to_s}
-
+        names = groupings.map { |g| g.name }
+        ids = groupings.map { |g| g.id.to_s }
 
         xhr :post, :save_badge_groupings, ids: ids, names: names
 
         groupings2 = BadgeGrouping.all.order(:position).to_a
 
-        expect(groupings2.map{|g| g.name}).to eq(names)
-        expect((groupings.map(&:id) - groupings2.map{|g| g.id}).compact).to be_blank
+        expect(groupings2.map { |g| g.name }).to eq(names)
+        expect((groupings.map(&:id) - groupings2.map { |g| g.id }).compact).to be_blank
 
         expect(::JSON.parse(response.body)["badge_groupings"].length).to eq(groupings2.length)
       end

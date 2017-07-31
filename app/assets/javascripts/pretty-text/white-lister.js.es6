@@ -112,6 +112,7 @@ const DEFAULT_LIST = [
   'a.mention',
   'a.mention-group',
   'a.onebox',
+  'a.inline-onebox-loading',
   'a[data-bbcode]',
   'a[name]',
   'a[rel=nofollow]',

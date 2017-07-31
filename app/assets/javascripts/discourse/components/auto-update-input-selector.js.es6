@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import Combobox from 'discourse-common/components/combo-box';
 import { CLOSE_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
@@ -111,9 +112,7 @@ export default Combobox.extend({
     let icons;
 
     if (icon) {
-      icons = icon.split(',').map(i => {
-        return `<i class='fa fa-${i}'/>`;
-      }).join(" ");
+      icons = icon.split(',').map(i => iconHTML(i)).join(" ");
     }
 
     if (time) {

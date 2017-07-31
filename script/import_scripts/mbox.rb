@@ -46,7 +46,7 @@ class ImportScripts::Mbox < ImportScripts::Base
     exit
   end
 
-  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create
+  validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, on: :create
 
   def execute
     import_categories
@@ -63,7 +63,7 @@ class ImportScripts::Mbox < ImportScripts::Base
     mappings = CATEGORY_MAPPINGS.values - ['uncategorized']
 
     create_categories(mappings) do |c|
-      {id: c, name: c}
+      { id: c, name: c }
     end
   end
 
@@ -109,7 +109,7 @@ class ImportScripts::Mbox < ImportScripts::Base
         each_line(f) do |line|
           line = line.scrub
           if line =~ SPLIT_AT
-p            message_count += 1
+            p message_count += 1
             if !msg.empty?
               mail = Mail.read_from_string(msg)
               yield mail, f
@@ -163,7 +163,7 @@ p            message_count += 1
 
     puts "#{not_found.size} records couldn't be associated with parents"
     if not_found.present?
-      db.execute "UPDATE emails SET reply_to = NULL WHERE msg_id IN (#{not_found.map {|nf| "'#{nf}'"}.join(',')})"
+      db.execute "UPDATE emails SET reply_to = NULL WHERE msg_id IN (#{not_found.map { |nf| "'#{nf}'" }.join(',')})"
     end
 
     dupe_titles = db.execute "SELECT title, COUNT(*) FROM emails GROUP BY title HAVING count(*) > 1"
@@ -197,7 +197,7 @@ p            message_count += 1
           from_email.gsub!(/ /, '')
         end
       end
-p    end
+    end
 
     display_names = from.try(:display_names)
     if display_names.present?
@@ -308,7 +308,7 @@ p    end
     title.strip
 
     #In case of mixed localized prefixes there could be many of them if the mail client didn't strip the localized ones
-    if original_length >  title.length
+    if original_length > title.length
       clean_title(title)
     else
       title
@@ -331,9 +331,9 @@ p    end
     total_count = all_users.size
 
     batches(BATCH_SIZE) do |offset|
-      users = all_users[offset..offset+BATCH_SIZE-1]
+      users = all_users[offset..offset + BATCH_SIZE - 1]
       break if users.nil?
-      next if all_records_exist? :users, users.map {|u| u[1]}
+      next if all_records_exist? :users, users.map { |u| u[1] }
 
       create_users(users, total: total_count, offset: offset) do |u|
         {
@@ -374,7 +374,7 @@ p    end
         new_raw = p.raw.dup
         new_raw = new_raw.gsub!(/#{Regexp.escape(find)}/i, replace) || new_raw
         if new_raw != p.raw
-          p.revise(Discourse.system_user, { raw: new_raw }, { bypass_bump: true })
+          p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true)
           print_warning "\nReplaced #{find} with #{replace} in topic #{p.topic_id}"
         end
       end
@@ -411,10 +411,10 @@ p    end
     topic_count = all_topics.size
 
     batches(BATCH_SIZE) do |offset|
-      topics = all_topics[offset..offset+BATCH_SIZE-1]
+      topics = all_topics[offset..offset + BATCH_SIZE - 1]
       break if topics.nil?
 
-      next if all_records_exist? :posts, topics.map {|t| t[0]}
+      next if all_records_exist? :posts, topics.map { |t| t[0] }
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
         raw_email = t[5]
@@ -454,7 +454,7 @@ p    end
         raw = clean_raw(raw)
         raw = raw.dup.to_s
         raw.gsub!(/#{from_email}/, "@#{username}")
-        cleaned_email = from_email.dup.sub(/@/,' at ')
+        cleaned_email = from_email.dup.sub(/@/, ' at ')
         raw.gsub!(/#{cleaned_email}/, "@#{username}")
         { id: t[0],
           title: clean_title(title),
@@ -490,11 +490,11 @@ p    end
     puts "Replies: #{post_count}"
 
     batches(BATCH_SIZE) do |offset|
-      posts = replies[offset..offset+BATCH_SIZE-1]
+      posts = replies[offset..offset + BATCH_SIZE - 1]
       break if posts.nil?
       break if posts.count < 1
 
-      next if all_records_exist? :posts, posts.map {|p| p[0]}
+      next if all_records_exist? :posts, posts.map { |p| p[0] }
 
       create_posts(posts, total: post_count, offset: offset) do |p|
         parent_id = p[6]
@@ -521,7 +521,7 @@ p    end
         user_id = user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID
         raw = clean_raw(raw).to_s
         raw.gsub!(/#{from_email}/, "@#{username}")
-        cleaned_email = from_email.dup.sub(/@/,' at ')
+        cleaned_email = from_email.dup.sub(/@/, ' at ')
         raw.gsub!(/#{cleaned_email}/, "@#{username}")
         # import the attachments
         mail.attachments.each do |attachment|

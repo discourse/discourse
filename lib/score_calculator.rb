@@ -11,18 +11,17 @@ class ScoreCalculator
     }
   end
 
-  def initialize(weightings=nil)
+  def initialize(weightings = nil)
     @weightings = weightings || ScoreCalculator.default_score_weights
   end
 
   # Calculate the score for all posts based on the weightings
-  def calculate(opts=nil)
+  def calculate(opts = nil)
     update_posts_score(opts)
     update_posts_rank(opts)
     update_topics_rank(opts)
     update_topics_percent_rank(opts)
   end
-
 
   private
 
@@ -110,7 +109,6 @@ SQL
               posts_required: SiteSetting.summary_posts_required,
               score_required: SiteSetting.summary_score_threshold)
 
-
     filter_topics(builder, opts)
 
     builder.exec
@@ -130,7 +128,6 @@ SQL
 
     builder.exec
   end
-
 
   def filter_topics(builder, opts)
     return builder unless opts

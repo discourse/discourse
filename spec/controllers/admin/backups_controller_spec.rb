@@ -89,7 +89,6 @@ describe Admin::BackupsController do
 
           get :show, id: backup_filename, token: token
 
-
           expect(response.headers['Content-Length']).to eq("5")
           expect(response.headers['Content-Disposition']).to match(/attachment; filename/)
         ensure

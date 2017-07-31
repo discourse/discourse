@@ -1,13 +1,16 @@
 require 'rails_helper'
 
 describe ApplicationRequest do
-
   before do
     ApplicationRequest.clear_cache!
   end
 
-  def inc(key,opts=nil)
-    ApplicationRequest.increment!(key,opts)
+  after do
+    ApplicationRequest.clear_cache!
+  end
+
+  def inc(key, opts = nil)
+    ApplicationRequest.increment!(key, opts)
   end
 
   it 'logs nothing for an unflushed increment' do

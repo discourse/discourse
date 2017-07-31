@@ -54,11 +54,11 @@ end
 class Ember::Handlebars::Template
   include Discourse::Ember::Handlebars::Helper
 
-  def precompile_handlebars(string, input=nil)
+  def precompile_handlebars(string, input = nil)
     "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
   end
 
-  def compile_handlebars(string, input=nil)
+  def compile_handlebars(string, input = nil)
     "requirejs('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
   end
 

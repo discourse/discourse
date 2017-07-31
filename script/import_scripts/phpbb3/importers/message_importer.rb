@@ -17,7 +17,6 @@ module ImportScripts::PhpBB3
       rows.map { |row| get_import_id(row[:msg_id]) }
     end
 
-
     def map_message(row)
       user_id = @lookup.user_id_from_imported_user_id(row[:author_id]) || Discourse.system_user.id
       attachments = import_attachments(row, user_id)
@@ -54,7 +53,7 @@ module ImportScripts::PhpBB3
       mapped[:title] = get_topic_title(row)
       mapped[:archetype] = Archetype.private_message
       mapped[:target_usernames] = get_recipient_usernames(row)
-      mapped[:custom_fields] = {import_user_ids: current_user_ids.join(',')}
+      mapped[:custom_fields] = { import_user_ids: current_user_ids.join(',') }
 
       if mapped[:target_usernames].empty?
         puts "Private message without recipients. Skipping #{row[:msg_id]}: #{row[:message_subject][0..40]}"
@@ -127,7 +126,7 @@ module ImportScripts::PhpBB3
         .joins(:topic)
         .joins(:_custom_fields)
         .where(["LOWER(topics.title) IN (:titles) AND post_custom_fields.name = 'import_user_ids' AND post_custom_fields.value = :user_ids",
-                {titles: topic_titles, user_ids: current_user_ids.join(',')}])
+                { titles: topic_titles, user_ids: current_user_ids.join(',') }])
         .order('topics.created_at DESC')
         .first.try(:topic_id)
     end

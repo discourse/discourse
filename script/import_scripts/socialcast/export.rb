@@ -2,8 +2,8 @@ require 'yaml'
 require 'fileutils'
 require_relative 'socialcast_api'
 
-def load_config file
-    config = YAML::load_file(File.join(__dir__, file))
+def load_config(file)
+  config = YAML::load_file(File.join(__dir__, file))
     @domain = config['domain']
     @username = config['username']
     @password = config['password']
@@ -17,8 +17,8 @@ def export
   export_messages
 end
 
-def export_users(page=1)
-  users = @api.list_users({page: page})
+def export_users(page = 1)
+  users = @api.list_users(page: page)
   return if users.empty?
   users.each do |user|
     File.open("output/users/#{user['id']}.json", 'w') do |f|
@@ -30,8 +30,8 @@ def export_users(page=1)
   export_users page + 1
 end
 
-def export_messages(page=1)
-  messages = @api.list_messages({page: page})
+def export_messages(page = 1)
+  messages = @api.list_messages(page: page)
   return if messages.empty?
   messages.each do |message|
     File.open("output/messages/#{message['id']}.json", 'w') do |f|

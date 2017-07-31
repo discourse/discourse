@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 import { escapeExpression } from 'discourse/lib/utilities';
 
@@ -8,7 +8,7 @@ export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'],
 
   click(e) {
-    if ($(e.target).hasClass('fa-thumb-tack')) {
+    if ($(e.target).hasClass('d-icon-thumb-tack')) {
       const topic = this.get('topic');
 
       // only pin unpin for now

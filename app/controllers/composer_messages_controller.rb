@@ -11,7 +11,7 @@ class ComposerMessagesController < ApplicationController
     if params[:topic_id].present?
       topic = Topic.where(id: params[:topic_id]).first
       if guardian.can_see?(topic)
-        json[:extras] = {duplicate_lookup: TopicLink.duplicate_lookup(topic)}
+        json[:extras] = { duplicate_lookup: TopicLink.duplicate_lookup(topic) }
       end
     end
 

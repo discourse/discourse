@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Kunena < ImportScripts::Base
 
-  KUNENA_DB    = "kunena"
+  KUNENA_DB = "kunena"
 
   def initialize
     super
@@ -38,7 +38,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     @users = nil
 
     create_categories(@client.query("SELECT id, parent, name, description, ordering FROM jos_kunena_categories ORDER BY parent, id;")) do |c|
-      h = {id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i}
+      h = { id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i }
       if c['parent'].to_i > 0
         h[:parent_category_id] = category_id_from_imported_category_id(c['parent'])
       end
@@ -61,12 +61,12 @@ class ImportScripts::Kunena < ImportScripts::Base
     puts "fetching Joomla users data from mysql"
     results = @client.query("SELECT id, username, email, registerDate FROM jos_users;", cache_rows: false)
     results.each do |u|
-      next unless u['id'].to_i > 0 and u['username'].present? and u['email'].present?
-      username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0,User.username_length.end]
+      next unless u['id'].to_i > (0) && u['username'].present? && u['email'].present?
+      username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0, User.username_length.end]
       if username.length < User.username_length.first
         username = username * User.username_length.first
       end
-      @users[u['id'].to_i] = {id: u['id'].to_i, username: username, email: u['email'], created_at: u['registerDate']}
+      @users[u['id'].to_i] = { id: u['id'].to_i, username: username, email: u['email'], created_at: u['registerDate'] }
     end
 
     puts "fetching Kunena user data from mysql"
@@ -109,7 +109,7 @@ class ImportScripts::Kunena < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| p['id'].to_i}
+      next if all_records_exist? :posts, results.map { |p| p['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false

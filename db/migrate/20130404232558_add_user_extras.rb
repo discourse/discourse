@@ -7,7 +7,6 @@ class AddUserExtras < ActiveRecord::Migration
     add_column :users, :likes_received, :integer, null: false, default: 0
     add_column :users, :topic_reply_count, :integer, null: false, default: 0
 
-
     # NOTE: to keep migrations working through refactorings we avoid externalizing this stuff.
     #   even though a helper method may make sense
     execute <<SQL

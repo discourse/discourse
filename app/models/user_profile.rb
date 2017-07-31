@@ -19,7 +19,7 @@ class UserProfile < ActiveRecord::Base
 
   BAKED_VERSION = 1
 
-  def bio_excerpt(length=350, opts={})
+  def bio_excerpt(length = 350, opts = {})
     excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>$/, '')
     return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
@@ -63,11 +63,11 @@ class UserProfile < ActiveRecord::Base
   def self.rebake_old(limit)
     problems = []
     UserProfile.where('bio_cooked_version IS NULL OR bio_cooked_version < ?', BAKED_VERSION)
-        .limit(limit).each do |p|
+      .limit(limit).each do |p|
       begin
         p.rebake!
       rescue => e
-        problems << {profile: p, ex: e}
+        problems << { profile: p, ex: e }
       end
     end
     problems

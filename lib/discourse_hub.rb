@@ -5,7 +5,7 @@ module DiscourseHub
   STATS_FETCHED_AT_KEY = "stats_fetched_at"
 
   def self.version_check_payload
-    default_payload = { installed_version: Discourse::VERSION::STRING }.merge!(Discourse.git_branch == "unknown" ? {} : {branch: Discourse.git_branch})
+    default_payload = { installed_version: Discourse::VERSION::STRING }.merge!(Discourse.git_branch == "unknown" ? {} : { branch: Discourse.git_branch })
     default_payload.merge!(get_payload)
   end
 
@@ -23,23 +23,23 @@ module DiscourseHub
     SiteSetting.share_anonymized_statistics && stats_fetched_at < 7.days.ago ? About.fetch_cached_stats.symbolize_keys : {}
   end
 
-  def self.get(rel_url, params={})
+  def self.get(rel_url, params = {})
     singular_action :get, rel_url, params
   end
 
-  def self.post(rel_url, params={})
+  def self.post(rel_url, params = {})
     collection_action :post, rel_url, params
   end
 
-  def self.put(rel_url, params={})
+  def self.put(rel_url, params = {})
     collection_action :put, rel_url, params
   end
 
-  def self.delete(rel_url, params={})
+  def self.delete(rel_url, params = {})
     singular_action :delete, rel_url, params
   end
 
-  def self.singular_action(action, rel_url, params={})
+  def self.singular_action(action, rel_url, params = {})
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
       headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
@@ -48,7 +48,7 @@ module DiscourseHub
     ).body)
   end
 
-  def self.collection_action(action, rel_url, params={})
+  def self.collection_action(action, rel_url, params = {})
     JSON.parse(Excon.send(action,
       "#{hub_base_url}#{rel_url}",
       body: JSON[params],

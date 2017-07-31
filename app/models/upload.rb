@@ -30,7 +30,7 @@ class Upload < ActiveRecord::Base
     thumbnail(width, height).present?
   end
 
-  def create_thumbnail!(width, height, crop=false)
+  def create_thumbnail!(width, height, crop = false)
     return unless SiteSetting.create_thumbnails?
 
     opts = {
@@ -53,10 +53,6 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def extension
-    File.extname(original_filename)
-  end
-
   def self.generate_digest(path)
     Digest::SHA1.file(path).hexdigest
   end
@@ -75,7 +71,7 @@ class Upload < ActiveRecord::Base
     Upload.find_by(url: url)
   end
 
-  def self.migrate_to_new_scheme(limit=nil)
+  def self.migrate_to_new_scheme(limit = nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
@@ -109,9 +105,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          if FileHelper.is_image?(File.basename(path))
-            ImageOptim.new.optimize_image!(path)
-          end
+          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)

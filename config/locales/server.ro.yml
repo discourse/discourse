@@ -1799,26 +1799,6 @@ ro:
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
     visit_link_to_respond_pm: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
     posted_by: "Postat de %{username} pe data %{post_date}"
-    invited_to_private_message_body: |
-      %{username} te-a invitat la un mesaj
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} te-a invitat la o discuție
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}

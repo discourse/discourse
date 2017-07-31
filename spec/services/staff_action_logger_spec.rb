@@ -151,7 +151,7 @@ describe StaffActionLogger do
     end
 
     it "logs updated site customizations" do
-      old_json = ThemeSerializer.new(theme, root:false).to_json
+      old_json = ThemeSerializer.new(theme, root: false).to_json
 
       theme.set_field(target: :common, name: :scss, value: "body{margin: 10px;}")
 
@@ -160,7 +160,7 @@ describe StaffActionLogger do
       expect(log_record.previous_value).to be_present
 
       json = ::JSON.parse(log_record.new_value)
-      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1}])
+      expect(json['theme_fields']).to eq([{ "name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1 }])
     end
   end
 
@@ -178,7 +178,7 @@ describe StaffActionLogger do
       expect(log_record.new_value).to eq(nil)
       json = ::JSON.parse(log_record.previous_value)
 
-      expect(json['theme_fields']).to eq([{"name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1}])
+      expect(json['theme_fields']).to eq([{ "name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1 }])
     end
   end
 
@@ -278,11 +278,9 @@ describe StaffActionLogger do
     end
 
     it "creates the UserHistory record" do
-      logged = logger.log_custom('clicked_something', {
-        evil: 'trout',
-        clicked_on: 'thing',
-        topic_id: 1234
-      })
+      logged = logger.log_custom('clicked_something',         evil: 'trout',
+                                                              clicked_on: 'thing',
+                                                              topic_id: 1234)
       expect(logged).to be_valid
       expect(logged.details).to eq("evil: trout\nclicked_on: thing")
       expect(logged.action).to eq(UserHistory.actions[:custom_staff])
@@ -308,7 +306,7 @@ describe StaffActionLogger do
       category.update!(attributes)
 
       logger.log_category_settings_change(category, attributes,
-        { category_group.group_name => category_group.permission_type }
+        category_group.group_name => category_group.permission_type
       )
 
       expect(UserHistory.count).to eq(2)
@@ -331,7 +329,7 @@ describe StaffActionLogger do
       old_permission = category.permissions_params
       category.update!(attributes)
 
-      logger.log_category_settings_change(category, attributes.merge({ permissions: { "everyone" => 1 } }), old_permission)
+      logger.log_category_settings_change(category, attributes.merge(permissions: { "everyone" => 1 }), old_permission)
 
       expect(UserHistory.count).to eq(1)
       expect(UserHistory.find_by_subject('name').category).to eq(category)

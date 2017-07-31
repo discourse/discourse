@@ -164,7 +164,6 @@ class ImportScripts::Ning < ImportScripts::Base
     puts "", "Marked #{suspended} users as suspended."
   end
 
-
   def import_categories
     puts "", "Importing categories"
     create_categories((["Blog", "Pages", "Photos"] + @discussions_json.map { |d| d["category"] }).uniq.compact) do |name|
@@ -178,7 +177,6 @@ class ImportScripts::Ning < ImportScripts::Base
       end
     end
   end
-
 
   def import_discussions
     puts "", "Importing discussions"
@@ -200,7 +198,7 @@ class ImportScripts::Ning < ImportScripts::Base
     import_topics(@pages_json, "Pages")
   end
 
-  def import_topics(topics_json, default_category=nil)
+  def import_topics(topics_json, default_category = nil)
     topics = 0
     posts = 0
     total = topics_json.size # number of topics. posts are embedded in the topic json, so we can't get total post count quickly.
@@ -398,6 +396,6 @@ class ImportScripts::Ning < ImportScripts::Base
   end
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::Ning.new.perform
 end

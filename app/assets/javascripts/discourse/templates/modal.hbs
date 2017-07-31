@@ -1,10 +1,10 @@
-{{#d-modal modalClass=modalClass title=title}}
+{{#d-modal modalClass=modalClass title=title class="hidden"}}
   <div class="modal-outer-container">
     <div class="modal-middle-container">
       <div class="modal-inner-container">
         <div class="modal-header">
           <div class='modal-close'>
-            <a class="close" {{action "closeModal"}}>{{fa-icon "times"}}</a>
+            <a class="close" {{action "closeModal"}}>{{d-icon "times"}}</a>
           </div>
 
           <h3>{{title}}</h3>

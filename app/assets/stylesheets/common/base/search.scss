@@ -108,7 +108,7 @@
   }
 
   .search-advanced-options {
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border: 1px solid $primary-low; 
     padding: 10px;
 
     .control-group.pull-left {
@@ -147,7 +147,7 @@
   }
   margin: 10px 0 15px;
   max-width: 780px;
-  border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  border-bottom: 3px solid $primary-low; 
   width: 100%;
   .sort-by {
     .desc {

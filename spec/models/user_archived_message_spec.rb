@@ -7,7 +7,7 @@ describe UserArchivedMessage do
 
     topic = create_post(user: user,
                         skip_validations: true,
-                        target_usernames: [user2.username,user.username].join(","),
+                        target_usernames: [user2.username, user.username].join(","),
                         archetype: Archetype.private_message).topic
 
     UserArchivedMessage.archive!(user.id, topic.id)
@@ -18,4 +18,3 @@ describe UserArchivedMessage do
     expect(topic.message_archived?(user)).to eq(true)
   end
 end
-

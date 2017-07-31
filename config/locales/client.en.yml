@@ -409,7 +409,8 @@ en:
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       name_placeholder: "Group name, no spaces, same as username rule"
-      public: "Allow users to join/leave the group freely (Requires publicly visible group)"
+      public_admission: "Allow users to join the group freely (Requires publicly visible group)"
+      public_exit: "Allow users to leave the group freely"
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
@@ -421,6 +422,7 @@ en:
       join: "Join Group"
       leave: "Leave Group"
       request: "Request to Join Group"
+      message: "Message"
       automatic_group: Automatic Group
       closed_group: Closed Group
       is_group_user: "You are a member of this group"
@@ -1134,6 +1136,24 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    emoji_picker:
+      filter_placeholder: Search for emoji
+      people: People
+      nature: Nature
+      food: Food
+      activity: Activity
+      travel: Travel
+      objects: Objects
+      celebration: Celebration
+      custom: Custom emojis
+      recent: Recently used
+      default_tone: No skin tone
+      light_tone: Light skin tone
+      medium_light_tone: Medium light skin tone
+      medium_tone: Medium skin tone
+      medium_dark_tone: Medium dark skin tone
+      dark_tone: Dark skin tone
+
     composer:
       emoji: "Emoji :)"
       more_emoji: "more..."
@@ -1313,8 +1333,8 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "1 result for <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} results for <span class='term'>\"{{term}}\"</span>"
+        one: "1 result for <span class='term'>{{term}}</span>"
+        other: "{{count}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -1355,6 +1375,7 @@ en:
           seen: I've read
           unseen: I've not read
           wiki: are wiki
+          images: includes image(s)
           all_tags: Contains all tags
         statuses:
           label: Where topics
@@ -3130,6 +3151,31 @@ en:
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         logster:
           title: "Error Logs"
+
+      watched_words:
+        title: "Watched Words"
+        search: "search"
+        clear_filter: "Clear"
+        show_words: "show words"
+        word_count:
+          one: "1 word"
+          other: "%{count} words"
+        actions:
+          block: 'Block'
+          censor: 'Censor'
+          require_approval: 'Require Approval'
+          flag: 'Flag'
+        action_descriptions:
+          block: 'Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post.'
+          censor: 'Allow posts containing these words, but replace them with characters that hide the censored words.'
+          require_approval: 'Posts containing these words will require approval by staff before they can be seen.'
+          flag: 'Allow posts containing these words, but flag them as inappropriate so moderators can review them.'
+        form:
+          label: 'New Word:'
+          add: 'Add'
+          success: 'Success'
+          upload: "Upload"
+          upload_successful: "Upload successful. Words have been added."
 
       impersonate:
         title: "Impersonate"

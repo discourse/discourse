@@ -95,14 +95,14 @@ function invalidPoll(state, tag) {
 const rule = {
   tag: 'poll',
 
-  before: function(state, attrs, md, raw){
+  before: function(state, tagInfo, raw){
     let token = state.push('text', '', 0);
     token.content = raw;
-    token.bbcode_attrs = attrs;
+    token.bbcode_attrs = tagInfo.attrs;
     token.bbcode_type = 'poll_open';
   },
 
-  after: function(state, openToken, md, raw) {
+  after: function(state, openToken, raw) {
 
     let items = getListItems(state.tokens, openToken);
     if (!items) {
@@ -113,7 +113,10 @@ const rule = {
 
     // default poll attributes
     const attributes = [["class", "poll"]];
-    attributes.push([DATA_PREFIX + "status", "open"]);
+
+    if (!attrs['status']) {
+      attributes.push([DATA_PREFIX + "status", "open"]);
+    }
 
     WHITELISTED_ATTRIBUTES.forEach(name => {
       if (attrs[name]) {
@@ -150,7 +153,7 @@ const rule = {
     if (attrs["type"] === "number") {
       // default values
       if (isNaN(min)) { min = 1; }
-      if (isNaN(max)) { max = md.options.discourse.pollMaximumOptions; }
+      if (isNaN(max)) { max = state.md.options.discourse.pollMaximumOptions; }
       if (isNaN(step)) { step = 1; }
 
       if (items.length > 0) {

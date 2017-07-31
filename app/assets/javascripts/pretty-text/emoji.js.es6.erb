@@ -1,7 +1,7 @@
 import { emojis, aliases, translations, tonableEmojis } from 'pretty-text/emoji/data';
 
 // bump up this number to expire all emojis
-export const IMAGE_VERSION = "5";
+export const IMAGE_VERSION = "<%= Emoji::EMOJI_VERSION %>";
 
 const extendedEmoji = {};
 
@@ -10,10 +10,8 @@ export function registerEmoji(code, url) {
   extendedEmoji[code] = url;
 }
 
-export function emojiList() {
-  const result = emojis.slice(0);
-  _.each(extendedEmoji, (v,k) => result.push(k));
-  return result;
+export function extendedEmojiList() {
+  return extendedEmoji;
 }
 
 const emojiHash = {};
@@ -54,8 +52,7 @@ export function isCustomEmoji(code, opts) {
 
 export function buildEmojiUrl(code, opts) {
   let url;
-  code = code.toLowerCase();
-
+  code = String(code).toLowerCase();
   if (extendedEmoji.hasOwnProperty(code)) {
     url = extendedEmoji[code];
   }
@@ -116,10 +113,9 @@ export function emojiSearch(term, options) {
 };
 
 export function isSkinTonableEmoji(term) {
-  let match = term.match(/^:?(.*?):?$/);
+  const match = _.compact(term.split(":"))[0];
   if (match) {
-    return tonableEmojis.indexOf(match[1]) !== -1;
-  } else {
-    return tonableEmojis.indexOf(term) !== -1;
+    return tonableEmojis.indexOf(match) !== -1;
   }
+  return false;
 }

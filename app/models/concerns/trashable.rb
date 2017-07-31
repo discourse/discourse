@@ -8,7 +8,6 @@ module Trashable
     belongs_to :deleted_by, class_name: 'User'
   end
 
-
   module ClassMethods
     def with_deleted
       # lifted from acts_as_paranoid, works around https://github.com/rails/rails/issues/4306
@@ -30,7 +29,7 @@ module Trashable
     deleted_at.present?
   end
 
-  def trash!(trashed_by=nil)
+  def trash!(trashed_by = nil)
     # note, an argument could be made that the column should probably called trashed_at
     # however, deleted_at is the terminology used in the UI
     #
@@ -43,7 +42,6 @@ module Trashable
   def recover!
     trash_update(nil, nil)
   end
-
 
   private
 

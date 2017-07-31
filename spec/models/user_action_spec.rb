@@ -23,7 +23,7 @@ describe UserAction do
       topic
     end
 
-    def log_test_action(opts={})
+    def log_test_action(opts = {})
       UserAction.log_action!({
         action_type: UserAction::NEW_PRIVATE_MESSAGE,
         user_id: user.id,
@@ -41,11 +41,11 @@ describe UserAction do
       log_test_action(action_type: UserAction::BOOKMARK)
     end
 
-    def stats_for_user(viewer=nil)
-      UserAction.stats(user.id, Guardian.new(viewer)).map{|r| r["action_type"].to_i}.sort
+    def stats_for_user(viewer = nil)
+      UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r["action_type"].to_i }.sort
     end
 
-    def stream_count(viewer=nil)
+    def stream_count(viewer = nil)
       UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer)).count
     end
 
@@ -94,7 +94,7 @@ describe UserAction do
       # recategorize belongs to the right user
       category2 = Fabricate(:category)
       admin = Fabricate(:admin)
-      public_post.revise(admin, { category_id: category2.id})
+      public_post.revise(admin, category_id: category2.id)
 
       action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
       expect(action.acting_user_id).to eq(admin.id)
@@ -198,7 +198,6 @@ describe UserAction do
       expect(@post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
     end
 
-
     describe 'when another user posts on the topic' do
       before do
         @other_user = Fabricate(:coding_horror)
@@ -254,7 +253,7 @@ describe UserAction do
     end
 
     let(:private_message) do
-      PostCreator.create( user,
+      PostCreator.create(user,
                           raw: 'this is a private message',
                           title: 'this is the pm title',
                           target_usernames: user2.username,

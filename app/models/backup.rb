@@ -10,9 +10,9 @@ class Backup
 
   def self.all
     Dir.glob(File.join(Backup.base_directory, "*.{gz,tgz}"))
-       .sort_by { |file| File.mtime(file) }
-       .reverse
-       .map { |backup| Backup.create_from_filename(File.basename(backup)) }
+      .sort_by { |file| File.mtime(file) }
+      .reverse
+      .map { |backup| Backup.create_from_filename(File.basename(backup)) }
   end
 
   def self.[](filename)

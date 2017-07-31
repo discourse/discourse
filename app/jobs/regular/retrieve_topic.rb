@@ -19,5 +19,3 @@ module Jobs
   end
 
 end
-
-

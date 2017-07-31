@@ -218,7 +218,7 @@ class CategoriesController < ApplicationController
         end
 
         if p = params[:permissions]
-          p.each do |k,v|
+          p.each do |k, v|
             p[k] = v.to_i
           end
         end
@@ -250,10 +250,10 @@ class CategoriesController < ApplicationController
                         :default_view,
                         :subcategory_list_style,
                         :default_top_period,
-                        :custom_fields => [params[:custom_fields].try(:keys)],
-                        :permissions => [*p.try(:keys)],
-                        :allowed_tags => [],
-                        :allowed_tag_groups => [])
+                        custom_fields: [params[:custom_fields].try(:keys)],
+                        permissions: [*p.try(:keys)],
+                        allowed_tags: [],
+                        allowed_tag_groups: [])
       end
     end
 
@@ -265,7 +265,7 @@ class CategoriesController < ApplicationController
       @staff_action_logger = StaffActionLogger.new(current_user)
     end
 
-    def include_topics(parent_category=nil)
+    def include_topics(parent_category = nil)
       view_context.mobile_view? ||
       params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||

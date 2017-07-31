@@ -102,7 +102,7 @@ describe Plugin::Instance do
       junk_file = "#{plugin.auto_generated_path}/junk"
 
       plugin.ensure_directory(junk_file)
-      File.open("#{plugin.auto_generated_path}/junk", "w") {|f| f.write("junk")}
+      File.open("#{plugin.auto_generated_path}/junk", "w") { |f| f.write("junk") }
       plugin.activate!
 
       expect(plugin.auth_providers.count).to eq(1)
@@ -160,32 +160,11 @@ describe Plugin::Instance do
     end
   end
 
-  context "themes" do
-    it "can register a theme" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_theme('plugin') do |theme|
-        theme.set_color_scheme(
-          primary: 'ffff00',
-          secondary: '222222',
-          tertiary: '0f82af',
-          quaternary: 'c14924',
-          header_background: '111111',
-          header_primary: '333333',
-          highlight: 'a87137',
-          danger: 'e45735',
-          success: '1ca551',
-          love: 'fa6c8d'
-        )
-      end
-      expect(plugin.themes).to be_present
-    end
-  end
-
   context "register_color_scheme" do
     it "can add a color scheme for the first time" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       expect {
-        plugin.register_color_scheme("Purple", {primary: 'EEE0E5'})
+        plugin.register_color_scheme("Purple", primary: 'EEE0E5')
         plugin.notify_after_initialize
       }.to change { ColorScheme.count }.by(1)
       expect(ColorScheme.where(name: "Purple")).to be_present
@@ -195,7 +174,7 @@ describe Plugin::Instance do
       Fabricate(:color_scheme, name: "Halloween")
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       expect {
-        plugin.register_color_scheme("Halloween", {primary: 'EEE0E5'})
+        plugin.register_color_scheme("Halloween", primary: 'EEE0E5')
         plugin.notify_after_initialize
       }.to_not change { ColorScheme.count }
     end

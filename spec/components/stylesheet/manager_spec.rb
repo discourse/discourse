@@ -28,7 +28,6 @@ describe Stylesheet::Manager do
 
     theme.save!
 
-
     child_theme = Theme.new(
       name: 'parent',
       user_id: -1,
@@ -55,7 +54,6 @@ describe Stylesheet::Manager do
     expect(css).to match(/\.common/)
     expect(css).to match(/\.desktop/)
 
-
     child_theme.set_field(target: :desktop, name: :scss, value: ".nothing{color: green;}")
     child_theme.save!
 
@@ -67,4 +65,3 @@ describe Stylesheet::Manager do
     expect(new_link).to include("/stylesheets/desktop_theme_#{theme.id}_")
   end
 end
-

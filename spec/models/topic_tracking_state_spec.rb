@@ -39,7 +39,6 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
-
   it "correctly handles capping" do
     user = Fabricate(:user)
 

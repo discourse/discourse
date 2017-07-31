@@ -19,7 +19,11 @@ export function buildOptions(state) {
     getCurrentUser,
     currentUser,
     lookupAvatarByPostNumber,
-    emojiUnicodeReplacer
+    emojiUnicodeReplacer,
+    lookupInlineOnebox,
+    previewing,
+    linkify,
+    censoredWords
   } = state;
 
   let features = {
@@ -31,6 +35,7 @@ export function buildOptions(state) {
     'html': true,
     'category-hashtag': true,
     'onebox': true,
+    'linkify': linkify !== false,
     'newline': !siteSettings.traditional_markdown_linebreaks
   };
 
@@ -52,8 +57,11 @@ export function buildOptions(state) {
     lookupAvatarByPostNumber,
     mentionLookup: state.mentionLookup,
     emojiUnicodeReplacer,
+    lookupInlineOnebox,
+    censoredWords,
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
-    markdownIt: true
+    markdownIt: true,
+    previewing
   };
 
   // note, this will mutate options due to the way the API is designed

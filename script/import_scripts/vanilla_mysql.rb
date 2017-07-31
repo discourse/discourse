@@ -54,7 +54,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     username = nil
     @last_user_id = -1
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}User;").first['count']
-    
+
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
         "SELECT UserID, Name, Title, Location, About, Email,
@@ -66,7 +66,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
       break if results.size < 1
       @last_user_id = results.to_a.last['UserID']
-      next if all_records_exist? :users, results.map {|u| u['UserID'].to_i}
+      next if all_records_exist? :users, results.map { |u| u['UserID'].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
@@ -197,9 +197,9 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     tag_names_sql = "select t.name as tag_name from GDN_Tag t, GDN_TagDiscussion td where t.tagid = td.tagid and td.discussionid = {discussionid} and t.name != '';"
 
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Discussion;").first['count']
-    
+
     @last_topic_id = -1
-    
+
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
         "SELECT DiscussionID, CategoryID, Name, Body,
@@ -211,7 +211,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
       break if discussions.size < 1
       @last_topic_id = discussions.to_a.last['DiscussionID']
-      next if all_records_exist? :posts, discussions.map {|t| "discussion#" + t['DiscussionID'].to_s}
+      next if all_records_exist? :posts, discussions.map { |t| "discussion#" + t['DiscussionID'].to_s }
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
         {
@@ -223,7 +223,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           created_at: Time.zone.at(discussion['DateInserted']),
           post_create_action: proc do |post|
             if @import_tags
-              tag_names = @client.query(tag_names_sql.gsub('{discussionid}', discussion['DiscussionID'].to_s)).map {|row| row['tag_name']}
+              tag_names = @client.query(tag_names_sql.gsub('{discussionid}', discussion['DiscussionID'].to_s)).map { |row| row['tag_name'] }
               DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
             end
           end
@@ -248,7 +248,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
       break if comments.size < 1
       @last_post_id = comments.to_a.last['CommentID']
-      next if all_records_exist? :posts, comments.map {|comment| "comment#" + comment['CommentID'].to_s}
+      next if all_records_exist? :posts, comments.map { |comment| "comment#" + comment['CommentID'].to_s }
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
@@ -272,15 +272,15 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n")
-             .gsub("\\t", "\t")
+      .gsub("\\t", "\t")
 
     # [HTML]...[/HTML]
     raw = raw.gsub(/\[html\]/i, "\n```html\n")
-             .gsub(/\[\/html\]/i, "\n```\n")
+      .gsub(/\[\/html\]/i, "\n```\n")
 
     # [PHP]...[/PHP]
     raw = raw.gsub(/\[php\]/i, "\n```php\n")
-             .gsub(/\[\/php\]/i, "\n```\n")
+      .gsub(/\[\/php\]/i, "\n```\n")
 
     # [HIGHLIGHT="..."]
     raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
@@ -288,7 +288,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     # [CODE]...[/CODE]
     # [HIGHLIGHT]...[/HIGHLIGHT]
     raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-             .gsub(/\[\/?highlight\]/i, "\n```\n")
+      .gsub(/\[\/?highlight\]/i, "\n```\n")
 
     # [SAMP]...[/SAMP]
     raw.gsub!(/\[\/?samp\]/i, "`")
@@ -299,12 +299,12 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       #  - AFTER all the "code" processing
       #  - BEFORE the "quote" processing
       raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-               .gsub("<", "&lt;")
-               .gsub("\u2603", "<")
+        .gsub("<", "&lt;")
+        .gsub("\u2603", "<")
 
       raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-               .gsub(">", "&gt;")
-               .gsub("\u2603", ">")
+        .gsub(">", "&gt;")
+        .gsub("\u2603", ">")
     end
 
     # [URL=...]...[/URL]
@@ -316,7 +316,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     # [URL]...[/URL]
     # [MP3]...[/MP3]
     raw = raw.gsub(/\[\/?url\]/i, "")
-             .gsub(/\[\/?mp3\]/i, "")
+      .gsub(/\[\/?mp3\]/i, "")
 
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n> #{$1}\n" }
@@ -366,7 +366,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+        Permalink.create(url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}") rescue nil
         print '.'
       end
     end
@@ -378,9 +378,9 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         id = pcf["import_id"].split('#').last
         if post.post_number == 1
           slug = Slug.for(topic.title) # probably matches what vanilla would do...
-          Permalink.create( url: "discussion/#{id}/#{slug}", topic_id: topic.id ) rescue nil
+          Permalink.create(url: "discussion/#{id}/#{slug}", topic_id: topic.id) rescue nil
         else
-          Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
+          Permalink.create(url: "discussion/comment/#{id}", post_id: post.id) rescue nil
         end
         print '.'
       end
@@ -388,6 +388,5 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   end
 
 end
-
 
 ImportScripts::VanillaSQL.new.perform

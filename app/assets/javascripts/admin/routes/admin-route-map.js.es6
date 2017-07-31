@@ -90,5 +90,10 @@ export default function() {
     this.route('adminPlugins', { path: '/plugins', resetNamespace: true }, function() {
       this.route('index', { path: '/' });
     });
+
+    this.route('adminWatchedWords', { path: '/watched_words', resetNamespace: true}, function() {
+      this.route('index', { path: '/' } );
+      this.route('action', { path: '/action/:action_id' } );
+    });
   });
 };

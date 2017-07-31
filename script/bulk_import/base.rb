@@ -10,7 +10,7 @@ module BulkImport; end
 class BulkImport::Base
 
   NOW ||= "now()".freeze
-  PRIVATE_OFFSET ||= 2 ** 30
+  PRIVATE_OFFSET ||= 2**30
 
   def initialize
     db = ActiveRecord::Base.connection_config
@@ -93,7 +93,8 @@ class BulkImport::Base
 
     puts "Loading users indexes..."
     @last_user_id = User.unscoped.maximum(:id)
-    @emails = User.unscoped.pluck(:email).to_set
+    @last_user_email_id = UserEmail.unscoped.maximum(:id)
+    @emails = User.unscoped.joins(:user_emails).pluck(:"user_emails.email").to_set
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @mapped_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("user_custom_fields.value", "users.username").to_h
 
@@ -119,6 +120,7 @@ class BulkImport::Base
     puts "Updating primary key sequences..."
     @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
     @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
+    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
     @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
     @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
     @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
@@ -138,9 +140,20 @@ class BulkImport::Base
   }
 
   USER_COLUMNS ||= %i{
-    id username username_lower name email active trust_level admin moderator
+    id username username_lower name active trust_level admin moderator
     date_of_birth ip_address registration_ip_address primary_group_id
     suspended_at suspended_till last_emailed_at created_at updated_at
+  }
+
+  USER_EMAIL_COLUMNS ||= %i{
+    id user_id email primary created_at updated_at
+  }
+
+  USER_STAT_COLUMNS ||= %i{
+    user_id topics_entered time_read days_visited posts_read_count
+    likes_given likes_received topic_reply_count new_since read_faq
+    first_post_created_at post_count topic_count bounce_score
+    reset_bounce_score_after
   }
 
   USER_PROFILE_COLUMNS ||= %i{
@@ -163,7 +176,7 @@ class BulkImport::Base
 
   POST_COLUMNS ||= %i{
     id user_id last_editor_id topic_id post_number sort_order reply_to_post_number
-    raw cooked hidden word_count created_at last_version_at updated_at
+    like_count raw cooked hidden word_count created_at last_version_at updated_at
   }
 
   TOPIC_ALLOWED_USER_COLUMNS ||= %i{
@@ -185,6 +198,8 @@ class BulkImport::Base
     end
   end
 
+  def create_user_emails(rows, &block) create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block); end
+  def create_user_stats(rows, &block) create_records(rows, "user_stat", USER_STAT_COLUMNS, &block); end
   def create_user_profiles(rows, &block); create_records(rows, "user_profile", USER_PROFILE_COLUMNS, &block); end
   def create_group_users(rows, &block); create_records(rows, "group_user", GROUP_USER_COLUMNS, &block); end
   def create_categories(rows, &block); create_records(rows, "category", CATEGORY_COLUMNS, &block); end
@@ -246,6 +261,38 @@ class BulkImport::Base
     user
   end
 
+  def process_user_email(user_email)
+    user_email[:id] = @last_user_email_id += 1;
+    user_email[:user_id] = @users[user_email[:imported_user_id].to_s]
+    user_email[:primary] = true
+    user_email[:created_at] ||= NOW
+    user_email[:updated_at] ||= user_email[:created_at]
+    user_email[:email] ||= random_email
+    user_email[:email].downcase!
+
+    # unique email
+    user_email[:email] = random_email until user_email[:email] =~ EmailValidator.email_regex && @emails.add?(user_email[:email])
+
+    user_email
+  end
+
+  def process_user_stat(user_stat)
+    user_stat[:user_id] = @users[user_stat[:imported_user_id].to_s]
+    user_stat[:topic_reply_count] = user_stat[:post_count] - user_stat[:topic_count]
+    user_stat[:topics_entered] ||= 0
+    user_stat[:time_read] ||= 0
+    user_stat[:days_visited] ||= 0
+    user_stat[:posts_read_count] ||= 0
+    user_stat[:likes_given] ||= 0
+    user_stat[:likes_received] ||= 0
+    user_stat[:topic_reply_count] ||= 0
+    user_stat[:new_since] ||= NOW
+    user_stat[:post_count] ||= 0
+    user_stat[:topic_count] ||= 0
+    user_stat[:bounce_score] ||= 0
+    user_stat
+  end
+
   def process_user_profile(user_profile)
     user_profile[:bio_raw]    = (user_profile[:bio_raw].presence || "").scrub.strip.presence
     user_profile[:bio_cooked] = pre_cook(user_profile[:bio_raw]) if user_profile[:bio_raw].present?
@@ -259,7 +306,8 @@ class BulkImport::Base
   end
 
   def process_category(category)
-    @categories[category[:imported_id].to_s] = category[:id] = @last_category_id += 1
+    category[:id] ||= @last_category_id += 1
+    @categories[category[:imported_id].to_s] ||= category[:id]
     category[:name] = category[:name][0...50].scrub.strip
     # TODO: unique name
     category[:name_lower] = category[:name].downcase
@@ -300,6 +348,7 @@ class BulkImport::Base
     @topic_id_by_post_id[post[:id]] = post[:topic_id]
     post[:raw] = (post[:raw] || "").scrub.strip.presence || "<Empty imported post>"
     post[:raw] = process_raw post[:raw]
+    post[:like_count] ||= 0
     post[:cooked] = pre_cook post[:raw]
     post[:hidden] ||= false
     post[:word_count] = post[:raw].scan(/[[:word:]]+/).size
@@ -428,17 +477,17 @@ class BulkImport::Base
 
   def create_records(rows, name, columns)
     start = Time.now
-
     imported_ids = []
     process_method_name = "process_#{name}"
-    sql = "COPY #{name.pluralize} (#{columns.join(",")}) FROM STDIN"
+    sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
         mapped = yield(row)
         next unless mapped
         processed = send(process_method_name, mapped)
-        imported_ids << mapped[:imported_id]
+        imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+        imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
         @raw_connection.put_copy_data columns.map { |c| processed[c] }
         print "\r%7d - %6d/sec".freeze % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
       end
@@ -492,7 +541,18 @@ class BulkImport::Base
   end
 
   def pre_cook(raw)
-    cooked = @markdown.render(raw).scrub.strip
+    cooked = raw
+
+    # Convert YouTube URLs to lazyYT DOMs before being transformed into links
+    cooked.gsub!(/\nhttps\:\/\/www.youtube.com\/watch\?v=(\w+)\n/) do
+      video_id = $1
+      result = <<-HTML
+        <div class="lazyYT" data-youtube-id="#{video_id}" data-width="480" data-height="270" data-parameters="feature=oembed&amp;wmode=opaque"></div>
+      HTML
+      result.strip
+    end
+
+    cooked = @markdown.render(cooked).scrub.strip
 
     cooked.gsub!(/\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[\/QUOTE\]/im) do
       username, post_id, topic_id = $1, $2, $3

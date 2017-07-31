@@ -7,7 +7,7 @@ class PluginStore
   end
 
   def self.set(plugin_name, key, value)
-    hash = {plugin_name: plugin_name, key: key}
+    hash = { plugin_name: plugin_name, key: key }
     row = PluginStoreRow.find_by(hash) || PluginStoreRow.new(hash)
 
     row.type_name = determine_type(value)
@@ -34,7 +34,7 @@ class PluginStore
     if item.is_a? Hash
       ActiveSupport::HashWithIndifferentAccess.new item
     elsif item.is_a? Array
-      item.map { |subitem| map_json subitem}
+      item.map { |subitem| map_json subitem }
     else
       item
     end

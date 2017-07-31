@@ -4,7 +4,7 @@ class UsernameCheckerService
     if username && username.length > 0
       validator = UsernameValidator.new(username)
       if !validator.valid_format?
-        {errors: validator.errors}
+        { errors: validator.errors }
       else
         check_username_availability(username, email)
       end
@@ -22,7 +22,6 @@ class UsernameCheckerService
   def is_developer?(value)
     Rails.configuration.respond_to?(:developer_emails) && Rails.configuration.developer_emails.include?(value)
   end
-
 
   def self.is_developer?(email)
     UsernameCheckerService.new.is_developer?(email)

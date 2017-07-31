@@ -29,7 +29,6 @@ class Admin::ColorSchemesController < Admin::AdminController
     render json: success_json
   end
 
-
   private
 
   def fetch_color_scheme

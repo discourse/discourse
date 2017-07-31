@@ -52,7 +52,7 @@ describe Admin::WebHooksController do
     describe '#ping' do
       it 'enqueues the ping event' do
         Jobs.expects(:enqueue)
-            .with(:emit_web_hook_event, web_hook_id: web_hook.id, event_type: 'ping', event_name: 'ping')
+          .with(:emit_web_hook_event, web_hook_id: web_hook.id, event_type: 'ping', event_name: 'ping')
         xhr :post, :ping, id: web_hook.id
 
         expect(response).to be_success

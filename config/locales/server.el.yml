@@ -1449,43 +1449,9 @@ el:
   invite_mailer:
     title: "Προσκάλεσε τον αποστολέα"
     subject_template: "%{invitee_name} σε προσκάλεσε σε '%{topic_title}' πάνω σε %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
-
-      Εάν σε ενδιαφέρει, κάνε κλικ στο σύνδεσμο παρακάτω:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Προσαρμοσμένη Πρόσκληση Ταχυδρομείου"
     subject_template: "%{invitee_name} σε προσκάλεσε στο %{topic_title}' του %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
-
-      Με αυτή τη σημείωση
-
-      > %{user_custom_message}
-
-      Εάν σε ενδιαφέρει, κάνε κλικ στο σύνδεσμο παρακάτω:
-
-      %{invite_link}
-
-      Αυτή η πρόσκληση προέρχεται από έμπιστο χρήστη, επομένως ένας λογαριασμός θα δημιουργηθεί αυτόματα για εσένα χρησιμοποιώντας αυτή τη διεύθυνση ηλεκτρονικού ταχυδρομείου.
   invite_forum_mailer:
     title: "Προσκαλέστε τον Μέιλερ του Φόρουμ"
     subject_template: "%{invitee_name} σε προσκάλεσε να συμμετέχεις στο %{site_domain_name}"
@@ -1941,26 +1907,6 @@ el:
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) για να αποκριθείς."
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) για να αποκριθείς."
     posted_by: "Δημοσιεύθηκε από %{username} στις %{post_date}"
-    invited_to_private_message_body: |
-      %{username} σας προσκάλεσε σε ένα μήνυμα
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στο
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Ο χρήστης προσκλήθηκε σε προσωπικό μήνυμα"
       text_body_template: |

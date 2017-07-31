@@ -1,5 +1,5 @@
-function addMention(buffer, match, state) {
-  let username = match.slice(1);
+function addMention(buffer, matches, state) {
+  let username = matches[1] || matches[2];
   let mentionLookup = state.md.options.discourse.mentionLookup;
   let getURL = state.md.options.discourse.getURL;
 
@@ -39,7 +39,7 @@ export function setup(helper) {
   helper.registerPlugin(md => {
 
     const rule = {
-      matcher: /@\w[\w.-]{0,59}/,
+      matcher: /@(\w[\w.-]{0,58}\w)|@(\w)/,
       onMatch: addMention
     };
 

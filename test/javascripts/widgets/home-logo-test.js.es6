@@ -66,7 +66,7 @@ widgetTest('no logo - minimized', {
   },
 
   test(assert) {
-    assert.ok(this.$('i.fa-home').length === 1);
+    assert.ok(this.$('.d-icon-home').length === 1);
   }
 });
 

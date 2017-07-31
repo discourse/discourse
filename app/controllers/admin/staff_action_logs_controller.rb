@@ -6,7 +6,7 @@ class Admin::StaffActionLogsController < Admin::AdminController
     staff_action_logs = UserHistory.staff_action_records(current_user, filters).to_a
     render json: StaffActionLogsSerializer.new({
       staff_action_logs: staff_action_logs,
-      user_history_actions: UserHistory.staff_actions.sort.map{|name| {id: UserHistory.actions[name], name: name}}
+      user_history_actions: UserHistory.staff_actions.sort.map { |name| { id: UserHistory.actions[name], name: name } }
     }, root: false)
   end
 
@@ -46,20 +46,18 @@ class Admin::StaffActionLogsController < Admin::AdminController
       cur: child_themes(cur)
     }
 
-
     load_diff(diff_fields, :cur, cur)
     load_diff(diff_fields, :prev, prev)
 
-    diff_fields.delete_if{|k,v| v[:cur] == v[:prev]}
+    diff_fields.delete_if { |k, v| v[:cur] == v[:prev] }
 
-
-    diff_fields.each do |k,v|
+    diff_fields.each do |k, v|
       output << "<h3>#{k}</h3><p></p>"
       diff = DiscourseDiff.new(v[:prev] || "", v[:cur] || "")
       output << diff.side_by_side_markdown
     end
 
-    render json: {side_by_side: output}
+    render json: { side_by_side: output }
   end
 
   protected
@@ -67,11 +65,11 @@ class Admin::StaffActionLogsController < Admin::AdminController
   def child_themes(theme)
     return "" unless children = theme["child_themes"]
 
-    children.map{|row| row["name"]}.join(" ").to_s
+    children.map { |row| row["name"] }.join(" ").to_s
   end
 
   def load_diff(hash, key, val)
-    if f=val["theme_fields"]
+    if f = val["theme_fields"]
       f.each do |row|
         entry = hash[row["target"] + " " + row["name"]] ||= {}
         entry[key] = row["value"]

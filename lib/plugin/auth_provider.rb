@@ -12,7 +12,7 @@ class Plugin::AuthProvider
   end
 
   def to_json
-    result = {name: name}
+    result = { name: name }
     result['customUrl'] = custom_url if custom_url
     result['titleOverride'] = title if title
     result['titleSetting'] = title_setting if title_setting

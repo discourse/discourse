@@ -14,4 +14,3 @@ module ImportScripts
     Importer.new(@settings).perform
   end
 end
-

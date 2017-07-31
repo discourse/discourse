@@ -167,7 +167,6 @@ export function setup(helper) {
     ruler.push('url', {
       tag: 'url',
       wrap: function(startToken, endToken, tagInfo, content) {
-
         const url = (tagInfo.attrs['_default'] || content).trim();
 
         if (simpleUrlRegex.test(url)) {

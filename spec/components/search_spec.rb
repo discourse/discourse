@@ -166,12 +166,10 @@ describe Search do
     let(:reply) { Fabricate(:post, topic: topic,
                                    raw: 'hello from mars, we just landed') }
 
-
-
     it 'searches correctly' do
 
       expect do
-       Search.execute('mars', type_filter: 'private_messages')
+        Search.execute('mars', type_filter: 'private_messages')
       end.to raise_error(Discourse::InvalidAccess)
 
       TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
@@ -182,7 +180,6 @@ describe Search do
                               guardian: Guardian.new(reply.user))
 
       expect(results.posts.length).to eq(1)
-
 
       results = Search.execute('mars',
                               search_context: topic,
@@ -199,7 +196,6 @@ describe Search do
 
       Fabricate(:topic, category_id: nil, archetype: 'private_message')
       Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
-
 
       # admin can search everything with correct context
       results = Search.execute('mars',
@@ -235,8 +231,7 @@ describe Search do
 
   context 'topics' do
     let(:post) { Fabricate(:post) }
-    let(:topic) { post.topic}
-
+    let(:topic) { post.topic }
 
     context 'search within topic' do
 
@@ -311,7 +306,7 @@ describe Search do
     end
 
     context "search for a topic by url" do
-      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')}
+      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic') }
 
       it 'returns the topic' do
         expect(result.posts.length).to eq(1)
@@ -331,7 +326,7 @@ describe Search do
         topic.category_id = category.id
         topic.save
 
-        category.set_permissions(:staff => :full)
+        category.set_permissions(staff: :full)
         category.save
 
         expect(result(nil).posts).not_to be_present
@@ -345,11 +340,11 @@ describe Search do
 
   context 'cyrillic topic' do
     let!(:cyrillic_topic) { Fabricate(:topic) do
-                                                user
+                              user
                                                 title { sequence(:title) { |i| "Тестовая запись #{i}" } }
-                                              end
+                            end
     }
-    let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
+    let!(:post) { Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user) }
     let(:result) { Search.execute('запись') }
 
     it 'finds something when given cyrillic query' do
@@ -380,12 +375,10 @@ describe Search do
 
   end
 
-
   context 'type_filter' do
 
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }
     let!(:category) { Fabricate(:category, name: 'amazing category', user: user) }
-
 
     context 'user filter' do
       let(:results) { Search.execute('amazing', type_filter: 'user') }
@@ -435,12 +428,12 @@ describe Search do
       subcategory = Fabricate(:category, parent_category_id: category.id)
       sub_topic = Fabricate(:topic, category: subcategory)
 
-      post = Fabricate(:post, topic: topic, user: topic.user )
-      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user )
-      sub_post = Fabricate(:post, raw: 'I am saying hello from a subcategory', topic: sub_topic, user: topic.user )
+      post = Fabricate(:post, topic: topic, user: topic.user)
+      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user)
+      sub_post = Fabricate(:post, raw: 'I am saying hello from a subcategory', topic: sub_topic, user: topic.user)
 
       search = Search.execute('hello', search_context: category)
-      expect(search.posts.map(&:id).sort).to eq([post.id,sub_post.id].sort)
+      expect(search.posts.map(&:id).sort).to eq([post.id, sub_post.id].sort)
       expect(search.posts.length).to eq(2)
     end
 
@@ -450,7 +443,7 @@ describe Search do
     it 'splits English / Chinese' do
       SiteSetting.default_locale = 'zh_CN'
       data = Search.prepare_data('Discourse社区指南').split(' ')
-      expect(data).to eq(['Discourse', '社区','指南'])
+      expect(data).to eq(['Discourse', '社区', '指南'])
     end
 
     it 'finds chinese topic based on title' do
@@ -639,6 +632,17 @@ describe Search do
 
     end
 
+    it 'can find posts with images' do
+      post_uploaded = Fabricate(:post_with_uploaded_image)
+      post_with_image_urls = Fabricate(:post_with_image_urls)
+      Fabricate(:post)
+
+      CookedPostProcessor.new(post_uploaded).update_post_image
+      CookedPostProcessor.new(post_with_image_urls).update_post_image
+
+      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id, post_with_image_urls.id)
+    end
+
     it 'can find by latest' do
       topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
       post1 = Fabricate(:post, topic: topic1)
@@ -711,9 +715,9 @@ describe Search do
       let(:topic1) { Fabricate(:topic, tags: [tag2, Fabricate(:tag)]) }
       let(:topic2) { Fabricate(:topic, tags: [tag2]) }
       let(:topic3) { Fabricate(:topic, tags: [tag1, tag2]) }
-      let!(:post1) { Fabricate(:post, topic: topic1)}
-      let!(:post2) { Fabricate(:post, topic: topic2)}
-      let!(:post3) { Fabricate(:post, topic: topic3)}
+      let!(:post1) { Fabricate(:post, topic: topic1) }
+      let!(:post2) { Fabricate(:post, topic: topic2) }
+      let!(:post3) { Fabricate(:post, topic: topic3) }
 
       it 'can find posts with tag' do
         post4 = Fabricate(:post, topic: topic3, raw: "It probably doesn't help that they're green...")
@@ -734,6 +738,23 @@ describe Search do
       end
     end
 
+    it "can find posts which contains filetypes" do
+      post1 = Fabricate(:post,
+                        raw: "http://example.com/image.png")
+      post2 = Fabricate(:post,
+                         raw: "Discourse logo\n"\
+                              "http://example.com/logo.png\n"\
+                              "http://example.com/vector_image.svg")
+      post_with_upload = Fabricate(:post, uploads: [Fabricate(:upload)])
+      Fabricate(:post)
+
+      TopicLink.extract_from(post1)
+      TopicLink.extract_from(post2)
+
+      expect(Search.execute('filetype:svg').posts).to eq([post2])
+      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id, post_with_upload.id)
+      expect(Search.execute('logo filetype:png').posts.map(&:id)).to eq([post2.id])
+    end
   end
 
   it 'can parse complex strings using ts_query helper' do
@@ -756,7 +777,6 @@ describe Search do
       expect(Search.word_to_date('deC')).to eq(Time.zone.parse('2000-12-01'))
       expect(Search.word_to_date('january')).to eq(Time.zone.parse('2001-01-01'))
       expect(Search.word_to_date('jan')).to eq(Time.zone.parse('2001-01-01'))
-
 
       expect(Search.word_to_date('100')).to eq(time.beginning_of_day.days_ago(100))
 

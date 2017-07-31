@@ -15,7 +15,7 @@ describe 'pool drainer' do
       pool.checkin conn
     end.join
 
-    expect(pool.connections.length).to eq(old+1)
+    expect(pool.connections.length).to eq(old + 1)
     pool.drain
     expect(pool.connections.length).to eq(old)
   end
@@ -25,15 +25,14 @@ describe 'pool drainer' do
     old = pool.connections.length
     expect(old).to eq(1)
 
-
     Thread.new do
       conn = pool.checkout
       pool.checkin conn
     end.join
 
-    expect(pool.connections.length).to eq(old+1)
+    expect(pool.connections.length).to eq(old + 1)
     pool.drain(1.minute)
-    expect(pool.connections.length).to eq(old+1)
+    expect(pool.connections.length).to eq(old + 1)
 
     # make sure we don't corrupt internal state
     20.times do

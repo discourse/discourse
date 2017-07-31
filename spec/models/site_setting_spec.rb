@@ -111,7 +111,6 @@ describe SiteSetting do
       SiteSetting.force_https = true
     end
 
-
     it "returns http when ssl is disabled" do
       SiteSetting.force_https = false
       expect(SiteSetting.scheme).to eq("http")
@@ -126,10 +125,6 @@ describe SiteSetting do
   context 'deprecated site settings' do
     before do
       SiteSetting.force_https = true
-    end
-
-    after do
-      SiteSetting.force_https = false
     end
 
     describe '#use_https' do

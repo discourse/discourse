@@ -18,10 +18,10 @@ he:
             byte:
               one: בית
               other: בתים
-            gb: GB
-            kb: KB
-            mb: MB
-            tb: TB
+            gb: ג״ב
+            kb: ק״ב
+            mb: מ״ב
+            tb: ט״ב
       short:
         thousands: "k{{number}}"
         millions: "{{number}}M"
@@ -44,7 +44,7 @@ he:
         half_a_minute: "פחות מדקה"
         less_than_x_seconds:
           one: "פחות משנייה"
-          other: "פחות מ-%{count} שניות"
+          other: "פחות מ־%{count} שניות"
         x_seconds:
           one: "שנייה אחת"
           other: "%{count} שניות"
@@ -62,7 +62,7 @@ he:
           other: "%{count} שנים"
         over_x_years:
           one: "יותר משנה"
-          other: "יותר מ-%{count} שנים"
+          other: "יותר מ־%{count} שנים"
         almost_x_years:
           one: "שנה אחת"
           other: "%{count} שנים"
@@ -109,7 +109,7 @@ he:
       twitter: 'שתפו קישור זה בטוויטר'
       facebook: 'שתפו קישור זה בפייסבוק'
       google+: 'שתפו קישור זה בגוגל+'
-      email: 'שלח קישור בדוא"ל'
+      email: 'שליחת קישור בדוא״ל'
     action_codes:
       public_topic: "הפכו נושא זה לפומבי %{when}"
       private_topic: "הפכו נושא זה לפרטי %{when}"
@@ -137,31 +137,31 @@ he:
         enabled: 'נכנס לרשימה %{when}'
         disabled: 'הוצא מהרשימה %{when}'
       banner:
-        enabled: 'באנר זה נוצר ב-%{when}. הוא יופיע בראש כל דף עד שישוחרר על ידי המשתמש/ת.'
-        disabled: 'באנר זה הוסר ב-%{when}. הוא לא יופיע יותר בראש כל דף.'
+        enabled: 'באנר זה נוצר ב־%{when}. הוא יופיע בראש כל דף עד שישוחרר על ידי המשתמש/ת.'
+        disabled: 'באנר זה הוסר ב־%{when}. הוא לא יופיע יותר בראש כל דף.'
     topic_admin_menu: "פעולות ניהול לנושא"
-    wizard_required: "ברוכים הבאים לסידקורס החדש שלכם! בואו נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
-    emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, לא תשלח."
+    wizard_required: "ברוכים הבאים לדיסקורס החדש שלכם! בואו נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
+    emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו תמצות יומי במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
     bootstrap_mode_disabled: "מצב איתחול-ראשוני יכובה ב 24 השעות הקרובות."
     themes:
       default_description: "ברירת מחדל"
     s3:
       regions:
-        us_east_1: "מזרח ארה\"ב (צפון וירג'יניה)"
-        us_west_1: "מערב ארה\"ב (צפון קליפורניה)"
-        us_west_2: "מערב ארה\"ב (ארגון)"
-        us_gov_west_1: "AWS GovCloud (ארה״ב)"
-        eu_west_1: "האיחוד האירופי (אירלנד)"
-        eu_west_2: "אירופה (לונדון)"
-        eu_central_1: "האיחוד האירופי (פרנקפורט)"
-        ap_southeast_1: "אסיה הפסיפית (סינגפור)"
-        ap_southeast_2: "אסיה הפסיפית (סידני)"
-        ap_south_1: "אסיה פסיפית (מומבאי)"
         ap_northeast_1: "אסיה הפסיפית (טוקיו)"
         ap_northeast_2: "אסיה הפסיפית (סיאול)"
-        sa_east_1: "דרום אמריקה (סאו פאולו)"
+        ap_south_1: "אסיה פסיפית (מומבאי)"
+        ap_southeast_1: "אסיה הפסיפית (סינגפור)"
+        ap_southeast_2: "אסיה הפסיפית (סידני)"
         cn_north_1: "סין (בייג׳ינג)"
+        eu_central_1: "האיחוד האירופי (פרנקפורט)"
+        eu_west_1: "האיחוד האירופי (אירלנד)"
+        eu_west_2: "אירופה (לונדון)"
+        sa_east_1: "דרום אמריקה (סאו פאולו)"
+        us_east_1: "מזרח ארה״ב (צפון וירג׳יניה)"
+        us_gov_west_1: "AWS GovCloud (ארה״ב)"
+        us_west_1: "מערב ארה\"ב (צפון קליפורניה)"
+        us_west_2: "מערב ארה\"ב (ארגון)"
     edit: 'עירכו את הכותרת והקטגוריה של נושא זה'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"
@@ -386,6 +386,12 @@ he:
       mentions: "אזכורים"
       messages: "הודעות"
       notification_level: "ברירת מחדל של רמת התראות להודעות קבוצה"
+      visibility_levels:
+        title: "מי יכול לראות קבוצה זו?"
+        public: "כולם"
+        members: "בעלי קבוצה, חברים ואדמיניסטרטורים"
+        staff: "בעלי קבוצה וצוות"
+        owners: "בעלי קבוצה ואדמיניסטרטורים"
       alias_levels:
         title: "מי יכולים לשלוח מסרים ו@לאזכר בקבוצה זו?"
         nobody: "אף אחד"
@@ -748,6 +754,9 @@ he:
         expired: "פג תוקף ההזמנה."
         rescind: "הסרה"
         rescinded: "הזמנה הוסרה"
+        rescind_all: "הסירו את כל ההזמנות"
+        rescinded_all: "כל ההזמנות הוסרו!"
+        rescind_all_confirm: "האם אתם בטוחים שאתם מעוניינים להסיר את כל ההזמנות?"
         reinvite: "משלוח חוזר של הזמנה"
         reinvite_all: "שלח מחדש את כל ההזמנות"
         reinvite_all_confirm: "האם אתם בטוחים שאתם מעוניינים לשלוח מחדש את כל ההזמנות?"
@@ -930,6 +939,8 @@ he:
       complete_email_found: "מצאנו חשבון תואם ל<b>%{email}</b>. בתוך זמן קצר תקבלו אליו דוא\"ל עם הנחיות כיצד לאתחל את הסיסמה שלכם."
       complete_username_not_found: "שום חשבון אינו תואם לשם המשתמש  <b>%{username}</b>"
       complete_email_not_found: "שום חשבון אינו תואם ל <b>%{email}</b>"
+      button_ok: "או קיי"
+      button_help: "עזרה"
     login:
       title: "התחברות"
       username: "משתמש"
@@ -989,6 +1000,8 @@ he:
       accept_invite: "קבלת הזמנה"
       success: "החשבון שלכם נוצר ואתם מחוברים עכשיו."
       name_label: "שם"
+      password_label: "קביעת סיסמה"
+      optional_description: "(אופציונלי)"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -1655,6 +1668,7 @@ he:
         has_liked: "אהבת פוסט זה"
         undo_like: "בטל 'אהוב'"
         edit: "עירכו פוסט זה"
+        edit_action: "עריכה"
         edit_anonymous: "מצטערים, אך עליכם להיות מחוברים בכדי לערוך פוסט זה."
         flag: "דגלו פוסט זה באופן פרטי לתשומת לב או שלחו התראה פרטית עליו"
         delete: "מחק פוסט זה"

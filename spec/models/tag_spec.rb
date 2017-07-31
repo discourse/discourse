@@ -38,7 +38,7 @@ describe Tag do
 
       it "can be used to filter before doing the count" do
         counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count(Tag::COUNT_ARG)
-        expect(counts).to eq({@tags[0].name => 1})
+        expect(counts).to eq(@tags[0].name => 1)
       end
 
       it "returns unused tags too" do
@@ -65,7 +65,7 @@ describe Tag do
         make_some_tags(count: 4) # one tag that isn't used
         @category1 = Fabricate(:category)
         @private_category = Fabricate(:category)
-        @private_category.set_permissions(:admins => :full)
+        @private_category.set_permissions(admins: :full)
         @private_category.save!
         @topics = []
         @topics << Fabricate(:topic, category: @category1, tags: [@tags[0]])

@@ -83,12 +83,13 @@ module Jobs
       web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id)
 
       begin
-        content_type = case web_hook.content_type
-                       when WebHook.content_types['application/x-www-form-urlencoded']
-                         'application/x-www-form-urlencoded'
-                       else
-                         'application/json'
-                       end
+        content_type =
+          case web_hook.content_type
+          when WebHook.content_types['application/x-www-form-urlencoded']
+            'application/x-www-form-urlencoded'
+          else
+            'application/json'
+          end
 
         headers = {
           'Accept' => '*/*',

@@ -5,7 +5,7 @@ class ImportScripts::Drupal < ImportScripts::Base
 
   DRUPAL_DB = ENV['DRUPAL_DB'] || "newsite3"
   VID = ENV['DRUPAL_VID'] || 1
-  
+
   def initialize
     super
 
@@ -23,7 +23,7 @@ class ImportScripts::Drupal < ImportScripts::Base
 
   def execute
     create_users(@client.query("SELECT uid id, name, mail email, created FROM users;")) do |row|
-      {id: row['id'], username: row['name'], email: row['email'], created_at: Time.zone.at(row['created'])}
+      { id: row['id'], username: row['name'], email: row['email'], created_at: Time.zone.at(row['created']) }
     end
 
     # You'll need to edit the following query for your Drupal install:
@@ -32,7 +32,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     #   * Table name may be term_data.
     #   * May need to select a vid other than 1.
     create_categories(categories_query) do |c|
-      {id: c['tid'], name: c['name'], description: c['description']}
+      { id: c['tid'], name: c['name'], description: c['description'] }
     end
 
     # "Nodes" in Drupal are divided into types. Here we import two types,
@@ -65,8 +65,8 @@ class ImportScripts::Drupal < ImportScripts::Base
 
     results = @client.query("
       SELECT n.nid nid,
-	n.title title, 
-	n.uid uid, 
+	n.title title,
+	n.uid uid,
 	n.created created,
 	n.sticky sticky,
 	nr.body body
@@ -85,7 +85,7 @@ class ImportScripts::Drupal < ImportScripts::Base
         created_at: Time.zone.at(row['created']),
         pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
         title: row['title'].try(:strip),
-        custom_fields: {import_id: "nid:#{row['nid']}"}
+        custom_fields: { import_id: "nid:#{row['nid']}" }
       }
     end
   end
@@ -123,7 +123,7 @@ class ImportScripts::Drupal < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| "nid:#{p['nid']}"}
+      next if all_records_exist? :posts, results.map { |p| "nid:#{p['nid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
         {
@@ -141,7 +141,7 @@ class ImportScripts::Drupal < ImportScripts::Base
 
   def create_replies
     puts '', "creating replies in topics"
-    
+
     if ENV['DRUPAL_IMPORT_BLOG']
       node_types = "('forum','blog')"
     else
@@ -149,7 +149,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     end
 
     total_count = @client.query("
-      SELECT COUNT(*) count 
+      SELECT COUNT(*) count
       FROM comments c
       LEFT JOIN node n ON n.nid=c.nid
       WHERE node.type IN #{node_types}
@@ -167,18 +167,18 @@ class ImportScripts::Drupal < ImportScripts::Base
                c.uid,
                c.timestamp,
                c.comment body
-        FROM comments c 
+        FROM comments c
         LEFT JOIN node n ON n.nid=c.nid
         WHERE n.type IN #{node_types}
           AND n.status = 1
-          AND c.status=0 
+          AND c.status=0
         LIMIT #{batch_size}
           OFFSET #{offset};
       ", cache_rows: false)
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| "cid:#{p['cid']}"}
+      next if all_records_exist? :posts, results.map { |p| "cid:#{p['cid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
         topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
@@ -192,7 +192,7 @@ class ImportScripts::Drupal < ImportScripts::Base
           }
           if row['pid']
             parent = topic_lookup_from_imported_post_id("cid:#{row['pid']}")
-            h[:reply_to_post_number] = parent[:post_number] if parent and parent[:post_number] > 1
+            h[:reply_to_post_number] = parent[:post_number] if parent && parent[:post_number] > (1)
           end
           h
         else
@@ -205,6 +205,6 @@ class ImportScripts::Drupal < ImportScripts::Base
 
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::Drupal.new.perform
 end

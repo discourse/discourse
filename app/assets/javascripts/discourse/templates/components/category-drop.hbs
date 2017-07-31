@@ -1,21 +1,23 @@
 {{#if category}}
-  <a href {{action "expand"}} class="badge-category" style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>
+  <a href {{action "expand"}} class="dropdown-header" style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>
     <span class="badge-category-bg" style={{categoryColor}}></span>
     {{#if category.read_restricted}}
-      {{fa-icon "lock"}}
+      {{d-icon "lock"}}
     {{/if}}
     {{category.name}}
   </a>
 {{else}}
   {{#if noSubcategories}}
-    <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>{{i18n 'categories.no_subcategory'}}</a>
+    <a href {{action "expand"}} class='dropdown-header home' style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>{{i18n 'categories.no_subcategory'}}</a>
   {{else}}
-    <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>{{allCategoriesLabel}}</a>
+    <a href {{action "expand"}} class='dropdown-header home' style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>{{allCategoriesLabel}}</a>
   {{/if}}
 {{/if}}
 
 {{#if categories}}
-  <a href {{action "expand"}} class={{dropdownButtonClass}} style={{badgeStyle}}><i class={{iconClass}}></i></a>
+  <a href {{action "expand"}} class={{dropdownButtonClass}} style={{badgeStyle}}>
+    {{d-icon expandIcon}}
+  </a>
   <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser">
     <div class='cat'><a href={{allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}

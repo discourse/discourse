@@ -101,7 +101,7 @@ module DiscoursePoll
         post.save_custom_fields(true)
 
         # publish the changes
-        MessageBus.publish("/polls/#{post.topic_id}", { post_id: post.id, polls: polls })
+        MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
       end
     end
 

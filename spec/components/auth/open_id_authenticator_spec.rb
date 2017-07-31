@@ -13,7 +13,7 @@ describe Auth::OpenIdAuthenticator do
 
     user = Fabricate(:user)
     response = OpenStruct.new(identity_url: 'abc')
-    result = auth.after_authenticate(info: {email: user.email}, extra: {response: response})
+    result = auth.after_authenticate(info: { email: user.email }, extra: { response: response })
     expect(result.user).to eq(user)
   end
 

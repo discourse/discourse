@@ -1,6 +1,6 @@
 module JsonError
 
-  def create_errors_json(obj, type=nil)
+  def create_errors_json(obj, type = nil)
     errors = create_errors_array obj
     errors[:error_type] = type if type
     errors

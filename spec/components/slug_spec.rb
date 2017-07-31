@@ -143,4 +143,3 @@ describe Slug do
     end
   end
 end
-

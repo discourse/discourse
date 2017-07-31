@@ -5,7 +5,7 @@ class TwitterApi
 
     def prettify_tweet(tweet)
       text = tweet["full_text"].dup
-      if entities = tweet["entities"] and urls = entities["urls"]
+      if (entities = tweet["entities"]) && (urls = entities["urls"])
         urls.each do |url|
           text.gsub!(url["url"], "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>")
         end
@@ -124,7 +124,6 @@ class TwitterApi
     def auth_uri
       URI.parse "#{BASE_URL}/oauth2/token"
     end
-
 
     def http(uri)
       Net::HTTP.new(uri.host, uri.port).tap { |http| http.use_ssl = true }
