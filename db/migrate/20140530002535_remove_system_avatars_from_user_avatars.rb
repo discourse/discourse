@@ -9,7 +9,7 @@ class RemoveSystemAvatarsFromUserAvatars < ActiveRecord::Migration
     # normally we dont reach into the object model, but we have to here.
     # otherwise we will wait a real long time for uploads to go away
     skip = -1
-    while skip=destroy_system_avatar_batch(skip) do
+    while skip = destroy_system_avatar_batch(skip) do
       puts "Destroyed up to id: #{skip}"
     end
 
@@ -21,9 +21,9 @@ class RemoveSystemAvatarsFromUserAvatars < ActiveRecord::Migration
     initial = skip
 
     Upload.where('id IN (SELECT system_upload_id FROM user_avatars) AND id > ?', skip)
-        .order(:id)
-        .limit(500)
-        .each do |upload|
+      .order(:id)
+      .limit(500)
+      .each do |upload|
       skip = upload.id
       begin
         upload.destroy

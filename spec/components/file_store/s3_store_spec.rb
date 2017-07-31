@@ -30,7 +30,7 @@ describe FileStore::S3Store do
     let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
 
     before do
-      SiteSetting.s3_region ='us-west-1'
+      SiteSetting.s3_region = 'us-west-1'
     end
   end
 

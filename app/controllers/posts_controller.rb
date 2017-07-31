@@ -41,23 +41,23 @@ class PostsController < ApplicationController
     if params[:id] == "private_posts"
       raise Discourse::NotFound if current_user.nil?
       posts = Post.private_posts
-                  .order(created_at: :desc)
-                  .where('posts.id <= ?', last_post_id)
-                  .where('posts.id > ?', last_post_id - 50)
-                  .includes(topic: :category)
-                  .includes(user: :primary_group)
-                  .includes(:reply_to_user)
-                  .limit(50)
+        .order(created_at: :desc)
+        .where('posts.id <= ?', last_post_id)
+        .where('posts.id > ?', last_post_id - 50)
+        .includes(topic: :category)
+        .includes(user: :primary_group)
+        .includes(:reply_to_user)
+        .limit(50)
       rss_description = I18n.t("rss_description.private_posts")
     else
       posts = Post.public_posts
-                  .order(created_at: :desc)
-                  .where('posts.id <= ?', last_post_id)
-                  .where('posts.id > ?', last_post_id - 50)
-                  .includes(topic: :category)
-                  .includes(user: :primary_group)
-                  .includes(:reply_to_user)
-                  .limit(50)
+        .order(created_at: :desc)
+        .where('posts.id <= ?', last_post_id)
+        .where('posts.id > ?', last_post_id - 50)
+        .includes(topic: :category)
+        .includes(user: :primary_group)
+        .includes(:reply_to_user)
+        .limit(50)
       rss_description = I18n.t("rss_description.posts")
     end
 
@@ -92,12 +92,12 @@ class PostsController < ApplicationController
     user = fetch_user_from_params
 
     posts = Post.public_posts
-                .where(user_id: user.id)
-                .where(post_type: Post.types[:regular])
-                .order(created_at: :desc)
-                .includes(:user)
-                .includes(topic: :category)
-                .limit(50)
+      .where(user_id: user.id)
+      .where(post_type: Post.types[:regular])
+      .order(created_at: :desc)
+      .includes(:user)
+      .includes(topic: :category)
+      .limit(50)
 
     posts = posts.reject { |post| !guardian.can_see?(post) || post.topic.blank? }
 
@@ -230,20 +230,20 @@ class PostsController < ApplicationController
     RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
 
     if too_late_to(:delete_post, post)
-      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
+      render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
       return
     end
 
     guardian.ensure_can_delete!(post)
 
-    destroyer = PostDestroyer.new(current_user, post, { context: params[:context] })
+    destroyer = PostDestroyer.new(current_user, post, context: params[:context])
     destroyer.destroy
 
     render nothing: true
   end
 
   def expand_embed
-    render json: {cooked: TopicEmbed.expanded_for(find_post_from_params) }
+    render json: { cooked: TopicEmbed.expanded_for(find_post_from_params) }
   rescue
     render_json_error I18n.t('errors.embed.load_from_remote')
   end
@@ -266,10 +266,10 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
     # Make sure we can delete the posts
-    posts.each {|p| guardian.ensure_can_delete!(p) }
+    posts.each { |p| guardian.ensure_can_delete!(p) }
 
     Post.transaction do
-      posts.each {|p| PostDestroyer.new(current_user, p).destroy }
+      posts.each { |p| PostDestroyer.new(current_user, p).destroy }
     end
 
     render nothing: true
@@ -399,7 +399,7 @@ class PostsController < ApplicationController
     post = find_post_from_params
     guardian.ensure_can_wiki!(post)
 
-    post.revise(current_user, { wiki: params[:wiki] })
+    post.revise(current_user, wiki: params[:wiki])
 
     render nothing: true
   end
@@ -408,7 +408,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_change_post_type!
 
     post = find_post_from_params
-    post.revise(current_user, { post_type: params[:post_type].to_i })
+    post.revise(current_user, post_type: params[:post_type].to_i)
 
     render nothing: true
   end
@@ -441,7 +441,7 @@ class PostsController < ApplicationController
     limit = [(params[:limit] || 60).to_i, 100].min
 
     posts = user_posts(guardian, user.id, offset: offset, limit: limit)
-              .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+      .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
                                    .where(disagreed_at: nil)
                                    .select(:post_id))
 
@@ -478,7 +478,6 @@ class PostsController < ApplicationController
 
     render json: json_obj, status: (!!success) ? 200 : 422
   end
-
 
   def find_post_revision_from_params
     post_id = params[:id] || params[:post_id]
@@ -529,9 +528,9 @@ class PostsController < ApplicationController
 
   def user_posts(guardian, user_id, opts)
     posts = Post.includes(:user, :topic, :deleted_by, :user_actions)
-                .where(user_id: user_id)
-                .with_deleted
-                .order(created_at: :desc)
+      .where(user_id: user_id)
+      .with_deleted
+      .order(created_at: :desc)
 
     if guardian.user.moderator?
 
@@ -545,7 +544,7 @@ class PostsController < ApplicationController
     end
 
     posts.offset(opts[:offset])
-         .limit(opts[:limit])
+      .limit(opts[:limit])
   end
 
   def create_params
@@ -622,7 +621,7 @@ class PostsController < ApplicationController
     "post##" << Digest::SHA1.hexdigest(args
       .to_a
       .concat([["user", current_user.id]])
-      .sort{|x,y| x[0] <=> y[0]}.join do |x,y|
+      .sort { |x, y| x[0] <=> y[0] }.join do |x, y|
         "#{x}:#{y}"
       end)
   end

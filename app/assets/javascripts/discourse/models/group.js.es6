@@ -122,15 +122,14 @@ const Group = RestModel.extend({
 
   @observes("visibility_level")
   _updatePublic() {
-    let visibility_level = parseInt(this.get('visibility_level'));
-    if (visibility_level !== 0) {
+    if (this.get('visibility_level') !== 0) {
       this.set('public', false);
       this.set('allow_membership_requests', false);
     }
   },
 
   asJSON() {
-    return {
+    const attrs = {
       name: this.get('name'),
       alias_level: this.get('alias_level'),
       visibility_level: this.get('visibility_level'),
@@ -144,18 +143,32 @@ const Group = RestModel.extend({
       flair_bg_color: this.get('flairBackgroundHexColor'),
       flair_color: this.get('flairHexColor'),
       bio_raw: this.get('bio_raw'),
-      public: this.get('public'),
+      public_admission: this.get('public_admission'),
+      public_exit: this.get('public_exit'),
       allow_membership_requests: this.get('allow_membership_requests'),
       full_name: this.get('full_name'),
       default_notification_level: this.get('default_notification_level')
     };
+
+    if (!this.get('id')) {
+      attrs['usernames'] = this.get('usernames');
+      attrs['owner_usernames'] = this.get('ownerUsernames');
+    }
+
+    return attrs;
   },
 
   create() {
-    var self = this;
-    return ajax("/admin/groups", { type: "POST", data:  { group: this.asJSON() } }).then(function(resp) {
-      self.set('id', resp.basic_group.id);
-    });
+    return ajax("/admin/groups", { type: "POST", data:  { group: this.asJSON() } })
+      .then(resp => {
+        this.setProperties({
+          id: resp.basic_group.id,
+          usernames: null,
+          ownerUsernames: null
+        });
+
+        this.findMembers();
+      });
   },
 
   save() {

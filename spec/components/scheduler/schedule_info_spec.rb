@@ -4,7 +4,7 @@ require 'scheduler/scheduler'
 
 describe Scheduler::ScheduleInfo do
 
-  let(:manager){ Scheduler::Manager.new }
+  let(:manager) { Scheduler::Manager.new }
 
   context "every" do
     class RandomJob

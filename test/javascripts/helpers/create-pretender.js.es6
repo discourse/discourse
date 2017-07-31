@@ -334,6 +334,17 @@ export default function() {
     this.post('/admin/badges', success);
     this.delete('/admin/badges/:id', success);
 
+    this.get('/admin/watched_words', () => {
+      return response(200, fixturesByUrl['/admin/watched_words.json']);
+    });
+    this.delete('/admin/watched_words/:id.json', success);
+
+    this.post('/admin/watched_words.json', request => {
+      const result = parsePostData(request.requestBody);
+      result.id = new Date().getTime();
+      return response(200, result);
+    });
+
     this.get('/onebox', request => {
       if (request.queryParams.url === 'http://www.example.com/has-title.html' ||
           request.queryParams.url === 'http://www.example.com/has-title-and-a-url-that-is-more-than-80-characters-because-thats-good-for-seo-i-guess.html') {

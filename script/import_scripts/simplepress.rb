@@ -5,7 +5,7 @@ class ImportScripts::SimplePress < ImportScripts::Base
 
   SIMPLE_PRESS_DB ||= ENV['SIMPLEPRESS_DB'] || "simplepress"
   TABLE_PREFIX = "wp_sf"
-  BATCH_SIZE  ||= 1000
+  BATCH_SIZE ||= 1000
 
   def initialize
     super
@@ -120,7 +120,7 @@ class ImportScripts::SimplePress < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|m| m['id'].to_i}
+      next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false

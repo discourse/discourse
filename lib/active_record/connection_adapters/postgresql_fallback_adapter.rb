@@ -98,9 +98,7 @@ module ActiveRecord
       if fallback_handler.master_down?
         fallback_handler.verify_master
 
-        connection = postgresql_connection(config.dup.merge({
-          host: config[:replica_host], port: config[:replica_port]
-        }))
+        connection = postgresql_connection(config.dup.merge(host: config[:replica_host], port: config[:replica_port]))
 
         verify_replica(connection)
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)

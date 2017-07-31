@@ -25,7 +25,7 @@
 
 .select2-drop {
   background: $secondary;
-  i.fa {
+  .d-icon {
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 }

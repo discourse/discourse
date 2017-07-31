@@ -16,7 +16,7 @@ class TopTopic < ActiveRecord::Base
 
   # We don't have to refresh these as often
   def self.refresh_older!
-    older_periods = periods - [:daily,:all]
+    older_periods = periods - [:daily, :all]
 
     transaction do
       older_periods.each do |period|
@@ -31,7 +31,6 @@ class TopTopic < ActiveRecord::Base
     refresh_daily!
     refresh_older!
   end
-
 
   def self.periods
     @@periods ||= [:all, :yearly, :quarterly, :monthly, :weekly, :daily].freeze
@@ -203,11 +202,11 @@ class TopTopic < ActiveRecord::Base
 
   def self.start_of(period)
     case period
-      when :yearly    then 1.year.ago
-      when :monthly   then 1.month.ago
-      when :quarterly then 3.months.ago
-      when :weekly    then 1.week.ago
-      when :daily     then 1.day.ago
+    when :yearly    then 1.year.ago
+    when :monthly   then 1.month.ago
+    when :quarterly then 3.months.ago
+    when :weekly    then 1.week.ago
+    when :daily     then 1.day.ago
     end
   end
 

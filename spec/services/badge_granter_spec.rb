@@ -83,7 +83,7 @@ describe BadgeGranter do
       }
 
       # TODO add welcome
-      expect(post.user.user_badges.pluck(:badge_id).sort).to eq([Badge::NiceTopic,Badge::GoodTopic])
+      expect(post.user.user_badges.pluck(:badge_id).sort).to eq([Badge::NiceTopic, Badge::GoodTopic])
 
       expect(post.user.notifications.count).to eq(2)
 
@@ -205,7 +205,7 @@ describe BadgeGranter do
     end
 
     it "grants autobiographer" do
-      user.user_profile.bio_raw  = "THIS IS MY bio it a long bio I like my bio"
+      user.user_profile.bio_raw = "THIS IS MY bio it a long bio I like my bio"
       user.uploaded_avatar_id = 10
       user.user_profile.save
       user.save
@@ -237,7 +237,7 @@ describe BadgeGranter do
 
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count).to eq(0)
 
-      PostRevisor.new(post).revise!(user, { raw: "This is my new test 1235 123" })
+      PostRevisor.new(post).revise!(user, raw: "This is my new test 1235 123")
       BadgeGranter.process_queue!
 
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count).to eq(1)

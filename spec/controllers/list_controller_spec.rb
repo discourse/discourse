@@ -41,7 +41,6 @@ describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
-
     it "doesn't throw an error with a negative page" do
       xhr :get, :top, page: -1024
       expect(response).to be_success

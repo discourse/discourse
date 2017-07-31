@@ -22,7 +22,7 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.refresh!
-    period_types.each_key {|p| refresh_period!(p)}
+    period_types.each_key { |p| refresh_period!(p) }
   end
 
   def self.refresh_period!(period_type)
@@ -30,14 +30,15 @@ class DirectoryItem < ActiveRecord::Base
     # Don't calculate it if the user directory is disabled
     return unless SiteSetting.enable_user_directory?
 
-    since = case period_type
-            when :daily then 1.day.ago
-            when :weekly then 1.week.ago
-            when :monthly then 1.month.ago
-            when :quarterly then 3.months.ago
-            when :yearly then 1.year.ago
-            else 1000.years.ago
-            end
+    since =
+      case period_type
+      when :daily then 1.day.ago
+      when :weekly then 1.week.ago
+      when :monthly then 1.month.ago
+      when :quarterly then 3.months.ago
+      when :yearly then 1.year.ago
+      else 1000.years.ago
+      end
 
     ActiveRecord::Base.transaction do
       exec_sql "DELETE FROM directory_items
@@ -46,7 +47,6 @@ class DirectoryItem < ActiveRecord::Base
                 WHERE di.id = directory_items.id AND
                       u.id IS NULL AND
                       di.period_type = :period_type", period_type: period_types[period_type]
-
 
       exec_sql "INSERT INTO directory_items(period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
                 SELECT
@@ -116,7 +116,6 @@ class DirectoryItem < ActiveRecord::Base
                   new_topic_type: UserAction::NEW_TOPIC,
                   reply_type: UserAction::REPLY,
                   regular_post_type: Post.types[:regular]
-
 
       if period_type == :all
         exec_sql <<SQL

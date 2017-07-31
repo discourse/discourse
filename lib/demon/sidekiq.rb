@@ -7,7 +7,7 @@ class Demon::Sidekiq < Demon::Base
   end
 
   def self.after_fork(&blk)
-    blk ? (@blk=blk) : @blk
+    blk ? (@blk = blk) : @blk
   end
 
   private

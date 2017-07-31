@@ -8,7 +8,7 @@ if GlobalSetting.enable_cors
     end
 
     def call(env)
-      if env['REQUEST_METHOD'] == 'OPTIONS' and env['HTTP_ACCESS_CONTROL_REQUEST_METHOD']
+      if env['REQUEST_METHOD'] == ('OPTIONS') && env['HTTP_ACCESS_CONTROL_REQUEST_METHOD']
         return [200, apply_headers(env), []]
       end
 
@@ -16,7 +16,7 @@ if GlobalSetting.enable_cors
       [status, apply_headers(env, headers), body]
     end
 
-    def apply_headers(env, headers=nil)
+    def apply_headers(env, headers = nil)
       headers ||= {}
 
       origin = nil

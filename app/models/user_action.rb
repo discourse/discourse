@@ -11,7 +11,7 @@ class UserAction < ActiveRecord::Base
   BOOKMARK = 3
   NEW_TOPIC = 4
   REPLY = 5
-  RESPONSE= 6
+  RESPONSE = 6
   MENTION = 7
   QUOTE = 9
   EDIT = 11
@@ -75,7 +75,7 @@ SQL
     apply_common_filters(builder, user_id, guardian)
 
     results = builder.exec.to_a
-    results.sort! { |a,b| ORDER[a.action_type] <=> ORDER[b.action_type] }
+    results.sort! { |a, b| ORDER[a.action_type] <=> ORDER[b.action_type] }
 
     results
   end
@@ -109,10 +109,10 @@ SQL
        GROUP BY g.name
     SQL
 
-    result = { all: all, mine: mine, unread: unread}
+    result = { all: all, mine: mine, unread: unread }
 
     exec_sql(sql, user_id: user_id).each do |row|
-      (result[:groups] ||= []) << {name: row["name"], count: row["count"].to_i}
+      (result[:groups] ||= []) << { name: row["name"], count: row["count"].to_i }
     end
 
     result
@@ -123,7 +123,7 @@ SQL
     stream(action_id: action_id, guardian: guardian).first
   end
 
-  def self.stream_queued(opts=nil)
+  def self.stream_queued(opts = nil)
     opts ||= {}
 
     offset = opts[:offset] || 0
@@ -156,7 +156,7 @@ SQL
       .map_exec(UserActionRow)
   end
 
-  def self.stream(opts=nil)
+  def self.stream(opts = nil)
     opts ||= {}
 
     action_types = opts[:action_types]
@@ -276,7 +276,7 @@ SQL
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
     if action = UserAction.find_by(hash.except(:created_at))
       action.destroy
-      MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
+      MessageBus.publish("/user/#{hash[:user_id]}", user_action_id: action.id, remove: true)
     end
 
     if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
@@ -331,7 +331,7 @@ SQL
     end
   end
 
-  def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
+  def self.apply_common_filters(builder, user_id, guardian, ignore_private_messages = false)
     # We never return deleted topics in activity
     builder.where("t.deleted_at is null")
 
@@ -341,7 +341,7 @@ SQL
 
       current_user_id = -2
       current_user_id = guardian.user.id if guardian.user
-      builder.where("NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id", current_user_id: current_user_id )
+      builder.where("NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id", current_user_id: current_user_id)
     end
 
     visible_post_types = Topic.visible_post_types(guardian.user)
@@ -381,7 +381,7 @@ SQL
       if allowed.present?
         builder.where("( c.read_restricted IS NULL OR
                          NOT c.read_restricted OR
-                        (c.read_restricted and c.id in (:cats)) )", cats: guardian.secure_category_ids )
+                        (c.read_restricted and c.id in (:cats)) )", cats: guardian.secure_category_ids)
       else
         builder.where("(c.read_restricted IS NULL OR NOT c.read_restricted)")
       end

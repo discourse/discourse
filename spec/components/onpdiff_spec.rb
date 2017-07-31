@@ -32,4 +32,3 @@ describe ONPDiff do
   end
 
 end
-

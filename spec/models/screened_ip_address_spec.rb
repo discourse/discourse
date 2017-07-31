@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ScreenedIpAddress do
   let(:ip_address) { '99.232.23.124' }
-  let(:valid_params) { {ip_address: ip_address} }
+  let(:valid_params) { { ip_address: ip_address } }
 
   describe 'new record' do
     it 'sets a default action_type' do

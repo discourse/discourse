@@ -80,7 +80,7 @@ describe Jobs::EmitWebHookEvent do
       expect(headers['X-Discourse-Event-Type']).to eq('ping')
       expect(headers['X-Discourse-Event']).to eq('ping')
       expect(headers['X-Discourse-Event-Signature']).to eq('sha256=162f107f6b5022353274eb1a7197885cfd35744d8d08e5bcea025d309386b7d6')
-      expect(event.payload).to eq(MultiJson.dump({ping: 'OK'}))
+      expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
       expect(event.status).to eq(200)
       expect(MultiJson.load(event.response_headers)['Test']).to eq('string')
       expect(event.response_body).to eq('OK')

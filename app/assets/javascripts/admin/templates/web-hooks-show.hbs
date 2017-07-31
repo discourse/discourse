@@ -1,5 +1,5 @@
 {{#link-to 'adminWebHooks' class="go-back"}}
-  {{fa-icon 'arrow-left'}}
+  {{d-icon 'arrow-left'}}
   {{i18n 'admin.web_hooks.go_back'}}
 {{/link-to}}
 
@@ -49,12 +49,12 @@
 
     <div class='filters'>
       <div>
-        <label>{{fa-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.categories_filter'}}</label>
+        <label>{{d-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.categories_filter'}}</label>
         {{category-selector categories=model.categories blacklist=model.categories}}
         <div class="instructions">{{i18n 'admin.web_hooks.categories_filter_instructions'}}</div>
       </div>
       <div>
-        <label>{{fa-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.groups_filter'}}</label>
+        <label>{{d-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.groups_filter'}}</label>
         {{group-selector groupNames=model.groupsFilterInName groupFinder=model.groupFinder}}
         <div class="instructions">{{i18n 'admin.web_hooks.groups_filter_instructions'}}</div>
       </div>

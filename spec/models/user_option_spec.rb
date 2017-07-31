@@ -19,7 +19,7 @@ describe UserOption do
     let!(:user) { Fabricate(:user) }
 
     it "should be redirected to top when there is a reason to" do
-      user.user_option.expects(:redirected_to_top).returns({ reason: "42" })
+      user.user_option.expects(:redirected_to_top).returns(reason: "42")
       expect(user.user_option.should_be_redirected_to_top).to eq(true)
     end
 
@@ -87,10 +87,8 @@ describe UserOption do
             end
 
             it "should have a reason for the first visit" do
-              expect(user.user_option.redirected_to_top).to eq({
-                reason: I18n.t('redirected_to_top_reasons.new_user'),
-                period: :monthly
-              })
+              expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'),
+                                                               period: :monthly)
             end
 
             it "should not have a reason for next visits" do
@@ -108,10 +106,8 @@ describe UserOption do
               user.last_seen_at = 2.months.ago
               user.user_option.expects(:update_last_redirected_to_top!).once
 
-              expect(user.user_option.redirected_to_top).to eq({
-                reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-                period: :monthly
-              })
+              expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
+                                                               period: :monthly)
             end
 
           end

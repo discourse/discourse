@@ -73,7 +73,6 @@ RSpec.describe Jobs::PublishTopicToCategory do
       end
     end
 
-
     it 'should publish the topic to the new category' do
       message = MessageBus.track_publish do
         described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)

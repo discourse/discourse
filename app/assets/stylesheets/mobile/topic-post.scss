@@ -47,7 +47,7 @@ span.badge-posts {
 
 nav.post-controls {
   clear: both;
-  i.fa {
+  .d-icon {
     opacity: 1.0;
   }
 }
@@ -134,7 +134,7 @@ nav.post-controls {
     width: 176px;
     margin-bottom: 5px;
 
-    i.fa {
+    .d-icon {
       width: 14px;
       margin-right: 14px;
     }
@@ -323,7 +323,7 @@ a.star {
 #topic-footer-buttons {
   @include clearfix;
   padding: 20px 0 0 0;
-  .fa-bookmark.bookmarked { color: $tertiary; }
+  .d-icon-bookmark.bookmarked { color: $tertiary; }
 
   .combobox {
     float: left;
@@ -371,7 +371,7 @@ span.post-count {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .fa-star {margin-right: 5px;}
+    .d-icon-star {margin-right: 5px;}
   }
 }
 

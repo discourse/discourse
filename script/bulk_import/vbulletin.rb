@@ -1,4 +1,5 @@
 require_relative "base"
+require "set"
 require "mysql2"
 require "htmlentities"
 
@@ -354,6 +355,8 @@ class BulkImport::VBulletin < BulkImport::Base
 
     posts = mysql_stream <<-SQL
         SELECT postid, post.threadid, parentid, userid, post.dateline, post.visible, pagetext
+               #{", post_thanks_amount" if @has_post_thanks}
+
           FROM post
           JOIN thread ON thread.threadid = post.threadid
          WHERE postid > #{@last_imported_post_id}
@@ -365,7 +368,7 @@ class BulkImport::VBulletin < BulkImport::Base
       replied_post_topic_id = topic_id_from_imported_post_id(row[2])
       reply_to_post_number = topic_id == replied_post_topic_id ? post_number_from_imported_id(row[2]) : nil
 
-      {
+      post = {
         imported_id: row[0],
         topic_id: topic_id,
         reply_to_post_number: reply_to_post_number,
@@ -374,6 +377,9 @@ class BulkImport::VBulletin < BulkImport::Base
         hidden: row[5] == 0,
         raw: normalize_text(row[6]),
       }
+
+      post[:like_count] = row[7] if @has_post_thanks
+      post
     end
   end
 
@@ -396,11 +402,10 @@ class BulkImport::VBulletin < BulkImport::Base
 
       next if @imported_topics.has_key?(key)
       @imported_topics[key] = row[0] + PRIVATE_OFFSET
-
       {
         archetype: Archetype.private_message,
         imported_id: row[0] + PRIVATE_OFFSET,
-        title: normalize_text(title),
+        title: title,
         user_id: user_id_from_imported_id(row[2]),
         created_at: Time.zone.at(row[4]),
       }
@@ -410,7 +415,7 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_topic_allowed_users
     puts "Importing topic allowed users..."
 
-    allowed_users = []
+    allowed_users = Set.new
 
     mysql_stream(<<-SQL
         SELECT pmtextid, touserarray

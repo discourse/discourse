@@ -27,7 +27,7 @@
             </tr>
             <tr>
               <td></td>
-              <td><div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div></td>
+              <td><div class="caps-lock-warning {{unless capsLockOn 'invisible'}}">{{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div></td>
               <td></td>
             </tr>
           </table>
@@ -43,7 +43,7 @@
       <button class="btn btn-large btn-primary"
         disabled={{loginDisabled}}
         {{action "login"}}>
-          <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
+          {{d-icon "unlock"}} &nbsp;{{loginButtonText}}
       </button>
 
       {{#if showSignupLink}}

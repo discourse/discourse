@@ -27,7 +27,6 @@ describe QueuedPostsController do
     end
   end
 
-
   context 'update' do
     let!(:user) { log_in(:moderator) }
     let(:qp) { Fabricate(:queued_post) }
@@ -56,4 +55,3 @@ describe QueuedPostsController do
 
   end
 end
-

@@ -60,14 +60,6 @@ describe FinalDestination do
         stub_request(:head, "https://eviltrout.com").to_return(doc_response)
       end
 
-      it "escapes url" do
-        url = 'https://eviltrout.com?s=180&#038;d=mm&#038;r=g'
-        escaped_url = URI.escape(url)
-        stub_request(:head, escaped_url).to_return(doc_response)
-
-        expect(fd(url).resolve.to_s).to eq(escaped_url)
-      end
-
       it "returns the final url" do
         final = FinalDestination.new('https://eviltrout.com', opts)
         expect(final.resolve.to_s).to eq('https://eviltrout.com')
@@ -278,6 +270,16 @@ describe FinalDestination do
     it 'supports whitelisting via a site setting' do
       SiteSetting.whitelist_internal_hosts = 'private-host.com'
       expect(fd("https://private-host.com/some/url").is_dest_valid?).to eq(true)
+    end
+  end
+
+  describe ".escape_url" do
+    it "correctly escapes url" do
+      fragment_url = "https://eviltrout.com/2016/02/25/fixing-android-performance.html#discourse-comments"
+
+      expect(fd(fragment_url).escape_url.to_s).to eq(fragment_url)
+      expect(fd("https://eviltrout.com?s=180&#038;d=mm&#038;r=g").escape_url.to_s).to eq("https://eviltrout.com?s=180&d=mm&r=g")
+      expect(fd("http://example.com/?a=\11\15").escape_url.to_s).to eq("http://example.com/?a=%09%0D")
     end
   end
 

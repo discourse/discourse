@@ -50,9 +50,9 @@ describe PostAction do
       action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message")
 
       posts = Post.joins(:topic)
-                  .select('posts.id, topics.subtype, posts.topic_id')
-                  .where('topics.archetype' => Archetype.private_message)
-                  .to_a
+        .select('posts.id, topics.subtype, posts.topic_id')
+        .where('topics.archetype' => Archetype.private_message)
+        .to_a
 
       expect(posts.count).to eq(1)
       expect(action.related_post_id).to eq(posts[0].id.to_i)
@@ -61,7 +61,7 @@ describe PostAction do
       topic = posts[0].topic
 
       # Moderators should be invited to the private topic, otherwise they're not permitted to see it
-      topic_user_ids = topic.topic_users(true).map {|x| x.user_id}
+      topic_user_ids = topic.topic_users(true).map { |x| x.user_id }
       expect(topic_user_ids).to include(codinghorror.id)
       expect(topic_user_ids).to include(mod.id)
 
@@ -379,7 +379,7 @@ describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached])
       expect(post.topic.visible).to eq(false)
 
-      post.revise(post.user, { raw: post.raw + " ha I edited it " })
+      post.revise(post.user, raw: post.raw + " ha I edited it ")
 
       post.reload
 
@@ -398,7 +398,7 @@ describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
       expect(post.topic.visible).to eq(false)
 
-      post.revise(post.user, { raw: post.raw + " ha I edited it again " })
+      post.revise(post.user, raw: post.raw + " ha I edited it again ")
 
       post.reload
 
@@ -426,13 +426,13 @@ describe PostAction do
     it "can flag the topic instead of a post" do
       post1 = create_post
       _post2 = create_post(topic: post1.topic)
-      post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], { flag_topic: true })
+      post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], flag_topic: true)
       expect(post_action.targets_topic).to eq(true)
     end
 
     it "will flag the first post if you flag a topic but there is only one post in the topic" do
       post = create_post
-      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam], { flag_topic: true })
+      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam], flag_topic: true)
       expect(post_action.targets_topic).to eq(false)
       expect(post_action.post_id).to eq(post.id)
     end
@@ -441,7 +441,7 @@ describe PostAction do
       Discourse.stubs(:site_contact_user).returns(admin)
 
       post = create_post
-      PostAction.act(moderator, post, PostActionType.types[:spam], { take_action: true })
+      PostAction.act(moderator, post, PostActionType.types[:spam], take_action: true)
 
       post.reload
       expect(post.hidden).to eq(true)
@@ -538,7 +538,7 @@ describe PostAction do
 
       map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
 
-      expect(map).to eq({post.topic_id => [post.post_number]})
+      expect(map).to eq(post.topic_id => [post.post_number])
     end
   end
 

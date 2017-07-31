@@ -6,7 +6,7 @@ describe PostAnalyzer do
   let(:url) { 'https://twitter.com/evil_trout/status/345954894420787200' }
 
   describe '#cook' do
-    let(:post_analyzer) {PostAnalyzer.new nil, nil  }
+    let(:post_analyzer) { PostAnalyzer.new nil, nil  }
 
     let(:raw) { "Here's a tweet:\n#{url}" }
     let(:options) { {} }
@@ -26,7 +26,7 @@ describe PostAnalyzer do
     end
 
     context 'when invalidating oneboxes' do
-      let(:options) {{ invalidate_oneboxes: true }}
+      let(:options) { { invalidate_oneboxes: true } }
 
       it 'invalidates the oneboxes for urls in the post' do
         Oneboxer.expects(:invalidate).with url
@@ -78,12 +78,12 @@ describe PostAnalyzer do
 
       it "returns the host and a count for links" do
         post_analyzer = PostAnalyzer.new(raw_two_links_html, default_topic_id)
-        expect(post_analyzer.linked_hosts).to eq({"disneyland.disney.go.com" => 1, "reddit.com" => 1})
+        expect(post_analyzer.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
       it "it counts properly with more than one link on the same host" do
         post_analyzer = PostAnalyzer.new(raw_three_links, default_topic_id)
-        expect(post_analyzer.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
+        expect(post_analyzer.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
     end
   end
@@ -161,7 +161,6 @@ describe PostAnalyzer do
       expect(post_analyzer.link_count).to eq(2)
     end
   end
-
 
   describe "raw_mentions" do
 

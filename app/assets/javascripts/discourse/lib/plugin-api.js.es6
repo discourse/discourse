@@ -1,4 +1,4 @@
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import { addDecorator } from 'discourse/widgets/post-cooked';
 import ComposerEditor from 'discourse/components/composer-editor';
 import { addButton } from 'discourse/widgets/post-menu';
@@ -19,10 +19,11 @@ import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
 import { addPostClassesCallback } from 'discourse/widgets/post';
 import { addPostTransformCallback } from 'discourse/widgets/post-stream';
 import { attachAdditionalPanel } from 'discourse/widgets/header';
+import { registerIconRenderer } from 'discourse-common/lib/icon-library';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.7';
+const PLUGIN_API_VERSION = '0.8.8';
 
 class PluginApi {
   constructor(version, container) {
@@ -56,6 +57,32 @@ class PluginApi {
     const klass = this.container.factoryFor(resolverName);
     klass.class.reopen(changes);
     return klass;
+  }
+
+  /**
+   * If you want to use custom icons in your discourse application,
+   * you can register a renderer that will return an icon in the
+   * format required.
+   *
+   * For example, the follwing resolver will render a smile in the place
+   * of every icon on Discourse.
+   *
+   * api.registerIconRenderer({
+   *   name: 'smile-icons',
+   *
+   *   // for the place in code that render a string
+   *   string() {
+   *     return "<i class='fa fa-smile-o'></i>";
+   *   },
+   *
+   *   // for the places in code that render virtual dom elements
+   *   node() {
+   *     return h('i', { className: 'fa fa-smile-o' });
+   *   }
+   * });
+   **/
+  registerIconRenderer(fn) {
+    registerIconRenderer(fn);
   }
 
   /**
@@ -523,7 +550,7 @@ function cmpVersions (a, b) {
 
 function getPluginApi(version) {
   version = version.toString();
-  if (cmpVersions(version,PLUGIN_API_VERSION) <= 0) {
+  if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }

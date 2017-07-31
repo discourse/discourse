@@ -3,7 +3,7 @@ import { dateNode } from 'discourse/helpers/node';
 import RawHtml from 'discourse/widgets/raw-html';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import highlightText from 'discourse/lib/highlight-text';
 
 class Highlighted extends RawHtml {

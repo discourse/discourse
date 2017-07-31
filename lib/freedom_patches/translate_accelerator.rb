@@ -49,10 +49,10 @@ module I18n
     end
 
     def ensure_all_loaded!
-      backend.fallbacks(locale).each {|l| ensure_loaded!(l) }
+      backend.fallbacks(locale).each { |l| ensure_loaded!(l) }
     end
 
-    def search(query, opts=nil)
+    def search(query, opts = nil)
       locale = opts[:locale] || config.locale
 
       load_locale(locale) unless @loaded_locales.include?(locale)
@@ -167,7 +167,7 @@ module I18n
 
     alias_method :t, :translate
 
-    def exists?(key, locale=nil)
+    def exists?(key, locale = nil)
       locale ||= config.locale
       load_locale(locale) unless @loaded_locales.include?(locale)
       exists_no_cache?(key, locale)

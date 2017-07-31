@@ -1,4 +1,4 @@
-discobot_username ='discobot'
+discobot_username = 'discobot'
 user = User.find_by(id: -2)
 
 if !user
@@ -37,7 +37,7 @@ if !user
 end
 
 bot = User.find(-2)
-bot.update!(admin:true, moderator: false)
+bot.update!(admin: true, moderator: false)
 
 bot.user_option.update!(
   email_private_messages: false,

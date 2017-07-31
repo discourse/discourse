@@ -1,8 +1,8 @@
 require "rails_helper"
 
 describe UserFullNameValidator do
-  let(:validator) { described_class.new({attributes: :name}) }
-  subject(:validate) { validator.validate_each(record,:name,@name) }
+  let(:validator) { described_class.new(attributes: :name) }
+  subject(:validate) { validator.validate_each(record, :name, @name) }
   let(:record) { Fabricate.build(:user, name: @name) }
 
   context "name not required" do

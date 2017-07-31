@@ -8,10 +8,9 @@ class Unread
     @topic_user = topic_user
   end
 
-
   def unread_posts
     return 0 if do_not_notify?(@topic_user.notification_level)
-    result = ((@topic_user.highest_seen_post_number||0) - (@topic_user.last_read_post_number||0))
+    result = ((@topic_user.highest_seen_post_number || 0) - (@topic_user.last_read_post_number || 0))
     result = 0 if result < 0
     result
   end
@@ -22,7 +21,7 @@ class Unread
 
     highest_post_number = @guardian.is_staff? ? @topic.highest_staff_post_number : @topic.highest_post_number
 
-    return 0 if (@topic_user.last_read_post_number||0) > highest_post_number
+    return 0 if (@topic_user.last_read_post_number || 0) > highest_post_number
 
     new_posts = (highest_post_number - @topic_user.highest_seen_post_number)
     new_posts = 0 if new_posts < 0

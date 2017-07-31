@@ -117,7 +117,6 @@ describe CategoryUser do
       expect(tu.notification_level).to eq TopicUser.notification_levels[:tracking]
     end
 
-
     it "unwatches categories that have been changed" do
       user = Fabricate(:user)
       watched_category = Fabricate(:category)

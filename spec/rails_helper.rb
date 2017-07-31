@@ -26,8 +26,8 @@ Spork.prefork do
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
-  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
-  Dir[Rails.root.join("spec/fabricators/*.rb")].each {|f| require f}
+  Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+  Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
 
   # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
   if ENV['LOAD_PLUGINS'] == "1"
@@ -79,7 +79,7 @@ Spork.prefork do
       # We nuke the DB storage provider from site settings, so need to yank out the existing settings
       #  and pretend they are default.
       # There are a bunch of settings that are seeded, they must be loaded as defaults
-      SiteSetting.current.each do |k,v|
+      SiteSetting.current.each do |k, v|
         # skip setting defauls for settings that are in unloaded plugins
         SiteSetting.defaults[k] = v if SiteSetting.respond_to? k
       end
@@ -129,12 +129,12 @@ Spork.prefork do
     end
 
     class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
-      def log_on_user(user,session,cookies)
+      def log_on_user(user, session, cookies)
         session[:current_user_id] = user.id
         super
       end
 
-      def log_off_user(session,cookies)
+      def log_off_user(session, cookies)
         session[:current_user_id] = nil
         super
       end
@@ -148,7 +148,7 @@ Spork.prefork do
     end
   end
 
-  def freeze_time(now=Time.now)
+  def freeze_time(now = Time.now)
     datetime = DateTime.parse(now.to_s)
     time = Time.parse(now.to_s)
 
@@ -177,7 +177,7 @@ Spork.prefork do
     TrackTimeStub.unstub(:stubbed)
   end
 
-  def file_from_fixtures(filename, directory="images")
+  def file_from_fixtures(filename, directory = "images")
     FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
     FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
     File.new("#{Rails.root}/tmp/spec/#{filename}")

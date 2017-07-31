@@ -11,8 +11,8 @@ class EmailToken < ActiveRecord::Base
   after_create do
     # Expire the previous tokens
     EmailToken.where(user_id: self.user_id)
-              .where("id != ?", self.id)
-              .update_all(expired: true)
+      .where("id != ?", self.id)
+      .update_all(expired: true)
   end
 
   def self.token_length
@@ -36,7 +36,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.valid_token_format?(token)
-    token.present? && token =~ /\h{#{token.length/2}}/i
+    token.present? && token =~ /\h{#{token.length / 2}}/i
   end
 
   def self.atomic_confirm(token)
@@ -81,10 +81,10 @@ class EmailToken < ActiveRecord::Base
 
   def self.confirmable(token)
     EmailToken.where(token: token)
-              .where(expired: false, confirmed: false)
-              .where("created_at >= ?", EmailToken.valid_after)
-              .includes(:user)
-              .first
+      .where(expired: false, confirmed: false)
+      .where("created_at >= ?", EmailToken.valid_after)
+      .includes(:user)
+      .first
   end
 end
 

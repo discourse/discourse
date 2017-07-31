@@ -125,12 +125,12 @@ class UserSerializer < BasicUserSerializer
 
   def mailing_list_posts_per_day
     val = Post.estimate_posts_per_day
-    [val,SiteSetting.max_emails_per_day_per_user].min
+    [val, SiteSetting.max_emails_per_day_per_user].min
   end
 
   def groups
     object.groups.order(:id)
-          .visible_groups(scope.user)
+      .visible_groups(scope.user)
   end
 
   def group_users
@@ -145,13 +145,12 @@ class UserSerializer < BasicUserSerializer
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
   end
 
-
   def user_api_keys
     keys = object.user_api_keys.where(revoked_at: nil).map do |k|
       {
         id: k.id,
         application_name: k.application_name,
-        scopes: k.scopes.map{|s| I18n.t("user_api_key.scopes.#{s}")},
+        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
         created_at: k.created_at
       }
     end
@@ -178,7 +177,7 @@ class UserSerializer < BasicUserSerializer
   def website_name
     uri = URI(website.to_s) rescue nil
     return if uri.nil? || uri.host.nil?
-    uri.host.sub(/^www\./,'') + uri.path
+    uri.host.sub(/^www\./, '') + uri.path
   end
 
   def include_website_name
@@ -248,7 +247,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 , { keep_newlines: true, keep_emoji_images: true })
+    object.user_profile.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
   end
 
   def include_suspend_reason?

@@ -169,13 +169,13 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(Hash[*@client_settings.map{|n| [n, self.send(n)]}.flatten])
+    MultiJson.dump(Hash[*@client_settings.map { |n| [n, self.send(n)] }.flatten])
   end
 
   # Retrieve all settings
-  def all_settings(include_hidden=false)
+  def all_settings(include_hidden = false)
     @defaults
-      .reject{|s, _| hidden_settings.include?(s) && !include_hidden}
+      .reject { |s, _| hidden_settings.include?(s) && !include_hidden }
       .map do |s, v|
         value = send(s)
         type = types[get_data_type(s, value)]
@@ -190,9 +190,9 @@ module SiteSettingExtension
         }
 
         if type == :enum && enum_class(s)
-          opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?})
+          opts.merge!(valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?)
         elsif type == :enum
-          opts.merge!({valid_values: choices[s].map{|c| {name: c, value: c}}, translate_names: false})
+          opts.merge!(valid_values: choices[s].map { |c| { name: c, value: c } }, translate_names: false)
         end
 
         opts[:textarea] = true if static_types[s] == :textarea
@@ -219,7 +219,7 @@ module SiteSettingExtension
       ensure_listen_for_changes
       old = current
 
-      new_hash =  Hash[*(provider.all.map { |s|
+      new_hash = Hash[*(provider.all.map { |s|
         [s.name.intern, convert(s.value, s.data_type, s.name)]
       }.to_a.flatten)]
 
@@ -325,11 +325,11 @@ module SiteSettingExtension
   end
 
   def notify_changed!
-    MessageBus.publish('/site_settings', {process: process_id})
+    MessageBus.publish('/site_settings', process: process_id)
   end
 
   def notify_clients!(name)
-    MessageBus.publish('/client_settings', {name: name, value: self.send(name)})
+    MessageBus.publish('/client_settings', name: name, value: self.send(name))
   end
 
   def has_setting?(name)
@@ -371,7 +371,7 @@ module SiteSettingExtension
     end
   end
 
-  def set_and_log(name, value, user=Discourse.system_user)
+  def set_and_log(name, value, user = Discourse.system_user)
     prev_value = send(name)
     set(name, value)
     StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
@@ -389,14 +389,14 @@ module SiteSettingExtension
     deletions = []
 
     new_hash.each do |name, value|
-      changes << [name,value] if !old.has_key?(name) || old[name] != value
+      changes << [name, value] if !old.has_key?(name) || old[name] != value
     end
 
-    old.each do |name,value|
-      deletions << [name,value] unless new_hash.has_key?(name)
+    old.each do |name, value|
+      deletions << [name, value] unless new_hash.has_key?(name)
     end
 
-    [changes,deletions]
+    [changes, deletions]
   end
 
   def get_data_type(name, val)

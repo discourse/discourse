@@ -17,7 +17,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       SiteSetting.set_and_log(id, value, current_user)
       render nothing: true
     rescue Discourse::InvalidParameters => e
-      render json: {errors: [e.message]}, status: 422
+      render json: { errors: [e.message] }, status: 422
     end
   end
 

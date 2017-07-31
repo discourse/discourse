@@ -290,7 +290,7 @@ describe Email::Receiver do
 
     it "handles inline reply" do
       expect { process(:inline_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
+      expect(topic.posts.last.raw).to eq("And this is *my* reply :+1:")
     end
 
     it "retrieves the first part of multiple replies" do
@@ -507,10 +507,10 @@ describe Email::Receiver do
       SiteSetting.always_show_trimmed_content = true
 
       Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:forwarded_email_to_category) }.to change{Topic.count}.by(1) # Topic created
+      expect { process(:forwarded_email_to_category) }.to change { Topic.count }.by(1) # Topic created
 
       new_post, = Post.last
-      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?","<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>","Discoursing much today?")
+      expect(new_post.raw).to include("Hi everyone, can you have a look at the email below?", "<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>", "Discoursing much today?")
     end
 
     it "works when approving is enabled" do

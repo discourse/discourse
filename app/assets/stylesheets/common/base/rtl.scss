@@ -7,7 +7,7 @@
   right: 0 !important;
 }
 
-// This is used to flip the .fa-caret-right icon
+// This is used to flip the .d-icon-caret-right 
 @mixin rotate( $degrees ) {
   -webkit-transform: rotate(#{$degrees}deg);
   -moz-transform: rotate(#{$degrees}deg);
@@ -21,7 +21,7 @@
 }
 
 // Get the right caret to point left
-.rtl .fa-caret-right {
+.rtl .d-icon-caret-right {
   @include rotate(180);
 }
 

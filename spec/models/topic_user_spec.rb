@@ -90,7 +90,7 @@ describe TopicUser do
     u
   }
 
-  let(:topic_new_user) { TopicUser.get(topic, new_user)}
+  let(:topic_new_user) { TopicUser.get(topic, new_user) }
   let(:yesterday) { DateTime.now.yesterday }
 
   def ensure_topic_user
@@ -135,12 +135,12 @@ describe TopicUser do
 
     it 'should be set to "regular" notifications, by default on non creators' do
       ensure_topic_user
-      expect(TopicUser.get(topic,user).notification_level).to eq(TopicUser.notification_levels[:regular])
+      expect(TopicUser.get(topic, user).notification_level).to eq(TopicUser.notification_levels[:regular])
     end
 
     it 'reason should reset when changed' do
       topic.notify_muted!(topic.user)
-      expect(TopicUser.get(topic,topic.user).notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
+      expect(TopicUser.get(topic, topic.user).notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
     end
 
     it 'should have the correct reason for a user change when watched' do
@@ -190,7 +190,7 @@ describe TopicUser do
 
       TopicUser.track_visit!(topic.id, user.id)
       # reload is a no go
-      topic_user = TopicUser.get(topic,user)
+      topic_user = TopicUser.get(topic, user)
       expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
       expect(topic_user.last_visited_at.to_i).to eq(Time.zone.now.to_i)
 
@@ -201,7 +201,7 @@ describe TopicUser do
 
     context "without auto tracking" do
 
-      let(:topic_user) { TopicUser.get(topic,user) }
+      let(:topic_user) { TopicUser.get(topic, user) }
 
       it 'should create a new record for a visit' do
         freeze_time yesterday
@@ -225,7 +225,7 @@ describe TopicUser do
 
         Fabricate(:post, topic: topic, user: user)
         TopicUser.update_last_read(user, topic.id, 2, 0)
-        topic_user = TopicUser.get(topic,user)
+        topic_user = TopicUser.get(topic, user)
 
         expect(topic_user.last_read_post_number).to eq(2)
         expect(topic_user.last_visited_at.to_i).to eq(today.to_i)
@@ -370,7 +370,7 @@ describe TopicUser do
     TopicUser.exec_sql("UPDATE topic_users set highest_seen_post_number=1, last_read_post_number=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: p1.topic_id, user_id: p1.user_id)
 
-    [p1,p2].each do |p|
+    [p1, p2].each do |p|
       PostTiming.create(topic_id: p.topic_id, post_number: p.post_number, user_id: p.user_id, msecs: 100)
     end
 

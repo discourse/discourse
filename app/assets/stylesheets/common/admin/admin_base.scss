@@ -51,8 +51,8 @@ $mobile-breakpoint: 700px;
         background-color: lighten($primary, 80%);
       }
 
-      i.fa-chevron-down,
-      i.fa-chevron-up {
+      .d-icon-chevron-down,
+      .d-icon-chevron-up {
         margin-left: 0.5em;
       }
     }
@@ -869,7 +869,7 @@ section.details {
 }
 
 .update-nag {
-  i.fa {
+  .d-icon {
     font-size: 1.429em;
   }
 }
@@ -904,10 +904,10 @@ table.api-keys {
     width: 100%;
 
     .title {
-      i.fa {
+      .d-icon {
         color: $primary;
       }
-      i.fa-heart {
+      .d-icon-heart {
         color: $love;
       }
     }
@@ -1363,10 +1363,10 @@ table.api-keys {
 }
 
 .tl3-requirements {
-  .fa-check {
+  .d-icon-check {
     color: $success;
   }
-  .fa-times {
+  .d-icon-times {
     color: $danger;
   }
 }
@@ -1844,6 +1844,47 @@ table#user-badges {
     width: 100%;
     height: 600px;
     border-width: 1px;
+  }
+}
+
+.watched-word-box {
+  display: inline-block;
+  width: 250px;
+  margin-bottom: 1em;
+  float: left;
+}
+
+.watched-words-list {
+  margin-top: 40px;
+}
+.watched-word {
+  display: inline-block;
+  cursor: pointer;
+  .d-icon {
+    margin-right: 0.25em;
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
+  }
+  &:hover .d-icon {
+    color: $primary;
+  }
+}
+.watched-word-form {
+  display: inline-block;
+  .success-message {
+    margin-left: 1em;
+  }
+}
+.watched-words-uploader {
+  float: right;
+  text-align: right;
+  .instructions {
+    font-size: 12px;
+  }
+}
+.watched-words-detail {
+  .about {
+    margin-top: 24px;
+    margin-bottom: 40px;
   }
 }
 

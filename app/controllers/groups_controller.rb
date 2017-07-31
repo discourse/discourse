@@ -124,13 +124,13 @@ class GroupsController < ApplicationController
     members = group.users
       .order('NOT group_users.owner')
       .order(order)
-      .order(:username_lower => dir)
+      .order(username_lower: dir)
       .limit(limit)
       .offset(offset)
 
     owners = group.users
       .order(order)
-      .order(:username_lower => dir)
+      .order(username_lower: dir)
       .where('group_users.owner')
 
     render json: {
@@ -146,7 +146,7 @@ class GroupsController < ApplicationController
 
   def add_members
     group = Group.find(params[:id])
-    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
     users =
       if params[:usernames].present?
@@ -163,7 +163,7 @@ class GroupsController < ApplicationController
 
     raise Discourse::NotFound if users.blank?
 
-    if group.public
+    if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
         raise Discourse::InvalidAccess
       end
@@ -201,7 +201,7 @@ class GroupsController < ApplicationController
 
   def remove_member
     group = Group.find(params[:id])
-    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
+    group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
     user =
       if params[:user_id].present?
@@ -216,7 +216,7 @@ class GroupsController < ApplicationController
 
     raise Discourse::NotFound unless user
 
-    if group.public
+    if group.public_exit
       if !guardian.can_log_group_changes?(group) && current_user != user
         raise Discourse::InvalidAccess
       end
@@ -274,8 +274,8 @@ class GroupsController < ApplicationController
     end
 
     GroupUser.where(group_id: group.id)
-             .where(user_id: user_id)
-             .update_all(notification_level: notification_level)
+      .where(user_id: user_id)
+      .update_all(notification_level: notification_level)
 
     render json: success_json
   end
@@ -322,7 +322,8 @@ class GroupsController < ApplicationController
       :flair_color,
       :bio_raw,
       :full_name,
-      :public,
+      :public_admission,
+      :public_exit,
       :allow_membership_requests
     )
   end

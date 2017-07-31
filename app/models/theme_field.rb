@@ -11,7 +11,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def self.theme_var_type_ids
-    @theme_var_type_ids ||= [2,3,4]
+    @theme_var_type_ids ||= [2, 3, 4]
   end
 
   COMPILER_VERSION = 5
@@ -19,7 +19,7 @@ class ThemeField < ActiveRecord::Base
   belongs_to :theme
 
   def transpile(es6_source, version)
-    template  = Tilt::ES6ModuleTranspilerTemplate.new {}
+    template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<PLUGIN_API_JS
 Discourse._registerPluginCode('#{version}', api => {
   #{es6_source}
@@ -89,7 +89,6 @@ COMPILED
   def self.scss_fields
     @scss_fields ||= %w(scss embedded_scss)
   end
-
 
   def ensure_baked!
     if ThemeField.html_fields.include?(self.name)

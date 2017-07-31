@@ -48,7 +48,7 @@ describe SiteSettings::YamlLoader do
 
   it 'can take a File argument' do
     receiver.expects(:setting).at_least_once
-    receiver.load_yaml( File.new(simple) )
+    receiver.load_yaml(File.new(simple))
   end
 
   it "maintains order of categories" do
@@ -64,13 +64,13 @@ describe SiteSettings::YamlLoader do
   end
 
   it "can load enum settings" do
-    receiver.expects(:setting).with('email', 'default_email_digest_frequency', 7, {enum: 'DigestEmailSiteSetting'})
+    receiver.expects(:setting).with('email', 'default_email_digest_frequency', 7, enum: 'DigestEmailSiteSetting')
     receiver.load_yaml(enum)
   end
 
   it "can load enum client settings" do
     receiver.expects(:client_setting).with do |category, name, default, opts|
-      category == 'basics' and name == 'default_locale' and default == 'en' and opts[:enum] == 'LocaleSiteSetting'
+      category == ('basics') && name == ('default_locale') && default == ('en') && opts[:enum] == ('LocaleSiteSetting')
     end
     receiver.load_yaml(enum_client)
   end

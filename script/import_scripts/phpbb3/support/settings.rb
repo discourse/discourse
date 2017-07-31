@@ -44,7 +44,7 @@ module ImportScripts::PhpBB3
       @import_remote_avatars = avatar_settings['remote']
       @import_gallery_avatars = avatar_settings['gallery']
 
-      @use_bbcode_to_md =import_settings['use_bbcode_to_md']
+      @use_bbcode_to_md = import_settings['use_bbcode_to_md']
 
       @original_site_prefix = import_settings['site_prefix']['original']
       @new_site_prefix = import_settings['site_prefix']['new']

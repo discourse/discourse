@@ -18,7 +18,7 @@ class SocialcastMessage
     }
    }
 
-   def initialize message_json
+   def initialize(message_json)
      @parsed_json = JSON.parse message_json
    end
 
@@ -50,7 +50,6 @@ class SocialcastMessage
      tags << DEFAULT_TAG
      tags
    end
-
 
    def category
      category = DEFAULT_CATEGORY
@@ -92,7 +91,7 @@ class SocialcastMessage
 
    private
 
-   def unescape html
+   def unescape(html)
      return nil unless html
      CGI.unescapeHTML html
    end

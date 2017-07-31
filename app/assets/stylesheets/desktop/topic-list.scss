@@ -23,8 +23,7 @@
     float: none;
   }
 
-
-  a.badge-category {
+  a.badge-category, .dropdown-header {
     padding: 3px 12px;
     font-size: 1.143em;
   }
@@ -36,10 +35,10 @@
 
 .topic-list {
   margin: 0 0 10px;
-  .fa-thumb-tack { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
-  .fa-thumb-tack.unpinned { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+  .d-icon-thumb-tack { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+  .d-icon-thumb-tack.unpinned { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   a.title {color: $primary;}
-  .fa-bookmark { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+  .d-icon-bookmark { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   th,
   td {
     padding: 12px 5px;
@@ -51,7 +50,7 @@
     }
   }
   th {
-    button i.fa {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    button .d-icon {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   }
 
   > tbody > tr {
@@ -68,7 +67,7 @@
   .star {
     width: 20px;
     padding-right: 0;
-    .fa-star {
+    .d-icon-star {
       position: relative;
     }
     + .main-link {

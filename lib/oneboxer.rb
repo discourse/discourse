@@ -18,16 +18,16 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://store.steampowered.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', Discourse.base_url]
   end
 
-  def self.preview(url, options=nil)
+  def self.preview(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
     onebox_raw(url)[:preview]
   end
 
-  def self.onebox(url, options=nil)
+  def self.onebox(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
     onebox_raw(url)[:onebox]
@@ -74,7 +74,7 @@ module Oneboxer
 
   def self.append_source_topic_id(url, topic_id)
     # hack urls to create proper expansions
-    if url =~ Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true)
+    if url =~ Regexp.new("^#{Discourse.base_url.gsub(".", "\\.")}.*$", true)
       uri = URI.parse(url) rescue nil
       if uri && uri.path
         route = Rails.application.routes.recognize_path(uri.path) rescue nil
@@ -86,7 +86,7 @@ module Oneboxer
     url
   end
 
-  def self.apply(string_or_doc, args=nil)
+  def self.apply(string_or_doc, args = nil)
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
     changed = false
@@ -95,7 +95,7 @@ module Oneboxer
       if args && args[:topic_id]
         url = append_source_topic_id(url, args[:topic_id])
       end
-      onebox, _preview = yield(url,element)
+      onebox, _preview = yield(url, element)
       if onebox
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
         next unless parsed_onebox.children.count > 0

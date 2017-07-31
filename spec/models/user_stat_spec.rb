@@ -72,7 +72,6 @@ describe UserStat do
     end
   end
 
-
   describe 'update_time_read!' do
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }

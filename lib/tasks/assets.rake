@@ -71,10 +71,10 @@ def assets_path
   "#{Rails.root}/public/assets"
 end
 
-def compress_node(from,to)
+def compress_node(from, to)
   to_path = "#{assets_path}/#{to}"
   assets = cdn_relative_path("/assets")
-  source_map_root = assets + ((d=File.dirname(from)) == "." ? "" : "/#{d}")
+  source_map_root = assets + ((d = File.dirname(from)) == "." ? "" : "/#{d}")
   source_map_url = cdn_path "/assets/#{to}.map"
 
   cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
@@ -89,7 +89,7 @@ def compress_node(from,to)
   result
 end
 
-def compress_ruby(from,to)
+def compress_ruby(from, to)
   data = File.read("#{assets_path}/#{from}")
 
   uglified, map = Uglifier.new(comments: :none,
@@ -99,7 +99,7 @@ def compress_ruby(from,to)
                                  output_filename: File.basename(to)
                                }
                               )
-                          .compile_with_map(data)
+    .compile_with_map(data)
   dest = "#{assets_path}/#{to}"
 
   File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
@@ -121,11 +121,11 @@ def brotli(path)
   end
 end
 
-def compress(from,to)
+def compress(from, to)
   if $node_uglify
-    compress_node(from,to)
+    compress_node(from, to)
   else
-    compress_ruby(from,to)
+    compress_ruby(from, to)
   end
 end
 
@@ -148,10 +148,10 @@ task 'assets:precompile' => 'assets:precompile:before' do
     concurrent? do |proc|
       to_skip = Rails.configuration.assets.skip_minification || []
       manifest.files
-              .select{|k,v| k =~ /\.js$/}
-              .each do |file, info|
+        .select { |k, v| k =~ /\.js$/ }
+        .each do |file, info|
 
-          path = "#{assets_path}/#{file}"
+        path = "#{assets_path}/#{file}"
           _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
           _path = "#{assets_path}/#{_file}"
 
@@ -164,7 +164,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               # We can specify some files to never minify
               unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
                 FileUtils.mv(path, _path)
-                compress(_file,file)
+                compress(_file, file)
               end
 
               info["size"] = File.size(path)

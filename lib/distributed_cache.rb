@@ -17,7 +17,7 @@ class DistributedCache
   end
 
   def self.process_message(message)
-    i = @subscribers.length-1
+    i = @subscribers.length - 1
 
     payload = message.data
 
@@ -32,9 +32,9 @@ class DistributedCache
         hash = current.hash(message.site_id)
 
         case payload["op"]
-          when "set" then hash[payload["key"]] = payload["marshalled"] ?  Marshal.load(Base64.decode64(payload["value"])) : payload["value"]
-          when "delete" then hash.delete(payload["key"])
-          when "clear"  then hash.clear
+        when "set" then hash[payload["key"]] = payload["marshalled"] ? Marshal.load(Base64.decode64(payload["value"])) : payload["value"]
+        when "delete" then hash.delete(payload["key"])
+        when "clear"  then hash.clear
         end
 
       rescue WeakRef::RefError
@@ -66,22 +66,22 @@ class DistributedCache
     message[:origin] = hash.identity
     message[:hash_key] = hash.key
     message[:discourse_version] = Discourse.git_version
-    MessageBus.publish(channel_name, message, { user_ids: [-1] })
+    MessageBus.publish(channel_name, message, user_ids: [-1])
   end
 
   def self.set(hash, key, value)
     # special support for set
     marshal = (Set === value || Hash === value)
     value = Base64.encode64(Marshal.dump(value)) if marshal
-    publish(hash, { op: :set, key: key, value: value, marshalled: marshal })
+    publish(hash, op: :set, key: key, value: value, marshalled: marshal)
   end
 
   def self.delete(hash, key)
-    publish(hash, { op: :delete, key: key })
+    publish(hash, op: :delete, key: key)
   end
 
   def self.clear(hash)
-    publish(hash, { op: :clear })
+    publish(hash, op: :clear)
   end
 
   def self.register(hash)
@@ -103,7 +103,7 @@ class DistributedCache
     (@seed_id ||= SecureRandom.hex) + "#{Process.pid}"
   end
 
-  def []=(k,v)
+  def []=(k, v)
     k = k.to_s if Symbol === k
     DistributedCache.set(self, k, v)
     hash[k] = v

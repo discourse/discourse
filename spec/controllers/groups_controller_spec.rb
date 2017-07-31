@@ -55,7 +55,7 @@ describe GroupsController do
 
     it "ensures that membership can be paginated" do
       5.times { group.add(Fabricate(:user)) }
-      usernames = group.users.map{ |m| m.username }.sort
+      usernames = group.users.map { |m| m.username }.sort
 
       xhr :get, :members, group_id: group.name, limit: 3
       expect(response).to be_success

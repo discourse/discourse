@@ -58,8 +58,8 @@ describe UserAuthToken do
     user = Fabricate(:user)
 
     user_token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent 2",
-                                    client_ip: "1.1.2.3")
+                                         user_agent: "some user agent 2",
+                                         client_ip: "1.1.2.3")
 
     expect(user_token.auth_token_seen).to eq(false)
 
@@ -75,8 +75,8 @@ describe UserAuthToken do
     user = Fabricate(:user)
 
     user_token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent 2",
-                                    client_ip: "1.1.2.3")
+                                         user_agent: "some user agent 2",
+                                         client_ip: "1.1.2.3")
 
     user_token.update_columns(auth_token_seen: true)
     expect(user_token.rotate!).to eq(true)
@@ -90,8 +90,8 @@ describe UserAuthToken do
     user = Fabricate(:user)
 
     user_token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent 2",
-                                    client_ip: "1.1.2.3")
+                                         user_agent: "some user agent 2",
+                                         client_ip: "1.1.2.3")
 
     UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
 
@@ -118,8 +118,8 @@ describe UserAuthToken do
     user = Fabricate(:user)
 
     user_token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent 2",
-                                    client_ip: "1.1.2.3")
+                                         user_agent: "some user agent 2",
+                                         client_ip: "1.1.2.3")
 
     prev_auth_token = user_token.auth_token
     unhashed_prev = user_token.unhashed_auth_token
@@ -242,7 +242,6 @@ describe UserAuthToken do
       path: "/path"
     ).count).to eq(1)
 
-
     freeze_time(UserAuthToken::ROTATE_TIME.from_now)
 
     token.rotate!(user_agent: "firefox", client_ip: "1.1.1.1")
@@ -263,7 +262,6 @@ describe UserAuthToken do
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent",
                                     client_ip: "1.1.2.3")
-
 
     lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
     lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)

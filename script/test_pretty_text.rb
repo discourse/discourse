@@ -1,6 +1,5 @@
 require File.expand_path("../../config/environment", __FILE__)
 
-
 puts PrettyText.cook "test"
 1000.times do |i|
   # PrettyText.v8.eval <<~JS
@@ -11,7 +10,7 @@ puts PrettyText.cook "test"
   PrettyText.v8.eval('gc()')
 
   # if i % 500 == 0
-    #p PrettyText.v8.heap_stats
+  #p PrettyText.v8.heap_stats
   # end
 end
 

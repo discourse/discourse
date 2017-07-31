@@ -6,7 +6,7 @@ class AddAutoTrackAfterSecondsAndBanningAndDobToUser < ActiveRecord::Migration
     add_column :users, :auto_track_topics_after_msecs, :integer
     add_column :users, :views, :integer, null: false, default: 0
 
-    remove_column  :users, :auto_track_topics
+    remove_column :users, :auto_track_topics
 
     add_column :topic_users, :total_msecs_viewed, :integer, null: false, default: 0
 

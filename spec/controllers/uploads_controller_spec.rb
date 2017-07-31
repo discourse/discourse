@@ -13,24 +13,18 @@ describe UploadsController do
       before { @user = log_in :user }
 
       let(:logo) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'logo.png',
-          tempfile: file_from_fixtures("logo.png")
-        })
+        ActionDispatch::Http::UploadedFile.new(filename: 'logo.png',
+                                               tempfile: file_from_fixtures("logo.png"))
       end
 
       let(:fake_jpg) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'fake.jpg',
-          tempfile: file_from_fixtures("fake.jpg")
-        })
+        ActionDispatch::Http::UploadedFile.new(filename: 'fake.jpg',
+                                               tempfile: file_from_fixtures("fake.jpg"))
       end
 
       let(:text_file) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'LICENSE.TXT',
-          tempfile: File.new("#{Rails.root}/LICENSE.txt")
-        })
+        ActionDispatch::Http::UploadedFile.new(filename: 'LICENSE.TXT',
+                                               tempfile: File.new("#{Rails.root}/LICENSE.txt"))
       end
 
       it 'expects a type' do

@@ -37,4 +37,3 @@ describe Discourse::VERSION do
 
   end
 end
-

@@ -8,7 +8,6 @@ class CreateActions < ActiveRecord::Migration
       # There is a notificiation table as well that covers much of this,
       # but this table is wider and is intended for non-notifying actions as well
 
-
       t.integer :action_type, null: false
       t.integer :user_id, null: false
       t.integer :target_forum_thread_id
