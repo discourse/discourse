@@ -148,7 +148,7 @@
                   {{#if flaggedPost.postHidden}}
                   <button title='{{i18n 'admin.flags.disagree_flag_unhide_post_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag_unhide_post'}}</button>
                   {{else}}
-                  <button title='{{i18n 'admin.flags.disagree_flag_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}>{{d-icon "thumbs-o-down"}}>{{i18n 'admin.flags.disagree_flag'}}</button>
+                  <button title='{{i18n 'admin.flags.disagree_flag_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag'}}</button>
                   {{/if}}
                   <button title='{{i18n 'admin.flags.defer_flag_title'}}' class='btn' {{action "deferFlags" flaggedPost}}>{{d-icon "external-link"}}{{i18n 'admin.flags.defer_flag'}}</button>
                   <button title='{{i18n 'admin.flags.delete_title'}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}>{{d-icon "trash-o"}}{{i18n 'admin.flags.delete'}}&hellip;</button>
