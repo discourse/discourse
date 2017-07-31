@@ -26,6 +26,16 @@ describe User do
           expect(user.errors.messages).to include(:primary_email)
         end
       end
+
+      describe 'when user is staged' do
+        it 'should still validate primary_email' do
+          user.staged = true
+          user.primary_email = nil
+
+          expect(user).to_not be_valid
+          expect(user.errors.messages).to include(:primary_email)
+        end
+      end
     end
   end
 
