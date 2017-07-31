@@ -35,7 +35,7 @@ describe DistributedCache do
 
     set << 5
 
-    c2["cats"] == set
+    c2["cats"] = set
 
     wait_for do
       c1["cats"] == set
