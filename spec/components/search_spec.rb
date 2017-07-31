@@ -632,6 +632,17 @@ describe Search do
 
     end
 
+    it 'can find posts with images' do
+      post_uploaded = Fabricate(:post_with_uploaded_image)
+      post_with_image_urls = Fabricate(:post_with_image_urls)
+      Fabricate(:post)
+
+      CookedPostProcessor.new(post_uploaded).update_post_image
+      CookedPostProcessor.new(post_with_image_urls).update_post_image
+
+      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id, post_with_image_urls.id)
+    end
+
     it 'can find by latest' do
       topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
       post1 = Fabricate(:post, topic: topic1)

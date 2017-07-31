@@ -1374,6 +1374,7 @@ en:
           seen: I've read
           unseen: I've not read
           wiki: are wiki
+          images: includes image(s)
           all_tags: Contains all tags
         statuses:
           label: Where topics
