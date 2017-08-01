@@ -15,7 +15,7 @@ function clamp(p, min=0.0, max=1.0) {
 
 function attachBackButton(widget) {
   return widget.attach('button', {
-    className: 'btn btn-primary btn-small back-button',
+    className: 'btn-primary btn-small back-button',
     label: 'topic.timeline.back',
     title: 'topic.timeline.back_description',
     action: 'goBack'
@@ -371,7 +371,7 @@ export default createWidget('topic-timeline', {
     if (currentUser && !attrs.fullScreen) {
       if (attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {
-          className: 'btn create',
+          className: 'create',
           icon: 'reply',
           title: 'topic.reply.help',
           action: 'replyToPost'
@@ -382,7 +382,7 @@ export default createWidget('topic-timeline', {
 
     if (attrs.fullScreen) {
       controls.push(this.attach('button', {
-        className: 'btn jump-to-post',
+        className: 'jump-to-post',
         title: 'topic.progress.jump_prompt_long',
         label: 'topic.progress.jump_prompt',
         action: 'jumpToPostPrompt'
