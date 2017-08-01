@@ -151,7 +151,7 @@ class TagsController < ::ApplicationController
     tag = Tag.find_by_name(params[:tag_id])
     raise Discourse::NotFound unless tag
     level = tag.tag_users.where(user: current_user).first.try(:notification_level) || TagUser.notification_levels[:regular]
-    render json: { tag_notification: { id: params[:tag_id], notification_level: level.to_i } }
+    render json: { tag_notification: { id: tag.name, notification_level: level.to_i } }
   end
 
   def update_notifications
