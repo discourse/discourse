@@ -432,14 +432,23 @@ posting:
     client: true
     min: 1
     default: 20
+    locale_default:
+      zh_CN: 8
+      zh_TW: 8
   min_first_post_length:
     client: true
     min: 1
     default: 20
+    locale_default:
+      zh_CN: 8
+      zh_TW: 8
   min_private_message_post_length:
     client: true
     min: 1
     default: 10
+    locale_default:
+      zh_CN: 3
+      zh_TW: 3
   max_post_length:
     client: true
     default: 32000
@@ -447,17 +456,32 @@ posting:
   topic_featured_link_enabled:
     client: true
     default: true
-  body_min_entropy: 7
+  body_min_entropy:
+    default: 7
+    locale_default:
+      zh_CN: 3
+      zh_TW: 3
   min_topic_title_length:
     client: true
     default: 15
+    locale_default:
+      zh_CN: 6
+      zh_TW: 6
   max_topic_title_length:
     client: true
     default: 255
     max: 255
-  title_min_entropy: 10
+  title_min_entropy:
+    default: 10
+    locale_default:
+      zh_CN: 3
+      zh_TW: 3
   allow_uppercase_posts: false
-  title_prettify: true
+  title_prettify:
+    default: true
+    locale_default:
+      zh_CN: false
+      zh_TW: false
   title_fancy_entities: true
   min_private_message_title_length:
     client: true
@@ -471,9 +495,15 @@ posting:
   min_title_similar_length:
     client: true
     default: 10
+    locale_default:
+      zh_CN: 4
+      zh_TW: 4
   min_body_similar_length:
     client: true
     default: 15
+    locale_default:
+      zh_CN: 5
+      zh_TW: 5
   enable_private_messages:
     default: true
     client: true
@@ -517,7 +547,11 @@ posting:
   newuser_max_attachments:
     client: true
     default: 0
-  post_excerpt_maxlength: 300
+  post_excerpt_maxlength:
+    default: 300
+    locale_default:
+      zh_CN: 120
+      zh_TW: 120
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -596,7 +630,11 @@ email:
     client: true
   private_email_time_window_seconds: 20
   email_posts_context: 5
-  digest_min_excerpt_length: 100
+  digest_min_excerpt_length:
+    default: 100
+    locale_default:
+      zh_CN: 50
+      zh_TW: 50
   digest_topics:
     default: 5
     min: 1
@@ -897,7 +935,11 @@ security:
 
 onebox:
   enable_flash_video_onebox: false
-  post_onebox_maxlength: 500
+  post_onebox_maxlength:
+    default: 500
+    locale_default:
+      zh_CN: 200
+      zh_TW: 200
   onebox_domains_blacklist:
     default: ''
     type: list
@@ -1148,6 +1190,9 @@ uncategorized:
   slug_generation_method:
     default: 'ascii'
     enum: 'SlugSetting'
+    locale_default:
+      zh_CN: 'none'
+      zh_TW: 'none'
 
   permalink_normalizations:
     default: ''
@@ -1288,6 +1333,9 @@ uncategorized:
   read_time_word_count:
     default: 500
     client: true
+    locale_default:
+      zh_CN: 350
+      zh_TW: 350
 
   topic_page_title_includes_category: true
 
