@@ -1,4 +1,3 @@
-import { iconNode } from 'discourse-common/lib/icon-library';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { ButtonClass } from 'discourse/widgets/button';
