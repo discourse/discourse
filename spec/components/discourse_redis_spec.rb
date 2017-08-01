@@ -99,7 +99,9 @@ describe DiscourseRedis do
       it 'should return the right value if the master server is still down' do
         fallback_handler.master = false
         Redis::Client.any_instance.expects(:call).with([:info]).returns("Some other stuff")
+
         expect(fallback_handler.initiate_fallback_to_master).to eq(false)
+        expect(MessageBus.keepalive_interval).to eq(0)
       end
 
       it 'should fallback to the master server once it is up' do
@@ -113,6 +115,7 @@ describe DiscourseRedis do
         expect(fallback_handler.initiate_fallback_to_master).to eq(true)
         expect(fallback_handler.master).to eq(true)
         expect(Discourse.recently_readonly?).to eq(false)
+        expect(MessageBus.keepalive_interval).to eq(-1)
       end
     end
   end
