@@ -4,20 +4,30 @@ require 'distributed_cache'
 describe DistributedCache do
 
   before :all do
-    $redis.flushall
+    @bus = MessageBus::Instance.new
+    @bus.configure(backend: :memory)
+    @manager = DistributedCache::Manager.new(@bus)
+  end
+
+  after :all do
+    @bus.destroy
+  end
+
+  def cache(name)
+    DistributedCache.new(name, @manager)
   end
 
   let! :cache1 do
-    DistributedCache.new("test")
+    cache("test")
   end
 
   let! :cache2 do
-    DistributedCache.new("test")
+    cache("test")
   end
 
   it 'allows us to store Set' do
-    c1 = DistributedCache.new("test1")
-    c2 = DistributedCache.new("test1")
+    c1 = cache("test1")
+    c2 = cache("test1")
 
     set = Set.new
     set << 1
@@ -45,8 +55,8 @@ describe DistributedCache do
   end
 
   it 'does not leak state across caches' do
-    c2 = DistributedCache.new("test1")
-    c3 = DistributedCache.new("test1")
+    c2 = cache("test1")
+    c3 = cache("test1")
     c2["hi"] = "hi"
     wait_for do
       c3["hi"] == "hi"
