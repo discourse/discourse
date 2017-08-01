@@ -2,7 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import { h } from 'virtual-dom';
 
-const ButtonClass = {
+export const ButtonClass = {
   tagName: 'button.widget-button.btn',
 
   buildClasses(attrs) {
@@ -20,7 +20,7 @@ const ButtonClass = {
         className += '-text';
       }
     } else if (hasText) {
-      className += 'btn-text';
+      className += ' btn-text';
     }
 
     return className;
