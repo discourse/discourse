@@ -27,10 +27,7 @@
                icon="bookmark"
                action=toggleBookmark}}
 
-    <button class="btn share" data-share-url={{topic.shareUrl}} title={{i18n "topic.share.help"}}>
-      {{d-icon "link"}}
-      {{i18n "topic.share.title"}}
-    </button>
+    {{share-button url=topic.shareUrl}}
 
     {{#if topic.details.can_flag_topic}}
       {{d-button class="flag-topic"

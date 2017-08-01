@@ -146,11 +146,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   }.property('selected.name_key', 'userDetails.can_be_deleted', 'userDetails.can_delete_all_posts'),
 
-  canSendWarning: function() {
-    if (this.get("flagTopic")) return false;
-
-    return (Discourse.User.currentProp('staff') && this.get('selected.name_key') === 'notify_user');
-  }.property('selected.name_key'),
+  @computed('flagTopic', 'selected.name_key')
+  canSendWarning(flagTopic, nameKey) {
+    return !flagTopic && this.currentUser.get('staff') && nameKey === 'notify_user';
+  },
 
   usernameChanged: function() {
     this.set('userDetails', null);

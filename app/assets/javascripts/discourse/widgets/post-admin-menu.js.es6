@@ -1,20 +1,15 @@
 import { iconNode } from 'discourse-common/lib/icon-library';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import { ButtonClass } from 'discourse/widgets/button';
 
-createWidget('post-admin-menu-button', {
+createWidget('post-admin-menu-button', jQuery.extend(ButtonClass, {
   tagName: 'li.btn',
-  buildClasses(attrs) {
-    return attrs.className;
-  },
-  html(attrs) {
-    return [iconNode(attrs.icon), I18n.t(attrs.label)];
-  },
   click() {
     this.sendWidgetAction('closeAdminMenu');
     return this.sendWidgetAction(this.attrs.action);
   }
-});
+}));
 
 export default createWidget('post-admin-menu', {
   tagName: 'div.post-admin-menu.popup-menu',
