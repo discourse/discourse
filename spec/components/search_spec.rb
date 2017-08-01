@@ -845,11 +845,11 @@ describe Search do
 
   context 'pagination' do
     let(:number_of_results) { 2 }
-    let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello')}
-    let!(:post2) { Fabricate(:post, raw: 'hello hello hello hello')}
-    let!(:post3) { Fabricate(:post, raw: 'hello hello hello')}
-    let!(:post4) { Fabricate(:post, raw: 'hello hello')}
-    let!(:post5) { Fabricate(:post, raw: 'hello')}
+    let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello') }
+    let!(:post2) { Fabricate(:post, raw: 'hello hello hello hello') }
+    let!(:post3) { Fabricate(:post, raw: 'hello hello hello') }
+    let!(:post4) { Fabricate(:post, raw: 'hello hello') }
+    let!(:post5) { Fabricate(:post, raw: 'hello') }
     before do
       Search.stubs(:per_filter).returns(number_of_results)
     end
