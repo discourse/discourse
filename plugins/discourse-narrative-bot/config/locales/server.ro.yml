@@ -5,4 +5,11 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ro: {}
+ro:
+  discourse_narrative_bot:
+    new_user_narrative:
+      hello:
+        message: |-
+          Mulțumim că te-ai alăturat comunității %{title}. Bine ai venit!
+
+          - Sunt doar un robot, dar [moderatorii](/about) sunt bucuroși să te ajute dacă ai nevoie să vorbești cu o persoană

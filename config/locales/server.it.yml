@@ -171,6 +171,7 @@ it:
   too_many_links:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un collegamento in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} collegamenti in un messaggio."
+  contains_blocked_words: "Il tuo messaggio contiene parole che non sono consentite."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -362,6 +363,10 @@ it:
           attributes:
             value:
               missing_interpolation_keys: 'Le seguenti chiavi(e) di interpolazione sono mancanti: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "Troppe parole per quest'azione"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/u/%{username_lower}/preferences/about-me'>vuoi compilarlo? </a></div>"
@@ -424,6 +429,7 @@ it:
       invalid_email_in: "'%{email}' non è un indirizzo email valido."
       email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
       email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
+      description_incomplete: "Il messaggio di descrizione della categoria deve avere almeno un paragrafo."
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Non classificato\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -868,6 +874,7 @@ it:
     search_tokenize_chinese_japanese_korean: "Attiva la tokenizzazione dei caratteri Cinesi/Giapponesi/Coreani nella ricerca anche sui siti non CJK"
     search_prefer_recent_posts: "Se il tuo forum è corposo e la ricerca è lenta, questa opzione tenta di indicizzare prima i messaggi più recenti"
     search_recent_posts_size: "Quanti messaggi recenti mantenere nell'indice"
+    log_search_queries: "Log delle query di ricerca eseguite dagli utenti"
     search_query_log_max_size: "Quantità massima di query di ricerca da mantenere"
     allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria. ATTENZIONE: se ci sono argomenti senza categoria, devi ricategorizzarli prima di disabilitare questa opzione."
     allow_duplicate_topic_titles: "Permetti più argomenti con lo stesso identico titolo"
@@ -898,6 +905,7 @@ it:
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     onebox_domains_blacklist: "Una lista di domini che non verranno mai oneboxed."
+    inline_onebox_domains_whitelist: "Una lista di domini che saranno oneboxed in forma di miniatura se collegati senza un titolo"
     max_oneboxes_per_post: "Numero massimo di oneboxe in un messaggio."
     logo_url: "L'immagine nel logo in alto a sinistra del sito, dovrebbe essere larga e di forma rettangolare. Se non impostata, verrà usato il testo del titolo del sito."
     digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Dovrebbe essere a forma di un ampio rettangolo. Non dovrebbe essere un'immagine SVG. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. "
@@ -943,6 +951,7 @@ it:
     ga_domain_name: "OBSOLETO: nome del dominio Google analytics (ga.js), esempio: miosito.com; vedi http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
+    ga_universal_auto_link_domains: "Attiva Il monitoraggio interdominio di Google Universal Analytics (analytics.js). Ai collegamenti in uscita a questi domini verrà aggiunto l'id del client. Vedi la guida di Google Cross-domain Tracking."
     gtm_container_id: "Container id di Google Tag Manager. Es: GTM-ABCDEF"
     enable_escaped_fragments: "Usa le Ajax-Crawling API di Google se non viene rilevato un webcrawler. Vedi https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
@@ -1445,10 +1454,31 @@ it:
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
     backup_succeeded:
+      title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
+      text_body_template: |
+        Il backup è avvenuto con successo.
+
+        Visita la  [sezione admin > backup](%{base_url}/admin/backups) per scaricare il nuovo backup.
+
+        Ecco il log:
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
+      title: "Backup Fallito"
       subject_template: "Backup fallito"
+      text_body_template: |
+        Il backup è fallito.
+
+        Ecco il log:
+
+        ```text
+        %{logs}
+        ```
     restore_succeeded:
+      title: "Ripristino Riuscito"
       subject_template: "Il ripristino è avvenuto con successo."
       text_body_template: |
         Il ripristino è avvenuto con successo.
@@ -1459,6 +1489,7 @@ it:
         %{logs}
         ```
     restore_failed:
+      title: "Ripristino Fallito"
       subject_template: "Ripristino fallito"
       text_body_template: |
         Il ripristino è fallito.
@@ -1469,24 +1500,27 @@ it:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "Invito di Massa Riuscito"
       subject_template: "Invito di massa processato con successo"
       text_body_template: "Il tuo file con l'invito di massa è stato processato, %{sent} inviti spediti."
     bulk_invite_failed:
+      title: "Invito di Massa Fallito"
       subject_template: "Invito di massa processato con errori"
     csv_export_succeeded:
+      title: "Esportazione CSV Riuscita"
       subject_template: "Esportazione dati completa"
+      text_body_template: |
+        L'esportazione dei tuoi dati è avvenuta con successo! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Il collegamento per il download qui sopra sarà valido per 48 ore.
+
+        I dati vengono compressi come archivio gzip. Se l'archivio non si auto-estrae quando lo si apre, utilizzare gli strumenti consigliati qui: http://www.gzip.org/#faq4
     csv_export_failed:
+      title: "Esportazione CSV Fallita"
       subject_template: "Esportazione dati fallita"
-    email_reject_screened_email:
-      text_body_template: |
-        Spiacenti, il tuo messaggio email a %{destination} (intitolato %{former_title}) non ha funzionato.
-
-        La tua risposta è stata inviata da un indirizzo email bloccato. Prova a spedire da un altro indirizzo email, oppure contatta un membro dello staff.
-    email_reject_no_account:
-      text_body_template: |
-        Ci dispiace, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
-
-        Non esiste un account con quell'indirizzo email. Prova ad inviarla a un altro indirizzo o contatta un membro dello staff.
+      text_body_template: "Siamo spiacenti, ma l'esportazione dei dati è fallita. Per favore controlla i log o [contatta un membro dello staff](%{base_url}/about)."
     email_reject_bad_destination_address:
       text_body_template: |+
         Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
@@ -1505,15 +1539,58 @@ it:
         Per ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Nuovo account sospeso"
+      text_body_template: |
+        Ciao,
+
+        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato a causa di un gran numero di segnalazioni da parte della comunità.
+
+        Come misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff.  Ci scusiamo per l'inconveniente
+
+        Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "Bloccato dallo Staff"
       subject_template: "Account temporaneamente sospeso"
+      text_body_template: |
+        Ciao,
+
+        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato temporaneamente bloccato come misura precauzionale.
+
+        Per favore continua pure a navigare, anche se non potrai rispondere o creare argomenti fino a che un  [membro dello staff](%{base_url}/about) avrà revisionato i tuoi messaggi più recenti. Ci scusiamo per l'inconveniente.
+
+        Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "Utente Bloccato Automaticamente"
       subject_template: "Nuovo utente %{username} bloccato dalle segnalazioni della comunità"
+      text_body_template: |
+        Questo è un messaggio automatico.
+
+        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente bloccato perché più utenti hanno contrassegnato i messaggi di %{username}.
+
+        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
+
+        Questa impostazione può essere modificata tramite l'impostazione del sito `block_new_user`.
     spam_post_blocked:
+      title: "Messaggio Spam Bloccato"
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
+      text_body_template: |
+        Questo è un messaggio automatico.
+
+        Il nuovo utente [%{username}](%{user_url}) ha creato diversi messaggi con collegamenti a %{domains}, ma tali messaggi sono stati bloccati per evitare spam. L'utente è ancora abilitato alla creazione di messaggi ma senza collegamenti verso %{domains}.
+
+        Per favore [controlla questo utente](%{user_url}).
+
+        Questa impostazione può essere modificata tramite le impostazioni del sito   `newuser_spam_host_threshold` e `white_listed_spam_host_domains`.
     unblocked:
+      title: "Sbloccato"
       subject_template: "Account non più sospeso"
+      text_body_template: |
+        Ciao,
+
+        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato sbloccato a seguito di revisione da parte dello staff.
+
+        Ora puoi nuovamente creare argomenti e risposte. Grazie della pazienza.
     pending_users_reminder:
+      title: "Promemoria Utenti in Sospeso"
       subject_template:
         one: "1 utente in attesa di approvazione"
         other: "%{count} utenti in attesa di approvazione"
@@ -1522,10 +1599,33 @@ it:
 
         [Per favore valutale nella sezione di amministrazione](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "Scaricamento Immagini Remote Disabilitato"
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
     dashboard_problems:
+      title: "Problemi Cruscotto"
       subject_template: "Si sono riscontrati problemi"
+      text_body_template: |
+        Alcuni problemi sono stati riportati sul tuo cruscotto di amministratore.
+
+        [Per favore esaminali e risolvili](%{base_url}/admin).
+    new_user_of_the_month:
+      title: "Sei il Nuovo Utente del Mese!"
+      subject_template: "Sei il Nuovo Utente del Mese!"
+      text_body_template: |
+        Congratulazioni, ti sei meritato il premio come **Nuovo Utente del Mese per %{month_year}**. :trophy:
+
+        Questo premio viene assegnato solo a due nuovi utenti al mese e sarà visibile permanentemente sulla [tua pagina utente](%{base_url}/my/badges).
+
+        Sei diventato velocemente un membro prezioso della nostra comunità. Grazie per l'adesione e continua a fare un buon lavoro!
+  unsubscribe_link: |
+    Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Stai ricevendo questa email perchè hai abilitato la modalità mailing list.
+
+    Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1540,7 +1640,82 @@ it:
     visit_link_to_respond: "[Visita Argomento](%{base_url}%{url}) per replicare."
     visit_link_to_respond_pm: "[Visita Messaggio](%{base_url}%{url}) per replicare."
     posted_by: "Pubblicato da %{username} il %{post_date}"
+    invited_group_to_private_message_body: |
+      %{username} ha invitato @%{group_name} a partecipare al messaggio
+
+      > #### %{topic_title}
+      >
+      > %{topic_excerpt}
+
+      su
+
+      > %{site_title} -- %{site_description}
+    invited_to_private_message_body: |
+      %{username} ti ha invitato a partecipare al messaggio
+
+      > #### %{topic_title}
+      >
+      > %{topic_excerpt}
+
+      su
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} ti ha invitato alla discussione
+
+      > #### %{topic_title}
+      >
+      > %{topic_excerpt}
+
+      su
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      subject_template: "[%{email_prefix}] %{username} ha invitato @%{group_name} a partecipare al messaggio '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
+      title: "Utente Invitato ad un MP"
+      subject_template: "[%{email_prefix}] %{username} ti ha invitato a partecipare al messaggio '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{email_prefix}] %{username} ti ha invitato a partecipare al messaggio '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      title: "Utente Invitato ad un Argomento"
+      subject_template: "[%{email_prefix}] %{username} ti ha invitato a '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_replied_pm:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1550,6 +1725,8 @@ it:
 
         %{respond_instructions}
     user_quoted:
+      title: "Utente Citato"
+      subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1559,6 +1736,7 @@ it:
 
         %{respond_instructions}
     user_linked:
+      subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1568,6 +1746,8 @@ it:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Utente Menzionato"
+      subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1577,6 +1757,7 @@ it:
 
         %{respond_instructions}
     user_group_mentioned:
+      subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1586,6 +1767,7 @@ it:
 
         %{respond_instructions}
     user_posted:
+      subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1595,6 +1777,7 @@ it:
 
         %{respond_instructions}
     user_watching_first_post:
+      subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1604,6 +1787,8 @@ it:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "Pubblicazione MP da Utente"
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1613,20 +1798,124 @@ it:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "Pubblicazione MP da Utente Temporaneo"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
+      since_last_visit: "Dalla tua ultima visita"
+      new_topics: "Nuovi Argomenti"
+      unread_messages: "Messaggi Non Letti"
+      unread_notifications: "Notifiche Non Lette"
       liked_received: "Like ricevuti"
+      new_posts: "Nuovi Messaggi"
       new_users: "Nuovi utenti"
+      popular_topics: "Argomenti Di Successo"
       follow_topic: "Segui questo topic"
+      join_the_discussion: "Leggi Altro"
+      popular_posts: "Messaggi di Successo"
+      more_new: "Nuovo per te"
+      subject_template: "[%{email_prefix}] Riepilogo"
+      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Modifica <a href='%{email_settings_url}'>le tue impostazioni email</a>, o %{unsubscribe_link} annulla l'iscrizione."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       preheader: "Un breve riepilogo dall'ultima tua visita il %{last_seen_at}"
+    forgot_password:
+      title: "Password Dimenticata"
+      subject_template: "[%{email_prefix}] Reimposta password"
+      text_body_template: |
+        Qualcuno ha richiesto l'azzeramento della tua password su [%{site_name}](%{base_url}).
+
+        Se non sei stato tu, puoi tranquillamente ignorare questa email.
+
+        Clicca il seguente collegamento per scegliere una nuova password:
+        %{base_url}/u/password-reset/%{email_token}
+    set_password:
+      title: "Imposta Password"
+      subject_template: "[%{email_prefix}] Imposta Password"
+      text_body_template: |
+        Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook, ecc) associato con questo indirizzo email validato.
+
+        Se non hai fatto tu questa richiesta, ignora tranquillamente questa email.
+
+        Clicca sul seguente collegamento per scegliere una password:
+        %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      title: "Login Amministratore"
+      subject_template: "[%{email_prefix}] Login"
+      text_body_template: |
+        Qualcuno ha richiesto di connettersi con il tuo account su [%{site_name}](%{base_url}).
+
+        Se non sei stato tu a fare questa richiesta, puoi tranquillamente ignorare questa email.
+
+        Clicca sul seguente collegamento per connetterti:
+        %{base_url}/u/admin-login/%{email_token}
+    account_created:
+      title: "Account Creato"
+      subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
+      text_body_template: |
+        E' stato creato un nuovo account per te su %{site_name}
+
+        Clicca sul seguente collegamento per scegliere una password per il tuo nuovo account:
+        %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      title: "Conferma Nuova Email"
+      subject_template: "[%{email_prefix}] Conferma il tuo nuovo indizzo email"
+      text_body_template: |
+        Conferma il tuo nuovo indirizzo email su %{site_name} cliccando il seguente collegamento:
+
+        %{base_url}/u/authorize-email/%{email_token}
+    confirm_old_email:
+      title: "Conferma Vecchia Email"
+      subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"
+      text_body_template: |
+        Prima di poter cambiare il tuo indirizzo email abbiamo bisogno che tu confermi di controllare
+        l'indirizzo email attuale. Dopo aver completato questo passaggio, dovrai confermare
+        il nuovo indirizzo email.
+
+        Conferma il tuo attuale indirizzo email su %{site_name} cliccando il seguente collegamento:
+
+        %{base_url}/u/authorize-email/%{email_token}
+    notify_old_email:
+      title: "Notifica Vecchia Email"
+      subject_template: "[%{email_prefix}] Il tuo indirizzo email è stato cambiato"
+      text_body_template: |
+        Questo è un messaggio automatico per farti sapere che il tuo indirizzo email per
+        %{site_name} è stato cambiato. Se è stato fatto per errore, per favore contatta un amministratore del sito.
+
+        Il tuo indirizzo email è stato cambiato in:
+
+        %{new_email}
     signup_after_approval:
+      title: "Iscrizione Dopo Approvazione"
       subject_template: "Sei stato ammesso su %{site_name}!"
+      text_body_template: |
+        Benvenuto su %{site_name}!
+
+        Un membro dello staff ha approvato il tuo account su  %{site_name}.
+
+        Clicca sul seguente collegamento per confermare e attivare il tuo nuovo account:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
+
+        %{new_user_tips}
+
+        Noi crediamo da sempre in un [comportamento comunitario civile](%{base_url}/guidelines).
+
+        Buona permanenza!
+    signup:
+      title: "Iscrizione"
+      subject_template: "[%{email_prefix}] Conferma il tuo nuovo account"
+      text_body_template: |
+        Benvenuto su %{site_name}!
+
+        Clicca sul collegamento seguente per confermare ed attivare il tuo nuovo account:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Se il collegamento non è cliccabile, copialo ed incollalo nella barra degli indirizzi del tuo browser.
   page_not_found:
     title: "La pagina richiesta non esiste oppure è privata."
     popular_topics: "Di successo"
@@ -1636,24 +1925,33 @@ it:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Benvenuto su %{title}](#welcome)
+      ## [Benvenuto su %{title}](#welcome)
       E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
   terms_of_service:
     title: "Termini di Servizio"
     signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellati'
+  image: "immagine"
   upload:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
     store_failure: "Caricamento n°%{upload_id} fallito per l'utente n°%{user_id}."
     file_missing: "Spiacenti, devi fornire un file da caricare."
+    empty: "Spiacenti, ma il file che hai fornito è vuoto."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
+      larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. E' forse danneggiata?"
+  avatar:
+    missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
+  flag_reason:
+    sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio (%{domain}). Vedi l'impostazione del sito <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   email_log:
+    post_user_deleted: "L'utente del messaggio è stato eliminato."
     no_user: "Non trovo l'utente con l'id %{user_id}"
     anonymous_user: "L'utente è anonimo"
     suspended_not_pm: "L'utente è sospeso, non è un messaggio"
@@ -1664,12 +1962,20 @@ it:
     post_deleted: "il messaggio è stato cancellato dal suo autore"
     user_suspended: "l'utente è stato sospeso"
     already_read: "l'utente ha già letto questo messaggio"
+    exceeded_emails_limit: "Ha superato max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Ha superato bounce_score_threshold"
     message_blank: "il messaggio è vuoto"
     message_to_blank: "message.to è vuoto"
     text_part_body_blank: "text_part.body è vuoto"
     body_blank: "il corpo è vuoto"
+    no_echo_mailing_list_mode: "Notifiche della mailing list disattivate per i propri messaggi"
   color_schemes:
     base_theme_name: "Base"
+    default: "Combinazione Chiara"
+    dark: "Combinazione Scura"
+    default_theme_name: "Predefinito"
+    dark_theme_name: "Scuro"
+    light_theme_name: "Chiaro"
   about: "Informazioni su"
   guidelines: "Linee Guida"
   privacy: "Privacy"
@@ -1709,63 +2015,269 @@ it:
     leader:
       name: Veterano
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Assegnato</a> modifica globale, puntare, chiudere, archiviare, suddividere e riunire, maggiori "Mi piace"
+      long_description: |
+        Questo distintivo è assegnato quando si raggiunge il livello di esperienza 4. Sei un veterano in questa comunità selezionato dallo staff, e qui sei un esempio positivo per il resto della comunità con le tue azioni e parole. Hai la possibilità di modificare tutti i messaggi, agire come un moderatore con azioni comuni quali puntare, chiudere, rendere invisibile, archiviare, dividere e unire, e hai tonnellate di mi piace al giorno.
     welcome:
       name: Benvenuto
       description: Ha ricevuto un "Mi piace"
+      long_description: |
+        Questo distintivo è assegnato quando ricevi il tuo primo mi piace su un messaggio. Congratulazioni, hai pubblicato qualcosa che i membri della tua comunità hanno trovato interessante, eccezionale o utile!
     autobiographer:
       name: Autobiografo
+      description: Ha compilato le informazioni sul <a href="/my/preferences">profilo</a>
+      long_description: |
+        Questo distintivo è assegnato per aver compilato <a href="/my/preferences">il tuo profilo utente</a> e selezionato un'immagine del profilo. Lasciare che la comunità sappia di più su chi sei e a cosa sei interessato rende la comunità migliore e più connessa. Unisciti a noi!
     anniversary:
       name: Compleanno
       description: Membro attivo per un anno, ha scritto almeno una volta
       long_description: |
         Questo distintivo è assegnato a chi è membro da un anno con almeno un messaggio scritto durante quell'anno. Grazie per esserci e contribuire alla nostra comunità. Non potremmo farcela senza di te.
+    nice_post:
+      name: Risposta Piacevole
+      description: Ha ricevuto 10 mi piace su una risposta
+      long_description: |
+        Questo distintivo è assegnato quando una risposta riceve 10 mi piace. La tua risposta ha fatto davvero impressione sulla comunità e ha aiutato a portare la conversazione avanti!
+    good_post:
+      name: Buona Risposta
+      description: Ha ricevuto 25 mi piace su una risposta
+      long_description: |
+        Questo distintivo è assegnato quando una risposta riceve 25 mi piace. La tua risposta è stata eccezionale e ha reso la conversazione migliore per tutti!
+    great_post:
+      name: Grande Risposta
+      description: Ha ricevuto 50 mi piace su una risposta
+      long_description: |
+        Questo distintivo è assegnato quando una risposta riceve 50 mi piace. Wow! La tua risposta è stata ispiratrice, affascinante, divertente, o penetrante e la comunità l'ha amata.
+    nice_topic:
+      name: Argomento Piacevole
+      description: Ha ricevuto 10 mi piace su un argomento
+      long_description: |
+        Questo distintivo è assegnato quando un argomento riceve 10 mi piace. Hey, hai iniziato una conversazione interessante che la comunità ha apprezzato!
+    good_topic:
+      name: Buon Argomento
+      description: Ha ricevuto 25 mi piace su un argomento
+      long_description: |
+        Questo distintivo è assegnato quando il tuo argomento riceve 25 mi piace. Hai lanciato una conversazione vibrante che ha radunato la comunità!
     great_topic:
+      name: Grande Argomento
       description: Ha ricevuto 50 "Mi piace" in un argomento
+      long_description: |
+        Questo distintivo è assegnato quando un argomento riceve 50 mi piace. Hai avviato una conversazione affascinante e la comunità ha apprezzato la discussione dinamica che è seguita!
+    nice_share:
+      name: Piacevole Condivisione
+      description: Ha condiviso un messaggio con 25 visitatori unici
+      long_description: |
+        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 25 visitatori esterni. Grazie per diffondere la parola circa le nostre discussioni e questa comunità.
+    good_share:
+      name: Buona Condivisione
+      description: Ha condiviso un messaggio con 300 visitatori unici
+      long_description: |
+        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 300 visitatori esterni. Buon lavoro! Hai mostrato una grande discussione ad un gruppo di persone nuove e hai aiutato questa comunità a crescere.
+    great_share:
+      name: Grande Condivisione
+      description: Ha condiviso un messaggio con 1000 visitatori unici
+      long_description: |
+        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 1000 visitatori esterni. Wow! Hai promosso un'interessante discussione ad un pubblico enorme e ci hai aiutato a far crescere la nostra comunità in grande stile!
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
+      long_description: |
+        Questo distintivo è assegnato la prima volta che metti mi piace ad un messaggio usando il pulsante :heart:. Mettere mi piace a dei messaggi è un ottimo modo per far sapere a tutti i membri della tua comunità che ciò che hanno pubblicato è stato interessante, utile, forte o divertente. Condividi l'amore!
     first_flag:
       name: Prima Segnalazione
       description: Segnalato un messaggio
+      long_description: |
+        Questo distintivo è assegnato la prima volta che segnali un messaggio. La segnalazione serve per contribuire a mantenere questo luogo pulito e piacevole per tutti. Se noti dei messaggi che richiedono l'attenzione di un moderatore per qualsiasi motivo, non esitate a contrassegnarli. Puoi anche contrassegnare per inviare <b>messaggi personali</b> ad altri utenti se vedi un problema con i loro messaggi. Se vedi un problema, :flag_black: segnalalo!
+    promoter:
+      name: Promotore
+      description: Ha invitato un utente
+      long_description: |
+        Questo distintivo è assegnato quando si invita qualcuno ad unirsi alla comunità tramite il pulsante invita sulla tua pagina utente, o in fondo ad un argomento. Invitare amici che potrebbero essere interessati a discussioni specifiche è un ottimo modo per introdurre nuove persone alla nostra comunità, quindi grazie!
+    campaigner:
+      name: Attivista
+      description: Ha invitato 3 utenti
+      long_description: |
+        Questo distintivo è assegnato quando hai invitato 3 persone che hanno successivamente trascorso abbastanza tempo sul sito per diventare utenti base. Una comunità vivace ha bisogno di un'infusione regolare di nuovi arrivati che partecipano regolarmente e aggiungono nuove voci alle conversazioni.
+    champion:
+      name: Campione
+      description: Ha invitato 5 membri
+      long_description: |
+        Questo distintivo è assegnato quando hai invitato 5 persone che hanno successivamente trascorso abbastanza tempo sul sito per diventare membri a tutti gli effetti. Wow! Grazie per aver ampliato la diversità della nostra comunità con nuovi membri!
     first_share:
       name: Prima Condivisione
       description: Ha condiviso un messaggio
+      long_description: |
+        Questo distintivo è assegnato la prima volta che condividi un collegamento ad una risposta o ad un argomento usando il pulsante condividi. Condividere collegamenti è un ottimo modo per mostrare interessanti discussioni al resto del mondo e far crescere la tua comunità.
     first_link:
       name: Primo Collegamento
+      description: Ha aggiunto un collegamento ad un altro argomento
+      long_description: |
+        Questo distintivo è assegnato la prima volta che aggiungi un collegamento ad un altro argomento. Collegare argomenti aiuta i tuoi colleghi lettori a trovare interessanti conversazioni correlate, mostrando le connessioni tra gli argomenti in entrambe le direzioni. Collega liberamente!
     first_quote:
+      name: Prima Citazione
       description: Ha citato un messaggio
+      long_description: |
+        Questo distintivo è assegnato la prima volta che citi un messaggio nella tua risposta. Citare le sezioni rilevanti di messaggi precedenti nella tua risposta aiuta a mantenere le discussioni connesse insieme e in argomento. Il modo più semplice per citare è evidenziare una sezione di un messaggio e quindi premere il pulsante rispondi. Cita generosamente!
+    read_guidelines:
+      name: Linee Guida
+      description: Ha letto le <a href="/guidelines">linee guida della comunità</a>
+      long_description: |
+        Questo distintivo è assegnato per <a href="/guidelines">aver letto le linee guida della comunità</a>. Seguendo e condividendo queste semplici linee guida aiuti a costruire una comunità sicura, divertente e sostenibile per tutti. Ricorda sempre che c'è un altro essere umano, molto simile a te, dall'altro lato dello schermo. Sii piacevole!
+    reader:
+      name: Lettore
+      description: Ha letto ogni risposta in un argomento con più di 100 risposte
+      long_description: |
+        Questo distintivo è assegnato la prima volta che leggi un argomento lungo con più di 100 risposte. Leggere una conversazione attentamente ti aiuta a seguire la discussione, a comprendere punti di vista diversi, e conduce a conversazioni ancora più interessanti. Quanto più si legge, tanto è migliore la conversazione. Come ci piace dire, la Lettura è Fondamentale! :slight_smile:
+    popular_link:
+      name: Collegamento Di Successo
+      description: Ha pubblicato un collegamento esterno con 50 click
+      long_description: |
+        Questo distintivo è assegnato quando un collegamento che hai condiviso riceve 50 click. Grazie per aver pubblicato un collegamento utile che ha aggiunto un contesto interessante alla conversazione!
+    hot_link:
+      name: Collegamento Caldo
+      description: Ha pubblicato un collegamento esterno con 300 click
+      long_description: |
+        Questo distintivo è assegnato quando un collegamento che hai condiviso riceve 300 click. Grazie per aver pubblicato un collegamento affascinante che ha portato avanti la conversazione e ha illuminato la discussione!
+    famous_link:
+      name: Collegamento Famoso
+      description: Ha pubblicato un collegamento esterno con 1000 click
+      long_description: |
+        Questo distintivo è assegnato quando un collegamento condiviso riceve 1000 click. Wow! Hai inserito un link che ha migliorato significativamente la conversazione aggiungendo dettagli, contesto e informazioni essenziali. Ottimo lavoro!
     appreciated:
+      name: Apprezzato
       description: Ha ricevuto 1 "Mi piace" su 20 messaggi
+      long_description: |
+        Questo distintivo è assegnato quando ricevi almeno un mi piace su 20 messaggi differenti. La comunità si sta godendo i tuoi contributi alle conversazioni!
     respected:
+      name: Rispettato
       description: Ha ricevuto 2 "Mi piace" su 100 messaggi
+      long_description: |
+        Questo distintivo è assegnato quando ricevi almeno 2 mi piace su 100 messaggi differenti. La comunità sta imparando a rispettare i tuoi numerosi contributi alle conversazioni.
     admired:
+      name: Ammirato
       description: Ha ricevuto 5 "Mi piace" su 300 messaggi
+      long_description: |
+        Questo distintivo è assegnato quando ricevi almeno 5 mi piace su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
+    out_of_love:
+      name: Amato
+      description: Ha messo 50 mi piace in un giorno
+      long_description: |
+        Questo distintivo è assegnato quando usi tutti i 50 mi piace che hai a disposizione giornalmente. Ricordando di prenderti un momento per mettere mi piace ai messaggi che ti piacciono e apprezzi, incoraggi i membri della tua comunità a creare discussioni ancora più grandi in futuro.
+    higher_love:
+      name: Molto Amato
+      description: Ha messo 50 mi piace al giorno per 5 volte
+      long_description: |
+        Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
+    crazy_in_love:
+      name: Adorato
+      description: Ha messo 50 mi piace al giorno per 20 volte
+      long_description: |
+        Questo distintivo è assegnato quando usi tutti i 50 mi piace giornalieri per 20 giorni. Wow! Sei un modello di regolarità nel cercare di incoraggiare i membri della  tua comunità!
+    thank_you:
+      name: Ringraziato
+      description: Ha ricevuto 20 mi piace sui messaggi e dato 10 mi piace
+      long_description: |
+        Questo distintivo è assegnato quando ricevi 20 mi piace sui messaggi e dai 10 o più mi piace in cambio. Quando qualcuno mette mi piace ai tuoi messaggi, troverai il tempo per mettere mi piace a ciò che altri scrivono.
+    gives_back:
+      name: Ricambiato
+      description: Ha ricevuto 100 mi piace sui messaggi e dato 100 mi piace
+      long_description: |
+        Questo distintivo è assegnato quando hai ricevuto 100 mi piace sui messaggi e hai dato 100 o più mi piace in cambio. Grazie per aver ricambiato!
+    empathetic:
+      name: Empatico
+      description: Ha ricevuto 500 mi piace sui messaggi e dato 1000 mi piace
+      long_description: |
+        Questo distintivo è assegnato quando hai ricevuto 500 mi piace sui messaggi e hai dato 1000 o più mi piace in cambio. Sei un modello di generosità e di apprezzamento reciproco : due_hearts :.
     first_emoji:
+      name: Prima Emoji
+      description: Ha usato una Emoji in un messaggio
       long_description: |
         Questo distintivo viene assegnato la prima volta che inserisci un Emoji in un messaggio :thumbsup:. Gli Emoji ti permettono di trasmettere emozioni nei messaggi, dalla felicità :smiley: alla tristezza :anguished: alla rabbia :angry: e tutto ciò che sta nel mezzo :sunglasses:. Digita semplicemente : (carattere due punti) oppure premi il bottone Emoji nella barra degli strumenti dell'editor, per selezionare tra centinaia di possibilità :ok_hand:
+    first_mention:
+      name: Prima Menzione
+      description: Ha menzionato un utente in un messaggio
+      long_description: Questo distintivo è assegnato la prima volta che menzioni lo @username di qualcuno nel tuo messaggio. Ogni menzione genera una notifica a quella persona, così verrà a conoscenza del tuo messaggio. Inizia a digitare @ (il simbolo) per menzionare qualsiasi utente o, se è consentito, un gruppo - è un modo conveniente per portare qualcosa alla loro attenzione.
+    first_onebox:
+      name: Prima Onebox
+      description: ha inserito un collegamento che ha generato una onebox
+      long_description: Questo distintivo è assegnato la prima volta che inserisci un collegamento su una riga da solo, il quale viene automaticamente espanso in un'anteprima con un breve riassunto del collegamento, un titolo e (quando disponibile) un'immagine.
+    first_reply_by_email:
+      name: Prima Risposta Da Email
+      description: Ha risposto ad un messaggio tramite email
+      long_description: |
+        Questo distintivo è assegnato la prima volta che rispondi ad un messaggio tramite email :e-mail:.
+    new_user_of_the_month:
+      name: "Nuovo Utente del Mese"
+      description: Contributi eccezionali nel loro primo mese
+      long_description: |
+        Questo distintivo è assegnato per congratularsi con due nuovi utenti ogni mese per i loro ottimi contributi globali, misurati sulla frequenza dei like ricevuti per i loro messaggi e da chi li ha dati.
+    badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
     success: "email Inviata"
     error: "Errore!"
     email_input: "Email Amministratore"
     submit_button: "Invia Email"
+  performance_report:
+    initial_post_raw: Questo argomento include rapporti di rendimento giornalieri per il tuo sito.
+    initial_topic_title: Rapporti sul rendimento del sito web
   tags:
     title: "Etichette"
+    staff_tag_disallowed: "L'etichetta \"%{tag}\" può essere applicata solo dallo staff."
     staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
   rss_by_tag: "Argomenti etichettati %{tag}"
+  finish_installation:
+    congratulations: "Congratulazioni, hai installato Discourse!"
+    register:
+      button: "Registrare"
+      title: "Registrare Account Amministratore"
+      help: "registrare un nuovo account per cominciare"
+      no_emails: "Purtroppo non è stata definita alcuna email di amministratore durante l'installazione, per cui la configurazione <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>potrebbe risultare difficoltosa</a>."
+    confirm_email:
+      title: "Conferma la tua Email"
+      message: "<p>Abbiamo inviato una email di attivazione a <b>%{email}</b>. Segui le istruzioni nella email per attivare il tuo account.</p><p>Se non arriva assicurati di aver impostato correttamente l'email per Discourse e di aver controllato la cartella di spam.</p>"
+    resend_email:
+      title: "Rispedire Email di Attivazione"
+      message: "<p>Abbiamo rispedito una email di attivazione a <b>%{email}</b>"
+  safe_mode:
+    title: "Modalità sicura"
+    description: "La modalità sicura ti consente di testare il tuo sito senza caricare plugin o personalizzazioni del sito."
+    no_customizations: "Disabilita il tema corrente"
+    only_official: "Disabilita i plugin non ufficiali"
+    no_plugins: "Disabilita tutti i plugin"
+    enter: "Avvia Modalità Sicura"
   wizard:
+    title: "Configurazione Discourse"
     step:
+      locale:
+        title: "Benvenuto sul tuo Discourse!"
+        fields:
+          default_locale:
+            description: "Qual è il linguaggio predefinito della tua comunità?"
+      forum_title:
+        title: "Nome"
+        description: "Il tuo nome è un segno visibile in lontananza, la <i>prima</i> cosa che i visitatori potenziali noteranno sulla tua comunità. Cosa dice il tuo nome e il tuo titolo sulla tua comunità?"
+        fields:
+          title:
+            label: "Il nome della tua comunità"
+            placeholder: "Il Ritrovo di Jane"
+          site_description:
+            label: "Descrivi  la tua comunità in una breve frase"
+            placeholder: "Un posto per Jane e per i suoi amici dove discutere di cose forti"
       introduction:
         title: "Introduzione"
         fields:
           welcome:
             label: "Argomento di Benvenuto"
+            description: "<p>Come descriveresti la tua comunità ad un estraneo su un ascensore in circa 1 minuto?</p><ul><li>Per chi sono queste discussioni?</li><li>Cosa posso trovare qui?</li><li>Perché dovrei visitare il sito?</li></ul><p>Il tuo argomento di benvenuto è la prima cosa che i nuovi arrivati leggeranno. Pensalo come al <b>tuo paragrafo</b> 'discorso da ascensore' o 'dichiarazione di intenti'.</p>"
+            one_paragraph: "Restringi il tuo messaggio di benvenuto a un paragrafo."
       privacy:
         title: "Accesso"
+        description: "<p>La tua comunità è aperta a tutti o è limitata ai membri, agli inviti o all'approvazione? Se preferisci puoi impostare il sito come privato e poi passare a pubblico in seguito.</p><p>Puoi sempre inviare inviti da argomenti o dalla tua pagina di profilo utente.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Pubblico"
+                description: "Chiunque può accedere a questa comunità e registrare un account"
               restricted:
                 label: "Privato"
                 description: "Solo le persone che ho invitato o approvato possono accedere a questa comunità"
@@ -1775,23 +2287,32 @@ it:
           contact_email:
             label: "Email"
             placeholder: "nome@esempio.com"
+            description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche quali segnalazioni non gestite, aggiornamenti sulla protezione e sulla tua pagina <a href='/about' target='_blank'>informazioni</a> per un contatto urgente."
           contact_url:
             label: "Sito Web"
+            placeholder: "http://www.example.com/contact-us"
+            description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='/about' target='_blank'>informazioni</a>."
           site_contact:
             label: "Messaggi Automatici"
+            description: "Tutti i messaggi personali automatici di Discourse saranno inviati da questo utente, ad esempio il messaggio di benvenuto inviato a ogni nuovo utente."
       corporate:
         title: "Società"
+        description: "Questi nomi verranno inseriti nelle <a href='/privacy' target='blank'>Norme sulla Privacy</a> e nei <a href='/tos' target='blank'>Termini di servizio</a>, che sono argomenti che è possibile modificare nella categoria Staff. Se non hai un'azienda, non esitare a saltare questo passaggio per ora."
         fields:
           company_short_name:
             label: "Nome Azienda (breve)"
+            placeholder: "Initech"
           company_full_name:
             label: "Nome Azienda (completo)"
+            placeholder: "Initech, Inc."
           company_domain:
             label: "Nome Dominio Azienda"
+            placeholder: "initech.com"
       colors:
         title: "Tema"
         fields:
           theme_id:
+            description: "Preferisci iniziare una combinazione di colori chiara o scura? È possibile personalizzare ulteriormente l'aspetto del tuo sito tramite Amministrazione, Personalizza."
             choices:
               default:
                 label: "Semplice Chiaro"
@@ -1802,24 +2323,40 @@ it:
         fields:
           logo_url:
             label: "Logo Primario"
+            description: "L'immagine del logo in alto a sinistra del tuo sito. Usare una forma rettangolare estesa."
           logo_small_url:
             label: "Logo Piccolo"
+            description: "Una versione compatta del tuo logo, mostrata in alto a sinistra del tuo sito, quando lo scorri verso il basso. Utilizzare una forma quadrata."
       icons:
         title: "Icone"
         fields:
           favicon_url:
             label: "Icona Piccola"
+            description: "Immagine dell'icona utilizzata per rappresentare il tuo sito nei browser web che sembra buona a piccole dimensioni, ad esempio 32px per 32px."
           apple_touch_icon_url:
             label: "Icona Grande"
+            description: "Immagine dell'icona utilizzata per rappresentare il tuo sito su dispositivi moderni che sembra buona a dimensioni più grandi. La dimensione consigliata è almeno 144px per 144px."
       homepage:
+        description: "Ti consigliamo di mostrare gli ultimi argomenti nella tua homepage, ma puoi anche visualizzare le categorie (gruppi di argomenti) sulla homepage, se preferisci."
         title: "Homepage"
         fields:
           homepage_style:
             choices:
+              latest:
+                label: "Ultimi Argomenti"
               categories:
                 label: "Categorie"
       emoji:
         title: "Emoji"
+        description: "Quale stile di emoji preferisci per la tua comunità? Puoi aggiungere più Emoji personalizzate in seguito tramite Amministrazione, Personalizza, Emoji."
+      invites:
+        title: "Invita lo Staff"
+        description: "Hai quasi finito! Invita alcuni membri dello staff a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per far partire la tua comunità."
+      finished:
+        title: "Il tuo Discourse è Pronto!"
+        description: |
+          <p>Se te la senti di cambiare queste impostazioni, visita <a href='/admin' target='_blank'>la tua sezione amministrazione</a>; la trovi accanto all'icona della chiave inglese nel menu hamburger del sito.</p>
+          <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   activemodel:
     errors:
       <<: *errors

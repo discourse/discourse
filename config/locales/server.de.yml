@@ -860,7 +860,6 @@ de:
     educate_until_posts: "Zeige das Hilfe-Panel im Editor sobald ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
     title: "Der Name dieser Site, wird für das Title-Tag verwendet."
     site_description: "Beschreibe diese Site in einem Satz. Wird für das \"description\" Meta-Tag verwendet."
-    contact_email: "Die E-Mail-Adresse des Hauptverantwortlichen dieser Site. Wird verwendet bei kritischen Benachrichtigungen wie beispielsweise unbearbeitete Meldungen, als auch solche die via /about Kontaktformular eintreffen. "
     contact_url: "URL für Kontaktanfragen bezüglich dieser Site. Wird unter /about im Kontaktformular für dringende Angelegenheiten verwendet."
     queue_jobs: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze Sidekiq zur Ausführung von Jobs. Wenn dies abgeschaltet wird, dann wird die Site nicht mehr richtig funktionieren!"
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
@@ -1807,28 +1806,15 @@ de:
     csv_export_failed:
       title: "CSV-Export fehlgeschlagen"
       subject_template: "Datenexport fehlgeschlagen"
-      text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere ein Team-Mitglied oder überprüfe die Logdateien."
     email_reject_insufficient_trust_level:
       title: "E-Mail abgelehnt weil Vertrauensstufe unzureichend"
       subject_template: "[%{email_prefix}] E-Mail-Probme -- Vertrauensstufe nicht ausreichend"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) konnte nicht zugestellt werden.
-
-        Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_user_not_found:
       title: "E-Mail abgelehnt weil Benutzer nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer nicht gefunden"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_screened_email:
       title: "E-Mail abgelehnt weil E-Mail-Adresse gesperrt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail-Adresse blockiert"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_inactive_user:
       title: "E-Mail abgelehnt weil Benutzer inaktiv"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
@@ -1846,17 +1832,9 @@ de:
     email_reject_reply_user_not_matching:
       title: "E-Mail abgelehnt weil E-Mail-Adresse abweichend"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortadresse unerwartet"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_no_account:
       title: "E-Mail abgelehnt weil unbekanntes Konto"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Konto unbekannt"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Wir konnten kein Konto finden, das zu deiner E-Mail-Adresse passt. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_empty:
       title: "E-Mail abgelehnt weil kein Inhalt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Kein Inhalt"
@@ -1876,17 +1854,9 @@ de:
     email_reject_invalid_access:
       title: "E-Mail abgelehnt weil nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Du hast nicht die notwendigen Zugriffsrechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_strangers_not_allowed:
       title: "E-Mail abgelehnt weil Zugriff nicht erlaubt"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Zugriff ungültig"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Die Kategorie, an die du die E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und von bekannten E-Mail-Adressen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_invalid_post:
       title: "E-Mail abgelehnt weil ungültiger Beitrag"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Beitrag fehlerhaft"
@@ -1915,10 +1885,6 @@ de:
     email_reject_reply_key:
       title: "E-Mail abgelehnt weil unbekannter Antwort-Schlüssel"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortschlüssel unbekannt"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Bitte kontaktiere ein Team-Mitglied.
     email_reject_bad_destination_address:
       title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
@@ -1929,24 +1895,12 @@ de:
     email_reject_topic_not_found:
       title: "E-Mail abgelehnt weil Thema nicht gefunden"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema nicht gefunden"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Das Thema, auf das du geantwortet hast, existiert nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_topic_closed:
       title: "E-Mail abgelehnt weil Thema geschlossen"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Thema geschlossen"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_auto_generated:
       title: "E-Mail abgelehnt weil automatisch generierte Antwort"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwort automatisch generiert"
-      text_body_template: |
-        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
-
-        Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt wurde statt von einem Menschen getippt; wir können diese Arten von E-Mails nicht akzeptieren. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-POP-Authentifizierungsfehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -2316,10 +2270,6 @@ de:
     see_more: "Mehr"
     search_title: "Diese Site durchsuchen"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Wilkommen bei %{title}](#welcome)
-      Ein Benutzerkonto ist notwendig. Bitte registriere dich oder melde dich an.
   terms_of_service:
     title: "Nutzungsbedingungen"
     signup_form_message: 'Ich habe die <a href="/tos" target="_blank">Nutzungsbedingungen</a> gelesen und akzeptiert.'

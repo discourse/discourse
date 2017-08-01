@@ -171,6 +171,7 @@ fi:
   too_many_links:
     one: "Pahoittelut, uudet käyttäjät voivat laittaa vain yhden linkin viestiin."
     other: "Pahoittelut, uusi käyttäjä voi laittaa vain %{count} linkkiä viestiin."
+  contains_blocked_words: "Viestissäsi on kielletty sanoja."
   spamming_host: "Pahoittelut, linkit tuolle sivulle eivät ole sallittuja."
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
@@ -360,6 +361,10 @@ fi:
           attributes:
             value:
               missing_interpolation_keys: 'Nämä interpolaatioavaimet puuttuvat: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "Toiminnolle on määritelty liian monta sanaa"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Tietoa minusta -kenttä käyttäjätiedoissasi on täyttämättä. <a href='/u/%{username_lower}/preferences/about-me'>Haluaisitko täyttää sen nyt?</a></div>"
@@ -422,6 +427,7 @@ fi:
       invalid_email_in: "'%{email}' ei ole käypä sähköpostiosoite"
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
+      description_incomplete: "Alueen kuvauksessa on oltava ainakin yksi kappale."
     cannot_delete:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on tytäralueita."
@@ -897,6 +903,7 @@ fi:
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
     onebox_domains_blacklist: "Verkko-osoitteet, joista ei luoda Onebox-esikatselua"
+    inline_onebox_domains_whitelist: "Verkko-osoitteet, joista luodaan Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     max_oneboxes_per_post: "Oneboxien enimmäismäärä yhdessä viestissä"
     logo_url: "Logo sivustosi vasemmassa yläkulmassa. Sen pitäisi olla leveä suorakulmio muodoltaan. Jos jätetään tyhjäksi, näytetään sivuston otsikkoteksti."
     digest_logo_url: "Vaihtoehtoinen logo, jota käytetään sähköpostikoosteessa. Muodoltaan sen tulisi olla leveä suorakulmio, eikä se saa olla SVG-muodossa. Jos ei aseteta, käytetään `logo_url`-kuvaa."
@@ -1854,28 +1861,28 @@ fi:
     csv_export_failed:
       title: "CSV:n vienti epäonnistui"
       subject_template: "Datan vienti epäonnistui"
-      text_body_template: "Pahoittelemme, mutta datan vientisi epäonnistui. Tarkasta lokit tai ota yhteyttä henkilökuntaan."
+      text_body_template: "Pahoittelemme, mutta datan vienti epäonnistui. Tarkasta lokit tai [ota yhteyttä henkilökuntaan](%{base_url}/about)."
     email_reject_insufficient_trust_level:
       title: "Sähköposti hylätty - riittämätön luottamustaso"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Riittämätön luottamustaso"
       text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Tilisi luottamustaso ei ole riittävä, jotta saisit lähettää uusia ketjuja tähän sähköpostiosoitteeseen. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
+        Et voi lähettää uusia ketjun avauksia tähän sähköpostiosoitteeseen, koska luottamustasosi ei riitä. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_user_not_found:
       title: "Sähköposti hylätty - käyttäjää ei löytynyt"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Käyttäjää ei löytynyt"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Pahoittelemme, mutta sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Yritä lähettää viesti toisesta osoitteesta, tai ota yhteyttä henkilökuntaan.
+        Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Yritä lähettää viesti toisesta osoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_screened_email:
       title: "Sähköposti hylätty - estetty sähköpostiosoite"
       subject_template: "[%{email_prefix}] Sähköpostiongelma-- Estetty sähköpostiosoite"
       text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Viestisi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
+        Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai  [ota yhteyttä henkilökuntaan](%{base_url}/about).
 
     email_reject_inactive_user:
       title: "Sähköposti hylätty - aktivoimaton käyttäjä"

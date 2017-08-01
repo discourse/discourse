@@ -63,6 +63,8 @@ sq:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
+  invite:
+    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   reading_time: "Koha e leximit"
@@ -387,6 +389,7 @@ sq:
     title: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
+    disable_digest_emails: "Mos më dërgo më mesazhe email me përmbledhjet"
     all: "Mos më dërgoni më email nga %{sitename}"
   user_api_key:
     title: "Lejo këtë aplikimi të ketë akses në faqe"
@@ -571,7 +574,7 @@ sq:
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. tld.com will automatically allow sub.tld.com as well. As a minimum, you should add the top-level domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
-    post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
+    post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
@@ -1149,8 +1152,11 @@ sq:
         %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
+      subject_template: "[%{email_prefix}] Përmbledhja"
+      unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} ku nuk ju kemi parë në faqe për ca kohë. Ndryshoni <a href='%{email_settings_url}'>preferencat tuaja</a>, ose %{unsubscribe_link} për të mos i marrë më këto mesazhe."
       click_here: "klikoni këtu"
-      from: "%{site_name} - Një përmbledhje e shkurtër"
+      from: "%{site_name} - përmbledhja"
+      preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për

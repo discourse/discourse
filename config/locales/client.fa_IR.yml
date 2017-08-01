@@ -95,7 +95,7 @@ fa_IR:
     action_codes:
       public_topic: "این موضوع در %{when}  عمومی شده"
       private_topic: "این موضوع در %{when}  خصوصی شده"
-      split_topic: "این موضوع را در %{when} جدا کنید "
+      split_topic: "این موضوع  %{when} جدا شد "
       invited_user: "%{who} در %{when} دعوت شده"
       invited_group: "%{who} در %{when} دعوت شده"
       removed_user: "%{who} در %{when} حذف شد"
@@ -1084,7 +1084,7 @@ fa_IR:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>'{{description}}'  را بدست آورده</p>"
+      granted_badge: "<i title=\"اعطای نشان\" class=\"fa fa-certificate\"></i><p>نشان '{{description}}'  را بدست آوردید</p>"
       topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>موضوع جدید</span> {{description}}</p"
       group_message_summary:
@@ -1295,7 +1295,7 @@ fa_IR:
       toggle_information: " تغییر وضعیت جزئیات موضوع"
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در {{catLink}} یا {{latestLink}} مرور کنید."
       read_more: "می‌خواهید بیشتر بخوانید؟ {{catLink}} یا {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>یک پیام خوانده نشده</a> وجود دارد } other { <a href='/unread'># پیام خوانده نشده</a> وجود دارد } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 موضوع جدید</a> } other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># موضوع جدید</a> } } remaining, or {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>یک پیام خوانده نشده</a>  } other { <a href='/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
       view_latest_topics: مشاهده آخرین موضوع
       suggest_create_topic: چرا یک موضوع ایجاد نمی‌کنید؟
@@ -1376,7 +1376,7 @@ fa_IR:
           '2_2': 'به دلیل پیگیری این موضوع، تعداد پاسخ‌های جدید را خواهید دید.'
           '2': 'شما به دلیل <a href="/u/{{username}}/preferences">خواندن این موضوع</a>. تعداد پاسخ‌های جدید آن را خواهید دید.'
           '1_2': 'در صورتی که فردی با @نام به شما اشاره کند یا پاسخی دهد به شما اطلاع داده خواهد شد.'
-          '1': 'در صورتی که فردی با @نام به شما اشاره کند یا به پاسخی دهد به شما اطلاع داده خواهد شد.'
+          '1': 'در صورتی که فردی با @نام به شما اشاره کند یا پاسخی دهد، به شما اطلاع داده خواهد شد.'
           '0_7': 'شما تمام اعلان‌های این دسته‌بندی را نادیده گرفته اید'
           '0_2': 'شما تمام اعلان‌های این موضوع را نادیده گرفته اید'
           '0': 'شما تمام اعلان‌های این موضوع را نادیده گرفته اید'
@@ -1882,10 +1882,10 @@ fa_IR:
     posts: "نوشته‌ها"
     posts_long: "این موضوع {{number}} نوشته دارد"
     posts_likes_MF: |
-      این موضوع {count, plural, one {1 پاسخ} other {# پاسخ}} با {ratio, select,
-      low {تعداد پسند به نوشته بالایی دارد}
-      med {تعداد پسند به نوشته بسیار بالایی دارد}
-      high {تعداد پسند به نوشته بشدت بالایی دارد}
+      این موضوع دارای {count, plural, one {1 پاسخ} other {# پاسخ}} است {ratio, select,
+      low {و مورد پسند دیگران واقع شده است}
+      med {و بسیار مورد پسند دیگران واقع شده است}
+      high {و به شدت مورد پسند دیگران واقع شده است}
       other {}}
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"

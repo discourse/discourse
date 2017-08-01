@@ -1268,16 +1268,6 @@ da:
 
         Den konto, der er knyttet til denne mailadresse, er blokeret.
 
-    email_reject_reply_user_not_matching:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Dit svar blev sendt fra en anden emailadresse end den forventede, så vi er ikke sikre på, at det er den samme person. Prøv at sende fra en anden emailadresse eller kontakt hjælperteamet.
-    email_reject_no_account:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Vi kan ikke finde nogen konto, der matcher din emailadresse. Prøv at sende fra en anden emailadresse eller kontakt hjælperteamet.
     email_reject_empty:
       text_body_template: |+
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
@@ -1291,16 +1281,6 @@ da:
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Vi kunne ikke finde dit svar i mailen. **Sørg for at dit svar står øverst i mailen** -- vi kan ikke behandle svar, der er indsat i den oprindelige tekst.
-    email_reject_invalid_access:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Din konto har ikke tilladelse til at oprette nye emner i kategorien. Hvis du mener, at det er en fejl, så kontakt hjælperteamet.
-    email_reject_strangers_not_allowed:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Kategorien du sendte mailen til tillader kun svar fra brugere med gyldige kontoer og kendte emailadresser. Hvis du mener, at det er en fejl, så kontakt hjælperteamet.
     email_reject_invalid_post:
       text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
@@ -1321,31 +1301,11 @@ da:
 
         Send-handlingen blev ikke genkendt. Prøv igen, eller send via websitet, hvis det fortsætter.
 
-    email_reject_reply_key:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Svarknappen i emailen er ugyldig eller ukendt, så vi ved ikke, hvad denne email er et svar til. Kontakt hjælpeteamet.
     email_reject_bad_destination_address:
       text_body_template: |
         Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
 
         Ingen af modtageradresserne kan genkendes. Dobbelttjek at du sender til den korrekte emailadresse fra hjælperteamet.
-    email_reject_topic_not_found:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Emnet du besvarer eksisterer ikke længere - Det er måske slettet? Hvis du mener, at det er en fejl, så kontakt hjælperteamet.
-    email_reject_topic_closed:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Emnet du besvarer er i øjeblikket lukket og modtager ikke længere svar. Hvis du mener, at det er en fejl, så kontakt hjælperteamet.
-    email_reject_auto_generated:
-      text_body_template: |
-        Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
-
-        Din mail blev markeret som "autogenereret", hvilket betyder, at den er blevet oprettet automastisk af en computer i stedet for at blive tastet ind af en peron; vi kan ikke acceptere den slags mails. Hvis du mener, det er en fejl, kan du kontakte et medlem af staben.
     too_many_spam_flags:
       title: "For Mange Flagmarkeringer for Spam"
       subject_template: "Nyoprettet konto sat på hold"

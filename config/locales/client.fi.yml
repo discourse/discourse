@@ -207,8 +207,8 @@ fi:
       one: "{{count}} merkki"
       other: "{{count}} merkkiä"
     suggested_topics:
-      title: "Ehdotetut ketjut"
-      pm_title: "Ehdotetut viestit"
+      title: "Ketjuehdotuksia"
+      pm_title: "Keskusteluehdotuksia"
     about:
       simple_title: "Tietoja"
       title: "Tietoja sivustosta %{title}"
@@ -353,7 +353,8 @@ fi:
         add_members: "Lisää jäseniä"
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
       name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
-      public: "Salli käyttäjien liittyä ryhmään ja poistua siitä vapaasti (ryhmän täytyy olla julkisesti näkyvillä)"
+      public_admission: "Salli käyttäjien liittyä ryhmään vapaasti (Ryhmän täytyy olla julkinen)"
+      public_exit: "Salli käyttäjien poistua ryhmästä vapaasti"
       empty:
         posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä."
         members: "Ryhmässä ei ole jäseniä."
@@ -365,6 +366,7 @@ fi:
       join: "Liity ryhmään"
       leave: "Poistu ryhmästä"
       request: "Hae ryhmään"
+      message: "Viesti"
       automatic_group: Automaattinen ryhmä
       closed_group: Suljettu ryhmä
       is_group_user: "Olet tämän ryhmän jäsen"
@@ -1034,7 +1036,13 @@ fi:
       objects: Esineet
       celebration: Juhlinta
       custom: Mukautetut emojit
-      recent: Hiljattain käyttämäni emojit
+      recent: Hiljattain käytetyt
+      default_tone: Ei ihonsävyä
+      light_tone: Vaalea ihonväri
+      medium_light_tone: Vaaleanruskea ihonväri
+      medium_tone: Ruskea ihonväri
+      medium_dark_tone: Tummanruskea ihonväri
+      dark_tone: Tumma ihonväri
     composer:
       emoji: "Emoji :)"
       more_emoji: "lisää..."
@@ -2898,6 +2906,27 @@ fi:
             title: "Luo uusia aliverkkojen laajuisia porttikieltoja, jos kieltoja on asetettu vähintään 'min_ban_entries_for_roll_up' asetuksen määrä."
         logster:
           title: "Virhelokit"
+      watched_words:
+        title: "Tarkkaillut sanat"
+        search: "haku"
+        clear_filter: "Tyhjennä"
+        show_words: "näytä sanat"
+        actions:
+          block: 'Estä'
+          censor: 'Sensuroi'
+          require_approval: 'Vie hyväksyttäväksi'
+          flag: 'Liputa'
+        action_descriptions:
+          block: 'Estä lähettämästä viestiä, jossa esiintyy joku näistä sanoista. Käyttäjälle näytetään virheilmoitus, kun hän yrittää lähettää viestinsä.'
+          censor: 'Salli viesti, jossa esiintyy joku näistä sanoista, mutta korvaa ne merkeillä, jotka piilottavat sensuroidut sanat.'
+          require_approval: 'Viesti, jossa esiintyy joku näistä sanoista, tarvitsee henkilökunnan hyväksynnän ennen sen julkaisemista.'
+          flag: 'Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä.'
+        form:
+          label: 'Uusi sana:'
+          add: 'Lisä'
+          success: 'Onnistui'
+          upload: "Lataa"
+          upload_successful: "Lataus onnistui. Sanoja lisättiin."
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."

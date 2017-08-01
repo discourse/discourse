@@ -7,37 +7,126 @@
 
 pl_PL:
   site_settings:
+    discourse_narrative_bot_enabled: 'Włącz bota Discourse Narrative'
     disable_discourse_narrative_bot_welcome_post: "Dezaktywuj wpis powitalny Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Nazwy użytkownika, które bot Discourse Narrative powinien zignorować"
+    discourse_narrative_bot_disable_public_replies: "Wyłącz publiczne odpowiedzi bota Discourse Narrative"
+    discourse_narrative_bot_welcome_post_type: "Rodzaj powitalnego posta, który bot Discourse Narrative powinien przesłać"
+    discourse_narrative_bot_welcome_post_delay: "Odczekaj (n) sekund, zanim wyślesz powitanie bota Discourse Narrative"
   badges:
     certified:
       name: Certyfikowany
+      description: "Ukończono tutorial dla nowych użytkowników"
+      long_description: |
+        Odznaka została nadana za ukończenie interaktywnego tutorialu dla nowych użytkowników. Poznałeś podstawowe narzędzia dyskusji i jesteś teraz certyfikowany!
+    licensed:
+      name: Licencjonowany
+      description: "Ukończono tutorial dla zaawansowanych użytkowników"
+      long_description: |
+        Odznaka została nadana za ukończenie interaktywnego tutorialu dla zaawansowanych użytkowników. Poznałeś zaawansowane narzędzia dyskusji i jesteś teraz w pełni licencjonowany!
   discourse_narrative_bot:
+    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby skomunikować się ze mną, wyślij do mnie wiadomość lub oznacz **`@%{discobot_username}`** w dowolnym miejscu."
+    timeout:
+      message: |-
+        Witaj @%{username}, przypominam o sobie bo od dawna do mnie nie zaglądałeś.
+
+        Aby kontynuować, odpowiedz mi w dowolnym momencie.
+
+        Aby pominąć ten krok, wyślij wiadomość o treści ``.
+
+        Aby rozpocząć od początku, wyślij wiadomość o treści `%{reset_trigger}`.
+
+        Jeśli nie odpowiesz to wszystko OK. Jestem robotem. Nie zranisz moich uczuć. :sob:
+    dice:
+      trigger: "przewiń"
+      invalid: |-
+        Przykro mi, ale jest to matematycznie niemożliwe, aby rzucić taką kombinacją kostki. :confounded:
+      not_enough_dice: |-
+        Mam tylko %{num_of_dice} kości. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
     quote:
       trigger: "cytuj"
       '1':
         author: "Albert Einstein"
       '2':
+        quote: "Musisz być zmianą, którą chcesz zobaczyć na świecie."
         author: "Mahatma Gandhi"
       '3':
+        quote: "Nie płacz, ponieważ się to skończyło - uśmiechnij się, bo miało to miejsce."
         author: "Dr Seuss"
+      '4':
+        quote: "Jeśli chcesz, aby coś zostało zrobione dobrze - zrób to sam."
+        author: "Charles-Guillaume Étienne"
       '5':
         quote: "Uwierz w to że możesz, jesteś już w połowie drogi."
+        author: "Theodore Roosevelt"
       '6':
         quote: "Życie jest jak pudełko czekoladek. Nigdy nie wiesz na co trafisz."
         author: "Mama Forresta Gumpa"
+      '7':
+        quote: "To mały krok dla człowieka, ale wielki krok dla ludzkości."
+        author: "Neil Armstrong"
       '8':
+        quote: "Rób codziennie jedną rzecz, której się boisz."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Błędy są zawsze wybaczalne, jeśli osoba może się do nich przyznać."
         author: "Bruce Lee"
       '10':
+        quote: "Każda rzecz, którą umysł ludzki może pojąć i w nią uwierzyć, może on osiągnąć."
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: 'fortuna'
       answers:
+        '1': "Jest to pewne"
+        '2': "Jest to zdecydowane, więc"
+        '3': "Bez zająknięcia"
         '4': "Tak zdecydowanie"
+        '5': "Możesz na tym polegać"
+        '6': "Tak jak ja to widzę, tak"
+        '7': "Najpewniej"
+        '8': "Perspektywy są dobre"
         '9': "Tak"
+        '10': "Wszystkie znaki wskazują na to, że tak"
+        '11': "Odpowiedź niejasna, spróbuj ponownie"
+        '12': "Spytaj ponownie później"
+        '13': "Lepiej, abym Ci teraz nie mówił"
+        '14': "Nie mogę teraz tego przewidzieć"
+        '15': "Skoncentruj się i spytaj ponownie"
+        '16': "Nie licz na to"
+        '17': "Moja odpowiedź to nie"
+        '18': "Moje źródła donoszą, że nie"
+        '19': "Perspektywy są złe"
+        '20': "Bardzo trudne do przewidzenia"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: 'zacznij'
       skip_trigger: 'pomiń'
       help_trigger: 'wyświetl pomoc'
+      random_mention:
+        reply: |-
+          Hej! Aby dowiedzieć się, co mogę zrobić, powiedz `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Aktualnie wiem jak zrobić następujące rzeczy:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          > Rozpoczyna jedną z następujących akcji: %{tracks}.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          > :left_speech_bubble: _Wykonuje losowy akt życzliwości, nie oczekując nagrody, wiedząc, że pewnego dnia ktoś może zrobić to samo dla Ciebie._ &mdash; Princess Diana
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Możesz na niej polegać
+      do_not_understand:
+        first_response: |-
+          Hej! Dzięki za odpowiedź!
+
+          Niestety, ale jako kiepsko zaprogramowany bot, nie do końca jestem w stanie ją zrozumieć. :frowning:
+        track_response: Możesz spróbować ponownie, a jeśli chcesz pominąć ten krok powiedz `%{skip_trigger}`. Natomiast jeśli chcesz zacząć od początku, powiedz `%{reset_trigger}`.
     new_user_narrative:
       reset_trigger: "nowy użytkownik"
