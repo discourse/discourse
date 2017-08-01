@@ -151,6 +151,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'annotate'
   gem 'foreman', require: false
+  gem 'rubocop', require: false
 end
 
 # this is an optional gem, it provides a high performance replacement
