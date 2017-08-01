@@ -626,7 +626,7 @@ class Search
         .references(:category_search_data)
         .order("topics_month DESC")
         .secured(@guardian)
-        .limit(@limit)
+        .limit(limit)
 
       categories.each do |category|
         @results.add(category)
@@ -643,7 +643,7 @@ class Search
         .where("user_search_data.search_data @@ #{ts_query("simple")}")
         .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
         .order("last_posted_at DESC")
-        .limit(@limit)
+        .limit(limit)
 
       users.each do |user|
         @results.add(user)
@@ -845,7 +845,7 @@ class Search
         added += 1
       end
 
-      if added < @limit
+      if added < limit
         aggregate_posts(post_sql[:remaining]).each { |p| @results.add(p) }
       end
     end
