@@ -63,6 +63,8 @@ task 'docker:test' do
     unless ENV["JS_ONLY"]
 
       unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_LINT"]
+
         params = []
         if ENV["BISECT"]
           params << "--bisect"
@@ -75,8 +77,10 @@ task 'docker:test' do
 
       unless ENV["SKIP_PLUGINS"]
         if ENV["SINGLE_PLUGIN"]
+          @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}") unless ENV["SKIP_LINT"]
           @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
         else
+          @good &&= run_or_fail("bundle exec rubocop --parallel plugins") unless ENV["SKIP_LINT"]
           @good &&= run_or_fail("bundle exec rake plugin:spec")
         end
       end
