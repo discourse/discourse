@@ -19,12 +19,11 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
     curl -sSL https://get.rvm.io | bash -s stable
     echo 'gem: --no-document' >> ~/.gemrc
 
-    # Logout and back in to activate RVM installation
+    # exit the terminal and open it again to activate RVM
 
-    rvm install 2.3.1
-    rvm --default use 2.3.1 # If this error out check https://rvm.io/integration/gnome-terminal
+    rvm install 2.3.4
+    rvm --default use 2.3.4 # If this error out check https://rvm.io/integration/gnome-terminal
     gem install bundler mailcatcher
-
 
     # Postgresql
     sudo su postgres
@@ -37,10 +36,12 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
     exit
 
     # Node
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
-    # exit the terminal and open it again
-    nvm install 6.2.0
-    nvm alias default 6.2.0
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+
+    # exit the terminal and open it again to activate NVM
+
+    nvm install node
+    nvm alias default node
     npm install -g svgo phantomjs-prebuilt
 
 
@@ -49,14 +50,19 @@ If everything goes alright, let's clone Discourse and start hacking:
     git clone https://github.com/discourse/discourse.git ~/discourse
     cd ~/discourse
     bundle install
-    bundle exec rake db:create db:migrate db:test:prepare
-    bundle exec rake autospec # CTRL + C to stop; Optional
-    bundle exec rails s -b 0.0.0.0 # Open browser on http://localhost:3000 and you should see Discourse
+    bundle exec rake db:migrate
+    RAILS_ENV=test bundle exec rake db:migrate
+    
+    # run the specs (optional)
+    bundle exec rake autospec # CTRL + C to stop
+    
+    # launch discourse
+    bundle exec rails s -b 0.0.0.0 # open browser on http://localhost:3000 and you should see Discourse
 
 Create a test account, and enable it with:
 
     bundle exec rails c
-    u = User.find_by_id 1
+    u = User.find(1)
     u.activate
     u.grant_admin!
     exit

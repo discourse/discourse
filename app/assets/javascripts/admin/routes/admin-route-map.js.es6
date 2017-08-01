@@ -62,6 +62,10 @@ export default function() {
       this.route('screenedEmails', { path: '/screened_emails' });
       this.route('screenedIpAddresses', { path: '/screened_ip_addresses' });
       this.route('screenedUrls', { path: '/screened_urls' });
+      this.route('adminWatchedWords', { path: '/watched_words', resetNamespace: true}, function() {
+        this.route('index', { path: '/' } );
+        this.route('action', { path: '/action/:action_id' } );
+      });
     });
 
     this.route('adminGroups', { path: '/groups', resetNamespace: true }, function() {
@@ -89,11 +93,6 @@ export default function() {
 
     this.route('adminPlugins', { path: '/plugins', resetNamespace: true }, function() {
       this.route('index', { path: '/' });
-    });
-
-    this.route('adminWatchedWords', { path: '/watched_words', resetNamespace: true}, function() {
-      this.route('index', { path: '/' } );
-      this.route('action', { path: '/action/:action_id' } );
     });
   });
 };

@@ -589,8 +589,9 @@ export default Ember.Component.extend({
 
     if (post.length > 0) {
       post = post.replace(/^\n*/, "\n\n");
+    } else {
+      post = "\n";
     }
-
 
     const value = pre + text + post;
     const $textarea = this.$('textarea.d-editor-input');

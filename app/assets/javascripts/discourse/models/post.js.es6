@@ -159,6 +159,7 @@ const Post = RestModel.extend({
     done elsewhere.
   **/
   setDeletedState(deletedBy) {
+    let promise;
     this.set('oldCooked', this.get('cooked'));
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
@@ -169,8 +170,7 @@ const Post = RestModel.extend({
         can_delete: false
       });
     } else {
-
-      cookAsync(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})).then(cooked => {
+      promise = cookAsync(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})).then(cooked => {
         this.setProperties({
           cooked: cooked,
           can_delete: false,
@@ -181,6 +181,8 @@ const Post = RestModel.extend({
         });
       });
     }
+
+    return promise || Em.RSVP.Promise.resolve();
   },
 
   /**
@@ -203,10 +205,11 @@ const Post = RestModel.extend({
   },
 
   destroy(deletedBy) {
-    this.setDeletedState(deletedBy);
-    return ajax("/posts/" + this.get('id'), {
-      data: { context: window.location.pathname },
-      type: 'DELETE'
+    return this.setDeletedState(deletedBy).then(()=>{
+      return ajax("/posts/" + this.get('id'), {
+        data: { context: window.location.pathname },
+        type: 'DELETE'
+      });
     });
   },
 

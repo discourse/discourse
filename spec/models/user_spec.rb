@@ -5,6 +5,7 @@ describe User do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :username }
+    it { is_expected.to validate_presence_of :primary_email }
 
     describe 'emails' do
       let(:user) { Fabricate.build(:user) }
@@ -20,6 +21,16 @@ describe User do
       describe 'when record has an invalid email' do
         it 'should not be valid' do
           user.email = 'test@gmailcom'
+
+          expect(user).to_not be_valid
+          expect(user.errors.messages).to include(:primary_email)
+        end
+      end
+
+      describe 'when user is staged' do
+        it 'should still validate primary_email' do
+          user.staged = true
+          user.primary_email = nil
 
           expect(user).to_not be_valid
           expect(user.errors.messages).to include(:primary_email)

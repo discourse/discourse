@@ -192,7 +192,7 @@ http://b.com/#{'a' * 500}
     end
 
     context "link to a local attachments" do
-      let(:post) { topic.posts.create(user: user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb">ruby.rb</a>') }
+      let(:post) { topic.posts.create(user: user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb?foo=bar">ruby.rb</a>') }
 
       it "extracts the link" do
         TopicLink.extract_from(post)
@@ -202,9 +202,11 @@ http://b.com/#{'a' * 500}
         # is set to internal
         expect(link).to be_internal
         # has the correct url
-        expect(link.url).to eq("/uploads/default/208/87bb3d8428eb4783.rb")
+        expect(link.url).to eq("/uploads/default/208/87bb3d8428eb4783.rb?foo=bar")
         # should not be the reflection
         expect(link).not_to be_reflection
+        # should have file extension
+        expect(link.extension).to eq('rb')
       end
 
     end
@@ -223,6 +225,8 @@ http://b.com/#{'a' * 500}
         expect(link.url).to eq("//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb")
         # should not be the reflection
         expect(link).not_to be_reflection
+        # should have file extension
+        expect(link.extension).to eq('rb')
       end
 
     end

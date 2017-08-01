@@ -122,8 +122,7 @@ const Group = RestModel.extend({
 
   @observes("visibility_level")
   _updatePublic() {
-    let visibility_level = parseInt(this.get('visibility_level'));
-    if (visibility_level !== 0) {
+    if (this.get('visibility_level') !== 0) {
       this.set('public', false);
       this.set('allow_membership_requests', false);
     }

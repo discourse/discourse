@@ -161,6 +161,7 @@ SQL
           added_urls << url
 
           unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
+            file_extension = File.extname(parsed.path)[1..10].downcase unless File.extname(parsed.path).empty?
             begin
               TopicLink.create!(post_id: post.id,
                                 user_id: post.user_id,
@@ -170,7 +171,8 @@ SQL
                                 internal: internal,
                                 link_topic_id: topic_id,
                                 link_post_id: reflected_post.try(:id),
-                                quote: link.is_quote)
+                                quote: link.is_quote,
+                                extension: file_extension)
             rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
               # it's fine
             end

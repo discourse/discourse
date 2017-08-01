@@ -54,7 +54,11 @@
 
   <div>
     <label for="visiblity">{{i18n 'groups.visibility_levels.title'}}</label>
-    {{combo-box name="alias" valueAttribute="value" value=model.visibility_level content=visibilityLevelOptions}}
+    {{combo-box name="alias"
+        valueAttribute="value"
+        value=model.visibility_level
+        content=visibilityLevelOptions
+        castInteger=true}}
   </div>
 
   {{#unless model.automatic}}

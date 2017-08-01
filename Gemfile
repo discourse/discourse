@@ -66,7 +66,7 @@ gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.6'
+gem 'email_reply_trimmer', '0.1.7'
 
 # TODO Use official image_optim gem once https://github.com/toy/image_optim/pull/149
 # is merged.
@@ -151,6 +151,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'annotate'
   gem 'foreman', require: false
+  gem 'rubocop', require: false
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -183,7 +184,7 @@ gem 'simple-rss', require: false
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri
 
-gem 'rmmseg-cpp', require: false
+gem 'cppjieba_rb', require: false
 
 gem 'logster'
 

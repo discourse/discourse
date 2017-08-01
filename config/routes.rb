@@ -168,6 +168,12 @@ Discourse::Application.routes.draw do
         end
       end
       resources :screened_urls,         only: [:index]
+      resources :watched_words, only: [:index, :create, :update, :destroy] do
+        collection do
+          get "action/:id" => "watched_words#index"
+        end
+      end
+      post "watched_words/upload" => "watched_words#upload"
     end
 
     get "/logs" => "staff_action_logs#index"
@@ -268,13 +274,6 @@ Discourse::Application.routes.draw do
     get "memory_stats" => "diagnostics#memory_stats", constraints: AdminConstraint.new
     get "dump_heap" => "diagnostics#dump_heap", constraints: AdminConstraint.new
     get "dump_statement_cache" => "diagnostics#dump_statement_cache", constraints: AdminConstraint.new
-
-    resources :watched_words, only: [:index, :create, :update, :destroy], constraints: AdminConstraint.new do
-      collection do
-        get "action/:id" => "watched_words#index"
-      end
-    end
-    post "watched_words/upload" => "watched_words#upload"
   end # admin namespace
 
   get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"

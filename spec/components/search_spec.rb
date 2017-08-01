@@ -440,10 +440,31 @@ describe Search do
   end
 
   describe 'Chinese search' do
-    it 'splits English / Chinese' do
+    let(:sentence) { 'Discourse中国的基础设施网络正在组装' }
+    let(:sentence_t) { 'Discourse太平山森林遊樂區' }
+
+    it 'splits English / Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
-      data = Search.prepare_data('Discourse社区指南').split(' ')
-      expect(data).to eq(['Discourse', '社区', '指南'])
+      data = Search.prepare_data(sentence).split(' ')
+      expect(data).to eq(["Discourse", "中国", "基础", "设施", "基础设施", "网络", "正在", "组装"])
+    end
+
+    it 'splits for indexing and filter out stop words' do
+      SiteSetting.default_locale = 'zh_CN'
+      data = Search.prepare_data(sentence, :index).split(' ')
+      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
+    end
+
+    it 'splits English / Traditional Chinese and filter out stop words' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data(sentence_t).split(' ')
+      expect(data).to eq(["Discourse", "太平", "平山", "太平山", "森林", "遊樂區"])
+    end
+
+    it 'splits for indexing and filter out stop words' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data(sentence_t, :index).split(' ')
+      expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
     end
 
     it 'finds chinese topic based on title' do
@@ -632,6 +653,17 @@ describe Search do
 
     end
 
+    it 'can find posts with images' do
+      post_uploaded = Fabricate(:post_with_uploaded_image)
+      post_with_image_urls = Fabricate(:post_with_image_urls)
+      Fabricate(:post)
+
+      CookedPostProcessor.new(post_uploaded).update_post_image
+      CookedPostProcessor.new(post_with_image_urls).update_post_image
+
+      expect(Search.execute('with:images').posts.map(&:id)).to contain_exactly(post_uploaded.id, post_with_image_urls.id)
+    end
+
     it 'can find by latest' do
       topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
       post1 = Fabricate(:post, topic: topic1)
@@ -727,6 +759,23 @@ describe Search do
       end
     end
 
+    it "can find posts which contains filetypes" do
+      post1 = Fabricate(:post,
+                        raw: "http://example.com/image.png")
+      post2 = Fabricate(:post,
+                         raw: "Discourse logo\n"\
+                              "http://example.com/logo.png\n"\
+                              "http://example.com/vector_image.svg")
+      post_with_upload = Fabricate(:post, uploads: [Fabricate(:upload)])
+      Fabricate(:post)
+
+      TopicLink.extract_from(post1)
+      TopicLink.extract_from(post2)
+
+      expect(Search.execute('filetype:svg').posts).to eq([post2])
+      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id, post_with_upload.id)
+      expect(Search.execute('logo filetype:png').posts.map(&:id)).to eq([post2.id])
+    end
   end
 
   it 'can parse complex strings using ts_query helper' do
@@ -792,6 +841,41 @@ describe Search do
       results = s.execute
       expect(results.search_log_id).to be_present
     end
+  end
+
+  context 'pagination' do
+    let(:number_of_results) { 2 }
+    let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello') }
+    let!(:post2) { Fabricate(:post, raw: 'hello hello hello hello') }
+    let!(:post3) { Fabricate(:post, raw: 'hello hello hello') }
+    let!(:post4) { Fabricate(:post, raw: 'hello hello') }
+    let!(:post5) { Fabricate(:post, raw: 'hello') }
+    before do
+      Search.stubs(:per_filter).returns(number_of_results)
+    end
+
+    it 'returns more results flag' do
+      results = Search.execute('hello', type_filter: 'topic')
+      results2 = Search.execute('hello', type_filter: 'topic', page: 2)
+
+      expect(results.posts.length).to eq(number_of_results)
+      expect(results.posts.map(&:id)).to eq([post1.id, post2.id])
+      expect(results.more_full_page_results).to eq(true)
+      expect(results2.posts.length).to eq(number_of_results)
+      expect(results2.posts.map(&:id)).to eq([post3.id, post4.id])
+      expect(results2.more_full_page_results).to eq(true)
+    end
+
+    it 'correctly search with page parameter' do
+      search = Search.new('hello', type_filter: 'topic', page: 3)
+      results = search.execute
+
+      expect(search.offset).to eq(2 * number_of_results)
+      expect(results.posts.length).to eq(1)
+      expect(results.posts).to eq([post5])
+      expect(results.more_full_page_results).to eq(nil)
+    end
+
   end
 
 end

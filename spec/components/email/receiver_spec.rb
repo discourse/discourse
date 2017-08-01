@@ -290,7 +290,7 @@ describe Email::Receiver do
 
     it "handles inline reply" do
       expect { process(:inline_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
+      expect(topic.posts.last.raw).to eq("And this is *my* reply :+1:")
     end
 
     it "retrieves the first part of multiple replies" do
@@ -400,7 +400,9 @@ describe Email::Receiver do
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
-    it "associates email replies using both 'In-Reply-To' and 'References' headers" do
+    it "associates email replies using both 'In-Reply-To' and 'References' headers when 'find_related_post_with_key' is disabled" do
+      SiteSetting.find_related_post_with_key = false
+
       expect { process(:email_reply_1) }.to change(Topic, :count)
 
       topic = Topic.last

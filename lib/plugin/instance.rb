@@ -2,7 +2,6 @@ require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
 require_dependency 'plugin/auth_provider'
-require_dependency 'plugin/theme'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -257,14 +256,6 @@ class Plugin::Instance
 
   def register_emoji(name, url)
     Plugin::CustomEmoji.register(name, url)
-  end
-
-  def register_theme(name)
-    return unless enabled?
-
-    theme = Plugin::Theme.new(self, name)
-    yield theme
-    themes << theme
   end
 
   def automatic_assets

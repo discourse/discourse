@@ -20,13 +20,15 @@ class Search
     %w(topic category user private_messages)
   end
 
-  def self.long_locale
-    # if adding a language see:
-    # /usr/share/postgresql/9.3/tsearch_data for possible options
-    # Do not add languages that are missing without amending the
+  def self.ts_config(locale = SiteSetting.default_locale)
+    # if adding a text search configuration, you should check PG beforehand:
+    # SELECT cfgname FROM pg_ts_config;
+    # As an aside, dictionaries can be listed by `\dFd`, the
+    # physical locations are in /usr/share/postgresql/<version>/tsearch_data.
+    # But it may not appear there based on pg extension configuration.
     # base docker config
     #
-    case SiteSetting.default_locale.to_sym
+    case locale.to_sym
     when :da     then 'danish'
     when :de     then 'german'
     when :en     then 'english'
@@ -39,7 +41,7 @@ class Search
     when :pt_BR  then 'portuguese'
     when :sv     then 'swedish'
     when :ru     then 'russian'
-      else 'simple' # use the 'simple' stemmer for other languages
+    else 'simple' # use the 'simple' stemmer for other languages
     end
   end
 
@@ -73,21 +75,16 @@ class Search
     nil
   end
 
-  def self.prepare_data(search_data)
+  def self.prepare_data(search_data, purpose = :query)
     data = search_data.squish
-    # TODO rmmseg is designed for chinese, we need something else for Korean / Japanese
+    # TODO cppjieba_rb is designed for chinese, we need something else for Korean / Japanese
     if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
-      unless defined? RMMSeg
-        require 'rmmseg'
-        RMMSeg::Dictionary.load_dictionaries
+      unless defined? CppjiebaRb
+        require 'cppjieba_rb'
       end
-
-      algo = RMMSeg::Algorithm.new(search_data)
-
-      data = ""
-      while token = algo.next_token
-        data << token.text << " "
-      end
+      mode = (purpose == :query ? :query : :mix)
+      data = CppjiebaRb.segment(search_data, mode: mode)
+      data = CppjiebaRb.filter_stop_word(data).join(' ')
     end
 
     data.force_encoding("UTF-8")
@@ -158,8 +155,8 @@ class Search
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
-    @limit = Search.per_facet
     @valid = true
+    @page = @opts[:page]
 
     # Removes any zero-width characters from search terms
     term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
@@ -177,10 +174,6 @@ class Search
       @search_context = @guardian.user
     end
 
-    if @opts[:type_filter].present?
-      @limit = Search.per_filter
-    end
-
     @results = GroupedSearchResults.new(
       @opts[:type_filter],
       clean_term,
@@ -188,6 +181,22 @@ class Search
       @include_blurbs,
       @blurb_length
     )
+  end
+
+  def limit
+    if @opts[:type_filter].present?
+      Search.per_filter + 1
+    else
+      Search.per_facet + 1
+    end
+  end
+
+  def offset
+    if @page && @opts[:type_filter].present?
+      (@page - 1) * Search.per_filter
+    else
+      0
+    end
   end
 
   def valid?
@@ -357,6 +366,10 @@ class Search
     end
   end
 
+  advanced_filter(/with:images/) do |posts|
+    posts.where("posts.image_url IS NOT NULL")
+  end
+
   advanced_filter(/category:(.+)/) do |posts, match|
     exact = false
 
@@ -473,7 +486,7 @@ class Search
       FROM topic_tags tt, tags
       WHERE tt.tag_id = tags.id
       GROUP BY tt.topic_id
-      HAVING to_tsvector(#{query_locale}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{query_locale}, ?)
+      HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
       )", tags.join('&'))
     else
       tags = match.split(",")
@@ -485,6 +498,19 @@ class Search
       AND tags.name in (?)
       )", tags)
     end
+  end
+
+  advanced_filter(/filetypes?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
+    file_extensions = match.split(",").map(&:downcase)
+
+    posts.where("posts.id IN (
+      SELECT post_id FROM topic_links
+      WHERE extension IN (:file_extensions)
+      UNION
+      SELECT post_uploads.post_id FROM uploads
+      JOIN post_uploads ON post_uploads.upload_id = uploads.id
+      WHERE lower(uploads.extension) IN (:file_extensions)
+      )", file_extensions: file_extensions)
   end
 
   private
@@ -543,7 +569,6 @@ class Search
         raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
         send("#{@results.type_filter}_search")
       else
-        @limit = Search.per_facet + 1
         unless @search_context
           user_search if @term.present?
           category_search if @term.present?
@@ -601,7 +626,7 @@ class Search
         .references(:category_search_data)
         .order("topics_month DESC")
         .secured(@guardian)
-        .limit(@limit)
+        .limit(limit)
 
       categories.each do |category|
         @results.add(category)
@@ -618,7 +643,7 @@ class Search
         .where("user_search_data.search_data @@ #{ts_query("simple")}")
         .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
         .order("last_posted_at DESC")
-        .limit(@limit)
+        .limit(limit)
 
       users.each do |user|
         @results.add(user)
@@ -661,7 +686,6 @@ class Search
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
-
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
             posts = posts.where("posts.raw ilike ?", "%#{exact}%")
@@ -723,7 +747,7 @@ class Search
           posts = posts.order("posts.like_count DESC")
         end
       else
-        posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
+        posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{default_ts_config}, topics.title), #{ts_query}) DESC")
 
         data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
         if opts[:aggregate_search]
@@ -740,37 +764,37 @@ class Search
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
       end
 
+      posts = posts.offset(offset)
       posts.limit(limit)
     end
 
-    def self.query_locale
-      "'#{Search.long_locale}'"
+    def self.default_ts_config
+      "'#{Search.ts_config}'"
     end
 
-    def query_locale
-      self.class.query_locale
+    def default_ts_config
+      self.class.default_ts_config
     end
 
-    def self.ts_query(term, locale = nil, joiner = "&")
+    def self.ts_query(term, ts_config = nil, joiner = "&")
 
-      data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
-                            locale: 'simple',
-                            term: term
-                          ).values[0][0]
+      data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
+                           config: 'simple',
+                           term: term).values[0][0]
 
-      locale = Post.sanitize(locale) if locale
+      ts_config = Post.sanitize(ts_config) if ts_config
       all_terms = data.scan(/'([^']+)'\:\d+/).flatten
       all_terms.map! do |t|
         t.split(/[\)\(&']/)[0]
       end.compact!
 
       query = Post.sanitize(all_terms.map { |t| "'#{PG::Connection.escape_string(t)}':*" }.join(" #{joiner} "))
-      "TO_TSQUERY(#{locale || query_locale}, #{query})"
+      "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
     end
 
-    def ts_query(locale = nil)
+    def ts_query(ts_config = nil)
       @ts_query_cache ||= {}
-      @ts_query_cache[(locale || query_locale) + " " + @term] ||= Search.ts_query(@term, locale)
+      @ts_query_cache["#{ts_config || default_ts_config} #{@term}"] ||= Search.ts_query(@term, ts_config)
     end
 
     def wrap_rows(query)
@@ -783,10 +807,10 @@ class Search
       query =
         if @order == :likes
           # likes are a pain to aggregate so skip
-          posts_query(@limit, private_messages: opts[:private_messages])
+          posts_query(limit, private_messages: opts[:private_messages])
             .select('topics.id', "posts.post_number")
         else
-          posts_query(@limit, aggregate_search: true, private_messages: opts[:private_messages])
+          posts_query(limit, aggregate_search: true, private_messages: opts[:private_messages])
             .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
             .group('topics.id')
         end
@@ -821,7 +845,7 @@ class Search
         added += 1
       end
 
-      if added < @limit
+      if added < limit
         aggregate_posts(post_sql[:remaining]).each { |p| @results.add(p) }
       end
     end
@@ -834,7 +858,7 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_eager_loads(posts_query(@limit))
+        posts = posts_eager_loads(posts_query(limit))
           .where('posts.topic_id = ?', @search_context.id)
 
         posts.each do |post|
