@@ -1341,6 +1341,7 @@ en:
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
       results_page: "Search Results"
+      more_results: "There are more results. Please narrow your search criteria."
 
       context:
         user: "Search posts by @{{username}}"
