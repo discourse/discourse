@@ -7,6 +7,7 @@
 # => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => JS_ONLY                   set to 1 to skip all rspec tests
+# => SKIP_LINT                 set to 1 to skip rubocop and eslint checks
 # => SINGLE_PLUGIN             set to plugin name to only run plugin-specific rspec tests (you'll probably want to SKIP_CORE as well)
 # => BISECT                    set to 1 to run rspec --bisect (applies to core rspec tests only)
 # => RSPEC_SEED                set to seed to use for rspec tests (applies to core rspec tests only)
@@ -89,18 +90,20 @@ task 'docker:test' do
 
     unless ENV["RUBY_ONLY"]
       unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("eslint app/assets/javascripts")
-        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts")
-        @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
-        @good &&= run_or_fail("eslint test/javascripts")
+        @good &&= run_or_fail("eslint app/assets/javascripts") unless ENV["SKIP_LINT"]
+        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts") unless ENV["SKIP_LINT"]
+        @good &&= run_or_fail("eslint --ext .es6 test/javascripts") unless ENV["SKIP_LINT"]
+        @good &&= run_or_fail("eslint test/javascripts") unless ENV["SKIP_LINT"]
         @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
         @good &&= run_or_fail("bundle exec rake qunit:test['600000','/wizard/qunit']")
       end
 
       unless ENV["SKIP_PLUGINS"]
         if ENV["SINGLE_PLUGIN"]
+          @good &&= run_or_fail("eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}") unless ENV["SKIP_LINT"]
           @good &&= run_or_fail("bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','600000']")
         else
+          @good &&= run_or_fail("eslint --ext .es6 plugins") unless ENV["SKIP_LINT"]
           @good &&= run_or_fail("bundle exec rake plugin:qunit['*','600000']")
         end
       end
