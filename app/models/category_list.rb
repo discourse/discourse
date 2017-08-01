@@ -25,10 +25,16 @@ class CategoryList
     trim_results
 
     if preloaded_topic_custom_fields.present?
-      Topic.preload_custom_fields(
-        @categories.map(&:displayable_topics).flatten,
-        preloaded_topic_custom_fields
-      )
+      displayable_topics = @categories.map(&:displayable_topics)
+      displayable_topics.flatten!
+      displayable_topics.compact!
+
+      if displayable_topics.present?
+        Topic.preload_custom_fields(
+          displayable_topics,
+          preloaded_topic_custom_fields
+        )
+      end
     end
   end
 
