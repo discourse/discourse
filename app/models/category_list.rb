@@ -3,6 +3,9 @@ require_dependency 'pinned_check'
 class CategoryList
   include ActiveModel::Serialization
 
+  cattr_accessor :preloaded_topic_custom_fields
+  self.preloaded_topic_custom_fields = Set.new
+
   attr_accessor :categories,
                 :uncategorized,
                 :draft,
@@ -20,6 +23,13 @@ class CategoryList
     find_user_data
     sort_unpinned
     trim_results
+
+    if preloaded_topic_custom_fields.present?
+      Topic.preload_custom_fields(
+        @categories.map(&:displayable_topics).flatten,
+        preloaded_topic_custom_fields
+      )
+    end
   end
 
   def preload_key
