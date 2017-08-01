@@ -273,4 +273,14 @@ describe FinalDestination do
     end
   end
 
+  describe ".escape_url" do
+    it "correctly escapes url" do
+      fragment_url = "https://eviltrout.com/2016/02/25/fixing-android-performance.html#discourse-comments"
+
+      expect(fd(fragment_url).escape_url.to_s).to eq(fragment_url)
+      expect(fd("https://eviltrout.com?s=180&#038;d=mm&#038;r=g").escape_url.to_s).to eq("https://eviltrout.com?s=180&d=mm&r=g")
+      expect(fd("http://example.com/?a=\11\15").escape_url.to_s).to eq("http://example.com/?a=%09%0D")
+    end
+  end
+
 end

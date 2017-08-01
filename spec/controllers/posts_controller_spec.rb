@@ -173,13 +173,13 @@ describe PostsController do
   describe 'show' do
     include_examples 'finding and showing post' do
       let(:action) { :show }
-      let(:params) { {id: post.id} }
+      let(:params) { { id: post.id } }
     end
 
     it 'gets all the expected fields' do
       # non fabricated test
       new_post = create_post
-      xhr :get, :show, {id: new_post.id}
+      xhr :get, :show, id: new_post.id
       parsed = JSON.parse(response.body)
       expect(parsed["topic_slug"]).to eq(new_post.topic.slug)
       expect(parsed["moderator"]).to eq(false)
@@ -191,14 +191,14 @@ describe PostsController do
   describe 'by_number' do
     include_examples 'finding and showing post' do
       let(:action) { :by_number }
-      let(:params) { {topic_id: post.topic_id, post_number: post.post_number} }
+      let(:params) { { topic_id: post.topic_id, post_number: post.post_number } }
     end
   end
 
   describe 'reply_history' do
     include_examples 'finding and showing post' do
       let(:action) { :reply_history }
-      let(:params) { {id: post.id} }
+      let(:params) { { id: post.id } }
     end
 
     it 'asks post for reply history' do
@@ -210,7 +210,7 @@ describe PostsController do
   describe 'replies' do
     include_examples 'finding and showing post' do
       let(:action) { :replies }
-      let(:params) { {post_id: post.id} }
+      let(:params) { { post_id: post.id } }
     end
 
     it 'asks post for replies' do
@@ -340,7 +340,7 @@ describe PostsController do
       {
         id: post.id,
         post: { raw: 'edited body', edit_reason: 'typo' },
-        image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
+        image_sizes: { 'http://image.com/image.jpg' => { 'width' => 123, 'height' => 456 } },
       }
     end
     let(:moderator) { Fabricate(:moderator) }
@@ -388,7 +388,7 @@ describe PostsController do
 
       it "extracts links from the new body" do
         param = update_params
-        param[:post][:raw] =  'I just visited this https://google.com so many cool links'
+        param[:post][:raw] = 'I just visited this https://google.com so many cool links'
 
         xhr :put, :update, param
         expect(response).to be_success
@@ -439,7 +439,7 @@ describe PostsController do
       it 'creates a bookmark' do
         xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
 
-        post_action = PostAction.find_by(user:user, post: post)
+        post_action = PostAction.find_by(user: user, post: post)
 
         expect(post_action.post_action_type_id).to eq(PostActionType.types[:bookmark])
       end
@@ -498,8 +498,8 @@ describe PostsController do
     include_examples "action requires login", :put, :wiki, post_id: 2
 
     describe "when logged in" do
-      let(:user) {log_in}
-      let(:post) {Fabricate(:post, user: user)}
+      let(:user) { log_in }
+      let(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to wiki the post" do
         Guardian.any_instance.expects(:can_wiki?).with(post).returns(false)
@@ -554,8 +554,8 @@ describe PostsController do
     include_examples "action requires login", :put, :post_type, post_id: 2
 
     describe "when logged in" do
-      let(:user) {log_in}
-      let(:post) {Fabricate(:post, user: user)}
+      let(:user) { log_in }
+      let(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to change the post type" do
         Guardian.any_instance.expects(:can_change_post_type?).returns(false)
@@ -583,8 +583,8 @@ describe PostsController do
     include_examples "action requires login", :put, :rebake, post_id: 2
 
     describe "when logged in" do
-      let(:user) {log_in}
-      let(:post) {Fabricate(:post, user: user)}
+      let(:user) { log_in }
+      let(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to rebake the post" do
         Guardian.any_instance.expects(:can_rebake?).returns(false)
@@ -622,11 +622,11 @@ describe PostsController do
         user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
-        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: raw, title: title, wpid: 1}
+        xhr :post, :create, api_username: user.username, api_key: master_key, raw: raw, title: title, wpid: 1
         expect(response).to be_success
         original = response.body
 
-        xhr :post, :create, {api_username: user.username_lower, api_key: master_key, raw: raw, title: title, wpid: 2}
+        xhr :post, :create, api_username: user.username_lower, api_key: master_key, raw: raw, title: title, wpid: 2
         expect(response).to be_success
 
         expect(response.body).to eq(original)
@@ -646,7 +646,7 @@ describe PostsController do
         end
 
         it 'queues the post if min_first_post_typing_time is not met' do
-          xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+          xhr :post, :create, raw: 'this is the test content', title: 'this is the test title for the topic'
 
           expect(response).to be_success
           parsed = ::JSON.parse(response.body)
@@ -668,11 +668,9 @@ describe PostsController do
         it "doesn't enqueue replies when the topic is closed" do
           topic = Fabricate(:closed_topic)
 
-          xhr :post, :create, {
-            raw: 'this is the test content',
-            title: 'this is the test title for the topic',
-            topic_id: topic.id
-          }
+          xhr :post, :create,             raw: 'this is the test content',
+                                          title: 'this is the test title for the topic',
+                                          topic_id: topic.id
 
           expect(response).not_to be_success
           parsed = ::JSON.parse(response.body)
@@ -681,10 +679,8 @@ describe PostsController do
 
         it "doesn't enqueue replies when the post is too long" do
           SiteSetting.max_post_length = 10
-          xhr :post, :create, {
-            raw: 'this is the test content',
-            title: 'this is the test title for the topic',
-          }
+          xhr :post, :create,             raw: 'this is the test content',
+                                          title: 'this is the test title for the topic'
 
           expect(response).not_to be_success
           parsed = ::JSON.parse(response.body)
@@ -695,7 +691,7 @@ describe PostsController do
       it 'blocks correctly based on auto_block_first_post_regex' do
         SiteSetting.auto_block_first_post_regex = "I love candy|i eat s[1-5]"
 
-        xhr :post, :create, {raw: 'this is the test content', title: 'when I eat s3 sometimes when not looking'}
+        xhr :post, :create, raw: 'this is the test content', title: 'when I eat s3 sometimes when not looking'
 
         expect(response).to be_success
         parsed = ::JSON.parse(response.body)
@@ -707,7 +703,7 @@ describe PostsController do
       end
 
       it 'creates the post' do
-        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+        xhr :post, :create, raw: 'this is the test content', title: 'this is the test title for the topic'
 
         expect(response).to be_success
         parsed = ::JSON.parse(response.body)
@@ -723,24 +719,20 @@ describe PostsController do
         user1 = Fabricate(:user)
         group.add(user1)
 
-        xhr :post, :create, {
-          raw: 'I can haz a test',
-          title: 'I loves my test',
-          target_usernames: group.name,
-          archetype: Archetype.private_message
-        }
+        xhr :post, :create,           raw: 'I can haz a test',
+                                      title: 'I loves my test',
+                                      target_usernames: group.name,
+                                      archetype: Archetype.private_message
 
         expect(response).not_to be_success
 
         # allow pm to this group
         group.update_columns(alias_level: Group::ALIAS_LEVELS[:everyone])
 
-        xhr :post, :create, {
-          raw: 'I can haz a test',
-          title: 'I loves my test',
-          target_usernames: group.name,
-          archetype: Archetype.private_message
-        }
+        xhr :post, :create,           raw: 'I can haz a test',
+                                      title: 'I loves my test',
+                                      target_usernames: group.name,
+                                      archetype: Archetype.private_message
 
         expect(response).to be_success
 
@@ -752,9 +744,9 @@ describe PostsController do
       end
 
       it "returns the nested post with a param" do
-        xhr :post, :create, {raw: 'this is the test content',
-                             title: 'this is the test title for the topic',
-                             nested_post: true}
+        xhr :post, :create, raw: 'this is the test content',
+                            title: 'this is the test title for the topic',
+                            nested_post: true
 
         expect(response).to be_success
         parsed = ::JSON.parse(response.body)
@@ -766,16 +758,16 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        xhr :post, :create, {raw: raw, title: title, wpid: 1}
+        xhr :post, :create, raw: raw, title: title, wpid: 1
         expect(response).to be_success
 
-        xhr :post, :create, {raw: raw, title: title, wpid: 2}
+        xhr :post, :create, raw: raw, title: title, wpid: 2
         expect(response).not_to be_success
       end
 
       context "errors" do
 
-        let(:post_with_errors) { Fabricate.build(:post, user: user)}
+        let(:post_with_errors) { Fabricate.build(:post, user: user) }
 
         before do
           post_with_errors.errors.add(:base, I18n.t(:spamming_host))
@@ -784,7 +776,7 @@ describe PostsController do
         end
 
         it "does not succeed" do
-          xhr :post, :create, {raw: 'test'}
+          xhr :post, :create, raw: 'test'
           User.any_instance.expects(:flag_linked_posts_as_spam).never
           expect(response).not_to be_success
         end
@@ -792,11 +784,10 @@ describe PostsController do
         it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
           PostCreator.any_instance.expects(:spam?).returns(true)
           User.any_instance.expects(:flag_linked_posts_as_spam)
-          xhr :post, :create, {raw: 'test'}
+          xhr :post, :create, raw: 'test'
         end
 
       end
-
 
       context "parameters" do
 
@@ -807,65 +798,65 @@ describe PostsController do
         end
 
         it "passes raw through" do
-          xhr :post, :create, {raw: 'hello'}
+          xhr :post, :create, raw: 'hello'
           expect(assigns(:manager_params)['raw']).to eq('hello')
         end
 
         it "passes title through" do
-          xhr :post, :create, {raw: 'hello', title: 'new topic title'}
+          xhr :post, :create, raw: 'hello', title: 'new topic title'
           expect(assigns(:manager_params)['title']).to eq('new topic title')
         end
 
         it "passes topic_id through" do
-          xhr :post, :create, {raw: 'hello', topic_id: 1234}
+          xhr :post, :create, raw: 'hello', topic_id: 1234
           expect(assigns(:manager_params)['topic_id']).to eq('1234')
         end
 
         it "passes archetype through" do
-          xhr :post, :create, {raw: 'hello', archetype: 'private_message'}
+          xhr :post, :create, raw: 'hello', archetype: 'private_message'
           expect(assigns(:manager_params)['archetype']).to eq('private_message')
         end
 
         it "passes category through" do
-          xhr :post, :create, {raw: 'hello', category: 1}
+          xhr :post, :create, raw: 'hello', category: 1
           expect(assigns(:manager_params)['category']).to eq('1')
         end
 
         it "passes target_usernames through" do
-          xhr :post, :create, {raw: 'hello', target_usernames: 'evil,trout'}
+          xhr :post, :create, raw: 'hello', target_usernames: 'evil,trout'
           expect(assigns(:manager_params)['target_usernames']).to eq('evil,trout')
         end
 
         it "passes reply_to_post_number through" do
-          xhr :post, :create, {raw: 'hello', reply_to_post_number: 6789, topic_id: 1234}
+          xhr :post, :create, raw: 'hello', reply_to_post_number: 6789, topic_id: 1234
           expect(assigns(:manager_params)['reply_to_post_number']).to eq('6789')
         end
 
         it "passes image_sizes through" do
-          xhr :post, :create, {raw: 'hello', image_sizes: {width: '100', height: '200'}}
+          xhr :post, :create, raw: 'hello', image_sizes: { width: '100', height: '200' }
           expect(assigns(:manager_params)['image_sizes']['width']).to eq('100')
           expect(assigns(:manager_params)['image_sizes']['height']).to eq('200')
         end
 
         it "passes meta_data through" do
-          xhr :post, :create, {raw: 'hello', meta_data: {xyz: 'abc'}}
+          xhr :post, :create, raw: 'hello', meta_data: { xyz: 'abc' }
           expect(assigns(:manager_params)['meta_data']['xyz']).to eq('abc')
         end
 
         context "is_warning" do
           it "doesn't pass `is_warning` through if you're not staff" do
-            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+            xhr :post, :create, raw: 'hello', archetype: 'private_message', is_warning: 'true'
             expect(assigns(:manager_params)['is_warning']).to eq(false)
           end
 
           it "passes `is_warning` through if you're staff" do
             log_in(:moderator)
-            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+            xhr :post, :create, raw: 'hello', archetype: 'private_message', is_warning: 'true'
             expect(assigns(:manager_params)['is_warning']).to eq(true)
           end
 
           it "passes `is_warning` as false through if you're staff" do
-            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'false'}
+            xhr :post, :create, raw: 'hello', archetype: 'private_message', is_warning: 'false'
             expect(assigns(:manager_params)['is_warning']).to eq(false)
           end
 
@@ -968,9 +959,9 @@ describe PostsController do
     include_examples 'action requires login', :put, :revert, post_id: 123, revision: 2
 
     let(:post) { Fabricate(:post, user: logged_in_as, raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
-    let(:post_revision) { Fabricate(:post_revision, post: post, modifications: {"raw" => ["this is original post body.", "this is edited post body."]}) }
-    let(:blank_post_revision) { Fabricate(:post_revision, post: post, modifications: {"edit_reason" => ["edit reason #1", "edit reason #2"]}) }
-    let(:same_post_revision) { Fabricate(:post_revision, post: post, modifications: {"raw" => ["Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex", "this is edited post body."]}) }
+    let(:post_revision) { Fabricate(:post_revision, post: post, modifications: { "raw" => ["this is original post body.", "this is edited post body."] }) }
+    let(:blank_post_revision) { Fabricate(:post_revision, post: post, modifications: { "edit_reason" => ["edit reason #1", "edit reason #2"] }) }
+    let(:same_post_revision) { Fabricate(:post_revision, post: post, modifications: { "raw" => ["Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex", "this is edited post body."] }) }
 
     let(:revert_params) do
       {

@@ -5,4 +5,24 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ar: {}
+ar:
+  site_settings:
+    discourse_narrative_bot_enabled: 'فعل روبوت ديسكورس المتحدث'
+    disable_discourse_narrative_bot_welcome_post: "عطل مشاركة الترحيب بواسطة روبوت ديسكورس المتحدث"
+    discourse_narrative_bot_ignored_usernames: "اسماء المستخدمين التي يتوجب على روبوت ديسكورس المتحدث تجاهلها"
+    discourse_narrative_bot_disable_public_replies: "عطل الردود العامة بواسطة روبوت ديسكورس المتحدث"
+    discourse_narrative_bot_welcome_post_type: "نوع مشاركة الترحيب التي يتوجب على روبوت ديسكورس المتحدث ارسالها"
+    discourse_narrative_bot_welcome_post_delay: "انتظر (n) ثوان قبل ارسال مشاركة الترحيب بواسطة روبوت ديسكورس المتحدث"
+  badges:
+    certified:
+      name: موثوق
+      description: "اكمل الدرس التعليمي الخاص بأعضائنا الجدد"
+    licensed:
+      name: مرخص
+  discourse_narrative_bot:
+    quote:
+      trigger: "اقتبس"
+      '1':
+        author: "البرت اينشتاين"
+      '2':
+        author: "مهاتما غاندي"

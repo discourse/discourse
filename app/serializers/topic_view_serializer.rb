@@ -90,13 +90,13 @@ class TopicViewSerializer < ApplicationSerializer
 
     if object.post_counts_by_user.present?
       result[:participants] = object.post_counts_by_user.map do |pc|
-        TopicPostCountSerializer.new({user: object.participants[pc[0]], post_count: pc[1]}, scope: scope, root: false)
+        TopicPostCountSerializer.new({ user: object.participants[pc[0]], post_count: pc[1] }, scope: scope, root: false)
       end
     end
 
     if object.suggested_topics.try(:topics).present?
-      result[:suggested_topics] = object.suggested_topics.topics.map do |topic|
-        SuggestedTopicSerializer.new(topic, scope: scope, root: false)
+      result[:suggested_topics] = object.suggested_topics.topics.map do |t|
+        SuggestedTopicSerializer.new(t, scope: scope, root: false)
       end
     end
 
@@ -220,7 +220,7 @@ class TopicViewSerializer < ApplicationSerializer
       result << { id: id,
                   count: 0,
                   hidden: false,
-                  can_act: scope.post_can_act?(post, sym)}
+                  can_act: scope.post_can_act?(post, sym) }
       # TODO: other keys? :can_defer_flags, :acted, :can_undo
     end
     result
@@ -277,7 +277,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def unicode_title
-    gsub_emoji_to_unicode(object.topic.title)
+    Emoji.gsub_emoji_to_unicode(object.topic.title)
   end
 
   def include_pm_with_non_human_user?

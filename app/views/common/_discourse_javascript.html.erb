@@ -42,9 +42,7 @@
     Discourse.Environment = '<%= Rails.env %>';
     Discourse.SiteSettings = ps.get('siteSettings');
     Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
-    <%- if SiteSetting.enable_experimental_markdown_it %>
     Discourse.MarkdownItURL = '<%= asset_url('markdown-it-bundle.js') %>';
-    <%- end %>
     I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
     Discourse.start();
     Discourse.set('assetVersion','<%= Discourse.assets_digest %>');

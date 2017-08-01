@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import DiscourseURL from 'discourse/lib/url';
 

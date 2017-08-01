@@ -34,4 +34,3 @@ describe Admin::FlagsController do
     end
   end
 end
-

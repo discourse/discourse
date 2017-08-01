@@ -6,7 +6,7 @@ describe PostAnalyzer do
   let(:url) { 'https://twitter.com/evil_trout/status/345954894420787200' }
 
   describe '#cook' do
-    let(:post_analyzer) {PostAnalyzer.new nil, nil  }
+    let(:post_analyzer) { PostAnalyzer.new nil, nil  }
 
     let(:raw) { "Here's a tweet:\n#{url}" }
     let(:options) { {} }
@@ -26,7 +26,7 @@ describe PostAnalyzer do
     end
 
     context 'when invalidating oneboxes' do
-      let(:options) {{ invalidate_oneboxes: true }}
+      let(:options) { { invalidate_oneboxes: true } }
 
       it 'invalidates the oneboxes for urls in the post' do
         Oneboxer.expects(:invalidate).with url
@@ -78,17 +78,12 @@ describe PostAnalyzer do
 
       it "returns the host and a count for links" do
         post_analyzer = PostAnalyzer.new(raw_two_links_html, default_topic_id)
-        expect(post_analyzer.linked_hosts).to eq({"disneyland.disney.go.com" => 1, "reddit.com" => 1})
+        expect(post_analyzer.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
       it "it counts properly with more than one link on the same host" do
         post_analyzer = PostAnalyzer.new(raw_three_links, default_topic_id)
-        expect(post_analyzer.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
-      end
-
-      it 'returns blank for ipv6 output' do
-        post_analyzer = PostAnalyzer.new('PING www.google.com(lb-in-x93.1e100.net) 56 data bytes', default_topic_id)
-        expect(post_analyzer.linked_hosts).to be_blank
+        expect(post_analyzer.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
     end
   end
@@ -167,7 +162,6 @@ describe PostAnalyzer do
     end
   end
 
-
   describe "raw_mentions" do
 
     it "returns an empty array with no matches" do
@@ -181,12 +175,14 @@ describe PostAnalyzer do
     end
 
     it "ignores pre" do
-      post_analyzer = PostAnalyzer.new("<pre>@Jake</pre> @Finn", default_topic_id)
+      # note, CommonMark has rules for dealing with HTML, if your paragraph starts with it
+      # it will no longer be an "inline" so this means that @Finn in this case would not be a mention
+      post_analyzer = PostAnalyzer.new(". <pre>@Jake</pre> @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
     it "catches content between pre tags" do
-      post_analyzer = PostAnalyzer.new("<pre>hello</pre> @Finn <pre></pre>", default_topic_id)
+      post_analyzer = PostAnalyzer.new(". <pre>hello</pre> @Finn <pre></pre>", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 
@@ -201,7 +197,7 @@ describe PostAnalyzer do
     end
 
     it "ignores quotes" do
-      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]@Jake[/quote] @Finn", default_topic_id)
+      post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
     end
 

@@ -3,6 +3,10 @@ require 'distributed_cache'
 
 describe DistributedCache do
 
+  before :all do
+    $redis.flushall
+  end
+
   let! :cache1 do
     DistributedCache.new("test")
   end
@@ -31,7 +35,7 @@ describe DistributedCache do
 
     set << 5
 
-    c2["cats"] == set
+    c2["cats"] = set
 
     wait_for do
       c1["cats"] == set

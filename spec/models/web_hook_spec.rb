@@ -113,7 +113,7 @@ describe WebHook do
       Fabricate(:topic_web_hook)
 
       Sidekiq::Testing.fake! do
-        post = PostCreator.create(user, { raw: 'post', title: 'topic', skip_validations: true })
+        post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
         topic_id = post.topic_id
         job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 

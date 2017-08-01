@@ -31,7 +31,7 @@ class MetadataController < ApplicationController
     }
 
     if SiteSetting.native_app_install_banner
-      manifest = manifest.merge({
+      manifest = manifest.merge(
         prefer_related_applications: true,
         related_applications: [
           {
@@ -39,7 +39,7 @@ class MetadataController < ApplicationController
             id: "com.discourse"
           }
         ]
-      })
+      )
     end
 
     manifest

@@ -66,7 +66,7 @@ gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.6'
+gem 'email_reply_trimmer', '0.1.7'
 
 # TODO Use official image_optim gem once https://github.com/toy/image_optim/pull/149
 # is merged.
@@ -122,7 +122,6 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  gem 'timecop'
   # TODO: Remove once we upgrade to Rails 5.
   gem 'test_after_commit'
 end
@@ -152,6 +151,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'annotate'
   gem 'foreman', require: false
+  gem 'rubocop', require: false
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -184,12 +184,11 @@ gem 'simple-rss', require: false
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri
 
-gem 'rmmseg-cpp', require: false
+gem 'cppjieba_rb', require: false
 
 gem 'logster'
 
 gem 'sassc', require: false
-
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

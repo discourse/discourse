@@ -28,8 +28,8 @@ class DiscourseCLI < Thor
 
     discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
   LONGDESC
-  option :global, :type => :boolean
-  option :regex, :type => :boolean
+  option :global, type: :boolean
+  option :regex, type: :boolean
   def remap(from, to)
     load_rails
 
@@ -48,7 +48,7 @@ class DiscourseCLI < Thor
 
     if options[:global]
       RailsMultisite::ConnectionManagement.each_connection do |db|
-        puts "","Remapping tables on #{db}...",""
+        puts "", "Remapping tables on #{db}...", ""
         do_remap(from, to, options[:regex])
       end
     else
@@ -85,7 +85,7 @@ class DiscourseCLI < Thor
   end
 
   desc "restore", "Restore a Discourse backup"
-  def restore(filename=nil)
+  def restore(filename = nil)
 
     if !filename
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
@@ -175,7 +175,7 @@ class DiscourseCLI < Thor
   end
 
   desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
-  def export_category(category_id, filename=nil)
+  def export_category(category_id, filename = nil)
     raise "Category id argument is missing!" unless category_id
 
     load_rails
@@ -225,7 +225,7 @@ class DiscourseCLI < Thor
     require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
   end
 
-  def do_remap(from, to, regex=false)
+  def do_remap(from, to, regex = false)
     sql = "SELECT table_name, column_name
 FROM information_schema.columns
 WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
@@ -256,7 +256,6 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
       end
     end
   end
-
 
 end
 

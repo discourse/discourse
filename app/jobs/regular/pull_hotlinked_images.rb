@@ -58,7 +58,7 @@ module Jobs
                   log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                 end
               else
-                log(:error, "There was an error while downloading '#{src}' locally for post: #{post_id}")
+                log(:info, "There was an error while downloading '#{src}' locally for post: #{post_id}")
               end
             end
             # have we successfully downloaded that file?

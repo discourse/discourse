@@ -30,7 +30,7 @@ class ImportScripts::Base
     @bbcode_to_md = true if use_bbcode_to_md?
     @site_settings_during_import = {}
     @old_site_settings = {}
-    @start_times = {import: Time.now}
+    @start_times = { import: Time.now }
   end
 
   def preload_i18n
@@ -56,7 +56,7 @@ class ImportScripts::Base
     reset_topic_counters
 
     elapsed = Time.now - @start_times[:import]
-    puts '', '', 'Done (%02dh %02dmin %02dsec)' % [elapsed/3600, elapsed/60%60, elapsed%60]
+    puts '', '', 'Done (%02dh %02dmin %02dsec)' % [elapsed / 3600, elapsed / 60 % 60, elapsed % 60]
 
   ensure
     reset_site_settings
@@ -118,7 +118,7 @@ class ImportScripts::Base
     delegate method_name, to: :@lookup
   end
 
-  def create_admin(opts={})
+  def create_admin(opts = {})
     admin = User.new
     admin.email = opts[:email] || "sam.saffron@gmail.com"
     admin.username = opts[:username] || "sam"
@@ -140,7 +140,7 @@ class ImportScripts::Base
   # Required fields are :id and :name, where :id is the id of the
   # group in the original datasource. The given id will not be used
   # to create the Discourse group record.
-  def create_groups(results, opts={})
+  def create_groups(results, opts = {})
     created = 0
     skipped = 0
     failed = 0
@@ -171,12 +171,12 @@ class ImportScripts::Base
   end
 
   def create_group(opts, import_id)
-    opts = opts.dup.tap {|o| o.delete(:id) }
+    opts = opts.dup.tap { |o| o.delete(:id) }
     import_name = opts[:name]
     opts[:name] = UserNameSuggester.suggest(import_name)
 
     existing = Group.where(name: opts[:name]).first
-    return existing if existing and existing.custom_fields["import_id"].to_i == import_id.to_i
+    return existing if existing && existing.custom_fields["import_id"].to_i == (import_id.to_i)
     g = existing || Group.new(opts)
     g.custom_fields["import_id"] = import_id
     g.custom_fields["import_name"] = import_name
@@ -196,14 +196,14 @@ class ImportScripts::Base
 
     existing = "#{type.to_s.classify}CustomField".constantize
     existing = existing.where(name: 'import_id')
-                       .joins('JOIN import_ids ON val = value')
-                       .count
+      .joins('JOIN import_ids ON val = value')
+      .count
     if existing == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
       return true
     end
   ensure
-    connection.exec('DROP TABLE import_ids')
+    connection.exec('DROP TABLE import_ids') unless connection.nil?
   end
 
   def created_user(user)
@@ -216,7 +216,7 @@ class ImportScripts::Base
   # Required fields are :id and :email, where :id is the id of the
   # user in the original datasource. The given id will not be used to
   # create the Discourse user record.
-  def create_users(results, opts={})
+  def create_users(results, opts = {})
     created = 0
     skipped = 0
     failed = 0
@@ -267,7 +267,7 @@ class ImportScripts::Base
     merge = opts.delete(:merge)
     post_create_action = opts.delete(:post_create_action)
 
-    existing = User.where("email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
+    existing = User.joins(:user_emails).where("user_emails.email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
     return existing if existing && (merge || existing.custom_fields["import_id"].to_i == import_id.to_i)
 
     bio_raw = opts.delete(:bio_raw)
@@ -323,8 +323,8 @@ class ImportScripts::Base
       end
     rescue => e
       # try based on email
-      if e.try(:record).try(:errors).try(:messages).try(:[], :email).present?
-        if existing = User.find_by(email: opts[:email].downcase)
+      if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?
+        if existing = User.find_by_email(opts[:email].downcase)
           existing.custom_fields["import_id"] = import_id
           existing.save!
           u = existing
@@ -422,7 +422,7 @@ class ImportScripts::Base
   # Attributes will be passed to the PostCreator.
   # Topics should give attributes title and category.
   # Replies should provide topic_id. Use topic_lookup_from_imported_post_id to find the topic.
-  def create_posts(results, opts={})
+  def create_posts(results, opts = {})
     skipped = 0
     created = 0
     total = opts[:total] || results.size
@@ -502,7 +502,7 @@ class ImportScripts::Base
   # Block should return a hash with the attributes for the bookmark.
   # Required fields are :user_id and :post_id, where both ids are
   # the values in the original datasource.
-  def create_bookmarks(results, opts={})
+  def create_bookmarks(results, opts = {})
     created = 0
     skipped = 0
     total = opts[:total] || results.size
@@ -539,7 +539,7 @@ class ImportScripts::Base
     [created, skipped]
   end
 
-  def close_inactive_topics(opts={})
+  def close_inactive_topics(opts = {})
     num_days = opts[:days] || 30
     puts '', "Closing topics that have been inactive for more than #{num_days} days."
 
@@ -775,7 +775,7 @@ class ImportScripts::Base
   end
 
   def get_start_time(key)
-    @start_times.fetch(key) {|k| @start_times[k] = Time.now}
+    @start_times.fetch(key) { |k| @start_times[k] = Time.now }
   end
 
   def batches(batch_size)

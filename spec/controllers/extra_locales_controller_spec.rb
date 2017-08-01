@@ -20,9 +20,8 @@ describe ExtraLocalesController do
       I18n.reload!
 
       JsLocaleHelper.expects(:plugin_translations)
-                    .with(I18n.locale.to_s)
-                    .returns({
-                      "admin_js" => {
+        .with(I18n.locale.to_s)
+        .returns("admin_js" => {
                         "admin" => {
                           "site_settings" => {
                             "categories" => {
@@ -30,8 +29,7 @@ describe ExtraLocalesController do
                             }
                           }
                         }
-                      }
-                    }).at_least_once
+                      }).at_least_once
 
       get :show, bundle: "admin"
 

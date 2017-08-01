@@ -21,7 +21,7 @@
 }
 
 .user-main {
-  i.fa-heart {
+  .d-icon-heart {
     color: $love !important;
   }
   .nav-pills {
@@ -177,10 +177,10 @@
 .user-nav {
   margin: 5px 0px;
   padding-top: 10px;
-  .fa {
+  .d-icon {
     margin-right: 5px;
   }
-  .fa.fa-comment {
+  .d-icon-comment {
     margin-right: 2px;
   }
 }
@@ -227,7 +227,7 @@
         width: 100%;
         height: 100%;
         display: block;
-        color: black;
+        color: $primary;
       }
     }
   }
@@ -242,7 +242,7 @@
   }
 
   .label {
-    color: dark-light-diff($primary, $secondary, 50%, -50%);
+    color: blend-primary-secondary(50%);
   }
 }
 
@@ -254,7 +254,7 @@
   }
 
   li {
-    border-left: dark-light-diff($primary, $secondary, 90%, -65%) solid 2px;
+    border-left: $primary-low solid 2px;
     padding: 5px 8px;
     margin: 10px 0;
   }
@@ -294,7 +294,7 @@ and (max-width : 600px) {
 }
 
 .user-preferences .tags .select2-container-multi {
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   width: 540px;
   border-radius: 0;
   .select2-choices {

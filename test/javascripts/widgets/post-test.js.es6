@@ -436,7 +436,7 @@ widgetTest("reply directly above", {
     click('a.reply-to-tab');
     andThen(() => {
       assert.equal(this.$('section.embedded-posts.top .cooked').length, 1);
-      assert.equal(this.$('section.embedded-posts i.fa-arrow-up').length, 1);
+      assert.equal(this.$('section.embedded-posts .d-icon-arrow-up').length, 1);
     });
   }
 });
@@ -673,7 +673,7 @@ widgetTest("replies - one below, not suppressed", {
     click('button.show-replies');
     andThen(() => {
       assert.equal(this.$('section.embedded-posts.bottom .cooked').length, 1);
-      assert.equal(this.$('section.embedded-posts i.fa-arrow-down').length, 1);
+      assert.equal(this.$('section.embedded-posts .d-icon-arrow-down').length, 1);
     });
   }
 });
@@ -760,12 +760,12 @@ widgetTest("topic map - links", {
     click('nav.buttons button');
     andThen(() => {
       assert.equal(this.$('.map.map-collapsed').length, 0);
-      assert.equal(this.$('.topic-map i.fa-chevron-up').length, 1);
+      assert.equal(this.$('.topic-map .d-icon-chevron-up').length, 1);
       assert.equal(this.$('.topic-map-expanded').length, 1);
       assert.equal(this.$('.topic-map-expanded .topic-link').length, 5, 'it limits the links displayed');
     });
 
-    click('.link-summary a');
+    click('.link-summary button');
     andThen(() => {
       assert.equal(this.$('.topic-map-expanded .topic-link').length, 6, 'all links now shown');
     });

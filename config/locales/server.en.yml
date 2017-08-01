@@ -208,6 +208,7 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+  contains_blocked_words: "Your post contains words that aren't allowed."
 
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
@@ -413,8 +414,11 @@ en:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
               missing_interpolation_keys: 'The following interpolation key(s) are missing: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "Too many words for that action"
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/u/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -486,6 +490,7 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      description_incomplete: "The category description post must have at least one paragraph."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -948,13 +953,15 @@ en:
     search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
     search_recent_posts_size: "How many recent posts to keep in the index"
+    log_search_queries: "Log search queries performed by users"
+    search_query_log_max_size: "Maximum amount of search queries to keep"
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, as well as on the /about contact form for urgent matters."
     contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
@@ -978,6 +985,7 @@ en:
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_blacklist: "A list of domains that will never be oneboxed."
+    inline_onebox_domains_whitelist: "A list of domains that will be oneboxed in miniature form if linked without a title"
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
@@ -1025,9 +1033,7 @@ en:
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
-    enable_experimental_markdown_it: "Enable the experimental markdown.it CommonMark engine, WARNING: some plugins may not work correctly"
     enable_markdown_typographer: "Use basic typography rules to improve text readability of paragraphs of text, replaces (c) (tm) etc, with symbols, reduces number of question marks and so on"
-    allow_html_tables: "Allow tables to be entered in Markdown using HTML tags. TABLE, THEAD, TD, TR, TH will be whitelisted (requires full rebake on all old posts containing tables)"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
@@ -1036,6 +1042,7 @@ en:
     ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See Google's Cross-Domain Tracking guide."
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
@@ -1204,6 +1211,8 @@ en:
     png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
+
+    strip_image_metadata: "Strip image metadata."
 
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
@@ -1380,7 +1389,7 @@ en:
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
 
-    find_related_post_with_key: "Only use the reply key to find the replied-to post. (Recommended if using Amazon SES)"
+    find_related_post_with_key: "Only use the 'reply key' to find the replied-to post. WARNING: disabling this allows user impersonation based on email address."
 
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
 
@@ -1765,7 +1774,7 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
@@ -1783,7 +1792,7 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
@@ -2108,7 +2117,7 @@ en:
     csv_export_failed:
       title: "CSV Export Failed"
       subject_template: "Data export failed"
-      text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
+      text_body_template: "We're sorry, but your data export failed. Please check the logs or [contact a staff member](%{base_url}/about)."
 
     email_reject_insufficient_trust_level:
       title: "Email Reject insufficient Trust Level"
@@ -2116,7 +2125,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account does not have the required trust level to post new topics to this email address. If you believe this is an error, contact a staff member.
+        Your account does not have the required trust level to post new topics to this email address. If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_user_not_found:
       title: "Email Reject User Not Found"
@@ -2124,7 +2133,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your reply was sent from an unknown email address. Try sending from another email address, or contact a staff member.
+        Your reply was sent from an unknown email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
 
     email_reject_screened_email:
       title: "Email Reject Screened Email"
@@ -2132,7 +2141,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your reply was sent from a blocked email address. Try sending from another email address, or contact a staff member.
+        Your reply was sent from a blocked email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
 
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
@@ -2156,7 +2165,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or contact a staff member.
+        Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or [contact a staff member](%{base_url}/about).
 
     email_reject_no_account:
       title: "Email Reject No Account"
@@ -2164,7 +2173,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        We can't find any accounts that match your email address. Try sending from a different email address, or contact a staff member.
+        We can't find any accounts that match your email address. Try sending from a different email address, or [contact a staff member](%{base_url}/about).
 
     email_reject_empty:
       title: "Email Reject Empty"
@@ -2190,7 +2199,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account does not have the privileges to post new topics in that category. If you believe this is an error, contact a staff member.
+        Your account does not have the privileges to post new topics in that category. If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_strangers_not_allowed:
       title: "Email Reject Strangers Not Allowed"
@@ -2198,7 +2207,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is an error, contact a staff member.
+        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_invalid_post:
       title: "Email Reject Invalid Post"
@@ -2235,7 +2244,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The reply key in the email is invalid or unknown, so we can't figure out what this email is in reply to. Contact a staff member.
+        The reply key in the email is invalid or unknown, so we can't figure out what this email is in reply to. [Contact a staff member](%{base_url}/about).
 
     email_reject_bad_destination_address:
       title: "Email Reject Bad Destination Address"
@@ -2251,7 +2260,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is an error, contact a staff member.
+        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_topic_closed:
       title: "Email Reject Topic Closed"
@@ -2259,7 +2268,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is an error, contact a staff member.
+        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is an error, [contact a staff member](%{base_url}/about).
 
     email_reject_auto_generated:
       title: "Email Reject Auto Generated"
@@ -2267,7 +2276,15 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is an error, contact a staff member.
+        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is an error, [contact a staff member](%{base_url}/about).
+
+    email_reject_unrecognized_error:
+      title: "Email Reject Unrecognized Error"
+      subject_template: "[%{email_prefix}] Email issue -- Unrecognized Error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        There was an unrecognized error while processing your email and it wasn't posted. You should try again, or [contact a staff member](%{base_url}/about).
 
     email_error_notification:
       title: "Email Error Notification"
@@ -2412,10 +2429,21 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
+    invited_group_to_private_message_body: |
+      %{username} invited @%{group_name} to a message
+
+      > #### %{topic_title}
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
     invited_to_private_message_body: |
       %{username} invited you to a message
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
@@ -2426,13 +2454,23 @@ en:
     invited_to_topic_body: |
       %{username} invited you to a discussion
 
-      > **%{topic_title}**
+      > #### %{topic_title}
       >
       > %{topic_excerpt}
 
       at
 
       > %{site_title} -- %{site_description}
+
+    user_invited_to_private_message_pm_group:
+      title: "User Invited Group to PM"
+      subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
 
     user_invited_to_private_message_pm:
       title: "User Invited to PM"
@@ -2735,7 +2773,7 @@ en:
 
   login_required:
     welcome_message: |
-      #[Welcome to %{title}](#welcome)
+      ## [Welcome to %{title}](#welcome)
       An account is required. Please create an account or log in to continue.
 
   terms_of_service:

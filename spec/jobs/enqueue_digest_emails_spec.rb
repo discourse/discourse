@@ -33,7 +33,7 @@ describe Jobs::EnqueueDigestEmails do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
 
         # As an approved user
-        unapproved_user.update_attributes(admin: false, moderator: false, approved: true )
+        unapproved_user.update_attributes(admin: false, moderator: false, approved: true)
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
       end
     end
@@ -148,6 +148,5 @@ describe Jobs::EnqueueDigestEmails do
     end
 
   end
-
 
 end

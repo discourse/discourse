@@ -357,7 +357,6 @@ es:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Las siguientes claves de interpolación no son válidas: "%{keys}"'
               missing_interpolation_keys: 'Las siguientes claves de interpolación se perdieron: "%{keys}"'
       <<: *errors
   user_profile:
@@ -932,9 +931,7 @@ es:
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
-    enable_experimental_markdown_it: "Habilitar el motor experimental CommonMark markdown.it, ADVERTENCIA: algunos plugins podrían no funcionar correctamente."
     enable_markdown_typographer: "Utilice reglas básicas de tipografía para mejorar la legibilidad de texto de los párrafos de texto, reemplaza (c) (tm) etc, con símbolos, reduce el número de signos de interrogación y así sucesivamente"
-    allow_html_tables: "Permitir la inserción de tablas en Markdown usando etiquetas HTML. Se permitirá usar TABLE, THEAD, TD, TR o TH (requiere un rebake completo para los posts antiguos que contengan tablas)"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
@@ -1536,45 +1533,9 @@ es:
   invite_mailer:
     title: "Invitar Usuario"
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te invitó a un debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
-
-      Si estás interesado, haz clic en el siguiente enlace:
-
-      %{invite_link}
-
-      Esta invitación proviene de un usuario de confianza, por lo que puedes comentar en el tema inmediatamente.
   custom_invite_mailer:
     title: "Personalizar Invitar Usuario"
     subject_template: "%{invitee_name} te ha invitado a '%{topic_title}' en %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te ha invitado a un debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
-
-      Mensaje de %{invitee_name}:
-
-      %{user_custom_message}
-
-      Si estás interesado en participar, haz clic en el enlace debajo:
-
-      %{invite_link}
-
-      Esta invitación viene de un usuario en el que confiamos, por lo que podrás responder inmediatamente.
   invite_forum_mailer:
     title: "Invitación suscripción del foro"
     subject_template: "%{invitee_name} te invitó a unirte a %{site_domain_name}"
@@ -2139,26 +2100,6 @@ es:
     visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} el %{post_date}"
-    invited_to_private_message_body: |
-      %{username} te invitó a un mensaje directo
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} te invitó a un tema de debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      en
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       title: "Usuario invitado a MP"
       subject_template: "[%{email_prefix}] %{username} te ha invitado a un hilo de mensajes en '%{topic_title}'"

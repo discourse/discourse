@@ -1,7 +1,7 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import { cook } from 'discourse/lib/text';
+import { cookAsync } from 'discourse/lib/text';
 
 export default Ember.Controller.extend(PreferencesTabController, {
 
@@ -47,8 +47,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
       const model = this.get('model'),
             userFields = this.get('userFields');
 
-      model.set('name', this.get('newNameInput'));
-
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
         const modelFields = model.get('user_fields');
@@ -59,9 +57,12 @@ export default Ember.Controller.extend(PreferencesTabController, {
         }
       }
 
+
       return model.save(this.get('saveAttrNames')).then(() => {
-        model.set('bio_cooked', cook(model.get('bio_raw')));
-        this.set('saved', true);
+        cookAsync(model.get('bio_raw')).then(()=>{
+          model.set('bio_cooked', );
+          this.set('saved', true);
+        }).catch(popupAjaxError);
       }).catch(popupAjaxError);
     }
   }

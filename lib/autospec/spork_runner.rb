@@ -30,7 +30,7 @@ module Autospec
     def run(specs)
       args = ["-r", "#{File.dirname(__FILE__)}/formatter.rb",
               "-f", "Autospec::Formatter", specs.split].flatten
-      spork_service.run(args,$stderr,$stdout)
+      spork_service.run(args, $stderr, $stdout)
     end
 
     def reload
@@ -66,7 +66,7 @@ module Autospec
 
     def write_pid_file(file, pid)
       FileUtils.mkdir_p(Rails.root + "tmp/pids")
-      File.open(file,'w') do |f|
+      File.open(file, 'w') do |f|
         f.write(pid)
       end
     end
@@ -95,7 +95,7 @@ module Autospec
         sleep 1
       end
 
-      @spork_pid = Process.spawn({'RAILS_ENV' => 'test'}, "bundle exec spork")
+      @spork_pid = Process.spawn({ 'RAILS_ENV' => 'test' }, "bundle exec spork")
       write_pid_file(spork_pid_file, @spork_pid)
 
       running = false

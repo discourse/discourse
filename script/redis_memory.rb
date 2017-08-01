@@ -22,7 +22,7 @@ stats = {}
 end
 
 puts "Top 100 keys"
-stats.sort{|a,b| b[1][0] <=> a[1][0]}.first(50).each do |k, (len, type, elems)|
+stats.sort { |a, b| b[1][0] <=> a[1][0] }.first(50).each do |k, (len, type, elems)|
   elems = " [#{elems}]" if elems
   puts "#{k} #{type} #{len}#{elems}"
 end

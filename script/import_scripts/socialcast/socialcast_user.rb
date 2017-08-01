@@ -4,9 +4,9 @@ require 'time'
 
 class SocialcastUser
 
-   def initialize user_json
-     @parsed_json = JSON.parse user_json
-   end
+  def initialize(user_json)
+    @parsed_json = JSON.parse user_json
+  end
 
    def user
      email = @parsed_json['contact_info']['email']

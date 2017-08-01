@@ -24,5 +24,4 @@ describe Jobs::InviteEmail do
 
   end
 
-
 end

@@ -9,7 +9,6 @@ describe Admin::ReportsController do
     let!(:admin) { log_in(:admin) }
     let(:user) { Fabricate(:user) }
 
-
     context '.show' do
 
       context "invalid id form" do

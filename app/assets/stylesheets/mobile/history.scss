@@ -9,7 +9,7 @@
     line-height: 2em;
   }
   #revision-details {
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    background-color: $primary-low; 
     padding: 5px;
     margin-top: 10px;
   }

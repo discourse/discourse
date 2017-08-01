@@ -230,7 +230,7 @@ export default createWidget('post-menu', {
     if (builder) {
       const buttonAtts = builder(attrs, this.state, this.siteSettings);
       if (buttonAtts) {
-        return this.attach('button', buttonAtts);
+        return this.attach('flat-button', buttonAtts);
       }
     }
   },
@@ -360,7 +360,7 @@ export default createWidget('post-menu', {
       return this.sendWidgetAction('toggleLike');
     }
 
-    const $heart = $(`[data-post-id=${attrs.id}] .fa-heart`);
+    const $heart = $(`[data-post-id=${attrs.id}] .d-icon-heart`);
     $heart.closest('button').addClass('has-like');
 
     if (!Ember.testing) {

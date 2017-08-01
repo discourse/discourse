@@ -15,13 +15,16 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def google_universal_analytics_json(ua_domain_name=nil)
+  def google_universal_analytics_json(ua_domain_name = nil)
     result = {}
     if ua_domain_name
       result[:cookieDomain] = ua_domain_name.gsub(/^http(s)?:\/\//, '')
     end
     if current_user.present?
       result[:userId] = current_user.id
+    end
+    if SiteSetting.ga_universal_auto_link_domains.present?
+      result[:allowLinker] = true
     end
     result.to_json.html_safe
   end
@@ -52,7 +55,7 @@ module ApplicationHelper
         GlobalSetting.cdn_url.start_with?("https") &&
         ENV["COMPRESS_BROTLI"] == "1" &&
         request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
-        path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
+      path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 "<link rel='preload' href='#{path}' as='script'/>
 <script src='#{path}'></script>".html_safe
@@ -155,7 +158,7 @@ module ApplicationHelper
   end
 
   # Creates open graph and twitter card meta data
-  def crawlable_meta_data(opts=nil)
+  def crawlable_meta_data(opts = nil)
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
@@ -227,9 +230,7 @@ module ApplicationHelper
   end
 
   def gsub_emoji_to_unicode(str)
-    if str
-      str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name }
-    end
+    Emoji.gsub_emoji_to_unicode(str)
   end
 
   def application_logo_url
@@ -241,7 +242,7 @@ module ApplicationHelper
   end
 
   def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
+    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
   end
 
   def crawler_layout?
@@ -282,7 +283,7 @@ module ApplicationHelper
     controller.class.name.split("::").first == "Admin"
   end
 
-  def category_badge(category, opts=nil)
+  def category_badge(category, opts = nil)
     CategoryBadge.html_for(category, opts).html_safe
   end
 
@@ -296,11 +297,11 @@ module ApplicationHelper
     return "" if Rails.env.test?
 
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
-    erbs = ApplicationHelper.all_connectors.select {|c| c =~ matcher }
+    erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
     result = ""
-    erbs.each {|erb| result << render(file: erb) }
+    erbs.each { |erb| result << render(file: erb) }
     result.html_safe
   end
 
@@ -334,7 +335,7 @@ module ApplicationHelper
     lookup.html_safe if lookup
   end
 
-  def discourse_stylesheet_link_tag(name, opts={})
+  def discourse_stylesheet_link_tag(name, opts = {})
     if opts.key?(:theme_key)
       key = opts[:theme_key] unless customization_disabled?
     else

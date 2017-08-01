@@ -1,5 +1,5 @@
 module PluginGem
-  def self.load(path, name, version, opts=nil)
+  def self.load(path, name, version, opts = nil)
     opts ||= {}
 
     gems_path = File.dirname(path) + "/gems/#{RUBY_VERSION}"

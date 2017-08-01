@@ -7,7 +7,7 @@ describe TopicCreator do
   let(:admin)     { Fabricate(:admin) }
 
   let(:valid_attrs) { Fabricate.attributes_for(:topic) }
-  let(:pm_valid_attrs)  { {raw: 'this is a new post', title: 'this is a new title', archetype: Archetype.private_message, target_usernames: moderator.username} }
+  let(:pm_valid_attrs)  { { raw: 'this is a new post', title: 'this is a new title', archetype: Archetype.private_message, target_usernames: moderator.username } }
 
   describe '#create' do
     context 'topic success cases' do

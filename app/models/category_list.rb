@@ -3,13 +3,16 @@ require_dependency 'pinned_check'
 class CategoryList
   include ActiveModel::Serialization
 
+  cattr_accessor :preloaded_topic_custom_fields
+  self.preloaded_topic_custom_fields = Set.new
+
   attr_accessor :categories,
                 :uncategorized,
                 :draft,
                 :draft_key,
                 :draft_sequence
 
-  def initialize(guardian=nil, options={})
+  def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
     @options = options
 
@@ -20,6 +23,19 @@ class CategoryList
     find_user_data
     sort_unpinned
     trim_results
+
+    if preloaded_topic_custom_fields.present?
+      displayable_topics = @categories.map(&:displayable_topics)
+      displayable_topics.flatten!
+      displayable_topics.compact!
+
+      if displayable_topics.present?
+        Topic.preload_custom_fields(
+          displayable_topics,
+          preloaded_topic_custom_fields
+        )
+      end
+    end
   end
 
   def preload_key
@@ -63,9 +79,9 @@ class CategoryList
         @categories = @categories.order(:position, :id)
       else
         @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
-                                 .order('COALESCE(categories.posts_month, 0) DESC')
-                                 .order('COALESCE(categories.posts_year, 0) DESC')
-                                 .order('id ASC')
+          .order('COALESCE(categories.posts_month, 0) DESC')
+          .order('COALESCE(categories.posts_year, 0) DESC')
+          .order('id ASC')
       end
 
       @categories = @categories.to_a

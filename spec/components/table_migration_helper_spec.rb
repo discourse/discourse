@@ -19,8 +19,8 @@ describe TableMigrationHelper do
       ActiveRecord::Base.exec_sql "CREATE TABLE table_with_old_name (topic_id INTEGER)"
 
       name = ActiveRecord::Base
-              .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
-              .getvalue(0,0)
+        .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
+        .getvalue(0, 0)
 
       Topic.exec_sql("UPDATE schema_migration_details SET created_at = :created_at WHERE name = :name",
                     name: name, created_at: 15.minutes.ago)
@@ -32,7 +32,7 @@ describe TableMigrationHelper do
         new_name: 'table_with_new_name',
         after_migration: name,
         delay: 20.minutes,
-        on_drop: ->(){dropped_proc_called = true}
+        on_drop: ->() { dropped_proc_called = true }
       )
 
       expect(table_exists?('table_with_old_name')).to eq(true)
@@ -43,7 +43,7 @@ describe TableMigrationHelper do
         new_name: 'table_with_new_name',
         after_migration: name,
         delay: 10.minutes,
-        on_drop: ->(){dropped_proc_called = true}
+        on_drop: ->() { dropped_proc_called = true }
       )
 
       expect(table_exists?('table_with_old_name')).to eq(true)
@@ -56,7 +56,7 @@ describe TableMigrationHelper do
         new_name: 'table_with_new_name',
         after_migration: name,
         delay: 10.minutes,
-        on_drop: ->(){dropped_proc_called = true}
+        on_drop: ->() { dropped_proc_called = true }
       )
 
       expect(table_exists?('table_with_old_name')).to eq(false)

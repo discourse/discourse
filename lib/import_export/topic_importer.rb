@@ -18,7 +18,7 @@ module ImportExport
 
     def import_users
       @export_data[:users].each do |u|
-        existing = User.where(email: u[:email]).first
+        existing = User.with_email(email: u[:email]).first
         if existing
           if existing.custom_fields["import_id"] != u[:id]
             existing.custom_fields["import_id"] = u[:id]
@@ -36,14 +36,14 @@ module ImportExport
         puts ""
         print t[:title]
 
-        first_post_attrs = t[:posts].first.merge( t.slice(*(TopicExporter::TOPIC_ATTRS - [:id, :category_id])) )
+        first_post_attrs = t[:posts].first.merge(t.slice(*(TopicExporter::TOPIC_ATTRS - [:id, :category_id])))
         first_post_attrs[:user_id] = new_user_id(first_post_attrs[:user_id])
         first_post_attrs[:category] = new_category_id(t[:category_id])
 
         first_post = PostCustomField.where(name: "import_id", value: first_post_attrs[:id]).first.try(:post)
 
         unless first_post
-          first_post = create_post( first_post_attrs, first_post_attrs[:id] )
+          first_post = create_post(first_post_attrs, first_post_attrs[:id])
         end
 
         topic_id = first_post.topic_id
@@ -53,10 +53,8 @@ module ImportExport
           print "."
           existing = PostCustomField.where(name: "import_id", value: post_data[:id]).first.try(:post)
           unless existing
-            create_post(post_data.merge({
-              topic_id: topic_id,
-              user_id: new_user_id(post_data[:user_id])
-            }), post_data[:id]) # see ImportScripts::Base
+            create_post(post_data.merge(topic_id: topic_id,
+                                        user_id: new_user_id(post_data[:user_id])), post_data[:id]) # see ImportScripts::Base
           end
         end
       end

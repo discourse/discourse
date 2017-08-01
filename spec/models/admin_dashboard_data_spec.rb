@@ -199,7 +199,7 @@ describe AdminDashboardData do
       def all_setting_permutations(keys)
         ['a', ''].repeated_permutation(keys.size) do |*values|
           hash = Hash[keys.zip(values)]
-          hash.each do |key,value|
+          hash.each do |key, value|
             SiteSetting.public_send("#{key}=", value)
           end
           yield hash

@@ -29,7 +29,6 @@ class NormalizeTopicViewDataAndIndex < ActiveRecord::Migration
     SELECT NULL, topic_id, ip_address, viewed_at FROM tmp_views_ip
     '
 
-
     execute 'CREATE UNIQUE INDEX user_id_topic_id_topic_views ON topic_views(user_id, topic_id) WHERE user_id IS NOT NULL'
     execute 'CREATE UNIQUE INDEX ip_address_topic_id_topic_views ON topic_views(ip_address, topic_id) WHERE user_id IS NULL'
 

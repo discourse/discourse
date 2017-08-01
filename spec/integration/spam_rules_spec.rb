@@ -50,8 +50,8 @@ describe SpamRulesEnforcer do
             PostAction.act(user2, spam_post, PostActionType.types[:spam])
 
             expect(Guardian.new(spammer).can_create_topic?(nil)).to be(false)
-            expect{PostCreator.create(spammer, {title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1})}.to raise_error(Discourse::InvalidAccess)
-            expect(PostCreator.create(spammer, {topic_id: another_topic.id, raw: 'my reply is spam in your topic', archetype_id: 1})).to eq(nil)
+            expect { PostCreator.create(spammer, title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1) }.to raise_error(Discourse::InvalidAccess)
+            expect(PostCreator.create(spammer, topic_id: another_topic.id, raw: 'my reply is spam in your topic', archetype_id: 1)).to eq(nil)
           end
 
           it 'should hide the posts' do
@@ -111,7 +111,7 @@ describe SpamRulesEnforcer do
 
           expect(spam_post.reload).to_not be_hidden
           expect(Guardian.new(spammer).can_create_topic?(nil)).to be(true)
-          expect{PostCreator.create(spammer, {title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1})}.to_not raise_error
+          expect { PostCreator.create(spammer, title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1) }.to_not raise_error
           expect(spammer.reload.private_topics_count).to eq(private_messages_count)
         end
       end

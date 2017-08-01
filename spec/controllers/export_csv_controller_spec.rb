@@ -60,7 +60,6 @@ describe ExportCsvController do
     end
   end
 
-
   context "while logged in as an admin" do
     before { @admin = log_in(:admin) }
 

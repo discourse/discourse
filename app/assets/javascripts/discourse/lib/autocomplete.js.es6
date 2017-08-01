@@ -3,6 +3,7 @@
 
   @module $.fn.autocomplete
 **/
+import { iconHTML } from 'discourse-common/lib/icon-library';
 export const CANCELLED_STATUS = "__CANCELLED";
 import { setCaretPosition, caretPosition } from 'discourse/lib/utilities';
 
@@ -105,7 +106,7 @@ export default function(options) {
     transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
 
     const divs = transformed.map(itm => {
-      let d = $(`<div class='item'><span>${itm}<a class='remove' href><i class='fa fa-times'></i></a></span></div>`);
+      let d = $(`<div class='item'><span>${itm}<a class='remove' href>${iconHTML('times')}</a></span></div>`);
       const $parent = me.parent();
       const prev = $parent.find('.item:last');
 

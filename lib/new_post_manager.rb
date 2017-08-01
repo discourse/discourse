@@ -1,6 +1,7 @@
 require_dependency 'post_creator'
 require_dependency 'new_post_result'
 require_dependency 'post_enqueuer'
+require_dependency 'word_watcher'
 
 # Determines what actions should be taken with new posts.
 #
@@ -16,16 +17,16 @@ class NewPostManager
   end
 
   def self.handlers
-    sorted_handlers.map {|h| h[:proc]}
+    sorted_handlers.map { |h| h[:proc] }
   end
 
   def self.clear_handlers!
     @sorted_handlers = [{ priority: 0, proc: method(:default_handler) }]
   end
 
-  def self.add_handler(priority=0, &block)
+  def self.add_handler(priority = 0, &block)
     sorted_handlers << { priority: priority, proc: block }
-    @sorted_handlers.sort_by! {|h| -h[:priority]}
+    @sorted_handlers.sort_by! { |h| -h[:priority] }
   end
 
   def self.is_first_post?(manager)
@@ -66,21 +67,25 @@ class NewPostManager
 
   end
 
-  def self.user_needs_approval?(manager)
+  def self.exempt_user?(user)
+    user.staff? || user.staged
+  end
+
+  def self.post_needs_approval?(manager)
     user = manager.user
 
-    return false if user.staff? || user.staged
+    return false if exempt_user?(user)
 
     (user.trust_level <= TrustLevel.levels[:basic] && user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
     (manager.args[:title].present? && user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i) ||
     is_fast_typer?(manager) ||
-    matches_auto_block_regex?(manager)
+    matches_auto_block_regex?(manager) ||
+    WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
   end
 
   def self.default_handler(manager)
-    if user_needs_approval?(manager)
-
+    if post_needs_approval?(manager)
       validator = Validators::PostValidator.new
       post = Post.new(raw: manager.args[:raw])
       post.user = manager.user
@@ -118,17 +123,25 @@ class NewPostManager
     SiteSetting.approve_post_count > 0 ||
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
     SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
+    WordWatcher.words_for_action_exists?(:require_approval) ||
     handlers.size > 1
   end
 
   def initialize(user, args)
     @user = user
-    @args = args.delete_if {|_, v| v.nil?}
+    @args = args.delete_if { |_, v| v.nil? }
   end
 
   def perform
+    if !self.class.exempt_user?(@user) && WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+      result = NewPostResult.new(:created_post, false)
+      result.errors[:base] << I18n.t('contains_blocked_words')
+      return result
+    end
+
     # We never queue private messages
     return perform_create_post if @args[:archetype] == Archetype.private_message
+
     if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
       return perform_create_post
     end
@@ -145,11 +158,11 @@ class NewPostManager
   end
 
   # Enqueue this post in a queue
-  def enqueue(queue, reason=nil)
+  def enqueue(queue, reason = nil)
     result = NewPostResult.new(:enqueued)
     enqueuer = PostEnqueuer.new(@user, queue)
 
-    queued_args = {post_options: @args.dup}
+    queued_args = { post_options: @args.dup }
     queued_args[:raw] = queued_args[:post_options].delete(:raw)
     queued_args[:topic_id] = queued_args[:post_options].delete(:topic_id)
 

@@ -56,7 +56,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| "nid:#{p['nid']}"}
+      next if all_records_exist? :posts, results.map { |p| "nid:#{p['nid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
         {
@@ -102,7 +102,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| "cid:#{p['cid']}"}
+      next if all_records_exist? :posts, results.map { |p| "cid:#{p['cid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
         topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
@@ -155,7 +155,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| "cid:#{p['cid']}"}
+      next if all_records_exist? :posts, results.map { |p| "cid:#{p['cid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
         topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
@@ -207,7 +207,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|p| "cid:#{p['cid']}"}
+      next if all_records_exist? :posts, results.map { |p| "cid:#{p['cid']}" }
 
       create_posts(results, total: total_count, offset: offset) do |row|
         topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
@@ -235,6 +235,6 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
 
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::DrupalQA.new.perform
 end

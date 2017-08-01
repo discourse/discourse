@@ -6,7 +6,6 @@ describe EmailToken do
   it { is_expected.to validate_presence_of :email }
   it { is_expected.to belong_to :user }
 
-
   context '#create' do
     let(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }

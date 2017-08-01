@@ -75,6 +75,7 @@ class UploadCreator
       @upload.sha1              = sha1
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
+      @upload.extension         = File.extname(@filename)[1..10]
 
       if FileHelper.is_image?(@filename)
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
@@ -237,7 +238,7 @@ class UploadCreator
 
   def optimize!
     OptimizedImage.ensure_safe_paths!(@file.path)
-    ImageOptim.new.optimize_image!(@file.path)
+    FileHelper.optimize_image!(@file.path)
     extract_image_info!
   rescue ImageOptim::Worker::TimeoutExceeded
     Rails.logger.warn("ImageOptim timed out while optimizing #{@filename}")

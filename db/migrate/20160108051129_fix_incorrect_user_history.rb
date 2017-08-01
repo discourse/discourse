@@ -7,7 +7,6 @@ class FixIncorrectUserHistory < ActiveRecord::Migration
     #
     # This migration hunts for date stuff started going wrong and date it started being good and corrects the data
 
-
     # this is a :auto_trust_level_change mislabled as :check_email
     # impersonate that was actually delete topic
     condition = <<CLAUSE

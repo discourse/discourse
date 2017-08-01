@@ -2,7 +2,7 @@ task "search:reindex" => :environment do
   ENV['RAILS_DB'] ? reindex_search : reindex_search_all_sites
 end
 
-def reindex_search(db=RailsMultisite::ConnectionManagement.current_db)
+def reindex_search(db = RailsMultisite::ConnectionManagement.current_db)
   puts "Reindexing '#{db}'"
   puts ""
   puts "Posts:"

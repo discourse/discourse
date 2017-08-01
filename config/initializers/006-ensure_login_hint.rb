@@ -18,5 +18,5 @@ if User.limit(20).count < 20 && User.where(admin: true).human_users.count == 0
     SiteSetting.has_login_hint = true
   end
 
-# we may be booting with no User table eg: first migration, just skip
+  # we may be booting with no User table eg: first migration, just skip
 end rescue nil

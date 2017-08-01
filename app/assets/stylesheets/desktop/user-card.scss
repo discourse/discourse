@@ -205,17 +205,12 @@ $user_card_background: $secondary;
 
     .names {
       float: left;
-      height: 60px;
-      position: relative;
       width: 45%;
 
       span {
-        position: absolute;
-        bottom: 0;
         display: block;
         width: 250px;
       }
-
     }
 
     .badge-section {
@@ -226,7 +221,7 @@ $user_card_background: $secondary;
 
       .user-badge {
         background: scale-color($user_card_background, $lightness: -5%);
-        border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        border: 1px solid $primary-low; 
         color: $user_card_primary;
       }
 

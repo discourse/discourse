@@ -2,7 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
 import Topic from 'discourse/models/topic';
 import Post from 'discourse/models/post';
-
+import { iconHTML } from 'discourse-common/lib/icon-library';
 
 const FlaggedPost = Post.extend({
 
@@ -35,13 +35,14 @@ const FlaggedPost = Post.extend({
 
   dispositionIcon: function (disposition) {
     if (!disposition) { return null; }
-    var icon, title = I18n.t('admin.flags.dispositions.' + disposition);
+    let icon;
+    let title = 'admin.flags.dispositions.' + disposition;
     switch (disposition) {
-      case "deferred": { icon = "fa-external-link"; break; }
-      case "agreed": { icon = "fa-thumbs-o-up"; break; }
-      case "disagreed": { icon = "fa-thumbs-o-down"; break; }
+      case "deferred": { icon = "external-link"; break; }
+      case "agreed": { icon = "thumbs-o-up"; break; }
+      case "disagreed": { icon = "thumbs-o-down"; break; }
     }
-    return "<i class='fa " + icon + "' title='" + title + "'></i>";
+    return iconHTML(icon, { title });
   },
 
   wasEdited: function () {

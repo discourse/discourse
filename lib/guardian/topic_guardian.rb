@@ -76,7 +76,7 @@ module TopicGuardian
     is_staff?
   end
 
-  def can_see_topic?(topic, hide_deleted=true)
+  def can_see_topic?(topic, hide_deleted = true)
     return false unless topic
     return true if is_admin?
     return false if hide_deleted && topic.deleted_at && !can_see_deleted_topics?
@@ -107,6 +107,6 @@ module TopicGuardian
 
   def can_edit_featured_link?(category_id)
     return false unless SiteSetting.topic_featured_link_enabled
-    Category.where(id: category_id||SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
+    Category.where(id: category_id || SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
   end
 end

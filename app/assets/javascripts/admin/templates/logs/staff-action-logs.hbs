@@ -7,25 +7,25 @@
     {{#if actionFilter}}
       <a {{action "clearFilter" "actionFilter"}} class="filter">
         <span class="label">{{i18n 'admin.logs.action'}}</span>: {{actionFilter}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
     {{#if filters.acting_user}}
       <a {{action "clearFilter" "acting_user"}} class="filter">
         <span class="label">{{i18n 'admin.logs.staff_actions.staff_user'}}</span>: {{filters.acting_user}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
     {{#if filters.target_user}}
       <a {{action "clearFilter" "target_user"}} class="filter">
         <span class="label">{{i18n 'admin.logs.staff_actions.target_user'}}</span>: {{filters.target_user}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
     {{#if filters.subject}}
       <a {{action "clearFilter" "subject"}} class="filter">
         <span class="label">{{i18n 'admin.logs.staff_actions.subject'}}</span>: {{filters.subject}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
   </div>

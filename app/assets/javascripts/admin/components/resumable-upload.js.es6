@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
 /*global Resumable:true */
@@ -40,7 +41,7 @@ export default Ember.Component.extend(bufferedRender({
 
   buildBuffer(buffer) {
     const icon = this.get("isUploading") ? "times" : "upload";
-    buffer.push(`<i class="fa fa-${icon}"></i>`);
+    buffer.push(iconHTML(icon));
     buffer.push("<span class='ru-label'>" + this.get("text") + "</span>");
     buffer.push("<span class='ru-progress' style='width:" + this.get("progress") + "%'></span>");
   },

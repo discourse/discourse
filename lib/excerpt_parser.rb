@@ -4,7 +4,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   SPAN_REGEX = /<\s*span[^>]*class\s*=\s*['|"]excerpt['|"][^>]*>/
 
-  def initialize(length, options=nil)
+  def initialize(length, options = nil)
     @length = length
     @excerpt = ""
     @current_length = 0
@@ -45,13 +45,13 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def include_tag(name, attributes)
-    characters("<#{name} #{attributes.map{|k,v| "#{k}=\"#{escape_attribute(v)}\""}.join(' ')}>", false, false, false)
+    characters("<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }.join(' ')}>", false, false, false)
   end
 
-  def start_element(name, attributes=[])
+  def start_element(name, attributes = [])
     case name
-      when "img"
-        attributes = Hash[*attributes.flatten]
+    when "img"
+      attributes = Hash[*attributes.flatten]
 
         if attributes["class"] == 'emoji'
           if @remap_emoji
@@ -78,28 +78,28 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
         characters("(#{attributes['src']})") if @markdown_images
 
-      when "a"
-        unless @strip_links
-          include_tag(name, attributes)
-          @in_a = true
-        end
+    when "a"
+      unless @strip_links
+        include_tag(name, attributes)
+        @in_a = true
+      end
 
-      when "aside"
-        attributes = Hash[*attributes.flatten]
+    when "aside"
+      attributes = Hash[*attributes.flatten]
 
         unless @keep_onebox_source && attributes['class'].include?('onebox')
           @in_quote = true
         end
-      when 'article'
-        if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
-          @in_quote = true
-        end
-      when "div", "span"
-        if attributes.include?(["class", "excerpt"])
-          @excerpt = ""
-          @current_length = 0
-          @start_excerpt = true
-        end
+    when 'article'
+      if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
+        @in_quote = true
+      end
+    when "div", "span"
+      if attributes.include?(["class", "excerpt"])
+        @excerpt = ""
+        @current_length = 0
+        @start_excerpt = true
+      end
         # Preserve spoilers
         if attributes.include?(["class", "spoiler"])
           include_tag("span", attributes)
@@ -112,7 +112,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     case name
     when "a"
       unless @strip_links
-        characters("</a>",false, false, false)
+        characters("</a>", false, false, false)
         @in_a = false
       end
     when "p", "br"
@@ -132,7 +132,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   def characters(string, truncate = true, count_it = true, encode = true)
     return if @in_quote
-    encode = encode ? lambda{|s| ERB::Util.html_escape(s)} : lambda {|s| s}
+    encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
       @excerpt << encode.call(string[0..length]) if truncate

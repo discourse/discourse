@@ -80,7 +80,7 @@ module PrettyText
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
-
+    ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
     apply_es6_file(ctx, root_path, "discourse/lib/utilities")
@@ -123,11 +123,12 @@ module PrettyText
 
   def self.reset_context
     @ctx_init.synchronize do
+      @ctx&.dispose
       @ctx = nil
     end
   end
 
-  def self.markdown(text, opts={})
+  def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
     baked = nil
@@ -148,13 +149,6 @@ module PrettyText
         paths[:S3BaseUrl] = Discourse.store.absolute_base_url
       end
 
-      if SiteSetting.enable_experimental_markdown_it
-        # defer load markdown it
-        unless context.eval("window.markdownit")
-          ctx_load_manifest(context, "markdown-it-bundle.js")
-        end
-      end
-
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
@@ -170,6 +164,9 @@ module PrettyText
         __optInput.mentionLookup = __mentionLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
+        __optInput.lookupInlineOnebox = __lookupInlineOnebox;
+        #{opts[:linkify] == false ? "__optInput.linkify = false;" : ""}
+        __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 
       if opts[:topicId]
@@ -182,12 +179,13 @@ module PrettyText
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
 
+      buffer << ("__pt = new __PrettyText(__textOptions);")
+
       # Be careful disabling sanitization. We allow for custom emails
       if opts[:sanitize] == false
-        buffer << ('__textOptions.sanitize = false;')
+        buffer << ('__pt.disableSanitizer();')
       end
 
-      buffer << ("__pt = new __PrettyText(__textOptions);")
       opts = context.eval(buffer)
 
       DiscourseEvent.trigger(:markdown_context, context)
@@ -226,7 +224,7 @@ module PrettyText
     end
   end
 
-  def self.cook(text, opts={})
+  def self.cook(text, opts = {})
     options = opts.dup
 
     # we have a minor inconsistency
@@ -282,7 +280,7 @@ module PrettyText
         if !uri.host.present? ||
            uri.host == site_uri.host ||
            uri.host.ends_with?("." << site_uri.host) ||
-           whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
+           whitelist.any? { |u| uri.host == u || uri.host.ends_with?("." << u) }
           # we are good no need for nofollow
         else
           l["rel"] = "nofollow noopener"
@@ -329,7 +327,7 @@ module PrettyText
     links
   end
 
-  def self.excerpt(html, max_length, options={})
+  def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
     strip_image_wrapping(doc)
@@ -343,7 +341,7 @@ module PrettyText
 
     # If the user is not basic, strip links from their bio
     fragment = Nokogiri::HTML.fragment(string)
-    fragment.css('a').each {|a| a.replace(a.inner_html) }
+    fragment.css('a').each { |a| a.replace(a.inner_html) }
     fragment.to_html
   end
 

@@ -19,19 +19,6 @@ describe TranslationOverride do
           ))
         end
       end
-
-      describe 'when interpolation keys are invalid' do
-        it 'should not be valid' do
-          translation_override = TranslationOverride.upsert!(
-            I18n.locale, 'some_key', '%{first} %{second} %{third}'
-          )
-
-          expect(translation_override.errors.full_messages).to include(I18n.t(
-            'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
-            keys: 'third'
-          ))
-        end
-      end
     end
   end
 

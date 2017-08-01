@@ -22,7 +22,7 @@ describe TimelineLookup do
   end
 
   it "respects a `max_values` setting" do
-    input = (1..100).map {|i| [1000+i, i, 100-i] }
+    input = (1..100).map { |i| [1000 + i, i, 100 - i] }
 
     result = TimelineLookup.build(input, 5)
     expect(result.size).to eq(5)
@@ -30,7 +30,7 @@ describe TimelineLookup do
   end
 
   it "respects an uneven `max_values` setting" do
-    input = (1..100).map {|i| [1000+i, i, 100-i] }
+    input = (1..100).map { |i| [1000 + i, i, 100 - i] }
 
     result = TimelineLookup.build(input, 3)
     expect(result.size).to eq(3)

@@ -6,7 +6,7 @@ import { propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
 import { postUrl } from 'discourse/lib/utilities';
-import { cook } from 'discourse/lib/text';
+import { cookAsync } from 'discourse/lib/text';
 import { userPath } from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
 
@@ -159,6 +159,7 @@ const Post = RestModel.extend({
     done elsewhere.
   **/
   setDeletedState(deletedBy) {
+    let promise;
     this.set('oldCooked', this.get('cooked'));
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
@@ -169,16 +170,19 @@ const Post = RestModel.extend({
         can_delete: false
       });
     } else {
-
-      this.setProperties({
-        cooked: cook(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})),
-        can_delete: false,
-        version: this.get('version') + 1,
-        can_recover: true,
-        can_edit: false,
-        user_deleted: true
+      promise = cookAsync(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})).then(cooked => {
+        this.setProperties({
+          cooked: cooked,
+          can_delete: false,
+          version: this.get('version') + 1,
+          can_recover: true,
+          can_edit: false,
+          user_deleted: true
+        });
       });
     }
+
+    return promise || Em.RSVP.Promise.resolve();
   },
 
   /**
@@ -201,10 +205,11 @@ const Post = RestModel.extend({
   },
 
   destroy(deletedBy) {
-    this.setDeletedState(deletedBy);
-    return ajax("/posts/" + this.get('id'), {
-      data: { context: window.location.pathname },
-      type: 'DELETE'
+    return this.setDeletedState(deletedBy).then(()=>{
+      return ajax("/posts/" + this.get('id'), {
+        data: { context: window.location.pathname },
+        type: 'DELETE'
+      });
     });
   },
 

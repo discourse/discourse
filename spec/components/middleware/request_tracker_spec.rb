@@ -3,7 +3,7 @@ require_dependency "middleware/request_tracker"
 
 describe Middleware::RequestTracker do
 
-  def env(opts={})
+  def env(opts = {})
     {
       "HTTP_HOST" => "http://test.com",
       "REQUEST_URI" => "/path?bla=1",
@@ -21,7 +21,7 @@ describe Middleware::RequestTracker do
     def log_tracked_view(val)
       data = Middleware::RequestTracker.get_data(env(
         "HTTP_DISCOURSE_TRACK_VIEW" => val
-      ), ["200",{"Content-Type" => 'text/html'}])
+      ), ["200", { "Content-Type" => 'text/html' }])
 
       Middleware::RequestTracker.log_request(data)
     end
@@ -40,19 +40,19 @@ describe Middleware::RequestTracker do
 
       data = Middleware::RequestTracker.get_data(env(
         "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"
-      ), ["200",{"Content-Type" => 'text/html'}])
+      ), ["200", { "Content-Type" => 'text/html' }])
 
       Middleware::RequestTracker.log_request(data)
 
       data = Middleware::RequestTracker.get_data(env(
         "HTTP_DISCOURSE_TRACK_VIEW" => "1"
-      ), ["200",{}])
+      ), ["200", {}])
 
       Middleware::RequestTracker.log_request(data)
 
       data = Middleware::RequestTracker.get_data(env(
         "HTTP_USER_AGENT" => "Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B410 Safari/600.1.4"
-      ), ["200",{"Content-Type" => 'text/html'}])
+      ), ["200", { "Content-Type" => 'text/html' }])
 
       Middleware::RequestTracker.log_request(data)
 

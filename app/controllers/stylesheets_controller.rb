@@ -19,17 +19,17 @@ class StylesheetsController < ApplicationController
 
     no_cookies
 
-    target,digest = params[:name].split(/_([a-f0-9]{40})/)
+    target, digest = params[:name].split(/_([a-f0-9]{40})/)
 
-    if Rails.env == "development"
+    if !Rails.env.production?
       # TODO add theme
       # calling this method ensures we have a cache for said target
       # we hold of re-compilation till someone asks for asset
       if target.include?("theme")
-        split_target,theme_id = target.split(/_(-?[0-9]+)/)
+        split_target, theme_id = target.split(/_(-?[0-9]+)/)
         theme = Theme.find(theme_id) if theme_id
       else
-        split_target,color_scheme_id = target.split(/_(-?[0-9]+)/)
+        split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
         theme = Theme.find_by(color_scheme_id: color_scheme_id)
       end
       Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.key)
@@ -58,7 +58,6 @@ class StylesheetsController < ApplicationController
     if cache_time && stylesheet_time && stylesheet_time <= cache_time
       return render nothing: true, status: 304
     end
-
 
     unless File.exist?(location)
       if current = query.limit(1).pluck(source_map ? :source_map : :content).first
@@ -90,4 +89,3 @@ class StylesheetsController < ApplicationController
   end
 
 end
-

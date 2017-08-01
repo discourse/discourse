@@ -3,7 +3,7 @@ require 'html_to_markdown'
 
 describe HtmlToMarkdown do
 
-  def html_to_markdown(html, opts={})
+  def html_to_markdown(html, opts = {})
     HtmlToMarkdown.new(html, opts).to_markdown
   end
 

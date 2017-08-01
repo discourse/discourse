@@ -36,25 +36,25 @@
 
     <ul class="usercard-controls">
       {{#if user.can_send_private_message_to_user}}
-        <li><a class='btn btn-primary' {{action "composePrivateMessage" user post}}>{{fa-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
+        <li><a class='btn btn-primary' {{action "composePrivateMessage" user post}}>{{d-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
       {{/if}}
 
       {{#if showFilter}}
-        <li><a class='btn' href {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username count=topicPostCount}}</a></li>
+        <li><a class='btn' href {{action "togglePosts" user}}>{{d-icon "filter"}}{{i18n 'topic.filter_to' username=username count=topicPostCount}}</a></li>
       {{/if}}
 
       {{#if hasUserFilters}}
-        <li><a class='btn' href {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n 'topic.filters.cancel'}}</a></li>
+        <li><a class='btn' href {{action "cancelFilter"}}>{{d-icon "times"}}{{i18n 'topic.filters.cancel'}}</a></li>
       {{/if}}
 
       {{#if showDelete}}
-        <li><a class='btn btn-danger' href {{action "deleteUser" user}}>{{fa-icon "exclamation-triangle"}}{{i18n 'admin.user.delete'}}</a></li>
+        <li><a class='btn btn-danger' href {{action "deleteUser" user}}>{{d-icon "exclamation-triangle"}}{{i18n 'admin.user.delete'}}</a></li>
       {{/if}}
     </ul>
 
     {{#if isSuspended}}
       <div class='suspended'>
-        {{fa-icon "ban"}}
+        {{d-icon "ban"}}
         <b>{{i18n 'user.suspended_notice' date=user.suspendedTillDate}}</b><br/>
         <b>{{i18n 'user.suspended_reason'}}</b> {{user.suspend_reason}}
       </div>
@@ -71,12 +71,12 @@
     {{#if hasLocationOrWebsite}}
       <div class="location-and-website">
         {{#if user.location}}
-          <span class='location'>{{fa-icon "map-marker"}} {{user.location}}</span>
+          <span class='location'>{{d-icon "map-marker"}} {{user.location}}</span>
         {{/if}}
 
         {{#if user.website_name}}
           <span class='website-name'>
-            {{fa-icon "globe"}}
+            {{d-icon "globe"}}
             {{#if linkWebsite}}
               <a href={{user.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{user.website_name}}</a>
             {{else}}

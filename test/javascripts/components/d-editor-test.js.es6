@@ -514,6 +514,32 @@ third line`
 });
 
 
+componentTest("quote button - empty lines", {
+  template: '{{d-editor value=value composerEvents=true}}',
+  beforeEach() {
+    this.set('value', "one\n\ntwo\n\nthree");
+  },
+  test(assert) {
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+
+    andThen(() => {
+      textarea.selectionStart = 0;
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "> one\n> \n> two\n> \n> three");
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 25);
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "one\n\ntwo\n\nthree");
+    });
+  }
+});
+
 testCase('quote button', function(assert, textarea) {
 
   andThen(() => {
@@ -763,19 +789,11 @@ componentTest('emoji', {
     this.set('value', 'hello world.');
   },
   test(assert) {
-    assert.equal($('.emoji-modal').length, 0);
-
     jumpEnd(this.$('textarea.d-editor-input')[0]);
     click('button.emoji');
-    andThen(() => {
-      assert.equal($('.emoji-modal').length, 1);
-    });
 
-    click('a[data-group-id=0]');
-    click('a[title=grinning]');
-
+    click('.emoji-picker .section[data-section="people"] button.emoji[title="grinning"]');
     andThen(() => {
-      assert.ok($('.emoji-modal').length === 0);
       assert.equal(this.get('value'), 'hello world.:grinning:');
     });
   }

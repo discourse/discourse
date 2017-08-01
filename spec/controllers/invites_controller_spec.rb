@@ -30,7 +30,6 @@ describe InvitesController do
       let!(:invite) { Fabricate(:invite, invited_by: user) }
       let(:another_invite) { Fabricate(:invite, email: 'anotheremail@address.com') }
 
-
       it 'raises an error when the email is missing' do
         expect { delete :destroy }.to raise_error(ActionController::ParameterMissing)
       end
@@ -52,11 +51,11 @@ describe InvitesController do
 
   end
 
-  context '.create' do
+  context '#create' do
     it 'requires you to be logged in' do
-      expect {
+      expect do
         post :create, email: 'jake@adventuretime.ooo'
-      }.to raise_error(Discourse::NotLoggedIn)
+      end.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -82,6 +81,18 @@ describe InvitesController do
         group = Fabricate(:group)
         log_in(:admin)
         post :create, email: email, group_names: group.name
+        expect(response).to be_success
+        expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
+      end
+
+      it 'allows group owners to invite to groups' do
+        group = Fabricate(:group)
+        user = log_in
+        user.update!(trust_level: TrustLevel[2])
+        group.add_owner(user)
+
+        post :create, email: email, group_names: group.name
+
         expect(response).to be_success
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
@@ -347,7 +358,7 @@ describe InvitesController do
     context 'while logged in' do
       let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
       let(:file) do
-        ActionDispatch::Http::UploadedFile.new({ filename: 'discourse.csv', tempfile: csv_file })
+        ActionDispatch::Http::UploadedFile.new(filename: 'discourse.csv', tempfile: csv_file)
       end
       let(:filename) { 'discourse.csv' }
 

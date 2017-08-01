@@ -126,9 +126,9 @@ before_fork do |server, worker|
 
         def max_rss
           rss = `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
-                .split("\n")
-                .map(&:to_i)
-                .max
+            .split("\n")
+            .map(&:to_i)
+            .max
 
           rss ||= 0
 
@@ -146,9 +146,9 @@ before_fork do |server, worker|
         def force_kill_rogue_sidekiq
           info = `ps -eo pid,rss,args | grep sidekiq | grep -v grep | awk '{print $1,$2}'`
           info.split("\n").each do |row|
-            pid,mem = row.split(" ").map(&:to_i)
-            if pid > 0 && (mem*1024) > max_allowed_size
-              Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem*1024}, killing"
+            pid, mem = row.split(" ").map(&:to_i)
+            if pid > 0 && (mem * 1024) > max_allowed_size
+              Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem * 1024}, killing"
               Process.kill("KILL", pid) rescue nil
             end
           end
@@ -198,7 +198,6 @@ before_fork do |server, worker|
 
   ActiveRecord::Base.connection.disconnect!
   $redis.client.disconnect
-
 
   # Throttle the master from forking too quickly by sleeping.  Due
   # to the implementation of standard Unix signal handlers, this

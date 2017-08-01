@@ -38,6 +38,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_emoji: {
+        prerequisite: Proc.new { SiteSetting.enable_emoji },
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
@@ -120,7 +121,7 @@ module DiscourseNarrativeBot
 
     def reset_bot(user, post)
       if pm_to_bot?(post)
-        reset_data(user, { topic_id: post.topic_id })
+        reset_data(user, topic_id: post.topic_id)
       else
         reset_data(user)
       end
@@ -153,7 +154,7 @@ module DiscourseNarrativeBot
       PostRevisor.new(post, topic).revise!(
         self.discobot_user,
         { raw: raw },
-        { skip_validations: true, force_new_version: true }
+        skip_validations: true, force_new_version: true
       )
 
       set_state_data(:post_version, post.reload.version || 0)
@@ -184,7 +185,8 @@ module DiscourseNarrativeBot
       opts = {
         title: I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title),
         target_usernames: @user.username,
-        archetype: Archetype.private_message
+        archetype: Archetype.private_message,
+        subtype: TopicSubtype.system_message,
       }
 
       if @post &&

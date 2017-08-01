@@ -33,10 +33,10 @@ module DiscourseUpdates
 
         # Handle cases when version check data is old so we report something that makes sense
 
-        if (version_info.updated_at.nil? or  # never performed a version check
-            last_installed_version != Discourse::VERSION::STRING or  # upgraded since the last version check
-            (version_info.missing_versions_count == 0 and version_info.latest_version != version_info.installed_version) or  # old data
-            (version_info.missing_versions_count != 0 and version_info.latest_version == version_info.installed_version))    # old data
+        if (version_info.updated_at.nil? ||  # never performed a version check
+            last_installed_version != (Discourse::VERSION::STRING) ||  # upgraded since the last version check
+            (version_info.missing_versions_count == (0) && version_info.latest_version != (version_info.installed_version)) ||  # old data
+            (version_info.missing_versions_count != (0) && version_info.latest_version == (version_info.installed_version)))    # old data
           Jobs.enqueue(:version_check, all_sites: true)
           version_info.version_check_pending = true
           unless version_info.updated_at.nil?
@@ -92,7 +92,7 @@ module DiscourseUpdates
       if versions.present?
         # store the list in redis
         version_keys = []
-        versions[0,5].each do |v|
+        versions[0, 5].each do |v|
           key = "#{missing_versions_key_prefix}:#{v['version']}"
           $redis.mapped_hmset key, v
           version_keys << key
@@ -107,7 +107,6 @@ module DiscourseUpdates
       keys = $redis.lrange(missing_versions_list_key, 0, 4) # max of 5 versions
       keys.present? ? keys.map { |k| $redis.hgetall(k) } : []
     end
-
 
     private
 

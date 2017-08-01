@@ -25,7 +25,8 @@ class SiteSerializer < ApplicationSerializer
              :top_tags,
              :wizard_required,
              :topic_featured_link_allowed_category_ids,
-             :user_themes
+             :user_themes,
+             :censored_words
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
@@ -36,16 +37,16 @@ class SiteSerializer < ApplicationSerializer
     cache_fragment("user_themes") do
       Theme.where('key = :default OR user_selectable',
                     default: SiteSetting.default_theme_key)
-           .order(:name)
-           .pluck(:key, :name)
-           .map{|k,n| {theme_key: k, name: n, default: k == SiteSetting.default_theme_key}}
-           .as_json
+        .order(:name)
+        .pluck(:key, :name)
+        .map { |k, n| { theme_key: k, name: n, default: k == SiteSetting.default_theme_key } }
+        .as_json
     end
   end
 
   def groups
     cache_fragment("group_names") do
-      Group.order(:name).pluck(:id,:name).map { |id,name| { id: id, name: name } }.as_json
+      Group.order(:name).pluck(:id, :name).map { |id, name| { id: id, name: name } }.as_json
     end
   end
 
@@ -141,5 +142,9 @@ class SiteSerializer < ApplicationSerializer
 
   def topic_featured_link_allowed_category_ids
     scope.topic_featured_link_allowed_category_ids
+  end
+
+  def censored_words
+    WordWatcher.words_for_action(:censor).join('|')
   end
 end

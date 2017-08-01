@@ -171,6 +171,10 @@ header .discourse-tag {color: $tag-color }
 .tag-chooser {
   width: 100%;
   margin: 5px 0;
+  ul.select2-choices {
+    max-height: 40px;
+    overflow-y: auto;
+  }
 }
 
 .title-wrapper .tag-chooser {
@@ -203,7 +207,7 @@ header .discourse-tag {color: $tag-color }
 }
 
 .autocomplete {
-  .fa-tag {
+  .d-icon-tag {
    color: dark-light-choose($primary, scale-color($primary, $lightness: 70%));
    padding-right: 5px;
   }

@@ -36,7 +36,7 @@ TXT
   let :args do
     {
       scopes: 'read',
-      client_id: "x"*32,
+      client_id: "x" * 32,
       auth_redirect: 'http://over.the/rainbow',
       application_name: 'foo',
       public_key: public_key,
@@ -205,7 +205,6 @@ TXT
       expect(api_key.user_id).to eq(user.id)
       expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info"].sort)
       expect(api_key.push_url).to eq("https://push.it/here")
-
 
       uri.query = ""
       expect(uri.to_s).to eq(args[:auth_redirect] + "?")

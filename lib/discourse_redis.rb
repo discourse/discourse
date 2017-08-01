@@ -15,6 +15,7 @@ class DiscourseRedis
       @mutex = Mutex.new
       @slave_config = DiscourseRedis.slave_config
       @timer_task = init_timer_task
+      @message_bus_keepalive_interval = MessageBus.keepalive_interval
     end
 
     def verify_master
@@ -41,6 +42,7 @@ class DiscourseRedis
             slave_client.call([:client, [:kill, 'type', connection_type]])
           end
 
+          MessageBus.keepalive_interval = @message_bus_keepalive_interval
           Discourse.clear_readonly!
           Discourse.request_refresh!
           success = true
@@ -57,7 +59,12 @@ class DiscourseRedis
     end
 
     def master=(args)
-      synchronize { @master = args }
+      synchronize do
+        @master = args
+
+        # Disables MessageBus keepalive when Redis is in readonly mode
+        MessageBus.keepalive_interval = 0 if !@master
+      end
     end
 
     def running?
@@ -125,10 +132,10 @@ class DiscourseRedis
   end
 
   def self.slave_config(options = config)
-    options.dup.merge!({ host: options[:slave_host], port: options[:slave_port] })
+    options.dup.merge!(host: options[:slave_host], port: options[:slave_port])
   end
 
-  def initialize(config=nil)
+  def initialize(config = nil)
     @config = config || DiscourseRedis.config
     @redis = DiscourseRedis.raw_connection(@config)
   end
@@ -146,7 +153,7 @@ class DiscourseRedis
     yield
   rescue Redis::CommandError => ex
     if ex.message =~ /READONLY/
-      unless Discourse.recently_readonly?
+      unless Discourse.recently_readonly? || Rails.env.test?
         STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
       end
 
@@ -182,7 +189,7 @@ class DiscourseRedis
   end
 
   def mget(*args)
-    args.map!{|a| "#{namespace}:#{a}"}
+    args.map! { |a| "#{namespace}:#{a}" }
     DiscourseRedis.ignore_readonly { @redis.mget(*args) }
   end
 
@@ -193,10 +200,10 @@ class DiscourseRedis
     end
   end
 
-  def keys(pattern=nil)
+  def keys(pattern = nil)
     DiscourseRedis.ignore_readonly do
       len = namespace.length + 1
-      @redis.keys("#{namespace}:#{pattern || '*'}").map{
+      @redis.keys("#{namespace}:#{pattern || '*'}").map {
         |k| k[len..-1]
       }
     end
@@ -210,7 +217,7 @@ class DiscourseRedis
 
   def flushdb
     DiscourseRedis.ignore_readonly do
-      keys.each{|k| del(k)}
+      keys.each { |k| del(k) }
     end
   end
 

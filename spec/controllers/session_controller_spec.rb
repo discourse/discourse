@@ -702,7 +702,6 @@ describe SessionController do
       expect(session[:current_user_id]).to be_blank
     end
 
-
     it 'removes the auth token cookie' do
       expect(cookies[:_t]).to be_blank
     end
@@ -716,7 +715,7 @@ describe SessionController do
 
     context 'for a non existant username' do
       it "doesn't generate a new token for a made up username" do
-        expect { xhr :post, :forgot_password, login: 'made_up'}.not_to change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: 'made_up' }.not_to change(EmailToken, :count)
       end
 
       it "doesn't enqueue an email" do
@@ -735,7 +734,7 @@ describe SessionController do
       end
 
       it "generates a new token for a made up username" do
-        expect { xhr :post, :forgot_password, login: user.username}.to change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: user.username }.to change(EmailToken, :count)
       end
 
       it "enqueues an email" do
@@ -748,7 +747,7 @@ describe SessionController do
       let(:system) { Discourse.system_user }
 
       it 'generates no token for system username' do
-        expect { xhr :post, :forgot_password, login: system.username}.not_to change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: system.username }.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do
@@ -761,7 +760,7 @@ describe SessionController do
       let!(:staged) { Fabricate(:staged) }
 
       it 'generates no token for staged username' do
-        expect { xhr :post, :forgot_password, login: staged.username}.not_to change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: staged.username }.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do

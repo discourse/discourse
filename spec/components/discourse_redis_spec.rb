@@ -5,9 +5,7 @@ describe DiscourseRedis do
   let(:slave_port) { 1234 }
 
   let(:config) do
-    DiscourseRedis.config.dup.merge({
-      slave_host: 'testhost', slave_port: 1234, connector: DiscourseRedis::Connector
-    })
+    DiscourseRedis.config.dup.merge(slave_host: 'testhost', slave_port: 1234, connector: DiscourseRedis::Connector)
   end
 
   let(:fallback_handler) { DiscourseRedis::FallbackHandler.instance }
@@ -95,13 +93,16 @@ describe DiscourseRedis do
   describe DiscourseRedis::FallbackHandler do
     after do
       fallback_handler.master = true
+      MessageBus.keepalive_interval = -1
     end
 
     describe '#initiate_fallback_to_master' do
       it 'should return the right value if the master server is still down' do
         fallback_handler.master = false
         Redis::Client.any_instance.expects(:call).with([:info]).returns("Some other stuff")
+
         expect(fallback_handler.initiate_fallback_to_master).to eq(false)
+        expect(MessageBus.keepalive_interval).to eq(0)
       end
 
       it 'should fallback to the master server once it is up' do
@@ -115,6 +116,7 @@ describe DiscourseRedis do
         expect(fallback_handler.initiate_fallback_to_master).to eq(true)
         expect(fallback_handler.master).to eq(true)
         expect(Discourse.recently_readonly?).to eq(false)
+        expect(MessageBus.keepalive_interval).to eq(-1)
       end
     end
   end

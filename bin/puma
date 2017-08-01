@@ -12,7 +12,7 @@ if ARGV[0] == '--kill-existing'
   pids = `ps aux | grep puma | grep discourse | grep -v grep | awk '{print $2;}'`.strip
     .split("\n")
     .map(&:to_i)
-    .reject{|pid| pid == Process.pid}
+    .reject { |pid| pid == Process.pid }
 
   if pids.length > 0
     STDERR.puts "Terminating old version of puma at pid #{pids[0]}"

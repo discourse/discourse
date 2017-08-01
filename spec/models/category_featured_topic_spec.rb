@@ -15,7 +15,7 @@ describe CategoryFeaturedTopic do
       # so much dancing, I am thinking fixures make sense here.
       user.change_trust_level!(TrustLevel[1])
 
-      category.set_permissions(:trust_level_1 => :full)
+      category.set_permissions(trust_level_1: :full)
       category.save
 
       _uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
@@ -31,7 +31,6 @@ describe CategoryFeaturedTopic do
       CategoryFeaturedTopic.feature_topics_for(category)
       expect(CategoryFeaturedTopic.count).to be(1)
     end
-
 
     it 'should feature stuff in the correct order' do
       category = Fabricate(:category, num_featured_topics: 2)
@@ -53,4 +52,3 @@ describe CategoryFeaturedTopic do
   end
 
 end
-
