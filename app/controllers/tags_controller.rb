@@ -49,8 +49,8 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
-      @tag_id = params[:tag_id]
-      @additional_tags = params[:additional_tag_ids].to_s.split('/')
+      @tag_id = params[:tag_id].force_encoding("UTF-8")
+      @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |t| t.force_encoding("UTF-8") }
 
       list_opts = build_topic_list_options
 
@@ -67,7 +67,7 @@ class TagsController < ::ApplicationController
       @title = @description_meta
 
       path_name = url_method(params.slice(:category, :parent_category))
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(path_name, *(params.slice(:parent_category, :category, :tag_id).values))}"
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(path_name, *(params.slice(:parent_category, :category, :tag_id).values.map { |t| t.force_encoding("UTF-8") }))}"
 
       if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
         permalink_redirect_or_not_found
