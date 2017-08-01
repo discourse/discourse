@@ -93,6 +93,7 @@ describe DiscourseRedis do
   describe DiscourseRedis::FallbackHandler do
     after do
       fallback_handler.master = true
+      MessageBus.keepalive_interval = -1
     end
 
     describe '#initiate_fallback_to_master' do
