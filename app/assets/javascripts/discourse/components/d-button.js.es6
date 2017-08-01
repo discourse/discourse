@@ -5,8 +5,19 @@ export default Ember.Component.extend({
   layoutName: 'components/d-button',
 
   tagName: 'button',
-  classNameBindings: [':btn', 'noText'],
+  classNameBindings: [':btn', 'noText', 'btnType'],
   attributeBindings: ['disabled', 'translatedTitle:title'],
+
+  btnIcon: Ember.computed.notEmpty('icon'),
+
+  @computed('icon', 'translatedLabel')
+  btnType(icon, translatedLabel) {
+    if (icon) {
+      return translatedLabel ? "btn-icon-text" : "btn-icon";
+    } else if (translatedLabel) {
+      return "btn-text";
+    }
+  },
 
   noText: Ember.computed.empty('translatedLabel'),
 
