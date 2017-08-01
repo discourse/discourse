@@ -18,7 +18,8 @@ class BulkImport::Base
     @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port])
 
     @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML,
+      Redcarpet::Render::HTML.new(hard_wrap: true),
+      no_intra_emphasis: true,
       fenced_code_blocks: true,
       autolink: true
     )
