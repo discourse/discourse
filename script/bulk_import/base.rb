@@ -110,6 +110,9 @@ class BulkImport::Base
     @last_post_id = Post.unscoped.maximum(:id)
     @post_number_by_post_id = Post.unscoped.pluck(:id, :post_number).to_h
     @topic_id_by_post_id = Post.unscoped.pluck(:id, :topic_id).to_h
+
+    puts "Loading post actions indexes..."
+    @last_post_action_id = PostAction.unscoped.maximum(:id) || 0
   end
 
   def execute
@@ -124,6 +127,7 @@ class BulkImport::Base
     @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
     @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
     @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
+    @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
   end
 
   def group_id_from_imported_id(id); @groups[id.to_s]; end
@@ -179,6 +183,12 @@ class BulkImport::Base
     like_count raw cooked hidden word_count created_at last_version_at updated_at
   }
 
+  POST_ACTION_COLUMNS ||= %i{
+    id post_id user_id post_action_type_id deleted_at created_at updated_at
+    deleted_by_id related_post_id staff_took_action deferred_by_id targets_topic
+    agreed_at agreed_by_id deferred_at disagreed_at disagreed_by_id
+  }
+
   TOPIC_ALLOWED_USER_COLUMNS ||= %i{
     topic_id user_id created_at updated_at
   }
@@ -205,6 +215,7 @@ class BulkImport::Base
   def create_categories(rows, &block); create_records(rows, "category", CATEGORY_COLUMNS, &block); end
   def create_topics(rows, &block); create_records(rows, "topic", TOPIC_COLUMNS, &block); end
   def create_posts(rows, &block); create_records(rows, "post", POST_COLUMNS, &block); end
+  def create_post_actions(rows, &block); create_records(rows, "post_action", POST_ACTION_COLUMNS, &block); end
   def create_topic_allowed_users(rows, &block); create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block); end
 
   def process_group(group)
@@ -356,6 +367,15 @@ class BulkImport::Base
     post[:last_version_at] = post[:created_at]
     post[:updated_at] ||= post[:created_at]
     post
+  end
+
+  def process_post_action(post_action)
+    post_action[:id] ||= @last_post_action_id += 1
+    post_action[:staff_took_action] ||= false
+    post_action[:targets_topic] ||= false
+    post_action[:created_at] ||= NOW
+    post_action[:updated_at] ||= post_action[:created_at]
+    post_action
   end
 
   def process_topic_allowed_user(topic_allowed_user)

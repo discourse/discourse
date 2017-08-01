@@ -93,6 +93,8 @@ class BulkImport::VBulletin < BulkImport::Base
     import_topics
     import_posts
 
+    import_likes
+
     import_private_topics
     import_topic_allowed_users
     import_private_posts
@@ -380,6 +382,36 @@ class BulkImport::VBulletin < BulkImport::Base
 
       post[:like_count] = row[7] if @has_post_thanks
       post
+    end
+  end
+
+  def import_likes
+    return unless @has_post_thanks
+    puts "Importing likes..."
+
+    @imported_likes = Set.new
+    @last_imported_post_id = 0
+
+    post_thanks = mysql_stream <<-SQL
+        SELECT postid, userid, date
+          FROM post_thanks
+         WHERE postid > #{@last_imported_post_id}
+      ORDER BY postid
+    SQL
+
+    create_post_actions(post_thanks) do |row|
+      post_id = post_id_from_imported_id(row[0])
+      user_id = user_id_from_imported_id(row[1])
+
+      next if post_id.nil? || user_id.nil?
+      next if @imported_likes.add?([post_id, user_id]).nil?
+
+      {
+        post_id: post_id_from_imported_id(row[0]),
+        user_id: user_id_from_imported_id(row[1]),
+        post_action_type_id: 2,
+        created_at: Time.zone.at(row[2])
+      }
     end
   end
 
