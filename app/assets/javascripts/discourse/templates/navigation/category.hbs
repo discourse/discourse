@@ -20,14 +20,10 @@
     {{category-notifications-button category=category}}
   {{/if}}
 
-  {{#if canCreateTopic}}
-    {{d-button  id="create-topic"
-                class="btn-default"
-                action="createTopic"
-                icon="plus"
-                label="topic.create"
-                disabled=cannotCreateTopicOnCategory}}
-  {{/if}}
+  {{create-topic-button
+    canCreateTopic=canCreateTopic
+    disabled=cannotCreateTopicOnCategory
+    action=(route-action "createTopic")}}
 
   {{#if canEditCategory}}
     {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}

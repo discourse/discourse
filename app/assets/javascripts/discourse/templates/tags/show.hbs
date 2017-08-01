@@ -15,9 +15,7 @@
       {{d-button action="deleteTag" icon="trash-o" class="admin-tag btn-danger"}}
       {{d-button action="renameTag" actionParam=tag icon="pencil" class="admin-tag"}}
     {{else}}
-      {{#if canCreateTopic}}
-      <button id="create-topic" class='btn btn-default' {{action "createTopic"}}>{{d-icon "plus"}}{{i18n 'topic.create'}}</button>
-      {{/if}}
+      {{create-topic-button canCreateTopic=canCreateTopic action=(route-action "createTopic")}}
     {{/if}}
 
     {{#if showTagFilter}}

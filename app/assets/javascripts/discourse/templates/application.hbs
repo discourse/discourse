@@ -1,11 +1,11 @@
 {{plugin-outlet name="above-site-header"}}
 {{site-header canSignUp=canSignUp
-              showCreateAccount=(action "appRouteAction" "showCreateAccount")
-              showLogin=(action "appRouteAction" "showLogin")
-              showKeyboard=(action "appRouteAction" "showKeyboardShortcutsHelp")
-              toggleMobileView=(action "appRouteAction" "toggleMobileView")
-              toggleAnonymous=(action "appRouteAction" "toggleAnonymous")
-              logout=(action "appRouteAction" "logout")}}
+              showCreateAccount=(route-action "showCreateAccount")
+              showLogin=(route-action "showLogin")
+              showKeyboard=(route-action "showKeyboardShortcutsHelp")
+              toggleMobileView=(route-action "toggleMobileView")
+              toggleAnonymous=(route-action "toggleAnonymous")
+              logout=(route-action "logout")}}
 {{plugin-outlet name="below-site-header"}}
 
 <div id="main-outlet" class="wrap">
