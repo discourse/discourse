@@ -353,7 +353,8 @@ it:
         add_members: "Aggiungi Membri"
         delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
       name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
-      public: "Permetti agli utenti di aggiungersi/togliersi liberamente dal gruppo (Richiede che il gruppo sia visibile a tutti)"
+      public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (Richiede che il gruppo sia visibile a tutti)"
+      public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
         posts: "Non ci sono messaggi da membri di questo gruppo."
         members: "Non ci sono membri in questo gruppo."
@@ -365,6 +366,7 @@ it:
       join: "Partecipa al Gruppo"
       leave: "Abbandona il Gruppo"
       request: "Richiedi di partecipare al gruppo"
+      message: "Messaggio"
       automatic_group: Gruppo Automatico
       closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
@@ -1023,6 +1025,23 @@ it:
       shift: 'Maiusc'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: Ricerca per emoji
+      people: Persone
+      nature: Natura
+      food: Cibo
+      activity: Attività
+      travel: Viaggio
+      objects: Oggetti
+      celebration: Celebrazione
+      custom: Emoji personalizzate
+      recent: Usate recentemente
+      default_tone: Nessun tono della pelle
+      light_tone: Tono della pelle chiaro
+      medium_light_tone: Tono della pelle medio chiaro
+      medium_tone: Tono della pelle medio
+      medium_dark_tone: Tono della pelle medio scuro
+      dark_tone: Tono della pelle scuro
     composer:
       emoji: "Emoji :)"
       more_emoji: "altro..."
@@ -2886,6 +2905,27 @@ it:
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
         logster:
           title: "Log Errori"
+      watched_words:
+        title: "Parole Osservate"
+        search: "ricerca"
+        clear_filter: "Pulisci"
+        show_words: "mostra le parole"
+        actions:
+          block: 'Blocca'
+          censor: 'Censura'
+          require_approval: 'Richiede Approvazione'
+          flag: 'Segnala'
+        action_descriptions:
+          block: 'Impedisci che i messaggi contenenti queste parole siano pubblicati. L''utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio.'
+          censor: 'Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate.'
+          require_approval: 'I messaggi contenenti queste parole richiederanno l''approvazione dello staff prima di poter essere visualizzati.'
+          flag: 'Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle.'
+        form:
+          label: 'Nuova Parola:'
+          add: 'Aggiungi'
+          success: 'Successo'
+          upload: "Carica"
+          upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
       impersonate:
         title: "Impersona"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."

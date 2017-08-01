@@ -27,11 +27,15 @@ ar:
   topics: "المواضيع"
   posts: "المشاركات"
   loading: "يحمّل"
+  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه وجافاسكربت مفعّل'
   log_in: "لِج"
   purge_reason: "حُذف آليًّا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
   remove_posts_deleted_by_author: "حذفها الكاتب"
+  themes:
+    bad_color_scheme: "لا يمكن تحديث السمة ، مخطط ألوان غير صحيح"
+    other_error: "حصل خطأ لتحديث السمة"
   emails:
     incoming:
       default_subject: "يحتاج هذا الموضوع عنوانًا"
@@ -122,6 +126,7 @@ ar:
       default_categories_already_selected: "لا يمكنك تحديد فئة تستخدم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
   bulk_invite:
+    file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق csv . "
     error: "حدث عطل أثناء رفع الملفّ. رجاء أعد المحاولة لاحقًا."
   topic_invite:
     user_exists: "آسف، ذلك المستخدم قد تمت دعوته من قبل. تستطيع فقط أن تدعوا عضواً لموضوعِ مرة واحدة."
@@ -146,6 +151,8 @@ ar:
   embed:
     start_discussion: "ابدأ النّقاش"
     continue: "تابع النّقاش"
+    error: "خطأ في الدمج"
+    referer: "المرجع:"
     more_replies:
       zero: "لا ردود أخرى"
       one: "رد واحد آخر"
@@ -285,6 +292,12 @@ ar:
       -نرحب بالنقد البناء، ولكن انتقد الأفكار ولا تنتقد الأشخاص!
 
       للمزيد, [انظر إرشادات المجتمع](/guidelines). هذه اللوحة ستظهر فقط لأول %{education_posts_text} لك.
+    dominating_topic: |
+      ### دع الآخرون ينضمون للمحادثة
+
+      هذا الموضوع واضحٌ أنه مهم بالنسبة لك &ndash; قمت بمشاركة أكثر من %{percent}%  الردود هنا.
+
+      هل أنت متأكد من أنك أعطيت وقت كافٍ للآخرين لمشاركة نقاط نظرهم أيضاً ؟
   activerecord:
     attributes:
       category:
@@ -1239,6 +1252,7 @@ ar:
     default_categories_watching: "قائمة الفئات التي تشاهد إفتراضيا."
     default_categories_tracking: "قائمة الفئات التي تتابع إفتراضيا."
     default_categories_muted: "قائمة الفئات التي توضع صامتة إفتراضيا."
+    tagging_enabled: "فعّل الأوسمة على المواضيع."
     company_short_name: "اسم الشّركة (قصير)"
     company_full_name: "اسم الشّركة (الكامل)"
     company_domain: "نطاق الشّركة"
@@ -1440,16 +1454,20 @@ ar:
     deferred: "نشكرك لإعلامنا بذلك. نحن ننظر في الأمر."
     deferred_and_deleted: "نشكرك لإعلامنا بذلك. لقد أزلنا المشاركة."
   system_messages:
+    contents_hidden: "يُرجى زيارة المشاركة لرؤية محتوياتها"
     post_hidden:
       title: "المشاركة مخفية"
       subject_template: "المشاركة مخفية بتصويت الاعضاء"
     welcome_user:
+      title: "ترحيب المستخدم"
       subject_template: "مرحبا بك في %{site_name}!"
     welcome_invite:
+      title: "ترحيب دعوة"
       subject_template: "مرحبا بك في %{site_name}!"
     backup_succeeded:
       subject_template: "اكتملت عملية النسخ الإحتياطي بنجاح"
     backup_failed:
+      title: "النسخة إحتياطية فشلت"
       subject_template: "فشل النسخ الإحتياطي"
     restore_succeeded:
       subject_template: "أكتملت الإستعادة بنجاح"
@@ -1464,7 +1482,8 @@ ar:
       subject_template: "اكتمل تصدير البيانات"
     csv_export_failed:
       subject_template: "فشل تصدير البيانات"
-      text_body_template: "نأسف، فشل تصدير البيانات. رجاء افحص السّجلّات أو راسل أحد أعضاء الطّاقم."
+    email_reject_blocked_user:
+      title: "رفض البريد حجب المستخدم"
     email_reject_empty:
       text_body_template: |
         آسفون، لكن رسالة البريد الالكتروني إلى %{destination} (titled %{former_title}) لم تنجح .
@@ -1493,6 +1512,10 @@ ar:
     download_remote_images_disabled:
       subject_template: "الغاء تفعيل تحميل الصور عن بعد "
       text_body_template: "تم تعطيل الإعداد 'download_remote_images_to_local' لأنه تم الوصول إلى حد مساحة القرص في 'download_remote_images_threshold'."
+  unsubscribe_mailing_list: |
+    استلمت هذا بسبب أنك قمت بتفعيل وضع القائمة البريدية.
+
+    لإلغاء الاشتراك من البريد الالكتروني ، [ انقر هنا](%{unsubscribe_url}).
   subject_re: "اعادة "
   user_notifications:
     previous_discussion: "الردود السابقة "
@@ -1500,6 +1523,8 @@ ar:
     unsubscribe:
       title: "غير مشترك "
       description: "لست مهتما في تلقي هذه الرسائل الالكترونيه؟ لا مشكله! اضغط تحت ليتم الغاء اشتركك فورا:"
+    reply_by_email: "[زيارة الموضوع](%{base_url}%{url}) أو بالرد على هذا البريد للإجابه."
+    visit_link_to_respond: "[زيارة الموضوع](%{base_url}%{url}) للرد."
     visit_link_to_respond_pm: "[زُر الرّسالة](%{base_url}%{url}) للرّدّ."
     posted_by: "مشاركة بواسطة %{username} على %{post_date}"
     user_posted_pm_staged:
@@ -1507,6 +1532,9 @@ ar:
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
       click_here: "أنقر هنا"
+    account_created:
+      title: "الحساب أُنشئ"
+      subject_template: "حسابك الجديد [%{email_prefix}]"
     signup_after_approval:
       subject_template: "قد وافقت على %{site_name}!"
   page_not_found:
@@ -1743,6 +1771,8 @@ ar:
   performance_report:
     initial_post_raw: 'هذا الموضوع يحتوي على معلومات الاداء اليومي للموقع '
     initial_topic_title: التبليغ عن اداء الموقع
+  tags:
+    title: "الأوسمة"
   finish_installation:
     congratulations: "تهانينا على تثبيت دسكورس!"
   wizard:

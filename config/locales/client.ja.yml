@@ -25,19 +25,19 @@ ja:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
-      time: "h:mm a"
+      time: "a h:mm"
       timeline_date: "YYYY MMM"
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "MMM D a h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
-      long_with_year: "YYYY, MMM D h:mm a"
-      long_with_year_no_time: "YYYY, MMM D"
-      full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
-      long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_with_year: "YYYY MMM D a h:mm"
+      long_with_year_no_time: "YYYY MMM D"
+      full_with_year_no_time: "YYYY MMMM Do"
+      long_date_with_year: "'YY MMM D LT"
+      long_date_without_year: "MMM D LT"
+      long_date_with_year_without_time: "'YY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "'YY MMM D <br/>LT"
       wrap_ago: "%{date}前"
       tiny:
         half_a_minute: "1分未満"
@@ -57,8 +57,8 @@ ja:
           other: "%{count}年以上"
         almost_x_years:
           other: "%{count}年"
-        date_month: "MMM D日"
-        date_year: "MMM 'YY"
+        date_month: "MMM D"
+        date_year: "'YY MMM"
       medium:
         x_minutes:
           other: "%{count}分"
@@ -122,7 +122,7 @@ ja:
         enabled: 'この広告%{when}を作成して下さい。ユーザーが拒否するまで各ページの上部に表示されます。'
         disabled: 'このバナー%{when}を削除すると、各ページの最上部に表示しません。'
     topic_admin_menu: "トピックの管理"
-    wizard_required: "新しいディスコースへようこそ。セットアップウィザードと一緒に始めましょう。"
+    wizard_required: "ディスコースへようこそ!さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
     bootstrap_mode_enabled: "かんたんにサイトを立ち上げられるようにするため、ブートストラップモードが有効になっています。新しいユーザーは全員、トラストレベル1を付与し、毎日更新がメールで届けられます。これらの機能は総ユーザー数が%{min_users}を超えた時にオフになります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間後に無効化されます。"
@@ -173,11 +173,11 @@ ja:
     or: "あるいは"
     now: "たった今"
     read_more: 'もっと読む'
-    more: "もっと見る"
-    less: "Less"
+    more: "増やす"
+    less: "減らす"
     never: "never"
     every_30_minutes: "30分毎"
-    every_hour: "1時間毎"
+    every_hour: "毎時"
     daily: "毎日"
     weekly: "毎週"
     every_two_weeks: "隔週"
@@ -567,8 +567,8 @@ ja:
         error: "(エラー)"
         action: "パスワードリセット用メールを送信する"
         set_password: "パスワードを設定する"
-        choose_new: "新規パスワードを決定してください。"
-        choose: "パスワードを決定してください。"
+        choose_new: "新規パスワードを決定"
+        choose: "パスワードを決定"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -602,16 +602,15 @@ ja:
         instructions: "背景画像は、幅590pxで中央揃えになります"
       email:
         title: "メールアドレス"
-        instructions: "決して全体には表示されません。"
+        instructions: "外部には公開しない"
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは {{provider}} によって認証されています"
-        frequency_immediately: "私達は、あなたがメールlを読まなかった場合、即座にl通知します。"
         frequency:
           other: "最後に利用されてから{{count}}分以上経過した場合にメールを送ります。"
       name:
         title: "名前"
-        instructions: "フルネーム(任意)"
+        instructions: "氏名(任意)"
         instructions_required: "氏名"
         too_short: "名前が短いです"
         ok: "問題ありません"
@@ -695,11 +694,11 @@ ja:
         expired: "この招待の有効期限が切れました。"
         rescind: "削除"
         rescinded: "取り消された招待"
-        rescind_all: "全ての招待を取り消してください。"
-        rescinded_all: "全ての招待が取り消しました!"
+        rescind_all: "全ての招待の取り消し"
+        rescinded_all: "全ての招待を取り消しました!"
         rescind_all_confirm: "本当にすべての招待を取り消したいですか？"
         reinvite: "招待を再送信する"
-        reinvite_all: "全ての招待を再送してください。"
+        reinvite_all: "全招待の再送信"
         reinvite_all_confirm: "本当に全ての招待を再送したいですか?"
         reinvited: "招待を再度送りました。"
         reinvited_all: "全ての招待が再送されました!"
@@ -868,8 +867,8 @@ ja:
       not_allowed_from_ip_address: "このIPアドレスでログインできません"
       admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
       resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックしてください。"
-      resend_title: "アクティベーションメールを再送してください。"
-      change_email: "メールアドレスを変更してください。"
+      resend_title: "アクティベーションメールの再送"
+      change_email: "メールアドレスの変更"
       sent_activation_email_again: "<b>{{currentEmail}}</b> にアクティベーションメールを再送信しました。メールが届くまで数分掛かることがあります。 (メールが届かない場合は、迷惑メールフォルダの中をご確認ください)。"
       to_continue: "ログインしてください"
       preferences: "ユーザ設定を変更するには、ログインする必要があります。"
@@ -898,10 +897,10 @@ ja:
       accept_title: "招待"
       welcome_to: "%{site_name}へようこそ!"
       invited_by: "あなたは招待されました:"
-      accept_invite: "招待を承認してください。"
+      accept_invite: "招待に応じる"
       success: "あなたのアカウントは作成されて、ログインされました。"
       name_label: "氏名"
-      password_label: "パスワードを入力してください。"
+      password_label: "パスワードを設定"
       optional_description: "(任意)"
     emoji_set:
       google: "Google"
@@ -1070,9 +1069,9 @@ ja:
         in_group:
           label: グループ内
         filters:
-          posted: 投稿しました。
-          bookmarks: ブックマークしました。
-          seen: 読み終わりました。
+          posted: 投稿済
+          bookmarks: ブックマーク済
+          seen: 既読
     hamburger_menu: "他のトピック一覧やカテゴリを見る"
     new_item: "新着"
     go_back: '戻る'
@@ -1748,6 +1747,7 @@ ja:
         mark_watching: '<b>m</b>, <b>w</b> トピックをウォッチする'
     badges:
       granted_on: "%{date}にゲット!"
+      others_count: "その他のバッジ所有者(%{count})"
       title: バッジ
       badge_count:
         other: "%{count}個のバッジ"
@@ -2331,7 +2331,7 @@ ja:
           title: "トラストレベル3の条件"
           value_heading: "値"
           requirement_heading: "条件"
-          visits: "訪問"
+          visits: "アクセス"
           days: "日"
           topics_replied_to: "返信したトピック"
           topics_viewed: "閲覧したトピックの数"

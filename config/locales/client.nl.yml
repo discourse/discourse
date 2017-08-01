@@ -28,14 +28,14 @@ nl:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM [om] HH:mm"
+      long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
-      long_with_year: "D MMM YYYY [om] HH:mm"
+      long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY [om] HH:mm"
-      long_date_without_year: "D MMM [om] HH:mm"
+      long_date_with_year: "D MMM 'YY HH:mm"
+      long_date_without_year: "D MMM HH:mm"
       long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH:mm"
@@ -140,9 +140,9 @@ nl:
         enabled: 'heeft deze banner gemaakt op %{when}. De banner verschijnt bovenaan elke pagina, totdat de gebruiker deze verbergt.'
         disabled: 'heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen.'
     topic_admin_menu: "beheeracties voor topic"
-    wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
+    wizard_required: "Welkom bij je nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
-    bootstrap_mode_enabled: "Om het lanceren van uw website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal %{min_users} gebruikers overschrijdt."
+    bootstrap_mode_enabled: "Om het lanceren van je website makkelijker te maken, bevind je je in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal %{min_users} gebruikers overschrijdt."
     bootstrap_mode_disabled: "De bootstrapmodus zal in de komende 24 uur worden uitgeschakeld."
     themes:
       default_description: "Standaard"
@@ -170,7 +170,7 @@ nl:
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     sign_up: "Registreren"
-    log_in: "Aanmelden"
+    log_in: "Inloggen"
     age: "Leeftijd"
     joined: "Lid sinds"
     admin_title: "Beheer"
@@ -185,10 +185,10 @@ nl:
     guidelines: "Richtlijnen"
     privacy_policy: "Privacybeleid"
     privacy: "Privacy"
-    terms_of_service: "Servicevoorwaarden"
+    terms_of_service: "Algemene Voorwaarden"
     mobile_view: "Mobiele weergave"
     desktop_view: "Desktopweergave"
-    you: "U"
+    you: "Jij"
     or: "of"
     now: "zojuist"
     read_more: 'meer info'
@@ -233,12 +233,12 @@ nl:
         bookmark: "Klik om een bladwijzer voor het eerste bericht van dit topic te maken"
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
     bookmarks:
-      not_logged_in: "sorry, u moet aangemeld zijn om bladwijzers voor berichten te maken"
-      created: "u hebt een bladwijzer voor dit bericht gemaakt"
-      not_bookmarked: "u hebt dit bericht gelezen; klik om er een bladwijzer voor te maken"
-      last_read: "dit is het laatste bericht dat u hebt gelezen; klik om er een bladwijzer voor te maken"
+      not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
+      created: "je hebt een bladwijzer voor dit bericht gemaakt"
+      not_bookmarked: "je hebt dit bericht gelezen; klik om er een bladwijzer voor te maken"
+      last_read: "dit is het laatste bericht dat je hebt gelezen; klik om er een bladwijzer voor te maken"
       remove: "Bladwijzer verwijderen"
-      confirm_clear: "Weet u zeker dat u alle bladwijzers van dit topic wilt verwijderen?"
+      confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
     topic_count_latest:
       one: "{{count}} nieuwe of aangepaste discussie."
       other: "{{count}} nieuwe of bijgewerkte topics."
@@ -250,7 +250,7 @@ nl:
       other: "{{count}} nieuwe topics."
     click_to_show: "Klik om te bekijken."
     preview: "voorbeeld"
-    cancel: "annuleren"
+    cancel: "annuleer"
     save: "Wijzigingen opslaan"
     saving: "Opslaan..."
     saved: "Opgeslagen!"
@@ -1022,6 +1022,17 @@ nl:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: Zoek naar emoji
+      people: Mensen
+      nature: Natuur
+      food: Voeding
+      activity: Activiteit
+      travel: Reizen
+      objects: Objecten
+      celebration: Viering
+      custom: Eigen emojis
+      recent: Recent gebruikt
     composer:
       emoji: "Emoji :)"
       more_emoji: "meer..."
@@ -3019,6 +3030,7 @@ nl:
         reset_bounce_score:
           label: "Terugzetten"
           title: "Bouncescore terugzetten naar 0"
+        visit_profile: "Ga naar <a href='%{url}'>de instellingen van deze gebruiker</a> om hun profiel te bewerken"
         deactivate_explanation: "Een gedeactiveerde gebruiker moet zijn of haar e-mailadres opnieuw valideren."
         suspended_explanation: "Een geschorste gebruiker kan zich niet aanmelden."
         block_explanation: "Een geblokkeerde gebruiker kan geen berichten plaatsen of topics maken."

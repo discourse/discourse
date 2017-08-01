@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ar: {}
+ar:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "ابدأ برنامج تعليم المستخدمين لكلّ المستخدمين الجدد"
+        welcome_message: "أرسل إلى كلّ المستخدمين الجدد رسالة ترحيبيّة فيها دليل بدء سريع"
