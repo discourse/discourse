@@ -15,6 +15,7 @@ class DiscourseRedis
       @mutex = Mutex.new
       @slave_config = DiscourseRedis.slave_config
       @timer_task = init_timer_task
+      @message_bus_keepalive_interval = MessageBus.keepalive_interval
     end
 
     def verify_master
@@ -41,6 +42,7 @@ class DiscourseRedis
             slave_client.call([:client, [:kill, 'type', connection_type]])
           end
 
+          MessageBus.keepalive_interval = @message_bus_keepalive_interval
           Discourse.clear_readonly!
           Discourse.request_refresh!
           success = true
@@ -57,7 +59,12 @@ class DiscourseRedis
     end
 
     def master=(args)
-      synchronize { @master = args }
+      synchronize do
+        @master = args
+
+        # Disables MessageBus keepalive when Redis is in readonly mode
+        MessageBus.keepalive_interval = 0 if !@master
+      end
     end
 
     def running?
