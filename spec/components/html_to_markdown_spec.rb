@@ -242,4 +242,18 @@ describe HtmlToMarkdown do
 
   end
 
+  context "with an empty tag" do
+
+    it "handles <strong>" do
+      expect(html_to_markdown("<strong></strong>")).to eq("")
+      expect(html_to_markdown("<strong>   </strong>")).to eq("")
+    end
+
+    it "handles <em>" do
+      expect(html_to_markdown("<em></em>")).to eq("")
+      expect(html_to_markdown("<em>   </em>")).to eq("")
+    end
+
+  end
+
 end
