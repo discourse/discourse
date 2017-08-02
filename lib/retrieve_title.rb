@@ -13,11 +13,11 @@ module RetrieveTitle
     title = nil
     if doc = Nokogiri::HTML(html)
 
-      if node = doc.at('meta[property="og:title"]')
+      title = doc.at('title')&.inner_text
+
+      if !title && node = doc.at('meta[property="og:title"]')
         title = node['content']
       end
-
-      title ||= doc.at('title')&.inner_text
     end
 
     if title.present?
@@ -42,9 +42,6 @@ module RetrieveTitle
 
     # Fetch the beginning of a HTML document at a url
     def self.fetch_beginning(url)
-      # Never crawl in test mode
-      return if Rails.env.test?
-
       fd = FinalDestination.new(url)
       uri = fd.resolve
       return "" unless uri

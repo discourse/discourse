@@ -36,13 +36,15 @@ class InlineOneboxer
       end
     end
 
-    if whitelist = SiteSetting.inline_onebox_domains_whitelist
+    always_allow = SiteSetting.enable_inline_onebox_on_all_domains
+    domains = SiteSetting.inline_onebox_domains_whitelist&.split('|') unless always_allow
+
+    if always_allow || domains
       uri = URI(url) rescue nil
 
-      domains = whitelist.split('|')
       if uri.present? &&
         uri.hostname.present? &&
-        domains.include?(uri.hostname) &&
+        (always_allow || domains.include?(uri.hostname)) &&
         title = RetrieveTitle.crawl(url)
         return onebox_for(url, title, opts)
       end

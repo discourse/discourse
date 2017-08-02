@@ -949,6 +949,8 @@ onebox:
   inline_onebox_domains_whitelist:
     default: ''
     type: list
+  enable_inline_onebox_on_all_domains:
+    default: false
 
 spam:
   add_rel_nofollow_to_user_content: true

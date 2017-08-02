@@ -986,6 +986,7 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_blacklist: "A list of domains that will never be oneboxed."
     inline_onebox_domains_whitelist: "A list of domains that will be oneboxed in miniature form if linked without a title"
+    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
