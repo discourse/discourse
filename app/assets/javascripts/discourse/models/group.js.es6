@@ -85,9 +85,9 @@ const Group = RestModel.extend({
 
   addOwners(usernames) {
     var self = this;
-    return ajax('/admin/groups/' + this.get('id') + '/owners.json', {
+    return ajax(`/admin/groups/${this.get('id')}/owners.json`, {
       type: "PUT",
-      data: { usernames: usernames }
+      data: { group: { usernames: usernames } }
     }).then(function() {
       self.findMembers();
     });
