@@ -108,7 +108,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
   def apply_group_rules(user)
     if add_groups
-      split = add_groups.split(",")
+      split = add_groups.split(",").map(&:downcase)
       if split.length > 0
         Group.where('name in (?) AND NOT automatic', split).pluck(:id).each do |id|
           unless GroupUser.where(group_id: id, user_id: user.id).exists?
