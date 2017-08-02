@@ -1,7 +1,10 @@
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
 
-  WEBSITE_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(([0-9]{1,5})?\/.*)?$)/ix
+  # This is not very picky about most DNS labels (the bits between the
+  # periods), but isn't taking much guff from the TLD. No leading
+  # digit, and no hyphens unless IDN.
+  WEBSITE_REGEXP = /(^$)|((^(http|https):\/\/)?([a-z0-9][a-z0-9-]*\.)+([a-z][a-z0-9]+|xn--[a-z0-9-]+)(\/.*)?$)/ix
 
   validates :bio_raw, length: { maximum: 3000 }
   validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
