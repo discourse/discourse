@@ -270,7 +270,7 @@ export default createWidget('post-menu', {
       visibleButtons = allButtons;
       if (state.collapsed) { state.collapsed = false; }
     } else {
-      const showMore = this.attach('button', {
+      const showMore = this.attach('flat-button', {
         action: 'showMoreActions',
         title: 'show_more',
         className: 'show-more-actions',
