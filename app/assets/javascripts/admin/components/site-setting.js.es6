@@ -52,16 +52,16 @@ export default Ember.Component.extend(BufferedContent, {
   }.on("willDestroyElement"),
 
   _save() {
-    const self = this,
-          setting = this.get('buffered');
-    SiteSetting.update(setting.get('setting'), setting.get('value')).then(function() {
-      self.set('validationMessage', null);
-      self.commitBuffer();
-    }).catch(function(e) {
+    const setting = this.get('buffered'),
+      action = SiteSetting.update(setting.get('setting'), setting.get('value'));
+    action.then(() => {
+      this.set('validationMessage', null);
+      this.commitBuffer();
+    }).catch((e) => {
       if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-        self.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
+        this.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
       } else {
-        self.set('validationMessage', I18n.t('generic_error'));
+        this.set('validationMessage', I18n.t('generic_error'));
       }
     });
   },

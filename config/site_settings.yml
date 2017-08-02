@@ -12,6 +12,9 @@
 # shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
 #                      exists it will be used instead of the setting and the setting will be hidden.
 #                      Useful for things like API keys on multisite.
+# locale_default     - A hash which overrides according to `SiteSetting.default_locale`.
+#                      The key should be as the same as possible value of default_locale.
+#
 #
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
@@ -68,11 +71,6 @@ required:
     default: ''
 
 basic:
-  default_locale:
-    default: 'en'
-    enum: 'LocaleSiteSetting'
-    refresh: true
-    shadowed_by_global: true
   allow_user_locale:
     client: true
     default: false
@@ -433,21 +431,24 @@ posting:
   min_post_length:
     client: true
     min: 1
-    default:
-      test: 5
-      default: 20
+    default: 20
+    locale_default:
+      zh_CN: 8
+      zh_TW: 8
   min_first_post_length:
     client: true
     min: 1
-    default:
-      test: 5
-      default: 20
+    default: 20
+    locale_default:
+      zh_CN: 8
+      zh_TW: 8
   min_private_message_post_length:
     client: true
     min: 1
-    default:
-      test: 5
-      default: 10
+    default: 10
+    locale_default:
+      zh_CN: 3
+      zh_TW: 3
   max_post_length:
     client: true
     default: 32000
@@ -455,17 +456,32 @@ posting:
   topic_featured_link_enabled:
     client: true
     default: true
-  body_min_entropy: 7
+  body_min_entropy:
+    default: 7
+    locale_default:
+      zh_CN: 3
+      zh_TW: 3
   min_topic_title_length:
     client: true
     default: 15
+    locale_default:
+      zh_CN: 6
+      zh_TW: 6
   max_topic_title_length:
     client: true
     default: 255
     max: 255
-  title_min_entropy: 10
+  title_min_entropy:
+    default: 10
+    locale_default:
+      zh_CN: 3
+      zh_TW: 3
   allow_uppercase_posts: false
-  title_prettify: true
+  title_prettify:
+    default: true
+    locale_default:
+      zh_CN: false
+      zh_TW: false
   title_fancy_entities: true
   min_private_message_title_length:
     client: true
@@ -479,9 +495,15 @@ posting:
   min_title_similar_length:
     client: true
     default: 10
+    locale_default:
+      zh_CN: 4
+      zh_TW: 4
   min_body_similar_length:
     client: true
     default: 15
+    locale_default:
+      zh_CN: 5
+      zh_TW: 5
   enable_private_messages:
     default: true
     client: true
@@ -525,7 +547,11 @@ posting:
   newuser_max_attachments:
     client: true
     default: 0
-  post_excerpt_maxlength: 300
+  post_excerpt_maxlength:
+    default: 300
+    locale_default:
+      zh_CN: 120
+      zh_TW: 120
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -604,7 +630,11 @@ email:
     client: true
   private_email_time_window_seconds: 20
   email_posts_context: 5
-  digest_min_excerpt_length: 100
+  digest_min_excerpt_length:
+    default: 100
+    locale_default:
+      zh_CN: 50
+      zh_TW: 50
   digest_topics:
     default: 5
     min: 1
@@ -727,9 +757,7 @@ files:
     refresh: true
     type: list
   crawl_images:
-    default:
-      test: false
-      default: true
+    default: true
   max_image_width:
     client: true
     default: 690
@@ -737,9 +765,7 @@ files:
     client: true
     default: 500
   download_remote_images_to_local:
-    default:
-      test: false
-      default: true
+    default: true
   download_remote_images_threshold: 10
   download_remote_images_max_days_old:
     default: 30
@@ -909,7 +935,11 @@ security:
 
 onebox:
   enable_flash_video_onebox: false
-  post_onebox_maxlength: 500
+  post_onebox_maxlength:
+    default: 500
+    locale_default:
+      zh_CN: 200
+      zh_TW: 200
   onebox_domains_blacklist:
     default: ''
     type: list
@@ -953,10 +983,7 @@ spam:
   auto_block_first_post_regex: ""
 
 rate_limits:
-  unique_posts_mins:
-    default:
-      test: 0
-      default: 5
+  unique_posts_mins: 5
   rate_limit_create_topic: 15
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
@@ -994,28 +1021,20 @@ rate_limits:
 
 developer:
   force_hostname:
-    hidden:
-      development: false
-      default: true
+    hidden: true
     default: ''
   port:
-    hidden:
-      development: false
-      default: true
-    default:
-      development: 3000
-      default: ''
+    hidden: true
+    default: ''
   queue_jobs:
-    hidden:
-      development: false
-      default: true
-    default:
-      test: false
-      default: true
+    hidden: true
+    default: true
   enable_long_polling:
     client: true
     default: true
-  long_polling_interval: 25000
+  long_polling_interval:
+    default: 25000
+    max: 25000
   long_polling_base_url:
     client: true
     default: '/'
@@ -1142,12 +1161,19 @@ search:
   min_search_term_length:
     client: true
     default: 3
+    locale_default:
+      zh_CN: 2
+      zh_TW: 2
 
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
-  search_recent_posts_size: 100000
+  search_recent_posts_size:
+    default: 100000
+    max: 100000
   log_search_queries: true
-  search_query_log_max_size: 1000000
+  search_query_log_max_size:
+    default: 1000000
+    max: 1000000
 
 uncategorized:
   version_checks:
@@ -1164,6 +1190,9 @@ uncategorized:
   slug_generation_method:
     default: 'ascii'
     enum: 'SlugSetting'
+    locale_default:
+      zh_CN: 'none'
+      zh_TW: 'none'
 
   permalink_normalizations:
     default: ''
@@ -1304,6 +1333,9 @@ uncategorized:
   read_time_word_count:
     default: 500
     client: true
+    locale_default:
+      zh_CN: 350
+      zh_TW: 350
 
   topic_page_title_includes_category: true
 
@@ -1321,7 +1353,7 @@ user_preferences:
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
     enum: 'MailingListModeSiteSetting'
-    default: 0
+    default: 1
   disable_mailing_list_mode:
     default: false
     client: true

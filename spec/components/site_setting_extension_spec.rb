@@ -64,7 +64,7 @@ describe SiteSettingExtension do
       expect(settings.hello).to eq(99)
     end
 
-    it "Publishes changes cross sites" do
+    it "publishes changes cross sites" do
       settings.setting(:hello, 1)
       settings2.setting(:hello, 1)
 
@@ -143,7 +143,7 @@ describe SiteSettingExtension do
 
       it "should publish changes to clients" do
         settings.setting("test_setting", 100)
-        settings.client_setting("test_setting")
+        settings.setting("test_setting", nil, client: true)
 
         messages = MessageBus.track_publish do
           settings.test_setting = 88
@@ -155,8 +155,11 @@ describe SiteSettingExtension do
   end
 
   describe "remove_override" do
-    it "correctly nukes overrides" do
+    before do
       settings.setting(:test_override, "test")
+      settings.refresh!
+    end
+    it "correctly nukes overrides" do
       settings.test_override = "bla"
       settings.remove_override!(:test_override)
       expect(settings.test_override).to eq("test")
@@ -263,6 +266,7 @@ describe SiteSettingExtension do
       settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
       settings.test_int_enum = "2"
       settings.refresh!
+      expect(settings.defaults[:test_int_enum]).to eq(1)
       expect(settings.test_int_enum).to eq(2)
     end
 
@@ -272,7 +276,7 @@ describe SiteSettingExtension do
 
     class TestEnumClass
       def self.valid_value?(v)
-        true
+        self.values.include?(v)
       end
       def self.values
         ['en']
@@ -297,6 +301,10 @@ describe SiteSettingExtension do
 
     it 'should not hose all_settings' do
       expect(settings.all_settings.detect { |s| s[:setting] == :test_enum }).to be_present
+    end
+
+    it 'should report error when being set other values' do
+      expect { settings.test_enum = 'not_in_enum' }.to raise_error(Discourse::InvalidParameters)
     end
 
     context 'when overridden' do
@@ -380,6 +388,14 @@ describe SiteSettingExtension do
       settings.refresh!
       expect {
         settings.set("provider", "haxxed")
+      }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe ".set_and_log" do
+    it "raises an error when set for an invalid setting name" do
+      expect {
+        settings.set_and_log("provider", "haxxed")
       }.to raise_error(ArgumentError)
     end
   end
@@ -500,6 +516,64 @@ describe SiteSettingExtension do
       it "should add the key to the shadowed_settings collection" do
         expect(settings.shadowed_settings.include?(:trout_api_key)).to eq(true)
       end
+    end
+  end
+
+  describe 'locale default overrides are respected' do
+    before do
+      settings.setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
+      settings.refresh!
+    end
+
+    after do
+      settings.remove_override!(:test_override)
+    end
+
+    it 'ensures the default cache expired after overriding the default_locale' do
+      expect(settings.test_override).to eq('default')
+      settings.default_locale = 'zh_CN'
+      expect(settings.test_override).to eq('cn')
+    end
+
+    it 'returns the saved setting even locale default exists' do
+      expect(settings.test_override).to eq('default')
+      settings.default_locale = 'zh_CN'
+      settings.test_override = 'saved'
+      expect(settings.test_override).to eq('saved')
+    end
+  end
+
+  describe '.requires_refresh?' do
+    it 'always refresh default_locale always require refresh' do
+      expect(settings.requires_refresh?(:default_locale)).to be_truthy
+    end
+  end
+
+  describe '.default_locale' do
+    it 'is always loaded' do
+      expect(settings.default_locale).to eq 'en'
+    end
+  end
+
+  describe '.default_locale=' do
+    it 'can be changed' do
+      settings.default_locale = 'zh_CN'
+      expect(settings.default_locale).to eq 'zh_CN'
+    end
+
+    it 'refresh!' do
+      settings.expects(:refresh!)
+      settings.default_locale = 'zh_CN'
+    end
+
+    it 'expires the cache' do
+      settings.default_locale = 'zh_CN'
+      expect(Rails.cache.exist?(SiteSettingExtension.client_settings_cache_key)).to be_falsey
+    end
+
+    it 'refreshes the client' do
+      Discourse.expects(:request_refresh!)
+      settings.default_locale = 'zh_CN'
     end
   end
 
