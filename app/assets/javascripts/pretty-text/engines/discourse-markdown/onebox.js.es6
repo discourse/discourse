@@ -12,10 +12,9 @@ function applyOnebox(state, silent) {
   for(let i=1;i<state.tokens.length;i++) {
     let token = state.tokens[i];
     let prev = state.tokens[i-1];
-    let prevAccepted =  prev.type === "paragraph_open" && prev.level === 0;
-    let mode = prevAccepted ? ONEBOX : INLINE;
+    let mode = prev.type === "paragraph_open" && prev.level === 0 ? ONEBOX : INLINE;
 
-    if (token.type === "inline" && prevAccepted) {
+    if (token.type === "inline") {
 
       let children = token.children;
       for(let j=0;j<children.length-2;j++){
