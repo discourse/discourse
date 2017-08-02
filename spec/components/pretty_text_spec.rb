@@ -840,15 +840,43 @@ HTML
 
   it 'handles mini onebox' do
     SiteSetting.enable_inline_onebox_on_all_domains = true
-    InlineOneboxer.purge("http://cnn.com")
+    InlineOneboxer.purge("http://cnn.com/a")
 
-    stub_request(:head, "http://cnn.com").to_return(status: 200)
+    stub_request(:head, "http://cnn.com/a").to_return(status: 200)
 
-    stub_request(:get, "http://cnn.com").
+    stub_request(:get, "http://cnn.com/a").
       to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
 
-    expect(PrettyText.cook("- http://cnn.com\n- a http://cnn.com").split("news").length).to eq(3)
-    expect(PrettyText.cook("- http://cnn.com\n    - a http://cnn.com").split("news").length).to eq(3)
+    expect(PrettyText.cook("- http://cnn.com/a\n- a http://cnn.com/a").split("news").length).to eq(3)
+    expect(PrettyText.cook("- http://cnn.com/a\n    - a http://cnn.com/a").split("news").length).to eq(3)
+  end
+
+  it 'handles mini onebox with query param' do
+    SiteSetting.enable_inline_onebox_on_all_domains = true
+    InlineOneboxer.purge("http://cnn.com?a")
+
+    stub_request(:head, "http://cnn.com?a").to_return(status: 200)
+
+    stub_request(:get, "http://cnn.com?a").
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+
+    expect(PrettyText.cook("- http://cnn.com?a\n- a http://cnn.com?a").split("news").length).to eq(3)
+    expect(PrettyText.cook("- http://cnn.com?a\n    - a http://cnn.com?a").split("news").length).to eq(3)
+  end
+
+  it 'skips mini onebox for primary domain' do
+
+    # we only include mini onebox if there is something in path or query params
+
+    SiteSetting.enable_inline_onebox_on_all_domains = true
+    InlineOneboxer.purge("http://cnn.com/")
+
+    stub_request(:head, "http://cnn.com/").to_return(status: 200)
+    stub_request(:get, "http://cnn.com/").
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+
+    expect(PrettyText.cook("- http://cnn.com/\n- a http://cnn.com/").split("news").length).to eq(1)
+    expect(PrettyText.cook("- cnn.com\n    - a http://cnn.com/").split("news").length).to eq(1)
   end
 
   it "can handle bbcode" do
