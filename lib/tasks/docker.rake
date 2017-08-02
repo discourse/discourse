@@ -90,10 +90,8 @@ task 'docker:test' do
 
     unless ENV["RUBY_ONLY"]
       unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("eslint app/assets/javascripts") unless ENV["SKIP_LINT"]
-        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts") unless ENV["SKIP_LINT"]
-        @good &&= run_or_fail("eslint --ext .es6 test/javascripts") unless ENV["SKIP_LINT"]
-        @good &&= run_or_fail("eslint test/javascripts") unless ENV["SKIP_LINT"]
+        @good &&= run_or_fail("eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_LINT"]
+        @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts") unless ENV["SKIP_LINT"]
         @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
         @good &&= run_or_fail("bundle exec rake qunit:test['600000','/wizard/qunit']")
       end
