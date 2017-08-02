@@ -6,7 +6,7 @@ acceptance("Rendering polls", {
 });
 
 test("Single Poll", (assert) => {
-  server.get('/t/13.json', () => {
+  server.get('/t/13.json', () => { // eslint-disable-line no-undef
     return [
       200,
       { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@ test("Single Poll", (assert) => {
 });
 
 test("Public poll", assert => {
-  server.get('/t/12.json', () => {
+  server.get('/t/12.json', () => { // eslint-disable-line no-undef
     return [
       200,
       { "Content-Type": "application/json" },
@@ -34,7 +34,7 @@ test("Public poll", assert => {
     ];
   });
 
-  server.get('/polls/voters.json', request => {
+  server.get('/polls/voters.json', request => { // eslint-disable-line no-undef
     let body = {};
 
     if (_.isEqual(request.queryParams, { post_id: "15", poll_name: "poll" })) {
@@ -73,7 +73,7 @@ test("Public poll", assert => {
 });
 
 test("Public number poll", assert => {
-  server.get('/t/13.json', () => {
+  server.get('/t/13.json', () => { // eslint-disable-line no-undef
     return [
       200,
       { "Content-Type": "application/json" },
@@ -81,7 +81,7 @@ test("Public number poll", assert => {
     ];
   });
 
-  server.get('/polls/voters.json', request => {
+  server.get('/polls/voters.json', request => { // eslint-disable-line no-undef
     let body = {};
 
     if (_.isEqual(request.queryParams, { post_id: "16", poll_name: "poll" })) {
