@@ -580,8 +580,11 @@ class BulkImport::Base
     cooked = @markdown.render(cooked).scrub.strip
 
     cooked.gsub!(/\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[\/QUOTE\]/im) do
-      username, post_id, topic_id = $1, $2, $3
-      quote = @markdown.render($4.presence || "").scrub.strip
+      username, post_id, topic_id, quote = $1, $2, $3, $4
+
+      quote = quote.scrub.strip
+      quote.gsub!(/^(<br>\n?)+/, "")
+      quote.gsub!(/(<br>\n?)+$/, "")
 
       if post_id.present? && topic_id.present?
         <<-HTML
