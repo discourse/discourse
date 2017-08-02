@@ -4,6 +4,12 @@ import { cachedInlineOnebox } from 'pretty-text/inline-oneboxer';
 const ONEBOX = 1;
 const INLINE = 2;
 
+function isTopLevel(href) {
+  let split = href.split(/https?:\/\/[^\/]+[\/?]/i);
+  let hasExtra = split && split[1] && split[1].length > 0;
+  return !hasExtra;
+}
+
 function applyOnebox(state, silent) {
   if (silent || !state.tokens) {
     return;
@@ -87,17 +93,20 @@ function applyOnebox(state, silent) {
               attrs.push(["target", "_blank"]);
             }
           } else if (mode === INLINE) {
-            let onebox = cachedInlineOnebox(href);
 
-            let options = state.md.options.discourse;
-            if (options.lookupInlineOnebox) {
-              onebox = options.lookupInlineOnebox(href);
-            }
+            if (!isTopLevel(href)) {
+              let onebox = cachedInlineOnebox(href);
 
-            if (onebox) {
-              text.content = onebox.title;
-            } else if (state.md.options.discourse.previewing) {
-              attrs.push(["class", "inline-onebox-loading"]);
+              let options = state.md.options.discourse;
+              if (options.lookupInlineOnebox) {
+                onebox = options.lookupInlineOnebox(href);
+              }
+
+              if (onebox) {
+                text.content = onebox.title;
+              } else if (state.md.options.discourse.previewing) {
+                attrs.push(["class", "inline-onebox-loading"]);
+              }
             }
           }
 
