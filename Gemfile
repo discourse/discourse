@@ -194,4 +194,5 @@ if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
+  gem 'ruby-bbcode-to-md', :github => 'nlalonde/ruby-bbcode-to-md'
 end
