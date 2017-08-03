@@ -95,7 +95,16 @@ module FileStore
     end
 
     def get_path_for_upload(upload)
-      get_path_for("original".freeze, upload.id, upload.sha1, "." + upload.extension)
+      extension =
+        if upload.extension
+          ".#{upload.extension}"
+        else
+          # Maintain backward compatibility before Jobs::MigrateUploadExtensions
+          # runs
+          File.extname(upload.original_filename)
+        end
+
+      get_path_for("original".freeze, upload.id, upload.sha1, extension)
     end
 
     def get_path_for_optimized_image(optimized_image)
