@@ -97,20 +97,39 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     end
   end
 
-  describe "uses canonical link" do
-    let(:mobile_url) { "http://m.imdb.com/title/tt0944947" }
-    let(:canonical_url) { "http://www.imdb.com/title/tt0944947/" }
-    before do
-      fake(mobile_url, response('imdb_mobile'))
-      fake(canonical_url, response('imdb'))
+  describe 'canonical link' do
+    context 'uses canonical link if available' do
+      let(:mobile_url) { "http://m.imdb.com/title/tt0944947" }
+      let(:canonical_url) { "http://www.imdb.com/title/tt0944947/" }
+      before do
+        fake(mobile_url, response('imdb_mobile'))
+        fake(canonical_url, response('imdb'))
+      end
+
+      it 'fetches opengraph data from canonical link' do
+        onebox = described_class.new(mobile_url)
+        expect(onebox.to_html).not_to be_nil
+        expect(onebox.to_html).to include("Game of Thrones")
+        expect(onebox.to_html).to include("Nine noble families fight for control over the mythical lands of Westeros")
+        expect(onebox.to_html).to include("https://images-na.ssl-images-amazon.com/images/M/MV5BMjE3NTQ1NDg1Ml5BMl5BanBnXkFtZTgwNzY2NDA0MjI@._V1_UY1200_CR90,0,630,1200_AL_.jpg")
+      end
     end
 
-    it 'fetches opengraph data from canonical link' do
-      onebox = described_class.new(mobile_url)
-      expect(onebox.to_html).not_to be_nil
-      expect(onebox.to_html).to include("Game of Thrones")
-      expect(onebox.to_html).to include("Nine noble families fight for control over the mythical lands of Westeros")
-      expect(onebox.to_html).to include("https://images-na.ssl-images-amazon.com/images/M/MV5BMjE3NTQ1NDg1Ml5BMl5BanBnXkFtZTgwNzY2NDA0MjI@._V1_UY1200_CR90,0,630,1200_AL_.jpg")
+    context 'does not use canonical link for Discourse topics' do
+      let(:discourse_topic_url) { "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483" }
+      let(:discourse_topic_reply_url) { "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2" }
+      before do
+        fake(discourse_topic_url, response('discourse_topic'))
+        fake(discourse_topic_reply_url, response('discourse_topic_reply'))
+      end
+
+      it 'fetches opengraph data from original link' do
+        onebox = described_class.new(discourse_topic_reply_url)
+        expect(onebox.to_html).not_to be_nil
+        expect(onebox.to_html).to include("Congratulations, most stars in 2013 GitHub Octoverse!")
+        expect(onebox.to_html).to include("Thanks for that link and thank you -- and everyone else who is contributing to the project!")
+        expect(onebox.to_html).to include("https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/codinghorror/200/5297_1.png")
+      end
     end
   end
 
