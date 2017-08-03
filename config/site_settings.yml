@@ -1133,6 +1133,7 @@ backups:
     default: false
   allow_restore:
     default: false
+    shadowed_by_global: true
   maximum_backups:
     client: true
     default: 5
