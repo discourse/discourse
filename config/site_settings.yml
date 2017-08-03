@@ -187,6 +187,7 @@ basic:
     client: true
     default: true
   default_theme_key:
+    default: ''
     hidden: true
   relative_date_duration:
     client: true
@@ -1414,6 +1415,7 @@ user_api:
   max_api_keys_per_user:
     default: 10
   push_api_secret_key:
+    default: ''
     hidden: true
   min_trust_level_for_user_api_key:
     default: 1
