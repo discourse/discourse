@@ -428,3 +428,19 @@ def exec_sql(sql)
     ActiveRecord::Base.exec_sql(sql)
   end
 end
+
+task "import:create_phpbb_permalinks" => :environment do
+  log 'Creating Permalinks...'
+
+  # /[^\/]+\/.*-t(\d+).html
+  SiteSetting.permalink_normalizations = '/[^\/]+\/.*-t(\d+).html/thread/\1'
+
+  Topic.listable_topics.find_each do |topic|
+    tcf = topic.custom_fields
+    if tcf && tcf["import_id"]
+      Permalink.create(url: "thread/#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    end
+  end
+
+  log "Done!"
+end
