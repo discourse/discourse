@@ -429,7 +429,7 @@ class PostRevisor
   end
 
   def update_topic_excerpt
-    excerpt = @post.excerpt(220, strip_links: true)
+    excerpt = @post.excerpt(220, strip_links: true).sub(/Learn more/, '')
     @topic.update_column(:excerpt, excerpt)
     if @topic.archetype == "banner"
       ApplicationController.banner_json_cache.clear

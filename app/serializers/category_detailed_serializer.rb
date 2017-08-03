@@ -26,7 +26,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def description_excerpt
-    PrettyText.excerpt(description, 300) if description
+    PrettyText.excerpt(description.sub(/Learn more/, ''), 300) if description
   end
 
   def include_subcategory_ids?
