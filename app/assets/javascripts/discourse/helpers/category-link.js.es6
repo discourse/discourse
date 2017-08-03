@@ -52,7 +52,7 @@ export function categoryBadgeHTML(category, opts) {
   let classNames = "badge-category clear-badge";
   if (restricted) { classNames += " restricted"; }
 
-  const categoryStyle = Discourse.SiteSettings.category_style;
+  const categoryStyle = opts.categoryStyle || Discourse.SiteSettings.category_style;
 
   let style = "";
   if (categoryStyle === "box") {
@@ -93,6 +93,7 @@ export function categoryLinkHTML(category, options) {
     if (options.link !== undefined) { categoryOptions.link = options.link; }
     if (options.extraClasses) { categoryOptions.extraClasses = options.extraClasses; }
     if (options.hideParent) { categoryOptions.hideParent = true; }
+    if (options.categoryStyle) { categoryOptions.categoryStyle = options.categoryStyle; }
   }
   return new Handlebars.SafeString(categoryBadgeHTML(category, categoryOptions));
 }
