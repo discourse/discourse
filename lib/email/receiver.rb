@@ -49,7 +49,9 @@ module Email
           @incoming_email = create_incoming_email
           process_internal
         rescue => e
-          @incoming_email.update_columns(error: e.to_s) if @incoming_email
+          error = e.to_s
+          error = e.class.name if error.blank?
+          @incoming_email.update_columns(error: error) if @incoming_email
           raise
         end
       end
