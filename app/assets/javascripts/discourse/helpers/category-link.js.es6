@@ -43,16 +43,16 @@ export function categoryBadgeHTML(category, opts) {
     parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
   }
 
-  if (parentCat && parentCat !== category) {
-    html += categoryStripe(get(parentCat,'color'), "badge-category-parent-bg");
+  const categoryStyle = opts.categoryStyle || Discourse.SiteSettings.category_style;
+  if (categoryStyle !== "none") {
+    if (parentCat && parentCat !== category) {
+      html += categoryStripe(get(parentCat,'color'), "badge-category-parent-bg");
+    }
+    html += categoryStripe(color, "badge-category-bg");
   }
-
-  html += categoryStripe(color, "badge-category-bg");
 
   let classNames = "badge-category clear-badge";
   if (restricted) { classNames += " restricted"; }
-
-  const categoryStyle = opts.categoryStyle || Discourse.SiteSettings.category_style;
 
   let style = "";
   if (categoryStyle === "box") {
