@@ -2,6 +2,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import SiteSetting from 'admin/models/site-setting';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
+import { categoryLinkHTML } from 'discourse/helpers/category-link';
 
 const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list', 'value_list'];
 
@@ -11,8 +12,19 @@ export default Ember.Component.extend(BufferedContent, {
   dirty: propertyNotEqual('buffered.value', 'setting.value'),
   validationMessage: null,
 
-  @computed("setting.preview", "buffered.value")
-  preview(preview, value) {
+  @computed("setting", "buffered.value")
+  preview(setting, value) {
+    // A bit hacky, but allows us to use helpers
+    if (setting.get('setting') === 'category_style') {
+      let category = this.site.get('categories.firstObject');
+      if (category) {
+        return categoryLinkHTML(category, {
+          categoryStyle: value
+        });
+      }
+    }
+
+    let preview = setting.get('preview');
     if (preview) {
       return new Handlebars.SafeString("<div class='preview'>" + preview.replace(/\{\{value\}\}/g, value) + "</div>");
     }
