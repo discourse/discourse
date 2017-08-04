@@ -545,6 +545,11 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
       post.raw.gsub!(/[[:blank:]]#/, " \\#")
 
       post.save!(validate: false)
+      # Enforce a rebake! A rebake triggers CookedPostProcessor > keep_reverse_index_up_to_date which makes sure that
+      # `PostUpload` entries exist for all uploads of a post.
+      # This is important as all uploads that are not associated with a post through `post_uploads` will be deleted, when
+      # Admin > Settings > Files > Remove orphan unreferenced uploads... is enabled.
+      post.rebake!
     end
 
   end
