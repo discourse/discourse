@@ -182,6 +182,7 @@ basic:
       - bar
       - box
       - bullet
+      - none
   enable_mobile_theme:
     client: true
     default: true
