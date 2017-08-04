@@ -78,6 +78,10 @@ describe EmbeddableHost do
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com')).to eq(true)
       expect(EmbeddableHost.url_allowed?('http://discourse.org')).to eq(true)
     end
+
+    it 'always allow forum own URL' do
+      expect(EmbeddableHost.url_allowed?(Discourse.base_url)).to eq(true)
+    end
   end
 
   describe "path_whitelist" do
