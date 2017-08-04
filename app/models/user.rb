@@ -103,6 +103,7 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_commit :trigger_user_created_event, on: :create
+  after_commit :trigger_user_updated_event, on: :update
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -1089,6 +1090,11 @@ class User < ActiveRecord::Base
 
   def trigger_user_created_event
     DiscourseEvent.trigger(:user_created, self)
+    true
+  end
+
+  def trigger_user_updated_event
+    DiscourseEvent.trigger(:user_updated, self)
     true
   end
 
