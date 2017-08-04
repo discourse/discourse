@@ -69,6 +69,12 @@ describe Email::Receiver do
     expect(IncomingEmail.last.is_bounce).to eq(true)
   end
 
+  it "logs a blank error" do
+    Email::Receiver.any_instance.stubs(:process_internal).raises(RuntimeError, "")
+    process(:existing_user) rescue RuntimeError
+    expect(IncomingEmail.last.error).to eq("RuntimeError")
+  end
+
   context "bounces to VERP" do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
