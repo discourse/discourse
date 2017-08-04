@@ -378,7 +378,8 @@ class Post < ActiveRecord::Base
 
   # Strip out most of the markup
   def excerpt(maxlength = nil, options = {})
-    Post.excerpt(cooked, maxlength, options)
+    # damingo (Github ID), 2017-08-04
+    Post.excerpt(cooked.gsub(/<summary\s*>.*?<\/summary\s*>/,''), maxlength, options)
   end
 
   def is_first_post?

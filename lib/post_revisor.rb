@@ -429,8 +429,7 @@ class PostRevisor
   end
 
   def update_topic_excerpt
-    # NOTE: If this needs to be adapted also adapt it in CategoryDetailedSerializer.description_excerpt
-    excerpt = @post.excerpt(220, strip_links: true).gsub(/<summary\s*>.*?<\/summary\s*>/,'')
+    excerpt = @post.excerpt(220, strip_links: true)
     @topic.update_column(:excerpt, excerpt)
     if @topic.archetype == "banner"
       ApplicationController.banner_json_cache.clear

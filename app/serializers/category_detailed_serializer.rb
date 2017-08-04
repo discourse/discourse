@@ -25,9 +25,9 @@ class CategoryDetailedSerializer < BasicCategorySerializer
     is_uncategorized
   end
 
-  # NOTE: If this needs to be adapted also adapt it in PostRevisor.update_topic_excerpt
   def description_excerpt
-    PrettyText.excerpt(description.gsub(/<summary\s*>.*?<\/summary\s*>/,''), 300) if description
+  # damingo (Github ID), 2017-08-04
+  PrettyText.excerpt(description.gsub(/<summary\s*>.*?<\/summary\s*>/,''), 300) if description
   end
 
   def include_subcategory_ids?
