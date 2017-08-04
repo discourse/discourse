@@ -4,7 +4,9 @@
   {{#if category.uploaded_logo.url}}
     {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
     {{#if category.description}}
-      {{{category.description}}}
+        <div class='category-summary'>
+            {{{category.description}}}
+        </div>
     {{/if}}
   {{/if}}
 </section>
