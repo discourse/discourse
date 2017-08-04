@@ -270,6 +270,57 @@ createWidget('topic-timeline-container', {
   }
 });
 
+createWidget('timeline-controls', {
+  tagName: 'div.timeline-controls',
+
+  html(attrs) {
+    const controls = [];
+    const { fullScreen, currentUser, topic } = attrs;
+
+    if (!fullScreen && currentUser && currentUser.get('canManageTopic')) {
+      controls.push(this.attach('topic-admin-menu-button', { topic }));
+    }
+
+    return controls;
+  }
+});
+
+createWidget('timeline-footer-controls', {
+  tagName: 'div.timeline-footer-controls',
+
+  html(attrs) {
+    const controls = [];
+    const { currentUser, fullScreen, topic } = attrs;
+
+    if (currentUser && !fullScreen) {
+      if (topic.get('details.can_create_post')) {
+        controls.push(this.attach('button', {
+          className: 'create',
+          icon: 'reply',
+          title: 'topic.reply.help',
+          action: 'replyToPost'
+        }));
+      }
+    }
+
+    if (fullScreen) {
+      controls.push(this.attach('button', {
+        className: 'jump-to-post',
+        title: 'topic.progress.jump_prompt_long',
+        label: 'topic.progress.jump_prompt',
+        action: 'jumpToPostPrompt'
+      }));
+    }
+
+    if (currentUser) {
+      controls.push(this.attach('topic-notifications-button', { topic }));
+    }
+
+    return controls;
+  }
+
+});
+
 export default createWidget('topic-timeline', {
   tagName: 'div.topic-timeline',
 
@@ -317,6 +368,8 @@ export default createWidget('topic-timeline', {
     const stream = attrs.topic.get('postStream.stream');
     const { currentUser } = this;
 
+    attrs["currentUser"] = currentUser;
+
     let result = [];
 
     if (attrs.fullScreen) {
@@ -333,16 +386,14 @@ export default createWidget('topic-timeline', {
 
       if (this.state.excerpt) {
         elems.push(new RawHtml({
-          html: "<div class='post-excerpt'>" + this.state.excerpt + "</div>"
+          html: `<div class='post-excerpt'>${this.state.excerpt}</div>`
         }));
       }
 
       result.push(h('div.title', elems));
     }
 
-    if (!attrs.fullScreen && currentUser && currentUser.get('canManageTopic')) {
-      result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
-    }
+    result.push(this.attach('timeline-controls', attrs));
 
     if (stream.length < 3) {
       const topicHeight = $('#topic').height();
@@ -365,37 +416,8 @@ export default createWidget('topic-timeline', {
                               action: 'jumpBottom'
                             }))];
 
-    result = result.concat([h('div.timeline-scrollarea-wrapper', scroller)]);
-
-    const controls = [];
-    if (currentUser && !attrs.fullScreen) {
-      if (attrs.topic.get('details.can_create_post')) {
-        controls.push(this.attach('button', {
-          className: 'create',
-          icon: 'reply',
-          title: 'topic.reply.help',
-          action: 'replyToPost'
-        }));
-      }
-
-    }
-
-    if (attrs.fullScreen) {
-      controls.push(this.attach('button', {
-        className: 'jump-to-post',
-        title: 'topic.progress.jump_prompt_long',
-        label: 'topic.progress.jump_prompt',
-        action: 'jumpToPostPrompt'
-      }));
-    }
-
-    if (currentUser) {
-      controls.push(this.attach('topic-notifications-button', { topic }));
-    }
-
-    if (controls.length > 0) {
-      result.push(h('div.timeline-footer-controls', controls));
-    }
+    result.push(h('div.timeline-scrollarea-wrapper', scroller));
+    result.push(this.attach('timeline-footer-controls', attrs));
 
     return result;
   }
