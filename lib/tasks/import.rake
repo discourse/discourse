@@ -432,13 +432,36 @@ end
 task "import:create_phpbb_permalinks" => :environment do
   log 'Creating Permalinks...'
 
-  # /[^\/]+\/.*-t(\d+).html
+  # /[^\/]+\/.*-t(\d+).html/
   SiteSetting.permalink_normalizations = '/[^\/]+\/.*-t(\d+).html/thread/\1'
 
   Topic.listable_topics.find_each do |topic|
     tcf = topic.custom_fields
     if tcf && tcf["import_id"]
       Permalink.create(url: "thread/#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    end
+  end
+
+  log "Done!"
+end
+
+task "import:create_vbulletin_permalinks" => :environment do
+  log 'Creating Permalinks...'
+
+  # /showthread.php\?t=(\d+).*/
+  SiteSetting.permalink_normalizations = '/showthread.php\?t=(\d+).*/showthread.php?t=\1'
+
+  Topic.listable_topics.find_each do |topic|
+   tcf = topic.custom_fields
+   if tcf && tcf["import_id"]
+     Permalink.create(url: "showthread.php?t=#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+   end
+  end
+
+  Category.find_each do |cat|
+    ccf = cat.custom_fields
+    if ccf && ccf["import_id"]
+      Permalink.create(url: "forumdisplay.php?f=#{ccf["import_id"]}", category_id: cat.id) rescue nil
     end
   end
 
