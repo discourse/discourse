@@ -452,10 +452,10 @@ task "import:create_vbulletin_permalinks" => :environment do
   SiteSetting.permalink_normalizations = '/showthread.php\?t=(\d+).*/showthread.php?t=\1'
 
   Topic.listable_topics.find_each do |topic|
-   tcf = topic.custom_fields
-   if tcf && tcf["import_id"]
-     Permalink.create(url: "showthread.php?t=#{tcf["import_id"]}", topic_id: topic.id) rescue nil
-   end
+    tcf = topic.custom_fields
+    if tcf && tcf["import_id"]
+      Permalink.create(url: "showthread.php?t=#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    end
   end
 
   Category.find_each do |cat|
