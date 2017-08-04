@@ -228,6 +228,13 @@ describe Admin::UsersController do
         @another_user.reload
         expect(@another_user.primary_group_id).to be_nil
       end
+
+      it "remove user's primary group" do
+        group.add(@another_user)
+        xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: ""
+        @another_user.reload
+        expect(@another_user.primary_group_id).to be(nil)
+      end
     end
 
     context '.trust_level' do
