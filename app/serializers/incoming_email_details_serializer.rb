@@ -17,7 +17,7 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
 
   def error
     if @error_string.blank?
-      "Unrecognized Error"
+      I18n.t("emails.incoming.unrecognized_error")
     else
       @error_string
     end
