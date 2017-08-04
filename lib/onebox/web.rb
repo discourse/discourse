@@ -12,6 +12,8 @@ module Onebox
     set :public_folder, Proc.new { "#{root}/assets" }
     set :views, Proc.new { "#{root}/views" }
     configure :development do
+      register Sinatra::Reloader
+      also_reload 'lib/**/*.rb'
       enable :logging
     end
 
