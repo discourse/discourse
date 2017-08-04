@@ -81,4 +81,22 @@ describe Admin::EmailController do
     end
   end
 
+  context '.rejected' do
+    it 'should provide a string for a blank error' do
+      Fabricate(:incoming_email, error: "")
+      xhr :get, :rejected
+      rejected = JSON.parse(response.body)
+      expect(rejected.first['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+    end
+  end
+
+  context '.incoming' do
+    it 'should provide a string for a blank error' do
+      incoming_email = Fabricate(:incoming_email, error: "")
+      xhr :get, :incoming, id: incoming_email.id
+      incoming = JSON.parse(response.body)
+      expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+    end
+  end
+
 end
