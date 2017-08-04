@@ -341,13 +341,12 @@ class TopicView
     end
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples. `days_ago` is there for the timeline
-  # calculations.
+  # Returns an array of [id, post_number, days_ago] tuples.
+  # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= @filtered_posts.order(:sort_order)
-      .pluck(:id,
-                                                    :post_number,
-                                                    'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+    @filtered_post_stream ||= @filtered_posts
+      .order(:sort_order)
+      .pluck(:id, :post_number, 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
   end
 
   def filtered_post_ids
