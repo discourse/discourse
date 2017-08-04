@@ -1484,7 +1484,7 @@ pl_PL:
       deleted: "Temat został usunięty"
       topic_status_update:
         title: "Ustaw ważność wątku"
-        save: "Ustaw czasd"
+        save: "Ustaw czas"
         num_of_hours: "Liczba godzin:"
         remove: "Usuń czas"
         publish_to: "Opublikuj do:"
