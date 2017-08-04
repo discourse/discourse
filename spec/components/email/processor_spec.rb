@@ -66,9 +66,9 @@ describe Email::Processor do
       Rails.logger.expects(:error)
 
       Email::Processor.process!(mail)
-      expect(IncomingEmail.first.error).to             eq("boom")
-      expect(IncomingEmail.first.rejection_message).to be_present
-      expect(EmailLog.first.email_type).to             eq("email_reject_unrecognized_error")
+      expect(IncomingEmail.last.error).to             eq("boom")
+      expect(IncomingEmail.last.rejection_message).to be_present
+      expect(EmailLog.last.email_type).to             eq("email_reject_unrecognized_error")
     end
 
     it "sends more than one rejection email per day" do
