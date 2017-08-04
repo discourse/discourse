@@ -30,11 +30,7 @@ class IncomingEmailSerializer < ApplicationSerializer
   end
 
   def error
-    if @object.error.blank?
-      I18n.t("emails.incoming.unrecognized_error")
-    else
-      @object.error
-    end
+    @object.error.presence || I18n.t("emails.incoming.unrecognized_error")
   end
 
 end
