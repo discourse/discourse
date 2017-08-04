@@ -29,4 +29,12 @@ class IncomingEmailSerializer < ApplicationSerializer
     object.cc_addresses.split(";")
   end
 
+  def error
+    if @object.error.blank?
+      "Unrecognized Error"
+    else
+      @object.error
+    end
+  end
+
 end

@@ -16,7 +16,11 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
   EMAIL_RECEIVER_ERROR_PREFIX = "Email::Receiver::".freeze
 
   def error
-    @error_string
+    if @error_string.blank?
+      "Unrecognized Error"
+    else
+      @error_string
+    end
   end
 
   def error_description
