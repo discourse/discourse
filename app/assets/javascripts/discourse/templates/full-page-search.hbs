@@ -14,9 +14,7 @@
       {{/if}}
     </div>
 
-    {{#if canCreateTopic}}
-      <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
-    {{/if}}
+    {{create-topic-button canCreateTopic=canCreateTopic action=(action "createTopic" searchTerm)}}
 
     {{#if canBulkSelect}}
       {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}

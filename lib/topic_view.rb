@@ -341,13 +341,12 @@ class TopicView
     end
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples. `days_ago` is there for the timeline
-  # calculations.
+  # Returns an array of [id, post_number, days_ago] tuples.
+  # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= @filtered_posts.order(:sort_order)
-      .pluck(:id,
-                                                    :post_number,
-                                                    'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+    @filtered_post_stream ||= @filtered_posts
+      .order(:sort_order)
+      .pluck(:id, :post_number, 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
   end
 
   def filtered_post_ids
@@ -387,7 +386,7 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
-      .includes(:user, :reply_to_user, :incoming_email)
+      .includes({ user: :primary_group }, :reply_to_user, :deleted_by, :incoming_email, :topic)
       .order('sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?

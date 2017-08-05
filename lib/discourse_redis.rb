@@ -15,6 +15,7 @@ class DiscourseRedis
       @mutex = Mutex.new
       @slave_config = DiscourseRedis.slave_config
       @timer_task = init_timer_task
+      @message_bus_keepalive_interval = MessageBus.keepalive_interval
     end
 
     def verify_master
@@ -41,6 +42,7 @@ class DiscourseRedis
             slave_client.call([:client, [:kill, 'type', connection_type]])
           end
 
+          MessageBus.keepalive_interval = @message_bus_keepalive_interval
           Discourse.clear_readonly!
           Discourse.request_refresh!
           success = true
@@ -57,7 +59,12 @@ class DiscourseRedis
     end
 
     def master=(args)
-      synchronize { @master = args }
+      synchronize do
+        @master = args
+
+        # Disables MessageBus keepalive when Redis is in readonly mode
+        MessageBus.keepalive_interval = 0 if !@master
+      end
     end
 
     def running?
@@ -128,9 +135,10 @@ class DiscourseRedis
     options.dup.merge!(host: options[:slave_host], port: options[:slave_port])
   end
 
-  def initialize(config = nil)
+  def initialize(config = nil, namespace: true)
     @config = config || DiscourseRedis.config
     @redis = DiscourseRedis.raw_connection(@config)
+    @namespace = namespace
   end
 
   def self.fallback_handler
@@ -176,29 +184,35 @@ class DiscourseRedis
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
    :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore].each do |m|
     define_method m do |*args|
-      args[0] = "#{namespace}:#{args[0]}"
+      args[0] = "#{namespace}:#{args[0]}" if @namespace
       DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
     end
   end
 
   def mget(*args)
-    args.map! { |a| "#{namespace}:#{a}" }
+    args.map! { |a| "#{namespace}:#{a}" }  if @namespace
     DiscourseRedis.ignore_readonly { @redis.mget(*args) }
   end
 
   def del(k)
     DiscourseRedis.ignore_readonly do
-      k = "#{namespace}:#{k}"
+      k = "#{namespace}:#{k}"  if @namespace
       @redis.del k
     end
   end
 
   def keys(pattern = nil)
     DiscourseRedis.ignore_readonly do
-      len = namespace.length + 1
-      @redis.keys("#{namespace}:#{pattern || '*'}").map {
-        |k| k[len..-1]
-      }
+      pattern = pattern || '*'
+      pattern = "#{namespace}:#{pattern}" if @namespace
+      keys = @redis.keys(pattern)
+
+      if @namespace
+        len = namespace.length + 1
+        keys.map! { |k| k[len..-1] }
+      end
+
+      keys
     end
   end
 

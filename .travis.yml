@@ -47,6 +47,7 @@ before_install:
   - eslint --ext .es6 app/assets/javascripts
   - eslint --ext .es6 test/javascripts
   - eslint --ext .es6 plugins/**/assets/javascripts
+  - eslint --ext .es6 plugins/**/test/javascripts
   - eslint test/javascripts
   - rubocop --parallel
 

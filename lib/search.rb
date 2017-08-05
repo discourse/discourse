@@ -425,12 +425,22 @@ class Search
       end
       posts.where("topics.category_id IN (?)", category_ids)
     else
-      posts.where("topics.id IN (
-        SELECT DISTINCT(tt.topic_id)
-        FROM topic_tags tt, tags
-        WHERE tt.tag_id = tags.id
-        AND tags.name = ?
-        )", slug[0])
+      # try a possible tag match
+      tag_id = Tag.where(name: slug[0]).pluck(:id).first
+      if (tag_id)
+        posts.where("topics.id IN (
+          SELECT DISTINCT(tt.topic_id)
+          FROM topic_tags tt
+          WHERE tt.tag_id = ?
+          )", tag_id)
+      else
+        # a bit yucky but we got to add the term back in
+        if match.to_s.length >= SiteSetting.min_search_term_length
+          posts.where("posts.id IN (
+            SELECT post_id FROM post_search_data pd1
+            WHERE pd1.search_data @@ #{Search.ts_query("##{match}")})")
+        end
+      end
     end
   end
 

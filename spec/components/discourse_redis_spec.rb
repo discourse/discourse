@@ -10,6 +10,70 @@ describe DiscourseRedis do
 
   let(:fallback_handler) { DiscourseRedis::FallbackHandler.instance }
 
+  describe 'redis commands' do
+    let(:raw_redis) { Redis.new(DiscourseRedis.config) }
+
+    before do
+      raw_redis.flushall
+    end
+
+    after do
+      raw_redis.flushall
+    end
+
+    describe 'when namespace is enabled' do
+      let(:redis) { DiscourseRedis.new }
+
+      it 'should append namespace to the keys' do
+        redis.set('key', 1)
+
+        expect(raw_redis.get('default:key')).to eq('1')
+        expect(redis.keys).to eq(['key'])
+
+        redis.del('key')
+
+        expect(raw_redis.get('default:key')).to eq(nil)
+
+        raw_redis.set('default:key1', '1')
+        raw_redis.set('default:key2', '2')
+
+        expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
+      end
+    end
+
+    describe 'when namespace is disabled' do
+      let(:redis) { DiscourseRedis.new(nil, namespace: false) }
+
+      it 'should not append any namespace to the keys' do
+        redis.set('key', 1)
+
+        expect(raw_redis.get('key')).to eq('1')
+        expect(redis.keys).to eq(['key'])
+
+        redis.del('key')
+
+        expect(raw_redis.get('key')).to eq(nil)
+
+        raw_redis.set('key1', '1')
+        raw_redis.set('key2', '2')
+
+        expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
+      end
+
+      it 'should noop a readonly redis' do
+        expect(Discourse.recently_readonly?).to eq(false)
+
+        redis.without_namespace
+          .expects(:set)
+          .raises(Redis::CommandError.new("READONLY"))
+
+        redis.set('key', 1)
+
+        expect(Discourse.recently_readonly?).to eq(true)
+      end
+    end
+  end
+
   context '.slave_host' do
     it 'should return the right config' do
       slave_config = DiscourseRedis.slave_config(config)
@@ -22,9 +86,9 @@ describe DiscourseRedis do
     it 'should check the status of the master server' do
       begin
         fallback_handler.master = false
-        $redis.without_namespace.expects(:get).raises(Redis::CommandError.new("READONLY"))
+        $redis.without_namespace.expects(:set).raises(Redis::CommandError.new("READONLY"))
         fallback_handler.expects(:verify_master).once
-        $redis.get('test')
+        $redis.set('test', '1')
       ensure
         fallback_handler.master = true
       end
@@ -93,13 +157,16 @@ describe DiscourseRedis do
   describe DiscourseRedis::FallbackHandler do
     after do
       fallback_handler.master = true
+      MessageBus.keepalive_interval = -1
     end
 
     describe '#initiate_fallback_to_master' do
       it 'should return the right value if the master server is still down' do
         fallback_handler.master = false
         Redis::Client.any_instance.expects(:call).with([:info]).returns("Some other stuff")
+
         expect(fallback_handler.initiate_fallback_to_master).to eq(false)
+        expect(MessageBus.keepalive_interval).to eq(0)
       end
 
       it 'should fallback to the master server once it is up' do
@@ -113,6 +180,7 @@ describe DiscourseRedis do
         expect(fallback_handler.initiate_fallback_to_master).to eq(true)
         expect(fallback_handler.master).to eq(true)
         expect(Discourse.recently_readonly?).to eq(false)
+        expect(MessageBus.keepalive_interval).to eq(-1)
       end
     end
   end

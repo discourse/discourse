@@ -141,6 +141,7 @@ ko:
         eu_west_2: "EU (런던)"
         sa_east_1: "남 아메리카 (상파울로)"
         us_east_1: "미국 동부 (N. 버지니아)"
+        us_east_2: "미국 동부 (오하이오)"
         us_gov_west_1: "AWS GovCloud(US)"
         us_west_1: "미국 서부 (N. 캘리포니아)"
         us_west_2: "미국 서부 (오레곤)"
@@ -972,6 +973,7 @@ ko:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google 클래식"
       facebook_messenger: "Facebook 메신저"
     category_page_style:
       categories_only: "카테고리만"
@@ -981,6 +983,15 @@ ko:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      people: 인물
+      nature: 자연
+      food: 음식
+      activity: 활동
+      travel: 여행
+      objects: 사물
+      celebration: 축하
+      custom: 커스텀 emoji
     composer:
       emoji: "이모지 :)"
       more_emoji: "더보기..."
@@ -1500,6 +1511,7 @@ ko:
         success_email: "<b>{{emailOrUsername}}</b>로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대상태를 확인하려면 사용자 페이지에서 '초대장' 탭을 선택하세요."
         success_username: "사용자가 이 주제에 참여할 수 있도록 초대했습니다."
         error: "그 사람을 초대할 수 없습니다. 혹시 이미 초대하진 않았나요?  (Invites are rate limited)"
+        success_existing_email: "해당 email을 사용하고 있는 사용자 <b>{{emailOrUsername}}</b> 가 이미 존재합니다. 그 사용자를 이 토픽에 참여하도록 초청했습니다."
       login_reply: '로그인하고 답글 쓰기'
       filters:
         n_posts:

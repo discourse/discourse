@@ -141,7 +141,7 @@ describe DiscourseSingleSignOn do
     sso.email = user.email
     sso.external_id = "A"
 
-    sso.add_groups = "#{add_group1.name},#{add_group2.name},badname"
+    sso.add_groups = "#{add_group1.name},#{add_group2.name.capitalize},badname"
     sso.remove_groups = "#{existing_group.name},badname"
 
     sso.lookup_or_create_user(ip_address)

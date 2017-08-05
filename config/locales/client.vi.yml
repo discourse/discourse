@@ -370,7 +370,7 @@ vi:
         none: "Không có gì"
       notifications:
         watching:
-          title: "Đang xem"
+          title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo khi có bài viết mới trong mỗi tin nhắn, và số lượng trả lời mới sẽ được hiển thị"
         watching_first_post:
           title: "Theo dõi chủ đề đầu tiên"
@@ -458,7 +458,7 @@ vi:
         rate_limit_error: "Bài viết chỉ được tải về một lần mỗi người, hãy thử lại vào ngày mai."
       new_private_message: "Tin nhắn mới"
       private_message: "Tin nhắn"
-      private_messages: "Các tin nhắn"
+      private_messages: "Tin nhắn"
       activity_stream: "Hoạt động"
       preferences: "Tùy chỉnh"
       expand_profile: "Mở"
@@ -482,6 +482,7 @@ vi:
       first_notification: "Thông báo đầu tiên của bạn! Chọn để bắt đầu"
       disable_jump_reply: "Đừng tới bài viết của tôi sau khi tôi trả lời"
       dynamic_favicon: "Hiện số chủ đề mới / cập nhật vào biểu tượng trình duyệt"
+      theme_default_on_all_devices: "Đặt giao diện này làm giao diện mặc định trên tất cả thiết bị của tôi"
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       change: "thay đổi"
@@ -511,7 +512,8 @@ vi:
       tracked_tags_instructions: "Chế độ theo dõi sẽ tự động bật với những chủ đề được gắn thẻ này. Số lượng bài viết mới sẽ xuất hiện bên cạnh chủ đề."
       muted_tags: "Im lặng"
       muted_tags_instructions: "Bạn sẽ không được thông báo về bất kì hoạt động nào ở những chủ đề có thẻ này, chúng cũng sẽ không xuất hiện như là những chủ đề mới nhất."
-      watched_categories: "Xem"
+      watched_categories: "Đã theo dõi"
+      watched_categories_instructions: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong những chuyên mục này. Bạn sẽ nhận được tin báo về những bài viết và chủ đề mới, cùng với số lượng bài viết mới cũng sẽ xuất hiện kế bên chủ đề đó."
       tracked_categories: "Theo dõi"
       watched_first_post_categories: "Xem bài viết đầu tiên"
       watched_first_post_categories_instructions: "Bạn sẽ nhận được thông báo khi có ai đó đăng chủ đề mới trong thư mục này."
@@ -529,7 +531,7 @@ vi:
       muted_users: "Im lặng"
       muted_users_instructions: "Ngăn chặn tất cả các thông báo từ những thành viên."
       muted_topics_link: "Hiển thị chủ đề Im Lặng"
-      watched_topics_link: "HIển thị chủ đề đã xem"
+      watched_topics_link: "HIển thị các chủ đề đã theo dõi."
       automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang."
       apps: "Ứng dụng"
       revoke_access: "Lấy lại quyền"
@@ -558,7 +560,9 @@ vi:
         profile: "Hồ sơ"
         emails: "Email"
         notifications: "Thông báo"
+        categories: "Chuyên mục"
         tags: "Thẻ"
+        interface: "Giao diện"
         apps: "Ứng dụng"
       change_password:
         success: "(email đã gửi)"
@@ -853,6 +857,7 @@ vi:
     trust_level: 'Độ tin tưởng'
     search_hint: 'username, email or IP address'
     create_account:
+      disclaimer: "Với việc đăng ký, tức là bạn đồng ý với <a href='{{privacy_link}}'>chính sách riêng tư</a> và <a href='{{tos_link}}'>điều khoản dịch vụ</a>."
       title: "Tạo tài khoản mới"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
     forgot_password:
@@ -966,6 +971,7 @@ vi:
       title: "Hoặc nhất Ctrl+Enter"
       users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
+      title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
       show_edit_reason: "(thêm lý do sửa)"
       reply_placeholder: "Gõ ở đây. Sử dụng Markdown, BBCode, hoặc HTML để định dạng. Kéo hoặc dán ảnh."
@@ -1251,6 +1257,7 @@ vi:
       auto_close_title: 'Tự động-Đóng các Cài đặt'
       timeline:
         back: "Quay lại"
+        replies_short: "%{current} / %{total}"
       progress:
         title: tiến trình của chủ đề
         go_top: "trên cùng"
@@ -1264,21 +1271,23 @@ vi:
         current: bài viết hiện tại
       notifications:
         reasons:
-          '3_6': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chuyên mục nàyotification'
-          '3_5': 'Bạn sẽ nhận được các thông báo bởi vì bạn đã bắt đầu xem chủ đề này một cách tự động'
-          '3_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
-          '3_1': 'Bạn sẽ được nhận thông báo bởi bạn đã tạo chủ để này.'
-          '3': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
-          '1_2': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
-          '1': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
-          '0_7': 'Bạn đang bỏ qua tất cả các thông báo trong chuyên mục này'
+          '3_6': 'Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chuyên mục này.'
+          '3_5': 'Bạn sẽ nhận được tin báo bởi vì bạn đã bắt đầu theo dõi chủ đề này một cách tự động.'
+          '3_2': 'Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này.'
+          '3_1': 'Bạn sẽ được nhận các tin báo bởi bạn đã tạo chủ để này.'
+          '3': 'Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này.'
+          '2_8': 'Bạn sẽ thấy được 1 số lượng bài viết mới bởi vì bạn đang theo dấu chuyên mục này.'
+          '2': 'Bạn sẽ xem được các bài trả lời bởi vì bạn <a href="/u/{{username}}/preferences">đọc chủ đề này</a>.'
+          '1_2': 'Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn.'
+          '1': 'Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn.'
+          '0_7': 'Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này.'
           '0_2': 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
           '0': 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
         watching_pm:
-          title: "Đang xem"
+          title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo về từng trả lời mới trong tin nhắn này, và một số trả lời mới sẽ được hiển thị"
         watching:
-          title: "Dang theo dõi"
+          title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo về từng trả lời mới trong tin nhắn này, và một số trả lời mới sẽ được hiển thị"
         tracking_pm:
           title: "Đang theo dõi"
@@ -1659,7 +1668,7 @@ vi:
       sort_options:
         default: "mặc định"
         likes: "Thích"
-        views: "Xem"
+        views: "Lượt xem"
         posts: "Bài viết"
         activity: "Hoạt động"
         posters: "Người gửi"
@@ -1805,7 +1814,7 @@ vi:
           other: "{{categoryName}} ({{count}})"
         help: "Những chủ đề mới nhất trong chuyên mục{{categoryName}} "
       top:
-        title: "Trên"
+        title: "Top"
         help: "Các chủ đề tích cực nhất trong năm, tháng, tuần, hoặc ngày trước"
         all:
           title: "Từ trước tới nay"

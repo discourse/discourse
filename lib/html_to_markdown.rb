@@ -186,18 +186,22 @@ class HtmlToMarkdown
   end
 
   def visit_strong(node)
+    return if node.text.blank?
     delimiter = node.text["*"] ? "__" : "**"
     @stack[-1].markdown << delimiter
     traverse(node)
+    @stack[-1].markdown.chomp!
     @stack[-1].markdown << delimiter
   end
 
   alias :visit_b :visit_strong
 
   def visit_em(node)
+    return if node.text.blank?
     delimiter = node.text["*"] ? "_" : "*"
     @stack[-1].markdown << delimiter
     traverse(node)
+    @stack[-1].markdown.chomp!
     @stack[-1].markdown << delimiter
   end
 

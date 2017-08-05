@@ -32,7 +32,7 @@ createWidget('topic-admin-menu-button', {
     // We don't show the button when expanded on the right side
     if (!(attrs.rightSide && state.expanded)) {
       result.push(this.attach('button', {
-        className: 'btn toggle-admin-menu' + (attrs.fixed ? " show-topic-admin" : ""),
+        className: 'toggle-admin-menu' + (attrs.fixed ? " show-topic-admin" : ""),
         title: 'topic_admin_menu',
         icon: 'wrench',
         action: 'showAdminMenu',

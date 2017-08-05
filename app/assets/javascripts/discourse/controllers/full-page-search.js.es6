@@ -5,6 +5,7 @@ import Category from 'discourse/models/category';
 import { escapeExpression } from 'discourse/lib/utilities';
 import { setTransient } from 'discourse/lib/page-tracker';
 import { iconHTML } from 'discourse-common/lib/icon-library';
+import Composer from 'discourse/models/composer';
 
 const SortOrders = [
   {name: I18n.t('search.relevance'), id: 0},
@@ -18,6 +19,7 @@ const PAGE_LIMIT = 10;
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
+  composer: Ember.inject.controller(),
   bulkSelectEnabled: null,
 
   loading: false,
@@ -225,6 +227,21 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+
+    createTopic(searchTerm) {
+      let topicCategory;
+      if (searchTerm.indexOf("category:") !== -1) {
+        const match =  searchTerm.match(/category:(\S*)/);
+        if (match && match[1]) {
+          topicCategory = match[1];
+        }
+      }
+      this.get('composer').open({
+        action: Composer.CREATE_TOPIC,
+        draftKey: Composer.CREATE_TOPIC,
+        topicCategory
+      });
+    },
 
     selectAll() {
       this.get('selected').addObjects(this.get('model.posts').map(r => r.topic));

@@ -5,14 +5,25 @@ export default Ember.Component.extend({
   layoutName: 'components/d-button',
 
   tagName: 'button',
-  classNameBindings: [':btn', 'noText'],
-  attributeBindings: ['disabled', 'translatedTitle:title'],
+  classNameBindings: [':btn', 'noText', 'btnType'],
+  attributeBindings: ['disabled', 'translatedTitle:title', 'tabindex'],
+
+  btnIcon: Ember.computed.notEmpty('icon'),
+
+  @computed('icon', 'translatedLabel')
+  btnType(icon, translatedLabel) {
+    if (icon) {
+      return translatedLabel ? "btn-icon-text" : "btn-icon";
+    } else if (translatedLabel) {
+      return "btn-text";
+    }
+  },
 
   noText: Ember.computed.empty('translatedLabel'),
 
   @computed("title")
   translatedTitle(title) {
-    if (title) return I18n.t(title);
+    return title ? I18n.t(title) : this.get('translatedLabel');
   },
 
   @computed("label")

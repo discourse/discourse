@@ -439,6 +439,7 @@ a.star {
 
 #topic-footer-buttons {
   padding: 10px 10px 0 0;
+  float: left;
   p {
     line-height: 32px;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));

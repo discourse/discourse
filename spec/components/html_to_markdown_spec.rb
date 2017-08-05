@@ -228,4 +228,32 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(html)).to eq("1st paragraph\n2nd paragraph")
   end
 
+  context "with an oddly placed <br>" do
+
+    it "handles <strong>" do
+      expect(html_to_markdown("<strong>Bold<br></strong>")).to eq("**Bold**")
+      expect(html_to_markdown("<strong>Bold<br>text</strong>")).to eq("**Bold\ntext**")
+    end
+
+    it "handles <em>" do
+      expect(html_to_markdown("<em>Italic<br></em>")).to eq("*Italic*")
+      expect(html_to_markdown("<em>Italic<br>text</em>")).to eq("*Italic\ntext*")
+    end
+
+  end
+
+  context "with an empty tag" do
+
+    it "handles <strong>" do
+      expect(html_to_markdown("<strong></strong>")).to eq("")
+      expect(html_to_markdown("<strong>   </strong>")).to eq("")
+    end
+
+    it "handles <em>" do
+      expect(html_to_markdown("<em></em>")).to eq("")
+      expect(html_to_markdown("<em>   </em>")).to eq("")
+    end
+
+  end
+
 end

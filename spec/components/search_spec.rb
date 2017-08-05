@@ -730,6 +730,18 @@ describe Search do
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 
+    it 'correctly handles #symbol when no tag or category match' do
+      Fabricate(:post, raw: 'testing #1 #9998')
+      results = Search.new('testing #1').execute
+      expect(results.posts.length).to eq(1)
+
+      results = Search.new('#9998').execute
+      expect(results.posts.length).to eq(1)
+
+      results = Search.new('#777').execute
+      expect(results.posts.length).to eq(0)
+    end
+
     context 'tags' do
       let(:tag1) { Fabricate(:tag, name: 'lunch') }
       let(:tag2) { Fabricate(:tag, name: 'eggs') }

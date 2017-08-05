@@ -2,6 +2,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import SiteSetting from 'admin/models/site-setting';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
+import { categoryLinkHTML } from 'discourse/helpers/category-link';
 
 const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list', 'value_list'];
 
@@ -11,8 +12,19 @@ export default Ember.Component.extend(BufferedContent, {
   dirty: propertyNotEqual('buffered.value', 'setting.value'),
   validationMessage: null,
 
-  @computed("setting.preview", "buffered.value")
-  preview(preview, value) {
+  @computed("setting", "buffered.value")
+  preview(setting, value) {
+    // A bit hacky, but allows us to use helpers
+    if (setting.get('setting') === 'category_style') {
+      let category = this.site.get('categories.firstObject');
+      if (category) {
+        return categoryLinkHTML(category, {
+          categoryStyle: value
+        });
+      }
+    }
+
+    let preview = setting.get('preview');
     if (preview) {
       return new Handlebars.SafeString("<div class='preview'>" + preview.replace(/\{\{value\}\}/g, value) + "</div>");
     }
@@ -52,16 +64,16 @@ export default Ember.Component.extend(BufferedContent, {
   }.on("willDestroyElement"),
 
   _save() {
-    const self = this,
-          setting = this.get('buffered');
-    SiteSetting.update(setting.get('setting'), setting.get('value')).then(function() {
-      self.set('validationMessage', null);
-      self.commitBuffer();
-    }).catch(function(e) {
+    const setting = this.get('buffered'),
+      action = SiteSetting.update(setting.get('setting'), setting.get('value'));
+    action.then(() => {
+      this.set('validationMessage', null);
+      this.commitBuffer();
+    }).catch((e) => {
       if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-        self.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
+        this.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
       } else {
-        self.set('validationMessage', I18n.t('generic_error'));
+        this.set('validationMessage', I18n.t('generic_error'));
       }
     });
   },

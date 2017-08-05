@@ -44,6 +44,11 @@ export default Combobox.extend({
     const value = this.get('value');
     const topic = this.get('topic');
 
+    // In case it's not a valid topic
+    if (!topic.get('id')) {
+      return;
+    }
+
     const refresh = () => {
       this._createContent();
       this.set('value', null);

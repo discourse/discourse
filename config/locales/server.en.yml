@@ -78,6 +78,7 @@ en:
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
         bounced_email_error: "Email is a bounced email report."
         screened_email_error: "Happens when the sender's email address was already screened."
+      unrecognized_error: "Unrecognized Error"
 
   errors: &errors
     format: ! '%{attribute} %{message}'
@@ -986,6 +987,7 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_blacklist: "A list of domains that will never be oneboxed."
     inline_onebox_domains_whitelist: "A list of domains that will be oneboxed in miniature form if linked without a title"
+    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
@@ -1774,7 +1776,7 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -1792,7 +1794,7 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -2443,7 +2445,7 @@ en:
     invited_to_private_message_body: |
       %{username} invited you to a message
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -2454,7 +2456,7 @@ en:
     invited_to_topic_body: |
       %{username} invited you to a discussion
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 

@@ -59,6 +59,7 @@ describe UserProfile do
 
       it "ensures website is valid" do
         expect(Fabricate.build(:user_profile, user: user, website: "http://https://google.com")).not_to be_valid
+        expect(Fabricate.build(:user_profile, user: user, website: "http://discourse.productions")).to be_valid
         expect(Fabricate.build(:user_profile, user: user, website: "https://google.com")).to be_valid
       end
 

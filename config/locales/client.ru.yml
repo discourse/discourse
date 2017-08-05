@@ -434,6 +434,11 @@ ru:
       posts: "Сообщения"
       mentions: "Упоминания"
       messages: "Сообщения"
+      visibility_levels:
+        title: "Кто может видеть эту группу?"
+        public: "Все"
+        members: "Владельцы группы, участники и администраторы"
+        owners: "Владельцы группы и администраторы"
       alias_levels:
         title: "Кто может отправлять сообщения и @упоминать эту группу?"
         nobody: "Никто"
@@ -803,6 +808,9 @@ ru:
         expired: "Это приглашение истекло."
         rescind: "Отозвать"
         rescinded: "Приглашение отозвано"
+        rescind_all: "Удалить все приглашения"
+        rescinded_all: "Все приглашения были удалены!"
+        rescind_all_confirm: "Вы уверены, что хотите удалить все приглашения?"
         reinvite: "Повторить приглашение"
         reinvite_all: "Повторить все приглашения"
         reinvite_all_confirm: "Вы действительно хотите отправить все приглашения повторно?"
@@ -1074,6 +1082,8 @@ ru:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Только разделы"
       categories_with_featured_topics: "Разделы и их лучшие темы"
@@ -1082,12 +1092,21 @@ ru:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      people: People
+      nature: Nature
+      food: Food
+      activity: Activity
+      travel: Travel
+      objects: Objects
+      celebration: Celebration
     composer:
       emoji: "Смайлики :)"
       more_emoji: "еще..."
       options: "Дополнительные опции"
       whisper: "внутреннее сообщение"
       unlist: "исключена из списков тем"
+      blockquote_text: "Цитата"
       add_warning: "Это официальное предупреждение."
       toggle_whisper: "Внутреннее сообщение"
       toggle_unlisted: "Спрятать из списков тем"
@@ -1332,6 +1351,7 @@ ru:
         change_category: "Задать раздел"
         close_topics: "Закрыть темы"
         archive_topics: "Архивировать темы"
+        notification_level: "Уведомления"
         choose_new_category: "Выберите новый раздел для этих тем:"
         selected:
           one: "Вы выбрали <b>{{count}}</b> тему."

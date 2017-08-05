@@ -353,7 +353,8 @@ nb_NO:
         add_members: "Legg til medlemmer"
         delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
       name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
-      public: "Tillat brukere å ta del/forlate gruppen fritt (Krever offentlig synlig gruppe)"
+      public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
+      public_exit: "Tillat brukere å fritt forlate gruppen"
       empty:
         posts: "Det er ingen innlegg av medlemmer i denne gruppen."
         members: "Det er ingen medlemmer av denne gruppen."
@@ -365,6 +366,7 @@ nb_NO:
       join: "Bli medlem av gruppe"
       leave: "Forlat gruppe"
       request: "Be om gruppemedlemskap"
+      message: "Melding"
       automatic_group: Automatisk gruppe
       closed_group: Lukket gruppe
       is_group_user: "Du er medlem av denne gruppen"
@@ -1024,7 +1026,7 @@ nb_NO:
       ctrl: 'Ctrl'
       alt: 'Alt'
     emoji_picker:
-      filter_placeholder: Søk etter en emoji
+      filter_placeholder: Søk etter emoji
       people: Folk
       nature: Natur
       food: Mat
@@ -1033,7 +1035,13 @@ nb_NO:
       objects: Objekter
       celebration: Feiring
       custom: Egendefinerte emoji-er
-      recent: Nylig brukte emoji-er
+      recent: Nylig brukt
+      default_tone: Ingen hudtone
+      light_tone: Lys hudtone
+      medium_light_tone: Middels lys hudtone
+      medium_tone: Middels hudtone
+      medium_dark_tone: Middels mørk hudtone
+      dark_tone: Mørk hudtone
     composer:
       emoji: "Emoji :)"
       more_emoji: "mer…"
@@ -1199,8 +1207,8 @@ nb_NO:
       clear_all: "Fjern Alle"
       too_short: "Din søketekst er for kort."
       result_count:
-        one: "Ett resultat for <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultater for <span class='term'>\"{{term}}\"</span>"
+        one: "1 resultat for <span class='term'>{{term}}</span>"
+        other: "{{count}} resultater for <span class='term'>{{term}}</span>"
       title: "søk etter emner, innlegg, brukere eller kategorier"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
@@ -2901,6 +2909,30 @@ nb_NO:
             title: "Lager nye blokkeringsoppføringer for subnett hvis det er minst 'min_ban_entries_for_roll_up' oppføringer."
         logster:
           title: "Feillogg"
+      watched_words:
+        title: "Ord som holdes oppsyn med"
+        search: "søk"
+        clear_filter: "Tøm"
+        show_words: "vis ord"
+        word_count:
+          one: "ett ord"
+          other: "%{count} ord"
+        actions:
+          block: 'Blokker'
+          censor: 'Sensurer'
+          require_approval: 'Krev godkjenning'
+          flag: 'Flagg'
+        action_descriptions:
+          block: 'Forhindre innlegg som inneholder disse ordene fra å bli postet. Brukeren vil se en feilmelding når vedkommende prøver å sende inn innlegget sitt.'
+          censor: 'Tillat innlegg som inneholder disse ordene, men erstatt dem med bokstaver som skjuler de sensurerte ordene.'
+          require_approval: 'Det kreves at innlegg som inneholder disse ordene godkjennes av staben før de kan ses.'
+          flag: 'Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem.'
+        form:
+          label: 'Nytt ord:'
+          add: 'Legg til'
+          success: 'Suksess'
+          upload: "Last opp"
+          upload_successful: "Opplastet. Ord lagt til."
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."

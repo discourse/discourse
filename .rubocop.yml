@@ -1,6 +1,10 @@
 AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
+  Exclude:
+    - 'bundle/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
 
 # Prefer &&/|| over and/or.
 Style/AndOr:

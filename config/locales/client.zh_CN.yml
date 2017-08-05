@@ -9,7 +9,7 @@ zh_CN:
   js:
     number:
       format:
-        separator: "."
+        separator: ".暂无链接"
         delimiter: ","
       human:
         storage_units:
@@ -322,7 +322,7 @@ zh_CN:
         to: "发至"
       edit:
         title: '编辑群组'
-        full_name: '名字'
+        full_name: '群组名'
         add_members: "增加组员"
         delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
       name_placeholder: "群组名，没有空格，和用户名一样的规则"
@@ -337,12 +337,13 @@ zh_CN:
       join: "加入群组"
       leave: "离开群组"
       request: "请求加入群组"
+      message: "信息"
       automatic_group: 自动群组
       closed_group: 封闭群组
       is_group_user: "你是该群组的一个成员"
       allow_membership_requests: "允许用户向小组拥有者发送\b\b成员请求"
       membership: "成员资格"
-      name: "名字"
+      name: "群组ID"
       user_count: "成员数目"
       bio: "关于群组"
       selector_placeholder: "添加成员"
@@ -359,6 +360,9 @@ zh_CN:
       mentions: "提及"
       messages: "私信"
       notification_level: "小组私信的默认通知等级"
+      visibility_levels:
+        public: "所有人"
+        members: "小组创建人，成员和管理员"
       alias_levels:
         title: "谁能@该群组和发送私信？"
         nobody: "没有人"
@@ -770,11 +774,11 @@ zh_CN:
         no_badges: "暂无徽章。"
         more_badges: "更多徽章"
         top_links: "热门链接"
-        no_links: "暂无链接"
+        no_links: "暂无链接。"
         most_liked_by: "谁赞最多"
         most_liked_users: "赞谁最多"
         most_replied_to_users: "最多回复至"
-        no_likes: "暂无赞"
+        no_likes: "暂无赞。"
       associated_accounts: "登录"
       ip_address:
         title: "最后使用的 IP 地址"
@@ -2376,7 +2380,7 @@ zh_CN:
       plugins:
         title: "插件"
         installed: "安装的插件"
-        name: "名字"
+        name: "插件名"
         none_installed: "你没有安装任何插件。"
         version: "版本"
         enabled: "启用？"
@@ -2755,6 +2759,15 @@ zh_CN:
             title: "如果有至少 'min_ban_entries_for_roll_up' 个记录，创建一个子网封禁记录"
         logster:
           title: "错误日志"
+      watched_words:
+        search: "搜索"
+        clear_filter: "清除"
+        actions:
+          flag: '旗标'
+        form:
+          add: '新增'
+          success: '成功'
+          upload: "上传"
       impersonate:
         title: "检视用户视角"
         help: "使用此工具来检视其他用户的帐号以方便调试。你应该在完成后立即退出。"
@@ -2935,7 +2948,7 @@ zh_CN:
           title: "单点登录"
           external_id: "外部 ID"
           external_username: "用户名"
-          external_name: "名字"
+          external_name: "外部系统中的名字"
           external_email: "电子邮件"
           external_avatar_url: "头像URL"
       user_fields:

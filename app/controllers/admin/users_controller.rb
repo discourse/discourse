@@ -135,18 +135,29 @@ class Admin::UsersController < Admin::AdminController
   def remove_group
     group = Group.find(params[:group_id].to_i)
     return render_json_error group unless group && !group.automatic
+
     group.remove(@user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
+
     render nothing: true
   end
 
   def primary_group
-    group = Group.find(params[:primary_group_id].to_i)
     guardian.ensure_can_change_primary_group!(@user)
-    if group.users.include?(@user)
-      @user.primary_group_id = params[:primary_group_id]
-      @user.save!
+
+    if params[:primary_group_id].present?
+      primary_group_id = params[:primary_group_id].to_i
+      if group = Group.find(primary_group_id)
+        if group.user_ids.include?(@user.id)
+          @user.primary_group_id = primary_group_id
+        end
+      end
+    else
+      @user.primary_group_id = nil
     end
+
+    @user.save!
+
     render nothing: true
   end
 

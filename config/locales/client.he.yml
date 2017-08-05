@@ -159,6 +159,7 @@ he:
         eu_west_2: "אירופה (לונדון)"
         sa_east_1: "דרום אמריקה (סאו פאולו)"
         us_east_1: "מזרח ארה״ב (צפון וירג׳יניה)"
+        us_east_2: "ארה״ב מזרח (אוהיו)"
         us_gov_west_1: "AWS GovCloud (ארה״ב)"
         us_west_1: "מערב ארה\"ב (צפון קליפורניה)"
         us_west_2: "מערב ארה\"ב (ארגון)"
@@ -352,6 +353,8 @@ he:
         add_members: "הוספת חברים"
         delete_member_confirm: "הסרת '%{username}' מהקבוצה '%{group}'?"
       name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
+      public_admission: "אפשרו למשתמשים להצטרף לקבוצה בחופשיות (דורש קבוצה פומבית)"
+      public_exit: "אפשרו למשתמשים לעזוב את הקבוצה בחופשיות"
       empty:
         posts: "אין פוסטים של חברי קבוצה זו."
         members: "אין חברים בקבוצה זו."
@@ -363,6 +366,7 @@ he:
       join: "הצטרפות לקבוצה"
       leave: "עזיבת קבוצה"
       request: "בקשה להצטרפות לקבוצה"
+      message: "הודעה"
       automatic_group: קבוצה אוטומטית
       closed_group: קבוצה סגורה
       is_group_user: "אתם חברים בקבוצה זו."
@@ -1018,6 +1022,20 @@ he:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: חיפוש אחר אימוג׳י
+      people: אנשים
+      nature: טבע
+      food: אוכל
+      activity: פעילות
+      custom: אימוג׳יז מותאמים
+      recent: בשימוש לאחרונה
+      default_tone: ללא גוון עור
+      light_tone: גוון עור בהיר
+      medium_light_tone: גוון עור בהיר בינוני
+      medium_tone: גוון עור בינוני
+      medium_dark_tone: גוון עור כהה בינוני
+      dark_tone: גוון עור כהה
     composer:
       emoji: "אמוג׳י :)"
       more_emoji: "עוד..."
@@ -1181,8 +1199,8 @@ he:
       clear_all: "נקוי של הכל"
       too_short: "מילת החיפוש שלכם קצרה מידי."
       result_count:
-        one: "תוצאה אחת ל <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} תוצאות ל <span class='term'>\"{{term}}\"</span>"
+        one: "1 תוצאה עבור <span class='term'>{{term}}</span>"
+        other: "{{count}} תוצאות עבור <span class='term'>{{term}}</span>"
       title: "חיפוש נושאים, פוסטים, משתמשים או קטגוריות"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."
@@ -1220,6 +1238,7 @@ he:
           seen: קראתי
           unseen: לא קראתי
           wiki: הם ויקי
+          all_tags: מכיל את כל התגים
         statuses:
           label: כאשר נושאים
           open: פתוחים
@@ -2881,6 +2900,24 @@ he:
             title: "יוצר ערכי איסור משנה חדשים, אם יש לפחות 'min_ban_entries_for_roll_up' ערכים."
         logster:
           title: "רישום תקלות"
+      watched_words:
+        search: "חיפוש"
+        clear_filter: "ניקוי"
+        show_words: "הצגת מילים"
+        actions:
+          block: 'חסימה'
+          censor: 'צינזור'
+          require_approval: 'דרישת אישור'
+          flag: 'דגל'
+        action_descriptions:
+          require_approval: 'פוסטים שמכילים מילים אלו ידרשו אישור על ידי הצוות לפני שניתן יהיה לראות אותם.'
+          flag: 'אפשרו פוסטים שמכילים אלו, אך דגלו אותם כלא-ראויים כדי שמנחים יוכלו לסקור אותם.'
+        form:
+          label: 'מילה חדשה:'
+          add: 'הוספה'
+          success: 'הצלחה'
+          upload: "העלאה"
+          upload_successful: "העלאה הצליחה. מילים נוספו."
       impersonate:
         title: "התחזות"
         help: "השתמשו בכלי זה כדי להתחזות לחשבון משתמש לצרכי דיבוג. עליכם להתנתק ברגע שתסיימו."

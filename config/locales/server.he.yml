@@ -28,10 +28,10 @@ he:
   posts: "פוסטים"
   loading: "טוען"
   powered_by_html: 'מופעל על ידי <a href="https://www.discourse.org">דיסקורס</a>, לצפיה מיטבית יש להפעיל JavaScript'
-  log_in: "התחברות"
+  log_in: "כניסה"
   purge_reason: "נמחק אוטומטית כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אחסון פנוי."
-  anonymous: "אנונימי"
+  anonymous: "אלמוני"
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   themes:
     bad_color_scheme: "לא ניתן לעדכן את התמה, סכמת צבעים שגויה"
@@ -121,11 +121,11 @@ he:
     user_exists: "מצטערים, המשתמשים כבר הוזמנו. ניתן להזמין משתמשים לנושא רק פעם אחת."
   backup:
     operation_already_running: "פעולה רצה כרגע. לא יכול להתחיל עבודה חדשה עכשיו."
-    backup_file_should_be_tar_gz: "קובץ הגיבוי צריך להיות .tar.gz."
-    not_enough_space_on_disk: "אין מספיק מקום על הדיסק כדי להעלות את הגיבוי הזה."
+    backup_file_should_be_tar_gz: "קובץ הגיבוי צריך להיות ‎.tar.gz."
+    not_enough_space_on_disk: "אין מספיק מקום על הכונן כדי להעלות את הגיבוי הזה."
     invalid_filename: "שם קובץ הגיבוי מכיל תווים שגויים. תווים תקינים הם a-z 0-9 . - _."
   not_logged_in: "אתם צריכים להיות מחוברים כדי לעשות את זה."
-  not_found: "המשאב או כתובת ה-URL המבוקשת לא נמצאו."
+  not_found: "המשאב או הכתובת המבוקשת לא נמצאו."
   invalid_access: "אינכם מורשים לצפות במשאב שביקשתם."
   read_only_mode_enabled: "האתר הזה במצב קריאה בלבד. פעולות אין אפשריות."
   reading_time: "זמן קריאה"
@@ -171,6 +171,7 @@ he:
   too_many_links:
     one: "מצטערים, משתמשים חדשים יכולים להוסיף רק קישור אחד בפוסט."
     other: "מצטערים, משתמשים חדשים יכולים להוסיף רק %{count} קישורים בפוסט."
+  contains_blocked_words: "הפוסט שלך מכיל מילים אסורות."
   spamming_host: "סליחה אך אינכם יכולים להוסיף קישור לאתר זה."
   user_is_suspended: "משתמשים מושעים אינם מורשים לפרסם."
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
@@ -352,6 +353,10 @@ he:
           attributes:
             execute_at:
               in_the_past: "חייב להיות בעתיד"
+        watched_word:
+          attributes:
+            word:
+              too_many: "יש יותר מדי מילים בפעולה הזו"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>השדה ״אודותי״ בפרופיל שלכם הוא ריק כרגע, <a href='/u/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
@@ -412,6 +417,7 @@ he:
       invalid_email_in: "'%{email}' אינה כתובת מייל תקפה."
       email_already_used_in_group: "'%{email}' כבר בשימוש על ידי הקבוצה '%{group_name}'."
       email_already_used_in_category: "'%{email}' כבר בשימוש על ידי הקטגוריה '%{category_name}'."
+      description_incomplete: "לתיאור קטגוריה זו צריכה להיות לפחות פסקה אחת."
     cannot_delete:
       uncategorized: "לא ניתן למחוק תוכן ללא קטגוריה"
       has_subcategories: "לא ניתן למחוק קטגוריה זו משום שיש בה תת-קטגוריות."
@@ -1288,6 +1294,7 @@ he:
     auto_close_messages_post_count: "מספר פוסטים מקסימלי בהודעה לפני שהיא נסגרת אוטומטית (0 לניטרול)"
     auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 לניטרול)"
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
+    max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
     default_include_tl0_in_digests: "כללו פוסטים ממשתמשים חדשים בדוא\"ל מסכם כברירת מחדל. משתמשים יוכלו לשנות זאת בהעדפות האישיות."
     default_email_private_messages: "שלח מייל כשמישהו שולח הודעה למשתמש, בתור ברירת מחדל."
@@ -1919,24 +1926,14 @@ he:
     email_reject_topic_not_found:
       title: "דחיית מייל נושא לא נמצא"
       subject_template: "[%{email_prefix}]  בעיית מייל -- לא נמצא נושא"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        הנושא שאתם מנסים להגיב אליו כבר לא קיים -- אולי הוא נמחק? אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_topic_closed:
       title: "דחיית מייל נושא סגור"
       subject_template: "[%{email_prefix}]  בעיית מייל -- נושא נסגר"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        הנושא שאתם מגיבים אליו סגור כרגע ולא מקבל יותר תגובות. אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_auto_generated:
       title: "דחיית מייל נוצר אוטומטית"
       subject_template: "[%{email_prefix}]  בעיית מייל -- תגובה נוצרה אוטומטית"
-      text_body_template: |
-        אנחנו מצטערים, אבל משהו לא עבד עם הודעת הדוא"ל שלך, שנשלחה אל %{destination} (titled %{former_title}).
-
-        המייל ששלחת סומן כ"נכתב אוטומטית", מה שאומר שהוא נכתב על ידי מחשב ולא הוקלד על ידי אדם; איננו יכולים לקבל מיילים שכאלה. אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
+    email_reject_unrecognized_error:
+      subject_template: "[%{email_prefix}] בעיה עם הדוא״ל -- שגיאה לא מוכרת"
     email_error_notification:
       title: "התראת בעיית מייל"
       subject_template: "[%{email_prefix}]  בעיית מייל -- בעיית אימות POP"

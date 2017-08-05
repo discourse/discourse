@@ -2,6 +2,7 @@ import MountWidget from 'discourse/components/mount-widget';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default MountWidget.extend({
+  classNames: ['topic-notifications-container'],
   widget: 'topic-notifications-button',
 
   buildArgs() {
