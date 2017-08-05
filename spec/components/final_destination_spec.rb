@@ -147,16 +147,16 @@ describe FinalDestination do
         final = FinalDestination.new('https://force.get.com/posts?page=4', opts)
         expect(final.resolve.to_s).to eq('https://force.get.com/posts?page=4')
         expect(final.status).to eq(:resolved)
-        expect(WebMock).to have_requested(:get, "https://force.get.com/posts?page=4")
-        expect(WebMock).to_not have_requested(:head, "https://force.get.com/posts?page=4")
+        expect(WebMock).to have_requested(:get, 'https://force.get.com/posts?page=4')
+        expect(WebMock).to_not have_requested(:head, 'https://force.get.com/posts?page=4')
       end
 
       it "will do a HEAD if not forced" do
         final = FinalDestination.new('https://eviltrout.com/posts?page=2', opts)
         expect(final.resolve.to_s).to eq('https://eviltrout.com/posts?page=2')
         expect(final.status).to eq(:resolved)
-        expect(WebMock).to_not have_requested(:get, "https://eviltrout.com/posts?page=2")
-        expect(WebMock).to have_requested(:head, "https://eviltrout.com/posts?page=2")
+        expect(WebMock).to_not have_requested(:get, 'https://eviltrout.com/posts?page=2')
+        expect(WebMock).to have_requested(:head, 'https://eviltrout.com/posts?page=2')
       end
     end
 
