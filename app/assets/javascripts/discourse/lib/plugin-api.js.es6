@@ -20,10 +20,11 @@ import { addPostClassesCallback } from 'discourse/widgets/post';
 import { addPostTransformCallback } from 'discourse/widgets/post-stream';
 import { attachAdditionalPanel } from 'discourse/widgets/header';
 import { registerIconRenderer } from 'discourse-common/lib/icon-library';
+import { addNavItem } from 'discourse/models/nav-item';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.8';
+const PLUGIN_API_VERSION = '0.8.9';
 
 class PluginApi {
   constructor(version, container) {
@@ -523,6 +524,22 @@ class PluginApi {
    */
   addPostTransformCallback(callback) {
     addPostTransformCallback(callback);
+  }
+
+  /**
+  *
+  * Adds a new item in the navigation bar.
+  *
+  * Example:
+  *
+  * addNavigationBarItem({
+  *   name: "discourse",
+  *   displayName: "Discourse"
+  *   href: "https://www.discourse.org",
+  * })
+  */
+  addNavigationBarItem(item) {
+    addNavItem(item);
   }
 }
 
