@@ -18,6 +18,7 @@ class FinalDestination
       end
 
     @opts = opts || {}
+    @force_get_hosts = @opts[:force_get_hosts] || []
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda do |host|
       begin
@@ -29,6 +30,7 @@ class FinalDestination
     @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
     @limit = @opts[:max_redirects]
     @status = :ready
+    @http_verb = @force_get_hosts.any? { |host| hostname_matches?(host) } ? :get : :head
     @cookie = nil
   end
 
@@ -79,7 +81,7 @@ class FinalDestination
 
     return nil unless validate_uri
     headers = request_headers
-    response = Excon.head(
+    response = Excon.public_send(@http_verb,
       @uri.to_s,
       read_timeout: FinalDestination.connection_timeout,
       headers: headers
