@@ -16,7 +16,7 @@ class SiteSettings::DefaultsProvider
     @cached = {}
     @defaults = {}
     @defaults[DEFAULT_LOCALE.to_sym] = {}
-    @site_locale = nil
+    @site_locale = {}
     refresh_site_locale!
   end
 
@@ -61,20 +61,22 @@ class SiteSettings::DefaultsProvider
 
   alias [] get
 
-  attr_reader :site_locale
+  def site_locale
+    @site_locale[current_db]
+  end
 
   def site_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
 
-    if val != @site_locale
+    if val != @site_locale[current_db]
       @site_setting.provider.save(DEFAULT_LOCALE_KEY, val, SiteSetting.types[:string])
       refresh_site_locale!
       @site_setting.refresh!
       Discourse.request_refresh!
     end
 
-    @site_locale
+    @site_locale[current_db]
   end
 
   def each
@@ -89,24 +91,28 @@ class SiteSettings::DefaultsProvider
       description: @site_setting.description(DEFAULT_LOCALE_KEY),
       type: SiteSetting.types[SiteSetting.types[:enum]],
       preview: nil,
-      value: @site_locale,
+      value: @site_locale[current_db],
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?
     }
   end
 
   def refresh_site_locale!
-    if GlobalSetting.respond_to?(DEFAULT_LOCALE_KEY) &&
-        (global_val = GlobalSetting.send(DEFAULT_LOCALE_KEY)) &&
-        !global_val.blank?
-      @site_locale = global_val
-    elsif (db_val = @site_setting.provider.find(DEFAULT_LOCALE_KEY))
-      @site_locale = db_val.value.to_s
-    else
-      @site_locale = DEFAULT_LOCALE
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      @site_locale[db] =
+        if GlobalSetting.respond_to?(DEFAULT_LOCALE_KEY) &&
+            (global_val = GlobalSetting.send(DEFAULT_LOCALE_KEY)) &&
+            !global_val.blank?
+          global_val
+        elsif (db_val = @site_setting.provider.find(DEFAULT_LOCALE_KEY))
+          db_val.value.to_s
+        else
+          DEFAULT_LOCALE
+        end
+
+      refresh_cache!
+      @site_locale[db]
     end
-    refresh_cache!
-    @site_locale
   end
 
   def has_setting?(name)
@@ -120,7 +126,11 @@ class SiteSettings::DefaultsProvider
   end
 
   def refresh_cache!
-    @cached = @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults.fetch(@site_locale.to_sym, {}))
+    @cached = @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults.fetch(@site_locale[current_db].to_sym, {}))
+  end
+
+  def current_db
+    RailsMultisite::ConnectionManagement.current_db
   end
 
 end
