@@ -539,7 +539,11 @@ class PluginApi {
   * })
   */
   addNavigationBarItem(item) {
-    addNavItem(item);
+    if (!item["name"]) {
+      console.warn("A 'name' is required when adding a Navigation Bar Item.", item);
+    } else {
+      addNavItem(item);
+    }
   }
 }
 
