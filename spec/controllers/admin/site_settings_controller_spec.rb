@@ -27,6 +27,7 @@ describe Admin::SiteSettingsController do
 
       before do
         SiteSetting.setting(:test_setting, "default")
+        SiteSetting.refresh!
       end
 
       it 'sets the value when the param is present' do
@@ -49,6 +50,7 @@ describe Admin::SiteSettingsController do
 
       it 'does not allow changing of hidden settings' do
         SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
+        SiteSetting.refresh!
         result = xhr :put, :update, id: 'hidden_setting', hidden_setting: 'not allowed'
         expect(SiteSetting.hidden_setting).to eq("hidden")
         expect(result.status).to eq(422)

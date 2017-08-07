@@ -46,4 +46,22 @@ Discourse::Application.configure do
     config.logger = Logger.new(nil)
     config.log_level = :fatal
   end
+
+  config.after_initialize do
+    SiteSetting.defaults.tap do |s|
+      s.set_regardless_of_locale(:s3_upload_bucket, 'bucket')
+      s.set_regardless_of_locale(:min_post_length, 5)
+      s.set_regardless_of_locale(:min_first_post_length, 5)
+      s.set_regardless_of_locale(:min_private_message_post_length, 10)
+      s.set_regardless_of_locale(:crawl_images, false)
+      s.set_regardless_of_locale(:download_remote_images_to_local, false)
+      s.set_regardless_of_locale(:unique_posts_mins, 0)
+      s.set_regardless_of_locale(:queue_jobs, false)
+      # disable plugins
+      if ENV['LOAD_PLUGINS'] == '1'
+        s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
+      end
+    end
+    SiteSetting.refresh!
+  end
 end
