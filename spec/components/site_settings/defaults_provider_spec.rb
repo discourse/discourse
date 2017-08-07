@@ -40,7 +40,7 @@ describe SiteSettings::DefaultsProvider do
   end
 
   describe 'expose default cache according to locale' do
-    before(:each) do
+    before do
       settings.setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
       settings.setting(:test_default, 'test', regex: '^\S+$')
       settings.refresh!
