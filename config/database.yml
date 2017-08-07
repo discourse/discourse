@@ -1,7 +1,7 @@
 development:
   prepared_statements: false
   adapter: postgresql
-  database: discourse_development
+  database: edgeryders_production
   min_messages: warning
   pool: 5
   timeout: 5000
