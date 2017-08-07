@@ -55,7 +55,7 @@
 
     <%= yield :head %>
 
-    <%= raw build_plugin_html 'before-head-close' %>
+    <%= raw build_plugin_html 'server:before-head-close' %>
   </head>
 
   <body class="<%= body_classes %>">
@@ -87,6 +87,7 @@
 
     <%- unless customization_disabled? || loading_admin? %>
       <%= theme_lookup("header") %>
+      <%= raw build_plugin_html 'server:header' %>
     <%- end %>
 
     <section id='main'>
@@ -124,6 +125,6 @@
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>
     <%- end %>
-    <%= raw build_plugin_html 'before-body-close' %>
+    <%= raw build_plugin_html 'server:before-body-close' %>
   </body>
 </html>
