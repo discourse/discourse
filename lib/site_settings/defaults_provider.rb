@@ -12,11 +12,10 @@ class SiteSettings::DefaultsProvider
   def initialize(site_setting)
     @site_setting = site_setting
     @site_setting.refresh_settings << DEFAULT_LOCALE_KEY
-
-    @cached = {}
     @defaults = {}
     @defaults[DEFAULT_LOCALE.to_sym] = {}
-    @site_locale = {}
+
+    @site_locales = {}
     refresh_site_locale!
   end
 
@@ -31,7 +30,6 @@ class SiteSettings::DefaultsProvider
         @defaults[locale][name] = v
       end
     end
-    refresh_cache!
   end
 
   def db_all
@@ -39,12 +37,14 @@ class SiteSettings::DefaultsProvider
   end
 
   def all
-    @cached
+    @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults[self.site_locale.to_sym] || {})
   end
 
   def get(name)
-    @cached[name.to_sym]
+    @defaults.dig(self.site_locale.to_sym, name.to_sym) ||
+      @defaults.dig(DEFAULT_LOCALE.to_sym, name.to_sym)
   end
+  alias [] get
 
   # Used to override site settings in dev/test env
   def set_regardless_of_locale(name, value)
@@ -53,34 +53,34 @@ class SiteSettings::DefaultsProvider
       @defaults.each { |_, hash| hash.delete(name) }
       @defaults[DEFAULT_LOCALE.to_sym][name] = value
       value, type = @site_setting.type_supervisor.to_db_value(name, value)
-      @cached[name] = @site_setting.type_supervisor.to_rb_value(name, value, type)
+      @defaults[self.site_locale.to_sym][name] = @site_setting.type_supervisor.to_rb_value(name, value, type)
     else
       raise ArgumentError.new("No setting named '#{name}' exists")
     end
   end
 
-  alias [] get
-
   def site_locale
-    @site_locale[current_db]
+    @site_locales[current_db]
   end
 
   def site_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
 
-    if val != @site_locale[current_db]
+    if val != @site_locales[current_db]
       @site_setting.provider.save(DEFAULT_LOCALE_KEY, val, SiteSetting.types[:string])
       refresh_site_locale!
       @site_setting.refresh!
       Discourse.request_refresh!
     end
 
-    @site_locale[current_db]
+    @site_locales[current_db]
   end
 
-  def each
-    @cached.each { |k, v| yield k.to_sym, v }
+  def each(&block)
+    self.all.each do |key, value|
+      block.call(key.to_sym, value)
+    end
   end
 
   def locale_setting_hash
@@ -91,7 +91,7 @@ class SiteSettings::DefaultsProvider
       description: @site_setting.description(DEFAULT_LOCALE_KEY),
       type: SiteSetting.types[SiteSetting.types[:enum]],
       preview: nil,
-      value: @site_locale[current_db],
+      value: @site_locales[current_db],
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?
     }
@@ -99,7 +99,7 @@ class SiteSettings::DefaultsProvider
 
   def refresh_site_locale!
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      @site_locale[db] =
+      @site_locales[db] =
         if GlobalSetting.respond_to?(DEFAULT_LOCALE_KEY) &&
             (global_val = GlobalSetting.send(DEFAULT_LOCALE_KEY)) &&
             !global_val.blank?
@@ -110,8 +110,7 @@ class SiteSettings::DefaultsProvider
           DEFAULT_LOCALE
         end
 
-      refresh_cache!
-      @site_locale[db]
+      @site_locales[db]
     end
   end
 
@@ -121,12 +120,9 @@ class SiteSettings::DefaultsProvider
 
   private
 
-  def has_key?(key)
-    @cached.key?(key) || key == DEFAULT_LOCALE_KEY
-  end
-
-  def refresh_cache!
-    @cached = @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults.fetch(@site_locale[current_db].to_sym, {}))
+  def has_key?(name)
+    @defaults[self.site_locale.to_sym]&.key?(name) ||
+      @defaults[DEFAULT_LOCALE.to_sym].key?(name) || name == DEFAULT_LOCALE_KEY
   end
 
   def current_db
