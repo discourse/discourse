@@ -143,6 +143,8 @@
     {{group-flair-inputs model=model}}
   {{/unless}}
 
+  {{plugin-outlet name="group-edit" args=(hash group=model)}}
+
   <div class='buttons'>
     <button {{action "save"}} disabled={{disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
     {{#unless model.automatic}}
