@@ -66,9 +66,11 @@ module SiteSettingExtension
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
-      defaults.load_setting(name,
-                            default,
-                            opts.extract!(*SiteSettings::DefaultsProvider::CONSUMED_OPTS))
+      defaults.load_setting(
+        name,
+        default,
+        opts.extract!(*SiteSettings::DefaultsProvider::CONSUMED_OPTS)
+      )
 
       categories[name] = opts[:category] || :uncategorized
 
@@ -97,8 +99,10 @@ module SiteSettingExtension
         previews[name] = opts[:preview]
       end
 
-      type_supervisor.load_setting(name,
-                                   opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS))
+      type_supervisor.load_setting(
+        name,
+        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS)
+      )
 
       setup_methods(name)
     end
@@ -164,7 +168,7 @@ module SiteSettingExtension
       defaults_view = defaults.all
 
       # add locale default and defaults based on default_locale, cause they are cached
-      new_hash = defaults_view.merge(new_hash)
+      new_hash = defaults_view.merge!(new_hash)
 
       # add shadowed
       shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
