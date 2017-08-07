@@ -85,9 +85,7 @@ gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-instagram'
-
-# Forked until https://github.com/intridea/omniauth-github/pull/41 is merged
-gem 'omniauth-github-discourse', require: 'omniauth-github'
+gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
