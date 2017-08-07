@@ -14,7 +14,11 @@ class SiteSetting < ActiveRecord::Base
 
   def self.load_settings(file)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
-      setting(name, default, opts.merge(category: category))
+      if opts.delete(:client)
+        client_setting(name, default, opts.merge(category: category))
+      else
+        setting(name, default, opts.merge(category: category))
+      end
     end
   end
 
@@ -26,11 +30,6 @@ class SiteSetting < ActiveRecord::Base
       load_settings(file)
     end
   end
-
-  # `current` hash is not populated everytime when load a site setting
-  # in order to support locale default. Instead, we simply `refresh!` once.
-  # This should only affects the spec in which you should populate `current`
-  refresh!
 
   client_settings << :available_locales
 

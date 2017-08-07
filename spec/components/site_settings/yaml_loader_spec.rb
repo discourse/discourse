@@ -8,18 +8,26 @@ describe SiteSettings::YamlLoader do
 
     def load_yaml(file_arg)
       SiteSettings::YamlLoader.new(file_arg).load do |category, name, default, opts|
-        setting(category, name, default, opts)
+        if opts.delete(:client)
+          client_setting(category, name, default, opts)
+        else
+          setting(category, name, default, opts)
+        end
       end
     end
 
     def setting(category, name, default = nil, opts = {})
       @settings ||= []
-      @client_settings ||= []
       @settings << name
       @categories ||= []
       @categories << category
       @categories.uniq!
-      @client_settings << name if opts.has_key?(:client)
+    end
+
+    def client_setting(category, name, default = nil)
+      @client_settings ||= []
+      @client_settings << name
+      setting(category, name, default)
     end
   end
 
@@ -28,9 +36,7 @@ describe SiteSettings::YamlLoader do
   let(:client)      { "#{Rails.root}/spec/fixtures/site_settings/client.yml" }
   let(:enum)        { "#{Rails.root}/spec/fixtures/site_settings/enum.yml" }
   let(:enum_client) { "#{Rails.root}/spec/fixtures/site_settings/enum_client.yml" }
-  let(:deprecated_env) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_env.yml" }
-  let(:deprecated_hidden) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_hidden.yml" }
-  let(:locale_default) { "#{Rails.root}/spec/fixtures/site_settings/locale_default.yml" }
+  let(:env)         { "#{Rails.root}/spec/fixtures/site_settings/env.yml" }
 
   it "loads simple settings" do
     receiver.expects(:setting).with('category1', 'title', 'My Site', {}).once
@@ -51,9 +57,9 @@ describe SiteSettings::YamlLoader do
   end
 
   it "can load client settings" do
-    receiver.expects(:setting).with('category1', 'title', 'Discourse', client: true)
-    receiver.expects(:setting).with('category2', 'tos_url', '', client: true)
-    receiver.expects(:setting).with('category2', 'must_approve_users', false, client: true)
+    receiver.expects(:client_setting).with('category1', 'title', 'Discourse', {})
+    receiver.expects(:client_setting).with('category2', 'tos_url', '', {})
+    receiver.expects(:client_setting).with('category2', 'must_approve_users', false, {})
     receiver.load_yaml(client)
   end
 
@@ -63,22 +69,15 @@ describe SiteSettings::YamlLoader do
   end
 
   it "can load enum client settings" do
-    receiver.expects(:setting).with do |category, name, default, opts|
-      category == ('basics') && name == ('default_locale') && default == ('en') && opts[:enum] == ('LocaleSiteSetting') && opts[:client] == true
+    receiver.expects(:client_setting).with do |category, name, default, opts|
+      category == ('basics') && name == ('default_locale') && default == ('en') && opts[:enum] == ('LocaleSiteSetting')
     end
     receiver.load_yaml(enum_client)
   end
 
-  it "raises deprecation when load settings based on environment" do
-    expect { receiver.load_yaml(deprecated_env) }.to raise_error(Discourse::Deprecation)
-  end
-
-  it "raises deprecation when hidden property is based on environment" do
-    expect { receiver.load_yaml(deprecated_hidden) }.to raise_error(Discourse::Deprecation)
-  end
-
-  it "can load settings with locale default" do
-    receiver.expects(:setting).with('search', 'min_search_term_length', 3, min: 2, client: true, locale_default: { zh_CN: 2, zh_TW: 2 })
-    receiver.load_yaml(locale_default)
+  it "can load settings based on environment" do
+    receiver.expects(:setting).with('misc', 'port', '', {})
+    receiver.expects(:client_setting).with('misc', 'crawl_images', false, {})
+    receiver.load_yaml(env)
   end
 end
