@@ -69,5 +69,11 @@ describe Onebox::Layout do
       html = described_class.new("amazon", record, cache).to_html
       expect(html).to include(%|"foo"|)
     end
+
+    it "rewrites relative image path" do
+      record = { image: "/image.png", link: "https://discourse.org" }
+      klass = described_class.new("whitelistedgeneric", record, cache)
+      expect(klass.view.record[:image]).to include("https://discourse.org")
+    end
   end
 end

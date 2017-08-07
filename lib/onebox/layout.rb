@@ -20,7 +20,7 @@ module Onebox
       end
 
       @md5 = Digest::MD5.new
-      @view = View.new(name, record)
+      @view = View.new(name, @record)
       @template_name = "_layout"
       @template_path = load_paths.last
     end
