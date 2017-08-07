@@ -79,6 +79,7 @@ GEM
     diff-lcs (1.3)
     discourse-qunit-rails (0.0.9)
       railties
+    discourse_fastimage (2.1.0)
     discourse_image_optim (0.24.5)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -112,7 +113,6 @@ GEM
       rake
       rake-compiler
     fast_xs (0.8.0)
-    fastimage (2.1.0)
     ffi (1.9.18)
     flamegraph (0.9.5)
     foreman (0.84.0)
@@ -413,6 +413,7 @@ DEPENDENCIES
   certified
   cppjieba_rb
   discourse-qunit-rails
+  discourse_fastimage
   discourse_image_optim
   email_reply_trimmer (= 0.1.7)
   ember-handlebars-template (= 0.7.5)
@@ -425,7 +426,6 @@ DEPENDENCIES
   fast_blank
   fast_xor
   fast_xs
-  fastimage (= 2.1.0)
   flamegraph
   foreman
   gc_tracer
