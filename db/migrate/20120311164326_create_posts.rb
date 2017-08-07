@@ -6,7 +6,7 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :post_number, null: false
       t.text :content, null: false
       t.text :formatted_content, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :posts, [:forum_thread_id, :created_at]

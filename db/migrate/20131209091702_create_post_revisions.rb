@@ -5,7 +5,7 @@ class CreatePostRevisions < ActiveRecord::Migration
       t.belongs_to :post
       t.text :modifications
       t.integer :number
-      t.timestamps
+      t.timestamps null: false
     end
 
     execute "INSERT INTO post_revisions (user_id, post_id, modifications, number, created_at, updated_at)

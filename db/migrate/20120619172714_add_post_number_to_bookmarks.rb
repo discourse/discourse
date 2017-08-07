@@ -6,7 +6,7 @@ class AddPostNumberToBookmarks < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.integer :forum_thread_id, null: false
       t.integer :post_number, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :bookmarks, [:user_id, :forum_thread_id, :post_number], unique: true

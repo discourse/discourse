@@ -3,7 +3,7 @@ class CreateTopicInvites < ActiveRecord::Migration
     create_table :topic_invites do |t|
       t.references :topic, null: false
       t.references :invite, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :topic_invites, [:topic_id, :invite_id], unique: true

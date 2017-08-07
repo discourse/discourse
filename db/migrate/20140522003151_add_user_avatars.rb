@@ -6,7 +6,7 @@ class AddUserAvatars < ActiveRecord::Migration
       t.integer :custom_upload_id
       t.integer :gravatar_upload_id
       t.datetime :last_gravatar_download_attempt
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_avatars, [:user_id]

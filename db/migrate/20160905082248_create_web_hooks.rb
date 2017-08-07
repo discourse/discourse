@@ -10,7 +10,7 @@ class CreateWebHooks < ActiveRecord::Migration
       t.boolean :verify_certificate, default: true, null: false
       t.boolean :active, default: false, null: false
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

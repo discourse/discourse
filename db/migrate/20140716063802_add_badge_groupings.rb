@@ -4,7 +4,7 @@ class AddBadgeGroupings < ActiveRecord::Migration
       t.string :name, null: false
       t.string :description, null: false
       t.integer :position, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_column :badges, :badge_grouping_id, :integer

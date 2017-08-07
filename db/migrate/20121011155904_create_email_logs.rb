@@ -4,7 +4,7 @@ class CreateEmailLogs < ActiveRecord::Migration
       t.string :to_address, null: false
       t.string :email_type, null: false
       t.integer :user_id, null: true
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :email_logs, :created_at, order: { created_at: :desc }

@@ -3,7 +3,7 @@ class CreateSiteContents < ActiveRecord::Migration
     create_table :site_contents, force: true, id: false do |t|
       t.string :content_type, null: false
       t.text :content, null: false
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :site_contents, :content_type, unique: true
   end

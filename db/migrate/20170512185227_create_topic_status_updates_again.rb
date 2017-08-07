@@ -10,7 +10,7 @@ class CreateTopicStatusUpdatesAgain < ActiveRecord::Migration
       t.boolean :based_on_last_post, null: false, default: false
       t.datetime :deleted_at
       t.integer :deleted_by_id
-      t.timestamps
+      t.timestamps null: false
       t.integer :category_id
     end
 

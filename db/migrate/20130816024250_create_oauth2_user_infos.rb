@@ -6,7 +6,7 @@ class CreateOauth2UserInfos < ActiveRecord::Migration
       t.string :provider, null: false
       t.string :email
       t.string :name
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :oauth2_user_infos, [:uid, :provider], unique: true

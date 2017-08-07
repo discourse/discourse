@@ -4,7 +4,7 @@ class AddTopicCustomFields < ActiveRecord::Migration
       t.integer :topic_id, null: false
       t.string :name, limit: 256, null: false
       t.text :value
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :topic_custom_fields, [:topic_id, :name]

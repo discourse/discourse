@@ -11,7 +11,7 @@ class CreateFacebookUserInfos < ActiveRecord::Migration
       t.string :name
       t.string :link
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :facebook_user_infos, :user_id, unique: true
     add_index :facebook_user_infos, :facebook_user_id, unique: true

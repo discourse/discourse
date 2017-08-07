@@ -9,7 +9,7 @@ class AddThemes < ActiveRecord::Migration
     create_table :child_themes do |t|
       t.integer :parent_theme_id
       t.integer :child_theme_id
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :child_themes, [:parent_theme_id, :child_theme_id], unique: true

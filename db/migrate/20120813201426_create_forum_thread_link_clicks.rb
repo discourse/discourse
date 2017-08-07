@@ -4,7 +4,7 @@ class CreateForumThreadLinkClicks < ActiveRecord::Migration
       t.references :forum_thread_link, null: false
       t.references :user, null: true
       t.integer :ip, null: false, limit: 8
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_column :forum_thread_links, :clicks, :integer, default: 0, null: false

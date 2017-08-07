@@ -4,7 +4,7 @@ class AddUserCustomFields < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.string :name, limit: 256, null: false
       t.text :value
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_custom_fields, [:user_id, :name]

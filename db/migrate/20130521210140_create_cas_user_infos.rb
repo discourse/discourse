@@ -11,7 +11,7 @@ class CreateCasUserInfos < ActiveRecord::Migration
       t.string :name
       t.string :link
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :cas_user_infos, :user_id, unique: true
     add_index :cas_user_infos, :cas_user_id, unique: true
