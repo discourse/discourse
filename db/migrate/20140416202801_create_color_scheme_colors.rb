@@ -6,7 +6,7 @@ class CreateColorSchemeColors < ActiveRecord::Migration
       t.integer :opacity,         null: false, default: 100
       t.integer :color_scheme_id, null: false
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :color_scheme_colors, [:color_scheme_id]

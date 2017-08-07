@@ -5,7 +5,7 @@ class CreateApiKeys < ActiveRecord::Migration
       t.string :key, limit: 64, null: false
       t.integer :user_id, null: true
       t.integer :created_by_id
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :api_keys, :key

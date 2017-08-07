@@ -6,7 +6,7 @@ class CreatePermalinks < ActiveRecord::Migration
       t.integer :post_id
       t.integer :category_id
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :permalinks, :url

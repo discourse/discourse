@@ -9,7 +9,7 @@ class CreateWebHookEvents < ActiveRecord::Migration
       t.text       :response_body
       t.integer    :duration, default: 0
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

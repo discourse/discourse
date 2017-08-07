@@ -22,7 +22,7 @@ SQL
       t.boolean :legacy, default: false, null: false
       t.inet    :client_ip
       t.datetime :rotated_at, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_auth_tokens, [:auth_token]

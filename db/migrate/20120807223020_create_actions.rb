@@ -15,7 +15,7 @@ class CreateActions < ActiveRecord::Migration
       t.integer :target_user_id
       t.integer :acting_user_id
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :actions, [:user_id, :action_type]

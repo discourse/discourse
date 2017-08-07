@@ -5,7 +5,7 @@ class CreateAdminLogs < ActiveRecord::Migration
       t.integer :admin_id,        null: false
       t.integer :target_user_id
       t.text    :details
-      t.timestamps
+      t.timestamps null: false
     end
   end
 

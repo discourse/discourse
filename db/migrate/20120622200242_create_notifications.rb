@@ -5,7 +5,7 @@ class CreateNotifications < ActiveRecord::Migration
       t.references :user, null: false
       t.string :data, null: false
       t.boolean :read, default: false, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :notifications, [:user_id, :created_at]

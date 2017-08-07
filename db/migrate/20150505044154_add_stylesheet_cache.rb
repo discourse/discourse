@@ -4,7 +4,7 @@ class AddStylesheetCache < ActiveRecord::Migration
       t.string :target, null: false
       t.string :digest, null: false
       t.text :content, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :stylesheet_cache, [:target, :digest], unique: true

@@ -4,7 +4,7 @@ class CreateBadgeTypes < ActiveRecord::Migration
       t.string :name, null: false
       t.string :color_hexcode, null: false
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :badge_types, [:name], unique: true

@@ -11,7 +11,7 @@ class CreateQueuedPosts < ActiveRecord::Migration
       t.timestamp  :approved_at
       t.integer    :rejected_by_id
       t.timestamp  :rejected_at
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :queued_posts, [:queue, :state, :created_at], name: 'by_queue_status'

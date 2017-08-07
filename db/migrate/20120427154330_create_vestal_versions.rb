@@ -9,7 +9,7 @@ class CreateVestalVersions < ActiveRecord::Migration
       t.integer :reverted_from
       t.string  :tag
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     change_table :versions do |t|

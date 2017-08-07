@@ -5,7 +5,7 @@ class CreateExpressions < ActiveRecord::Migration
       t.string :parent_type, null: false, limit: 50
       t.integer :expression_type_id, null: false
       t.integer :user_id, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :expressions, [:parent_id, :parent_type, :expression_type_id, :user_id], unique: true, name: "expressions_pk"

@@ -4,7 +4,7 @@ class CreateUserOpenIds < ActiveRecord::Migration
       t.integer :user_id
       t.string :email
       t.string :url
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_open_ids, [:url]

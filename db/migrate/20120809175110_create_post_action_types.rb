@@ -8,7 +8,7 @@ class CreatePostActionTypes < ActiveRecord::Migration
       t.text :description
       t.string :icon, limit: 20
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

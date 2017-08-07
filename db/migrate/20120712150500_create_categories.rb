@@ -9,7 +9,7 @@ class CreateCategories < ActiveRecord::Migration
       t.integer :top1_user_id, null: true
       t.integer :top2_user_id, null: true
       t.integer :forum_thread_count, null: false, default: 0
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :categories, :name, unique: true

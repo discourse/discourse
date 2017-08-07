@@ -3,7 +3,7 @@ class CreateReplies < ActiveRecord::Migration
     create_table :post_replies, id: false do |t|
       t.references :post
       t.integer :reply_id
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :post_replies, [:post_id, :reply_id], unique: true

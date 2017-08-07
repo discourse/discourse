@@ -7,7 +7,7 @@ class CreateColorSchemes < ActiveRecord::Migration
       t.integer :versioned_id
       t.integer :version,      null: false, default: 1
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

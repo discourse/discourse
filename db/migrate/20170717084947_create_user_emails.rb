@@ -6,7 +6,7 @@ class CreateUserEmails < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.string :email, limit: 513, null: false
       t.boolean :primary, default: false, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_emails, :user_id
