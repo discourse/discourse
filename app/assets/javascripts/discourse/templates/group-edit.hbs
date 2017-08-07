@@ -51,6 +51,8 @@
       </label>
     </div>
 
+    {{plugin-outlet name="group-edit" args=(hash group=model)}}
+
     {{d-button action="save" class="btn-primary" disabled=saving label="save"}}
     {{savingText}}
   </form>
