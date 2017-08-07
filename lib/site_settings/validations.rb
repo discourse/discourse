@@ -1,6 +1,6 @@
+module SiteSettings; end
 
-module SiteSettingValidations
-
+module SiteSettings::Validations
   def validate_error(key)
     raise Discourse::InvalidParameters.new(I18n.t("errors.site_settings.#{key}"))
   end
