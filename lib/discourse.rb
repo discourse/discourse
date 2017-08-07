@@ -84,8 +84,6 @@ module Discourse
   # Cross site request forgery
   class CSRF < StandardError; end
 
-  class Deprecation < StandardError; end
-
   def self.filters
     @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end
