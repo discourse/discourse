@@ -24,7 +24,10 @@ module Onebox
       def get_pdf_info
         uri = URI.parse(@url)
         size = Onebox::Helpers.fetch_content_length(@url)
-        return {filesize: Onebox::Helpers.pretty_filesize(size.to_i), name: File.basename(uri.path)}
+        return {
+          filesize: size ? Onebox::Helpers.pretty_filesize(size.to_i) : nil,
+          name: File.basename(uri.path)
+        }
       rescue
         nil
       end
