@@ -232,6 +232,7 @@ en:
   num_participants: "Participants:"
   read_full_topic: "Read full topic"
   private_message_abbrev: "Msg"
+
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
@@ -249,6 +250,8 @@ en:
     user_posts: "Latest posts by @%{username}"
     user_topics: "Latest topics by @%{username}"
     tag: "Tagged topics"
+    badge: "%{display_name} badge on %{site_title}"
+
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
