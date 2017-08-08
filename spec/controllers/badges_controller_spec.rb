@@ -33,5 +33,11 @@ describe BadgesController do
       get :show, id: badge.id, format: :json
       expect(user_badge.notification.reload.read).to eq(true)
     end
+
+    it 'renders rss feed of a badge' do
+      get :show, id: badge.id, format: :rss
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('application/rss+xml')
+    end
   end
 end
