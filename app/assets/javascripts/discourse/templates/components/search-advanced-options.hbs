@@ -53,11 +53,13 @@
   <div class="control-group pull-left">
     <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
     <div class="controls">
-      <section class='field'>
-        <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
-        <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.private}} {{i18n "search.advanced.filters.private"}}</label>
-        <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>
-      </section>
+      {{#if currentUser}}
+        <section class='field'>
+          <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
+          <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.private}} {{i18n "search.advanced.filters.private"}}</label>
+          <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>
+        </section>
+      {{/if}}
       {{combo-box id="in" valueAttribute="value" content=inOptions value=searchedTerms.in none="user.locale.any"}}
     </div>
   </div>

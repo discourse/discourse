@@ -1,6 +1,7 @@
 import { acceptance, waitFor } from "helpers/qunit-helpers";
 acceptance("Search - Full Page", {
   settings: {tagging_enabled: true},
+  loggedIn: true,
   beforeEach() {
     const response = (object) => {
       return [
