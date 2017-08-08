@@ -53,6 +53,7 @@ class SiteSettings::DefaultsProvider
       @defaults.each { |_, hash| hash.delete(name) }
       @defaults[DEFAULT_LOCALE.to_sym][name] = value
       value, type = @site_setting.type_supervisor.to_db_value(name, value)
+      @defaults[self.site_locale.to_sym] ||= {}
       @defaults[self.site_locale.to_sym][name] = @site_setting.type_supervisor.to_rb_value(name, value, type)
     else
       raise ArgumentError.new("No setting named '#{name}' exists")
