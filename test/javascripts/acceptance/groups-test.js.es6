@@ -85,6 +85,34 @@ QUnit.test("User Viewing Group", assert => {
   logIn();
   Discourse.reset();
 
+  visit("/groups");
+  click('.group-index-request');
+
+  server.post('/groups/Macdonald/request_membership', () => { // eslint-disable-line no-undef
+    return [
+      200,
+      { "Content-Type": "application/json" },
+      { relative_url: '/t/internationalization-localization/280' }
+    ];
+  });
+
+  andThen(() => {
+    assert.equal(find('.modal-header').text().trim(), I18n.t(
+      'groups.membership_request.title', { group_name: 'Macdonald' }
+    ));
+
+    assert.equal(find('.request-group-membership-form textarea').val(), 'Please add me');
+  });
+
+  click('.modal-footer .btn-primary');
+
+  andThen(() => {
+    assert.equal(
+      find('.fancy-title').text().trim(),
+      "Internationalization / localization"
+    );
+  });
+
   visit("/groups/discourse");
 
   click('.group-message-button');
