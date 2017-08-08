@@ -1,5 +1,6 @@
 set :application,     'discourse'
 set :repo_url,        'https://github.com/edgeryders/discourse.git'
+set :branch,          'stable'
 set :user,            'discourse'
 set :deploy_to,       "/home/discourse/#{fetch(:stage)}"
 set :use_sudo,        false
