@@ -6,6 +6,9 @@ class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
 
+  cattr_accessor :preloaded_custom_field_names
+  self.preloaded_custom_field_names = Set.new
+
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
