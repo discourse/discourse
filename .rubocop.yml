@@ -85,6 +85,9 @@ Layout/TrailingBlankLines:
 Layout/TrailingWhitespace:
   Enabled: true
 
+Lint/Debugger:
+  Enabled: true
+
 Lint/BlockAlignment:
   Enabled: true
 
