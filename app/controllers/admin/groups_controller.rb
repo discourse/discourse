@@ -97,6 +97,7 @@ class Admin::GroupsController < Admin::AdminController
 
     if group_params[:allow_membership_requests]
       group.allow_membership_requests = group_params[:allow_membership_requests]
+      group.membership_request_template = group_params[:membership_request_template]
     end
 
     if group_params[:owner_usernames].present?
@@ -208,7 +209,8 @@ class Admin::GroupsController < Admin::AdminController
       :full_name,
       :default_notification_level,
       :usernames,
-      :owner_usernames
+      :owner_usernames,
+      :membership_request_template
     )
   end
 end

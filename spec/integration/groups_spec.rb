@@ -564,6 +564,14 @@ describe "Groups" do
       end.to raise_error(Discourse::NotLoggedIn)
     end
 
+    it 'requires a reason' do
+      sign_in(user)
+
+      expect do
+        xhr :post, "/groups/#{group.name}/request_membership"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+
     it 'should create the right PM' do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
       owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1 .day)
@@ -571,7 +579,8 @@ describe "Groups" do
 
       sign_in(user)
 
-      xhr :post, "/groups/#{group.name}/request_membership"
+      xhr :post, "/groups/#{group.name}/request_membership",
+        reason: 'Please add me in'
 
       expect(response).to be_success
 
@@ -586,10 +595,7 @@ describe "Groups" do
         group_name: group.name
       ))
 
-      expect(post.raw).to eq(I18n.t(
-        'groups.request_membership_pm.body', group_name: group.name
-      ))
-
+      expect(post.raw).to eq('Please add me in')
       expect(topic.archetype).to eq(Archetype.private_message)
       expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
       expect(topic.allowed_groups).to eq([])

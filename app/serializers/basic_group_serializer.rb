@@ -22,7 +22,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :public_exit,
              :allow_membership_requests,
              :full_name,
-             :default_notification_level
+             :default_notification_level,
+             :membership_request_template
 
   def include_display_name?
     object.automatic
