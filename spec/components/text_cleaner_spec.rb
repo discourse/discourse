@@ -191,6 +191,10 @@ describe TextCleaner do
         expect(TextCleaner.clean_title("INVESTIGAÇÃO POLÍTICA NA CÂMARA")).to eq("Investigação política na câmara")
       end
 
+      it "doesn't downcase text if only one word is upcase in a non-ascii alphabet" do
+        expect(TextCleaner.clean_title("«Эта неделя в EVE»")).to eq("«Эта неделя в EVE»")
+      end
+
       it "capitalizes first unicode letter" do
         expect(TextCleaner.clean_title("épico encontro")).to eq("Épico encontro")
       end
