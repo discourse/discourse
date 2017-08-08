@@ -8,7 +8,7 @@ class CreateDirectoryItems < ActiveRecord::Migration
       t.integer :topics_entered, null: false
       t.integer :topic_count, null: false
       t.integer :post_count, null: false
-      t.timestamps null: false
+      t.timestamps null: true
     end
 
     add_index :directory_items, :period_type
