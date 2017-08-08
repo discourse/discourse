@@ -3,10 +3,28 @@ task 'set_locale' do
   I18n.locale = (SiteSetting.default_locale || :en) rescue :en
 end
 
+task 'db:create', [:multisite] => [:load_config] do |_, args|
+  if Rails.env.test? && !args[:multisite]
+    system("MULTISITE=multisite rake db:create['true']")
+  end
+end
+
+task 'db:drop', [:multisite] => [:load_config] do |_, args|
+  if Rails.env.test? && !args[:multisite]
+    system("MULTISITE=multisite rake db:drop['true']")
+  end
+end
+
 # we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => ['environment', 'set_locale'] do
+task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed
   Jobs::Onceoff.enqueue_all
+
+  if Rails.env.test? && !args[:multisite]
+    system("rake db:schema:dump")
+    system("MULTISITE=multisite rake db:schema:load")
+    system("MULTISITE=multisite rake db:migrate['multisite']")
+  end
 end
 
 task 'test:prepare' => 'environment' do
