@@ -55,6 +55,10 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes) {
+    if (this.container.cache[resolverName]) {
+      console.warn(`"${resolverName}" was already cached in the container. Changes won't be applied.`);
+    }
+
     const klass = this.container.factoryFor(resolverName);
     klass.class.reopen(changes);
     return klass;
