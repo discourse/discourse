@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, logIn } from "helpers/qunit-helpers";
 acceptance("Search");
 
 QUnit.test("search", (assert) => {
@@ -71,5 +71,55 @@ QUnit.test("Search with context", assert => {
 
   andThen(() => {
     assert.ok(!$('.search-context input[type=checkbox]').is(":checked"));
+  });
+});
+
+QUnit.test("in:likes, in:private, and in:seen filters are hidden to anonymous users", assert => {
+  visit("/search?expanded=true");
+
+  andThen(() => {
+    assert.notOk(exists('.search-advanced-options .in-likes'));
+    assert.notOk(exists('.search-advanced-options .in-private'));
+    assert.notOk(exists('.search-advanced-options .in-seen'));
+  });
+});
+
+QUnit.test("in:likes, in:private, and in:seen filters are available to logged in users", assert => {
+  logIn();
+  Discourse.reset();
+  visit("/search?expanded=true");
+
+  andThen(() => {
+    assert.ok(exists('.search-advanced-options .in-likes'));
+    assert.ok(exists('.search-advanced-options .in-private'));
+    assert.ok(exists('.search-advanced-options .in-seen'));
+  });
+});
+
+QUnit.test(`"I've not read", "I posted in", "I'm watching", "I'm tracking",
+            "I've bookmarked" filters are hidden to anonymous users from the dropdown`, assert => {
+  visit("/search?expanded=true");
+
+  andThen(() => {
+    assert.notOk(exists('select#in option[value=unseen]'));
+    assert.notOk(exists('select#in option[value=posted]'));
+    assert.notOk(exists('select#in option[value=watching]'));
+    assert.notOk(exists('select#in option[value=tracking]'));
+    assert.notOk(exists('select#in option[value=bookmarks]'));
+  });
+});
+
+QUnit.test(`"I've not read", "I posted in", "I'm watching", "I'm tracking",
+            "I've bookmarked" filters are available to logged in users in the dropdown`, assert => {
+  logIn();
+  Discourse.reset();
+  visit("/search?expanded=true");
+
+  andThen(() => {
+    assert.ok(exists('select#in option[value=unseen]'));
+    assert.ok(exists('select#in option[value=posted]'));
+    assert.ok(exists('select#in option[value=watching]'));
+    assert.ok(exists('select#in option[value=tracking]'));
+    assert.ok(exists('select#in option[value=bookmarks]'));
   });
 });
