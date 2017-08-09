@@ -20,15 +20,11 @@
           disabled=true}}
     {{/if}}
   {{else}}
-    {{d-button action="requestMembership"
+    {{d-button action="showRequestMembershipForm"
         class="group-index-request"
         disabled=loading
         icon="user-plus"
         label="groups.request"}}
-
-    {{#if loading}}
-      {{loading-spinner size="small"}}
-    {{/if}}
   {{/if}}
 {{else}}
   {{yield}}

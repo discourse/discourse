@@ -91,6 +91,17 @@
       </label>
     </div>
 
+    {{#if model.allow_membership_requests}}
+      <div>
+        <label for="membership-request-template">
+          {{i18n 'groups.membership_request_template'}}
+        </label>
+
+        {{expanding-text-area name="membership-request-template"
+            value=model.membership_request_template}}
+      </div>
+    {{/if}}
+
     <div>
       <label for="primary_group">
         {{input type="checkbox" checked=model.primary_group}}
