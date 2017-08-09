@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, logIn } from "helpers/qunit-helpers";
 acceptance("Search");
 
 QUnit.test("search", (assert) => {
@@ -71,5 +71,51 @@ QUnit.test("Search with context", assert => {
 
   andThen(() => {
     assert.ok(!$('.search-context input[type=checkbox]').is(":checked"));
+  });
+});
+
+QUnit.test("Right filters are shown to anonymous users", assert => {
+  visit("/search?expanded=true");
+
+  andThen(() => {
+    assert.ok(exists('select#in option[value=first]'));
+    assert.ok(exists('select#in option[value=pinned]'));
+    assert.ok(exists('select#in option[value=unpinned]'));
+    assert.ok(exists('select#in option[value=wiki]'));
+    assert.ok(exists('select#in option[value=images]'));
+
+    assert.notOk(exists('select#in option[value=unseen]'));
+    assert.notOk(exists('select#in option[value=posted]'));
+    assert.notOk(exists('select#in option[value=watching]'));
+    assert.notOk(exists('select#in option[value=tracking]'));
+    assert.notOk(exists('select#in option[value=bookmarks]'));
+
+    assert.notOk(exists('.search-advanced-options .in-likes'));
+    assert.notOk(exists('.search-advanced-options .in-private'));
+    assert.notOk(exists('.search-advanced-options .in-seen'));
+  });
+});
+
+QUnit.test("Right filters are shown to logged-in users", assert => {
+  logIn();
+  Discourse.reset();
+  visit("/search?expanded=true");
+
+  andThen(() => {
+    assert.ok(exists('select#in option[value=first]'));
+    assert.ok(exists('select#in option[value=pinned]'));
+    assert.ok(exists('select#in option[value=unpinned]'));
+    assert.ok(exists('select#in option[value=wiki]'));
+    assert.ok(exists('select#in option[value=images]'));
+
+    assert.ok(exists('select#in option[value=unseen]'));
+    assert.ok(exists('select#in option[value=posted]'));
+    assert.ok(exists('select#in option[value=watching]'));
+    assert.ok(exists('select#in option[value=tracking]'));
+    assert.ok(exists('select#in option[value=bookmarks]'));
+
+    assert.ok(exists('.search-advanced-options .in-likes'));
+    assert.ok(exists('.search-advanced-options .in-private'));
+    assert.ok(exists('.search-advanced-options .in-seen'));
   });
 });
