@@ -280,7 +280,6 @@ en:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
-      body: "I would like to apply for membership in @%{group_name}."
 
   education:
     until_posts:

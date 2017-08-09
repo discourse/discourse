@@ -243,6 +243,8 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
+    params.require(:reason)
+
     unless current_user.staff?
       RateLimiter.new(current_user, "request_group_membership", 1, 1.day).performed!
     end
@@ -259,7 +261,7 @@ class GroupsController < ApplicationController
 
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
-      raw: I18n.t('groups.request_membership_pm.body', group_name: group_name),
+      raw: params[:reason],
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
       skip_validations: true

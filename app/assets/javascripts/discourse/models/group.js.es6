@@ -147,7 +147,8 @@ const Group = RestModel.extend({
       public_exit: this.get('public_exit'),
       allow_membership_requests: this.get('allow_membership_requests'),
       full_name: this.get('full_name'),
-      default_notification_level: this.get('default_notification_level')
+      default_notification_level: this.get('default_notification_level'),
+      membership_request_template: this.get('membership_request_template')
     };
 
     if (!this.get('id')) {
@@ -220,9 +221,10 @@ const Group = RestModel.extend({
     });
   },
 
-  requestMembership() {
+  requestMembership(reason) {
     return ajax(`/groups/${this.get('name')}/request_membership`, {
-      type: "POST"
+      type: "POST",
+      data: { reason: reason }
     });
   },
 });
