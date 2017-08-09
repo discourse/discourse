@@ -218,13 +218,15 @@ module Jobs
         topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
         return user_archive_array if topic_data.nil?
         category = topic_data.category
-        sub_category = "-"
+        sub_category_name = "-"
         if category
           category_name = category.name
-          if !category.parent_category_id.nil?
+          if category.parent_category_id.present?
             # sub category
-            category_name = Category.find_by(id: category.parent_category_id).name
-            sub_category = category.name
+            if parent_category = Category.find_by(id: category.parent_category_id)
+              category_name = parent_category.name
+              sub_category_name = category.name
+            end
           end
         else
           # PM
@@ -233,7 +235,7 @@ module Jobs
         is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
         url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
-        topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category, "is_pm" => is_pm, "url" => url }
+        topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category_name, "is_pm" => is_pm, "url" => url }
         user_archive.merge!(topic_hash)
 
         HEADER_ATTRS_FOR['user_archive'].each do |attr|
