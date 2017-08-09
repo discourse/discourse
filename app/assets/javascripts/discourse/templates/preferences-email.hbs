@@ -10,7 +10,13 @@
     {{#if success}}
       <div class="control-group">
         <div class="instructions">
-          <p>{{i18n 'user.change_email.success'}}</p>
+          <p>
+            {{#if currentUser.staff}}
+              {{i18n 'user.change_email.success_staff'}}
+            {{else}}
+              {{i18n 'user.change_email.success'}}
+            {{/if}}
+          </p>
         </div>
       </div>
     {{else}}
