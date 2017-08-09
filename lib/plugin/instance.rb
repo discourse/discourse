@@ -74,17 +74,18 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
-    klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
+    reloadable_patch(self) do |plugin|
+      klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
-    klass.attributes(attr) unless attr.to_s.start_with?("include_")
+      klass.attributes(attr) unless attr.to_s.start_with?("include_")
 
-    klass.send(:define_method, attr, &block)
+      klass.send(:define_method, attr, &block)
 
-    return unless define_include_method
-
-    # Don't include serialized methods if the plugin is disabled
-    plugin = self
-    klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+      unless define_include_method
+        # Don't include serialized methods if the plugin is disabled
+        klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+      end
+    end
   end
 
   def whitelist_staff_user_custom_field(field)
@@ -93,46 +94,48 @@ class Plugin::Instance
 
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
-  def add_to_class(klass, attr, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
+  def add_to_class(class_name, attr, &block)
+    reloadable_patch(self) do |plugin|
+      klass = class_name.to_s.classify.constantize rescue class_name.to_s.constantize
+      hidden_method_name = :"#{attr}_without_enable_check"
+      klass.send(:define_method, hidden_method_name, &block)
 
-    hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_method, hidden_method_name, &block)
-
-    plugin = self
-    klass.send(:define_method, attr) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(:define_method, attr) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
     end
   end
 
   # Adds a class method to a class, respecting if plugin is enabled
-  def add_class_method(klass, attr, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
+  def add_class_method(klass_name, attr, &block)
+    reloadable_patch(self) do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
-    hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_singleton_method, hidden_method_name, &block)
+      hidden_method_name = :"#{attr}_without_enable_check"
+      klass.send(:define_singleton_method, hidden_method_name, &block)
 
-    plugin = self
-    klass.send(:define_singleton_method, attr) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(:define_singleton_method, attr) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
     end
   end
 
-  def add_model_callback(klass, callback, options = {}, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
-    plugin = self
+  def add_model_callback(klass_name, callback, options = {}, &block)
+    reloadable_patch(self) do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
-    # generate a unique method name
-    method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
-    @idx += 1
-    hidden_method_name = :"#{method_name}_without_enable_check"
-    klass.send(:define_method, hidden_method_name, &block)
+      # generate a unique method name
+      method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
+      @idx += 1
+      hidden_method_name = :"#{method_name}_without_enable_check"
+      klass.send(:define_method, hidden_method_name, &block)
 
-    klass.send(callback, options) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(callback, options) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
+
+      hidden_method_name
     end
-
-    hidden_method_name
   end
 
   # Add validation method but check that the plugin is enabled
@@ -433,6 +436,18 @@ JS
       ensure_directory(path)
       File.open(path, "w") { |f| f.write(contents) }
     end
+  end
+
+  def reloadable_patch(plugin)
+
+    if Rails.env.development? && defined?(ActionDispatch::Reloader)
+      ActionDispatch::Reloader.to_prepare do
+        yield plugin
+      end
+    end
+
+    # apply the patch
+    yield plugin
   end
 
 end
