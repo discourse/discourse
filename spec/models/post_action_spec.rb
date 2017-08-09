@@ -542,7 +542,7 @@ describe PostAction do
     end
   end
 
-  describe ".add_moderator_post_if_needed" do
+  describe "#add_moderator_post_if_needed" do
 
     it "should not add a moderator post when it's disabled" do
       post = create_post
@@ -552,7 +552,7 @@ describe PostAction do
       topic = action.related_post.topic
       expect(topic.posts.count).to eq(1)
 
-      SiteSetting.expects(:auto_respond_to_flag_actions).returns(false)
+      SiteSetting.auto_respond_to_flag_actions = false
       PostAction.agree_flags!(post, admin)
 
       topic.reload
@@ -566,7 +566,7 @@ describe PostAction do
       topic = action.reload.related_post.topic
       expect(user.notifications.count).to eq(0)
 
-      SiteSetting.expects(:auto_respond_to_flag_actions).returns(true)
+      SiteSetting.auto_respond_to_flag_actions = true
       PostAction.agree_flags!(post, admin)
 
       user_notifications = user.notifications
