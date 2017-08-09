@@ -23,13 +23,38 @@ describe DirectoryItem do
       UserActionCreator.enable
     end
 
-    let!(:post) { create_post }
-
     it "creates the record for the user" do
+      post = create_post
       DirectoryItem.refresh!
       expect(DirectoryItem.where(period_type: DirectoryItem.period_types[:all])
                           .where(user_id: post.user.id)
                           .where(topic_count: 1).count).to eq(1)
+    end
+
+    it "handles users with no activity" do
+      post = nil
+
+      freeze_time(2.years.ago) do
+        post = create_post
+        # Create records for that activity
+        DirectoryItem.refresh!
+      end
+
+      DirectoryItem.refresh!
+      [:yearly, :monthly, :weekly, :daily, :quarterly].each do |period|
+        directory_item = DirectoryItem
+          .where(period_type: DirectoryItem.period_types[period])
+          .where(user_id: post.user.id)
+          .first
+        expect(directory_item.topic_count).to eq(0)
+        expect(directory_item.post_count).to eq(0)
+      end
+
+      directory_item = DirectoryItem
+        .where(period_type: DirectoryItem.period_types[:all])
+        .where(user_id: post.user.id)
+        .first
+      expect(directory_item.topic_count).to eq(1)
     end
 
   end
