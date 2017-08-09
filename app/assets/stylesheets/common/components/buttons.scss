@@ -16,7 +16,7 @@
   cursor: pointer;
   transition: all .25s;
 
-  &:active {
+  &:active, &.btn-active {
     text-shadow: none;
   }
   &[disabled], &.disabled {
@@ -50,7 +50,7 @@
   &[href] {
     color: $primary;
   }
-  &:hover {
+  &:hover, &.btn-hover {
     background: $primary-medium; 
     color: $secondary;
   }
@@ -80,11 +80,11 @@
   &[href] {
     color: $secondary;
   }
-  &:hover {
+  &:hover, &.btn-hover {
     color: #fff;
     background: dark-light-choose(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -20%));
   }
-  &:active {
+  &:active, &.btn-active {
     @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
     color: $secondary;
   }
@@ -103,10 +103,10 @@
   &[href] {
     color: $secondary;
   }
-  &:hover{
+  &:hover, &.btn-hover {
     background: scale-color($danger, $lightness: -20%);
   }
-  &:active {
+  &:active, &.btn-active {
     @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
   }
   &[disabled], &.disabled {
