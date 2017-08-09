@@ -23,7 +23,7 @@ task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
   if Rails.env.test? && !args[:multisite]
     system("rake db:schema:dump")
     system("MULTISITE=multisite rake db:schema:load")
-    system("MULTISITE=multisite rake db:migrate['multisite']")
+    system("RAILS_DB=discourse_test_multisite rake db:migrate['multisite']")
   end
 end
 
