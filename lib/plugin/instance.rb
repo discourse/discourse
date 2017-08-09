@@ -74,17 +74,19 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
-    reloadable_patch(self) do |plugin|
+    reloadable_patch do |plugin|
       klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
-      klass.attributes(attr) unless attr.to_s.start_with?("include_")
+      unless attr.to_s.start_with?("include_")
+        klass.attributes(attr)
+
+        if define_include_method
+          # Don't include serialized methods if the plugin is disabled
+          klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+        end
+      end
 
       klass.send(:define_method, attr, &block)
-
-      unless define_include_method
-        # Don't include serialized methods if the plugin is disabled
-        klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
-      end
     end
   end
 
@@ -95,7 +97,7 @@ class Plugin::Instance
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(class_name, attr, &block)
-    reloadable_patch(self) do |plugin|
+    reloadable_patch do |plugin|
       klass = class_name.to_s.classify.constantize rescue class_name.to_s.constantize
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.send(:define_method, hidden_method_name, &block)
@@ -108,7 +110,7 @@ class Plugin::Instance
 
   # Adds a class method to a class, respecting if plugin is enabled
   def add_class_method(klass_name, attr, &block)
-    reloadable_patch(self) do |plugin|
+    reloadable_patch do |plugin|
       klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
       hidden_method_name = :"#{attr}_without_enable_check"
@@ -121,7 +123,7 @@ class Plugin::Instance
   end
 
   def add_model_callback(klass_name, callback, options = {}, &block)
-    reloadable_patch(self) do |plugin|
+    reloadable_patch do |plugin|
       klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
       # generate a unique method name
@@ -438,10 +440,10 @@ JS
     end
   end
 
-  def reloadable_patch(plugin)
-
+  def reloadable_patch(plugin = self)
     if Rails.env.development? && defined?(ActionDispatch::Reloader)
       ActionDispatch::Reloader.to_prepare do
+        # reload the patch
         yield plugin
       end
     end
