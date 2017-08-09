@@ -32,6 +32,7 @@ class RouteNode {
     this.children = [];
     this.childrenByName = {};
     this.paths = {};
+    this.site = Discourse.Site.current();
 
     if (!opts.path) {
       opts.path = name;
@@ -119,7 +120,7 @@ export function mapRoutes() {
   });
 
   extras.forEach(extra => {
-    const node = tree.findPath(extra.resource);
+    let node = tree.findPath(extra.resource);
     if (node) {
       node.extract(extra.map);
     }
