@@ -10,8 +10,18 @@ module Stylesheet
     end
 
     def initialize(paths)
-      @paths = paths || ["app/assets/stylesheets", "plugins"]
+      @paths = paths || Watcher.default_paths
       @queue = Queue.new
+    end
+
+    def self.default_paths
+      return @default_paths if @default_paths
+
+      @default_paths = ["app/assets/stylesheets"]
+      Discourse.plugins.each do |p|
+        @default_paths << File.dirname(p.path).sub(Rails.root.to_s, '').sub(/^\//, '')
+      end
+      @default_paths
     end
 
     def start
