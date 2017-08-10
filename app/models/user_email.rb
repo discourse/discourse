@@ -3,12 +3,14 @@ require_dependency 'email_validator'
 class UserEmail < ActiveRecord::Base
   belongs_to :user
 
+  attr_accessor :should_validate_email
+
   before_validation :strip_downcase_email
 
   validates :email, presence: true, uniqueness: true
 
   validates :email, email: true, format: { with: EmailValidator.email_regex },
-                    if: :skip_email_validation?
+                    if: :validate_email?
 
   validates :primary, uniqueness: { scope: [:user_id] }
 
@@ -21,8 +23,8 @@ class UserEmail < ActiveRecord::Base
     end
   end
 
-  def skip_email_validation?
-    return true if user && user.skip_email_validation
+  def validate_email?
+    return false unless self.should_validate_email
     email_changed?
   end
 end

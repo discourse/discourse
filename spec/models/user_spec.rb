@@ -28,9 +28,9 @@ describe User do
       end
 
       describe 'when user is staged' do
-        it 'should still validate primary_email' do
+        it 'should still validate presence of primary_email' do
           user.staged = true
-          user.primary_email = nil
+          user.email = nil
 
           expect(user).to_not be_valid
           expect(user.errors.messages).to include(:primary_email)
@@ -623,7 +623,10 @@ describe User do
     it "doesn't validate email address for staged users" do
       SiteSetting.email_domains_whitelist = "foo.com"
       SiteSetting.email_domains_blacklist = "bar.com"
-      expect(Fabricate.build(:user, staged: true, email: "foo@bar.com")).to be_valid
+
+      user = Fabricate.build(:user, staged: true, email: "foo@bar.com")
+
+      expect(user.save).to eq(true)
     end
   end
 
