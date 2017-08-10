@@ -835,8 +835,10 @@ describe Post do
   end
 
   describe "has_host_spam" do
+    let(:raw) { "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
+
     it "correctly detects host spam" do
-      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}")
+      post = Fabricate(:post, raw: raw)
 
       expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
       post.acting_user.trust_level = 0
@@ -848,6 +850,20 @@ describe Post do
       expect(post.has_host_spam?).to eq(true)
 
       SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "doesn't punish staged users" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "ignores private messages" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      user = Fabricate(:user, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
       expect(post.has_host_spam?).to eq(false)
     end
   end
