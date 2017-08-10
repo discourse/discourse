@@ -1,0 +1,246 @@
+.select-box {
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: inline-block;
+  flex-direction: column;
+  position: relative;
+  z-index: 998;
+
+  &.is-expanded {
+    z-index: 999;
+
+    .select-box-body {
+      display: flex;
+      flex-direction: column;
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  &.is-reversed {
+    .select-box-body {
+      bottom: 0;
+      top: auto;
+    }
+
+    .select-box-wrapper {
+      bottom: 0;
+      top: auto;
+    }
+  }
+
+  .d-icon {
+    color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
+    font-size: 14px;
+  }
+
+  .select-box-header {
+    background: $secondary;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 32px;
+    outline: none;
+  }
+
+  .select-box-body {
+    display: none;
+    box-sizing: border-box;
+  }
+
+  .select-box-row {
+    cursor: pointer;
+    outline: none;
+    padding: 5px;
+    height: 28px;
+    min-height: 28px;
+    line-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .select-box-collection {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background: $secondary;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 0 0 3px 3px;
+    margin: 0;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .select-box-filter {
+    border-bottom: 1px solid $primary-low;
+    background: $secondary;
+  }
+
+  .select-box-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: none;
+    display: none;
+    box-sizing: border-box;
+    pointer-events: none;
+    border: 1px solid transparent;
+  }
+}
+
+.select-box .select-box-header {
+  .wrapper {
+    height: inherit;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .current-selection {
+    text-align: left;
+    flex: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .icon {
+    margin-right: 5px;
+  }
+
+  .caret-icon {
+    margin-left: 5px;
+    pointer-events: none;
+  }
+}
+
+.select-box .select-box-row {
+  &.is-highlighted {
+    background: $highlight-medium;
+  }
+}
+
+.select-box .select-box-collection {
+  flex: 0 1 auto;
+
+  .collection {
+    padding: 0;
+    margin: 0;
+  }
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    cursor: pointer;
+    border-radius: 5px;
+    background: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    -webkit-transition: color .2s ease;
+    transition: color .2s ease;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0;
+  }
+}
+
+.select-box .select-box-row {
+  .d-icon {
+    margin-right: 5px;
+  }
+
+  .text {
+    margin: 0;
+  }
+
+  &.is-selected {
+    a {
+      background: $highlight-medium;
+    }
+  }
+}
+
+.select-box .select-box-filter {
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 5px 10px;
+  }
+
+  input, input:focus {
+    margin: 0;
+    flex: 1;
+    outline: none;
+    border: 0;
+    box-shadow: none;
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  .icon {
+    margin-right: 5px;
+  }
+}
+
+.select-box .select-box-offscreen, .select-box .select-box-offscreen:focus {
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: absolute;
+  outline: 0;
+  left: 0px;
+  top: 0px;
+}
+
+.select-box.discourse {
+  .select-box-header {
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-radius: 3px;
+
+    &.is-focused {
+      border: 1px solid $tertiary;
+      border-radius: 3px;
+      box-shadow: $tertiary 0px 0px 6px 0px;
+    }
+  }
+
+  &.is-expanded {
+    .select-box-header {
+      border-radius: 3px 3px 0 0;
+    }
+
+    .select-box-body, .collection, {
+      border-radius: 0 0 3px 3px;
+    }
+
+    .select-box-wrapper {
+      border: 1px solid $tertiary;
+      border-radius: 3px;
+      box-shadow: $tertiary 0px 0px 6px 0px;
+    }
+  }
+
+  .select-box-row {
+    margin: 5px;
+  }
+
+  &.is-highlighted .select-box-header {
+    border: 1px solid $tertiary;
+    box-shadow: $tertiary 0px 0px 6px 0px;
+  }
+}
