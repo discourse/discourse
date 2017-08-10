@@ -3179,6 +3179,7 @@ en:
           flag: 'Allow posts containing these words, but flag them as inappropriate so moderators can review them.'
         form:
           label: 'New Word:'
+          placeholder: 'full word or * as wildcard'
           add: 'Add'
           success: 'Success'
           upload: "Upload"
