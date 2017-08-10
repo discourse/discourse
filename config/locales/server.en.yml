@@ -3497,7 +3497,7 @@ en:
             description: "General contact web page for you or your organization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
           site_contact:
             label: "Automated Messages"
-            description: "All automated Discourse personal messages will be sent from this user, such as the welcome message sent to each new user."
+            description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
 
       corporate:
         title: "Organization"
@@ -3563,7 +3563,7 @@ en:
 
       invites:
         title: "Invite Staff"
-        description: "You’re almost done! Let’s invite some staff members to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
+        description: "You’re almost done! Let’s invite some people to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
 
       finished:
         title: "Your Discourse is Ready!"

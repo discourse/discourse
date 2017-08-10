@@ -3599,8 +3599,8 @@ en:
       quit: "Maybe Later"
 
       staff_count:
-        one: "Your community has 1 staff member. "
-        other: "Your community has %{count} staff members."
+        one: "Your community has 1 staff (you). "
+        other: "Your community has %{count} staff, including you."
 
       invites:
         add_user: "add"
