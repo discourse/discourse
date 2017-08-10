@@ -174,7 +174,7 @@ en:
 
           Can you try adding the following link, on its own line, in your next reply?
 
-          - https://en.wikipedia.org/wiki/Exotic_Shorthair
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
 
       images:
         instructions: |-
