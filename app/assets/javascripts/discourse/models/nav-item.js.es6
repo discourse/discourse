@@ -80,8 +80,9 @@ const NavItem = Discourse.Model.extend({
     }
   },
 
-  @computed("topicTrackingState", "name", "category")
-  count(state, name, category) {
+  @computed("name", "category", "topicTrackingState.messageCount")
+  count(name, category) {
+    const state = this.get("topicTrackingState");
     if (state) {
       return state.lookupCount(name, category);
     }
