@@ -1,3 +1,5 @@
+import createStore from 'helpers/create-store';
+
 QUnit.module("Discourse.NavItem", {
   beforeEach() {
     Ember.run(function() {
@@ -18,4 +20,16 @@ QUnit.test('href', assert =>{
   href('categories', '/categories', 'categories');
   href('category/bug', '/c/bug', 'English category name');
   href('category/确实是这样', '/c/343434-category', 'Chinese category name');
+});
+
+QUnit.test("count", assert => {
+  const navItem = createStore().createRecord("nav-item", { name: "new" });
+
+  assert.equal(navItem.get("count"), 0, "it has no count by default");
+
+  const tracker = navItem.get("topicTrackingState");
+  tracker.states["t1"] = { topic_id: 1, last_read_post_number: null };
+  tracker.incrementMessageCount();
+
+  assert.equal(navItem.get("count"), 1, "it updates when a new message arrives");
 });
