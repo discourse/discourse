@@ -5,6 +5,8 @@ class StaffConstraint
   def matches?(request)
     provider = Discourse.current_user_provider.new(request.env)
     provider.current_user && provider.current_user.staff?
+  rescue Discourse::InvalidAccess
+    false
   end
 
 end
