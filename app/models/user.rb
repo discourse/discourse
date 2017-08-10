@@ -82,9 +82,11 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
-  validates_associated :primary_email, if: :should_validate_primary_email?
+  validates_associated :primary_email
 
   after_initialize :add_trust_level
+
+  before_validation :set_should_validate_email
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -268,7 +270,7 @@ class User < ActiveRecord::Base
     used_invite.try(:invited_by)
   end
 
-  def should_validate_primary_email?
+  def should_validate_email_address?
     !skip_email_validation && !staged?
   end
 
@@ -938,7 +940,7 @@ class User < ActiveRecord::Base
 
   def email=(email)
     if primary_email
-      self.new_record? ? primary_email.email = email : primary_email.update(email: email)
+      new_record? ? primary_email.email = email : primary_email.update(email: email)
     else
       build_primary_email(email: email)
     end
@@ -1095,6 +1097,14 @@ class User < ActiveRecord::Base
 
   def trigger_user_updated_event
     DiscourseEvent.trigger(:user_updated, self)
+    true
+  end
+
+  def set_should_validate_email
+    if self.primary_email
+      self.primary_email.should_validate_email = should_validate_email_address?
+    end
+
     true
   end
 
