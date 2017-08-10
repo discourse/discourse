@@ -1,6 +1,6 @@
 module Jobs
   class FixPrimaryEmailsForStagedUsers < Jobs::Onceoff
-    def execute_onceoff
+    def execute_onceoff(args)
       User.exec_sql <<~SQL
       INSERT INTO user_emails (
         user_id,
