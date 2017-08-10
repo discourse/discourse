@@ -66,7 +66,8 @@ module CategoryBadge
     # category name
     class_names = 'badge-category clear-badge'
     text_color = "##{category.text_color}"
-    description = category.description_text ? "title='#{category.description_text.html_safe}'" : ''
+    # damingo (Github ID), 2017-08-10: Remove `html_safe` to prevent `description_text` to break out of the title tag.
+    description = category.description_text ? "title='#{category.description_text}'" : ''
     category_url = opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
 
     extra_span_classes = if opts[:inline_style]

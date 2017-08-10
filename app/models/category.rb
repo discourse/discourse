@@ -221,7 +221,8 @@ SQL
 
     @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
-      Nokogiri::HTML.fragment(self.description).text.strip
+      # damingo (Github ID), 2017-08-10
+      Nokogiri::HTML.fragment(self.description).text.strip.truncate(500, separator: /\s/)
     end
   end
 
