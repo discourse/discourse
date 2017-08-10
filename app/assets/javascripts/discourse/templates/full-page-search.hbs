@@ -1,4 +1,5 @@
 {{#d-section pageClass="search" class="search-container"}}
+  {{scroll-tracker name="full-page-search" tag=searchTerm}}
   <div class="search row clearfix">
     {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
     {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
