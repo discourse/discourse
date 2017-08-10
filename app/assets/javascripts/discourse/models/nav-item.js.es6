@@ -108,6 +108,8 @@ NavItem.reopenClass({
         testName = name.split("/")[0],
         anonymous = !Discourse.User.current();
 
+    opts = opts || {};
+
     if (anonymous && !Discourse.Site.currentProp('anonymous_top_menu_items').includes(testName)) return null;
     if (!Discourse.Category.list() && testName === "categories") return null;
     if (!Discourse.Site.currentProp('top_menu_items').includes(testName)) return null;
