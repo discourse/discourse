@@ -57,6 +57,10 @@
     }
   }
 
+  .user-fields {
+    border-top: 1px solid $primary-low;
+    padding-top: 20px;
+  }
 }
 
 .password-reset, .invites-show {
