@@ -362,10 +362,6 @@ GEM
       redis (~> 3.3, >= 3.3.3)
     simple-rss (1.3.1)
     slop (3.6.0)
-    spork (1.0.0rc4)
-    spork-rails (4.0.0)
-      rails (>= 3.0.0, < 5)
-      spork (>= 1.0rc0)
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -488,7 +484,6 @@ DEPENDENCIES
   shoulda
   sidekiq
   simple-rss
-  spork-rails
   stackprof
   test_after_commit
   thor
