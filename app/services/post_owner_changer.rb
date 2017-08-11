@@ -22,6 +22,7 @@ class PostOwnerChanger
         end
         post.topic = @topic
         post.set_owner(@new_owner, @acting_user, @skip_revision)
+        PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
       end
 
       @topic.update_statistics

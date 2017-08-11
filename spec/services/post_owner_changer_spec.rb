@@ -26,8 +26,12 @@ describe PostOwnerChanger do
       freeze_time 2.days.from_now
 
       old_user = p1.user
+      PostAction.act(user_a, p1, PostActionType.types[:like])
+      p1.reload
+      expect(p1.topic.like_count).to eq(1)
       PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       p1.reload
+      expect(p1.topic.like_count).to eq(0)
       expect(p1.topic.bumped_at).to be_within(1.second).of (bumped_at)
       expect(p1.topic.last_post_user_id).to eq(user_a.id)
       expect(old_user).not_to eq(p1.user)
