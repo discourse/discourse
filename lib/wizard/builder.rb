@@ -82,7 +82,8 @@ class Wizard
         username = Discourse.system_user.username if username.blank?
         contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
 
-        User.where(admin: true).pluck(:username).each { |c| contact.add_choice(c) }
+        User.human_users.where(admin: true).pluck(:username).each { |c| contact.add_choice(c) }
+        contact.add_choice(Discourse.system_user.username)
 
         step.on_update do |updater|
           updater.apply_settings(:contact_email, :contact_url)
