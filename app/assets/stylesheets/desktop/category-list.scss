@@ -115,24 +115,13 @@
   }
 }
 
-.categories-and-latest {
-
-  .category-list,
-  .topic-list-latest {
-    width: 48%;
+.topic-list-latest {
+  th.latest {
+    line-height: 19px;
   }
+}
 
-  .category-list {
-    float: left;
-  }
-
-  .topic-list-latest {
-    float: right;
-    th.latest {
-      line-height: 19px;
-    }
-  }
-
+.categories-and-latest, .topic-list-latest {
   .main-link {
     width: 100%;
   }
@@ -158,24 +147,34 @@
     padding-left: 8px;
   }
 
-  .topic-list {
-    .posts {
-      width: 100%;
-      text-align: right;
-      margin-bottom: 10px;
-    }
+  .posts {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 10px;
+  }
 
-    .num.posts a {
-      padding: 0;
-    }
+  .num.posts a {
+    padding: 0;
+  }
 
-    .more-topics,
-    .no-topics {
-      border-bottom: none;
-      td {
-        padding-right: 0;
-        color: $primary;
-      }
+  .more-topics,
+  .no-topics {
+    border-bottom: none;
+    td {
+      padding-right: 0;
+      color: $primary;
     }
+  }
+}
+
+.categories-and-latest {
+  .category-list {
+    width: 48%;
+    float: left;
+  }
+
+  .topic-list-latest {
+    width: 48%;
+    float: right;
   }
 }
