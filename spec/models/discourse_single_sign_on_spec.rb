@@ -128,9 +128,13 @@ describe DiscourseSingleSignOn do
     add_group1 = Fabricate(:group, name: 'group1')
     add_group2 = Fabricate(:group, name: 'group2')
     existing_group = Fabricate(:group, name: 'group3')
+    add_group4 = Fabricate(:group, name: 'GROUP4')
+    existing_group2 = Fabricate(:group, name: 'GRoup5')
 
-    existing_group.add(user)
-    existing_group.save!
+    [existing_group, existing_group2].each do |g|
+      g.add(user)
+      g.save!
+    end
 
     add_group1.add(user)
     existing_group.save!
@@ -141,19 +145,25 @@ describe DiscourseSingleSignOn do
     sso.email = user.email
     sso.external_id = "A"
 
-    sso.add_groups = "#{add_group1.name},#{add_group2.name.capitalize},badname"
-    sso.remove_groups = "#{existing_group.name},badname"
+    sso.add_groups = "#{add_group1.name},#{add_group2.name.capitalize},group4,badname"
+    sso.remove_groups = "#{existing_group.name},#{existing_group2.name.downcase},badname"
 
     sso.lookup_or_create_user(ip_address)
 
     existing_group.reload
     expect(existing_group.usernames).to eq("")
 
+    existing_group2.reload
+    expect(existing_group2.usernames).to eq("")
+
     add_group1.reload
     expect(add_group1.usernames).to eq(user.username)
 
     add_group2.reload
     expect(add_group2.usernames).to eq(user.username)
+
+    add_group4.reload
+    expect(add_group4.usernames).to eq(user.username)
   end
 
   it "can override name / email / username" do

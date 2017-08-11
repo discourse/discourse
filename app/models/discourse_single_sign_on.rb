@@ -110,7 +110,7 @@ class DiscourseSingleSignOn < SingleSignOn
     if add_groups
       split = add_groups.split(",").map(&:downcase)
       if split.length > 0
-        Group.where('name in (?) AND NOT automatic', split).pluck(:id).each do |id|
+        Group.where('LOWER(name) in (?) AND NOT automatic', split).pluck(:id).each do |id|
           unless GroupUser.where(group_id: id, user_id: user.id).exists?
             GroupUser.create(group_id: id, user_id: user.id)
           end
@@ -119,11 +119,11 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if remove_groups
-      split = remove_groups.split(",")
+      split = remove_groups.split(",").map(&:downcase)
       if split.length > 0
         GroupUser
           .where(user_id: user.id)
-          .where('group_id IN (SELECT id FROM groups WHERE name in (?))', split)
+          .where('group_id IN (SELECT id FROM groups WHERE LOWER(name) in (?))', split)
           .destroy_all
       end
     end
