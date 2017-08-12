@@ -67,15 +67,13 @@ class TopicView
     filter_posts(options)
 
     if @posts
-      added_fields = User.whitelisted_user_custom_fields(@guardian)
-      if added_fields.present?
+      if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
       end
-    end
 
-    whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)
-    if whitelisted_fields.present? && @posts
-      @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
+      if (whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)).present?
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
+      end
     end
 
     @draft_key = @topic.draft_key
