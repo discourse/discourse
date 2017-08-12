@@ -17,6 +17,9 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
+  cattr_accessor :permitted_create_params
+  self.permitted_create_params = Set.new
+
   # increase this number to force a system wide post rebake
   BAKED_VERSION = 1
 
