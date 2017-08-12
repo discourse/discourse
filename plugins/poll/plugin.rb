@@ -339,10 +339,10 @@ after_initialize do
     end
   end
 
-  Post.register_custom_field_type(DiscoursePoll::POLLS_CUSTOM_FIELD, :json)
-  Post.register_custom_field_type(DiscoursePoll::VOTES_CUSTOM_FIELD, :json)
+  register_post_custom_field_type(DiscoursePoll::POLLS_CUSTOM_FIELD, :json)
+  register_post_custom_field_type(DiscoursePoll::VOTES_CUSTOM_FIELD, :json)
 
-  TopicView.add_post_custom_fields_whitelister do |user|
+  topic_view_post_custom_fields_whitelister do |user|
     user ? [DiscoursePoll::POLLS_CUSTOM_FIELD, DiscoursePoll::VOTES_CUSTOM_FIELD] : [DiscoursePoll::POLLS_CUSTOM_FIELD]
   end
 
