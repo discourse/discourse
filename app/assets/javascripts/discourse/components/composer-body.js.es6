@@ -14,7 +14,13 @@ export default Ember.Component.extend(KeyEnterEscape, {
                       'composer.canEditTitle:edit-title',
                       'composer.createdPost:created-post',
                       'composer.creatingTopic:topic',
-                      'composer.whisper:composing-whisper'],
+                      'composer.whisper:composing-whisper',
+                      'currentUserPrimaryGroupClass'],
+
+  @computed("currentUser.primary_group_name")
+  currentUserPrimaryGroupClass(primaryGroupName) {
+    return primaryGroupName && `group-${primaryGroupName}`;
+  },
 
   @computed('composer.composeState')
   composeState(composeState) {
