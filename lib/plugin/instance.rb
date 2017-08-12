@@ -91,7 +91,9 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
-    User.register_plugin_staff_custom_field(field, self)
+    reloadable_patch do |plugin|
+      User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
+    end
   end
 
   # Extend a class but check that the plugin is enabled
@@ -137,6 +139,30 @@ class Plugin::Instance
       end
 
       hidden_method_name
+    end
+  end
+
+  def topic_view_post_custom_fields_whitelister(&block)
+    reloadable_patch do |plugin|
+      TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
+    end
+  end
+
+  def add_preloaded_group_custom_field(field)
+    reloadable_patch do |plugin|
+      Group.preloaded_custom_field_names << field if plugin.enabled?
+    end
+  end
+
+  def add_preloaded_topic_list_custom_field(field)
+    reloadable_patch do |plugin|
+      TopicList.preloaded_custom_fields << field if plugin.enabled?
+    end
+  end
+
+  def add_permitted_post_create_param(name)
+    reloadable_patch do |plugin|
+      Post.permitted_create_params << name if plugin.enabled?
     end
   end
 
@@ -205,17 +231,38 @@ class Plugin::Instance
 
   def notify_after_initialize
     color_schemes.each do |c|
-      ColorScheme.create_from_base(name: c[:name], colors: c[:colors]) unless ColorScheme.where(name: c[:name]).exists?
+      unless ColorScheme.where(name: c[:name]).exists?
+        ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
+      end
     end
 
     initializers.each do |callback|
       begin
         callback.call(self)
       rescue ActiveRecord::StatementInvalid => e
-        # When running db:migrate for the first time on a new database, plugin initializers might
-        # try to use models. Tolerate it.
+        # When running `db:migrate` for the first time on a new database,
+        # plugin initializers might try to use models.
+        # Tolerate it.
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
+    end
+  end
+
+  def register_topic_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Topic.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_post_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Post.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_group_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Group.register_custom_field_type(name, type) if plugin.enabled?
     end
   end
 
