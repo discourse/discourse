@@ -98,6 +98,9 @@ class PostMover
     new_post.update_column(:reply_count, @reply_count[1] || 0)
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
+
+    DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
+
     new_post
   end
 
@@ -116,7 +119,9 @@ class PostMover
       update[:reply_to_user_id] = nil
     end
 
-    Post.where(id: post.id, topic_id: original_topic.id).update_all(update)
+    post.update(update)
+
+    DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
