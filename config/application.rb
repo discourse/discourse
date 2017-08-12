@@ -176,7 +176,7 @@ module Discourse
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     require 'auth'
-    Discourse.activate_plugins! unless Rails.env.test? && ENV['LOAD_PLUGINS'] != ("1")
+    Discourse.activate_plugins! unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
 
     if GlobalSetting.relative_url_root.present?
       config.relative_url_root = GlobalSetting.relative_url_root
@@ -197,6 +197,8 @@ module Discourse
       require_dependency 'post_revision'
       require_dependency 'notification'
       require_dependency 'topic_user'
+      require_dependency 'topic_view'
+      require_dependency 'topic_list'
       require_dependency 'group'
       require_dependency 'user_field'
       require_dependency 'post_action_type'
@@ -205,9 +207,9 @@ module Discourse
 
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
-      if plugins = Discourse.plugins
-        plugins.each { |plugin| plugin.notify_after_initialize }
-      end
+
+      # Load plugins
+      Discourse.plugins.each(&:notify_after_initialize)
 
       # This nasty hack is required for not precompiling QUnit assets
       # in test mode. see: https://github.com/rails/sprockets-rails/issues/299#issuecomment-167701012
