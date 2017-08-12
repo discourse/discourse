@@ -20,19 +20,17 @@ module PostStreamSerializerMixin
   end
 
   def posts
-    return @posts if @posts.present?
-    @posts = []
-    if object.posts
-      object.posts.each do |p|
-        ps = PostSerializer.new(p, scope: scope, root: false)
-        ps.add_raw = true if @options[:include_raw]
-        ps.topic_view = object
-        p.topic = object.topic
+    @posts ||= begin
+      (object.posts || []).map do |post|
+        post.topic = object.topic
 
-        @posts << ps.as_json
+        serializer = PostSerializer.new(post, scope: scope, root: false)
+        serializer.add_raw = true if @options[:include_raw]
+        serializer.topic_view = object
+
+        serializer.as_json
       end
     end
-    @posts
   end
 
 end

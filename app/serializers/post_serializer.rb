@@ -1,7 +1,7 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  INSTANCE_VARS = [
+  INSTANCE_VARS ||= [
     :topic_view,
     :parent_post,
     :add_raw,
@@ -310,9 +310,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_custom_fields?
-    return if @topic_view.blank?
-    custom_fields = @topic_view.user_custom_fields
-    custom_fields && custom_fields[object.user_id]
+    (@topic_view&.user_custom_fields || {})[object.user_id]
   end
 
   def static_doc
@@ -354,20 +352,19 @@ class PostSerializer < BasicPostSerializer
   private
 
     def post_actions
-      @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil
+      @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
     end
 
     def active_flags
-      @active_flags ||= (@topic_view.present? && @topic_view.all_active_flags.present?) ? @topic_view.all_active_flags[object.id] : nil
+      @active_flags ||= (@topic_view&.all_active_flags || {})[object.id]
     end
 
     def post_custom_fields
-      @post_custom_fields ||=
-        if @topic_view
-          (@topic_view.post_custom_fields && @topic_view.post_custom_fields[object.id]) || {}
-        else
-          object.custom_fields
-        end
+      @post_custom_fields ||= if @topic_view
+        (@topic_view.post_custom_fields || {})[object.id] || {}
+      else
+        object.custom_fields
+      end
     end
 
 end
