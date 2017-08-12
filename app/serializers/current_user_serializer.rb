@@ -35,7 +35,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :automatically_unpin_topics,
              :mailing_list_mode,
              :previous_visit_at,
-             :seen_notification_id
+             :seen_notification_id,
+             :primary_group_id,
+             :primary_group_name
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -166,6 +168,18 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def mailing_list_mode
     object.user_option.mailing_list_mode
+  end
+
+  def include_primary_group_id?
+    object.primary_group_id.present?
+  end
+
+  def primary_group_name
+    object.primary_group.name.downcase
+  end
+
+  def include_primary_group_name?
+    object.primary_group&.name.present?
   end
 
 end
