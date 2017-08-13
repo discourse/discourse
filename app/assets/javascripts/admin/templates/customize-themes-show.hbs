@@ -38,6 +38,7 @@
   <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
   <p>{{d-select-box data=colorSchemes
                     textKey="name"
+                    filterable=true
                     value=colorSchemeId
                     icon="paint-brush"}}
      {{#if colorSchemeChanged}}
