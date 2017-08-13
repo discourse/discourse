@@ -33,12 +33,17 @@
 // Base list
 // --------------------------------------------------
 
-.topic-list {
-  margin: 0 0 10px;
+.topic-list-icons {
   .d-icon-thumb-tack { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   .d-icon-thumb-tack.unpinned { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   a.title {color: $primary;}
   .d-icon-bookmark { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+}
+
+.topic-list {
+  @extend .topic-list-icons;
+
+  margin: 0 0 10px;
   th,
   td {
     padding: 12px 5px;
