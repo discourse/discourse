@@ -3,8 +3,7 @@
   width: 100%;
 
   td, th {
-    padding: 12px 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    @extend .list-cell;
   }
 
   td {
@@ -90,9 +89,9 @@
 
   tbody {
     tr {
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
       &:first-of-type {
-        border-top: 3px solid $primary-low; 
+        border-top: 3px solid $primary-low;
       }
     }
 
@@ -116,38 +115,15 @@
 }
 
 .categories-and-latest {
+  display: flex;
+  flex-direction: row;
 
-  .category-list,
-  .topic-list-latest {
-    width: 48%;
+  div.column {
+    flex: 1;
   }
 
-  .category-list {
-    float: left;
-  }
-
-  .topic-list-latest {
-    float: right;
-    th.latest {
-      line-height: 19px;
-    }
-  }
-
-  .main-link {
-    width: 100%;
-  }
-
-  .new-posts {
-    margin-left: 6px;
-  }
-
-  .topic-stats {
-    text-align: right;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
-  }
-
-  .topic-last-activity a {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+  div.column.categories {
+    margin-right: 2em;
   }
 
   .discourse-tag {
@@ -157,25 +133,5 @@
   .topic-featured-link {
     padding-left: 8px;
   }
-
-  .topic-list {
-    .posts {
-      width: 100%;
-      text-align: right;
-      margin-bottom: 10px;
-    }
-
-    .num.posts a {
-      padding: 0;
-    }
-
-    .more-topics,
-    .no-topics {
-      border-bottom: none;
-      td {
-        padding-right: 0;
-        color: $primary;
-      }
-    }
-  }
 }
+
