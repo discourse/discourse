@@ -1143,6 +1143,10 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    select_box:
+      no_data: No data
+      filter_placeholder: Search...
+
     emoji_picker:
       filter_placeholder: Search for emoji
       people: People

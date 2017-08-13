@@ -36,11 +36,10 @@
 
   <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
   <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
-  <p>{{combo-box content=colorSchemes
-                 nameProperty="name"
-                 value=colorSchemeId
-                 selectionIcon="paint-brush"
-                 valueAttribute="id"}}
+  <p>{{d-select-box data=colorSchemes
+                    textKey="name"
+                    value=colorSchemeId
+                    icon="paint-brush"}}
      {{#if colorSchemeChanged}}
         {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
         {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
