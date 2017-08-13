@@ -1,0 +1,14 @@
+<div class="wrapper">
+  {{input
+    tabindex="-1"
+    class="filter-query"
+    placeholder=filterPlaceholder
+    key-up=onFilterChange
+  }}
+
+  {{#if filterIcon}}
+    <div class="filter-icon">
+      {{d-icon filterIcon}}
+    </div>
+  {{/if}}
+</div>
