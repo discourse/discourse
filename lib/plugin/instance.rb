@@ -144,25 +144,25 @@ class Plugin::Instance
 
   def topic_view_post_custom_fields_whitelister(&block)
     reloadable_patch do |plugin|
-      TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
+      ::TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
     end
   end
 
   def add_preloaded_group_custom_field(field)
     reloadable_patch do |plugin|
-      Group.preloaded_custom_field_names << field if plugin.enabled?
+      ::Group.preloaded_custom_field_names << field if plugin.enabled?
     end
   end
 
   def add_preloaded_topic_list_custom_field(field)
     reloadable_patch do |plugin|
-      TopicList.preloaded_custom_fields << field if plugin.enabled?
+      ::TopicList.preloaded_custom_fields << field if plugin.enabled?
     end
   end
 
   def add_permitted_post_create_param(name)
     reloadable_patch do |plugin|
-      Post.permitted_create_params << name if plugin.enabled?
+      ::Post.permitted_create_params << name if plugin.enabled?
     end
   end
 
