@@ -1,33 +1,36 @@
-{{add-category-class category=category}}
+{{#d-section class="navigation-container"}}
+  {{add-category-class category=category}}
 
-<section class='category-heading'>
-  {{#if category.uploaded_logo.url}}
-    {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
-    {{#if category.description}}
-      <p>{{{category.description}}}</p>
+  <section class='category-heading'>
+    {{#if category.uploaded_logo.url}}
+      {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
+      {{#if category.description}}
+        <p>{{{category.description}}}</p>
+      {{/if}}
     {{/if}}
-  {{/if}}
-</section>
+  </section>
 
-<div class='category-navigation'>
-  {{bread-crumbs categories=categories
-                 category=category
-                 noSubcategories=noSubcategories}}
+  <div class='category-navigation'>
+    {{bread-crumbs categories=categories
+                   category=category
+                   noSubcategories=noSubcategories}}
 
-  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+    {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
 
-  {{#if currentUser}}
-    {{category-notifications-button category=category}}
-  {{/if}}
+    {{#if currentUser}}
+      {{category-notifications-button category=category}}
+    {{/if}}
 
-  {{create-topic-button
-    canCreateTopic=canCreateTopic
-    disabled=cannotCreateTopicOnCategory
-    action=(route-action "createTopic")}}
+    {{create-topic-button
+      canCreateTopic=canCreateTopic
+      disabled=cannotCreateTopicOnCategory
+      action=(route-action "createTopic")}}
 
-  {{#if canEditCategory}}
-    {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
-  {{/if}}
+    {{#if canEditCategory}}
+      {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
+    {{/if}}
 
-  {{plugin-outlet name="category-navigation" args=(hash category=category)}}
-</div>
+    {{plugin-outlet name="category-navigation" args=(hash category=category)}}
+  </div>
+{{/d-section}}
+
