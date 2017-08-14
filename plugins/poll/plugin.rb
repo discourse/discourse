@@ -220,17 +220,26 @@ after_initialize do
       poll = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD][poll_name]
       raise Discourse::InvalidParameters.new("poll_name is invalid") if !poll
 
+      voter_limit = (params[:voter_limit] || 25).to_i
+      voter_limit = 0 if voter_limit < 0
+      voter_limit = 50 if voter_limit > 50
+
       user_ids = []
       options = poll["options"]
 
       if poll["type"] != "number"
+
+        per_option_voters = {}
+
         options.each do |option|
           if (params[:option_id])
             next unless option["id"] == params[:option_id].to_s
           end
 
           next unless option["voter_ids"]
-          user_ids << option["voter_ids"].slice((params[:offset].to_i || 0) * 25, 25)
+          voters = option["voter_ids"].slice((params[:offset].to_i || 0) * voter_limit, voter_limit)
+          per_option_voters[option["id"]] = Set.new(voters)
+          user_ids << voters
         end
 
         user_ids.flatten!
@@ -248,6 +257,10 @@ after_initialize do
               next unless option_id == params[:option_id].to_s
             end
 
+            voters = per_option_voters[option_id]
+            # we may have a user from a different vote
+            next unless voters.include?(user.id)
+
             result[option_id] ||= []
             result[option_id] << user_hash
           end
@@ -256,7 +269,7 @@ after_initialize do
         user_ids = options.map { |option| option["voter_ids"] }.sort!
         user_ids.flatten!
         user_ids.uniq!
-        user_ids = user_ids.slice((params[:offset].to_i || 0) * 25, 25)
+        user_ids = user_ids.slice((params[:offset].to_i || 0) * voter_limit, voter_limit)
 
         result = []
 

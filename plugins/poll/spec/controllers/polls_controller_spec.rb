@@ -7,6 +7,7 @@ describe ::DiscoursePoll::PollsController do
   let!(:user) { log_in }
   let(:topic) { Fabricate(:topic) }
   let(:poll)  { Fabricate(:post, topic_id: topic.id, user_id: user.id, raw: "[poll]\n- A\n- B\n[/poll]") }
+  let(:multi_poll)  { Fabricate(:post, topic_id: topic.id, user_id: user.id, raw: "[poll min=1 max=2 type=multiple public=true]\n- A\n- B\n[/poll]") }
 
   describe "#vote" do
 
@@ -173,4 +174,34 @@ describe ::DiscoursePoll::PollsController do
     end
 
   end
+
+  describe "votes" do
+
+    it "correctly handles offset" do
+
+      first = "5c24fc1df56d764b550ceae1b9319125"
+      second = "e89dec30bbd9bf50fabf6a05b4324edf"
+
+      user1 = log_in
+      xhr :put, :vote, post_id: multi_poll.id, poll_name: "poll", options: [first]
+
+      user2 = log_in
+      xhr :put, :vote, post_id: multi_poll.id, poll_name: "poll", options: [first]
+
+      user3 = log_in
+      xhr :put, :vote,
+        post_id: multi_poll.id,
+        poll_name: "poll",
+        options: [first, second]
+
+      xhr :get, :voters, poll_name: 'poll', post_id: multi_poll.id, voter_limit: 2
+      json = JSON.parse(response.body)
+
+      # no user3 cause voter_limit is 2
+      expect(json["poll"][first].map { |h| h["id"] }.sort).to eq([user1.id, user2.id])
+      expect(json["poll"][second].map { |h| h["id"] }).to eq([user3.id])
+    end
+
+  end
+
 end
