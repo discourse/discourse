@@ -703,6 +703,11 @@ describe Search do
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
     end
 
+    it 'can tokanize website names correctly' do
+      post = Fabricate(:post, raw: 'i like wb.camra.org.uk so yay')
+      expect(Search.execute('wb.camra.org.uk').posts.map(&:id)).to eq([post.id])
+    end
+
     it 'supports category slug and tags' do
       # main category
       category = Fabricate(:category, name: 'category 24', slug: 'category-24')
