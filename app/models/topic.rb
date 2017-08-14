@@ -337,6 +337,7 @@ class Topic < ActiveRecord::Base
       .where(closed: false, archived: false)
       .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
       .created_since(since)
+      .where('topics.created_at < ?', (SiteSetting.editing_grace_period || 0).seconds.ago)
       .listable_topics
       .includes(:category)
 

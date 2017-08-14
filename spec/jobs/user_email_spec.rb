@@ -80,7 +80,10 @@ describe Jobs::UserEmail do
 
   context "email_log" do
 
-    before { Fabricate(:post) }
+    before do
+      SiteSetting.editing_grace_period = 0
+      Fabricate(:post)
+    end
 
     it "creates an email log when the mail is sent (via Email::Sender)" do
       last_emailed_at = user.last_emailed_at

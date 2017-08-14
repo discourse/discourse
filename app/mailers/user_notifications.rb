@@ -99,6 +99,7 @@ class UserNotifications < ActionMailer::Base
           .where('posts.post_type = ?', Post.types[:regular])
           .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
           .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 5.0)
+          .where('posts.created_at < ?', (SiteSetting.editing_grace_period || 0).seconds.ago)
           .limit(SiteSetting.digest_posts)
       else
         []

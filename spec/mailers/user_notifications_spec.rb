@@ -106,7 +106,7 @@ describe UserNotifications do
     context "with new topics" do
 
       before do
-        Fabricate(:topic, user: Fabricate(:coding_horror))
+        Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago)
       end
 
       it "works" do
@@ -127,8 +127,8 @@ describe UserNotifications do
       end
 
       it "excludes deleted topics and their posts" do
-        deleted = Fabricate(:topic, user: Fabricate(:user), title: "Delete this topic plz")
-        post = Fabricate(:post, topic: deleted, score: 100.0, post_number: 2, raw: "Your wish is my command")
+        deleted = Fabricate(:topic, user: Fabricate(:user), title: "Delete this topic plz", created_at: 1.hour.ago)
+        post = Fabricate(:post, topic: deleted, score: 100.0, post_number: 2, raw: "Your wish is my command", created_at: 1.hour.ago)
         deleted.trash!
         html = subject.html_part.body.to_s
         expect(html).to_not include deleted.title
@@ -136,10 +136,10 @@ describe UserNotifications do
       end
 
       it "excludes whispers and other post types that don't belong" do
-        t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?")
-        whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper])
-        mod_action = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "This topic unlisted", post_type: Post.types[:moderator_action])
-        small_action = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "A small action", post_type: Post.types[:small_action])
+        t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?", created_at: 1.hour.ago)
+        whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper], created_at: 1.hour.ago)
+        mod_action = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "This topic unlisted", post_type: Post.types[:moderator_action], created_at: 1.hour.ago)
+        small_action = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "A small action", post_type: Post.types[:small_action], created_at: 1.hour.ago)
         html = subject.html_part.body.to_s
         expect(html).to_not include whisper.raw
         expect(html).to_not include mod_action.raw
@@ -147,14 +147,22 @@ describe UserNotifications do
       end
 
       it "excludes deleted and hidden posts" do
-        t = Fabricate(:topic, user: Fabricate(:user), title: "Post objectionable stuff here")
-        deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "This post is uncalled for", deleted_at: 5.minutes.ago)
-        hidden = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "Try to find this post", hidden: true, hidden_at: 5.minutes.ago, hidden_reason_id: Post.hidden_reasons[:flagged_by_tl3_user])
-        user_deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "I regret this post", user_deleted: true)
+        t = Fabricate(:topic, user: Fabricate(:user), title: "Post objectionable stuff here", created_at: 1.hour.ago)
+        deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "This post is uncalled for", deleted_at: 5.minutes.ago, created_at: 1.hour.ago)
+        hidden = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "Try to find this post", hidden: true, hidden_at: 5.minutes.ago, hidden_reason_id: Post.hidden_reasons[:flagged_by_tl3_user], created_at: 1.hour.ago)
+        user_deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "I regret this post", user_deleted: true, created_at: 1.hour.ago)
         html = subject.html_part.body.to_s
         expect(html).to_not include deleted.raw
         expect(html).to_not include hidden.raw
         expect(html).to_not include user_deleted.raw
+      end
+
+      it "excludes posts that are newer than editing grace period" do
+        SiteSetting.editing_grace_period = 5.minutes
+        too_new = Fabricate(:topic, user: Fabricate(:user), title: "Oops I need to edit this", created_at: 1.minute.ago)
+        too_new_post = Fabricate(:post, user: too_new.user, topic: too_new, score: 100.0, post_number: 1, created_at: 1.minute.ago)
+        html = subject.html_part.body.to_s
+        expect(html).to_not include too_new.title
       end
 
       it "uses theme color" do
