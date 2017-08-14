@@ -178,6 +178,7 @@ class HtmlToMarkdown
   end
 
   def visit_br(node)
+    return if node.previous_sibling.nil? && EMPHASIS.include?(node.parent.name)
     @stack[-1].markdown << "\n"
   end
 
