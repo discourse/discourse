@@ -82,7 +82,10 @@ class Wizard
         username = Discourse.system_user.username if username.blank?
         contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
 
-        User.human_users.where(admin: true).pluck(:username).each { |c| contact.add_choice(c) }
+        reserved_usernames = SiteSetting.defaults[:reserved_usernames].split('|')
+        User.human_users.where(admin: true).pluck(:username).each do |c|
+          contact.add_choice(c) unless reserved_usernames.include?(c.downcase)
+        end
         contact.add_choice(Discourse.system_user.username)
 
         step.on_update do |updater|
