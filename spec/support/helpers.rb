@@ -84,4 +84,8 @@ module Helpers
   def email(email_name)
     fixture_file("emails/#{email_name}.eml")
   end
+
+  def search_for_user(*args)
+    UserSearch.new(*args).search
+  end
 end
