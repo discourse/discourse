@@ -87,6 +87,11 @@ export default Ember.Controller.extend({
     return escapeExpression(q);
   },
 
+  @computed('canCreateTopic', 'siteSettings.login_required')
+  showSuggestion(canCreateTopic, loginRequired) {
+    return canCreateTopic || !loginRequired;
+  },
+
   _searchOnSortChange: true,
 
   setSearchTerm(term) {
