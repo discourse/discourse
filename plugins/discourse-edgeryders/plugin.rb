@@ -15,6 +15,7 @@ after_initialize do
   require_dependency 'user_serializer'
   class ::UserSerializer
     attributes :consent_given
+
     def consent_given
       object.consent_given?
     end
@@ -24,6 +25,7 @@ after_initialize do
   require_dependency 'post_serializer'
   class ::PostSerializer
     attributes :poster_paycoupons_username
+
     def poster_paycoupons_username
       object.user.paycoupons_username
     end
@@ -38,6 +40,7 @@ after_initialize do
         before_filter :ensure_consent_given, only: [:update]
       end
     end
+
     module InstanceMethods
       def ensure_consent_given
         raise Discourse::InvalidAccess.new unless current_user && current_user.consent_given?
@@ -55,6 +58,7 @@ after_initialize do
         before_filter :ensure_consent_given, only: [:create, :update]
       end
     end
+
     module InstanceMethods
       def ensure_consent_given
         raise Discourse::InvalidAccess.new unless current_user && current_user.consent_given?
@@ -72,6 +76,23 @@ after_initialize do
 
     def paycoupons_username
       UserCustomField.find_by(user_id: id, name: 'user_field_2').try(:value)
+    end
+  end
+
+
+  User.class_eval do
+    # Use to notify community managers about new sign-ups.
+    # Users can simply set the notification level of the posts thread accordingly ("Watching" to get immediate
+    # e-mail notifications, "Tracking" to only get in-site and desktop notifications).
+    after_create do
+      if topic = Topic.find_by(id: 6710)
+        manager = NewPostManager.new(
+          Discourse.system_user,
+          raw: "We're glad to welcome [#{username}](/u/#{username}) to our community.",
+          topic_id: topic.id
+        )
+        manager.perform
+      end
     end
   end
 
