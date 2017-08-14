@@ -74,19 +74,25 @@ module CategoryBadge
 
     # category name
     class_names = 'badge-category clear-badge'
-    text_color = "##{category.text_color}"
     description = category.description_text ? "title='#{category.description_text.html_safe}'" : ''
     category_url = opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
+
+    text_color =
+      if (SiteSetting.category_style || :box).to_sym == :box
+        "##{category.text_color}"
+      else
+        "#222222"
+      end
 
     extra_span_classes =
       if opts[:inline_style]
         case (SiteSetting.category_style || :box).to_sym
         when :bar
-          'padding: 3px; color: #222222 !important; vertical-align: text-top; margin-top: -3px; display: inline-block;'
+          'padding: 3px; vertical-align: text-top; margin-top: -3px; display: inline-block;'
         when :box
           "#{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
         when :bullet
-          'color: #222222 !important; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
+          'vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
         end + 'max-width: 150px; overflow: hidden; text-overflow: ellipsis;'
       else
         ''
