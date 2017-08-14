@@ -247,11 +247,41 @@ describe HtmlToMarkdown do
     it "handles <strong>" do
       expect(html_to_markdown("<strong></strong>")).to eq("")
       expect(html_to_markdown("<strong>   </strong>")).to eq("")
+      expect(html_to_markdown("Some<strong> </strong>text")).to eq("Some text")
+      expect(html_to_markdown("Some<strong>    </strong>text")).to eq("Some text")
     end
 
     it "handles <em>" do
       expect(html_to_markdown("<em></em>")).to eq("")
       expect(html_to_markdown("<em>   </em>")).to eq("")
+      expect(html_to_markdown("Some<em> </em>text")).to eq("Some text")
+      expect(html_to_markdown("Some<em>    </em>text")).to eq("Some text")
+    end
+
+  end
+
+  context "with spaces around text" do
+
+    it "handles <strong>" do
+      expect(html_to_markdown("<strong> Bold</strong>")).to eq("**Bold**")
+      expect(html_to_markdown("<strong>     Bold</strong>")).to eq("**Bold**")
+      expect(html_to_markdown("<strong>Bold </strong>")).to eq("**Bold**")
+      expect(html_to_markdown("<strong>Bold     </strong>")).to eq("**Bold**")
+      expect(html_to_markdown("Some<strong> bold</strong> text")).to eq("Some **bold** text")
+      expect(html_to_markdown("Some<strong>     bold</strong> text")).to eq("Some **bold** text")
+      expect(html_to_markdown("Some <strong>bold </strong>text")).to eq("Some **bold** text")
+      expect(html_to_markdown("Some <strong>bold     </strong>text")).to eq("Some **bold** text")
+    end
+
+    it "handles <em>" do
+      expect(html_to_markdown("<em> Italic</em>")).to eq("*Italic*")
+      expect(html_to_markdown("<em>     Italic</em>")).to eq("*Italic*")
+      expect(html_to_markdown("<em>Italic </em>")).to eq("*Italic*")
+      expect(html_to_markdown("<em>Italic     </em>")).to eq("*Italic*")
+      expect(html_to_markdown("Some<em> italic</em> text")).to eq("Some *italic* text")
+      expect(html_to_markdown("Some<em>     italic</em> text")).to eq("Some *italic* text")
+      expect(html_to_markdown("Some <em>italic </em>text")).to eq("Some *italic* text")
+      expect(html_to_markdown("Some <em>italic     </em>text")).to eq("Some *italic* text")
     end
 
   end
