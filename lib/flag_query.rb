@@ -131,7 +131,7 @@ module FlagQuery
   private
 
     def self.excerpt(cooked)
-      excerpt = Post.excerpt(cooked, 200)
+      excerpt = Post.excerpt(cooked, 200, keep_emoji_images: true)
       # remove the first link if it's the first node
       fragment = Nokogiri::HTML.fragment(excerpt)
       if fragment.children.first == fragment.css("a:first").first && fragment.children.first

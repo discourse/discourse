@@ -29,12 +29,13 @@ describe FlagQuery do
 
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
       PostAction.act(user2, post, PostActionType.types[:spam])
-      mod_message = PostAction.act(user3, post, PostActionType.types[:notify_moderators], message: "this is a 10")
+      mod_message = PostAction.act(user3, post, PostActionType.types[:notify_moderators], message: "this is a :one::zero:")
 
       PostAction.act(codinghorror, post2, PostActionType.types[:spam])
       PostAction.act(user2, post2, PostActionType.types[:spam])
 
       posts, topics, users = FlagQuery.flagged_posts_report(admin, "")
+
       expect(posts.count).to eq(2)
       first = posts.first
 
@@ -47,6 +48,7 @@ describe FlagQuery do
 
       expect(second[:post_actions].count).to eq(3)
       expect(second[:post_actions].first[:permalink]).to eq(mod_message.related_post.topic.relative_url)
+      expect(second[:post_actions].first[:conversation][:response][:excerpt]).to match("<img src=")
 
       posts, users = FlagQuery.flagged_posts_report(admin, "", 1)
       expect(posts.count).to eq(1)
