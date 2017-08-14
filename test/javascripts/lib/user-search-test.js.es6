@@ -41,10 +41,16 @@ QUnit.module("lib:user-search", {
               "avatar_template": "https://avatars.discourse.org/v3/letter/l/a9a28c/{size}.png"
             },
             {
-              "username": "dzsat_team",
-              "name": "Dz Sat Dz Sat",
-              "avatar_template": "https://avatars.discourse.org/v3/letter/d/eb9ed0/{size}.png"
-            }
+              "username": "beatric",
+              "name": "Béatrice",
+              "avatar_template": "https://avatars.discourse.org/v3/letter/b/a2a2a2/{size}.png"
+            },
+            {
+              "username": "legalatom",
+              "name": "Team LegalAtom",
+              "avatar_template": "https://avatars.discourse.org/v3/letter/l/a9a28c/{size}.png"
+            },
+
           ],
           groups: [
             {
@@ -60,5 +66,18 @@ QUnit.module("lib:user-search", {
 QUnit.test("it places groups unconditionally for exact match", assert => {
   return userSearch({term: 'Team'}).then((results)=>{
      assert.equal(results[results.length-1]["name"], "team");
+  });
+});
+
+
+QUnit.test("it searches user's name", assert => {
+  return userSearch({term: 'Béa'}).then((results)=>{
+    assert.equal(results[5]["name"], "Béatrice");
+  });
+});
+
+QUnit.test("it limits the result to 6 by default", assert => {
+  return userSearch({term : 't'}).then((results) => {
+    assert.equal(results.length, 6);
   });
 });

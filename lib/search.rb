@@ -770,8 +770,7 @@ class Search
       self.class.default_ts_config
     end
 
-    def self.ts_query(term, ts_config = nil, joiner = "&")
-
+    def self.prepare_ts_query(term, ts_config = nil, joiner = "&")
       data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
                            config: 'simple',
                            term: term).values[0][0]
@@ -788,6 +787,11 @@ class Search
           .join(" #{joiner} ")
       )
 
+      [ts_config, query]
+    end
+
+    def self.ts_query(term, ts_config = nil, joiner = "&")
+      ts_config, query = self.prepare_ts_query(term, ts_config, joiner)
       "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
     end
 
