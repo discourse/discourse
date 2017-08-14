@@ -62,3 +62,9 @@ QUnit.test("it places groups unconditionally for exact match", assert => {
      assert.equal(results[results.length-1]["name"], "team");
   });
 });
+
+QUnit.test("it limits the result to 6 by default", assert => {
+  return userSearch({term: 't'}).then((results)=>{
+     assert.equal(results.length, 6);
+  });
+});
