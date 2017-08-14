@@ -130,7 +130,7 @@ module DiscoursePoll
     private
 
     def self.private_to_public_poll?(post, previous_polls, current_polls, poll_name)
-      previous_poll = previous_polls[poll_name]
+      _previous_poll = previous_polls[poll_name]
       current_poll = current_polls[poll_name]
 
       if previous_polls["public"].nil? && current_poll["public"] == "true"
