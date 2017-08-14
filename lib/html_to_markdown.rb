@@ -178,6 +178,7 @@ class HtmlToMarkdown
   end
 
   def visit_br(node)
+    return if node.previous_sibling.nil? && EMPHASIS.include?(node.parent.name)
     @stack[-1].markdown << "\n"
   end
 
@@ -185,29 +186,30 @@ class HtmlToMarkdown
     @stack[-1].markdown << "\n\n---\n\n"
   end
 
-  def visit_strong(node)
-    return if node.text.blank?
-    delimiter = node.text["*"] ? "__" : "**"
-    @stack[-1].markdown << delimiter
-    traverse(node)
-    @stack[-1].markdown.chomp!
-    @stack[-1].markdown << delimiter
+  EMPHASIS ||= %w{b strong i em}
+  EMPHASIS.each do |tag|
+    class_eval <<-RUBY
+      def visit_#{tag}(node)
+        return if node.text.empty?
+        return @stack[-1].markdown << " " if node.text.blank?
+        times = "#{tag}" == "i" || "#{tag}" == "em" ? 1 : 2
+        delimiter = (node.text["*"] ? "_" : "*") * times
+        @stack[-1].markdown << " " if node.text[0] == " "
+        @stack[-1].markdown << delimiter
+        traverse(node)
+        @stack[-1].markdown.chomp!
+        if @stack[-1].markdown[-1] == " "
+          @stack[-1].markdown.chomp!(" ")
+          append_space = true
+        end
+        @stack[-1].markdown << delimiter
+        @stack[-1].markdown << " " if append_space
+      end
+    RUBY
   end
-
-  alias :visit_b :visit_strong
-
-  def visit_em(node)
-    return if node.text.blank?
-    delimiter = node.text["*"] ? "_" : "*"
-    @stack[-1].markdown << delimiter
-    traverse(node)
-    @stack[-1].markdown.chomp!
-    @stack[-1].markdown << delimiter
-  end
-
-  alias :visit_i :visit_em
 
   def visit_text(node)
+    node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && EMPHASIS.include?(node.parent.name)
     @stack[-1].markdown << node.text.gsub(/\s{2,}/, " ")
   end
 
