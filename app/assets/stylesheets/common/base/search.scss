@@ -108,7 +108,7 @@
   }
 
   .search-advanced-options {
-    border: 1px solid $primary-low; 
+    border: 1px solid $primary-low;
     padding: 10px;
 
     .control-group.pull-left {
@@ -121,6 +121,9 @@
   }
 }
 
+.no-results-suggestion {
+  margin-top: 30px;
+}
 .search-footer {
   margin-bottom: 30px;
 }
@@ -161,4 +164,8 @@
     float: right;
     margin-bottom: 4px;
   }
+}
+
+.google-search-form {
+  margin-top: 2em;
 }

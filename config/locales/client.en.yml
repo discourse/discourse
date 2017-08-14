@@ -1353,6 +1353,12 @@ en:
       post_format: "#{{post_number}} by {{username}}"
       results_page: "Search Results"
       more_results: "There are more results. Please narrow your search criteria."
+      cant_find: "Can't find what you're looking for?"
+      start_new_topic: "Why not create a topic?"
+      or_search_google: "Or use Google to search instead:"
+      search_google: "Try searching with Google instead:"
+      search_google_button: "Google"
+      search_google_title: "Search this site"
 
       context:
         user: "Search posts by @{{username}}"

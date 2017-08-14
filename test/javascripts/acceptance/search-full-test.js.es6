@@ -53,7 +53,10 @@ QUnit.test("perform various searches", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search .btn-primary');
 
-  andThen(() => assert.ok(find('.fps-topic').length === 0), 'has no results');
+  andThen(() => {
+    assert.ok(find('.fps-topic').length === 0, 'has no results');
+    assert.ok(find('.no-results-suggestion .google-search-form'));
+  });
 
   fillIn('.search input.full-page-search', 'posts');
   click('.search .btn-primary');

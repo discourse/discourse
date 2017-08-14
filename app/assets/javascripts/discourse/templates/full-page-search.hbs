@@ -15,7 +15,9 @@
       {{/if}}
     </div>
 
-    {{create-topic-button canCreateTopic=canCreateTopic action=(action "createTopic" searchTerm)}}
+    {{#if hasResults}}
+      {{create-topic-button canCreateTopic=canCreateTopic action=(action "createTopic" searchTerm)}}
+    {{/if}}
 
     {{#if canBulkSelect}}
       {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
@@ -116,11 +118,25 @@
 
     {{#conditional-loading-spinner condition=loading }}
       {{#unless hasResults}}
-        <h3>
-          {{#if searchActive}}
-              {{i18n "search.no_results"}}
+        {{#if searchActive}}
+          <h3>{{i18n "search.no_results"}}</h3>
+
+          {{#if showSuggestion}}
+            <div class="no-results-suggestion">
+              {{i18n "search.cant_find"}}
+              {{#if canCreateTopic}}
+                <a href {{action "createTopic" searchTerm}}>{{i18n "search.start_new_topic"}}</a>
+                {{#unless siteSettings.login_required}}
+                  {{i18n "search.or_search_google"}}
+                {{/unless}}
+              {{else}}
+                {{i18n "search.search_google"}}
+              {{/if}}
+            </div>
+
+            {{google-search searchTerm=searchTerm}}
           {{/if}}
-        </h3>
+        {{/if}}
       {{/unless}}
 
       {{#if hasResults}}
