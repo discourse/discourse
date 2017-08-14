@@ -26,8 +26,13 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def description_excerpt
-    # damingo (Github ID), 2017-08-04
-    PrettyText.excerpt(description.gsub(/<summary\s*>.*?<\/summary\s*>/,''), 300) if description
+    # damingo (Github ID), 2017-08-15
+    if description
+      doc = Nokogiri::HTML.fragment(description)
+      html = doc.css("p").first.inner_html.strip
+      #PrettyText.excerpt(description.gsub(/<summary\s*>.*?<\/summary\s*>/,''), 300)
+      PrettyText.excerpt(html, 300)
+    end
   end
 
   def include_subcategory_ids?
