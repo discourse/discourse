@@ -1,68 +1,69 @@
 import componentTest from 'helpers/component-test';
 
-moduleForComponent('select-box', {integration: true});
+moduleForComponent('select-box', { integration: true });
 
-componentTest('updating the data refreshes the list', {
-  template: '{{select-box value=1 data=data}}',
+componentTest('updating the content refreshes the list', {
+  template: '{{select-box value=1 content=content}}',
 
   beforeEach() {
-    this.set("data", [{id:1, text:"robin"}]);
+    this.set("content", [{id:1, text:"robin"}]);
   },
 
   test(assert) {
     click(this.$(".select-box-header"));
     andThen(() => {
       assert.equal(this.$(".select-box-row .text").html().trim(), "robin");
-
-      andThen(() => this.set("data", [{id:1, text:"regis"}]));
-      andThen(() => assert.equal(this.$(".select-box-row .text").html().trim(), "regis"));
     });
+    andThen(() => this.set("content", [{id:1, text:"regis"}]));
+    andThen(() => assert.equal(this.$(".select-box-row .text").html().trim(), "regis"));
   }
 });
 
 componentTest('accepts a value by reference', {
-  template: '{{select-box value=value data=data}}',
+  template: '{{select-box value=value content=content}}',
 
   beforeEach() {
     this.set("value", 1);
-    this.set("data", [{id:1, text:"robin"}, {id: 2, text:"regis"}]);
+    this.set("content", [{id:1, text:"robin"}, {id: 2, text:"regis"}]);
   },
 
   test(assert) {
     click(this.$(".select-box-header"));
     andThen(() => {
       assert.equal(this.$(".select-box-row.is-highlighted .text").html().trim(), "robin", "it highlights the row corresponding to the value");
+    });
 
+    andThen(() => {
       click(this.$(".select-box-row[title='robin']"));
-      andThen(() => assert.equal(this.get("value"), 1, "it mutates the value"));
+      andThen(() => {
+        assert.equal(this.get("value"), 1, "it mutates the value");
+      });
     });
   }
 });
 
 componentTest('select-box can be filtered', {
-  template: '{{select-box filterable=true value=1 data=data}}',
+  template: '{{select-box filterable=true value=1 content=content}}',
 
   beforeEach() {
-    this.set("data", [{id:1, text:"robin"}, {id: 2, text:"regis"}]);
+    this.set("content", [{id:1, text:"robin"}, {id: 2, text:"regis"}]);
   },
 
   test(assert) {
     click(this.$(".select-box-header"));
+    andThen(() => assert.equal(this.$(".filter-query").length, 1, "it has a search input"));
+
     andThen(() => {
-      andThen(() => assert.equal(this.$(".filter-query").length, 1, "it has a search input"));
-
-      andThen(() => {
-        this.$(".filter-query").val("regis");
-        this.$(".filter-query").trigger("keyup");
-      });
-      andThen(() => assert.equal(this.$(".select-box-row").length, 1, "it filters results"));
-
-      andThen(() => {
-        this.$(".filter-query").val("");
-        this.$(".filter-query").trigger("keyup");
-      });
-      andThen(() => assert.equal(this.$(".select-box-row").length, 2, "it returns to original data when filter is empty"));
+      this.$(".filter-query").val("regis");
+      this.$(".filter-query").trigger("keyup");
     });
+    andThen(() => assert.equal(this.$(".select-box-row").length, 1, "it filters results"));
+
+    andThen(() => {
+      this.$(".filter-query").val("");
+      this.$(".filter-query").trigger("keyup");
+    });
+    andThen(() => assert.equal(this.$(".select-box-row").length, 2, "it returns to original content when filter is empty"));
   }
 });
 
@@ -129,7 +130,6 @@ componentTest('not filterable by default', {
 componentTest('select-box is expandable', {
   template: '{{select-box}}',
   test(assert) {
-
     click(".select-box-header");
     andThen(() => {
       assert.equal(this.$(".select-box").hasClass("is-expanded"), true);
@@ -143,11 +143,11 @@ componentTest('select-box is expandable', {
 });
 
 componentTest('accepts custom id/text keys', {
-  template: '{{select-box value=value data=data idKey="identifier" textKey="name"}}',
+  template: '{{select-box value=value content=content idKey="identifier" textKey="name"}}',
 
   beforeEach() {
     this.set("value", 1);
-    this.set("data", [{identifier:1, name:"robin"}]);
+    this.set("content", [{identifier:1, name:"robin"}]);
   },
 
   test(assert) {
@@ -159,10 +159,10 @@ componentTest('accepts custom id/text keys', {
 });
 
 componentTest('doesn’t render collection content before first expand', {
-  template: '{{select-box value=1 data=data idKey="identifier" textKey="name"}}',
+  template: '{{select-box value=1 content=content idKey="identifier" textKey="name"}}',
 
   beforeEach() {
-    this.set("data", [{identifier:1, name:"robin"}]);
+    this.set("content", [{identifier:1, name:"robin"}]);
   },
 
   test(assert) {
@@ -176,10 +176,10 @@ componentTest('doesn’t render collection content before first expand', {
 });
 
 componentTest('persists filter state when expandind/collapsing', {
-  template: '{{select-box value=1 data=data filterable=true}}',
+  template: '{{select-box value=1 content=content filterable=true}}',
 
   beforeEach() {
-    this.set("data", [{id:1, text:"robin"}, {id:2, text:"régis"}]);
+    this.set("content", [{id:1, text:"robin"}, {id:2, text:"régis"}]);
   },
 
   test(assert) {
@@ -205,12 +205,11 @@ componentTest('persists filter state when expandind/collapsing', {
   }
 });
 
-
 componentTest('supports options to limit size', {
-  template: '{{select-box maxWidth=100 maxCollectionHeight=20 data=data}}',
+  template: '{{select-box maxWidth=100 maxCollectionHeight=20 content=content}}',
 
   beforeEach() {
-    this.set("data", [{id:1, text:"robin"}]);
+    this.set("content", [{id:1, text:"robin"}]);
   },
 
   test(assert) {
