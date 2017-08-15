@@ -102,6 +102,23 @@ describe UserProfile do
     end
   end
 
+  describe 'bio excerpt emojis' do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      CustomEmoji.create!(name: 'test', upload_id: 1)
+      Emoji.clear_cache
+
+      user.user_profile.bio_raw = "hello :test: :woman_scientist:t5: 🤔"
+      user.user_profile.save
+      user.user_profile.reload
+    end
+
+    it 'supports emoji images' do
+      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"/uploads/default/original/1X/f588830852fc8091a094cf0be0be0e6559dc8304.png?v=5\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=5\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\"> <img src=\"/images/emoji/twitter/thinking.png?v=5\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\">")
+    end
+  end
+
   describe 'bio link stripping' do
 
     it 'returns an empty string with no bio' do
