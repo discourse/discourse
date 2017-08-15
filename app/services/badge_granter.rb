@@ -52,7 +52,7 @@ class BadgeGranter
                         badge_name: @badge.display_name,
                         badge_slug: @badge.slug,
                         badge_title: @badge.allow_title,
-                        username: @user.username}.to_json
+                        username: @user.username }.to_json
               )
               user_badge.update_attributes notification_id: notification.id
             end
