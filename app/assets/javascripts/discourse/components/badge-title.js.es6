@@ -4,6 +4,9 @@ import BadgeSelectController from 'discourse/mixins/badge-select-controller';
 export default Ember.Component.extend(BadgeSelectController, {
   classNames: ["badge-title"],
 
+  saved: false,
+  saving: false,
+
   actions: {
     save() {
       this.setProperties({ saved: false, saving: true });
