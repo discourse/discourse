@@ -9,8 +9,8 @@ class SessionController < ApplicationController
 
   before_action :check_local_login_allowed, only: %i(create forgot_password)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login become sso_provider destroy email_login_page email_login)
-  skip_before_action :check_xhr, only: %i(email_login_page)
+  skip_before_action :preload_json, only: %i(sso sso_login sso_provider become destroy email_login)
+  skip_before_action :check_xhr, only: %i(sso sso_login sso_provider become destroy email_login_page)
 
   ACTIVATE_USER_KEY = "activate_user"
 

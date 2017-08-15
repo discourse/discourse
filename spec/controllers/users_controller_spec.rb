@@ -456,7 +456,6 @@ describe UsersController do
     end
   end
 
-
   describe '.email_login' do
     let(:user) { Fabricate(:user) }
 
