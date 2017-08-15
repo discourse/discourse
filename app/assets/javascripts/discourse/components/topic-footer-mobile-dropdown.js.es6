@@ -1,12 +1,13 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
-import Combobox from 'discourse-common/components/combo-box';
 import { observes } from 'ember-addons/ember-computed-decorators';
+import DiscourseSelectBoxComponent from "discourse/components/d-select-box";
 
-export default Combobox.extend({
-  none: "topic.controls",
-
+export default DiscourseSelectBoxComponent.extend({
   init() {
     this._super();
+
+    this.set("textKey", "name");
+    this.set("defaultHeaderText", I18n.t("topic.controls"));
+    this.set("maxCollectionHeight", 300);
     this._createContent();
   },
 
@@ -24,23 +25,20 @@ export default Combobox.extend({
     } else {
       content.push({ id: 'bookmark', icon: 'bookmark', name: I18n.t('bookmarked.title') });
     }
+
     content.push({ id: 'share', icon: 'link', name: I18n.t('topic.share.title') });
 
     if (details.get('can_flag_topic')) {
       content.push({ id: 'flag', icon: 'flag', name: I18n.t('topic.flag_topic.title') });
     }
 
-    this.comboTemplate = (item) => {
-      const contentItem = content.findBy('id', item.id);
-      if (!contentItem) { return item.text; }
-      return `${iconHTML(contentItem.icon)}&nbsp; ${item.text}`;
-    };
-
     this.set('content', content);
   },
 
   @observes('value')
   _valueChanged() {
+    this._super();
+
     const value = this.get('value');
     const topic = this.get('topic');
 

@@ -1144,7 +1144,7 @@ en:
       alt: 'Alt'
 
     select_box:
-      no_data: No data
+      no_content: No content
       filter_placeholder: Search...
 
     emoji_picker:
