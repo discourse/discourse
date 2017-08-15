@@ -20,9 +20,16 @@ class QueuedPostsController < ApplicationController
   def update
     qp = QueuedPost.where(id: params[:id]).first
 
-    if params[:queued_post][:raw].present?
-      qp.update_column(:raw, params[:queued_post][:raw])
+    update_params = params[:queued_post]
+
+    qp.raw = update_params[:raw] if update_params[:raw].present?
+    unless qp.topic_id
+      qp.post_options['title'] = update_params[:title] if update_params[:title].present?
+      qp.post_options['category'] = update_params[:category_id].to_i if update_params[:category_id].present?
+      qp.post_options['tags'] = update_params[:tags] if update_params[:tags].present?
     end
+
+    qp.save(validate: false)
 
     state = params[:queued_post][:state]
     begin
