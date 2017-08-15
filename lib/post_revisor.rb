@@ -111,6 +111,12 @@ class PostRevisor
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
+  # - skip_jobs: Don't enqueue jobs when revision succeeds. This is needed if you
+  #              wrap `PostRevisor` in a transaction, as the sidekiq jobs could
+  #              dequeue before the commit finishes which leads to corrupt state.
+  #              If you do this, be sure to call `post_process_post` after the
+  #              transaction is comitted.
+
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -166,7 +172,7 @@ class PostRevisor
     # WARNING: do not pull this into the transaction
     # it can fire events in sidekiq before the post is done saving
     # leading to corrupt state
-    post_process_post
+    post_process_post unless @opts[:skip_jobs]
 
     update_topic_word_counts
     alert_users

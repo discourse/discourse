@@ -137,6 +137,61 @@ describe QueuedPost do
     end
   end
 
+  context "creating a edited post" do
+    let(:admin) { Fabricate(:admin) }
+    let(:new_category) { Fabricate(:diff_category) }
+    let(:edited_qp) do
+      Fabricate(:queued_topic, post_options: {
+        category: 1,
+        title: 'This is a new topic',
+        archetype: 'regular',
+        changes: {
+          category_id: new_category.id,
+          title: 'New edited topic',
+          raw: 'edited content',
+          tags: ['edited'],
+          edit_reason: 'test editing',
+          editor_id: admin.id
+        }
+      })
+    end
+
+    before do
+      SiteSetting.tagging_enabled = true
+      edited_qp.approve!(admin)
+    end
+
+    it 'contains the edited content' do
+      new_post = Post.last
+      new_topic = new_post.topic
+
+      expect(new_post.raw).to eq('edited content')
+      expect(new_topic.title).to eq('New edited topic')
+      expect(new_topic.category_id).to eq(new_category.id)
+      expect(new_topic.tags.map(&:name)).to eq(['edited'])
+    end
+
+    it 'records the editor and edit reason' do
+      new_post = Post.last
+
+      expect(new_post.version).to eq(2)
+      expect(new_post.last_editor_id).to eq(admin.id)
+      expect(new_post.edit_reason).to eq('test editing')
+    end
+
+    it 'creats a revision' do
+      revision = PostRevision.last
+      diff = revision.modifications
+
+      expect(revision.user_id).to eq(admin.id)
+      expect(diff['raw']).to eq(
+        ['This post should be queued up, and more importantly, this is a new topic', 'edited content']
+      )
+      expect(diff['title']).to eq(["This is a new topic", "New edited topic"])
+      expect(diff['tags']).to eq([[], ["edited"]])
+    end
+  end
+
   context "visibility" do
     it "works as expected in the invisible queue" do
       qp = Fabricate(:queued_post, queue: 'invisible')

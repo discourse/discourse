@@ -27,16 +27,34 @@ export default Ember.Component.extend(bufferedProperty('editables'), {
     const postOptions = post.get('post_options');
 
     this.set('editables', {});
-    this.set('editables.raw', post.get('raw'));
-    this.set('editables.category', post.get('category'));
-    this.set('editables.category_id', post.get('category.id'));
-    this.set('editables.title', postOptions.title);
-    this.set('editables.tags', postOptions.tags);
+
+    if (post.revised) {
+      const changes = postOptions.changes;
+
+      ['raw', 'title', 'tags', 'edit_reason'].forEach(key => {
+        if (changes[key] !== undefined) {
+          this.set(`editables.${key}`, changes[key]);
+        }
+      });
+
+      if (changes['category_id'] !== undefined) {
+        this.set('editables.category_id', changes['category_id']);
+        this.set('editables.category', Discourse.Category.findById(changes['category_id']));
+      }
+    } else {
+      this.set('editables.raw', post.get('raw'));
+      this.set('editables.category', post.get('category'));
+      this.set('editables.category_id', post.get('category.id'));
+      this.set('editables.title', postOptions.title);
+      this.set('editables.tags', postOptions.tags);
+    }
   }.on('init'),
 
   _categoryChanged: function() {
     this.set('buffered.category', Discourse.Category.findById(this.get('buffered.category_id')));
   }.observes('buffered.category_id'),
+
+  showEditReason: Ember.computed.notEmpty('editables.edit_reason'),
 
   editTitleAndCategory: function() {
     return this.get('editing') && !this.get('post.topic');
@@ -58,6 +76,10 @@ export default Ember.Component.extend(bufferedProperty('editables'), {
     approve: updateState('approved'),
     reject: updateState('rejected'),
 
+    displayEditReason() {
+      this.set('showEditReason', true);
+    },
+
     deleteUser() {
       bootbox.confirm(I18n.t('queue.delete_prompt', {username: this.get('post.user.username')}), (confirmed) => {
         if (confirmed) { this._confirmDelete(); }
@@ -77,7 +99,8 @@ export default Ember.Component.extend(bufferedProperty('editables'), {
         'raw',
         'title',
         'tags',
-        'category_id'
+        'category_id',
+        'edit_reason'
       )).then(() => {
         this.commitBuffer();
         this.set('currentlyEditing', null);

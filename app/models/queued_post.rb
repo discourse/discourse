@@ -40,6 +40,10 @@ class QueuedPost < ActiveRecord::Base
     QueuedPost.visible_queues.include?(queue)
   end
 
+  def revised?
+    post_options['changes'].present?
+  end
+
   def self.broadcast_new!
     msg = { post_queue_new_count: QueuedPost.new_count }
     MessageBus.publish('/queue_counts', msg, user_ids: User.staff.pluck(:id))
@@ -63,6 +67,7 @@ class QueuedPost < ActiveRecord::Base
     created_post = nil
 
     creator = PostCreator.new(user, create_options.merge(skip_validations: true, skip_jobs: true))
+    revisor = nil
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
@@ -73,10 +78,22 @@ class QueuedPost < ActiveRecord::Base
       unless created_post && creator.errors.blank?
         raise StandardError.new(creator.errors.full_messages.join(" "))
       end
+
+      if revised?
+        revisor = PostRevisor.new(created_post)
+        revisor.revise!(
+          User.find(post_options['changes']['editor_id']),
+          post_options['changes'],
+          skip_validations: true,
+          skip_jobs: true,
+          force_new_version: true
+        )
+      end
     end
 
     # Do sidekiq work outside of the transaction
     creator.enqueue_jobs
+    revisor.post_process_post if revised?
 
     DiscourseEvent.trigger(:approved_post, self, created_post)
     created_post

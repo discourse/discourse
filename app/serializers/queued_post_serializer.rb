@@ -11,7 +11,8 @@ class QueuedPostSerializer < ApplicationSerializer
              :post_options,
              :created_at,
              :category_id,
-             :can_delete_user
+             :can_delete_user,
+             :revised?
 
   has_one :user, serializer: AdminUserListSerializer
   has_one :topic, serializer: BasicTopicSerializer

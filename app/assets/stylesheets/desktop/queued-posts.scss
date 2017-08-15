@@ -14,6 +14,10 @@
        span {color: dark-light-choose($primary-medium, $secondary-medium); }
      }
 
+    .body {
+      margin: 0.5em 0;
+    }
+
     .cooked {
       width: $topic-body-width;
       float: left;
@@ -28,6 +32,10 @@
       button {
         float: left;
         margin-right: 0.5em;
+      }
+
+      .display-edit-reason {
+        line-height: 30px;
       }
     }
     .post-title {

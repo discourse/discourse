@@ -25,7 +25,6 @@ QUnit.test("For topics: body of post, title, category and tags are all editbale"
   });
 });
 
-
 QUnit.test("For replies: only the body of post is editbale", assert => {
   server.get("/queued_posts", () => { //eslint-disable-line no-undef
     return [
@@ -43,5 +42,24 @@ QUnit.test("For replies: only the body of post is editbale", assert => {
     assert.notOk(exists(".edit-title .ember-text-field"), "title should not be editbale");
     assert.notOk(exists(".category-chooser"), "category should not be editable");
     assert.notOk(exists("div.tag-chooser"), "tags should not be editable");
+  });
+});
+
+QUnit.test("revised content should be shown if provided", assert => {
+  server.get("/queued_posts", () => { //eslint-disable-line no-undef
+    return [
+      200,
+      {"Content-Type": "application/json"},
+      {"users":[{"id":3,"username":"test_user","avatar_template":"/letter_avatar_proxy/v2/letter/t/eada6e/{size}.png","active":true,"admin":false,"moderator":false,"last_seen_at":"2017-08-15T19:11:58.078Z","last_emailed_at":null,"created_at":"2017-08-07T02:23:33.309Z","last_seen_age":"1m","last_emailed_age":null,"created_at_age":"9d","username_lower":"test_user","trust_level":0,"trust_level_locked":false,"flag_level":0,"title":null,"suspended_at":null,"suspended_till":null,"suspended":null,"blocked":false,"time_read":"33m","staged":false,"days_visited":5,"posts_read_count":26,"topics_entered":8,"post_count":14}],"topics":[],"queued_posts":[{"id":37,"queue":"default","user_id":3,"state":1,"topic_id":null,"approved_by_id":null,"rejected_by_id":null,"raw":"original content","post_options":{"archetype":"regular","category":"17","typing_duration_msecs":"3000","composer_open_duration_msecs":"18425","visible":true,"is_warning":false,"title":"original title","tags":["original"],"first_post_checks":true,"is_poll":true,"changes":{"raw":"new content","title":"new title","category_id":3,"tags":["edited"],"editor_id":1}},"created_at":"2017-08-15T19:12:24.310Z","category_id":1,"can_delete_user":true,"revised":true}],"__rest_serializer":"1","refresh_queued_posts":"/queued_posts?status=new"}
+    ];
+  });
+
+  visit("/queued-posts");
+
+  andThen(() => {
+    assert.ok(exists(".body:contains('new content')"), "the revised body of the post should be shown");
+    assert.ok(exists(".post-title:contains('new title')"), "the revised title should be shown");
+    assert.ok(exists(".badge-category:contains('meta')"), "the revised category should be shown");
+    assert.ok(exists(".tag-edited:contains('edited')"), "the revised tag should be shown");
   });
 });

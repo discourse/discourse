@@ -66,6 +66,14 @@
                    icon="times"
                    disabled=post.isSaving
                    class="btn-danger cancel"}}
+
+        {{#if showEditReason}}
+          {{text-field value=buffered.edit_reason
+                       maxlength="255"
+                       placeholderKey="composer.edit_reason_placeholder"}}
+        {{else}}
+          <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
+        {{/if}}
       {{else}}
         {{d-button action="approve"
                    disabled=post.isSaving
