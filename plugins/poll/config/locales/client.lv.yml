@@ -1,0 +1,19 @@
+lv:
+  js:
+    poll:
+      public:
+        title: "Balsojumi ir publiski."
+      cast-votes:
+        label: "Balso tagad!"
+      show-results:
+        title: "Parādīt aptaujas rezultātus"
+        label: "Rādīt rezultātus"
+      hide-results:
+        title: "Atpakaļ pie balsojumiem"
+        label: "Paslēpt rezultātus"
+      open:
+        title: "Atvērt aptauju"
+        label: "Atvērt"
+      close:
+        title: "Aizvērt aptauju"
+        label: "Aizvērt"
