@@ -58,7 +58,8 @@ module Onebox
           response = (Onebox::Helpers.fetch_response(url, nil, nil, headers) rescue nil)
           doc = Nokogiri::HTML(response)
 
-          unless skip_canonical_link
+          ignore_canonical = doc.at('meta[property="og:ignore_canonical"]')
+          unless ignore_canonical && ignore_canonical['content'].to_s == 'true'
             # prefer canonical link
             canonical_link = doc.at('//link[@rel="canonical"]/@href')
             if canonical_link && "#{URI(canonical_link).host}#{URI(canonical_link).path}" != "#{URI(url).host}#{URI(url).path}"
@@ -123,10 +124,6 @@ module Onebox
           end
 
           twitter
-        end
-
-        def skip_canonical_link
-          WhitelistedGenericOnebox.probable_discourse(URI(url))
         end
     end
   end
