@@ -1,0 +1,5 @@
+lv:
+  site_settings:
+    poll_enabled: "Atļaut lietotājiet veidot aptaujas?"
+  poll:
+    poll_must_be_open_to_vote: "Aptaujai jābūt atvērtai, lai balsotu."
