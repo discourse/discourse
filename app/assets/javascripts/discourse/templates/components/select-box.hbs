@@ -7,7 +7,7 @@
 />
 
 {{component selectBoxHeaderComponent
-  data=selectedData
+  text=headerText
   focused=focused
   caretUpIcon=caretUpIcon
   caretDownIcon=caretDownIcon
@@ -17,7 +17,7 @@
 }}
 
 <div class="select-box-body">
-  {{#if _renderBody}}
+  {{#if renderBody}}
     {{#if filterable}}
       {{component selectBoxFilterComponent
         onFilterChange=(action "onFilterChange")
@@ -27,12 +27,12 @@
     {{/if}}
 
     {{component selectBoxCollectionComponent
-      filteredData=filteredData
+      filteredContent=filteredContent
       selectBoxRowComponent=selectBoxRowComponent
       lastHoveredId=lastHoveredId
       onSelectRow=(action "onSelectRow")
       onHoverRow=(action "onHoverRow")
-      noDataText=noDataText
+      noContentText=noContentText
       selectedId=value
     }}
   {{/if}}
