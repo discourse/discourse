@@ -399,8 +399,6 @@ class BulkImport::PhpBB < BulkImport::Base
 
     text.gsub!(/:(?:\w{8})\]/, ']')
 
-    text = bbcode_to_md(text)
-
     # Some links look like this: <!-- m --><a class="postlink" href="http://www.onegameamonth.com">http://www.onegameamonth.com</a><!-- m -->
     text.gsub!(/<!-- \w --><a(?:.+)href="(\S+)"(?:.*)>(.+)<\/a><!-- \w -->/i, '[\2](\1)')
 
@@ -433,6 +431,8 @@ class BulkImport::PhpBB < BulkImport::Base
         @smiley_map[smiley] = smiley
       end
     end
+
+    text = bbcode_to_md(text)
 
     text
   end
