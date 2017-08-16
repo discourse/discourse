@@ -56,6 +56,7 @@ fi:
         topic_closed_error: "Näin käy, kun vastauksen saapuessa ketju, johon viesti oli tarkoitettu, on suljettu."
         bounced_email_error: "Sähköposti on palautetun sähköpostin raportti"
         screened_email_error: "Näin käy, kun lähettäjän sähköpostiosoite on jo seulottu."
+      unrecognized_error: "Tuntematon virhe"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -880,9 +881,8 @@ fi:
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Palstan nimi, käytetään title tagissa."
     site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään meta description tagissa."
-    contact_email: "Sähköpostiosoite, josta sivuston henkilökunnan saa tavoitettua. Tänne lähetetään sivuston kriittiset ilmoitukset, kuten käsittelemättömät liput ja näytetään /about sivun yhteystietona."
+    contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset ja se näkyy /about-sivulla kiireellisiä yhteydenottoja varten."
     contact_url: "Verkko-osoiteyhteystieto sivustolle. Näytetään /about sivun yhteystietona kiireellisiin asioihin liittyen."
-    queue_jobs: "VAIN KEHITTÄJILLE! VAROITUS! Oletusarvona tehtävät asetetaan sidekiq jonoon. Jos poistetaan käytöstä, sivusto ei enää toimi."
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan (prosenteissa)"
@@ -1902,16 +1902,12 @@ fi:
       title: "Sähköposti hylätty - käyttäjä ei täsmää"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Vastaus odottamattomasta osoitteesta"
       text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
-        Viestisi ei saapunut siitä sähköpostiosoitteesta josta odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
+        Vastauksesi ei saapunut siitä sähköpostiosoitteesta kuin odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_no_account:
       title: "Sähköposti hylätty - ei käyttäjätiliä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon tili"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
-
-        Sähköpostiosoitteesi ei vastaa yhtäkään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       title: "Sähköposti hylätty - tyhjä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei sisältöä"

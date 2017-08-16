@@ -125,8 +125,8 @@ end
 #  approved_at    :datetime
 #  rejected_by_id :integer
 #  rejected_at    :datetime
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 # Indexes
 #

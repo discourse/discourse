@@ -207,7 +207,10 @@ SQL
     return if staff_already_replied?(related_post.topic)
     message_key = "flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
-    related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
+
+    I18n.with_locale(SiteSetting.default_locale) do
+      related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
+    end
   end
 
   def staff_already_replied?(topic)

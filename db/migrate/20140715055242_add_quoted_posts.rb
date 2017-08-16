@@ -3,7 +3,7 @@ class AddQuotedPosts < ActiveRecord::Migration
     create_table :quoted_posts do |t|
       t.integer :post_id, null: false
       t.integer :quoted_post_id, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :quoted_posts, [:post_id, :quoted_post_id], unique: true

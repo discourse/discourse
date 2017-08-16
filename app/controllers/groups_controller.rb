@@ -30,6 +30,10 @@ class GroupsController < ApplicationController
     count = groups.count
     groups = groups.offset(page * page_size).limit(page_size)
 
+    if Group.preloaded_custom_field_names.present?
+      Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
+    end
+
     group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
 
     render_json_dump(
@@ -239,6 +243,8 @@ class GroupsController < ApplicationController
   end
 
   def request_membership
+    params.require(:reason)
+
     unless current_user.staff?
       RateLimiter.new(current_user, "request_group_membership", 1, 1.day).performed!
     end
@@ -255,7 +261,7 @@ class GroupsController < ApplicationController
 
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
-      raw: I18n.t('groups.request_membership_pm.body', group_name: group_name),
+      raw: params[:reason],
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
       skip_validations: true
@@ -308,6 +314,10 @@ class GroupsController < ApplicationController
 
     if params[:ignore_automatic].to_s == "true"
       groups = groups.where(automatic: false)
+    end
+
+    if Group.preloaded_custom_field_names.present?
+      Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
     end
 
     render_serialized(groups, BasicGroupSerializer)

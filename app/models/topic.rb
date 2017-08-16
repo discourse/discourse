@@ -15,6 +15,7 @@ class Topic < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include HasCustomFields
   include Trashable
+  include Searchable
   include LimitedEdit
   extend Forwardable
 
@@ -125,7 +126,7 @@ class Topic < ActiveRecord::Base
 
   has_one :user_warning
   has_one :first_post, -> { where post_number: 1 }, class_name: Post
-
+  has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -337,6 +338,7 @@ class Topic < ActiveRecord::Base
       .where(closed: false, archived: false)
       .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
       .created_since(since)
+      .where('topics.created_at < ?', (SiteSetting.editing_grace_period || 0).seconds.ago)
       .listable_topics
       .includes(:category)
 

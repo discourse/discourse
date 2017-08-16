@@ -21,11 +21,22 @@ describe RetrieveTitle do
       expect(title).to eq("Another Title")
     end
 
+    it "will pick og:title if title is missing" do
+      title = RetrieveTitle.extract_title(<<~HTML
+        <html>
+          <meta property="og:title" content="Good Title"
+        </html>
+        HTML
+      )
+
+      expect(title).to eq("Good Title")
+    end
+
     it "will prefer the title from an opengraph tag" do
       title = RetrieveTitle.extract_title(<<~HTML
         <html>
-          <title>Bad Title</title>
-          <meta property="og:title" content="Good Title" />
+          <title>Good Title</title>
+          <meta property="og:title" content="Bad Title"
         </html>
         HTML
       )

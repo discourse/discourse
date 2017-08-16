@@ -1,12 +1,23 @@
 module JsLocaleHelper
 
+  def self.plugin_client_files(locale_str)
+    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"]
+  end
+
+  def self.reloadable_plugins(locale, ctx)
+    return unless Rails.env.development?
+    plugin_client_files(locale.to_s).each do |file|
+      ctx.depend_on(file)
+    end
+  end
+
   def self.plugin_translations(locale_str)
     @plugin_translations ||= HashWithIndifferentAccess.new
 
     @plugin_translations[locale_str] ||= begin
       translations = {}
 
-      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+      plugin_client_files(locale_str).each do |file|
         if plugin_translations = YAML.load_file(file)[locale_str]
           translations.deep_merge!(plugin_translations)
         end
@@ -20,6 +31,7 @@ module JsLocaleHelper
     opts ||= {}
 
     @loaded_translations = nil if opts[:force]
+    @plugin_translations = nil if opts[:force]
 
     @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin

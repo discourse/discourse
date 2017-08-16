@@ -30,12 +30,14 @@ const IN_OPTIONS_MAPPING = {'images': 'with'};
 export default Em.Component.extend({
   classNames: ['search-advanced-options'],
 
-  inOptions: [
+  inOptionsForUsers: [
     {name: I18n.t('search.advanced.filters.unseen'),  value: "unseen"},
     {name: I18n.t('search.advanced.filters.posted'),    value: "posted"},
     {name: I18n.t('search.advanced.filters.watching'),  value: "watching"},
     {name: I18n.t('search.advanced.filters.tracking'),  value: "tracking"},
     {name: I18n.t('search.advanced.filters.bookmarks'), value: "bookmarks"},
+  ],
+  inOptionsForAll: [
     {name: I18n.t('search.advanced.filters.first'),     value: "first"},
     {name: I18n.t('search.advanced.filters.pinned'),    value: "pinned"},
     {name: I18n.t('search.advanced.filters.unpinned'),  value: "unpinned"},
@@ -91,7 +93,8 @@ export default Em.Component.extend({
           when: 'before',
           days: ''
         }
-      }
+      },
+      inOptions: this.currentUser ? this.inOptionsForUsers.concat(this.inOptionsForAll) : this.inOptionsForAll
     });
   },
 

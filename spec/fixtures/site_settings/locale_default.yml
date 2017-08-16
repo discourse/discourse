@@ -1,0 +1,8 @@
+search:
+  min_search_term_length:
+    client: true
+    default: 3
+    locale_default:
+      zh_CN: 2
+      zh_TW: 2
+    min: 2

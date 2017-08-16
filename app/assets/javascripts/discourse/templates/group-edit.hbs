@@ -51,6 +51,20 @@
       </label>
     </div>
 
+    {{#if model.allow_membership_requests}}
+      <div>
+        <label for="membership-request-template">
+          {{i18n 'groups.membership_request_template'}}
+        </label>
+
+        {{expanding-text-area name="membership-request-template"
+            value=model.membership_request_template
+            class="group-edit-membership-request-template"}}
+      </div>
+    {{/if}}
+
+    {{plugin-outlet name="group-edit" args=(hash group=model)}}
+
     {{d-button action="save" class="btn-primary" disabled=saving label="save"}}
     {{savingText}}
   </form>

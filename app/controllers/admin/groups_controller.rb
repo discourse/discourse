@@ -1,4 +1,18 @@
 class Admin::GroupsController < Admin::AdminController
+  def index
+    groups = Group.order(:name).where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
+
+    if search = params[:search].to_s
+      groups = groups.where("name ILIKE ?", "%#{search}%")
+    end
+
+    if params[:ignore_automatic].to_s == "true"
+      groups = groups.where(automatic: false)
+    end
+
+    render_serialized(groups, BasicGroupSerializer)
+  end
+
   def show
     render nothing: true
   end
@@ -23,6 +37,7 @@ class Admin::GroupsController < Admin::AdminController
         valid_emails[email] = valid_usernames[username_lower] = id
         id
       end
+      valid_users.uniq!
       invalid_users = users.reject! { |u| valid_emails[u] || valid_usernames[u] }
       group.bulk_add(valid_users) if valid_users.present?
       users_added = valid_users.count
@@ -83,6 +98,7 @@ class Admin::GroupsController < Admin::AdminController
 
     if group_params[:allow_membership_requests]
       group.allow_membership_requests = group_params[:allow_membership_requests]
+      group.membership_request_template = group_params[:membership_request_template]
     end
 
     if group_params[:owner_usernames].present?
@@ -194,7 +210,8 @@ class Admin::GroupsController < Admin::AdminController
       :full_name,
       :default_notification_level,
       :usernames,
-      :owner_usernames
+      :owner_usernames,
+      :membership_request_template
     )
   end
 end

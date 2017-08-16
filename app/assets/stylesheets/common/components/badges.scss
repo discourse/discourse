@@ -51,6 +51,11 @@
     }
   }
 
+  &.none { // no category style
+    color: $primary;
+    margin-right: 5px;
+  }
+
   &.bullet { //bullet category style
     display: inline-flex;
     align-items: baseline;
@@ -208,6 +213,9 @@
         .badge-category {
           max-width: 100px;
         }
+      }
+      &.none {
+        padding: 5px;
       }
       &.bullet {
         padding: 5px;

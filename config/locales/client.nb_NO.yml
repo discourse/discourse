@@ -371,6 +371,11 @@ nb_NO:
       closed_group: Lukket gruppe
       is_group_user: "Du er medlem av denne gruppen"
       allow_membership_requests: "Tillat brukere å sende forespørsler om medlemskap av gruppen til eiere"
+      membership_request_template: "Egendefinert mal å vise brukere når du sender en medlemskapsforespørsel."
+      membership_request:
+        submit: "Send inn forespørsel"
+        title: "Spør om å ta del i @%{group_name}"
+        reason: "La gruppeeierne vite hvorfor du ønsker å ta del i denne gruppen"
       membership: "Medlemskap"
       name: "Navn"
       user_count: "Antall medlemmer"
@@ -629,6 +634,7 @@ nb_NO:
         taken: "Beklager, den e-postadressen er ikke tilgjengelig."
         error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje den adressen allerede er i bruk?"
         success: "Vi har sendt en e-post til den adressen. Følg instruksjonene i meldingen."
+        success_staff: "Vi har sendt en e-post til den gjeldende adressen. Følg bekreftelsesinstruksjonene."
       change_avatar:
         title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
@@ -1025,6 +1031,9 @@ nb_NO:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      no_content: Inget innhold
+      filter_placeholder: Søk…
     emoji_picker:
       filter_placeholder: Søk etter emoji
       people: Folk
@@ -1215,6 +1224,13 @@ nb_NO:
       searching: "Søker…"
       post_format: "#{{post_number}} av {{username}}"
       results_page: "Søkeresultater"
+      more_results: "Det er flere resultater. Begrens søket ditt."
+      cant_find: "Finner du ikke det du leter etter?"
+      start_new_topic: "Kanskje du ønsker å starte et nytt emne?"
+      or_search_google: "Eller prøv å søke på Google istedenfor:"
+      search_google: "Prøv å søke på Google istedenfor:"
+      search_google_button: "Google"
+      search_google_title: "Søk på denne siden"
       context:
         user: "Søk i innleggene av @{{username}}"
         category: "Søk i kategorien #{{category}}"
@@ -1246,6 +1262,7 @@ nb_NO:
           seen: Jeg har lest
           unseen: Jeg har ikke lest
           wiki: er wiki
+          images: inkluder bilde(r)
           all_tags: Inneholder alle stikkord
         statuses:
           label: Der emner
@@ -2148,7 +2165,7 @@ nb_NO:
         hamburger_menu: '<b>=</b> Åpne hamburgermeny'
         user_profile_menu: '<b>p</b> Åpne brukermenyen'
         show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
-        search: '<b>/</b> Søk'
+        search: '<b>/</b> eller <b>ctrl</b>+<b>/</b> Søk'
         help: '<b>?</b> Åpne tastaturhjelp'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Avvis Nye/Innlegg'
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis emner'
@@ -2929,6 +2946,7 @@ nb_NO:
           flag: 'Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem.'
         form:
           label: 'Nytt ord:'
+          placeholder: 'helt ord eller * som jokertegn'
           add: 'Legg til'
           success: 'Suksess'
           upload: "Last opp"
@@ -3331,8 +3349,8 @@ nb_NO:
       uploading: "Laster opp…"
       quit: "Kanskje senere"
       staff_count:
-        one: "Din gemenskap har ett stabsmedlem."
-        other: "Din gemenskap har %{count} stabsmedlemmer."
+        one: "Din gemenskap har ett stabsmedlem (deg)."
+        other: "Din gemenskap har %{count} stab, inkludert deg selv."
       invites:
         add_user: "legg til"
         none_added: "Du har ikke invitert noen til staben. Er du sikker på at du vil fortsette?"

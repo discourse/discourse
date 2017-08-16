@@ -4,7 +4,7 @@ class CreateDrafts < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.string :draft_key, null: false
       t.text :data, null: false
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :drafts, [:user_id, :draft_key]
   end

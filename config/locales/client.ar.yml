@@ -457,7 +457,6 @@ ar:
         add_members: "إضافة أعضاء"
         delete_member_confirm: "أأزيل ’%{username}‘ من مجموعة ’%{group}‘؟"
       name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
-      public: "السماح للأعضاء بالانظمام\\مغادرة المجموعة بحرية (يتطلب مجموعة مرئية للجميع)"
       empty:
         posts: "لا مشاركات من أعضاء هذه المجموعة."
         members: "لا أعضاء في هذه المجموعة."
@@ -469,6 +468,7 @@ ar:
       join: "انضمّ للمجموعة"
       leave: "غادر المجموعة"
       request: "اطلب الانضمام للمجموعة"
+      message: "الرسائل"
       automatic_group: مجموعة تلقائية
       closed_group: مجموعة مغلقة
       is_group_user: "أنت عضو في هذه المجموعة"
@@ -695,6 +695,7 @@ ar:
       api_approved: "موافق عليه:"
       theme: "السّم"
       staff_counters:
+        flags_given: "مؤشرات مساعدة"
         deleted_posts: "حذف جميع المشاركات"
         suspensions: "موقوف"
         warnings_received: "تحذيرات"
@@ -1301,18 +1302,12 @@ ar:
       sort_by: "ترتيب حسب"
       relevance: "أهمية"
       latest_post: "آخر مشاركات"
+      latest_topic: "آخر المواضيع"
       most_viewed: "الأكثر مشاهدة"
       most_liked: "الأكثر إعجابا"
       select_all: "أختر الكل"
       clear_all: "إلغ إختيار الكل"
       too_short: "عبارة البحث قصيرة جدًّا."
-      result_count:
-        zero: "لا نتائج ل‍ <span class='term'>\"{{term}}\"</span>"
-        one: "نتيجة واحدة ل‍ <span class='term'>\"{{term}}\"</span>"
-        two: "نتيجتان ل‍ <span class='term'>\"{{term}}\"</span>"
-        few: "{{count}} نتائج ل‍ <span class='term'>\"{{term}}\"</span>"
-        many: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
       title: "ابحث في المواضيع أو المشاركات أو المستخدمين أو الفئات"
       no_results: "لا نتائج."
       no_more_results: "لا نتائج أخرى."

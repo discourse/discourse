@@ -240,25 +240,25 @@ const Composer = RestModel.extend({
     return (this.get('titleLength') <= this.siteSettings.max_topic_title_length);
   }.property('minimumTitleLength', 'titleLength', 'post.static_doc'),
 
-  // The icon for the save button
-  saveIcon: function () {
-    switch (this.get('action')) {
-      case EDIT: return iconHTML('pencil');
-      case REPLY: return iconHTML('reply');
-      case CREATE_TOPIC: iconHTML('plus');
-      case PRIVATE_MESSAGE: iconHTML('envelope');
+  @computed('action')
+  saveIcon(action) {
+    switch (action) {
+      case EDIT: return 'pencil';
+      case REPLY: return 'reply';
+      case CREATE_TOPIC: 'plus';
+      case PRIVATE_MESSAGE: 'envelope';
     }
-  }.property('action'),
+  },
 
-  // The text for the save button
-  saveText: function() {
-    switch (this.get('action')) {
-      case EDIT: return I18n.t('composer.save_edit');
-      case REPLY: return I18n.t('composer.reply');
-      case CREATE_TOPIC: return I18n.t('composer.create_topic');
-      case PRIVATE_MESSAGE: return I18n.t('composer.create_pm');
+  @computed('action')
+  saveLabel(action) {
+    switch (action) {
+      case EDIT: return 'composer.save_edit';
+      case REPLY: return 'composer.reply';
+      case CREATE_TOPIC: return 'composer.create_topic';
+      case PRIVATE_MESSAGE: return 'composer.create_pm';
     }
-  }.property('action'),
+  },
 
   hasMetaData: function() {
     const metaData = this.get('metaData');

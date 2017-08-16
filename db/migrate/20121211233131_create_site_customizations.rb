@@ -8,7 +8,7 @@ class CreateSiteCustomizations < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.boolean :enabled, null: false
       t.string :key, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :site_customizations, [:key]

@@ -6,7 +6,7 @@ class CreateSiteSettings < ActiveRecord::Migration
       t.integer :data_type, null: false
       t.text :value
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

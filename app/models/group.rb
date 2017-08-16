@@ -6,6 +6,9 @@ class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
 
+  cattr_accessor :preloaded_custom_field_names
+  self.preloaded_custom_field_names = Set.new
+
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
@@ -411,12 +414,18 @@ class Group < ActiveRecord::Base
     users.pluck(:username).join(",")
   end
 
+  PUBLISH_CATEGORIES_LIMIT = 10
+
   def add(user)
     self.users.push(user) unless self.users.include?(user)
 
-    MessageBus.publish('/categories', {
-      categories: ActiveModel::ArraySerializer.new(self.categories).as_json
-    }, user_ids: [user.id])
+    if self.categories.count < PUBLISH_CATEGORIES_LIMIT
+      MessageBus.publish('/categories', {
+        categories: ActiveModel::ArraySerializer.new(self.categories).as_json
+      }, user_ids: [user.id])
+    else
+      Discourse.request_refresh!(user_ids: [user.id])
+    end
 
     self
   end
@@ -619,12 +628,13 @@ end
 #  flair_color                        :string
 #  bio_raw                            :text
 #  bio_cooked                         :text
-#  public_admission                   :boolean          default(FALSE), not null
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
+#  public_admission                   :boolean          default(FALSE), not null
+#  membership_request_template        :text
 #
 # Indexes
 #

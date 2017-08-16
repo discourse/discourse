@@ -48,6 +48,8 @@ class GlobalSetting
       end
       token
     end
+  rescue Redis::CommandError => e
+    @safe_secret_key_base = SecureRandom.hex(64) if e.message =~ /READONLY/
   end
 
   def self.load_defaults

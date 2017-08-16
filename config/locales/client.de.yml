@@ -159,6 +159,7 @@ de:
         eu_west_2: "EU (London)"
         sa_east_1: "Südamerika (São Paulo)"
         us_east_1: "USA Ost (Nord-Virginia)"
+        us_east_2: "USA West (Ohio)"
         us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA West (Nordkalifornien)"
         us_west_2: "USA West (Oregon)"
@@ -352,7 +353,8 @@ de:
         add_members: "Mitglieder hinzufügen"
         delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
       name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
-      public: "Nutzenden erlauben, die Gruppe eigenständig zu betreten/zu verlassen (nur bei öffentlich sichtbaren Gruppen) "
+      public_admission: "Erlaube Benutzern, die Gruppe eigenständig zu betreten (Erfordert, dass die Gruppe öffentlich sichtbar ist)"
+      public_exit: "Erlaube Benutzern, die Gruppe eigenständig zu verlassen"
       empty:
         posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe."
         members: "Es gibt keine Mitglieder in dieser Gruppe."
@@ -364,6 +366,7 @@ de:
       join: "Gruppe beitreten"
       leave: "Gruppe verlassen"
       request: "Gruppenbeitritt beantragen"
+      message: "Nachricht"
       automatic_group: Automatische Gruppe
       closed_group: Geschlossene Gruppe
       is_group_user: "Du bist ein Mitglied in dieser Gruppe."
@@ -940,6 +943,7 @@ de:
       complete_email_found: "Wir haben ein zu <b>%{email}</b> gehörendes Benutzerkonto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_username_not_found: "Es gibt kein Konto mit dem Benutzernamen <b>%{username}</b>"
       complete_email_not_found: "Es gibt kein Benutzerkonto für <b>%{email}</b>"
+      help: "E-Mail nicht angekommen? Bitte prüfe zuerst deinen Spam-Ordner. <p>Nicht sicher, welche E-Mail-Adresse du verwendet hast? Gib eine E-Mail-Adresse ein und wir werden dir sagen, ob sie hier existiert.</p><p>Falls du keinen Zugriff mehr auf die hinterlegte E-Mail-Adresse deines Kontos hast, kontaktiere bitte <a href='/about'>unser hilfsbereites Team. </a></p>"
       button_ok: "OK"
       button_help: "Hilfe"
     login:
@@ -1011,6 +1015,7 @@ de:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Windows 10"
+      google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "nur Kategorien"
@@ -1020,6 +1025,23 @@ de:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: Emoji suchen
+      people: Personen
+      nature: Natur
+      food: Lebensmittel
+      activity: Aktivität
+      travel: Reisen
+      objects: Objekte
+      celebration: Feiern
+      custom: Benutzerdefinierte Emojis
+      recent: Zuletzt verwendet
+      default_tone: Keine Hautfarbe
+      light_tone: Helle Hautfarbe
+      medium_light_tone: Mittel-helle Hautfarbe
+      medium_tone: Mittlere Hautfarbe
+      medium_dark_tone: Mittel-dunkle Hautfarbe
+      dark_tone: Dunkle Hautfarbe
     composer:
       emoji: "Emoji :)"
       more_emoji: "mehr…"
@@ -1185,14 +1207,15 @@ de:
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
       result_count:
-        one: "1 Ergebnis für <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} Ergebnisse für <span class='term'>\"{{term}}\"</span>"
+        one: "1 Ergebnis für <span class='term'>{{term}}</span>"
+        other: "{{count}} Ergebnisse für <span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       searching: "Suche …"
       post_format: "#{{post_number}} von {{username}}"
       results_page: "Suchergebnisse"
+      more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie #{{category}} durchsuchen"
@@ -1224,6 +1247,7 @@ de:
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis
+          images: eingeschlossene(s) Bild(er)
           all_tags: Enthält alle Schlagwörter
         statuses:
           label: 'Themen einschränken:'
@@ -1554,6 +1578,7 @@ de:
         success_email: "Wir haben an <b>{{emailOrUsername}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
         success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."
         error: "Es tut uns leid, wir konnten diese Person nicht einladen. Wurde diese Person vielleicht schon eingeladen? (Einladungen sind in ihrer Zahl beschränkt)"
+        success_existing_email: "Ein Benutzer mit der E-Mail-Adresse <b>{{emailOrUsername}}</b> existiert bereits. Wir haben den Benutzer eingeladen, sich an diesem Thema zu beteiligen."
       login_reply: 'Anmelden, um zu antworten'
       filters:
         n_posts:
@@ -1776,6 +1801,10 @@ de:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
           other: "Möchtest du wirklich all diese Beiträge löschen?"
+      merge:
+        confirm:
+          one: "Möchtest du diese Beiträge wirklich zusammenführen?"
+          other: "Möchtest du diese {{count}} Beiträge wirklich zusammenführen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -1821,6 +1850,8 @@ de:
       settings: 'Einstellungen'
       topic_template: "Themenvorlage"
       tags: "Schlagwörter"
+      tags_allowed_tags: "Erlaube in dieser Kategorie nur folgende Schlagwörter:"
+      tags_allowed_tag_groups: "Erlaube in dieser Kategorie nur Schlagwörter aus folgenden Schlagwortgruppen:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
@@ -2115,7 +2146,7 @@ de:
         hamburger_menu: '<b>=</b> „Hamburger“-Menü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Aktualisierte Themen anzeigen'
-        search: '<b>/</b> Suche'
+        search: '<b>/</b> oder <b>STRG</b>+<b>/</b> Suchen'
         help: '<b>?</b> Tastaturhilfe öffnen'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Neue/ausgewählte Beiträge ausblenden'
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ausblenden'
@@ -2638,6 +2669,9 @@ de:
           updating: "Wird aktualisiert..."
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           add: "Hinzufügen"
+          commits_behind:
+            one: "Theme liegt 1 Commit zurück!"
+            other: "Theme liegt {{count}} Commits zurück!"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"
@@ -2873,6 +2907,30 @@ de:
             title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
         logster:
           title: "Fehlerprotokolle"
+      watched_words:
+        title: "Beobachtete Wörter"
+        search: "Suchen"
+        clear_filter: "Zurücksetzen"
+        show_words: "Wörter anzeigen"
+        word_count:
+          one: "1 Wort"
+          other: "%{count} Wörter"
+        actions:
+          block: 'Blockieren'
+          censor: 'Zensieren'
+          require_approval: 'Erfordert Genehmigung'
+          flag: 'Melden'
+        action_descriptions:
+          block: 'Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken.'
+          censor: 'Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken.'
+          require_approval: 'Beitärge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind.'
+          flag: 'Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können.'
+        form:
+          label: 'Neues Wort:'
+          add: 'Hinzufügen'
+          success: 'Erfolg'
+          upload: "Hochladen"
+          upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
       impersonate:
         title: "Als Benutzer ausgeben"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."

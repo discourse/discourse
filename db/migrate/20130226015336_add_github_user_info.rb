@@ -4,7 +4,7 @@ class AddGithubUserInfo < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.string :screen_name, null: false
       t.integer :github_user_id, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :github_user_infos, [:github_user_id], unique: true

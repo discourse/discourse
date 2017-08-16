@@ -2031,9 +2031,10 @@ describe UsersController do
         user = Fabricate(:inactive_user)
         token = user.email_tokens.first
 
-        xhr :put, :update_activation_email,           username: user.username,
-                                                      password: 'qwerqwer123',
-                                                      email: 'updatedemail@example.com'
+        xhr :put, :update_activation_email,
+          username: user.username,
+          password: 'qwerqwer123',
+          email: 'updatedemail@example.com'
 
         expect(response).to be_success
 

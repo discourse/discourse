@@ -11,8 +11,9 @@ module Stylesheet
       error.gsub!("\n", '\A ')
       error.gsub!("'", '\27 ')
 
-      "footer { white-space: pre; }
-      footer:after { content: '#{error}' }"
+      "#main { display: none; }
+      body { white-space: pre; }
+      body:before { font-family: monospace; content: '#{error}' }"
     end
 
     def self.compile_asset(asset, options = {})

@@ -1,10 +1,7 @@
-{{#d-section bodyClass="navigation-topics" class="navigation-topics" scrollTop="false"}}
+{{#d-section bodyClass="navigation-topics" class="navigation-container" scrollTop="false"}}
   {{bread-crumbs categories=categories}}
 
   {{navigation-bar navItems=navItems filterMode=filterMode}}
 
-  {{#if canCreateTopic}}
-    <button id="create-topic" class='btn btn-default' {{action "createTopic"}}>
-      {{d-icon "plus"}} <span>{{i18n 'topic.create'}}</span></button>
-  {{/if}}
+  {{create-topic-button canCreateTopic=canCreateTopic action=(route-action "createTopic")}}
 {{/d-section}}

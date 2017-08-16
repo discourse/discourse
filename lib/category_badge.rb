@@ -74,7 +74,6 @@ module CategoryBadge
 
     # category name
     class_names = 'badge-category clear-badge'
-    text_color = "##{category.text_color}"
     description = category.description_text ? "title='#{category.description_text.html_safe}'" : ''
     category_url = opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
 
@@ -82,16 +81,16 @@ module CategoryBadge
       if opts[:inline_style]
         case (SiteSetting.category_style || :box).to_sym
         when :bar
-          'padding: 3px; color: #222222 !important; vertical-align: text-top; margin-top: -3px; display: inline-block;'
+          'color: #222222; padding: 3px; vertical-align: text-top; margin-top: -3px; display: inline-block;'
         when :box
-          "#{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
+          "color: #{category.text_color}; #{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
         when :bullet
-          'color: #222222 !important; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
+          'color: #222222; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
         end + 'max-width: 150px; overflow: hidden; text-overflow: ellipsis;'
       else
         ''
       end
-    result << "<span style='color: #{text_color};#{extra_span_classes}' data-drop-close='true' class='#{class_names}'
+    result << "<span style='#{extra_span_classes}' data-drop-close='true' class='#{class_names}'
                  #{description}>"
 
     result << category.name.html_safe << '</span>'

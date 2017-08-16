@@ -1,9 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
-import Composer from 'discourse/models/composer';
 import PreloadStore from 'preload-store';
 import { getTransient, setTransient } from 'discourse/lib/page-tracker';
-import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Discourse.Route.extend({
   queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
@@ -47,17 +45,6 @@ export default Discourse.Route.extend({
     didTransition() {
       this.controllerFor("full-page-search")._showFooter();
       return true;
-    },
-
-    createTopic(searchTerm) {
-      let category;
-      if (searchTerm.indexOf("category:")) {
-        const match =  searchTerm.match(/category:(\S*)/);
-        if (match && match[1]) {
-          category = match[1];
-        }
-      }
-      getOwner(this).lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC, topicCategory: category});
     }
   }
 

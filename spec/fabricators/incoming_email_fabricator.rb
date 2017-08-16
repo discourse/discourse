@@ -1,0 +1,1 @@
+Fabricator(:incoming_email)

@@ -8,7 +8,7 @@ class AddPostStats < ActiveRecord::Migration
       t.integer :drafts_saved
       t.integer :typing_duration_msecs
       t.integer :composer_open_duration_msecs
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :post_stats, [:post_id]

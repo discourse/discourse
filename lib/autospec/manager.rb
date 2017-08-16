@@ -52,13 +52,8 @@ class Autospec::Manager
   private
 
   def ruby_runner
-    if ENV["SPORK"]
-      require "autospec/spork_runner"
-      Autospec::SporkRunner.new
-    else
-      require "autospec/simple_runner"
-      Autospec::SimpleRunner.new
-    end
+    require "autospec/simple_runner"
+    Autospec::SimpleRunner.new
   end
 
   def javascript_runner

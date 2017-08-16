@@ -27,9 +27,7 @@ QUnit.test("Editing group", assert => {
     assert.ok(find('.group-members-input .item').length === 7, 'it should display group members');
     assert.ok(find('.group-members-input-selector').length === 1, 'it should display input to add group members');
     assert.ok(find('.group-members-input-selector .add[disabled]').length === 1, 'add members button should be disabled');
-  });
 
-  andThen(() => {
     assert.ok(
       find('.group-edit-allow-membership-requests[disabled]').length === 1,
       'it should disable group allow_membership_request input'
@@ -43,6 +41,11 @@ QUnit.test("Editing group", assert => {
     assert.ok(
       find('.group-edit-public-admission[disabled]').length === 1,
       'it should disable group public admission input'
+    );
+
+    assert.equal(
+      find('.group-edit-membership-request-template').length, 1,
+      'it should display the membership request template field'
     );
   });
 });

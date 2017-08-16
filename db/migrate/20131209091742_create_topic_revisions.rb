@@ -5,7 +5,7 @@ class CreateTopicRevisions < ActiveRecord::Migration
       t.belongs_to :topic
       t.text :modifications
       t.integer :number
-      t.timestamps
+      t.timestamps null: false
     end
 
     execute "INSERT INTO topic_revisions (user_id, topic_id, modifications, number, created_at, updated_at)

@@ -6,7 +6,7 @@ class CreatePostDetails < ActiveRecord::Migration
       t.string     :value, size: 512
       t.text       :extra
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :post_details, [:post_id, :key], unique: true

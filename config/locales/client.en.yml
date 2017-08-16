@@ -427,6 +427,12 @@ en:
       closed_group: Closed Group
       is_group_user: "You are a member of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners"
+      membership_request_template: "Custom template to display to users when sending a membership request"
+      membership_request:
+        submit: "Submit Request"
+        title: "Request to join @%{group_name}"
+        reason: "Let the group owners know why you belong in this group"
+
       membership: "Membership"
       name: "Name"
       user_count: "Number of Members"
@@ -700,6 +706,7 @@ en:
         taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
+        success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
 
       change_avatar:
         title: "Change your profile picture"
@@ -1136,6 +1143,10 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
+    select_box:
+      no_content: No content
+      filter_placeholder: Search...
+
     emoji_picker:
       filter_placeholder: Search for emoji
       people: People
@@ -1342,6 +1353,12 @@ en:
       post_format: "#{{post_number}} by {{username}}"
       results_page: "Search Results"
       more_results: "There are more results. Please narrow your search criteria."
+      cant_find: "Can’t find what you’re looking for?"
+      start_new_topic: "Perhaps start a new topic?"
+      or_search_google: "Or try searching with Google instead:"
+      search_google: "Try searching with Google instead:"
+      search_google_button: "Google"
+      search_google_title: "Search this site"
 
       context:
         user: "Search posts by @{{username}}"
@@ -2359,7 +2376,7 @@ en:
         hamburger_menu: '<b>=</b> Open hamburger menu'
         user_profile_menu: '<b>p</b> Open user menu'
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
-        search: '<b>/</b> Search'
+        search: '<b>/</b> or <b>ctrl</b>+<b>/</b> Search'
         help: '<b>?</b> Open keyboard help'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
@@ -3172,6 +3189,7 @@ en:
           flag: 'Allow posts containing these words, but flag them as inappropriate so moderators can review them.'
         form:
           label: 'New Word:'
+          placeholder: 'full word or * as wildcard'
           add: 'Add'
           success: 'Success'
           upload: "Upload"
@@ -3591,8 +3609,8 @@ en:
       quit: "Maybe Later"
 
       staff_count:
-        one: "Your community has 1 staff member. "
-        other: "Your community has %{count} staff members."
+        one: "Your community has 1 staff (you). "
+        other: "Your community has %{count} staff, including you."
 
       invites:
         add_user: "add"

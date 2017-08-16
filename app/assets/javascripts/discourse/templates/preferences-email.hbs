@@ -1,4 +1,4 @@
-<section class='user-content user-preferences'>
+<section class='user-right user-preferences'>
   <form class="form-horizontal">
 
     <div class="control-group">
@@ -8,11 +8,17 @@
     </div>
 
     {{#if success}}
-        <div class="control-group">
-          <div class="instructions">
-            <p>{{i18n 'user.change_email.success'}}</p>
-          </div>
+      <div class="control-group">
+        <div class="instructions">
+          <p>
+            {{#if currentUser.staff}}
+              {{i18n 'user.change_email.success_staff'}}
+            {{else}}
+              {{i18n 'user.change_email.success'}}
+            {{/if}}
+          </p>
         </div>
+      </div>
     {{else}}
       {{#if error}}
         <div class="control-group">
@@ -34,7 +40,6 @@
           {{else}}
             {{i18n 'user.email.instructions'}}
           {{/if}}
-
         </div>
       </div>
 

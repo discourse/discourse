@@ -68,6 +68,25 @@ describe InlineOneboxer do
       expect(onebox).to be_blank
     end
 
+    it "will crawl anything if allowed to" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+
+      # Final destination does a HEAD and a GET
+      stub_request(:head, "https://eviltrout.com/some-path").to_return(status: 200)
+
+      stub_request(:get, "https://eviltrout.com/some-path").
+        to_return(status: 200, body: "<html><head><title>a blog</title></head></html>", headers: {})
+
+      onebox = InlineOneboxer.lookup(
+        "https://eviltrout.com/some-path",
+        skip_cache: true
+      )
+
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
+      expect(onebox[:title]).to eq("a blog")
+    end
+
     it "will lookup whitelisted domains" do
       SiteSetting.inline_onebox_domains_whitelist = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")

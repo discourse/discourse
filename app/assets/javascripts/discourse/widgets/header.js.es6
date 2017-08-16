@@ -90,11 +90,18 @@ createWidget('header-dropdown', jQuery.extend({
       body.push(attrs.contents.call(this));
     }
 
-    return h('a.icon', { attributes: { href: attrs.href,
-                                       'data-auto-route': true,
-                                       title,
-                                       'aria-label': title,
-                                       id: attrs.iconId } }, body);
+    return h(
+      'a.icon.btn-flat',
+      { attributes: { 
+        href: attrs.href,
+          'data-auto-route': true,
+          title,
+          'aria-label': title,
+          id: attrs.iconId
+        }
+      },
+      body
+    );
   }
 }, dropdown));
 

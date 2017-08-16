@@ -9,7 +9,7 @@ class AddUserApiKeys < ActiveRecord::Migration
       t.boolean :write, null: false
       t.boolean :push, null: false
       t.string :push_url
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_api_keys, [:key], unique: true

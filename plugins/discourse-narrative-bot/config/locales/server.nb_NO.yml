@@ -49,6 +49,9 @@ nb_NO:
       answers:
         '9': "Ja"
         '12': "Spør igjen senere"
+        '17': "Mitt svar er nei"
+        '18': "Mine kilder sier nei"
+        '20': "Veldig tvilsomt"
     track_selector:
       reset_trigger: 'start'
       skip_trigger: 'hopp over'

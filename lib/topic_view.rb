@@ -67,15 +67,13 @@ class TopicView
     filter_posts(options)
 
     if @posts
-      added_fields = User.whitelisted_user_custom_fields(@guardian)
-      if added_fields.present?
+      if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
       end
-    end
 
-    whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)
-    if whitelisted_fields.present? && @posts
-      @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
+      if (whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)).present?
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
+      end
     end
 
     @draft_key = @topic.draft_key
@@ -341,13 +339,12 @@ class TopicView
     end
   end
 
-  # Returns an array of [id, post_number, days_ago] tuples. `days_ago` is there for the timeline
-  # calculations.
+  # Returns an array of [id, post_number, days_ago] tuples.
+  # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= @filtered_posts.order(:sort_order)
-      .pluck(:id,
-                                                    :post_number,
-                                                    'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+    @filtered_post_stream ||= @filtered_posts
+      .order(:sort_order)
+      .pluck(:id, :post_number, 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
   end
 
   def filtered_post_ids
@@ -387,7 +384,7 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
-      .includes(:user, :reply_to_user, :incoming_email)
+      .includes({ user: :primary_group }, :reply_to_user, :deleted_by, :incoming_email, :topic)
       .order('sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?

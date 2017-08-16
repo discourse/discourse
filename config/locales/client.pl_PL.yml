@@ -423,6 +423,11 @@ pl_PL:
       closed_group: Zamknięta grupa
       is_group_user: "Jesteś członkiem tej grupy"
       allow_membership_requests: "Zezwól użytkownikom na wysyłanie zaproszeń do właścicieli grupy."
+      membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
+      membership_request:
+        submit: "Złóż wniosek"
+        title: "Prośba o dołączenie @%{group_name}"
+        reason: "Poinformuj właścicieli grupy dlaczego do niej należysz."
       membership: "Członkostwo"
       name: "Nazwa"
       user_count: "Ilość użytkowników"
@@ -686,6 +691,7 @@ pl_PL:
         taken: "Przykro nam, ale ten adres email nie jest dostępny."
         error: "Wystąpił błąd podczas próby zmiany twojego adresu email. Być może ten email jest już zarejestrowany?"
         success: "Wysłaliśmy wiadomość do potwierdzenia na podany adres email."
+        success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
       change_avatar:
         title: "Zmień swój awatar"
         gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
@@ -1103,6 +1109,8 @@ pl_PL:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      filter_placeholder: Wyszukiwanie...
     emoji_picker:
       filter_placeholder: Szukaj emoji
       people: Ludzie
@@ -1300,6 +1308,7 @@ pl_PL:
       searching: "Szukam…"
       post_format: "#{{post_number}} za {{username}}"
       results_page: "Wyniki wyszukiwania"
+      more_results: "Istnieje więcej wyników wyszukiwania. Doprecyzuj kryteria wyszukiwania."
       context:
         user: "Szukaj wpisów @{{username}}"
         category: "Szukaj w kategorii #{{category}}"
@@ -1331,6 +1340,7 @@ pl_PL:
           seen: Przeczytałem
           unseen: Nie przeczytałem
           wiki: są postami wiki
+          images: Zawiera obrazki
           all_tags: Zawiera wszystkie tagi
         statuses:
           label: Tematy gdzie
@@ -1484,7 +1494,7 @@ pl_PL:
       deleted: "Temat został usunięty"
       topic_status_update:
         title: "Ustaw ważność wątku"
-        save: "Ustaw czasd"
+        save: "Ustaw czas"
         num_of_hours: "Liczba godzin:"
         remove: "Usuń czas"
         publish_to: "Opublikuj do:"
@@ -2100,6 +2110,7 @@ pl_PL:
       subcategory_list_styles:
         rows: "Rzędy"
         rows_with_featured_topics: "Rzędy z wybranymi tematami"
+        boxes: "Pudełka"
         boxes_with_featured_topics: "Ramki z wybranymi tematami"
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
@@ -2339,7 +2350,7 @@ pl_PL:
         hamburger_menu: '<b>=</b> Otwórz menu'
         user_profile_menu: '<b>p</b> Otwórz menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> Pokaż zaktualizowane tematy'
-        search: '<b>/</b> Wyszukaj'
+        search: '<b>/</b>lub<b>ctrl</b>+<b>/</b>Wyszukaj'
         help: '<b>?</b> Pokaż skróty klawiszowe'
         dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
@@ -3144,6 +3155,7 @@ pl_PL:
           flag: 'Zezwalaj na publikację takich postów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość.'
         form:
           label: 'Nowe słowo:'
+          placeholder: 'pełne słowo lub jako dzika karta'
           add: 'Dodaj'
           success: 'Sukces'
           upload: "Prześlij"

@@ -19,6 +19,25 @@
 html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-medium; }
 .topic-list a.title.visited:not(.badge-notification) {color: $primary-medium; }
 
+.topic-list-main-link {
+  font-size: 1.143em;
+  a.title {
+    padding: 15px 0;
+    word-break: break-word;
+    color: $primary;
+  }
+
+  .anon & {
+    a.title:visited:not(.badge-notification) {
+      color: $primary-medium;
+    }
+  }
+
+  a.title.visited:not(.badge-notification) {
+    color: $primary-medium;
+  }
+}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
@@ -58,7 +77,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-
   }
 
   > tbody > tr:first-of-type {
-    border-top: 3px solid $primary-low; 
+    border-top: 3px solid $primary-low;
   }
 
   th,
@@ -81,11 +100,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-
   }
 
   .main-link {
-    font-size: 1.143em;
-    a.title {
-      padding: 15px 0;
-      word-break: break-word;
-    }
+    @extend .topic-list-main-link;
   }
 
   .topic-featured-link {
@@ -344,3 +359,14 @@ ol.category-breadcrumb {
 div.education {
   color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }
+
+.list-cell {
+  padding: 12px 5px;
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+}
+
+.table-heading {
+  @extend .list-cell;
+  border-bottom: 2px solid $primary-low;
+}
+

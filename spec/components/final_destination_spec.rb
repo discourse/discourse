@@ -7,6 +7,8 @@ describe FinalDestination do
     {
       ignore_redirects: ['https://ignore-me.com'],
 
+      force_get_hosts: ['https://force.get.com'],
+
       # avoid IP lookups in test
       lookup_ip: lambda do |host|
         case host
@@ -17,6 +19,7 @@ describe FinalDestination do
         when 'private-host.com' then '192.168.10.1'
         when 'internal-ipv6.com' then '2001:abc:de:01:3:3d0:6a65:c2bf'
         when 'ignore-me.com' then '53.84.143.152'
+        when 'force.get.com' then '22.102.29.40'
         else
           as_ip = IPAddr.new(host) rescue nil
           raise "couldn't lookup #{host}" if as_ip.nil?
@@ -129,6 +132,31 @@ describe FinalDestination do
         expect(final.resolve).to be_nil
         expect(final.redirected?).to eq(true)
         expect(final.status).to eq(:invalid_address)
+      end
+    end
+
+    context "GET can be forced" do
+      before do
+        stub_request(:head, 'https://force.get.com/posts?page=4')
+        stub_request(:get, 'https://force.get.com/posts?page=4')
+        stub_request(:head, 'https://eviltrout.com/posts?page=2')
+        stub_request(:get, 'https://eviltrout.com/posts?page=2')
+      end
+
+      it "will do a GET when forced" do
+        final = FinalDestination.new('https://force.get.com/posts?page=4', opts)
+        expect(final.resolve.to_s).to eq('https://force.get.com/posts?page=4')
+        expect(final.status).to eq(:resolved)
+        expect(WebMock).to have_requested(:get, 'https://force.get.com/posts?page=4')
+        expect(WebMock).to_not have_requested(:head, 'https://force.get.com/posts?page=4')
+      end
+
+      it "will do a HEAD if not forced" do
+        final = FinalDestination.new('https://eviltrout.com/posts?page=2', opts)
+        expect(final.resolve.to_s).to eq('https://eviltrout.com/posts?page=2')
+        expect(final.status).to eq(:resolved)
+        expect(WebMock).to_not have_requested(:get, 'https://eviltrout.com/posts?page=2')
+        expect(WebMock).to have_requested(:head, 'https://eviltrout.com/posts?page=2')
       end
     end
 

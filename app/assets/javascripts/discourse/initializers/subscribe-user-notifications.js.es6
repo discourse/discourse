@@ -95,6 +95,10 @@ export default {
 
       bus.subscribe("/client_settings", data => Ember.set(siteSettings, data.name, data.value));
 
+      bus.subscribe("/refresh_client", data => {
+        Discourse.set("assetVersion", data);
+      });
+
       if (!Ember.testing) {
         if (!site.mobileView) {
           bus.subscribe(alertChannel(user), data => onNotification(data, user));

@@ -349,6 +349,7 @@ pt:
         add_members: "Adicionar membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
+      public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo."
         members: "Não existem membros neste grupo."
@@ -358,12 +359,17 @@ pt:
         logs: "Não existem registos para este grupo."
       add: "Adicionar"
       join: "Aderir ao Grupo"
-      leave: "Sair do Grupo"
+      leave: "Deixar o Grupo"
       request: "Pedir para Aderir ao Grupo"
+      message: "Mensagem"
       automatic_group: Grupo Automático
       closed_group: Grupo fechado
       is_group_user: "É um membro deste grupo"
       allow_membership_requests: "Permitir que os utilizadores enviem pedidos de adesão aos donos do grupo"
+      membership_request:
+        submit: "Submeter Pedido"
+        title: "Peça para aderir ao @%{group_name}"
+        reason: "Permita que os donos de grupo saibam porque é que pertence a este grupo"
       membership: "Adesão"
       name: "Nome"
       user_count: "Número de Membros"
@@ -485,9 +491,9 @@ pt:
       edit: "Editar Preferências"
       download_archive:
         button_text: "Transferir Tudo"
-        confirm: "Tem a certeza que deseja descarregar as suas publicações?"
-        success: "Descarregamento iniciado, será notificado via mensagem assim que o processo estiver concluído."
-        rate_limit_error: "As publicações podem ser descarregadas uma vez por dia, por favor, tente novamente amanhã."
+        confirm: "Tem a certeza que deseja transferir as suas publicações?"
+        success: "Transferência iniciada, será notificado via mensagem assim que o processo estiver concluído."
+        rate_limit_error: "As publicações podem ser transferidas uma vez por dia, por favor, tente novamente amanhã."
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -587,6 +593,15 @@ pt:
         move_to_archive: "Arquivo"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez a sua rede esteja em baixo)"
         select_all: "Selecionar Tudo"
+      preferences_nav:
+        account: "Conta"
+        profile: "Perfil"
+        emails: "E-mails"
+        notifications: "Notificações"
+        categories: "Categorias"
+        tags: "Etiquetas"
+        interface: "Interface"
+        apps: "Aplicações"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -608,6 +623,7 @@ pt:
         taken: "Pedimos desculpa, esse email não está disponível."
         error: "Ocorreu um erro ao alterar o email. Talvez esse endereço já esteja a ser utilizado neste fórum?"
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
+        success_staff: "Nós enviámos uma mensagem para o seu endereço atual. Por favor, siga as instruções de confirmação."
       change_avatar:
         title: "Alterar a sua imagem de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
@@ -737,8 +753,12 @@ pt:
         expired: "Este convite expirou."
         rescind: "Remover"
         rescinded: "Convite Removido"
+        rescind_all: "Remover todos os Convites"
+        rescinded_all: "Todos os Convites removidos!"
+        rescind_all_confirm: "Tem a certeza que deseja remover todos os convites?"
         reinvite: "Reenviar convite"
         reinvite_all: "Reenviar todos os Convites"
+        reinvite_all_confirm: "Tem a certeza que deseja reenviar todos os convites?"
         reinvited: "Convite reenviado"
         reinvited_all: "Todos os Convites reenviados!"
         time_read: "Tempo de Leitura"
@@ -751,6 +771,7 @@ pt:
         bulk_invite:
           text: "Convite em massa a partir de ficheiro"
           success: "Ficheiro carregado corretamente, será notificado via mensagem assim que o processo esteja concluído."
+          error: "Desculpe, o ficheiro deverá estar no formato CSV."
       password:
         title: "Palavra-passe"
         too_short: "A sua palavra-passe é muito curta."
@@ -758,6 +779,7 @@ pt:
         same_as_username: "A sua palavra-passe é a mesma que o seu nome de utilizador."
         same_as_email: "A sua palavra-passe é a mesma que o seu email."
         ok: "A sua palavra-passe parece correta."
+        instructions: "pelo menos %{count} carateres"
       summary:
         title: "Sumário"
         stats: "Estatísticas"
@@ -915,6 +937,8 @@ pt:
       complete_email_found: "Encontrámos uma conta correspondente a <b>%{email}</b>, deverá receber em breve um email com instruções para repor a sua palavra-passe."
       complete_username_not_found: "Não existe nenhuma conta correspondente ao nome de utilizador <b>%{username}</b>"
       complete_email_not_found: "Não existe nenhuma conta correspondente a <b>%{email}</b>"
+      button_ok: "CONFIRMAR"
+      button_help: "Ajuda"
     login:
       title: "Entrar"
       username: "Utilizador"
@@ -934,6 +958,9 @@ pt:
       not_allowed_from_ip_address: "Não pode iniciar sessão a partir desse endereço IP."
       admin_not_allowed_from_ip_address: "Não pode iniciar sessão como administrador a partir desse endereço IP."
       resend_activation_email: "Clique aqui para enviar o email de ativação novamente."
+      resend_title: "Reenviar Mensagem de Ativação"
+      change_email: "Alterar Endereço de E-mail"
+      submit_new_email: "Atualizar Endereço de E-mail"
       sent_activation_email_again: "Enviámos mais um email de ativação para o endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos; certifique-se que verifica a sua pasta de spam ou lixo."
       to_continue: "Por favor Inicie Sessão"
       preferences: "Necessita de ter sessão iniciada para alterar as suas preferências de utilizador."
@@ -959,12 +986,25 @@ pt:
       github:
         title: "com GitHub"
         message: "A autenticar com GitHub (certifique-se de que os bloqueadores de popup estão desativados)"
+    invites:
+      accept_title: "Convidar"
+      welcome_to: "Bem-vindo a %{site_name}!"
+      invited_by: "Foi convidado por:"
+      accept_invite: "Aceitar Convite"
+      success: "A sua conta foi criada e está agora com a sessão iniciada."
+      name_label: "Nome"
+      password_label: "Definir Palavra-passe"
+      optional_description: "(opcional)"
+    password_reset:
+      continue: "Continuar para %{site_name}"
     emoji_set:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Apenas Categorias"
       categories_with_featured_topics: "Categorias com Tópicos Destacados"
@@ -973,6 +1013,19 @@ pt:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      filter_placeholder: Pesquisar...
+    emoji_picker:
+      filter_placeholder: Pesquisar por emoji
+      people: Pessoas
+      nature: Natureza
+      food: Comida
+      activity: Atividade
+      travel: Viagem
+      objects: Objetos
+      celebration: Celebração
+      custom: Emojis Personalizados
+      recent: Utilizado recentemente
     composer:
       emoji: "Emoji :)"
       more_emoji: "mais..."
@@ -1012,6 +1065,7 @@ pt:
       title: "Ou prima Ctrl+Enter"
       users_placeholder: "Adicionar um utilizador"
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
+      title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
       show_edit_reason: "(adicione a razão para a edição)"
       topic_featured_link_placeholder: "Inserir ligação mostrada com o título."
@@ -1082,6 +1136,7 @@ pt:
       moved_post: "<i title='publicação movida' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
       linked: "<i title='publicação ligada' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='distintivo concedido' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
+      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       watching_first_post: "<i title='novo tópico' class='fa fa-dot-circle-o'></i><p><span>Novo Tópico</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mensagem na caixa de entrada do seu grupo {{group_name}}</p>"
@@ -1127,19 +1182,18 @@ pt:
       sort_by: "Ordenar por"
       relevance: "Relevância"
       latest_post: "Publicação Mais Recente"
+      latest_topic: "Tópico Recente"
       most_viewed: "Mais Visto"
       most_liked: "Mais Gostos"
       select_all: "Selecionar Tudo"
       clear_all: "Remover Tudo"
       too_short: "O seu termo de pesquisa é demasiado curto."
-      result_count:
-        one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
       title: "pesquisar tópicos, publicações, utilizadores, ou categorias"
       no_results: "Não foi encontrado nenhum resultado."
       no_more_results: "Mais nenhum resultado encontrado."
       searching: "A procurar..."
       post_format: "#{{post_number}} por {{username}}"
+      results_page: "Resultados da Pesquisa"
       context:
         user: "Procurar publicações por @{{username}}"
         category: "Pesquise na categoria #{{category}}"
@@ -1168,6 +1222,8 @@ pt:
           first: são a primeira publicação
           pinned: estão afixados
           unpinned: não estão afixados
+          seen: Eu li
+          unseen: Eu não li
           wiki: são wiki
         statuses:
           label: Aonde tópicos
@@ -1194,6 +1250,7 @@ pt:
         select_all: "Selecionar Tudo"
         clear_all: "Remover Tudo"
         unlist_topics: "Remover Tópicos da Lista"
+        relist_topics: "Voltar a Listar Tópicos"
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
@@ -1204,12 +1261,16 @@ pt:
         dismiss_new: "Marcar Visto Novos"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
+        change_category: "Definir Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar tópicos"
+        notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
           one: "Selecionou  <b>1</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
+        change_tags: "Substituir Etiquetas"
+        append_tags: "Anexar Etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
         changed_tags: "As etiquetas para esses tópicos foram mudadas."
       none:
@@ -1298,6 +1359,18 @@ pt:
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi eliminado"
+      topic_status_update:
+        num_of_hours: "Número de horas:"
+        publish_to: "Publicar para:"
+        when: "Quando:"
+      auto_update_input:
+        later_today: "Hoje, mais tarde"
+        tomorrow: "Amanhã"
+        this_weekend: "Este fim de semana"
+        next_week: "Próxima semana"
+        next_month: "Próximo mês"
+      reminder:
+        title: "Lembrar-me"
       auto_close_title: 'Configurações para Fechar Automaticamente'
       auto_close_immediate:
         one: "A última publicação neste tópico já tem 1 hora, por isso o tópico será fechado imediatamente."
@@ -1540,7 +1613,7 @@ pt:
         too_many_dragged_and_dropped_files: "Lamentamos mas só pode carregar 10 ficheiros de cada vez."
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
-        attachment_download_requires_login: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
+        attachment_download_requires_login: "Desculpe, precisa de iniciar a sessão para transferir anexos."
       abandon:
         confirm: "Tem a certeza que deseja abandonar a sua publicação?"
         no_value: "Não, manter"
@@ -1947,7 +2020,7 @@ pt:
       create_post: "Responder / Ver"
       readonly: "Ver"
     lightbox:
-      download: "descarregar"
+      download: "transferir"
     keyboard_shortcuts_help:
       title: 'Atalhos de Teclado'
       jump_to:
@@ -2393,7 +2466,9 @@ pt:
             confirm: "Deseja criar uma nova cópia de segurança?"
             without_uploads: "Sim (não incluir ficheiros)"
           download:
-            label: "Descarregar"
+            label: "Transferir"
+            title: "Enviar mensagem com hiperligação de transferência"
+            alert: "Foi-lhe enviada por e-mail uma hiperligação para transferir esta cópia de segurança."
           destroy:
             title: "Remover a cópia de segurança"
             confirm: "Tem a certeza que deseja destruir esta cópia de segurança?"
@@ -2606,6 +2681,7 @@ pt:
             deleted_tag: "etiqueta removida"
             renamed_tag: "etiqueta renomeada"
             revoke_email: "revogar email"
+            backup_download: "transferir cópia de segurança"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de email serão verificados e o registo será bloqueado, ou outra ação será executada."

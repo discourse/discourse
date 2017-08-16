@@ -1,7 +1,5 @@
 class PostSearchData < ActiveRecord::Base
-  belongs_to :post
-
-  validates_presence_of :search_data
+  include HasSearchData
 end
 
 # == Schema Information
@@ -12,6 +10,7 @@ end
 #  search_data :tsvector
 #  raw_data    :text
 #  locale      :string
+#  version     :integer          default(0)
 #
 # Indexes
 #

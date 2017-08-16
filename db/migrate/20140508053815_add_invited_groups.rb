@@ -3,7 +3,7 @@ class AddInvitedGroups < ActiveRecord::Migration
     create_table :invited_groups do |t|
       t.integer :group_id
       t.integer :invite_id
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

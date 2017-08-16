@@ -76,7 +76,7 @@
                       {{popup-input-tip validation=categoryValidation}}
                     </div>
                     {{#if model.archetype.hasOptions}}
-                      <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
+                      {{d-button action="showOptions" label="topic.options"}}
                     {{/if}}
                   {{/if}}
                 </div>
@@ -107,7 +107,12 @@
                 {{#if canEditTags}}
                   {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
                 {{/if}}
-                <button {{action "save"}} tabindex="5" class="btn btn-primary create {{if disableSubmit 'disabled'}}" title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
+                {{composer-save-button
+                  action=(action "save")
+                  icon=model.saveIcon
+                  label=model.saveLabel
+                  disableSubmit=disableSubmit}}
+
                 <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
 
                 {{#if site.mobileView}}

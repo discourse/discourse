@@ -91,6 +91,17 @@
       </label>
     </div>
 
+    {{#if model.allow_membership_requests}}
+      <div>
+        <label for="membership-request-template">
+          {{i18n 'groups.membership_request_template'}}
+        </label>
+
+        {{expanding-text-area name="membership-request-template"
+            value=model.membership_request_template}}
+      </div>
+    {{/if}}
+
     <div>
       <label for="primary_group">
         {{input type="checkbox" checked=model.primary_group}}
@@ -142,6 +153,8 @@
   {{#unless model.automatic}}
     {{group-flair-inputs model=model}}
   {{/unless}}
+
+  {{plugin-outlet name="group-edit" args=(hash group=model)}}
 
   <div class='buttons'>
     <button {{action "save"}} disabled={{disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>

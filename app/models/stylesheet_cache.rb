@@ -4,8 +4,13 @@ class StylesheetCache < ActiveRecord::Base
   MAX_TO_KEEP = 50
 
   def self.add(target, digest, content, source_map)
+    old_logger = ActiveRecord::Base.logger
 
     return false if where(target: target, digest: digest).exists?
+
+    if Rails.env.development?
+      ActiveRecord::Base.logger = nil
+    end
 
     success = create(target: target, digest: digest, content: content, source_map: source_map)
 
@@ -25,6 +30,10 @@ class StylesheetCache < ActiveRecord::Base
     success
   rescue ActiveRecord::RecordNotUnique
     false
+  ensure
+    if Rails.env.development? && old_logger
+      ActiveRecord::Base.logger = old_logger
+    end
   end
 
 end
@@ -37,8 +46,8 @@ end
 #  target     :string           not null
 #  digest     :string           not null
 #  content    :text             not null
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #  theme_id   :integer          default(-1), not null
 #  source_map :text
 #

@@ -561,6 +561,10 @@ class PostsController < ApplicationController
       :visible
     ]
 
+    if Post.permitted_create_params.present?
+      permitted.concat(Post.permitted_create_params.to_a)
+    end
+
     # param munging for WordPress
     params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
     params[:visible] = (params[:unlist_topic].to_s == "false") if params[:unlist_topic]

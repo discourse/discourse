@@ -179,8 +179,7 @@ const TopicTrackingState = Discourse.Model.extend({
     delete this.states["t" + topic_id];
   },
 
-  // If we have a cached topic list, we can update it from our tracking
-  // information.
+  // If we have a cached topic list, we can update it from our tracking information.
   updateTopics(topics) {
     if (Em.isEmpty(topics)) { return; }
 
@@ -283,7 +282,7 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   incrementMessageCount() {
-    this.set("messageCount", this.get("messageCount") + 1);
+    this.incrementProperty("messageCount");
   },
 
   countNew(category_id) {
@@ -358,8 +357,7 @@ const TopicTrackingState = Discourse.Model.extend({
     const states = this.states;
     const idMap = Discourse.Category.idMap();
 
-    // I am taking some shortcuts here to avoid 500 gets for
-    // a large list
+    // I am taking some shortcuts here to avoid 500 gets for a large list
     if (data) {
       _.each(data,topic => {
         var category = idMap[topic.category_id];

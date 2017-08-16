@@ -28,9 +28,9 @@ describe User do
       end
 
       describe 'when user is staged' do
-        it 'should still validate primary_email' do
+        it 'should still validate presence of primary_email' do
           user.staged = true
-          user.primary_email = nil
+          user.email = nil
 
           expect(user).to_not be_valid
           expect(user.errors.messages).to include(:primary_email)
@@ -90,12 +90,15 @@ describe User do
       user.approve(admin)
     end
 
-    it 'triggers a extensibility event' do
+    it 'triggers extensibility events' do
       user && admin # bypass the user_created event
-      event = DiscourseEvent.track_events { user.approve(admin) }.first
+      user_updated_event, user_approved_event = DiscourseEvent.track_events { user.approve(admin) }
 
-      expect(event[:event_name]).to eq(:user_approved)
-      expect(event[:params].first).to eq(user)
+      expect(user_updated_event[:event_name]).to eq(:user_updated)
+      expect(user_updated_event[:params].first).to eq(user)
+
+      expect(user_approved_event[:event_name]).to eq(:user_approved)
+      expect(user_approved_event[:params].first).to eq(user)
     end
 
     context 'after approval' do
@@ -612,7 +615,7 @@ describe User do
 
     it 'email whitelist should be used when email is being changed' do
       SiteSetting.email_domains_whitelist = 'vaynermedia.com'
-      u = Fabricate(:user, email: 'good@vaynermedia.com')
+      u = Fabricate(:user_single_email, email: 'good@vaynermedia.com')
       u.email = 'nope@mailinator.com'
       expect(u).not_to be_valid
     end
@@ -620,7 +623,10 @@ describe User do
     it "doesn't validate email address for staged users" do
       SiteSetting.email_domains_whitelist = "foo.com"
       SiteSetting.email_domains_blacklist = "bar.com"
-      expect(Fabricate.build(:user, staged: true, email: "foo@bar.com")).to be_valid
+
+      user = Fabricate.build(:user, staged: true, email: "foo@bar.com")
+
+      expect(user.save).to eq(true)
     end
   end
 

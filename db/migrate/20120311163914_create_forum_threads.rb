@@ -5,7 +5,7 @@ class CreateForumThreads < ActiveRecord::Migration
       t.string :title, null: false
       t.integer :last_post_id
       t.datetime :last_posted_at
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

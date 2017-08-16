@@ -61,15 +61,16 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
-gem 'fastimage', '2.1.0'
+# Forked until https://github.com/sdsykes/fastimage/pull/93 is merged
+gem 'discourse_fastimage', require: 'fastimage'
+
 gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
 gem 'email_reply_trimmer', '0.1.7'
 
-# TODO Use official image_optim gem once https://github.com/toy/image_optim/pull/149
-# is merged.
+# Forked until https://github.com/toy/image_optim/pull/149 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
@@ -84,9 +85,7 @@ gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-instagram'
-
-# forked while https://github.com/intridea/omniauth-github/pull/41 is being upstreamd
-gem 'omniauth-github-discourse', require: 'omniauth-github'
+gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
@@ -110,9 +109,8 @@ gem 'mini_racer'
 gem 'highline', require: false
 gem 'rack-protection' # security
 
-# Gems used only for assets and not required
-# in production environments by default.
-# allow everywhere for now cause we are allowing asset debugging in prd
+# Gems used only for assets and not required in production environments by default.
+# Allow everywhere for now cause we are allowing asset debugging in production
 group :assets do
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
@@ -140,7 +138,6 @@ group :test, :development do
   gem 'rspec-rails', require: false
   gem 'shoulda', require: false
   gem 'rspec-html-matchers'
-  gem 'spork-rails'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
 end
@@ -157,7 +154,7 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank' #, github: "SamSaffron/fast_blank"
+gem 'fast_blank'
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -177,7 +174,6 @@ gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
-#
 gem 'ruby-readability', require: false
 gem 'simple-rss', require: false
 
@@ -194,4 +190,5 @@ if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   gem 'sqlite3', '~> 1.3.13'
+  gem 'ruby-bbcode-to-md', github: 'nlalonde/ruby-bbcode-to-md'
 end

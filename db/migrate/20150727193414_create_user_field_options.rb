@@ -3,7 +3,7 @@ class CreateUserFieldOptions < ActiveRecord::Migration
     create_table :user_field_options, force: true do |t|
       t.references :user_field, null: false
       t.string :value, null: false
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

@@ -230,6 +230,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       this.send('postChangedRoute', postNumber);
       this._progressIndex = topic.get('postStream').progressIndexOfPost(post);
+
+      this.appEvents.trigger('topic:current-post-changed', { post });
     },
 
     currentPostScrolled(event) {

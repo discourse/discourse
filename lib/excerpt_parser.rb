@@ -53,7 +53,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "img"
       attributes = Hash[*attributes.flatten]
 
-        if attributes["class"] == 'emoji'
+        if attributes["class"]&.include?('emoji')
           if @remap_emoji
             title = (attributes["alt"] || "").gsub(":", "")
             title = Emoji.lookup_unicode(title) || attributes["alt"]

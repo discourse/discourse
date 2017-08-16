@@ -448,7 +448,9 @@ class ApplicationController < ActionController::Base
       end
 
       DiscoursePluginRegistry.html_builders.each do |name, blk|
-        data[name] = blk.call(self)
+        if name.start_with?("client:")
+          data[name.sub(/^client:/, '')] = blk.call(self)
+        end
       end
 
       MultiJson.dump(data)

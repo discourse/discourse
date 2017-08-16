@@ -255,9 +255,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def topic_timer
-    TopicTimerSerializer.new(
-      object.topic.public_topic_timer, root: false
-    )
+    TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
 
   def tags

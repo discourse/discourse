@@ -6,7 +6,7 @@ class CreateInvites < ActiveRecord::Migration
       t.integer :invited_by_id, null: false
       t.integer :user_id, null: true
       t.timestamp :redeemed_at, null: true
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :invites, :invite_key, unique: true

@@ -21,6 +21,10 @@ module Oneboxer
     @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', Discourse.base_url]
   end
 
+  def self.force_get_hosts
+    @force_get_hosts ||= ['http://us.battle.net']
+  end
+
   def self.preview(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
@@ -147,7 +151,7 @@ module Oneboxer
 
     def self.onebox_raw(url)
       Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-        fd = FinalDestination.new(url, ignore_redirects: ignore_redirects)
+        fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, force_get_hosts: force_get_hosts)
         uri = fd.resolve
         return blank_onebox if uri.blank? || SiteSetting.onebox_domains_blacklist.include?(uri.hostname)
         options = {

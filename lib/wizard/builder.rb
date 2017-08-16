@@ -82,7 +82,10 @@ class Wizard
         username = Discourse.system_user.username if username.blank?
         contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
 
-        User.where(admin: true).pluck(:username).each { |c| contact.add_choice(c) }
+        User.human_users.where(admin: true).pluck(:username).each do |c|
+          contact.add_choice(c) unless reserved_usernames.include?(c.downcase)
+        end
+        contact.add_choice(Discourse.system_user.username)
 
         step.on_update do |updater|
           updater.apply_settings(:contact_email, :contact_url)
@@ -210,7 +213,7 @@ class Wizard
 
       @wizard.append_step('invites') do |step|
 
-        staff_count = User.staff.human_users.count
+        staff_count = User.staff.human_users.where('username_lower not in (?)', reserved_usernames).count
         step.add_field(id: 'staff_count', type: 'component', value: staff_count)
 
         step.add_field(id: 'invite_list', type: 'component')
@@ -248,6 +251,10 @@ class Wizard
       new_value = field_name if new_value.blank?
 
       raw.gsub!(old_value, new_value)
+    end
+
+    def reserved_usernames
+      @reserved_usernames ||= SiteSetting.defaults[:reserved_usernames].split('|')
     end
   end
 end

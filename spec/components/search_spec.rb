@@ -703,6 +703,11 @@ describe Search do
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
     end
 
+    it 'can tokanize website names correctly' do
+      post = Fabricate(:post, raw: 'i like wb.camra.org.uk so yay')
+      expect(Search.execute('wb.camra.org.uk').posts.map(&:id)).to eq([post.id])
+    end
+
     it 'supports category slug and tags' do
       # main category
       category = Fabricate(:category, name: 'category 24', slug: 'category-24')
@@ -728,6 +733,18 @@ describe Search do
       topic.tags = [Fabricate(:tag, name: 'alpha')]
       expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('this is a test #beta').posts.size).to eq(0)
+    end
+
+    it 'correctly handles #symbol when no tag or category match' do
+      Fabricate(:post, raw: 'testing #1 #9998')
+      results = Search.new('testing #1').execute
+      expect(results.posts.length).to eq(1)
+
+      results = Search.new('#9998').execute
+      expect(results.posts.length).to eq(1)
+
+      results = Search.new('#777').execute
+      expect(results.posts.length).to eq(0)
     end
 
     context 'tags' do

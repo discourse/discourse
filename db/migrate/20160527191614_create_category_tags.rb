@@ -3,7 +3,7 @@ class CreateCategoryTags < ActiveRecord::Migration
     create_table :category_tags do |t|
       t.references :category, null: false
       t.references :tag,      null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :category_tags, [:category_id, :tag_id], name: "idx_category_tags_ix1", unique: true

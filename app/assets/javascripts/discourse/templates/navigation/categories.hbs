@@ -1,4 +1,4 @@
-{{#d-section bodyClass="navigation-categories" class="navigation-categories"}}
+{{#d-section bodyClass="navigation-categories" class="navigation-container"}}
   {{bread-crumbs categories=categories}}
 
   {{navigation-bar navItems=navItems filterMode=filterMode}}
@@ -6,12 +6,5 @@
   {{#if canCreateCategory}}
     {{categories-admin-dropdown}}
   {{/if}}
-  {{#if canCreateTopic}}
-    {{d-button
-      id="create-topic"
-      action="createTopic"
-      icon="plus"
-      label="topic.create"
-    }}
-  {{/if}}
+  {{create-topic-button canCreateTopic=canCreateTopic action=(route-action "createTopic")}}
 {{/d-section}}

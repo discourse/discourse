@@ -3,7 +3,7 @@ class CreateForums < ActiveRecord::Migration
     create_table :forums do |t|
       t.integer :site_id, null: false
       t.string :title, limit: 100, null: false
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

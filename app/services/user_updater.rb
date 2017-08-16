@@ -121,7 +121,6 @@ class UserUpdater
       end
     end
 
-    DiscourseEvent.trigger(:user_updated, user) if saved
     saved
   end
 

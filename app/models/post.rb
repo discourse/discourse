@@ -14,8 +14,12 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
+  include Searchable
   include HasCustomFields
   include LimitedEdit
+
+  cattr_accessor :permitted_create_params
+  self.permitted_create_params = Set.new
 
   # increase this number to force a system wide post rebake
   BAKED_VERSION = 1
@@ -37,7 +41,6 @@ class Post < ActiveRecord::Base
   has_many :post_uploads
   has_many :uploads, through: :post_uploads
 
-  has_one :post_search_data
   has_one :post_stat
 
   has_one :incoming_email
@@ -303,6 +306,7 @@ class Post < ActiveRecord::Base
   # Prevent new users from posting the same hosts too many times.
   def has_host_spam?
     return false if acting_user.present? && (acting_user.staged? || acting_user.has_trust_level?(TrustLevel[1]))
+    return false if topic&.private_message?
 
     total_hosts_usage.values.any? { |count| count >= SiteSetting.newuser_spam_host_threshold }
   end

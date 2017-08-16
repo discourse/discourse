@@ -6,7 +6,7 @@ class CreateBadges < ActiveRecord::Migration
       t.integer :badge_type_id, index: true, null: false
       t.integer :grant_count, null: false, default: 0
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :badges, [:name], unique: true

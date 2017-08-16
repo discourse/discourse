@@ -74,65 +74,96 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
-    klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
+    reloadable_patch do |plugin|
+      klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
-    klass.attributes(attr) unless attr.to_s.start_with?("include_")
+      unless attr.to_s.start_with?("include_")
+        klass.attributes(attr)
 
-    klass.send(:define_method, attr, &block)
+        if define_include_method
+          # Don't include serialized methods if the plugin is disabled
+          klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+        end
+      end
 
-    return unless define_include_method
-
-    # Don't include serialized methods if the plugin is disabled
-    plugin = self
-    klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+      klass.send(:define_method, attr, &block)
+    end
   end
 
   def whitelist_staff_user_custom_field(field)
-    User.register_plugin_staff_custom_field(field, self)
+    reloadable_patch do |plugin|
+      User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
+    end
   end
 
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
-  def add_to_class(klass, attr, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
+  def add_to_class(class_name, attr, &block)
+    reloadable_patch do |plugin|
+      klass = class_name.to_s.classify.constantize rescue class_name.to_s.constantize
+      hidden_method_name = :"#{attr}_without_enable_check"
+      klass.send(:define_method, hidden_method_name, &block)
 
-    hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_method, hidden_method_name, &block)
-
-    plugin = self
-    klass.send(:define_method, attr) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(:define_method, attr) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
     end
   end
 
   # Adds a class method to a class, respecting if plugin is enabled
-  def add_class_method(klass, attr, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
+  def add_class_method(klass_name, attr, &block)
+    reloadable_patch do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
-    hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_singleton_method, hidden_method_name, &block)
+      hidden_method_name = :"#{attr}_without_enable_check"
+      klass.send(:define_singleton_method, hidden_method_name, &block)
 
-    plugin = self
-    klass.send(:define_singleton_method, attr) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(:define_singleton_method, attr) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
     end
   end
 
-  def add_model_callback(klass, callback, options = {}, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
-    plugin = self
+  def add_model_callback(klass_name, callback, options = {}, &block)
+    reloadable_patch do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
-    # generate a unique method name
-    method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
-    @idx += 1
-    hidden_method_name = :"#{method_name}_without_enable_check"
-    klass.send(:define_method, hidden_method_name, &block)
+      # generate a unique method name
+      method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
+      @idx += 1
+      hidden_method_name = :"#{method_name}_without_enable_check"
+      klass.send(:define_method, hidden_method_name, &block)
 
-    klass.send(callback, options) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(callback, options) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
+
+      hidden_method_name
     end
+  end
 
-    hidden_method_name
+  def topic_view_post_custom_fields_whitelister(&block)
+    reloadable_patch do |plugin|
+      ::TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
+    end
+  end
+
+  def add_preloaded_group_custom_field(field)
+    reloadable_patch do |plugin|
+      ::Group.preloaded_custom_field_names << field if plugin.enabled?
+    end
+  end
+
+  def add_preloaded_topic_list_custom_field(field)
+    reloadable_patch do |plugin|
+      ::TopicList.preloaded_custom_fields << field if plugin.enabled?
+    end
+  end
+
+  def add_permitted_post_create_param(name)
+    reloadable_patch do |plugin|
+      ::Post.permitted_create_params << name if plugin.enabled?
+    end
   end
 
   # Add validation method but check that the plugin is enabled
@@ -200,17 +231,38 @@ class Plugin::Instance
 
   def notify_after_initialize
     color_schemes.each do |c|
-      ColorScheme.create_from_base(name: c[:name], colors: c[:colors]) unless ColorScheme.where(name: c[:name]).exists?
+      unless ColorScheme.where(name: c[:name]).exists?
+        ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
+      end
     end
 
     initializers.each do |callback|
       begin
         callback.call(self)
       rescue ActiveRecord::StatementInvalid => e
-        # When running db:migrate for the first time on a new database, plugin initializers might
-        # try to use models. Tolerate it.
+        # When running `db:migrate` for the first time on a new database,
+        # plugin initializers might try to use models.
+        # Tolerate it.
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
+    end
+  end
+
+  def register_topic_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Topic.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_post_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Post.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_group_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Group.register_custom_field_type(name, type) if plugin.enabled?
     end
   end
 
@@ -433,6 +485,18 @@ JS
       ensure_directory(path)
       File.open(path, "w") { |f| f.write(contents) }
     end
+  end
+
+  def reloadable_patch(plugin = self)
+    if Rails.env.development? && defined?(ActionDispatch::Reloader)
+      ActionDispatch::Reloader.to_prepare do
+        # reload the patch
+        yield plugin
+      end
+    end
+
+    # apply the patch
+    yield plugin
   end
 
 end

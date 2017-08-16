@@ -4,7 +4,7 @@ class CreateOneboxRenders < ActiveRecord::Migration
       t.string :url, null: false
       t.text :cooked, null: false
       t.datetime :expires_at, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :onebox_renders, :url, unique: true

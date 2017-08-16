@@ -2,6 +2,7 @@ AllCops:
   TargetRubyVersion: 2.4
   DisabledByDefault: true
   Exclude:
+    - 'db/schema.rb'
     - 'bundle/**/*'
     - 'vendor/**/*'
     - 'node_modules/**/*'
@@ -82,6 +83,9 @@ Layout/TrailingBlankLines:
 
 # No trailing whitespace.
 Layout/TrailingWhitespace:
+  Enabled: true
+
+Lint/Debugger:
   Enabled: true
 
 Lint/BlockAlignment:

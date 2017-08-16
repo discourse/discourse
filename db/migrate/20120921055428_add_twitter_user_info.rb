@@ -4,7 +4,7 @@ class AddTwitterUserInfo < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.string :screen_name, null: false
       t.integer :twitter_user_id, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :twitter_user_infos, [:twitter_user_id], unique: true

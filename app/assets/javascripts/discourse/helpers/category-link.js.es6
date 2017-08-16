@@ -43,16 +43,16 @@ export function categoryBadgeHTML(category, opts) {
     parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
   }
 
-  if (parentCat && parentCat !== category) {
-    html += categoryStripe(get(parentCat,'color'), "badge-category-parent-bg");
+  const categoryStyle = opts.categoryStyle || Discourse.SiteSettings.category_style;
+  if (categoryStyle !== "none") {
+    if (parentCat && parentCat !== category) {
+      html += categoryStripe(get(parentCat,'color'), "badge-category-parent-bg");
+    }
+    html += categoryStripe(color, "badge-category-bg");
   }
-
-  html += categoryStripe(color, "badge-category-bg");
 
   let classNames = "badge-category clear-badge";
   if (restricted) { classNames += " restricted"; }
-
-  const categoryStyle = Discourse.SiteSettings.category_style;
 
   let style = "";
   if (categoryStyle === "box") {
@@ -93,6 +93,7 @@ export function categoryLinkHTML(category, options) {
     if (options.link !== undefined) { categoryOptions.link = options.link; }
     if (options.extraClasses) { categoryOptions.extraClasses = options.extraClasses; }
     if (options.hideParent) { categoryOptions.hideParent = true; }
+    if (options.categoryStyle) { categoryOptions.categoryStyle = options.categoryStyle; }
   }
   return new Handlebars.SafeString(categoryBadgeHTML(category, categoryOptions));
 }

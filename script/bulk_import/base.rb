@@ -229,8 +229,8 @@ class BulkImport::Base
       group[:name] = group_name
     end
 
-    group[:title]      = group[:title].scrub.strip.presence
-    group[:bio_raw]    = group[:bio_raw].scrub.strip.presence
+    group[:title]      = group[:title].scrub.strip.presence if group[:title].present?
+    group[:bio_raw]    = group[:bio_raw].scrub.strip.presence if group[:bio_raw].present?
     group[:bio_cooked] = pre_cook(group[:bio_raw]) if group[:bio_raw].present?
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
@@ -307,6 +307,7 @@ class BulkImport::Base
   def process_user_profile(user_profile)
     user_profile[:bio_raw]    = (user_profile[:bio_raw].presence || "").scrub.strip.presence
     user_profile[:bio_cooked] = pre_cook(user_profile[:bio_raw]) if user_profile[:bio_raw].present?
+    user_profile[:views] ||= 0
     user_profile
   end
 
@@ -526,6 +527,9 @@ class BulkImport::Base
         value: imported_id,
       }
     end
+  rescue => e
+    puts e.message
+    puts e.backtrace.join("\n")
   end
 
   def create_custom_fields(table, name, rows)
