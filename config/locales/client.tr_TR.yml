@@ -444,6 +444,7 @@ tr_TR:
       mute: "Sustur"
       edit: "Tercihleri Düzenle"
       download_archive:
+        button_text: "Hepsini İndir"
         confirm: "Gönderilerinizi indirmek istediğinize emin misiniz?"
         success: "İndirme başlatıldı, İşlem tamamlandığında mesaj ile bilgilendirileceksiniz."
         rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
@@ -2548,6 +2549,11 @@ tr_TR:
             title: "En az 'min_ban_entries_for_roll_up' adet giriş olduğu takdirde yeni subnet engelleme girişleri yaratır."
         logster:
           title: "Hata Kayıtları"
+      watched_words:
+        form:
+          label: 'Yeni Kelime: '
+          add: 'Ekle'
+          upload: "Yükle"
       impersonate:
         title: "Rolüne gir"
         help: "Hata bulma ve giderme amaçları için, bu aracı kullanarak kullanıcının rolüne girin. İşiniz bitince sistemdne çıkış yapmanız gerekecek."

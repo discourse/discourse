@@ -56,6 +56,7 @@ he:
         topic_closed_error: "קורה כאשר הגיעה תגובה אבל הנושא הקשור נסגר."
         bounced_email_error: "המייל הוא דוח מיילים מוחזרים"
         screened_email_error: "מתרחש כאשר כתובת הדוא\"ל של השולחים כבר סוננה."
+      unrecognized_error: "תקלה לא מוכרת"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:

@@ -795,7 +795,7 @@ el:
     http_background_reqs:
       title: "Φόντο"
       xaxis: "Ημέρα"
-      yaxis: "Αιτήματα που χρησιμοποιήθηκαν για ζωντανή μετάδοση και ανίχνευση"
+      yaxis: "Αιτήματα που χρησιμοποιήθηκαν για ζωντανή ενημέρωση και παρακολούθηση"
     http_2xx_reqs:
       title: "Κατάσταση 2xx (ΟΚ)"
       xaxis: "Ημέρα"
@@ -980,10 +980,9 @@ el:
     log_out_strict: "Όταν αποσυνδεθείτε, ΟΛΕΣ οι δραστηριότητες σας σε ΟΛΕΣ τις συσκευές θα αποσυνδεθούν"
     version_checks: "Έλεγξε το Hub του Discourse για αναβαθμίσεις και δείξε μηνύματα για νέες ενημερώσεις στην σελίδα διαχείρισης.  "
     new_version_emails: "Αποστολή ηλεκτρονικού μηνλυματος στην contact_email διεύθυνση όταν μια νέα έκδοση του Discourse είναι διαθέσιμη."
-    port: "ΠΡΟΓΡΑΜΜΑΤΙΣΤΕΣ ΜΟΝΟ! ΠΡΟΣΟΧΗ! Χρησιμοποιήστε το  HTTP port αντί για το προκαθορισμένο port 80.  Αφήστε κενό για το προκαθορισμένο 80. "
-    force_hostname: "ΠΡΟΓΡΑΜΜΑΤΙΣΤΕΣ ΜΌΝΟ! ΠΡΟΣΟΧΗ! Καθορίστε ένα όνομα εξυπηρετητή στη διεύθυνση URL. Αφήστε κενό για το προκαθορισμένο ."
     invite_expiry_days: "Για πόσο καιρό οι κύριες προσκλήσεις ισχύουν, σε μέρες "
     invite_passthrough_hours: "Για πόσο καιρό ο χρήστης μπορεί να χρησιμοποιήσει ένα ήδη εξαργυρωμένο κλειδί πρόσκλησης για να συνδεθεί, σε ώρες"
+    invite_only: "Οι ανοιχτές εγγραφές είναι απενεργοποιημένες, όλα τα νέα μέλη θα πρέπει να προσκληθούν από το προσωπικό."
     login_required: "Απαιτήστε την επικύρωση για να διαβάσετε το περιεχόμενο σε αυτήν την ιστοσελίδα,  απαγορεύσετε την ανώνυμη πρόσβαση."
     min_username_length: "Ελάχιστο μέγεθος ονόματος χρήστη σε χαρακτήρες. ΠΡΟΣΟΧΗ: εάν υπάρχουν χρήστες ή ομάδες που έχουν ονόματα πιο μικρά από την ρύθμιση αυτή, θα δημιουργηθεί πρόβλημα στην λειτουργία της ιστοσελίδας!"
     max_username_length: "Μέγιστο μέγεθος ονόματος χρήστη σε χαρακτήρες. ΠΡΟΣΟΧΗ: εάν υπάρχουν χρήστες ή ομάδες που έχουν ονόματα μεγαλύτερα από την ρύθμιση αυτή, θα δημιουργηθεί πρόβλημα στην λειτουργία της ιστοσελίδας!"
@@ -1002,7 +1001,7 @@ el:
     sso_overrides_name: "Παράκαμψη τοπικού ονόματεπώνυμου με το όνομα χρήστη από τον εξωτερικό ιστότοπο SSO σε κάθε σύνδεση και αποτροπή τοπικών αλλαγών. "
     sso_overrides_avatar: "Παράκαμψη τοπικού άβαταρ χρήστη με το άβαταρ από τον εξωτερικό ιστότοπο SSO Εάν ενεργοποιημένο, η αποσύνδεση του allow_uploaded_avatars συνιστάται."
     sso_not_approved_url: "Ανακατευθύνετε μη εγκεκριμένους λογαριασμούς SSO σε αυτό το URL"
-    sso_allows_all_return_paths: "Μην αναχαιτίσεις το κυρίαρχο return_paths που παρέχεται από το SSO (από προεπιλογή η διαδρομή γυρισμόυ πρέπει να είναι στην τρεχούμενη ιστοσελίδα)"
+    sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
     enable_local_logins: "Ενεργοποίηση τοπικών λογαριασμών χρήστη με βάση το χρηστώνυμο και τον κωδικό πρόσβασης. (Σημείωση: αυτό πρέπει να είναι ενεργοποιημένο για να λειτουργούν οι προσκλήσεις)"
     allow_new_registrations: "Επιτρέψτε τις νέες εγγραφές χρηστών. Απενεργοποιήστε την επιλογή αυτή για να αποτρέψετε σε οποιονδήποτε  να δημιουργήσει ένα νέο λογαριασμό"
     enable_signup_cta: "Δείξε μια ανακοίνωση στους ανώνυμους χρήστες που επιστρέφουν, η οποία να τους παροτρύνει να δημιουργήσουν λογαριασμό."
@@ -1024,7 +1023,7 @@ el:
     github_client_id: "Client id για επαλήθευση μέσω Github, εγγεγραμμένο στο https://github.com/settings/applications"
     github_client_secret: "Client secret για επαλήθευση μέσω Github, εγγεγραμμένο στο https://github.com/settings/applications"
     readonly_mode_during_backup: "Ενεργοποίηση της λειτουργίας \"μόνο-ανάγνωση\" κατά τη διάρκεια δημιουργίας αντίγραφου ασφαλείας"
-    allow_restore: "Επίτρεψε επαναφορά, η οποία μπορεί να αντικαταστήσει ΟΛΑ τα δεδομένα του ιστότοπου! Αφήστε σφάλμα εκτός αν σχεδιάζεις να επαναφέρεις αντίγραφο ασφαλείας"
+    allow_restore: "Επίτρεψε επαναφορά, η οποία μπορεί να αντικαταστήσει ΟΛΑ τα δεδομένα του ιστότοπου! Αφήστε απενεργοποιημένο, εκτός αν σχεδιάζετε να επαναφέρετε αντίγραφο ασφαλείας"
     maximum_backups: "Το μέγιστο ποσό αντιγράφω ασφαλείας το οποία θα διατηρηθούν στο δίσκο. Παλαιότερα αντίγραφα ασφαλείας διαγράφονται αυτόματα"
     automatic_backups_enabled: "Πάρε αυτόματα αντίγραφα ασφαλείας όπως ορίζεται στη συχνότητα αντιγράφων ασφαλείας"
     backup_frequency: "Πόσο συχνά δημιουργούμε αντίγραφο ασφαλείας ιστοτόπου, σε ημέρες."
@@ -1034,12 +1033,12 @@ el:
     backup_time_of_day: "Ώρα σε ζώνη UTC που το αντίγραφο ασφαλείας πρέπει να πραγματοποιηθεί."
     backup_with_uploads: "Συμπεριέλαβε τις μεταφορτώσεις στα αντίγραφα ασφαλείας. Απενεργοποιώντας το θα δημιουργηθούν αντίγραφα ασφαλείας μόνο για τη βάση δεδομένων."
     active_user_rate_limit_secs: "Πόσο συχνά ενημερώνουμε το 'last_seen_at' πεδίο, σε δευτερόλεπτα"
-    verbose_localization: "Εμφάνιζε εκτεταμένες συμβουλές εντοπισμού στην διεπαφή χρήστη. "
+    verbose_localization: "Εμφάνιζε εκτεταμένες συμβουλές τοπικής προσαρμογής στην διεπαφή χρήστη. "
     previous_visit_timeout_hours: "Πόσο διαρκεί μια επίσκεψη προτού τη θεωρήσουμε \"προηγούμενη\" επίσκεψη, σε ώρες"
-    top_topics_formula_log_views_multiplier: "Ο πολλαπλασιαστής (n) της αξίας προβολών καταγραφής μπαίνει στην αρχή του νήματος της φόρμουλας: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_first_post_likes_multiplier: "Ο πολλαπλασιαστής (n) της αξίας των πρώτων αναρτήσεων μπαίνει στην αρχή του νήματος της φόρμουλας: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    top_topics_formula_least_likes_per_post_multiplier: "Ο πολλαπλασιαστής (n) της αξίας των λιγότερων likes ανα ανάρτηση μπαίνει στην αρχή του νήματος της φόρμουλας: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Ο αριθμός των παλιών αναρτήσεων θα αναθεωρηθεί σε 15 λεπτά."
+    top_topics_formula_log_views_multiplier: "value of log views multiplier (n) in top topics formula: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    rebake_old_posts_count: "Ο αριθμός των παλιών αναρτήσεων ο οποίος θα αναθεωρείται κάθε 15 λεπτά."
     rate_limit_create_topic: "Μετά τη δημιουργία νήματος, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
     rate_limit_create_post: "Μετά τη δημοσίευση, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλης δημοσίευσης."
     rate_limit_new_user_create_topic: "Μετά τη δημιουργία νήματος, οι νέοι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
@@ -1056,18 +1055,18 @@ el:
     max_logins_per_ip_per_minute: "Μέγιστος αριθμός επιτρεπόμενων συνδέσεων ανα διεύθυνση IP το λεπτό"
     alert_admins_if_errors_per_minute: "Πλήθος σφαλμάτων ανά λεπτό για την ενεργοποίηση χρειάζεται ειδοποίηση διαχειριστή. Η τιμή 0 απενεργοποιεί αυτήν τη δυνατότητα. Σημείωση: απαιτεί επανεκκίνηση."
     alert_admins_if_errors_per_hour: "Ο αριθμός σφαλμάτων που χρειάζονται προκειμένου να προκληθεί μία ειδοποίηση διαχειριστή. Αν ο αριθμός σφαλμάτων είναι 0, τότε αυτή η λειτουργία απενεργοποιείται. Σημείωση: απαιτεί επανεκκίνηση. "
-    categories_topics: "Αριθμός θεμάτων που παρουσιάζονται στη σελίδα του /κατηγορίες."
+    categories_topics: "Αριθμός νημάτων που εμφανίζονται στη σελίδα /categories"
     suggested_topics: "Αριθμός προτεινόμενων νημάτων που εμφανίζονται στο κάτω μέρος ενός νήματος."
-    limit_suggested_to_category: "Εμφάνιζε θέματα μόνο από την τρέχουσα κατηγορία στα προτεινόμενα θέματα."
-    suggested_topics_max_days_old: "Προτεινόμενα θέματα δεν πρέπει να υπερβαίνουν το n παλαιών ημερών"
-    clean_up_uploads: "Απομάκρυνση μόνων και μη καταχωρημένων φορτώσεων για αποτροπή παράνομων . ΠΡΟΕΙΔΟΠΟΙΗΣΗ: ίσως να θέλετε να δημιουργήσετε αντίγραφα ασφαλείας του καταλόγου /uploads σας πριν την ενεργοποίηση αυτής της ρύθμισης."
-    clean_orphan_uploads_grace_period_hours: "Η περίοδος χάριτος είναι (ώρες) πριν μία ανώνυμη ανάρτηση θα αφαιρείται"
-    purge_deleted_uploads_grace_period_days: "Η περίοδος χάριτος είναι (μέρες) πριν μία διεγραμένη ανάρτηση σβηστεί μόνημα."
-    purge_unactivated_users_grace_period_days: "Η περίοδος χάριτος είναι (μέρες) πριν ένας χρήστης ο οποίος δεν έχει δρατηριοποιήσει τον λογαρισμό του θα διαγράφεται."
-    enable_s3_uploads: "Τοποθέτηση φορτόσεων στον αποθηκευτικό χώρο Amazon S3. ΣΗΜΑΝΤΙΚΟ: Απαιτούνται έγκυρα διαπιστευτήρια S3 (και access key id και secret access key)."
-    s3_use_iam_profile: 'Χρησιμοποιήστε AWS EC2 ΙΑΜ ρόλο για να ανακτήσετε τα κλειδιά. ΣΗΜΕΙΩΣΗ: η ενεργοποίηση θα υπερισχύσει τις ρυθμίσεις "κλειδί s3 πρόσβαση id" και "s3 βασικό μυστικό πρόσβασης".'
-    s3_upload_bucket: "Το όνομα κουβά Amazon S3 οπου θα μεταφορτοθούν τα αρχεία . ΠΡΟΣΟΧΗ: πρέπει να είναι πεζά, χωρίς περίοδοι και χωρίς υπογράμμισεις."
-    s3_access_key_id: "Η ταυτότητα του κλειδιού πρόσβασης του άμαζον Σ3 θα χρεισημοποιηθή για το ανέβασμα φωτογραφιών"
+    limit_suggested_to_category: "Εμφάνιζε νήματα μόνο από την τρέχουσα κατηγορία στα προτεινόμενα νήματα."
+    suggested_topics_max_days_old: "Τα προτεινόμενα νήματα δεν πρέπει να είναι πάνω από n ημερών"
+    clean_up_uploads: "Απομάκρυνση ορφανών και μη χρησιμοποιημένων μεταφορτώσεων για αποτροπή παράνομης φιλοξενίας αρχείων. ΠΡΟΕΙΔΟΠΟΙΗΣΗ: ίσως να θέλετε να δημιουργήσετε αντίγραφα ασφαλείας του καταλόγου /uploads σας πριν την ενεργοποίηση αυτής της ρύθμισης."
+    clean_orphan_uploads_grace_period_hours: "Η περίοδος χάριτος (σε ώρες) πριν μία ορφανή μεταφόρτωση αφαιρεθεί."
+    purge_deleted_uploads_grace_period_days: "Η περίοδος χάριτος (σε μέρες) πριν μία διεγραμένη μεταφόρτωση αφαιρεθεί μόνιμα."
+    purge_unactivated_users_grace_period_days: "Η περίοδος χάριτος (σε μέρες) πριν ένας χρήστης ο οποίος δεν έχει ενεργοποιήσει τον λογαρισμό του θα διαγράφεται."
+    enable_s3_uploads: "Τοποθέτηση μεταφορτώσεων σε αποθηκευτικό χώρο Amazon S3. ΣΗΜΑΝΤΙΚΟ: Απαιτούνται έγκυρα διαπιστευτήρια S3 (access key id και secret access key)."
+    s3_use_iam_profile: 'Χρησιμοποιήστε AWS EC2 ΙΑΜ ρόλο για να ανακτήσετε τα κλειδιά. ΣΗΜΕΙΩΣΗ: η ενεργοποίηση θα αναιρέσει τις ρυθμίσεις "s3 access key id" και "s3 secret access key".'
+    s3_upload_bucket: "Το όνομα κουβά Amazon S3 οπου θα μεταφορτωθούν τα αρχεία . ΠΡΟΣΟΧΗ: πρέπει να είναι πεζά, χωρίς τελείες και χωρίς κάτω παύλες."
+    s3_access_key_id: "Η ταυτότητα του κλειδιού πρόσβασης του Amazon S3 η οποία θα χρεισημοποιηθεί για το ανέβασμα φωτογραφιών"
     s3_secret_access_key: "Το μυστικό κλειδί πρόσβασης στο Amazon S3 που θα χρησιμοποιηθεί για να ανεβάσετε εικόνες."
     s3_region: "Το όνομα περιοχής Amazon S3 που θα χρησιμοποιηθεί για να ανεβάσετε εικόνες."
     s3_cdn_url: "Η διεύθυνση CDN που θα χρησιμοποιήθει για όλα τα στοιχεία s3 (για παράδειγμα: https://cdn.somewhere.com). ΠΡΟΣΟΧΗ: μετά την αλλαγή αυτής της ρύθμισης θα πρέπει να γίνει rebake σε όλες τις υπάρχουσες αναρτήσεις."
@@ -1462,6 +1461,7 @@ el:
     deactivated: "Απενεργοποιήθηκε εξαιτίας των πολλών μηνυμάτων ηλεκτρονικού ταχυδρομείου που επέστρεψαν πίσω στο %{email}'."
     deactivated_by_staff: "Απενεργοποιημένο από το προσωπικό"
     activated_by_staff: "Ενεργοποιημένο από το προσωπικό"
+    new_user_typed_too_fast: "Ο νέος χρήστης πληκτρολογούσε πολύ γρήγορα"
     username:
       short: "πρέπει να είναι τουλάχιστον %{min} χαρακτήρες"
       long: "δεν πρέπει να είναι περισσότερο από %{max} χαρακτήρες"
@@ -1572,6 +1572,7 @@ el:
     subject_template: "Όρισε κωδικό πρόσβασης για τον λογαρισμό σου %{site_name}"
   admin_confirmation_mailer:
     title: "Επικύρωση Διαχειριστή"
+    subject_template: "[%{email_prefix}] Επιβεβαίωση νέου Λογαριασμού Διαχειριστή"
   test_mailer:
     title: "Δοκιμάστε τον αποστολέα"
     text_body_template: |
@@ -1617,6 +1618,7 @@ el:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Καινούργια έκδοση Αποστολέα"
+    subject_template: "[%{email_prefix}] Νέα έκδοση Discourse, διαθέσιμη ενημέρωση"
     text_body_template: |
       Ζήτω, μια νέα έκδοση του [Discourse](http://www.discourse.org) είναι διαθέσιμη!
 
@@ -1669,26 +1671,34 @@ el:
     post_hidden:
       title: "Η δημοσίευση κρύφτηκε"
       subject_template: "Η δημοσίευση κρύφτηκε από τις επισημάνσεις της κοινότητας"
-      text_body_template: |
-        Γεια σου,
-
-        Αυτό είναι αυτοματοποιημένο μήνυμα από %{site_name} tγια να σε ενημερώσει ότι η ανάρτησή σου έχει αποκρυφθεί.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Πολλά μέλη της κοινότητας επισήμαναν αυτή την ανάρτηση πριν αποκρυφθεί, οπότε σε παρακαλούμε σκέψου πως μπορείς να επαναλάβεις την ανάρτηση λαμβάνοντας υπόψιν τα σχόλια τους. **Μπορείς να επεξεργαστείς την ανάρτησή σου μετά από %{edit_delay} λεπτά, και αυτόματα θα επανεμφανιστεί.**
-
-        Όμως, εάν η ανάρτηση αποκρυφθεί από την κοινότητα για δεύτερη φορά, θα παραμείνει κρυμμένη έως ότου διαχειριστεί απο συνεργάτη, και ίσως υπάρξουν περαιτέρω ενέργειες συμπεριλαμβανομένης την πιθανής διακοπής του λογαριασμού σου.
-
-        Για επιπλεον καθοδήγηση, παρακαλούμε ανάτρεξε στις [οδηγίες κοινότητας](%{base_url}/guidelines).
     welcome_user:
       title: "Καλώς ήλθες χρήστη"
       subject_template: "Καλώς ήλθατε στο %{site_name}!"
+      text_body_template: |
+        Ευχαριστούμε για την εγγραφή σας στην %{site_name}, καλώς ορίσατε!
+
+        %{new_user_tips}
+
+        Πιστεύουμε και επικροτούμε την [πολιτισμένη επικοινωνία](%{base_url}/guidelines) στο διαδίκτυο.
+
+        Να περάσετε καλά!
     welcome_invite:
       title: "Πρόσκληση καλωσορίσματος"
       subject_template: "Καλώς ήλθατε στο %{site_name}!"
+      text_body_template: |
+        Ευχαριστούμε για την αποδοχή της πρόσκλησης στην %{site_name} -- καλώς ορίσατε!
+
+        - Δημιουργήσαμε αυτόν τον νέο λογαριασμό χρήστη **%{username}** για εσάς. Αλλάξτε το όνομα και τον κωδικό σας από την [σελίδα προφίλ][prefs].
+
+        - Όταν συνδέεστε, παρακαλούμε **χρησιμοποιήστε την διεύθυνση email της αρχικής πρόσκλησης** — για να μπορέσουμε να σας ταυτοποιήσουμε!
+
+        %{new_user_tips}
+
+        Πιστεύουμε και επικροτούμε την [πολιτισμένη επικοινωνία](%{base_url}/guidelines) στο διαδίκτυο.
+
+        Να περάσετε καλά!
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Το αντίγραφο ασφαλείας πέτυχε"
       subject_template: "Το αντίγραφο ασφαλείας ολοκληρώθηκε επιτυχώς"
@@ -2205,10 +2215,29 @@ el:
       title: "Σύνδεση Διαχειριστή"
     account_created:
       title: "Ο λογαριασμός δημιουργήθηκε"
+      subject_template: "[%{email_prefix}] Ο νέος σας Λογαριασμός"
+      text_body_template: |
+        Ένας νέος λογαριασμός χρήστη δημιουργηθηκε για εσάς στην %{site_name}
+
+        Κάντε κλικ στον παρακάτω σύνδεσμο για να επιλέξετε κωδικό πρόσβασης για τον νέο σας λογαριασμό:
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Επιβεβαίωση Νέας Ηλεκτρονικής Διεύθυνσης"
+      subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
+      text_body_template: |
+        Επικυρώστε την νέα σας διεύθυνση email στην %{site_name} κάνοντας κλικ στον παρακάτω σύνδεσμο:
+
+        %{base_url}/u/authorize-email/%{email_token}
     confirm_old_email:
       title: "Επιβεβαίωση Παλιάς Ηλεκτρονικής Διεύθυνσης"
+      text_body_template: |
+        Προτού αλλάξουμε την διεύθυνση email σας, θα πρέπει να επιβεβαιώσουμε ότι σας ανήκει
+        η τρέχουσα διεύθυνση email. Αφού ολοκληρώσετε αυτό το βήμα, θα σας ζητήσουμε να
+        επιβεβαιώσετε την νέα σας διεύθυνση email.
+
+        Επιβεβαιώστε την τρέχουσα διεύθυνση email στην%{site_name} κάνοντας κλικ στον παρακάτω σύνδεσμο:
+
+        %{base_url}/u/authorize-email/%{email_token}
     notify_old_email:
       title: "Ειδοποίηση παλιάς ηλεκτρονικής διεύθυνσης"
       text_body_template: |
@@ -2291,6 +2320,106 @@ el:
 
   guidelines_topic:
     title: "Συχνές Ερωτήσεις/Οδηγίες"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Αυτός είναι ένας πολιτισμένος χώρος για δημόσιες συζητήσεις](#civilized)
+
+      Παρακαλούμε σεβαστείτε τον χώρο στον οποίο βρίσκεστε και συμπεριφερθείτε πολιτισμένα, σαν να βρίσκεστε σε κάποιο δημόσιο πάρκο ή άλλο δημόσιο χώρο στον οποίο μπορείτε να επικοινωνήσετε πολιτισμένα με τους συνανθρώπους σας.
+
+      Ο οδηγός αυτός έχει σκοπό να σας ενθαρρύνει σε πολιτισμένες συζητήσεις ώστε να παραμένει το επίπεδο της κοινότητας υψηλό.
+
+      <a name="improve"></a>
+
+      ## [Βελτιώστε την Συζήτηση](#improve)
+
+      Βοηθήστε μας να κάνουμε τον χώρο αυτό ένα υπέροχο μέρος για να περνάμε καλά και να ανταλλάσουμε απόψεις. συμβάλλωντας με οποιοδήποτε τρόπο, έστω και μικρό, στην βελτίωση των συζητήσεων. Συνεισφέρετε όσο μπορείτε πιο θετικά σε αυτές και μην μειώνετε τις απόψεις των άλλων.
+
+      Τα θέματα που συζητούνται σε αυτήν την κοινότητα, έχουν αξία σε εμας καθώς και στα μέλη της κοινότητας που συμμετέχουν και θα θέλαμε να συμπεριφερθείτε ανάλογα όταν συμμετέχετε και εσείς σε αυτά. Να σέβεστε λοιπόν τα θέματα στα οποία συμμετέχετε καθώς και τους ανθρώπους που συμμετέχουν σε αυτά, ακόμα και αν διαφωνείτε.
+
+      Σεβαστείτε την διαφορετικότητα των συνανθρώπων σας και αν δεν συμφωνείτε με τα θέματα τα οποία συζητούνται, προτιμήστε να ξεκινήστε ένα δικό σας.
+
+      One way to improve the discussion is by discovering ones that are already happening. Spend time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
+
+      <a name="agreeable"></a>
+
+      ## [Συμφωνήστε, ακόμα και όταν διαφωνείτε](#agreeable)
+
+      Πιθανώς να νοιώθετε την αναγκη να διαφωνήσετε και αυτό είναι λογικό. Θυμηθείτε όμως, να διαφωνείτε με τις ιδέες και όχι με τους ανθρώπους που τις εκφράζουν. Αποφύγετε:
+
+      *   Προσωπικούς χαρακτηρισμούς
+      *   Προσωπικές επιθέσεις
+      *   Την απάντηση στον "τόνο" του μηνύματος αντί του περιεχομένου
+      *   Την απάντηση σε απόψεις, λόγω του μέλους που τις εκφράζει
+
+      Αντ' αυτού, επικοινωνήστε θετικά με απόψεις που βοηθούν την βελτίωση μια συζήτησης.
+
+      <a name="participate"></a>
+
+      ## [Your Participation Counts](#participate)
+
+      The conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
+
+      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
+
+      Let’s leave our community better than we found it.
+
+      <a name="flag-problems"></a>
+
+      ## [If You See a Problem, Flag It](#flag-problems)
+
+      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
+
+      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
+
+      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.
+
+      <a name="be-civil"></a>
+
+      ## [Always Be Civil](#be-civil)
+
+      Nothing sabotages a healthy conversation like rudeness:
+
+      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
+      *   Keep it clean. Don’t post anything obscene or sexually explicit.
+      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
+      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
+
+      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
+
+      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
+
+      <a name="keep-tidy"></a>
+
+      ## [Keep It Tidy](#keep-tidy)
+
+      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
+
+      *   Don’t start a topic in the wrong category.
+      *   Don’t cross-post the same thing in multiple topics.
+      *   Don’t post no-content replies.
+      *   Don’t divert a topic by changing it midstream.
+      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
+
+      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
+
+      <a name="stealing"></a>
+
+      ## [Post Only Your Own Stuff](#stealing)
+
+      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
+
+      <a name="tos"></a>
+
+      ## [Terms of Service](#tos)
+
+      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "Όροι χρήσης της Υπηρεσίας"
     body: |+

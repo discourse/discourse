@@ -56,6 +56,7 @@ zh_CN:
         topic_closed_error: "回复到已经锁定的主题。"
         bounced_email_error: "邮件是投递失败的错误报告。"
         screened_email_error: "发件人邮箱已经被封禁。"
+      unrecognized_error: "无法识别的错误"
   errors: &errors
     format: '%{attribute}%{message}'
     messages:
@@ -109,7 +110,7 @@ zh_CN:
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
   invite:
     not_found: "你的邀请码不正确。请联系网站管理员。"
-    user_exists: "不需要邀请<b>%{email}</b>，他们<a href='/u/%{username}/summary'>已经有账号了！</a>"
+    user_exists: "不需要邀请<b>%{email}</b>，他们<a href='/u/%{username}/summary'>已经有帐号了！</a>"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     error: "上传文件的时候出错了。请重试。"
@@ -780,7 +781,7 @@ zh_CN:
     queue_size_warning: '队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
     google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
-    facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
+    facebook_config_warning: '服务器允许使用 Facebook 帐号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用 GitHub 账号登录（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
     s3_config_warning: '服务器被配置为上传文件到 s3，但是以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>中更新设置。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
@@ -1401,7 +1402,7 @@ zh_CN:
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登陆。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
     suspended: "你要等到 %{date} 之后才能登录。"
-    suspended_with_reason: "账号暂停至%{date}: %{reason}"
+    suspended_with_reason: "帐号暂停至%{date}: %{reason}"
     errors: "%{errors}"
     not_available: "不可用，试试%{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
@@ -1658,7 +1659,7 @@ zh_CN:
       text_body_template: |
         感谢你接受邀请加入%{site_name} —— 欢迎！
 
-        - 我们为你创建了账号**%{username}**。访问[你的用户设置][prefs]修改名字或密码。
+        - 我们为你创建了帐号**%{username}**。访问[你的用户设置][prefs]修改名字或密码。
 
         - 你登录的时候，请**使用收到邀请的邮箱地址**登录——否则我们就无法分辨是不是你本人！
 
@@ -1744,35 +1745,22 @@ zh_CN:
     csv_export_failed:
       title: "导致CSV失败"
       subject_template: "数据导出失败"
-      text_body_template: "我们很抱歉，但是你的数据导出请求失败了。请检查日志或联系一位管理人员。"
     email_reject_insufficient_trust_level:
       title: "拒收邮件 信任等级不足"
       subject_template: "[%{email_prefix}] 邮件问题 -- 信任等级不足"
-      text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
-
-        你的账户没有足够的信任等级以该邮件地址发布新主题。如果你有异议，联系管理人员。
     email_reject_user_not_found:
       title: "Email被拒绝：用户未找到"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未找到用户"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_screened_email:
       title: "Email被拒绝：被屏蔽的Email地址"
       subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
-      text_body_template: |
-        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
-
-        你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_inactive_user:
       title: "Email被拒绝：未激活的用户"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未激活用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
-        与你账户关联的邮件地址没有激活，请先激活你的账号再发送邮件。
+        与你账户关联的邮件地址没有激活，请先激活你的帐号再发送邮件。
     email_reject_blocked_user:
       title: "Email被拒绝：被禁用的用户"
       subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的用户"

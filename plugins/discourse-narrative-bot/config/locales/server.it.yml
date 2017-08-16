@@ -168,7 +168,7 @@ it:
 
           Puoi provare ad aggiungere il seguente collegamento, su una riga da solo, nella tua prossima risposta?
 
-          - https://it.wikipedia.org/wiki/Exotic_Shorthair
+          <https://it.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Ecco l'immagine di un unicorno:

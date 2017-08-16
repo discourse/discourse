@@ -9,5 +9,5 @@ id:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Mulai panduan anggota baru untuk semua anggota baru"
-        welcome_message: "Kirim semua anggota ucapan selamat datang dengan panduan awal singkat"
+        new_user_track: "Mulai panduan pengguna baru untuk semua pengguna baru"
+        welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat"

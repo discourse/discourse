@@ -323,12 +323,24 @@ de:
 
           Beachte, dass Änderungen, die nach 5 Minuten gemacht werden, als Überarbeitungen für jeden sichtbar sind. Die Anzahl der Überarbeitungen wird, neben einem kleinen Bleistift-Symbol, am Beitrag rechts oben angezeigt.
       delete:
+        instructions: |-
+          Wenn du einen Beitrag zurückziehen möchtest, kannst du ihn löschen.
+
+          Leg’ los und **lösche** einen deiner Beiträge über die <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> **Löschen**-Aktion. Lösche aber bitte nicht den ersten Beitrag!
+        not_found: |-
+          Ich sehe noch keine gelöschten Beiträge. Denk’ immer daran, dass <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16">„Löschen“ anzeigt.
         reply: |-
           Oha! :boom:
 
           Um die Kontinuität deiner Diskussionen zu bewahren, werden Löschungen nicht sofort durchgeführt. Gelöschte Beiträge werden erst nach einer gewissen Zeit entfernt.
       recover:
         deleted_post_raw: 'Warum hat @%{discobot_username} meinen Beitrag gelöscht? :anguished:'
+        instructions: |-
+          Oh nein! Es sieht so aus als hätte ich gerade einen neuen Beitrag gelöscht, den ich gerade für dich erstellt hatte.
+
+          Kannst du mir einen Gefallen tun und ihn <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **wiederherstellen**?
+        not_found: |-
+          Klappt es nicht? Denk daran, dass <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> „Mehr anzeigen“ auch <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> „Wiederherstellen“ anzeigt.
         reply: |-
           Puh, das war knapp! Danke, dass du das korrigiert hast :wink:
 
@@ -360,6 +372,19 @@ de:
 
           Beachte, dass die Benachrichtigungsstufe automatisch auf „Verfolgen“ geändert wird, wenn du auf ein Thema antwortest oder ein Thema länger als ein paar Minuten liest. Du kannst dies in [deinen Benutzer-Einstellungen](/my/preferences) ändern.
       poll:
+        instructions: |-
+          Wusstest du, dass du eine Umfrage zu jedem Beitrag hinzufügen kannst? Verwende das <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16">-Symbol, um im Editor die **Umfrage [zu] erstellen**.
+        not_found: |-
+          Upps! Deine Antwort hat keine Umfrage enthalten.
+
+          Verwende das <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> Zahnrad-Symbol im Editor, oder kopiere diese Umfrage und füge sie in deine nächste Antwort ein:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hey, schöne Umfrage! Wie mache ich mich als Lehrer?
 
@@ -368,6 +393,20 @@ de:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Manchmal möchtest du vielleicht in deinen Antworten bestimmte **Details ausblenden** :
+
+          - Wenn du Handlungsfäden eines Films oder einer Fernsehserie diskutierst, die ein Spoiler darstellen würden.
+
+          - Wenn dein Beitrag viele optionale Details benötigt, die überwältigend wäre, wenn man sie auf einmal liest.
+
+          [details=Wähle dies aus, um zu sehen wie es funktioniert!]
+          1. Wähle das <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> Werkzeug-Symbol im Editor.
+          2. Wähle "Details ausblenden".
+          3. Bearbeite die Zusammenfassung der Details und ergänze deinen Inhalt.
+          [/details]
+
+          Kannst du das <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> Werkzeug-Symbol im Editor sehen und einen Details-Abschnitt in deine nächste Antwort einfügen?
         not_found: |-
           Hast du Schwierigkeiten, den Details-Abschnitt zu erstellen? Versuche Folgendes in deine nächste Antwort aufzunehmen:
 
