@@ -2424,7 +2424,7 @@ en:
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
