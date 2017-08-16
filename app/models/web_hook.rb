@@ -62,6 +62,6 @@ end
 #  wildcard_web_hook    :boolean          default(FALSE), not null
 #  verify_certificate   :boolean          default(TRUE), not null
 #  active               :boolean          default(FALSE), not null
-#  created_at           :datetime
-#  updated_at           :datetime
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
 #
