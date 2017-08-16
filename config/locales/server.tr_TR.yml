@@ -425,6 +425,7 @@ tr_TR:
     like:
       title: 'Beğen'
       description: 'Bu gönderiyi beğen'
+      short_description: 'Bu gönderiyi beğen'
       long_form: 'bu beğenildi'
     vote:
       title: 'Oyla'

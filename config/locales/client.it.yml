@@ -371,6 +371,11 @@ it:
       closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
       allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
+      membership_request_template: "Template personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
+      membership_request:
+        submit: "Invia Richiesta"
+        title: "Richiesta di adesione a @%{group_name}"
+        reason: "Spiega ai proprietari del gruppo perché vuoi entrare a far parte di questo gruppo"
       membership: "Iscrizione"
       name: "Nome"
       user_count: "Numero di Membri"
@@ -629,6 +634,7 @@ it:
         taken: "Spiacenti, questa email non è disponibile."
         error: "C'è stato un errore nel cambio dell'email; potrebbe essere già usata da un altro utente."
         success: "Abbiamo inviato una email a questo indirizzo. Segui le indicazioni di conferma."
+        success_staff: "Abbiamo inviato una email al tuo indirizzo corrente. Segui le istruzioni di conferma."
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
@@ -1207,14 +1213,15 @@ it:
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
       result_count:
-        one: "1 risultato per <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} risultati per <span class='term'>\"{{term}}\"</span>"
+        one: "1 result for <span class='term'>{{term}}</span>"
+        other: "{{count}} risultati per <span class='term'>{{term}}</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
       searching: "Ricerca in corso..."
       post_format: "#{{post_number}} da {{username}}"
       results_page: "Risultati Ricerca"
+      more_results: "Ci sono più risultati. Restringi i criteri di ricerca."
       context:
         user: "Cerca messaggi di @{{username}}"
         category: "Cerca nella categoria #{{category}}"
@@ -1246,6 +1253,7 @@ it:
           seen: ho letto
           unseen: non ho letto
           wiki: sono wiki
+          images: include immagine/i
           all_tags: Contiene tutte le etichette
         statuses:
           label: In cui gli argomenti
@@ -2144,7 +2152,7 @@ it:
         hamburger_menu: '<b>=</b> Apri il menu hamburger'
         user_profile_menu: '<b>p</b> Apri menu utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
-        search: '<b>/</b> Cerca'
+        search: '<b>/</b> o <b>ctrl</b>+<b>/</b> Cerca'
         help: '<b>?</b> Apri la legenda tasti'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovi Messaggi'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
@@ -2910,6 +2918,9 @@ it:
         search: "ricerca"
         clear_filter: "Pulisci"
         show_words: "mostra le parole"
+        word_count:
+          one: "1 word"
+          other: "%{count} parole"
         actions:
           block: 'Blocca'
           censor: 'Censura'
@@ -2922,6 +2933,7 @@ it:
           flag: 'Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle.'
         form:
           label: 'Nuova Parola:'
+          placeholder: 'parola completa o * come carattere jolly'
           add: 'Aggiungi'
           success: 'Successo'
           upload: "Carica"
@@ -3324,8 +3336,8 @@ it:
       uploading: "Caricamento..."
       quit: "Forse Dopo"
       staff_count:
-        one: "La tua comunità ha 1 membro dello staff."
-        other: "La tua comunità ha %{count} membri dello staff."
+        one: "Your community has 1 staff (you). "
+        other: "La tua comunità ha %{count} membri dello staff, te incluso."
       invites:
         add_user: "aggiungi"
         none_added: "Non hai invitato nessuno dello staff. Sicuro di voler proseguire?"

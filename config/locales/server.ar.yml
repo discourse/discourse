@@ -698,7 +698,8 @@ ar:
         make: "هذا الموضوع معلّم الآن. سوف يظهر في أعلى كل صفحة حتى يرفض من قبل المستخدم."
         remove: "هذا الموضوع لم يعد معلّم. لن يظهر في أعلى كل صفحة."
   unsubscribed:
-    title: "غير مشترك "
+    title: "غير مشترك!"
+    description: "<b>%{email}><b/> أصبح غير مشترك . لتغيّر بريدك الإلكتروني <a/>  زُر خصائص المستخدم الخاصة بك <'a href=%{url}"
     topic_description: "لإعادة الاشتراك لل %{link}، استخدم ادارة التنبيهات في أسفل او يمين الموضوع."
   unsubscribe:
     title: "إلغاء الإشتراك"
@@ -1512,6 +1513,10 @@ ar:
     download_remote_images_disabled:
       subject_template: "الغاء تفعيل تحميل الصور عن بعد "
       text_body_template: "تم تعطيل الإعداد 'download_remote_images_to_local' لأنه تم الوصول إلى حد مساحة القرص في 'download_remote_images_threshold'."
+  unsubscribe_link: |
+    لإلغاء الإشتراك من رسائل البريد الإلكترونية [أنقر هنا] (%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    لإلغاء الإشتراك من رسائل البريد الإلكترونية [أنقر هنا] (%{unsubscribe_url}).
   unsubscribe_mailing_list: |
     استلمت هذا بسبب أنك قمت بتفعيل وضع القائمة البريدية.
 

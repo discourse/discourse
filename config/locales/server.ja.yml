@@ -82,6 +82,9 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
+  bulk_invite:
+    file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
+    error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
   backup:
     operation_already_running: "操作を実行しています。他の操作はできません。"
     backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz形式である必要があります。"
@@ -990,9 +993,13 @@ ja:
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
       text_body_template: "'download_remote_images_threshold'の制限に達したため、`download_remote_images_to_local`の設定は無効になりました"
+  unsubscribe_link: |
+    配信停止をご希望の場合は、[こちらをクリック](%{unsubscribe_url})してください。
+  unsubscribe_link_and_mail: |
+    配信停止をご希望の場合は、[こちらをクリック](%{unsubscribe_url})してください。
   unsubscribe_mailing_list: |
     本メッセージは、メーリングリストモードの設定が有効になっているため配信されました。
-    配信停止をご希望の場合は、[こちらをクリック](%{unsubscribe_url})
+    配信停止をご希望の場合は、[こちらをクリック](%{unsubscribe_url})してください。
   subject_re: "Re:"
   subject_pm: "[プライベートメッセージ]"
   user_notifications:
@@ -1000,12 +1007,12 @@ ja:
     unsubscribe:
       title: "解除"
       description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
-    reply_by_email: "回答するにはこのメールに返信するか、 (%{base_url}%{url}) に[ブラウザでアクセスしてください]。"
-    visit_link_to_respond: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
+    reply_by_email: "回答するにはこのメールに返信するか、 %{base_url}%{url}をクリックしブラウザでアクセスしてください。"
+    visit_link_to_respond: "回答するには%{base_url}%{url}をクリックし、ブラウザでアクセスしてください。"
     posted_by: "%{post_date} に %{username} が投稿"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      click_here: "ここをクリック"
+      click_here: "こちらをクリック"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
   page_not_found:

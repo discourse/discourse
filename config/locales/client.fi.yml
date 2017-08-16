@@ -1419,7 +1419,7 @@ fi:
         auto_open: "Ketju avautuu automaattisesti %{timeLeft}."
         auto_close: "Ketju suljetaan ajastetusti %{timeLeft}."
         auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} viimeisimmästä viestistä."
+        auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} kuluttua viimeisimmästä viestistä."
         auto_delete: "Ketju poistetaan ajastetusti %{timeLeft} kuluttua."
         auto_reminder: "Sinua muistutetaan tästä ketjusta %{timeLeft}."
       auto_close_title: 'Automaattisen sulkemisen asetukset'
@@ -3109,7 +3109,7 @@ fi:
           will_be_promoted: "Ylennetään piakkoin."
           will_be_demoted: "Alennetaan piakkoin."
           on_grace_period: "Tällä hetkellä siirtymäajalla, ei alenneta"
-          locked_will_not_be_promoted: "Luottamsutaso lukittu. Ei koskaan ylennetä."
+          locked_will_not_be_promoted: "Luottamustaso lukittu. Ei koskaan ylennetä."
           locked_will_not_be_demoted: "Luottamustaso lukittu. Ei koskaan alenneta."
         sso:
           title: "Kertakirjautuminen"

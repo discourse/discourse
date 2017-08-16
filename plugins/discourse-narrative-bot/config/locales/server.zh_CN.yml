@@ -161,12 +161,8 @@ zh_CN:
           - https://en.wikipedia.org/wiki/Inherently_funny_word
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
-        not_found: |-
-          抱歉，我没在你的回复中找到链接！ :cry:
-
-          你可以试着添加下面的链接吗？在你的下个回复中，单独一行。
-
-          - https://en.wikipedia.org/wiki/Exotic_Shorthair
+        reply: |-
+          酷！这将会对大多数<img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16">链接起作用。请记住，它必须是单独的一行链接，在它之前和之后都没有内容。
       images:
         reply: |-
           好赞的图片—我点了赞 :heart: ，你知道我很乐意看见它的 :heart_eyes:

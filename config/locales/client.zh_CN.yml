@@ -9,7 +9,7 @@ zh_CN:
   js:
     number:
       format:
-        separator: ".暂无链接"
+        separator: "."
         delimiter: ","
       human:
         storage_units:
@@ -141,6 +141,7 @@ zh_CN:
         eu_west_2: "欧洲（London）"
         sa_east_1: "南美（Sao Paulo）"
         us_east_1: "美国东部（N. Virginia）"
+        us_east_2: "美国东部（俄亥俄州）"
         us_gov_west_1: "政府专用（US）"
         us_west_1: "美国西部（N. California）"
         us_west_2: "美国西部（Oregon）"
@@ -326,6 +327,8 @@ zh_CN:
         add_members: "增加组员"
         delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
       name_placeholder: "群组名，没有空格，和用户名一样的规则"
+      public_admission: "允许用户自由加入小组（需要小组公开可见）"
+      public_exit: "允许用户自由离开小组"
       empty:
         posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
@@ -361,8 +364,11 @@ zh_CN:
       messages: "私信"
       notification_level: "小组私信的默认通知等级"
       visibility_levels:
+        title: "谁能看到这个小组？"
         public: "所有人"
         members: "小组创建人，成员和管理员"
+        staff: "小组创建者及工作人员"
+        owners: "小组创建者及管理员"
       alias_levels:
         title: "谁能@该群组和发送私信？"
         nobody: "没有人"
@@ -530,7 +536,7 @@ zh_CN:
       muted_categories_instructions: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。"
       no_category_access: "无法保存，作为审核人您仅具有受限的 分类 访问权限"
       delete_account: "删除我的帐号"
-      delete_account_confirm: "你真的要永久删除自己的账号吗？删除之后无法恢复！"
+      delete_account_confirm: "你真的要永久删除自己的帐号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被删除。"
       delete_yourself_not_allowed: "你目前不能删除自己的帐号。联系管理员帮助你删除帐号。"
       unread_message_count: "私信"
@@ -565,8 +571,8 @@ zh_CN:
         failed_to_move: "移动选中私信失败（可能你的网络出问题了）"
         select_all: "全选"
       preferences_nav:
-        account: "账号"
-        profile: "个人简介"
+        account: "undefined"
+        profile: "个人档案"
         emails: "邮件"
         notifications: "通知"
         categories: "分类"
@@ -721,6 +727,9 @@ zh_CN:
         expired: "邀请已过期。"
         rescind: "移除"
         rescinded: "邀请已删除"
+        rescind_all: "移除所有邀请"
+        rescinded_all: "所有邀请已移除"
+        rescind_all_confirm: "你确定你想要移除所有邀请么？"
         reinvite: "重新发送邀请"
         reinvite_all: "重发所有邀请"
         reinvite_all_confirm: "确定要重发这些邀请吗？"
@@ -728,7 +737,7 @@ zh_CN:
         reinvited_all: "所有邀请已重新发送！"
         time_read: "阅读时间"
         days_visited: "访问天数"
-        account_age_days: "账号建立天数"
+        account_age_days: "帐号建立天数"
         create: "发送邀请"
         generate_link: "复制邀请链接"
         link_generated: "邀请链接生成成功！"
@@ -855,7 +864,7 @@ zh_CN:
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
       intro: "嘿！:heart_eyes: 看来你很欣赏该讨论，但你没有注册帐号。"
-      value_prop: "你创建一个 账号 后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
+      value_prop: "你创建一个帐号后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -894,6 +903,9 @@ zh_CN:
       complete_email_found: "你的账户 <b>%{email}</b> 存在，你将马上收到一封电子邮件，以重置密码。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
       complete_email_not_found: "没有找到用户 <b>%{email}</b> "
+      help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账号的邮箱，请联系<a href='/about'>我们的工作人员。</a></p>"
+      button_ok: "OK"
+      button_help: "帮助"
     login:
       title: "登录"
       username: "用户"
@@ -910,7 +922,7 @@ zh_CN:
       awaiting_activation: "你的帐号尚未激活，点击忘记密码链接以重新发送激活邮件。"
       awaiting_approval: "你的帐号尚未被论坛版主审核。请等待一段时间，当你的帐号被审核时会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
-      not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>{{sentTo}}</b>，请打开它并完成账号激活。"
+      not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>{{sentTo}}</b>，请打开它并完成帐号激活。"
       not_allowed_from_ip_address: "你使用的 IP 地址已被封禁。"
       admin_not_allowed_from_ip_address: "你不能从这个 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活邮件。"
@@ -921,7 +933,7 @@ zh_CN:
       sent_activation_email_again: "我们又向 <b>{{currentEmail}}</b> 发送了一封激活邮件，邮件送达可能需要几分钟；请检查一下你邮箱的垃圾邮件文件夹。"
       to_continue: "请登录"
       preferences: "需要登入后更改设置"
-      forgot: "我记不清账号详情了"
+      forgot: "我记不清帐号详情了"
       not_approved: "你的帐号还未通过审核。一旦审核通过，我们将邮件通知你。"
       google:
         title: "Google 登录"
@@ -953,6 +965,8 @@ zh_CN:
       accept_invite: "接受邀请"
       success: "已创建您的帐号，您现在可以登录了。"
       name_label: "昵称"
+      password_label: "设置密码"
+      optional_description: "（可选）"
     password_reset:
       continue: "转入到 %{site_name}"
     emoji_set:
@@ -961,6 +975,8 @@ zh_CN:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "仅分类"
       categories_with_featured_topics: "有推荐主题的分类"
@@ -969,6 +985,17 @@ zh_CN:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    emoji_picker:
+      filter_placeholder: 查找表情符号
+      people: 人物
+      nature: 自然
+      food: 食物
+      activity: 活动
+      travel: 旅行
+      objects: 物品
+      celebration: 庆典
+      custom: 自定义表情符号
+      recent: 近期使用
     composer:
       emoji: "Emoji :)"
       more_emoji: "更多…"
@@ -1758,7 +1785,7 @@ zh_CN:
       special_warning: "警告：这个分类是已经自动建立好的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       images: "图片"
       email_in: "自定义进站电子邮件地址："
-      email_in_allow_strangers: "接受无账号的匿名用户的邮件"
+      email_in_allow_strangers: "接受无帐号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       suppress_from_homepage: "不在主页中显示这个分类。"
@@ -1975,7 +2002,7 @@ zh_CN:
         this_month: "月"
         this_week: "周"
         today: "今天"
-        other_periods: "跳至顶部"
+        other_periods: "查看热门"
     browser_update: '抱歉，<a href="http://www.discourse.com/faq/#browser">你的浏览器版本太低，无法正常访问该站点。</a>。请<a href="http://browsehappy.com">升级你的浏览器</a>。'
     permission_types:
       full: "创建 / 回复 / 阅读"
