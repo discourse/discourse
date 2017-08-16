@@ -18,7 +18,7 @@
 }
 
 .menu-panel {
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
   z-index: 1100;
@@ -147,6 +147,13 @@
   .no-results {
     padding: 5px;
     text-align: center;
+  }
+
+  li.selected {
+    background-color: $highlight-medium;
+  }
+  li:focus {
+    outline: none;
   }
   .filter {
     padding: 0;

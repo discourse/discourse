@@ -9,7 +9,8 @@ const searchData = {
   noResults: false,
   term: undefined,
   typeFilter: null,
-  invalidTerm: false
+  invalidTerm: false,
+  selected: null
 };
 
 // Helps with debouncing and cancelling promises
@@ -132,7 +133,8 @@ export default createWidget('search-menu', {
           noResults: searchData.noResults,
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
-          searchContextEnabled: searchData.contextEnabled
+          searchContextEnabled: searchData.contextEnabled,
+          selected: searchData.selected
         }));
       }
     }
@@ -167,6 +169,81 @@ export default createWidget('search-menu', {
 
   clickOutside() {
     this.sendWidgetAction('toggleSearchMenu');
+  },
+
+  keyDown(e) {
+    if (searchData.loading || searchData.noResults) {
+      return;
+    }
+
+    if (e.which === 13 /*enter*/ && searchData.selected) {
+      searchData.selected = null;
+      $('header .results li.selected a').click();
+    }
+
+    if (e.which === 38 /*arrow up*/ || e.which === 40 /*arrow down*/) {
+      this.moveSelected(e.which === 38 ? -1 : 1);
+
+      this.scheduleRerender();
+
+      Em.run.next(()=>{
+          if (searchData.selected) {
+
+            // so we do not clear selected
+            $('header .results li').off('blur');
+
+            let selected = $('header .results li.selected')
+              .focus()
+              .on('blur', ()=> {
+                searchData.selected = null;
+                this.scheduleRerender();
+                selected.off('blur');
+              });
+
+          } else {
+            $('#search-term').focus();
+          }
+      });
+
+      e.preventDefault();
+      return false;
+    }
+  },
+
+  moveSelected(offset) {
+
+    if (offset === 1 && !searchData.selected) {
+      searchData.selected = {type: searchData.results.resultTypes[0].type, index: 0};
+      return;
+    }
+
+    if (!searchData.selected) {
+      return;
+    }
+
+    let typeIndex = _.findIndex(searchData.results.resultTypes, item => item.type === searchData.selected.type);
+
+    if (typeIndex === 0 && searchData.selected.index === 0 && offset === -1) {
+      searchData.selected = null;
+      return;
+    }
+
+    let currentResults = searchData.results.resultTypes[typeIndex].results;
+    let newPosition = searchData.selected.index + offset;
+
+    if (newPosition < currentResults.length && newPosition >= 0) {
+      searchData.selected.index = newPosition;
+    } else {
+      // possibly move to next type
+      let newTypeIndex = typeIndex + offset;
+      if (newTypeIndex >= 0 && newTypeIndex < searchData.results.resultTypes.length) {
+        newPosition = 0;
+        if (offset === -1) {
+          newPosition = searchData.results.resultTypes[newTypeIndex].results.length - 1;
+        }
+        searchData.selected = {type: searchData.results.resultTypes[newTypeIndex].type, index: newPosition};
+      }
+    }
   },
 
   triggerSearch() {

@@ -20,13 +20,18 @@ class Highlighted extends RawHtml {
 function createSearchResult({ type, linkField, builder }) {
   return createWidget(`search-result-${type}`, {
     html(attrs) {
-      return attrs.results.map(r => {
 
+      let i=-1;
+
+      return attrs.results.map(r => {
+        i+=1;
         let searchResultId;
         if (type === "topic") {
           searchResultId = r.get('topic_id');
         }
-        return h('li', this.attach('link', {
+        let className = i === attrs.selected ? '.selected' : '';
+
+        return h('li' + className, { attributes: { tabindex: '-1' } }, this.attach('link', {
           href: r.get(linkField),
           contents: () => builder.call(this, r, attrs.term),
           className: 'search-link',
@@ -126,7 +131,8 @@ createWidget('search-menu-results', {
           searchContextEnabled: attrs.searchContextEnabled,
           searchLogId: attrs.results.grouped_search_result.search_log_id,
           results: rt.results,
-          term: attrs.term
+          term: attrs.term,
+          selected: (attrs.selected && attrs.selected.type === rt.type) ? attrs.selected.index : -1
         })),
         h('div.no-results', more)
       ];
