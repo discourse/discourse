@@ -37,8 +37,8 @@ end
 #  target     :string           not null
 #  digest     :string           not null
 #  content    :text             not null
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #  theme_id   :integer          default(-1), not null
 #  source_map :text
 #

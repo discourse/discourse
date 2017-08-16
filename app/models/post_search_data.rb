@@ -10,6 +10,7 @@ end
 #  search_data :tsvector
 #  raw_data    :text
 #  locale      :string
+#  version     :integer          default(0)
 #
 # Indexes
 #

@@ -149,6 +149,7 @@ end
 #  sha1              :string(40)
 #  origin            :string(1000)
 #  retain_hours      :integer
+#  extension         :string(10)
 #
 # Indexes
 #

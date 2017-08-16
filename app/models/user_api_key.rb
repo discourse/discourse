@@ -70,8 +70,8 @@ end
 #  key              :string           not null
 #  application_name :string           not null
 #  push_url         :string
-#  created_at       :datetime
-#  updated_at       :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #  revoked_at       :datetime
 #  scopes           :text             default([]), not null, is an Array
 #
