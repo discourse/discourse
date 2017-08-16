@@ -139,7 +139,6 @@ module HasCustomFields
   end
 
   def custom_fields
-
     if @preloaded_custom_fields
       return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields)
     end
@@ -177,7 +176,10 @@ module HasCustomFields
             dup.delete(f.name)
           end
         else
-          if dup[f.name] != f.value
+          t = {}
+          self.class.append_custom_field(t, f.name, f.value)
+
+          if dup[f.name] != t[f.name]
             f.destroy
           else
             dup.delete(f.name)

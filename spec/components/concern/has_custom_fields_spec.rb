@@ -142,6 +142,16 @@ describe HasCustomFields do
       test_item.reload
 
       expect(test_item.custom_fields).to eq("bool" => true, "int" => 1, "json" => { "foo" => "bar" })
+
+      before_ids = CustomFieldsTestItemCustomField.where(custom_fields_test_item_id: test_item.id).pluck(:id)
+
+      test_item.custom_fields["bool"] = false
+      test_item.save
+
+      after_ids = CustomFieldsTestItemCustomField.where(custom_fields_test_item_id: test_item.id).pluck(:id)
+
+      # we updated only 1 custom field, so there should be only 1 different id
+      expect((before_ids - after_ids).size).to eq(1)
     end
 
     it "simple modifications don't interfere" do
