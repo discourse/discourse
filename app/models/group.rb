@@ -414,12 +414,18 @@ class Group < ActiveRecord::Base
     users.pluck(:username).join(",")
   end
 
+  PUBLISH_CATEGORIES_LIMIT = 10
+
   def add(user)
     self.users.push(user) unless self.users.include?(user)
 
-    MessageBus.publish('/categories', {
-      categories: ActiveModel::ArraySerializer.new(self.categories).as_json
-    }, user_ids: [user.id])
+    if self.categories.count < PUBLISH_CATEGORIES_LIMIT
+      MessageBus.publish('/categories', {
+        categories: ActiveModel::ArraySerializer.new(self.categories).as_json
+      }, user_ids: [user.id])
+    else
+      Discourse.request_refresh!(user_ids: [user.id])
+    end
 
     self
   end
