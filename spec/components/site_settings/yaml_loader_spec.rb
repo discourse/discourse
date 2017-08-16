@@ -31,6 +31,7 @@ describe SiteSettings::YamlLoader do
   let(:deprecated_env) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_env.yml" }
   let(:deprecated_hidden) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_hidden.yml" }
   let(:locale_default) { "#{Rails.root}/spec/fixtures/site_settings/locale_default.yml" }
+  let(:nil_default) { "#{Rails.root}/spec/fixtures/site_settings/nil_default.yml" }
 
   it "loads simple settings" do
     receiver.expects(:setting).with('category1', 'title', 'My Site', {}).once
@@ -75,6 +76,10 @@ describe SiteSettings::YamlLoader do
 
   it "raises deprecation when hidden property is based on environment" do
     expect { receiver.load_yaml(deprecated_hidden) }.to raise_error(Discourse::Deprecation)
+  end
+
+  it "raises invalid parameter when default value is not present" do
+    expect { receiver.load_yaml(nil_default) }.to raise_error(StandardError)
   end
 
   it "can load settings with locale default" do
