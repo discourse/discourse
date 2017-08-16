@@ -3,6 +3,8 @@ class EmailToken < ActiveRecord::Base
 
   validates :token, :user_id, :email, presence: true
 
+  attr_accessor :remote_ip, :user_agent
+
   before_validation(on: :create) do
     self.token = EmailToken.generate_token
     self.email = self.email.downcase if self.email
@@ -98,6 +100,8 @@ end
 #  token      :string           not null
 #  confirmed  :boolean          default(FALSE), not null
 #  expired    :boolean          default(FALSE), not null
+#  remote_ip  :inet
+#  user_agent :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

@@ -48,10 +48,17 @@ class UserNotifications < ActionMailer::Base
   end
 
   def forgot_password(user, opts = {})
+    token_data = EmailToken.where(token: opts[:email_token]).first
+    # may not be set, if from before change
+    remote_ip = token_data.remote_ip || ''
+    user_agent = token_data.user_agent || ''
+
     build_email(user.email,
                 template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
                 locale: user_locale(user),
-                email_token: opts[:email_token])
+                email_token: opts[:email_token],
+		remote_ip: remote_ip,
+		user_agent: user_agent)
   end
 
   def admin_login(user, opts = {})
