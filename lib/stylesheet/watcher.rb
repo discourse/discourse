@@ -37,10 +37,14 @@ module Stylesheet
       end
 
       root = Rails.root.to_s
+
+      listener_opts = { ignore: /xxxx/ }
+      listener_opts[:force_polling] = true if ENV['FORCE_POLLING']
+
       @paths.each do |watch|
         Thread.new do
           begin
-            listener = Listen.to("#{root}/#{watch}", ignore: /xxxx/) do |modified, added, _|
+            listener = Listen.to("#{root}/#{watch}", listener_opts) do |modified, added, _|
               paths = [modified, added].flatten
               paths.compact!
               paths.map! { |long| long[(root.length + 1)..-1] }
