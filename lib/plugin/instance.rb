@@ -92,7 +92,7 @@ class Plugin::Instance
 
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
-      User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
+      ::User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
     end
   end
 
@@ -250,19 +250,19 @@ class Plugin::Instance
 
   def register_topic_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      Topic.register_custom_field_type(name, type) if plugin.enabled?
+      ::Topic.register_custom_field_type(name, type) if plugin.enabled?
     end
   end
 
   def register_post_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      Post.register_custom_field_type(name, type) if plugin.enabled?
+      ::Post.register_custom_field_type(name, type) if plugin.enabled?
     end
   end
 
   def register_group_custom_field_type(name, type)
     reloadable_patch do |plugin|
-      Group.register_custom_field_type(name, type) if plugin.enabled?
+      ::Group.register_custom_field_type(name, type) if plugin.enabled?
     end
   end
 
