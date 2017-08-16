@@ -302,7 +302,7 @@ module Discourse
     # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
     # it spreads the refreshes out over a time period
     if user_ids
-      MessageBus.publish("/refresh_client", 'clobber', user_ids: user_id)
+      MessageBus.publish("/refresh_client", 'clobber', user_ids: user_ids)
     else
       MessageBus.publish('/global/asset-version', 'clobber')
     end
