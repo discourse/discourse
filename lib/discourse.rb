@@ -296,12 +296,16 @@ module Discourse
     last_read_only[$redis.namespace] = nil
   end
 
-  def self.request_refresh!
+  def self.request_refresh!(user_ids: nil)
     # Causes refresh on next click for all clients
     #
     # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
     # it spreads the refreshes out over a time period
-    MessageBus.publish '/global/asset-version', 'clobber'
+    if user_ids
+      MessageBus.publish("/refresh_client", 'clobber', user_ids: user_id)
+    else
+      MessageBus.publish('/global/asset-version', 'clobber')
+    end
   end
 
   def self.git_version
