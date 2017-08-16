@@ -1,7 +1,7 @@
 Fabricator(:user_stat) do
 end
 
-Fabricator(:user) do
+Fabricator(:user_single_email, class_name: :user) do
   name 'Bruce Wayne'
   username { sequence(:username) { |i| "bruce#{i}" } }
   email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
@@ -9,6 +9,10 @@ Fabricator(:user) do
   trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i % 254}" } }
   active true
+end
+
+Fabricator(:user, from: :user_single_email) do
+  after_create { |user| Fabricate(:alternate_email, user: user)  }
 end
 
 Fabricator(:coding_horror, from: :user) do

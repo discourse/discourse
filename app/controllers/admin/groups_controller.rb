@@ -37,6 +37,7 @@ class Admin::GroupsController < Admin::AdminController
         valid_emails[email] = valid_usernames[username_lower] = id
         id
       end
+      valid_users.uniq!
       invalid_users = users.reject! { |u| valid_emails[u] || valid_usernames[u] }
       group.bulk_add(valid_users) if valid_users.present?
       users_added = valid_users.count

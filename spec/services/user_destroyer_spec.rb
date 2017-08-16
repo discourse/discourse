@@ -53,10 +53,10 @@ describe UserDestroyer do
         destroy
       end
 
-      it "adds email to block list if block_email is true" do
+      it "adds emails to block list if block_email is true" do
         expect {
           UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge(block_email: true))
-        }.to change { ScreenedEmail.count }.by(1)
+        }.to change { ScreenedEmail.count }.by(2)
       end
     end
 
