@@ -29,8 +29,8 @@ end
 #
 #  id            :integer          not null, primary key
 #  name          :string           not null
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #  parent_tag_id :integer
 #  one_per_topic :boolean          default(FALSE)
 #

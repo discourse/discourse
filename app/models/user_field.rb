@@ -18,8 +18,8 @@ end
 #  id                :integer          not null, primary key
 #  name              :string           not null
 #  field_type        :string           not null
-#  created_at        :datetime
-#  updated_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #  editable          :boolean          default(FALSE), not null
 #  description       :string           not null
 #  required          :boolean          default(TRUE), not null

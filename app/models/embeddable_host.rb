@@ -57,8 +57,8 @@ end
 #  id             :integer          not null, primary key
 #  host           :string           not null
 #  category_id    :integer          not null
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  path_whitelist :string
 #  class_name     :string
 #
