@@ -1,6 +1,7 @@
 require_dependency 'search/grouped_search_results'
 
 class Search
+  INDEX_VERSION = 1.freeze
 
   def self.per_facet
     5
@@ -43,36 +44,6 @@ class Search
     when :ru     then 'russian'
     else 'simple' # use the 'simple' stemmer for other languages
     end
-  end
-
-  def self.rebuild_problem_posts(limit = 10000)
-    posts = Post.joins(:topic)
-      .where('posts.id IN (
-               SELECT p2.id FROM posts p2
-               LEFT JOIN post_search_data pd ON locale = ? AND p2.id = pd.post_id
-               WHERE pd.post_id IS NULL
-              )', SiteSetting.default_locale).limit(limit)
-
-    posts.each do |post|
-      # force indexing
-      post.cooked += " "
-      SearchIndexer.index(post)
-    end
-
-    posts = Post.joins(:topic)
-      .where('posts.id IN (
-               SELECT p2.id FROM posts p2
-               LEFT JOIN topic_search_data pd ON locale = ? AND p2.topic_id = pd.topic_id
-               WHERE pd.topic_id IS NULL AND p2.post_number = 1
-              )', SiteSetting.default_locale).limit(limit)
-
-    posts.each do |post|
-      # force indexing
-      post.cooked += " "
-      SearchIndexer.index(post)
-    end
-
-    nil
   end
 
   def self.prepare_data(search_data, purpose = :query)
