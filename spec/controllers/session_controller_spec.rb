@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 describe SessionController do
+  shared_examples 'failed to continue local login' do
+    it 'should return the right response' do
+      expect(response).not_to be_success
+      expect(response.status.to_i).to eq 500
+    end
+  end
 
   describe 'become' do
     let!(:user) { Fabricate(:user) }
@@ -458,6 +464,22 @@ describe SessionController do
 
     let(:user) { Fabricate(:user) }
 
+    context 'local login is disabled' do
+      before do
+        SiteSetting.enable_local_logins = false
+        xhr :post, :create, login: user.username, password: 'myawesomepassword'
+      end
+      it_behaves_like "failed to continue local login"
+    end
+
+    context 'SSO is enabled' do
+      before do
+        SiteSetting.enable_sso = true
+        xhr :post, :create, login: user.username, password: 'myawesomepassword'
+      end
+      it_behaves_like "failed to continue local login"
+    end
+
     context 'when email is confirmed' do
       before do
         token = user.email_tokens.find_by(email: user.email)
@@ -521,14 +543,6 @@ describe SessionController do
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
           expect(UserAuthToken.hash_token(cookies[:_t])).to eq(user.user_auth_tokens.first.auth_token)
-        end
-      end
-
-      describe 'local logins disabled' do
-        it 'fails' do
-          SiteSetting.enable_local_logins = false
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          expect(response.status.to_i).to eq(500)
         end
       end
 
@@ -727,10 +741,20 @@ describe SessionController do
     context 'for an existing username' do
       let(:user) { Fabricate(:user) }
 
-      it "returns a 500 if local logins are disabled" do
-        SiteSetting.enable_local_logins = false
-        xhr :post, :forgot_password, login: user.username
-        expect(response.code.to_i).to eq(500)
+      context 'local login is disabled' do
+        before do
+          SiteSetting.enable_local_logins = false
+          xhr :post, :forgot_password, login: user.username
+        end
+        it_behaves_like "failed to continue local login"
+      end
+
+      context 'SSO is enabled' do
+        before do
+          SiteSetting.enable_sso = true
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+        end
+        it_behaves_like "failed to continue local login"
       end
 
       it "generates a new token for a made up username" do
