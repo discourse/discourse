@@ -224,6 +224,8 @@ export default createWidget('search-menu', {
 
       if (index === -1 && down) {
         $('header .panel-body .search-link:first').focus();
+      } else if (index === 0 && up) {
+        $('header .panel-body input:first').focus();
       } else if (index > -1) {
         index += (down ? 1 : -1);
         if (index >= 0 && index < results.length) {
