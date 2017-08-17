@@ -19,13 +19,14 @@ function updateState(state, opts) {
 
 export default Ember.Component.extend(bufferedProperty('editables'), {
   editing: propertyEqual('post', 'currentlyEditing'),
-  editables: {},
+  editables: null,
   _confirmDelete: updateState('rejected', {deleteUser: true}),
 
   _initEditables: function() {
     const post = this.get('post');
     const postOptions = post.get('post_options');
 
+    this.set('editables', {});
     this.set('editables.raw', post.get('raw'));
     this.set('editables.category', post.get('category'));
     this.set('editables.category_id', post.get('category.id'));
