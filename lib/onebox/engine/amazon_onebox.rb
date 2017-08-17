@@ -73,7 +73,7 @@ module Onebox
           end
 
         summary = raw.at("#productDescription")
-        result[:description] = og[:description] || summary&.inner_text
+        result[:description] = og[:description] || summary.inner_text
         result
       end
     end
