@@ -30,9 +30,20 @@ export default Discourse.Route.extend({
   afterModel(model, transition) {
     const username = transition.queryParams && transition.queryParams.username;
 
-    return UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
-      this.userBadges = userBadges;
+    const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
+      this.userBadgesGrant = userBadges;
     });
+
+    const userBadgesAll = UserBadge.findByUsername(username).then(userBadges => {
+      this.userBadgesAll = userBadges;
+    });
+
+    const promises = {
+      userBadgesGrant,
+      userBadgesAll,
+    };
+
+    return Ember.RSVP.hash(promises);
   },
 
   titleToken() {
@@ -42,8 +53,10 @@ export default Discourse.Route.extend({
     }
   },
 
+
   setupController(controller, model) {
     controller.set("model", model);
-    controller.set("userBadges", this.userBadges);
+    controller.set("userBadges", this.userBadgesGrant);
+    controller.set("userBadgesAll", this.userBadgesAll);
   }
 });
