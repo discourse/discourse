@@ -2657,7 +2657,7 @@ en:
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
-	The request came from %{remote_ip} using "%{user_agent}". If it was not you, you can safely ignore this email.
+        The request came from %{remote_ip} using "%{user_agent}". If it was not you, you can safely ignore this email.
 
         Click the following link to choose a new password:
         %{base_url}/u/password-reset/%{email_token}
@@ -2668,7 +2668,7 @@ en:
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
-	The request came from %{remote_ip} using "%{user_agent}". If it was not you, you can safely ignore this email.
+        The request came from %{remote_ip} using "%{user_agent}". If it was not you, you can safely ignore this email.
 
         Click the following link to choose a password:
         %{base_url}/u/password-reset/%{email_token}
