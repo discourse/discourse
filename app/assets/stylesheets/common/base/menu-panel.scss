@@ -149,12 +149,6 @@
     text-align: center;
   }
 
-  li.selected {
-    background-color: $highlight-medium;
-  }
-  li:focus {
-    outline: none;
-  }
   .filter {
     padding: 0;
     &:hover {background: transparent;}

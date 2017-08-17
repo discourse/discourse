@@ -9,8 +9,7 @@ const searchData = {
   noResults: false,
   term: undefined,
   typeFilter: null,
-  invalidTerm: false,
-  selected: null
+  invalidTerm: false
 };
 
 // Helps with debouncing and cancelling promises
@@ -134,7 +133,6 @@ export default createWidget('search-menu', {
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
           searchContextEnabled: searchData.contextEnabled,
-          selected: searchData.selected
         }));
       }
     }
@@ -176,73 +174,64 @@ export default createWidget('search-menu', {
       return;
     }
 
-    if (e.which === 13 /*enter*/ && searchData.selected) {
-      searchData.selected = null;
-      $('header .results li.selected a').click();
+    if (e.which === 65 /* a */) {
+      let focused = $('header .results .search-link:focus');
+      if (focused.length === 1) {
+        if ($('#reply-control.open').length === 1) {
+          // add a link and focus composer
+
+          this.appEvents.trigger('composer:insert-text', focused[0].href, {ensureSpace: true});
+
+          e.preventDefault();
+          $('#reply-control.open textarea').focus();
+          return false;
+        }
+      }
     }
 
-    if (e.which === 38 /*arrow up*/ || e.which === 40 /*arrow down*/) {
-      this.moveSelected(e.which === 38 ? -1 : 1);
+    const up = e.which === 38;
+    const down = e.which === 40;
+    if (up || down) {
 
-      this.scheduleRerender();
+      let focused = $('header .panel-body *:focus')[0];
 
-      Em.run.next(()=>{
-          if (searchData.selected) {
+      if (!focused) {
+        return;
+      }
 
-            // so we do not clear selected
-            $('header .results li').off('blur');
+      let links = $('header .panel-body .results a');
+      let results = $('header .panel-body .results .search-link');
 
-            let selected = $('header .results li.selected')
-              .focus()
-              .on('blur', ()=> {
-                searchData.selected = null;
-                this.scheduleRerender();
-                selected.off('blur');
-              });
+      let prevResult;
+      let result;
 
-          } else {
-            $('#search-term').focus();
-          }
+      links.each((idx,item) => {
+        if ($(item).hasClass('search-link')) {
+          prevResult = item;
+        }
+
+        if (item === focused) {
+          result = prevResult;
+        }
       });
+
+      let index = -1;
+
+      if (result) {
+        index = results.index(result);
+      }
+
+      if (index === -1 && down) {
+        $('header .panel-body .search-link:first').focus();
+      } else if (index > -1) {
+        index += (down ? 1 : -1);
+        if (index >= 0 && index < results.length) {
+          $(results[index]).focus();
+        }
+      }
 
       e.preventDefault();
       return false;
-    }
-  },
-
-  moveSelected(offset) {
-
-    if (offset === 1 && !searchData.selected) {
-      searchData.selected = {type: searchData.results.resultTypes[0].type, index: 0};
-      return;
-    }
-
-    if (!searchData.selected) {
-      return;
-    }
-
-    let typeIndex = _.findIndex(searchData.results.resultTypes, item => item.type === searchData.selected.type);
-
-    if (typeIndex === 0 && searchData.selected.index === 0 && offset === -1) {
-      searchData.selected = null;
-      return;
-    }
-
-    let currentResults = searchData.results.resultTypes[typeIndex].results;
-    let newPosition = searchData.selected.index + offset;
-
-    if (newPosition < currentResults.length && newPosition >= 0) {
-      searchData.selected.index = newPosition;
-    } else {
-      // possibly move to next type
-      let newTypeIndex = typeIndex + offset;
-      if (newTypeIndex >= 0 && newTypeIndex < searchData.results.resultTypes.length) {
-        newPosition = 0;
-        if (offset === -1) {
-          newPosition = searchData.results.resultTypes[newTypeIndex].results.length - 1;
-        }
-        searchData.selected = {type: searchData.results.resultTypes[newTypeIndex].type, index: newPosition};
-      }
     }
   },
 
