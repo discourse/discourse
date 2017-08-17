@@ -574,6 +574,9 @@ class PostsController < ApplicationController
       params[:skip_validations] = params[:skip_validations].to_s == "true"
       permitted << :skip_validations
 
+      params[:import_mode] = params[:import_mode].to_s == "true"
+      permitted << :import_mode
+
       # We allow `embed_url` via the API
       permitted << :embed_url
 
