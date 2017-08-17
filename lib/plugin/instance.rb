@@ -248,6 +248,12 @@ class Plugin::Instance
     end
   end
 
+  def register_category_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Category.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
   def register_topic_custom_field_type(name, type)
     reloadable_patch do |plugin|
       ::Topic.register_custom_field_type(name, type) if plugin.enabled?
