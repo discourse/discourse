@@ -23,7 +23,7 @@ function submitQuiz() {
     if (quizScorePercent == 100) {
 
       $.ajax({
-        url: '/u/'+Discourse.User.currentProp('username'),
+        url: '/u/'+Discourse.User.currentProp('username')+'.json',
         type: 'PUT',
         data: "custom_fields[edgeryders_consent]=1",
         success: function(data) {
