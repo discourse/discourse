@@ -20,8 +20,8 @@ class Highlighted extends RawHtml {
 function createSearchResult({ type, linkField, builder }) {
   return createWidget(`search-result-${type}`, {
     html(attrs) {
-      return attrs.results.map(r => {
 
+      return attrs.results.map(r => {
         let searchResultId;
         if (type === "topic") {
           searchResultId = r.get('topic_id');

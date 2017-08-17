@@ -64,7 +64,7 @@
         {{d-icon "check"}} {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
 
-    {{#footer-message education=footerEducation message=footerMessage tagName=""}}
+    {{#footer-message education=footerEducation message=footerMessage}}
       {{#if latest}}
         {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
       {{else if top}}
