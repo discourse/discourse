@@ -447,7 +447,7 @@ module Discourse
 
   def self.reset_active_record_cache
     ActiveRecord::Base.connection.query_cache.clear
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
       table.classify.constantize.reset_column_information rescue nil
     end
     nil
