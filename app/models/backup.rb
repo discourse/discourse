@@ -30,7 +30,11 @@ class Backup
   end
 
   def after_create_hook
-    upload_to_s3 if SiteSetting.enable_s3_backups?
+    if SiteSetting.enable_s3_backups?
+      upload_to_s3
+    else
+      DiscourseEvent.trigger(:backup_choice)
+    end
   end
 
   def after_remove_hook
