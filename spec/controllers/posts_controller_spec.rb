@@ -510,7 +510,7 @@ describe PostsController do
       end
 
       it "toggle wiki status should create a new version" do
-        admin = log_in(:admin)
+        _admin = log_in(:admin)
         another_user = Fabricate(:user)
         another_post = Fabricate(:post, user: another_user)
 
@@ -520,7 +520,7 @@ describe PostsController do
         expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'false' }
           .to change { another_post.reload.version }.by(-1)
 
-        another_admin = log_in(:admin)
+        _another_admin = log_in(:admin)
 
         expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'true' }
           .to change { another_post.reload.version }.by(1)
@@ -638,16 +638,36 @@ describe PostsController do
         user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
-        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: 'this is test reply 1', topic_id: post.topic.id, reply_to_post_number: 1}
+        xhr :post, :create,
+          api_username: user.username,
+          api_key: master_key,
+          raw: 'this is test reply 1',
+          topic_id: post.topic.id,
+          reply_to_post_number: 1
+
         expect(response).to be_success
         expect(post.topic.user.notifications.count).to eq(1)
         post.topic.user.notifications.destroy_all
 
-        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: 'this is test reply 2', topic_id: post.topic.id, reply_to_post_number: 1, :import_mode => true}
+        xhr :post, :create,
+          api_username: user.username,
+          api_key: master_key,
+          raw: 'this is test reply 2',
+          topic_id: post.topic.id,
+          reply_to_post_number: 1,
+          import_mode: true
+
         expect(response).to be_success
         expect(post.topic.user.notifications.count).to eq(0)
 
-        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: 'this is test reply 3', topic_id: post.topic.id, reply_to_post_number: 1, :import_mode => false}
+        xhr :post, :create,
+          api_username: user.username,
+          api_key: master_key,
+          raw: 'this is test reply 3',
+          topic_id: post.topic.id,
+          reply_to_post_number: 1,
+          import_mode: false
+
         expect(response).to be_success
         expect(post.topic.user.notifications.count).to eq(1)
       end
