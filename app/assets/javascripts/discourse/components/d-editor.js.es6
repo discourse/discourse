@@ -259,7 +259,7 @@ export default Ember.Component.extend({
 
     if (this.get('composerEvents')) {
       this.appEvents.on('composer:insert-block', text => this._addBlock(this._getSelected(), text));
-      this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
+      this.appEvents.on('composer:insert-text', (text, options) => this._addText(this._getSelected(), text, options));
       this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
     }
     this._mouseTrap = mouseTrap;
@@ -613,8 +613,22 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
-  _addText(sel, text) {
+  _addText(sel, text, options) {
     const $textarea = this.$('textarea.d-editor-input');
+
+    if (options && options.ensureSpace) {
+      if ((sel.pre + '').length > 0) {
+        if (!sel.pre.match(/\s$/)) {
+          text = ' ' + text;
+        }
+      }
+      if ((sel.post + '').length > 0) {
+        if (!sel.post.match(/^\s/)) {
+          text = text + ' ';
+        }
+      }
+    }
+
     const insert = `${sel.pre}${text}`;
     const value = `${insert}${sel.post}`;
     this.set('value', value);
