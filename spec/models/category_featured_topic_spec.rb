@@ -34,7 +34,7 @@ describe CategoryFeaturedTopic do
 
     it 'should feature stuff in the correct order' do
       category = Fabricate(:category, num_featured_topics: 2)
-      t5 = Fabricate(:topic, category_id: category.id, bumped_at: 12.minutes.ago)
+      _t5 = Fabricate(:topic, category_id: category.id, bumped_at: 12.minutes.ago)
       t4 = Fabricate(:topic, category_id: category.id, bumped_at: 10.minutes.ago)
       t3 = Fabricate(:topic, category_id: category.id, bumped_at: 7.minutes.ago)
       t2 = Fabricate(:topic, category_id: category.id, bumped_at: 4.minutes.ago)
@@ -45,7 +45,7 @@ describe CategoryFeaturedTopic do
 
       # Should find more than we need: pinned topics first, then num_featured_topics * 2
       expect(
-        CategoryFeaturedTopic.where(category_id: category.id).pluck(:topic_id)
+        CategoryFeaturedTopic.where(category_id: category.id).order('rank asc').pluck(:topic_id)
       ).to eq([pinned.id, t2.id, t1.id, t3.id, t4.id])
 
     end
