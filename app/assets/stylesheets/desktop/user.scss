@@ -92,6 +92,11 @@
 .user-table {
   margin-top: 30px;
   width: 100%;
+  display: table;
+  table-layout: fixed;
+  .wrapper {
+    display: table-row;
+  }
 }
 
 .user-navigation .nav-stacked .glyph {
