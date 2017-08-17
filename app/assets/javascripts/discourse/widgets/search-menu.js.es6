@@ -181,6 +181,7 @@ export default createWidget('search-menu', {
           // add a link and focus composer
 
           this.appEvents.trigger('composer:insert-text', focused[0].href, {ensureSpace: true});
+          this.appEvents.trigger('header:keyboard-trigger', {type: 'search'});
 
           e.preventDefault();
           $('#reply-control.open textarea').focus();
