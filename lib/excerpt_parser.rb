@@ -132,6 +132,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   def characters(string, truncate = true, count_it = true, encode = true)
     return if @in_quote
+    # we call length on this so might as well ensure we have a string
+    string = string.to_s
+
     encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
