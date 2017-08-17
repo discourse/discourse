@@ -7,13 +7,7 @@ The following are template configurations for email service providers who offer 
 **Please note that in any email provider, you _must_ verify and use the subdomain, e.g. `discourse.example.com`. If you verify the domain only, e.g. `example.com`, mail will not be configured correctly.**
 
 Enter these values when prompted by `./discourse-setup` per the [install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md#edit-discourse-configuration):
-
-#### [SparkPost][sp] &mdash; 100k emails/month
-
-    SMTP server address? smtp.sparkpostmail.com
-    SMTP user name?      SMTP_Injection
-    SMTP password?       [Any API key with Send via SMTP permission]
-    
+  
 #### [Elastic Email][ee] &mdash; 150k emails/month
 
     SMTP server address? smtp.elasticemail.com
@@ -39,7 +33,6 @@ We recommend creating an [API Key][sg2] instead of using your SendGrid username 
 
 Go to [My Account page](https://www.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://www.mailjet.com/account/setup) link.
 
-   [sp]: https://www.sparkpost.com/
    [ee]: https://elasticemail.com
   [jet]: https://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
