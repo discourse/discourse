@@ -3,6 +3,7 @@ class GroupsController < ApplicationController
   before_filter :ensure_logged_in, only: [
     :set_notifications,
     :mentionable,
+    :messageable,
     :update,
     :messages,
     :histories,
@@ -198,6 +199,16 @@ class GroupsController < ApplicationController
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
+    else
+      raise Discourse::InvalidAccess.new
+    end
+  end
+
+  def messageable
+    group = find_group(:name)
+
+    if group
+      render json: { messageable: Group.messageable(current_user).where(id: group.id).present? }
     else
       raise Discourse::InvalidAccess.new
     end

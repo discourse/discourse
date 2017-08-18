@@ -296,7 +296,9 @@ class Guardian
     # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?) &&
     # Blocked users can only send PM to staff
-    (!is_blocked? || target.staff?)
+    (!is_blocked? || target.staff?) &&
+    # It must be a messageable group.
+    (!target.is_a?(Group) || Group.messageable(@user).where(id: target.id).present?)
   end
 
   def can_see_emails?

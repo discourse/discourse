@@ -108,9 +108,9 @@ const Group = RestModel.extend({
     return this.get('flair_color') ? this.get('flair_color').replace(new RegExp("[^0-9a-fA-F]", "g"), "") : null;
   },
 
-  @computed('alias_level')
-  canEveryoneMention(aliasLevel) {
-    return aliasLevel === '99';
+  @computed('mentionable_level')
+  canEveryoneMention(mentionableLevel) {
+    return mentionableLevel === '99';
   },
 
   @observes("visibility_level", "canEveryoneMention")
@@ -131,7 +131,8 @@ const Group = RestModel.extend({
   asJSON() {
     const attrs = {
       name: this.get('name'),
-      alias_level: this.get('alias_level'),
+      mentionable_level: this.get('mentionable_level'),
+      messageable_level: this.get('messageable_level'),
       visibility_level: this.get('visibility_level'),
       automatic_membership_email_domains: this.get('emailDomains'),
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive'),
