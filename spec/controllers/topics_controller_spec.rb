@@ -1026,7 +1026,7 @@ describe TopicsController do
     end
 
     before do
-      admins.alias_level = Group::ALIAS_LEVELS[:everyone]
+      admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
       admins.save!
     end
 

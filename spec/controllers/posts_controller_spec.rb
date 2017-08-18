@@ -755,7 +755,7 @@ describe PostsController do
 
       it "can send a message to a group" do
 
-        group = Group.create(name: 'test_group', alias_level: Group::ALIAS_LEVELS[:nobody])
+        group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = Fabricate(:user)
         group.add(user1)
 
@@ -767,7 +767,7 @@ describe PostsController do
         expect(response).not_to be_success
 
         # allow pm to this group
-        group.update_columns(alias_level: Group::ALIAS_LEVELS[:everyone])
+        group.update_columns(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
         xhr :post, :create,           raw: 'I can haz a test',
                                       title: 'I loves my test',
