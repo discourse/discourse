@@ -13,14 +13,12 @@
           <div class='grant-info-item'>
             {{i18n 'badges.allow_title'}}
             {{#if userBadges}}
-              {{#each userBadges as |ub|}}
-                {{#if model.allow_title}}
-                  {{d-button
-                      class='btn btn-small pad-left no-text'
-                      action='toggleSetUserTitle'
-                      icon='pencil'}}
-                {{/if}}
-              {{/each}}
+              {{#if model.allow_title}}
+                {{d-button
+                    class='btn btn-small pad-left no-text'
+                    action='toggleSetUserTitle'
+                    icon='pencil'}}
+              {{/if}}
             {{/if}}
           </div>
         {{/if}}
