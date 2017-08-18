@@ -3,6 +3,8 @@
 // Requires chrome-launcher and chrome-remote-interface from npm
 // An up-to-date version of chrome is also required
 
+/* globals Promise */
+
 var args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
@@ -13,82 +15,87 @@ if (args.length < 1 || args.length > 2) {
 const chromeLauncher = require('chrome-launcher');
 const CDP = require('chrome-remote-interface');
 
-(async function() {
+(function() {
 
-  async function launchChrome() {
-    return await chromeLauncher.launch({
+  function launchChrome() {
+    return chromeLauncher.launch({
       chromeFlags: [
         '--disable-gpu',
-        '--headless'
+       '--headless',
+       '--no-sandbox'
       ]
     });
   }
-  const chrome = await launchChrome();
-  const protocol = await CDP({
-    port: chrome.port
-  });
 
-  const {
-    Page,
-    Runtime
-  } = protocol;
-  await Page.enable();
-  await Runtime.enable();
+  launchChrome().then(chrome => {
+    CDP({
+      port: chrome.port
+    }).then(protocol => {
+      const {Page, Runtime} = protocol;
+      Promise.all([Page.enable(), Runtime.enable()]).then(()=>{
 
-  Runtime.consoleAPICalled((response) => {
-    const message = response['args'][0].value;
+        Runtime.consoleAPICalled((response) => {
+          const message = response['args'][0].value;
 
-    // If it's a simple test result, write without newline
-    if(message === "." || message === "F"){
-      process.stdout.write(message);
-    }else{
-      console.log(message);
-    }
-  });
-
-  Page.navigate({
-    url: args[0]
-  });
-
-  Page.loadEventFired(async() => {
-    
-    await Runtime.evaluate({
-      expression: `(${qunit_script})()`
-    });
-    
-    const timeout = parseInt(args[1] || 300000, 10);
-    var start = Date.now();
-
-    var interval = setInterval(async() => {
-      if (Date.now() > start + timeout) {
-        console.error("Tests timed out");
-
-        protocol.close();
-        chrome.kill(); 
-        process.exit(124);
-      } else {
-        
-        const numFails = await Runtime.evaluate({
-          expression: `(${check_script})()`
+          // If it's a simple test result, write without newline
+          if(message === "." || message === "F"){
+            process.stdout.write(message);
+          }else{
+            console.log(message);
+          }
         });
 
-        if (numFails.result.type !== 'undefined') {
-          clearInterval(interval);
-          protocol.close();
-          chrome.kill(); 
+        Page.navigate({
+          url: args[0]
+        });
 
-          if (numFails.value > 0) {
-            process.exit(1);
-          } else {
-            process.exit();
-          }
-        }
-      }
-    }, 250);
+        Page.loadEventFired(() => {
+          
+          Runtime.evaluate({
+            expression: `(${qunit_script})()`
+          }).then(() => {
+            const timeout = parseInt(args[1] || 300000, 10);
+            var start = Date.now();
 
-  });
+            var interval = setInterval(() => {
+              if (Date.now() > start + timeout) {
+                console.error("Tests timed out");
 
+                protocol.close();
+                chrome.kill(); 
+                process.exit(124);
+              } else {
+                
+                Runtime.evaluate({
+                  expression: `(${check_script})()`
+                }).then((numFails) => {
+                  if (numFails.result.type !== 'undefined') {
+                    clearInterval(interval);
+                    protocol.close();
+                    chrome.kill(); 
+
+                    if (numFails.value > 0) {
+                      process.exit(1);
+                    } else {
+                      process.exit();
+                    }
+                  }
+                }).catch(error);
+              }
+            }, 250);
+          }).catch(error(1));
+        });
+      }).catch(error(3));
+    }).catch(error(4));
+  }).catch(error(5));
 })();
+
+function error(code){
+  return function(){
+    console.log("A promise failed to resolve code:"+code);
+    process.exit(1);
+  };
+}
 
 // The following functions are converted to strings
 // And then sent to chrome to be evalaluated
