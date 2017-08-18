@@ -63,7 +63,7 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
     config.autoload_paths += Dir["#{config.root}/app"]
 
-    if Rails.env.development?
+    if Rails.env.development? && !Sidekiq.server?
       config.autoload_paths += Dir["#{config.root}/lib"]
     end
 
