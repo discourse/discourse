@@ -35,11 +35,18 @@ end
 
 desc 'Run JS and Ruby linters'
 task 'docker:lint' do
-  success = run_or_fail("bundle exec rubocop --parallel")
-  success = run_or_fail("eslint app/assets/javascripts test/javascripts")
-  success = run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts plugins")
+  success = true
 
-  exit 1 if !success
+  if ENV["SINGLE_PLUGIN"]
+    success &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
+    success &&= run_or_fail("eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
+  else
+    success &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
+    success &&= run_or_fail("eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
+    success &&= run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
+  end
+
+  exit 1 unless success
 end
 
 desc 'Run all tests (JS and code in a standalone environment)'
