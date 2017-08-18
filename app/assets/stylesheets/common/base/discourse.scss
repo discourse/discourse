@@ -45,152 +45,153 @@ html {
 }
 
 body {
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-    margin-bottom: .5rem;
-  }
-
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
 
   @include clearfix;
+}
 
-  button.ok {
-    background: $success;
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: .5rem;
+}
+
+button.ok {
+  background: $success;
+  color: $secondary;
+  @include hover {
+    background: lighten($success, 10%);
     color: $secondary;
-    @include hover {
-      background: lighten($success, 10%);
-      color: $secondary;
-    }
   }
-  button.cancel {
-    background: $danger;
+}
+
+button.cancel {
+  background: $danger;
+  color: $secondary;
+  @include hover {
+    background: lighten($danger, 10%);
     color: $secondary;
-    @include hover {
-      background: lighten($danger, 10%);
-      color: $secondary;
-    }
   }
+}
 
-  // the default for table cells in topic list
-  // is scale-color($primary, $lightness: 50%)
-  // numbers get dimmer as they get colder
-  .coldmap-high {
-    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
-  }
-  .coldmap-med {
-    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)) !important;
-  }
-  .coldmap-low {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
-  }
+// the default for table cells in topic list
+// is scale-color($primary, $lightness: 50%)
+// numbers get dimmer as they get colder
+.coldmap-high {
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
+}
+.coldmap-med {
+  color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)) !important;
+}
+.coldmap-low {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
+}
 
-  #loading-message {
-    position: absolute;
-    font-size: 2.143em;
-    text-align: center;
-    top: 120px;
-    left: 500px;
-    color: $primary;
-  }
-    .top-space {
-    margin-top: 10px;
-  }
-  ul.breadcrumb {
-    margin: 0 10px 0 10px;
-  }
+#loading-message {
+  position: absolute;
+  font-size: 2.143em;
+  text-align: center;
+  top: 120px;
+  left: 500px;
+  color: $primary;
+}
+  .top-space {
+  margin-top: 10px;
+}
+ul.breadcrumb {
+  margin: 0 10px 0 10px;
+}
 
-  .message {
-    @include border-radius-all(8px);
-    background-color: $secondary;
-    padding: 14px;
+.message {
+  @include border-radius-all(8px);
+  background-color: $secondary;
+  padding: 14px;
 
-    h2 {
-      margin-bottom: 20px;
-    }
+  h2 {
+    margin-bottom: 20px;
   }
+}
 
-  #footer {
-    .container {
-      height: 50px;
-      .contents {
-        padding-top: 10px;
-        a[href] {
-          color: $secondary;
-        }
+#footer {
+  .container {
+    height: 50px;
+    .contents {
+      padding-top: 10px;
+      a[href] {
+        color: $secondary;
       }
     }
   }
+}
 
-  .clear-transitions {
-    transition:none !important;
-  }
+.clear-transitions {
+  transition:none !important;
+}
 
-  .tip {
-    display: inline-block;
-    &.good {
-      color: $success;
-    }
-    &.bad {
-      color: $danger;
-    }
+.tip {
+  display: inline-block;
+  &.good {
+    color: $success;
   }
+  &.bad {
+    color: $danger;
+  }
+}
 
-  input[type].invalid {
-    background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
-  }
+input[type].invalid {
+  background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
+}
 
-  .d-editor-input {
-    resize: none;
-  }
+.d-editor-input {
+  resize: none;
+}
 
-  .avatar-wrapper {
-    background-color: $secondary;
-    display: inline-block;
-    border-radius: 50%;
-  }
+.avatar-wrapper {
+  background-color: $secondary;
+  display: inline-block;
+  border-radius: 50%;
+}
 
-  .profiler-results.profiler-left {
-    top: 60px !important;
-  }
+.profiler-results.profiler-left {
+  top: 60px !important;
+}
 
-  label {
-    display: block;
-    margin-bottom: 5px;
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+input {
+  &[type="radio"], &[type="checkbox"] {
+    margin: 3px 0;
+    line-height: normal;
+    cursor: pointer;
   }
-  input {
-    &[type="radio"], &[type="checkbox"] {
-      margin: 3px 0;
-      line-height: normal;
-      cursor: pointer;
-    }
-    &[type="submit"], &[type="reset"], &[type="button"], &[type="radio"], &[type="checkbox"] {
-      width: auto;
-    }
+  &[type="submit"], &[type="reset"], &[type="button"], &[type="radio"], &[type="checkbox"] {
+    width: auto;
   }
-  .radio, .checkbox {
-    min-height: 18px;
-    padding-left: 18px;
-  }
-  .radio input[type="radio"], .checkbox input[type="checkbox"] {
-    float: left;
-    margin-left: -18px;
-  }
-  .controls > {
-    .radio:first-child, .checkbox:first-child {
-      padding-top: 5px;
-    }
-  }
-  .radio.inline, .checkbox.inline {
-    display: inline-block;
+}
+.radio, .checkbox {
+  min-height: 18px;
+  padding-left: 18px;
+}
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+  float: left;
+  margin-left: -18px;
+}
+.controls > {
+  .radio:first-child, .checkbox:first-child {
     padding-top: 5px;
-    margin-bottom: 0;
-    vertical-align: middle;
   }
-  .radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
-    margin-left: 10px;
-  }
+}
+.radio.inline, .checkbox.inline {
+  display: inline-block;
+  padding-top: 5px;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
+  margin-left: 10px;
 }
 
 .flex-center-align {
@@ -329,7 +330,7 @@ body {
 .content-list {
 
   h3 {
-    color: $primary-medium; 
+    color: $primary-medium;
     font-size: 1.071em;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -340,10 +341,10 @@ body {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid $primary-low; 
+      border-top: 1px solid $primary-low;
     }
     li {
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
     }
 
     li a {
@@ -352,7 +353,7 @@ body {
       color: $primary;
 
       &:hover {
-        background-color: $primary-low; 
+        background-color: $primary-low;
         color: $primary;
       }
 
