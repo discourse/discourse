@@ -629,8 +629,8 @@ end
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
-#  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  messageable_level                  :integer          default(99)
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
