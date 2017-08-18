@@ -99,7 +99,7 @@ class DiscourseRedis
       @fallback_handler = DiscourseRedis::FallbackHandler.instance
     end
 
-    def resolve
+    def resolve(client = nil)
       if !@fallback_handler.master
         @fallback_handler.verify_master unless @fallback_handler.running?
         return @slave_options
@@ -108,7 +108,7 @@ class DiscourseRedis
       begin
         options = @options.dup
         options.delete(:connector)
-        client = Redis::Client.new(options)
+        client ||= Redis::Client.new(options)
         loading = client.call([:info]).split("\r\n").include?("loading:1")
         loading ? @slave_options : @options
       rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex

@@ -116,12 +116,24 @@ describe DiscourseRedis do
       end
     end
 
+    class BrokenRedis
+      def initialize(error)
+        @error = error
+      end
+
+      def call(*args)
+        raise @error
+      end
+
+      def disconnect
+      end
+    end
+
     it "should return the slave config when master's hostname cannot be resolved" do
       begin
         error = RuntimeError.new('Name or service not known')
 
-        Redis::Client.any_instance.expects(:call).raises(error).once
-        expect { connector.resolve }.to raise_error(error)
+        expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(error)
         fallback_handler.instance_variable_get(:@timer_task).shutdown
         expect(fallback_handler.running?).to eq(false)
 
