@@ -117,3 +117,7 @@ vendor/bundle/*
 
 #ignore jetbrains ide file
 *.iml
+
+# ignore nodejs files
+/node_modules
+/package-lock.json
