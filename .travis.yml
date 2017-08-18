@@ -5,8 +5,9 @@ env:
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GC_MALLOC_LIMIT=50000000
   matrix:
-    - "RAILS_MASTER=0 QUNIT_RUN=0"
-    - "RAILS_MASTER=0 QUNIT_RUN=1"
+    - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=0"
+    - "RAILS_MASTER=0 QUNIT_RUN=1 RUN_LINT=0"
+    - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 addons:
   postgresql: 9.5
@@ -36,27 +37,35 @@ cache:
     - vendor/bundle
 
 before_install:
-  - gem install bundler rubocop
+  - gem install bundler
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
   - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
   - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
   - git clone --depth=1 https://github.com/discourse/discourse-slack-official.git plugins/discourse-slack-official
-  - yarn global add eslint babel-eslint
-  - eslint app/assets/javascripts
-  - eslint --ext .es6 app/assets/javascripts
-  - eslint --ext .es6 test/javascripts
-  - eslint --ext .es6 plugins/**/assets/javascripts
-  - eslint --ext .es6 plugins/**/test/javascripts
-  - eslint test/javascripts
-  - rubocop --parallel
-
-before_script:
-  - bundle exec rake db:create db:migrate
 
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
+  - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint; fi"
 
 script:
-  - bash -c "if [ '$QUNIT_RUN' == '0' ]; then bundle exec rspec && bundle exec rake plugin:spec; else LOAD_PLUGINS=1 bundle exec rake qunit:test['300000']; fi"
+  - |
+    bash -c "
+      if [ '$RUN_LINT' == '1' ]; then
+        bundle exec rubocop --parallel && \
+        eslint --ext .es6 app/assets/javascripts && \
+        eslint --ext .es6 test/javascripts && \
+        eslint --ext .es6 plugins/**/assets/javascripts && \
+        eslint --ext .es6 plugins/**/test/javascripts && \
+        eslint app/assets/javascripts test/javascripts
+      else
+        bundle exec rake db:create db:migrate
+
+        if [ '$QUNIT_RUN' == '1' ]; then
+          LOAD_PLUGINS=1 bundle exec rake qunit:test['300000']
+        else
+          bundle exec rspec && bundle exec rake plugin:spec
+        fi
+      fi
+    "
