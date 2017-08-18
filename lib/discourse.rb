@@ -311,25 +311,44 @@ module Discourse
   def self.git_version
     return $git_version if $git_version
 
-    # load the version stamped by the "build:stamp" task
-    f = Rails.root.to_s + "/config/version"
-    require f if File.exists?("#{f}.rb")
-
-    begin
-      $git_version ||= `git rev-parse HEAD`.strip
-    rescue
-      $git_version = Discourse::VERSION::STRING
-    end
+    git_cmd='git rev-parse HEAD'
+    self.load_version_or_git(git_cmd, Discourse::VERSION::STRING) { $git_version }
   end
 
   def self.git_branch
     return $git_branch if $git_branch
+    git_cmd='git rev-parse --abbrev-ref HEAD'
+    self.load_version_or_git(git_cmd, 'unknown') { $git_branch }
+  end
 
-    begin
-      $git_branch ||= `git rev-parse --abbrev-ref HEAD`.strip
-    rescue
-      $git_branch = "unknown"
+  def self.full_version
+    return $full_version if $full_version
+    git_cmd='git describe --dirty --match "v[0-9]*"'
+    self.load_version_or_git(git_cmd, 'unknown') { $full_version }
+  end
+
+  def self.load_version_or_git(git_cmd, default_value)
+    version_file  = "#{Rails.root}/config/version.rb"
+    version_value = false
+
+    if File.exists?(version_file)
+      require version_file
+      version_value = yield
     end
+
+    # file does not exist or does not define the expected global variable
+    unless version_value
+      begin
+        version_value = `#{git_cmd}`.strip
+      rescue # sollte noch ausspezifiziert werden…
+        version_value = default_value
+      end
+    end
+    if version_value.empty?
+      version_value = default_value
+    end
+
+    version_value
   end
 
   # Either returns the site_contact_username user or the first admin.
