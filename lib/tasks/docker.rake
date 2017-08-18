@@ -46,7 +46,7 @@ task 'docker:lint' do
     success &&= run_or_fail("eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
   end
 
-  exit 1 unless success
+  exit 1 if !success
 end
 
 desc 'Run all tests (JS and code in a standalone environment)'
