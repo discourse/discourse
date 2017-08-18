@@ -33,7 +33,7 @@
   }
   overflow-y: auto;
   z-index: 110;
-  padding: 10px;
+  padding: 10px 10px 35px 10px;
 
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: $highlight-medium;
@@ -55,10 +55,17 @@
   }
 
   a.close {
-    float: right;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
     color: $primary;
     opacity: 0.5;
     font-size: 1.071em;
+    &:before {
+      content: 'esc';
+      font-size: 0.85em;
+      margin-right: 0.5em;
+    }
   }
 
   a.close:hover {
