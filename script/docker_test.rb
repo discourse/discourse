@@ -12,4 +12,5 @@ unless ENV['NO_UPDATE']
   run_or_fail("bundle")
 end
 
-run_or_fail("bundle exec rake docker:test")
+run_or_fail("bundle exec rake docker:lint") unless ENV["SKIP_LINT"]
+run_or_fail("bundle exec rake docker:test") unless ENV["LINT_ONLY"]
