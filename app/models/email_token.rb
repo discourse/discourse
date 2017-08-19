@@ -3,11 +3,10 @@ class EmailToken < ActiveRecord::Base
 
   validates :token, :user_id, :email, presence: true
 
-  attr_accessor :remote_ip, :user_agent
-
   before_validation(on: :create) do
     self.token = EmailToken.generate_token
     self.email = self.email.downcase if self.email
+    self.user_agent = self.user_agent.strip if self.user_agent
   end
 
   after_create do

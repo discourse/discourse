@@ -51,7 +51,8 @@ class UserNotifications < ActionMailer::Base
     token_data = EmailToken.where(token: opts[:email_token]).first
     # may not be set, if from before change
     remote_ip = token_data.remote_ip || ''
-    user_agent = token_data.user_agent || ''
+    # force UA not to ever be interpreted as HTML
+    user_agent = token_data.user_agent ? "`#{token_data.user_agent}`" : ''
 
     build_email(user.email,
                 template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",

@@ -248,7 +248,7 @@ class SessionController < ApplicationController
     user = User.find_by_username_or_email(params[:login])
     user_presence = user.present? && user.id > 0 && !user.staged
     if user_presence
-      user_agent = request.user_agent || '(unidentified browser)'
+      user_agent = ERB::Util.html_escape(request.user_agent) || '(unidentified browser)'
       email_token = user.email_tokens.create(email: user.email, remote_ip: request.remote_ip, user_agent: user_agent)
       Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
