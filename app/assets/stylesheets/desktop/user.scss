@@ -19,7 +19,15 @@
 }
 
 .user-preferences {
+  display: table-cell;
+  vertical-align: top;
   padding-top: 10px;
+  padding-left: 30px;
+
+  h3 {
+    color: $primary;
+    margin: 20px 0 10px 0;
+  }
 
   input.category-selector, input.user-selector, input.tag-chooser {
     width: 530px;
@@ -106,7 +114,7 @@
   // position: static;
 }
 
-.user-navigation, .user-preferences {
+.user-navigation {
   display: table-cell;
   vertical-align: top;
   width: 170px;
@@ -143,7 +151,6 @@
    }
 
   .user-right {
-    width: 900px;
     display: table-cell;
   }
 
