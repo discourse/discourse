@@ -59,8 +59,8 @@ class UserNotifications < ActionMailer::Base
                 template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
                 locale: user_locale(user),
                 email_token: opts[:email_token],
-		remote_ip: remote_ip,
-		user_agent: "`#{user_agent}`")
+                remote_ip: remote_ip,
+                user_agent: "`#{user_agent}`")
   end
 
   def admin_login(user, opts = {})
