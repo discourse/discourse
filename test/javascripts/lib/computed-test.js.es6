@@ -90,7 +90,7 @@ QUnit.test("i18n", assert => {
 
 QUnit.test("url", assert => {
   var t, testClass;
-  
+
   testClass = Em.Object.extend({
     userUrl: url('username', "/u/%@")
   });

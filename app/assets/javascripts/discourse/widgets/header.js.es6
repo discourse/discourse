@@ -92,7 +92,7 @@ createWidget('header-dropdown', jQuery.extend({
 
     return h(
       'a.icon.btn-flat',
-      { attributes: { 
+      { attributes: {
         href: attrs.href,
           'data-auto-route': true,
           title,
