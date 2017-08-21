@@ -1,0 +1,12 @@
+<h3>{{{suggestedTitle}}}</h3>
+<div class="topics">
+  {{#if topic.isPrivateMessage}}
+    {{basic-topic-list
+      hideCategory="true"
+      showPosters="true"
+      topics=topic.details.suggested_topics}}
+  {{else}}
+    {{basic-topic-list topics=topic.details.suggested_topics}}
+  {{/if}}
+</div>
+<h3>{{{browseMoreMessage}}}</h3>
