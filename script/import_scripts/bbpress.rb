@@ -35,6 +35,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     import_anonymous_users
     import_categories
     import_topics_and_posts
+    import_private_messages
   end
 
   def import_users
@@ -259,6 +260,96 @@ class ImportScripts::Bbpress < ImportScripts::Base
         end
 
         skip ? nil : post
+      end
+    end
+  end
+
+  def import_private_messages
+    puts "", "importing private messages..."
+
+    last_post_id = -1
+    total_posts = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}bp_messages_messages").first["count"]
+
+    threads = {}
+
+    total_count = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}bp_messages_recipients").first["count"]
+    current_count = 0
+
+    batches(BATCH_SIZE) do |offset|
+      rows = bbpress_query(<<-SQL
+        SELECT thread_id, user_id
+          FROM #{BB_PRESS_PREFIX}bp_messages_recipients
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+        OFFSET #{offset}
+      SQL
+      ).to_a
+
+      break if rows.empty?
+
+      rows.each do |row|
+        current_count += 1
+        print_status(current_count, total_count, get_start_time('private_messages'))
+
+        threads[row['thread_id']] ||= {
+          target_user_ids: [],
+          imported_topic_id: nil
+        }
+        user_id = user_id_from_imported_user_id(row['user_id'])
+        if user_id && !threads[row['thread_id']][:target_user_ids].include?(user_id)
+          threads[row['thread_id']][:target_user_ids] << user_id
+        end
+      end
+    end
+
+    batches(BATCH_SIZE) do |offset|
+      posts =  bbpress_query(<<-SQL
+        SELECT id,
+               thread_id,
+               date_sent,
+               sender_id,
+               subject,
+               message
+          FROM wp_bp_messages_messages
+         WHERE id > #{last_post_id}
+      ORDER BY thread_id, date_sent
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+
+      break if posts.empty?
+
+      last_post_id = posts[-1]["id"].to_i
+
+      create_posts(posts, total: total_posts, offset: offset) do |post|
+        if tcf = TopicCustomField.where(name: 'bb_thread_id', value: post['thread_id']).first
+          {
+            id: "pm#{post['id']}",
+            topic_id: threads[post['thread_id']][:imported_topic_id],
+            user_id: user_id_from_imported_user_id(post['sender_id']) || find_user_by_import_id(post['sender_id'])&.id || -1,
+            raw: post['message'],
+            created_at: post['date_sent'],
+          }
+        else
+          # First post of the thread
+          {
+            id: "pm#{post['id']}",
+            archetype: Archetype.private_message,
+            user_id: user_id_from_imported_user_id(post['sender_id']) || find_user_by_import_id(post['sender_id'])&.id || -1,
+            title: post['subject'],
+            raw: post['message'],
+            created_at: post['date_sent'],
+            target_usernames: User.where(id: threads[post['thread_id']][:target_user_ids]).pluck(:username),
+            post_create_action: proc do |new_post|
+              if topic = new_post.topic
+                threads[post['thread_id']][:imported_topic_id] = topic.id
+                TopicCustomField.create(topic_id: topic.id, name: 'bb_thread_id', value: post['thread_id'])
+              else
+                puts "Error in post_create_action! Can't find topic!"
+              end
+            end
+          }
+        end
       end
     end
   end
