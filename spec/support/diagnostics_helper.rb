@@ -13,8 +13,9 @@ module MessageBus::DiagnosticsHelper
   def track_publish
     @tracking = tracking = []
     yield
-    @tracking = nil
     tracking
+  ensure
+    @tracking = nil
   end
 end
 
