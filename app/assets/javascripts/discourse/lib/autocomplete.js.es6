@@ -165,7 +165,7 @@ export default function(options) {
   };
 
   if (isInput) {
-    const width = this.width();
+    const width = Math.max(this.width(), 200);
 
     if (options.updateData) {
       wrap = this.parent();
