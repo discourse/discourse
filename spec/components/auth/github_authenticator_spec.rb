@@ -6,13 +6,33 @@ require 'rails_helper'
 Auth.send(:remove_const, :GithubAuthenticator)
 load 'auth/github_authenticator.rb'
 
+def auth_token_for(user)
+  {
+    extra: {
+      all_emails: [{
+        email: user.email,
+        primary: true,
+        verified: true,
+      }]
+    },
+    info: {
+      email: user.email,
+      email_verified: true,
+      nickname: user.username,
+      name: user.name,
+      image: "https://avatars3.githubusercontent.com/u/#{user.username}",
+    },
+    uid: '100'
+  }
+end
+
 describe Auth::GithubAuthenticator do
+  let(:authenticator) { described_class.new }
+  let(:user) { Fabricate(:user) }
 
   context 'after_authenticate' do
 
     it 'can authenticate and create a user record for already existing users' do
-      user = Fabricate(:user)
-
       hash = {
         extra: {
           all_emails: [{
@@ -30,7 +50,6 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      authenticator = Auth::GithubAuthenticator.new
       result = authenticator.after_authenticate(hash)
 
       expect(result.user.id).to eq(user.id)
@@ -41,8 +60,6 @@ describe Auth::GithubAuthenticator do
     end
 
     it 'will not authenticate for already existing users with an unverified email' do
-      user = Fabricate(:user)
-
       hash = {
         extra: {
           all_emails: [{
@@ -60,7 +77,6 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      authenticator = Auth::GithubAuthenticator.new
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
@@ -88,7 +104,6 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      authenticator = Auth::GithubAuthenticator.new
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
@@ -120,7 +135,6 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      authenticator = Auth::GithubAuthenticator.new
       SiteSetting.email_domains_blacklist = "blacklist.com"
       result = authenticator.after_authenticate(hash)
 
@@ -157,7 +171,6 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      authenticator = Auth::GithubAuthenticator.new
       SiteSetting.email_domains_whitelist = "whitelist.com"
       result = authenticator.after_authenticate(hash)
 
@@ -168,5 +181,31 @@ describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(true)
     end
 
+  end
+
+  describe 'avatar retrieval' do
+    context 'when user has a custom avatar' do
+      let(:user_avatar) { Fabricate(:user_avatar, custom_upload: Fabricate(:upload)) }
+      let(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }
+
+      it 'does not enqueue a download_avatar_from_url job' do
+        Jobs.expects(:enqueue).with(:download_avatar_from_url, anything).never
+
+        result = authenticator.after_authenticate(auth_token_for(user_with_custom_avatar))
+      end
+    end
+
+    context 'when user does not have a custom avatar' do
+      it 'enqueues a download_avatar_from_url job' do
+        Jobs.expects(:enqueue).with(
+          :download_avatar_from_url,
+          url: "https://avatars3.githubusercontent.com/u/#{user.username}",
+          user_id: user.id,
+          override_gravatar: false
+        )
+
+        result = authenticator.after_authenticate(auth_token_for(user))
+      end
+    end
   end
 end
