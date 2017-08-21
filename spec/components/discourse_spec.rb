@@ -108,7 +108,7 @@ describe Discourse do
         yield
       end
 
-      messages.first { |m| m.channel == Discourse.readonly_channel }
+      messages.find { |m| m.channel == Discourse.readonly_channel }
     end
 
     describe ".enable_readonly_mode" do
