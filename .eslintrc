@@ -92,7 +92,9 @@
     "wrap-iife": [
       2,
       "inside"
-    ]
+    ],
+    "no-mixed-spaces-and-tabs": 2,
+    "no-trailing-spaces": 2
   },
   "parser": "babel-eslint"
 }
