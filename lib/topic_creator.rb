@@ -166,12 +166,8 @@ class TopicCreator
       rollback_with!(topic, :no_user_selected)
     end
 
-    if @opts[:target_emails].present?
-      if !SiteSetting.reply_by_email_enabled? || !SiteSetting.enable_staged_users? then
-        rollback_with!(topic, :reply_by_email_disabled)
-      elsif @user.trust_level < SiteSetting.min_trust_to_send_email_messages then
-        rollback_with!(topic, :pm_email_tl_insufficient)
-      end
+    if @opts[:target_emails].present? && !@guardian.cand_send_private_messages_to_email? then
+      rollback_with!(topic, :reply_by_email_disabled)
     end
 
     add_users(topic, @opts[:target_usernames])
@@ -241,27 +237,21 @@ class TopicCreator
   end
 
   def find_or_create_user(email, display_name)
-    user = nil
+    user = User.find_by_email(email)
 
-    User.transaction do
-      begin
-        user = User.find_by_email(email)
-
-        if user.nil? && SiteSetting.enable_staged_users
-          username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
-          user = User.create!(
-            email: email,
-            username: UserNameSuggester.suggest(username.presence || email),
-            name: display_name.presence || User.suggest_name(email),
-            staged: true
-          )
-        end
-      rescue
-        user = nil
-      end
+    if user.nil? && SiteSetting.enable_staged_users
+      username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
+      user = User.create!(
+        email: email,
+        username: UserNameSuggester.suggest(username.presence || email),
+        name: display_name.presence || User.suggest_name(email),
+        staged: true
+      )
     end
 
     user
+  rescue
+    rollback_with!(topic, :target_user_not_found)
   end
 
 end

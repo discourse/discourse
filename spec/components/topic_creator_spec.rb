@@ -59,7 +59,6 @@ describe TopicCreator do
           TopicCreator.any_instance.expects(:save_topic).returns(true)
           TopicCreator.any_instance.expects(:watch_topic).returns(true)
           SiteSetting.allow_duplicate_topic_titles = true
-          SiteSetting.reply_by_email_enabled = true
           SiteSetting.enable_staged_users = true
         end
 
@@ -73,6 +72,7 @@ describe TopicCreator do
         end
 
         it "should be possible for a trusted user to send private messages via email" do
+          SiteSetting.enable_private_email_messages = true
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
           expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
         end

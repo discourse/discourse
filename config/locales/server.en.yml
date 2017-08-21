@@ -383,7 +383,6 @@ en:
               cant_send_pm: "Sorry, you cannot send a private message to that user."
               no_user_selected: "You must select a valid user."
               reply_by_email_disabled: "Reply by email has been disabled."
-              pm_email_tl_insufficient: "At least trust level 3 is required to send private messages to email addresses."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -1012,6 +1011,7 @@ en:
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
     enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_private_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
