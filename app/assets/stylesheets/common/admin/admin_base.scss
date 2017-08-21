@@ -193,6 +193,13 @@ td.flaggers td {
     background-color: $secondary;
     padding: 12px 12px 5px;
 
+    .powered-by {
+      font-size: 0.80em;
+      position: absolute;
+      bottom: -10px;
+      left: 10px;
+    }
+
     .other-accounts {
       margin: 5px 0 0;
       max-height: 200px;
