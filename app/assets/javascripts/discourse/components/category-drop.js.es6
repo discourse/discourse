@@ -72,7 +72,7 @@ export default Ember.Component.extend({
 
       if (color || textColor) {
         let style = "";
-        if (color) { 
+        if (color) {
           if (categoryStyle === "bar") {
             style += `border-color: #${color};`;
           } else if (categoryStyle === "box") {
