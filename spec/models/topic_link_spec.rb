@@ -251,6 +251,21 @@ http://b.com/#{'a' * 500}
 
   end
 
+  describe 'internal link from unlisted topic' do
+    it 'works' do
+      unlisted_topic = Fabricate(:topic, user: user, visible: false)
+      url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
+
+      unlisted_topic.posts.create(user: user, raw: 'initial post')
+      linked_post = unlisted_topic.posts.create(user: user, raw: "Link to another topic: #{url}")
+
+      TopicLink.extract_from(linked_post)
+
+      expect(topic.topic_links.first).to eq(nil)
+      expect(unlisted_topic.topic_links.first).not_to eq(nil)
+    end
+  end
+
   describe 'internal link with non-standard port' do
     it 'includes the non standard port if present' do
       other_topic = Fabricate(:topic, user: user)
