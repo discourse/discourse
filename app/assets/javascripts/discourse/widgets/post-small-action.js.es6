@@ -75,6 +75,7 @@ export default createWidget('post-small-action', {
 
     if (attrs.canDelete) {
       contents.push(this.attach('button', {
+        className: 'small-action-delete',
         icon: 'times',
         action: 'deletePost',
         title: 'post.controls.delete'
@@ -83,6 +84,7 @@ export default createWidget('post-small-action', {
 
     if (attrs.canEdit) {
       contents.push(this.attach('button', {
+        className: 'small-action-edit',
         icon: 'pencil',
         action: 'editPost',
         title: 'post.controls.edit'
