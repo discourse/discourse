@@ -1066,6 +1066,21 @@ describe Topic do
             expect(topic_timer.execute_at).to be_within(1.second).of(Time.zone.now + 5.hours)
           end
 
+          describe 'when topic is already closed' do
+            before do
+              SiteSetting.queue_jobs = true
+              topic.update_status('closed', true, Discourse.system_user)
+            end
+
+            it 'should not set a topic timer' do
+              expect { topic.change_category_to_id(new_category.id) }
+                .to change { TopicTimer.with_deleted.count }.by(0)
+
+              expect(topic.closed).to eq(true)
+              expect(topic.reload.category).to eq(new_category)
+            end
+          end
+
           describe 'when topic has an existing topic timer' do
             let(:topic_timer) { Fabricate(:topic_timer, topic: topic) }
 

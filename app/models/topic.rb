@@ -216,7 +216,8 @@ class Topic < ActiveRecord::Base
   end
 
   def inherit_auto_close_from_category
-    if !@ignore_category_auto_close &&
+    if !self.closed &&
+       !@ignore_category_auto_close &&
        self.category &&
        self.category.auto_close_hours &&
        !public_topic_timer&.execute_at
@@ -1010,7 +1011,7 @@ SQL
     topic_timer.status_type = status_type
 
     if time.blank?
-      topic_timer.trash!(trashed_by: by_user || Discourse.system_user)
+      topic_timer.trash!(by_user || Discourse.system_user)
       return
     end
 
