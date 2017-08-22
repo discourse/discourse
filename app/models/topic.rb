@@ -994,6 +994,12 @@ SQL
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
 
+  def delete_topic_timer(status_type, by_user: Discourse.system_user)
+    options = { status_type: status_type }
+    options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
+    self.topic_timers.find_by(options)&.trash!(by_user)
+  end
+
   # Valid arguments for the time:
   #  * An integer, which is the number of hours from now to update the topic's status.
   #  * A timestamp, like "2013-11-25 13:00", when the topic's status should update.
@@ -1005,15 +1011,12 @@ SQL
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
   def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank?
+
     topic_timer_options = { topic: self }
     topic_timer_options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
     topic_timer.status_type = status_type
-
-    if time.blank?
-      topic_timer.trash!(by_user || Discourse.system_user)
-      return
-    end
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = !based_on_last_post.blank?
