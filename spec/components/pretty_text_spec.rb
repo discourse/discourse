@@ -1099,8 +1099,6 @@ HTML
         <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
       HTML
 
-      puts PrettyText.cook(raw)
-
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
 
