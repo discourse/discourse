@@ -420,6 +420,7 @@ describe TopicsController do
 
         expect(response).to be_success
         expect(@topic.reload.closed).to eq(false)
+        expect(@topic.topic_timers).to eq([])
 
         body = JSON.parse(response.body)
 
