@@ -1,5 +1,5 @@
 import { propertyEqual } from 'discourse/lib/computed';
-import { actionDescription } from "discourse/components/small-action";
+import { actionDescription } from "discourse/widgets/post-small-action";
 
 export default Ember.Component.extend({
   classNameBindings: [":item", "item.hidden", "item.deleted:deleted", "moderatorAction"],
