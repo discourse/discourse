@@ -10,3 +10,4 @@
 //= require ./pretty-text/sanitizer
 //= require ./pretty-text/oneboxer
 //= require ./pretty-text/inline-oneboxer
+//= require ./pretty-text/image-short-url

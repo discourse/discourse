@@ -13,6 +13,9 @@ import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
          validateUploadedFiles } from 'discourse/lib/utilities';
+import { lookupCachedUploadUrl,
+         lookupUncachedUploadUrls,
+         cacheShortUploadUrl } from 'pretty-text/image-short-url';
 
 export default Ember.Component.extend({
   classNames: ['wmd-controls'],
@@ -191,6 +194,24 @@ export default Ember.Component.extend({
     $oneboxes.each((_, o) => load(o, refresh, ajax, this.currentUser.id));
   },
 
+  _loadShortUrls($images) {
+    const urls = _.map($images, img => $(img).data('orig-src'));
+    lookupUncachedUploadUrls(urls, ajax).then(() => this._loadCachedShortUrls($images));
+  },
+
+  _loadCachedShortUrls($images) {
+    $images.each((idx, image) => {
+      let $image = $(image);
+      let url = lookupCachedUploadUrl($image.data('orig-src'));
+      if (url) {
+        $image.removeAttr('data-orig-src');
+        if (url !== "missing") {
+          $image.attr('src', url);
+        }
+      }
+    });
+  },
+
   _warnMentionedGroups($preview) {
     Ember.run.scheduleOnce('afterRender', () => {
       var found = this.get('warnedGroupMentions') || [];
@@ -312,6 +333,7 @@ export default Ember.Component.extend({
       if (upload && upload.url) {
         if (!this._xhr || !this._xhr._userCancelled) {
           const markdown = getUploadMarkdown(upload);
+          cacheShortUploadUrl(upload.short_url, upload.url);
           this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
           this._resetUpload(false);
         } else {
@@ -577,6 +599,19 @@ export default Ember.Component.extend({
       const $oneboxes = $('a.onebox', $preview);
       if ($oneboxes.length > 0 && $oneboxes.length <= this.siteSettings.max_oneboxes_per_post) {
         Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
+      }
+
+      // Short upload urls
+      let $shortUploadUrls = $('img[data-orig-src]');
+
+      if ($shortUploadUrls.length > 0) {
+        this._loadCachedShortUrls($shortUploadUrls);
+
+        $shortUploadUrls = $('img[data-orig-src]');
+        if ($shortUploadUrls.length > 0) {
+          // this is carefully batched so we can do an leading debounce (trigger right away)
+          Ember.run.debounce(this, this._loadShortUrls, $shortUploadUrls, 450, true);
+        }
       }
 
       let inline = {};

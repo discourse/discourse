@@ -414,6 +414,7 @@ Discourse::Application.routes.draw do
   get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
 
   post "uploads" => "uploads#create"
+  post "uploads/lookup-urls" => "uploads#lookup_urls"
 
   # used to download original images
   get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
