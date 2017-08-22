@@ -568,7 +568,14 @@ describe TopicsController do
   end
 
   describe 'show unlisted' do
-    it 'returns 404 unless exact correct URL' do
+    it 'returns 301 even if slug does not match URL' do
+      # in the past we had special logic for unlisted topics
+      # we would require slug unless you made a json call
+      # this was not really providing any security
+      #
+      # we no longer require a topic be visible to perform url correction
+      # if you need to properly hide a topic for users use a secure category
+      # or a PM
       topic = Fabricate(:topic, visible: false)
       Fabricate(:post, topic: topic)
 
@@ -576,10 +583,10 @@ describe TopicsController do
       expect(response).to be_success
 
       xhr :get, :show, topic_id: topic.id, slug: "just-guessing"
-      expect(response.code).to eq("404")
+      expect(response.code).to eq("301")
 
       xhr :get, :show, id: topic.slug
-      expect(response.code).to eq("404")
+      expect(response.code).to eq("301")
     end
   end
 
