@@ -67,7 +67,7 @@ class TopicsController < ApplicationController
     # up that particular number
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
       topic = Topic.find_by(slug: params[:id].downcase)
-      return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+      return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
 
     if opts[:print]
@@ -84,7 +84,7 @@ class TopicsController < ApplicationController
     rescue Discourse::NotFound
       if params[:id]
         topic = Topic.find_by(slug: params[:id].downcase)
-        return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+        return redirect_to_correct_topic(topic, opts[:post_number]) if topic
       end
       raise Discourse::NotFound
     end
@@ -95,10 +95,6 @@ class TopicsController < ApplicationController
     end
 
     discourse_expires_in 1.minute
-
-    if !@topic_view.topic.visible && @topic_view.topic.slug != params[:slug] && !request.format.json?
-      raise Discourse::NotFound
-    end
 
     if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
       redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
