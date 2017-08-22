@@ -4,6 +4,7 @@ require_dependency "url_helper"
 require_dependency "db_helper"
 require_dependency "validators/upload_validator"
 require_dependency "file_store/local_store"
+require_dependency "base62"
 
 class Upload < ActiveRecord::Base
   belongs_to :user
@@ -50,6 +51,17 @@ class Upload < ActiveRecord::Base
     Upload.transaction do
       Discourse.store.remove_upload(self)
       super
+    end
+  end
+
+  def short_url
+    "upload://#{Base62.encode(sha1.hex)}.#{extension}"
+  end
+
+  def self.sha1_from_short_url(url)
+    if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
+      sha1 = Base62.decode($2).to_s(16)
+      sha1.length == 40 ? sha1 : nil
     end
   end
 

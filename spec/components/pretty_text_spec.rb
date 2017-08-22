@@ -1059,4 +1059,51 @@ HTML
     end
   end
 
+  describe "image decoding" do
+
+    it "can decode upload:// for default setup" do
+      upload = Fabricate(:upload)
+
+      raw = <<~RAW
+      ![upload](#{upload.short_url})
+
+      - ![upload](#{upload.short_url})
+
+      - test
+          - ![upload](#{upload.short_url})
+      RAW
+
+      cooked = <<~HTML
+        <p><img src="#{upload.url}" alt="upload"></p>
+        <ul>
+        <li>
+        <p><img src="#{upload.url}" alt="upload"></p>
+        </li>
+        <li>
+        <p>test</p>
+        <ul>
+        <li><img src="#{upload.url}" alt="upload"></li>
+        </ul>
+        </li>
+        </ul>
+      HTML
+
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+
+    it "can place a blank image if we can not find the upload" do
+
+      raw = "![upload](upload://abcABC.png)"
+
+      cooked = <<~HTML
+        <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
+      HTML
+
+      puts PrettyText.cook(raw)
+
+      expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+
+  end
+
 end
