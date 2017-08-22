@@ -1,4 +1,6 @@
 <{{view.tagName}} class='num posts-map posts {{view.likesHeat}}' title='{{view.title}}'>
-  {{raw-plugin-outlet name="topic-list-before-reply-count"}}
-  <a href class='posts-map badge-posts {{view.likesHeat}}'>{{number topic.replyCount noTitle="true"}}</a>
+  <a href class='posts-map badge-posts {{view.likesHeat}}'>
+    {{raw-plugin-outlet name="topic-list-before-reply-count"}}
+    {{number topic.replyCount noTitle="true"}}
+  </a>
 </{{view.tagName}}>
