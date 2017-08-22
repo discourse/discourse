@@ -109,7 +109,14 @@ createWidget('topic-map-summary', {
       contents.push(h('li.avatars', participants));
     }
 
-    return h('ul.clearfix', contents);
+    const nav = h('nav.buttons', this.attach('button', {
+      title: 'topic.toggle_information',
+      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
+      action: 'toggleMap',
+      className: 'btn',
+    }));
+
+    return [nav, h('ul.clearfix', contents)];
   }
 });
 
@@ -209,14 +216,7 @@ export default createWidget('topic-map', {
   },
 
   html(attrs, state) {
-    const nav = h('nav.buttons', this.attach('button', {
-      title: 'topic.toggle_information',
-      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
-      action: 'toggleMap',
-      className: 'btn',
-    }));
-
-    const contents = [nav, this.attach('topic-map-summary', attrs, { state })];
+    const contents = [this.attach('topic-map-summary', attrs, { state })];
 
     if (!state.collapsed) {
       contents.push(this.attach('topic-map-expanded', attrs));
