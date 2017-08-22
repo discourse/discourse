@@ -41,7 +41,7 @@ describe UploadsController do
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: logo, type: "avatar"
-        end.first
+        end.find { |m| m.channel == "/uploads/avatar" }
 
         expect(response.status).to eq 200
 
@@ -56,7 +56,7 @@ describe UploadsController do
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: text_file, type: "composer"
-        end.first
+        end.find { |m| m.channel == "/uploads/composer" }
 
         expect(response.status).to eq 200
         expect(message.channel).to eq("/uploads/composer")
