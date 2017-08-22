@@ -46,6 +46,17 @@ describe Tag do
         counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
         expect(counts[unused.name]).to eq(0)
       end
+
+      it "doesn't include deleted topics in counts" do
+        deleted_topic_tag = Fabricate(:tag)
+        delete_topic = Fabricate(:topic)
+        post = Fabricate(:post, topic: delete_topic, user: delete_topic.user)
+        delete_topic.tags << deleted_topic_tag
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
+        expect(counts[deleted_topic_tag.name]).to eq(0)
+      end
     end
   end
 
