@@ -35,7 +35,8 @@ function rule(state) {
 
   if (images.length > 0) {
     let srcList = images.map(([token, srcIndex]) => token.attrs[srcIndex][1]);
-    let longUrls = state.md.options.discourse.lookupImageUrls(srcList);
+    let lookup = state.md.options.discourse.lookupImageUrls;
+    let longUrls = (lookup && lookup(srcList)) || {};
 
     images.forEach(([token, srcIndex]) => {
       let origSrc = token.attrs[srcIndex][1];

@@ -36,6 +36,13 @@ describe UploadsController do
         xhr :post, :create, file: logo, type: "super \# long \//\\ type with \\. $%^&*( chars" * 5
       end
 
+      it 'can look up long urls' do
+        upload = Fabricate(:upload)
+        xhr :post, :lookup_urls, short_urls: [upload.short_url]
+        result = JSON.parse(response.body)
+        expect(result[0]["url"]).to eq(upload.url)
+      end
+
       it 'is successful with an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
@@ -78,6 +85,7 @@ describe UploadsController do
 
         expect(response.status).to eq 200
         expect(json["id"]).to be
+        expect(json["short_url"]).to eq("upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png")
       end
 
       it 'correctly sets retain_hours for admins' do
