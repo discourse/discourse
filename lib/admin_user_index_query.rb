@@ -4,8 +4,7 @@ class AdminUserIndexQuery
 
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
     @params = params
-    @outer_query = initialize_query_with_order(klass)
-    @query = klass.joins(:user_emails).distinct
+    @query = initialize_query_with_order(klass.joins(:primary_email))
     @trust_levels = trust_levels
   end
 
@@ -135,7 +134,7 @@ class AdminUserIndexQuery
     append filter_by_ip
     append filter_exclude
     append filter_by_search
-    @outer_query.from(@query, 'users')
+    @query
   end
 
 end
