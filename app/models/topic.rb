@@ -998,6 +998,7 @@ SQL
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
     self.topic_timers.find_by(options)&.trash!(by_user)
+    nil
   end
 
   # Valid arguments for the time:
