@@ -88,6 +88,16 @@ describe AdminUserIndexQuery do
 
   end
 
+  describe 'with a suspected user' do
+    let(:user) { Fabricate(:active_user, created_at: 1.day.ago) }
+
+    it 'finds the suspected user' do
+      user
+      query = AdminUserIndexQuery.new(query: 'suspect')
+      expect(query.find_users).to eq([user])
+    end
+  end
+
   describe "with a pending user" do
 
     let!(:user) { Fabricate(:user, approved: false) }
