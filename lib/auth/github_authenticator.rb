@@ -118,14 +118,11 @@ class Auth::GithubAuthenticator < Auth::Authenticator
            scope: "user:email"
   end
 
-  protected
+  private
 
   def retrieve_avatar(user, data)
-    return unless user
-    return if user.user_avatar&.custom_upload_id.present?
+    return unless data[:image].present? && user && user.user_avatar&.custom_upload_id.blank?
 
-    if (avatar_url = data[:image]).present?
-      Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id, override_gravatar: false)
-    end
+    Jobs.enqueue(:download_avatar_from_url, url: data[:image], user_id: user.id, override_gravatar: false)
   end
 end

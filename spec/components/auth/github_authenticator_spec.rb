@@ -184,27 +184,36 @@ describe Auth::GithubAuthenticator do
   end
 
   describe 'avatar retrieval' do
+    let(:job_klass) { Jobs::DownloadAvatarFromUrl }
+
+    before { SiteSetting.queue_jobs = true }
+
     context 'when user has a custom avatar' do
       let(:user_avatar) { Fabricate(:user_avatar, custom_upload: Fabricate(:upload)) }
       let(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }
 
       it 'does not enqueue a download_avatar_from_url job' do
-        Jobs.expects(:enqueue).with(:download_avatar_from_url, anything).never
+        Sidekiq::Testing.fake!
 
-        result = authenticator.after_authenticate(auth_token_for(user_with_custom_avatar))
+        expect {
+          authenticator.after_authenticate(auth_token_for(user_with_custom_avatar))
+        }.to_not change(job_klass.jobs, :size)
       end
     end
 
     context 'when user does not have a custom avatar' do
       it 'enqueues a download_avatar_from_url job' do
-        Jobs.expects(:enqueue).with(
-          :download_avatar_from_url,
-          url: "https://avatars3.githubusercontent.com/u/#{user.username}",
-          user_id: user.id,
-          override_gravatar: false
-        )
+        Sidekiq::Testing.fake!
 
-        result = authenticator.after_authenticate(auth_token_for(user))
+        expect {
+          authenticator.after_authenticate(auth_token_for(user))
+        }.to change(job_klass.jobs, :size).by(1)
+
+        job_args = job_klass.jobs.last['args'].first
+
+        expect(job_args['url']).to eq("https://avatars3.githubusercontent.com/u/#{user.username}")
+        expect(job_args['user_id']).to eq(user.id)
+        expect(job_args['override_gravatar']).to eq(false)
       end
     end
   end
