@@ -10,14 +10,11 @@ module Jobs
         .count
         .each_key do |email|
 
-        query = users.where("email_tokens.email = ?", email)
-                  .order(id: :asc)
+        query = users.where("email_tokens.email = ?", email).order(id: :asc)
 
         original_user = query.first
 
-        query.offset(1)
-          .each do |user|
-
+        query.offset(1).each do |user|
           user.posts.each do |post|
             post.set_owner(original_user, acting_user)
           end
