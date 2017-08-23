@@ -369,7 +369,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def has_title_badges
-    object.badges.where(allow_title: true).count > 0
+    object.badges.where(allow_title: true).exists?
   end
 
   def user_fields
