@@ -19,7 +19,7 @@ input {
   padding: 4px;
   border-radius: 3px;
   box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-  border: 1px solid $primary-low;
+  border: 1px solid $primary-low; 
 }
 input[type=radio], input[type=checkbox] {
   box-shadow: none;
@@ -38,7 +38,7 @@ input[type=radio], input[type=checkbox] {
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: $primary-low;
+  background-color: $primary-low; 
   bottom: 0;
   font-size: 1em;
   position: fixed;
@@ -58,7 +58,7 @@ input[type=radio], input[type=checkbox] {
     line-height: 30px;
   }
   .control-row {
-    margin: 0 5px 0 5px;
+    margin: 0 0 0 5px;
     .reply-to {
       overflow: hidden;
       max-width: 80%;
@@ -88,7 +88,7 @@ input[type=radio], input[type=checkbox] {
   &.draft {
     height: 35px !important;
     cursor: pointer;
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid $primary-low; 
     .draft-text {
       display: block;
       position: absolute;
@@ -122,16 +122,9 @@ input[type=radio], input[type=checkbox] {
       input#reply-title {
         padding: 5px;
         margin-top: 6px;
-        width: 100%;
+        width: 99%;
         box-sizing: border-box;
         border: 1px solid $secondary;
-      }
-      .category-input {
-        margin-top: 3px;
-
-        .category-select-box {
-          height: 28px;
-        }
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -141,7 +134,20 @@ input[type=radio], input[type=checkbox] {
   }
   .contents {
     padding: 8px 5px 0 5px;
+    .form-element {
+      .select2-container {
+        width: 99%;
+        margin-top: 6px;
+        a {
+          padding-top: 4px;
+          height: 28px;
+        }
+        b {
+          margin-top: 4px;
+        }
+      }
 
+    }
     .edit-reason-input, .display-edit-reason {
       display: none;
     }
@@ -186,6 +192,12 @@ input[type=radio], input[type=checkbox] {
         overflow: hidden;
         white-space: nowrap;
       }
+    }
+  }
+  .category-input {
+    // hack, select2 is using inline styles
+    .select2-container {
+      width: 99% !important;
     }
   }
   .popup-tip .close {

@@ -162,7 +162,7 @@
     padding-left: 7px;
   }
   .control-row {
-    margin: 0 5px 0 5px;
+    margin: 0 0 0 5px;
   }
   .saving-text {
     display: none;
@@ -221,9 +221,14 @@
     .contents {
       input#reply-title {
         padding: 7px 10px;
-        margin-bottom: 0;
+        margin: 6px 10px 3px 0;
         color: $primary;
+
+      }
+      input#reply-title {
         width: 400px;
+                color: $primary;
+
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -237,13 +242,34 @@
     min-width: 1280px;
     .form-element {
       position: relative;
-      display: flex;
-
-
-      .category-input {
+      display: inline-block;
+      .select2-container {
+        width: 400px;
+        margin-top: 5px;
+        a {
+          padding-top: 4px;
+          height: 28px;
+        }
+        b {
+          margin-top: 4px;
+        }
+      }
+      .category-combobox {
         width: 430px;
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }
+
+        .select2-drop {
+          left: -9000px;
+          width: 428px;
+          @include medium-width { width: 283px; }
+          @include small-width { width: 218px; }
+        }
+        .select2-search input {
+          width: 378px;
+          @include medium-width { width: 233px; }
+          @include small-width { width: 168px; }
+        }
       }
     }
     .edit-reason-input {
@@ -260,7 +286,7 @@
     }
     #reply-title {
       color: $primary;
-      margin-right: 5px;
+      margin-right: 10px;
       float: left;
       &:disabled {
         background-color: $primary-low;

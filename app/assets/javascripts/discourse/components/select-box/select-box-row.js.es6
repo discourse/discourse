@@ -1,5 +1,3 @@
-import { on, observes } from 'ember-addons/ember-computed-decorators';
-
 export default Ember.Component.extend({
   classNames: "select-box-row",
 
@@ -10,14 +8,6 @@ export default Ember.Component.extend({
   attributeBindings: ["text:title"],
 
   lastHoveredId: null,
-
-  @on("init")
-  @observes("content", "lastHoveredId", "selectedId", "selectBoxRowTemplate")
-  _updateTemplate: function() {
-    this.set("isHighlighted", this._isHighlighted());
-    this.set("text", this.get("content.text"));
-    this.set("template", this.get("selectBoxRowTemplate")(this));
-  },
 
   mouseEnter() {
     this.sendAction("onHover", this.get("content.id"));
