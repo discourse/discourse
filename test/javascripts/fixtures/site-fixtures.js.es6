@@ -2,6 +2,7 @@ export default {
   "site.json":{
     "site":{
       "default_archetype":"regular",
+      "disabled_plugins":[],
       "notification_types":{
         "mentioned":1,
         "replied":2,
