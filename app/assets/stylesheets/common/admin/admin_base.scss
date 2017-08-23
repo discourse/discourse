@@ -36,8 +36,8 @@ $mobile-breakpoint: 700px;
   tr {text-align: left;}
   td, th {padding: 8px;}
   td {
-    border-bottom: 1px solid $primary-low; 
-    border-top: 1px solid $primary-low; 
+    border-bottom: 1px solid $primary-low;
+    border-top: 1px solid $primary-low;
   }
   th {
     text-align: left;
@@ -94,7 +94,7 @@ td.flaggers td {
 
   .site-text {
     cursor: pointer;
-    border-bottom: 1px solid $primary-low; 
+    border-bottom: 1px solid $primary-low;
     margin-bottom: 0.5em;
 
     &.overridden {
@@ -112,7 +112,7 @@ td.flaggers td {
     .site-text-value {
       margin: 0.5em 5em 0.5em 0;
       max-height: 100px;
-      color: $primary-medium; 
+      color: $primary-medium;
     }
 
   }
@@ -136,7 +136,7 @@ td.flaggers td {
   font-size: 0.857em;
   float: right;
   margin-right: 10px;
-  background-color: $primary-low; 
+  background-color: $primary-low;
   padding: 2px 5px;
   border-radius: 5px;
   color: $primary;
@@ -229,16 +229,16 @@ td.flaggers td {
 }
 
 .admin-controls {
-  background-color: $primary-low; 
+  background-color: $primary-low;
   padding: 10px 10px 3px 0;
   @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
-        border-color: $primary-low; 
-        background-color: $primary-medium; 
+        border-color: $primary-low;
+        background-color: $primary-medium;
         &:hover {
-          background-color: $primary-medium; 
+          background-color: $primary-medium;
         }
       }
     }
@@ -374,22 +374,17 @@ td.flaggers td {
 .admin-nav {
   width: 18.018%;
   position: relative;
+
+  li a.active {
+    color: $secondary;
+    background-color: $quaternary;
+  }
+
   // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
     z-index: 0;
     width: 50%;
-  }
-  margin-top: 30px;
-  .nav-stacked {
-    border-right: none;
-    @media (max-width: $mobile-breakpoint) {
-      //margin-right: 10px;
-    }
-  }
-  li a.active {
-    color: $secondary;
-    background-color: $quaternary;
   }
 }
 
@@ -403,7 +398,7 @@ td.flaggers td {
   // Todo: set this properly - it needs to be >= the menu height
   min-height: 875px;
   margin-left: 0;
-  border-left: solid 1px $primary-low; 
+  border-left: solid 1px $primary-low;
   padding: 30px 0 30px 30px;
   @media (max-width: $mobile-breakpoint) {
     padding: 30px 0;
@@ -485,7 +480,7 @@ td.flaggers td {
       }
       padding: 1px;
       background-color: $secondary;
-      border: 1px solid $primary-low; 
+      border: 1px solid $primary-low;
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -553,7 +548,7 @@ section.details {
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
-    border-bottom: 5px solid $primary-low; 
+    border-bottom: 5px solid $primary-low;
   }
 }
 
@@ -596,7 +591,7 @@ section.details {
   &.highlight-danger {
     background-color: scale-color($danger, $lightness: 50%);
   }
-  border-top: 1px solid $primary-low; 
+  border-top: 1px solid $primary-low;
   &:before, &:after {
     display: table;
     content: "";
@@ -716,14 +711,14 @@ section.details {
     font-size: 1em;
     line-height: 16px;
     padding: 4px;
-    background-color: $primary-low; 
+    background-color: $primary-low;
   }
 
   .badge-query-plan {
     font-size: 0.857em;
     line-height: 13px;
     padding: 4px;
-    background-color: $primary-low; 
+    background-color: $primary-low;
   }
 
   .count-warning {
@@ -922,7 +917,7 @@ table.api-keys {
     th {
       font-weight: normal;
       text-align: center;
-      background: $primary-low; 
+      background: $primary-low;
     }
     th.title {
       text-align: left;
@@ -972,7 +967,7 @@ table.api-keys {
   }
 
   &.detected-problems {
-    background: $primary-low; 
+    background: $primary-low;
     margin-bottom: 20px;
 
     .look-here {
@@ -997,7 +992,7 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background: $primary-low; 
+        background: $primary-low;
       }
       ul {
         margin-left: 0;
@@ -1047,7 +1042,7 @@ table.api-keys {
 }
 
 .commits-widget {
-  border: solid 1px $primary-low; 
+  border: solid 1px $primary-low;
   height: 180px;
   margin-bottom: 36px;
 
@@ -1070,7 +1065,7 @@ table.api-keys {
     color: $primary;
     font-weight: bold;
     height: 30px;
-    background: $primary-low; 
+    background: $primary-low;
     cursor: pointer;
 
     h1 {
@@ -1093,7 +1088,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-    background-color: $primary-low; 
+    background-color: $primary-low;
       .left {
         float: left;
       }
@@ -1103,7 +1098,7 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px $primary-low; 
+        border: solid 1px $primary-low;
         padding: 2px;
         background-color: $secondary;
       }
@@ -1134,11 +1129,11 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background: $primary-low; 
+    background: $primary-low;
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px $primary-low; 
+    border-left: solid 1px $primary-low;
   }
 }
 
@@ -1313,7 +1308,7 @@ table.api-keys {
     color: $primary;
     &:hover {
       color: $primary;
-      background-color: $primary-low; 
+      background-color: $primary-low;
 
 
     }
@@ -1343,7 +1338,7 @@ table.api-keys {
 
   .heading-container {
     width: 100%;
-    background-color: $primary-low; 
+    background-color: $primary-low;
   }
   .col.heading {
     font-weight: bold;
@@ -1359,7 +1354,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px $primary-low; 
+    border-top: solid 1px $primary-low;
   }
 }
 
@@ -1444,14 +1439,6 @@ button.ru {
   }
   .btn:first-of-type {
     margin-left: 10px;
-  }
-}
-
-@media all
-and (max-width : 850px) {
-  html:not(.mobile-view) .admin-content .nav-stacked {
-    .glyph {width: auto; position: relative;}
-    > li > a {padding: 13px}
   }
 }
 
@@ -1549,7 +1536,7 @@ tr.not-activated {
   .user-field {
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid $primary-low; 
+    border-bottom: 1px solid $primary-low;
 
     .form-display {
       width: 25%;
