@@ -99,7 +99,7 @@ QUnit.test("Reply as new topic", assert => {
       "it fills composer with the ring string"
     );
     assert.equal(
-      find('.category-combobox').select2('data').text, "feature",
+      find('.category-select-box .select-box-header .current-selection').html().trim(), "feature",
       "it fills category selector with the right category"
     );
   });
