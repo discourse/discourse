@@ -26,7 +26,7 @@ class DirectoryItemsController < ApplicationController
       user_ids = UserSearch.new(params[:name]).search.pluck(:id)
       if user_ids.present?
         # Add the current user if we have at least one other match
-        if current_user && result.dup.where(user_id: user_ids).count > 0
+        if current_user && result.dup.where(user_id: user_ids).exists?
           user_ids << current_user.id
         end
         result = result.where(user_id: user_ids)

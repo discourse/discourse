@@ -32,7 +32,7 @@ class PostAnalyzer
 
     cooked_stripped.css("img").reject do |t|
       if dom_class = t["class"]
-        (Post.white_listed_image_classes & dom_class.split).count > 0
+        (Post.white_listed_image_classes & dom_class.split).exists?
       end
     end.count
   end
