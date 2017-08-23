@@ -61,7 +61,12 @@ class Upload < ActiveRecord::Base
   def self.sha1_from_short_url(url)
     if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
       sha1 = Base62.decode($2).to_s(16)
-      sha1.length == 40 ? sha1 : nil
+
+      if sha1.length > 40
+        nil
+      else
+        sha1.rjust(40, '0')
+      end
     end
   end
 
