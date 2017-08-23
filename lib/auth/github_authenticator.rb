@@ -91,6 +91,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       end
     end
 
+    retrieve_avatar(user, data)
+
     result.user = user
     result
   end
@@ -102,6 +104,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       screen_name: data[:github_screen_name],
       github_user_id: data[:github_user_id]
     )
+
+    retrieve_avatar(user, data)
   end
 
   def register_middleware(omniauth)
@@ -112,5 +116,13 @@ class Auth::GithubAuthenticator < Auth::Authenticator
               strategy.options[:client_secret] = SiteSetting.github_client_secret
            },
            scope: "user:email"
+  end
+
+  private
+
+  def retrieve_avatar(user, data)
+    return unless data[:image].present? && user && user.user_avatar&.custom_upload_id.blank?
+
+    Jobs.enqueue(:download_avatar_from_url, url: data[:image], user_id: user.id, override_gravatar: false)
   end
 end
