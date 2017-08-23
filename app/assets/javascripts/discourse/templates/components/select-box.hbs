@@ -4,6 +4,7 @@
   aria-haspopup="true"
   role="button"
   aria-labelledby="select-box-input-{{componentId}}"
+  tabindex={{tabindex}}
 />
 
 {{component selectBoxHeaderComponent
@@ -29,6 +30,7 @@
     {{component selectBoxCollectionComponent
       filteredContent=filteredContent
       selectBoxRowComponent=selectBoxRowComponent
+      selectBoxRowTemplate=selectBoxRowTemplate
       lastHoveredId=lastHoveredId
       onSelectRow=(action "onSelectRow")
       onHoverRow=(action "onHoverRow")
