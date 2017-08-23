@@ -61,7 +61,7 @@ module Helpers
     Guardian.stubs(new: guardian).with(user)
   end
 
-  def wait_for(&blk)
+  def wait_for(on_fail: nil, &blk)
     i = 0
     result = false
     while !result && i < 1000
@@ -70,6 +70,7 @@ module Helpers
       sleep 0.001
     end
 
+    on_fail&.call
     expect(result).to eq(true)
   end
 
