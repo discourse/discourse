@@ -46,6 +46,11 @@ export default Ember.Component.extend(CleansUp, {
     return !this.siteSettings.prioritize_username_in_ux && name && name.trim().length > 0;
   },
 
+  @computed('username', 'topicPostCount')
+  togglePostsLabel(username, count) {
+    return I18n.t("topic.filter_to", { username, count });
+  },
+
   @computed('user.user_fields.@each.value')
   publicUserFields() {
     const siteUserFields = this.site.get('user_fields');
