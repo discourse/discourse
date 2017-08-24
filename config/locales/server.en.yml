@@ -55,6 +55,9 @@ en:
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
 
+  no_browser_user_agent: "(unidentified browser)"
+  no_remote_ip: "(unidentified IP address)"
+
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
     other_error: "Something went wrong updating theme"
@@ -2657,7 +2660,7 @@ en:
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
-        The request came from %{remote_ip} using "%{user_agent}". If it was not you, you can safely ignore this email.
+        The request came from [%{remote_ip}](https://ipinfo.io/%{remote_ip}) using "%{user_agent}". If it was not you, you can safely ignore this email.
 
         Click the following link to choose a new password:
         %{base_url}/u/password-reset/%{email_token}
