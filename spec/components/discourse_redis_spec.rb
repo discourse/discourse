@@ -25,10 +25,11 @@ describe DiscourseRedis do
       let(:redis) { DiscourseRedis.new }
 
       it 'should append namespace to the keys' do
-        redis.set('key', 1)
+        raw_redis.set('default:key', 1)
+        raw_redis.set('test:key2', 1)
 
-        expect(raw_redis.get('default:key')).to eq('1')
-        expect(redis.keys).to eq(['key'])
+        expect(redis.keys).to include('key')
+        expect(redis.keys).to_not include('key2')
 
         redis.del('key')
 
@@ -45,10 +46,10 @@ describe DiscourseRedis do
       let(:redis) { DiscourseRedis.new(nil, namespace: false) }
 
       it 'should not append any namespace to the keys' do
-        redis.set('key', 1)
+        raw_redis.set('default:key', 1)
+        raw_redis.set('test:key2', 1)
 
-        expect(raw_redis.get('key')).to eq('1')
-        expect(redis.keys).to eq(['key'])
+        expect(redis.keys).to include('default:key', 'test:key2')
 
         redis.del('key')
 
