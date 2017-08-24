@@ -1404,7 +1404,7 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'should publish the right message' do
-      message = MessageBus.track_publish { user.logged_out }.first
+      message = MessageBus.track_publish { user.logged_out }.find { |m| m.channel == '/logout'}
 
       expect(message.channel).to eq('/logout')
       expect(message.data).to eq(user.id)
