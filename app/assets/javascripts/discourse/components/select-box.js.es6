@@ -78,6 +78,10 @@ export default Ember.Component.extend({
       this.set("content", []);
     }
 
+    if (this.site.isMobileDevice) {
+      this.set("filterable", false);
+    }
+
     this.setProperties({
       componentId: this.elementId,
       filteredContent: []
@@ -193,6 +197,13 @@ export default Ember.Component.extend({
         this.$(".select-box-offscreen").blur();
         return false;
       }
+
+      if (keyCode >= 65 && keyCode <= 90) {
+        this.setProperties({expanded: true, focused: false});
+        Ember.run.schedule("afterRender", () => {
+          this.$(".filter-query").focus().val(String.fromCharCode(keyCode));
+        });
+      }
     });
 
     this.$(".select-box-offscreen").on("focusout.select-box", () => {
@@ -259,6 +270,7 @@ export default Ember.Component.extend({
   _bindTab() {
     $(document).on("keydown.select-box", (event) => {
       const keyCode = event.keyCode || event.which;
+
       if (keyCode === 9) {
         this.set("expanded", false);
       }
