@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe "Groups" do
+describe GroupsController do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
 
-  describe 'viewing groups' do
+  describe '#index' do
     let!(:staff_group) do
       Fabricate(:group, name: '0000', visibility_level: Group.visibility_levels[:staff])
     end
@@ -57,7 +57,7 @@ describe "Groups" do
     end
   end
 
-  describe "checking if a group can be mentioned" do
+  describe '#mentionable' do
     it "should return the right response" do
       sign_in(user)
       group.update_attributes!(name: 'test')
@@ -79,7 +79,7 @@ describe "Groups" do
     end
   end
 
-  describe "group can be updated" do
+  describe '#update' do
     let(:group) do
       Fabricate(:group,
         name: 'test',
@@ -103,7 +103,7 @@ describe "Groups" do
         group.update!(allow_membership_requests: false)
 
         expect do
-          xhr :put, "/groups/#{group.id}", group: {
+          put "/groups/#{group.id}.json", group: {
             flair_bg_color: 'FFF',
             flair_color: 'BBB',
             flair_url: 'fa-adjust',
@@ -138,7 +138,7 @@ describe "Groups" do
       end
 
       it 'should be able to update the group' do
-        xhr :put, "/groups/#{group.id}", group: { flair_color: 'BBB' }
+        put "/groups/#{group.id}.json", group: { flair_color: 'BBB' }
 
         expect(response).to be_success
         expect(group.reload.flair_color).to eq('BBB')
@@ -149,14 +149,14 @@ describe "Groups" do
       it 'should not be able to update the group' do
         sign_in(user)
 
-        xhr :put, "/groups/#{group.id}", group: { name: 'testing' }
+        put "/groups/#{group.id}.json", group: { name: 'testing' }
 
         expect(response.status).to eq(403)
       end
     end
   end
 
-  describe 'members' do
+  describe '#members' do
     let(:user1) do
       Fabricate(:user,
         last_seen_at: Time.zone.now,
@@ -220,7 +220,7 @@ describe "Groups" do
     end
   end
 
-  describe "membership edit permissions" do
+  describe "edit" do
     let(:group) { Fabricate(:group) }
 
     context 'when user is not signed in' do
@@ -287,7 +287,7 @@ describe "Groups" do
       sign_in(admin)
     end
 
-    context 'adding members' do
+    context 'add_members' do
       it "can make incremental adds" do
         user2 = Fabricate(:user)
 
@@ -394,7 +394,7 @@ describe "Groups" do
       end
     end
 
-    context 'removing members' do
+    context '#remove_member' do
       it "cannot remove members from automatic groups" do
         group.update!(automatic: true)
 
@@ -555,7 +555,7 @@ describe "Groups" do
     end
   end
 
-  describe "requesting membership for a group" do
+  describe '#request_membership' do
     let(:new_user) { Fabricate(:user) }
 
     it 'requires the user to log in' do
@@ -602,7 +602,7 @@ describe "Groups" do
     end
   end
 
-  describe 'search for groups' do
+  describe '#search ' do
     let(:hidden_group) do
       Fabricate(:group,
         visibility_level: Group.visibility_levels[:owners],
