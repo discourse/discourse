@@ -2,18 +2,22 @@ module Jobs
   class FixPrimaryEmailsForStagedUsers < Jobs::Onceoff
     def execute_onceoff(args)
       users = User.where(active: false, staged: true).joins(:email_tokens)
-      destroyer = UserDestroyer.new(Discourse.system_user)
+      acting_user = Discourse.system_user
+      destroyer = UserDestroyer.new(acting_user)
 
       users.group("email_tokens.email")
         .having("COUNT(email_tokens.email) > 1")
         .count
         .each_key do |email|
 
-        users.where("email_tokens.email = ?", email)
-          .order(id: :asc)
-          .offset(1)
-          .each do |user|
+        query = users.where("email_tokens.email = ?", email).order(id: :asc)
 
+        original_user = query.first
+
+        query.offset(1).each do |user|
+          user.posts.each do |post|
+            post.set_owner(original_user, acting_user)
+          end
           destroyer.destroy(user)
         end
       end
