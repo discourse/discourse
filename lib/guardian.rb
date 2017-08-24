@@ -301,7 +301,7 @@ class Guardian
 
   def cand_send_private_messages_to_email?
     # Staged users must be enabled to create a temporary user.
-    SiteSetting.enable_staged_users? &&
+    SiteSetting.enable_staged_users &&
     # User is authenticated
     authenticated? &&
     # User is trusted enough

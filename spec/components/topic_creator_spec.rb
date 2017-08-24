@@ -72,7 +72,9 @@ describe TopicCreator do
         end
 
         it "should be possible for a trusted user to send private messages via email" do
-          SiteSetting.enable_private_email_messages = true
+          SiteSetting.expects(:enable_staged_users).returns(true)
+          SiteSetting.expects(:enable_staged_users).returns(true)
+          SiteSetting.expects(:enable_private_email_messages).returns(true)
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
           expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
         end
