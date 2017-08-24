@@ -98,7 +98,6 @@
 }
 
 .user-table {
-  margin-top: 30px;
   width: 100%;
   display: table;
   table-layout: fixed;
@@ -143,82 +142,64 @@
   }
 }
 
+.user-content {
+  padding: 10px 8px;
+  background-color: $secondary;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+
+  .btn.right {
+    float: right
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+}
+
+.pref-avatar {
+  .avatar {
+    max-width: 45px;
+    max-height: 45px;
+  }
+}
+
+.user-invite-list {
+  width: 100%;
+  margin-top: 15px;
+
+  th {
+    text-align: left;
+    border-bottom: 3px solid $primary-low;
+    padding: 0 0 10px 0;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
+  }
+
+  td {
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid $primary-low;
+  }
+}
+
+.user-invite-controls {
+  background-color: $primary-low;
+  padding: 5px 10px 0px 0;
+  height: 35px;
+}
+
+.user-invite-search {
+  clear: both;
+  margin: 15px 0px -15px 0px;
+}
+
+.user-invite-none {
+  clear: both;
+  padding: 15px;
+}
+
 .user-main {
   margin-bottom: 50px;
-
-  // name hacky so lastpass does not freak out
-  // -search- means it is bypassed
-  #add-user-to-group {
-    button, .ac-wrap {
-      float: left;
-    }
-    button {
-      margin-top: 5px;
-    }
-    #user-search-selector {
-      width: 400px;
-    }
-   }
-
-  .user-right {
-    display: table-cell;
-  }
-
-  .user-content {
-    padding: 10px 8px;
-    background-color: $secondary;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-
-    .btn.right {
-      float: right
-    }
-
-    h2 {
-      margin-bottom: 10px;
-    }
-
-    .user-invite-list {
-      width: 100%;
-      margin-top: 15px;
-
-      th {
-        text-align: left;
-        border-bottom: 3px solid $primary-low;
-        padding: 0 0 10px 0;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-weight: normal;
-      }
-
-      td {
-        padding: 10px 0 10px 0;
-        border-bottom: 1px solid $primary-low;
-      }
-    }
-
-    .pref-avatar {
-      .avatar {
-        max-width: 45px;
-        max-height: 45px;
-      }
-    }
-
-    .user-invite-controls {
-      background-color: $primary-low;
-      padding: 5px 10px 0px 0;
-      height: 35px;
-    }
-
-    .user-invite-search {
-      clear: both;
-      margin: 15px 0px -15px 0px;
-    }
-
-    .user-invite-none {
-      clear: both;
-      padding: 15px;
-    }
-  }
 
   .about {
     background-position: center center;
@@ -234,12 +215,15 @@
       }
     }
 
-  .secondary {
-    background: scale-color($secondary, $lightness: -5%);
-    border-top: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
-    font-size: 0.929em;
-      .btn { padding: 3px 12px; }
+    .secondary {
+      background: scale-color($secondary, $lightness: -5%);
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
+      font-size: 0.929em;
+
+      .btn {
+        padding: 3px 12px;
+      }
 
       dl dd {
         display: inline;
@@ -318,7 +302,7 @@
       .groups {
         margin-left: 10px;
         display: inline;
-        }
+      }
 
       img.avatar {
         margin: 0 20px 10px 0;
@@ -363,16 +347,21 @@
         }
       }
     }
-        &.has-background {
-          .details { padding: 15px 15px 4px 15px;}
-        }
+
+    &.has-background {
+      .details {
+        padding: 15px 15px 4px 15px;
+      }
+    }
 
     .controls {
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
       width: 180px;
-      ul {list-style-type: none;}
+      ul {
+        list-style-type: none;
+      }
       a {
         padding: 5px 10px;
         width: 140px;
@@ -384,70 +373,73 @@
         margin-left: 5px;
       }
     }
-  }
 
-  .about.collapsed-info {
-    .controls {
-      margin-top: 0;
-      width: auto;
-      ul {
-        li {display: inline;}
-        a {
-          padding: 5px 10px;
-          margin-bottom: 10px;
-          width: auto;
-          }
-      }
-    }
-
-    .staff-counters {
-      display: none;
-    }
-
-    .secondary { display: none; }
-
-    .profile-image {
-      height: 0;
-    }
-
-    .details {
-      padding: 0 0 2px 0;
-      margin-top: 0;
-      background: rgba($secondary, .85);
-      border-bottom: 1px solid $primary-low;
-      .bio { display: none; }
-
-      .primary {
-        text-align: left;
+    &.collapsed-info {
+      .controls {
         margin-top: 0;
-        width: 100%;
-
-        .avatar {
-          float: left;
-          margin-right: 10px;
-          width: 45px;
-          height: 45px;
+        width: auto;
+        ul {
+          li {display: inline;}
+          a {
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            width: auto;
+            }
         }
+      }
 
-        h1 {
-          font-size: 1.429em;
-        }
+      .staff-counters {
+        display: none;
+      }
 
-        h2 {
-          font-size: 1.071em;
-          margin-top: 4px;
-        }
+      .secondary {
+        display: none;
+      }
 
-        h3 {
+      .profile-image {
+        height: 0;
+      }
+
+      .details {
+        padding: 0 0 2px 0;
+        margin-top: 0;
+        background: rgba($secondary, .85);
+        border-bottom: 1px solid $primary-low;
+        .bio {
           display: none;
         }
+
+        .primary {
+          text-align: left;
+          margin-top: 0;
+          width: 100%;
+
+          .avatar {
+            float: left;
+            margin-right: 10px;
+            width: 45px;
+            height: 45px;
+          }
+
+          h1 {
+            font-size: 1.429em;
+          }
+
+          h2 {
+            font-size: 1.071em;
+            margin-top: 4px;
+          }
+
+          h3 {
+            display: none;
+          }
+        }
+      }
+
+      &.has-background {
+        .details {  padding: 12px 15px 2px 15px;}
       }
     }
-
-    &.has-background {
-      .details {  padding: 12px 15px 2px 15px;}
-    }
-
   }
 
   .user-stream {
@@ -643,7 +635,11 @@
   }
 }
 
-.user-right .group-notification-menu {
-  float: right;
-  margin-bottom: 5px;
+.user-right {
+  display: table-cell;
+
+  .group-notification-menu {
+    float: right;
+    margin-bottom: 5px;
+  }
 }
