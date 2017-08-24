@@ -2244,7 +2244,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination email addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
+        None of the destination email addresses are recognized, or the Message-ID header in the email has been modified. Please make sure that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
