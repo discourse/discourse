@@ -625,6 +625,9 @@ es:
     no_likes_given:
       self: "No le has dado a \"Me gusta\" en ningún tema."
       others: "No te gusta ningún tema."
+    no_replies:
+      self: "No has respondido en ningún tema."
+      others: "No hay respuestas."
   topic_flag_types:
     spam:
       title: 'Spam'
