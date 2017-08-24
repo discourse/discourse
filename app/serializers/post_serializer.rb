@@ -243,7 +243,7 @@ class PostSerializer < BasicPostSerializer
         summary[:can_defer_flags] = true if scope.is_staff? &&
                                                    PostActionType.flag_types.values.include?(id) &&
                                                    active_flags.present? && active_flags.has_key?(id) &&
-                                                   active_flags[id].count > 0
+                                                   active_flags[id].exists?
       end
 
       if actions.present? && actions.has_key?(id)
