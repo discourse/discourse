@@ -74,7 +74,6 @@ export default SelectBoxComponent.extend({
 
   rowContentTemplate(item) {
     let category;
-    let result = '<div class="category-status">';
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
     if (Ember.isEmpty(item.id)) {
@@ -87,18 +86,20 @@ export default SelectBoxComponent.extend({
     }
 
     if (!category) return item.text;
-    result += categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true});
+    let result = categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true});
     const parentCategoryId = category.get("parent_category_id");
 
     if (parentCategoryId) {
-      result += categoryBadgeHTML(Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
+      result = `<div class="category-status">${categoryBadgeHTML(Category.findById(parentCategoryId), {link: false})}&nbsp;${result}`;
+    } else {
+      result = `<div class="category-status">${result}`;
     }
 
-    result += ` <span class='topic-count'>&times; ${category.get("topic_count")}</span></div>`;
+    result += ` <span class="topic-count">&times; ${category.get("topic_count")}</span></div>`;
 
     const description = category.get("description");
     // TODO wtf how can this be null?;
-    if (description && description !== 'null') {
+    if (description && description !== "null") {
       result += `<div class="category-desc">${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}</div>`;
     }
 
