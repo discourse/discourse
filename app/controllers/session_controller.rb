@@ -2,7 +2,12 @@ require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
 
 class SessionController < ApplicationController
+  class LocalLoginNotAllowed < StandardError; end
+  rescue_from LocalLoginNotAllowed do
+    render nothing: true, status: 500
+  end
 
+  before_filter :check_local_login_allowed, only: %i(create forgot_password)
   skip_before_filter :redirect_to_login_if_required
   skip_before_filter :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
 
@@ -176,12 +181,6 @@ class SessionController < ApplicationController
   end
 
   def create
-
-    unless allow_local_auth?
-      render nothing: true, status: 500
-      return
-    end
-
     RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
     RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
 
@@ -234,11 +233,6 @@ class SessionController < ApplicationController
   def forgot_password
     params.require(:login)
 
-    unless allow_local_auth?
-      render nothing: true, status: 500
-      return
-    end
-
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
@@ -281,11 +275,15 @@ class SessionController < ApplicationController
     end
   end
 
-  private
+  protected
 
-  def allow_local_auth?
-    !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+  def check_local_login_allowed
+    if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+      raise LocalLoginNotAllowed, "SSO takes over local login or the local login is disallowed."
+    end
   end
+
+  private
 
   def login_not_approved_for?(user)
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?
