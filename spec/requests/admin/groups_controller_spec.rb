@@ -9,7 +9,7 @@ RSpec.describe Admin::GroupsController do
     sign_in(admin)
   end
 
-describe '#create' do
+  describe '#create' do
     it 'should work' do
       post "/admin/groups.json", group: {
         name: 'testing',
