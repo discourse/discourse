@@ -134,18 +134,6 @@
   margin-top: 18px;
 }
 
-.user-navigation {
-  width: 100%;
-  margin-top: 20px;
-  min-height: 20px;
-
-  h3 {
-    color: $primary;
-    margin: 10px;
-  }
-
-}
-
 .user-main {
 
   table.group-members {
@@ -159,11 +147,11 @@
     th {
       padding: 0.5em;
       text-align: right;
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
     }
     td {
       padding: 0.5em;
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
       img {
         margin-right: 10px;
       }
@@ -196,13 +184,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid $primary-low; 
+        border-bottom: 1px solid $primary-low;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid $primary-low; 
+        border-bottom: 1px solid $primary-low;
       }
     }
   }
@@ -215,7 +203,7 @@
     color: $secondary;
 
     .secondary {
-      background: $primary-low; 
+      background: $primary-low;
       font-size: 0.929em;
 
       .btn { padding: 3px 12px; }
@@ -251,8 +239,8 @@
       background: rgba($secondary, .85);
 
       blockquote {
-        background-color: $secondary-low; 
-        border-left-color: $secondary-low; 
+        background-color: $secondary-low;
+        border-left-color: $secondary-low;
       }
 
       h1 {
@@ -392,6 +380,8 @@
 
 
   .user-stream {
+    padding-top: 20px;
+
     .excerpt {
       margin: 5px 0;
       font-size: 0.929em;
@@ -412,7 +402,7 @@
     .item {
       padding: 20px 0 15px 0;
       background-color: $secondary;
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
     }
     .type {
       color: $primary;
@@ -584,10 +574,6 @@
     width: 100%;
     margin-top: 0;
   }
-}
-
-.user-archive {
-  display: inline-block;
 }
 
 // mobile fixups for badges
