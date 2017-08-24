@@ -708,6 +708,9 @@ en:
     no_likes_given:
       self: "You have not liked any posts."
       others: "No liked posts."
+    no_replies:
+      self: "You have not replied to any posts."
+      others: "No replies."
 
   topic_flag_types:
     spam:
