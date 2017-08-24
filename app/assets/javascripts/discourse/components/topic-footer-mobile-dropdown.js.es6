@@ -1,13 +1,16 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
-import DiscourseSelectBoxComponent from "discourse/components/d-select-box";
+import SelectBoxComponent from "discourse/components/select-box";
 
-export default DiscourseSelectBoxComponent.extend({
+export default SelectBoxComponent.extend({
+  textKey: "name",
+
+  headerText: I18n.t("topic.controls"),
+
+  maxCollectionHeight: 300,
+
   init() {
     this._super();
 
-    this.set("textKey", "name");
-    this.set("defaultHeaderText", I18n.t("topic.controls"));
-    this.set("maxCollectionHeight", 300);
     this._createContent();
   },
 

@@ -1,17 +1,18 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
+import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default Ember.Component.extend({
+  layoutName: "components/select-box",
+
   classNames: "select-box",
+
+  width: 220,
 
   classNameBindings: ["expanded:is-expanded"],
 
-  attributeBindings: ['componentStyle:style'],
-  componentStyle: function() {
-    return Ember.String.htmlSafe(`width: ${this.get("maxWidth")}px`);
-  }.property("maxWidth"),
-
   expanded: false,
   focused: false,
+  tabindex: 0,
 
   caretUpIcon: "caret-up",
   caretDownIcon: "caret-down",
@@ -19,6 +20,7 @@ export default Ember.Component.extend({
   icon: null,
 
   value: null,
+  selectedContent: null,
   noContentText: I18n.t("select_box.no_content"),
   lastHoveredId: null,
 
@@ -43,6 +45,31 @@ export default Ember.Component.extend({
 
   renderBody: false,
 
+  castInteger: false,
+
+  filterFunction: function() {
+    return (selectBox) => {
+      const filter = selectBox.get("filter").toLowerCase();
+      return _.filter(selectBox.get("content"), (content) => {
+        return content[selectBox.get("textKey")].toLowerCase().indexOf(filter) > -1;
+      });
+    };
+  },
+
+  selectBoxRowTemplate: function() {
+    return (rowComponent) => {
+      let template = "";
+
+      if (rowComponent.get("content.icon")) {
+        template += iconHTML(Handlebars.escapeExpression(rowComponent.get("content.icon")));
+      }
+
+      template += `<p class="text">${Handlebars.escapeExpression(rowComponent.get("text"))}</p>`;
+
+      return template;
+    };
+  }.property(),
+
   init() {
     this._super();
 
@@ -52,8 +79,7 @@ export default Ember.Component.extend({
 
     this.setProperties({
       componentId: this.elementId,
-      filteredContent: [],
-      selectedContent: {}
+      filteredContent: []
     });
   },
 
@@ -71,9 +97,7 @@ export default Ember.Component.extend({
     if (Ember.isEmpty(this.get("filter"))) {
       this.set("filteredContent", this._remapContent(this.get("content")));
     } else {
-      const filtered = _.filter(this.get("content"), (content) => {
-        return content[this.get("textKey")].toLowerCase().indexOf(this.get("filter")) > -1;
-      });
+      const filtered = this.filterFunction()(this);
       this.set("filteredContent", this._remapContent(filtered));
     }
   },
@@ -95,18 +119,26 @@ export default Ember.Component.extend({
     $(document).off("keydown.select-box");
     this.$(".select-box-offscreen").off("focusin.select-box");
     this.$(".select-box-offscreen").off("focusout.select-box");
+    this.$(".select-box-offscreen").off("keydown.select-box");
+    $(window).off("resize.select-box");
   },
 
   @on("didRender")
   _configureSelectBoxDOM: function() {
+    this.$().css("width", this.get("width"));
+    this.$(".select-box-header").css("height", this.$().height());
+    this.$(".select-box-filter").css("height", this.$().height());
+
     if (this.get("expanded")) {
-      this.$(".select-box-body").css('width', this.get("maxWidth"));
-      this.$(".select-box-filter .filter-query").focus();
+      this.$(".select-box-body").css('width', this.$().width());
       this.$(".select-box-collection").css("max-height", this.get("maxCollectionHeight"));
 
       this._bindTab();
-      this._applyDirection();
-      this._positionSelectBoxWrapper();
+
+      Ember.run.schedule('afterRender', () => {
+        this._applyDirection();
+        this._positionSelectBoxWrapper();
+      });
     } else {
       $(document).off("keydown.select-box");
       this.$(".select-box-wrapper").hide();
@@ -124,7 +156,10 @@ export default Ember.Component.extend({
 
     this.set("filteredContent", this._remapContent(this.get("content")));
     this._setSelectedContent(this.get("content"));
-    this.set("headerText", this.get("defaultHeaderText") || this.get("selectedContent.text"));
+
+    if (Ember.isNone(this.get("headerText"))) {
+      this.set("headerText", this.get("selectedContent.text"));
+    }
   },
 
   @on("didInsertElement")
@@ -143,8 +178,26 @@ export default Ember.Component.extend({
       this.set("focused", true);
     });
 
+    this.$(".select-box-offscreen").on("keydown.select-box", (event) => {
+      const keyCode = event.keyCode || event.which;
+
+      if(keyCode === 13 || keyCode === 40) {
+        this.setProperties({expanded: true, focused: false});
+        return false;
+      }
+
+      if(keyCode === 27) {
+        this.$(".select-box-offscreen").blur();
+        return false;
+      }
+    });
+
     this.$(".select-box-offscreen").on("focusout.select-box", () => {
       this.set("focused", false);
+    });
+
+    $(window).on("resize.select-box", () => {
+      this.set("expanded", false);
     });
   },
 
@@ -158,6 +211,10 @@ export default Ember.Component.extend({
     },
 
     onSelectRow(id) {
+      if(this.get("castInteger") === true) {
+        id = parseInt(id, 10);
+      }
+
       this.setProperties({
         value: id,
         expanded: false
@@ -184,8 +241,13 @@ export default Ember.Component.extend({
   },
 
   _normalizeContent(content) {
+    let id = content[this.get("idKey")];
+    if(this.get("castInteger") === true) {
+      id = parseInt(id, 10);
+    }
+
     return {
-      id: content[this.get("idKey")],
+      id,
       text: content[this.get("textKey")],
       icon: content[this.get("iconKey")]
     };
@@ -204,7 +266,7 @@ export default Ember.Component.extend({
     const headerHeight = this.$(".select-box-header").outerHeight();
 
     this.$(".select-box-wrapper").css({
-      width: this.get("maxWidth"),
+      width: this.$().width(),
       display: "block",
       height: headerHeight + this.$(".select-box-body").outerHeight()
     });
