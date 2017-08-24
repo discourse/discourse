@@ -100,10 +100,6 @@ h2#site-text-logo
   font-weight: normal;
 }
 
-.user-table {
-  position: relative;
-}
-
 .mobile-view .mobile-nav {
   &.messages-nav, &.notifications-nav, &.activity-nav, &.preferences-nav {
     position: absolute;
@@ -123,7 +119,7 @@ h2#site-text-logo
   }
   margin: 0;
   padding: 0;
-  background: $primary-low; 
+  background: $primary-low;
   list-style: none;
   overflow: visible;
   position: relative;
