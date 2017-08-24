@@ -272,3 +272,44 @@ componentTest('supports converting select value to integer', {
     });
   }
 });
+
+componentTest('dynamic headerText', {
+  template: '{{select-box value=1 content=content}}',
+
+  beforeEach() {
+    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+  },
+
+  test(assert) {
+    click(".select-box-header");
+    andThen(() => {
+      assert.equal(find(".select-box-header .current-selection").html().trim(), "robin");
+    });
+
+    click(".select-box-row[title='regis']");
+    andThen(() => {
+      assert.equal(find(".select-box-header .current-selection").html().trim(), "regis", "it changes header text");
+    });
+  }
+});
+
+componentTest('static headerText', {
+  template: '{{select-box value=1 content=content dynamicHeaderText=false headerText=headerText}}',
+
+  beforeEach() {
+    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+    this.set("headerText", "Choose...");
+  },
+
+  test(assert) {
+    click(".select-box-header");
+    andThen(() => {
+      assert.equal(find(".select-box-header .current-selection").html().trim(), "Choose...");
+    });
+
+    click(".select-box-row[title='regis']");
+    andThen(() => {
+      assert.equal(find(".select-box-header .current-selection").html().trim(), "Choose...", "it doesn’t change header text");
+    });
+  }
+});
