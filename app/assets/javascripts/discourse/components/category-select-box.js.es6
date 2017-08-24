@@ -61,6 +61,16 @@ export default SelectBoxComponent.extend({
     this.set("content", filteredCategories);
   },
 
+  @on("didRender")
+  _bindComposerResizing() {
+    this.appEvents.on("composer:resized", this, this.applyDirection);
+  },
+
+  @on("willDestroyElement")
+  _unbindComposerResizing() {
+    this.appEvents.off("composer:resized");
+  },
+
   @on("init")
   @observes("site.sortedCategories")
   _updateCategories() {
