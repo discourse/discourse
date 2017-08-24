@@ -15,6 +15,7 @@ module CategoryBadge
       when :bar then 'line-height: 1.25; margin-right: 5px;'
       when :box then 'line-height: 1.5; margin-top: 5px; margin-right: 5px;'
       when :bullet then 'line-height: 1; margin-right: 10px;'
+      when :none then ''
       end
 
     " style='font-size: 0.857em; white-space: nowrap; display: inline-block; position: relative; #{style}'"
@@ -45,6 +46,8 @@ module CategoryBadge
             inline_category_stripe(parent_category.color, 'display: block; position: absolute; width: 100%; height: 100%;')
           when :bullet
             inline_category_stripe(parent_category.color, 'display: inline-block; width: 5px; height: 10px; line-height: 1;')
+          when :none
+            ''
           end
         else
           category_stripe(parent_category.color, 'badge-category-parent-bg')
@@ -67,6 +70,8 @@ module CategoryBadge
           end
         when :bullet
           inline_category_stripe(category.color, "display: inline-block; width: #{category.parent_category_id.nil? ? 10 : 5}px; height: 10px;")
+        when :none
+          ''
         end
       else
         category_stripe(category.color, 'badge-category-bg')
@@ -86,6 +91,8 @@ module CategoryBadge
           "color: #{category.text_color}; #{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
         when :bullet
           'color: #222222; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
+        when :none
+          ''
         end + 'max-width: 150px; overflow: hidden; text-overflow: ellipsis;'
       else
         ''
