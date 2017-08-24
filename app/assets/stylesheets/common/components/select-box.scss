@@ -10,11 +10,10 @@
       -ms-flex-direction: column;
           flex-direction: column;
   position: relative;
-  z-index: 998;
   height: 34px;
 
   &.is-expanded {
-    z-index: 999;
+    z-index: 102;
 
     .select-box-wrapper {
       border: 1px solid $tertiary;
