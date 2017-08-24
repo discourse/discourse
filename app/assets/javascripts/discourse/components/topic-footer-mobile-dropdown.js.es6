@@ -6,6 +6,8 @@ export default SelectBoxComponent.extend({
 
   headerText: I18n.t("topic.controls"),
 
+  dynamicHeaderText: false,
+
   maxCollectionHeight: 300,
 
   init() {

@@ -17,6 +17,7 @@ export default Ember.Component.extend({
   caretUpIcon: "caret-up",
   caretDownIcon: "caret-down",
   headerText: null,
+  dynamicHeaderText: true,
   icon: null,
 
   value: null,
@@ -145,7 +146,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes("content.[]")
+  @observes("content.[]", "value")
   @on("didReceiveAttrs")
   _contentChanged: function() {
     if (!Ember.isNone(this.get("value"))) {
@@ -157,8 +158,10 @@ export default Ember.Component.extend({
     this.set("filteredContent", this._remapContent(this.get("content")));
     this._setSelectedContent(this.get("content"));
 
-    if (Ember.isNone(this.get("headerText"))) {
-      this.set("headerText", this.get("selectedContent.text"));
+    if (this.get("dynamicHeaderText") === true) {
+      if (!Ember.isNone(this.get("selectedContent.text"))) {
+        this.set("headerText", this.get("selectedContent.text"));
+      }
     }
   },
 
