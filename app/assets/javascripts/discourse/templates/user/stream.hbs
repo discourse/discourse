@@ -1,6 +1,4 @@
 {{#if model.noContent}}
-  <div class='no-content'>
-    {{{model.noContentHelp}}}
-  </div>
+  <div class='alert alert-info'>{{{model.noContentHelp}}}</div>
 {{/if}}
 {{user-stream stream=model}}
