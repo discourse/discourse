@@ -87,7 +87,7 @@ gem 'omniauth-twitter'
 gem 'omniauth-instagram'
 gem 'omniauth-github'
 
-gem 'omniauth-oauth2', '-> 1.3.1' , require: false
+gem 'omniauth-oauth2', '~> 1.3.1' , require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
