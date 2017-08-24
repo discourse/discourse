@@ -136,7 +136,7 @@ export default Ember.Component.extend({
       this._bindTab();
 
       Ember.run.schedule('afterRender', () => {
-        this._applyDirection();
+        this.applyDirection();
         this._positionSelectBoxWrapper();
       });
     } else {
@@ -272,7 +272,7 @@ export default Ember.Component.extend({
     });
   },
 
-  _applyDirection() {
+  applyDirection() {
     this.$().removeClass("is-reversed");
 
     const offsetTop = this.$()[0].getBoundingClientRect().top;
