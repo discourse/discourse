@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Managing groups as an admin" do
+RSpec.describe Admin::GroupsController do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
@@ -9,7 +9,7 @@ RSpec.describe "Managing groups as an admin" do
     sign_in(admin)
   end
 
-  describe 'creating a new group' do
+describe '#create' do
     it 'should work' do
       post "/admin/groups.json", group: {
         name: 'testing',
@@ -30,7 +30,7 @@ RSpec.describe "Managing groups as an admin" do
     end
   end
 
-  describe 'adding a new owner' do
+  describe '#add_owners' do
     it 'should work' do
       put "/admin/groups/#{group.id}/owners.json", group: {
         usernames: [user.username, admin.username].join(",")
