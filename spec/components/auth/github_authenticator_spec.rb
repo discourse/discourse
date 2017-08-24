@@ -193,8 +193,6 @@ describe Auth::GithubAuthenticator do
       let(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }
 
       it 'does not enqueue a download_avatar_from_url job' do
-        Sidekiq::Testing.fake!
-
         expect {
           authenticator.after_authenticate(auth_token_for(user_with_custom_avatar))
         }.to_not change(job_klass.jobs, :size)
@@ -203,8 +201,6 @@ describe Auth::GithubAuthenticator do
 
     context 'when user does not have a custom avatar' do
       it 'enqueues a download_avatar_from_url job' do
-        Sidekiq::Testing.fake!
-
         expect {
           authenticator.after_authenticate(auth_token_for(user))
         }.to change(job_klass.jobs, :size).by(1)
