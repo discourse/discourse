@@ -43,7 +43,7 @@ export default createWidget('topic-notifications-button', {
     const details = buttonDetails(level);
 
     const button = {
-      className: `btn toggle-notification-options`,
+      className: `toggle-notification-options`,
       label: null,
       icon: details.icon,
       action: 'toggleDropdown',
