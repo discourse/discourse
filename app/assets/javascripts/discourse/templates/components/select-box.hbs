@@ -22,8 +22,9 @@
     {{#if filterable}}
       {{component selectBoxFilterComponent
         onFilterChange=(action "onFilterChange")
-        filterIcon=filterIcon
-        filterPlaceholder=filterPlaceholder
+        icon=filterIcon
+        focused=filterFocused
+        placeholder=filterPlaceholder
       }}
     {{/if}}
 
@@ -40,4 +41,6 @@
   {{/if}}
 </div>
 
-<div class="select-box-wrapper"></div>
+{{#if wrapper}}
+  <div class="select-box-wrapper"></div>
+{{/if}}

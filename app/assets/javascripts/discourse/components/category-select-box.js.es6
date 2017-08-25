@@ -1,8 +1,8 @@
 import SelectBoxComponent from "discourse/components/select-box";
-import { categoryBadgeHTML } from 'discourse/helpers/category-link';
-import { observes, on } from 'ember-addons/ember-computed-decorators';
-import PermissionType from 'discourse/models/permission-type';
-import Category from 'discourse/models/category';
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { observes, on } from "ember-addons/ember-computed-decorators";
+import PermissionType from "discourse/models/permission-type";
+import Category from "discourse/models/category";
 
 export default SelectBoxComponent.extend({
   classNames: ["category-select-box"],
@@ -13,9 +13,9 @@ export default SelectBoxComponent.extend({
 
   castInteger: true,
 
-  width: '100%',
+  width: "100%",
 
-  @on("willInsertElement")
+  @on("init")
   @observes("selectedContent")
   _setHeaderText: function() {
     let headerText;
@@ -30,7 +30,7 @@ export default SelectBoxComponent.extend({
       headerText = this.get("selectedContent.text");
     }
 
-    this.set("headerText", headerText);
+    this.set("headerText", Handlebars.escapeExpression(headerText));
   },
 
   // original method is kept for compatibility
