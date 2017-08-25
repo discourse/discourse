@@ -15,7 +15,7 @@ function initializeDetails(api) {
     actions: {
       insertDetails() {
         this.get("toolbarEvent").applySurround(
-          "\n" + `[details=${I18n.t("composer.details_title")}]` + "\n",
+          "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
           "\n[/details]\n",
           "details_text",
           { multiline: true }
