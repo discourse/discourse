@@ -1,1 +1,1 @@
-<%= link_to field.data.name, "/u/#{field.data.username}" %>
+<%= link_to field.data.name, "/u/#{field.data.username}" if field.data.present? %>

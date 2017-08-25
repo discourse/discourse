@@ -11,8 +11,6 @@ by providing a `content_for(:javascript)` block.
   <%= javascript_include_tag js_path %>
 <% end %>
 
-<%= javascript_include_tag 'edgeryders/jquery.min' %>
-
 <%= yield :javascript %>
 
 <% if Rails.env.test? %>
