@@ -1,4 +1,6 @@
 class Tag < ActiveRecord::Base
+  include Searchable
+
   validates :name, presence: true, uniqueness: true
 
   has_many :tag_users # notification settings
@@ -11,6 +13,8 @@ class Tag < ActiveRecord::Base
 
   has_many :tag_group_memberships
   has_many :tag_groups, through: :tag_group_memberships
+
+  after_save :index_search
 
   COUNT_ARG = "topics.id"
 
@@ -55,6 +59,10 @@ class Tag < ActiveRecord::Base
 
   def full_url
     "#{Discourse.base_url}/tags/#{self.name}"
+  end
+
+  def index_search
+    SearchIndexer.index(self)
   end
 end
 
