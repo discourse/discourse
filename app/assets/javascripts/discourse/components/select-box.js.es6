@@ -104,6 +104,10 @@ export default Ember.Component.extend({
       this.set("filterable", false);
     }
 
+    if (this.get("castInteger")) {
+      this.set("value", parseInt(this.get("value"), 10));
+    }
+
     this.set("headerText", Handlebars.escapeExpression(this.get("headerText")));
 
     this.setProperties({
