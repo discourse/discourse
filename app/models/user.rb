@@ -1061,6 +1061,8 @@ class User < ActiveRecord::Base
 
   # Delete unactivated accounts (without verified email) that are over a week old
   def self.purge_unactivated
+    return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
+
     to_destroy = User.where(active: false)
       .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
       .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)

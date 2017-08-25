@@ -1183,6 +1183,15 @@ describe User do
       expect(all_users.include?(inactive)).to eq(true)
       expect(all_users.include?(inactive_old)).to eq(false)
     end
+
+    it "does nothing if purge_unactivated_users_grace_period_days is 0" do
+      SiteSetting.purge_unactivated_users_grace_period_days = 0
+      User.purge_unactivated
+      all_users = User.all
+      expect(all_users.include?(user)).to eq(true)
+      expect(all_users.include?(inactive)).to eq(true)
+      expect(all_users.include?(inactive_old)).to eq(true)
+    end
   end
 
   describe "hash_passwords" do
