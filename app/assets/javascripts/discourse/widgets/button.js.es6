@@ -78,5 +78,5 @@ export const ButtonClass = {
 export default createWidget('button', ButtonClass);
 
 createWidget('flat-button', jQuery.extend(ButtonClass, {
-  tagName: 'button.widget-button.btn-flat'
+  tagName: 'button.widget-button.btn.btn-flat'
 }));
