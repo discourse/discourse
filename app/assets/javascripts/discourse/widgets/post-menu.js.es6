@@ -219,6 +219,10 @@ function replaceButton(buttons, find, replace) {
 export default createWidget('post-menu', {
   tagName: 'section.post-menu-area.clearfix',
 
+  settings: {
+    collapseButtons: true
+  },
+
   defaultState() {
     return { collapsed: true, likedUsers: [], adminVisible: false };
   },
@@ -258,11 +262,16 @@ export default createWidget('post-menu', {
       const button = this.attachButton(i, attrs);
       if (button) {
         allButtons.push(button);
+
         if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
           visibleButtons.push(button);
         }
       }
     });
+
+    if (!this.settings.collapseButtons) {
+      visibleButtons = allButtons;
+    }
 
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
