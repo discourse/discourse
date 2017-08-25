@@ -37,6 +37,59 @@ task 'db:api_test_seed' => 'environment' do
   load Rails.root + 'db/api_test_seeds.rb'
 end
 
+def print_table(array)
+  width = array[0].keys.map { |k| k.to_s.length }
+  cols = array[0].keys.length
+
+  array.each do |row|
+    row.each_with_index do |(_, val), i|
+      width[i] = [width[i].to_i, val.to_s.length].max
+    end
+  end
+
+  array[0].keys.each_with_index do |col, i|
+    print col.to_s.ljust(width[i], ' ')
+    if i == cols - 1
+      puts
+    else
+      print ' | '
+    end
+  end
+
+  puts "-" * (width.sum + width.length)
+
+  array.each do |row|
+    row.each_with_index do |(_, val), i|
+      print val.to_s.ljust(width[i], ' ')
+      if i == cols - 1
+        puts
+      else
+        print ' | '
+      end
+    end
+  end
+end
+
+desc 'Statistics about database'
+task 'db:stats' => 'environment' do
+
+  sql = <<~SQL
+    select table_name,
+    (
+      select reltuples::bigint
+      from pg_class
+      where oid = ('public.' || table_name)::regclass
+    ) AS row_estimate,
+    pg_size_pretty(pg_relation_size(quote_ident(table_name))) size
+    from information_schema.tables
+    where table_schema = 'public'
+    order by pg_relation_size(quote_ident(table_name)) DESC
+  SQL
+
+  puts
+  print_table(Post.exec_sql(sql).to_a)
+end
+
 desc 'Rebuild indexes'
 task 'db:rebuild_indexes' => 'environment' do
   if Import::backup_tables_count > 0
