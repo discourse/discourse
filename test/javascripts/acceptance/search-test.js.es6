@@ -25,6 +25,18 @@ QUnit.test("search", (assert) => {
   });
 });
 
+QUnit.test("search for a tag", (assert) => {
+  visit("/");
+
+  click('#search-button');
+
+  fillIn('#search-term', 'evil');
+  keyEvent('#search-term', 'keyup', 16);
+  andThen(() => {
+    assert.ok(exists('.search-menu .results ul li'), 'it shows results');
+  });
+});
+
 QUnit.test("search scope checkbox", assert => {
   visit("/c/bug");
   click('#search-button');

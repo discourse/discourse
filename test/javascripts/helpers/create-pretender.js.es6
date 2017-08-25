@@ -108,6 +108,16 @@ export default function() {
             id: 1234
           }]
         });
+      } else if (request.queryParams.q === 'evil') {
+        return response({
+          posts: [{
+            id: 1234
+          }],
+          tags: [{
+            id: 6,
+            name: 'eviltrout'
+          }]
+        });
       }
 
       return response({});

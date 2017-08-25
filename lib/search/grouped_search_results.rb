@@ -14,6 +14,7 @@ class Search
       :posts,
       :categories,
       :users,
+      :tags,
       :more_posts,
       :more_categories,
       :more_users,
@@ -34,6 +35,7 @@ class Search
       @posts = []
       @categories = []
       @users = []
+      @tags = []
     end
 
     def find_user_data(guardian)
