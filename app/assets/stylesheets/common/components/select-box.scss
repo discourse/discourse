@@ -2,9 +2,7 @@
   border-radius: 3px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: inline-block;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -39,6 +37,16 @@
     .collection, {
       border-radius: 0 0 3px 3px;
     }
+
+    .select-box-header {
+      border-radius: 3px 3px 0 0;
+    }
+
+    &.is-reversed {
+      .select-box-header {
+        border-radius: 0 0 3px 3px;
+      }
+    }
   }
 
   &.is-highlighted {
@@ -62,8 +70,7 @@
   }
 
   .d-icon {
-    color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
-    font-size: 14px;
+    opacity: 0.7;
   }
 
   .select-box-header {
@@ -74,6 +81,9 @@
             box-sizing: border-box;
     cursor: pointer;
     outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     &.is-focused {
       border: 1px solid $tertiary;
@@ -142,24 +152,22 @@
 }
 
 .select-box .select-box-header {
-  .wrapper {
-    height: inherit;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+  height: inherit;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
 
   .current-selection {
     text-align: left;
@@ -169,6 +177,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    color: inherit;
   }
 
   .icon {
@@ -218,10 +227,6 @@
   margin: 5px;
   min-height: 1px;
 
-  .d-icon {
-    margin-right: 5px;
-  }
-
   .text {
     margin: 0;
   }
@@ -246,7 +251,8 @@
           justify-content: space-between;
   padding: 0 10px;
 
-  input, input:focus {
+  .filter-query, .filter-query:focus, .filter-query:active {
+    background: none;
     margin: 0;
     -webkit-box-flex: 1;
         -ms-flex: 1;

@@ -72,7 +72,7 @@
 
                   {{#if model.showCategoryChooser}}
                     <div class="category-input">
-                      {{category-select-box valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
+                      {{category-select-box value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
                       {{popup-input-tip validation=categoryValidation}}
                     </div>
                     {{#if model.archetype.hasOptions}}

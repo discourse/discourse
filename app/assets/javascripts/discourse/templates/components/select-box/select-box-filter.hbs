@@ -1,7 +1,7 @@
 {{input
   tabindex="-1"
   class="filter-query"
-  placeholder=filterPlaceholder
+  placeholder=placeholder
   key-up=onFilterChange
   autocomplete="off"
   autocorrect="off"
@@ -9,6 +9,6 @@
   spellcheck=false
 }}
 
-{{#if filterIcon}}
-  {{d-icon filterIcon}}
+{{#if icon}}
+  {{d-icon icon class="filter-icon"}}
 {{/if}}
