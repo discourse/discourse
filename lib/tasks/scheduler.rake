@@ -19,3 +19,17 @@ end
 task version_check: :environment do
   Jobs::VersionCheck.new.execute(nil)
 end
+
+def time
+  start = Time.now
+  yield
+  puts "Elapsed #{((Time.now - start) * 1000).to_i}ms"
+end
+
+desc "run every task the scheduler knows about in that order, use only for debugging"
+task 'scheduler:run_all' => :environment do
+  Scheduler::Manager.discover_schedules.each do |schedule|
+    puts "Running #{schedule}"
+    time { schedule.new.execute({}) }
+  end
+end
