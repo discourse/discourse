@@ -1,0 +1,1728 @@
+th:
+  js:
+    number:
+      format:
+        separator: "."
+        delimiter: ","
+      human:
+        storage_units:
+          format: '%n %u'
+          units:
+            byte:
+              other: ไบต์
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
+      short:
+        thousands: "{{number}}พัน"
+        millions: "{{number}}ล้าน"
+    dates:
+      time: "h:mm a"
+      timeline_date: "MMM YYYY"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} วันก่อน"
+      tiny:
+        half_a_minute: "< 1 นาที"
+        less_than_x_seconds:
+          other: "< %{count} วินาที"
+        x_seconds:
+          other: "%{count} วินาที"
+        x_minutes:
+          other: "%{count} นาที"
+        about_x_hours:
+          other: "%{count} ชั่วโมง"
+        x_days:
+          other: "%{count} วัน"
+        about_x_years:
+          other: "%{count} ปี"
+        over_x_years:
+          other: "> %{count} ปี"
+        almost_x_years:
+          other: "%{count} ปี"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
+      medium:
+        x_minutes:
+          other: "%{count} นาที"
+        x_hours:
+          other: "%{count} ชั่วโมง"
+        x_days:
+          other: "%{count} วัน"
+        date_year: "MMM D, 'YY"
+      medium_with_ago:
+        x_minutes:
+          other: "%{count} นาทีที่แล้ว"
+        x_hours:
+          other: "%{count} ชั่วโมงที่แล้ว"
+        x_days:
+          other: "%{count} วันที่แล้ว"
+      later:
+        x_days:
+          other: "%{count} วันหลังจากนั้น"
+        x_months:
+          other: "%{count} เดือนหลังจากนั้น"
+        x_years:
+          other: "%{count} ปีหลังจากนั้น"
+      previous_month: 'เดือนที่แล้ว'
+      next_month: 'เดือนถัดไป'
+    share:
+      topic: 'แบ่งปันลิงก์ไปยังกระทู้นี้'
+      post: 'โพส #%{postNumber}'
+      close: 'ปิด'
+      twitter: 'แบ่งปันลิงก์นี้บน Twitter'
+      facebook: 'แบ่งปันลิงก์นี้บน Facebook'
+      google+: 'แบ่งปันลิงก์บน Google+'
+      email: 'ส่งลิงก์นี้ทางอีเมล'
+    action_codes:
+      public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
+      private_topic: "ทำให้กระทู้นี้ส่วนตัว %{when} "
+      split_topic: "แบ่งกระทู้นี้เมื่อ %{when}"
+      invited_user: "ได้เชิญ %{who} %{when}"
+      invited_group: "ได้เชิญ %{who} %{when}"
+      removed_user: "ลบ %{who} %{when}"
+      removed_group: "ลบ %{who} %{when}"
+      autoclosed:
+        enabled: 'ปิดเมื่อ %{when}'
+        disabled: 'เปิดเมื่อ %{when}'
+      closed:
+        enabled: 'ปิดเมื่อ %{when}'
+        disabled: 'เปิดเมื่อ %{when}'
+      archived:
+        enabled: 'ถูกเก็บเข้าคลังเมื่อ %{when}'
+        disabled: 'ถูกเอกออกจากคลังเมื่อ %{when}'
+      pinned:
+        enabled: 'ถูกปักหมุดเมื่อ %{when}'
+        disabled: 'ถึงปลดหมุดเมื่อ %{when}'
+      pinned_globally:
+        enabled: 'ถูกปักหมุดแบบรวมเมื่อ %{when}'
+        disabled: 'ถูกปลดหมุดเมื่อ %{when}'
+      visible:
+        enabled: 'ถูกแสดงเมื่อ %{when}'
+        disabled: 'ถูกซ่อนเมื่อ %{when}'
+    topic_admin_menu: "จัดการกระทู้ "
+    emails_are_disabled: "อีเมลขาออกทั้งหมดจะถูกปิดโดยผู้ดูแลระบบ ไม่มีอีเมลแจ้งเตือนใดๆจะถูกส่งออกไป"
+    bootstrap_mode_enabled: "ตอนนี้คุณอยู่ในการใช้งานแบบ Bootstrap เพื่อให้การเปิดเว็บไซต์ใหม่ง่ายขึ้น ผู้ใช้งานใหม่ทุกคนจะได้ระบบความเชื่อถือที่ 1 และจะได้รับอีเมลสรุปทุกวัน แล้วจะเลิกส่งต่อเมื่อจำนวนผู้ใช้งานทั้งหมดเกิน %{min_users} คน"
+    bootstrap_mode_disabled: "การใช้งานแบบ Bootstrap ในอีก 24 ชั่วโมง"
+    s3:
+      regions:
+        ap_northeast_1: "เอเชียแปซิฟิก (โตเกียว)"
+        ap_northeast_2: "เอเชียแปซิฟิก (โซล)"
+        ap_southeast_1: "เอเชียแปซิฟิก (สิงคโปร)"
+        ap_southeast_2: "เอเชียแปซิฟิก (ซิสนี่)"
+        eu_central_1: "อียู (แฟรงก์เฟิร์ต)"
+        eu_west_1: "อียู (ไอร์แลนด์)"
+        sa_east_1: "อเมริกาใต้ (ซาวเปาโล)"
+        us_east_1: "อเมริกาตะวันออก (เวอร์จินเนียเหนือ)"
+        us_gov_west_1: "AWS GovCloud (อเมริกา)"
+        us_west_1: "อเมริกาตะวันตก (แคริฟอเนียเหนือ)"
+        us_west_2: "อเมริกาตะวันตก (โอเลก้อน)"
+    edit: 'แก้ไขหัวข้อและหมวดหมู่ของกระทู้นี้'
+    not_implemented: "เสียใจด้วย!! คุณสมบัตินั้นยังไม่เสร็จสมบูรณ์ในตอนนี้"
+    no_value: "ไม่ใช่"
+    yes_value: "ใช่"
+    generic_error: "เสียใจด้วย, มีความผิดพลาดขึ้น"
+    generic_error_with_reason: "มีข้อผิดพลาดเกิดขึ้น: %{error}"
+    sign_up: "สมัครสมาชิก"
+    log_in: "เข้าสู่ระบบ"
+    age: "อายุ"
+    joined: "เข้าร่วม"
+    admin_title: "ผู้ดูแลระบบ"
+    flags_title: "ธง"
+    show_more: "แสดงเพิ่มเติม"
+    show_help: "ตัวเลือก"
+    links: "ลิงก์"
+    links_lowercase:
+      other: "ลิงค์"
+    faq: "ถามตอบ"
+    guidelines: "คู่มือ"
+    privacy_policy: "นโยบายความเป็นส่วนตัว"
+    privacy: "ความเป็นส่วนตัว"
+    terms_of_service: "เงื่อนไขการบริการ"
+    mobile_view: "เปิดหน้าสำหรับอุปกรณ์เคลื่อนที่"
+    desktop_view: "เปิดหน้าสำหรับเดสท๊อป"
+    you: "คุณ"
+    or: "หรือ"
+    now: "เมื่อสักครู่นี้"
+    read_more: 'อ่านเพิ่มเติม'
+    more: "เพิ่มเติม"
+    less: "น้อย"
+    never: "ไม่เคย"
+    every_30_minutes: "ทุก 30 นาที"
+    every_hour: "ทุกชั่วโมง"
+    daily: "ทุกวัน"
+    weekly: "รายสัปดาห์"
+    every_two_weeks: "ทุกสองอาทิตย์"
+    every_three_days: "ทุกสามวัน"
+    max_of_count: "สูงสุดของ  {{count}}"
+    alternation: "หรือ"
+    character_count:
+      other: "{{count}} ตัวอักษร"
+    suggested_topics:
+      title: "กระทู้แนะนำ"
+      pm_title: "ข้อความที่แนะนำ"
+    about:
+      simple_title: "เกี่ยวกับ"
+      title: "เกี่ยวกับ %{title}"
+      stats: "สถิติเว็บไซต์"
+      our_admins: "แอดมินของพวกเรา"
+      our_moderators: "พิธีกรของพวกเรา"
+      stat:
+        all_time: "ทุกเวลา"
+        last_7_days: "7 วันที่แล้ว"
+        last_30_days: "30 วันที่แล้ว"
+      like_count: "ถูกใจ"
+      topic_count: "กระทู้"
+      post_count: "โพส"
+      active_user_count: "ผู้ใช้ที่ใช้งานอยู่"
+      contact: "ติดต่อเรา"
+      contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือเกิดความผิดพลาดร้ายแรงเกี่ยวกับเว็บไซต์นี้ โปรดติดต่อเราได้ที่ %{contact_info}"
+    bookmarked:
+      title: "บุ๊คมาร์ค"
+      clear_bookmarks: "ล้างบุ๊คมาร์ค"
+      help:
+        bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
+        unbookmark: "คลิกเพื่อลบบุ๊คมาร์คทั้งหมดในกระทู้นี้"
+    bookmarks:
+      not_logged_in: "เสียใจด้วย, คุณต้องเข้าระบบก่อนถึงจะทำบุ๊คม๊าคโพสได้"
+      created: "คุณได้ทำบุ๊คม๊าคโพสแล้ว"
+      not_bookmarked: "คุณได้อ่านโพสนี้แล้ว; คลิกเพื่อทำบุ๊คม๊าค"
+      last_read: "นี่เป็นโพสสุดท้ายที่คุณอ่าน คลิกเพื่อทำบุ๊คม๊าค"
+      remove: "ลบบุ๊คม๊าค"
+      confirm_clear: "คุณแน่ใจไหม ที่จะลบบุ๊คมาร์กในกระทู้นี้ทั้งหมด"
+    topic_count_latest:
+      other: "{{count}} กระทู้ใหม่หรือกระทู้อัพเดต"
+    topic_count_unread:
+      other: "{{count}} กระทู้ยังไม่อ่าน"
+    topic_count_new:
+      other: "{{count}} กระทู้ใหม่"
+    click_to_show: "กดเพื่อเปิด"
+    preview: "แสดงตัวอย่าง"
+    cancel: "ยกเลิก"
+    save: "บันทึกการเปลี่ยนแปลง"
+    saving: "กำลังบันทึก..."
+    saved: "บันทึกแล้ว!"
+    upload: "อัปโหลด"
+    uploading: "กำลังอัปโหลด..."
+    uploading_filename: "กำลังอัพโหลด {{filename}}..."
+    uploaded: "อัปโหลดเสร็จสมบูรณ์"
+    enable: "เปิดใช้งาน"
+    disable: "ปิดใช้งาน"
+    undo: "เลิกทำ"
+    revert: "ย้อนกลับ"
+    failed: "ล้มเหลว"
+    switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
+    switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
+    banner:
+      close: "ปิดแบนเนอร์นี้"
+      edit: "แก้ไขป้ายนี้ >>"
+    choose_topic:
+      none_found: "ไม่พบกระทู้ใดๆ"
+      title:
+        search: "ค้นหากระทู้โดยชื่อ url หรือ id"
+        placeholder: "ระบุชื่อกระทู้ที่นี่"
+    queue:
+      topic: "กระทู้:"
+      approve: 'อนุมัติ'
+      reject: 'ละทิ้ง'
+      delete_user: 'ลบผู้ใช้'
+      title: "ต้องการอนุมัติ"
+      none: "ไม่มีโพสให้คุณตรวจสอบ"
+      edit: "แก้ไข"
+      cancel: "ยกเลิก"
+      view_pending: "ดูโพสที่กำลังรออยู่"
+      has_pending_posts:
+        other: "กระทู้นี้มีโพสอีก <b>{{count}}</b> โพสที่รอบตรวจสอบอยู่"
+      confirm: "บันทึกการเปลี่ยนแปลง"
+      delete_prompt: "คุณแน่ใจหรือว่าจะลบ <b>%{username}</b>? นี่จะทำให้เราลบโพสและบล็อกอีเมลและไอพีของคนนี้"
+      approval:
+        title: "โพสต์นี้ต้องได้รับการอนุมัติ"
+        description: "เราได้รับโพสของคุณแล้วแต่จำเป็นต้องมีการอนุมัตโดยผู้ดูแลก่อนจึงจะปรากฎขึ้น กรุณารอสักครู่"
+        pending_posts:
+          other: "คุณมี <strong>{{count}}</strong> กระทู้ที่รอการยืนยัน"
+        ok: "ตกลง"
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> โพส <a href='{{topicUrl}}'>กระทู้</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>คุณ</a> โพส <a href='{{topicUrl}}'>กระทู้</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> ตอบกลับ <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>คุณ</a> ตอบกลับ <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> ตอบกลับ <a href='{{topicUrl}}'>กระทู้</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>คุณ</a> ได้ตอบกลับ <a href='{{topicUrl}}'>กระทู้</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> พูดถึง <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> พูดถึง <a href='{{user2Url}}'>คุณ</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>คุณ</a> ได้พูดถึง <a href='{{user2Url}}'>{{another_user}}</a>"
+      posted_by_user: "โพสโดย <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "โพสโดย <a href='{{userUrl}}'>คุณ</a>"
+      sent_by_user: "ถูกส่งโดย <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "ถูกส่งโดย <a href='{{userUrl}}'>คุณ</a>"
+    directory:
+      filter_name: "กรองด้วยชื่อผู้ใช้"
+      title: "ชื่อผู้ใช้"
+      likes_given: "ให้"
+      likes_received: "รับ"
+      topics_entered: "ดู"
+      topics_entered_long: "กระทู้ที่ดู"
+      time_read: "เวลาที่อ่าน"
+      topic_count: "กระทู้"
+      topic_count_long: "กระทู้สร้าง"
+      post_count: "ตอบ"
+      post_count_long: "ตอบกลับแล้ว"
+      no_results: "ไม่มีผลการค้นหา"
+      days_visited: "เยี่ยมชม"
+      days_visited_long: "วันที่ดู"
+      posts_read: "อ่าน"
+      posts_read_long: "อ่านโพส"
+      total_rows:
+        other: "%{count} ผู้ใช้"
+    group_histories:
+      actions:
+        add_user_to_group: "เพิ่มผู้ใช้"
+        remove_user_from_group: "ลบผู้ใช้"
+    groups:
+      logs:
+        acting_user: "ผู้ใช้ชั่วคราว"
+        target_user: "ผู้ใช้เป้าหมาย"
+        subject: "หัวข้อ"
+        details: "รายละเอียด"
+        from: "จาก"
+        to: "ถึง"
+      edit:
+        title: 'แก้ไขกลุ่ม'
+        full_name: 'ชื่อ-นามสกุล'
+        add_members: "เพิ่มสมาชิก"
+        delete_member_confirm: "ลบ '%{username}' ออกจาก '%{group}' กลุ่ม?"
+      add: "เพิ่ม"
+      join: "เข้าร่วมกลุ่ม"
+      leave: "ออกจากกลุ่ม"
+      request: "ส่งคำขอเข้าร่วมกลุ่ม"
+      automatic_group: กลุ่มอัตโนมัติ
+      closed_group: กลุ่มปิด
+      is_group_user: "คุณเป็นสมาชิกของกลุ่มนี้"
+      membership: "การเป็นสมาชิก"
+      name: "ชื่อ"
+      user_count: "จำนวนสมาชิก"
+      bio: "เกี่ยวกับกลุ่ม"
+      selector_placeholder: "เพิ่มสมาชิก"
+      owner: "เจ้าของ"
+      index:
+        title: "กลุ่ม"
+        empty: "ไม่มีกลุ่มที่เห็นได้"
+      title:
+        other: "กลุ่ม"
+      activity: "กิจกรรม"
+      members: "สมาชิก"
+      topics: "กระทู้"
+      posts: "โพสต์"
+      mentions: "พูดถึง"
+      messages: "ข้อความ"
+      alias_levels:
+        title: "ใครจะสามารถส่งข้อความและ @พูดถึง กลุ่มนี้?"
+        nobody: "ไม่มี"
+        only_admins: "เฉพาะผู้ดูแลระบบ"
+        mods_and_admins: "ผู้ดูแลระบบและผู้ตรวจสอบ"
+        members_mods_and_admins: "สมาชิกกลุ่ม ผู้ดูแลกระทู้ และผู้ดูแลเว็บ"
+        everyone: "ทุกคน"
+      trust_levels:
+        title: "ระดับความไว้ใจจะถูกให้ไปยังผู้ใช้โดยอัตโนมัติเมื่อพวกเขาเพิ่ม:"
+        none: "ไม่มี"
+      notifications:
+        watching:
+          title: "กำลังดู"
+          description: "คุณจะถูกแจ้งเตือนทุกๆโพสใหม่ในทุกๆข้อความและจำนวนใหม่จะถูกนับอละแสดง"
+        watching_first_post:
+          title: "ดูโพสต์แรก"
+          description: "คุณได้รับการแจ้งเตือนเกี่ยวกับโพสต์ใหม่ในกระทู้ในกลุ่มนี้"
+        tracking:
+          title: "ติดตาม"
+          description: "คุณจะได้รับการแจ้งเตือนเมื่อใครก็ตามเอ่ยชื่อของคุณ @name หรือตอบคุณ และจำนวนของการตอบจะถูกแสดง"
+        regular:
+          title: "ปกติ"
+          description: "คุณจะได้รับการแจ้งเตือนเมื่อใครก็ตามเอ่ยชื่อของคุณ @name หรือตอบคุณ"
+        muted:
+          title: "ปิด"
+          description: "คุณจะไม่ได้รับการแจ้งเตือนเกี่ยวกับกระทู้ใหม่ๆในกลุ่มนี้"
+    user_action_groups:
+      '1': "ให้ถูกใจ"
+      '2': "ได้รับการถูกใจ"
+      '3': "บุ๊คมาร์ค"
+      '4': "กระทู้"
+      '5': "ตอบ"
+      '6': "ตอบสนอง"
+      '7': "พูดถึง"
+      '9': "อ้างอิง"
+      '11': "แก้ไข"
+      '12': "รายการที่ส่งแล้ว"
+      '13': "กล่องข้อความ"
+      '14': "อยู่ระหว่างการพิจารณา"
+    categories:
+      all: "ดูทุกหมวดหมู่"
+      all_subcategories: "ทั้งหมด"
+      no_subcategory: "ไม่มี"
+      category: "หมวดหมู่"
+      category_list: "แสดงหมวดหมู่ทั้งหมด"
+      reorder:
+        title: "เรียงหมวดหมู่ใหม่"
+        title_long: "จัดการรายชื่อหมวดหมู่"
+        fix_order: "ตรึงตำแหน่ง"
+        fix_order_tooltip: "ไม่ใช่หมวดหมู่ทุกอันจะมีเลขตำแหน่งของตัวเอง ซึ่งนั่นอาจส่งผลให้เกิดผลที่ไม่ได้คาดหวังไว้"
+        save: "บันทึกตำแหน่ง"
+        apply_all: "นำไปใช้"
+        position: "ตำแหน่ง"
+      posts: "โพสต์"
+      topics: "กระทู้"
+      latest: "ล่าสุด"
+      latest_by: "ล่าสุดโดย"
+      toggle_ordering: "เปลี่ยนวิธีการจัดลำดับ"
+      subcategories: "หมวดหมู่ย่อย"
+      topic_stat_sentence:
+        other: "%{count} กระทู้ใหม่ในเวลาที่ผ่านมา %{unit}."
+    ip_lookup:
+      title: มองหาที่อยู่ไอพี
+      hostname: ชื่อโฮสต์
+      location: สถานที่
+      location_not_found: (ไม่ทราบ)
+      organisation: องค์กร
+      phone: โทรศัพท์
+      other_accounts: "บัญชีอื่นที่ใช้ไอพีนี้"
+      delete_other_accounts: "ลบ %{count}"
+      username: "ผู้ใช้"
+      trust_level: "TL"
+      read_time: "เวลาที่อ่าน"
+      topics_entered: "กระทู้ที่เข้า"
+      post_count: "# โพส"
+      confirm_delete_other_accounts: "คุณแน่ใจแล้วหรือว่าจะลบบัญชีเหล่านี้จริงๆ?"
+    user_fields:
+      none: "(เลือกตัวเลือก)"
+    user:
+      said: "{{username}}:"
+      profile: "ข้อมูลส่วนตัว"
+      mute: "ปิด"
+      edit: "แก้ไขการตั้งค่า"
+      new_private_message: "สร้างข้อความส่วนตัวใหม่"
+      private_message: "ข้อความส่วนตัว"
+      private_messages: "ข้อความ"
+      activity_stream: "กิจกรรม"
+      preferences: "การตั้งค่า"
+      expand_profile: "ขยาย"
+      bookmarks: "บุ๊คมาร์ค"
+      bio: "เกี่ยวกับฉัน"
+      invited_by: "แนะนำโดย"
+      trust_level: "ระดับความถูกต้อง"
+      notifications: "การแจ้งเตือน"
+      statistics: "สถิติ"
+      desktop_notifications:
+        label: "การแจ้งเตือนบนเดสท๊อป"
+        not_supported: "การแจ้งเตือนยังไม่สนับสนุนบนบาวเซอร์นี้ ขอโทษด้วย"
+        perm_default: "เปิดการแจ้งเตือน"
+        perm_denied_btn: "ไม่มีสิทธิ์เข้าถึง"
+        perm_denied_expl: "คุณปฎิเสทเพื่อรับการแจ้งเตือน เปิดการแจ้งเตือนในบาวเซอร์ของคุณ"
+        disable: "ปิดการแจ้งเตือน"
+        enable: "เปิดการแจ้งเตือน"
+        each_browser_note: "โปรดทราบ: คุณต้องเปลี่ยนการตั้วค่านี้บนทุกบาวเซอร์ของคุณ"
+      dismiss_notifications: "ซ่อนทั้งหมด"
+      dismiss_notifications_tooltip: "ทำการแจ้งเตือนทั้งหมดที่ยังไม่อ่านเป็นอ่านแล้ว"
+      disable_jump_reply: "อย่าข้ามไปโพสของฉันหลังจากตอบ"
+      dynamic_favicon: "แสดงจำนวนกระทู้ใหม่/ที่มีการอัพเดตบนไอค่อนบาวเซอร์"
+      external_links_in_new_tab: "เปิดลิงก์ภายนอกทั้งหมดในแท็บใหม่"
+      enable_quoting: "เปิดการตอบกลับการอ้างอิงโดยไฮไลท์ข้อความ"
+      change: "เปลี่ยนแปลง"
+      moderator: "{{user}} เป็นผู้ตรวจสอบ"
+      admin: "{{user}} เป็นผู้ดูแลระบบ"
+      moderator_tooltip: "ผู้ใช้นี้เป็นผู้ตรวจสอบ"
+      admin_tooltip: "ผู้ใช้นี้เป็นผู้ดูแลระบบ"
+      blocked_tooltip: "ผู้ใช้นี้ถูกระงับ"
+      suspended_notice: "ผู้ใช้นี้ถูกระงับตั้งแต่ {{date}}"
+      suspended_reason: "เหตุผล:"
+      github_profile: "Github"
+      email_activity_summary: "สรุปกิจกรรม"
+      mailing_list_mode:
+        label: "โหมดจดหมายข่าว"
+        enabled: "เปิดใช้งานโหมดจดหมายข่าว"
+        instructions: |
+          การตั้งค่านี้จะเปลี่ยนแปลงการสรุปกิจกรรม<br />
+          กระทู้และหมวดที่ปิดการแจ้งเตือนจะไม่มีในอีเมลเหล่านี้
+        individual: "ส่งอีเมลทุกครั้งที่โพสต์ใหม่"
+        many_per_day: "ส่งอีเมลหาฉันทุกๆโพสใหม่ (เกี่ยวกับ {{dailyEmailEstimate}} ต่อวัน)"
+        few_per_day: "ส่งอีเมลหาฉันทุกๆโพสใหม่ (เกี่ยวกับ 2 ต่อวัน)"
+      tag_settings: "แท็ก"
+      watched_tags: "ดูแล้ว"
+      tracked_tags: "ติดตาม"
+      watched_categories: "ดูแล้ว"
+      tracked_categories: "ติดตาม"
+      muted_categories: "ปิดเสียง"
+      muted_categories_instructions: "คุณจะไม่ได้รับการแจ้งเตือนใดๆเกี่ยวกับกระทู้ใหม่ในหมวดนี้ และจะไม่แสดงในเมนูยังไม่ได้อ่าน"
+      delete_account: "ลบบัญชีของคุณ"
+      delete_account_confirm: "คุณแน่ใจใหม่ที่จะลบบัญชีอย่างถาวร? การกระทำนี้ไม่สามารถยกเลิกได้"
+      deleted_yourself: "คุณลบบัญชีเสร็จเเรียบร้อยแล้ว"
+      delete_yourself_not_allowed: "คุณไม่สามารถลบบัญชีได้ในขณะนี้ กรุณาติดต่อผู้ดูแลระบบเพื่อลบบัญชีของคุณ"
+      unread_message_count: "ข้อความ"
+      admin_delete: "ลบ"
+      users: "ผู้ใช้"
+      muted_users: "ปิดการแจ้งเตือน"
+      muted_users_instructions: "ยกเลิกการแจ้งเตือนทุกอย่างกับบัญชีผู้ใช้นี้"
+      muted_topics_link: "แสดงกระทู้ที่ถูกปิดการแจ้งเตือน"
+      automatically_unpin_topics: "ยกเลิกกระทู้ปกหมุดอัตโนมัติเมื่อถึงท้ายของหน้า"
+      staff_counters:
+        flags_given: "ธงที่เป็นประโยชน์"
+        flagged_posts: "โพสปักธง"
+        deleted_posts: "ลบโพส"
+        suspensions: "ระงับการใช้งาน"
+        warnings_received: "คำเตือน"
+      messages:
+        all: "ทั้งหมด"
+        inbox: "กล่องจดหมายเข้า"
+        sent: "ส่ง"
+        archive: "คลัง"
+        groups: "กลุ่มของฉัน"
+        bulk_select: "เลือกข้อความ"
+        move_to_inbox: "ย้ายไปกล่องขาเข้า"
+        move_to_archive: "เก็บ"
+        failed_to_move: "เกิดความผิดพลาดในการย้ายหัวข้อที่เลือก (อาจเกิดจาดเครือข่ายของคุณล่ม)"
+        select_all: "เลือกทั้งหมด"
+      change_password:
+        success: "(อีเมลที่ส่งแล้ว)"
+        in_progress: "(กำลังส่งอีเมล)"
+        error: "(ผิดพลาด)"
+        action: "ส่งอีเมลรีเซ็ทรหัสผ่าน"
+        set_password: "ตั้งรหัสผ่าน"
+      change_about:
+        title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
+        error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
+      change_username:
+        title: "เปลี่ยน Username"
+        taken: "ขออภัย มีคนใช้ชื่อนี้แล้ว"
+        invalid: "ชื่อผู้ใช้ไม่ถูกต้อง จะต้องมีเพียงแค่ตัวอักษรและตัวเลขเท่านั้น"
+      change_email:
+        title: "เปลี่ยนอีเมล์"
+        taken: "อีเมล์ไม่ถูกต้อง"
+        error: "มีปัญหาในการเปลี่ยนอีเมล์ บางทีอีเมล์นี้อาจจะถูกใช้แล้ว?"
+        success: "เราส่งอีเมลไปยังที่อยู่อีเมลดังกล่าวแล้ว กรุณาทำตามขั้นตอนยืนยัน"
+      change_avatar:
+        title: "เปลี่ยนรูปโพรไฟล์"
+        gravatar: "ทำงานด้วย <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
+        gravatar_title: "เปลี่ยนภาพแทนตัวของคุณบนเว็บไซต์ Gravatar"
+        refresh_gravatar_title: "เรียกของคุณ Gravatar ใหม่"
+        letter_based: "รูปโพรไฟล์ที่ระบบทำให้อัตโนมัติ"
+        uploaded_avatar: "รูปกำหนดเอง"
+        uploaded_avatar_empty: "เพิ่มรูปกำหนดเอง"
+        upload_title: "อัปโหลดรูปภาพของคุณ"
+        upload_picture: "อัปโหลดรูปภาพ"
+        image_is_not_a_square: "ระวัง: เราได้ตัวรูปภาพบางส่วนของคุณ; ความยาวและความสูงจะไม่เท่ากัน"
+        cache_notice: "คุณได้เปลี่ยนรูปภาพประจำตัวเรียบร้อยแล้วแต่อาจใช้เวลาในการเปลี่ยนแปลงบ้างเนื่องจากแคชของบาวเซอร์"
+      change_profile_background:
+        title: "พื้นหลังโปรไฟล์"
+        instructions: "พื้นหลังโปรไฟล์จะถูกจัดให้อยู่กึ่งกลางและมีค่าปริยายของความกว้างเท่ากับ 850 พิกเซล"
+      change_card_background:
+        title: "พื้นหลังผู้ใช้"
+        instructions: "รูปพื้นหลังจะถูกจัดกลางและมีความกว้างมาตราฐานที่ 590px"
+      email:
+        title: "อีเมล"
+        ok: "เราจะส่งอีเมลไปหาคุณเพื่อยืนยันอีกครั้ง"
+        invalid: "กรุณาใส่อีเมลที่ถูกต้อง"
+        authenticated: "อีเมลของคุณได้รับการยืนยันโดย {{provider}}"
+        frequency_immediately: "เราจะอีเมลถึงคุณทันทีหากคุณยังไม่ได้อ่านสิ่งที่เราอีเมลหาคุณ"
+        frequency:
+          other: "เราจะอีเมลหาคุณเฉพาะสิ่งที่คุณไม่ได้เห็นในช่วง {{count}} นาที"
+      name:
+        title: "ชื่อ"
+        instructions_required: "ชื่อเต็มของคุณ"
+        too_short: "ชื่อของคุณสั้นไป"
+        ok: "ชื่อของคุณมีลักษณะที่ดี"
+      username:
+        title: "ชื่อผู้ใช้"
+        short_instructions: "ผู้คนสามารถพูดถึงคุณ @{{username}}"
+        available: "ชื่อผู้ใช้ของคุณสามารถใช้ได้"
+        not_available: "ใช้การไม่ได้ ลอง{{suggestion}}?"
+        too_short: "ชื่อผู้ใช้สั้นไป"
+        too_long: "ชื่อผู้ใช้ยาวไป"
+        checking: "กำลังตรวจสอบชื่อผู้ใช้"
+        prefilled: "อีเมลที่ตรงกับผู้ใช้ที่ลงทะเบียนนี้"
+      locale:
+        title: "ภาษา"
+        instructions: "ภาษา จะเปลี่ยนเมื่อคุณรีเฟรชหน้า"
+        default: "(ค่าเริ่มต้น)"
+      password_confirmation:
+        title: "ยืนยันรหัสผ่าน"
+      last_posted: "โพสล่าสุด"
+      last_emailed: "อีเมลล่าสุด"
+      last_seen: "เห็น"
+      created: "สมัครสมาชิกเมื่อ"
+      log_out: "ออกจากระบบ"
+      location: "ที่อยู่"
+      card_badge:
+        title: "ตราประจำบัตร"
+      website: "เว็บไซต์"
+      email_settings: "อีเมล์"
+      like_notification_frequency:
+        title: "แจ้งเตือนเมื่อมีคนกดถูกใจ"
+        always: "เสมอ"
+        first_time_and_daily: "ครั้งแรกที่โพสโดนชอบในวันนี้"
+        first_time: "ครั้งแรกที่โพสต์โดนชอบ"
+        never: "ไม่เคย"
+      email_previous_replies:
+        title: "เพิ่มข้อความตอบรับเก่าในอีเมล"
+        unless_emailed: "นอกจากว่าเคยส่งมาก่อน"
+        always: "เสมอ"
+        never: "ไม่เคย"
+      email_digests:
+        every_30_minutes: "ทุก 30 นาที"
+        every_hour: "ทุกชั่วโมง"
+        daily: "ทุกวัน"
+        every_three_days: "ทุกๆสามวัน"
+        weekly: "ทุกสัปดาห์"
+        every_two_weeks: "ทุกๆสองอาทิตย์"
+      include_tl0_in_digests: "รวมถึงเนื้อหาจากผู้ใช้ใหม่ในอีเมลสรุป"
+      email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
+      email_direct: "ส่งอีเมลเมื่อมี การอ้างอิงถึง ตอบโพสท์ พูดถึง @username หรือ ถูกเชิญเข้าไปในกระทู้"
+      email_private_messages: "ส่งอีเมลหาฉันเมื่อใครก็ตามส่งข้อความส่วนตัวมาหา"
+      email_always: "ส่งอีเมลเตือนแม้ว่าจะกำลังใช้งานอยู่"
+      other_settings: "อื่นๆ"
+      categories_settings: "หมวดหมู่"
+      new_topic_duration:
+        label: "พิจารณากระทู้ใหม่เมื่อ"
+        not_viewed: "ฉันยังไม่ได้ดูมันเลย"
+        last_here: "ถูกสร้างตั้งแต่ฉันดูครั้งล่าสุด"
+        after_1_day: "ถูกสร้างเมื่อวาน"
+        after_2_days: "ถูกสร้างเมื่อ 2 วันที่แล้ว"
+        after_1_week: "ถูกสร้างเมื่ออาทิตย์ที่แล้ว"
+        after_2_weeks: "ถูกสร้างเมื่อ 2 อาทิตย์ที่แล้ว"
+      auto_track_topics: "ตรวจกระทู้ที่ฉันเข้าอัตโนมัติ"
+      auto_track_options:
+        never: "ไม่เลย"
+        immediately: "ทันที"
+        after_30_seconds: "หลังจาก 30 วินาที"
+        after_1_minute: "หลังจาก 1 นาที"
+        after_2_minutes: "หลังจาก 2 นาที"
+        after_3_minutes: "หลังจาก 3 นาที"
+        after_4_minutes: "หลังจาก 4 นาที"
+        after_5_minutes: "หลังจาก 5 นาที"
+        after_10_minutes: "หลังจาก 10 นาที"
+      invited:
+        search: "พิมพ์เพื่อค้นหาการเชิญ..."
+        title: "เชิญชวน"
+        user: "เชิญชวนผู้ใช้"
+        sent: "ส่ง"
+        none: "ไม่มีคำเชิญที่รออยู่ให้แสดง"
+        truncated:
+          other: "กำลังแสดงคำเชิญ {{count}} รายการแรก"
+        redeemed: "ยืนยันการเชิญชวน"
+        redeemed_tab: "ยืนยัน"
+        redeemed_tab_with_count: "ยืนยันแล้ว ({{count}})"
+        redeemed_at: "ยืนยัน"
+        pending: "รอการเชิญ"
+        pending_tab: "กำลังรอ"
+        pending_tab_with_count: "กำลังรออยู่ ({{count}})"
+        topics_entered: "ดูกระทู้แล้ว"
+        posts_read_count: "อ่านโพส"
+        expired: "การเชิญหมดอายุ"
+        rescind: "ลบ"
+        rescinded: "การชวนถูกนำออก"
+        reinvite: "ส่งการเชิญชวนอีกครั้ง"
+        reinvite_all: "ส่งการเชิญชวนทั้งหมดอีกครั้ง"
+        reinvited: "ส่งการเชิญชวนอีกครั้ง"
+        reinvited_all: "ส่งการเชิญชวนทั้งหมดอีกครั้งแล้ว"
+        time_read: "เวลาอ่าน"
+        days_visited: "วันที่ดู"
+        account_age_days: "อายุบัญชีผู้ใช้ในหน่วยวัน"
+        create: "ส่งการเชิญชวน"
+        generate_link: "คัดลอกลิงค์เชิญชวน"
+        link_generated: "สร้างลิงค์เชิญชวนสำเร็จ!"
+        bulk_invite:
+          text: "เชิญชวนจากไฟล์"
+          success: "ไฟล์ถูกอัพโหลดเรียบร้อยแล้ว คุณจะได้รับการแจ้งเตือนทางข้อความหลังจากที่ทุกอย่างเรียบร้อยแล้ว"
+      password:
+        title: "รหัสผ่าน"
+        too_short: "รหัสผ่านสั้นเกินไป"
+        common: "รหัสผ่านง่ายเกินไป"
+        same_as_username: "รหัสเหมือนกับชื่อผู้ใช้ของคุณ"
+        same_as_email: "รหัสผ่านเหมือนกับอีเมล์ของคุณ"
+        ok: "รหัสผ่านของคุณดูดี"
+      summary:
+        title: "ภาพรวม"
+        stats: "สถิติ"
+        time_read: "เวลาอ่าน"
+        topic_count:
+          other: "กระทู้สร้าง"
+        post_count:
+          other: "โพสถูกสร้าง"
+        likes_given:
+          other: "<i class='fa fa-heart'></i> ให้"
+        likes_received:
+          other: "<i class='fa fa-heart'></i> ได้รับ"
+        days_visited:
+          other: "วันที่ดู"
+        posts_read:
+          other: "โพสที่อ่าน"
+        bookmark_count:
+          other: "บุ๊คมาร์ค"
+        top_replies: "ตอบสูงสุด"
+        no_replies: "ยังไม่มีใครตอบ"
+        more_replies: "การตอบอื่น"
+        top_topics: "กระทู้ยอดนิยม"
+        no_topics: "ยังไม่มีกระทู้"
+        more_topics: "กระทู้อื่นๆ"
+        top_badges: "ตราที่มากที่สุด"
+        no_badges: "ยังไม่มีตรา"
+        more_badges: "ตราอื่นๆ"
+        top_links: "ลิงก์ยอดนิยม"
+        no_links: "ยังไม่มีลิงก์เลย"
+        most_liked_by: "ถูกชอบมากที่สุดโดย"
+        most_liked_users: "ถูกชอบมากที่สุด"
+        most_replied_to_users: "ถูกตอบมากที่สุด"
+        no_likes: "ยังไม่มีใครชอบเลย"
+      associated_accounts: "การเข้าสู่ระบบ"
+      ip_address:
+        title: "ไอพีล่าสุด"
+      registration_ip_address:
+        title: "ไอพีที่ลงทะเบียน"
+      avatar:
+        title: "ภาพแทนตัว"
+        header_title: "ข้อมูลส่วนตัว,ข้อความ,บุ๊คมาร์คและการตั้งค่า"
+      title:
+        title: "ชื่อเรื่อง"
+      filters:
+        all: "ทั้งหมด"
+      stream:
+        posted_by: "โพสต์โดย"
+        sent_by: "ส่งโดย"
+        private_message: "ข้อความส่วนตัว"
+        the_topic: "กระทู้"
+    loading: "กำลังโหลด..."
+    errors:
+      prev_page: "พยายามที่จะโหลด"
+      reasons:
+        network: "เครือข่ายมีปัญหา"
+        server: "เซิร์ฟเวอร์มีปัญหา"
+        forbidden: "การเข้าถึงถูกปฏิเสธ"
+        unknown: "ผิดพลาด"
+        not_found: "ไม่หน้าดังกล่าว"
+      desc:
+        network: "โปรดตรวจสอบการเชื่อมต่อของคุณ"
+        network_fixed: "ดูเหมือนว่ามันจะกลับมา"
+        server: "รหัสข้อผิดพลาด: {{status}}"
+        forbidden: "คุณไม่ได้รับอนุญาคิให้ดูมัน"
+        not_found: "อ๊ะ, ระบบพยายามโหลดหน้าที่ไม่มีอยู่"
+        unknown: "มีบางอย่างผิดปกติไป"
+      buttons:
+        back: "ย้อนกลับ"
+        again: "ลองอีกครั้ง"
+        fixed: "โหลดหน้า"
+    close: "ปิด"
+    assets_changed_confirm: "เว็บนี้พึ่งได้รับการอัปเดต รีเฟรชเพื่อเข้าหน้าเว็บล่าสุด?"
+    logout: "คุณได้ออกจากระบบ"
+    refresh: "รีเฟรช"
+    read_only_mode:
+      enabled: "หน้าเว็บนี้อยู่ในสถานะอ่านเท่านั้น คุณสามารถดูได้แต่การตอบ ชอบ หรือการกระทำอื่นๆถูกปิดอยู่ในขณะนี้"
+      login_disabled: "การลงชื่อเข้าใช้จะไม่สามารถใช้งานได้เมื่อเว็บนี้ถูกตั้งเป็นรูปแบบอ่านอย่างเดียว"
+      logout_disabled: "การออกจากระบบนั้นไม่สามารถทำได้ในเวลาที่เว็บนั้นอยู่ในโหมด read only"
+    logs_error_rate_notice:
+      rate:
+        other: "%{count} ผิดพลาด/%{duration}"
+    learn_more: "เรียนรู้เพิ่มเติม..."
+    year: 'ปี'
+    year_desc: 'กระทู้ที่ถูกตั้งเมื่อ365 วันที่ผ่านมา'
+    month: 'เดือน'
+    month_desc: 'กระทู้ที่ถูกตั้งเมื่อ 30 วันที่ผ่านมา'
+    week: 'สัปดาห์'
+    week_desc: 'กระทู้ที่ถูกตั้งในรอบ 7 วันที่ผ่านมา'
+    day: 'วัน'
+    first_post: โพสแรก
+    mute: ปิดเสียง
+    unmute: เลิกปิดเสียง
+    last_post: โพสสุดท้าย
+    last_reply_lowercase: การตอบล่าสุด
+    replies_lowercase:
+      other: ตอบ
+    signup_cta:
+      sign_up: "สมัคร"
+      hide_session: "แจ้งเตือนฉันอีกทีพรุ่งนี้"
+      hide_forever: "ไม่เป็นไร"
+      hidden_for_session: "โอเค ฉันจะถามคุณอีกทีพรุ่งนี้ คุณสามารถใช้เมนู เข้าสู่ระบบ เพื่อสร้างบัญชีได้เหมือนกันนะ"
+      intro: "เอาล่ะ! :heart_eyes: ดูเหมือนคุณจะถูกใช้หัวข้อมากเลยนะ แต่คุณยังไม่ได้สร้างบัญชีเลย"
+      value_prop: "ถ้าคุณสร้างบัญชี เราจะสามารถจำได้แปะๆเลยว่าคุณกำลังอ่านอะไรและเมื่อคุณไม่อยู่ คุณจะได้รับการแจ้งเตือนทั้งจากที่นี่ จากอีเมล เมื่อใดก็ตามที่โพสถูกสร้าง และนอกจากนี้คุณยังสามารถถูกใจโพสเพื่อแบ่งปันความรักได้ด้วยนะ :heartbeat:"
+    summary:
+      enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
+      description: "ตอบทั้งหมด  <b>{{replyCount}}</b> ครั้ง"
+      description_time: "ตอบทั้งหมด <b>{{replyCount}}</b> ครั้งโดยมีเวลาการอ่านประมาณ <b>{{readingTime}} นาที</b>."
+      enable: 'สรุปกระทู้นี้'
+      disable: 'แสดงโพสต์ทั้งหมด'
+    deleted_filter:
+      enabled_description: "กระทู้นี้ซ่อนโพสต์ที่ถูกลบไปแล้ว"
+      disabled_description: "ลบโพสต์ที่แสดงทั้งหมดในกระทู้"
+      enable: "ซ่อนโพสต์ที่ถูกลบ"
+      disable: "แสดงโพสต์ที่ถูกลบ"
+    private_message_info:
+      title: "ข้อความ"
+      invite: "เชิญชวนอื่นๆ..."
+      remove_allowed_user: "คุณต้องการจะลบ {{name}} จากข้อความนี้ใช้หรือไม่"
+    email: 'อีเมล'
+    username: 'ชื่อผู้ใช้'
+    last_seen: 'เห็น'
+    created: 'สร้างเมื่อ'
+    created_lowercase: 'ตั้งเมื่อ'
+    trust_level: 'ระดับความน่าไว้ใจ'
+    search_hint: 'ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี'
+    create_account:
+      title: "สร้างบัญชีใหม่"
+      failed: "มีบางอย่างผิดพลาด อีเมลนี้อาจจะลงทะเบียนไว้แล้ว หากลืมรหัสให้กดลิงค์ลืมรหัสผ่าน"
+    forgot_password:
+      title: "ขอรหัสใหม่"
+      action: "ฉันลืมรหัสผ่าน"
+      invite: "กรอกชื่อผู้ใช้หรืออีเมลของท่าน, ทางเราจะส่งอีเมลสำหรับรีเซตรหัสผ่านให้"
+      reset: "รีเซ็ทรหัสผ่าน"
+      complete_username: "ถ้าบัญชีนี้ตรงกับชื่อผู้ใช้ <b>%{username}</b> คุณควรจะได้รับอีเมลเร็วๆนี้ ในอีเมลจะเป็นขั้นตอนการรีเซตรหัสผ่าน"
+      complete_email: "ถ้าบัญชีตรงกับ <b>%{email}</b> คุณจะได้รับอีเมลสำหรับขั้นตอนในการรีเซ็ตรหัสผ่านในเร็วๆนี้"
+      complete_username_found: "เราพบบัญชีที่ใช้ชื่อผู้ใช้ <b>%{username}</b> คุณจะได้รับอีเมลวิธีการรีเซ็ตรหัสผ่านในเร็วๆนี้"
+      complete_email_found: "เราพบบัญชีที่ใช้ชื่อผู้ใช้ <b>%{email}</b> คุณจะได้รับอีเมลวิธีการรีเซ็ตรหัสผ่านในเร็วๆนี้"
+      complete_username_not_found: "ไม่มีบัญชีตรงกับชื่อผู้ใช้ <b>%{username}</b>"
+      complete_email_not_found: "ไม่มีบัญชีตรงกับอีเมล <b>%{email}</b>"
+    login:
+      title: "เข้าสู่ระบบ"
+      username: "ชื่อผู้ใช้"
+      password: "รหัสผ่าน"
+      email_placeholder: "อีเมล์หรือชื่อผู้ใช้"
+      caps_lock_warning: "เปิดแคปล็อคอยู่"
+      error: "ข้อผิดพลาดไม่ทราบสาเหตุ"
+      rate_limit: "กรุณารอสักครู่ก่อนเข้าสู่ระบบอีกครั้ง"
+      blank_username_or_password: "กรุณากรอกอีเมลหรือชื่อผู้ใช้ และรหัสผ่าน"
+      reset_password: 'รีเซ็ทรหัสผ่าน'
+      logging_in: "กำลังลงชื่อเข้าใช้"
+      or: "หรือ"
+      authenticating: "กำลังตรวจสอบ ..."
+      awaiting_approval: "บัญชีของคุณยังไม่ได้รับการยืนยันโดยทีมงาน คุณจะได้รับอีเมลแจ้งเมื่อคุณได้รับการยืนยันแล้ว"
+      requires_invite: "ขออภัย, สามารถเข้าถึงได้เฉพาะผู้ที่ได้รับเชิญเท่านั้น"
+      not_activated: "คุณไม่สามารถเข้าสู่ระบบได้ เราได้ส่งอีเมลยืนยันตัวตนไปหาคุณที่  <b>{{sentTo}}</b> กรุณาทำตามขั้นตอนในอีเมลเพื่อยืนยันตัวตนของคุณ"
+      not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยไอพีนี้ได้"
+      admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
+      resend_activation_email: "คลิกเพื่อส่งอีเมลยืนยันตัวตนอีกครั้ง"
+      sent_activation_email_again: "เราส่งอีเมลยืนยันตัวตนใหม่ไปให้คุณที่ <b>{{currentEmail}}</b> กรุณารอสักครู่และตรวจสอบในถังขยะอีเมลของคุณ"
+      to_continue: "โปรดเข้าสู่ระบบ"
+      preferences: "คุณจำเป็นต้องเข้าสู่ระบบจึงจะสามารถเปลี่ยนการตั้งค่าส่วนตัวของคุณได้"
+      forgot: "ฉันจำรายละเอียดบัญชีของตัวเองไม่ได้"
+      google:
+        title: "ด้วย Google"
+        message: "กำลังตรวจสอบกับ Google (ต้องไม่ปิดกั้นป๊อปอัพ)"
+      google_oauth2:
+        title: "ด้วย Google"
+        message: "กำลังตรวจสอบกับ Google (ต้องไม่ปิดกั้นป๊อปอัพ)"
+      twitter:
+        title: "ด้วย Twitter"
+        message: "กำลังตรวจสอบกับ Twitter (ต้องไม่ปิดกั้นป๊อปอัพ)"
+      instagram:
+        title: "ด้วย Instragram"
+        message: "เข้าใช้งานด้วย Instragram (โปรดแน่ใจว่าไม่ได้เปิดใช้งานการป้องกัน pop up)"
+      facebook:
+        title: "ด้วย Facebook"
+        message: "กำลังตรวจสอบกับ Facebook (ต้องไม่ปิดกั้นป๊อปอัพ)"
+      yahoo:
+        title: "ด้วย Yahoo"
+        message: "กำลังตรวจสอบกับ Yahoo (ต้องไม่ปิดกั้นป๊อปอัพ)"
+      github:
+        title: "ด้วย GitHub"
+        message: "กำลังตรวจสอบกับ Github (ต้องไม่ปิดกั้นป๊อปอัพ)"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
+    composer:
+      emoji: "อีโมจิ :)"
+      more_emoji: "อื่นๆ..."
+      options: "ตัวเลือก"
+      whisper: "กระซิบ"
+      add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
+      toggle_whisper: "เปิดกระซิบ"
+      posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ?"
+      saving_draft_tip: "กำลังบันทึก..."
+      saved_draft_tip: "บันทึกแล้ว"
+      saved_local_draft_tip: "บันทึกบนอุปกรณ์"
+      similar_topics: "กระทู้ของคุณ ใกล้เคียงกับ ..."
+      drafts_offline: "ร่างออฟไลน์"
+      error:
+        title_missing: "ต้องมีชื่อเรื่อง"
+        title_too_short: "ชื่อเรื่องต้องมีอย่างน้อย {{min}} ตัวอักษร"
+        title_too_long: "ชื่อเรื่องต้องไม่ยาวเกิน {{max}} ตัวอักษร"
+        post_missing: "โพสไม่สามารถว่างได้"
+        post_length: "โพสต้องมีอย่างน้อย {{min}} ตัวอักษร"
+        try_like: 'คุณได้ลองปุ่ม <i class="fa fa-heart"></i> หรือยัง? '
+        category_missing: "คุณต้องเลือกหมวดหมู่"
+      save_edit: "บันทึกการแก้ไข"
+      reply_original: "ตอบบนกระทู้ต้นฉบับ"
+      reply_here: "ตอบที่นี่"
+      reply: "ตอบกลับ"
+      cancel: "ยกเลิก"
+      create_topic: "สร้างกระทู้"
+      create_pm: "ข้อความ"
+      title: "หรือกด Ctrl+Enter"
+      users_placeholder: "เพิ่มผู้ใช้"
+      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1  ประโยค"
+      edit_reason_placeholder: "ทำไมคุณถึงแก้ไข?"
+      show_edit_reason: "(เพิ่มสาเหตุที่แก้ไข)"
+      reply_placeholder: "พิมพ์ที่นี่. ใช้ Markdown, BBCode หรือ HTML เพื่อจัดรูปแบบ สามารถลากหรือวางรูปภาพได้"
+      view_new_post: "ดูโพสต์ใหม่ของคุณ"
+      saving: "กำลังบันทึก"
+      saved: "บันทึกแล้ว!"
+      saved_draft: "มีร่างโพส เลือกเพื่อทำต่อ"
+      uploading: "กำลังอัปโหลด..."
+      show_preview: 'แสดงตัวอย่าง &raquo;'
+      hide_preview: '&raquo; ซ่อนตัวอย่าง'
+      quote_post_title: "อ้างถึงโพสทั้งหมด"
+      bold_title: "หนา"
+      bold_text: "ตัวอักษรหนา"
+      italic_title: "ความสำคัญ"
+      italic_text: "ข้อความสำคัญ"
+      link_title: "ลิงค์"
+      link_description: "กรอกรายละเอียดลิงค์ที่นี่"
+      link_dialog_title: "เพิ่มลิงค์"
+      link_optional_text: "ชื่อเรื่องเพิ่มเติม"
+      link_url_placeholder: "http://example.com"
+      quote_title: "ส่วนอ้างถึง"
+      quote_text: "ส่วนอ้างถึง"
+      code_title: "ข้อความก่อนจัดรูปแบบ"
+      code_text: "ข้อความก่อนจัดรูปแบบเยื้อง 4 เคาะ"
+      upload_title: "อัปโหลด"
+      upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
+      olist_title: "รายการลำดับ"
+      ulist_title: "รายการดอกจันทร์"
+      list_item: "รายการ"
+      heading_title: "หัวเรื่อง"
+      heading_text: "หัวเรื่อง"
+      hr_title: "เส้นนอน"
+      help: "ช่วยเหลือการจัดรูปแบบ"
+      toggler: "ซ่อนหรือแสดงแผงตกแต่ง"
+      modal_ok: "ตกลง"
+      modal_cancel: "ยกเลิก"
+      cant_send_pm: "ขอโทษด้วย คุณไม่สามารถส่งข้อความหา %{username} ได้"
+      admin_options_title: "ตั้งค่าทางเลือกทีมงานสำหรับกระทู้นี้"
+    notifications:
+      title: "การแจ้งเตือนการพูดถึง,การตอบกลับไปยังโพส กระทู้ หรือข้อความส่วนตัว และอื่นๆของ @name "
+      none: "ไม่สามารถโหลดการแจ้งเตือนในขณะนี้"
+      more: "ดูการแจ้งเตือนก่อนหน้านี้"
+      total_flagged: "โพสที่ปักธงทั้งหมด"
+      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} และ อีก {{count}} คน</span> {{description}}</p>"
+      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> ยอมรับการเชิญของคุณ</p>"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ย้าย{{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>ได้รับ'{{description}}'</p>"
+      group_message_summary:
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} ข้อความในกลุ่ม {{group_name}} ของคุณ</p>"
+      alt:
+        mentioned: "ถูกพูดถึงโดย"
+        quoted: "ถูกอ้างอิงโดย"
+        replied: "ตอบแล้ว"
+        posted: "โพสโดย"
+        edited: "แก้ไขโพสของคุณโดย"
+        liked: "ได้ถูกใจโพสของคุณ"
+        private_message: "ข้อความส่วนตัวจาก"
+        invited_to_private_message: "ได้รับคำเชิญเพื่อข้อความส่วนตัวจาก"
+        invited_to_topic: "เชิญไปยังกระทู้จาก"
+        invitee_accepted: "การเชิญได้ตอบรับโดย"
+        moved_post: "โพสของคุณได้ถูกย้ายโดย"
+        linked: "ลิงค์ไปยังโพสของคุณ"
+        granted_badge: "ได้รับป้าย"
+        group_message_summary: "ข้อความในกล่องข้อความกลุ่ม"
+      popup:
+        mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} อ้างอิงถึงคุณใน "{{topic}}" - {{site_title}}'
+        replied: '{{username}} ตอบคุณใน "{{topic}}" - {{site_title}}'
+        posted: '{{username}} โพสท์ใน "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} ส่งข้อความส่วนตัวถึงคุณใน "{{topic}}" - {{site_title}}'
+        linked: '{{username}} ลิงค์โพสของคุณจาก "{{topic}}" - {{site_title}}'
+    upload_selector:
+      title: "เพิ่มรูปภาพ"
+      title_with_attachments: "เพิ่มรูปภาพหรือไฟล์"
+      from_my_computer: "จากอุปกรณ์"
+      from_the_web: "จากเว็บ"
+      remote_tip: "ลิงค์ไปยังรูปภาพ"
+      remote_tip_with_attachments: "ลิงค์ไปยังรูปหรือไฟล์ {{authorized_extensions}}"
+      local_tip: "เลือกภาพจากอุปกรณ์ของคุณ"
+      local_tip_with_attachments: "เลือกภาพหรือไฟล์จากอุปกรณ์ของคุณ {{authorized_extensions}}"
+      hint: "(คุณสามารถใช้เมาส์ลากไปวางในตัวแก้ไขข้อความเพื่ออัพโหลดได้ด้วย)"
+      hint_for_supported_browsers: "คุณยังสามารถลากหรือวางไฟล์ในช่องแก้ไขโดยตรงได้ด้วย"
+      uploading: "กำลังอัปโหลด"
+      select_file: "เลือกไฟล์"
+      image_link: "ลิงค์รูปของคุณจะชี้ไปที่"
+    search:
+      sort_by: "เรียงโดย"
+      relevance: "เกี่ยวข้อง"
+      latest_post: "โพสล่าสุด"
+      most_viewed: "ดูเยอะสุด"
+      most_liked: "ไลค์เยอะสุด"
+      select_all: "เลือกทั้งหมด"
+      clear_all: "ล้างทั้งหมด"
+      title: "ค้นหากระทู้, โพสต์, ผู้ใช้ หรือ หมวดหมู่"
+      no_results: "ไม่มีผลการค้นหา"
+      no_more_results: "ไม่พบการค้นหาเพิ่มเติมแล้ว"
+      searching: "กำลังค้นหา..."
+      post_format: "#{{post_number}} ด้วย {{username}}"
+      context:
+        user: "ค้นหาโพสต์ด้วย @{{username}}"
+        category: "ค้นหาหมวด #{{category}}"
+        topic: "ค้นหากระทู้นี้"
+        private_messages: "ค้นหาข้อความ"
+    hamburger_menu: "ไปยังกระทู้อื่นหรือหมวดหมู่อื่น"
+    new_item: "ใหม่"
+    go_back: 'ย้อนกลับ'
+    not_logged_in_user: 'หน้าผู้ใช้สำหรับสรุปกิจกรรมล่าสุดและการปรับแต่ง'
+    current_user: 'ไปยังหน้าผู้ใช้'
+    topics:
+      bulk:
+        unlist_topics: "กระทู้ที่ไม่ได้แสดง"
+        reset_read: "ล้างจำนวนการอ่าน"
+        delete: "ลบกระทู้นี้"
+        dismiss: "ซ่อน"
+        dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
+        dismiss_button: "ซ่อน..."
+        dismiss_tooltip: "ซ่อนเฉพาะโพสใหม่หรือหยุดติดตามกระทู้"
+        also_dismiss_topics: "หยุดติดตามกระทู้เหล่านี้และอย่าแสดงพวกนั้นให้ฉันเห็นเป็นหัวข้อที่ยังไม่ได้อ่านอีก"
+        dismiss_new: "ซ่อนใหม่"
+        toggle: "สลับการเลือกกระทู้จำนวนมาก"
+        actions: "การดำเนินการจำนวนมาก"
+        close_topics: "ลบกระทู้นี้"
+        archive_topics: "คลังกระทู้"
+        choose_new_category: "เลือกหมวดใหม่ให้กระทู้"
+        selected:
+          other: "คุณได้เลือก <b>{{count}}</b> กระทู้"
+      none:
+        unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
+        new: "คุณไม่มีกระทู้ใหม่"
+        read: "คุณยังไม่ได้อ่านกระทู้เลย"
+        posted: "คุณยังไม่ได้โพสในกระทู้ใดๆ"
+        latest: "ไม่มีกระทู้ล่าสุด น่าเสียใจจริงๆ"
+        hot: "ไม่มีกระทู้ที่น่าสนใจ"
+        bookmarks: "คุณยังไม่ได้บุ๊คมาร์คกระทู้ใดๆเลย"
+        category: "ยังไม่ในกระทู้ในหมวด {{category}}"
+        search: "ไม่พบผลการค้นหา"
+      bottom:
+        latest: "ไม่มีกระทู้ล่าสุด"
+        hot: "ไม่มีกระทู้ที่น่าสนใจ"
+        new: "ไม่มีกระทู้ใหม่"
+        bookmarks: "ไม่มีบุ๊คมาร์คในหัวข้อใดอีกแล้ว"
+    topic:
+      create: 'กระทู้ใหม่'
+      create_long: 'สร้างกระทู้ใหม่'
+      private_message: 'สร้างข้อความใหม่'
+      archive_message:
+        help: 'ย้ายข้อความไปกล่องเก็บข้อความ'
+        title: 'คลัง'
+      move_to_inbox:
+        title: 'ย้ายไปกล่องขาเข้า'
+        help: 'ย้ายข้อความกลับไปกล่องข้อความ'
+      list: 'กระทู้'
+      new: 'สร้างกระทู้'
+      unread: 'ยังไม่ได้อ่าน'
+      new_topics:
+        other: '{{count}} กระทู้ใหม่'
+      unread_topics:
+        other: '{{count}} กระทู้ที่ยังไม่ได้อ่าน'
+      title: 'กระทู้'
+      invalid_access:
+        title: "กระทู้นี้เป็นกระทู้ส่วนตัว"
+        description: "ขออภัยคุณไม่สามารถเข้าถึงกระทู้ที่ต้องการได้!"
+        login_required: "คุณจำเป็นต้องเข้าสู่ระบบเพื่อดูกระทู้นี้"
+      server_error:
+        title: "ไม่สามารถโหลดกระทู้ได้"
+      not_found:
+        title: "ไม่พบกระทู้"
+      total_unread_posts:
+        other: "คุณมี {{count}} ความคิดเห็น ที่ยังไม่ได้อ่านในกระทู้นี้"
+      unread_posts:
+        other: "คุณมี {{count}} ความคิดเห็นเก่า ที่ยังไม่ได้อ่านในกระทู้นี้"
+      back_to_list: "กลับไปที่รายชื่อกระทู้"
+      show_links: "แสดงลิงค์ในกระทู้นี้"
+      read_more_in_category: "ต้องการจะอ่านเพิ่มเหรอ? ลองดูกระทู้อื่นใน {{catLink}} หรือ {{latestLink}}"
+      read_more: "ต้องการจะอ่านเพิ่ม? {{catLink}} หรือ {{latestLink}}."
+      view_latest_topics: ดูกระทู้ล่าสุด
+      suggest_create_topic: ทำไมไม่สร้างกระทู้ละ
+      deleted: "หัวข้อถูกลบ"
+      auto_close_title: 'ปิดการตั้งค่าอัตโนมัติ'
+      timeline:
+        back: "กลับ"
+      notifications:
+        reasons:
+          '3_2': 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
+          '3_1': 'คุณจะได้รับการแจ้งเตือนเพราะคุณสร้างกระทู้นี้'
+          '3': 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
+          '0_2': 'คุณไม่ต้องการรับการแจ้งเตือนของกระทู้นี้'
+          '0': 'คุณไม่ต้องการรับการแจ้งเตือนของกระทู้นี้'
+        watching_pm:
+          title: "กำลังดู"
+        watching:
+          title: "กำลังดู"
+        tracking_pm:
+          title: "ติดตาม"
+        tracking:
+          title: "ติดตาม"
+        regular:
+          title: "ปกติ"
+        regular_pm:
+          title: "ปกติ"
+        muted_pm:
+          title: "ปิด"
+        muted:
+          title: "ปิดการแจ้งเตือน"
+      actions:
+        recover: "เลิกลบกระทู้"
+        delete: "ลบกระทู้"
+        open: "เปิดกระทู้"
+        close: "ปิดกระทู้"
+        multi_select: "เลือกโพส..."
+        pin: "ปักหมุดกระทู้"
+        unpin: "ยกเลิกปักหมุดกระทู้"
+        unarchive: "เลิกเก็บกระทู้เข้าคลัง"
+        archive: "เก็บกระทู้เข้าคลัง"
+        invisible: "ทำให้ไม่แสดงในรายชื่อ"
+        visible: "ทำให้แสดงในรายชื่อ"
+        reset_read: "ล้างข้อมูลวันที่"
+        make_public: "ทำให้กระทู้เป็นสาธารณะ"
+        make_private: "ทำเป็นข้อความส่วนตัว"
+      feature:
+        pin: "ปักหมุดกระทู้"
+        unpin: "ยกเลิกปักหมุดกระทู้"
+        pin_globally: "ปักหมุดกระทู้ทั้งหมด"
+        make_banner: "ป้ายกระทู้"
+        remove_banner: "ยกเลิกป้ายกระทู้"
+      share:
+        title: 'แบ่งปัน'
+        help: 'แบ่งปันลิงค์ไปยังกระทู้นี้'
+      flag_topic:
+        title: 'ธง'
+        help: 'ปังธงกระทู้นี้เพื่อติดตามหรือรับการแจ้งเตือนเกี่ยวกับกระทู้'
+        success_message: 'คุณปักธงกระทู้นี้แล้ว'
+      feature_topic:
+        title: "แนะนำกระทู้นี้"
+        confirm_pin: "ตอนนี้คุณมีกระทู้ที่ปักหมุดทั้งหมด {{count}} กระทู้ การมีกระทู้ที่ปักหมุดมากๆจะทำให้ผู้ใช้ใหม่และผู้ใช้ที่ไม่ระบุชื่อรำคาญ คุณแน่ใจจริงๆหรือว่าจะปักหมุกกระทู้เพิ่มอีก?"
+        confirm_pin_globally: "ตอนนี้คุณมีหัวข้อที่ปักหมุดแบบรวม {{count}} หัวข้อ การมีหัวข้อที่ปักหมุดมากๆจะทำให้ผู้ใช้ใหม่และผู้ใช้ที่ไม่ระบุชื่อรำคาญ คุณแน่ใจจริงๆหรือว่าจะปักหมุกหัวข้อเพิ่มอีก?"
+      inviting: "กำลังเชิญ..."
+      invite_private:
+        title: 'ข้อความที่ใช้เชิญ'
+        email_or_username: "อีเมลหรือชื่อผู้ใช้ที่ถูกเชิญ"
+        email_or_username_placeholder: "อีเมลหรือชื่อผู้ใช้"
+        action: "เชิญ"
+        success: "เราได้เชิญผู้ใช้นั้นให้มีส่วนร่วมในข้อความนี้แล้ว"
+        error: "ขออภัย เกิดความผิดพลาดในการเชิญผู้ใช้ท่านนี้"
+        group_name: "ชื่อกลุ่ม"
+      controls: "การควบคุมหัวข้อ"
+      invite_reply:
+        title: 'เชิญ'
+        username_placeholder: "ชื่อผู้ใช้"
+        action: 'ส่งคำเชิญ'
+        email_placeholder: 'name@example.com'
+      login_reply: 'เข้าสู่ระบบเพื่อตอบ'
+      filters:
+        n_posts:
+          other: "{{count}} โพส"
+        cancel: "เอาการกรองออก"
+      split_topic:
+        title: "ย้ายไปหัวข้อใหม่"
+        action: "ย้ายไปหัวข้อใหม่"
+        topic_name: "ชื่อหัวข้อใหม่"
+      merge_topic:
+        title: "ย้ายไปหัวข้อที่มีอยู่แล้ว"
+        action: "ย้ายไปหัวข้อที่มีอยู่แล้ว"
+      change_owner:
+        title: "เลือกเจ้าของโพส"
+        action: "เปลี่ยนความเป็นเจ้าของ"
+        error: "มีความผิดพลาดขณะเปลี่ยนความเป็นเจ้าของโพส"
+        label: "เจ้าของใหม่ของโพส"
+        placeholder: "ชื่อผู้ใช้ของเจ้าของใหม่"
+      change_timestamp:
+        action: "เปลี่ยนแปลงเวลา"
+      multi_select:
+        select: 'เลือก'
+        selected: 'เลือกแล้ว ({{count}})'
+        select_replies: 'เลือก +ตอบ'
+        delete: ลบที่เลือก
+        cancel: ยกเลิกการเลือก
+        select_all: เลือกทั้งหมด
+        deselect_all: ไม่เลือกทั้งหมด
+        description:
+          other: คุณได้เลือก <b>{{count}}</b> โพสต์.
+    post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      edit: "แก้ไข {{link}} {{replyAvatar}} {{username}}"
+      edit_reason: "เหตุผล:"
+      post_number: "โพสต์ {{number}}"
+      last_edited_on: "โพสแก้ไขล่าสุดเมื่อ"
+      reply_as_new_topic: "ตอบด้วยหัวข้อที่ลิงค์ไว้"
+      follow_quote: "ไปยังโพสที่ถูกอ้างถึง"
+      show_full: "แสดงโพสแบบเต็ม"
+      show_hidden: 'ดูเนื้อหาที่ถูกซ่อน'
+      deleted_by_author:
+        other: "(โพสถูกแจ้งลบโดยเจ้าของ และจะถูกลบใน %{count} ชั่วโมงเว้นแต่จะถูกปักธง)"
+      expand_collapse: "ขยาย/หด"
+      unread: "โพสนี้ยังไม่ถูกอ่าน"
+      has_replies:
+        other: "{{count}} ตอบ"
+      has_likes:
+        other: "{{count}} ชอบ"
+      has_likes_title:
+        other: "{{count}} ผู้คนที่ชอบโพสนี้"
+      has_likes_title_only_you: "คุณชอบโพสนี้"
+      errors:
+        create: "ขอโทษ, เกิดความผิดพลาดขณะกำลังสร้างโพสของคุณ โปรดลองใหม่อีกครั้ง"
+        edit: "ขอโทษ, เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ โปรดลองใหม่อีกครั้ง"
+        upload: "ขอโทษ, เกิดความผิดพลาดขณะกำลังอัพโหลดไฟล์ โปรดลองใหม่อีกครั้ง"
+        too_many_uploads: "ขอโทษ, คุณสามารถอัพโหลดไฟล์ได้ครั้งล่ะหนึ่งไฟล์"
+        image_upload_not_allowed_for_new_user: "ขออภัย, ผู้ใช้ใหม่ไม่สามารถอัพโหลดรูปภาพได้"
+        attachment_upload_not_allowed_for_new_user: "ขออภัย, ผู้ใช้ใหม่ไม่สามารถอัพโหลดไฟล์แนบได้"
+        attachment_download_requires_login: "ขออภัย, คุณต้องเข้าสู่ระบบเพื่อดาวห์โหลดไฟล์แนบ"
+      abandon:
+        confirm: "คุณต้องการทิ้งโพสของคุณจริงๆเหรอ?"
+        no_value: "ไม่ เก็บไว้"
+        yes_value: "ใช่ ทิ้งไป"
+      via_email: "โพสนี้ถูกเก็บโดยอีเมล"
+      whisper: "โพสนี้คือการกระซิบจากผู้ดูแล"
+      archetypes:
+        save: 'บันทึกการตั้งค่า'
+      controls:
+        like: "ชอบโพสนี้"
+        has_liked: "คุณได้ชอบโพสนี้แล้ว"
+        undo_like: "ย้อนคืนการชอบ"
+        edit: "แก้ไขโพสนี้"
+        edit_anonymous: "ขอโทษแต่คุณต้องเข้าสู่ระบบเพื่อแก้ไขโพสนี้"
+        delete: "ลบโพสนี้"
+        undelete: "เลือกลบโพสนี้"
+        more: "อื่น"
+        delete_replies:
+          confirm:
+            other: "คุณต้องการที่จะลบคำตอบจำนวน {{count}} คำตอบซึ่งตอบมายังหัวข้อนี้ด้วยหรือไม่?"
+          yes_value: "ใช่ ลบการตอบด้วย"
+          no_value: "ไม่, แค่โพสนี้พอ"
+        unhide: "เลิกซ่อน"
+      actions:
+        undo:
+          bookmark: "ย้อนคืนการบุ๊คมาร์ค"
+        by_you:
+          bookmark: "บุ๊คมาร์คโพสนี้"
+        by_you_and_others:
+          bookmark:
+            other: "คุณและอีก {{count}} คนได้บุ๊คมาร์คโพสนี้"
+        by_others:
+          bookmark:
+            other: "{{count}} คน ได้บุ๊คมาร์คโพสนี้"
+      delete:
+        confirm:
+          other: "คุณแน่ใจหรือว่าจะลบโพสเหล่านั้นออก?"
+    category:
+      delete: 'ลบหมวดหมู่'
+      delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก?"
+      email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
+      notifications:
+        watching:
+          title: "กำลังดู"
+        tracking:
+          title: "ติดตาม"
+        regular:
+          title: "ปกติ"
+        muted:
+          title: "ปิด"
+    flagging:
+      notify_action: 'ข้อความส่วนตัว'
+      delete_spammer: "ลบสแปมเมอร์"
+      yes_delete_spammer: "ใช่ ลบสแปมเมอร์ออก"
+    flagging_topic:
+      notify_action: "ข้อความส่วนตัว"
+    topic_map:
+      title: "ภาครวมหัวข้อ"
+    topic_statuses:
+      bookmarked:
+        help: "คุณได้บุ๊คมาร์คหัวข้อนี้แล้ว"
+      archived:
+        help: "หัวข้อนี้ถูกจัดเก้บแล้ว; นั่นหมายความว่ามันถูกแช่แข็งและไม่สามารถเปลี่ยนแปลงได้"
+      locked_and_archived:
+        help: "หัวข้อนี้ถูกปิดและถูกจัดเก็บแล้ว; นั่นหมายความว่ามันไม่รับข้อความใหม่และไม่สามารถเปลี่ยนแปลงได้"
+    posts: "โพส"
+    original_post: "โพสต้นฉบับ"
+    views: "ดู"
+    views_lowercase:
+      other: "ดู"
+    replies: "ตอบ"
+    activity: "กิจกรรม"
+    likes: "ชอบ"
+    likes_lowercase:
+      other: "ชอบ"
+    users: "ผู้ใช้"
+    users_lowercase:
+      other: "ผู้ใช้"
+    category_title: "หมวดหมู่"
+    history: "ประวัติ"
+    changed_by: "โดย {{author}}"
+    raw_email:
+      not_available: "ไม่พร้อม!"
+    categories_list: "รายการหมวดหมู่"
+    filters:
+      with_topics: "%{filter} หัวข้อ"
+      with_category: "%{filter} %{category} หัวข้อ"
+      latest:
+        title: "ล่าสุด"
+        title_with_count:
+          other: "ล่าสุด ({{count}})"
+        help: "หัวข้อพร้อมโพสล่าสุด"
+      hot:
+        title: "ร้อนแรง"
+      read:
+        title: "อ่าน"
+      search:
+        title: "ค้นหา"
+        help: "ค้นหาทุกหัวข้อ"
+      categories:
+        title: "หมวดหมู่"
+        title_in: "หมวดหมู่ - {{categoryName}}"
+        help: "ทุกหัวข้อจัดกลุ่มโดยหมวดหมู่"
+      unread:
+        title: "ยังไม่อ่าน"
+        title_with_count:
+          other: "ยังไม่ได้อ่าน ({{count}})"
+        help: "หัวข้อที่คุณกำลังจับตาหรือติดตามพร้อมโพสที่ยังไม่อ่าน"
+        lower_title_with_count:
+          other: "{{count}} ไม่ได้อ่าน"
+      new:
+        lower_title_with_count:
+          other: "{{count}} ใหม่"
+        lower_title: "ใหม่"
+        title: "ใหม่"
+        title_with_count:
+          other: "ใหม่ ({{count}})"
+        help: "หัวข้อที่ถูกสร้างในช่วงไม่กี่วัน"
+      posted:
+        title: "โพสของฉัน"
+        help: "หัวข้อที่คุณโพส"
+      bookmarks:
+        title: "บุ๊คมาร์ค"
+        help: "หัวข้อของคุณได้รับการบุ๊คมาร์ค"
+      category:
+        title: "{{categoryName}}"
+        title_with_count:
+          other: "{{categoryName}} ({{count}})"
+        help: "หัวข้อล่าสุดในหมวดหมู่ {{categoryName}}"
+      top:
+        title: "บน"
+        help: "หัวข้อที่มีการเลือกไหวมากที่สุดในปี เดือน อาทิตย์ หรือวันที่ผ่านมา"
+        all:
+          title: "ตลอดเวลา"
+        yearly:
+          title: "ปี"
+        quarterly:
+          title: "สามเดือน"
+        monthly:
+          title: "เดือน"
+        weekly:
+          title: "อาทิตย์"
+        daily:
+          title: "วัน"
+        all_time: "ตลอดเวลา"
+        this_year: "ปี"
+        this_quarter: "สามเดือน"
+        this_month: "เดือน"
+        this_week: "อาทิตย์"
+        today: "วันนี้"
+        other_periods: "ดูสูงสุด"
+    browser_update: 'ไม่เสียดาย, <a href="http://www.discourse.org/faq/#browser">บาวเซอร์ของคุณเก่าเกินไป</a>. โปรด <a href="http://browsehappy.com">เปลี่ยนบาวเซอร์ของคุณ</a>.'
+    permission_types:
+      full: "สร้าง / ตอบ / ดู"
+      create_post: "ตอบ / ดู"
+      readonly: "ดู"
+  admin_js:
+    type_to_filter: "พิมพ์เพื่อกรอง..."
+    admin:
+      title: 'ผู้ดูแลระบบดิสคอส'
+      moderator: 'ผู้ดูแล'
+      dashboard:
+        title: "แดชบอร์ด"
+        last_updated: "แดชบอร์ดพร้อมกับแก้ไขล่าสุด:"
+        version: "เวอร์ชั่น"
+        up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
+        critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
+        updates_available: "มีการอัพเดต"
+        please_upgrade: "โปรดอัพเดต!"
+        installed_version: "ติดตั้งแล้ว"
+        latest_version: "ล่าสุด"
+        problems_found: "เกิดปัญหาบางประการกับการติดตั้งดิสคอสของคุณ:"
+        last_checked: "ตรวจล่าสุด"
+        refresh_problems: "รีเฟรช"
+        no_problems: "ไม่พบปัญหา"
+        moderators: 'ผู้ดูแล:'
+        admins: 'ผู้ดูแลระบบ:'
+        blocked: 'ถูกบล็อก:'
+        suspended: 'ถูกปิด:'
+        private_messages_short: "ข้อความ"
+        private_messages_title: "ข้อความ"
+        mobile_title: "โทรศัพท์"
+        space_free: "{{size}} ว่าง"
+        uploads: "อัพโหลด"
+        backups: "สำรอง"
+        traffic_short: "การจราจร"
+        reports:
+          today: "วันนี้"
+          yesterday: "เมื่อวาน"
+          last_7_days: "เมื่อ 7 วันที่ผ่านมา"
+          last_30_days: "เมื่อ 30 วันที่ผ่านมา"
+          all_time: "ตลอดเวลา"
+          7_days_ago: "7 วันที่แล้ว"
+          30_days_ago: "30 วันที่แล้ว"
+          all: "ทั้งหมด"
+          view_table: "ตาราง"
+          view_graph: "กราฟ"
+          refresh_report: "โหลดรายงานใหม่"
+          start_date: "วันที่เริ่ม"
+          end_date: "วันที่จบ"
+          groups: "กลุ่มทั้งหมด"
+      commits:
+        latest_changes: "การเปลี่ยนแปลงล่าสุด: โปรดอัพเดตบ่อยๆ"
+        by: "โดย"
+      flags:
+        title: "ธง"
+        old: "เก่า"
+        active: "ใช้งาน"
+        agree: "เห็นด้วย"
+        agree_title: "ยืนยันว่าธงนี้ว่าถูกต้อง"
+        agree_flag_modal_title: "เห็นด้วยและ..."
+        agree_flag_hide_post: "เห็นด้วย (ซ่อนโพส + ส่งหลังไมค์)"
+        agree_flag_restore_post: "เห็นด้วย (เรียกโพสคืน)"
+        agree_flag_restore_post_title: "เรียกคืนโพสนี้"
+        agree_flag: "เห็นด้วยกับธงนี้"
+        delete: "ลบ"
+        delete_title: "ลบโพสที่ถูกติดป้ายแสดงไว้"
+        delete_post_defer_flag: "ลบโพสและลบธง"
+        delete_post_defer_flag_title: "ลบโพส ถ้าโพสนั้นเป็นโพสแรกให้ลบหัวข้อออก"
+        delete_post_agree_flag: "ลบโพสและเห็นด้วยกับธง"
+        delete_post_agree_flag_title: "ลบโพส ถ้าเป็นโพสแรกให้ลบหัวข้อออก"
+        delete_flag_modal_title: "ลบและ..."
+        delete_spammer: "ลบสแปมเมอร์"
+        disagree_flag_unhide_post: "ไม่เห็นด้วย (ยกเลิกการซ่อนโพส)"
+        disagree_flag: "ไม่เห็นด้วย"
+        clear_topic_flags: "เสร็จ"
+        dispositions:
+          agreed: "เห็นด้วย"
+          disagreed: "ไม่เห็นด้วย"
+        system: "ระบบ"
+        error: "มีบางอย่างผิดปกติไป"
+        reply_message: "ตอบ"
+        no_results: "ไม่มีธง"
+        topic_flagged: "ใน <strong>หัวข้อนี้</strong> ถูกปักธงแล้ว"
+        visit_topic: "ดูหัวข้อเพื่อกระทำบางอย่าง"
+      groups:
+        primary: "กลุ่มหลัก"
+        no_primary: "(ไม่มีกลุ่มหลัก)"
+        title: "กลุ่ม"
+        edit: "แก้กลุ่ม"
+        refresh: "รีโหลด"
+        new: "ใหม่"
+        selector_placeholder: "ชื่อผู้ใช้ใหม่"
+        about: "แก้ไขสมาชิกและชื่อกลุ่มของคุณได้ที่นี่"
+        group_members: "ชื่อสมาชิก"
+        delete: "ลบ"
+        delete_confirm: "ลบกลุ่มนี้?"
+        delete_failed: "ไม่สามารถลงกลุ่มได้ ถ้ากลุ่มนี้เป็นกลุ่มอัตโนมัติมันจะไม่สามารถถูกทำลายได้"
+        delete_owner_confirm: "ลบสิทธิ์การเป็นเจ้าของ ของ '%{username}'?"
+        add: "เพิ่ม"
+        add_members: "เพิ่มสมาชิก"
+        group_owners: เจ้าของ
+        add_owners: เพิ่มเจ้าของ
+        incoming_email: "ตั้งที่อยู่สำหรับอีเมลขาเข้า"
+        incoming_email_placeholder: "ใส่อีเมล"
+      api:
+        user: "ผู้ใช้"
+        title: "API"
+        key: "API Key"
+        revoke: "เอาออก"
+      plugins:
+        title: "ปลั้กอิน"
+        installed: "ปลั้กอินที่ติดตั้งแล้ว"
+        name: "ชื่อ"
+        none_installed: "คุณยังไม่มีปลั้กอินใดๆติดตั้ง"
+        version: "เวอร์ชั่น"
+        enabled: "เปิดใช้?"
+        is_enabled: "Y"
+        not_enabled: "N"
+      backups:
+        title: "สำรอง"
+        menu:
+          backups: "สำรอง"
+        operations:
+          cancel:
+            label: "ยกเลิก"
+      export_csv:
+        button_text: "ส่งออก"
+      export_json:
+        button_text: "ส่งออก"
+      invite:
+        button_text: "ส่งคำเชิญ"
+        button_title: "ส่งคำเชิญ"
+      customize:
+        title: "การปรับแต่ง"
+        delete: "ลบ"
+        colors:
+          delete_confirm: "ลบชุดสีนี้?"
+      email:
+        sent: "ส่ง"
+        incoming_emails:
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "เรื่อง"
+            error_placeholder: "ผิดพลาด"
+        logs:
+          filters:
+            user_placeholder: "ผู้ใช้"
+            address_placeholder: "name@example.com"
+      logs:
+        ip_address: "ไอพี"
+        topic_id: "หมายเลขหัวข้อ"
+        post_id: "หมายเลยโพสต์"
+        delete: 'ลบ'
+        edit: 'แก้ไข'
+        save: 'บันทึก'
+        staff_actions:
+          clear_filters: "แสดงทั้งหมด"
+          when: "เมื่อ"
+          deleted: "ไม่มีค่าใหม่ การบันทึกถูกลบ"
+          actions:
+            delete_user: "ลบผู้ใช้"
+            change_trust_level: "เปลี่ยนระดับความไว้ใจ"
+            delete_topic: "ลบหัวข้อ"
+            delete_post: "ลบโพส"
+            delete_category: "ลบหมวดหมู่"
+        screened_ips:
+          form:
+            add: "เพิ่ม"
+      users:
+        title: 'ผู้ใช้'
+        nav:
+          active: "ใช้งานอยู่"
+          pending: "กำลังรอ"
+          staff: 'ทีมงาน'
+          suspended: 'ระงับการใช้งาน'
+          blocked: 'ถูกบล็อก'
+          suspect: 'ต้องสงสัย'
+        approved: "ยืนยันหรือไม่"
+        approved_selected:
+          other: "ผู้ใช้งานที่ได้รับยืนยันแล้ว ({{count}})"
+        reject_selected:
+          other: "ผู้ใช้งานที่ไม่ได้รับยืนยันแล้ว ({{count}})"
+        titles:
+          active: 'ผู้ใช้ที่ใช้งานอยู่'
+          new: 'ผู้ใช้งานใหม่'
+          pending: 'ผู้ใช้งานที่รอการยืนยัน'
+          newuser: 'ผู้ใช้ที่ระดับความไว้ใจ 0 (ผู้ใช้ใหม่)'
+          basic: 'ผู้ใช้ที่ระดับความไว้ใจ 1 (ผู้ใช้ทั่วไป)'
+          member: 'ผู้ใช้ที่ระดับความไว้ใจ 2 (สมาชิก)'
+          regular: 'ผู้ใช้ที่ระดับความไว้ใจ 3 (ทั่วไป)'
+          leader: 'ผู้ใช้ที่ระดับความไว้ใจ 4 (ผู้นำ)'
+          staff: "ทีมงาน"
+          blocked: 'ผู้ใช้งานที่ถูกบล็อก'
+          suspended: 'ผู้ใช้งานที่ถูกระงับ'
+          suspect: 'ผู้ใช้งานที่ต้องสงสัย'
+        not_verified: "ยังไม่ได้รับการตรวจสอบ"
+        check_email:
+          title: "แสดงอีเมลผู้ใช้งาน"
+          text: "แสดง"
+      user:
+        suspend_failed: "มีข้อผิดพลาดในการระงับการใช้งาน {{error}}"
+        unsuspend_failed: "มีข้อผิดพลาดในเปิดการใช้งาน {{error}}"
+        suspend_duration: "ระงับการใช้งานถึงเมื่อไร"
+        suspend_duration_units: "(วัน)"
+        suspended_by: "ระงับการใช้งานโดย"
+        delete_all_posts: "ลบโพสทั้งหมด"
+        suspend: "ระงับการใช้งาน"
+        unsuspend: "เปิดการใช้งาน"
+        suspended: "ระงับการใช้งานหรือไม่"
+        blocked: "บล็อกหรือไม่"
+        ip_lookup: "ค้นหา IP"
+        unblock: 'ปลดบล็อก'
+        last_100_days: 'ใน 100 วันที่ผ่านมา'
+        private_topics_count: หัวข้อส่วนตัว
+        posts_read_count: อ่านโพส
+        post_count: โพสถูกสร้างแล้ว
+        topics_entered: หัวข้อที่ได้ดูแล้ว
+        approve: 'อนุมัติ'
+        approved_by: "อนุมัติโดย"
+        time_read: "เวลาอ่าน"
+        delete: "ลบผู้ใช้"
+        delete_forbidden_because_staff: "ผู้ดูแลระบบและผู้ดูแลไม่สามารถถูกลบได้"
+        delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสทั้งหมดของผู้ดูแลระบบและผู้ดูแลได้"
+        delete_confirm: "คุณแน่ใจหรือที่จะลบผู้ใช้นี้ออก? นี้เป็นการกระทำที่ย้อนคืนไม่ได้!"
+        delete_and_block: "ลบและ <b>บล็อก</b> อีเมลและไอพีนี้"
+        delete_dont_block: "ลบเท่านั้น"
+        deleted: "ผู้ใช้ถูกลบแล้ว"
+        trust_level_change_failed: "มีความผิดพลาดขณะกำลังเปลี่ยนระดับความไว้ใจของผู้ใช้"
+        trust_level_2_users: "ระดับความไว้ใจ 2 ผู้ใช้"
+        trust_level_3_requirements: "ระดับความไว้ใจ 3 ความต้องการ"
+        trust_level_locked_tip: "ระดับความไว้ใจถูกล็อกไว้ระบบจะไม่ปรับระดับความไว้ใจของผู้ใช้ขึ้นหรือลง"
+        trust_level_unlocked_tip: "ระดับความไว้ใจถูกปลดล็อก ระบบจะปรับระดับความไว้ใจขึ้นหรือลงของผู้ใช้ตามปกติ"
+        lock_trust_level: "ล็อกระดับความไว้ใจ"
+        unlock_trust_level: "ปลดล็อกระดับความไว้ใจ"
+        tl3_requirements:
+          title: "ความต้องการเพิ่มปรับระดับความไว้ใจเป็น 3"
+          value_heading: "ค่า"
+          requirement_heading: "ความต้องการ"
+          visits: "เยี่ยมชม"
+          days: "วัน"
+          posts_read: "อ่านโพส"
+          likes_given: "ได้ชอบ"
+          likes_received: "ได้รับการชอบ"
+          qualifies: "คุณสมบัติเพียงพอสำหรับระดับความไว้ใจที่ 3"
+          does_not_qualify: "คุณสมบัติไม่เพียงพอสำหรับระดับความไว้ใจที่ 3"
+          locked_will_not_be_promoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจขึ้น"
+          locked_will_not_be_demoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจลง"
+        sso:
+          external_id: "รหัสภายนอก"
+          external_username: "ชื่อผู้ใช้"
+          external_name: "ชื่อ"
+          external_email: "อีเมล"
+          external_avatar_url: "ที่อยู่ภาพประจำตัว"
+      user_fields:
+        title: "ช่องข้อมูลผู้ใช้"
+        help: "เพิ่มช่องที่คุณสามารถใส่ข้อมูลเพิ่มได้"
+        create: "สร้างช่องข้อมูลผู้ใช้"
+        untitled: "ไม่ได้ตั้งชื่อ"
+        name: "ชื่อช่อง"
+        type: "ประเภทช่อง"
+        description: "รายละเอียดช่อง"
+        save: "บันทึก"
+        edit: "แก้ไข"
+        delete: "ลบ"
+        cancel: "ยกเลิก"
+        delete_confirm: "คุณแน่ใจหรือว่าจะลบฟิวส์ของผู้ใช้นี้?"
+        options: "ตัวเลือก"
+        required:
+          title: "ต้องการเมื่อลงทะเบียน?"
+          enabled: "ต้องการ"
+          disabled: "ไม่ต้องการ"
+        editable:
+          title: "แก้ไขได้หลังลงทะเบียน?"
+          enabled: "แก้ไขได้"
+          disabled: "แก้ไขไม่ได้"
+        show_on_profile:
+          title: "แสดงในข้อมูลสาธารณะ?"
+          enabled: "แสดงแสดงในข้อมูลส่วนตัว"
+          disabled: "ไม่แสดงในข้อมูลส่วนตัว"
+        show_on_user_card:
+          title: "แสดงบนการ์ดผู้ใช้?"
+          enabled: "แสดงบนการ์ดผู้ใช้"
+          disabled: "ไม่แสดงบนการ์ดผู้ใช้"
+        field_types:
+          text: 'ช่องข้อความ'
+          confirm: 'การยืนยัน'
+          dropdown: "ดร็อปดาวน์"
+      site_text:
+        description: "คุณสามารถปรับแต่งข้อความบนฟอรั่มของคุณได้คุณอย่าง เริ่มได้โดยการค้นหาข้างล่างนี่"
+        search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
+        title: 'เนื้อความของข้อความ'
+        edit: 'แก้ไข'
+        revert: "ย้อนกลับการแก้ไข"
+        revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
+        go_back: "กลับไปค้นหา"
+        recommended: "เราแนะนำให้คุณแก้ไขข้อความให้ตรงกับความต้องการของคุณ:"
+      site_settings:
+        title: 'การตั้งค่า'
+        reset: 'ล้าง'
+        none: 'ไม่มี'
+        no_results: "ไม่มีผลการค้นหา"
+        clear_filter: "ล้าง"
+        add_url: "เพิ่ม URL"
+        add_host: "เพิ่มโฮส"
+        categories:
+          all_results: 'ทั้งหมด'
+          required: 'ต้องการ'
+          basic: 'การตั้งค่าพื้นฐาน'
+          users: 'ผู้ใช้'
+          posting: 'โพส'
+          email: 'อีเมล'
+          files: 'ไฟล์'
+          trust: 'ระดับความไว้ใจ'
+          security: 'ความปลอดภัย'
+          seo: 'SEO'
+          spam: 'ขยะ'
+          rate_limits: 'ข้อจำกัด'
+          developer: 'นักพัฒนา'
+          embedding: "การฝั่ง"
+          legal: "กฎ"
+          uncategorized: 'อื่นๆ'
+          backups: "สำรองข้อมูล"
+          login: "เข้าสู่ระบบ"
+          plugins: "ตัวเสริม"
+          user_preferences: "การตั้งค่าของผู้ใช้"
+          tags: "แท็ก"
+      badges:
+        new: ใหม่
+        name: ชื่อ
+        display_name: ชื่อที่ใช้แสดง
+        description: รายละเอียด
+        long_description: รายละเอียดแบบยาว
+        badge_grouping: กลุ่ม
+        granted_by: อนุญาตโดย
+        granted_at: อนุญาตเมื่อ
+        reason_help: (ลิงก์ไปยังหัวข้อหรือโพส)
+        save: บันทึก
+        delete: ลบ
+        revoke: เอาออก
+        reason: เหตุผล
+        icon: ไอค่อน
+        image: ภาพ
+        trigger_type:
+          trust_level_change: "เมื่อผู้ใช้เปลี่ยนระดับความไว้ใจ"
+        preview:
+          bad_count_warning:
+            header: "อันตราย!"
+          sample: "ตัวอย่าง:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link}
+            with_post_time: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> เมื่อ <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        add: "เพิ่ม Emoji ใหม่"
+        name: "ชื่อ"
+        image: "ภาพ"
+        delete_confirm: "คุณแน่ใจหรือว่าจะลบ Emoji :%{name}: ออก?"
+      embedding:
+        confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"
+        title: "ฝั่ง"
+        host: "อนุญาตโฮส"
+        edit: "แก้ไข"
+        category: "โพสไปยังหมวดหมู่"
+        add_host: "เพิ่มโฮส"
+        settings: "การตั้งการการฝั่ง"
+        feed_settings: "การตั้งค่าฟีด"
+        save: "บันทึกการตั้งค่าการฝั่ง"
+      permalink:
+        title: "ลิงค์ถาวร"
+        url: "URL"
+        topic_id: "เลขที่หัวข้อ"
+        topic_title: "หัวข้อ"
+        post_id: "เลขที่โพส"
+        post_title: "โพส"
+        category_id: "เลขที่หมวดหมู่"
+        category_title: "หมวดหมู่"
+        external_url: "ลิงก์ภายนอก"
+        delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
+        form:
+          label: "ใหม่:"
+          add: "เพิ่ม"
+          filter: "ค้นหา (URL หรือ ลิงก์ภายนอก)"
