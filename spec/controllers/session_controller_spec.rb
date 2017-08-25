@@ -933,7 +933,7 @@ describe SessionController do
 
     it 'fails when local logins disabled' do
       SiteSetting.enable_local_logins = false
-      put :email_login, token: SecureRandom.hex
+      xhr :put, :email_login, token: SecureRandom.hex
       expect(response.status.to_i).to eq(500)
     end
 
@@ -942,13 +942,13 @@ describe SessionController do
 
       it "doesn't log in the user when not approved" do
         SiteSetting.must_approve_users = true
-        put :email_login, token: token
+        xhr :put, :email_login, token: token
 
         expect(session[:current_user_id]).to be_blank
       end
 
       it 'logs in the user' do
-        put :email_login, token: token
+        xhr :put, :email_login, token: token
         expect(response).to be_success
         expect(session[:current_user_id]).to eq(user.id)
       end

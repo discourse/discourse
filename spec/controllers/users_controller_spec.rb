@@ -461,7 +461,7 @@ describe UsersController do
 
     it "enqueues the email token" do
       Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :email_login, user_id: user.id))
-      put :email_login, login: user.email
+      xhr :put, :email_login, login: user.email
     end
   end
 
