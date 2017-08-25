@@ -37,14 +37,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (data.user_found === true) {
           key += '_found';
           this.set('accountEmailOrUsername', '');
-          this.set('offerHelp', I18n.t(key, {email: escaped, username: escaped}));
+          this.set('offerHelp', I18n.t(key, { email: escaped, username: escaped }));
         } else {
           if (data.user_found === false) {
             key += '_not_found';
             extraClass = 'error';
           }
 
-          this.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
+          this.flash(I18n.t(key, { email: escaped, username: escaped }), extraClass);
         }
       }).catch(e => {
         this.flash(extractError(e), 'error');
@@ -88,7 +88,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
             extraClass = 'error';
           }
 
-          this.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
+          this.flash(I18n.t(key, { email: escaped, username: escaped }), extraClass);
         }
       }).catch(e => {
         this.flash(extractError(e), 'error');
