@@ -70,8 +70,6 @@ export default Ember.Component.extend({
   }.property(),
 
   applyDirection() {
-    this.$().removeClass("is-reversed");
-
     const offsetTop = this.$()[0].getBoundingClientRect().top;
     const windowHeight = $(window).height();
     const headerHeight = this.$(".select-box-header").outerHeight();
@@ -85,6 +83,7 @@ export default Ember.Component.extend({
         bottom: headerHeight + this.get("verticalOffset")
       });
     } else {
+      this.$().removeClass("is-reversed");
       this.$(".select-box-body").css({
         left: this.get("horizontalOffset"),
         top: headerHeight + this.get("verticalOffset"),
@@ -117,9 +116,14 @@ export default Ember.Component.extend({
   },
 
   @on("willDestroyElement")
-  _unbindEvents: function() {
+  _removeDocumentListeners: function() {
+    $(document).off("click.select-box");
+    $(document).off("keydown.select-box");
     $(window).off("resize.select-box");
-    $(document).off("click.select-box", "keydown.select-box");
+  },
+
+  @on("willDestroyElement")
+  _unbindEvents: function() {
     this.$(".select-box-offscreen").off(
       "focusin.select-box",
       "focusout.select-box",
@@ -138,8 +142,6 @@ export default Ember.Component.extend({
       this.$(".select-box-body").css("width", this.$().css("width"));
       this.$(".select-box-collection").css("max-height", this.get("maxCollectionHeight"));
 
-      this._bindTab();
-
       Ember.run.schedule("afterRender", () => {
         this.applyDirection();
 
@@ -148,23 +150,36 @@ export default Ember.Component.extend({
         }
       });
     } else {
-      $(document).off("keydown.select-box");
-
       if (this.get("wrapper")) {
         this.$(".select-box-wrapper").hide();
       }
     }
   },
 
+  @on("didRender")
+  _setupDocumentListeners: function() {
+    $(document)
+      .on("click.select-box", (event) => {
+        const $element = this.$();
+        const $target = $(event.target);
+
+        if (!$target.closest($element).length) {
+          this.set("expanded", false);
+        }
+      })
+      .on("keydown.select-box", (event) => {
+        const keyCode = event.keyCode || event.which;
+
+        if (this.get("expanded") && keyCode === 9) {
+          this.set("expanded", false);
+        }
+      });
+
+    $(window).on("resize.select-box", () => this.set("expanded", false) );
+  },
+
   @on("didInsertElement")
   _bindEvents: function() {
-    $(document).on("click.select-box", (event) => {
-      const clickOutside = $(event.target).parents(".select-box").attr("id") !== this.$().attr("id");
-      if (this.get("expanded") && clickOutside) {
-        this.setProperties({ expanded: false, focused: false });
-      }
-    });
-
     this.$(".select-box-offscreen").on("focusin.select-box", () => {
       this.set("focused", true);
     });
@@ -199,8 +214,6 @@ export default Ember.Component.extend({
         });
       }
     });
-
-    $(window).on("resize.select-box", () => this.set("expanded", false) );
   },
 
   @observes("value")
@@ -306,16 +319,6 @@ export default Ember.Component.extend({
       text: content[this.get("textKey")],
       icon: content[this.get("iconKey")]
     };
-  },
-
-  _bindTab() {
-    $(document).on("keydown.select-box", (event) => {
-      const keyCode = event.keyCode || event.which;
-
-      if (keyCode === 9) {
-        this.set("expanded", false);
-      }
-    });
   },
 
   _positionSelectBoxWrapper() {
