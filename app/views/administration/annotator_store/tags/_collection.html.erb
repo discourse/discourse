@@ -1,0 +1,94 @@
+<%#
+# Collection
+
+This partial is used on the `index` and `show` pages
+to display a collection of resources in an HTML table.
+
+## Local variables:
+
+- `collection_presenter`:
+  An instance of [Administrate::Page::Collection][1].
+  The table presenter uses `ResourceDashboard::COLLECTION_ATTRIBUTES` to determine
+  the columns displayed in the table
+- `resources`:
+  An ActiveModel::Relation collection of resources to be displayed in the table.
+  By default, the number of resources is limited by pagination
+  or by a hard limit to prevent excessive page load times
+
+[1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Collection
+%>
+
+<table aria-labelledby="<%= table_title %>">
+  <thead>
+  <tr>
+    <% collection_presenter.attribute_types.each do |attr_name, attr_type| %>
+        <th class="cell-label
+        cell-label--<%= attr_type.html_class %>
+        cell-label--<%= collection_presenter.ordered_html_class(attr_name) %>"
+            scope="col"
+            role="columnheader"
+            aria-sort="<%= sort_order(collection_presenter.ordered_html_class(attr_name)) %>">
+          <%= link_to(sanitized_order_params.merge(
+                              collection_presenter.order_params_for(attr_name)
+                      )) do %>
+              <%= t(
+                          "helpers.label.#{collection_presenter.resource_name}.#{attr_name}",
+                          default: attr_name.to_s,
+                  ).titleize %>
+
+              <% if collection_presenter.ordered_by?(attr_name) %>
+              <span class="cell-label__sort-indicator cell-label__sort-indicator--<%= collection_presenter.ordered_html_class(attr_name) %>">
+                <svg aria-hidden="true">
+                  <use xlink:href="#icon-up-caret"/>
+                </svg>
+              </span>
+              <% end %>
+          <% end %>
+        </th>
+    <% end %>
+    <% [valid_action?(:edit, collection_presenter.resource_name),
+        valid_action?(:destroy, collection_presenter.resource_name)].count(true).times do %>
+        <th scope="col"></th>
+    <% end %>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% resources.each do |resource| %>
+      <tr class="js-table-row"
+          tabindex="0"
+          <% if valid_action? :show, collection_presenter.resource_name %>
+          <%= %(role=link data-url=#{polymorphic_path([namespace, :annotator_store, resource])}) %>
+          <% end %>
+          >
+        <% collection_presenter.attributes_for(resource).each do |attribute| %>
+            <td class="cell-data cell-data--<%= attribute.html_class %>">
+              <div style="<%= "padding-left:#{params[:search].blank? ? (20 * resource.depth) : 0 }px;" if attribute.name == 'name' %>">
+                <a href="<%= polymorphic_path([namespace, :annotator_store, resource]) -%>" class="action-show">
+                  <%= render_field attribute %>
+                </a>
+              </div>
+            </td>
+        <% end %>
+
+        <% if valid_action? :edit, collection_presenter.resource_name %>
+            <td><%= link_to(
+                            t("administrate.actions.edit"),
+                            [:edit, namespace, :annotator_store, resource],
+                            class: "action-edit",
+                    ) %></td>
+        <% end %>
+
+        <% if valid_action? :destroy, collection_presenter.resource_name %>
+            <td><%= link_to(
+                            t("administrate.actions.destroy"),
+                            [namespace, :annotator_store, resource],
+                            class: "text-color-red",
+                            method: :delete,
+                            data: {confirm: t("administrate.actions.confirm")}
+                    ) %></td>
+        <% end %>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

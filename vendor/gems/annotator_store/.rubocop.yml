@@ -1,0 +1,37 @@
+# RuboCop is a Ruby static code analyzer. Out of the box it will enforce many of
+# the guidelines outlined in the community Ruby Style Guide here;
+# https://github.com/bbatsov/ruby-style-guide
+#
+# See also; https://github.com/bbatsov/rubocop
+
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  RunRailsCops: true
+
+Metrics/AbcSize:
+  Max: 60
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  CountComments: false
+  Max: 30
+
+Style/NumericLiterals:
+  MinDigits: 7
+  Exclude:
+    - 'spec/dummy/db/schema.rb'
+
+Style/SingleSpaceBeforeFirstArg:
+  Exclude:
+    - 'spec/dummy/db/schema.rb'
+
+Style/SpecialGlobalVars:
+  Exclude:
+    - 'annotator_store.gemspec'
+
+Style/StringLiterals:
+  Exclude:
+    - 'spec/dummy/db/schema.rb'

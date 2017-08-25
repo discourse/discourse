@@ -1,0 +1,20 @@
+<%#
+# Stylesheet Partial
+
+This partial imports the necessary stylesheets on each page.
+By default, it includes the application CSS,
+but each page can define additional CSS sources
+by providing a `content_for(:stylesheet)` block.
+%>
+
+<% Administrate::Engine.stylesheets.each do |css_path| %>
+  <%= stylesheet_link_tag css_path %>
+<% end %>
+
+<%= render partial: "common/special_font_face" %>
+
+<%= stylesheet_link_tag 'vendor/font_awesome/font-awesome' %>
+<%= stylesheet_link_tag 'vendor/select2' %>
+
+
+<%= yield :stylesheet %>

@@ -1,0 +1,32 @@
+<%#
+# New
+
+This view is the template for the "new resource" page.
+It displays a header, and then renders the `_form` partial
+to do the heavy lifting.
+
+## Local variables:
+
+- `page`:
+  An instance of [Administrate::Page::Form][1].
+  Contains helper methods to help display a form,
+  and knows which attributes should be displayed in the resource's form.
+
+[1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Form
+%>
+
+<% content_for(:title) { "#{t("administrate.actions.new")} #{page.resource_name.titleize}" } %>
+
+<header class="main-content__header" role="banner">
+  <h1 class="main-content__page-title">
+    <%= content_for(:title) %>
+  </h1>
+
+  <div>
+    <%= link_to t("administrate.actions.back"), :back, class: "button" %>
+  </div>
+</header>
+
+<section class="main-content__body">
+  <%= render "form", page: page %>
+</section>

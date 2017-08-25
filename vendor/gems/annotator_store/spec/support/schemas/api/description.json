@@ -1,0 +1,99 @@
+{
+  "type": "object",
+  "required": ["name", "version", "links"],
+  "properties": {
+    "name" : {
+      "type": "string"
+    },
+    "version" : {
+      "type": "string"
+    },
+    "links" : {
+      "type": "object",
+      "required": ["annotation", "search"],
+      "properties": {
+        "annotation" : {
+          "type": "object",
+          "required": ["create", "read", "update", "delete"],
+          "properties": {
+            "create" : {
+              "type": "object",
+              "required": ["url", "method", "description"],
+              "properties": {
+                "url" : {
+                  "type": "string"
+                },
+                "method" : {
+                  "type": "string"
+                },
+                "description" : {
+                  "type": "string"
+                }
+              }
+            },
+            "read" : {
+              "type": "object",
+              "required": ["url", "method", "description"],
+              "properties": {
+                "url" : {
+                  "type": "string"
+                },
+                "method" : {
+                  "type": "string"
+                },
+                "description" : {
+                  "type": "string"
+                }
+              }
+            },
+            "update" : {
+              "type": "object",
+              "required": ["url", "method", "description"],
+              "properties": {
+                "url" : {
+                  "type": "string"
+                },
+                "method" : {
+                  "type": "string"
+                },
+                "description" : {
+                  "type": "string"
+                }
+              }
+            },
+            "delete" : {
+              "type": "object",
+              "required": ["url", "method", "description"],
+              "properties": {
+                "url" : {
+                  "type": "string"
+                },
+                "method" : {
+                  "type": "string"
+                },
+                "description" : {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "search" : {
+          "type": "object",
+          "required": ["url", "method", "description"],
+          "properties": {
+            "url" : {
+              "type": "string"
+            },
+            "method" : {
+              "type": "string"
+            },
+            "description" : {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<div class="field-unit__label">
+  <%= f.label field.attribute %>
+</div>
+<div class="field-unit__field">
+  <%= f.select :parent_id, nested_dropdown(AnnotatorStore::Tag.all.arrange(order: 'name')), include_blank: true %>
+</div>

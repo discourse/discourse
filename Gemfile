@@ -209,10 +209,15 @@ gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'
 
 
 
-# if ENV["IMPORT"] == "1"
+if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
   # gem 'sqlite3', '~> 1.3.13'
-# end
+end
 
 
+# damingo (Github ID), 2017-08-22, #annotator
+# gem 'annotator_store', git: 'https://github.com/edgeryders/annotator_store-gem'
+gem 'annotator_store', path: 'vendor/gems/annotator_store'
+# https://github.com/thoughtbot/administrate
+gem 'administrate'

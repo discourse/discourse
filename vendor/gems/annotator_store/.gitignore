@@ -1,0 +1,20 @@
+## Bundler
+/.bundle
+/vendor/bundle
+
+## Dummy app
+/spec/dummy/db/*rb
+/spec/dummy/log/*.log
+/spec/dummy/tmp/
+
+## Gem
+/log/*
+/pkg/*
+/tmp/*
+/Gemfile.lock
+
+## Appraisal
+/gemfiles/*.gemfile.lock
+
+## Ruby
+/.ruby-version

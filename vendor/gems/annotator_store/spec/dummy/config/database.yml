@@ -1,0 +1,28 @@
+postgres: &postgres
+  adapter: postgresql
+  username: dummy
+  password: dummy_password
+  encoding: unicode
+  port: 5432
+
+mysql: &mysql
+  adapter: mysql2
+  username: root
+  password: dummy_password
+  encoding: utf8
+  socket: /Applications/MAMP/tmp/mysql/mysql.sock
+
+default: &default
+  database: dummy_astore_<%= Rails.env %>
+  host: localhost
+  pool: 5
+  <<: *<%= ENV['DB'] || 'postgres' %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

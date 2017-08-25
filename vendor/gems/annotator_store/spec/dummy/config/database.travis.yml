@@ -1,0 +1,13 @@
+mysql: &mysql
+  adapter: mysql2
+  database: myapp_test
+  username: travis
+  encoding: utf8
+
+postgres: &postgres
+  adapter: postgresql
+  database: travis_ci_test
+  username: postgres
+
+test:
+  <<: *<%= ENV['DB'] %>

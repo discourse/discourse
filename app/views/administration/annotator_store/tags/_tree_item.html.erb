@@ -1,0 +1,38 @@
+<li>
+  <span>
+    <% if tag.children.any? %>
+        <i class="fa fa-minus-circle" style="color:#aaa;"></i>
+    <% end %>
+    <strong class="item"><%= tag.name %> (<%= tag.annotations.count %>)</strong>
+  </span>
+  <%= link_to(
+              t('administrate.actions.show'),
+              [namespace, :annotator_store, tag],
+              class: "action-edit",
+      ) %> |
+
+  <%= link_to(
+              t('administrate.actions.edit'),
+              [:edit, namespace, :annotator_store, tag],
+              class: "action-edit",
+      ) %>
+
+  <% if tag.is_childless? %>
+      |
+      <%= link_to(
+                  t('administrate.actions.destroy'),
+                  [namespace, :annotator_store, tag],
+                  class: "text-color-red",
+                  method: :delete,
+                  data: {confirm: "Are you sure? This tag has #{tag.annotations.count} which will also be deleted."}
+          ) %>
+  <% end %>
+
+  <% if tag.children.any? %>
+      <ul>
+        <% tag.children.each do |tag| %>
+            <%= render 'tree_item', tag: tag %>
+        <% end %>
+      </ul>
+  <% end %>
+</li>

@@ -13,6 +13,20 @@ BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_
 
 Discourse::Application.routes.draw do
 
+  # damingo (Github ID), 2017-08-22
+  mount AnnotatorStore::Engine, at: '/annotator_store', constraints: StaffConstraint.new
+
+  namespace :administration, constraints: StaffConstraint.new do
+
+    namespace :annotator_store, path: 'annotator' do
+      resources :tags
+      resources :collections
+    end
+
+    root to: 'annotator_store/tags#index'
+  end
+
+
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 

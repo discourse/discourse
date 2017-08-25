@@ -1,0 +1,25 @@
+language: ruby
+rvm:
+  - '2.1.2'
+  - '2.1.1'
+  - '2.1.0'
+  - '2.0.0'
+  - '1.9.3'
+env:
+  - DB=mysql
+  - DB=postgres
+gemfile:
+  - gemfiles/rails_4.0.12.gemfile
+  - gemfiles/rails_4.1.8.gemfile
+  - gemfiles/rails_4.2.0.gemfile
+addons:
+  postgresql: '9.3'
+before_script:
+  - mysql -e 'create database myapp_test;'
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - cd spec/dummy/
+  - cp config/database.travis.yml config/database.yml
+  - bundle exec rake annotator_store:install:migrations
+  - bundle exec rake db:migrate
+  - cd ../../
+script: bundle exec rspec spec

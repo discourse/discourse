@@ -1,0 +1,23 @@
+<%#
+# Javascript Partial
+
+This partial imports the necessary javascript on each page.
+By default, it includes the application JS,
+but each page can define additional JS sources
+by providing a `content_for(:javascript)` block.
+%>
+
+<% Administrate::Engine.javascripts.each do |js_path| %>
+  <%= javascript_include_tag js_path %>
+<% end %>
+
+<%= javascript_include_tag 'edgeryders/jquery.min' %>
+
+<%= yield :javascript %>
+
+<% if Rails.env.test? %>
+  <%= javascript_tag do %>
+    $.fx.off = true;
+    $.ajaxSetup({ async: false });
+  <% end %>
+<% end %>
