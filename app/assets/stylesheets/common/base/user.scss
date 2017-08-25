@@ -1,25 +1,4 @@
-// styling of bottom section
-.user-stream .child-actions {
-  margin-top: 8px;
-  .avatar-link {
-    float: none;
-  }
-  .fa {
-    width: 15px;
-    display: inline-block;
-    color: $primary;
-  }
-  .avatar-link {
-    margin-right: 3px;
-  }
-
-}
-.user-stream .item .expand-item {
-  float: right;
-  margin-right: 0.5em;
-  color: lighten($primary, 40%);
-}
-
+// Common styles for "/user" section
 .user-main {
   .d-icon-heart {
     color: $love !important;
@@ -190,10 +169,12 @@
   }
 }
 
-.user-right .list-actions {
-  margin-bottom: 10px;
-  .btn {
-    margin-right: 10px;
+.user-right {
+  .list-actions {
+    margin-bottom: 10px;
+    .btn {
+      margin-right: 10px;
+    }
   }
 }
 
