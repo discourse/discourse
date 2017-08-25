@@ -937,15 +937,6 @@ describe SessionController do
       expect(response.status.to_i).to eq(500)
     end
 
-    context 'missing token' do
-      it 'disallows login' do
-        put :email_login, token: ''
-
-        expect(session[:current_user_id]).to be_blank
-        expect(response.status.to_i).to eq 500
-      end
-    end
-
     context 'valid token' do
       let(:token) { user.email_tokens.create(email: user.email).token }
 

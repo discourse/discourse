@@ -7,7 +7,7 @@ class SessionController < ApplicationController
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password)
+  before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_page)
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, only: %i(sso sso_login sso_provider become destroy email_login)
   skip_before_action :check_xhr, only: %i(sso sso_login sso_provider become destroy email_login_page)
@@ -251,11 +251,6 @@ class SessionController < ApplicationController
   end
 
   def email_login
-    unless allow_local_auth?
-      render nothing: true, status: 500
-      return
-    end
-
     if EmailToken.valid_token_format?(params[:token])
       user = EmailToken.confirm(params[:token]) # also redeems the invite
 
