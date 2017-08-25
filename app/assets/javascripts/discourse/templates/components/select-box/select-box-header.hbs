@@ -1,15 +1,9 @@
-<div class="wrapper">
-  {{#if icon}}
-    <div class="icon">
-      {{d-icon icon}}
-    </div>
-  {{/if}}
+{{#if icon}}
+  {{d-icon icon class="icon"}}
+{{/if}}
 
-  <span class="current-selection">
-    {{text}}
-  </span>
+<span class="current-selection">
+  {{{text}}}
+</span>
 
-  <div class="caret-icon">
-    {{d-icon caretIcon}}
-  </div>
-</div>
+{{d-icon caretIcon class="caret-icon"}}

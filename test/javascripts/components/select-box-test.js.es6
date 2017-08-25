@@ -87,7 +87,7 @@ componentTest('customisable icon', {
   template: '{{select-box icon="shower"}}',
 
   test(assert) {
-    assert.equal(find(".select-box-header .icon").html().trim(), "<i class=\"fa fa-shower d-icon d-icon-shower\"></i>", "it has a the correct icon");
+    assert.equal(find(".select-box-header .icon").hasClass("d-icon-shower"), true, "it has a the correct icon");
   }
 });
 
