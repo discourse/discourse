@@ -1,4 +1,4 @@
-// styles that apply to the user page
+// Desktop styles for "/user" section
 .groups {
   .group-link {
     color: $tertiary;
@@ -442,107 +442,6 @@
     }
   }
 
-  .user-stream {
-    .excerpt {
-      margin: 5px 0;
-      font-size: 0.929em;
-      word-wrap: break-word;
-      color: $primary;
-    }
-    .item.moderator-action {
-      background-color: $highlight-medium;
-    }
-    .item.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
-    }
-    .item.hidden {
-      display: block;
-      opacity: 0.4;
-    }
-    .item {
-      padding: 20px 8px 15px 8px;
-      background-color: $secondary;
-      border-bottom: 1px solid $primary-low;
-    }
-    .type {
-      color: $primary;
-    }
-    span.name {
-      color: $primary;
-    }
-    .time, .delete-info {
-      display: block;
-      float: right;
-      color: lighten($primary, 40%);
-      margin-right: 8px;
-      font-size: 11px;
-    }
-    .delete-info i {
-      font-size: 1em;
-    }
-    .avatar-link {
-      float: left;
-      margin-right: 4px;
-    }
-    .title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-    .name {
-      font-size: 1em;
-      max-width: 400px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .edit-reason {
-      background-color: dark-light-choose(scale-color($highlight, $lightness: 25%), scale-color($highlight, $lightness: -50%));
-      padding: 3px 5px 5px 5px;
-    }
-    .remove-bookmark {
-      float: right;
-      margin-top: -4px;
-    }
-    .notification {
-      &.unread {
-        background-color: $tertiary-low;
-      }
-
-      li { display: inline-block; }
-      p {
-        display: inline-block;
-        margin-left: 10px;
-        span {
-          color: $primary;
-        }
-      }
-      .time {
-        display: inline-block;
-        margin-left: 10px;
-        float: none;
-      }
-      // common/base/header.scss
-      .fa, .icon {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-size: 1.714em;
-      }
-    }
-    .group-member-info {
-      .name {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-      .title {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-    }
-  }
-
   .staff-counters {
     text-align: left;
     background: $primary;
@@ -637,6 +536,13 @@
 
 .user-right {
   display: table-cell;
+
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 10px;
+    }
+  }
 
   .group-notification-menu {
     float: right;

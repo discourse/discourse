@@ -22,6 +22,9 @@
 @import "desktop/menu-panel";
 @import "desktop/group";
 
+// Import all component-specific files
+@import "desktop/components/*";
+
 /* These files doesn't actually exist, they are injected by Stylesheet::Compiler. */
 
 @import "plugins";
