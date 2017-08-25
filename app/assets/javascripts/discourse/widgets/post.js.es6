@@ -82,7 +82,8 @@ createWidget('post-avatar', {
   tagName: 'div.topic-avatar',
 
   settings: {
-    size: 'large'
+    size: 'large',
+    displayPosterName: false
   },
 
   html(attrs) {
@@ -105,6 +106,10 @@ createWidget('post-avatar', {
     }
 
     result.push(h('div.poster-avatar-extra'));
+
+    if (this.settings.displayPosterName) {
+      result.push(this.attach('poster-name', attrs));
+    }
 
     return result;
   }
@@ -141,8 +146,16 @@ function showReplyTab(attrs, siteSettings) {
 
 createWidget('post-meta-data', {
   tagName: 'div.topic-meta-data',
+
+  settings: {
+    displayPosterName: true
+  },
+
   html(attrs) {
-    const result = [this.attach('poster-name', attrs)];
+    let result = [];
+    if (this.settings.displayPosterName) {
+      result.push(this.attach('poster-name', attrs));
+    }
 
     if (attrs.isWhisper) {
       result.push(h('div.post-info.whisper', {
