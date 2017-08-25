@@ -20,9 +20,11 @@
 .nav-pills {
   @extend %nav;
   @extend .clearfix;
+
   > li {
     float: left;
     margin-right: 5px;
+
     > a {
       border: none;
       padding: 5px 12px;
@@ -30,14 +32,26 @@
       font-size: 1.143em;
       line-height: 20px;
       transition: background .15s;
+
+      .d-icon {
+        margin-right: 5px;
+        opacity: .65;
+      }
+
       &:hover {
         color: $quaternary;
         background-color: $quaternary-low;
       }
     }
-    &.active > a, > a.active {
+
+    &.active > a,
+    > a.active {
       color: $secondary;
       background-color: $quaternary;
+
+      .d-icon {
+        opacity: 1;
+      }
     }
   }
 }
