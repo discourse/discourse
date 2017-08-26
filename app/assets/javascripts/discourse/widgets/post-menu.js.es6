@@ -220,7 +220,8 @@ export default createWidget('post-menu', {
   tagName: 'section.post-menu-area.clearfix',
 
   settings: {
-    collapseButtons: true
+    collapseButtons: true,
+    buttonType: 'flat-button'
   },
 
   defaultState() {
@@ -234,7 +235,7 @@ export default createWidget('post-menu', {
     if (builder) {
       const buttonAtts = builder(attrs, this.state, this.siteSettings);
       if (buttonAtts) {
-        return this.attach('flat-button', buttonAtts);
+        return this.attach(this.settings.buttonType, buttonAtts);
       }
     }
   },
@@ -295,7 +296,7 @@ export default createWidget('post-menu', {
           const { position, beforeButton } = buttonAtts;
           delete buttonAtts.position;
 
-          let button = this.attach('button', buttonAtts);
+          let button = this.attach(this.settings.buttonType, buttonAtts);
 
           if (beforeButton) {
             button = h('span', [beforeButton(h), button]);
