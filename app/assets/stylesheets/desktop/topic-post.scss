@@ -119,11 +119,6 @@ nav.post-controls {
     margin-right: 5px;
   }
 
-  .btn:disabled {
-    background: transparent;
-    cursor: default;
-  }
-
   button {
     font-size: 1.143em;
     padding: 8px 10px;
@@ -132,7 +127,7 @@ nav.post-controls {
     border: none;
     margin-left: 3px;
 
-    &.d-hover, &:hover {
+    &.d-hover {
       background: $primary-low;
       color: $primary;
     }
