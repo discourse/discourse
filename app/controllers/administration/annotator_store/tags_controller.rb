@@ -11,7 +11,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
     if resource.save
       redirect_to(
         [namespace, :annotator_store, resource],
-        notice: translate_with_resource("create.success"),
+        notice: 'Tag was successfully created.',
       )
     else
       render :new, locals: {
