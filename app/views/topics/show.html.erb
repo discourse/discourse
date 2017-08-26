@@ -150,12 +150,8 @@
 <% content_for :head do %>
     <% if params[:oe].present? %>
         <%# damingo (Github ID), 2017-08-22, #annotator %>
-        <%= javascript_include_tag 'edgeryders/jquery.min' %>
-        <%= javascript_include_tag 'edgeryders/jquery-ui.min' %>
-        <%= javascript_include_tag 'edgeryders/annotator-full.min' %>
-
-        <%= stylesheet_link_tag 'edgeryders/annotator.min' %>
-        <%= stylesheet_link_tag 'edgeryders/jquery-ui.min' %>
+        <%= javascript_include_tag 'annotator_store/application' %>
+        <%= stylesheet_link_tag 'annotator_store/application' %>
     <% end %>
 
     <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
