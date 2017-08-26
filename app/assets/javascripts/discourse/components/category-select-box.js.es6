@@ -15,6 +15,26 @@ export default SelectBoxComponent.extend({
 
   width: "100%",
 
+  filterFunction: function() {
+    const _matchFunction = (filter, text) => {
+      return text.toLowerCase().indexOf(filter) > -1;
+    };
+
+    return (selectBox) => {
+      const filter = selectBox.get("filter").toLowerCase();
+      return _.filter(selectBox.get("content"), (content) => {
+        const category = Category.findById(content[selectBox.get("idKey")]);
+        const text = content[selectBox.get("textKey")];
+        if (category && category.get("parentCategory")) {
+          const categoryName = category.get("parentCategory.name");
+          return _matchFunction(filter, text) || _matchFunction(filter, categoryName);
+        } else {
+          return _matchFunction(filter, text);
+        }
+      });
+    };
+  },
+
   @on("init")
   @observes("selectedContent")
   _setHeaderText: function() {
