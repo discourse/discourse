@@ -170,6 +170,7 @@ export default Ember.Component.extend({
 
     const queuedForTyping = this.get('queuedForTyping');
     composer.store.find('composer-message', args).then(messages => {
+      if (this.isDestroying || this.isDestroyed) { return; }
 
       // Checking composer messages on replies can give us a list of links to check for
       // duplicates
