@@ -59,9 +59,7 @@
 
         <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
         <script>
-            var availableTags = <%=
-            AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.all).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe
-              -%>;
+            var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.all).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
         </script>
 
         <% if params[:oe].present? %>

@@ -3,7 +3,7 @@
     <% if tag.children.any? %>
         <i class="fa fa-minus-circle" style="color:#aaa;"></i>
     <% end %>
-    <strong class="item"><%= tag.name %> (<%= tag.annotations.count %>)</strong>
+    <strong class="item" title="<%= tag.annotations.count %> annotations use this tag"><%= tag.name %> (<%= tag.annotations.count %>)</strong>
   </span>
   <%= link_to(
               t('administrate.actions.show'),

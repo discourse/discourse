@@ -101,7 +101,18 @@ module AnnotatorStore
     end
 
     def get_tag_id
-      Tag.find_by(name: params[:tags].join(' ').split(' → ').last.strip).try(:id)
+      path = params[:tags].join(' ').split(' → ').map(&:strip)
+      # NOTE: Make sure we find the right tag, as tag names are only unique among siblings.
+      path_ids = []
+      tag = nil
+      path.each do |tag_name|
+        tag = AnnotatorStore::Tag.find_by(
+          ancestry: path_ids.blank? ? nil : path_ids.join('/'),
+          name: tag_name
+        )
+        path_ids << tag.id
+      end
+      tag.id
     end
 
   end
