@@ -44,13 +44,13 @@ export default SelectBoxComponent.extend({
       if (this.siteSettings.allow_uncategorized_topics) {
         headerText = Ember.get(Category.findUncategorized(), this.get("textKey"));
       } else {
-        headerText = I18n.t("category.choose");
+        headerText = I18n.t("category.choose").htmlSafe();
       }
     } else {
       headerText = this.get("selectedContent.text");
     }
 
-    this.set("headerText", Handlebars.escapeExpression(headerText));
+    this.set("headerText", headerText);
   },
 
   // original method is kept for compatibility
