@@ -30,11 +30,13 @@
             <div class="instructions">{{i18n 'user.username.instructions'}}</div>
           </div>
 
-          <div class="input name-input">
-            <label>{{i18n 'invites.name_label'}}</label>
-            {{input value=accountName id="new-account-name" name="name"}}
-            <div class="instructions">{{nameInstructions}}</div>
-          </div>
+          {{#if fullnameRequired}}
+            <div class="input name-input">
+              <label>{{i18n 'invites.name_label'}}</label>
+              {{input value=accountName id="new-account-name" name="name"}}
+              <div class="instructions">{{nameInstructions}}</div>
+            </div>
+          {{/if}}
 
           <div class="input password-input">
             <label>{{i18n 'invites.password_label'}}</label>
