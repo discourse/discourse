@@ -10,6 +10,7 @@
           flairColor=user.primary_group_flair_color
           groupName=user.primary_group_name}}
       {{/if}}
+      {{plugin-outlet name="user-card-avatar-flair" args=(hash user=user) tagName='div'}}
     </div>
 
     <div class="names">
