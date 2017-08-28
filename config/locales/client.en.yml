@@ -1145,7 +1145,8 @@ en:
       alt: 'Alt'
 
     select_box:
-      no_content: No content
+      default_header_text: Select...
+      no_content: No matches found
       filter_placeholder: Search...
 
     emoji_picker:

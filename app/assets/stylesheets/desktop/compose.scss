@@ -237,8 +237,7 @@
     min-width: 1280px;
     .form-element {
       position: relative;
-      display: flex;
-
+      display: inline-block;
 
       .category-input {
         width: 430px;
@@ -313,6 +312,7 @@
   }
   .title-input, .category-input, .show-admin-options {
     display: inline;
+    float: left;
   }
   .show-admin-options {
     vertical-align: top;

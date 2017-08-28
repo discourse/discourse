@@ -91,6 +91,18 @@
       -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
               box-shadow: $tertiary 0px 0px 6px 0px;
     }
+
+    .clear-selection {
+      margin: 0 5px;
+      padding: 0;
+      outline: none;
+
+      .d-icon {
+        margin: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
   }
 
   .select-box-body {
@@ -190,12 +202,6 @@
   }
 }
 
-.select-box .select-box-row {
-  &.is-highlighted {
-    background: $highlight-medium;
-  }
-}
-
 .select-box .select-box-collection {
   -webkit-box-flex: 0;
       -ms-flex: 0 1 auto;
@@ -229,6 +235,14 @@
 
   .text {
     margin: 0;
+  }
+
+  .d-icon {
+    margin-right: 5px;
+  }
+
+  &.is-highlighted {
+    background: $highlight-medium;
   }
 
   &.is-selected {
