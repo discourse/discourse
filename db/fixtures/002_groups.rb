@@ -7,8 +7,8 @@ Group.where(name: 'everyone').update_all(visibility_level: Group.visibility_leve
 
 ColumnDropper.drop(
   table: 'groups',
-  after_migration: 'RemovePublicFromGroups',
-  columns:  %w[visible public],
+  after_migration: 'SplitAliasLevels',
+  columns:  %w[visible public alias_level],
   on_drop: ->() {
     STDERR.puts 'Removing superflous visible group column!'
   }
