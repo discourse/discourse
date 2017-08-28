@@ -119,7 +119,7 @@ class UserActionCreator
     action = UserAction::BOOKMARK if model.is_bookmark?
     action = UserAction::LIKE if model.is_like?
 
-    post = Post.with_deleted.where(id: model.post_id).first
+    post = Post.with_deleted.find_by(id: model.post_id)
 
     row = {
       action_type: action,
