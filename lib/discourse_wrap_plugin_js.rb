@@ -22,7 +22,7 @@ class DiscourseWrapPluginJS
     folder_name = path[/\/plugins\/(\S+?)\//, 1]
 
     # Lookup plugin name
-    plugin = Discourse.plugins.find {|p| p.path =~ /\/plugins\/#{folder_name}\//}
+    plugin = Discourse.plugins.find { |p| p.path =~ /\/plugins\/#{folder_name}\// }
     plugin_name = plugin.name
 
     "Discourse._registerPluginScriptDefinition('#{plugin_name}', function(){#{data}}); \n"
