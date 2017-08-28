@@ -33,7 +33,7 @@ export default Discourse.Route.extend({
         }
       });
     } else {
-      this.session.set("shouldRedirectToUrl", window.location.href);
+      $.cookie('destination_url', window.location.href);
       this.replaceWith('login');
     }
   }
