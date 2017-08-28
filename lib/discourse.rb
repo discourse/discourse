@@ -311,19 +311,19 @@ module Discourse
   def self.git_version
     return $git_version if $git_version
 
-    git_cmd='git rev-parse HEAD'
+    git_cmd = 'git rev-parse HEAD'
     self.load_version_or_git(git_cmd, Discourse::VERSION::STRING) { $git_version }
   end
 
   def self.git_branch
     return $git_branch if $git_branch
-    git_cmd='git rev-parse --abbrev-ref HEAD'
+    git_cmd = 'git rev-parse --abbrev-ref HEAD'
     self.load_version_or_git(git_cmd, 'unknown') { $git_branch }
   end
 
   def self.full_version
     return $full_version if $full_version
-    git_cmd='git describe --dirty --match "v[0-9]*"'
+    git_cmd = 'git describe --dirty --match "v[0-9]*"'
     self.load_version_or_git(git_cmd, 'unknown') { $full_version }
   end
 
