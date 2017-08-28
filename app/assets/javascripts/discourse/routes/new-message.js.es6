@@ -21,8 +21,8 @@ export default Discourse.Route.extend({
           });
         } else if (params.groupname) {
           // send a message to a group
-          Group.mentionable(params.groupname).then(result => {
-            if (result.mentionable) {
+          Group.messageable(params.groupname).then(result => {
+            if (result.messageable) {
               Ember.run.next(() => e.send("createNewMessageViaParams", params.groupname, params.title, params.body));
             } else {
               bootbox.alert(I18n.t("composer.cant_send_pm", { username: params.groupname }));

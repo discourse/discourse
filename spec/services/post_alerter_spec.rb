@@ -270,7 +270,7 @@ describe PostAlerter do
 
   context '@group mentions' do
 
-    let(:group) { Fabricate(:group, name: 'group', alias_level: Group::ALIAS_LEVELS[:everyone]) }
+    let(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
     let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
     before { group.add(evil_trout) }
 
@@ -281,7 +281,7 @@ describe PostAlerter do
 
       expect(GroupMention.count).to eq(1)
 
-      Fabricate(:group, name: 'group-alt', alias_level: Group::ALIAS_LEVELS[:everyone])
+      Fabricate(:group, name: 'group-alt', mentionable_level: Group::ALIAS_LEVELS[:everyone])
 
       expect {
         create_post_with_alerts(raw: "Hello, @group-alt should not trigger a notification?")
@@ -289,7 +289,7 @@ describe PostAlerter do
 
       expect(GroupMention.count).to eq(2)
 
-      group.update_columns(alias_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
+      group.update_columns(mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
       expect {
         create_post_with_alerts(raw: "Hello @group you are not mentionable")
       }.to change(evil_trout.notifications, :count).by(0)

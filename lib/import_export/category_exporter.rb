@@ -48,7 +48,7 @@ module ImportExport
       self
     end
 
-    GROUP_ATTRS = [ :id, :name, :created_at, :alias_level, :visible,
+    GROUP_ATTRS = [ :id, :name, :created_at, :mentionable_level, :messageable_level, :visible,
                     :automatic_membership_email_domains, :automatic_membership_retroactive,
                     :primary_group, :title, :grant_trust_level, :incoming_email]
 

@@ -443,6 +443,7 @@ Discourse::Application.routes.draw do
     get 'messages'
     get 'counts'
     get 'mentionable'
+    get 'messageable'
     get 'logs' => 'groups#histories'
 
     collection do

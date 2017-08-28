@@ -25,6 +25,10 @@ class GroupShowSerializer < BasicGroupSerializer
     Group.mentionable(scope.user).exists?(id: object.id)
   end
 
+  def messageable
+    Group.messageable(scope.user).exists?(id: object.id)
+  end
+
   private
 
   def authenticated?
