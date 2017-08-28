@@ -1,8 +1,12 @@
 class SplitAliasLevels < ActiveRecord::Migration
-  def change
-    rename_column :groups, :alias_level, :mentionable_level
+  def up
     add_column :groups, :messageable_level, :integer, default: 0
+    add_column :groups, :mentionable_level, :integer, default: 0
 
-    Group.update_all('messageable_level=mentionable_level')
+    execute 'UPDATE groups SET messageable_level = alias_level, mentionable_level = alias_level'
+  end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
   end
 end
