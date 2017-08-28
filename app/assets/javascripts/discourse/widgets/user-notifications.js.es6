@@ -7,7 +7,7 @@ export default createWidget('user-notifications', {
   buildKey: () => 'user-notifications',
 
   defaultState() {
-    return { notifications: [], loading: false };
+    return { notifications: [], loading: false, loaded: false };
   },
 
   notificationsChanged() {
@@ -49,12 +49,13 @@ export default createWidget('user-notifications', {
       state.notifications = [];
     }).finally(() => {
       state.loading = false;
+      state.loaded = true;
       this.scheduleRerender();
     });
   },
 
   html(attrs, state) {
-    if (!state.notifications.length) {
+    if (!state.loaded) {
       this.refreshNotifications(state);
     }
 
