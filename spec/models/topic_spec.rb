@@ -455,7 +455,7 @@ describe Topic do
 
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
-            admins.update!(alias_level: Group::ALIAS_LEVELS[:everyone])
+            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
             expect(topic.invite_group(topic.user, admins)).to eq(true)
             expect(topic.allowed_groups.include?(admins)).to eq(true)

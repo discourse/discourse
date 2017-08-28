@@ -69,7 +69,7 @@ describe GroupsController do
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(false)
 
-      group.update_attributes!(alias_level: Group::ALIAS_LEVELS[:everyone])
+      group.update_attributes!(mentionable_level: Group::ALIAS_LEVELS[:everyone])
 
       get "/groups/test/mentionable.json", name: group.name
       expect(response).to be_success

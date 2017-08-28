@@ -459,7 +459,8 @@ en:
         staff: "Group owners and staff"
         owners: "Group owners and admins"
       alias_levels:
-        title: "Who can message and @mention this group?"
+        mentionable: "Who can @mention this group?"
+        messageable: "Who can message this group?"
         nobody: "Nobody"
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
