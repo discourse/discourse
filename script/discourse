@@ -91,7 +91,7 @@ class DiscourseCLI < Thor
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
 
       Dir["public/backups/default/*"].each do |f|
-        puts "script/discourse restore #{File.basename(f)}"
+        puts "discourse restore #{File.basename(f)}"
       end
 
       return
