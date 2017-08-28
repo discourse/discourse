@@ -15,6 +15,8 @@ export default SelectBoxComponent.extend({
 
   width: "100%",
 
+  clearable: true,
+
   filterFunction: function() {
     const _matchFunction = (filter, text) => {
       return text.toLowerCase().indexOf(filter) > -1;
@@ -75,6 +77,9 @@ export default SelectBoxComponent.extend({
       const categoryId = c.get("id");
       if (scopedCategoryId && categoryId !== scopedCategoryId && c.get("parent_category_id") !== scopedCategoryId) { return false; }
       if (excludeCategoryId === categoryId) { return false; }
+      if (!this.siteSettings.allow_uncategorized_topics && c.get("isUncategorizedCategory")) {
+        return false;
+      }
       return c.get("permission") === PermissionType.FULL;
     });
 

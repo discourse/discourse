@@ -8,13 +8,16 @@
 />
 
 {{component selectBoxHeaderComponent
-  text=headerText
+  text=generatedHeadertext
   focused=focused
   caretUpIcon=caretUpIcon
   caretDownIcon=caretDownIcon
   onToggle=(action "onToggle")
+  onClearSelection=(action "onClearSelection")
   icon=icon
+  clearable=clearable
   expanded=expanded
+  selectedId=value
 }}
 
 <div class="select-box-body">
