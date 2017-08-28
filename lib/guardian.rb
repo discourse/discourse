@@ -299,6 +299,17 @@ class Guardian
     (!is_blocked? || target.staff?)
   end
 
+  def cand_send_private_messages_to_email?
+    # Staged users must be enabled to create a temporary user.
+    SiteSetting.enable_staged_users &&
+    # User is authenticated
+    authenticated? &&
+    # User is trusted enough
+    @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
+    # PMs to email addresses are enabled
+    (is_staff? || SiteSetting.enable_private_email_messages)
+  end
+
   def can_see_emails?
     @can_see_emails
   end

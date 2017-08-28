@@ -508,6 +508,10 @@ posting:
   enable_private_messages:
     default: true
     client: true
+  enable_private_email_messages:
+    default: false
+    client: true
+    validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
   post_edit_time_limit:
     default: 86400
@@ -856,6 +860,9 @@ trust:
     enum: 'TrustLevelSetting'
   min_trust_to_send_messages:
     default: 1
+    enum: 'TrustLevelSetting'
+  min_trust_to_send_email_messages:
+    default: 4
     enum: 'TrustLevelSetting'
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
