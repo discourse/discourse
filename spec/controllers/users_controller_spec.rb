@@ -564,12 +564,27 @@ describe UsersController do
       end
 
       context "with an admin api key" do
-        let(:user) { Fabricate(:admin) }
-        let(:api_key) { Fabricate(:api_key, user: user) }
+        let(:admin) { Fabricate(:admin) }
+        let(:api_key) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a regular key" do
-          xhr :post, :create, post_user_params.merge(active: true, api_key: api_key.key)
-          expect(JSON.parse(response.body)['active']).to be_truthy
+          SiteSetting.queue_jobs = true
+          SiteSetting.send_welcome_message = true
+          SiteSetting.must_approve_users = true
+
+          Sidekiq::Client.expects(:enqueue).never
+
+          xhr :post, :create, post_user_params.merge(approved: true, active: true, api_key: api_key.key)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+
+          expect(json['active']).to be_truthy
+
+          expect(new_user.active).to eq(true)
+          expect(new_user.approved).to eq(true)
+          expect(new_user.approved_by_id).to eq(admin.id)
+          expect(new_user.approved_at).to_not eq(nil)
         end
 
         it "won't create the developer as active" do
