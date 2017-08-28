@@ -382,6 +382,7 @@ en:
               too_many_users: "You can only send warnings to one user at a time."
               cant_send_pm: "Sorry, you cannot send a private message to that user."
               no_user_selected: "You must select a valid user."
+              reply_by_email_disabled: "Reply by email has been disabled."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -1013,6 +1014,7 @@ en:
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
     enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_private_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1258,6 +1260,8 @@ en:
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new private messages."
+
+    min_trust_to_send_email_messages: "The minimum trust level required to send new private messages via email (to staged users)."
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1586,6 +1590,8 @@ en:
       invalid_regex: "Regex is invalid or not allowed."
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
       enable_sso_disabled: "You must first enable 'enable sso' before enabling this setting."
+      staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
+      reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
 
   search:
     within_post: "#%{post_number} by %{username}"
