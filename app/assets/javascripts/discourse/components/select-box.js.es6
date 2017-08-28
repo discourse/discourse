@@ -1,4 +1,5 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
+import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
@@ -16,9 +17,10 @@ export default Ember.Component.extend({
 
   caretUpIcon: "caret-up",
   caretDownIcon: "caret-down",
-  headerText: null,
+  headerText: I18n.t("select_box.default_header_text"),
   dynamicHeaderText: true,
   icon: null,
+  clearable: false,
 
   value: null,
   selectedContent: null,
@@ -103,13 +105,8 @@ export default Ember.Component.extend({
       this.set("filterable", false);
     }
 
-    if (this.get("castInteger")) {
-      this.set("value", parseInt(this.get("value"), 10));
-    }
-
-    this.set("headerText", Handlebars.escapeExpression(this.get("headerText")));
-
     this.setProperties({
+      value: this._castInteger(this.get("value")),
       componentId: this.elementId,
       filteredContent: []
     });
@@ -117,8 +114,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _removeDocumentListeners: function() {
-    $(document).off("click.select-box");
-    $(document).off("keydown.select-box");
+    $(document).off("click.select-box", "keydown.select-box");
     $(window).off("resize.select-box");
   },
 
@@ -160,6 +156,8 @@ export default Ember.Component.extend({
   _setupDocumentListeners: function() {
     $(document)
       .on("click.select-box", (event) => {
+        if (this.isDestroying || this.isDestroyed) { return; }
+
         const $element = this.$();
         const $target = $(event.target);
 
@@ -180,19 +178,13 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _bindEvents: function() {
-    this.$(".select-box-offscreen").on("focusin.select-box", () => {
-      this.set("focused", true);
-    });
-    this.$(".select-box-offscreen").on("focusout.select-box", () => {
-      this.set("focused", false);
-    });
+    this.$(".select-box-offscreen")
+      .on("focusin.select-box", () => this.set("focused", true) )
+      .on("focusout.select-box", () => this.set("focused", false) );
 
-    this.$(".filter-query").on("focusin.select-box", () => {
-      this.set("filterFocused", true);
-    });
-    this.$(".filter-query").on("focusout.select-box", () => {
-      this.set("filterFocused", false);
-    });
+    this.$(".filter-query")
+      .on("focusin.select-box", () => this.set("filterFocused", true) )
+      .on("focusout.select-box", () => this.set("filterFocused", false) );
 
     this.$(".select-box-offscreen").on("keydown.select-box", (event) => {
       const keyCode = event.keyCode || event.which;
@@ -221,18 +213,6 @@ export default Ember.Component.extend({
     if (Ember.isNone(this.get("value"))) {
       this.set("lastHoveredId", null);
     }
-
-    this.set("filteredContent", this._remapContent(this.get("content")));
-  },
-
-  @observes("filter")
-  _filterChanged: function() {
-    if (Ember.isEmpty(this.get("filter"))) {
-      this.set("filteredContent", this._remapContent(this.get("content")));
-    } else {
-      const filtered = this.filterFunction()(this);
-      this.set("filteredContent", this._remapContent(filtered));
-    }
   },
 
   @observes("expanded")
@@ -250,6 +230,42 @@ export default Ember.Component.extend({
     };
   },
 
+  @computed("value", "content")
+  selectedContent(value, content) {
+    if (Ember.isNone(value)) {
+      return null;
+    }
+
+    const selectedContent = content.find((c) => {
+      return c[this.get("idKey")] === value;
+    });
+
+    if (!Ember.isNone(selectedContent)) {
+      return this._normalizeContent(selectedContent);
+    }
+
+    return null;
+  },
+
+  @computed("headerText", "dynamicHeaderText", "selectedContent.text")
+  generatedHeadertext(headerText, dynamic, text) {
+    if (dynamic && !Ember.isNone(text)) {
+      return text;
+    }
+
+    return headerText;
+  },
+
+  @observes("content.[]", "filter")
+  _filterChanged: function() {
+    if (Ember.isEmpty(this.get("filter"))) {
+      this.set("filteredContent", this._remapContent(this.get("content")));
+    } else {
+      const filtered = this.filterFunction()(this);
+      this.set("filteredContent", this._remapContent(filtered));
+    }
+  },
+
   @observes("content.[]", "value")
   @on("didReceiveAttrs")
   _contentChanged: function() {
@@ -260,13 +276,6 @@ export default Ember.Component.extend({
     }
 
     this.set("filteredContent", this._remapContent(this.get("content")));
-    this._setSelectedContent(this.get("content"));
-
-    if (this.get("dynamicHeaderText")) {
-      if (!Ember.isNone(this.get("selectedContent.text"))) {
-        this.set("headerText", this.get("selectedContent.text"));
-      }
-    }
   },
 
   actions: {
@@ -274,17 +283,17 @@ export default Ember.Component.extend({
       this.toggleProperty("expanded");
     },
 
+    onClearSelection() {
+      this.set("value", null);
+    },
+
     onFilterChange(filter) {
       this.set("filter", filter);
     },
 
     onSelectRow(id) {
-      if (this.get("castInteger")) {
-        id = parseInt(id, 10);
-      }
-
       this.setProperties({
-        value: id,
+        value: this._castInteger(id),
         expanded: false
       });
     },
@@ -294,28 +303,13 @@ export default Ember.Component.extend({
     }
   },
 
-  _setSelectedContent(content) {
-    const selectedContent = content.find((c) => {
-      return c[this.get("idKey")] === this.get("value");
-    });
-
-    if (!Ember.isNone(selectedContent)) {
-      this.set("selectedContent", this._normalizeContent(selectedContent));
-    }
-  },
-
   _remapContent(content) {
     return content.map(c => this._normalizeContent(c));
   },
 
   _normalizeContent(content) {
-    let id = content[this.get("idKey")];
-    if (this.get("castInteger")) {
-      id = parseInt(id, 10);
-    }
-
     return {
-      id,
+      id: this._castInteger(content[this.get("idKey")]),
       text: content[this.get("textKey")],
       icon: content[this.get("iconKey")]
     };
@@ -330,4 +324,12 @@ export default Ember.Component.extend({
       height: headerHeight + this.$(".select-box-body").outerHeight()
     });
   },
+
+  _castInteger(value) {
+    if (this.get("castInteger") && Ember.isPresent(value)) {
+      return parseInt(value, 10);
+    }
+
+    return value;
+  }
 });

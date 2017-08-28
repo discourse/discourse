@@ -128,10 +128,6 @@ input[type=radio], input[type=checkbox] {
       }
       .category-input {
         margin-top: 3px;
-
-        .category-select-box {
-          height: 28px;
-        }
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -206,7 +202,7 @@ input[type=radio], input[type=checkbox] {
     margin: 7px 0 0 5px;
     position: absolute;
   }
-  .btn-primary {
+  .create.btn-primary {
     margin-bottom: 8px;
   }
 }
