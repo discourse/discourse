@@ -17,16 +17,16 @@ export default SelectBoxComponent.extend({
 
   clearable: true,
 
-  filterFunction: function() {
+  filterFunction: function(content) {
     const _matchFunction = (filter, text) => {
       return text.toLowerCase().indexOf(filter) > -1;
     };
 
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
-      return _.filter(selectBox.get("content"), (content) => {
-        const category = Category.findById(content[selectBox.get("idKey")]);
-        const text = content[selectBox.get("textKey")];
+      return _.filter(content, (c) => {
+        const category = Category.findById(c[selectBox.get("idKey")]);
+        const text = c[selectBox.get("textKey")];
         if (category && category.get("parentCategory")) {
           const categoryName = category.get("parentCategory.name");
           return _matchFunction(filter, text) || _matchFunction(filter, categoryName);
@@ -56,7 +56,7 @@ export default SelectBoxComponent.extend({
   },
 
   // original method is kept for compatibility
-  selectBoxRowTemplate: function() {
+  templateForRow: function() {
     return (rowComponent) => this.rowContentTemplate(rowComponent.get("content"));
   }.property(),
 

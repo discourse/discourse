@@ -25,7 +25,7 @@ export default Ember.Component.extend({
   value: null,
   selectedContent: null,
   noContentText: I18n.t("select_box.no_content"),
-  lastHoveredId: null,
+  lastHovered: null,
 
   idKey: "id",
   textKey: "text",
@@ -48,16 +48,33 @@ export default Ember.Component.extend({
 
   castInteger: false,
 
-  filterFunction: function() {
+  filterFunction: function(content) {
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
-      return _.filter(selectBox.get("content"), (content) => {
-        return content[selectBox.get("textKey")].toLowerCase().indexOf(filter) > -1;
+      return _.filter(content, (c) => {
+        return c[selectBox.get("textKey")].toLowerCase().indexOf(filter) > -1;
       });
     };
   },
 
-  selectBoxRowTemplate: function() {
+  titleForRow: function() {
+    return (rowComponent) => {
+      return rowComponent.get(`content.${this.get("textKey")}`);
+    };
+  }.property(),
+
+  shouldHighlightRow: function() {
+    return (rowComponent) => {
+      const id = this._castInteger(rowComponent.get(`content.${this.get("idKey")}`));
+      if (Ember.isNone(this.get("lastHovered"))) {
+        return id === this.get("value");
+      } else {
+        return id === this.get("lastHovered");
+      }
+    };
+  }.property(),
+
+  templateForRow: function() {
     return (rowComponent) => {
       let template = "";
 
@@ -65,7 +82,8 @@ export default Ember.Component.extend({
         template += iconHTML(Handlebars.escapeExpression(rowComponent.get("content.icon")));
       }
 
-      template += `<p class="text">${Handlebars.escapeExpression(rowComponent.get("text"))}</p>`;
+      const text = rowComponent.get(`content.${this.get("textKey")}`);
+      template += `<p class="text">${Handlebars.escapeExpression(text)}</p>`;
 
       return template;
     };
@@ -97,9 +115,8 @@ export default Ember.Component.extend({
   init() {
     this._super();
 
-    if (!this.get("content")) {
-      this.set("content", []);
-    }
+    const content = this.getWithDefault("content", []);
+    this.set("content", content);
 
     if (this.site.isMobileDevice) {
       this.set("filterable", false);
@@ -107,8 +124,7 @@ export default Ember.Component.extend({
 
     this.setProperties({
       value: this._castInteger(this.get("value")),
-      componentId: this.elementId,
-      filteredContent: []
+      componentId: this.elementId
     });
   },
 
@@ -208,21 +224,10 @@ export default Ember.Component.extend({
     });
   },
 
-  @observes("value")
-  _valueChanged: function() {
-    if (Ember.isNone(this.get("value"))) {
-      this.set("lastHoveredId", null);
-    }
-  },
-
   @observes("expanded")
   _expandedChanged: function() {
     if (this.get("expanded")) {
       this.setProperties({ focused: false, renderBody: true });
-
-      if (Ember.isNone(this.get("lastHoveredId"))) {
-        this.set("lastHoveredId", this.get("value"));
-      }
 
       if (this.get("filterable")) {
         Ember.run.schedule("afterRender", () => this.$(".filter-query").focus());
@@ -230,52 +235,37 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed("value", "content")
+  @computed("value", "content.[]")
   selectedContent(value, content) {
     if (Ember.isNone(value)) {
       return null;
     }
 
-    const selectedContent = content.find((c) => {
-      return c[this.get("idKey")] === value;
+    return content.find((c) => {
+      return this._castInteger(c[this.get("idKey")]) === value;
     });
-
-    if (!Ember.isNone(selectedContent)) {
-      return this._normalizeContent(selectedContent);
-    }
-
-    return null;
   },
 
-  @computed("headerText", "dynamicHeaderText", "selectedContent.text")
-  generatedHeadertext(headerText, dynamic, text) {
-    if (dynamic && !Ember.isNone(text)) {
-      return text;
+  @computed("headerText", "dynamicHeaderText", "selectedContent", "textKey")
+  generatedHeadertext(headerText, dynamic, selectedContent, textKey) {
+    if (dynamic && !Ember.isNone(selectedContent)) {
+      return selectedContent[textKey];
     }
 
     return headerText;
   },
 
-  @observes("content.[]", "filter")
-  _filterChanged: function() {
-    if (Ember.isEmpty(this.get("filter"))) {
-      this.set("filteredContent", this._remapContent(this.get("content")));
-    } else {
-      const filtered = this.filterFunction()(this);
-      this.set("filteredContent", this._remapContent(filtered));
-    }
-  },
+  @computed("content.[]", "filter")
+  filteredContent(content, filter) {
+    let filteredContent;
 
-  @observes("content.[]", "value")
-  @on("didReceiveAttrs")
-  _contentChanged: function() {
-    if (!Ember.isNone(this.get("value"))) {
-      this.set("lastHoveredId", this.get("content")[this.get("idKey")]);
+    if (Ember.isEmpty(filter)) {
+      filteredContent = content;
     } else {
-      this.set("lastHoveredId", null);
+      filteredContent = this.filterFunction(content)(this);
     }
 
-    this.set("filteredContent", this._remapContent(this.get("content")));
+    return filteredContent;
   },
 
   actions: {
@@ -283,36 +273,20 @@ export default Ember.Component.extend({
       this.toggleProperty("expanded");
     },
 
-    onClearSelection() {
-      this.set("value", null);
-    },
-
     onFilterChange(filter) {
       this.set("filter", filter);
     },
 
-    onSelectRow(id) {
+    onSelectRow(content) {
       this.setProperties({
-        value: this._castInteger(id),
+        value: this._castInteger(content[this.get("idKey")]),
         expanded: false
       });
     },
 
-    onHoverRow(id) {
-      this.set("lastHoveredId", id);
+    onHoverRow(content) {
+      this.set("lastHovered", this._castInteger(content[this.get("idKey")]));
     }
-  },
-
-  _remapContent(content) {
-    return content.map(c => this._normalizeContent(c));
-  },
-
-  _normalizeContent(content) {
-    return {
-      id: this._castInteger(content[this.get("idKey")]),
-      text: content[this.get("textKey")],
-      icon: content[this.get("iconKey")]
-    };
   },
 
   _positionSelectBoxWrapper() {
@@ -325,11 +299,11 @@ export default Ember.Component.extend({
     });
   },
 
-  _castInteger(value) {
-    if (this.get("castInteger") && Ember.isPresent(value)) {
-      return parseInt(value, 10);
+  _castInteger(id) {
+    if (this.get("castInteger") === true && Ember.isPresent(id)) {
+      return parseInt(id, 10);
     }
 
-    return value;
+    return id;
   }
 });
