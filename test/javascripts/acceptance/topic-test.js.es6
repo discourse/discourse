@@ -51,7 +51,8 @@ QUnit.test("Updating the topic title and category", assert => {
   click('#topic-title .d-icon-pencil');
 
   fillIn('#edit-title', 'this is the new title');
-  selectDropdown('.category-combobox', 4);
+
+  selectBox('.title-wrapper .category-select-box', 'faq');
 
   click('#topic-title .submit-edit');
 
