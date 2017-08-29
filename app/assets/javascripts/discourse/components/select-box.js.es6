@@ -65,6 +65,10 @@ export default Ember.Component.extend({
 
   shouldHighlightRow: function() {
     return (rowComponent) => {
+      if (Ember.isNone(this.get("value"))) {
+        return false;
+      }
+
       const id = this._castInteger(rowComponent.get(`content.${this.get("idKey")}`));
       if (Ember.isNone(this.get("lastHovered"))) {
         return id === this.get("value");
