@@ -1,8 +1,11 @@
-.category-select-box {
+.select-box.category-select-box {
   .select-box-row {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: flex-start;
+        -ms-flex-align: flex-start;
+            align-items: flex-start;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
