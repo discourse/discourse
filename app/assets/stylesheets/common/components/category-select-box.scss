@@ -8,6 +8,12 @@
         -ms-flex-direction: column;
             flex-direction: column;
 
+    &.is-uncategorized {
+      .topic-count {
+        display: none;
+      }
+    }
+
     .topic-count {
       font-size: 11px;
       color: $primary;
