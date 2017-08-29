@@ -340,20 +340,3 @@ componentTest('supports custom row title', {
     });
   }
 });
-
-componentTest('supports custom row title', {
-  template: '{{select-box content=content titleForRow=titleForRow}}',
-
-  beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }]);
-    this.set("titleForRow", () => "sam" );
-  },
-
-  test(assert) {
-    click(".select-box-header");
-
-    andThen(() => {
-      assert.equal(find(".select-box-row:first").attr("title"), "sam");
-    });
-  }
-});
