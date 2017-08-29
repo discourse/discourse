@@ -83,12 +83,18 @@ describe TopicCreator do
       context 'failure cases' do
         it "min_trust_to_send_messages setting should be checked when sending private message" do
           SiteSetting.min_trust_to_send_messages = TrustLevel[4]
-          expect(-> { TopicCreator.create(user, Guardian.new(user), pm_valid_attrs) }).to raise_error(ActiveRecord::Rollback)
+
+          expect do
+            TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)
+          end.to raise_error(ActiveRecord::Rollback)
         end
 
         it "min_trust_to_send_email_messages should be checked when sending private messages via email" do
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[4]
-          expect(-> { TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs) }).to raise_error(ActiveRecord::Rollback)
+
+          expect do
+            TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
+          end.to raise_error(ActiveRecord::Rollback)
         end
       end
     end
