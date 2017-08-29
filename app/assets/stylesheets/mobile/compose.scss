@@ -18,9 +18,15 @@ input {
   color: $primary;
   padding: 4px;
   border-radius: 3px;
-  box-shadow: none;
+  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
   border: 1px solid $primary-low;
-  -webkit-appearance: none;
+}
+
+#reply-control {
+  input[type="text"] {
+    box-shadow: none;
+    -webkit-appearance: none;
+  }
 }
 
 textarea {
