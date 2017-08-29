@@ -7,6 +7,8 @@ import Category from "discourse/models/category";
 export default SelectBoxComponent.extend({
   classNames: ["category-select-box"],
 
+  selectBoxRowComponent: "category-select-box/category-select-box-row",
+
   textKey: "name",
 
   filterable: true,
