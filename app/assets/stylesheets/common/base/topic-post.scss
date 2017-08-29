@@ -420,3 +420,9 @@ a.mention, a.mention-group {
     padding-bottom: 15px;
   }
 }
+
+.broken-image, .large-image {
+  border: 1px solid $primary-low;
+  font-size: 32px;
+  padding: 16px;
+}
