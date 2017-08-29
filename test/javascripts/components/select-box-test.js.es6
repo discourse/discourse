@@ -239,12 +239,12 @@ componentTest('supports options to limit size', {
 });
 
 componentTest('supports custom row template', {
-  template: '{{select-box content=content selectBoxRowTemplate=selectBoxRowTemplate}}',
+  template: '{{select-box content=content templateForRow=templateForRow}}',
 
   beforeEach() {
     this.set("content", [{ id: 1, text: "robin" }]);
-    this.set("selectBoxRowTemplate", (rowComponent) => {
-      return `<b>${rowComponent.get("text")}</b>`;
+    this.set("templateForRow", (rowComponent) => {
+      return `<b>${rowComponent.get("content.text")}</b>`;
     });
   },
 
@@ -258,9 +258,10 @@ componentTest('supports custom row template', {
 });
 
 componentTest('supports converting select value to integer', {
-  template: '{{select-box value=2 content=content castInteger=true}}',
+  template: '{{select-box value=value content=content castInteger=true}}',
 
   beforeEach() {
+    this.set("value", 2);
     this.set("content", [{ id: "1", text: "robin"}, {id: "2", text: "régis" }]);
   },
 
@@ -269,6 +270,15 @@ componentTest('supports converting select value to integer', {
 
     andThen(() => {
       assert.equal(find(".select-box-row.is-highlighted .text").text(), "régis");
+    });
+
+    andThen(() => {
+      this.set("value", 3);
+      this.set("content", [{ id: "3", text: "jeff" }]);
+    });
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-highlighted .text").text(), "jeff", "it works with dynamic content");
     });
   }
 });
@@ -332,6 +342,23 @@ componentTest('clearable selection', {
     andThen(() => {
       assert.notOk(exists(".select-box-row.is-highlighted"));
       assert.equal(find(".select-box-header .current-selection").html().trim(), "Select...");
+    });
+  }
+});
+
+componentTest('supports custom row title', {
+  template: '{{select-box content=content titleForRow=titleForRow}}',
+
+  beforeEach() {
+    this.set("content", [{ id: 1, text: "robin" }]);
+    this.set("titleForRow", () => "sam" );
+  },
+
+  test(assert) {
+    click(".select-box-header");
+
+    andThen(() => {
+      assert.equal(find(".select-box-row:first").attr("title"), "sam");
     });
   }
 });

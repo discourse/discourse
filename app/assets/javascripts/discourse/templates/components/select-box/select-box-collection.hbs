@@ -2,11 +2,13 @@
   {{#each filteredContent as |content|}}
     {{component selectBoxRowComponent
       content=content
-      selectBoxRowTemplate=selectBoxRowTemplate
-      lastHoveredId=lastHoveredId
+      templateForRow=templateForRow
+      titleForRow=titleForRow
+      shouldHighlightRow=shouldHighlightRow
+      lastHovered=lastHovered
       onSelect=onSelectRow
       onHover=onHoverRow
-      selectedId=selectedId
+      value=value
     }}
   {{else}}
     {{#if noContentText}}

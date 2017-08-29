@@ -17,7 +17,7 @@
   icon=icon
   clearable=clearable
   expanded=expanded
-  selectedId=value
+  value=value
 }}
 
 <div class="select-box-body">
@@ -34,12 +34,14 @@
     {{component selectBoxCollectionComponent
       filteredContent=filteredContent
       selectBoxRowComponent=selectBoxRowComponent
-      selectBoxRowTemplate=selectBoxRowTemplate
-      lastHoveredId=lastHoveredId
+      templateForRow=templateForRow
+      shouldHighlightRow=shouldHighlightRow
+      titleForRow=titleForRow
+      lastHovered=lastHovered
       onSelectRow=(action "onSelectRow")
       onHoverRow=(action "onHoverRow")
       noContentText=noContentText
-      selectedId=value
+      value=value
     }}
   {{/if}}
 </div>

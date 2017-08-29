@@ -1,44 +1,36 @@
-import { on, observes } from 'ember-addons/ember-computed-decorators';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
+  layoutName: "components/select-box/select-box-row",
+
   classNames: "select-box-row",
 
   tagName: "li",
 
-  classNameBindings: ["isHighlighted"],
+  attributeBindings: ["title"],
 
-  attributeBindings: ["text:title"],
+  classNameBindings: ["isHighlighted:is-highlighted"],
 
-  lastHoveredId: null,
+  @computed("titleForRow")
+  title(titleForRow) {
+    return titleForRow(this);
+  },
 
-  @on("init")
-  @observes("content", "lastHoveredId", "selectedId", "selectBoxRowTemplate")
-  _updateTemplate: function() {
-    this.set("isHighlighted", this._isHighlighted());
-    this.set("text", this.get("content.text"));
-    this.set("template", this.get("selectBoxRowTemplate")(this));
+  @computed("templateForRow")
+  template(templateForRow) {
+    return templateForRow(this);
+  },
+
+  @computed("shouldHighlightRow", "lastHovered", "value")
+  isHighlighted(shouldHighlightRow) {
+    return shouldHighlightRow(this);
   },
 
   mouseEnter() {
-    this.sendAction("onHover", this.get("content.id"));
+    this.sendAction("onHover", this.get("content"));
   },
 
   click() {
-    this.sendAction("onSelect", this.get("content.id"));
-  },
-
-  didReceiveAttrs() {
-    this._super();
-
-    this.set("isHighlighted", this._isHighlighted());
-    this.set("text", this.get("content.text"));
-  },
-
-  _isHighlighted() {
-    if(_.isUndefined(this.get("lastHoveredId"))) {
-      return this.get("content.id") === this.get("selectedId");
-    } else {
-      return this.get("content.id") === this.get("lastHoveredId");
-    }
-  },
+    this.sendAction("onSelect", this.get("content"));
+  }
 });
