@@ -82,7 +82,9 @@
     cursor: pointer;
     outline: none;
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     justify-content: space-between;
 
     &.is-focused {
@@ -100,12 +102,15 @@
   }
 
   .select-box-row {
+    margin: 5px;
+    min-height: 1px;
     cursor: pointer;
     outline: none;
     padding: 5px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    align-items: center;
     -webkit-box-pack: start;
         -ms-flex-pack: start;
             justify-content: flex-start;
@@ -218,9 +223,6 @@
 }
 
 .select-box .select-box-row {
-  margin: 5px;
-  min-height: 1px;
-
   .text {
     margin: 0;
   }
@@ -280,42 +282,4 @@
   outline: 0;
   left: 0px;
   top: 0px;
-}
-
-.select-box.discourse {
-  .select-box-header {
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    border-radius: 3px;
-
-    &.is-focused {
-      border: 1px solid $tertiary;
-      border-radius: 3px;
-      box-shadow: $tertiary 0px 0px 6px 0px;
-    }
-  }
-
-  &.is-expanded {
-    .select-box-header {
-      border-radius: 3px 3px 0 0;
-    }
-
-    .select-box-body, .collection, {
-      border-radius: 0 0 3px 3px;
-    }
-
-    .select-box-wrapper {
-      border: 1px solid $tertiary;
-      border-radius: 3px;
-      box-shadow: $tertiary 0px 0px 6px 0px;
-    }
-  }
-
-  .select-box-row {
-    margin: 5px;
-  }
-
-  &.is-highlighted .select-box-header {
-    border: 1px solid $tertiary;
-    box-shadow: $tertiary 0px 0px 6px 0px;
-  }
 }
