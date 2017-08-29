@@ -6,11 +6,11 @@
 }
 
 .composer-popup-container {
-display: none !important; // can be removed if inline JS CSS is removed from composer-popup
+  display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
 .composer-popup {
-display: none !important; // can be removed if inline JS CSS is removed from composer-popup
+  display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
 input {
@@ -18,12 +18,26 @@ input {
   color: $primary;
   padding: 4px;
   border-radius: 3px;
-  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+  box-shadow: none;
   border: 1px solid $primary-low;
+  -webkit-appearance: none;
 }
+
+textarea {
+  box-shadow: none;
+  -webkit-appearance: none;
+}
+
 input[type=radio], input[type=checkbox] {
   box-shadow: none;
 }
+
+#reply-control {
+  &.no-transition {
+    transition: none;
+  }
+}
+
 
 #reply-control {
   // used for upload link
@@ -34,7 +48,7 @@ input[type=radio], input[type=checkbox] {
   #mobile-uploader { display: none; }
   .mobile-file-upload.hidden { display: none; }
   #draft-status, #file-uploading, .mobile-file-upload { display: inline-block; }
-  transition: height .4s ease;
+  transition: height .4s ease-in-out;
   width: 100%;
   z-index: 1039;
   height: 0;
@@ -319,4 +333,8 @@ input[type=radio], input[type=checkbox] {
 .select2-search,
 .select2-focusser {
   display:none !important;
+}
+
+#reply-control.edit-title.open {
+  height: 100%;
 }

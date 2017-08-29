@@ -33,6 +33,7 @@ function positioningWorkaround($fixedElement) {
   }
 
   const fixedElement = $fixedElement[0];
+  const oldHeight = fixedElement.style.height;
 
   var done = false;
   var originalScrollTop = 0;
@@ -46,7 +47,11 @@ function positioningWorkaround($fixedElement) {
 
       fixedElement.style.position = '';
       fixedElement.style.top = '';
-      fixedElement.style.height = '';
+      fixedElement.style.height = oldHeight;
+
+      setTimeout(()=>{
+        $(fixedElement).removeClass('no-transition');
+      },500);
 
       $(window).scrollTop(originalScrollTop);
 
@@ -61,10 +66,6 @@ function positioningWorkaround($fixedElement) {
     if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
       // something in focus so skip
       return;
-    }
-
-    if (composingTopic) {
-      return false;
     }
 
     positioningWorkaround.blur(evt);
@@ -97,17 +98,22 @@ function positioningWorkaround($fixedElement) {
 
     $(window).scrollTop(0);
 
+    let i = 20;
+    let interval = setInterval(()=>{
+      $(window).scrollTop(0);
+      if (i--===0) {
+        clearInterval(interval);
+      }
+    }, 10);
+
     fixedElement.style.top = '0px';
 
     composingTopic = $('#reply-control .category-select-box').length > 0;
 
     const height = calcHeight(composingTopic);
-
     fixedElement.style.height = height + "px";
 
-    // I used to do this, but it seems like we don't need to with position
-    // fixed
-    // setTimeout(()=>$(window).scrollTop(0),500);
+    $(fixedElement).addClass('no-transition');
 
     evt.preventDefault();
     self.focus();
