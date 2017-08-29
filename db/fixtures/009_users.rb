@@ -35,8 +35,9 @@ Group.user_trust_level_change!(-1, TrustLevel[4])
 
 ColumnDropper.drop(
   table: 'users',
-  after_migration: 'AddUserAuthTokens',
+  after_migration: 'CreateUserEmails',
   columns:  %w[
+      email
       email_always
       mailing_list_mode
       email_digests
