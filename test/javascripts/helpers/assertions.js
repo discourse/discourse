@@ -19,8 +19,8 @@ Ember.Test.registerAsyncHelper('selectDropdown', function(app, selector, itemId)
 });
 
 Ember.Test.registerAsyncHelper('selectBox', function(app, selector, title) {
-  click(`${selector} .select-box-header`);
-  click(`${selector} .select-box-row[title="${title}"]`);
+  click(selector + ' .select-box-header');
+  click(selector + ' .select-box-row[title="' + title + '"]');
 });
 
 function invisible(selector) {
