@@ -5,27 +5,14 @@ export default Ember.Component.extend({
 
   classNameBindings: ["focused:is-focused"],
 
-  showClearButton: false,
-
   didReceiveAttrs() {
     this._super();
 
     this._setCaretIcon();
   },
 
-  @computed("clearable", "selectedId")
-  showClearButton(clearable, selectedId) {
-    return clearable === true && !Ember.isNone(selectedId);
-  },
-
   click() {
     this.sendAction("onToggle");
-  },
-
-  actions: {
-    clearSelection() {
-      this.sendAction("onClearSelection");
-    }
   },
 
   _setCaretIcon() {
