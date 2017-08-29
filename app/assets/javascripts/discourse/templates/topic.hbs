@@ -19,7 +19,7 @@
           {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
           {{#if showCategoryChooser}}
             <br>
-            {{category-chooser valueAttribute="id" value=buffered.category_id}}
+            {{category-select-box width=350 value=buffered.category_id}}
           {{/if}}
 
           {{#if canEditTags}}
