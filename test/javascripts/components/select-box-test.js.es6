@@ -314,24 +314,19 @@ componentTest('static headerText', {
   }
 });
 
-componentTest('clearable selection', {
-  template: '{{select-box value=1 content=content clearable=true}}',
+componentTest('supports custom row title', {
+  template: '{{select-box content=content titleForRow=titleForRow}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+    this.set("content", [{ id: 1, text: "robin" }]);
+    this.set("titleForRow", () => "sam" );
   },
 
   test(assert) {
     click(".select-box-header");
-    andThen(() => {
-      assert.ok(exists(".select-box-row.is-highlighted"));
-      assert.equal(find(".select-box-header .current-selection").html().trim(), "robin");
-    });
 
-    click(".select-box-header .clear-selection");
     andThen(() => {
-      assert.notOk(exists(".select-box-row.is-highlighted"));
-      assert.equal(find(".select-box-header .current-selection").html().trim(), "Select...");
+      assert.equal(find(".select-box-row:first").attr("title"), "sam");
     });
   }
 });
