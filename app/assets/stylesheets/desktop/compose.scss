@@ -239,7 +239,7 @@
       position: relative;
       display: inline-block;
 
-      .category-input {
+      .category-input .category-select-box {
         width: 430px;
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }

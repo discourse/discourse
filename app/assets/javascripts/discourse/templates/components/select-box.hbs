@@ -30,6 +30,7 @@
     {{/if}}
 
     {{component selectBoxCollectionComponent
+      clearSelectionLabel=clearSelectionLabel
       filteredContent=filteredContent
       selectBoxRowComponent=selectBoxRowComponent
       templateForRow=templateForRow
@@ -38,7 +39,8 @@
       lastHovered=lastHovered
       onSelectRow=(action "onSelectRow")
       onHoverRow=(action "onHoverRow")
-      noContentText=noContentText
+      onClearSelection=(action "onClearSelection")
+      noContentLabel=noContentLabel
       value=value
     }}
   {{/if}}

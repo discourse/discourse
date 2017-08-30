@@ -15,9 +15,18 @@ export default SelectBoxComponent.extend({
 
   castInteger: true,
 
-  width: "100%",
-
   clearable: true,
+
+  allowUncategorized: null,
+
+  init() {
+    this._super();
+
+    if (!Ember.isNone(this.get("categories"))) {
+      this.set("content", this.get("categories"));
+      this._scopeCategories();
+    }
+  },
 
   filterFunction: function(content) {
     const _matchFunction = (filter, text) => {
@@ -57,7 +66,6 @@ export default SelectBoxComponent.extend({
     this.set("headerText", headerText);
   },
 
-  // original method is kept for compatibility
   templateForRow: function() {
     return (rowComponent) => this.rowContentTemplate(rowComponent.get("content"));
   }.property(),
@@ -79,8 +87,11 @@ export default SelectBoxComponent.extend({
       const categoryId = c.get("id");
       if (scopedCategoryId && categoryId !== scopedCategoryId && c.get("parent_category_id") !== scopedCategoryId) { return false; }
       if (excludeCategoryId === categoryId) { return false; }
-      if (!this.siteSettings.allow_uncategorized_topics && c.get("isUncategorizedCategory")) {
-        return false;
+      if (this.get("allowUncategorized") === false && c.get("isUncategorizedCategory")) { return false; }
+      if (this.get("allowUncategorized") !== true) {
+        if (!this.siteSettings.allow_uncategorized_topics && c.get("isUncategorizedCategory")) {
+          return false;
+        }
       }
       return c.get("permission") === PermissionType.FULL;
     });

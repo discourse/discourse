@@ -10,6 +10,10 @@
   position: relative;
   height: 34px;
 
+  &.small {
+    height: 28px;
+  }
+
   &.is-expanded {
     z-index: 102;
 
@@ -97,6 +101,7 @@
 
   .select-box-body {
     display: none;
+    background: $secondary;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
   }
