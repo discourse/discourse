@@ -14,12 +14,12 @@
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each model as |action|}}
-      {{#link-to 'adminWatchedWords.action' action.nameKey tagName='li' class=action.nameKey}}
+      <li class="{{action.nameKey}}">
         {{#link-to 'adminWatchedWords.action' action.nameKey}}
           {{action.name}}
           {{#if action.count}}<span class="count">({{action.count}})</span>{{/if}}
         {{/link-to}}
-      {{/link-to}}
+      </li>
     {{/each}}
   </ul>
 </div>

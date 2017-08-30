@@ -15,14 +15,14 @@
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each model as |category|}}
-      {{#link-to 'adminSiteSettingsCategory' category.nameKey tagName='li' class=category.nameKey}}
+      <li class="{{category.nameKey}}">
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
           {{#if filtered}}
             {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}
           {{/if}}
         {{/link-to}}
-      {{/link-to}}
+      </li>
     {{/each}}
   </ul>
 </div>
