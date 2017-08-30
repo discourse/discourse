@@ -15,7 +15,7 @@
   }
 
   &.is-expanded {
-    z-index: 102;
+    z-index: 9999;
 
     .select-box-wrapper {
       border: 1px solid $tertiary;
