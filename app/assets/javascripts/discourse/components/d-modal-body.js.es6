@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
     $('#modal-alert').hide();
-    $('#discourse-modal').modal('show');
+    $('.d-modal').modal('show');
     Ember.run.scheduleOnce('afterRender', this, this._afterFirstRender);
     this.appEvents.on('modal-body:flash', msg => this._flash(msg));
   },
