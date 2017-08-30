@@ -232,7 +232,7 @@ componentTest('supports options to limit size', {
     click(".select-box-header");
 
     andThen(() => {
-      assert.equal(find(".select-box-body").height(), 20, "it limits the height");
+      assert.equal(parseInt(find(".select-box-body").height()), 20, "it limits the height");
     });
   }
 });
