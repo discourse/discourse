@@ -83,7 +83,13 @@
 }
 
 
-.modal {
+.inline-modal {
+  .modal-inner-container {
+    border: 1px solid $secondary-medium;
+  }
+}
+
+.fixed-modal {
   position: fixed;
   top: 0;
   width: 100%;
