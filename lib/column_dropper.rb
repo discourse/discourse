@@ -32,7 +32,7 @@ class ColumnDropper
       columns.each do |column|
         ActiveRecord::Base.exec_sql <<~SQL
         DROP TRIGGER IF EXISTS #{readonly_trigger_name(table, column)} ON #{table};
-        DROP FUNCTION IF EXISTS #{readonly_function_name(table, column)};
+        DROP FUNCTION IF EXISTS #{readonly_function_name(table, column)} CASCADE;
         SQL
 
         # safe cause it is protected on method entry, can not be passed in params
