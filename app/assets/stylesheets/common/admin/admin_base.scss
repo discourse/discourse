@@ -349,7 +349,7 @@ td.flaggers td {
       margin-top: 10px;
     }
 
-    input, textarea, select {
+    input, textarea, select, .select-box {
       width: 350px;
     }
 
@@ -1670,6 +1670,10 @@ table#user-badges {
     margin-bottom: 1em;
     max-width: 700px;
   }
+}
+
+.embedding td input {
+  margin-bottom: 0;
 }
 
 // Emails

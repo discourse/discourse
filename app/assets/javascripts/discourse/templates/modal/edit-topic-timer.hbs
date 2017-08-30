@@ -13,10 +13,9 @@
       {{else if publishToCategory}}
         <div class="control-group">
           <label>{{i18n 'topic.topic_status_update.publish_to'}}</label>
-          {{category-chooser
-              valueAttribute="id"
-              value=topicTimer.category_id
-              excludeCategoryId=excludeCategoryId}}
+          {{category-select-box
+            value=topicTimer.category_id
+            excludeCategoryId=excludeCategoryId}}
         </div>
 
         {{auto-update-input

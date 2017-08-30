@@ -74,7 +74,8 @@ QUnit.test("Subcategory list settings", assert => {
   });
 
   click('.edit-category-general');
-  selectDropdown('.edit-category-tab-general .category-combobox', 2);
+
+  selectBox('.edit-category-tab-general .category-select-box', 'feature')
 
   click('.edit-category-settings');
   andThen(() => {

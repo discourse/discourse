@@ -14,6 +14,7 @@ export default Ember.Component.extend({
   renderBody: false,
   wrapper: true,
   tabindex: 0,
+  scrollableParentSelector: ".modal-body",
 
   caretUpIcon: "caret-up",
   caretDownIcon: "caret-down",
@@ -24,8 +25,9 @@ export default Ember.Component.extend({
 
   value: null,
   selectedContent: null,
-  noContentText: I18n.t("select_box.no_content"),
+  noContentLabel: I18n.t("select_box.no_content"),
   lastHovered: null,
+  clearSelectionLabel: null,
 
   idKey: "id",
   textKey: "text",
@@ -41,7 +43,7 @@ export default Ember.Component.extend({
   selectBoxHeaderComponent: "select-box/select-box-header",
   selectBoxCollectionComponent: "select-box/select-box-collection",
 
-  width: 220,
+  minWidth: 220,
   maxCollectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
@@ -65,7 +67,7 @@ export default Ember.Component.extend({
 
   shouldHighlightRow: function() {
     return (rowComponent) => {
-      if (Ember.isNone(this.get("value"))) {
+      if (Ember.isNone(this.get("value")) && Ember.isNone(this.get("lastHovered"))) {
         return false;
       }
 
@@ -96,14 +98,14 @@ export default Ember.Component.extend({
   applyDirection() {
     const offsetTop = this.$()[0].getBoundingClientRect().top;
     const windowHeight = $(window).height();
-    const headerHeight = this.$(".select-box-header").outerHeight();
-    const filterHeight = this.$(".select-box-filter").outerHeight();
+    const headerHeight = this.$(".select-box-header").outerHeight(false);
+    const filterHeight = this.$(".select-box-filter").outerHeight(false);
 
     if (windowHeight - (offsetTop + this.get("maxCollectionHeight") + filterHeight + headerHeight) < 0) {
       this.$().addClass("is-reversed");
       this.$(".select-box-body").css({
         left: this.get("horizontalOffset"),
-        top: "",
+        top: "auto",
         bottom: headerHeight + this.get("verticalOffset")
       });
     } else {
@@ -111,7 +113,7 @@ export default Ember.Component.extend({
       this.$(".select-box-body").css({
         left: this.get("horizontalOffset"),
         top: headerHeight + this.get("verticalOffset"),
-        bottom: ""
+        bottom: "auto"
       });
     }
   },
@@ -150,21 +152,31 @@ export default Ember.Component.extend({
 
   @on("didRender")
   _configureSelectBoxDOM: function() {
-    this.$().css("width", this.get("width"));
-    this.$(".select-box-header").css("height", this.$().css("height"));
-    this.$(".select-box-filter").css("height", this.$().css("height"));
+    if (this.get("scrollableParent").length === 1) {
+      this._removeFixedPosition();
+    }
+
+    this.$().css("min-width", this.get("minWidth"));
+
+    const computedWidth = this.$().outerWidth(false);
+    const computedHeight = this.$().outerHeight(false);
+
+    this.$(".select-box-header").css("height", computedHeight);
+    this.$(".select-box-filter").css("height", computedHeight);
 
     if (this.get("expanded")) {
-      this.$(".select-box-body").css("width", this.$().css("width"));
+      if (this.get("scrollableParent").length === 1) {
+        this._applyFixedPosition(computedWidth, computedHeight);
+      }
+
+      this.$(".select-box-body").css("width", computedWidth);
       this.$(".select-box-collection").css("max-height", this.get("maxCollectionHeight"));
 
-      Ember.run.schedule("afterRender", () => {
-        this.applyDirection();
+      this.applyDirection();
 
-        if (this.get("wrapper")) {
-          this._positionSelectBoxWrapper();
-        }
-      });
+      if (this.get("wrapper")) {
+        this._positionSelectBoxWrapper();
+      }
     } else {
       if (this.get("wrapper")) {
         this.$(".select-box-wrapper").hide();
@@ -250,10 +262,14 @@ export default Ember.Component.extend({
     });
   },
 
-  @computed("headerText", "dynamicHeaderText", "selectedContent", "textKey")
-  generatedHeadertext(headerText, dynamic, selectedContent, textKey) {
+  @computed("headerText", "dynamicHeaderText", "selectedContent", "textKey", "clearSelectionLabel")
+  generatedHeadertext(headerText, dynamic, selectedContent, textKey, clearSelectionLabel) {
     if (dynamic && !Ember.isNone(selectedContent)) {
       return selectedContent[textKey];
+    }
+
+    if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(clearSelectionLabel)) {
+      return I18n.t(clearSelectionLabel);
     }
 
     return headerText;
@@ -272,6 +288,11 @@ export default Ember.Component.extend({
     return filteredContent;
   },
 
+  @computed("scrollableParentSelector")
+  scrollableParent(scrollableParentSelector) {
+    return this.$().parents(scrollableParentSelector).first();
+  },
+
   actions: {
     onToggle() {
       this.toggleProperty("expanded");
@@ -288,18 +309,22 @@ export default Ember.Component.extend({
       });
     },
 
+    onClearSelection() {
+      this.setProperties({ value: null, expanded: false });
+    },
+
     onHoverRow(content) {
       this.set("lastHovered", this._castInteger(content[this.get("idKey")]));
     }
   },
 
   _positionSelectBoxWrapper() {
-    const headerHeight = this.$(".select-box-header").outerHeight();
+    const headerHeight = this.$(".select-box-header").outerHeight(false);
 
     this.$(".select-box-wrapper").css({
       width: this.$().width(),
       display: "block",
-      height: headerHeight + this.$(".select-box-body").outerHeight()
+      height: headerHeight + this.$(".select-box-body").outerHeight(false)
     });
   },
 
@@ -309,5 +334,33 @@ export default Ember.Component.extend({
     }
 
     return id;
+  },
+
+  _applyFixedPosition(width, height) {
+    const $placeholder = $(`<div class='select-box-fixed-placeholder-${this.get("componentId")}' style='vertical-align: middle; height: ${height}px; width: ${width}px; line-height: ${height}px;display:inline-block'></div>`);
+
+    this.$()
+      .before($placeholder)
+      .css({
+        width,
+        position: "fixed",
+        "margin-top": -this.get("scrollableParent").scrollTop(),
+        "margin-left": -width
+      });
+
+    this.get("scrollableParent").on("scroll.select-box", () => this.set("expanded", false) );
+  },
+
+  _removeFixedPosition() {
+    $(`.select-box-fixed-placeholder-${this.get("componentId")}`).remove();
+    this.$().css({
+      top: "auto",
+      left: "auto",
+      "margin-left": "auto",
+      "margin-top": "auto",
+      position: "relative"
+    });
+
+    this.get("scrollableParent").off("scroll.select-box");
   }
 });
