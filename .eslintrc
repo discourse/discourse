@@ -42,6 +42,7 @@
     "invisible":true,
     "asyncRender":true,
     "selectDropdown":true,
+    "selectBox":true,
     "asyncTestDiscourse":true,
     "fixture":true,
     "find":true,
