@@ -121,11 +121,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
     hideModal() {
-      $('.d-modal').modal('hide');
+      $('.d-modal.fixed-modal').modal('hide');
     },
 
     reopenModal() {
-      $('.d-modal').modal('show');
+      $('.d-modal.fixed-modal').modal('show');
     },
 
     editCategory(category) {
