@@ -78,6 +78,14 @@ createWidget('reply-to-tab', {
 });
 
 
+createWidget('post-avatar-user-info', {
+  tagName: 'div.post-avatar-user-info',
+
+  html(attrs) {
+    return this.attach('poster-name', attrs);
+  }
+});
+
 createWidget('post-avatar', {
   tagName: 'div.topic-avatar',
 
@@ -108,7 +116,7 @@ createWidget('post-avatar', {
     result.push(h('div.poster-avatar-extra'));
 
     if (this.settings.displayPosterName) {
-      result.push(this.attach('poster-name', attrs));
+      result.push(this.attach('post-avatar-user-info', attrs));
     }
 
     return result;
