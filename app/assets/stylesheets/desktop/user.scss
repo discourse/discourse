@@ -113,24 +113,26 @@
 
   .nav-stacked {
     background-color: transparent;
+
     li {
       border-bottom: none;
 
-      a {
-        color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+      &.archive {
+        padding-left: 15px;
       }
+    }
 
-      a.active {
+    a {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+
+      &.active {
         color: $primary;
         font-weight: bold;
         background-color: transparent;
 
         &:after {
-        display: none;
+          display: none;
         }
-      }
-      &.archive {
-        padding-left: 15px;
       }
     }
   }

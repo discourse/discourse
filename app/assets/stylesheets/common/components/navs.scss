@@ -76,29 +76,28 @@
     &.indent {
       padding-left: 15px;
     }
-
-    a {
-      margin: 0;
-      padding: 13px;
-      font-size: 1.143em;
-      line-height: 20px;
-      cursor: pointer;
-      color: $primary;
-    }
   }
 
-  .active > a,
-  li > a.active {
-    color: $secondary;
-    background-color: $quaternary;
+  a {
+    margin: 0;
+    padding: 13px;
+    font-size: 1.143em;
+    line-height: 20px;
+    cursor: pointer;
+    color: $primary;
 
-    &:after {
-      left: 90%;
-      top: 33%;
-      content: " ";
-      position: absolute;
-      border: 8px solid transparent;
-      border-left-color: $secondary;
+    &.active {
+      color: $secondary;
+      background-color: $quaternary;
+
+      &::after {
+        left: 90%;
+        top: 33%;
+        content: " ";
+        position: absolute;
+        border: 8px solid transparent;
+        border-left-color: $secondary;
+      }
     }
   }
 

@@ -7,7 +7,7 @@
   right: 0 !important;
 }
 
-// This is used to flip the .d-icon-caret-right 
+// This is used to flip the .d-icon-caret-right
 @mixin rotate( $degrees ) {
   -webkit-transform: rotate(#{$degrees}deg);
   -moz-transform: rotate(#{$degrees}deg);
@@ -27,7 +27,7 @@
 
 // Changes the triangle arrow direction in .nav-stacked .active
 // The 'left' and 'right' in these selectors is not being flipped by r2.
-.rtl .nav-stacked .active > a::after {
+.rtl .nav-stacked a.active::after {
   border-left-color: transparent !important;
   border-right-color: $secondary !important;
 }
@@ -38,8 +38,8 @@
 .rtl .pull-left {
   float: right !important;
 }
-.rtl .autocomplete { 
-  left: 27px; 
+.rtl .autocomplete {
+  left: 27px;
 }
 
 .rtl .customize .current-style .toggle-mobile {

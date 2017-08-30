@@ -375,11 +375,6 @@ td.flaggers td {
   width: 18.018%;
   position: relative;
 
-  li a.active {
-    color: $secondary;
-    background-color: $quaternary;
-  }
-
   // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
