@@ -27,7 +27,11 @@ export default Ember.Component.extend({
     });
 
     this.appEvents.on('modal:body-shown', data => {
-      this.$().removeClass('hidden');
+      if (this.isDestroying || this.isDestroyed) { return; }
+      if (data.fixed) {
+        this.$().removeClass('hidden');
+      }
+
       if (data.title) {
         this.set('title', I18n.t(data.title));
       } else if (data.rawTitle) {
