@@ -148,6 +148,10 @@ input[type=radio], input[type=checkbox] {
       }
       .category-input {
         margin-top: 3px;
+
+        .category-select-box {
+          width: 100%;
+        }
       }
       .wmd-controls {
         transition: top 0.3s ease;

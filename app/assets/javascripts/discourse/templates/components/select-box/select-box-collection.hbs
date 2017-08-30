@@ -1,4 +1,10 @@
 <ul class="collection">
+  {{#if clearSelectionLabel}}
+    <li {{action "onClearSelection" on="click"}} class="select-box-row clear-selection">
+      {{i18n clearSelectionLabel}}
+    </li>
+  {{/if}}
+
   {{#each filteredContent as |content|}}
     {{component selectBoxRowComponent
       content=content
@@ -11,9 +17,9 @@
       value=value
     }}
   {{else}}
-    {{#if noContentText}}
+    {{#if noContentLabel}}
       <li class="select-box-row no-content">
-        {{noContentText}}
+        {{noContentLabel}}
       </li>
     {{/if}}
   {{/each}}
