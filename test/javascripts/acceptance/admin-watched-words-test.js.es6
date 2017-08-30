@@ -23,7 +23,7 @@ QUnit.test("list words in groups", assert => {
     assert.ok(exists('.watched-words-list .watched-word'), "Always show the words when checkbox is checked.");
   });
 
-  click('.nav-stacked .censor');
+  click('.nav-stacked .censor a');
   andThen(() => {
     assert.ok(exists('.watched-words-list'));
     assert.ok(!exists('.watched-words-list .watched-word'), "Empty word list.");
