@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     // use `elementId`
     if (this.get('modalStyle') !== 'inline-modal') {
       this.set('elementId', 'discourse-modal');
-      this.set('modalStyle', 'popup-modal');
+      this.set('modalStyle', 'fixed-modal');
     }
   },
 
