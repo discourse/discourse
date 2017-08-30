@@ -1,9 +1,19 @@
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  elementId: 'discourse-modal',
-  classNameBindings: [':modal', 'modalClass'],
+  classNameBindings: [':modal', ':d-modal', 'modalClass', 'modalStyle'],
   attributeBindings: ['data-keyboard'],
+
+  init() {
+    this._super(...arguments);
+
+    // If we need to render a second modal for any reason, we can't
+    // use `elementId`
+    if (this.get('modalStyle') !== 'inline-modal') {
+      this.set('elementId', 'discourse-modal');
+      this.set('modalStyle', 'popup-modal');
+    }
+  },
 
   // We handle ESC ourselves
   'data-keyboard': 'false',

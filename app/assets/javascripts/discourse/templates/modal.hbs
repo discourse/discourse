@@ -1,24 +1,10 @@
-{{#d-modal modalClass=modalClass title=title class="hidden"}}
-  <div class="modal-outer-container">
-    <div class="modal-middle-container">
-      <div class="modal-inner-container">
-        <div class="modal-header">
-          <div class='modal-close'>
-            <a class="close" {{action "closeModal"}}>{{d-icon "times"}}</a>
-          </div>
+{{#d-modal
+  modalClass=modalClass
+  title=title
+  class="hidden"
+  errors=errors
+  closeModal=(route-action "closeModal")}}
 
-          <h3>{{title}}</h3>
-        </div>
+  {{outlet "modalBody"}}
 
-        <div id='modal-alert'></div>
-        {{outlet "modalBody"}}
-        {{#each errors as |error|}}
-          <div class="alert alert-error">
-            <button class="close" data-dismiss="alert">×</button>
-            {{error}}
-          </div>
-        {{/each}}
-      </div>
-    </div>
-  </div>
 {{/d-modal}}
