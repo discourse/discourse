@@ -105,7 +105,7 @@ SQL
 
   # Extract any urls in body
   def self.extract_from(post)
-    return unless post.present?
+    return unless post.present? && !post.whisper?
 
     added_urls = []
     TopicLink.transaction do
