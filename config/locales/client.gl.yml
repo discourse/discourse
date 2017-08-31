@@ -325,7 +325,6 @@ gl:
       mentions: "Mencións"
       messages: "Mensaxes"
       alias_levels:
-        title: "Quen pode enviar mensaxes e @mención a este grupo?"
         nobody: "Ninguén"
         only_admins: "Só administradores"
         mods_and_admins: "Só moderadores e administradores"
@@ -929,9 +928,6 @@ gl:
       most_liked: "Con máis Gústames"
       select_all: "Seleccionar todo"
       clear_all: "Borrar todo"
-      result_count:
-        one: "Un resultado para <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
       title: "buscar temas, publicacións, usuarios ou categorías"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."

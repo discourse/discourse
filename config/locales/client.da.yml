@@ -387,7 +387,6 @@ da:
       messages: "Beskeder"
       notification_level: "Standard notifikationsniveau for gruppebeskeder"
       alias_levels:
-        title: "Hvem kan sende beskeder til og @nævne denne gruppe?"
         nobody: "Ingen"
         only_admins: "Kun administratore"
         mods_and_admins: "Kun moderatore og administratore"
@@ -1161,9 +1160,6 @@ da:
       select_all: "Vælg alle"
       clear_all: "Ryd alle"
       too_short: "Dit søgekriterie er for kort."
-      result_count:
-        one: "1 resultat for <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultater for <span class='term'>\"{{term}}\"</span>"
       title: "søg efter emner, indlæg, brugere eller kategorier"
       no_results: "Ingen resultater fundet."
       no_more_results: "Ikke flere resultater."
@@ -2084,7 +2080,6 @@ da:
         hamburger_menu: '<b>=</b> Åben hamburger menu'
         user_profile_menu: '<b>p</b> Åben bruger menu'
         show_incoming_updated_topics: '<b>.</b> Vis opdaterede emner'
-        search: '<b>/</b> Søg'
         help: '<b>?</b> Åben tastaturhjælp'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Afvis Nyt/Indlæg'
         dismiss_topics: '<b>x</b>, <b>t</b> Afvis emner'
@@ -3222,9 +3217,6 @@ da:
       upload: "Upload"
       uploading: "Uploader..."
       quit: "Måske senere"
-      staff_count:
-        one: "Dit fællesskab har 1 hjælper"
-        other: "Dit fællesskab har %{count} hjælpere."
       invites:
         add_user: "tilføj"
         none_added: "Du har ikke inviteret nogen til hjælperteamet. Er du sikker på, at du vil fortsætte?"

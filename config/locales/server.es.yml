@@ -56,6 +56,7 @@ es:
         topic_closed_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido cerrado. "
         bounced_email_error: "El email es un reporte de correo rebotado."
         screened_email_error: "Sucede cuando la dirección de email del remitente ya ha sido filtrada."
+      unrecognized_error: "Error no reconocido"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -171,10 +172,12 @@ es:
   too_many_links:
     one: "Lo sentimos, los nuevos usuarios solo pueden poner un link en un post."
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post."
+  contains_blocked_words: "Tu post contiene palabras que no están permitidas."
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
   not_accepting_pms: "Lo sentimos, %{username} no acepta mensajes en este momento."
+  max_pm_recepients: "Lo sentimos, solo puedes mandar un mensaje a %{recipients_limit} recipientes como máximo."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
   invalid_characters: "contiene caracteres no válidos"
   is_invalid: "parece poco claro, es una oración completa?"
@@ -235,7 +238,6 @@ es:
       trust_level_4: "nivel_de_confianza_4"
     request_membership_pm:
       title: "Solicitud de membresía para @%{group_name}"
-      body: "Me gustaría pertenecer al grupo @%{groupName}."
   education:
     until_posts:
       one: "1 post"
@@ -870,9 +872,7 @@ es:
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
-    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas como reportes sin resolver, así como en la página /about de contacto para asuntos urgentes."
     contact_url: "URL de contacto para este sitio. Utilizada en la sección /about para asuntos urgentes."
-    queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
     download_remote_images_threshold: "Mínimo espacio en disco necesario para descargar imágenes remotas de forma local (porcentaje)"
@@ -887,7 +887,6 @@ es:
     fixed_category_positions: "Si está marcado, podrás ordenar las categorías en un orden fijado. Si no, las categorías se mostrarán según su actividad reciente."
     fixed_category_positions_on_create: "Al marcar esta opción, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. dominio.com permitirá automáticamente sub.dominio.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
     show_pinned_excerpt_mobile: "Mostrar extracto de temas destacados en la vista móvil."
     show_pinned_excerpt_desktop: "Mostrar extracto de temas destacados en la vista de escritorio."
@@ -974,8 +973,6 @@ es:
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
-    port: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Usa este puerto HTTP en vez del puerto 80 por defecto. Dejar en blanco deja por defecto el puerto 80."
-    force_hostname: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para usar el valor por defecto"
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
     invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por el staff."
@@ -1059,7 +1056,6 @@ es:
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
-    purge_unactivated_users_grace_period_days: "Período de gracia (en días) que se concede a un usuario que no haya activado su cuenta antes de eliminarla."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
@@ -1211,7 +1207,6 @@ es:
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
     email_prefix: "La [etiqueta] utilizada en el asunto de los emails. Si no está configurado, será por defecto el 'título'."
     email_site_title: "El título del sitio utilizado como remitente de los emails desde el sitio. Si no está configurado, será por defecto 'título'. Si tu 'título' contiene caracteres que no están permitidos en las cadenas del remitente del email, usa esta opción."
-    find_related_post_with_key: "Only use the reply key to find the replied-to post. (Recomendado si usas Amazon SES)"
     minimum_topics_similar: "Cuántos temas necesita haber en el foro antes de que pueda mostrarse el panel con temas similares al crear nuevos temas."
     relative_date_duration: "Número de días desde el último post antes de los cuales las fechas se mostrarán en formato relativo (7d) en vez de absoluto (20 Feb)."
     delete_user_max_post_age: "No permitir eliminar usuarios cuyo primer post tenga una antigüedad de (x) días."
@@ -1270,18 +1265,10 @@ es:
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) mira: https://highlightjs.org/static/demo/ para ver una demo"
-    feed_polling_enabled: "SOLO PARA EMBEBER: embeber feeds RSS/ATOM como posts."
-    feed_polling_url: "SOLO PARA EMBEBER: URL de los feeds RSS/ATOM a embeber."
-    feed_polling_frequency_mins: "EMBEDDING ONLY: Frecuencia de polling"
-    embed_by_username: "Nombre de usuario en Discourse del que crea los temas embebidos."
-    embed_username_key_from_feed: "Clave para extraer el nombre de usuario en Discourse desde el feed."
-    embed_title_scrubber: "Expresión regular para depurar títulos embebibles."
     embed_truncate: "Truncar los posts embebidos."
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
     embed_post_limit: "Número máximo de posts a embeber."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
-    embed_whitelist_selector: "Selector CSS para los elementos que están permitidos en los embebidos."
-    embed_blacklist_selector: "Selector CSS para los elementos que están eliminados desde los embebidos."
     notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al staff. Deshabilita esta opción introduciendo el valor 0."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
@@ -1533,6 +1520,19 @@ es:
   invite_mailer:
     title: "Invitar Usuario"
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} te ha invitado a un debate
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      en
+      > %{site_title} -- %{site_description}
+
+      Si te interesa, haz clic en el siguiente enlace:
+
+      %{invite_link}
   custom_invite_mailer:
     title: "Personalizar Invitar Usuario"
     subject_template: "%{invitee_name} te ha invitado a '%{topic_title}' en %{site_domain_name}"
@@ -1707,17 +1707,17 @@ es:
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tu mensaje ha sido ocultado.
+        Esto es un mensaje automático de %{site_name} para informarte de que tu post ha sido ocultado.
 
         %{base_url}%{url}
 
         %{flag_reason}
 
-        Varios miembros de la comunidad han reportado el mensaje antes de que fuera ocultado, por lo que te recomendamos que revises tu mensaje para reflejar su opinión. **Puedes editar tu mensaje en %{edit_delay} minutos, y será automáticamente mostrado de nuevo.**
+        Varios miembros de la comunidad han reportado este post antes de que fuera ocultado, por lo que te animamos a editarlo para reflejar sus comentarios. **Puedes editar tu post en %{edit_delay} minutos, y será automáticamente desocultado**.
 
-        Sin embargo, si el mensaje es ocultado por la comunidad una segunda vez, seguirá ocultado hasta que el staff lo revise – y se podrían tomar medidas incluida la posible suspensión de tu cuenta.
+        Sin embargo, si el post es ocultado por la comunidad una segunda vez, se mantendrá oculto hasta que sea revisado por el staff.
 
-        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
+        Para más información sobre el comportamiento que se espera de los usuarios, lee las [directrices de la comunidad](%{base_url}/guidelines)
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1829,28 +1829,15 @@ es:
     csv_export_failed:
       title: "Error en la exportación de datos en CSV"
       subject_template: "La exportación de datos falló"
-      text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
     email_reject_insufficient_trust_level:
       title: "Email rechazado, insuficiente nivel de confianza"
       subject_template: "[%{email_prefix}] Problema de email -- Insuficiente nivel de confianza"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje de email a %{destination} (con título %{former_title}) no ha funcionado.
-
-        Tu cuenta no tiene el nivel de confianza necesario para publicar nuevos temas a esta dirección de email. Si crees que se trata de un error, contacta a un miembro del staff.
     email_reject_user_not_found:
       title: "Email rechazado, cuenta de usuario no encontrada"
       subject_template: "[%{email_prefix}] Problema de email -- Usuario no encontrado"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje de email para %{destination} (titulado %{former_title}) no se ha enviado.
-
-        No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_screened_email:
       title: "Email rechazado, correo bloqueado"
       subject_template: "[%{email_prefix}] Problema con el email -- Correo bloqueado"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_inactive_user:
       title: "Email rechazado, usuario inactivo"
       subject_template: "[%{email_prefix}] Problema con el email -- Usuario inactivo"
@@ -1868,17 +1855,9 @@ es:
     email_reject_reply_user_not_matching:
       title: "Email rechazado, el usuario no coincide"
       subject_template: "[%{email_prefix}] Problema con el correo -- Email de respuesta no esperado"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se ha enviado.
-
-        No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_no_account:
       title: "Email rechazado, no hay cuenta"
       subject_template: "[%{email_prefix}] Problema con el correo -- Cuenta Desconocida"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        No hay una cuenta de usuario asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_empty:
       title: "Email rechazado, email vacío"
       subject_template: "[%{email_prefix}] Problema con el correo -- Sin Contenido"
@@ -1898,19 +1877,9 @@ es:
     email_reject_invalid_access:
       title: "Email rechazado, acceso inválido"
       subject_template: "[%{email_prefix}] Problema con el correo -- Acceso no válido"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje por email a %{destination} (titled %{former_title}) no funcionó.
-
-        Tu cuenta no tiene los privilegios para publicar nuevos temas en esa categoría. Si crees que esto es un error, contacta a un moderador o administrador.
     email_reject_strangers_not_allowed:
       title: "Rechazar emails desconocidos No permitido"
       subject_template: "[%{email_prefix}] Problema con el correo -- Acceso no válido"
-      text_body_template: |+
-        Lo sentimos, pero tu mensaje de email para %{destination} (titulado %{former_title}) no fue aceptado.
-
-
-        La categoría donde intentas enviar tu email solo acepta respuestas desde usuarios válidos con correos conocidos. Si tu crees que ves esto por error, contacta con algún administrador o moderador.
-
     email_reject_invalid_post:
       title: "Email rechazado, post inválido"
       subject_template: "[%{email_prefix}] Problema con el correo -- Posting error"
@@ -1939,38 +1908,18 @@ es:
     email_reject_reply_key:
       title: "El email rechazó la clave de respuesta"
       subject_template: "[%{email_prefix}] Problema con el correo -- Clave de Respuesta Desconocida"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        La clave de respuesta proporcionada no es válida o es desconocida, por lo que no sabemos a qué responde este email. Contacta con algún miembro del staff.
     email_reject_bad_destination_address:
       title: "Email rechazado, mala dirección del destinatario"
       subject_template: "[%{email_prefix}] Problema con el correo -- Dirección desconocida"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
-
-        Ninguna de las direcciones de emails ha sido reconocida. Por favor asegúrate de que estás enviando los correos a las direcciones correctas provistas por los administradores.
     email_reject_topic_not_found:
       title: "Email rechazado, tema no encontrado"
       subject_template: "[%{email_prefix}] Problema con el correo -- Tema no encontrado"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
-
-        El tema al que estás respondiendo ya no existe, quizá debe haber sido eliminado? Si crees que esto es un error, contacta a un administrador.
     email_reject_topic_closed:
       title: "Email rechazado, tema cerrado"
       subject_template: "[%{email_prefix}] Problema con el correo -- Tema cerrado"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
-
-        El tema actualmente está cerrado y no acepta más respuestas. Si crees que esto es un error, contacta a un administrador.
     email_reject_auto_generated:
       title: "Email autogenerado rechazado"
       subject_template: "[%{email_prefix}] Problema con el correo -- Respuesta Auto Generada"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje de correo electrónico para %{destination} (titulado %{former_title}) no funcionó.
-
-        Tu respuesta de correo fue marcada como "generada automáticamente", lo que significa que fue creado automáticamente por una computadora, en vez de un ser humano; no aceptamos este tipo de emails. Si crees que se trata de un error contacta con un administrador.
     email_error_notification:
       title: "Email, error de notificación"
       subject_template: "[%{email_prefix}] Problema con el correo -- Error de autenticación POP"
@@ -2351,8 +2300,8 @@ es:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Bienvenido a %{title}](#welcome)
-      Una cuenta es requerida. Por favor cree una cuenta o inicie sesión para continuar.
+      ## [Te damos la bienvenida a %{title}](#welcome)
+      Es necesario tener una cuenta. Por favor, regístrate o inicia sesión para continuar.
   terms_of_service:
     title: "Condiciones Generales de Uso"
     signup_form_message: 'He leído y acepto las <a href="/tos" target="_blank">Condiciones de Servicio</a>.'
@@ -3039,7 +2988,6 @@ es:
             description: "Tu página de contacto o la de tu organización. Será mostrada en la <a href='/about' target='_blank'>página de acerca de</a>."
           site_contact:
             label: "Mensajes automáticos"
-            description: "Todos los mensajes privados automáticos de Discourse serán enviados desde este usuario, como por ejemplo, el mensaje de bienvenida que se envía a los usuarios nuevos."
       corporate:
         title: "Organización"
         description: "Estos nombres se usarán en tu <a href='/privacy' target='blank'>Política de privacidad</a> y <a href='/tos' target='blank'>Términos y condiciones</a>, que podrás editar en todo momento en la categoría Staff. Si no tienes una empresa, puedes saltarte este paso por ahora."
@@ -3096,7 +3044,6 @@ es:
         description: "¿Qué estilo de Emoji prefieres para tu comunidad? Siempre puedes añadir más Emojis personalizados a trvés de Admin, Personalizar, Emoji."
       invites:
         title: "Invitar staff"
-        description: "¡Ya casi está! Invita algunos miembros del staff para ayudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar conversaciones</a> con temas interesantes y respuestas para dar tu comunidad por empezadas."
       finished:
         title: "Tu foro de Discourse está listo!"
         description: |

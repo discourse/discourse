@@ -205,9 +205,11 @@ ja:
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
   meta_category_name: "サイトフィードバック"
-  meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
+  meta_category_description: "本サイトをより使い勝手がいいものにするために議論しましょう。"
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフのためのプライベートカテゴリです。トピックは管理者とモデレータのみが閲覧できます"
+  discourse_welcome_topic:
+    title: "Discourseへようこそ"
   lounge_welcome:
     title: "ラウンジへようこそ"
     body: |2
@@ -329,15 +331,18 @@ ja:
     off_topic:
       title: '関係ない話題'
       description: 'この投稿はタイトルと投稿で定義される現在の内容に関連しておらず、どこかに移動させる必要があります'
+      short_description: 'ディスカッションに関連がない'
       long_form: '「関係ない話題」として通報'
     spam:
       title: 'スパム'
+      short_description: '営利目的か破壊行為の可能性'
       long_form: 'スパムとして通報する'
       email_title: '"%{title}"はスパムとして通報されています'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不適切'
       description: 'この投稿は、誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。'
+      short_description: 'コミュニティガイドラインへの違反'
       long_form: '不適切として通報する'
     notify_user:
       title: '@{{username}}へメッセージを送る'
@@ -346,6 +351,7 @@ ja:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "その他"
+      short_description: 'その他の理由で管理人による確認が必要'
       long_form: 'スタッフへ知らせるために通報する'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -387,6 +393,7 @@ ja:
         make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
   unsubscribe:
+    title: "配信停止"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
   user_api_key:
     title: "アプリケーションアクセスの認証"
@@ -562,7 +569,6 @@ ja:
     title: "サイトの名前です。titleタグで使用されます"
     site_description: "このサイトについて簡単に説明してください。 descriptionタグで使用されます。"
     contact_url: "このサイトの問い合わせURL。緊急連絡用問い合わせフォームに使用されます"
-    queue_jobs: "開発者ONLY! 警告! デフォルトでキューは sidekiq により処理されます。これを無効にするとサイトが動作不能になります。"
     crawl_images: "正しい幅と高さを取得するためにURLから画像を取得する"
     download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。破損した画像を防ぎます"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクスペースの最低残容量 (パーセント)"
@@ -575,7 +581,6 @@ ja:
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
-    exclude_rel_nofollow_domains: "nofollowを付与すべきではないドメインのリスト。tld.comは、sub.tld.com も許可します。最低でもクローラーが全てのコンテンツを見つけるために、このサイトのトップレベルドメインを追加する必要があります。このサイトの他の部分が別ドメインに存在している場合、それも追加します"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBox投稿の最大文字数"
     logo_url: "サイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
@@ -632,8 +637,6 @@ ja:
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     version_checks: "Discourse Hubからのアップデートを確認し、管理ページにバージョンやアップデートメッセージを表示する"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
-    port: "開発者用! 警告! デフォルトの80番ポートではなく、ここで指定した HTTP ポートを利用する。空欄でデフォルトの80番ポートを利用。"
-    force_hostname: "開発者用! 警告! URL 内のホスト名を指定。空欄でデフォルト値を利用。"
     invite_expiry_days: "招待キーの有効期間 (日)"
     invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
@@ -687,7 +690,6 @@ ja:
     clean_up_uploads: "不正アップロードを防ぐためにどこからも参照されていないアップロードファイルを削除する。警告: この設定を有効にする前に /uploads ディレクトリのバックアップを取ることをおすすめします"
     clean_orphan_uploads_grace_period_hours: "どこからもリンクされていないアップロードファイルを削除するまでの猶予期間 (単位：時間)。"
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
-    purge_unactivated_users_grace_period_days: "アクティベートしていないユーザが削除されるまでの猶予期間 (日)"
     enable_s3_uploads: "Amazon S3にアップロードします。重要: 有効なS3 credentials(access key id & secret access key)が必要です"
     s3_use_iam_profile: 'キーの取得にAWS EC2 IAM roleを使用する 注意: 有効にすると、s3 access key id" と "s3 secret access key"の設定を上書きします'
     s3_upload_bucket: "ファイルをアップロードする Amazon S3のバケット名。　警告: 小文字である必要があり、ピリオドとアンダースコアを含むことはできません"
@@ -820,14 +822,8 @@ ja:
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
-    feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
-    feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
-    embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"
-    embed_username_key_from_feed: "フィードからDiscourseユーザ名をプルするキー"
     embed_truncate: "embedされた投稿をtruncateする"
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
-    embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
-    embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
@@ -976,7 +972,6 @@ ja:
       subject_template: "データのダウンロード準備が完了しました"
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
-      text_body_template: "申し訳ありません。データのエクスポートに失敗しました。ログを確認するかスタッフメンバーにお問い合わせください。"
     email_reject_parsing:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
@@ -1007,8 +1002,9 @@ ja:
     unsubscribe:
       title: "解除"
       description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
-    reply_by_email: "回答するにはこのメールに返信するか、 %{base_url}%{url}をクリックしブラウザでアクセスしてください。"
-    visit_link_to_respond: "回答するには%{base_url}%{url}をクリックし、ブラウザでアクセスしてください。"
+    reply_by_email: "回答するにはこのメールに返信するか、 (%{base_url}%{url}) に[ブラウザでアクセスしてください]。"
+    visit_link_to_respond: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
+    visit_link_to_respond_pm: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
     posted_by: "%{post_date} に %{username} が投稿"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
@@ -1022,10 +1018,6 @@ ja:
     see_more: "もっと見る"
     search_title: "サイトを検索"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[%{title}へようこそ](#welcome)
-      アカウントが必要です。アカウントを作成するかログインしてください
   terms_of_service:
     title: "利用規約"
     signup_form_message: '<a href="/tos" target="_blank">Terms of Service</a>を読んで同意しました'

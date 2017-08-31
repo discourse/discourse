@@ -960,7 +960,6 @@ pl_PL:
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     contact_email: "Adres email kogoś, z kim należy się kontaktować w kwestii serwisu. Istotne informacje z discourse.org dotyczące krytycznych aktualizacji mogą być wysyłane pod ten adres."
     contact_url: "URL kontaktowy dla tego serwisu. Używany na podstronie /about."
-    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
@@ -975,7 +974,6 @@ pl_PL:
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     fixed_category_positions_on_create: "Jeżeli jest sprawdzone to porządkowanie kategorii będzie zależało od stworzonego tematu (requires fixed_category_positions). "
     add_rel_nofollow_to_user_content: "Dodaj rel nofollow do wszystkich treści użytkownika, poza wewnętrznymi linkami (wliczając domeny nadrzędne). Jeśli to zmienisz, musisz rebake wszystkie posty poprzez: \"rake post:rebake\""
-    exclude_rel_nofollow_domains: "Spis domen, dla których nofollow nie powinien być dodawany do linków. tld.com automatycznie zezwoli sub.tld.com. Minimalnie powinieneś dodać nadrzędną domenę tej strony żeby pomóc robotom internetowym znajdować treści. Jeśli inne części Twojej witryny znajdują się w innych domenach - dodaj również je."
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     show_pinned_excerpt_mobile: "Pokaż fragment przypiętych tematów w widoku mobilnym"
     show_pinned_excerpt_desktop: "Pokaż fragment przypiętych tematów w widoku \"wersja komputerowa\""
@@ -1148,7 +1146,6 @@ pl_PL:
     clean_up_uploads: "Usuń osierocone pliki aby zapobiec wykorzystywaniu forum jako hosting. UWAGA: przed włączeniem tej opcji zaleca się wykonanie kopii katalogu /uploads."
     clean_orphan_uploads_grace_period_hours: "Okres karencji (w dniach) przed wysłaniem sierot zostanie skasowany."
     purge_deleted_uploads_grace_period_days: "Okres karencji (w dniach) przed usunięciem upload zostanie skasowany."
-    purge_unactivated_users_grace_period_days: "Okres karencji w dniach, po upływie którego nieaktywowane konto użytkownika zostanie usunięte."
     enable_s3_uploads: "Umieść przesyły w pamięci Amazon S3. Ważne: wymaga ważnych danych uwierzytelniających (zarówno klucza id i tajnego klucza dostępu)"
     s3_use_iam_profile: 'Użyj AWS EC2 IAM aby odzyskać klucze. Pamiętaj: włączenie spowoduje nadpisanie ustawień "id klucza dostępu s3" i "tajnego klucza dostępu s3" '
     s3_upload_bucket: "Nazwa koszyka Amazon S3, do którego zostaną przesłane pliki. Ostrzeżenie: bez wielkich liter, kropek czy podkreślenia."
@@ -1696,7 +1693,7 @@ pl_PL:
 
       Kliknij ten link, by wybrać hasło:
 
-      %{base_url}/users/password-reset/%{email_token}
+      %{base_url}/u/password-reset/%{email_token}
 
 
 
@@ -1960,7 +1957,7 @@ pl_PL:
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination} (zatytułowana %{former_title}) nie została wysłana.
 
-        Twoja odpowiedź została wysłana z nieznanego adresu email. Spróbuj wysłać wiadomość z innego adresu email lub [skontaktuj się z obsługą](%{base_url}/o nas).
+        Twoja odpowiedź została wysłana z nieznanego adresu email. Spróbuj wysłać wiadomość z innego adresu email lub [skontaktuj się z obsługą](%{base_url}/about).
     email_reject_screened_email:
       title: "Odrzucenie emaila ekranowany email"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - zablokowany email"
@@ -1989,14 +1986,14 @@ pl_PL:
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
-        Twoja odpowiedź została wysłana z innego adresu email niż się spodziewaliśmy. Nie jesteśmy pewni czy jest to ta sama osoba, spróbuj wysłać wiadomość z innego adresu email lub [skontaktuj się z obsługą] %{base_url}/o nas).
+        Twoja odpowiedź została wysłana z innego adresu email niż się spodziewaliśmy. Nie jesteśmy pewni czy jest to ta sama osoba, spróbuj wysłać wiadomość z innego adresu email lub [skontaktuj się z obsługą] %{base_url}/about).
     email_reject_no_account:
       title: "Email odrzucony Brak konta"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - Nieznane Konto"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
-        Nie możemy znaleźć kont, które pasują do tego adresu email. Spróbuj wysłać wiadomość z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/o nas).
+        Nie możemy znaleźć kont, które pasują do tego adresu email. Spróbuj wysłać wiadomość z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/about).
     email_reject_empty:
       title: "Email odrzucony Pusty"
       subject_template: "[%{email_prefix}]email\" original-title=\"<span class=\"glossary-highlight\" title=\"email (click to copy)\" data-copy-glossary=\"email\">email (click to copy)\"> Problem z pocztą elektroniczną - brak zawartości"
@@ -2019,14 +2016,14 @@ pl_PL:
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
-        Twoje konto nie ma przywilejów , aby dodać nowe wątki w tej kategorii. Jeśli wydaje ci się, że jest to błąd, [skontaktuj się z obsługą](%{base_url}/o nas).
+        Twoje konto nie ma przywilejów , aby dodać nowe wątki w tej kategorii. Jeśli wydaje ci się, że jest to błąd, [skontaktuj się z obsługą](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "Odrzucenie emaila Nieznajomi niedozwoleni"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieprawidłowy dostęp"
       text_body_template: |
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
-        Kategoria, do której został wysłany ten email pozwala jedynie na odpowiedzi od użytkowników z ważnymi kontami i znanymi adresami email. Jeśli wydaje ci się, że jest to błąd [skontaktuj się z obsługą](%{base_url}/o nas).
+        Kategoria, do której został wysłany ten email pozwala jedynie na odpowiedzi od użytkowników z ważnymi kontami i znanymi adresami email. Jeśli wydaje ci się, że jest to błąd [skontaktuj się z obsługą](%{base_url}/about).
     email_reject_invalid_post:
       title: "Odrzucenia emaila niewłaściwy post"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd dodawania"
@@ -2062,10 +2059,6 @@ pl_PL:
     email_reject_bad_destination_address:
       title: "Odrzucony email zły adres docelowy"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną -- Nieznany: adres"
-      text_body_template: |
-        Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
-
-        Żaden z docelowych adresów email nie został rozpoznany. Proszę upewnić się, że wiadomość jest wysyłana do poprawnego adresu email dostarczonego przez obsługę.
     email_reject_topic_not_found:
       title: "Odrzucenie emaila nie znaleziono tematu"
       subject_template: "[%{site_name}] Problem z mailem -- Temat Nieznaleziony "
@@ -2124,7 +2117,7 @@ pl_PL:
 
         Jako środek zapobiegawczy, twoje nowe konto zostało zablokowane i nie ma możliwości dodawania odpowiedzi oraz nowych wątków dopóki obsługa przeglądanie twoje konto. Przepraszamy za niedogodności.
 
-        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności] %{base_url}/wskazówki).
+        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności] %{base_url}/guidelines).
     blocked_by_staff:
       title: "Zablokowany prze moderatora"
       subject_template: "Konto tymczasowo zawieszone"
@@ -2135,7 +2128,7 @@ pl_PL:
 
         Możesz kontynuować przeglądanie, ale nie będzie mógł dodawać odpowiedzi lub tworzyć wątków dopóki [członek obsługi](%{base_url}/o nas)  przejrzy twoje ostatnie posty. Przepraszamy za niedogodności.
 
-        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/o nas).
+        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/about).
     user_automatically_blocked:
       title: "Użytkownik Zablokowany Automatycznie"
       subject_template: "Nowy użytkownik %{username} został zablokowany z powodu oflagowania przez społeczność"
@@ -2177,7 +2170,7 @@ pl_PL:
       text_body_template: |+
         Są nowi zarejestrowani użytkownicy, oczekujący na zaakceptowanie (lub odrzucenie) przed rozpoczęciem użytkowania forum.
 
-        [Proszę przejrzeć to w sekcji admina](%{base_url}/admin/użytkownicy/lista/oczekujące).
+        [Proszę przejrzeć to w sekcji admina](%{base_url}/admin/users/list/pending).
 
     download_remote_images_disabled:
       title: "Pobieranie Zdalne Obrazów Wyłączone"
@@ -2189,14 +2182,14 @@ pl_PL:
       text_body_template: |
         Pojawiły się problemy w twojej tablicy admina.
 
-        [Proszę przejrzeć i naprawić powstałe problemy](%{base_url}/o nas).
+        [Proszę przejrzeć i naprawić powstałe problemy](%{base_url}/admin).
     new_user_of_the_month:
       title: "Jesteś nowym użytkownikiem miesiąca!"
       subject_template: "Jesteś nowym użytkownikiem miesiąca!"
       text_body_template: |
         Gratulacje, zdobyłeś **Zdobyłeś nagrodę dla nowego użytkownika za %{month_year}**.:trophy:
 
-        Ta nagroda jest przyznawana co miesiąc dla dwóch nowych użytkowników i będzie widoczne na stale na [twojej stronie użytkownika(%{base_url}/moje/odznaki).
+        Ta nagroda jest przyznawana co miesiąc dla dwóch nowych użytkowników i będzie widoczne na stale na [twojej stronie użytkownika(%{base_url}/my/badges).
 
         Szybko zostałeś naprawdę wartościowym członkiem naszej społeczności. Dziękujemy za dołączenie, kontynuuj dobrą robotę!
   unsubscribe_link: |
@@ -2222,15 +2215,6 @@ pl_PL:
     visit_link_to_respond: "[Zobacz Temat](%{base_url}%{url}) aby odpowiedzieć."
     visit_link_to_respond_pm: "[Zobacz wiadomość](%{base_url}%{url}) aby odpowiedzieć."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
-    invited_group_to_private_message_body: |
-      %{username}zaprosił @%{group_name} do wiadomości
-
-      >####%{topic_title}
-      >
-      <%{topic_excerpt}
-      at
-
-      >%{site_title}_%{site_description}
     invited_to_private_message_body: |
       %{username} zaprosił cię do wiadomści
 
@@ -2429,7 +2413,7 @@ pl_PL:
         Jeśli to nie była twoja prośba, możesz zignorować tą wiadomość.
 
         Kliknij odnośnik poniżej by ustawić hasło:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Logowanie administratora. "
       subject_template: "[%{site_name}] Login"
@@ -2447,7 +2431,7 @@ pl_PL:
         Utworzyliśmy Twoje konto na %{site_name}
 
         Kliknij na link poniżej, aby ustawić swoje hasło:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Potwierdź Nowy Email"
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
@@ -2482,7 +2466,7 @@ pl_PL:
         Nasz personel zatwierdził twoje konto na %{site_name}.
 
         Kliknij na podany link, aby potwierdzić i aktywować swoje nowe konto:
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         Jeśli podany link nie działa, spróbuj skopiować go i przykleić w pasku adresów swojej wyszukiwarki.
 
@@ -2498,7 +2482,7 @@ pl_PL:
         Witaj na %{site_name}!
 
         Kliknij na poniższy link by potwierdzić i aktywować Twoje nowe konto:
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         Jeśli powyższy link nie działa, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:

@@ -7,7 +7,7 @@
 
 pt:
   dates:
-    short_date_no_year: "D MMMoad"
+    short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "DD de MMMM de YYYY hh:mm"
   datetime_formats: &datetime_formats
@@ -48,7 +48,7 @@ pt:
         no_body_detected_error: "Acontece quando nós não conseguimos extrair um corpo e não existiam anexos."
         inactive_user_error: "Acontece quando o remetente não está ativo."
         blocked_user_error: "Acontece quando o remetente foi bloqueado."
-        bad_destination_address: "Acontece quando nenhum dos endereços de email nos campos para/cc/bcc coincide com um endereço de email configurado."
+        bad_destination_address: "Acontece quando nenhum dos endereços de e-mail nos campos Para/Cc/Bcc coincidem com um endereço de e-mail de 'A Receber' configurado."
         strangers_not_allowed_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não é membro."
         insufficient_trust_level_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não tem o nível de confiança necessário."
         reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de e-mail diferente de onde a notificação foi enviada."
@@ -136,7 +136,7 @@ pt:
     continue: "Continuar Discussão"
     error: "Erro de Integração"
     no_hosts: "Não foram configurados anfitriões para incorporar."
-    configure: "Configurar Incorporação"
+    configure: "Configurar Integração"
     more_replies:
       one: "mais 1 resposta"
       other: "mais %{count} respostas"
@@ -233,7 +233,6 @@ pt:
       trust_level_4: "nivel_de_confianca_4"
     request_membership_pm:
       title: "Pedido de Adesão para @%{group_name}"
-      body: "Eu gostaria de de solicitar a adesão em @%{group_name}."
   education:
     until_posts:
       one: "1 mensagem"
@@ -820,7 +819,6 @@ pt:
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Uma lista de domínios em que nofollow não deve ser adicionado a linkls.tld.com irá permitir automaticamente sub.tld.com. Como mínimo, deve adicionar o domínio de alto nível deste sítio para ajudar os rastreadores da internet a encontrarem todo o conteúdo. Se outras partes do seu sítio estão em outros domínicios, adicione-os também."
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
@@ -903,8 +901,6 @@ pt:
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel de administração"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
-    port: "PROGRAMADOR APENAS! AVISO! Utilize esta porta HTTP em vez da porta 80. Deixar em branco para usar a porta padrão 80."
-    force_hostname: "PROGRAMADOR APENAS! AVISO! Especifique um nome de servidor no URL. Deixe em branco para utilizar o valor por defeito."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
@@ -980,7 +976,6 @@ pt:
     clean_up_uploads: "Remover carregamentos orfãos não referenciados para prevenir alojamento ilegal. AVISO: poderá querer criar uma cópia de segurança da diretoria /uploads antes de ativar esta configuração."
     clean_orphan_uploads_grace_period_hours: "Período de carência (em horas) antes de um carregamento orfão ser removido."
     purge_deleted_uploads_grace_period_days: "Período de carência (em dias) antes de um carregamento eliminado ser apagado."
-    purge_unactivated_users_grace_period_days: "Período de carência (em dias) antes de um utilizador que não ativou a sua conta ser eliminado."
     enable_s3_uploads: "Coloca os carregamentos no armazenamento Amazon S3. IMPORTANTE: requer credenciais S3 válidas (tanto id de chave de acesso como a chave de acesso secreta)."
     s3_use_iam_profile: 'Utiliza AWS EC2 IAM para recuperar chaves. NOTA: a ativação irá substituir as configurações de "id da chave de acesso s3" e a "chave de acesso secreta s3".'
     s3_upload_bucket: "Nome do balde da Amazon S3 que contém os ficheiros carregados. AVISO: tem que ser minúsculo, sem pontos e sem sublinhados."
@@ -1178,17 +1173,10 @@ pt:
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
     autohighlight_all_code: "Forçar o destaque do código a todos os blocos de código pré-formatados mesmo quando não se especifica a linguagem."
     highlighted_languages: "Incluídas regras de destaque da sintaxe (Aviso: incluir demasiadas linguagens pode impactar o desempenho) ver: https://highlightjs.org/static/demo/ para uma demonstração"
-    feed_polling_enabled: "INCORPORAR APENAS: incorporar feeds RSS/ATOM como mensagens."
-    feed_polling_url: "INCORPORAR APENAS: URL dos feeds de RSS/ATOM para embutir."
-    embed_by_username: "Nome de utilizador Discourse do utilizador que cria tópicos embebidos."
-    embed_username_key_from_feed: "Chave para recuperar o nome de utilizador discourse do feed."
-    embed_title_scrubber: "Expressão regular usada para filtrar títulos embutíveis."
     embed_truncate: "Truncar mensagens incorporadas."
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
-    embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
-    embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
@@ -1581,25 +1569,11 @@ pt:
     bulk_invite_failed:
       subject_template: "Convite de utilizadores em massa processado com erros"
     csv_export_succeeded:
+      title: "Exportação de CSV bem-sucedida"
       subject_template: "Exportação de dados completa"
     csv_export_failed:
+      title: "Exportação de CSV falhou"
       subject_template: "A exportação dos dados falhou"
-      text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."
-    email_reject_insufficient_trust_level:
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) falhou.
-
-        A sua conta não possui o nível de confiança necessário para criar novos tópicos para este endereço de email. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
-    email_reject_user_not_found:
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        A sua resposta foi enviada de um endereço de email desconhecido. Tente enviá-la de outro endereço de email, ou contacte um membro da equipa de apoio.
-    email_reject_screened_email:
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        A sua resposta foi enviada de um endereço de email bloqueado. Tente enviá-la de outro endereço de email, ou contacte um membro da equipa de apoio.
     email_reject_inactive_user:
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
@@ -1610,18 +1584,6 @@ pt:
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua conta associada com este endereço de email foi bloqueada.
-
-    email_reject_reply_user_not_matching:
-      text_body_template: |+
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro da equipa de apoio.
-
-    email_reject_no_account:
-      text_body_template: |+
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        Não conseguimos encontrar nenhuma conta com o seu endereço de email. Tente enviar de outro endereço de email, ou contacte um membro da equipa de apoio.
 
     email_reject_empty:
       text_body_template: |
@@ -1635,17 +1597,6 @@ pt:
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
         Não conseguimos encontrar a sua resposta no email. **Certifique-se que a sua resposta se encontra no topo do email** - não conseguimos processar respostas em linha.
-    email_reject_invalid_access:
-      text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        A sua conta não tem privilégios para publicar novos tópicos nessa categoria. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
-    email_reject_strangers_not_allowed:
-      text_body_template: |+
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
-
-        A categoria que enviou neste email apenas permite respostas de utilizadores com contas validadas e endereços de email conhecidos. Se acredita que isto é um erro, contacte um membro da equipa de apoio.
-
     email_reject_invalid_post:
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
@@ -1665,11 +1616,6 @@ pt:
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A Acção de Publicação não foi reconhecida. Por favor tente novamente, ou publique através do sítio se isto continuar.
-    email_reject_bad_destination_address:
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que está a enviar o endereço de email correcto fornecido pela equipa de apoio.
     email_error_notification:
       title: "Notificação de Erro de Mensagem"
       text_body_template: |
@@ -2533,7 +2479,6 @@ pt:
         title: "Emoji"
       invites:
         title: "Convidar Equipa de Apoio"
-        description: "Está quase completo! Vamos convidar algumas pessoas para a equipa de apoio para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>disseminar as suas conversas</a>  com tópicos e respostas interessantes para que a sua comunidade ganhe tração."
       finished:
         title: "O seu Discourse está Pronto!"
         description: |

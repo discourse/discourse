@@ -402,7 +402,8 @@ it:
         staff: "Proprietari del gruppo e staff"
         owners: "Proprietari del gruppo e amministratori"
       alias_levels:
-        title: "Chi può inviare @menzionare e inviare messaggi a questo gruppo?"
+        mentionable: "Chi può @menzionare questo gruppo?"
+        messageable: "Chi può inviare messaggi a questo gruppo?"
         nobody: "Nessuno"
         only_admins: "Solo gli amministratori"
         mods_and_admins: "Solo i moderatori e gli amministratori"
@@ -490,6 +491,7 @@ it:
       topics_entered: "argomenti visualizzati"
       post_count: "n° messaggi"
       confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
+      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(scegli un'opzione)"
     user:
@@ -1031,6 +1033,10 @@ it:
       shift: 'Maiusc'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: Selezione...
+      no_content: Nessun risultato trovato
+      filter_placeholder: Ricerca...
     emoji_picker:
       filter_placeholder: Ricerca per emoji
       people: Persone
@@ -1222,6 +1228,12 @@ it:
       post_format: "#{{post_number}} da {{username}}"
       results_page: "Risultati Ricerca"
       more_results: "Ci sono più risultati. Restringi i criteri di ricerca."
+      cant_find: "Non riesci a trovare quello che stai cercando?"
+      start_new_topic: "Forse vuoi avviare un nuovo argomento?"
+      or_search_google: "O prova a cercare con Google invece:"
+      search_google: "Prova a cercare con Google invece:"
+      search_google_button: "Google"
+      search_google_title: "Cerca nel sito"
       context:
         user: "Cerca messaggi di @{{username}}"
         category: "Cerca nella categoria #{{category}}"
@@ -2152,7 +2164,7 @@ it:
         hamburger_menu: '<b>=</b> Apri il menu hamburger'
         user_profile_menu: '<b>p</b> Apri menu utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
-        search: '<b>/</b> o <b>ctrl</b>+<b>/</b> Cerca'
+        search: '<b>/</b> o <b>ctrl</b>+<b>shift</b>+<b>s</b> Cerca'
         help: '<b>?</b> Apri la legenda tasti'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovi Messaggi'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'

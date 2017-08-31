@@ -387,7 +387,6 @@ pt_BR:
       messages: "Mensagens"
       notification_level: "Nível de notificação padrão para mensagens de grupo"
       alias_levels:
-        title: "Quem pode enviar mensagem e @mention a este grupo?"
         nobody: "Ninguém"
         only_admins: "Somente administradores"
         mods_and_admins: "Somente moderadores e Administradores"
@@ -1160,9 +1159,6 @@ pt_BR:
       select_all: "Selecionar Todos"
       clear_all: "Limpar Todos"
       too_short: "Seu termo de pesquisa é muito curto."
-      result_count:
-        one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
       title: "procurar em tópicos, respostas, usuários ou categorias"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Sem mais resultados encontrados."
@@ -2071,7 +2067,6 @@ pt_BR:
         hamburger_menu: '<b>=</b> Abrir o menu hambúrguer'
         user_profile_menu: '<b>p</b> Abrir menu do usuário'
         show_incoming_updated_topics: '<b>.</b> Exibir tópicos atualizados'
-        search: '<b>/</b> Pesquisa'
         help: '<b>?</b> Abrir ajuda de teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Novas Postagens'
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Tópicos'
@@ -3157,9 +3152,6 @@ pt_BR:
       upload: "Enviar"
       uploading: "Enviando..."
       quit: "Talvez Depois"
-      staff_count:
-        one: "Sua comunidade tem 1 membro na equipe."
-        other: "Sua comunidade tem %{count} membros na equipe."
       invites:
         add_user: "adicionar"
         none_added: "Você ainda não convidou ninguém para a equipe. Tem certeza que deseja continuar?"

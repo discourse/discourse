@@ -141,7 +141,6 @@ ja:
         eu_west_2: "EU(ロンドン)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
-        us_east_2: "US East"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -327,7 +326,6 @@ ja:
         add_members: "メンバーを追加"
         delete_member_confirm: "%{group}から%{username}を削除しますか?"
       name_placeholder: "グループネームはユーザー名と同様にスペース無し"
-      public: "自由なグループへの加入・脱退をユーザーに許可する (一般公開グループである必要があります)"
       empty:
         posts: "このグループのメンバーによる投稿はありません。"
         members: "このグループにはメンバーがいません。"
@@ -339,10 +337,13 @@ ja:
       join: "グループに参加"
       leave: "グループから離脱"
       request: "グループへの参加をリクエスト"
+      message: "メッセージ"
       automatic_group: 自動作成グループ
       closed_group: クローズドグループ
       is_group_user: "このグループのメンバーです"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
+      membership_request:
+        submit: "リクエストを送信"
       membership: "メンバーシップ"
       name: "名前"
       user_count: "メンバー数"
@@ -368,7 +369,6 @@ ja:
         staff: "グループオーナーとスタッフのみ"
         owners: "グループオーナーと管理者のみ"
       alias_levels:
-        title: "誰がこのグループにメッセージや@メンションが送れますか?"
         nobody: "無し"
         only_admins: "管理者のみ"
         mods_and_admins: "管理者とモデレータのみ"
@@ -379,10 +379,8 @@ ja:
         none: "なし"
       notifications:
         watching:
-          title: "待機中"
-          description: "メッセージ内の新規投稿はあなただけに通知され、新規返信数が表示されます。"
+          title: "ウォッチ中"
         watching_first_post:
-          title: "最初の投稿に注意"
           description: "グループ内新規トピック欄における最初の投稿はあなただけに通知されます。"
         tracking:
           title: "追跡中"
@@ -1722,7 +1720,6 @@ ja:
         hamburger_menu: '<b>=</b> メニューを開く'
         user_profile_menu: '<b>p</b> ユーザーメニューを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
-        search: '<b>/</b> 検索'
         help: '<b>?</b> キーボードヘルプを表示する'
         dismiss_new_posts: '<b>x</b>, <b>r</b> 新規投稿を非表示にする'
         dismiss_topics: '<b>x</b>, <b>t</b> トピックを既読にする'
@@ -2540,8 +2537,6 @@ ja:
       upload: "アップロード"
       uploading: "アップロード中..."
       quit: "後で"
-      staff_count:
-        other: "コミュニティには%{count}名のスタッフがいます。"
       invites:
         add_user: "追加"
         none_added: "あなたはスタッフを招待していません。 続行してもよろしいですか？"

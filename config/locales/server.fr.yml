@@ -235,7 +235,6 @@ fr:
       trust_level_4: "niveau_confiance_4"
     request_membership_pm:
       title: "Demande d'adhésion pour @%{group_name}"
-      body: "Je souhaiterais adhérer à @%{group_name}."
   education:
     until_posts:
       one: "1 message"
@@ -870,9 +869,7 @@ fr:
     educate_until_posts: "Lors de la rédaction des (n) premiers nouveaux sujets de l'utilisateur, afficher le panneau d'aide à la saisie."
     title: "Le nom du site, utilisé dans la balise title."
     site_description: "Décrivez ce site en une seule phrase, utilisée dans le tag meta description."
-    contact_email: "Adresse de courriel du contact clé pour ce site. Utilisée pour des notifications critiques telles que des signalements en attente ou des faits urgents en provenance du formulaire de contact de la page À propos."
     contact_url: "Adresse de contact pour ce site. Utilisée sur la formulaire de contact sur la page À propos pour les notifications critiques."
-    queue_jobs: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Par défaut, empiler les travaux dans sidekiq. Si désactivé, votre site sera cassé."
     crawl_images: "Récupérer les images provenant de sources tierces pour y insérer les dimensions correctes (hauteur et largeur)."
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant ; cela permet d'éviter les liens morts."
     download_remote_images_threshold: "Quantité minimum d'espace disque requise pour télécharger localement des images distantes (en pourcentage)"
@@ -887,7 +884,6 @@ fr:
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Une liste de domaines pour lesquels l'attribut nofollow ne sera pas ajouté aux liens. tld.com autorisera automatiquement sub.tld.com également. Au minimum, vous devriez ajouter le domaine de premier niveau (TLD) de ce site pour aider les robots d'indexation à trouver tout le contenu. Si d'autres parties du site sont sur d'autre domaines, ajoutez-les aussi."
     post_excerpt_maxlength: "Longueur maximale d'un extrait / résumé de message."
     show_pinned_excerpt_mobile: "Afficher les extraits des sujets épinglés en vue mobile."
     show_pinned_excerpt_desktop: "Afficher les extraits des sujets épinglés en vue bureau."
@@ -972,8 +968,6 @@ fr:
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
-    port: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Utiliser ce port HTTP plutôt que celui par défaut 80. Laissez vide par défaut 80."
-    force_hostname: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Voulez-vous spécifier un nom d'hôte dans l'URL ? Sinon, laisser vide par défaut."
     invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides"
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "Les inscriptions sont désactivées, elles ne peuvent se faire uniquement sur invitation par le staff."
@@ -1055,7 +1049,6 @@ fr:
     clean_up_uploads: "Retirer les fichiers téléchargés orphelins pour prévenir les hébergements illégaux. ATTENTION: vous devriez faire une sauvegarde de votre répertoire /uploads avant d'activer ce paramètre."
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
-    purge_unactivated_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé."
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans caractères de soulignement."
@@ -1264,17 +1257,10 @@ fr:
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances) voir : https://highlightjs.org/static/demo/ pour une démo"
-    feed_polling_enabled: "INTÉGRATION UNIQUEMENT : Détermine l'intégration d'un flux RSS/ATOM en tant que messages."
-    feed_polling_url: "INTÉGRATION UNIQUEMENT : URL du flux RSS/ATOM à intégrer."
-    embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
-    embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
-    embed_title_scrubber: "Expression régulière pour nettoyer les titres intégrables."
     embed_truncate: "Tronquer les messages embarqués."
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
-    embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
-    embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
     notify_about_flags_after: "S'il y a des signalements qui n'ont pas été traités après ce nombre d'heures, envoyer un message privé aux responsables. Mettre 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
@@ -1694,21 +1680,6 @@ fr:
     post_hidden:
       title: "Message caché"
       subject_template: "Message caché suite à des signalements de la communauté"
-      text_body_template: |+
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Plusieurs membres de la communauté ont signalé ce message avant qu'il soit masqué, merci de modifier votre message en fonction des raisons invoquées. **Vous pouvez modifier votre message après %{edit_delay} minutes, il sera alors automatiquement démasqué.**
-
-        Cependant, si votre message est masqué par la communauté une seconde fois, il le restera jusqu'à ce qu'un membre de l'équipe s'en occupe – et il est possible que des actions supplémentaires soient entreprises, y compris la suspension de votre compte.
-
-        Afin d'être guidé, merci de vous référer à notre [charte](%{base_url}/guidelines).
-
     usage_tips:
       text_body_template: |+
         Pour connaître quelques astuces pour vous aider à démarrer en tant que nouveau membre, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1818,25 +1789,12 @@ fr:
     csv_export_failed:
       title: "Export CSV échoué"
       subject_template: "Échec de l'exportation des données "
-      text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consulter les journaux ou contacter un responsable."
     email_reject_insufficient_trust_level:
       subject_template: "[%{email_prefix}] Problème de courriel -- Niveau de confiance insuffisant "
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse de courriel. Si vous pensez qu'il s'agit d'une erreur, contacter un responsable.
     email_reject_user_not_found:
       subject_template: "[%{site_name}] Problème de courriel -- L'utilisateur est introuvable"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre réponse a été envoyée depuis une adresse inconnue. Essayez de l'envoyer depuis une autre adresse, ou contactez un responsable.
     email_reject_screened_email:
       subject_template: "[%{email_prefix}] Problème de courriel -- Courriel bloqué"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou contactez un responsable.
     email_reject_inactive_user:
       subject_template: "[%{email_prefix}] Problème de courriel -- Utilisateur inactif"
       text_body_template: |
@@ -1851,16 +1809,8 @@ fr:
         Le compte associé avec cette adresse a été bloqué.
     email_reject_reply_user_not_matching:
       subject_template: "[%{email_prefix}] Problème de courriel -- Adresse de réponse inattendue"
-      text_body_template: |
-        Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
-
-        Votre réponses nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse, ou contactez un responsable.
     email_reject_no_account:
       subject_template: "[%{email_prefix}] Problème de courriel - Compte inconnu"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Aucun compte utilisateur avec cette adresse n'a été trouvé. Essayez de l'envoyer depuis une autre adresse ou contactez un responsable.
     email_reject_empty:
       subject_template: "[%{email_prefix}] Problème de courriel - Aucun contenu"
       text_body_template: |
@@ -1877,16 +1827,8 @@ fr:
         Nous n'avons pas pu trouver votre réponse dans le courriel. **Assurez-vous que votre réponse se trouve au début du courriel** -- nous ne pouvons pas traiter les réponses en ligne.
     email_reject_invalid_access:
       subject_template: "[%{email_prefix}] Problème de courriel -- Accès invalide"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet dans cette catégorie. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_strangers_not_allowed:
       subject_template: "[%{email_prefix}] Problème de courriel -- Accès invalide"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        La catégorie vers laquelle vous avez envoyé ce courriel autorise uniquement les réponses d'utilisateurs avec un compte valide et une adresse de courriel connue. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_invalid_post:
       subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'envoi d'un message"
       text_body_template: |
@@ -1911,34 +1853,14 @@ fr:
         Le Post Action n'était pas reconnu. Veuillez réessayer ou rédigez votre message directement sur le site si le problème persiste.
     email_reject_reply_key:
       subject_template: "[%{email_prefix}] Problème de courriel -- Clé de réponse inconnue"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse. Contactez un responsable.
     email_reject_bad_destination_address:
       subject_template: "[%{email_prefix}] Problème de courriel - Adresse de destinataire inconnue"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Aucune des adresses de destination n'est reconnue. Veuillez vérifier que vous envoyez bien à l'adresse de courriel fournie par les responsables.
     email_reject_topic_not_found:
       subject_template: "[%{email_prefix}] Problème de courriel -- Sujet introuvable"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Le sujet à lequel vous répondez n'existe plus. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_topic_closed:
       subject_template: "[%{email_prefix}] Problème de courriel -- Sujet fermé"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Le sujet à lequel vous répondez est actuellement fermé et n'accepte plus de réponses. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_auto_generated:
       subject_template: "[%{email_prefix}] Problème de courriel - Réponse automatique"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre courriel a été marqué comme "automatiquement généré", ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ces types de courriel. Si vous pensez qu'il s'agit d'une erreur, contacter un responsable.
     email_error_notification:
       subject_template: "[%{email_prefix}] Problème de courriel -- Erreur d'authentification POP3"
       text_body_template: |
@@ -2304,10 +2226,6 @@ fr:
     see_more: "Plus"
     search_title: "Rechercher dans ce site"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Bienvenue sur %{title}](#bienvenue)
-      Un compte est requis. Veuillez créer un compte ou vous connecter pour continuer.
   terms_of_service:
     title: "Conditions générales d'utilisation"
     signup_form_message: 'J''ai lu et j''accepte les <a href="/tos" target="_blank">conditions générales d''utilisation</ a>.'
@@ -2754,7 +2672,6 @@ fr:
             description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='/about' target='_blank'>À propos</a>."
           site_contact:
             label: "Messages automatiques"
-            description: "Tous les messages privés automatiques de Discourse seront envoyés par cet utilisateur comme le message de bienvenue envoyé à chaque nouvel utilisateur."
       corporate:
         title: "Organisation"
         description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."
@@ -2811,7 +2728,6 @@ fr:
         description: "Quel style d'Emoji préférez-vous pour votre communauté ? Vous pouvez ajouter des Emoji supplémentaires dans Administration, Personnaliser, Emoji."
       invites:
         title: "Inviter des responsables"
-        description: "Vous avez presque fini ! Invitons quelques responsables pour aider à <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>entamer les discussions</a> avec des sujets et réponses intéressantes pour lancer la communauté."
       finished:
         title: "Votre Discourse est prêt !"
         description: |

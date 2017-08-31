@@ -402,7 +402,6 @@ el:
         staff: "Ιδιοκτήτες ομάδας και προσωπικό"
         owners: "Ιδιοκτήτες ομάδας και διαχειριστές"
       alias_levels:
-        title: "Ποιός μπορεί να στείλει μήνυμα και να @αναφέρει αυτή την ομάδα?"
         nobody: "Κανένας"
         only_admins: "Μόνο διαχειριστές"
         mods_and_admins: "Μόνο συντονιστές και διαχειριστές"
@@ -1032,7 +1031,6 @@ el:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
-      no_content: Χωρίς περιεχόμενο
       filter_placeholder: Αναζήτηση...
     emoji_picker:
       filter_placeholder: Αναζήτηση για emoji
@@ -2165,7 +2163,7 @@ el:
         hamburger_menu: '<b>=</b>''Ανοιξε το μενού χάμπουρκερ'
         user_profile_menu: '<b>p</b> Άνοιγμα του μενού του χρήστη'
         show_incoming_updated_topics: '<b>.</b> Εμφάνιση ενημερωμένων νημάτων'
-        search: '<b>/</b> ή <b>ctrl</b>+<b>/</b> Αναζήτηση'
+        search: '<b>/</b> ή <b>ctrl</b>+<b>shift</b>+<b>s</b> Αναζήτηση'
         help: '<b>?</b> Εμβάνισε τη βοήθεια πληκτρολογίου'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Απόρριψη Νέων/Αναρτήσεων'
         dismiss_topics: '<b>x</b>, <b>t</b> Απόρριψη Νημάτων'

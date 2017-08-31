@@ -402,7 +402,8 @@ nb_NO:
         staff: "Gruppemedlemmer og personale"
         owners: "Gruppeeiere og administratorer"
       alias_levels:
-        title: "Hvem kan sende meldinger til og @nevne denne gruppen?"
+        mentionable: "Hvem kan @nevne denne gruppen?"
+        messageable: "Hvem kan sende meldinger til denne gruppen?"
         nobody: "Ingen"
         only_admins: "Kun administratorer"
         mods_and_admins: "Kun moderatorer og administratorer"
@@ -490,6 +491,7 @@ nb_NO:
       topics_entered: "emner laget"
       post_count: "# innlegg"
       confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
+      powered_by: "drevet av <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(velg et alternativ)"
     user:
@@ -1032,7 +1034,8 @@ nb_NO:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
-      no_content: Inget innhold
+      default_header_text: Velg…
+      no_content: Ingen treff funnet
       filter_placeholder: Søk…
     emoji_picker:
       filter_placeholder: Søk etter emoji
@@ -2165,7 +2168,7 @@ nb_NO:
         hamburger_menu: '<b>=</b> Åpne hamburgermeny'
         user_profile_menu: '<b>p</b> Åpne brukermenyen'
         show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
-        search: '<b>/</b> eller <b>ctrl</b>+<b>/</b> Søk'
+        search: '<b>/</b> eller <b>ctrl</b>+<b>shift</b>+<b>s</b> Søk'
         help: '<b>?</b> Åpne tastaturhjelp'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Avvis Nye/Innlegg'
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis emner'

@@ -456,7 +456,6 @@ pl_PL:
         staff: "Właściciele grupy i zespół"
         owners: "Właściciele grupy i administratorzy"
       alias_levels:
-        title: "Kto może wysyłać wiadomości i używać @aliasu tej grupy?"
         nobody: "Nikt"
         only_admins: "Tylko administratorzy"
         mods_and_admins: "Tylko moderatorzy i administratorzy"
@@ -2350,7 +2349,6 @@ pl_PL:
         hamburger_menu: '<b>=</b> Otwórz menu'
         user_profile_menu: '<b>p</b> Otwórz menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> Pokaż zaktualizowane tematy'
-        search: '<b>/</b>lub<b>ctrl</b>+<b>/</b>Wyszukaj'
         help: '<b>?</b> Pokaż skróty klawiszowe'
         dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
@@ -3575,11 +3573,6 @@ pl_PL:
       upload: "Wyślij"
       uploading: "Wysyłanie…"
       quit: "Może później"
-      staff_count:
-        one: "W twojej społeczności jest 1 pracownik."
-        few: "W twojej społeczności jest %{count} pracowników."
-        many: "W twojej społeczności jest %{count} pracowników."
-        other: "W twojej społeczności jest %{count} pracowników."
       invites:
         add_user: "dodaj"
         none_added: "Nie zaprosiłeś nikogo. Czy na pewno chcesz kontynuować?"

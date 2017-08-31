@@ -56,6 +56,7 @@ nl:
         topic_closed_error: "Gebeurt wanneer een antwoord is ontvangen, maar het verwante topic is gesloten."
         bounced_email_error: "E-mail is een gebouncet e-mailrapport."
         screened_email_error: "Gebeurt wanneer het e-mailadres van de afzender al was gecontroleerd."
+      unrecognized_error: "Onbekende Fout"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -171,6 +172,7 @@ nl:
   too_many_links:
     one: "Sorry, nieuwe gebruikers kunnen maar één koppeling in een bericht plaatsen."
     other: "Sorry, nieuwe gebruikers kunnen maar %{count} koppelingen in een bericht plaatsen."
+  contains_blocked_words: "Je bericht bevat woorden die niet zijn toegestaan."
   spamming_host: "Sorry, u kunt geen koppeling naar die host plaatsen."
   user_is_suspended: "Geschorste gebruikers mogen geen berichten plaatsen."
   topic_not_found: "Er is iets fout gegaan. Misschien is het topic gesloten of verwijderd terwijl u het bekeek?"
@@ -207,6 +209,7 @@ nl:
     user_posts: "Nieuwste berichten van @%{username}"
     user_topics: "Nieuwste topics van @%{username}"
     tag: "Gemarkeerde onderwerpen"
+    badge: "%{display_name} badge op %{site_title}"
   too_late_to_edit: "Dat bericht is te lang geleden geschreven. Het kan niet meer worden gewijzigd of verwijderd."
   revert_version_same: "De huidige versie is dezelfde als de versie die u probeert terug te zetten."
   excerpt_image: "afbeelding"
@@ -232,6 +235,8 @@ nl:
       trust_level_2: "vertrouwensniveau_2"
       trust_level_3: "vertrouwensniveau_3"
       trust_level_4: "vertrouwensniveau_4"
+    request_membership_pm:
+      title: "Lidmaatschapsverzoek voor @%{group_name}"
   education:
     until_posts:
       one: "1 bericht"
@@ -318,6 +323,7 @@ nl:
               too_many_users: "U kunt alleen waarschuwingen naar één gebruiker tegelijk sturen."
               cant_send_pm: "Sorry, u kunt geen privébericht naar die gebruiker sturen."
               no_user_selected: "U moet een geldige gebruiker selecteren."
+              reply_by_email_disabled: "Antwoorden met een email is uitgeschakeld."
             featured_link:
               invalid: "is ongeldig. URL moet http:// of https:// bevatten."
               invalid_category: "kan niet worden bewerkt in deze categorie."
@@ -346,6 +352,14 @@ nl:
           attributes:
             name:
               taken: wordt al door een andere emoji gebruikt
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "moet in de toekomst zijn."
+        watched_word:
+          attributes:
+            word:
+              too_many: "Te veel woorden voor die aktie"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>het veld Over mij van uw profiel is momenteel leeg; <a href='/u/%{username_lower}/preferences/about-me'>zou u dit willen invullen?</a></div>"
@@ -407,6 +421,7 @@ nl:
       invalid_email_in: "'%{email}' is geen geldig e-mailadres."
       email_already_used_in_group: "'%{email}' wordt al gebruikt door de groep '%{group_name}'."
       email_already_used_in_category: "'%{email}' wordt al gebruikt door de categorie '%{category_name}'."
+      description_incomplete: "De categorie beschrijving moet minimaal een paragraaf hebben."
     cannot_delete:
       uncategorized: "Ongecategoriseerd kan niet worden verwijderd"
       has_subcategories: "Deze categorie kan niet worden verwijderd, omdat deze subcategorieën bevat"
@@ -562,39 +577,48 @@ nl:
     off_topic:
       title: 'Off-topic'
       description: 'Dit bericht is niet relevant voor de huidige discussie zoals beschreven door de titel en het eerste bericht, en dient wellicht naar een ander topic te worden verplaatst.'
+      short_description: 'Niet relevant voor de discussie'
       long_form: 'heeft dit als off-topic gemarkeerd'
     spam:
       title: 'Spam'
+      description: 'Dit bericht is een advertentie of vandalisme. Het is niet relevant voor het huidige onderwerp.'
+      short_description: 'Dit is spam'
       long_form: 'heeft dit als spam gemarkeerd'
       email_title: '''%{title}'' is als spam gemarkeerd'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ongepast'
       description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="/guidelines">onze gemeenschapsrichtlijnen</a> zou beschouwen.'
+      short_description: 'Een overtreding van <a href="/guidelines">onze community richtlijnen</a>'
       long_form: 'heeft dit als ongepast gemarkeerd'
     notify_user:
       title: '@{{username}} een bericht sturen'
       description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
+      short_description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
       long_form: 'bericht verstuurd naar gebruiker'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
       description: 'Dit bericht vereist aandacht van een staflid om een andere reden dan hierboven vermeld.'
+      short_description: 'Dit bericht vereist aandacht van een staflid om een andere reden'
       long_form: 'heeft dit gemarkeerd voor aandacht van een staflid'
       email_title: 'Een bericht in ''%{title}'' vereist aandacht van een staflid'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bladwijzer maken'
       description: 'Bladwijzer voor dit bericht maken'
+      short_description: 'Bladwijzer voor dit bericht maken'
       long_form: 'heeft een bladwijzer voor dit bericht gemaakt'
     like:
       title: 'Leuk'
       description: 'Dit bericht leuk vinden'
+      short_description: 'Like dit bericht'
       long_form: 'vindt dit bericht leuk'
     vote:
       title: 'Stemmen'
       description: 'Stemmen op dit bericht'
+      short_description: 'Stemmen op dit bericht'
       long_form: 'heeft op dit bericht gestemd'
   user_activity:
     no_bookmarks:
@@ -603,6 +627,9 @@ nl:
     no_likes_given:
       self: "U hebt geen berichten geliket."
       others: "Geen gelikete berichten."
+    no_replies:
+      self: "U hebt op geen enkel bericht geantwoord."
+      others: "Geen antwoorden."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -840,15 +867,16 @@ nl:
     min_search_term_length: "Minimumlengte van een zoekterm in tekens"
     search_prefer_recent_posts: "Als doorzoeken van uw grote forum traag werkt, probeert deze optie eerst een index van recentere berichten"
     search_recent_posts_size: "Het aantal in de index te behouden recente berichten "
+    log_search_queries: "Zoekopdrachten van gebruikers opslaan"
+    search_query_log_max_size: "Maximum aantal te bewaren zoekopdrachten"
     allow_uncategorized_topics: "Topics zonder categorie toestaan. WAARSCHUWING: Alle topics moet weer aan een categorie zijn toegekend voor dit wordt uitgezet."
     allow_duplicate_topic_titles: "Topics met dezelfde identieke titels toestaan"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "Laat de popup voor nieuwe gebruikers zien als een gebruiker start met het typen van hun eerste (n) nieuwe berichten in de berichtopsteller."
     title: "De naam van deze site, wordt gebruikt in de titeltag"
     site_description: "Omschrijf de site in één zin. Deze wordt getoond in de meta-omschrijvingstag."
-    contact_email: "E-mailadressen van een contactpersonen van deze site. Belangrijke updates, zoals onbehandelde meldingen, maar ook berichten van het /about contactformulier worden naar dit adres gestuurd."
+    contact_email: "e-mailadres van de hoofdpersoon verandwoordelijk voor deze website. Wordt gebruikt voor kritische meldingen, als ook voor het /about contact formulier voor dringende vragen."
     contact_url: "Contact URL voor deze site. Wordt gebruikt op het /about contactformulier voor dringende zaken."
-    queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: "Haal afbeeldingen van externe URLs om de correcte breedte- en hoogtedimensies in te voegen"
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
@@ -863,8 +891,9 @@ nl:
     fixed_category_positions: "Wanneer aangevinkt, kunt u categorieën in een vaste volgorde schikken. Wanneer niet aangevinkt, worden categorieën op activiteit vermeld."
     fixed_category_positions_on_create: "Wanneer aangevinkt, wordt de categorievolgorde bij het maken van een topic aangehouden (vereist fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Een lijst van domeinen waar ´nofollow´ niet aan de links moet worden toegevoegd. (voorbeelddomein.com staat automatisch sub.voorbeelddomein toe). Voeg minimaal het 'top-level' domein van deze site toe om web crawlers alle content te laten vinden. Als delen van deze site zich op andere domeinen bevinden, voeg deze eveneens toe."
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
+    show_pinned_excerpt_mobile: "Laat een fragment bij vastgemaakte topics zien op mobiel."
+    show_pinned_excerpt_desktop: "Laat een fragment bij vastgemaakte topics zien op desktop."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     max_oneboxes_per_post: "Maximale aantal Oneboxes in een bericht."
     logo_url: "De logoafbeelding links bovenaan op uw website moet de vorm van een brede rechthoek hebben. Wanneer leeg gelaten, wordt de titeltekst van de website getoond."
@@ -927,18 +956,19 @@ nl:
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
     version_checks: "Ping de Discourse-Hub voor updates en laat meldingen van nieuwe versies zien op het dashboard van de beheerder."
     new_version_emails: "Stuur een email naar het contact_email adres wanneer een nieuwe versie van Discourse beschikbaar is."
-    port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
-    force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
     invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
     invite_only: "Openbare registratie is uitgeschakeld; alle nieuwe gebruikers moeten expliciet worden uitgenodigd door stafleden."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
     min_password_length: "Minimum lengte wachtwoord."
     min_admin_password_length: "Minimale wachtwoordlengte voor de beheerder."
+    password_unique_characters: "Minimum aantal unieke karakters dat een wachtwoord nodig heeft."
     block_common_passwords: "Accepteer geen wachtwoorden die voorkomen in de 10.000 meest voorkomende wachtwoorden."
     enable_sso: "Schakel single sign on in via een externe site (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS '* MOETEN * DOOR DE EXTERNE SITE WORDEN GEVALIDEERD)"
+    verbose_sso_logging: "Uitgebreide SSO gegevens opslaan in /logs"
     enable_sso_provider: "Pas  Discourse SSO provider protocol toe op het /session/sso_provider eindpunt, vereist dat sso_secret is ingesteld"
     sso_secret: "Geheime tekenreeks voor het cryptografisch valideren van SSO informatie, zorg er voor dat het 10 tekens of langer is"
+    sso_overrides_bio: "Overschrijft de biografie in het gebruikersprofiel en voorkomt dat de gebruiker het kan wijzigen"
     sso_overrides_email: "Overschrijft bij elke aanmelding lokaal opgegeven mailadres door mailadres uit SSO payload van externe site, en voorkomt lokaal wijzigen. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale mailadressen)"
     sso_overrides_username: "Overschrijft bij elke aanmelding lokaal opgegeven gebruikersnaam door gebruikersnaam uit SSO payload van externe site, en voorkomt lokaal wijzigen. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in gebruikersnaam lengte/vereisten)"
     sso_overrides_name: "Overschrijft bij elke aanmelding lokaal opgegeven volledige naam door volledige naam uit SSO payload van externe site, en voorkomt lokaal wijzigen"
@@ -968,6 +998,7 @@ nl:
     backup_frequency: "Hoe vaak we een back-up van de site maken, in dagen."
     enable_s3_backups: "Upload voltooide back-ups naar S3. LET OP: Zorg ervoor dat je je S3 inloggegevens hebt ingevuld in de Bestanden instellingen."
     s3_backup_bucket: "De S3 bucket voor de backups. WAARSCHUWING: zorg er voor dat dit een privébucket is."
+    s3_disable_cleanup: "Backups van S3 niet verwijderen als het lokaal wordt verwijdert."
     backup_time_of_day: "Tijdstip UTC wanneer de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads ook meenemen in de geplande back-ups. Deze optie uitschakelen zal alleen een back-up maken van de database."
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld updaten, in seconden."
@@ -989,12 +1020,14 @@ nl:
     max_logins_per_ip_per_minute: "Maximale aantal toegestane aanmeldingen per IP-adres per minuut"
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze mogelijkheid uit. LET OP: herstart vereist."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze mogelijkheid uit. LET OP: herstart vereist."
+    categories_topics: "Aantal getoonde topics op de categoriepagina."
     suggested_topics: "Aantal aanbevolen topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in aanbevolen topics."
+    suggested_topics_max_days_old: "Aanbevolen topics moeten niet meer dan n dagen oud zijn."
     clean_up_uploads: "Verwijder weesbestanden zonder referentie om illegale hosting te voorkomen. LET OP: maak een back-up van je /uploads directory voordat je deze instelling aanzet."
     clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
-    purge_unactivated_users_grace_period_days: "Respijtperiode (in dagen) voordat een gebruiker die het account niet heeft geactiveerd wordt verwijderd."
+    purge_unactivated_users_grace_period_days: "Periode (in dagen) voordat een gebruiker die zijn account niet heeft geactiveerd wordt verwijderd. Zet op 0 om gebruikers nooit te verwijderen."
     enable_s3_uploads: "Uploads plaatsen op Amazon S3 storage. LET OP: vereist geldige S3 inloggegevens (zowel acces key id als secret access key)"
     s3_use_iam_profile: 'Gebruik AWS EC2 IAM rol om keys binnen te halen. LET OP: na inschakelen dit gebruikt i.p.v. de instellingen voor "s3 access key id" en "s3 secret access key".'
     s3_upload_bucket: "De naam van de Amazon S3 bucket waar bestanden naar worden geüpload. LET OP: moet bestaan uit kleine letters, zonder puntjes en geen underscores."
@@ -1004,7 +1037,9 @@ nl:
     s3_cdn_url: "De CDN URL voor alle S3 assets (bijvoorbeeld: https://cdn.ergens.com). LETOP: na het wijzigen van deze instelling moeten je alle oude berichten rebaken."
     avatar_sizes: "Lijst van automatisch gegenereerde avatar groottes."
     external_system_avatars_enabled: "Gebruik een avatars service van een extern systeem."
+    external_system_avatars_url: "URL van de externe avatar service. Toegestaande vervangingen zijn {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL van de standaard opengraph afbeelding."
+    png_to_jpg_quality: "Kwaliteit van het geconverteerde JPG bestand (1 is laagste kwaliteit, 99 is beste kwaliteit, 100 om uit te schakelen)."
     enable_flash_video_onebox: "Embedden van swf en flv (Adobe Flash) links toestaan in oneboxen. LET OP: dit kan onveilig zijn"
     default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden."
     default_trust_level: "Het standaard trustlevel (0-4) voor alle nieuwe gebruikers. LET OP! Wijzigen van deze instelling geeft een serieus risico op spam."
@@ -1148,15 +1183,9 @@ nl:
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Wanneer iemand begint met antwoorden op een topic waar het laatste antwoord ouder is dan dit aantal dagen, zal er een waarschuwing worden weergegeven. Kan worden uitsgechakeld door op 0 te zetten."
     autohighlight_all_code: "Forceer het toepassen van code highlighting bij alle opgemaakte code blokken, zelfs als de codetaal niet expliciet is opgeven."
-    feed_polling_enabled: "ALLEEN INSLUITEN: Het al of niet insluiten van een RSS / ATOM-feed als berichten."
-    feed_polling_url: "ALLEEN INSLUITEN: URL van de RSS/ATOM feed om in te sluiten."
-    embed_by_username: "Discourse gebruikersnaam van de gebruiker die de ingesloten topics aanmaakt."
-    embed_username_key_from_feed: "Sleutel waarmee de discourse gebruikersnaam uit de feed kan worden gehaald."
     embed_truncate: "Kort de geembedde berichten in"
     embed_post_limit: "Maximale aantal te embedden berichten."
     embed_username_required: "De gebruikersnaam om topics aan te maken is vereist."
-    embed_whitelist_selector: "CSS-selector voor de elementen die zijn toegestaan in invoegberichten."
-    embed_blacklist_selector: "CSS-selector voor de elementen die zijn verwijderd uit invoegberichten."
     notify_about_flags_after: "Als er na dit aantal uren markeringen zijn die nog niet zijn afgehandeld, een privébericht naar stafleden sturen. Gebruik 0 om dit uit te schakelen."
     show_create_topics_notice: "Als de site minder dan 5 publieke topics heeft, toon dan een melding waarin admins gevraagd wordt om een aantal topics te creëren."
     delete_drafts_older_than_n_days: Verwijder concepten ouder dan (n) dagen.
@@ -1388,7 +1417,6 @@ nl:
     csv_export_failed:
       title: "CSV Export Mislukt"
       subject_template: "Export mislukt"
-      text_body_template: "Het spijt ons, maar de export is mislukt. Bekijk de logbestanden of neem contact op met de staf."
     email_reject_inactive_user:
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
@@ -1399,16 +1427,6 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Het account dat bij dit e-mailadres hoort, is geblokkeerd.
-    email_reject_reply_user_not_matching:
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Je reactie werd verstuurd van een ander e-mailadres dan we verwacht hadden, dus we weten niet zeker of dit dezelfde persoon is. Probeer de e-mail vanaf een ander adres te sturen, of neem contact op met de staf.
-    email_reject_no_account:
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        We konden geen accounts vinden die overeenkomen met je e-mailadres. Probeer de e-mail van een ander adres te sturen, of neem contact op met de staf.
     email_reject_empty:
       text_body_template: |+
         Het spijt ons, maar het plaatsen van uw e-mailbericht naar %{destination} (getiteld %{former_title}) is niet gelukt.
@@ -1442,16 +1460,6 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         De plaatsingsactie werd niet herkend. Probeer het opnieuw of plaats je bericht via de website als het nog steeds niet lukt.
-    email_reject_reply_key:
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        De antwoordsleutel in de e-mail is ongeldig of onbekend, dus we weten niet waar deze e-mail een reactie op is. Neem contact op met de staf.
-    email_reject_bad_destination_address:
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Geen van de bestemmingsadressen werd herkend. Zorg ervoor dat je je e-mail naar het juiste door de staf verstrekte e-mailadres stuurt.
     blocked_by_staff:
       subject_template: "Account tijdelijk geblokkeerd"
     user_automatically_blocked:
@@ -1523,10 +1531,6 @@ nl:
     see_more: "Meer"
     search_title: "Zoeken op deze website"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Welkom op %{title}](#welcome)
-      Voor dit forum is een account nodig. Maak een account aan of log in om verder te gaan.
   terms_of_service:
     title: "Servicevoorwaarden"
     signup_form_message: 'Ik heb de <a href="/tos" target="_blank">Servicevoorwaarden</a> gelezen en ga hiermee akkoord.'
@@ -1641,7 +1645,6 @@ nl:
         title: "Emoji"
       invites:
         title: "Staf uitnodigen"
-        description: "U bent bijna klaar! Nodig wat stafleden uit om te helpen met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>het starten van discussies</a> met interessante topics en berichten om uw gemeenschap op te zetten."
       finished:
         title: "Uw Discourse is gereed!"
         description: |

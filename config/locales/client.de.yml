@@ -397,7 +397,6 @@ de:
         staff: "Gruppenbesitzer und Team"
         owners: "Gruppenbesitzer und Admins"
       alias_levels:
-        title: "Wer kann diese Gruppe kontaktieren und per @Gruppenname erwähnen?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -1216,6 +1215,7 @@ de:
       post_format: "#{{post_number}} von {{username}}"
       results_page: "Suchergebnisse"
       more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
+      search_google_button: "Google"
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie #{{category}} durchsuchen"
@@ -2146,7 +2146,6 @@ de:
         hamburger_menu: '<b>=</b> „Hamburger“-Menü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Aktualisierte Themen anzeigen'
-        search: '<b>/</b> oder <b>STRG</b>+<b>/</b> Suchen'
         help: '<b>?</b> Tastaturhilfe öffnen'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Neue/ausgewählte Beiträge ausblenden'
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ausblenden'
@@ -2927,6 +2926,7 @@ de:
           flag: 'Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können.'
         form:
           label: 'Neues Wort:'
+          placeholder: 'vollständiges Wort oder * als Platzhalter'
           add: 'Hinzufügen'
           success: 'Erfolg'
           upload: "Hochladen"
@@ -3328,9 +3328,6 @@ de:
       upload: "Hochladen"
       uploading: "Hochladen..."
       quit: "Vielleicht später"
-      staff_count:
-        one: "Deine Community hat 1 Team-Mitglied."
-        other: "Deine Community hat %{count} Team-Mitglieder."
       invites:
         add_user: "Hinzufügen"
         none_added: "Du hast bisher kein Team eingeladen. Möchtest du wirklich fortfahren?"

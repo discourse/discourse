@@ -225,7 +225,7 @@ pl_PL:
         instructions: |-
           Jeśli chcesz się dowiedzieć więcej, wybierz <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> poniżej i <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16">**dodaj do zakładek tą wiadomość prywatną**. Jeśli tak zrobisz, możesz otrzymać :gift: w przyszłości!
         reply: |-
-          Wspaniale! Teraz możesz w łatwy sposób, w każdym momencie przejść do konwersacji prywatnej, po prawej od [zakładki dodawania do zakładek w twoim profilu]%{profile_page_url}/aktywność/zakładki). Wystarczy, że klikniesz na swoj zdjęcie profilowe po prawej u góry&#8599;
+          Wspaniale! Teraz możesz w łatwy sposób, w każdym momencie przejść do konwersacji prywatnej, po prawej od [zakładki dodawania do zakładek w twoim profilu]%{profile_page_url}/activity/bookmarks). Wystarczy, że klikniesz na swoj zdjęcie profilowe po prawej u góry&#8599;
         not_found: |-
           O nie, nie widzę żadnych zakładek w tym temacie. Czy znalazłeś zakładkę pod każdym postem? Użyj pokaż więcej <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">, aby odkryć dodatkowe procesy.
       emoji:

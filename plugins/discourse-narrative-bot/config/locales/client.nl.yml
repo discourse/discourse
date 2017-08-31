@@ -10,3 +10,4 @@ nl:
     discourse_narrative_bot:
       welcome_post_type:
         new_user_track: "Start de nieuwe gebruikerstutorial voor alle nieuwe gebruikers"
+        welcome_message: "Stuur een welkomstbericht met een snelle start handleiding naar alle nieuwe gebruikers"

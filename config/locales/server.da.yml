@@ -845,9 +845,7 @@ da:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "Sitets navn, som anvendt i tittel."
     site_description: "Beskriv denne side i én sætning, som anvendt i meta beskrivelsen."
-    contact_email: "Email adresse på ansvarlig kontaktperson for denne side. Anvendes til kritiske notifikationer som ubehandlede flag, og hastende sager."
     contact_url: "Kontakt URL for denne side. Anvendt på kontakt admin, i tilfælde af hastesager."
-    queue_jobs: "KUN FOR UDVIKLERE! ADVARSEL! Brug sidekiq som jobkø. Hvis dette slås fra går dit site i stykker."
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_to_local: "Konverter eksterne billeder til lokale billeder ved at downloade dem; dette forebygger at billeder ikke forsvinder."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
@@ -861,7 +859,6 @@ da:
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
     fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
-    exclude_rel_nofollow_domains: "En liste af domæner hvor 'nofollow' skal tilføjes til links. tid.com vil desuden automatisk tillade sub.tid Som minimum bør du tilføje top level domænet til sitet, for at hjælpe webcrawlere finde alt indhold. Såfremt andre dele af jeres site er på andre domæner, så tilføj også disse."
     post_excerpt_maxlength: "Max længde på uddrag af indlæg / opsummering."
     show_pinned_excerpt_mobile: "Vis uddrag af fastgjorte emner på mobilen."
     show_pinned_excerpt_desktop: "Vis uddrag af fastgjorte emner i desktop visning"
@@ -928,8 +925,6 @@ da:
     enable_whispers: "Tillad at hjælperteamet har private samtaler i emner."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
-    port: "KUN FOR UDVIKLERE! ADVARSEL! Brug denne HTTP-port i stedet for standarden, som er port 80. Lad feltet stå tomt for at bruge standardværdien."
-    force_hostname: "KUN FOR UDVIKLERE! ADVARSEL! Angiv et host-navn i URLen. Lad feltet stå tomt for at bruge standardværdien."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
     invite_passthrough_hours: "Hvor længe kan en bruger benytte en tidligere benyttet invitation til at logge ind, i timer."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
@@ -1213,21 +1208,6 @@ da:
     contents_hidden: "Gå venligst til indlægget for at se indholdet."
     post_hidden:
       subject_template: "Inlægget er skjult pga. flagmarkeringer"
-      text_body_template: |+
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at dit indlæg er blevet skjult.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Flere af de andre brugere har flaget indlægget, før det blev skjult, så overvej venligst, hvordan du kan opdatere dit indlæg baseret på deres feedback. **Du kan redigere dit indlæg efter %{edit_delay} minutter, hvoretefter det automatisk bliver vist igen.**
-
-        Hvis dit indlæg bliver skjult af de andre brugere endnu en gang, vil det forblive skjult, indtil moderatorerne tager sig af det - det kan medføre yderligere sanktioner, herunder en mulig suspendering af din konto.
-
-        Se venligst [Retningslinjerne](%{base_url}/guidelines) for yderligere vejledning.
-
     usage_tips:
       text_body_template: |
         Hvis du vil have et par hurtige tips til at komme i gang som ny bruger, så [tjek dette blogindlæg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1239,23 +1219,6 @@ da:
     welcome_invite:
       title: "Velkomst til inviterede brugere"
       subject_template: "Velkommen til %{site_name}!"
-    csv_export_failed:
-      text_body_template: "Desværre, din dataeksport mislykkedes. Kig venligst i loggen eller kontakt hjælperteamet."
-    email_reject_insufficient_trust_level:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Din konto har ikke det nødvendige tillidsniveau til at kunne oprette nye emner til denne emailadresse. Hvis du mener, at det er en fejl, så kontakt hjælperteamet.
-    email_reject_user_not_found:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Dit svar blev sendt fra en ukendt emailadresse. Prøv at sende fra en anden emailadresse eller kontakt hjælperteamet.
-    email_reject_screened_email:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Dit svar blev sendt fra en blokeret emailadresse. Prøv at sende fra en anden emailadresse eller kontakt hjælperteamet.
     email_reject_inactive_user:
       text_body_template: |+
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
@@ -1301,11 +1264,6 @@ da:
 
         Send-handlingen blev ikke genkendt. Prøv igen, eller send via websitet, hvis det fortsætter.
 
-    email_reject_bad_destination_address:
-      text_body_template: |
-        Desværre, din mail til %{destination} (titled %{former_title}) virkede ikke.
-
-        Ingen af modtageradresserne kan genkendes. Dobbelttjek at du sender til den korrekte emailadresse fra hjælperteamet.
     too_many_spam_flags:
       title: "For Mange Flagmarkeringer for Spam"
       subject_template: "Nyoprettet konto sat på hold"
@@ -1852,7 +1810,6 @@ da:
         description: "Hvilken Emoji-stil foretrækker du for dit fællesskab? Du kan tilføje flere brugerdefinerede Emoji'er senere via Admin, Tilpas, Emoji."
       invites:
         title: "Inviter hjælpere"
-        description: "Du er næsten færdig! Lad os invitere nogle til hjælpereteamet, som kan href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>starte debatter</a> med interessante emner og svar for at få gang i dit fællesskab."
       finished:
         title: "Discourse er gjort klar til dig!"
   activemodel:

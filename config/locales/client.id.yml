@@ -296,7 +296,6 @@ id:
       mentions: "Balasan-balasan"
       messages: "Pesan-pesan"
       alias_levels:
-        title: "Siapa yang mendapat pesan dan membalas kelompok ini?"
         mods_and_admins: "Hanya moderator dan Admin"
         members_mods_and_admins: "Hanya anggota grup, moderator dan admin"
         everyone: "Semua orang"

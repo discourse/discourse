@@ -163,12 +163,6 @@ he:
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           מגניב! זה יעבוד בשביל רוב <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> הקישורים. זיכרו, זה חייב להיות בשורה _בפני עצמו_, בלי שום דבר לפני ואחרי.
-        not_found: |-
-          מצטער, לא מצאתי את הקישור בתשובה שלכם! :cry:
-
-          תוכלו להוסיף את הקישור הבא, בשורה בפני עצמו, עם התשובה הבאה שלכם?
-
-          - https://en.wikipedia.org/wiki/Exotic_Shorthair
       images:
         instructions: |-
           הנה תמונה של חד-קרן:

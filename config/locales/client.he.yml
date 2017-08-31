@@ -397,7 +397,6 @@ he:
         staff: "בעלי קבוצה וצוות"
         owners: "בעלי קבוצה ואדמיניסטרטורים"
       alias_levels:
-        title: "מי יכולים לשלוח מסרים ו@לאזכר בקבוצה זו?"
         nobody: "אף אחד"
         only_admins: "רק מנהלים"
         mods_and_admins: "רק מנחים ומנהלים"
@@ -2140,7 +2139,6 @@ he:
         hamburger_menu: '<b>=</b> פתיחת תפריט המבורגר'
         user_profile_menu: '<b>p</b> פתיחת תפריט משתמש'
         show_incoming_updated_topics: '<b>.</b> הצגת נושאים שהתעדכנו'
-        search: '<b>/</b> חיפוש'
         help: '<b>?</b> פתיחת קיצורי מקשים'
         dismiss_new_posts: '<b>x</b>, <b>r</b> בטלו חדשים/פוסטים'
         dismiss_topics: '<b>x</b>, <b>t</b> בטלו נושאים'
@@ -3319,9 +3317,6 @@ he:
       upload: "העלאה"
       uploading: "מעלה..."
       quit: "אולי מאוחר יותר"
-      staff_count:
-        one: "לקהילה שלכם יש חבר צוות 1."
-        other: "לקהילה שלכם יש %{count} חברי צוות."
       invites:
         add_user: "הוספה"
         none_added: "טרם הזמנתם חברי צוות. האם אתם בטוחים שאתם מעוניינים להמשיך?"
