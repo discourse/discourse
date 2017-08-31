@@ -20,6 +20,12 @@
   z-index: 1000;
   padding-top: 14px;
   margin-bottom: 10px;
+
+  .tag-chooser {
+    width: 100%;
+    max-width: 450px;
+  }
+  
   .star {
     font-size: 1.429em;
     margin-top: 6px;
@@ -88,7 +94,7 @@
 }
 
 #topic-progress-expanded {
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   padding: 5px;
   background: $secondary;
 
