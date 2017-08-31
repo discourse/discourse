@@ -18,19 +18,20 @@
 
           {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
           {{#if showCategoryChooser}}
+            <br>
             {{category-select-box class="small" value=buffered.category_id}}
           {{/if}}
 
           {{#if canEditTags}}
+            <br>
             {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
           {{/if}}
 
           {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
-          <div class="actions">
-            {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-            {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
-          </div>
+          <br>
+          {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
+          {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
         {{else}}
           <h1>
             {{#unless model.is_warning}}

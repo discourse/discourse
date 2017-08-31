@@ -21,15 +21,13 @@
   padding-top: 14px;
   margin-bottom: 10px;
 
-  .tag-chooser {
-    width: 100%;
-    max-width: 450px;
-  }
-  
   .star {
     font-size: 1.429em;
     margin-top: 6px;
     margin-right: 6px;
+  }
+  #edit-title, .category-select-box {
+    width: 500px;
   }
   h1 {
     font-size: 1.8em;
@@ -44,10 +42,6 @@
     vertical-align: middle;
   }
   .private-message-glyph { display: none; }
-  .actions {
-    flex: 1;
-    align-items: center;
-  }
 }
 
 .private-message-glyph {
