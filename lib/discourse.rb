@@ -340,7 +340,7 @@ module Discourse
     unless version_value
       begin
         version_value = `#{git_cmd}`.strip
-      rescue # sollte noch ausspezifiziert werden…
+      rescue
         version_value = default_value
       end
     end
