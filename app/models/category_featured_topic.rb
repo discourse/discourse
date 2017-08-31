@@ -40,7 +40,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     return if results == existing
 
     CategoryFeaturedTopic.transaction do
-      CategoryFeaturedTopic.delete_all(category_id: c.id)
+      CategoryFeaturedTopic.where(category_id: c.id).delete_all
       if results
         results.each_with_index do |topic_id, idx|
           begin

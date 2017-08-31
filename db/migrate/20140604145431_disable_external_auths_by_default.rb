@@ -1,4 +1,4 @@
-class DisableExternalAuthsByDefault < ActiveRecord::Migration
+class DisableExternalAuthsByDefault < ActiveRecord::Migration[4.2]
 
   def enable_setting_if_default(name)
     result = User.exec_sql("SELECT count(*) count FROM site_settings WHERE name = '#{name}'")

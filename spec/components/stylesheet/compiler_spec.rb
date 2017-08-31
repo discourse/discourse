@@ -14,16 +14,16 @@ describe Stylesheet::Compiler do
   end
 
   it "supports asset-url" do
-    css, _map = Stylesheet::Compiler.compile(".body{background-image: asset-url('foo.png');}", "test.scss")
+    css, _map = Stylesheet::Compiler.compile(".body{background-image: asset-url('/images/favicons/github.png');}", "test.scss")
 
-    expect(css).to include("url('/foo.png')")
+    expect(css).to include("url('/images/favicons/github.png')")
     expect(css).not_to include('asset-url')
   end
 
   it "supports image-url" do
-    css, _map = Stylesheet::Compiler.compile(".body{background-image: image-url('foo.png');}", "test.scss")
+    css, _map = Stylesheet::Compiler.compile(".body{background-image: image-url('/favicons/github.png');}", "test.scss")
 
-    expect(css).to include("url('/images/foo.png')")
+    expect(css).to include("url('/favicons/github.png')")
     expect(css).not_to include('image-url')
   end
 end

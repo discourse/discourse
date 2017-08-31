@@ -6,12 +6,12 @@ shared_examples 'finding and showing post' do
 
   it 'ensures the user can see the post' do
     Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-    xhr :get, action, params
+    get action, params: params, format: :json
     expect(response).to be_forbidden
   end
 
   it 'succeeds' do
-    xhr :get, action, params
+    get action, params: params, format: :json
     expect(response).to be_success
   end
 
@@ -21,25 +21,25 @@ shared_examples 'finding and showing post' do
     end
 
     it "can't find deleted posts as an anonymous user" do
-      xhr :get, action, params
+      get action, params: params, format: :json
       expect(response.status).to eq(404)
     end
 
     it "can't find deleted posts as a regular user" do
       log_in(:user)
-      xhr :get, action, params
+      get action, params: params, format: :json
       expect(response.status).to eq(404)
     end
 
     it "can find posts as a moderator" do
       log_in(:moderator)
-      xhr :get, action, params
+      get action, params: params, format: :json
       expect(response).to be_success
     end
 
     it "can find posts as a admin" do
       log_in(:admin)
-      xhr :get, action, params
+      get action, params: params, format: :json
       expect(response).to be_success
     end
   end
@@ -47,7 +47,11 @@ end
 
 shared_examples 'action requires login' do |method, action, params|
   it 'raises an exception when not logged in' do
-    expect { xhr method, action, params }.to raise_error(Discourse::NotLoggedIn)
+    expect do
+      options = { format: :json }
+      options.merge!(params: params) if params
+      self.public_send(method, action, options)
+    end.to raise_error(Discourse::NotLoggedIn)
   end
 end
 
@@ -67,21 +71,13 @@ describe PostsController do
       end
 
       it 'returns public posts with topic for json' do
-        xhr :get, :latest, id: "latest_posts", format: :json
+        get :latest, params: { id: "latest_posts" }, format: :json
         expect(response).to be_success
         json = ::JSON.parse(response.body)
         post_ids = json['latest_posts'].map { |p| p['id'] }
         expect(post_ids).to include post.id
         expect(post_ids).to_not include private_post.id
         expect(post_ids).to_not include topicless_post.id
-      end
-
-      it 'returns public posts with topic for rss' do
-        xhr :get, :latest, id: "latest_posts", format: :rss
-        expect(response).to be_success
-        expect(assigns(:posts)).to include post
-        expect(assigns(:posts)).to_not include private_post
-        expect(assigns(:posts)).to_not include topicless_post
       end
     end
 
@@ -91,38 +87,13 @@ describe PostsController do
       end
 
       it 'returns private posts for json' do
-        xhr :get, :latest, id: "private_posts", format: :json
+        get :latest, params: { id: "private_posts" }, format: :json
         expect(response).to be_success
         json = ::JSON.parse(response.body)
         post_ids = json['private_posts'].map { |p| p['id'] }
         expect(post_ids).to include private_post.id
         expect(post_ids).to_not include post.id
       end
-
-      it 'returns private posts for rss' do
-        xhr :get, :latest, id: "private_posts", format: :rss
-        expect(response).to be_success
-        expect(assigns(:posts)).to include private_post
-        expect(assigns(:posts)).to_not include post
-      end
-    end
-  end
-
-  describe 'user_posts_feed' do
-    let(:user) { log_in }
-    let!(:public_topic) { Fabricate(:topic) }
-    let!(:post) { Fabricate(:post, user: user, topic: public_topic) }
-    let!(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category: nil) }
-    let!(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
-    let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
-
-    it 'returns public posts with topic for rss' do
-      topicless_post.update topic_id: -100
-      xhr :get, :user_posts_feed, username: user.username, format: :rss
-      expect(response).to be_success
-      expect(assigns(:posts)).to include post
-      expect(assigns(:posts)).to_not include private_post
-      expect(assigns(:posts)).to_not include topicless_post
     end
   end
 
@@ -133,7 +104,7 @@ describe PostsController do
     end
 
     it 'returns the cooked conent' do
-      xhr :get, :cooked, id: 1234
+      get :cooked, params: { id: 1234 }, format: :json
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json).to be_present
@@ -151,7 +122,7 @@ describe PostsController do
       it "raises an error if the user doesn't have permission to view raw email" do
         Guardian.any_instance.expects(:can_view_raw_email?).returns(false)
 
-        xhr :get, :raw_email, id: post.id
+        get :raw_email, params: { id: post.id }, format: :json
 
         expect(response).to be_forbidden
       end
@@ -159,7 +130,7 @@ describe PostsController do
       it "can view raw email" do
         Guardian.any_instance.expects(:can_view_raw_email?).returns(true)
 
-        xhr :get, :raw_email, id: post.id
+        get :raw_email, params: { id: post.id }, format: :json
 
         expect(response).to be_success
         json = ::JSON.parse(response.body)
@@ -179,7 +150,7 @@ describe PostsController do
     it 'gets all the expected fields' do
       # non fabricated test
       new_post = create_post
-      xhr :get, :show, id: new_post.id
+      get :show, params: { id: new_post.id }, format: :json
       parsed = JSON.parse(response.body)
       expect(parsed["topic_slug"]).to eq(new_post.topic.slug)
       expect(parsed["moderator"]).to eq(false)
@@ -203,7 +174,7 @@ describe PostsController do
 
     it 'asks post for reply history' do
       Post.any_instance.expects(:reply_history)
-      xhr :get, :reply_history, id: post.id
+      get :reply_history, params: { id: post.id }, format: :json
     end
   end
 
@@ -215,7 +186,7 @@ describe PostsController do
 
     it 'asks post for replies' do
       p1 = Fabricate(:post)
-      xhr :get, :replies, post_id: p1.id
+      get :replies, params: { post_id: p1.id }, format: :json
       expect(response.status).to eq(200)
     end
   end
@@ -232,7 +203,7 @@ describe PostsController do
         Guardian.any_instance.stubs(:can_delete_post?).with(post).returns(false)
         Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
 
-        xhr :delete, :destroy, id: post.id
+        delete :destroy, params: { id: post.id }, format: :json
 
         expect(response.status).to eq(422)
         expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
@@ -240,7 +211,7 @@ describe PostsController do
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
-        xhr :delete, :destroy, id: post.id
+        delete :destroy, params: { id: post.id }, format: :json
         expect(response).to be_forbidden
       end
 
@@ -248,7 +219,7 @@ describe PostsController do
         destroyer = mock
         PostDestroyer.expects(:new).returns(destroyer)
         destroyer.expects(:destroy)
-        xhr :delete, :destroy, id: post.id
+        delete :destroy, params: { id: post.id }, format: :json
       end
 
     end
@@ -264,7 +235,7 @@ describe PostsController do
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_recover_post?).with(post).returns(false)
-        xhr :put, :recover, post_id: post.id
+        put :recover, params: { post_id: post.id }, format: :json
         expect(response).to be_forbidden
       end
 
@@ -273,7 +244,7 @@ describe PostsController do
         post = create_post(topic_id: topic_id)
 
         PostDestroyer.new(user, post).destroy
-        xhr :put, :recover, post_id: post.id
+        put :recover, params: { post_id: post.id }, format: :json
         post.reload
         expect(post.deleted_at).to eq(nil)
       end
@@ -291,27 +262,31 @@ describe PostsController do
       let!(:post2) { Fabricate(:post, topic_id: post1.topic_id, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
 
       it "raises invalid parameters no post_ids" do
-        expect { xhr :delete, :destroy_many }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          delete :destroy_many, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises invalid parameters with missing ids" do
-        expect { xhr :delete, :destroy_many, post_ids: [12345] }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          delete :destroy_many, params: { post_ids: [12345] }, format: :json
+        end.to raise_error(Discourse::InvalidParameters)
       end
 
       it "raises an error when the user doesn't have permission to delete the posts" do
         Guardian.any_instance.expects(:can_delete?).with(instance_of(Post)).returns(false)
-        xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
+        delete :destroy_many, params: { post_ids: [post1.id, post2.id] }, format: :json
         expect(response).to be_forbidden
       end
 
       it "deletes the post" do
         PostDestroyer.any_instance.expects(:destroy).twice
-        xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
+        delete :destroy_many, params: { post_ids: [post1.id, post2.id] }, format: :json
       end
 
       it "updates the highest read data for the forum" do
         Topic.expects(:reset_highest).twice
-        xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
+        delete :destroy_many, params: { post_ids: [post1.id, post2.id] }, format: :json
       end
 
       describe "can delete replies" do
@@ -322,7 +297,9 @@ describe PostsController do
 
         it "deletes the post and the reply to it" do
           PostDestroyer.any_instance.expects(:destroy).twice
-          xhr :delete, :destroy_many, post_ids: [post1.id], reply_post_ids: [post1.id]
+          delete :destroy_many,
+            params: { post_ids: [post1.id], reply_post_ids: [post1.id] },
+            format: :json
         end
 
       end
@@ -352,7 +329,7 @@ describe PostsController do
         Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
         Post.any_instance.stubs(:edit_time_limit_expired?).returns(true)
 
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
 
         expect(response.status).to eq(422)
         expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
@@ -360,37 +337,38 @@ describe PostsController do
 
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=)
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
       end
 
       it 'passes the edit reason through' do
         Post.any_instance.expects(:edit_reason=)
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
       end
 
       it "raises an error when the post parameter is missing" do
         update_params.delete(:post)
         expect {
-          xhr :put, :update, update_params
+          put :update, params: update_params, format: :json
         }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_edit?).with(post).at_least_once.returns(false)
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
         expect(response).to be_forbidden
       end
 
       it "calls revise with valid parameters" do
         PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
       end
 
       it "extracts links from the new body" do
         param = update_params
         param[:post][:raw] = 'I just visited this https://google.com so many cool links'
 
-        xhr :put, :update, param
+        put :update, params: param, format: :json
+
         expect(response).to be_success
         expect(TopicLink.count).to eq(1)
       end
@@ -399,7 +377,7 @@ describe PostsController do
         first_post = post.topic.ordered_posts.first
         PostDestroyer.new(moderator, first_post).destroy
 
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
         expect(response).not_to be_success
       end
     end
@@ -411,7 +389,7 @@ describe PostsController do
         first_post = post.topic.ordered_posts.first
         PostDestroyer.new(moderator, first_post).destroy
 
-        xhr :put, :update, update_params
+        put :update, params: update_params, format: :json
         expect(response).to be_success
 
         post.reload
@@ -432,12 +410,18 @@ describe PostsController do
 
       it "raises an error if the user doesn't have permission to see the post" do
         post
-        xhr :put, :bookmark, post_id: private_message.id, bookmarked: 'true'
+
+        put :bookmark,
+          params: { post_id: private_message.id, bookmarked: 'true' },
+          format: :json
+
         expect(response).to be_forbidden
       end
 
       it 'creates a bookmark' do
-        xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
+        put :bookmark,
+          params: { post_id: post.id, bookmarked: 'true' },
+          format: :json
 
         post_action = PostAction.find_by(user: user, post: post)
 
@@ -449,14 +433,16 @@ describe PostsController do
         let(:admin) { Fabricate(:admin) }
 
         it "returns the right response when post is not bookmarked" do
-          xhr :put, :bookmark, post_id: Fabricate(:post, user: user).id
+          put :bookmark,
+            params: { post_id: Fabricate(:post, user: user).id },
+            format: :json
 
           expect(response.status).to eq(404)
         end
 
         it 'should be able to remove a bookmark' do
           post_action
-          xhr :put, :bookmark, post_id: post.id
+          put :bookmark, params: { post_id: post.id }, format: :json
 
           expect(PostAction.find_by(id: post_action.id)).to eq(nil)
         end
@@ -471,7 +457,7 @@ describe PostsController do
 
             expect(Guardian.new(user).can_see_post?(post.reload)).to eq(false)
 
-            xhr :put, :bookmark, post_id: post.id
+            put :bookmark, params: { post_id: post.id }, format: :json
 
             expect(PostAction.find_by(id: post_action.id)).to eq(nil)
           end
@@ -482,7 +468,7 @@ describe PostsController do
             post = post_action.post
             post.trash!
 
-            xhr :put, :bookmark, post_id: post.id
+            put :bookmark, params: { post_id: post.id }, format: :json
 
             expect(PostAction.find_by(id: post_action.id)).to eq(nil)
           end
@@ -504,7 +490,9 @@ describe PostsController do
       it "raises an error if the user doesn't have permission to wiki the post" do
         Guardian.any_instance.expects(:can_wiki?).with(post).returns(false)
 
-        xhr :put, :wiki, post_id: post.id, wiki: 'true'
+        put :wiki,
+          params: { post_id: post.id, wiki: 'true' },
+          format: :json
 
         expect(response).to be_forbidden
       end
@@ -514,22 +502,31 @@ describe PostsController do
         another_user = Fabricate(:user)
         another_post = Fabricate(:post, user: another_user)
 
-        expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'true' }
-          .to change { another_post.reload.version }.by(1)
+        expect do
+          put :wiki,
+            params: { post_id: another_post.id, wiki: 'true' },
+            format: :json
+        end.to change { another_post.reload.version }.by(1)
 
-        expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'false' }
-          .to change { another_post.reload.version }.by(-1)
+        expect do
+          put :wiki,
+            params: { post_id: another_post.id, wiki: 'false' },
+            format: :json
+        end.to change { another_post.reload.version }.by(-1)
 
         _another_admin = log_in(:admin)
 
-        expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'true' }
-          .to change { another_post.reload.version }.by(1)
+        expect do
+          put :wiki,
+            params: { post_id: another_post.id, wiki: 'true' },
+            format: :json
+        end.to change { another_post.reload.version }.by(1)
       end
 
       it "can wiki a post" do
         Guardian.any_instance.expects(:can_wiki?).with(post).returns(true)
 
-        xhr :put, :wiki, post_id: post.id, wiki: 'true'
+        put :wiki, params: { post_id: post.id, wiki: 'true' }, format: :json
 
         post.reload
         expect(post.wiki).to eq(true)
@@ -539,7 +536,7 @@ describe PostsController do
         wikied_post = Fabricate(:post, user: user, wiki: true)
         Guardian.any_instance.expects(:can_wiki?).with(wikied_post).returns(true)
 
-        xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
+        put :wiki, params: { post_id: wikied_post.id, wiki: 'false' }, format: :json
 
         wikied_post.reload
         expect(wikied_post.wiki).to eq(false)
@@ -560,7 +557,7 @@ describe PostsController do
       it "raises an error if the user doesn't have permission to change the post type" do
         Guardian.any_instance.expects(:can_change_post_type?).returns(false)
 
-        xhr :put, :post_type, post_id: post.id, post_type: 2
+        put :post_type, params: { post_id: post.id, post_type: 2 }, format: :json
 
         expect(response).to be_forbidden
       end
@@ -568,7 +565,7 @@ describe PostsController do
       it "can change the post type" do
         Guardian.any_instance.expects(:can_change_post_type?).returns(true)
 
-        xhr :put, :post_type, post_id: post.id, post_type: 2
+        put :post_type, params: { post_id: post.id, post_type: 2 }, format: :json
 
         post.reload
         expect(post.post_type).to eq(2)
@@ -589,7 +586,7 @@ describe PostsController do
       it "raises an error if the user doesn't have permission to rebake the post" do
         Guardian.any_instance.expects(:can_rebake?).returns(false)
 
-        xhr :put, :rebake, post_id: post.id
+        put :rebake, params: { post_id: post.id }, format: :json
 
         expect(response).to be_forbidden
       end
@@ -597,7 +594,7 @@ describe PostsController do
       it "can rebake the post" do
         Guardian.any_instance.expects(:can_rebake?).returns(true)
 
-        xhr :put, :rebake, post_id: post.id
+        put :rebake, params: { post_id: post.id }, format: :json
 
         expect(response).to be_success
       end
@@ -622,54 +619,70 @@ describe PostsController do
         user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
-        xhr :post, :create, api_username: user.username, api_key: master_key, raw: raw, title: title, wpid: 1
+        post :create, params: {
+          api_username: user.username,
+          api_key: master_key,
+          raw: raw,
+          title: title,
+          wpid: 1
+        }, format: :json
+
         expect(response).to be_success
         original = response.body
 
-        xhr :post, :create, api_username: user.username_lower, api_key: master_key, raw: raw, title: title, wpid: 2
-        expect(response).to be_success
+        post :create, params: {
+          api_username: user.username_lower,
+          api_key: master_key,
+          raw: raw,
+          title: title,
+          wpid: 2
+        }, format: :json
 
+        expect(response).to be_success
         expect(response.body).to eq(original)
       end
 
       it 'allows to create posts in import_mode' do
         NotificationEmailer.enable
-        post = Fabricate(:post)
+        post_1 = Fabricate(:post)
         user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
-        xhr :post, :create,
+        post :create, params: {
           api_username: user.username,
           api_key: master_key,
           raw: 'this is test reply 1',
-          topic_id: post.topic.id,
+          topic_id: post_1.topic.id,
           reply_to_post_number: 1
+        }, format: :json
 
         expect(response).to be_success
-        expect(post.topic.user.notifications.count).to eq(1)
-        post.topic.user.notifications.destroy_all
+        expect(post_1.topic.user.notifications.count).to eq(1)
+        post_1.topic.user.notifications.destroy_all
 
-        xhr :post, :create,
+        post :create, params: {
           api_username: user.username,
           api_key: master_key,
           raw: 'this is test reply 2',
-          topic_id: post.topic.id,
+          topic_id: post_1.topic.id,
           reply_to_post_number: 1,
           import_mode: true
+        }, format: :json
 
         expect(response).to be_success
-        expect(post.topic.user.notifications.count).to eq(0)
+        expect(post_1.topic.user.notifications.count).to eq(0)
 
-        xhr :post, :create,
+        post :create, params: {
           api_username: user.username,
           api_key: master_key,
           raw: 'this is test reply 3',
-          topic_id: post.topic.id,
+          topic_id: post_1.topic.id,
           reply_to_post_number: 1,
           import_mode: false
+        }
 
         expect(response).to be_success
-        expect(post.topic.user.notifications.count).to eq(1)
+        expect(post_1.topic.user.notifications.count).to eq(1)
       end
     end
 
@@ -686,7 +699,10 @@ describe PostsController do
         end
 
         it 'queues the post if min_first_post_typing_time is not met' do
-          xhr :post, :create, raw: 'this is the test content', title: 'this is the test title for the topic'
+          post :create, params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic'
+          }, format: :json
 
           expect(response).to be_success
           parsed = ::JSON.parse(response.body)
@@ -708,9 +724,11 @@ describe PostsController do
         it "doesn't enqueue replies when the topic is closed" do
           topic = Fabricate(:closed_topic)
 
-          xhr :post, :create,             raw: 'this is the test content',
-                                          title: 'this is the test title for the topic',
-                                          topic_id: topic.id
+          post :create, params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            topic_id: topic.id
+          }, format: :json
 
           expect(response).not_to be_success
           parsed = ::JSON.parse(response.body)
@@ -719,8 +737,11 @@ describe PostsController do
 
         it "doesn't enqueue replies when the post is too long" do
           SiteSetting.max_post_length = 10
-          xhr :post, :create,             raw: 'this is the test content',
-                                          title: 'this is the test title for the topic'
+
+          post :create, params: {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic'
+          }, format: :json
 
           expect(response).not_to be_success
           parsed = ::JSON.parse(response.body)
@@ -731,7 +752,10 @@ describe PostsController do
       it 'blocks correctly based on auto_block_first_post_regex' do
         SiteSetting.auto_block_first_post_regex = "I love candy|i eat s[1-5]"
 
-        xhr :post, :create, raw: 'this is the test content', title: 'when I eat s3 sometimes when not looking'
+        post :create, params: {
+          raw: 'this is the test content',
+          title: 'when I eat s3 sometimes when not looking'
+        }, format: :json
 
         expect(response).to be_success
         parsed = ::JSON.parse(response.body)
@@ -742,37 +766,30 @@ describe PostsController do
         expect(user.blocked).to eq(true)
       end
 
-      it 'creates the post' do
-        xhr :post, :create, raw: 'this is the test content', title: 'this is the test title for the topic'
-
-        expect(response).to be_success
-        parsed = ::JSON.parse(response.body)
-
-        # Deprecated structure
-        expect(parsed['post']).to be_blank
-        expect(parsed['cooked']).to be_present
-      end
-
       it "can send a message to a group" do
 
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = Fabricate(:user)
         group.add(user1)
 
-        xhr :post, :create,           raw: 'I can haz a test',
-                                      title: 'I loves my test',
-                                      target_usernames: group.name,
-                                      archetype: Archetype.private_message
+        post :create, params: {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_usernames: group.name,
+          archetype: Archetype.private_message
+        }, format: :json
 
         expect(response).not_to be_success
 
         # allow pm to this group
         group.update_columns(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
-        xhr :post, :create,           raw: 'I can haz a test',
-                                      title: 'I loves my test',
-                                      target_usernames: group.name,
-                                      archetype: Archetype.private_message
+        post :create, params: {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_usernames: group.name,
+          archetype: Archetype.private_message
+        }, format: :json
 
         expect(response).to be_success
 
@@ -784,9 +801,11 @@ describe PostsController do
       end
 
       it "returns the nested post with a param" do
-        xhr :post, :create, raw: 'this is the test content',
-                            title: 'this is the test title for the topic',
-                            nested_post: true
+        post :create, params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          nested_post: true
+        }, format: :json
 
         expect(response).to be_success
         parsed = ::JSON.parse(response.body)
@@ -798,10 +817,10 @@ describe PostsController do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        xhr :post, :create, raw: raw, title: title, wpid: 1
+        post :create, params: { raw: raw, title: title, wpid: 1 }, format: :json
         expect(response).to be_success
 
-        xhr :post, :create, raw: raw, title: title, wpid: 2
+        post :create, params: { raw: raw, title: title, wpid: 2 }, format: :json
         expect(response).not_to be_success
       end
 
@@ -816,7 +835,7 @@ describe PostsController do
         end
 
         it "does not succeed" do
-          xhr :post, :create, raw: 'test'
+          post :create, params: { raw: 'test' }, format: :json
           User.any_instance.expects(:flag_linked_posts_as_spam).never
           expect(response).not_to be_success
         end
@@ -824,86 +843,9 @@ describe PostsController do
         it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
           PostCreator.any_instance.expects(:spam?).returns(true)
           User.any_instance.expects(:flag_linked_posts_as_spam)
-          xhr :post, :create, raw: 'test'
+          post :create, params: { raw: 'test' }, format: :json
         end
-
       end
-
-      context "parameters" do
-
-        before do
-          # Just for performance, no reason to actually perform for these
-          # tests.
-          NewPostManager.stubs(:perform).returns(NewPostResult)
-        end
-
-        it "passes raw through" do
-          xhr :post, :create, raw: 'hello'
-          expect(assigns(:manager_params)['raw']).to eq('hello')
-        end
-
-        it "passes title through" do
-          xhr :post, :create, raw: 'hello', title: 'new topic title'
-          expect(assigns(:manager_params)['title']).to eq('new topic title')
-        end
-
-        it "passes topic_id through" do
-          xhr :post, :create, raw: 'hello', topic_id: 1234
-          expect(assigns(:manager_params)['topic_id']).to eq('1234')
-        end
-
-        it "passes archetype through" do
-          xhr :post, :create, raw: 'hello', archetype: 'private_message'
-          expect(assigns(:manager_params)['archetype']).to eq('private_message')
-        end
-
-        it "passes category through" do
-          xhr :post, :create, raw: 'hello', category: 1
-          expect(assigns(:manager_params)['category']).to eq('1')
-        end
-
-        it "passes target_usernames through" do
-          xhr :post, :create, raw: 'hello', target_usernames: 'evil,trout'
-          expect(assigns(:manager_params)['target_usernames']).to eq('evil,trout')
-        end
-
-        it "passes reply_to_post_number through" do
-          xhr :post, :create, raw: 'hello', reply_to_post_number: 6789, topic_id: 1234
-          expect(assigns(:manager_params)['reply_to_post_number']).to eq('6789')
-        end
-
-        it "passes image_sizes through" do
-          xhr :post, :create, raw: 'hello', image_sizes: { width: '100', height: '200' }
-          expect(assigns(:manager_params)['image_sizes']['width']).to eq('100')
-          expect(assigns(:manager_params)['image_sizes']['height']).to eq('200')
-        end
-
-        it "passes meta_data through" do
-          xhr :post, :create, raw: 'hello', meta_data: { xyz: 'abc' }
-          expect(assigns(:manager_params)['meta_data']['xyz']).to eq('abc')
-        end
-
-        context "is_warning" do
-          it "doesn't pass `is_warning` through if you're not staff" do
-            xhr :post, :create, raw: 'hello', archetype: 'private_message', is_warning: 'true'
-            expect(assigns(:manager_params)['is_warning']).to eq(false)
-          end
-
-          it "passes `is_warning` through if you're staff" do
-            log_in(:moderator)
-            xhr :post, :create, raw: 'hello', archetype: 'private_message', is_warning: 'true'
-            expect(assigns(:manager_params)['is_warning']).to eq(true)
-          end
-
-          it "passes `is_warning` as false through if you're staff" do
-            xhr :post, :create, raw: 'hello', archetype: 'private_message', is_warning: 'false'
-            expect(assigns(:manager_params)['is_warning']).to eq(false)
-          end
-
-        end
-
-      end
-
     end
   end
 
@@ -914,7 +856,9 @@ describe PostsController do
 
     it "throws an exception when revision is < 2" do
       expect {
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: 1
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: 1
+        }, format: :json
       }.to raise_error(Discourse::InvalidParameters)
     end
 
@@ -923,19 +867,26 @@ describe PostsController do
       before { SiteSetting.edit_history_visible_to_public = false }
 
       it "ensures anonymous cannot see the revisions" do
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: post_revision.number
+        }, format: :json
+
         expect(response).to be_forbidden
       end
 
       it "ensures regular user cannot see the revisions" do
         log_in(:user)
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: post_revision.number
+        }, format: :json
         expect(response).to be_forbidden
       end
 
       it "ensures staff can see the revisions" do
         log_in(:admin)
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: post_revision.number
+        }, format: :json
         expect(response).to be_success
       end
 
@@ -943,13 +894,17 @@ describe PostsController do
         user = log_in(:active_user)
         post = Fabricate(:post, user: user, version: 3)
         pr = Fabricate(:post_revision, user: user, post: post)
-        xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
+        get :revisions, params: {
+          post_id: pr.post_id, revision: pr.number
+        }, format: :json
         expect(response).to be_success
       end
 
       it "ensures trust level 4 can see the revisions" do
         log_in(:trust_level_4)
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: post_revision.number
+        }, format: :json
         expect(response).to be_success
       end
 
@@ -960,7 +915,9 @@ describe PostsController do
       before { SiteSetting.edit_history_visible_to_public = true }
 
       it "ensures anyone can see the revisions" do
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: post_revision.number
+        }, format: :json
         expect(response).to be_success
       end
 
@@ -974,7 +931,9 @@ describe PostsController do
       before { deleted_post.trash!(admin) }
 
       it "also work on deleted post" do
-        xhr :get, :revisions, post_id: deleted_post_revision.post_id, revision: deleted_post_revision.number
+        get :revisions, params: {
+          post_id: deleted_post_revision.post_id, revision: deleted_post_revision.number
+        }, format: :json
         expect(response).to be_success
       end
     end
@@ -988,7 +947,9 @@ describe PostsController do
       before { deleted_topic.trash!(admin) }
 
       it "also work on deleted topic" do
-        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        get :revisions, params: {
+          post_id: post_revision.post_id, revision: post_revision.number
+        }
         expect(response).to be_success
       end
     end
@@ -1015,7 +976,7 @@ describe PostsController do
       let(:logged_in_as) { log_in }
 
       it "does not work" do
-        xhr :put, :revert, revert_params
+        put :revert, params: revert_params, format: :json
         expect(response).to_not be_success
       end
     end
@@ -1025,36 +986,44 @@ describe PostsController do
 
       it "throws an exception when revision is < 2" do
         expect {
-          xhr :put, :revert, post_id: post.id, revision: 1
+          put :revert, params:  { post_id: post.id, revision: 1 }, format: :json
         }.to raise_error(Discourse::InvalidParameters)
       end
 
       it "fails when post_revision record is not found" do
-        xhr :put, :revert, post_id: post.id, revision: post_revision.number + 1
+        put :revert, params: {
+          post_id: post.id, revision: post_revision.number + 1
+        }, format: :json
         expect(response).to_not be_success
       end
 
       it "fails when post record is not found" do
-        xhr :put, :revert, post_id: post.id + 1, revision: post_revision.number
+        put :revert, params: {
+          post_id: post.id + 1, revision: post_revision.number
+        }, format: :json
         expect(response).to_not be_success
       end
 
       it "fails when revision is blank" do
-        xhr :put, :revert, post_id: post.id, revision: blank_post_revision.number
+        put :revert, params: {
+          post_id: post.id, revision: blank_post_revision.number
+        }, format: :json
 
         expect(response.status).to eq(422)
         expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
       end
 
       it "fails when revised version is same as current version" do
-        xhr :put, :revert, post_id: post.id, revision: same_post_revision.number
+        put :revert, params: {
+          post_id: post.id, revision: same_post_revision.number
+        }, format: :json
 
         expect(response.status).to eq(422)
         expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
       end
 
       it "works!" do
-        xhr :put, :revert, revert_params
+        put :revert, params: revert_params, format: :json
         expect(response).to be_success
       end
 
@@ -1062,7 +1031,7 @@ describe PostsController do
         first_post = post.topic.ordered_posts.first
         PostDestroyer.new(moderator, first_post).destroy
 
-        xhr :put, :revert, revert_params
+        put :revert, params: revert_params, format: :json
         expect(response).to be_success
       end
     end
@@ -1073,14 +1042,14 @@ describe PostsController do
 
     it "raises an error when you can't see the post" do
       Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-      xhr :get, :expand_embed, id: post.id
+      get :expand_embed, params: { id: post.id }, format: :json
       expect(response).not_to be_success
     end
 
     it "retrieves the body when you can see the post" do
       Guardian.any_instance.expects(:can_see?).with(post).returns(true)
       TopicEmbed.expects(:expanded_for).with(post).returns("full content")
-      xhr :get, :expand_embed, id: post.id
+      get :expand_embed, params: { id: post.id }, format: :json
       expect(response).to be_success
       expect(::JSON.parse(response.body)['cooked']).to eq("full content")
     end
@@ -1095,13 +1064,13 @@ describe PostsController do
 
       it "raises an error if the user doesn't have permission to see the flagged posts" do
         Guardian.any_instance.expects(:can_see_flagged_posts?).returns(false)
-        xhr :get, :flagged_posts, username: "system"
+        get :flagged_posts, params: { username: "system" }, format: :json
         expect(response).to be_forbidden
       end
 
       it "can see the flagged posts when authorized" do
         Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
-        xhr :get, :flagged_posts, username: "system"
+        get :flagged_posts, params: { username: "system" }, format: :json
         expect(response).to be_success
       end
 
@@ -1122,7 +1091,7 @@ describe PostsController do
         PostAction.clear_flags!(post_disagreed, admin)
 
         Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
-        xhr :get, :flagged_posts, username: user.username
+        get :flagged_posts, params: { username: user.username }, format: :json
         expect(response).to be_success
 
         expect(JSON.parse(response.body).length).to eq(2)
@@ -1141,13 +1110,13 @@ describe PostsController do
 
       it "raises an error if the user doesn't have permission to see the deleted posts" do
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(false)
-        xhr :get, :deleted_posts, username: "system"
+        get :deleted_posts, params: { username: "system" }, format: :json
         expect(response).to be_forbidden
       end
 
       it "can see the deleted posts when authorized" do
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
-        xhr :get, :deleted_posts, username: "system"
+        get :deleted_posts, params: { username: "system" }, format: :json
         expect(response).to be_success
       end
 
@@ -1164,7 +1133,7 @@ describe PostsController do
         PostDestroyer.new(admin, secured_post).destroy
 
         log_in(:moderator)
-        xhr :get, :deleted_posts, username: user.username
+        get :deleted_posts, params: { username: user.username }, format: :json
         expect(response).to be_success
 
         data = JSON.parse(response.body)
@@ -1180,7 +1149,7 @@ describe PostsController do
         PostDestroyer.new(admin, pm_post).destroy
 
         log_in(:moderator)
-        xhr :get, :deleted_posts, username: user.username
+        get :deleted_posts, params: { username: user.username }, format: :json
         expect(response).to be_success
 
         data = JSON.parse(response.body)
@@ -1199,7 +1168,7 @@ describe PostsController do
         PostDestroyer.new(admin, post_deleted_by_admin).destroy
 
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
-        xhr :get, :deleted_posts, username: user.username
+        get :deleted_posts, params: { username: user.username }, format: :json
         expect(response).to be_success
 
         data = JSON.parse(response.body)
@@ -1216,7 +1185,7 @@ describe PostsController do
     describe "by ID" do
       it "can be viewed by anonymous" do
         post = Fabricate(:post, raw: "123456789")
-        xhr :get, :markdown_id, id: post.id
+        get :markdown_id, params: { id: post.id }, format: :json
         expect(response).to be_success
         expect(response.body).to eq("123456789")
       end
@@ -1227,7 +1196,7 @@ describe PostsController do
         topic = Fabricate(:topic)
         post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
         post.save
-        xhr :get, :markdown_num, topic_id: topic.id, post_number: 1
+        get :markdown_num, params: { topic_id: topic.id, post_number: 1 }, format: :json
         expect(response).to be_success
         expect(response.body).to eq("123456789")
       end
@@ -1239,13 +1208,13 @@ describe PostsController do
     let(:post) { Fabricate(:post, topic: topic) }
 
     it "redirects to the topic" do
-      xhr :get, :short_link, post_id: post.id
+      get :short_link, params: { post_id: post.id }, format: :json
       expect(response).to be_redirect
     end
 
     it "returns a 403 when access is denied" do
       Guardian.any_instance.stubs(:can_see?).returns(false)
-      xhr :get, :short_link, post_id: post.id
+      get :short_link, params: { post_id: post.id }, format: :json
       expect(response).to be_forbidden
     end
   end

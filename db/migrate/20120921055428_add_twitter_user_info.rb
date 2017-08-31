@@ -1,4 +1,4 @@
-class AddTwitterUserInfo < ActiveRecord::Migration
+class AddTwitterUserInfo < ActiveRecord::Migration[4.2]
   def change
     create_table :twitter_user_infos do  |t|
       t.integer :user_id, null: false

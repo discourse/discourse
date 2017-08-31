@@ -1,4 +1,4 @@
-class AddPublicTypeToTopicTimers < ActiveRecord::Migration
+class AddPublicTypeToTopicTimers < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_timers, :public_type, :boolean, default: true
 

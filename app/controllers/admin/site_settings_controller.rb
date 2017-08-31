@@ -14,7 +14,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     value.strip! if value.is_a?(String)
     raise_access_hidden_setting(id)
     SiteSetting.set_and_log(id, value, current_user)
-    render nothing: true
+    render body: nil
   end
 
   private

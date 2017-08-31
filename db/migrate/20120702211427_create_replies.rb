@@ -1,4 +1,4 @@
-class CreateReplies < ActiveRecord::Migration
+class CreateReplies < ActiveRecord::Migration[4.2]
   def change
     create_table :post_replies, id: false do |t|
       t.references :post

@@ -1,4 +1,4 @@
-class AddLikeCountToPostMenu < ActiveRecord::Migration
+class AddLikeCountToPostMenu < ActiveRecord::Migration[4.2]
   def up
     execute <<SQL
 UPDATE site_settings

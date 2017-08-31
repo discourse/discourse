@@ -1,4 +1,4 @@
-class AddVisibleBackToGroups < ActiveRecord::Migration
+class AddVisibleBackToGroups < ActiveRecord::Migration[4.2]
   def change
     # add the visible column so it is delay dropped this cleans up some deploy issues
     add_column :groups, :visible, :boolean, default: true, null: false

@@ -38,7 +38,7 @@ class Admin::FlagsController < Admin::AdminController
       PostAction.hide_post!(post, post_action_type)
     end
 
-    render nothing: true
+    render body: nil
   end
 
   def disagree
@@ -49,7 +49,7 @@ class Admin::FlagsController < Admin::AdminController
 
     post.unhide!
 
-    render nothing: true
+    render body: nil
   end
 
   def defer
@@ -60,7 +60,7 @@ class Admin::FlagsController < Admin::AdminController
 
     PostDestroyer.new(current_user, post).destroy if params[:delete_post]
 
-    render nothing: true
+    render body: nil
   end
 
 end

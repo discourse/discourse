@@ -1,4 +1,4 @@
-class CreateOneboxRenders < ActiveRecord::Migration
+class CreateOneboxRenders < ActiveRecord::Migration[4.2]
   def change
     create_table :onebox_renders do |t|
       t.string :url, null: false

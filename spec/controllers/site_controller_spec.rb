@@ -13,7 +13,7 @@ describe SiteController do
       SiteSetting.apple_touch_icon_url = "https://boom.com/apple/logo.png"
       SiteSetting.mobile_logo_url = "https://a.a/a.png"
 
-      xhr :get, :basic_info
+      get :basic_info, format: :json
       json = JSON.parse(response.body)
 
       expect(json["title"]).to eq("Hammer Time")
@@ -31,7 +31,7 @@ describe SiteController do
       SiteSetting.login_required = true
       SiteSetting.share_anonymized_statistics = true
 
-      xhr :get, :statistics
+      get :statistics, format: :json
       json = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -54,7 +54,7 @@ describe SiteController do
     it 'is not visible if site setting share_anonymized_statistics is disabled' do
       SiteSetting.share_anonymized_statistics = false
 
-      xhr :get, :statistics
+      get :statistics, format: :json
       expect(response).to redirect_to '/'
     end
   end

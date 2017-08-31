@@ -1,4 +1,4 @@
-class CreatePostDetails < ActiveRecord::Migration
+class CreatePostDetails < ActiveRecord::Migration[4.2]
   def change
     create_table :post_details do |t|
       t.belongs_to :post

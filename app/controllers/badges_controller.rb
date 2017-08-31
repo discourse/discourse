@@ -1,5 +1,5 @@
 class BadgesController < ApplicationController
-  skip_before_filter :check_xhr, only: [:index, :show]
+  skip_before_action :check_xhr, only: [:index, :show]
 
   def index
     raise Discourse::NotFound unless SiteSetting.enable_badges

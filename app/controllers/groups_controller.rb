@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
 
-  before_filter :ensure_logged_in, only: [
+  before_action :ensure_logged_in, only: [
     :set_notifications,
     :mentionable,
     :messageable,
@@ -11,7 +11,7 @@ class GroupsController < ApplicationController
     :search
   ]
 
-  skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
+  skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def index
     unless SiteSetting.enable_group_directory?

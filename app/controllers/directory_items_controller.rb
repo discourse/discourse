@@ -47,7 +47,7 @@ class DirectoryItemsController < ApplicationController
     result_count = result.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
 
-    more_params = params.slice(:period, :order, :asc)
+    more_params = params.slice(:period, :order, :asc).permit!
     more_params[:page] = page + 1
 
     # Put yourself at the top of the first page

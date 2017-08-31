@@ -65,7 +65,7 @@ class CookedPostProcessor
 
     values = upload_ids.map { |u| "(#{@post.id},#{u})" }.join(",")
     PostUpload.transaction do
-      PostUpload.delete_all(post_id: @post.id)
+      PostUpload.where(post_id: @post.id).delete_all
       if upload_ids.length > 0
         PostUpload.exec_sql("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end

@@ -1,4 +1,4 @@
-class CreateTrustLevels < ActiveRecord::Migration
+class CreateTrustLevels < ActiveRecord::Migration[4.2]
   def change
     create_table :trust_levels do |t|
       t.string :name_key, null: false

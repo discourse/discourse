@@ -7,7 +7,7 @@ describe FreedomPatches::SchemaMigrationDetails do
   class SchemaMigrationDetail < ActiveRecord::Base
   end
 
-  class TestMigration < ActiveRecord::Migration
+  class TestMigration < ActiveRecord::Migration[4.2]
     def up
       sleep 0.001
     end

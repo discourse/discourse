@@ -1,4 +1,4 @@
-class AddReplyBelowToPosts < ActiveRecord::Migration
+class AddReplyBelowToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :reply_below_post_number, :integer, null: true
   end

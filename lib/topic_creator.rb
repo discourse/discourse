@@ -72,12 +72,12 @@ class TopicCreator
       topic.notifier.watch_topic!(topic.user_id)
     end
 
-    topic.topic_allowed_users(true).each do |tau|
+    topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id == -1 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
     end
 
-    topic.topic_allowed_groups(true).each do |tag|
+    topic.reload.topic_allowed_groups.each do |tag|
       tag.group.group_users.each do |gu|
         next if gu.user_id == -1 || gu.user_id == topic.user_id
 

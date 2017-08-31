@@ -1,4 +1,4 @@
-class AddUserArchivedMessagesGroupArchivedMessages < ActiveRecord::Migration
+class AddUserArchivedMessagesGroupArchivedMessages < ActiveRecord::Migration[4.2]
   def change
     create_table :user_archived_messages do |t|
       t.integer :user_id, null: false

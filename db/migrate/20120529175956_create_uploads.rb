@@ -1,4 +1,4 @@
-class CreateUploads < ActiveRecord::Migration
+class CreateUploads < ActiveRecord::Migration[4.2]
   def change
     create_table :uploads do |t|
       t.integer :user_id, null: false

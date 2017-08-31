@@ -20,7 +20,7 @@ describe Admin::VersionsController do
     end
 
     describe 'show' do
-      subject { xhr :get, :show }
+      subject { get :show, format: :json }
       it { is_expected.to be_success }
 
       it 'should return the currently available version' do

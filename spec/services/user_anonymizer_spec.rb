@@ -40,7 +40,7 @@ describe UserAnonymizer do
       it "resets profile to default values" do
         user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
 
-        profile = user.user_profile(true)
+        profile = user.reload.user_profile
         profile.update_attributes(location: "Moose Jaw",
                                   website: "www.bim.com",
                                   bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
@@ -62,7 +62,7 @@ describe UserAnonymizer do
         expect(user.title).not_to be_present
         expect(user.user_auth_tokens.count).to eq(0)
 
-        profile = user.user_profile(true)
+        profile = user.reload.user_profile
         expect(profile.location).to eq(nil)
         expect(profile.website).to eq(nil)
         expect(profile.bio_cooked).to eq(nil)

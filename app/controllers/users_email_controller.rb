@@ -4,10 +4,10 @@ require_dependency 'email_updater'
 
 class UsersEmailController < ApplicationController
 
-  before_filter :ensure_logged_in, only: [:index, :update]
+  before_action :ensure_logged_in, only: [:index, :update]
 
-  skip_before_filter :check_xhr, only: [:confirm]
-  skip_before_filter :redirect_to_login_if_required, only: [:confirm]
+  skip_before_action :check_xhr, only: [:confirm]
+  skip_before_action :redirect_to_login_if_required, only: [:confirm]
 
   def index
   end
@@ -26,7 +26,7 @@ class UsersEmailController < ApplicationController
       return render_json_error(updater.errors.full_messages)
     end
 
-    render nothing: true
+    render body: nil
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
   end

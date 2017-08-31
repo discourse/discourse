@@ -1,4 +1,4 @@
-class AddEmailInReplyToToUserOptions < ActiveRecord::Migration
+class AddEmailInReplyToToUserOptions < ActiveRecord::Migration[4.2]
   def up
     add_column :user_options, :email_in_reply_to, :boolean, null: false, default: true
     change_column :user_options, :email_previous_replies, :integer, default: 2, null: false

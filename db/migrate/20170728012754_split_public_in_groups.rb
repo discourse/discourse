@@ -1,4 +1,4 @@
-class SplitPublicInGroups < ActiveRecord::Migration
+class SplitPublicInGroups < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :public_exit, :boolean, default: false, null: false
     add_column :groups, :public_admission, :boolean, default: false, null: false

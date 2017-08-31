@@ -4,7 +4,7 @@ describe CategoriesController do
   describe "create" do
 
     it "requires the user to be logged in" do
-      expect { xhr :post, :create }.to raise_error(Discourse::NotLoggedIn)
+      expect { post :create, format: :json }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe "logged in" do
@@ -14,26 +14,38 @@ describe CategoriesController do
 
       it "raises an exception when they don't have permission to create it" do
         Guardian.any_instance.expects(:can_create?).with(Category, nil).returns(false)
-        xhr :post, :create, name: 'hello', color: 'ff0', text_color: 'fff'
+        post :create, params: {
+          name: 'hello', color: 'ff0', text_color: 'fff'
+        }, format: :json
+
         expect(response).to be_forbidden
       end
 
       it "raises an exception when the name is missing" do
-        expect { xhr :post, :create, color: "ff0", text_color: "fff" }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          post :create, params: { color: "ff0", text_color: "fff" }, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an exception when the color is missing" do
-        expect { xhr :post, :create, name: "hello", text_color: "fff" }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          post :create, params: { name: "hello", text_color: "fff" }, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an exception when the text color is missing" do
-        expect { xhr :post, :create, name: "hello", color: "ff0" }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          post :create, params: { name: "hello", color: "ff0" }, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       describe "failure" do
         before do
           @category = Fabricate(:category, user: @user)
-          xhr :post, :create, name: @category.name, color: "ff0", text_color: "fff"
+
+          post :create, params: {
+            name: @category.name, color: "ff0", text_color: "fff"
+          }, format: :json
         end
 
         it { is_expected.not_to respond_with(:success) }
@@ -48,12 +60,17 @@ describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
-          xhr :post, :create, name: "hello", color: "ff0", text_color: "fff", slug: "hello-cat",
-                              auto_close_hours: 72,
-                              permissions: {
-                                "everyone" => readonly,
-                                "staff" => create_post
-                              }
+          post :create, params: {
+            name: "hello",
+            color: "ff0",
+            text_color: "fff",
+            slug: "hello-cat",
+            auto_close_hours: 72,
+            permissions: {
+              "everyone" => readonly,
+              "staff" => create_post
+            }
+          }, format: :json
 
           expect(response.status).to eq(200)
           category = Category.find_by(name: "hello")
@@ -73,7 +90,8 @@ describe CategoriesController do
   describe "destroy" do
 
     it "requires the user to be logged in" do
-      expect { xhr :delete, :destroy, id: "category" }.to raise_error(Discourse::NotLoggedIn)
+      expect { delete :destroy, params: { id: "category" }, format: :json }
+        .to raise_error(Discourse::NotLoggedIn)
     end
 
     describe "logged in" do
@@ -84,13 +102,16 @@ describe CategoriesController do
 
       it "raises an exception if they don't have permission to delete it" do
         Guardian.any_instance.expects(:can_delete_category?).returns(false)
-        xhr :delete, :destroy, id: @category.slug
+        delete :destroy, params: { id: @category.slug }, format: :json
         expect(response).to be_forbidden
       end
 
       it "deletes the record" do
         Guardian.any_instance.expects(:can_delete_category?).returns(true)
-        expect { xhr :delete, :destroy, id: @category.slug }.to change(Category, :count).by(-1)
+        expect do
+          delete :destroy, params: { id: @category.slug }, format: :json
+        end.to change(Category, :count).by(-1)
+
         expect(UserHistory.count).to eq(1)
       end
     end
@@ -119,24 +140,25 @@ describe CategoriesController do
       payload[c3.id] = 6
       payload[c4.id] = 5
 
-      xhr :post, :reorder, mapping: MultiJson.dump(payload)
+      post :reorder, params: { mapping: MultiJson.dump(payload) }, format: :json
 
       SiteSetting.fixed_category_positions = true
       list = CategoryList.new(Guardian.new(admin))
+
       expect(list.categories).to eq([
-                                      Category.find(SiteSetting.uncategorized_category_id),
-                                      c1,
-                                      c4,
-                                      c2,
-                                      c3
-                                    ])
+        Category.find(SiteSetting.uncategorized_category_id),
+        c1,
+        c4,
+        c2,
+        c3
+      ])
     end
   end
 
   describe "update" do
 
     it "requires the user to be logged in" do
-      expect { xhr :put, :update, id: 'category' }.to raise_error(Discourse::NotLoggedIn)
+      expect { put :update, params: { id: 'category' }, format: :json }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe "logged in" do
@@ -149,26 +171,54 @@ describe CategoriesController do
 
       it "raises an exception if they don't have permission to edit it" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
-        xhr :put, :update, id: @category.slug, name: 'hello', color: 'ff0', text_color: 'fff'
+        put :update, params: {
+          id: @category.slug,
+          name: 'hello',
+          color: 'ff0',
+          text_color: 'fff'
+        }, format: :json
+
         expect(response).to be_forbidden
       end
 
       it "requires a name" do
-        expect { xhr :put, :update, id: @category.slug, color: 'fff', text_color: '0ff' }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          put :update, params: {
+            id: @category.slug,
+            color: 'fff',
+            text_color: '0ff',
+          }, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a color" do
-        expect { xhr :put, :update, id: @category.slug, name: 'asdf', text_color: '0ff' }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          put :update, params: {
+            id: @category.slug,
+            name: 'asdf',
+            text_color: '0ff',
+          }, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a text color" do
-        expect { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          put :update,
+            params: { id: @category.slug, name: 'asdf', color: 'fff' },
+            format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       describe "failure" do
         before do
           @other_category = Fabricate(:category, name: "Other", user: @user)
-          xhr :put, :update, id: @category.id, name: @other_category.name, color: "ff0", text_color: "fff"
+
+          put :update, params: {
+            id: @category.id,
+            name: @other_category.name,
+            color: "ff0",
+            text_color: "fff",
+          }, format: :json
         end
 
         it "returns errors on a duplicate category name" do
@@ -182,7 +232,14 @@ describe CategoriesController do
 
       it "returns 422 if email_in address is already in use for other category" do
         @other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
-        xhr :put, :update, id: @category.id, name: "Email", email_in: "mail@examle.com", color: "ff0", text_color: "fff"
+
+        put :update, params: {
+          id: @category.id,
+          name: "Email",
+          email_in: "mail@examle.com",
+          color: "ff0",
+          text_color: "fff",
+        }, format: :json
 
         expect(response).not_to be_success
         expect(response.code.to_i).to eq(422)
@@ -194,15 +251,21 @@ describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
-          xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff", slug: "hello-category",
-                             auto_close_hours: 72,
-                             permissions: {
-                                "everyone" => readonly,
-                                "staff" => create_post
-                              },
-                             custom_fields: {
-                                "dancing" => "frogs"
-                              }
+          put :update, params: {
+            id: @category.id,
+            name: "hello",
+            color: "ff0",
+            text_color: "fff",
+            slug: "hello-category",
+            auto_close_hours: 72,
+            permissions: {
+              "everyone" => readonly,
+              "staff" => create_post
+            },
+            custom_fields: {
+              "dancing" => "frogs"
+            },
+          }, format: :json
 
           expect(response.status).to eq(200)
           @category.reload
@@ -219,12 +282,16 @@ describe CategoriesController do
         it 'logs the changes correctly' do
           @category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
 
-          xhr :put , :update, id: @category.id, name: 'new name',
-                              color: @category.color, text_color: @category.text_color,
-                              slug: @category.slug,
-                              permissions: {
+          put :update, params: {
+            id: @category.id,
+            name: 'new name',
+            color: @category.color,
+            text_color: @category.text_color,
+            slug: @category.slug,
+            permissions: {
               "everyone" => CategoryGroup.permission_types[:create_post]
-            }
+            },
+          }, format: :json
 
           expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
@@ -235,7 +302,9 @@ describe CategoriesController do
 
   describe 'update_slug' do
     it 'requires the user to be logged in' do
-      expect { xhr :put, :update_slug, category_id: 'category' }.to raise_error(Discourse::NotLoggedIn)
+      expect do
+        put :update_slug, params: { category_id: 'category' }, format: :json
+      end.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'logged in' do
@@ -247,32 +316,44 @@ describe CategoriesController do
       end
 
       it 'rejects blank' do
-        xhr :put, :update_slug, category_id: @category.id, slug: nil
+        put :update_slug, params: { category_id: @category.id, slug: nil }, format: :json
         expect(response.status).to eq(422)
       end
 
       it 'accepts valid custom slug' do
-        xhr :put, :update_slug, category_id: @category.id, slug: 'valid-slug'
+        put :update_slug,
+          params: { category_id: @category.id, slug: 'valid-slug' },
+          format: :json
+
         expect(response).to be_success
         expect(@category.reload.slug).to eq('valid-slug')
       end
 
       it 'accepts not well formed custom slug' do
-        xhr :put, :update_slug, category_id: @category.id, slug: ' valid slug'
+        put :update_slug,
+          params: { category_id: @category.id, slug: ' valid slug' },
+          format: :json
+
         expect(response).to be_success
         expect(@category.reload.slug).to eq('valid-slug')
       end
 
       it 'accepts and sanitize custom slug when the slug generation method is not english' do
         SiteSetting.slug_generation_method = 'none'
-        xhr :put, :update_slug, category_id: @category.id, slug: ' another !_ slug @'
+        put :update_slug,
+          params: { category_id: @category.id, slug: ' another !_ slug @' },
+          format: :json
+
         expect(response).to be_success
         expect(@category.reload.slug).to eq('another-slug')
         SiteSetting.slug_generation_method = 'ascii'
       end
 
       it 'rejects invalid custom slug' do
-        xhr :put, :update_slug, category_id: @category.id, slug: '  '
+        put :update_slug,
+          params: { category_id: @category.id, slug: '  ' },
+          format: :json
+
         expect(response.status).to eq(422)
       end
     end

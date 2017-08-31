@@ -1,4 +1,4 @@
-class DenormalizeExpressions < ActiveRecord::Migration
+class DenormalizeExpressions < ActiveRecord::Migration[4.2]
   def change
 
     # Denormalizing this makes our queries so, so, so much nicer

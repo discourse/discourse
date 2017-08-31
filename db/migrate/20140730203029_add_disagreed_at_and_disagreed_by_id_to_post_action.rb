@@ -1,4 +1,4 @@
-class AddDisagreedAtAndDisagreedByIdToPostAction < ActiveRecord::Migration
+class AddDisagreedAtAndDisagreedByIdToPostAction < ActiveRecord::Migration[4.2]
   def up
     add_column :post_actions, :disagreed_at, :datetime
     add_column :post_actions, :disagreed_by_id, :integer

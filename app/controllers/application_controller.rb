@@ -37,19 +37,19 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :check_readonly_mode
-  before_filter :handle_theme
-  before_filter :set_current_user_for_logs
-  before_filter :clear_notifications
-  before_filter :set_locale
-  before_filter :set_mobile_view
-  before_filter :block_if_readonly_mode
-  before_filter :authorize_mini_profiler
-  before_filter :preload_json
-  before_filter :redirect_to_login_if_required
-  before_filter :check_xhr
-  after_filter  :add_readonly_header
-  after_filter  :perform_refresh_session
-  after_filter  :dont_cache_page
+  before_action :handle_theme
+  before_action :set_current_user_for_logs
+  before_action :clear_notifications
+  before_action :set_locale
+  before_action :set_mobile_view
+  before_action :block_if_readonly_mode
+  before_action :authorize_mini_profiler
+  before_action :preload_json
+  before_action :redirect_to_login_if_required
+  before_action :check_xhr
+  after_action  :add_readonly_header
+  after_action  :perform_refresh_session
+  after_action  :dont_cache_page
 
   layout :set_layout
 
@@ -128,8 +128,8 @@ class ApplicationController < ActionController::Base
   class PluginDisabled < StandardError; end
 
   # Handles requests for giant IDs that throw pg exceptions
-  rescue_from RangeError do |e|
-    if e.message =~ /ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Integer/
+  rescue_from ActiveModel::RangeError do |e|
+    if e.message =~ /ActiveModel::Type::Integer/
       rescue_discourse_actions(:not_found, 404)
     else
       raise e
@@ -169,7 +169,7 @@ class ApplicationController < ActionController::Base
   # If a controller requires a plugin, it will raise an exception if that plugin is
   # disabled. This allows plugins to be disabled programatically.
   def self.requires_plugin(plugin_name)
-    before_filter do
+    before_action do
       raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
     end
   end

@@ -28,13 +28,13 @@ class Theme < ActiveRecord::Base
     changed_fields.each(&:save!)
     changed_fields.clear
 
-    Theme.expire_site_cache! if user_selectable_changed? || name_changed?
+    Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
 
     @dependant_themes = nil
     @included_themes = nil
 
     remove_from_cache!
-    notify_scheme_change if color_scheme_id_changed?
+    notify_scheme_change if saved_change_to_color_scheme_id?
   end
 
   after_destroy do

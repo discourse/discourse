@@ -1,4 +1,4 @@
-class AddLikedAndBookmarkedToTopicUser < ActiveRecord::Migration
+class AddLikedAndBookmarkedToTopicUser < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_users, :liked, :boolean, default: false
     add_column :topic_users, :bookmarked, :boolean, default: false

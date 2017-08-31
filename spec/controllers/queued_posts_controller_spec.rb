@@ -5,7 +5,7 @@ require_dependency 'queued_post'
 describe QueuedPostsController do
   context 'without authentication' do
     it 'fails' do
-      xhr :get, :index
+      get :index, format: :json
       expect(response).not_to be_success
     end
   end
@@ -13,7 +13,7 @@ describe QueuedPostsController do
   context 'as a regular user' do
     let!(:user) { log_in(:user) }
     it 'fails' do
-      xhr :get, :index
+      get :index, format: :json
       expect(response).not_to be_success
     end
   end
@@ -22,7 +22,7 @@ describe QueuedPostsController do
     let!(:user) { log_in(:moderator) }
 
     it 'returns the queued posts' do
-      xhr :get, :index
+      get :index, format: :json
       expect(response).to be_success
     end
   end
@@ -34,7 +34,10 @@ describe QueuedPostsController do
     context 'approved' do
       it 'updates the post to approved' do
 
-        xhr :put, :update, id: qp.id, queued_post: { state: 'approved' }
+        put :update, params: {
+          id: qp.id, queued_post: { state: 'approved' }
+        }, format: :json
+
         expect(response).to be_success
 
         qp.reload
@@ -45,7 +48,10 @@ describe QueuedPostsController do
     context 'rejected' do
       it 'updates the post to rejected' do
 
-        xhr :put, :update, id: qp.id, queued_post: { state: 'rejected' }
+        put :update, params: {
+          id: qp.id, queued_post: { state: 'rejected' }
+        }, format: :json
+
         expect(response).to be_success
 
         qp.reload
@@ -67,7 +73,10 @@ describe QueuedPostsController do
         let(:queued_topic) { Fabricate(:queued_topic) }
 
         before do
-          xhr :put, :update, id: queued_topic.id, queued_post: changes
+          put :update, params: {
+            id: queued_topic.id, queued_post: changes
+          }, format: :json
+
           expect(response).to be_success
         end
 
@@ -92,7 +101,10 @@ describe QueuedPostsController do
         let(:queued_reply) { Fabricate(:queued_post) }
 
         before do
-          xhr :put, :update, id: queued_reply.id, queued_post: changes
+          put :update, params: {
+            id: queued_reply.id, queued_post: changes
+          }, format: :json
+
           expect(response).to be_success
         end
 

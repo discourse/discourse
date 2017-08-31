@@ -11,7 +11,7 @@ class Admin::EmailController < Admin::AdminController
     params.require(:email_address)
     begin
       Jobs::TestEmail.new.execute(to_address: params[:email_address])
-      render nothing: true
+      render body: nil
     rescue => e
       render json: { errors: [e.message] }, status: 422
     end

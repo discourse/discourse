@@ -1,4 +1,4 @@
-class CreateDigestUnsubscribeKeys < ActiveRecord::Migration
+class CreateDigestUnsubscribeKeys < ActiveRecord::Migration[4.2]
   def up
     create_table :digest_unsubscribe_keys, id: false do |t|
       t.string :key, limit: 64, null: false

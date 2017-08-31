@@ -2,12 +2,12 @@ require "mini_mime"
 require_dependency 'upload_creator'
 
 class UploadsController < ApplicationController
-  before_filter :ensure_logged_in, except: [:show]
-  skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
+  before_action :ensure_logged_in, except: [:show]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
     # 50 characters ought to be enough for the upload type
-    type = params.require(:type).parameterize("_")[0..50]
+    type = params.require(:type).parameterize(separator: "_")[0..50]
 
     if type == "avatar" && (SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
       return render json: failed_json, status: 422

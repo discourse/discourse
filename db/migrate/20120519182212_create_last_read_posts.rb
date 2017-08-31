@@ -1,4 +1,4 @@
-class CreateLastReadPosts < ActiveRecord::Migration
+class CreateLastReadPosts < ActiveRecord::Migration[4.2]
   def change
     create_table :last_read_posts do |t|
       t.integer :user_id, null: false

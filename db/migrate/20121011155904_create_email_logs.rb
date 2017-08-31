@@ -1,4 +1,4 @@
-class CreateEmailLogs < ActiveRecord::Migration
+class CreateEmailLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :email_logs do |t|
       t.string :to_address, null: false

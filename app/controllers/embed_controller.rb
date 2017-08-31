@@ -1,9 +1,9 @@
 class EmbedController < ApplicationController
-  skip_before_filter :check_xhr, :preload_json, :verify_authenticity_token
+  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_filter :ensure_embeddable, except: [ :info ]
-  before_filter :get_embeddable_css_class, except: [ :info ]
-  before_filter :ensure_api_request, only: [ :info ]
+  before_action :ensure_embeddable, except: [ :info ]
+  before_action :get_embeddable_css_class, except: [ :info ]
+  before_action :ensure_api_request, only: [ :info ]
 
   layout 'embed'
 
@@ -46,7 +46,6 @@ class EmbedController < ApplicationController
         @reply_count = @topic_view.topic.posts_count - 1
         @reply_count = 0 if @reply_count < 0
       end
-
     elsif embed_url.present?
       Jobs.enqueue(:retrieve_topic,
                       user_id: current_user.try(:id),

@@ -54,7 +54,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   def mailjet
@@ -71,7 +71,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   def mandrill
@@ -88,7 +88,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   def sparkpost
@@ -114,17 +114,17 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render nothing: true, status: 200
+    render body: nil, status: 200
   end
 
   private
 
     def mailgun_failure
-      render nothing: true, status: 406
+      render body: nil, status: 406
     end
 
     def mailgun_success
-      render nothing: true, status: 200
+      render body: nil, status: 200
     end
 
     def mailgun_verify(timestamp, token, signature)

@@ -214,17 +214,29 @@ SQL
 
       # Remove links that aren't there anymore
       if added_urls.present?
-        TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
+        TopicLink.where(
+          "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
+          urls: added_urls, post_id: post.id
+        ).delete_all
 
         reflected_ids.compact!
         if reflected_ids.present?
-          TopicLink.delete_all ["(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
-                                reflected_ids: reflected_ids, post_id: post.id]
+          TopicLink.where(
+            "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+            reflected_ids: reflected_ids, post_id: post.id
+          ).delete_all
         else
-          TopicLink.delete_all ["link_post_id = :post_id AND reflection", post_id: post.id]
+          TopicLink
+            .where("link_post_id = :post_id AND reflection", post_id: post.id)
+            .delete_all
         end
       else
-        TopicLink.delete_all ["(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)", post_id: post.id]
+        TopicLink
+          .where(
+            "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
+            post_id: post.id
+          )
+          .delete_all
       end
     end
   end

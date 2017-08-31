@@ -1,4 +1,4 @@
-class AddDefaultsToCategoryPostsAndTopicsFields < ActiveRecord::Migration
+class AddDefaultsToCategoryPostsAndTopicsFields < ActiveRecord::Migration[4.2]
   def change
     change_column_default :categories, :posts_week,   0
     change_column_default :categories, :posts_month,  0

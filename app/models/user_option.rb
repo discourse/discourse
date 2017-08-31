@@ -60,7 +60,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def update_tracked_topics
-    return unless auto_track_topics_after_msecs_changed?
+    return unless saved_change_to_auto_track_topics_after_msecs?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
   end
 

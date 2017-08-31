@@ -1,4 +1,4 @@
-class AddGithubUserInfo < ActiveRecord::Migration
+class AddGithubUserInfo < ActiveRecord::Migration[4.2]
   def change
     create_table :github_user_infos do  |t|
       t.integer :user_id, null: false

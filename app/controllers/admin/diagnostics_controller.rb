@@ -2,7 +2,7 @@ require_dependency 'memory_diagnostics'
 
 class Admin::DiagnosticsController < Admin::AdminController
   layout false
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
 
   def dump_statement_cache
     statements = Post.exec_sql("select * from pg_prepared_statements").to_a

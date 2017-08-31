@@ -1,4 +1,4 @@
-class RemoveTopicResponseActions < ActiveRecord::Migration
+class RemoveTopicResponseActions < ActiveRecord::Migration[4.2]
   def up
     # 2 notes:
     #   migrations should never use the object model to run sql, otherwise they are a time bomb

@@ -1,4 +1,4 @@
-class AddLoungeCategory < ActiveRecord::Migration
+class AddLoungeCategory < ActiveRecord::Migration[4.2]
   def up
     return if Rails.env.test?
 

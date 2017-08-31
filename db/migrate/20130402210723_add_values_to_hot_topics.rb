@@ -1,4 +1,4 @@
-class AddValuesToHotTopics < ActiveRecord::Migration
+class AddValuesToHotTopics < ActiveRecord::Migration[4.2]
   def change
     add_column :hot_topics, :random_bias, :float
     add_column :hot_topics, :random_multiplier, :float

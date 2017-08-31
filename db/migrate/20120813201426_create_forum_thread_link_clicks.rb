@@ -1,4 +1,4 @@
-class CreateForumThreadLinkClicks < ActiveRecord::Migration
+class CreateForumThreadLinkClicks < ActiveRecord::Migration[4.2]
   def change
     create_table :forum_thread_link_clicks do |t|
       t.references :forum_thread_link, null: false

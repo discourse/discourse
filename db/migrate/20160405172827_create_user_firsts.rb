@@ -1,4 +1,4 @@
-class CreateUserFirsts < ActiveRecord::Migration
+class CreateUserFirsts < ActiveRecord::Migration[4.2]
   def change
     create_table :user_firsts, force: true do |t|
       t.integer :user_id, null: false

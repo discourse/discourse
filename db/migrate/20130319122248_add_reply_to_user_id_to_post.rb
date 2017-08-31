@@ -1,4 +1,4 @@
-class AddReplyToUserIdToPost < ActiveRecord::Migration
+class AddReplyToUserIdToPost < ActiveRecord::Migration[4.2]
   def up
     # caching this column makes the topic page WAY faster
     add_column :posts, :reply_to_user_id, :integer

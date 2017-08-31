@@ -1,4 +1,4 @@
-class RenameTrustLevelSettings < ActiveRecord::Migration
+class RenameTrustLevelSettings < ActiveRecord::Migration[4.2]
   def up
     execute "UPDATE site_settings
              SET name = regexp_replace(name, '^basic_', 'tl1_')"

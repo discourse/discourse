@@ -1,4 +1,4 @@
-class AddUserExtras < ActiveRecord::Migration
+class AddUserExtras < ActiveRecord::Migration[4.2]
   def up
 
     # NOTE: our user table is getting bloated, we probably want to split it for performance
