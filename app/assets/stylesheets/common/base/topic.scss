@@ -48,20 +48,9 @@
 
 #topic-title {
   .title-wrapper {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    max-width: 450px;
+    float: left;
+    width: 90%;
 
-    #edit-title, .tag-chooser, .category-select-box {
-      flex: 1;
-      width: auto;
-    }
-
-    #edit-title {
-      margin-bottom: 5px;
-
-    }
     .btn-small {
       margin: 0 6px 0 0;
     }
