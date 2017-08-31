@@ -318,6 +318,12 @@ class UsersController < ApplicationController
       user = User.new(user_params)
     end
 
+    # Handle API approval
+    if user.approved
+      user.approved_by_id ||= current_user.id
+      user.approved_at ||= Time.zone.now
+    end
+
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
@@ -842,7 +848,7 @@ class UsersController < ApplicationController
           current_user.present? &&
           current_user.admin?
 
-        result.merge!(params.permit(:active, :staged))
+        result.merge!(params.permit(:active, :staged, :approved))
       end
 
       result

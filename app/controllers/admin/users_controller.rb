@@ -292,7 +292,7 @@ class Admin::UsersController < Admin::AdminController
     ip = params[:ip]
 
     # should we cache results in redis?
-    location = Excon.get("http://ipinfo.io/#{ip}/json", read_timeout: 30, connect_timeout: 30).body rescue nil
+    location = Excon.get("https://ipinfo.io/#{ip}/json", read_timeout: 10, connect_timeout: 10).body rescue nil
 
     render json: location
   end

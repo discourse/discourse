@@ -1,21 +1,30 @@
 {{#d-section pageClass="user-notifications" class="user-navigation"}}
   {{#mobile-nav class='notifications-nav' desktopClass='notification-list action-list nav-stacked' currentPath=application.currentPath}}
-    <li class='no-glyph'>
-      {{#link-to 'userNotifications.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
+    <li>
+      {{#link-to 'userNotifications.index'}}
+        {{i18n 'user.filters.all'}}
+      {{/link-to}}
     </li>
     <li>
       {{#link-to 'userNotifications.responses'}}
-        {{d-icon "reply" class="glyph"}}
         {{i18n 'user_action_groups.6'}}
       {{/link-to}}
     </li>
     <li>
       {{#link-to 'userNotifications.likesReceived'}}
-        {{d-icon "heart" class="glyph"}}{{i18n 'user_action_groups.2'}}
+        {{i18n 'user_action_groups.2'}}
       {{/link-to}}
     </li>
-    <li>{{#link-to 'userNotifications.mentions'}}{{d-icon "at" class="glyph"}}{{i18n 'user_action_groups.7'}}{{/link-to}}</li>
-    <li>{{#link-to 'userNotifications.edits'}}{{d-icon "pencil" class="glyph"}}{{i18n 'user_action_groups.11'}}{{/link-to}}</li>
+    <li>
+      {{#link-to 'userNotifications.mentions'}}
+        {{i18n 'user_action_groups.7'}}
+      {{/link-to}}
+    </li>
+    <li>
+      {{#link-to 'userNotifications.edits'}}
+        {{i18n 'user_action_groups.11'}}
+      {{/link-to}}
+    </li>
   {{/mobile-nav}}
 
   {{#if model}}

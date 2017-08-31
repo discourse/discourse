@@ -25,10 +25,11 @@ describe DiscourseRedis do
       let(:redis) { DiscourseRedis.new }
 
       it 'should append namespace to the keys' do
-        redis.set('key', 1)
+        raw_redis.set('default:key', 1)
+        raw_redis.set('test:key2', 1)
 
-        expect(raw_redis.get('default:key')).to eq('1')
-        expect(redis.keys).to eq(['key'])
+        expect(redis.keys).to include('key')
+        expect(redis.keys).to_not include('key2')
 
         redis.del('key')
 
@@ -45,10 +46,10 @@ describe DiscourseRedis do
       let(:redis) { DiscourseRedis.new(nil, namespace: false) }
 
       it 'should not append any namespace to the keys' do
-        redis.set('key', 1)
+        raw_redis.set('default:key', 1)
+        raw_redis.set('test:key2', 1)
 
-        expect(raw_redis.get('key')).to eq('1')
-        expect(redis.keys).to eq(['key'])
+        expect(redis.keys).to include('default:key', 'test:key2')
 
         redis.del('key')
 
@@ -102,10 +103,23 @@ describe DiscourseRedis do
       expect(connector.resolve).to eq(config)
     end
 
+    class BrokenRedis
+      def initialize(error)
+        @error = error
+      end
+
+      def call(*args)
+        raise @error
+      end
+
+      def disconnect
+      end
+    end
+
     it 'should return the slave config when master is down' do
       begin
-        Redis::Client.any_instance.expects(:call).raises(Redis::CannotConnectError).once
-        expect { connector.resolve }.to raise_error(Redis::CannotConnectError)
+        error = Redis::CannotConnectError
+        expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(Redis::CannotConnectError)
 
         config = connector.resolve
 
@@ -120,8 +134,7 @@ describe DiscourseRedis do
       begin
         error = RuntimeError.new('Name or service not known')
 
-        Redis::Client.any_instance.expects(:call).raises(error).once
-        expect { connector.resolve }.to raise_error(error)
+        expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(error)
         fallback_handler.instance_variable_get(:@timer_task).shutdown
         expect(fallback_handler.running?).to eq(false)
 

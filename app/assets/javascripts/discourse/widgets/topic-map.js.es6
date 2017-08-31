@@ -66,15 +66,19 @@ createWidget('topic-map-summary', {
     contents.push(h('li',
       [
         h('h4', I18n.t('created_lowercase')),
-        avatarFor('tiny', { username: attrs.createdByUsername, template: attrs.createdByAvatarTemplate }),
-        dateNode(attrs.topicCreatedAt)
+        h('div.topic-map-post.created-at', [
+          avatarFor('tiny', { username: attrs.createdByUsername, template: attrs.createdByAvatarTemplate }),
+          dateNode(attrs.topicCreatedAt)
+        ])
       ]
     ));
     contents.push(h('li',
       h('a', { attributes: { href: attrs.lastPostUrl } }, [
         h('h4', I18n.t('last_reply_lowercase')),
-        avatarFor('tiny', { username: attrs.lastPostUsername, template: attrs.lastPostAvatarTemplate }),
-        dateNode(attrs.lastPostAt)
+        h('div.topic-map-post.last-reply', [
+          avatarFor('tiny', { username: attrs.lastPostUsername, template: attrs.lastPostAvatarTemplate }),
+          dateNode(attrs.lastPostAt)
+        ])
       ])
     ));
     contents.push(h('li', [
@@ -109,7 +113,14 @@ createWidget('topic-map-summary', {
       contents.push(h('li.avatars', participants));
     }
 
-    return h('ul.clearfix', contents);
+    const nav = h('nav.buttons', this.attach('button', {
+      title: 'topic.toggle_information',
+      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
+      action: 'toggleMap',
+      className: 'btn',
+    }));
+
+    return [nav, h('ul.clearfix', contents)];
   }
 });
 
@@ -209,14 +220,7 @@ export default createWidget('topic-map', {
   },
 
   html(attrs, state) {
-    const nav = h('nav.buttons', this.attach('button', {
-      title: 'topic.toggle_information',
-      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
-      action: 'toggleMap',
-      className: 'btn',
-    }));
-
-    const contents = [nav, this.attach('topic-map-summary', attrs, { state })];
+    const contents = [this.attach('topic-map-summary', attrs, { state })];
 
     if (!state.collapsed) {
       contents.push(this.attach('topic-map-expanded', attrs));

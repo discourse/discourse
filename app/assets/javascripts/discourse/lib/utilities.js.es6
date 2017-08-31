@@ -298,7 +298,7 @@ export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     const split = upload.original_filename.split('.');
     const name = split[split.length-2];
-    return `![${name}|${upload.width}x${upload.height}](${upload.url})`;
+    return `![${name}|${upload.width}x${upload.height}](${upload.short_url || upload.url})`;
   } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i).test(upload.original_filename)) {
     return uploadLocation(upload.url);
   } else {

@@ -1,3 +1,9 @@
+# This script is run in the discourse_test docker image
+# Available environment variables:
+# => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
+#                   this can also be set to a branch, e.g. "origin/tests-passed"
+# See lib/tasks/docker.rake for more information
+
 def run_or_fail(command)
   pid = Process.spawn(command)
   Process.wait(pid)

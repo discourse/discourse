@@ -1,4 +1,6 @@
 class Tag < ActiveRecord::Base
+  include Searchable
+
   validates :name, presence: true, uniqueness: true
 
   has_many :tag_users # notification settings
@@ -12,7 +14,9 @@ class Tag < ActiveRecord::Base
   has_many :tag_group_memberships
   has_many :tag_groups, through: :tag_group_memberships
 
-  COUNT_ARG = "topic_tags.id"
+  after_save :index_search
+
+  COUNT_ARG = "topics.id"
 
   # Apply more activerecord filters to the tags_by_count_query, and then
   # fetch the result with .count(Tag::COUNT_ARG).
@@ -20,9 +24,9 @@ class Tag < ActiveRecord::Base
   # e.g., Tag.tags_by_count_query.where("topics.category_id = ?", category.id).count(Tag::COUNT_ARG)
   def self.tags_by_count_query(opts = {})
     q = Tag.joins("LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id")
-      .joins("LEFT JOIN topics ON topics.id = topic_tags.topic_id")
+      .joins("LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL")
       .group("tags.id, tags.name")
-      .order('count_topic_tags_id DESC')
+      .order('count_topics_id DESC')
     q = q.limit(opts[:limit]) if opts[:limit]
     q
   end
@@ -55,6 +59,10 @@ class Tag < ActiveRecord::Base
 
   def full_url
     "#{Discourse.base_url}/tags/#{self.name}"
+  end
+
+  def index_search
+    SearchIndexer.index(self)
   end
 end
 

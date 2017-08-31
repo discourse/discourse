@@ -163,12 +163,6 @@ de:
           - https://de.wikipedia.org/wiki/Beghilos
         reply: |-
           Super! Dies funktioniert mit den meisten <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> Links. Aber denk dran: er muss _ganz alleine_ in der Zeile stehen, mit nichts davor und nichts dahinter.
-        not_found: |-
-          Entschuldige bitte, ich konnte keinen Link in deiner Antwort finden! :cry:
-
-          Kannst du versuchen, den folgenden Link auf einer eigenen Zeile in deine nächste Antwort einzufügen?
-
-          - https://de.wikipedia.org/wiki/Hauskatze
       images:
         instructions: |-
           Hier ist ein Bild von einem Einhorn:

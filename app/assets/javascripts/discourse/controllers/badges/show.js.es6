@@ -1,11 +1,17 @@
 import UserBadge from 'discourse/models/user-badge';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import BadgeSelectController from "discourse/mixins/badge-select-controller";
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(BadgeSelectController, {
   queryParams: ['username'],
   noMoreBadges: false,
   userBadges: null,
   application: Ember.inject.controller(),
+  hiddenSetTitle: true,
+
+  filteredList: function() {
+    return this.get('userBadgesAll').filterBy('badge.allow_title', true);
+  }.property('userBadgesAll'),
 
   @computed('username')
   user(username) {
@@ -17,6 +23,11 @@ export default Ember.Controller.extend({
   @computed('username', 'model.grant_count', 'userBadges.grant_count')
   grantCount(username, modelCount, userCount) {
     return username ? userCount : modelCount;
+  },
+
+  @computed("model.has_title_badges")
+  canSelectTitle(hasTitleBadges) {
+    return this.siteSettings.enable_badges && hasTitleBadges;
   },
 
   actions: {
@@ -39,6 +50,10 @@ export default Ember.Controller.extend({
       }).finally(()=>{
         this.set('loadingMore', false);
       });
+    },
+
+    toggleSetUserTitle() {
+      return this.toggleProperty('hiddenSetTitle');
     }
   },
 

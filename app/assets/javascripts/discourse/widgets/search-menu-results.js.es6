@@ -91,6 +91,15 @@ createSearchResult({
   }
 });
 
+createSearchResult({
+  type: 'tag',
+  linkField: 'url',
+  builder(t) {
+    const tag = Handlebars.Utils.escapeExpression(t.get('id'));
+    return h('a', { attributes: { href: t.get('url') }, className: `tag-${tag} discourse-tag ${Discourse.SiteSettings.tag_style}`}, tag);
+  }
+});
+
 createWidget('search-menu-results', {
   tagName: 'div.results',
 

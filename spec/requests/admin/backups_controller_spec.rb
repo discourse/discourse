@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe "Managing Backups" do
+RSpec.describe Admin::BackupsController do
   let(:admin) { Fabricate(:admin) }
 
   before do
     sign_in(admin)
   end
 
-  describe 'rolling back a restore' do
+  describe '#rollback' do
     it 'should rollback the restore' do
       BackupRestore.expects(:rollback!)
 
@@ -22,7 +22,7 @@ RSpec.describe "Managing Backups" do
     end
   end
 
-  describe 'cancelling a backup' do
+  describe '#cancel' do
     it "should cancel an backup" do
       BackupRestore.expects(:cancel!)
 

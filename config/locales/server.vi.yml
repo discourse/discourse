@@ -635,9 +635,7 @@ vi:
     educate_until_posts: "Khi người dùng bắt đầu đăng (n) bài viết đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
     title: "Tên của trang này, sử dụng trong thẻ tiêu đề"
     site_description: "Mô tả trang này trong một câu, nó sẽ được sử dụng trong thẻ meta description"
-    contact_email: "Địa chỉ email liên hệ của người chịu trách nhiệm trang này. Sử dụng cho những thông báo quan trọng giống như cờ không được quản lý, cũng giống form liện hệ /about  cho những vấn đề cấp bách."
     contact_url: "URL liên hệ trong trang này. Sử dụng trong form liên hệ /about cho những vấn đề cấp bách."
-    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_to_local: "Tải ảnh về lưu trữ để tránh ảnh bị hư."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
@@ -651,7 +649,6 @@ vi:
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
     fixed_category_positions_on_create: "Nếu chọn, sắp xếp danh mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Thêm rel='nofollow' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Một danh sách tên miền mà rel='nofollow' không được thêm vào các liên kết, các tên miền con sẽ được tự động áp dụng như với tên miền chính. Tối thiểu, bạn nên thêm tên miền cấp cao nhất của website này để giúp search engine tìm kiếm tất cả các nội dung. Nếu các phần khác của website thuộc tên miền khác, cũng nên thêm vào."
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
     logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
@@ -713,8 +710,6 @@ vi:
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     version_checks: "Ping Discourse Hub để cập nhật phiên bản và hiện thông báo phiên bản mới trong bảng điều khiển quản trị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
-    port: "DEVELOPER ONLY! WARNING! Sử dụng HTTP port thay vì mặc định port 80. Để trống mặc định port 80."
-    force_hostname: "DEVELOPER ONLY! LƯU Ý! Chỉ rõ hostname trong URL. Để trống là mặc định."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
     invite_passthrough_hours: "Bao lâu người dùng có thể sử dụng mã lời mời trước đó để đăng nhập, theo giờ"
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
@@ -784,7 +779,6 @@ vi:
     clean_up_uploads: "Loại bỏ không triệt các dòng mồ côi khi upload để ngăn chặn hosting bất hợp pháp. LƯU Ý: bạn cần phải backup thư mục /uploads trước khi bật thiết lập này."
     clean_orphan_uploads_grace_period_hours: "Thời gian gia hạn (theo giờ) trước khi dòng mồ côi upload được loại bỏ."
     purge_deleted_uploads_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi upload cần xóa được xóa."
-    purge_unactivated_users_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi người dùng chưa kích hoạt tài khoản sẽ được xóa."
     enable_s3_uploads: "Đặt thư mục upload trên Amazon S3. QUAN TRỌNG: yêu cầu chứng thực S3 (cả ID khóa truy cập & khóa bảo mật)."
     s3_use_iam_profile: 'Sử dụng AWS EC2 IAM để lấy khóa. LƯU Ý: bật thiết lập này sẽ ghi đè thiết lập "s3 access key id" và "s3 secret access key".'
     s3_upload_bucket: "Tên Amazon S3 để lưu trữ các file sẽ được upload. CHÚ Ý: phải là chữ thường, không cách và không gạch dưới."
@@ -943,15 +937,9 @@ vi:
     default_code_lang: "Highlight cú pháp ngôn ngữ lập trình mặc định áp dụng cho đoạn mã GitHub (lang-auto, ruby, python...)"
     warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
     autohighlight_all_code: "Highlight code bắt buộc đối với các đoạn mã thực thi ngay cả khi họ không chỉ định ngôn ngữ rõ ràng."
-    feed_polling_enabled: "CHỈ NHÚNG: Cho dù chỉ nhúng RSS/ATOM bài viết."
-    feed_polling_url: "CHỈ NHÚNG: URL của RSS/ATOM để nhúng."
-    embed_by_username: "Tên tài khoản Discourse của thành viên tạo các chủ đề nhúng."
-    embed_username_key_from_feed: "Khóa để kéo tên tài khoản Discourse từ feed."
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
-    embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
-    embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"
@@ -1136,17 +1124,6 @@ vi:
       subject_template: "Xuất dữ liệu hoàn tất"
     csv_export_failed:
       subject_template: "Xuất dữ liệu thất bại"
-      text_body_template: "Chúng tôi xin lỗi, những dữ liệu bạn xuất bị lỗi. Vui lòng xem log hoặc liên hệ nhân viên."
-    email_reject_insufficient_trust_level:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Tài khoản của bạn không đủ cấp độ tin cậy bắt buộc để gửi chủ đề mới tới địa chỉ email này. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
-    email_reject_user_not_found:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Trả lời của bạn đã được gửi từ một địa chỉ email chưa rõ. Xin hãy thử gửi với địa chỉ email khác, hoặc liên hệ với BQT.
     email_reject_inactive_user:
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
@@ -1157,16 +1134,6 @@ vi:
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
         Tài khoản của bạn liên kết với địa chỉ email này đã bị chặn.
-    email_reject_reply_user_not_matching:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Trả lời của bạn đã được gửi từ một địa chỉ email khác với những gì chúng tôi mong đợi, chúng tôi nghĩ đây có thể là cùng một người. Xin hãy thử gửi với địa chỉ email khác, hoặc liên hệ với BQT.
-    email_reject_no_account:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Chúng tôi không tìm thấy tài khoản nào khớp với địa chỉ email của bạn. Xin hãy thử gửi với địa chỉ email khác, hoặc liên hệ với BQT.
     email_reject_empty:
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
@@ -1179,16 +1146,6 @@ vi:
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
         Chúng tôi không tìm thấy nội dung trả lời trong email của bạn. **Hãy đảm bảo rằng trả lời của bạn ở phía trên cùng của email** -- chúng tôi không thể xử lý các trả lời nội tuyến.
-    email_reject_invalid_access:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Tài khoản của bạn không có quyền tạo chủ đề mới trong chuyên mục đó. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
-    email_reject_strangers_not_allowed:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Chuyên mục bạn gửi email này tới chỉ chấp nhận trả lời từ các thành viên có tài khoản hợp lệ với các địa chỉ email rõ ràng. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
     email_reject_invalid_post:
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
@@ -1208,31 +1165,6 @@ vi:
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
         Hành động gửi bài không được công nhận, bạn hãy thử lại hoặc gửi thông qua website.
-    email_reject_reply_key:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Khóa trả lời trong email là không hợp lệ hoặc không rõ, vì thế chúng tôi không thể hình dung ra email này gửi trả lời tới đâu. Xin hãy liên hệ với BQT.
-    email_reject_bad_destination_address:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Không có địa chỉ email người nhận được xác định, hãy chắc chắn rằng địa chỉ email bạn gửi tới là chính xác.
-    email_reject_topic_not_found:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Chủ đề bạn gửi trả lời không còn tồn tại -- có thể do đã được xóa? Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
-    email_reject_topic_closed:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Chủ đề bạn gửi trả lời hiện đang đóng và không nhận gửi trả lời. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
-    email_reject_auto_generated:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Email của bạn được đánh dấu là "tạo tự động", chúng tôi không chấp nhận các kiểu email này. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
     email_error_notification:
       text_body_template: |
         Thật không may, có một lỗi xác thực trong khi polling mail từ POP server.
@@ -1306,10 +1238,6 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_google: "Goole"
-  login_required:
-    welcome_message: |
-      #[Chào mừng đến %{title}](#welcome)
-      Trang này yêu cầu phải có tài khoản. Vui lòng tạo một tài khoản hoặc đăng nhập để tiếp tục.
   terms_of_service:
     title: "Điều khoản Dịch vụ"
     signup_form_message: 'Tôi đã đọc và đồng ý với <a href="/tos" target="_blank">Điều khoản dịch vụ</a>.'

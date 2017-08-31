@@ -37,27 +37,78 @@ nb_NO:
         - For å begynne på nytt, si `%{reset_trigger}`.
 
         Hvis du helst ikke vil er det også OK. Jeg er en robot. Du sårer ikke følelsene mine. :sob:
+    dice:
+      trigger: "rull"
+      invalid: |-
+        Jeg beklager, det er matematisk umulig å rulle den kombinasjonen av terninger. :confounded:
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "sitat"
       '1':
+        quote: "I midten av hver utfordring finnes muligheter"
         author: "Albert Einstein"
       '2':
+        quote: "Du må være endringen du ønsker å se i verden."
         author: "Mahatma Gandhi"
+      '3':
+        quote: "Ikke gråt fordi det er over, smil fordi det skjedde."
+      '4':
+        quote: "Hvis du vil ha noe velgjort, gjør det selv."
       '5':
+        quote: "Tro at du kan, og du finner deg selv på halvveien."
         author: "Theodore Roosevelt"
+      '7':
+        author: "Neil Armstrong"
+      '8':
+        quote: "Gjør én ting om dagen som skremmer deg."
+      '9':
+        quote: "Feil kan alltid tilgis, hvis man har mot nok til å innrømme dem."
+        author: "Bruce Lee"
     magic_8_ball:
       answers:
+        '1': "Det er sikkert"
+        '2': "Det er virkelig slik"
+        '3': "Uten tvil"
+        '4': "Ja, definitivt"
+        '5': "Du kan stole på det"
+        '6': "Slik jeg ser det, ja"
+        '7': "Antageligvis"
+        '8': "Utsiktene er gode"
         '9': "Ja"
+        '10': "Ting taler i favør av ja"
+        '11': "Vagt svar, prøv igjen"
         '12': "Spør igjen senere"
+        '15': "Konsentrer deg og spør igjen"
+        '16': "Ikke regn med det"
         '17': "Mitt svar er nei"
         '18': "Mine kilder sier nei"
+        '19': "Forespeilingen er ikke så god"
         '20': "Veldig tvilsomt"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: 'start'
       skip_trigger: 'hopp over'
       help_trigger: 'vis hjelp'
+      random_mention:
+        reply: |-
+          Hei! Finn ut hva jeg kan gjøre, si `@%{discobot_username} %{help_trigger}`.
+    new_user_narrative:
+      reset_trigger: "ny bruker"
+      quoting:
+        reply: |-
+          Godt jobbet, du valgte mitt  favorittsitat! :left_speech_bubble:
     advanced_user_narrative:
       reset_trigger: 'avansert bruker'
+      poll:
+        reply: |-
+          Hei, fin avstemning! Hvordan gjorde jeg det i opplæringsprosessen?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
       details:
         reply: |-
           Bra jobbet — ditt _detaljarbeid_ er beundringsverdig!

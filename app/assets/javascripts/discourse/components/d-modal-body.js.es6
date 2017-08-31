@@ -1,10 +1,17 @@
 export default Ember.Component.extend({
   classNames: ['modal-body'],
+  fixed: false,
 
   didInsertElement() {
     this._super();
     $('#modal-alert').hide();
-    $('#discourse-modal').modal('show');
+
+    let fixedParent = this.$().closest('.d-modal.fixed-modal');
+    if (fixedParent.length) {
+      this.set('fixed', true);
+      fixedParent.modal('show');
+    }
+
     Ember.run.scheduleOnce('afterRender', this, this._afterFirstRender);
     this.appEvents.on('modal-body:flash', msg => this._flash(msg));
   },
@@ -28,7 +35,14 @@ export default Ember.Component.extend({
       }
     }
 
-    this.appEvents.trigger('modal:body-shown', this.getProperties('title', 'rawTitle'));
+    this.appEvents.trigger(
+      'modal:body-shown',
+      this.getProperties(
+        'title',
+        'rawTitle',
+        'fixed'
+      )
+    );
   },
 
   _flash(msg) {

@@ -113,4 +113,26 @@ describe Upload do
     end
   end
 
+  describe '.short_url' do
+    it "should generate a correct short url" do
+      upload = Upload.new(sha1: 'bda2c513e1da04f7b4e99230851ea2aafeb8cc4e', extension: 'png')
+      expect(upload.short_url).to eq('upload://r3AYqESanERjladb4vBB7VsMBm6.png')
+    end
+  end
+
+  describe '.sha1_from_short_url' do
+    it "should be able to look up sha1" do
+      sha1 = 'bda2c513e1da04f7b4e99230851ea2aafeb8cc4e'
+
+      expect(Upload.sha1_from_short_url('upload://r3AYqESanERjladb4vBB7VsMBm6.png')).to eq(sha1)
+      expect(Upload.sha1_from_short_url('upload://r3AYqESanERjladb4vBB7VsMBm6')).to eq(sha1)
+      expect(Upload.sha1_from_short_url('r3AYqESanERjladb4vBB7VsMBm6')).to eq(sha1)
+    end
+
+    it "should be able to look up sha1 even with leading zeros" do
+      sha1 = '0000c513e1da04f7b4e99230851ea2aafeb8cc4e'
+      expect(Upload.sha1_from_short_url('upload://1Eg9p8rrCURq4T3a6iJUk0ri6.png')).to eq(sha1)
+    end
+  end
+
 end

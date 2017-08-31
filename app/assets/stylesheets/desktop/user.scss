@@ -1,4 +1,4 @@
-// styles that apply to the user page
+// Desktop styles for "/user" section
 .groups {
   .group-link {
     color: $tertiary;
@@ -19,7 +19,15 @@
 }
 
 .user-preferences {
+  display: table-cell;
+  vertical-align: top;
   padding-top: 10px;
+  padding-left: 30px;
+
+  h3 {
+    color: $primary;
+    margin: 20px 0 10px 0;
+  }
 
   input.category-selector, input.user-selector, input.tag-chooser {
     width: 530px;
@@ -90,7 +98,6 @@
 }
 
 .user-table {
-  margin-top: 30px;
   width: 100%;
   display: table;
   table-layout: fixed;
@@ -99,24 +106,36 @@
   }
 }
 
-.user-navigation .nav-stacked .glyph {
-  display: none;
-  // float: right;
-  // display: block;
-  // position: static;
-}
-
-.user-navigation, .user-preferences {
+.user-navigation {
   display: table-cell;
   vertical-align: top;
   width: 170px;
-  padding-left: 30px;
 
-  h3 {
-    color: $primary;
-    margin: 20px 0 10px 0;
+  .nav-stacked {
+    background-color: transparent;
+
+    li {
+      border-bottom: none;
+
+      &.archive {
+        padding-left: 15px;
+      }
+    }
+
+    a {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+
+      &.active {
+        color: $primary;
+        font-weight: bold;
+        background-color: transparent;
+
+        &:after {
+          display: none;
+        }
+      }
+    }
   }
-
 }
 
 .viewing-self .user-main .about.collapsed-info {
@@ -125,83 +144,64 @@
   }
 }
 
+.user-content {
+  padding: 10px 8px;
+  background-color: $secondary;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+
+  .btn.right {
+    float: right
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+}
+
+.pref-avatar {
+  .avatar {
+    max-width: 45px;
+    max-height: 45px;
+  }
+}
+
+.user-invite-list {
+  width: 100%;
+  margin-top: 15px;
+
+  th {
+    text-align: left;
+    border-bottom: 3px solid $primary-low;
+    padding: 0 0 10px 0;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
+  }
+
+  td {
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid $primary-low;
+  }
+}
+
+.user-invite-controls {
+  background-color: $primary-low;
+  padding: 5px 10px 0px 0;
+  height: 35px;
+}
+
+.user-invite-search {
+  clear: both;
+  margin: 15px 0px -15px 0px;
+}
+
+.user-invite-none {
+  clear: both;
+  padding: 15px;
+}
+
 .user-main {
   margin-bottom: 50px;
-
-  // name hacky so lastpass does not freak out
-  // -search- means it is bypassed
-  #add-user-to-group {
-    button, .ac-wrap {
-      float: left;
-    }
-    button {
-      margin-top: 5px;
-    }
-    #user-search-selector {
-      width: 400px;
-    }
-   }
-
-  .user-right {
-    width: 900px;
-    display: table-cell;
-  }
-
-  .user-content {
-    padding: 10px 8px;
-    background-color: $secondary;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-
-    .btn.right {
-      float: right
-    }
-
-    h2 {
-      margin-bottom: 10px;
-    }
-
-    .user-invite-list {
-      width: 100%;
-      margin-top: 15px;
-
-      th {
-        text-align: left;
-        border-bottom: 3px solid $primary-low; 
-        padding: 0 0 10px 0;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-weight: normal;
-      }
-
-      td {
-        padding: 10px 0 10px 0;
-        border-bottom: 1px solid $primary-low; 
-      }
-    }
-
-    .pref-avatar {
-      .avatar {
-        max-width: 45px;
-        max-height: 45px;
-      }
-    }
-
-    .user-invite-controls {
-      background-color: $primary-low; 
-      padding: 5px 10px 0px 0;
-      height: 35px;
-    }
-
-    .user-invite-search {
-      clear: both;
-      margin: 15px 0px -15px 0px;
-    }
-
-    .user-invite-none {
-      clear: both;
-      padding: 15px;
-    }
-  }
 
   .about {
     background-position: center center;
@@ -217,12 +217,15 @@
       }
     }
 
-  .secondary {
-    background: scale-color($secondary, $lightness: -5%);
-    border-top: 1px solid $primary-low; 
-    border-bottom: 1px solid $primary-low; 
-    font-size: 0.929em;
-      .btn { padding: 3px 12px; }
+    .secondary {
+      background: scale-color($secondary, $lightness: -5%);
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
+      font-size: 0.929em;
+
+      .btn {
+        padding: 3px 12px;
+      }
 
       dl dd {
         display: inline;
@@ -269,8 +272,8 @@
       transition: margin .15s linear;
 
       blockquote {
-        background-color: $secondary-low; 
-        border-left-color: $secondary-low; 
+        background-color: $secondary-low;
+        border-left-color: $secondary-low;
       }
 
       h1 {
@@ -301,7 +304,7 @@
       .groups {
         margin-left: 10px;
         display: inline;
-        }
+      }
 
       img.avatar {
         margin: 0 20px 10px 0;
@@ -346,16 +349,21 @@
         }
       }
     }
-        &.has-background {
-          .details { padding: 15px 15px 4px 15px;}
-        }
+
+    &.has-background {
+      .details {
+        padding: 15px 15px 4px 15px;
+      }
+    }
 
     .controls {
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
       width: 180px;
-      ul {list-style-type: none;}
+      ul {
+        list-style-type: none;
+      }
       a {
         padding: 5px 10px;
         width: 140px;
@@ -367,169 +375,71 @@
         margin-left: 5px;
       }
     }
-  }
 
-  .about.collapsed-info {
-    .controls {
-      margin-top: 0;
-      width: auto;
-      ul {
-        li {display: inline;}
-        a {
-          padding: 5px 10px;
-          margin-bottom: 10px;
-          width: auto;
-          }
-      }
-    }
-
-    .staff-counters {
-      display: none;
-    }
-
-    .secondary { display: none; }
-
-    .profile-image {
-      height: 0;
-    }
-
-    .details {
-      padding: 0 0 2px 0;
-      margin-top: 0;
-      background: rgba($secondary, .85);
-      border-bottom: 1px solid $primary-low; 
-      .bio { display: none; }
-
-      .primary {
-        text-align: left;
+    &.collapsed-info {
+      .controls {
         margin-top: 0;
-        width: 100%;
-
-        .avatar {
-          float: left;
-          margin-right: 10px;
-          width: 45px;
-          height: 45px;
+        width: auto;
+        ul {
+          li {display: inline;}
+          a {
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            width: auto;
+            }
         }
+      }
 
-        h1 {
-          font-size: 1.429em;
-        }
+      .staff-counters {
+        display: none;
+      }
 
-        h2 {
-          font-size: 1.071em;
-          margin-top: 4px;
-        }
+      .secondary {
+        display: none;
+      }
 
-        h3 {
+      .profile-image {
+        height: 0;
+      }
+
+      .details {
+        padding: 0 0 2px 0;
+        margin-top: 0;
+        background: rgba($secondary, .85);
+        border-bottom: 1px solid $primary-low;
+        .bio {
           display: none;
         }
-      }
-    }
 
-    &.has-background {
-      .details {  padding: 12px 15px 2px 15px;}
-    }
+        .primary {
+          text-align: left;
+          margin-top: 0;
+          width: 100%;
 
-  }
+          .avatar {
+            float: left;
+            margin-right: 10px;
+            width: 45px;
+            height: 45px;
+          }
 
-  .user-stream {
-    .excerpt {
-      margin: 5px 0;
-      font-size: 0.929em;
-      word-wrap: break-word;
-      color: $primary;
-    }
-    .item.moderator-action {
-      background-color: $highlight-medium;
-    }
-    .item.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
-    }
-    .item.hidden {
-      display: block;
-      opacity: 0.4;
-    }
-    .item {
-      padding: 20px 8px 15px 8px;
-      background-color: $secondary;
-      border-bottom: 1px solid $primary-low; 
-    }
-    .type {
-      color: $primary;
-    }
-    span.name {
-      color: $primary;
-    }
-    .time, .delete-info {
-      display: block;
-      float: right;
-      color: lighten($primary, 40%);
-      margin-right: 8px;
-      font-size: 11px;
-    }
-    .delete-info i {
-      font-size: 1em;
-    }
-    .avatar-link {
-      float: left;
-      margin-right: 4px;
-    }
-    .title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-    .name {
-      font-size: 1em;
-      max-width: 400px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .edit-reason {
-      background-color: dark-light-choose(scale-color($highlight, $lightness: 25%), scale-color($highlight, $lightness: -50%));
-      padding: 3px 5px 5px 5px;
-    }
-    .remove-bookmark {
-      float: right;
-      margin-top: -4px;
-    }
-    .notification {
-      &.unread {
-        background-color: $tertiary-low;
-      }
+          h1 {
+            font-size: 1.429em;
+          }
 
-      li { display: inline-block; }
-      p {
-        display: inline-block;
-        margin-left: 10px;
-        span {
-          color: $primary;
+          h2 {
+            font-size: 1.071em;
+            margin-top: 4px;
+          }
+
+          h3 {
+            display: none;
+          }
         }
       }
-      .time {
-        display: inline-block;
-        margin-left: 10px;
-        float: none;
-      }
-      // common/base/header.scss
-      .fa, .icon {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-size: 1.714em;
-      }
-    }
-    .group-member-info {
-      .name {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-      .title {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+
+      &.has-background {
+        .details {  padding: 12px 15px 2px 15px;}
       }
     }
   }
@@ -626,35 +536,18 @@
   }
 }
 
-.user-right .group-notification-menu {
-  float: right;
-  margin-bottom: 5px;
-}
+.user-right {
+  display: table-cell;
 
-.user-main .nav-stacked {
-  &.activity-list {
-    padding-top: 20px;
-  }
-  background-color: transparent;
-
-  li {
-    border-bottom: none;
-    > a {
-      padding: 8px 13px;
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 10px;
     }
   }
 
-  li > a.active {
-    color: $primary;
-    font-weight: bold;
-    background-color: transparent;
-  }
-  li > a.active:after {
-    display: none;
-  }
-
-  li.archive {
-    padding-left: 15px;
+  .group-notification-menu {
+    float: right;
+    margin-bottom: 5px;
   }
 }

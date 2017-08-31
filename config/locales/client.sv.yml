@@ -385,7 +385,6 @@ sv:
       mentions: "Omnämnaden"
       messages: "Meddelanden"
       alias_levels:
-        title: "Vem kan meddela och @omnämna den här gruppen?"
         nobody: "Ingen"
         only_admins: "Bara administratörer"
         mods_and_admins: "Bara moderatorer och administratörer"
@@ -1145,9 +1144,6 @@ sv:
       select_all: "Markera alla"
       clear_all: "Rensa allt"
       too_short: "Din sökterm är för kort."
-      result_count:
-        one: "1 resultat för <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultat för <span class='term'>\"{{term}}\"</span>"
       title: "sök efter ämnen, inlägg, användare, eller kategorier"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
@@ -2042,7 +2038,6 @@ sv:
         hamburger_menu: '<b>=</b> Öppna hamburgarmenyn'
         user_profile_menu: '<b>p</b> Öppna användarmeny'
         show_incoming_updated_topics: '<b>.</b> Visa uppdaterade ämnen'
-        search: '<b>/</b> Sök'
         help: '<b>?</b> Öppna tangentbordshjälp'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Avfärda nya/inlägg'
         dismiss_topics: '<b>x</b>, <b>t</b> Avfärda ämnen'
@@ -3113,9 +3108,6 @@ sv:
       upload: "Ladda upp"
       uploading: "Laddar upp..."
       quit: "Kanske senare"
-      staff_count:
-        one: "Ditt forum har 1 personalmedlem."
-        other: "Ditt forum har %{count} personalmedlemmar."
       invites:
         add_user: "lägg till"
         none_added: "Du har inte bjudit in någon personal. Är du säker på att du vill fortsätta?"

@@ -162,7 +162,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: "@#{discobot_user.username} #{skip_trigger}")
+            post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -225,7 +225,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: skip_trigger)
+            post.update!(raw: skip_trigger.upcase)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select

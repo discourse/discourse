@@ -10,7 +10,7 @@ ar:
     number:
       format:
         separator: "."
-        delimiter: " "
+        delimiter: "’"
       human:
         storage_units:
           format: '%n %u'
@@ -372,7 +372,7 @@ ar:
       delete_user: 'احذف المستخدم'
       title: "تحتاج موافقة"
       none: "لا مشاركات لمراجعتها."
-      edit: "حرر"
+      edit: "عدّل"
       cancel: "ألغِ"
       view_pending: "اعرض المشاركات المعلّقة"
       has_pending_posts:
@@ -457,6 +457,8 @@ ar:
         add_members: "إضافة أعضاء"
         delete_member_confirm: "أأزيل ’%{username}‘ من مجموعة ’%{group}‘؟"
       name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
+      public_admission: "اسمح للمستخدمين بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
+      public_exit: "اسمح للمستخدمين بمغادرة المجموعة بحرية"
       empty:
         posts: "لا مشاركات من أعضاء هذه المجموعة."
         members: "لا أعضاء في هذه المجموعة."
@@ -473,6 +475,11 @@ ar:
       closed_group: مجموعة مغلقة
       is_group_user: "أنت عضو في هذه المجموعة"
       allow_membership_requests: "السماح للأعضاء بأرسالة طلب انضمام لمدراء المجموعة"
+      membership_request_template: "قالب مخصص ليظهر للمستخدمين عندما يرسلون طلب عضوية"
+      membership_request:
+        submit: "ارسل الطلب"
+        title: "اطلب الانضمام للمجموعة @ %{group_name}"
+        reason: "دع مدراء المجموعة يعرفون لماذا انت تنتمي لهذه المجموعة"
       membership: "العضوية"
       name: "الاسم"
       user_count: "عدد اﻷعضاء"
@@ -499,11 +506,10 @@ ar:
       visibility_levels:
         title: "من يستطيع رؤية هذه المجموعة ؟"
         public: "الكل"
-        members: "مدراء المجموعة, الاعضاء و المشرفون"
+        members: "مدراء المجموعة وَ الأعضاء وَ المسؤولون"
         staff: "مدراء المجموعة و الطاقم"
         owners: "مدراء المجموعة و المشرفون"
       alias_levels:
-        title: "مَن يمكنه مراسلة هذه المجموعة و@الإشارة إليها؟"
         nobody: "لا أحد"
         only_admins: "المدراء فقط"
         mods_and_admins: "المدراء والمشرفون فقط"
@@ -514,16 +520,16 @@ ar:
         none: "لا شيء"
       notifications:
         watching:
-          title: "جاري المشاهدة"
+          title: "مُشاهد"
           description: "سنرسل لك إشعارا عن كل مشاركة لكل رسالة، كما وسترى عددًا من الردود الجديدة."
         watching_first_post:
           title: "المراقبة فيها أول مشاركة"
           description: "سنرسل لك إشعارا فقط لأول مشاركة في كل موضوع جديد في هذه المجموعة."
         tracking:
-          title: "جاري المتابعة"
+          title: "مُتابع"
           description: "سنرسل لك إشعارا إن أشار أحد إلى اسمك أو ردّ عليك، كما ويترى عددًا من الردود الجديدة."
         regular:
-          title: "طبيعي"
+          title: "عادي"
           description: "سنرسل لك إشعارا إن أشار أحد إليك أو ردّ عليك."
         muted:
           title: "مكتوم"
@@ -551,16 +557,16 @@ ar:
       '13': "البريد الوارد"
       '14': "قيد الانتظار"
     categories:
-      all: "كل الأقسام"
-      all_subcategories: "جميع"
+      all: "كل الفئات"
+      all_subcategories: "الكل"
       no_subcategory: "لا شيء"
-      category: "القسم"
-      category_list: "أعرض قائمة الأقسام."
+      category: "الفئة"
+      category_list: "أعرض قائمة الفئة"
       reorder:
-        title: "إعادة ترتيب الأقسام"
-        title_long: "إعادة تنظيم الأقسام"
+        title: "إعادة ترتيب الفئات"
+        title_long: "إعادة تنظيم الفئات"
         fix_order: "تثبيت الأماكن"
-        fix_order_tooltip: "ليس كل الأقسام لديها رقم مكان فريد، ربما يسبب نتيجة غير متوقعة."
+        fix_order_tooltip: "ليست كل الفئات لديها رقم مكان فريد، ربما يسبب نتيجة غير متوقعة."
         save: "حفظ الترتيب"
         apply_all: "تطبيق"
         position: "مكان"
@@ -599,6 +605,7 @@ ar:
       topics_entered: " مواضيع شوهدت"
       post_count: "# مشاركات"
       confirm_delete_other_accounts: "أمتأكد من حذف هذه الحسابات؟"
+      powered_by: "مقدم من قبل <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(إختر خيار )"
     user:
@@ -677,6 +684,7 @@ ar:
       watched_first_post_tags_instructions: "سيصلك إشعارا لأول مشاركة لكل موضوع موسوم بهذه الفئات."
       muted_categories: "المكتومة"
       muted_categories_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة في هذه التصنيفات، ولن تظهر مواضيع هذه التصنيفات في قائمة المواضيع المنشورة مؤخراً."
+      no_category_access: "كـ مشرف لك وصول محدود للفئة, الحفظ معطل"
       delete_account: "حذف الحساب"
       delete_account_confirm: "أمتأكّد من حذف حسابك للأبد؟ هذا إجراء لا عودة فيه!"
       deleted_yourself: "حُذف حسابك بنجاح."
@@ -688,6 +696,7 @@ ar:
       muted_users_instructions: "تجاهل الإشعارات من هؤلاء المستخدمين."
       muted_topics_link: "أظهر المواضيع المكتومة"
       watched_topics_link: "أظهر المواضيع المراقبة"
+      tracked_topics_link: "أظهر المواضيع المراقبة"
       automatically_unpin_topics: "ألغِ تثبيت المواضيع آليا عندما أصل إلى أسفلها."
       apps: "برامج"
       revoke_access: "توقيف صلاحيات الوصول"
@@ -696,6 +705,7 @@ ar:
       theme: "السّم"
       staff_counters:
         flags_given: "مؤشرات مساعدة"
+        flagged_posts: "المشاركات المبلغ عنها "
         deleted_posts: "حذف جميع المشاركات"
         suspensions: "موقوف"
         warnings_received: "تحذيرات"
@@ -740,6 +750,7 @@ ar:
         taken: "نأسف، البريد الإلكترونيّ غير متوفّر."
         error: "حدث عطل أثناء تغيير البريد الإلكترونيّ. لربّما هناك من يستخدم هذا العنوان بالفعل؟"
         success: "لقد أرسلنا بريدا إلى هذا البريد. من فضلك اتّبع تعليمات التأكيد."
+        success_staff: "لقد قمنا بأرسال بريداً الى عنوانك الحالي, رجاء اتبع تعليمات التأكيد."
       change_avatar:
         title: "غيّر صورة اللاحة"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>غرافاتار/Gravatar</a>، من"
@@ -747,7 +758,7 @@ ar:
         refresh_gravatar_title: "أنعش صورة غرافاتار"
         letter_based: "صورة لاحة يصنعها النّظام"
         uploaded_avatar: "تخصيص صورة"
-        uploaded_avatar_empty: "اضافة صورة "
+        uploaded_avatar_empty: "اضافة صورة مخصصة"
         upload_title: "رفع صورتك "
         upload_picture: "رفع الصورة"
         image_is_not_a_square: "تحذير: لقد قصصنا الصورة، إذ أن عرضها وارتفاعها لا يتطابقان."
@@ -877,8 +888,12 @@ ar:
         expired: "الدعوة انتهت صلاحيتها "
         rescind: "حذف"
         rescinded: "الدعوة حذفت"
+        rescind_all: "احذف كل الدعوات"
+        rescinded_all: "تم حذف كل الدعوات!"
+        rescind_all_confirm: "هل انت متأكد من رغبتك في حذف كل الدعوات؟"
         reinvite: "اعادة ارسال الدعوة"
         reinvite_all: "أعد إرسال كل الدعوات"
+        reinvite_all_confirm: "هل انت متأكد من رغبتك في اعادة ارسال كل الدعوات؟"
         reinvited: "اعادة ارسال الدعوة"
         reinvited_all: "كل الدعوات تمت اعادة ارسالها"
         time_read: "وقت القراءة"
@@ -1085,6 +1100,9 @@ ar:
       complete_email_found: "عثرنا على حساب يطابق <b>%{email}</b>. يفترض أن تستلم قريبًا بريدًا به إرشادات تصفير كلمة السر."
       complete_username_not_found: "لا حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
+      help: "لم يصل البريد؟ تأكد انك تتفحص مجلد البريد الغير هام<p>لست متأكداً اي عنوان بريد الكتروني قمت بأستخدام؟ قم بأدخال عنوان البريد الالكتروني و سنعلمك ان كان موجوداً هنا</p><p> ان لم يعد بأمكانك الوصول الى البريد الالكتروني في حسابك, رجاء اتصل بـ <a href='/about'>طاقم الدعم الخاص بنا</a></p>"
+      button_ok: "حسنا"
+      button_help: "مساعدة"
     login:
       title: "لِج"
       username: "المستخدم"
@@ -1098,12 +1116,16 @@ ar:
       logging_in: "يلج..."
       or: "أو "
       authenticating: "يستوثق..."
+      awaiting_activation: "ما زال حسابك غير مفعّل، استخدم رابط نسيان كلمة المرور لإرسال بريد إلكتروني تفعيلي آخر."
       awaiting_approval: "لم يوافق أيّ من أعضاء الطّاقم على حسابك بعد. سيُرسل إليك بريد حالما يتمّ ذلك."
       requires_invite: "المَعذرة، الوصول لهذا الموقع خاص بالمدعويين فقط."
       not_activated: "لا يمكنك الولوج بعد. لقد أرسلنا سابقًا بريدًا إلى <b>{{sentTo}}</b>. رجاء اتّبع الإرشادات فيه لتفعيل حسابك."
       not_allowed_from_ip_address: "لا يمكنك الولوج من عنوان IP هذا."
       admin_not_allowed_from_ip_address: "لا يمكنك الولوج كمدير من عنوان IP هذا."
       resend_activation_email: "انقر هنا لإرسال بريد التّفعيل مرّة أخرى."
+      resend_title: "اعد ارسال رسالة التفعيل"
+      change_email: "غير عنوان البريد الالكتروني"
+      provide_new_email: "ادخل عنوان بريد الكتروني جديد و سنقوم بأرسال لك بريد التأكيد."
       submit_new_email: "حدث عنوان البريد الإلكتروني"
       sent_activation_email_again: "لقد أرسلنا بريد تفعيل آخر إلى <b>{{currentEmail}}</b>. قد يستغرق وصوله بضعة دقائق. تحقّق من فحص مجلّد السّخام."
       to_continue: "رجاءً لِج"
@@ -1150,6 +1172,8 @@ ar:
       twitter: "تويتر"
       emoji_one: "إموجي واحد"
       win10: "وندوز10"
+      google_classic: "كوكل كلاسيك"
+      facebook_messenger: "فيسبوك ماسنجر"
     category_page_style:
       categories_only: "الأقسام فقط"
       categories_with_featured_topics: "أقسام ذات مواضيع متميزة"
@@ -1158,6 +1182,20 @@ ar:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      no_content: لا يوجد نتائج مطابقة
+      filter_placeholder: بحث...
+    emoji_picker:
+      filter_placeholder: بحث عن الرموز التعبيرية
+      people: الاشخاص
+      nature: طبيعة
+      food: طعام
+      activity: نشاط
+      travel: سفر
+      objects: اشياء
+      celebration: احتفال
+      custom: الرموز التعبيرية المخصصة
+      recent: تم استخدامه مؤخراً
     composer:
       emoji: "الإيموجي :)"
       more_emoji: "أكثر..."
@@ -1826,6 +1864,7 @@ ar:
         has_liked: "أعجبتك هذه المشاركة"
         undo_like: "ألغِ الإعجاب"
         edit: "عدّل المشاركة"
+        edit_action: "حرّر"
         edit_anonymous: "نأسف، عليك الولوج لتعديل المشاركة."
         flag: "بلَغ عن هذا الموضوع او ارسل تنبيه خاص لأدارة الموقع."
         delete: "احذف المشاركة"
@@ -2361,7 +2400,6 @@ ar:
         hamburger_menu: '<b>=</b> فتح القائمة الرّئيسيّة'
         user_profile_menu: '<b>p</b>فتح قائمة المستخدم'
         show_incoming_updated_topics: '<b>.</b> عرض المواضيع المحدثة'
-        search: '<b>/</b> البحث'
         help: '<b>?</b> فتح مساعدة لوحة المفاتيح'
         dismiss_new_posts: 'تجاهل جديد / المشاركات <b>x</b>, <b>r</b>'
         dismiss_topics: '<b>x</b>, <b>t</b> تجاهل المواضيع'
@@ -2672,6 +2710,7 @@ ar:
         add_owners: اضف ملّاكً
         incoming_email: "تعيين بريد إلكتروني خاص:"
         incoming_email_placeholder: "يرجى إدخال بريد الكتروني فعّال."
+        none_selected: "اختر مجموعة للبدء"
       api:
         generate_master: "توليد مفتاح  API رئيسى"
         none: "لا مفاتيح API نشطة حاليًّا."
@@ -2830,6 +2869,7 @@ ar:
           revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
         theme:
           title: "السمات"
+          edit: "حرّر"
           common: "شائع"
           desktop: "سطح المكتب"
           mobile: "هاتف محمول"
@@ -3059,6 +3099,14 @@ ar:
             title: "أنشئ مدخلات فرعية جديدة إذا كانت هذه على الأقل مدخلات 'min_ban_entries_for_roll_up'."
         logster:
           title: "سجلات الخطأ."
+      watched_words:
+        title: "مراقب الكلمات"
+        search: "بحث"
+        form:
+          label: 'كلمة جديدة:'
+          add: 'اضف'
+          success: 'نجاح'
+          upload: "حمل"
       impersonate:
         title: "انتحال الشخصية"
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض التصحيح. سيتم تسجيل خروجك عندما تنتهي."
@@ -3477,13 +3525,6 @@ ar:
       upload: "رفع"
       uploading: "يرفع..."
       quit: "ربما لاحقا"
-      staff_count:
-        zero: "ليس في المجتمع أيّ أعضاء طاقم."
-        one: "في المجتمع عضو طاقم واحد."
-        two: "في المجتمع عضوا طاقم."
-        few: "في المجتمع %{count} أعضاء طاقم."
-        many: "في المجتمع %{count} عضو طاقم."
-        other: "في المجتمع %{count} عضو طاقم."
       invites:
         add_user: "أضف"
         none_added: "لم تدعو أيّ عضو طاقم. أمتأكّد من المتابعة؟"

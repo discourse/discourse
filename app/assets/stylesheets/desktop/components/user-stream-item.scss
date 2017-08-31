@@ -1,0 +1,24 @@
+// Desktop styles for "user-stream-item" component
+.user-stream {
+
+  // DEPRECATION:
+  // The ".item" class should be eventually removed because it's too generic.
+  // Once ".item" has been removed, ".user-stream-item" can replace
+  // ".user-stream" as the top-level selector on this file as all other
+  // selectors below are its children
+  .item,
+  .user-stream-item {
+    padding: 20px 8px 15px 8px;
+  }
+
+  .time,
+  .delete-info {
+    margin-right: 8px;
+  }
+
+  .notification {
+    &.unread {
+      background-color: $tertiary-low;
+    }
+  }
+}

@@ -377,7 +377,6 @@ et:
       mentions: "Mainimisi"
       messages: "Sõnumid"
       alias_levels:
-        title: "Kes saab siia gruppi sõnumeid saata ja @mention?"
         nobody: "Mitte keegi"
         only_admins: "Vaid adminid"
         mods_and_admins: "Vaid moderaatorid ja adminnid"
@@ -1134,9 +1133,6 @@ et:
       select_all: "Vali kõik"
       clear_all: "Puhasta kõik"
       too_short: "Otsitav tekst on liiga lühike."
-      result_count:
-        one: "1 tulemus <span class='term'>\"{{term}}\"</span> kohta"
-        other: "{{count}} tulemust <span class='term'>\"{{term}}\"</span> kohta"
       title: "otsi teemasid, postitusi, kasutajaid, või foorumeid"
       no_results: "Ei leidnud midagi."
       no_more_results: "Rohkem vasteid pole."
@@ -1992,7 +1988,6 @@ et:
         hamburger_menu: '<b>=</b> Ava rippmenüü'
         user_profile_menu: '<b>p</b> Ava kasutajamenüü'
         show_incoming_updated_topics: '<b>.</b> Näita uuendatud teemasid'
-        search: '<b>/</b> Otsi'
         help: '<b>?</b> Ava klaviatuuri abimenüü'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Ignoreeri uusi/postitusi'
         dismiss_topics: '<b>x</b>, <b>t</b> Ignoreeri teemasid'
@@ -3061,9 +3056,6 @@ et:
       upload: "Lae üles"
       uploading: "Laen üles..."
       quit: "Võib-olla hiljem"
-      staff_count:
-        one: "Sinu kommuunis on 1 tiimi liige."
-        other: "Sinu kommuunis on %{count} tiimi liiget."
       invites:
         add_user: "lisa"
         none_added: "Sa ei ole kutsunud ühtegi tiimi liiget. Oled Sa kindel, et soovid jätkata?"

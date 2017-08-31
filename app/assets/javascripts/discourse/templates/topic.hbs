@@ -19,7 +19,7 @@
           {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
           {{#if showCategoryChooser}}
             <br>
-            {{category-chooser valueAttribute="id" value=buffered.category_id}}
+            {{category-select-box class="small" value=buffered.category_id}}
           {{/if}}
 
           {{#if canEditTags}}
@@ -246,21 +246,8 @@
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
 
               {{#if model.details.suggested_topics.length}}
-                <div id="suggested-topics">
-                  <h3>{{{suggestedTitle}}}</h3>
-                  <div class="topics">
-                    {{#if model.isPrivateMessage}}
-                      {{basic-topic-list hideCategory="true"
-                                         showPosters="true"
-                                         topics=model.details.suggested_topics}}
-                    {{else}}
-                      {{basic-topic-list topics=model.details.suggested_topics}}
-                    {{/if}}
-                  </div>
-                  <h3>{{{browseMoreMessage}}}</h3>
-                </div>
+                {{suggested-topics topic=model}}
               {{/if}}
-
             {{/if}}
           {{/conditional-loading-spinner}}
 

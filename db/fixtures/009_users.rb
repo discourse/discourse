@@ -33,9 +33,10 @@ UserOption.where(user_id: -1).update_all(
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
 
+# TODO drop email with ignored_columns pattern in rails 5.1
 ColumnDropper.drop(
   table: 'users',
-  after_migration: 'AddUserAuthTokens',
+  after_migration: 'CreateUserEmails',
   columns:  %w[
       email_always
       mailing_list_mode

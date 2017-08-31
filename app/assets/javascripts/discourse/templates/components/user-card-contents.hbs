@@ -10,6 +10,7 @@
           flairColor=user.primary_group_flair_color
           groupName=user.primary_group_name}}
       {{/if}}
+      {{plugin-outlet name="user-card-avatar-flair" args=(hash user=user) tagName='div'}}
     </div>
 
     <div class="names">
@@ -36,19 +37,41 @@
 
     <ul class="usercard-controls">
       {{#if user.can_send_private_message_to_user}}
-        <li><a class='btn btn-primary' {{action "composePrivateMessage" user post}}>{{d-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
+        <li>
+          {{d-button
+            class="btn-primary"
+            action=(action "composePrivateMessage" user post)
+            icon="envelope"
+            label="user.private_message"}}
+        </li>
       {{/if}}
 
       {{#if showFilter}}
-        <li><a class='btn' href {{action "togglePosts" user}}>{{d-icon "filter"}}{{i18n 'topic.filter_to' username=username count=topicPostCount}}</a></li>
+        <li>
+          {{d-button
+            action=(action "togglePosts" user)
+            icon="filter"
+            translatedLabel=togglePostsLabel}}
+        </li>
       {{/if}}
 
       {{#if hasUserFilters}}
-        <li><a class='btn' href {{action "cancelFilter"}}>{{d-icon "times"}}{{i18n 'topic.filters.cancel'}}</a></li>
+        <li>
+          {{d-button
+            action="cancelFilter"
+            icon="times"
+            label="topic.filters.cancel"}}
+        </li>
       {{/if}}
 
       {{#if showDelete}}
-        <li><a class='btn btn-danger' href {{action "deleteUser" user}}>{{d-icon "exclamation-triangle"}}{{i18n 'admin.user.delete'}}</a></li>
+        <li>
+          {{d-button
+            class="btn-danger"
+            action=(action "deleteUser" user)
+            icon="exclamation-triangle"
+            label="admin.user.delete"}}
+        </li>
       {{/if}}
     </ul>
 

@@ -35,8 +35,8 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 
 // Color Utilities
 
-// w3c definition of color brightness
-@function brightness($color) {
+// w3c definition of color brightness https://www.w3.org/TR/AERT#color-contrast
+@function dc-color-brightness($color) {
   @return ((red($color) * .299) + (green($color) * .587) + (blue($color) * .114));
 }
 
@@ -65,14 +65,14 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 }
 
 @function dark-light-diff($adjusted-color, $comparison-color, $lightness, $darkness) {
-  @if brightness($adjusted-color) < brightness($comparison-color) {
+  @if dc-color-brightness($adjusted-color) < dc-color-brightness($comparison-color) {
     @return scale-color($adjusted-color, $lightness: $lightness);
   } @else {
     @return scale-color($adjusted-color, $lightness: $darkness);
   }
 }
 @function dark-light-choose($light-theme-result, $dark-theme-result) {
-  @if brightness($primary) < brightness($secondary) {
+  @if dc-color-brightness($primary) < dc-color-brightness($secondary) {
     @return $light-theme-result;
   } @else {
     @return $dark-theme-result;

@@ -51,7 +51,8 @@ QUnit.test("Updating the topic title and category", assert => {
   click('#topic-title .d-icon-pencil');
 
   fillIn('#edit-title', 'this is the new title');
-  selectDropdown('.category-combobox', 4);
+
+  selectBox('.title-wrapper .category-select-box', 'faq');
 
   click('#topic-title .submit-edit');
 
@@ -99,7 +100,7 @@ QUnit.test("Reply as new topic", assert => {
       "it fills composer with the ring string"
     );
     assert.equal(
-      find('.category-combobox').select2('data').text, "feature",
+      find('.category-select-box .select-box-header .current-selection').html().trim(), "feature",
       "it fills category selector with the right category"
     );
   });

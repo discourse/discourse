@@ -79,7 +79,7 @@ class NotificationEmailer
     def perform_enqueue(type, delay)
       user = notification.user
       return unless user.active? || user.staged?
-      return if SiteSetting.must_approve_users? && !user.approved?
+      return if SiteSetting.must_approve_users? && !user.approved? && !user.staged?
 
       return unless EMAILABLE_POST_TYPES.include?(post_type)
 

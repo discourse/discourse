@@ -687,9 +687,7 @@ nb_NO:
     educate_until_posts: "Når bruker begynner å skrive på de første (n) innleggene, vis pop-up med opplæringspanelet for nye brukere i editoren."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
     site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
-    contact_email: "E-post til ansvarlig kontakt for denne siden. Brukes til kritiske påminninger som uhåndterte flagg og som kontakt-adresse på /om-siden."
     contact_url: "Kontakt-URL for siden. Brukes på /om siden."
-    queue_jobs: "KUN FOR UTVIKLERE! ADVARSEL! Jobber køes som forvalg i Sidekiq. Hvis det slås av vil siden ikke fungere. "
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
@@ -879,10 +877,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Velkommen til %{title}](#welcome)
-      En bruker er påkrevd. Lag en bruker eller logg inn for å fortsette.
   terms_of_service:
     title: "Bruksvilkår"
     signup_form_message: 'Jeg har lest og akseptert <a href="/tos" target="_blank">Bruksvilkårene</a>.'

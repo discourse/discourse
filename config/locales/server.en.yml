@@ -382,6 +382,7 @@ en:
               too_many_users: "You can only send warnings to one user at a time."
               cant_send_pm: "Sorry, you cannot send a private message to that user."
               no_user_selected: "You must select a valid user."
+              reply_by_email_disabled: "Reply by email has been disabled."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -708,6 +709,9 @@ en:
     no_likes_given:
       self: "You have not liked any posts."
       others: "No liked posts."
+    no_replies:
+      self: "You have not replied to any posts."
+      others: "No replies."
 
   topic_flag_types:
     spam:
@@ -980,7 +984,7 @@ en:
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. tld.com will automatically allow sub.tld.com as well. As a minimum, you should add the top-level domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
+    exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. example.com will automatically allow sub.example.com as well. As a minimum, you should add the domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
@@ -1010,6 +1014,7 @@ en:
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
     enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_private_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1189,7 +1194,7 @@ en:
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    purge_unactivated_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
+    purge_unactivated_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted. Set to 0 to never purge unactivated users."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
@@ -1255,6 +1260,8 @@ en:
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new private messages."
+
+    min_trust_to_send_email_messages: "The minimum trust level required to send new private messages via email (to staged users)."
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1583,6 +1590,8 @@ en:
       invalid_regex: "Regex is invalid or not allowed."
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
       enable_sso_disabled: "You must first enable 'enable sso' before enabling this setting."
+      staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
+      reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2244,7 +2253,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination email addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
+        None of the destination email addresses are recognized, or the Message-ID header in the email has been modified. Please make sure that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"

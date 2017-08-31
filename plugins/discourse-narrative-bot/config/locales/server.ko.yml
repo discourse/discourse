@@ -163,12 +163,6 @@ ko:
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           대단해! 이 기능은 가장 <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16">한 링크에 작동해. 잊지마. 줄 하나 당  링크 하나씩이야. 주소 앞이나 뒤에 무언가가 있으면 작동하지 않아.
-        not_found: |-
-          미안해. 답글에서 링크를 찾지 못했어! :cry:
-
-          아래 링크 한줄을 복사해서 다음 답글에 넣어볼래?
-
-          - https://en.wikipedia.org/wiki/Exotic_Shorthair
       images:
         instructions: |-
           유니콘 사진이야.

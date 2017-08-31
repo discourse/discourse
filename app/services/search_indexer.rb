@@ -84,6 +84,10 @@ class SearchIndexer
     update_index('category', category_id, name)
   end
 
+  def self.update_tags_index(tag_id, name)
+    update_index('tag', tag_id, name)
+  end
+
   def self.index(obj, force: false)
     return if @disabled
 
@@ -114,6 +118,10 @@ class SearchIndexer
 
     if obj.class == Category && (obj.name_changed? || force)
       SearchIndexer.update_categories_index(obj.id, obj.name)
+    end
+
+    if obj.class == Tag && (obj.name_changed? || force)
+      SearchIndexer.update_tags_index(obj.id, obj.name)
     end
   end
 

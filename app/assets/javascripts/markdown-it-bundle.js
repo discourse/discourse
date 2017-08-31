@@ -14,3 +14,4 @@
 //= require ./pretty-text/engines/discourse-markdown/newline
 //= require ./pretty-text/engines/discourse-markdown/html-img
 //= require ./pretty-text/engines/discourse-markdown/text-post-process
+//= require ./pretty-text/engines/discourse-markdown/image-protocol

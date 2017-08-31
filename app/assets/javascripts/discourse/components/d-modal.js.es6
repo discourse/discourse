@@ -1,9 +1,19 @@
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  elementId: 'discourse-modal',
-  classNameBindings: [':modal', 'modalClass'],
+  classNameBindings: [':modal', ':d-modal', 'modalClass', 'modalStyle'],
   attributeBindings: ['data-keyboard'],
+
+  init() {
+    this._super(...arguments);
+
+    // If we need to render a second modal for any reason, we can't
+    // use `elementId`
+    if (this.get('modalStyle') !== 'inline-modal') {
+      this.set('elementId', 'discourse-modal');
+      this.set('modalStyle', 'fixed-modal');
+    }
+  },
 
   // We handle ESC ourselves
   'data-keyboard': 'false',
@@ -17,7 +27,11 @@ export default Ember.Component.extend({
     });
 
     this.appEvents.on('modal:body-shown', data => {
-      this.$().removeClass('hidden');
+      if (this.isDestroying || this.isDestroyed) { return; }
+      if (data.fixed) {
+        this.$().removeClass('hidden');
+      }
+
       if (data.title) {
         this.set('title', I18n.t(data.title));
       } else if (data.rawTitle) {

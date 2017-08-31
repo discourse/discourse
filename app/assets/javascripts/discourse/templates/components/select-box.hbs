@@ -4,16 +4,18 @@
   aria-haspopup="true"
   role="button"
   aria-labelledby="select-box-input-{{componentId}}"
+  tabindex={{tabindex}}
 />
 
 {{component selectBoxHeaderComponent
-  text=headerText
+  text=generatedHeadertext
   focused=focused
   caretUpIcon=caretUpIcon
   caretDownIcon=caretDownIcon
   onToggle=(action "onToggle")
   icon=icon
   expanded=expanded
+  value=value
 }}
 
 <div class="select-box-body">
@@ -21,21 +23,29 @@
     {{#if filterable}}
       {{component selectBoxFilterComponent
         onFilterChange=(action "onFilterChange")
-        filterIcon=filterIcon
-        filterPlaceholder=filterPlaceholder
+        icon=filterIcon
+        focused=filterFocused
+        placeholder=filterPlaceholder
       }}
     {{/if}}
 
     {{component selectBoxCollectionComponent
+      clearSelectionLabel=clearSelectionLabel
       filteredContent=filteredContent
       selectBoxRowComponent=selectBoxRowComponent
-      lastHoveredId=lastHoveredId
+      templateForRow=templateForRow
+      shouldHighlightRow=shouldHighlightRow
+      titleForRow=titleForRow
+      lastHovered=lastHovered
       onSelectRow=(action "onSelectRow")
       onHoverRow=(action "onHoverRow")
-      noContentText=noContentText
-      selectedId=value
+      onClearSelection=(action "onClearSelection")
+      noContentLabel=noContentLabel
+      value=value
     }}
   {{/if}}
 </div>
 
-<div class="select-box-wrapper"></div>
+{{#if wrapper}}
+  <div class="select-box-wrapper"></div>
+{{/if}}

@@ -759,9 +759,7 @@ sv:
     educate_until_posts: "Visa hjälppanelen för komponering tills dess att användaren har gjort (n) nya inlägg. "
     title: "Namnet på denna webbplats som används i titel-taggen."
     site_description: "Beskriv denna webbplats i en mening, som sedan används i meta-description-taggen."
-    contact_email: "E-postadresser som är kritiska för kontakt av den här webbplatsen. Används för kritiska notiser såsom ohanterade flaggor och även som kontaktadress för brådskande ärenden på /om-sidans kontaktformulär."
     contact_url: "Kontakt URL för den här webbplatsen. Används på /om kontaktformuläret för brådskande ärenden."
-    queue_jobs: "UTVECKLARE ENDAST! VARNING! Köa uppgifter i sidekiq som standard. Om inaktiverat så kommer din webbplats att gå sönder."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner. "
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att ladda hem dem; det motverkar felaktiga bildlänkar."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
@@ -776,7 +774,6 @@ sv:
     fixed_category_positions: "Om aktiverad, kommer du kunna ordna kategorier i en bestämd ordning. Om inaktiverad, sorteras kategorierna baserat på aktivitet."
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogen för skapandet av ämnen om den här bockas i (kräver fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "En lista av alla domän där nofollow inte bör läggas till länkarna. tld.com kommer automatiskt tillåta sub.tld.com också. Du bör lägga till top-level domän från den här webbplatsen för att hjälpa sökrobotar hitta allt innehåll. Om andra delar av din webbplats finns på andra domän så bör du lägga till dem också. "
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag / sammanfattning."
     show_pinned_excerpt_mobile: "Visa inte utdrag för klistrade ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
@@ -855,8 +852,6 @@ sv:
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hubben för versionsuppdatering och visa nya versionsmeddelanden på /admin översiktspanelen"
     new_version_emails: "Skicka ett mejl till contact_email när en ny version av Discourse finns tillgängligt."
-    port: "ENDAST UTVECKLARE! VARNING! Använd denna HTTP-port istället för standardporten 80. Lämna tom för standardport 80. "
-    force_hostname: "ENDAST UTVECKLARE! VARNING! Specifiera ett värdnamn i URL:en. Lämna tom för standard."
     invite_expiry_days: "Hur länge användarinbjudningsnycklar är giltiga, i dagar"
     invite_passthrough_hours: "Hur länge en användare kan använda en tidigare utlöst inbjudningsnyckel för att logga in, i timmar"
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
@@ -931,7 +926,6 @@ sv:
     clean_up_uploads: "Ta bort föräldralösa orefererade uppladdningar för att förhindra illegal hosting. VARNING: det kan vara värt att säkerhetskopiera din /uploads-mapp innan du aktiverar den här inställningen."
     clean_orphan_uploads_grace_period_hours: "Nådefrist (i timmar) innan en föräldralös uppladdning raderas."
     purge_deleted_uploads_grace_period_days: "Nådefrist (i dagar) innan en borttagen uppladdning raderas."
-    purge_unactivated_users_grace_period_days: "Nådefrista (i dagar) innan en användare som inte har aktiverat sitt raderas."
     enable_s3_uploads: "Lägg uppladdningar i Amazon S3 lagring. VIKTIGT: kräver giltiga S3-kreditiv (både åtkomstnyckelns ID och den hemliga åtkomstnyckeln)."
     s3_use_iam_profile: 'Använd AWS EC2 IAM roll för att återfå nycklar. OBS: aktivering kommer att åsidosätta inställningarna "s3 access key id" och "s3 secret access key". '
     s3_upload_bucket: "Namnet på Amazon S3 behållaren som filerna kommer att laddas upp i. VARNING: måste vara gemener, inga punkter och inga understreck."
@@ -1125,16 +1119,10 @@ sv:
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvinga applicerad syntaxmarkering på alla förformatterade kodblock även när de inte explicit har specifierat språket."
     highlighted_languages: "Ingår syntax höjda regler. (Varning: att inkludera för många språk kan ha påverkan på prestandan) se: https://highlightjs.org/static/demo/ för en demo"
-    feed_polling_enabled: "ENDAST INBÄDDNING: Huruvida RSS/ATOM-flöde ska bäddas in som inlägg."
-    feed_polling_url: "ENDAST INBÄDDNING: URL för RSS/ATOM-flöde att bädda in."
-    embed_by_username: "Discourse användarnamn för användaren som skapar inbäddade ämnen."
-    embed_username_key_from_feed: "Nyckel för att hämta discourse användarnamn från flöde. "
     embed_truncate: "Trunkera de inbäddade inläggen."
     allowed_href_schemes: "System tillåtna i länkar i motsatsen till http och https."
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
-    embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
-    embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
@@ -1375,20 +1363,6 @@ sv:
     post_hidden:
       title: "Gömda inlägg"
       subject_template: "Inlägg dolt på grund av att det flaggats av forumets medlemmar"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt meddelande har dolts.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Ett flertal forummedlemmar flaggade det här meddelandet innan det doldes. Var vänlig och begrunda hur du kan se över ditt meddelande för att reflektera deras respons. **Du kan redigera ditt meddelande efter %{edit_delay} minuter, då kommer det automatiskt att visas igen.**
-
-        Om meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det att fortsätta döljas tills det har hanterats av personal – och det är möjligt att det leder till andra åtgärder, bland annat avstängning av ditt konto.
-
-        För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
     welcome_user:
       title: "Välkommen Användare"
       subject_template: "Välkommen till %{site_name}!"
@@ -1420,25 +1394,12 @@ sv:
     csv_export_failed:
       title: "CSV exporten misslyckades"
       subject_template: "Dataexport misslyckades"
-      text_body_template: "Tyvärr har din dataexport misslyckats. Var god kontrollera loggarna eller kontakta personal."
     email_reject_insufficient_trust_level:
       title: "email avslår otillräcklig förtroendenivå"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ditt konto har inte tillräckligt hög förtroendenivå för att skriva nya inlägg från den e-postadressen. Kontakta personal om du tror att det här är ett misstag.
     email_reject_user_not_found:
       title: "Emailet avslås användare kunde inte finnas"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ditt svarsmeddelande skickades från en okänd e-postadress. Försök skicka meddelandet från en annan e-postadress, eller kontakta personal.
     email_reject_screened_email:
       title: "Email avslås screenade email"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ditt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka svaret från en annan e-postadress eller kontakta personal.
     email_reject_inactive_user:
       title: "Emailet avslås Inaktiverad användare"
       text_body_template: |
@@ -1453,16 +1414,8 @@ sv:
         Kontot associerat till den här e-postadressen har blockerats.
     email_reject_reply_user_not_matching:
       title: "Emailet avslås användare hittas ej"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ditt svarsmeddelande skickades från en annan e-postadress än den vi väntat oss, så vi är inte säkra på att det är från samma person. Försök skicka svaret från en annan e-postadress eller kontakta personal.
     email_reject_no_account:
       title: "Emailet avslås det finns inget konto"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Vi kan inte hitta något konto som matchar din e-postadress. Försök skicka meddelandet från en annan e-postadress eller kontakta personal.
     email_reject_empty:
       title: "Emailet avslås - tomt"
       text_body_template: |
@@ -1478,16 +1431,8 @@ sv:
         Vi kunde inte hitta något svar i ditt e-postmeddelande. **Se till att ditt svar är högst upp i e-postmeddelandet** -- vi kan inte hantera inbäddad text.
     email_reject_invalid_access:
       title: "Emailet avslås ogiltig åtkomst"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ditt konto har inte rättighet att skriva nya inlägg i den kategorin. Kontakta personal om du tror att det här är ett misstag.
     email_reject_strangers_not_allowed:
       title: "Emailet avslås okända är ej tillåtna"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Kategorin som du skickat e-postmeddelandet till godkänner endast inlägg från användare med giltiga konton och kända e-postadresser. Kontakta personal om du tror att det här är ett misstag.
     email_reject_invalid_post:
       title: "Emailet avslås ogiltigt inlägg"
       text_body_template: |
@@ -1512,34 +1457,14 @@ sv:
         Poståtgärden kändes inte igen. Var vänlig försök igen, eller gör ett inlägg via hemsidan om problemet fortsätter.
     email_reject_reply_key:
       title: "Emailet avvisar svars nyckeln"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Svarsnyckeln i e-postmeddelandet är ogiltigt eller okänt, så vi vet inte vad det är e-postmeddelandet är ett svar till. Kontakta personal.
     email_reject_bad_destination_address:
       title: "Emailet avslås dålig mottagaradress"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Inga av mottagaradresserna kunde identifieras. Var god se till att du skickar till en korrekt e-postadress tillhandahållen av personalen.
     email_reject_topic_not_found:
       title: "Emailet avslås ämnet fanns ej"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ämnet du försöker svara i finns inte längre, kanske har den raderats? Kontakta personal om du tror att det här är ett misstag.
     email_reject_topic_closed:
       title: "Emailet avslås ämnet är stängt"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ämnet som du svarar i är för närvarande avstängt och tar inte emot svarsmeddelanden. Kontakta personal om du tror att det här är ett misstag.
     email_reject_auto_generated:
       title: "Emailet avslås detta är autogenererat"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Ditt e-postmeddelande har flaggats som "autogenererat", vilket betyder att e-postmeddelandet är skapat av en dator och inte skrivet av en människa. Vi kan tyvärr inte acceptera den typen av e-post. Kontakta personal om du tror att det här är ett misstag.
     email_error_notification:
       title: "Email felmeddelanden"
       text_body_template: |
@@ -1814,10 +1739,6 @@ sv:
     see_more: "Mer"
     search_title: "Sök på hemsidan"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Välkommen till %{title}](#welcome)
-      Ett konto krävs för att logga in. Var god och skapa ett konto eller logga in för att fortsätta.
   terms_of_service:
     title: "Användarvillkor"
     signup_form_message: 'Jag har läst och accepterat <a href="/tos" target="_blank">Användarvillkoren</a>.'

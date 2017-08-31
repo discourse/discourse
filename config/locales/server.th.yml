@@ -1,0 +1,108 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+th:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [null, มกราคม, กุมภาพันธ์, มีนาคม, เมษายน, พฤษภาคม, มิถุนายน, กรกฎาคม, สิงหาคม, กันยายน, ตุลาคม, พฤศจิกายน, ธันวาคม]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
+  title: "ดิสคอส"
+  topics: "หัวข้อ"
+  posts: "โพสต์"
+  loading: "กำลังโหลด"
+  log_in: "เข้าสู่ระบบ"
+  anonymous: "ไม่ระบุชื่อ"
+  emails:
+    incoming:
+      errors:
+        inactive_user_error: "เกิดขึ้นเมื่อผู้ส่งยังไม่มีการใช้งาน"
+        blocked_user_error: "เกิดขึ้นเมื่อผู้ใช้งานโดนบล็อค"
+  errors: &errors
+    messages:
+      invalid: ไม่ถูกต้อง
+  embed:
+    start_discussion: "เริ่มการสนทนา"
+    continue: "ดำเนินการสนทนาต่อ"
+    loading: "กำลังโหลดการสนทนา"
+  user_is_suspended: "ผู้ใช้ที่ถูกระงับการใช้งานไม่สามารถโพสได้"
+  just_posted_that: "คล้ายกับสิ่งคุณเพิ่งโพสมากเกินไป"
+  invalid_characters: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
+  next_page: "หน้าถัดไป →"
+  prev_page: "← หน้าก่อนหน้า"
+  page_num: "หน้า %{num}"
+  num_posts: "โพส"
+  groups:
+    default_names:
+      everyone: "ทุกคน"
+      admins: "ผู้ดูแลระบบ"
+      moderators: "ผู้ดูแล"
+      staff: "ทีมงาน"
+  education:
+    until_posts:
+      other: "%{count} โพส"
+  category:
+    topic_prefix: "เกี่ยวกับหมวด %{category}"
+  archetypes:
+    banner:
+      title: "ป้ายหัวข้อ"
+  reports:
+    topics:
+      title: "หัวข้อ"
+    posts:
+      title: "โพส"
+    bookmarks:
+      title: "บุ๊คมาร์ค"
+    users_by_trust_level:
+      xaxis: "ระดับความไว้ใจ"
+    top_referrers:
+      num_topics: "หัวข้อ"
+    top_traffic_sources:
+      num_topics: "หัวข้อ"
+      num_users: "ผู้ใช้"
+  search:
+    types:
+      user: 'ผู้ใช้'
+  login:
+    admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
+  subject_re: "ตอบ: "
+  subject_pm: "[PM] "
+  user_notifications:
+    user_posted_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      text_body_template: |2
+
+        %{message}
+  page_not_found:
+    see_more: "อื่น"
+    search_google: "กูเกิ้ล"
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors

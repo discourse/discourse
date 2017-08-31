@@ -217,9 +217,7 @@ module DiscourseNarrativeBot
     def skip_track?
       if @is_pm_to_bot
         post_raw = @post.raw
-
-        post_raw.match(/^@#{self.discobot_user.username} #{self.class.skip_trigger}/i) ||
-          post_raw.strip == self.class.skip_trigger
+        post_raw.match(/((^@#{self.discobot_user.username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i)
       else
         false
       end

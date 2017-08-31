@@ -350,7 +350,6 @@ tr_TR:
       mentions: "Bahsetmeler"
       messages: "İletiler"
       alias_levels:
-        title: "Kimler bu gruba ileti gönderebilir ve gruptan @bahsedebilir?"
         nobody: " Hiç Kimse"
         only_admins: "Sadece Yöneticiler"
         mods_and_admins: "Sadece Moderatörler ve Yöneticiler"
@@ -1090,8 +1089,6 @@ tr_TR:
       select_all: "Tümünü Seç"
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
-      result_count:
-        other: "<span class='term'>\"{{term}}\"</span> için {{count}} sonuç "
       title: "konu, gönderi, kullanıcı veya kategori ara"
       no_results: "Hiç bir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
@@ -1886,7 +1883,6 @@ tr_TR:
         hamburger_menu: '<b>=</b> Hamburger menüyü aç'
         user_profile_menu: '<b>p</b> Kullanıcı menüsünü aç'
         show_incoming_updated_topics: '<b>.</b> Güncellenmiş konuları göster'
-        search: '<b>/</b> Ara'
         help: '<b>?</b> Klavye yardım sayfasını aç'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Yeni Konuları/Gönderileri Yoksay'
         dismiss_topics: '<b>x</b>, <b>t</b> Konuları yoksay'
@@ -2937,8 +2933,6 @@ tr_TR:
       upload: "Yükle"
       uploading: "Yükleniyor..."
       quit: "Belki Sonra"
-      staff_count:
-        other: "Topluluğunuzda %{count} görevli üye var."
       invites:
         add_user: "ekle"
         none_added: "Herhangi bir görevli davet etmediniz. Devam etmek istediğinize emin misiniz?"

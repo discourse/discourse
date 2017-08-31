@@ -397,7 +397,6 @@ fi:
         staff: "Ryhmän isännät ja henkilökunta"
         owners: "Ryhmän isännät ja ylläpitäjät"
       alias_levels:
-        title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @mainita sen?"
         nobody: "Ei kukaan"
         only_admins: "Vain ylläpitäjät"
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
@@ -1206,9 +1205,6 @@ fi:
       select_all: "Valitse kaikki"
       clear_all: "Tyhjennä kaikki"
       too_short: "Hakusana on liian lyhyt."
-      result_count:
-        one: "1 tulos haulle <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} tulosta haulle <span class='term'>\"{{term}}\"</span>"
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
@@ -2147,7 +2143,6 @@ fi:
         hamburger_menu: '<b>=</b> Avaa hampurilaisvalikko'
         user_profile_menu: '<b>p</b> Avaa käyttäjävalikko'
         show_incoming_updated_topics: '<b>.</b> Näytä päivttyneet ketjut'
-        search: '<b>/</b> Haku'
         help: '<b>?</b> Näytä näppäimistöoikotiet'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Unohda Uudet/Viestit'
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
@@ -3323,9 +3318,6 @@ fi:
       upload: "Lataa"
       uploading: "Ladataan..."
       quit: "Ehkä myöhemmin"
-      staff_count:
-        one: "Yhteisöllä on 1 henkilökuntalainen."
-        other: "Yhteisöllä on %{count} henkilökuntalaista."
       invites:
         add_user: "lisää"
         none_added: "Et ole kutsunut lainkaan henkilökuntaa. Haluatko todella jatkaa?"

@@ -652,9 +652,7 @@ tr_TR:
     educate_until_posts: "Kullanıcılar, ilk (n) gönderilerini yazmaya başladıklarında, pop-up yeni kullanıcı eğitim paneli metin düzenleyecisinin üstünde çıksın."
     title: "Sayfa başlığı etiketinde kullanılacak, bu sitenin ismi."
     site_description: "Meta açıklama etiketinde kullanılacak, bu sitenin bir cümlelik açıklaması."
-    contact_email: "Bu site için sorumlu kişinin e-posta adresi. Sadece acil durumlar için /about iletişim formu içerisinde ve beklenmeyen bildirmeler gibi ciddi bildiriler için kullanılacak."
     contact_url: "Bu site için iletişim URL'si. Acil durumlar için /about iletişim formunda kullanılır."
-    queue_jobs: "SADECE GELİŞTİRİCİLER İÇİN! UYARI! Aksi gerekmediği takdirde işleri sidekiq ile sıraya koydurtun. Bu özellik devre dışı bırakılırsa, siteniz düzgün çalışmayacaktır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
@@ -669,7 +667,6 @@ tr_TR:
     fixed_category_positions: "Seçerseniz, kategoriler için sabit bir sıralama belirleyebileceksiniz. Seçmezseniz, kategoriler etkinlik sırasına göre listelenir. "
     fixed_category_positions_on_create: "Seçerseniz, konu oluşturma ekranında da kategori sıralaması korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: "İç bağlantılar (ana alan adları dahil) hariç, gönderilen tüm kullanıcı içeriklerine rel nofollow ekle. Bu ayarı değiştirirseniz, tüm gönderileri \"rake post:rebake\" ile yeniden işlemeniz gerekir."
-    exclude_rel_nofollow_domains: "nofollow eklenmeyecek sınırlandırılmış alan adları listesi. ust.com'a izin verirseniz otomatik olarak alt.ust.com'a da izin verilir."
     post_excerpt_maxlength: "Gönderi alıntısının / özetinin en fazla uzunluğu."
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
@@ -744,8 +741,6 @@ tr_TR:
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Discourse Hub'a sürüm güncellemeleri için haber yolla ve yeni versiyon iletilerine /admin gösterge panelinde yer ver"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."
-    port: "SADECE YAZILIMCILAR İÇİN! UYARI! Öntanımlı 80 portu yerine bu HTTP portunu kullanın. Öntanımlı 80'i kullanmak için boş bırakın. "
-    force_hostname: "SADECE YAZILIMCILAR İÇİN! DİKKAT! URL'de bir bilgisayar adı belirleyin. Öntanımlı için boş bırakın."
     invite_expiry_days: "Kullanıcı davet anahtarlarının geçerlilik süresi, gün olarak"
     invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
@@ -810,7 +805,6 @@ tr_TR:
     clean_up_uploads: "Yasadışı barındırmayı engellemek için artık referanssız yüklemeleri kaldır. UYARI: Bu ayarı etkinleştirmeden önce /uploads dizinini yedeklemeyi isteyebilirsiniz"
     clean_orphan_uploads_grace_period_hours: "Artık yüklemeler kaldırılmadan önce tanınan süre (saat olarak)."
     purge_deleted_uploads_grace_period_days: "Silinen yüklemelerin kaldırılması için tanınan süre (gün olarak)."
-    purge_unactivated_users_grace_period_days: "Hesabını etkinleştirmemiş bir kullanıcının sistemden silinmesi için tanınan süre (gün olarak)."
     enable_s3_uploads: "Yüklemeleri Amazon S3 belleklerinde sakla. ÖNEMLİ: Doğru S3 bilgileri (erişim anahtarı id & gizli erişim anahtarı) gerektirir"
     s3_use_iam_profile: 'Anahtarları almak için AWS EC2 IAM rolünü kullan. NOT: Etkinleştirilmesi "s3 access key id" and "s3 secret access key" ayarlarının üzerine yazacaktır.'
     s3_upload_bucket: "Dosyaların yükleneceği Amazon S3 biriktirme yeri adı. DİKKAT: büyük harfler, nokta ve altçizgi karakterleri kullanılmamalı."
@@ -971,15 +965,9 @@ tr_TR:
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı iletisi çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden biçimlendirilen kod parçalarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Dahil edilen kod renklendirme kuralları. (Uyarı: çok fazla dil eklemek performansı etkileyebilir) demo için bakınız: https://highlightjs.org/static/demo/"
-    feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
-    feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
-    embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
-    embed_username_key_from_feed: "Beslemeden Discourse kullanıcı adını çekmek için kullanılacak anahtar"
     embed_truncate: "Yerleştirilmiş gönderileri kırp."
     embed_post_limit: "Yerleştirilecek en fazla gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
-    embed_whitelist_selector: "Yerleştirmelerde kullanılmasına izin verilen öğeler için CSS seçicisi."
-    embed_blacklist_selector: "Yerleştirmelerden çıkartılmış öğeler için CSS seçicisi."
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, yöneticiden yeni konular oluşturmasını isteyen bir uyarı iletisi göster. "
     delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"
@@ -1250,7 +1238,6 @@ tr_TR:
       subject_template: "Dışarı veri aktarımı tamamlandı"
     csv_export_failed:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
-      text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."
     email_reject_empty:
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
@@ -1463,10 +1450,6 @@ tr_TR:
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[%{title} topluluğuna hoş geldiniz](#welcome)
-      Hesap oluşturmanız gerekiyor. Devam etmek için lütfen bir hesap oluşturun ya da giriş yapın.
   terms_of_service:
     title: "Üyelik Sözleşmesi"
     signup_form_message: '<a href="/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'

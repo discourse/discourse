@@ -20,17 +20,30 @@ class UploadsController < ApplicationController
 
     if params[:synchronous] && (current_user.staff? || is_api?)
       data = create_upload(file, url, type, for_private_message, pasted)
-      render json: data.as_json
+      render json: serialize_upload(data)
     else
       Scheduler::Defer.later("Create Upload") do
         begin
           data = create_upload(file, url, type, for_private_message, pasted)
         ensure
-          MessageBus.publish("/uploads/#{type}", (data || {}).as_json, client_ids: [params[:client_id]])
+          MessageBus.publish("/uploads/#{type}", serialize_upload(data), client_ids: [params[:client_id]])
         end
       end
       render json: success_json
     end
+  end
+
+  def lookup_urls
+    params.permit(short_urls: [])
+    uploads = []
+
+    if (params[:short_urls] && params[:short_urls].length > 0)
+      PrettyText::Helpers.lookup_image_urls(params[:short_urls]).each do |short_url, url|
+        uploads << { short_url: short_url, url: url }
+      end
+    end
+
+    render json: uploads.to_json
   end
 
   def show
@@ -56,6 +69,13 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def serialize_upload(data)
+    # as_json.as_json is not a typo... as_json in AM serializer returns keys as symbols, we need them
+    # as strings here
+    serialized = UploadSerializer.new(data, root: nil).as_json.as_json if Upload === data
+    serialized ||= (data || {}).as_json
+  end
 
   def render_404
     raise Discourse::NotFound

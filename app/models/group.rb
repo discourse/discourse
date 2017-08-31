@@ -78,7 +78,8 @@ class Group < ActiveRecord::Base
     )
   end
 
-  validates :alias_level, inclusion: { in: ALIAS_LEVELS.values }
+  validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
+  validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
   scope :visible_groups, ->(user) {
     groups = Group.order(name: :asc).where("groups.id > 0")
@@ -126,6 +127,23 @@ class Group < ActiveRecord::Base
 
   scope :mentionable, lambda { |user|
 
+    where("mentionable_level in (:levels) OR
+          (
+            mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          )", levels: alias_levels(user), user_id: user && user.id)
+  }
+
+  scope :messageable, lambda { |user|
+
+    where("messageable_level in (:levels) OR
+          (
+            messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          )", levels: alias_levels(user), user_id: user && user.id)
+  }
+
+  def self.alias_levels(user)
     levels = [ALIAS_LEVELS[:everyone]]
 
     if user && user.admin?
@@ -139,12 +157,8 @@ class Group < ActiveRecord::Base
                 ALIAS_LEVELS[:members_mods_and_admins]]
     end
 
-    where("alias_level in (:levels) OR
-          (
-            alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
-            SELECT group_id FROM group_users WHERE user_id = :user_id)
-          )", levels: levels, user_id: user && user.id)
-  }
+    levels
+  end
 
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
@@ -615,7 +629,8 @@ end
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
-#  alias_level                        :integer          default(0)
+#  mentionable_level                  :integer          default(0)
+#  messageable_level                  :integer          default(0)
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null

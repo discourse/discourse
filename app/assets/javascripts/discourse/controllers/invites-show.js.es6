@@ -38,6 +38,11 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, N
     return usernameFailed || passwordFailed || nameFailed || userFieldsFailed;
   },
 
+  @computed
+  fullnameRequired() {
+    return this.siteSettings.full_name_required || this.siteSettings.enable_names;
+  },
+
   actions: {
     submit() {
 

@@ -115,13 +115,13 @@ QUnit.test("Create an enqueued Topic", assert => {
   fillIn('.d-editor-input', "enqueue this content please");
   click('#reply-control button.create');
   andThen(() => {
-    assert.ok(visible('#discourse-modal'), 'it pops up a modal');
+    assert.ok(visible('.d-modal'), 'it pops up a modal');
     assert.equal(currentURL(), "/", "it doesn't change routes");
   });
 
   click('.modal-footer button');
   andThen(() => {
-    assert.ok(invisible('#discourse-modal'), 'the modal can be dismissed');
+    assert.ok(invisible('.d-modal'), 'the modal can be dismissed');
   });
 });
 
@@ -183,12 +183,12 @@ QUnit.test("Create an enqueued Reply", assert => {
   });
 
   andThen(() => {
-    assert.ok(visible('#discourse-modal'), 'it pops up a modal');
+    assert.ok(visible('.d-modal'), 'it pops up a modal');
   });
 
   click('.modal-footer button');
   andThen(() => {
-    assert.ok(invisible('#discourse-modal'), 'the modal can be dismissed');
+    assert.ok(invisible('.d-modal'), 'the modal can be dismissed');
   });
 });
 

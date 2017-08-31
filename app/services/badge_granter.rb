@@ -51,6 +51,7 @@ class BadgeGranter
                 data: { badge_id: @badge.id,
                         badge_name: @badge.display_name,
                         badge_slug: @badge.slug,
+                        badge_title: @badge.allow_title,
                         username: @user.username }.to_json
               )
               user_badge.update_attributes notification_id: notification.id
@@ -327,6 +328,7 @@ class BadgeGranter
                             badge_id: badge.id,
                             badge_name: badge.display_name,
                             badge_slug: badge.slug,
+                            badge_title: badge.allow_title,
                             username: row.username
         }.to_json)
       end

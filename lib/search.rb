@@ -18,7 +18,7 @@ class Search
   end
 
   def self.facets
-    %w(topic category user private_messages)
+    %w(topic category user private_messages tags)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -553,6 +553,7 @@ class Search
         unless @search_context
           user_search if @term.present?
           category_search if @term.present?
+          tags_search if @term.present?
         end
         topic_search
       end
@@ -628,6 +629,20 @@ class Search
 
       users.each do |user|
         @results.add(user)
+      end
+    end
+
+    def tags_search
+      return unless SiteSetting.tagging_enabled
+
+      tags = Tag.includes(:tag_search_data)
+        .where("tag_search_data.search_data @@ #{ts_query}")
+        .references(:tag_search_data)
+        .order("name asc")
+        .limit(limit)
+
+      tags.each do |tag|
+        @results.add(tag)
       end
     end
 

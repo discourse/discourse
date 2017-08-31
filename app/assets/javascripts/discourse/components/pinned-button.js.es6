@@ -6,6 +6,8 @@ export default DropdownButton.extend({
   descriptionKey: 'help',
   classNames: ['pinned-options'],
   title: '',
+  buttonExtraClasses: 'btn-icon-text',
+
   longDescription: function(){
     const topic = this.get('topic');
     const globally = topic.get('pinned_globally') ? '_globally' : '';

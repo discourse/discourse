@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe "Users" do
+RSpec.describe UsersController do
   let(:user) { Fabricate(:user) }
 
-  describe "viewing a user" do
+  describe '#show' do
 
     it "should be able to view a user" do
       get "/u/#{user.username}"

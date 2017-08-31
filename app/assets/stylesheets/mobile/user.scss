@@ -1,4 +1,12 @@
-// styles that apply to the user page
+// Mobile styles for "/user" section
+.user-right {
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 20px;
+    }
+  }
+}
 
 .user-preferences {
   .control-group {
@@ -134,18 +142,6 @@
   margin-top: 18px;
 }
 
-.user-navigation {
-  width: 100%;
-  margin-top: 20px;
-  min-height: 20px;
-
-  h3 {
-    color: $primary;
-    margin: 10px;
-  }
-
-}
-
 .user-main {
 
   table.group-members {
@@ -159,11 +155,11 @@
     th {
       padding: 0.5em;
       text-align: right;
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
     }
     td {
       padding: 0.5em;
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
       img {
         margin-right: 10px;
       }
@@ -196,13 +192,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid $primary-low; 
+        border-bottom: 1px solid $primary-low;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid $primary-low; 
+        border-bottom: 1px solid $primary-low;
       }
     }
   }
@@ -215,7 +211,7 @@
     color: $secondary;
 
     .secondary {
-      background: $primary-low; 
+      background: $primary-low;
       font-size: 0.929em;
 
       .btn { padding: 3px 12px; }
@@ -251,8 +247,8 @@
       background: rgba($secondary, .85);
 
       blockquote {
-        background-color: $secondary-low; 
-        border-left-color: $secondary-low; 
+        background-color: $secondary-low;
+        border-left-color: $secondary-low;
       }
 
       h1 {
@@ -390,113 +386,6 @@
     }
   }
 
-
-  .user-stream {
-    .excerpt {
-      margin: 5px 0;
-      font-size: 0.929em;
-      word-wrap: break-word;
-      color: $primary;
-    }
-    .item.moderator-action {
-      background-color: $highlight-medium;
-    }
-    .item.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
-    }
-    .item.hidden {
-      display: block;
-      opacity: 0.4;
-    }
-    .item {
-      padding: 20px 0 15px 0;
-      background-color: $secondary;
-      border-bottom: 1px solid $primary-low; 
-    }
-    .type {
-      color: $primary;
-    }
-    span.name {
-      color: $primary;
-    }
-    .time, .delete-info {
-      display: block;
-      float: right;
-      color: lighten($primary, 40%);
-      font-size: 11px;
-    }
-    .delete-info i {
-      font-size: 1em;
-    }
-    .avatar-link {
-      float: left;
-      margin-right: 4px;
-    }
-    .title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-    .name {
-      font-size: 1em;
-      max-width: 400px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      vertical-align: middle;
-    }
-    .edit-reason {
-      background-color: scale-color($highlight, $lightness: 25%);
-      padding: 3px 5px 5px 5px;
-    }
-    .remove-bookmark {
-      float: right;
-      margin-top: -4px;
-    }
-    .notification {
-      &.unread {
-        background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
-      }
-
-      li { display: inline-block; }
-      p {
-        display: inline-block;
-        margin-left: 10px;
-        span {
-          color: $primary;
-        }
-      }
-      .time {
-        display: inline-block;
-        margin-left: 10px;
-        float: none;
-      }
-      // common/base/header.scss
-      .fa, .icon {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        font-size: 1.714em;
-      }
-    }
-    .group-member-info {
-      .name {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        vertical-align: inherit;
-      }
-      .title {
-        display: inline-block;
-        margin-top: 5px;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      }
-    }
-    .topic-statuses {
-      float: left;
-    }
-  }
-
   .staff-counters {
     text-align: left;
     background: $primary;
@@ -584,10 +473,6 @@
     width: 100%;
     margin-top: 0;
   }
-}
-
-.user-archive {
-  display: inline-block;
 }
 
 // mobile fixups for badges

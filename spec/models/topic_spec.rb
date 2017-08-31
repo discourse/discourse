@@ -455,7 +455,7 @@ describe Topic do
 
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
-            admins.update!(alias_level: Group::ALIAS_LEVELS[:everyone])
+            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
             expect(topic.invite_group(topic.user, admins)).to eq(true)
             expect(topic.allowed_groups.include?(admins)).to eq(true)
@@ -1066,6 +1066,21 @@ describe Topic do
             expect(topic_timer.execute_at).to be_within(1.second).of(Time.zone.now + 5.hours)
           end
 
+          describe 'when topic is already closed' do
+            before do
+              SiteSetting.queue_jobs = true
+              topic.update_status('closed', true, Discourse.system_user)
+            end
+
+            it 'should not set a topic timer' do
+              expect { topic.change_category_to_id(new_category.id) }
+                .to change { TopicTimer.with_deleted.count }.by(0)
+
+              expect(topic.closed).to eq(true)
+              expect(topic.reload.category).to eq(new_category)
+            end
+          end
+
           describe 'when topic has an existing topic timer' do
             let(:topic_timer) { Fabricate(:topic_timer, topic: topic) }
 
@@ -1162,8 +1177,6 @@ describe Topic do
     let(:admin) { Fabricate(:admin) }
     let(:trust_level_4) { Fabricate(:trust_level_4) }
 
-    before { Discourse.stubs(:system_user).returns(admin) }
-
     it 'can take a number of hours as an integer' do
       freeze_time now
 
@@ -1233,12 +1246,12 @@ describe Topic do
 
     it 'sets topic status update user to system user if given user is not staff or a TL4 user' do
       topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: Fabricate.build(:user, id: 444))
-      expect(topic.topic_timers.first.user).to eq(admin)
+      expect(topic.topic_timers.first.user).to eq(Discourse.system_user)
     end
 
     it 'sets topic status update user to system user if user is not given and topic creator is not staff nor TL4 user' do
       topic.set_or_create_timer(TopicTimer.types[:close], 3)
-      expect(topic.topic_timers.first.user).to eq(admin)
+      expect(topic.topic_timers.first.user).to eq(Discourse.system_user)
     end
 
     it 'sets topic status update user to topic creator if it is a staff user' do
@@ -1263,6 +1276,15 @@ describe Topic do
       freeze_time now
       closing_topic.set_or_create_timer(TopicTimer.types[:close], 48)
       expect(closing_topic.reload.public_topic_timer.execute_at).to eq(2.days.from_now)
+    end
+
+    it 'should not delete topic_timer of another status_type' do
+      freeze_time
+      closing_topic.set_or_create_timer(TopicTimer.types[:open], nil)
+      topic_timer = closing_topic.public_topic_timer
+
+      expect(topic_timer.execute_at).to eq(5.hours.from_now)
+      expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
     end
 
     it 'should allow status_type to be updated' do

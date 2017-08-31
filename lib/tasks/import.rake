@@ -445,6 +445,39 @@ task "import:create_phpbb_permalinks" => :environment do
   log "Done!"
 end
 
+task "import:remap_old_phpbb_permalinks" => :environment do
+  log 'Remapping Permalinks...'
+
+  i = 0
+  # discussions.flightaware.com
+  Post.where("raw LIKE ?", "%discussions.flightaware.com%").each do |p|
+    begin
+      new_raw = p.raw.dup
+      # \((https?:\/\/discussions\.flightaware\.com\/\S*-t\d+.html)\)
+      new_raw.gsub!(/\((https?:\/\/discussions\.flightaware\.com\/\S*-t\d+.html)\)/) do
+        normalized_url = Permalink.normalize_url($1)
+        permalink = Permalink.find_by_url(normalized_url) rescue nil
+        if permalink && permalink.target_url
+          "(#{permalink.target_url})"
+        else
+          "(#{$1})"
+        end
+      end
+
+      if new_raw != p.raw
+        p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
+        putc "."
+        i += 1
+      end
+    rescue
+      # skip
+    end
+  end
+  i
+
+  log "Done! #{i} posts remapped."
+end
+
 task "import:create_vbulletin_permalinks" => :environment do
   log 'Creating Permalinks...'
 

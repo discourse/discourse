@@ -615,9 +615,12 @@ class PostsController < ApplicationController
 
     if usernames = result[:target_usernames]
       usernames = usernames.split(",")
-      groups = Group.mentionable(current_user).where('name in (?)', usernames).pluck('name')
+      groups = Group.messageable(current_user).where('name in (?)', usernames).pluck('name')
       usernames -= groups
+      emails = usernames.select { |user| user.match(/@/) }
+      usernames -= emails
       result[:target_usernames] = usernames.join(",")
+      result[:target_emails] = emails.join(",")
       result[:target_group_names] = groups.join(",")
     end
 

@@ -371,8 +371,6 @@ bs_BA:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "Brief title of this site, used in the title tag."
     site_description: "Describe this site in one sentence, used in the meta description tag."
-    contact_email: "Email address of key contact for site. Important notices from discourse.org regarding critical updates may be sent to this address."
-    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
@@ -429,8 +427,6 @@ bs_BA:
     email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
-    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
-    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
@@ -573,14 +569,8 @@ bs_BA:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
-    feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
-    feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
-    embed_by_username: "Discourse username of the user who creates the embedded topics."
-    embed_username_key_from_feed: "Key to pull discourse username from feed."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
-    embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
-    embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     enable_emoji: "Omogući smajlije"
@@ -690,7 +680,6 @@ bs_BA:
       subject_template: "Data Export completed successfully"
     csv_export_failed:
       subject_template: "Export failed"
-      text_body_template: "The export has failed. Please check the logs."
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
@@ -720,10 +709,6 @@ bs_BA:
     see_more: "Više"
     search_title: "Pretraži stranicu"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Welcome to %{title}](#welcome)
-      Potreban je nalog. Kreirajte novi nalog ili se ulogujte.
   terms_of_service:
     title: "Terms of Service"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

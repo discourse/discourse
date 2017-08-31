@@ -251,6 +251,21 @@ http://b.com/#{'a' * 500}
 
   end
 
+  describe 'internal link from unlisted topic' do
+    it 'works' do
+      unlisted_topic = Fabricate(:topic, user: user, visible: false)
+      url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
+
+      unlisted_topic.posts.create(user: user, raw: 'initial post')
+      linked_post = unlisted_topic.posts.create(user: user, raw: "Link to another topic: #{url}")
+
+      TopicLink.extract_from(linked_post)
+
+      expect(topic.topic_links.first).to eq(nil)
+      expect(unlisted_topic.topic_links.first).not_to eq(nil)
+    end
+  end
+
   describe 'internal link with non-standard port' do
     it 'includes the non standard port if present' do
       other_topic = Fabricate(:topic, user: user)
@@ -334,6 +349,13 @@ http://b.com/#{'a' * 500}
         expect(TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length).to eq(1)
       end
 
+      it 'does not include links from whisper' do
+        url = "https://blog.codinghorror.com/hacker-hack-thyself/"
+        post = Fabricate(:post, raw: "whisper post... #{url}", post_type: Post.types[:whisper])
+        TopicLink.extract_from(post)
+
+        expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
+      end
     end
 
     describe ".duplicate_lookup" do

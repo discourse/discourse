@@ -33,7 +33,7 @@
   }
   overflow-y: auto;
   z-index: 110;
-  padding: 10px;
+  padding: 10px 10px 35px 10px;
 
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: $highlight-medium;
@@ -55,10 +55,17 @@
   }
 
   a.close {
-    float: right;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
     color: $primary;
-    opacity: 0.5;
+    padding: 6px 4px 2px 4px;
     font-size: 1.071em;
+    &:before {
+      content: 'esc';
+      font-size: 0.85em;
+      margin-right: 0.5em;
+    }
   }
 
   a.close:hover {
@@ -155,7 +162,7 @@
     padding-left: 7px;
   }
   .control-row {
-    margin: 0 0 0 5px;
+    margin: 0 5px 0 5px;
   }
   .saving-text {
     display: none;
@@ -214,14 +221,9 @@
     .contents {
       input#reply-title {
         padding: 7px 10px;
-        margin: 6px 10px 3px 0;
+        margin-bottom: 0;
         color: $primary;
-
-      }
-      input#reply-title {
         width: 400px;
-                color: $primary;
-
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -236,33 +238,11 @@
     .form-element {
       position: relative;
       display: inline-block;
-      .select2-container {
-        width: 400px;
-        margin-top: 5px;
-        a {
-          padding-top: 4px;
-          height: 28px;
-        }
-        b {
-          margin-top: 4px;
-        }
-      }
-      .category-combobox {
+
+      .category-input .category-select-box {
         width: 430px;
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }
-
-        .select2-drop {
-          left: -9000px;
-          width: 428px;
-          @include medium-width { width: 283px; }
-          @include small-width { width: 218px; }
-        }
-        .select2-search input {
-          width: 378px;
-          @include medium-width { width: 233px; }
-          @include small-width { width: 168px; }
-        }
       }
     }
     .edit-reason-input {
@@ -279,7 +259,7 @@
     }
     #reply-title {
       color: $primary;
-      margin-right: 10px;
+      margin-right: 5px;
       float: left;
       &:disabled {
         background-color: $primary-low;
@@ -332,6 +312,7 @@
   }
   .title-input, .category-input, .show-admin-options {
     display: inline;
+    float: left;
   }
   .show-admin-options {
     vertical-align: top;

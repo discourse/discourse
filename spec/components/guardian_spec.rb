@@ -207,7 +207,7 @@ describe Guardian do
       it "returns true if target is a staff group" do
         Group::STAFF_GROUPS.each do |name|
           g = Group[name]
-          g.alias_level = Group::ALIAS_LEVELS[:everyone]
+          g.messageable_level = Group::ALIAS_LEVELS[:everyone]
           expect(Guardian.new(user).can_send_private_message?(g)).to be_truthy
         end
       end

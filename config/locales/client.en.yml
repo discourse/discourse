@@ -459,7 +459,8 @@ en:
         staff: "Group owners and staff"
         owners: "Group owners and admins"
       alias_levels:
-        title: "Who can message and @mention this group?"
+        mentionable: "Who can @mention this group?"
+        messageable: "Who can message this group?"
         nobody: "Nobody"
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
@@ -550,6 +551,7 @@ en:
       topics_entered: "topics entered"
       post_count: "# posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
+      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
 
     user_fields:
       none: "(select an option)"
@@ -1144,7 +1146,8 @@ en:
       alt: 'Alt'
 
     select_box:
-      no_content: No content
+      default_header_text: Select...
+      no_content: No matches found
       filter_placeholder: Search...
 
     emoji_picker:

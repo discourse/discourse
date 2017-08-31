@@ -396,7 +396,6 @@ pt:
         staff: "Donos do grupo e equipa"
         owners: "Donos do grupo e administradores"
       alias_levels:
-        title: "Quem pode mandar mensagens e @mencionar este grupo?"
         nobody: "Ninguém"
         only_admins: "Apenas administradores"
         mods_and_admins: "Apenas moderadores e Administradores"
@@ -482,6 +481,7 @@ pt:
       topics_entered: "tópicos inseridos"
       post_count: "# publicações"
       confirm_delete_other_accounts: "Tem a certeza que quer apagar estas contas?"
+      powered_by: "desenvolvido por <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(selecione uma opção)"
     user:
@@ -570,6 +570,7 @@ pt:
       muted_users_instructions: "Suprimir todas as notificações destes utilizadores."
       muted_topics_link: "Mostrar tópicos silenciados"
       watched_topics_link: "Mostrar tópicos vigiados"
+      tracked_topics_link: "Mostrar tópicos monitorizados"
       automatically_unpin_topics: "Desafixar tópicos automaticamente quando eu chegar ao final."
       apps: "Aplicações"
       revoke_access: "Rescindir Acesso"
@@ -987,7 +988,7 @@ pt:
         title: "com GitHub"
         message: "A autenticar com GitHub (certifique-se de que os bloqueadores de popup estão desativados)"
     invites:
-      accept_title: "Convidar"
+      accept_title: "Convite"
       welcome_to: "Bem-vindo a %{site_name}!"
       invited_by: "Foi convidado por:"
       accept_invite: "Aceitar Convite"
@@ -2048,7 +2049,6 @@ pt:
         hamburger_menu: '<b>=</b> Abrir menu hamburger'
         user_profile_menu: '<b>p</b> Abrir menu de utilizador'
         show_incoming_updated_topics: '<b>.</b> Mostrar tópicos atualizados'
-        search: '<b>/</b> Pesquisar'
         help: '<b>?</b> Abrir ajuda do teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Marcar Visto Novos/Publicações'
         dismiss_topics: '<b>x</b>, <b>t</b> Marcar Visto Tópicos'
@@ -3105,9 +3105,6 @@ pt:
       upload: "Carregar"
       uploading: "A carregar…"
       quit: "Talvez Mais Tarde"
-      staff_count:
-        one: "A sua comunidade tem 1 membro na equipa de apoio."
-        other: "A sua comunidade tem %{count} membros na equipa de apoio."
       invites:
         add_user: "adicionar"
         none_added: "Não convidou ninguém para a equipa de apio. Tem a certeza de que quer continuar?"

@@ -11,12 +11,12 @@ QUnit.test("Can open the category modal", assert => {
 
   click('.edit-category');
   andThen(() => {
-    assert.ok(visible('#discourse-modal'), 'it pops up a modal');
+    assert.ok(visible('.d-modal'), 'it pops up a modal');
   });
 
   click('a.close');
   andThen(() => {
-    assert.ok(!visible('#discourse-modal'), 'it closes the modal');
+    assert.ok(!visible('.d-modal'), 'it closes the modal');
   });
 });
 
@@ -27,7 +27,7 @@ QUnit.test("Change the category color", assert => {
   fillIn('#edit-text-color', '#ff0000');
   click('#save-category');
   andThen(() => {
-    assert.ok(!visible('#discourse-modal'), 'it closes the modal');
+    assert.ok(!visible('.d-modal'), 'it closes the modal');
     assert.equal(DiscourseURL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
   });
 });
@@ -40,7 +40,7 @@ QUnit.test("Change the topic template", assert => {
   fillIn('.d-editor-input', 'this is the new topic template');
   click('#save-category');
   andThen(() => {
-    assert.ok(!visible('#discourse-modal'), 'it closes the modal');
+    assert.ok(!visible('.d-modal'), 'it closes the modal');
     assert.equal(DiscourseURL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
   });
 });
@@ -74,7 +74,8 @@ QUnit.test("Subcategory list settings", assert => {
   });
 
   click('.edit-category-general');
-  selectDropdown('.edit-category-tab-general .category-combobox', 2);
+
+  selectBox('.edit-category-tab-general .category-select-box', 'feature');
 
   click('.edit-category-settings');
   andThen(() => {

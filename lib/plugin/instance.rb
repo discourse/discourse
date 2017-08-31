@@ -96,6 +96,13 @@ class Plugin::Instance
     end
   end
 
+  def custom_avatar_column(column)
+    reloadable_patch do |plugin|
+      AvatarLookup.lookup_columns << column
+      AvatarLookup.lookup_columns.uniq!
+    end
+  end
+
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(class_name, attr, &block)

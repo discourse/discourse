@@ -45,6 +45,30 @@ module PrettyText
       end
     end
 
+    def lookup_image_urls(urls)
+      map = {}
+      result = {}
+
+      urls.each do |url|
+        sha1 = Upload.sha1_from_short_url(url)
+        map[url] = sha1 if sha1
+      end
+
+      if map.length > 0
+        reverse_map = map.invert
+
+        Upload.where(sha1: map.values).pluck(:sha1, :url).each do |row|
+          sha1, url = row
+
+          if short_url = reverse_map[sha1]
+            result[short_url] = url
+          end
+        end
+      end
+
+      result
+    end
+
     def lookup_inline_onebox(url)
       InlineOneboxer.lookup(url)
     end

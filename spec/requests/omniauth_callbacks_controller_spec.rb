@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "OmniAuth Callbacks" do
+RSpec.describe Users::OmniauthCallbacksController do
   let(:user) { Fabricate(:user) }
 
   before do

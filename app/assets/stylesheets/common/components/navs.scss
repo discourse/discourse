@@ -20,9 +20,11 @@
 .nav-pills {
   @extend %nav;
   @extend .clearfix;
+
   > li {
     float: left;
     margin-right: 5px;
+
     > a {
       border: none;
       padding: 5px 12px;
@@ -30,14 +32,26 @@
       font-size: 1.143em;
       line-height: 20px;
       transition: background .15s;
+
+      .d-icon {
+        margin-right: 5px;
+        opacity: .65;
+      }
+
       &:hover {
         color: $quaternary;
         background-color: $quaternary-low;
       }
     }
-    &.active > a, > a.active {
+
+    &.active > a,
+    > a.active {
       color: $secondary;
       background-color: $quaternary;
+
+      .d-icon {
+        opacity: 1;
+      }
     }
   }
 }
@@ -50,38 +64,41 @@
   padding: 0;
   overflow: hidden;
   background: $primary-low;
+
   li {
     border-bottom: 1px solid $primary-low;
     position: relative;
+
     &:last-of-type {
       border-bottom: 0;
     }
-    a {
-      margin: 0;
-      padding: 13px 13px 13px 30px;
-      font-size: 1.143em;
-      line-height: 20px;
-      cursor: pointer;
-      color: $primary;
+
+    &.indent {
+      padding-left: 15px;
     }
   }
-  > li.indent {
-    padding-left: 15px;
-  }
-  .active > a, & li > a.active
-  {
-    color: $secondary;
-    background-color: $quaternary;
-  }
 
-  .active > a::after, & li > a.active::after
-  {
-    left: 90%;
-    top: 33%;
-    content: " ";
-    position: absolute;
-    border: 8px solid transparent;
-    border-left-color: $secondary;
+  a {
+    margin: 0;
+    padding: 13px;
+    font-size: 1.143em;
+    line-height: 20px;
+    cursor: pointer;
+    color: $primary;
+
+    &.active {
+      color: $secondary;
+      background-color: $quaternary;
+
+      &::after {
+        left: 90%;
+        top: 33%;
+        content: " ";
+        position: absolute;
+        border: 8px solid transparent;
+        border-left-color: $secondary;
+      }
+    }
   }
 
   .count {
@@ -91,10 +108,9 @@
 
   .glyph {
     font-size: 0.857em;
-    width: 30px;
+    width: 1.25em;
     text-align: center;
-    position: absolute;
-    left: 2px;
+    margin-right: .5em;
     line-height: 20px;
   }
 }

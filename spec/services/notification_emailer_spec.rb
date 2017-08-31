@@ -39,6 +39,14 @@ describe NotificationEmailer do
         Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
         NotificationEmailer.process_notification(notification)
       end
+
+      it "enqueues a job if the user is staged even if site requires user approval" do
+        SiteSetting.must_approve_users = true
+
+        notification.user.staged = true
+        Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
+        NotificationEmailer.process_notification(notification)
+      end
     end
 
     context "active but unapproved user" do

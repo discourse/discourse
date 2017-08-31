@@ -92,7 +92,7 @@ createWidget('header-dropdown', jQuery.extend({
 
     return h(
       'a.icon.btn-flat',
-      { attributes: { 
+      { attributes: {
         href: attrs.href,
           'data-auto-route': true,
           title,
@@ -150,7 +150,7 @@ createWidget('header-icons', {
 });
 
 createWidget('header-buttons', {
-  tagName: 'span',
+  tagName: 'span.header-buttons',
 
   html(attrs) {
     if (this.currentUser) { return; }

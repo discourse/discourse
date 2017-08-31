@@ -327,7 +327,6 @@ ko:
         add_members: "구성원 추가"
         delete_member_confirm: "'%{username}'를 '%{group}' 그룹에서 삭제하겠습니까?"
       name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
-      public: "그룹 가입/탈퇴를 자유롭게 할 수 있도록 허용 (그룹이 공개되어야 합니다)"
       empty:
         posts: "이 그룹에는 아직 멤버들이 포스트를 작성하지 않았습니다."
         members: "이 그룹에는 구성원이 없습니다."
@@ -368,7 +367,6 @@ ko:
         staff: "그룹 소유자와 운영진"
         owners: "그룹 소유자와 관리자"
       alias_levels:
-        title: "누가 이 그룹에 메시지와 @멘션을 보낼 수 있습니까?"
         nobody: "0명"
         only_admins: "관리자 전용"
         mods_and_admins: "운영자 및 관리자만"
@@ -635,7 +633,7 @@ ko:
         title: "아이디"
         instructions: "공백없이, 짧고 특이하게"
         short_instructions: "@{{username}}으로 멘션이 가능합니다."
-        available: "아이디\x1D로 사용가능합니다."
+        available: "아이디로 사용가능합니다."
         not_available: "사용할 수 없는 아이디입니다. 다시 시도해보세요. {{suggestion}}"
         not_available_no_suggestion: "불가합니다"
         too_short: "아이디가 너무 짧습니다"
@@ -1153,8 +1151,6 @@ ko:
       select_all: "모두 선택"
       clear_all: "다 지우기"
       too_short: "검색 단어가 너무 짧습니다."
-      result_count:
-        other: "<span class='term'>\"{{term}}\"</span> 검색결과 {{count}} 개"
       title: "주제, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
@@ -2031,7 +2027,6 @@ ko:
         hamburger_menu: '<b>=</b> 햄버거 메뉴 열기'
         user_profile_menu: '<b>p</b> 사용자 메뉴 열기'
         show_incoming_updated_topics: '<b>.</b> 갱신된 토픽 보기'
-        search: '<b>/</b> 검색'
         help: '<b>?</b> 키보드 도움말 열기'
         dismiss_new_posts: '<b>x</b>, <b>r</b> 새글을 읽은 상태로 표시하기'
         dismiss_topics: '<b>x</b>, <b>t</b> 토픽 무시하기'
@@ -3168,8 +3163,6 @@ ko:
       upload: "업로드"
       uploading: "업로드 중..."
       quit: "아마도 다음에"
-      staff_count:
-        other: "당신의 커뮤니티는 관리자가 %{count}명 있습니다."
       invites:
         add_user: "추가"
         none_added: "관리자에게 초대되지 않았습니다. 계속하시겠습니까?"

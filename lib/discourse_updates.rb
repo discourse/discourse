@@ -7,7 +7,7 @@ module DiscourseUpdates
         DiscourseVersionCheck.new(
           installed_version: Discourse::VERSION::STRING,
           installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
-          installed_describe: `git describe --dirty --match "v[0-9]*"`,
+          installed_describe: Discourse.full_version,
           git_branch: Discourse.git_branch,
           updated_at: nil
         )
@@ -17,7 +17,7 @@ module DiscourseUpdates
           critical_updates: critical_updates_available?,
           installed_version: Discourse::VERSION::STRING,
           installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
-          installed_describe: `git describe --dirty --match "v[0-9]*"`,
+          installed_describe: Discourse.full_version,
           missing_versions_count: missing_versions_count,
           git_branch: Discourse.git_branch,
           updated_at: updated_at

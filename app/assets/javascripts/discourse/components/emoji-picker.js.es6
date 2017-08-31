@@ -21,6 +21,8 @@ export function resetCache() {
 let $picker, $filter, $results, $list, scrollPosition, $visibleSections, _checkTimeout;
 
 export default Ember.Component.extend({
+  automaticPositioning: true,
+
   willDestroyElement() {
     this._super();
 
@@ -448,7 +450,7 @@ export default Ember.Component.extend({
       $picker.css(_.merge(attributes, options));
     };
 
-    if(Ember.testing) {
+    if(Ember.testing || this.get("automaticPositioning") === false) {
       desktopPositioning();
       return;
     }

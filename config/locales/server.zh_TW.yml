@@ -772,9 +772,7 @@ zh_TW:
     educate_until_posts: "當用戶開始鍵入他們的前幾個 (n) 新帖子時，在編輯器上顯示教育面板視窗。"
     title: "網站名字，用於 title 標籤。"
     site_description: "用一句話描述這個網站，用於 meta description 標籤。"
-    contact_email: "本站管理員的電郵地址。用於緊急事項的通知，如未處理的標記，以及作為 /about 頁面中的緊急聯絡人。"
     contact_url: "這個網站聯絡 URL。用作 /about 頁面中的緊急聯絡。"
-    queue_jobs: "如果失敗佇列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
     download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
@@ -789,7 +787,6 @@ zh_TW:
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
-    exclude_rel_nofollow_domains: "不添加 nofollow 連結的域名列表。填寫 tld.com 將自動包括 sub.tld.com。最少你應該填寫頂級域名來讓爬蟲獲得所有內容。如果你的網站包含其他域名，增加他們。"
     post_excerpt_maxlength: "文章摘要的最大文字長度"
     show_pinned_excerpt_mobile: "移動版顯示置頂主題剪輯。"
     show_pinned_excerpt_desktop: "移動版顯示置頂主題剪輯。"
@@ -872,8 +869,6 @@ zh_TW:
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
-    port: "使用此 HTTP 埠而不是80埠。留空為不使用，主要用於開發調試"
-    force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     login_required: "需要登入才能進入網站，不允許匿名操作"
@@ -952,7 +947,6 @@ zh_TW:
     clean_up_uploads: "移除孤立的已上傳檔案。警告：你可能想要在啟用這個設定前備份 /uploads 文件夾。"
     clean_orphan_uploads_grace_period_hours: "刪除孤立的上傳檔案的寬限期（單位：小時）"
     purge_deleted_uploads_grace_period_days: "徹底刪除孤立的上傳檔案的寬限期（單位：天）"
-    purge_unactivated_users_grace_period_days: "刪除未啓用的帳戶的寬限期（單位：天）。"
     enable_s3_uploads: "上傳至 Amazon S3 存儲的地址。重要：需要有效的 S3 驗證資料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色來獲得鑰匙。注意：啟用這個會覆蓋“S3 access key id”和“S3 secret access key” 設定。'
     s3_upload_bucket: "上傳檔案保存於 Amazon S3 的 bucket 名字。警告：必須為小寫，無句點，無下劃線。"
@@ -1154,17 +1148,10 @@ zh_TW:
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
     highlighted_languages: "包含語法高亮規則。（警告：包含太多的語言可能影響性能）見：https://highlightjs.org/static/demo/ 查看演示"
-    feed_polling_enabled: "僅用於嵌入：是否將 RSS/ATOM 訂閲為帖子。"
-    feed_polling_url: "僅用於嵌入：RSS/ATOM 訂閲的 URL。"
-    embed_by_username: "創建嵌入主題的 Discourse 的用戶名。"
-    embed_username_key_from_feed: "從流中獲取 discourse 用戶名的 Key。"
-    embed_title_scrubber: "抓取嵌入主題的正則表達式。"
     embed_truncate: "截斷 embed 過的文章"
     allowed_href_schemes: "除了 http 和 https 外允許的連結協議。"
     embed_post_limit: "文章內 embed 的最大數量"
     embed_username_required: "創建主題需要用戶名。"
-    embed_whitelist_selector: "在 embeds 頁面允許 CSS 元素選擇器"
-    embed_blacklist_selector: "在 embeds 頁面移除 CSS 元件選擇器"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用戶數下限（0 為禁用）。"
@@ -1503,20 +1490,6 @@ zh_TW:
     post_hidden:
       title: "文章已隱藏"
       subject_template: "帖子因社群標記隱藏"
-      text_body_template: |
-        你好，
-
-        這是%{site_name}自動發出的郵件，通知你的帖子已被隱藏。
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        你的帖子是因為被多個社群成員標記才被隱藏的，所以請考慮根據他們的反饋修改你的帖子。**你可以在 %{edit_delay} 分鐘後開始編輯你的帖子，然後它將重新被顯示。**
-
-        然而，如果帖子再次被社群成員標記並隱藏，它將被隱藏至版主處理後——並且可能導致進一步的措施，如封禁帳號。
-
-        想瞭解更多，請查看我們的[社群指引](%{base_url}/guidelines)。
     welcome_user:
       title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"
@@ -1590,25 +1563,12 @@ zh_TW:
     csv_export_failed:
       title: "CSV 檔匯出失敗"
       subject_template: "資料匯出失敗"
-      text_body_template: "很抱歉，你的資料匯出失敗了。請檢查日誌，或聯繫管理人員。"
     email_reject_insufficient_trust_level:
       title: "電子郵件拒絕 信任等級不足"
-      text_body_template: |
-        我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
-
-        你的賬戶沒有足夠的信任等級以該郵件地址發佈新主題。如果你有異議，聯繫管理人員。
     email_reject_user_not_found:
       title: "電子郵件拒絕 找不到用戶"
-      text_body_template: |
-        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
-
-        你發送回覆的郵件地址是未知的郵件地址。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_screened_email:
       title: "電子郵件拒絕 屏蔽的電子郵件地址"
-      text_body_template: |
-        我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
-
-        你發送回覆的郵件地址是已被封禁的郵件地址。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_inactive_user:
       title: "電子郵件拒絕 用戶尚未啟動"
       text_body_template: |
@@ -1623,16 +1583,8 @@ zh_TW:
         與你賬戶關聯的郵件地址已經被封禁。
     email_reject_reply_user_not_matching:
       title: "點子郵件拒絕 未找到符合的用戶"
-      text_body_template: |
-        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
-
-        你發送回覆的郵件地址與我們等待的地址不同，所以我們不確定你是不是同一個人。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_no_account:
       title: "電子郵件拒絕 沒有帳號"
-      text_body_template: |
-        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
-
-        我們找不到匹配你郵件地址的賬號。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_empty:
       title: "電子郵件拒絕 空白"
       text_body_template: |
@@ -1649,17 +1601,8 @@ zh_TW:
         我們不能找到你郵件中的回覆。**請確認將你的回覆置於郵件頂端**——我們不能處理行內回覆。
     email_reject_invalid_access:
       title: "電子郵件拒絕 無效存取"
-      text_body_template: |
-        我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
-
-        你的賬戶沒有達到足夠的信任等級在該分類發佈新主題。如果你有異議，聯繫管理人員。
     email_reject_strangers_not_allowed:
       title: "電子郵件拒絕 陌生人禁止"
-      text_body_template: |+
-        我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
-
-        郵件發至的分類只接受來自合法帳戶且郵件地址已確認的用戶的有郵件。如果你有異議，聯繫管理人員。
-
     email_reject_invalid_post:
       title: "電子郵件拒絕 無效貼文"
       text_body_template: |
@@ -1684,34 +1627,14 @@ zh_TW:
         發送的命令無法被識別。請再試一次，如果還有問題，使用網站發表。
     email_reject_reply_key:
       title: "電子郵件拒絕 復原金鑰"
-      text_body_template: |
-        我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
-
-        郵件中的回覆信令是無效或者未知的，所以我們不知道這封郵件回覆給誰了。請聯繫管理人員。
     email_reject_bad_destination_address:
       title: "電子郵件拒絕 不良目的地位址"
-      text_body_template: |
-        我們非常抱歉，但是你發送至%{destination}（名為%{former_title}） 郵件出問題了。
-
-        目標郵件地址無法識別。請確保你在向管理人員提供的郵件地址發信。
     email_reject_topic_not_found:
       title: "電子郵件拒絕 未找到討論話題"
-      text_body_template: |
-        我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
-
-        你回覆的主題不存在——可能已經被刪除了？如果你有異議，聯繫管理人員。
     email_reject_topic_closed:
       title: "電子郵件拒絕 討論話題已關閉"
-      text_body_template: |
-        我們很抱歉，但是你發送至 %{destination} ( 名為 %{former_title} )的郵件出問題了。
-
-        你回覆的主題已經被關閉，不允許回覆。如果你有異議，聯繫管理人員。
     email_reject_auto_generated:
       title: "電子郵件拒絕 自動生成"
-      text_body_template: |
-        我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
-
-        系統覺得你的郵件是“自動生成”的，即電腦生成了該郵件而不是由你輸入的；我們不能接受這樣的郵件。如果你有異議，聯繫管理人員。
     email_error_notification:
       title: "電子郵件錯誤通知"
       text_body_template: |
@@ -1994,10 +1917,6 @@ zh_TW:
     see_more: "更多"
     search_title: "搜尋該網頁"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[歡迎來到 %{title}](#welcome)
-      你需要一個賬號。請創建一個賬號或者登錄以繼續。
   terms_of_service:
     title: "服務條款"
     signup_form_message: '我已閱讀並接受 <a href="/tos" target="_blank">服務條款</a>'
@@ -2446,7 +2365,7 @@ zh_TW:
       long_description: |
         該徽章授予給一天內讚了 50 次的你。別忘記休息一下。讚你喜歡的帖子能鼓勵成員不斷改進討論的內容。
     higher_love:
-      name: "激情\b"
+      name: 激情
       description: 5 天都讚過 50 次
       long_description: |
         該徽章授予給 5 天讚過 50 次的你。感謝你每天都花點時間鼓勵討論的進行！
@@ -2624,7 +2543,6 @@ zh_TW:
         description: "你喜歡你的社群使用哪一種 Emoji 樣式？你可以在管理-自定義-Emoji中增加更多的定製 Emoji。"
       invites:
         title: "邀請工作人員"
-        description: "您就快完成啦！讓我們邀請一些工作人員來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"
       finished:
         title: "你的 Discourse 已經準備就緒！"
         description: |

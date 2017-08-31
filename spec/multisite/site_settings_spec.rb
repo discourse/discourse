@@ -12,7 +12,7 @@ RSpec.describe 'Multisite SiteSettings' do
 
   after do
     ['default', 'second'].each do |db|
-      conn.with_connection(db) { SiteSetting.destroy_all }
+      conn.with_connection(db) { SiteSetting.where(name: 'default_locale').destroy_all }
     end
 
     conn.clear_settings!

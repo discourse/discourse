@@ -375,6 +375,51 @@ describe Search do
 
   end
 
+  context 'tags' do
+    def search
+      Search.execute(tag.name)
+    end
+
+    let!(:tag) { Fabricate(:tag) }
+    let(:tag_group) { Fabricate(:tag_group) }
+    let(:category) { Fabricate(:category) }
+
+    context 'tagging is disabled' do
+      before { SiteSetting.tagging_enabled = false }
+
+      it 'does not include tags' do
+        expect(search.tags).to_not be_present
+      end
+    end
+
+    context 'tagging is enabled' do
+      before { SiteSetting.tagging_enabled = true }
+
+      it 'returns the tag in the result' do
+        expect(search.tags).to eq([tag])
+      end
+
+      it 'shows staff tags' do
+        staff_tag = Fabricate(:tag, name: "#{tag.name}9")
+        SiteSetting.staff_tags = "#{staff_tag.name}"
+
+        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags).to contain_exactly(tag, staff_tag)
+        expect(search.tags).to contain_exactly(tag, staff_tag)
+      end
+
+      it 'includes category-restricted tags' do
+        category_tag = Fabricate(:tag, name: "#{tag.name}9")
+        tag_group.tags = [category_tag]
+        category.set_permissions(admins: :full)
+        category.allowed_tag_groups = [tag_group.name]
+        category.save!
+
+        expect(Search.execute(tag.name, guardian: Guardian.new(Fabricate(:admin))).tags).to contain_exactly(tag, category_tag)
+        expect(search.tags).to contain_exactly(tag, category_tag)
+      end
+    end
+  end
+
   context 'type_filter' do
 
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }

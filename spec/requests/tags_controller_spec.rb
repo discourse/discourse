@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe "Tags" do
+describe TagsController do
   before do
     SiteSetting.tagging_enabled = true
   end
 
-  describe "checking tag hashtags" do
+  describe '#check_hashtag' do
     let(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
