@@ -372,7 +372,6 @@ sq:
       mentions: "Përmendje"
       messages: "Mesazhet"
       alias_levels:
-        title: "Kush mund ti bëjë mesazh dhe @permendje këtij grupi?"
         nobody: "Asnjëri"
         only_admins: "Vetëm adminët"
         mods_and_admins: "Vetëm moderatorët dhe adminët"
@@ -586,6 +585,7 @@ sq:
         taken: "Na vjen keq, por ky email nuk është i disponueshëm."
         error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga dikush tjetër?"
         success: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
+        success_staff: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
       change_avatar:
         title: "Ndrysho fotografinë e profilit"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazur në"
@@ -1121,9 +1121,6 @@ sq:
       select_all: "Zgjidhni Gjithçka"
       clear_all: "Pastro kriteret"
       too_short: "Fraza e kërkuar është shumë e shkurtër. "
-      result_count:
-        one: "1 rezultat për <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} rezultate për <span class='term'>\"{{term}}\"</span>"
       title: "kërko në faqe"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
@@ -1897,7 +1894,6 @@ sq:
         hamburger_menu: '<b>=</b> Hap menunë hamburger'
         user_profile_menu: '<b>p</b> Hap menunë e përdoruesit'
         show_incoming_updated_topics: '<b>.</b> Shiko temat e përditësuara'
-        search: '<b>/</b> Kërko'
         help: '<b>?</b> Trego shkurtimet e tastierës'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Hiq Të Rejat/Postimet'
         dismiss_topics: '<b>x</b>, <b>t</b> Hiq temat'
@@ -2749,9 +2745,6 @@ sq:
       upload: "Ngarko"
       uploading: "Duke ngarkuar..."
       quit: "Mbase më vonë"
-      staff_count:
-        one: "Komuniteti juaj ka 1 anëtar stafi."
-        other: "Komuniteti juaj ka %{count} anëtarë stafi."
       invites:
         add_user: "shto"
         none_added: "Nuk keni ftuar asnjë staf. Doni të vazhdoni?"

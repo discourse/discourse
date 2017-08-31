@@ -359,7 +359,6 @@ vi:
       mentions: "Được nhắc đến"
       messages: "Tin nhắn"
       alias_levels:
-        title: "Ai có thể nhắn tin và @mention trong nhóm này?"
         nobody: "Không ai cả"
         only_admins: "Chỉ các quản trị viên"
         mods_and_admins: "Chỉ có người điều hành và ban quản trị"
@@ -1087,8 +1086,6 @@ vi:
       select_all: "Chọn tất cả"
       clear_all: "Xóa tất cả"
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
-      result_count:
-        other: "{{count}} kết quả cho <span class='term'>\"{{term}}\"</span>"
       title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"

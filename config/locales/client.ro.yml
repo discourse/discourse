@@ -406,7 +406,6 @@ ro:
       mentions: "Mențiuni"
       messages: "Mesaje"
       alias_levels:
-        title: "Cine poate trimite mesaje către acest grup sau să îl @menționeze?"
         nobody: "Nimeni"
         only_admins: "Doar adminii"
         mods_and_admins: "Doar moderatorii și adminii"
@@ -1166,10 +1165,6 @@ ro:
       select_all: "Selectează tot"
       clear_all: "Șterge tot"
       too_short: "Termenul căutat este prea scurt."
-      result_count:
-        one: "Un rezultat pentru <span class='term'>\"{{term}}\"</span>"
-        few: "{{count}} rezultate pentru <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} de rezultate pentru <span class='term'>\"{{term}}\"</span>"
       title: "Caută subiecte, postări, utilizatori sau categorii"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
@@ -2062,7 +2057,6 @@ ro:
         hamburger_menu: '<b>=</b> Deschide meniu hamburger'
         user_profile_menu: '<b>p</b> Deschide meniu utilizator'
         show_incoming_updated_topics: '<b>.</b> Arată subiectele actualizate'
-        search: '<b>/</b> Caută'
         help: '<b>?</b> Deschide ajutor tastatură'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Abandonează postări noi'
         dismiss_topics: '<b>x</b>, <b>t</b> Abandonează subiecte'
@@ -3136,10 +3130,6 @@ ro:
       upload: "Încărcare"
       uploading: "Se încarcă..."
       quit: "Poate mai târziu"
-      staff_count:
-        one: "Comunitatea ta are un membru al echipei."
-        few: "Comunitatea ta are %{count} membri ai echipei."
-        other: "Comunitatea ta are %{count} de membri ai echipei."
       invites:
         add_user: "adaugă"
         none_added: "Nu ați invitat nici un membru al echipei. Ești sigur că vrei să continui?"

@@ -818,9 +818,7 @@ ro:
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru scris postarea."
     title: "Titlul scurt al site-ului, folosit în tag-ul title."
     site_description: "Descrie acest site într-o singură frază, așa cum se folosește în tagul meta-descriere."
-    contact_email: "Adresa de email a persoanei de contact principale pentru acest site. Folosită pentru notificări critice precum marcaje de avertizare negestionate și pentru chestiuni urgente trimise prin formularul de contact din /despre"
     contact_url: "URL-ul de contact pentru acest site. Folosit pentru chestiuni urgente trimise prin formularul de contact din /despre"
-    queue_jobs: "PENTRU DEVELOPER! ATENȚIE! Implicit, pune operațiile în coadă în sidekiq. Dacă e dezactivat, site-ul nu va mai funcționa."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_to_local: "Transformă imaginile la distanță în imagini locale descărcându-le; asta previne imaginile stricate."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
@@ -835,7 +833,6 @@ ro:
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "O listă a domeniilor unde nofollow nu trebuie adăugat la link-uri. tld.com va permite automat și sub.tld.com. Ca cerință minimă, va trebui să adaugi domeniul top-level  al acestui site pentru a permite roboților web să îi găsească tot conținutul. Dacă există părți ale site-ul tău care se află pe alte domenii, adăugă-le și pe acestea."
     post_excerpt_maxlength: "Lungimea maximă a unui fragment/rezumat dintr-o postare."
     show_pinned_excerpt_mobile: "Arată fragmente din subiectele fixate în vizualizarea de mobil."
     show_pinned_excerpt_desktop: "Arată fragmente din subiectele fixate în vizualizarea de desktop."
@@ -918,8 +915,6 @@ ro:
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     version_checks: "Verifică Hub-ul Discourse pentru actualizări și arată notificările de versiuni noi pe spațiul de lucru /admin ."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
-    port: "PENTRU DEVELOPER! ATENȚIE! Folosește acest port HTTP în locul portului 80 care este implicit. Lasă liber pentru a folosi portul 80, ca implicit."
-    force_hostname: "PENTRU DEVELOPER! ATENȚIE! Specifică un nume de gazdă în URL. Lasă liber pentru cel implicit."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     invite_passthrough_hours: "Cât timp un utilizator poate folosi o cheie de invitație acceptată anterior pentru autentificare, în ore"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
@@ -996,7 +991,6 @@ ro:
     clean_up_uploads: "șterge încărcările ne-referențiate orfane pentru a preveni găzduirea ilegală. ATENȚIE: înainte de a activa această setare faceți un backup la directorul /uploads ."
     clean_orphan_uploads_grace_period_hours: "Perioada de grație (în ore) înainte ca o reîncărcare orfană să fie ștearsă."
     purge_deleted_uploads_grace_period_days: "Perioada de grație (în zile) înainte ca o încărcare ștearsă să fie eliminată."
-    purge_unactivated_users_grace_period_days: "Perioada de grație (în zile) înainte ca un utilizator care nu și-a activat contul să fie șters."
     enable_s3_uploads: "Pune încărcările pe spațiul Amazon S3. IMPORTANT: necesită un acces valid (atât identificatorul cheii de acces cât și cheia secretă)."
     s3_use_iam_profile: 'Folosește rolul AWS EC2 IAM pentru retragerea cheilor. NOTĂ: activarea va suprascrie setările pentru "s3 access key id" și "s3 secret access key".'
     s3_upload_bucket: "Numele containerului Amazon S3 unde vor fi încărcate fișierele. ATENȚIE: trebuie să fie scris cu litere mici, fără puncte și fără underscore."
@@ -1193,17 +1187,10 @@ ro:
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
     autohighlight_all_code: "Forțează aplicarea de punere în evidență cod pe toate blocurile de cod preformatate, chiar și atunci când nu le este explicit specificată limba."
     highlighted_languages: "Regulile e evidențiere sintactică. (Atenție: includerea de prea multe limbaje va avea un impact asupra performanței) vezi: https://highlightjs.org/static/demo/ pentru un demo"
-    feed_polling_enabled: "EXCLUSIV ÎNCORPORARE:  Dacă să încorporeze un flux RSS/ATOM ca postări."
-    feed_polling_url: "EXCLUSIV ÎNCORPORARE: URL fluxului RSS/ATOM care să fie încorporat."
-    embed_by_username: "Numele utilizator Discourse al utilizatorului care creează subiecte embedded."
-    embed_username_key_from_feed: "Cheie pentru extragerea numelui utilizator din flux."
-    embed_title_scrubber: "Expresie regulată pentru curățarea titlurile integrabile."
     embed_truncate: "Retează postările încorporate."
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
-    embed_whitelist_selector: "Selector CSS pentru elementele ce sunt permise în încorporări."
-    embed_blacklist_selector: "Selector CSS pentru elementele ce sunt șterse din încorporări"
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
     delete_drafts_older_than_n_days: șterge drafturile mai vechi de (n) zile.
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"
@@ -1521,20 +1508,6 @@ ro:
   system_messages:
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că mesajul tău a fost ascuns.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Mai mulți membri ai comunității au marcat acestă postare cu marcaje de avertizare înainte ca ea să fie ascunsă, așa că te rugăm să îți revizuiești postarea pentru a ține cont de feedback-ul primit. **Îți poți edita postarea după %{edit_delay} minute, și ea va fi automat re-afișată**
-
-        Totuși, dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău..
-
-        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
     welcome_invite:
@@ -1590,22 +1563,6 @@ ro:
       subject_template: "Exportul datelor s-a terminat"
     csv_export_failed:
       subject_template: "Exportul datelor a eșuat"
-      text_body_template: "Ne pare rău, dar exportul datelor tale a eșuat. Te rugăm să verifici rapoartele sau să contactezi un membru al echipei."
-    email_reject_insufficient_trust_level:
-      text_body_template: |
-        Ne pare rău, dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Contul tău nu are nivelul de încredere necesar pentru a crea noi subiecte, de la această adresă de email. Dacă ți se pare că aste e o eroare, contactează un membru al echipei.
-    email_reject_user_not_found:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Răspunsul tău a fost trimis de pe o adresă de email necunoscută. Încearcă să îl trimiți de pe o altă adresă de email, sau contactează un membru al echipei.
-    email_reject_screened_email:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Răspunsul tău a fost trimis de pe o adresă de email blocată. Încearcă să îl trimiți de pe o altă adresă, sau contactează un membru al echipei.
     email_reject_inactive_user:
       text_body_template: |
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
@@ -1616,16 +1573,6 @@ ro:
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
 
         Contul asociat acestei adrese de email este blocat.
-    email_reject_reply_user_not_matching:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Răspunsul tău a fost trimis de pe o adresă de email diferită de cea așteptată, așa că nu suntem siguri că este aceeași persoană. Încearcă să trimiți de pe altă adresă de email, sau contactează un membru al echipei.
-    email_reject_no_account:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Nu putem găsi nici un cont care să corespundă adresei tale de email. Încearcă să trimiți de pe o adresă diferită de email, sau contactează un membru al echipei.
     email_reject_empty:
       text_body_template: |
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
@@ -1638,17 +1585,6 @@ ro:
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
 
         Nu am putu găsi răspunsul tău în email. **Asigură-te că răspunsul tău este în partea de sus a emailului** -- nu putem procesa răspunsuri intercalate.
-    email_reject_invalid_access:
-      text_body_template: |+
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Contul tău nu are drepturile necesare pentru a posta noi subiecte în acea categorie. Dacă ți se pare că asta e o eroare, contactează un membru al echipei.
-
-    email_reject_strangers_not_allowed:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Categoria căreia i-ai trimis acest email nu permite răspunsuri decât de la utilizatori cu conturi valide și adrese de email cunoscute. Dacă ți se pare că e o eroare, contactează un membru al echipei.
     email_reject_invalid_post:
       text_body_template: |
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
@@ -1668,31 +1604,6 @@ ro:
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
 
         Acțiunea de postare nu a fost recunoscută. Te rugăm să încerci din nou, sau să postezi pe website dacă eroarea persistă.
-    email_reject_reply_key:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Cheia de răspuns la acest email este invalidă sau necunoscută, așa că nu ne putem da seama la ce email vine acest răspuns. Contactați un membru al echipei.
-    email_reject_bad_destination_address:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Nici una din adresele de email de destinație nu este recunoscută. Te rugăm să verifici că trimiți la adresa corecta de email furnizată de către echipă.
-    email_reject_topic_not_found:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Subiectul la care vrei să răspunzi nu mai există -- poate că a fost șters? Dacă ți se pare că e o eroare, contactează un membru al echipei.
-    email_reject_topic_closed:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Subiectul la care vrei să răspunzi este în prezent închis și nu mai acceptă răspunsuri. Dacă ți se pare că e o eroare, contactează un membru al echipei.
-    email_reject_auto_generated:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Emailul tău a fost marcat ca „autogenerat”, ceea ce înseamnă că a fost creat automat de un computer în loc să fie scris de un om; nu putem accepta aceste tipuri de emailuri. Dacă ți se pare că este o eroare, contactează un membru al echipei.
     email_error_notification:
       text_body_template: |
         Din păcate,s-a produs o eroare de autentificare la retragerea emailurilor de pe serverul POP
@@ -1938,10 +1849,6 @@ ro:
     see_more: "Mai multe"
     search_title: "Caută în site"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Bine ai venit pe %{title}](#welcome)
-      Ai nevoie de un cont. Te rugăm să îți creezi un cont sau autentifică-te pentru a continua.
   terms_of_service:
     title: "Condițiile generale de utilizare"
     signup_form_message: 'Am citit și accept <a href="/tos" target="_blank">Condițiile generale de utilizare</a>.'
@@ -2558,7 +2465,6 @@ ro:
         title: "Emoji"
       invites:
         title: "Invită membrii echipei"
-        description: "Aproape ai terminat! Hai să invităm niște membri ai echipei să dea o mână de ajutor <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>și să presare discuțiile</a> cu subiecte și răspunsuri interesante, pentru a lansa comunitatea."
       finished:
         title: "Discourse-ul tău e gata!"
         description: |

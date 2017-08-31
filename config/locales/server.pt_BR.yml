@@ -795,9 +795,7 @@ pt_BR:
     educate_until_posts: "Quando o usuário começa a digitar suas primeiras (n) novos posts, mostrar o novo painel pop-up de educação do usuário no compositor."
     title: "O nome deste site, como usado na tag de título."
     site_description: "Descreva este site com uma frase, como usado na tag de meta description."
-    contact_email: "Endereço de email do responsável de contato chave para este site. Usado para notificações críticas tais como sinalizações não controladas, assim como também pela forma de contato em /about para assuntos urgentes."
     contact_url: "URL de contato para este site. Usada no formulário de contato /about para assuntos urgentes."
-    queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"
@@ -812,7 +810,6 @@ pt_BR:
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     fixed_category_positions_on_create: "Se ativado, a ordenação das categorias vai ser mantida no formulário de criação de tópico. (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
-    exclude_rel_nofollow_domains: "Uma lista de domínios aonde nofollow não deve ser adicionado nos links. tld.com automaticamente permite sub.tld.com. No mínimo, você deve adiocionar o domínio principal deste site para ajudar os motores de busca encontrarem todo conteúdo. Se outras partes de seu site estão em outros domínios, adicione estes também."
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     show_pinned_excerpt_mobile: "Mostrar excerto de tópicos fixos na exibição para celular."
     show_pinned_excerpt_desktop: "Mostrar excerto de tópicos fixos na exibição para desktop."
@@ -892,8 +889,6 @@ pt_BR:
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
-    port: "Se você quiser especificar a porta na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
-    force_hostname: "Se você quiser especificar um hostname na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."
     invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
@@ -969,7 +964,6 @@ pt_BR:
     clean_up_uploads: "Remover envios sem referência para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório de /uploads antes de habilitar essa configuração."
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
-    purge_unactivated_users_grace_period_days: "Período extra (em dias) antes que um usuário que não ativou sua conta seja deletado."
     enable_s3_uploads: "Colocar uploads no armazenamento da Amazon S3. IMPORTANTE: exige credenciais válidas da S3 (ambos id da chave de acesso & segredo da chave de acesso)."
     s3_use_iam_profile: 'Usar papel AWS EC2 IAM para recuperar chaves. OBS: habilitar irá substituir configurações "s3 access key id" e "s3 secret access key".'
     s3_upload_bucket: "Nome do bucket da Amazon S3 no qual os arquivos serão enviados. AVISO: precisa ser em minúsculas, sem pontos, sem underscores."
@@ -1104,15 +1098,9 @@ pt_BR:
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
-    feed_polling_enabled: "Se um feed RSS / ATOM são importados como mensagens"
-    feed_polling_url: "URL do feed RSS / ATOM para importar"
-    embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"
-    embed_username_key_from_feed: "Chave para puxar nome do usuário discourse a partir do feed."
     embed_truncate: "Cortar os posts embutidos."
     embed_post_limit: "Número máximo de respostas para embutir"
     embed_username_required: "Nome de usuário para criação do tópico é obrigatório."
-    embed_whitelist_selector: "Seletor CSS para os elementos que são permitidos em embeds."
-    embed_blacklist_selector: "Selector CSS para elementos que são removidos dos embeds."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
@@ -1292,7 +1280,6 @@ pt_BR:
       subject_template: "Exportação de dados completada"
     csv_export_failed:
       subject_template: "A exportação de dados falhou"
-      text_body_template: "Nos desculpamos, mas sua exportação de dados falhou. Por favor verifique os logs ou entre em contato com um membro da staff."
     email_reject_parsing:
       text_body_template: |
         Nos desculpamos, mas sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
@@ -1481,10 +1468,6 @@ pt_BR:
     see_more: "Mais"
     search_title: "Procurar neste site"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Welcome to %{title}](#welcome)
-      Este fórum de discussão requer uma conta para visualizar %{title}.  Para continuar a ler, por favor, crie uma nova conta ou entre na sua conta.
   terms_of_service:
     title: "Termos de Serviço"
     signup_form_message: 'Eu li e aceito os <a href="/tos" target="_blank">Termos de Serviço</ a>.'

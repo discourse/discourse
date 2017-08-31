@@ -120,7 +120,7 @@ zh_CN:
         disabled: '于%{when}隐藏'
       banner:
         enabled: '%{when}将其设置为横幅。在用户关闭横幅前，横幅将显示在每一页的顶部。'
-        disabled: "%{when}撤销了该横幅。\b横幅将不在显示每一页的顶部。"
+        disabled: '%{when}撤销了该横幅。横幅将不在显示每一页的顶部。'
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
@@ -340,11 +340,16 @@ zh_CN:
       join: "加入群组"
       leave: "离开群组"
       request: "请求加入群组"
-      message: "信息"
+      message: "私信"
       automatic_group: 自动群组
       closed_group: 封闭群组
       is_group_user: "你是该群组的一个成员"
-      allow_membership_requests: "允许用户向小组拥有者发送\b\b成员请求"
+      allow_membership_requests: "允许用户向小组拥有者发送成员请求"
+      membership_request_template: "用户发送会员请求时向其显示的自定义模板"
+      membership_request:
+        submit: "提交成员申请"
+        title: "申请加入%{group_name}"
+        reason: "向小组拥有者说明你为何属于这个小组"
       membership: "成员资格"
       name: "群组ID"
       user_count: "成员数目"
@@ -370,7 +375,6 @@ zh_CN:
         staff: "小组创建者及工作人员"
         owners: "小组创建者及管理员"
       alias_levels:
-        title: "谁能@该群组和发送私信？"
         nobody: "没有人"
         only_admins: "管理员"
         mods_and_admins: "版主与管理员"
@@ -456,6 +460,7 @@ zh_CN:
       topics_entered: "进入的主题"
       post_count: "# 帖子"
       confirm_delete_other_accounts: "确定要删除这些账户？"
+      powered_by: "由<a href='https://ipinfo.io'>ipinfo.io</a>驱动"
     user_fields:
       none: "（选择一项）"
     user:
@@ -571,7 +576,7 @@ zh_CN:
         failed_to_move: "移动选中私信失败（可能你的网络出问题了）"
         select_all: "全选"
       preferences_nav:
-        account: "undefined"
+        account: "帐号"
         profile: "个人档案"
         emails: "邮件"
         notifications: "通知"
@@ -600,6 +605,7 @@ zh_CN:
         taken: "抱歉，此邮箱不可用。"
         error: "修改你的邮箱时出错了，可能邮箱已经被使用了？"
         success: "我们已经发送了一封确认信到该邮箱，请按照邮箱内指示完成确认。"
+        success_staff: "我们已经发送了一封确认信到你现在的邮箱，请按照邮件内指示完成确认。"
       change_avatar:
         title: "更换头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
@@ -985,6 +991,8 @@ zh_CN:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      filter_placeholder: 搜索……
     emoji_picker:
       filter_placeholder: 查找表情符号
       people: 人物
@@ -996,12 +1004,19 @@ zh_CN:
       celebration: 庆典
       custom: 自定义表情符号
       recent: 近期使用
+      default_tone: 无肤色
+      light_tone: 浅肤色
+      medium_light_tone: 中浅肤色
+      medium_tone: 中间肤色
+      medium_dark_tone: 中深肤色
+      dark_tone: 深肤色
     composer:
       emoji: "Emoji :)"
       more_emoji: "更多…"
       options: "选项"
       whisper: "密语"
       unlist: "隐藏"
+      blockquote_text: "引用"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
       toggle_unlisted: "未列表切换"
@@ -1157,13 +1172,20 @@ zh_CN:
       clear_all: "清除所有"
       too_short: "你的搜索词太短。"
       result_count:
-        other: "搜索<span class='term'>“{{term}}”</span>有 {{count}} 条相关结果"
+        other: "<span class='term'>{{term}}</span> 共计 {{count}} 个结果"
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"
       searching: "搜索中..."
       post_format: "#{{post_number}} 来自于 {{username}}"
       results_page: "搜索结果"
+      more_results: "还有更多结果。请增加您的搜索条件。"
+      cant_find: "找不到你要找的内容？"
+      start_new_topic: "不如创建一个新主题？"
+      or_search_google: "或者尝试使用Google进行搜索："
+      search_google: "尝试使用Google进行搜索："
+      search_google_button: "Google"
+      search_google_title: "站内搜索"
       context:
         user: "搜索 @{{username}} 的帖子"
         category: "搜索 #{{category}} 分类"
@@ -1195,6 +1217,8 @@ zh_CN:
           seen: 我已经读过的
           unseen: 我还没有读过的
           wiki: 公共编辑
+          images: 包含图片
+          all_tags: 包含所有标签
         statuses:
           label: 当主题
           open: 是开放的
@@ -1265,7 +1289,7 @@ zh_CN:
         new: "没有更多的近期主题。"
         unread: "没有更多未读主题了。"
         category: "没有更多{{category}}分类的主题了。"
-        top: "没有更多最佳主题了。"
+        top: "没有更多的热门主题."
         bookmarks: "没有更多收藏的主题了。"
         search: "没有更多搜索结果了。"
     topic:
@@ -1313,8 +1337,8 @@ zh_CN:
       options: "主题选项"
       show_links: "显示此主题中的链接"
       toggle_information: "切换主题详情"
-      read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题 或 {{latestLink}}。"
-      read_more: "想阅读更多？{{catLink}} 或 {{latestLink}}。"
+      read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题或{{latestLink}}。"
+      read_more: "想阅读更多？{{catLink}}或{{latestLink}}。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
@@ -1513,6 +1537,7 @@ zh_CN:
         success_email: "我们发了一封邮件邀请<b>{{emailOrUsername}}</b>。邀请被接受后你会收到通知。检查用户页中的邀请标签页来追踪你的邀请。"
         success_username: "我们已经邀请了该用户参与该主题。"
         error: "抱歉，我们不能邀请这个人。可能他已经被邀请了？（邀请有频率限制）"
+        success_existing_email: "用户<b>{{emailOrUsername}}</b>已存在。我们已经邀请了该用户参与该主题。"
       login_reply: '登录以回复'
       filters:
         n_posts:
@@ -1619,6 +1644,7 @@ zh_CN:
         has_liked: "已赞"
         undo_like: "取消赞"
         edit: "编辑本帖"
+        edit_action: "编辑"
         edit_anonymous: "抱歉，需要登录后才能编辑该贴。"
         flag: "背地里标记该帖以示警示，或发送关于它的私下通知"
         delete: "删除本帖"
@@ -2037,7 +2063,7 @@ zh_CN:
         hamburger_menu: '<b>=</b> 打开汉堡菜单'
         user_profile_menu: '<b>p</b> 打开用户菜单'
         show_incoming_updated_topics: '<b>.</b> 显示更新主题'
-        search: '<b>/</b> 搜索'
+        search: '<b>/</b> 或 <b>ctrl</b>+<b>shift</b>+<b>s</b> 搜索'
         help: '<b>?</b> 打开键盘帮助'
         dismiss_new_posts: '<b>x</b> 然后 <b>r</b> 解除新/帖子提示'
         dismiss_topics: '<b>x</b> 然后 <b>t</b> 解除主题提示'
@@ -2166,7 +2192,7 @@ zh_CN:
           read: "没有更多已阅主题可看了。"
           new: "没有更多的近期主题。"
           unread: "没有更多未读主题了。"
-          top: "没有更多最佳主题了。"
+          top: "没有更多的热门主题."
           bookmarks: "没有更多收藏的主题了。"
           search: "没有更多搜索结果了。"
     invite:
@@ -2456,7 +2482,7 @@ zh_CN:
           download:
             label: "下载"
             title: "发送含下载链接的邮件"
-            alert: "包含下载备份链接的邮件已经发送给你了。\b"
+            alert: "包含下载备份链接的邮件已经发送给你了。"
           destroy:
             title: "删除备份"
             confirm: "你确定要删除该备份吗？"
@@ -2719,7 +2745,7 @@ zh_CN:
             change_trust_level: "更改信任等级"
             change_username: "修改用户名"
             change_site_setting: "更改站点设置"
-            change_theme: "\b更改主题"
+            change_theme: "更改主题"
             delete_theme: "删除主题"
             change_site_text: "更改站点文字"
             suspend_user: "封禁用户"
@@ -2787,14 +2813,29 @@ zh_CN:
         logster:
           title: "错误日志"
       watched_words:
+        title: "敏感词"
         search: "搜索"
         clear_filter: "清除"
+        show_words: "显示敏感词"
+        word_count:
+          other: "%{count}个敏感词"
         actions:
+          block: '封禁'
+          censor: '审查'
+          require_approval: '需要审核'
           flag: '旗标'
+        action_descriptions:
+          block: '防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。'
+          censor: '允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。'
+          require_approval: '包含这些敏感词的帖子需通过人工审核才能被看到。'
+          flag: '允许包含这些敏感词的帖子，但将其标记为不当，以便版主审核。'
         form:
+          label: '新敏感词：'
+          placeholder: '完整字词或 * 作为通配符'
           add: '新增'
           success: '成功'
           upload: "上传"
+          upload_successful: "上传成功。敏感词已添加。"
       impersonate:
         title: "检视用户视角"
         help: "使用此工具来检视其他用户的帐号以方便调试。你应该在完成后立即退出。"
@@ -3184,7 +3225,7 @@ zh_CN:
       uploading: "上传中..."
       quit: "以后再说"
       staff_count:
-        other: "你的社区中有 %{count} 位工作人员。"
+        other: "你的社区中包括你在内有 %{count} 位工作人员。"
       invites:
         add_user: "添加"
         none_added: "你还没有邀请任何工作人员。你确定要继续吗？"

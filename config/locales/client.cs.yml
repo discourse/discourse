@@ -404,7 +404,6 @@ cs:
         public: "Všichni"
         members: "Vlastníci skupiny, členové a správci"
       alias_levels:
-        title: "Kdo může do této skupiny psát zprávy a @zmiňovat ji?"
         nobody: "Nikdo"
         only_admins: "Pouze správci"
         mods_and_admins: "Pouze moderátoři a správci"
@@ -1175,10 +1174,6 @@ cs:
       select_all: "Vybrat vše"
       clear_all: "Vymazat vše"
       too_short: "Hledaný výraz je příliš krátký."
-      result_count:
-        one: "1 výsledek pro <span class='term'>\"{{term}}\"</span>"
-        few: "{{count}} výsledků pro <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} výsledků pro <span class='term'>\"{{term}}\"</span>"
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
@@ -2099,7 +2094,6 @@ cs:
         hamburger_menu: '<b>=</b> Otevře hamburgerové menu'
         user_profile_menu: '<b>p</b> Otevře uživatelské menu'
         show_incoming_updated_topics: '<b>.</b> Ukáže aktualizovaná témata'
-        search: '<b>/</b> Hledání'
         help: '<b>?</b> Otevře seznam klávesových zkratek'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Odhlásit se'
       actions:
@@ -3107,10 +3101,6 @@ cs:
       upload: "Nahrát"
       uploading: "Nahrává se..."
       quit: "Možná později"
-      staff_count:
-        one: "Vaše komunita má 1 redakčního člena."
-        few: "Vaše komunita má %{count} redakční členy."
-        other: "Vaše komunita má %{count} členů v redakci."
       invites:
         add_user: "přidat"
         none_added: "Nepozvali jste nikoho z redakce. Určitě chcete pokračovat?"

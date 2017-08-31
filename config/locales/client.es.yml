@@ -352,7 +352,7 @@ es:
         add_members: "Añadir miembros"
         delete_member_confirm: "¿Quitar a '%{username}' del grupo '%{group}'?"
       name_placeholder: "Nombre del grupo, sin espacios, igual que los nombres de usuarios"
-      public: "Permitir a usuarios unirse/salir del grupo libremente (es necesario que el grupo sea visible)"
+      public_exit: "Permitir a los usuarios abandonar este grupo libremente"
       empty:
         posts: "No existe ningún post de miembros de este grupo"
         members: "No hay miembros en este grupo."
@@ -364,6 +364,7 @@ es:
       join: "Unirse al grupo"
       leave: "Salir del grupo"
       request: "Solicitar unirse al grupo"
+      message: "Mensaje"
       automatic_group: Grupo automático
       closed_group: Grupo cerrado
       is_group_user: "Eres miembro de este grupo"
@@ -394,7 +395,6 @@ es:
         staff: "Propietarios del grupo y staff"
         owners: "Propietarios del grupo y admins"
       alias_levels:
-        title: "¿Quién puede emviar mensajes y @mencionar a este grupo?"
         nobody: "Nadie"
         only_admins: "Solo administradores"
         mods_and_admins: "Solo moderadores y administradores"
@@ -1012,6 +1012,7 @@ es:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Clásicos"
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Solo categorías"
@@ -1021,6 +1022,25 @@ es:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      filter_placeholder: Buscar...
+    emoji_picker:
+      filter_placeholder: Buscar emoji
+      people: Personas
+      nature: Naturaleza
+      food: Comida
+      activity: Actividad
+      travel: Viajes
+      objects: Objetos
+      celebration: Celebración
+      custom: Emojis personalizados
+      recent: Usados recientemente
+      default_tone: Sin tono de piel
+      light_tone: Tono de piel claro
+      medium_light_tone: Tono de piel medio claro
+      medium_tone: Tono de piel medio
+      medium_dark_tone: Tono de piel medio oscuro
+      dark_tone: Tono de piel oscuro
     composer:
       emoji: "Emoji :)"
       more_emoji: "más..."
@@ -1186,14 +1206,21 @@ es:
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
       result_count:
-        one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
+        one: "1 resultado para <span class='term'>{{term}}</span>"
+        other: "{{count}} resultados pars <span class='term'>{{term}}</span>"
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."
       searching: "Buscando ..."
       post_format: "#{{post_number}} por {{username}}"
       results_page: "Buscar resultados"
+      more_results: "Hay más resultados. Por favor, aumenta tus criterios de búsqueda."
+      cant_find: "¿No encuentras lo que estás buscando?"
+      start_new_topic: "¿Empezar un nuevo tema?"
+      or_search_google: "O intenta buscar en Google:"
+      search_google: "Intenta buscar en Google:"
+      search_google_button: "Google"
+      search_google_title: "Buscar en este sitio"
       context:
         user: "Buscar posts por @{{username}}"
         category: "Buscar la categoría #{{category}}"
@@ -1225,6 +1252,7 @@ es:
           seen: Leídos
           unseen: No leídos
           wiki: son tipo wiki
+          images: imágenes incluidas
           all_tags: Contiene todas las etiquetas
         statuses:
           label: Donde los temas
@@ -2126,7 +2154,7 @@ es:
         hamburger_menu: '<b>=</b> Abrir menú hamburguesa'
         user_profile_menu: '<b>p</b> Abrir menú de usuario'
         show_incoming_updated_topics: '<b>.</b> Mostrar temas actualizados'
-        search: '<b>/</b> Buscar'
+        search: '<b>/</b> o <b>control</b>+<b>shift</b>+<b>s</b> Buscar'
         help: '<b>?</b> Abrir guía de atajos de teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Nuevos/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar temas'
@@ -2887,6 +2915,31 @@ es:
             title: "Crea un nuevo rango de entradas para banear si hay al menos 'min_ban_entries_for_roll_up' entradas."
         logster:
           title: "Registros de errores"
+      watched_words:
+        title: "Palabras vigiladas"
+        search: "buscar"
+        clear_filter: "Limpiar"
+        show_words: "mostrar palabras"
+        word_count:
+          one: "1 palabra"
+          other: "%{count} palabras"
+        actions:
+          block: 'Bloquear'
+          censor: 'Censurar'
+          require_approval: 'Necesitar aprobación'
+          flag: 'Reportar'
+        action_descriptions:
+          block: 'Impedir que se publiquen posts con estas palabras. El usuario verá un error cuando lo intente.'
+          censor: 'Permitir posts que contengan estas palabras, pero reemplazarlas con caracteres que ocultan las palabras censuradas.'
+          require_approval: 'Posts con estas palabras necesitarán ser aprobados por el staff antes de ser visibles.'
+          flag: 'Permitir posts que contengan estas palabras, pero reportarlos como inapropiados para que los moderadores los puedan revisar.'
+        form:
+          label: 'Nueva palabra:'
+          placeholder: 'palabra completa o * como comodín'
+          add: 'Añadir'
+          success: 'Añadida correctamente'
+          upload: "Subir"
+          upload_successful: "Carga completada con éxito. Las palabras se han añadido."
       impersonate:
         title: "Impersonar"
         help: "Utiliza esta herramienta para personificar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
@@ -3285,8 +3338,8 @@ es:
       uploading: "Subiendo..."
       quit: "Tal vez más tarde"
       staff_count:
-        one: "Tu comunidad tiene 1 miembro como staff."
-        other: "Tu comunidad tiene %{count} miembros como staff."
+        one: "Tu comunidad tiene 1 staff (tú)."
+        other: "Tu comunidad tiene %{count} staff, incluyéndote a ti."
       invites:
         add_user: "añadir"
         none_added: "No has invitado a nadie como staff. ¿Seguro que quieres continuar?"

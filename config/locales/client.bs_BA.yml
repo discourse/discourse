@@ -384,7 +384,6 @@ bs_BA:
       mentions: "Spomenuto"
       messages: "Poruke"
       alias_levels:
-        title: "Ko može @spominjati i slati poruke ovoj grupi?"
         nobody: "Niko"
         only_admins: "Samo admini"
         mods_and_admins: "Samo moderatori i Admini"
@@ -2294,10 +2293,6 @@ bs_BA:
       upload: "Učitaj"
       uploading: "Učitavanje..."
       quit: "Možda kasnije"
-      staff_count:
-        one: "Vaša zajednica ima 1 člana osoblja."
-        few: "Vaša zajednica ima 2 člana osoblja."
-        other: "Vaša zajednica ima %{count} članova osoblja."
       invites:
         add_user: "Dodaj"
         none_added: "Niste pozvali ni jednog admina/moderatora. Jeste li sigurni da želite nastaviti?"

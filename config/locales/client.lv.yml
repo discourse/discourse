@@ -424,7 +424,6 @@ lv:
         staff: "Grupu īpašnieki un personāls"
         owners: "Grupu īpašnieki un administratori"
       alias_levels:
-        title: "Kas var rakstīt ziņas grupai un @pieminēt to?"
         nobody: "Neviens"
         only_admins: "Tikai administratori"
         mods_and_admins: "Tikai moderatori un administratori"
@@ -2385,7 +2384,7 @@ lv:
       title: 'Discourse administrators'
       moderator: 'Moderators'
       dashboard:
-        title: "Administrācija panelis"
+        title: "Administrācijas panelis"
         last_updated: "Pēdējais administrācijas paneļa atjauninājums:"
         version: "Versija"
         up_to_date: "Tu seko līdzi laikam!"
@@ -2888,7 +2887,7 @@ lv:
           actions:
             block: "Bloķēt"
             do_nothing: "Atļaut"
-            allow_admin: "Atļaut Administrēt"
+            allow_admin: "Atļaut administrēt"
           form:
             label: "Jauns:"
             ip_address: "IP adrese"
@@ -2931,7 +2930,7 @@ lv:
         invalid: "Piedod, tu nevari izlikties (impersonate) par šo lietotāju."
       users:
         title: 'Lietotāji'
-        create: 'Pievienot Administrātoru'
+        create: 'Pievienot administratoru'
         last_emailed: "Pēdējo reizi saņēmis e-pastu"
         not_found: "Piedod, šāds lietotājvārds neeksistē mūsu sistēmā."
         id_not_found: "Piedod, šāds lietotāja ID neeksistē mūsu sistēmā."
@@ -2964,7 +2963,7 @@ lv:
           regular: 'Lietotāji ar 3. uzticības pakāpi (Aktīvie atbalstītāji)'
           leader: 'Lietotāji ar 4. uzticības pakāpi (Vadītāji)'
           staff: "Personāls"
-          admins: 'Administrātori'
+          admins: 'Administratori'
           moderators: 'Moderātori'
           blocked: 'Bloķētie lietotāji'
           suspended: 'Atceltie lietotāji'
@@ -2995,7 +2994,7 @@ lv:
         unsuspend: "Neapturēt"
         suspended: "Neapturēts?"
         moderator: "Moderātors?"
-        admin: "Administrātors?"
+        admin: "Administrators?"
         blocked: "Bloķēts?"
         staged: "Izveidots?"
         show_admin_profile: "Administrators"
@@ -3007,9 +3006,9 @@ lv:
         ip_lookup: "IP meklēšana"
         log_out: "Iziet"
         logged_out: "Lietotājs tika atslēgts no visām ierīcēm"
-        revoke_admin: 'Atsaukt Administrātora pakāpi'
-        grant_admin: 'Piešķirt Administrātora pakāpi'
-        grant_admin_confirm: "Tu saņem šo e-pastu lai apstiprinātu jaunu administrātoru. Lūdzu atver e-pastu un seko instrukcijām."
+        revoke_admin: 'Atsaukt Administratora pakāpi'
+        grant_admin: 'Piešķirt Administratora pakāpi'
+        grant_admin_confirm: "Mēs nosūtījām jums e-pastu, lai jūs apstiprinātu jauno administratoru. Lūdzu atver e-pastu un seko instrukcijām."
         revoke_moderation: 'Atsaukt Moderātora pakāpi'
         grant_moderation: 'Piešķirt Moderātora pakāpi'
         unblock: 'Atbloķēt'
@@ -3037,8 +3036,8 @@ lv:
         anonymize_yes: "Jā, anonimizēt kontu. (anonymize)"
         anonymize_failed: "Radās problēma ar konta anonimizēšanu (anonymizing)."
         delete: "Dzēst lietotāju."
-        delete_forbidden_because_staff: "Administrātori un moderātori nevar tikt dzēsti."
-        delete_posts_forbidden_because_staff: "Nevar izdzēst visus administrātoru un moderātoru ierakstus."
+        delete_forbidden_because_staff: "Administratori un moderatori nevar tikt dzēsti."
+        delete_posts_forbidden_because_staff: "Nevar izdzēst visus administratoru un moderatoru ierakstus."
         delete_forbidden:
           zero: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"
           one: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"
@@ -3334,6 +3333,6 @@ lv:
         add_user: "Pievienot"
         none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"
         roles:
-          admin: "Administrātors"
+          admin: "Administrators"
           moderator: "Moderātors"
           regular: "Lietotājs"

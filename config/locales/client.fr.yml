@@ -159,6 +159,7 @@ fr:
         eu_west_2: "UE (Londres)"
         sa_east_1: "Amérique du Sud (Sao Paulo)"
         us_east_1: "États-Unis est (Virginie)"
+        us_east_2: "États-Unis est (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "États-Unis ouest (Californie)"
         us_west_2: "États-Unis ouest (Oregon)"
@@ -352,7 +353,8 @@ fr:
         add_members: "Ajouter des membres"
         delete_member_confirm: "Supprimer %{username} du groupe « %{group} » ?"
       name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
-      public: "Autoriser les utilisateurs à rejoindre/quitter le groupe librement (nécessite que le groupe soit visible)"
+      public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
+      public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
         posts: "Il n'y a aucun message de membres de ce groupe."
         members: "Il n' y a aucun membre dans ce groupe."
@@ -364,10 +366,16 @@ fr:
       join: "Rejoindre le groupe"
       leave: "Quitter le groupe"
       request: "Demander à rejoindre le groupe"
+      message: "Message"
       automatic_group: Groupe automatique
       closed_group: Groupe fermé
       is_group_user: "Vous êtes membre de ce groupe"
       allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe"
+      membership_request_template: "Modèle personnalisé à afficher aux utilisateurs lors de l'envoi d'une demande d'adhésion"
+      membership_request:
+        submit: "Soumettre la demande"
+        title: "Demander à rejoindre %{group_name}"
+        reason: "Expliquez au propriétaire du groupe pourquoi vous avez votre place dans ce groupe"
       membership: "Adhésion"
       name: "Nom"
       user_count: "Nombre de membres"
@@ -394,7 +402,6 @@ fr:
         staff: "Propriétaires du groupe et responsables"
         owners: "Propriétaires du groupe et administrateurs"
       alias_levels:
-        title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
         only_admins: "Seulement les administrateurs "
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
@@ -626,6 +633,7 @@ fr:
         taken: "Désolé, cette adresse de courriel est indisponible."
         error: "Il y a eu une erreur lors du changement d'adresse de courriel. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous avons envoyé un courriel à cette adresse. Merci de suivre les instructions."
+        success_staff: "Nous avons envoyé un courriel à votre adresse actuelle. Merci de suivre les instructions."
       change_avatar:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
@@ -1022,6 +1030,21 @@ fr:
       shift: 'Maj'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      filter_placeholder: Recherche...
+    emoji_picker:
+      filter_placeholder: Chercher un emoji
+      people: Personnes
+      nature: Nature
+      food: Nourriture
+      activity: Activité
+      travel: Voyage
+      objects: Objets
+      celebration: Fête
+      custom: Emojis personnalisés
+      recent: Utilisés récemment
+      default_tone: Aucune couleur de peau
+      light_tone: Couleur de peau claire
     composer:
       emoji: "Emoji :)"
       more_emoji: "plus…"
@@ -1186,15 +1209,19 @@ fr:
       select_all: "Sélectionner tout"
       clear_all: "Tout désélectionner"
       too_short: "Votre terme de recherche est trop court."
-      result_count:
-        one: "1 résultat pour « <span class='term'>{{term}}</span> »"
-        other: "{{count}} résultats pour « <span class='term'>{{term}}</span> »"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
       results_page: "Résultats de votre recherche"
+      more_results: "Il y a d'autres résultats. Merci de préciser vos critères de recherche."
+      cant_find: "Vous ne trouvez pas ce que vous cherchez ?"
+      start_new_topic: "Voulez-vous commencer un nouveau sujet ?"
+      or_search_google: "Ou essayez plutôt de chercher avec Google :"
+      search_google: "Essayez plutôt de chercher avec Google :"
+      search_google_button: "Google"
+      search_google_title: "Rechercher dans ce site"
       context:
         user: "Chercher dans les messages de @{{username}}"
         category: "Rechercher dans la catégorie #{{category}}"
@@ -1226,6 +1253,7 @@ fr:
           seen: j'ai lu
           unseen: je n'ai pas lu
           wiki: qui sont des wikis
+          images: y compris les images
           all_tags: Contient tous les tags
         statuses:
           label: Dont les sujets
@@ -1556,6 +1584,7 @@ fr:
         success_email: "Nous avons envoyé une invitation à <b>{{emailOrUsername}}</b>. Nous vous avertirons lorsqu'il l'aura acceptée. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
         error: "Désolé, nous n'avons pas pu inviter cette personne. Elle a peut-être déjà été invitée ? (Le nombre d'invitations est limité)"
+        success_existing_email: "Un utilisateur avec le courriel <b>{{emailOrUsername}}</b> existe déjà. Nous avons invité cet utilisateur à participer à ce sujet."
       login_reply: 'Se connecter pour répondre'
       filters:
         n_posts:
@@ -2127,7 +2156,7 @@ fr:
         hamburger_menu: '<b>=</b> Ouvrir le menu hamburger'
         user_profile_menu: '<b>p</b>Ouvrir le menu utilisateur'
         show_incoming_updated_topics: '<b>.</b> Montrer les sujets mis à jour récemment'
-        search: '<b>/</b> Rechercher'
+        search: '<b>/</b> ou <b>ctrl</b>+<b>MAJ.</b>+<b>s</b> Rechercher'
         help: '<b>?</b> Ouvrir l''aide du clavier'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Ignorer les nouveaux messages'
         dismiss_topics: '<b>x</b>, <b>t</b> Ignorer les sujets'
@@ -2888,6 +2917,28 @@ fr:
             title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins 'min_ban_entries_for_roll_up' entrées."
         logster:
           title: "Journal d'erreurs"
+      watched_words:
+        title: "Mots surveillés"
+        search: "recherche"
+        clear_filter: "Vider"
+        show_words: "Afficher les mots"
+        actions:
+          block: 'Bloquer'
+          censor: 'Censurer'
+          require_approval: 'Nécessite l''approbation'
+          flag: 'Signaler'
+        action_descriptions:
+          block: 'Empêcher les messages contenant ces mots d''être publiés. L''utilisateur verra un message d''erreur lorsqu''il essaiera de publier son message.'
+          censor: 'Autoriser les messages contenant ces mots, mais les remplacer par des caractères qui cachent les mots censurés.'
+          require_approval: 'Les messages qui contiennent ces mots devront être approuvés par un responsable avant de pouvoir être publiés.'
+          flag: 'Autoriser les messages contenant ces mots, mais les signaler comme inapproprié pour que les modérateurs puisse les vérifier.'
+        form:
+          label: 'Nouveau mot :'
+          placeholder: 'mot complet ou * comme signe générique'
+          add: 'Ajouter'
+          success: 'Succès'
+          upload: "Envoyer"
+          upload_successful: "Envoi réussi. Les mots ont été ajoutés."
       impersonate:
         title: "Incarner"
         help: "Utiliser cet outil pour incarner un compte utilisateur à des fins de tests.\nVous devrez vous déconnecter une fois terminé."
@@ -3285,9 +3336,6 @@ fr:
       upload: "Envoi"
       uploading: "Envoi en cours…"
       quit: "Peut-être plus tard"
-      staff_count:
-        one: "Votre communauté a 1 responsable."
-        other: "Votre communauté a %{count} responsables."
       invites:
         add_user: "ajouter"
         none_added: "Vous n'avez invité aucun responsable. Êtes-vous sûr de vouloir continuer ?"

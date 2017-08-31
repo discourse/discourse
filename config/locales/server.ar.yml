@@ -903,9 +903,7 @@ ar:
     educate_until_posts: "عندما يبدا المستخدم كتابه منشورهم الاول.، اظهر انبثاق  لوحه تعليمات المستخدم الجديد في المؤلف"
     title: "اسم هذا الموقع، يُستخدم في وسم title."
     site_description: "صِف هذا الموقع بجملة واحدة، يُستخدم في وسم meta description."
-    contact_email: "عنوان البريد الإلكتروني للاتصال الرئيسي المسؤول لهذا الموقع. تستخدم للإشعارات الحرجة كالتبليغات الغير معالجة، وكذلك عن / حول نموذج الاتصال للأمور المستعجلة."
     contact_url: "اتصل بـ URL لهذا الموقع. استخدم في / حول نموذج الاتصال للأمور المستعجلة."
-    queue_jobs: "مطورين فقط ! تحذير ! افتراضياً، اذا تم تعطيل قوائم الانتظار في sidkiq سيتعطل الموقع."
     crawl_images: "جلب الصور من الروابط لادراج الأبعاد الصحيحة."
     download_remote_images_to_local: "تحويل الصور البعيدة إلى صور محلية بواسطة تحميلها؛ بإستثناء الصور التالفة"
     download_remote_images_threshold: "ادني مساحه للقرص ضروربه لتحميل الصور البعيده محليا ( في المئه) "
@@ -920,7 +918,6 @@ ar:
     fixed_category_positions: "إن أُشّر، فسيمكنك ترتيب الفئات بترتيب ثابت. إن لم يؤشّر، فستُسرد الفئات بترتيب نشاطها."
     fixed_category_positions_on_create: "إذا تحققت، سيحفظ ترتيب الفئة في موضوع الحوار المنشأ (يتطلب fixed_category_positions)."
     add_rel_nofollow_to_user_content: "أضف rel nofollow لجميع محتوى المستخدم المتقدم، باستثناء الروابط الداخلية (بما في ذلك المجالات الأصل). إذا غيرت هذا، يجب عليك عمل rebake لكل المشاركات بـ: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "قائمه النطاقات حيت لا اتباع لا يجب ان تضاف للروابط. tld.com سوف يقوم تلقائيا  بالسماح  sub.tld.com كذلك  مثل  الاصغر , يجب عليك اضافه النطاق الاعلى مستوي الخاص بالموقع لمساعده  زحف الويب ليجاد جميع المحتويات.اذا كان باقي اجزاء موقعك في نطاقات اخرى , اضفهم ايضا"
     post_excerpt_maxlength: "الحد الأقصى لطول وظيفة مقتطف / ملخص."
     show_pinned_excerpt_mobile: "اظهر مقتطفات من المواضيع المثبتة فى منظر المحمول."
     show_pinned_excerpt_desktop: "اظهر مقتطفات من المواضيع المثبتة فى منظر سطح المكتب."
@@ -996,8 +993,6 @@ ar:
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
     version_checks: "Ping ديسكورس مركزا لتحديثات الإصدار وإظهار الرسائل النسخة الجديدة على لوحة القيادة / مسؤول"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
-    port: "DEVELOPER فقط! تحذير! استخدام هذا المنفذ HTTP بدلا من الافتراضي من المنفذ 80. المغادرة ابحث عن الافتراضي من 80."
-    force_hostname: "DEVELOPER فقط! تحذير! تحديد اسم المضيف في URL. اتركه فارغا لالافتراضي."
     invite_expiry_days: "مدة صلاحية مفاتيح دعوة عضو، بالأيام."
     invite_passthrough_hours: "كم المدة التي يمكن للعضو أن يستخدم مفتاح دعوة محرر سابقا لتسجيل الدخول، في الساعات"
     login_required: "أصلح التوثيق لقراءة الاتصال على هذا الموقع، لا تسمع بالوصول المجهول."
@@ -1066,7 +1061,6 @@ ar:
     clean_up_uploads: " يتيم أزالة تحديث غير مرجعية لمنع استضافة غير المشروعة. تحذير: قد تحتاج لعمل نسخة احتياطية من الدليل / تحميل قبل تمكين هذا الإعداد."
     clean_orphan_uploads_grace_period_hours: "فترة الراحة (بالساعات) قبل الرفع الوحيد تمت إزالته."
     purge_deleted_uploads_grace_period_days: "يتم مسح فترة سماح (بالأيام) قبل تحميل حذفه."
-    purge_unactivated_users_grace_period_days: "يتم حذف فترة سماح (بالأيام) قبل المستخدم الذي لم تنشيط حساباتهم."
     enable_s3_uploads: "وضع الإضافات على تخزين الأمازون S3. هام: يتطلب اعتماد S3 صالحة (على حد سواء الوصول معرف مفتاح ومفتاح الوصول السري)."
     s3_use_iam_profile: 'إستعمل وظيفة AWS EC2 IAM لإسترجاع المفاتيح. ملاحظة : التمكين سوف يتجاوز " مفتاح معرف الوصول ل s3 " و "مفتاح الوصول السري ل s3" الإعدادات.'
     s3_upload_bucket: "اسم حزمة Amazon S3 التي سيتم تحميل الملفات إليها. تحذير : يجب أن تكون أحرف صغيرة، لا تحوي مسافات، ولا _."
@@ -1189,6 +1183,7 @@ ar:
     allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
     default_avatars: "سيتم استخدام عناوين URL للصور الرمزية بشكل افتراضيًا للأعضاء الجدد حتى يغيروا صورهم."
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
+    digest_topics: "أقصى عدد للمواضيع المشهورة لتعرض في موجز البريد الإلكتروني . "
     disable_digest_emails: "تعطيل رسائل الملخص لجميع الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
@@ -1217,15 +1212,9 @@ ar:
     default_code_lang: "تسليط الضوء علي تركيب جمله اللغه البرمجيه يطبق الي مكعبات اكواد GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "عندما يبدا احدهم بالرد علي الموضوع و اخر كان اقدم من هذه الايام, سوف يظهر تحذير, عطل عن طريق الضبط الي 0"
     autohighlight_all_code: "تطبيق تسليط الضوء الاجباري علي الاكواد  لكل مكعبات الاكواد لمهياه مسبقا . عندما لا تحدد اللغه بشكل صريح"
-    feed_polling_enabled: "فقط التضمين : تضمين مغذي RSS/ATOM كمشاركات."
-    feed_polling_url: "فقط التضمين : URL  لمغذي RSS/ATOM مضمن."
-    embed_by_username: "اسم مستخدم Discourse للعضو الذي ينشأ المواضيع المضمنة."
-    embed_username_key_from_feed: "مفتاح لسحب اسم مستخدم discourse من المغذي."
     embed_truncate: "اقتطاع الوظائف المدمجة."
     embed_post_limit: "أقصى عدد للمشاركات المضمنة."
     embed_username_required: "إسم المستخدم مطلوب لإضافة مقالة"
-    embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
-    embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
     prevent_anons_from_downloading_files: "امنع  المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع  اصول نشره كمرفقات من العمل."
@@ -1514,9 +1503,9 @@ ar:
       subject_template: "الغاء تفعيل تحميل الصور عن بعد "
       text_body_template: "تم تعطيل الإعداد 'download_remote_images_to_local' لأنه تم الوصول إلى حد مساحة القرص في 'download_remote_images_threshold'."
   unsubscribe_link: |
-    لإلغاء الإشتراك من رسائل البريد الإلكترونية [أنقر هنا] (%{unsubscribe_url}).
+    لإلغاء الإشتراك من هذه الرسائل الإلكترونية [أنقر هنا](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
-    لإلغاء الإشتراك من رسائل البريد الإلكترونية [أنقر هنا] (%{unsubscribe_url}).
+    لإلغاء الإشتراك من هذه الرسائل الإلكترونية [أنقر هنا](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
     استلمت هذا بسبب أنك قمت بتفعيل وضع القائمة البريدية.
 
@@ -1526,7 +1515,7 @@ ar:
     previous_discussion: "الردود السابقة "
     in_reply_to: "في رد لـ "
     unsubscribe:
-      title: "غير مشترك "
+      title: "إلغاء الاشتراك"
       description: "لست مهتما في تلقي هذه الرسائل الالكترونيه؟ لا مشكله! اضغط تحت ليتم الغاء اشتركك فورا:"
     reply_by_email: "[زيارة الموضوع](%{base_url}%{url}) أو بالرد على هذا البريد للإجابه."
     visit_link_to_respond: "[زيارة الموضوع](%{base_url}%{url}) للرد."
@@ -1536,10 +1525,37 @@ ar:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
+      since_last_visit: "منذ زيارتك الأخيرة"
+      new_topics: "المواضيع الجديدة"
+      liked_received: "الإعجابات المستلمة"
+      new_posts: "المشاركات الجديدة"
+      popular_topics: "أشهر المواضيع"
+      join_the_discussion: "إقرأ المزيد"
+      more_new: "الجديد لك أنت"
+      unsubscribe: "هذا الموجز أٌرسل لك من %{site_link} عندما لم نرك لمدة . . غير <a href='%{email_settings_url}'> إعدادات بريد الإلكتروني</a>, أو %{unsubscribe_link} لإلغاء الأشتراك. "
       click_here: "أنقر هنا"
+      preheader: "ملخص منذ زيارتك الأخيرة على %{last_seen_at}"
     account_created:
       title: "الحساب أُنشئ"
       subject_template: "حسابك الجديد [%{email_prefix}]"
+    confirm_new_email:
+      subject_template: "أكّد عنوان بريد الإلكتروني الجديد %{email_prefix}"
+      text_body_template: |
+        أكد عنوان بريدك الإلكتروني لـ %{site_name} بالضغط على الرابط التالي :
+
+        %{email_token}/u/ وثق البريد الإلكتروني  /u/%{base_url}
+    confirm_old_email:
+      subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
+      text_body_template: |
+        قبل أن نُغيّر عنوان بريد الإلكتروني ، نحتاجك إلى تأكيد تحكمك
+        بالبريد الالكتروني الحالي للحساب ، بعد إكمال هذه الخطوة ، سوف نؤكد لك
+        عنوان البريد الإلكتروني الجديد .
+
+        أكّد عنوان بريدك الإلكتروني الحالي لـ %{site_name} بالضغط على الرابط التالي :
+
+        /u/أكّد بريدك الإلكتروني/%{email_token}%{base_url}
+    notify_old_email:
+      subject_template: "عنوان بريد الإلكتروني تم تغييرة %{email_prefix}"
     signup_after_approval:
       subject_template: "قد وافقت على %{site_name}!"
   page_not_found:
@@ -1548,10 +1564,6 @@ ar:
     see_more: "المزيد"
     search_title: "البحث في الموقع"
     search_google: "غوغل"
-  login_required:
-    welcome_message: |
-      #[أهلاً بكم %{title}](#مرحبًا)
-      الحساب مطلوب. الرجاء انشاء حساب او تسجيل الدخول للأستمرار.
   terms_of_service:
     title: "شروط الخدمة"
     signup_form_message: 'لقد قرأت و أوافق على <a href="/tos" target="_blank">بنود الخدمة</a>.'
@@ -1714,16 +1726,22 @@ ar:
       name: الذكرى السنوية
     nice_post:
       name: رد رائع
+      description: استلمت 10 أعجابات على الرد
     good_post:
       name: رد حسن
+      description: استلمت 25 إعجابا على الرد
     great_post:
       name: رد عظيم
+      description: استلمت 50 إعجابا على الرد
     nice_topic:
       name: موضوع رائع
+      description: استلمت 10 إعجابات على الموضوع
     good_topic:
       name: موضوع حسن
+      description: استلمت 25 اعجابا على الموضوع
     great_topic:
       name: موضوع عظيم
+      description: استلمت 50 إعجابا على الموضوع
     first_like:
       name: أول إعجاب
     first_flag:
@@ -1747,6 +1765,9 @@ ar:
       name: رابط مشهور
     respected:
       name: محترم
+      description: استلمت 2 اعجابين على 100 مشاركة
+    admired:
+      description: استلمت 5 إعجابات على 300 مشاركة
     higher_love:
       description: استخدمَ 50 إعجابًا يوميًّا 5 مرّات
     crazy_in_love:

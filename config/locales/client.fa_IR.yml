@@ -366,7 +366,6 @@ fa_IR:
         staff: "صاحبان گروه، و کارکنان"
         owners: "صاحبان گروه و مدیران"
       alias_levels:
-        title: "چه کسی میتواند پیام بفرستد و به این گروه @اشاره کند؟"
         nobody: "هیچ‌کس"
         only_admins: "فقط مدیران ارشد"
         mods_and_admins: "فقط مدیران و مدیران ارشد"
@@ -1136,8 +1135,6 @@ fa_IR:
       select_all: "انتخاب همه"
       clear_all: "پاک کردن همه"
       too_short: "کلمه جستجو شده بسیار کوتاه است"
-      result_count:
-        other: "{{count}} نتایج برای <span class='term'>\"{{term}}\"</span>"
       title: "جستجوی موضوعات، نوشته‌ها، کاربران یا دسته‌‌بندی‌ها"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
@@ -2012,7 +2009,6 @@ fa_IR:
         hamburger_menu: '<b>=</b> باز کردن منو همبرگری'
         user_profile_menu: '<b>p</b> نمایش منو کاربری'
         show_incoming_updated_topics: '<b>.</b> نمایش موضوعات به‌روز شده'
-        search: '<b>/</b> جستجو'
         help: '<b>?</b> باز کردن کمک صفحه‌کلید'
         dismiss_new_posts: '<b>x</b>, <b>r</b> بستن نوشته‌های جدید'
         dismiss_topics: '<b>x</b>, <b>t</b> بستن موضوعات'
@@ -3143,8 +3139,6 @@ fa_IR:
       upload: "بارگذاری"
       uploading: "در حال بار گذاری..."
       quit: "شاید بعدا"
-      staff_count:
-        other: "انجمن شما دارای %{count} عضو همکار است."
       invites:
         add_user: "اضافه کردن"
         none_added: "هیچ کدام از همکاران را دعوت نکردید. ادامه می‌دهید؟"

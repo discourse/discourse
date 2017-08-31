@@ -411,9 +411,13 @@ ru:
       join: "Вступить в Группу"
       leave: "Покинуть Группу"
       request: "Попроситься в Группу"
+      message: "Сообщение"
       automatic_group: Автоматическая Группа
       closed_group: Закрытая Группа
       is_group_user: "Вы участник этой группы"
+      membership_request:
+        submit: "Подтвердить запрос"
+        title: "Запрос на вступление в группу %{group_name}"
       membership: "Участие"
       name: "Название"
       user_count: "Количество Участников"
@@ -440,7 +444,6 @@ ru:
         members: "Владельцы группы, участники и администраторы"
         owners: "Владельцы группы и администраторы"
       alias_levels:
-        title: "Кто может отправлять сообщения и @упоминать эту группу?"
         nobody: "Никто"
         only_admins: "Только администраторы"
         mods_and_admins: "Только модераторы и администраторы"
@@ -1092,7 +1095,10 @@ ru:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      filter_placeholder: Искать...
     emoji_picker:
+      filter_placeholder: Искать emoji
       people: People
       nature: Nature
       food: Food
@@ -1100,6 +1106,7 @@ ru:
       travel: Travel
       objects: Objects
       celebration: Celebration
+      recent: Недавно использованные
     composer:
       emoji: "Смайлики :)"
       more_emoji: "еще..."
@@ -1270,17 +1277,15 @@ ru:
       select_all: "Выбрать все"
       clear_all: "Сбросить все"
       too_short: "Слишком короткое слово для поиска."
-      result_count:
-        one: "Найдено 1: <span class='term'>\"{{term}}\"</span>"
-        few: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
-        many: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
-        other: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
       title: "Поиск по темам, сообщениям, псевдонимам и разделам"
       no_results: "Ничего не найдено."
       no_more_results: "Больше ничего не найдено."
       searching: "Поиск ..."
       post_format: "#{{post_number}} от {{username}}"
       results_page: "Результаты поиска"
+      more_results: "Найдено множество результатов. Пожалуйста, уточните, критерии поиска."
+      cant_find: "Не можете найти нужную информацию?"
+      start_new_topic: "Создать новую тему?"
       context:
         user: "Искать сообщения от @{{username}}"
         category: "Искать в разделе #{{category}}"
@@ -2295,7 +2300,6 @@ ru:
         hamburger_menu: '<b>=</b> Открыть меню гамбургер'
         user_profile_menu: '<b>p</b> Открыть меню профиля'
         show_incoming_updated_topics: '<b>.</b> Показать обновленные темы'
-        search: '<b>/</b> Поиск'
         help: '<b>?</b> Показать сочетания клавиш'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Отложить новые сообщения'
         dismiss_topics: '<b>x</b>, <b>t</b> Отложить темы'
@@ -3483,11 +3487,6 @@ ru:
       upload: "Загрузить"
       uploading: "Загрузка..."
       quit: "Может быть позже"
-      staff_count:
-        one: "В Вашем сообществе 1 сотрудник."
-        few: "В Вашем сообществе %{count} сотрудника."
-        many: "В Вашем сообществе %{count} сотрудников."
-        other: "В Вашем сообществе %{count} сотрудников."
       invites:
         add_user: "добавить"
         none_added: "Вы ещё не пригласили сотрудников. Вы уверены, что хотите продолжить?"

@@ -368,7 +368,6 @@ ur:
       mentions: "ذکر"
       messages: "پیغامات"
       alias_levels:
-        title: "کون اِس گروپ کو پیغام بھیج سکتا اور@زکر کرسکتا ہے؟"
         nobody: "کوئی بھی نہیں"
         only_admins: "صرف منتظمین"
         mods_and_admins: "صرف ثالث اور منتظمین"
@@ -1124,9 +1123,6 @@ ur:
       select_all: "تمام منتخب کریں"
       clear_all: "تمام کو صاف کریں"
       too_short: "آپ کا سَرچ ٹَرم بہت مختصر ہے۔"
-      result_count:
-        one: "<span class='term'>\"{{term}}\"</span> کیلئیے 1 نتیجہ"
-        other: "<span class='term'>\"{{term}}\"</span> کیلئیے {{count}} نتائج"
       title: "ٹاپک، پوسٹس، صارفین، یا زمرہ جات کو سَرچ کریں"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
@@ -2004,7 +2000,6 @@ ur:
         hamburger_menu: '<b>=</b> ہیمبرگر مینو کھولیں'
         user_profile_menu: '<b>p</b> صارف مینو کھولیں'
         show_incoming_updated_topics: 'اَپ ڈیٹ ہوے ٹاپک دکھائیں'
-        search: '<b>/</b> سرچ'
         help: '<b>?</b> کیبورڈ مدد کھولیں'
         dismiss_new_posts: '<b>x</b>، <b>r</b> برخاست کریں نئے/پوسٹس'
         dismiss_topics: '<b>x</b>، <b>t</b> ٹاپک برخاست کریں'
@@ -3074,9 +3069,6 @@ ur:
       upload: "اَپ لوڈ"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
       quit: "شاید بعد میں"
-      staff_count:
-        one: "آپ کی کمیونٹی میں 1 سٹاف کا رکن ہے۔"
-        other: "آپ کی کمیونٹی میں ٪{count} سٹاف کے ارکان ہیں۔"
       invites:
         add_user: "شامل کریں"
         none_added: "آپ نے کسی  بھی سٹاف کو مدعو نہیں کیا۔ کیا آپ واقعی آگے جانا چاہتے ہیں؟"

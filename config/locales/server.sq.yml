@@ -314,10 +314,13 @@ sq:
     confirmed: "Adresa e postës u azhornua."
     please_continue: "Vazhdo tek %{site_name}"
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
+    already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
     authorizing_old:
       title: "Ju falënderojmë për konfirmimin e adresës tuaj email"
+      description: "Tani po ju dërgojmë një mesazh tek adresa e re e emailit për t'a konfirmuar."
   activation:
     action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
+    already_done: "Na vjen keq, ky link nuk vlen më. Mbase llogaria është që tani e aktivizuar?"
     please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
     continue_button: "Vazhdo tek %{site_name}"
     welcome_to: "Mirë se vini tek %{site_name}!"
@@ -558,9 +561,7 @@ sq:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
     contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
-    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
@@ -573,7 +574,6 @@ sq:
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. tld.com will automatically allow sub.tld.com as well. As a minimum, you should add the top-level domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
@@ -631,8 +631,6 @@ sq:
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
-    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
-    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
@@ -686,7 +684,6 @@ sq:
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    purge_unactivated_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
@@ -817,14 +814,8 @@ sq:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
-    feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
-    feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
-    embed_by_username: "Discourse username of the user who creates the embedded topics."
-    embed_username_key_from_feed: "Key to pull discourse username from feed."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
-    embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
-    embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
@@ -948,6 +939,11 @@ sq:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
+  admin_confirmation_mailer:
+    text_body_template: |
+      Ju lutemi të konfirmoni që dëshironi të shtoni **%{target_username}** si një administrator në këtë faqe.
+
+      [Konfirmo llogarinë e administratorit](%{admin_confirm_url})
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
@@ -962,20 +958,6 @@ sq:
   system_messages:
     post_hidden:
       subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"
-      text_body_template: |
-        Përshëndetje,
-
-        Ky është një mesazh automatik nga %{site_name} për t'ju njoftuar se postimi juaj u fsheh.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Disa anëtarë të faqes sinjalizuan këtë postim. **Mund t'a modifikoni postimin pas %{edit_delay} minutash, dhe do të shfaqet automatikisht.**
-
-        Sidoqoftë, nëse postimi fshihet nga komuniteti për një herë të dytë, postimi do të mbetet u fshehur derisa të ndërhyjë stafi. Stafi mund të vendosë edhe të pezullojë ose bllokojë llogarinë tuaj.
-
-        Për udhëzime të mëtejshme, shikoni [rregullat e komunitetit](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
     welcome_invite:
@@ -997,7 +979,6 @@ sq:
       subject_template: "Data export complete"
     csv_export_failed:
       subject_template: "Data export failed"
-      text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
     email_reject_parsing:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1157,6 +1138,14 @@ sq:
       click_here: "klikoni këtu"
       from: "%{site_name} - përmbledhja"
       preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
+    confirm_new_email:
+      subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
+      text_body_template: |
+        Konfirmoni adresën tuaj të re të emailit për "%{site_name}" duke klikuar linkun më poshtë:
+
+        %{base_url}/u/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për
@@ -1167,16 +1156,21 @@ sq:
         %{new_email}
     signup_after_approval:
       subject_template: "Jeni aprovuar tek %{site_name}!"
+    signup:
+      subject_template: "[%{email_prefix}] Konfirmoni llogarinë tuaj të re"
+      text_body_template: |
+        Mirseerdhët tek %{site_name}!
+
+        Klikoni linkun më poshtë për të konfirmuar dhe aktivizuar llogarinë tuaj të re:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Nëse nuk arrini të klikoni në linkun më siper, provoni ta kopjoni dhe ta ngjisni në shfletuesin tuaj.
   page_not_found:
     popular_topics: "Popullore"
     recent_topics: "Më të fundit"
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please create an account or log in to continue.
   terms_of_service:
     title: "Kushtet e shërbimit"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
@@ -1580,6 +1574,9 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
+  finish_installation:
+    confirm_email:
+      title: "Konfirmoni emailin tuaj"
   wizard:
     step:
       emoji:

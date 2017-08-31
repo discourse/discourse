@@ -239,7 +239,6 @@ it:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Richesta di Adesione per @%{group_name}"
-      body: "Vorrei fare domanda per l'iscrizione a @%{group_name}."
   education:
     until_posts:
       one: "1 messaggio"
@@ -329,6 +328,7 @@ it:
               too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
               cant_send_pm: "Spiacenti, non puoi inviare un messaggio privato a quell'utente."
               no_user_selected: "Seleziona un utente valido."
+              reply_by_email_disabled: "La risposta via email è stata disabilitata."
             featured_link:
               invalid: "è invalido. Un URL dovrebbe includere http:// o https://."
               invalid_category: "non può essere modificato in questa categoria."
@@ -637,6 +637,9 @@ it:
     no_likes_given:
       self: "Non hai messo \"Mi piace\" ad alcun messaggio."
       others: "Nessun messaggio con \"Mi piace\"."
+    no_replies:
+      self: "Non hai risposto a nessun messaggio."
+      others: "Nessuna risposta."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -900,7 +903,7 @@ it:
     fixed_category_positions: "Se attivata, potrai ordinare le categorie. Se non attivata, le categorie vengono elencate in ordine di attività."
     fixed_category_positions_on_create: "Se attivata, verrà mantenuto l'ordinamento delle categorie nella finestra di creazione argomenti (richiede fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Una lista di domini a cui non aggiungere \"nofollow\" ai collegamenti. Inoltre tld.com autorizzerà automaticamente sub.tld.com. Dovresti perlomeno aggiungere il dominio di primo livello di questo sito, per aiutare i motori di ricerca a trovare tutto il contenuto. Se parti del tuo sito si trovano su altri domini, aggiungi anche quelli."
+    exclude_rel_nofollow_domains: "Un elenco di domini dove l'attributo nofollow non dovrebbe essere aggiunto ai collegamenti. \"esempio.com\" consentirà automaticamente anche \"sub.esempio.com\". Come minimo si dovrebbe aggiungere il dominio di questo sito per aiutare i web crawler a trovare tutti i contenuti. Se altre parti del tuo sito web sono in altri domini, aggiungi anche quelle."
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella vista mobile."
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
@@ -926,6 +929,7 @@ it:
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
     summary_max_results: "Massimo numero di messaggi mostrati in 'Riassumi Argomento'"
     enable_private_messages: "Autorizza gli utenti con livello di esperienza 1  (configurabile attraverso \"min livello di esperienza per l'invio di messaggi\") a creare e rispondere ai messaggi. Nota che lo staff può inviare messaggi in ogni caso."
+    enable_private_email_messages: "Consenti agli utenti a livello di esperienza 4 (configurabile attraverso \"min trust level to send messages\") di inviare messaggi privati via email . Nota che lo staff può inviare messaggi in ogni caso."
     enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
     long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"
@@ -990,8 +994,6 @@ it:
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
-    port: "SOLO PER SVILUPPATORI! ATTENZIONE! Usa questa porta HTTP al posto della porta di default 80. Lascia vuoto per usare il default 80."
-    force_hostname: "SOLO PER SVILUPPATORI! ATTENZIONE! Specifica un hostname nella URL. Lascia vuoto per usare il default."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
     invite_passthrough_hours: "Per quanto tempo un utente può usare una chiave d'invito per connettersi, espresso in ore"
     invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere esplicitamente invitati dallo staff."
@@ -1075,7 +1077,7 @@ it:
     clean_up_uploads: "Elimina i caricamenti orfani per evitare l'hosting di materiale illegale. ATTENZIONE: prima di attivare questa impostazione è meglio effettuare un backup della cartella /uploads."
     clean_orphan_uploads_grace_period_hours: "Dopo quante ore un caricamento orfano (senza riferimenti) viene rimosso."
     purge_deleted_uploads_grace_period_days: "Dopo quanti giorni un caricamento cancellato viene rimosso."
-    purge_unactivated_users_grace_period_days: "Periodo di grazia (in giorni) prima che un utente che non abbia attivato il proprio account venga cancellato."
+    purge_unactivated_users_grace_period_days: "Il periodo di grazia (in giorni) prima che un utente che non ha attivato il suo account venga eliminato. Impostare su 0 per non eliminare mai gli utenti non attivati."
     enable_s3_uploads: "Mette i caricamenti sullo spazio disco Amazon S3. IMPORTANTE: richiede che siano inserite valide credenziali S3 (sia l'access key id sia l'access key secret)."
     s3_use_iam_profile: 'Usa il ruolo AWS EC2 IAM per recuperare le chiavi. NOTA: abilitarla sovrascriverà le impostazioni "s3 access key id" e "s3 secret access key". '
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere tutto minuscolo, senza punti, senza trattini bassi."
@@ -1124,6 +1126,7 @@ it:
     min_trust_to_edit_post: "Il livello di esperienza minimo richiesto per modificare i messaggi."
     min_trust_to_allow_self_wiki: "Il livello di esperienza minimo richiesto per consentire agli utenti di pubblicare una propria wiki."
     min_trust_to_send_messages: "Il livello di esperienza minimo richiesto per creare nuovi messaggi privati."
+    min_trust_to_send_email_messages: " Il livello di esperienza minimo richiesto per inviare nuovi messaggi privati via email (a utenti temporanei)."
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
     newuser_max_images: "Quante immagini può aggiungere ad un messaggio un nuovo utente."
     newuser_max_attachments: "Quanti allegati può aggiungere ad un messaggio un nuovo utente."
@@ -1379,6 +1382,8 @@ it:
       invalid_regex: "Regex non è valido o non è consentito."
       email_editable_enabled: "Prima di attivare questa impostazione, devi disabilitare 'email editable'."
       enable_sso_disabled: "Prima di attivare questa impostazione, devi abilitare 'enable sso'."
+      staged_users_disabled: "Devi abilitare 'staged users' prima di attivare questa impostazione ."
+      reply_by_email_disabled: "Devi abilitare 'reply by email' prima di attivare questa impostazione ."
   search:
     within_post: "n°%{post_number} di %{username}"
     types:
@@ -1979,11 +1984,10 @@ it:
     email_reject_bad_destination_address:
       title: "Email Rifiutata Indirizzo di Destinazione Errato"
       subject_template: "[%{email_prefix}] Problema email -- Sconosciuto A: Indirizzo"
-      text_body_template: |+
-        Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
+      text_body_template: |
+        Spiacenti, ma il tuo messaggio email per %{destination}(intitolato %{former_title}) non ha funzionato.
 
-        Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.
-
+        Nessuno degli indirizzi email di destinazione viene riconosciuto o l'intestazione Message-ID della email è stata modificata. Assicurati di inviare all'indirizzo email corretto fornito dallo staff.
     email_reject_topic_not_found:
       title: "Email Rifiutata Argomento Non Trovato"
       subject_template: "[%{email_prefix}] Problema email -- Argomento Non Trovato"
@@ -2142,7 +2146,7 @@ it:
     invited_group_to_private_message_body: |
       %{username} ha invitato @%{group_name} a partecipare al messaggio
 
-      > #### %{topic_title}
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 

@@ -238,7 +238,6 @@ he:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "בקשת חברות עבור @%{group_name}"
-      body: "ארצה לבקש חברות ב-@%{group_name}."
   education:
     until_posts:
       one: "פוסט אחד"
@@ -870,9 +869,7 @@ he:
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
     title: "שם האתר הזה, כפי שהוא משמש בתגית הכותרת."
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
-    contact_email: "כתובת דוא\"ל של אנשי קשר האחראים לאתר זה. משמשת להתראות חשובות, כמו דגלים שלא טופלו, כמו גם ליצירת קשר בשעת חירום מעמוד האודות."
     contact_url: "כתובת URL ליצירת קשר לעמוד זה. משמשת בטופס ה- /about לעניינים דחופים."
-    queue_jobs: "מפתחים בלבד! אזהרה! כברירת מחדל, שימו עבודות בתור sidekiq. אם מנוטרל, האתר שלכם ישבר."
     crawl_images: "אחזור תמונות מכתובת URL רחוקה כדי להכניס את מימדי האורך והרוחב הנכונים."
     download_remote_images_to_local: "המרת תמונות מרחוק לתמונות מקומיות באמצעות הורדות; למניעת שגיאות של תמונות חסרות"
     download_remote_images_threshold: "שטח האכסון המינימלי (באחוזים) הנדרש להורדת תמונות באופן מקומי"
@@ -887,7 +884,6 @@ he:
     fixed_category_positions: "אם אפשרות זו מסומנת, תוכלו  לארגן את הקטגוריות כך שיופיעו בסדר קבוע. אם האופציות אינן מסומנות, הקטגוריות יסודרו על פי סדר הפעילות שהתבצעה בהן."
     fixed_category_positions_on_create: "אם האפשרות תסומן, סדר הקטגוריות יוגדר בתפריט יצירת נושא (דורש fixed_category_positions)."
     add_rel_nofollow_to_user_content: "הוספת התווית rel nofollow לכל תוכן שפורסם על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל מתחם הורה parent domains). אם תשנו אפשרות זו, עליכם לאפות מחדש את כל הפרסומים עם: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "רשימת דומיינים שלקישורים אליהם לא יתווסף nofollow. לדומיין tld.com אוטומטית יצטרף sub.tld.com גם כן. בתור מינימום, כדאי לכם להוסיף את הדומיין העליון של אתר זה, כדי להקל על זחלני רשת למצוא תוכן. אם חלקים אחרים של האתר שלכם נמצאים בדומיינים אחרים, הוסיפו אותם גם כן."
     post_excerpt_maxlength: "אורך מקסימלי של קטע פוסט / סיכום."
     show_pinned_excerpt_mobile: "הצגת קטע בנושאים נעוצים במבט ניידים."
     show_pinned_excerpt_desktop: "הצגת קטע בנושאים נעוצים בתצוגת מחשב-שולחני."
@@ -972,8 +968,6 @@ he:
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה ב /admin"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסה חדשה של Discourse זמינה."
-    port: "מ-פ-ת-ח-י-ם ב-ל-ב-ד! א-ז-ה-ר-ה! התמשו בפורט זה ל HTTP במקום בפורט 80. השאירו ריק בשביל ברירת המחדל פורט 80."
-    force_hostname: "מ-פ-ת-ח-י-ם ב-ל-ב-ד! א-ז-ה-ר-ה! הגדירו שם שרת ב URL. השאירו ריק בשביל ברירת המחדל."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_passthrough_hours: "כמה זמן, בשעות, יכולים משתמשים לעשות שימוש בהזמנה שנשלחה כדי להתחבר "
     invite_only: "הרשמה פומבית מנוטרלת, כל המשתמשים החדשים חייבים להיות מוזמנים על ידי הצוות."
@@ -1057,7 +1051,6 @@ he:
     clean_up_uploads: "הסירו העלאות יתומות וללא הפניה כדי למנוע אירוח בלתי חוקי של חומר. אזהרה: אתם עלולי לרצות לגבות את תיקיית ה-/uploads שלכם לפנו שתאפשרו הגדרה זו."
     clean_orphan_uploads_grace_period_hours: "תקופת חסד (בשעות) לפני שהעלאות יתומות מוסרות."
     purge_deleted_uploads_grace_period_days: "תקופת חסד (בימים) לפני שהעלאה שהוסרה תמחק."
-    purge_unactivated_users_grace_period_days: "תקופת חסד (בימים) לפני שמשתמשים שלא הפעילו את חשבונם ימחקו."
     enable_s3_uploads: "אחסן העלאות (uploads) על תשתית של Amazon S3. חשוב: מצריך מפתח גישה + מפתח גישה סודי שיהיו חוקיים."
     s3_use_iam_profile: 'השתמש ב-AWS EC2 IAM role על מנת לאחזר מפתחות. שימו לב: איפשור של זה ידרוס את ההגדרות "S3 access key id" וכן את "s3 secret access key".'
     s3_upload_bucket: "שם של Amazon S3 bucket אליו יועלו קבצים. אזהרה: שם זה חייב להיות באותיות קטנות, ללא נקודות וללא קווים תחתונים."
@@ -1267,18 +1260,10 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כולל הדגשת כללי תחביר (syntax). (אזהרה: הכללת שפות רבות מידי עשויה להשפיע על הביצועים) ראו: https://highlightjs.org/static/demo/ להדגמה."
-    feed_polling_enabled: "הטמעה בלבד: האם להטמיע תזרימים של RSS/ATOM כפוסטים."
-    feed_polling_url: "הטמעה בלבד: URL של תזרים RSS/ATOM להטמעה."
-    feed_polling_frequency_mins: "שילוב בלבד: תדירות משיכה"
-    embed_by_username: "שם המשתמש של המשתמש/ת שיוצר את הנושאים המוטמעים."
-    embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהתזרים."
-    embed_title_scrubber: "ביטויים רגולריים כדי לנקות כותרות מוטמעות."
     embed_truncate: "חיתוך הפוסטים המוטמעים."
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
     embed_post_limit: "מספר מקסימלי של פוסטים להטמעה."
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
-    embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
-    embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
     notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר מספר זה של שעות, שילחו הודעה פרטית לצוות. קיבעו ל 0 כדי לנטרל."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו מודעה המבקשת מן המנהלים ליצור עוד נושאים."
     delete_drafts_older_than_n_days: מחקו טיוטות בנות יותר מ (n) ימים.
@@ -1697,20 +1682,6 @@ he:
     post_hidden:
       title: "פוסט חבוי"
       subject_template: "פוסט הוסתר על ידי דגלים של הקהילה"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שפוסט שלכם הוחבא.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        מספר חברי קהילה דיגלו פוסט זה לפני שהוא הוחבא, אז אנא שיקלו לערוך אותו כדי לענות על המשוב שלהם. **אתם יכולים לערוך את הפוסט שלכם לאחר %{edit_delay} דקות, והוא יוצג מחדש אוטומטית.**
-
-        אך עם זאת, אם הפוסט יוחבא שוב על ידי הקהילה, הוא יישאר מוחבא עד לטיפול של חבר צוות - וייתכן ותנקט פעולה נוספת, כולל השהייה אפשרית של החשבון.
-
-        להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         לכמה טיפים זריזים בנוגע להתחלה כמשתמשים חדשים, [קיראו פוסט זה](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -1805,28 +1776,15 @@ he:
     csv_export_failed:
       title: "יצוא CSV נכשל"
       subject_template: "ייצוא הנתונים נכשל"
-      text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_insufficient_trust_level:
       title: "מייל נדחה, רמת אמון לא מספיקה"
       subject_template: "[%{email_prefix}] בעיית מייל -- רמת אמון לא מספיקה"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        לחשבון שלכם אין את רמת האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת מייל זו. אם אתם חושבים שזו טעות, אנא פנו לחבר צוות.
     email_reject_user_not_found:
       title: "מייל נדחה, משתמש לא נמצא"
       subject_template: "[%{email_prefix}] בעיית מייל -- משתמש לא נמצא"
-      text_body_template: |
-        אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        התגובה שלכם נשלחה מכתובת מייל לא ידועה. נסו לשלוח מכתובת מייל אחרת, או ליצור קשר עם חבר צוות.
     email_reject_screened_email:
       title: "מייל נדחה, מייל מסונן"
       subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        התשובה שלכם נשלחה מכתובת מייל חסומה. נסו לשלוח מכתובת מייל אחרת, או צרו קשר עם חבר צוות.
     email_reject_inactive_user:
       title: "מייל נדחה, משתמש לא פעיל"
       subject_template: "[%{email_prefix}] בעיית מייל -- משתמש לא-פעיל"
@@ -1844,17 +1802,9 @@ he:
     email_reject_reply_user_not_matching:
       title: "דחיית מייל משתמש/ת לא מתאימים"
       subject_template: "[%{email_prefix}] בעיית מייל -- נמען לא תואם"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        התשובה שלכם נשלחה מכתובת מייל שונה מזו שציפינו לה, אז אנחנו לא בטוחים אם זה אותו אדם. נסו לשלוח מכתובת מייל אחרת, או ליצור קשר עם חבר צוות.
     email_reject_no_account:
       title: "מייל נדחה, אין חשבון"
       subject_template: "[%{email_prefix}]  בעיית מייל -- חשבון לא מזוהה"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        אנחנו לא מוצאים חשבונות שמתאימים לכתובת המייל שלכם. נסו לשלוח מכתובת מייל אחרת, או צרו קשר עם חבר צוות.
     email_reject_empty:
       title: "מייל נדחה, ריק"
       subject_template: "[%{email_prefix}]  בעיית מייל -- ללא תוכן"
@@ -1874,17 +1824,9 @@ he:
     email_reject_invalid_access:
       title: "דחיית מייל גישה לא-מורשית"
       subject_template: "[%{email_prefix}]  בעיית מייל -- גישה לא תקינה"
-      text_body_template: |
-        אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        לחשבון שלכם אין מספיק הרשאות כדי לפרסם נושאים חדשים בקטגוריה זו. אם אתם מאמינים שזו טעות, צרו קשר עם חבר צוות.
     email_reject_strangers_not_allowed:
       title: "דחיית מייל זרים לא מורשים"
       subject_template: "[%{email_prefix}] בעיית מייל -- גישה לא נכונה"
-      text_body_template: |
-        אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        הקטגוריה ששלחתם אליה את המייל הזה מאפשרת רק תגובות ממשתמשים עם חשבונות תקינים וכתובות מייל ידועות. אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_invalid_post:
       title: "דחיית מייל פוסט לא-תקין"
       subject_template: "[%{email_prefix}] בעיית מייל -- תקלה בפרסום"
@@ -1913,17 +1855,9 @@ he:
     email_reject_reply_key:
       title: "דחיית מייל מפתח תגובה"
       subject_template: "[%{email_prefix}]  בעיית מייל -- תו תגובה לא מוכר"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        מפתח התגובה במייל לא תקין או לא ידוע, אז לא יכולנו להבין למה המייל הזה מגיב. אנא פנו לחבר צוות.
     email_reject_bad_destination_address:
       title: "דחיית מייל כתובת יעד לא-נכונה"
       subject_template: "[%{email_prefix}] בעיית מייל -- כתובת To: לא ידועה"
-      text_body_template: |
-        אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        אף אחד מייעדי המייל לא זוהה. אנא וודאו שאתם שולחים לכתובת המייל הנכונה שניתנה על-ידי הצוות.
     email_reject_topic_not_found:
       title: "דחיית מייל נושא לא נמצא"
       subject_template: "[%{email_prefix}]  בעיית מייל -- לא נמצא נושא"
@@ -2290,10 +2224,6 @@ he:
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
     search_google: "גוגל"
-  login_required:
-    welcome_message: |
-      #[ברוכים הבאים אל %{title}](#welcome)
-      נדרש חשבון. אנא צרו חשבון או התחברו כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
     signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="/tos" target="_blank">תנאי השירות</a>.'
@@ -2885,7 +2815,6 @@ he:
             description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות שלכם</a>."
           site_contact:
             label: "הודעות אוטומטיות"
-            description: "כל הודעות דיסקורס האישיות האוטומטיות יישלחו ממשתמש זה, כמו הודעת הברוכים הבאים שנשלחת לכל משתמש חדש."
       corporate:
         title: "ארגון"
         description: "שמות אלו יוכנסו ל<a href='/privacy' target='blank'>מדיניות הפרטיות</a> שלכם ול<a href='/tos' target='blank'>תנאי השימוש</a>, שתוכלו לערוך בכל זמן בקטגוריית הצוות. אם אין לכם חברה, הרגישו חופשי לדלג על שלב זה לעת עתה."
@@ -2942,7 +2871,6 @@ he:
         description: "איזה סגנון אמוג׳יז תעדיפו לקהילה שלכם? אתם יכולים להוסיף עוד אמוג׳יז מותאמים אישית תחת ניהול, התאמה אישית, אמוג׳י."
       invites:
         title: "הזמינו צוות"
-        description: "כמעט סיימתם! בואו נזמין כמ חברי צוות כדי לסייע <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לזרוע את הדיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלכם."
       finished:
         title: "ה Discourse שלכם מוכן!"
         description: |

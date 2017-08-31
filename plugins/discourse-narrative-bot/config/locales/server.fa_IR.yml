@@ -147,12 +147,6 @@ fa_IR:
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           عالی! این کار برای اکثر پیوندها <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> صدق میکنه. به یاد داشته باش که لینک بایستی در یک خط به تنهایی و بدون پس و پیش قرار بگیرد.
-        not_found: |-
-          متاسفم، نمیتوانم پیوند را در پاسخ شما پیدا کنم.
-
-          میتونی یک بار دیگر لینکی که در ادامه می‌آید را در یک خط جداگانه در پاسخ بعدی ات قرار بدهی؟
-
-          - https://en.wikipedia.org/wiki/Exotic_Shorthair
       images:
         instructions: |-
           این عکسی از اسب تک شاخ است:

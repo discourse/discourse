@@ -385,7 +385,6 @@ sk:
       mentions: "Zmienky"
       messages: "Správy"
       alias_levels:
-        title: "Kto môže poslať správu a @zmieniť túto skupinu?"
         nobody: "Nikto"
         only_admins: "Iba administrátori"
         mods_and_admins: "Iba moderátori a administrátori"
@@ -1099,10 +1098,6 @@ sk:
       select_all: "Označ všetky"
       clear_all: "Odznač všetky"
       too_short: "Vyhladávací termín je príliš krátky."
-      result_count:
-        one: "1 výsledok pre <span class='term'>\"{{term}}\"</span>"
-        few: "{{count}} výsledky pre <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} výsledkov pre <span class='term'>\"{{term}}\"</span>"
       title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
@@ -1939,7 +1934,6 @@ sk:
         hamburger_menu: '<b>=</b> Otvoriť hamburger menu'
         user_profile_menu: '<b>p</b> Otvor užívateľské menu'
         show_incoming_updated_topics: '<b>.</b> Zobraz aktualizované témy'
-        search: '<b>/</b> Hľadať'
         help: '<b>?</b> Pomoc s klávesovými skratkami'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Zahodiť Nové/Príspevky'
         dismiss_topics: '<b>x</b>, <b>t</b> Zahodiť témy'
@@ -2882,10 +2876,6 @@ sk:
       upload: "Načítať"
       uploading: "Načítavam..."
       quit: "Možno neskôr"
-      staff_count:
-        one: "Vaša komunita má 1 člena. "
-        few: "Vaša komunita má %{count} členov. "
-        other: "Vaša komunita má %{count} členov. "
       invites:
         add_user: "pridať"
         none_added: "Neprizvali ste žiadnych členov. Určite chcete pokračovať?"
