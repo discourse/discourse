@@ -150,7 +150,7 @@ createWidget('header-icons', {
 });
 
 createWidget('header-buttons', {
-  tagName: 'span',
+  tagName: 'span.header-buttons',
 
   html(attrs) {
     if (this.currentUser) { return; }
