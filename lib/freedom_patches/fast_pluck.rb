@@ -64,7 +64,7 @@ class ActiveRecord::Relation
         columns_hash.key?(cn) ? arel_table[cn] : cn
       }
 
-      conn.select_raw(relation, nil, relation.arel.bind_values + bind_values) do |result, _|
+      conn.select_raw(relation, nil, relation.bound_attributes) do |result, _|
         result.type_map = SqlBuilder.pg_type_map
         result.nfields == 1 ? result.column_values(0) : result.values
       end

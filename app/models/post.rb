@@ -563,7 +563,7 @@ class Post < ActiveRecord::Base
   before_save do
     self.last_editor_id ||= user_id
 
-    if !new_record? && raw_changed?
+    if !new_record? && will_save_change_to_raw?
       self.cooked = cook(raw, topic_id: topic_id)
     end
 

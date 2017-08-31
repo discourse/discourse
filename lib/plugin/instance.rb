@@ -501,8 +501,8 @@ JS
   end
 
   def reloadable_patch(plugin = self)
-    if Rails.env.development? && defined?(ActionDispatch::Reloader)
-      ActionDispatch::Reloader.to_prepare do
+    if Rails.env.development? && defined?(ActiveSupport::Reloader)
+      ActiveSupport::Reloader.to_prepare do
         # reload the patch
         yield plugin
       end

@@ -1,4 +1,4 @@
-class MoveColumnsToUserStats < ActiveRecord::Migration
+class MoveColumnsToUserStats < ActiveRecord::Migration[4.2]
   def up
     add_column :user_stats, :topics_entered, :integer, default: 0, null: false
     add_column :user_stats, :time_read, :integer, default: 0, null: false

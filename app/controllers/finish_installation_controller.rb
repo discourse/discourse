@@ -1,8 +1,8 @@
 class FinishInstallationController < ApplicationController
-  skip_before_filter :check_xhr, :preload_json, :redirect_to_login_if_required
+  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   layout 'finish_installation'
 
-  before_filter :ensure_no_admins, except: ['confirm_email', 'resend_email']
+  before_action :ensure_no_admins, except: ['confirm_email', 'resend_email']
 
   def index
   end

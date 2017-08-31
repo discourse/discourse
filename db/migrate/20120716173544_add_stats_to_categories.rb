@@ -1,4 +1,4 @@
-class AddStatsToCategories < ActiveRecord::Migration
+class AddStatsToCategories < ActiveRecord::Migration[4.2]
   def change
     add_column :categories, :posts_year, :integer
     add_column :categories, :posts_month, :integer

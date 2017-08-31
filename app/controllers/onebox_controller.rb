@@ -1,7 +1,7 @@
 require_dependency 'oneboxer'
 
 class OneboxController < ApplicationController
-  before_filter :ensure_logged_in
+  before_action :ensure_logged_in
 
   def show
     params.require(:user_id)
@@ -13,7 +13,7 @@ class OneboxController < ApplicationController
     end
 
     # only 1 outgoing preview per user
-    return render(nothing: true, status: 429) if Oneboxer.is_previewing?(params[:user_id])
+    return render(body: nil, status: 429) if Oneboxer.is_previewing?(params[:user_id])
 
     Oneboxer.preview_onebox!(params[:user_id])
 
@@ -25,7 +25,7 @@ class OneboxController < ApplicationController
     }
 
     if preview.blank?
-      render nothing: true, status: 404
+      render body: nil, status: 404
     else
       render plain: preview
     end

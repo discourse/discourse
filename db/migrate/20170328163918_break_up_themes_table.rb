@@ -1,4 +1,4 @@
-class BreakUpThemesTable < ActiveRecord::Migration
+class BreakUpThemesTable < ActiveRecord::Migration[4.2]
   def change
     create_table :theme_fields do |t|
       t.integer :theme_id, null: false

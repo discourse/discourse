@@ -2,7 +2,7 @@ require_dependency 'composer_messages_finder'
 
 class ComposerMessagesController < ApplicationController
 
-  before_filter :ensure_logged_in
+  before_action :ensure_logged_in
 
   def index
     finder = ComposerMessagesFinder.new(current_user, params.slice(:composer_action, :topic_id, :post_id))

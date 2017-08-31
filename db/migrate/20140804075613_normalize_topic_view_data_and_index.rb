@@ -1,4 +1,4 @@
-class NormalizeTopicViewDataAndIndex < ActiveRecord::Migration
+class NormalizeTopicViewDataAndIndex < ActiveRecord::Migration[4.2]
   def change
     remove_index :topic_views, [:topic_id]
     remove_index :topic_views, [:user_id, :topic_id]

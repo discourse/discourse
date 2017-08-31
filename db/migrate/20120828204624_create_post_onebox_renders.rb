@@ -1,4 +1,4 @@
-class CreatePostOneboxRenders < ActiveRecord::Migration
+class CreatePostOneboxRenders < ActiveRecord::Migration[4.2]
   def change
     create_table :post_onebox_renders, id: false do |t|
       t.references :post, null: false

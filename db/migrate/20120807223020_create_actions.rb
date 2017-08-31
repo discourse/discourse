@@ -1,4 +1,4 @@
-class CreateActions < ActiveRecord::Migration
+class CreateActions < ActiveRecord::Migration[4.2]
   def change
     create_table :actions do |t|
 

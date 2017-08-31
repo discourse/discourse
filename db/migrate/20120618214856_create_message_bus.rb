@@ -1,4 +1,4 @@
-class CreateMessageBus < ActiveRecord::Migration
+class CreateMessageBus < ActiveRecord::Migration[4.2]
   def change
     create_table :message_bus do |t|
       t.string :name

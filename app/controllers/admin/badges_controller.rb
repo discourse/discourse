@@ -84,7 +84,7 @@ class Admin::BadgesController < Admin::AdminController
 
   def destroy
     find_badge.destroy
-    render nothing: true
+    render body: nil
   end
 
   private

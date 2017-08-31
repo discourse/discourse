@@ -11,23 +11,11 @@ describe ListController do
     SiteSetting.top_menu = 'latest,-video|new|unread|categories|category/beer'
   end
 
-  describe 'titles for crawler layout' do
-    it 'has no title for the default URL' do
-      xhr :get, Discourse.anonymous_filters[0], _escaped_fragment_: 'true'
-      expect(assigns(:title)).to be_blank
-    end
-
-    it 'has a title for non-default URLs' do
-      xhr :get, Discourse.anonymous_filters[1], _escaped_fragment_: 'true'
-      expect(assigns(:title)).to be_present
-    end
-  end
-
   describe 'indexes' do
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "#{filter}" do
-        before { xhr :get, filter }
+        before { get filter }
         it { is_expected.to respond_with(:success) }
       end
     end
@@ -35,14 +23,14 @@ describe ListController do
     it 'allows users to filter on a set of topic ids' do
       p = create_post
 
-      xhr :get, :latest, format: :json, topic_ids: "#{p.topic_id}"
+      get :latest, format: :json, params: { topic_ids: "#{p.topic_id}" }
       expect(response).to be_success
       parsed = JSON.parse(response.body)
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
     it "doesn't throw an error with a negative page" do
-      xhr :get, :top, page: -1024
+      get :top, params: { page: -1024 }
       expect(response).to be_success
     end
   end
@@ -105,7 +93,7 @@ describe ListController do
       context 'without access to see the category' do
         before do
           Guardian.any_instance.expects(:can_see?).with(category).returns(false)
-          xhr :get, :category_latest, category: category.slug
+          get :category_latest, params: { category: category.slug }
         end
 
         it { is_expected.not_to respond_with(:success) }
@@ -113,7 +101,7 @@ describe ListController do
 
       context 'with access to see the category' do
         before do
-          xhr :get, :category_latest, category: category.slug
+          get :category_latest, params: { category: category.slug }
         end
 
         it { is_expected.to respond_with(:success) }
@@ -121,7 +109,9 @@ describe ListController do
 
       context 'with a link that includes an id' do
         before do
-          xhr :get, :category_latest, category: "#{category.id}-#{category.slug}"
+          get :category_latest, params: {
+            category: "#{category.id}-#{category.slug}"
+          }
         end
 
         it { is_expected.to respond_with(:success) }
@@ -132,7 +122,11 @@ describe ListController do
 
         context "with valid slug" do
           before do
-            xhr :get, :category_latest, parent_category: category.slug, category: child_category.slug, id: child_category.id
+            get :category_latest, params: {
+              parent_category: category.slug,
+              category: child_category.slug,
+              id: child_category.id
+            }
           end
 
           it { is_expected.to redirect_to(child_category.url) }
@@ -140,7 +134,11 @@ describe ListController do
 
         context "with invalid slug" do
           before do
-            xhr :get, :category_latest, parent_category: 'random slug', category: 'random slug', id: child_category.id
+            get :category_latest, params: {
+              parent_category: 'random slug',
+              category: 'random slug',
+              id: child_category.id
+            }
           end
 
           it { is_expected.to redirect_to(child_category.url) }
@@ -151,14 +149,17 @@ describe ListController do
         # One category has another category's id at the beginning of its name
         let!(:other_category) { Fabricate(:category, name: "#{category.id} name") }
 
-        before do
-          xhr :get, :category_latest, category: other_category.slug
-        end
-
-        it { is_expected.to respond_with(:success) }
-
         it 'uses the correct category' do
-          expect(assigns(:category)).to eq(other_category)
+          get :category_latest,
+            params: { category: other_category.slug },
+            format: :json
+
+          expect(response).to be_success
+
+          body = JSON.parse(response.body)
+
+          expect(body["topic_list"]["topics"].first["category_id"])
+            .to eq(other_category.id)
         end
       end
 
@@ -167,7 +168,9 @@ describe ListController do
 
         context 'when parent and child are requested' do
           before do
-            xhr :get, :category_latest, parent_category: category.slug, category: sub_category.slug
+            get :category_latest, params: {
+              parent_category: category.slug, category: sub_category.slug
+            }
           end
 
           it { is_expected.to respond_with(:success) }
@@ -175,7 +178,9 @@ describe ListController do
 
         context 'when child is requested with the wrong parent' do
           before do
-            xhr :get, :category_latest, parent_category: 'not_the_right_slug', category: sub_category.slug
+            get :category_latest, params: {
+              parent_category: 'not_the_right_slug', category: sub_category.slug
+            }
           end
 
           it { is_expected.not_to respond_with(:success) }
@@ -184,7 +189,7 @@ describe ListController do
 
       describe 'feed' do
         it 'renders RSS' do
-          get :category_feed, category: category.slug, format: :rss
+          get :category_feed, params: { category: category.slug }, format: :rss
           expect(response).to be_success
           expect(response.content_type).to eq('application/rss+xml')
         end
@@ -194,28 +199,28 @@ describe ListController do
         it "has a top default view" do
           category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
           described_class.expects(:best_period_with_topics_for).with(anything, category.id, :monthly).returns(:monthly)
-          xhr :get, :category_default, category: category.slug
+          get :category_default, params: { category: category.slug }
           expect(response).to be_success
         end
 
         it "has a default view of nil" do
           category.update_attributes!(default_view: nil)
           described_class.expects(:best_period_for).never
-          xhr :get, :category_default, category: category.slug
+          get :category_default, params: { category: category.slug }
           expect(response).to be_success
         end
 
         it "has a default view of ''" do
           category.update_attributes!(default_view: '')
           described_class.expects(:best_period_for).never
-          xhr :get, :category_default, category: category.slug
+          get :category_default, params: { category: category.slug }
           expect(response).to be_success
         end
 
         it "has a default view of latest" do
           category.update_attributes!(default_view: 'latest')
           described_class.expects(:best_period_for).never
-          xhr :get, :category_default, category: category.slug
+          get :category_default, params: { category: category.slug }
           expect(response).to be_success
         end
       end
@@ -224,13 +229,13 @@ describe ListController do
         render_views
 
         it 'for category default view' do
-          get :category_default, category: category.slug
+          get :category_default, params: { category: category.slug }
           expect(response).to be_success
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
 
         it 'for category latest view' do
-          get :category_latest, category: category.slug
+          get :category_latest, params: { category: category.slug }
           expect(response).to be_success
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
@@ -242,7 +247,7 @@ describe ListController do
     let!(:user) { log_in }
 
     it "should respond with a list" do
-      xhr :get, :topics_by, username: @user.username
+      get :topics_by, params: { username: @user.username }
       expect(response).to be_success
     end
   end
@@ -252,13 +257,13 @@ describe ListController do
 
     it "raises an error when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
-      xhr :get, :private_messages, username: @user.username
+      get :private_messages, params: { username: @user.username }
       expect(response).to be_forbidden
     end
 
     it "succeeds when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
-      xhr :get, :private_messages, username: @user.username
+      get :private_messages, params: { username: @user.username }
       expect(response).to be_success
     end
   end
@@ -268,13 +273,13 @@ describe ListController do
 
     it "raises an error when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
-      xhr :get, :private_messages_sent, username: @user.username
+      get :private_messages_sent, params: { username: @user.username }
       expect(response).to be_forbidden
     end
 
     it "succeeds when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
-      xhr :get, :private_messages_sent, username: @user.username
+      get :private_messages_sent, params: { username: @user.username }
       expect(response).to be_success
     end
   end
@@ -284,26 +289,26 @@ describe ListController do
 
     it "raises an error when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
-      xhr :get, :private_messages_unread, username: @user.username
+      get :private_messages_unread, params: { username: @user.username }
       expect(response).to be_forbidden
     end
 
     it "succeeds when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
-      xhr :get, :private_messages_unread, username: @user.username
+      get :private_messages_unread, params: { username: @user.username }
       expect(response).to be_success
     end
   end
 
   context 'read' do
     it 'raises an error when not logged in' do
-      expect { xhr :get, :read }.to raise_error(Discourse::NotLoggedIn)
+      expect { get :read }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
       before do
         log_in_user(@user)
-        xhr :get, :read
+        get :read
       end
 
       it { is_expected.to respond_with(:success) }
@@ -378,7 +383,7 @@ describe ListController do
     end
 
     it "does not suppress" do
-      get SiteSetting.homepage, category: category_one.id, format: :json
+      get SiteSetting.homepage, params: { category: category_one.id }, format: :json
       expect(response).to be_success
 
       topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
@@ -395,11 +400,11 @@ describe ListController do
       expect(response.body).to match(/plugin\.js/)
       expect(response.body).to match(/plugin-third-party\.js/)
 
-      get :latest, safe_mode: "no_plugins"
+      get :latest, params: { safe_mode: "no_plugins" }
       expect(response.body).not_to match(/plugin\.js/)
       expect(response.body).not_to match(/plugin-third-party\.js/)
 
-      get :latest, safe_mode: "only_official"
+      get :latest, params: { safe_mode: "only_official" }
       expect(response.body).to match(/plugin\.js/)
       expect(response.body).not_to match(/plugin-third-party\.js/)
 

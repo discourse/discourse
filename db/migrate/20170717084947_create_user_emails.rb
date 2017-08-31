@@ -1,6 +1,6 @@
 require_dependency 'column_dropper'
 
-class CreateUserEmails < ActiveRecord::Migration
+class CreateUserEmails < ActiveRecord::Migration[4.2]
   def up
     create_table :user_emails do |t|
       t.integer :user_id, null: false

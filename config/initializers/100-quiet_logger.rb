@@ -2,9 +2,8 @@ Rails.application.config.assets.configure do |env|
   env.logger = Logger.new('/dev/null')
 end
 
-Rails::Rack::Logger.class_eval do
-  def call_with_quiet_assets(env)
-
+module DiscourseRackQuietAssetsLogger
+  def call(env)
     override = false
     if (env['PATH_INFO'].index("/assets/") == 0) ||
        (env['PATH_INFO'].index("mini-profiler-resources") == 0)
@@ -14,11 +13,12 @@ Rails::Rack::Logger.class_eval do
       end
     end
 
-    call_without_quiet_assets(env).tap do
+    super(env).tap do
       if override
         Rails.logger.override_level = nil
       end
     end
   end
-  alias_method_chain :call, :quiet_assets
 end
+
+Rails::Rack::Logger.prepend DiscourseRackQuietAssetsLogger

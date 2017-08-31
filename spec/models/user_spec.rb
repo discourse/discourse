@@ -736,6 +736,10 @@ describe User do
         user.update_last_seen!
       end
 
+      after do
+        $redis.flushall
+      end
+
       it "updates last_seen_at" do
         expect(user.last_seen_at).to be_within_one_second_of(date)
       end

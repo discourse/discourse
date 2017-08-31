@@ -392,7 +392,7 @@ describe Invite do
 
       invites = Invite.find_pending_invites_from(inviter)
 
-      expect(invites.size).to eq(1)
+      expect(invites.length).to eq(1)
       expect(invites.first).to eq pending_invite
     end
   end
@@ -416,7 +416,7 @@ describe Invite do
 
       invites = Invite.find_redeemed_invites_from(inviter)
 
-      expect(invites.size).to eq(1)
+      expect(invites.length).to eq(1)
       expect(invites.first).to eq redeemed_invite
     end
   end

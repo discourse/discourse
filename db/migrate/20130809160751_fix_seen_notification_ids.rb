@@ -1,4 +1,4 @@
-class FixSeenNotificationIds < ActiveRecord::Migration
+class FixSeenNotificationIds < ActiveRecord::Migration[4.2]
   def up
 
     # There was an error where `seen_notification_id` was being updated incorrectly.

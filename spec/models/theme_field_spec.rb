@@ -9,10 +9,11 @@ describe ThemeField do
    badJavaScript(;
 </script>
 HTML
+
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     expect(field.error).not_to eq(nil)
-    field.value = ""
-    field.save!
+
+    field.update!(value: '')
     expect(field.error).to eq(nil)
   end
 

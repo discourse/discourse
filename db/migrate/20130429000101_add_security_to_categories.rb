@@ -1,4 +1,4 @@
-class AddSecurityToCategories < ActiveRecord::Migration
+class AddSecurityToCategories < ActiveRecord::Migration[4.2]
   def change
     add_column :categories, :secure, :boolean, default: false, null: false
 

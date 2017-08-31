@@ -1,4 +1,4 @@
-class AddWhisperSupportToTopics < ActiveRecord::Migration
+class AddWhisperSupportToTopics < ActiveRecord::Migration[4.2]
   def up
     remove_column :topics, :bookmark_count
     remove_column :topics, :off_topic_count

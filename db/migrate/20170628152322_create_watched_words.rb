@@ -1,4 +1,4 @@
-class CreateWatchedWords < ActiveRecord::Migration
+class CreateWatchedWords < ActiveRecord::Migration[4.2]
   def change
     create_table :watched_words do |t|
       t.string  :word,   null: false

@@ -1,6 +1,6 @@
 # This takes all the system avatars out of the upload system, saving us a huge
 # amount of space on backups
-class RemoveSystemAvatarsFromUserAvatars < ActiveRecord::Migration
+class RemoveSystemAvatarsFromUserAvatars < ActiveRecord::Migration[4.2]
   def up
     execute "UPDATE users SET uploaded_avatar_id = NULL WHERE uploaded_avatar_id IN (
       SELECT system_upload_id FROM user_avatars

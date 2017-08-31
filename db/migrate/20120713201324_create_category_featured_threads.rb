@@ -1,4 +1,4 @@
-class CreateCategoryFeaturedThreads < ActiveRecord::Migration
+class CreateCategoryFeaturedThreads < ActiveRecord::Migration[4.2]
   def change
     create_table :category_featured_threads, id: false do |t|
       t.references :category, null: false

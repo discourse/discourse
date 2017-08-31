@@ -1,4 +1,4 @@
-class AddSupportForBouncedEmails < ActiveRecord::Migration
+class AddSupportForBouncedEmails < ActiveRecord::Migration[4.2]
   def change
     add_column :email_logs, :bounced, :boolean, null: false, default: false
     add_column :incoming_emails, :is_bounce, :boolean, null: false, default: false

@@ -1,4 +1,4 @@
-class AddPublicVersionToPosts < ActiveRecord::Migration
+class AddPublicVersionToPosts < ActiveRecord::Migration[4.2]
   def up
     add_column :posts, :public_version, :integer, null: false, default: 1
 

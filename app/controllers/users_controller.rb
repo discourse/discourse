@@ -7,19 +7,19 @@ require_dependency 'admin_confirmation'
 
 class UsersController < ApplicationController
 
-  skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
+  skip_before_action :authorize_mini_profiler, only: [:avatar]
+  skip_before_action :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
+  before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
                                           :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
 
-  before_filter :respond_to_suspicious_request, only: [:create]
+  before_action :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
   #  once that happens you can't log in with social
-  skip_before_filter :verify_authenticity_token, only: [:create]
-  skip_before_filter :redirect_to_login_if_required, only: [:check_username,
+  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :redirect_to_login_if_required, only: [:check_username,
                                                             :create,
                                                             :get_honeypot_value,
                                                             :account_created,
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
       user.user_profile.update_column(:card_image_badge_id, nil)
     end
 
-    render nothing: true
+    render body: nil
   end
 
   def user_preferences_redirect
@@ -99,9 +99,10 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+    attributes = user_params.merge!(custom_fields: params[:custom_fields])
 
     if params[:user_fields].present?
-      params[:custom_fields] = {} unless params[:custom_fields].present?
+      attributes[:custom_fields] = {} unless params[:custom_fields].present?
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
@@ -111,13 +112,13 @@ class UsersController < ApplicationController
         val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
-        params[:custom_fields]["user_field_#{f.id}"] = val
+        attributes[:custom_fields]["user_field_#{f.id}"] = val
       end
     end
 
     json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
       updater = UserUpdater.new(current_user, user)
-      updater.update(params)
+      updater.update(attributes.permit!)
     end
   end
 
@@ -177,11 +178,11 @@ class UsersController < ApplicationController
       user.save!
     end
 
-    render nothing: true
+    render body: nil
   end
 
   def preferences
-    render nothing: true
+    render body: nil
   end
 
   def my_redirect
@@ -345,7 +346,7 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
-      return render nothing: true, status: 500
+      return render body: nil, status: 500
     end
 
     authentication.start
@@ -660,7 +661,7 @@ class UsersController < ApplicationController
     else
       @email_token = @user.email_tokens.unconfirmed.active.first
       enqueue_activation_email
-      render nothing: true
+      render body: nil
     end
   end
 
@@ -848,10 +849,20 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      result = params.permit(:name, :email, :password, :username, :date_of_birth)
-        .merge(ip_address: request.remote_ip,
-               registration_ip_address: request.remote_ip,
-               locale: user_locale)
+      result = params.permit(
+        :name,
+        :email,
+        :password,
+        :username,
+        :date_of_birth,
+        :muted_usernames,
+        :theme_key,
+        :locale
+      ).reverse_merge(
+        ip_address: request.remote_ip,
+        registration_ip_address: request.remote_ip,
+        locale: user_locale
+      )
 
       if !UsernameCheckerService.is_developer?(result['email']) &&
           is_api? &&

@@ -12,7 +12,7 @@ describe Admin::ImpersonateController do
 
     context 'index' do
       it 'returns success' do
-        xhr :get, :index
+        get :index, format: :json
         expect(response).to be_success
       end
     end
@@ -20,17 +20,17 @@ describe Admin::ImpersonateController do
     context 'create' do
 
       it 'requires a username_or_email parameter' do
-        expect { xhr :put, :create }.to raise_error(ActionController::ParameterMissing)
+        expect { put :create, format: :json }.to raise_error(ActionController::ParameterMissing)
       end
 
       it 'returns 404 when that user does not exist' do
-        xhr :post, :create, username_or_email: 'hedonismbot'
+        post :create, params: { username_or_email: 'hedonismbot' }, format: :json
         expect(response.status).to eq(404)
       end
 
       it "raises an invalid access error if the user can't be impersonated" do
         Guardian.any_instance.expects(:can_impersonate?).with(user).returns(false)
-        xhr :post, :create, username_or_email: user.email
+        post :create, params: { username_or_email: user.email }, format: :json
         expect(response).to be_forbidden
       end
 
@@ -38,21 +38,21 @@ describe Admin::ImpersonateController do
 
         it "logs the impersonation" do
           StaffActionLogger.any_instance.expects(:log_impersonate)
-          xhr :post, :create, username_or_email: user.username
+          post :create, params: { username_or_email: user.username }, format: :json
         end
 
         it "changes the current user session id" do
-          xhr :post, :create, username_or_email: user.username
+          post :create, params: { username_or_email: user.username }, format: :json
           expect(session[:current_user_id]).to eq(user.id)
         end
 
         it "returns success" do
-          xhr :post, :create, username_or_email: user.email
+          post :create, params: { username_or_email: user.email }, format: :json
           expect(response).to be_success
         end
 
         it "also works with an email address" do
-          xhr :post, :create, username_or_email: user.email
+          post :create, params: { username_or_email: user.email }, format: :json
           expect(session[:current_user_id]).to eq(user.id)
         end
 

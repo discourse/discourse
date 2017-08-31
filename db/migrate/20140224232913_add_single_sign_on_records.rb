@@ -1,4 +1,4 @@
-class AddSingleSignOnRecords < ActiveRecord::Migration
+class AddSingleSignOnRecords < ActiveRecord::Migration[4.2]
   def change
     create_table :single_sign_on_records do |t|
       t.integer :user_id, null: false

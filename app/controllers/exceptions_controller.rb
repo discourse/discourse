@@ -1,5 +1,5 @@
 class ExceptionsController < ApplicationController
-  skip_before_filter :check_xhr, :preload_json
+  skip_before_action :check_xhr, :preload_json
   before_action :hide_google
 
   def not_found

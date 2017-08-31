@@ -1,4 +1,4 @@
-class AddTopicCustomFields < ActiveRecord::Migration
+class AddTopicCustomFields < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_custom_fields do |t|
       t.integer :topic_id, null: false

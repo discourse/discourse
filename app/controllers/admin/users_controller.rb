@@ -4,7 +4,7 @@ require_dependency 'admin_confirmation'
 
 class Admin::UsersController < Admin::AdminController
 
-  before_filter :fetch_user, only: [:suspend,
+  before_action :fetch_user, only: [:suspend,
                                     :unsuspend,
                                     :refresh_browsers,
                                     :log_out,
@@ -48,7 +48,7 @@ class Admin::UsersController < Admin::AdminController
     @user = User.find_by(id: params[:user_id])
     @user.delete_all_posts!(guardian)
     # staff action logs will have an entry for each post
-    render nothing: true
+    render body: nil
   end
 
   def suspend
@@ -59,7 +59,7 @@ class Admin::UsersController < Admin::AdminController
     @user.revoke_api_key
     StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
     @user.logged_out
-    render nothing: true
+    render body: nil
   end
 
   def unsuspend
@@ -68,7 +68,7 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_at = nil
     @user.save!
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
-    render nothing: true
+    render body: nil
   end
 
   def log_out
@@ -83,14 +83,14 @@ class Admin::UsersController < Admin::AdminController
 
   def refresh_browsers
     refresh_browser @user
-    render nothing: true
+    render body: nil
   end
 
   def revoke_admin
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
     StaffActionLogger.new(current_user).log_revoke_admin(@user)
-    render nothing: true
+    render body: nil
   end
 
   def generate_api_key
@@ -100,7 +100,7 @@ class Admin::UsersController < Admin::AdminController
 
   def revoke_api_key
     @user.revoke_api_key
-    render nothing: true
+    render body: nil
   end
 
   def grant_admin
@@ -112,7 +112,7 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_moderation!(@user)
     @user.revoke_moderation!
     StaffActionLogger.new(current_user).log_revoke_moderation(@user)
-    render nothing: true
+    render body: nil
   end
 
   def grant_moderation
@@ -129,7 +129,7 @@ class Admin::UsersController < Admin::AdminController
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
 
-    render nothing: true
+    render body: nil
   end
 
   def remove_group
@@ -139,7 +139,7 @@ class Admin::UsersController < Admin::AdminController
     group.remove(@user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
 
-    render nothing: true
+    render body: nil
   end
 
   def primary_group
@@ -158,7 +158,7 @@ class Admin::UsersController < Admin::AdminController
 
     @user.save!
 
-    render nothing: true
+    render body: nil
   end
 
   def trust_level
@@ -204,20 +204,20 @@ class Admin::UsersController < Admin::AdminController
       end
     end
 
-    render nothing: true
+    render body: nil
   end
 
   def approve
     guardian.ensure_can_approve!(@user)
     @user.approve(current_user)
-    render nothing: true
+    render body: nil
   end
 
   def approve_bulk
     User.where(id: params[:users]).each do |u|
       u.approve(current_user) if guardian.can_approve?(u)
     end
-    render nothing: true
+    render body: nil
   end
 
   def activate
@@ -234,19 +234,19 @@ class Admin::UsersController < Admin::AdminController
     @user.deactivate
     StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'))
     refresh_browser @user
-    render nothing: true
+    render body: nil
   end
 
   def block
     guardian.ensure_can_block_user! @user
     UserBlocker.block(@user, current_user, keep_posts: true)
-    render nothing: true
+    render body: nil
   end
 
   def unblock
     guardian.ensure_can_unblock_user! @user
     UserBlocker.unblock(@user, current_user)
-    render nothing: true
+    render body: nil
   end
 
   def reject_bulk
@@ -267,7 +267,9 @@ class Admin::UsersController < Admin::AdminController
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
     begin
-      options = params.slice(:delete_posts, :block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+      options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+      options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+
       if UserDestroyer.new(current_user).destroy(user, options)
         render json: { deleted: true }
       else
@@ -298,7 +300,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def sync_sso
-    return render nothing: true, status: 404 unless SiteSetting.enable_sso
+    return render body: nil, status: 404 unless SiteSetting.enable_sso
 
     sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
 

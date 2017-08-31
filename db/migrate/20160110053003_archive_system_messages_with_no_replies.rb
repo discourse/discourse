@@ -1,4 +1,4 @@
-class ArchiveSystemMessagesWithNoReplies < ActiveRecord::Migration
+class ArchiveSystemMessagesWithNoReplies < ActiveRecord::Migration[4.2]
   def up
     # backdate archival of system messages send on behalf of site_contact_user
     execute <<SQL

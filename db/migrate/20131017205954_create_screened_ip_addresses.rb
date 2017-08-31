@@ -1,4 +1,4 @@
-class CreateScreenedIpAddresses < ActiveRecord::Migration
+class CreateScreenedIpAddresses < ActiveRecord::Migration[4.2]
   def change
     create_table :screened_ip_addresses do |t|
       t.column :ip_address, :inet, null: false

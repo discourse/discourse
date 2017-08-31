@@ -1,4 +1,4 @@
-class RenameExpressionColumnsInPosts < ActiveRecord::Migration
+class RenameExpressionColumnsInPosts < ActiveRecord::Migration[4.2]
   def change
     rename_column 'posts', 'expression1_count', 'off_topic_count'
     rename_column 'posts', 'expression2_count', 'offensive_count'

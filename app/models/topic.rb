@@ -83,7 +83,8 @@ class Topic < ActiveRecord::Base
 
   validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
   validate if: :featured_link do
-    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? || Guardian.new.can_edit_featured_link?(category_id)
+    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? ||
+      Guardian.new.can_edit_featured_link?(category_id)
   end
 
   before_validation do
@@ -101,8 +102,8 @@ class Topic < ActiveRecord::Base
   has_many :group_archived_messages, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
 
-  has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
+  has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_users, through: :topic_allowed_users, source: :user
   has_many :queued_posts
 
@@ -125,7 +126,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_timers, dependent: :destroy
 
   has_one :user_warning
-  has_one :first_post, -> { where post_number: 1 }, class_name: Post
+  has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
 
@@ -196,7 +197,7 @@ class Topic < ActiveRecord::Base
   after_save do
     banner = "banner".freeze
 
-    if archetype_was == banner || archetype == banner
+    if archetype_before_last_save == banner || archetype == banner
       ApplicationController.banner_json_cache.clear
     end
 

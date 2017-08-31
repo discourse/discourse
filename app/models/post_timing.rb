@@ -61,8 +61,13 @@ class PostTiming < ActiveRecord::Base
 
   def self.destroy_for(user_id, topic_ids)
     PostTiming.transaction do
-      PostTiming.delete_all(['user_id = ? and topic_id in (?)', user_id, topic_ids])
-      TopicUser.delete_all(['user_id = ? and topic_id in (?)', user_id, topic_ids])
+      PostTiming
+        .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
+        .delete_all
+
+      TopicUser
+        .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
+        .delete_all
     end
   end
 

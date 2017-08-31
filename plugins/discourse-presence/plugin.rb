@@ -97,7 +97,7 @@ after_initialize do
 
   class Presence::PresencesController < ::ApplicationController
     requires_plugin PLUGIN_NAME
-    before_filter :ensure_logged_in
+    before_action :ensure_logged_in
 
     def publish
       data = params.permit(:response_needed,
