@@ -48,14 +48,30 @@
 
 #topic-title {
   .title-wrapper {
-    float: left;
-    width: 90%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    max-width: 450px;
+
+    #edit-title, .tag-chooser, .category-select-box {
+      flex: 1;
+      width: auto;
+    }
+
+    .tag-chooser {
+      width: 100%;
+      max-width: 450px;
+    }
+
+    #edit-title {
+      margin-bottom: 5px;
+
+    }
     .btn-small {
       margin: 0 6px 0 0;
     }
 
     .badge-wrapper {
-      float: left;
       margin-right: 12px;
     }
 

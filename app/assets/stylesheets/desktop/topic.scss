@@ -25,24 +25,23 @@
     margin-top: 6px;
     margin-right: 6px;
   }
-  #edit-title { width: 500px; }
   h1 {
     font-size: 1.8em;
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
   }
-
-
   .topic-statuses {
     margin-top: -2px;
   }
   .select2-container {
     vertical-align: middle;
-    margin-right: 5px;
-    margin-bottom: 2px;
   }
   .private-message-glyph { display: none; }
+  .actions {
+    flex: 1;
+    align-items: center;
+  }
 }
 
 .private-message-glyph {
