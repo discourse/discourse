@@ -349,6 +349,13 @@ http://b.com/#{'a' * 500}
         expect(TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length).to eq(1)
       end
 
+      it 'does not include links from whisper' do
+        url = "https://blog.codinghorror.com/hacker-hack-thyself/"
+        post = Fabricate(:post, raw: "whisper post... #{url}", post_type: Post.types[:whisper])
+        TopicLink.extract_from(post)
+
+        expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
+      end
     end
 
     describe ".duplicate_lookup" do
