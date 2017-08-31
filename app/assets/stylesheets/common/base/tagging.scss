@@ -169,11 +169,16 @@ header .discourse-tag {color: $tag-color }
 }
 
 .tag-chooser {
+  width: 100%;
   margin: 5px 0;
   ul.select2-choices {
     max-height: 40px;
     overflow-y: auto;
   }
+}
+
+.title-wrapper .tag-chooser {
+  width: 500px;
 }
 
 .admin-tag {
