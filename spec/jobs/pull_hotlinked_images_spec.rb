@@ -82,6 +82,7 @@ describe Jobs::PullHotlinkedImages do
       end
 
       it 'replaces image src' do
+        SiteSetting.download_remote_images_threshold = 0
         post = Fabricate(:post, raw: "#{url}")
 
         Jobs::ProcessPost.new.execute(post_id: post.id)
