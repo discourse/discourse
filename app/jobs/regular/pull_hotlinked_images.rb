@@ -25,6 +25,7 @@ module Jobs
       raw = post.raw.dup
       start_raw = raw.dup
       downloaded_urls = {}
+      broken_images, large_images = [], []
 
       extract_images_from(post.cooked).each do |image|
         src = original_src = image['src']
@@ -56,9 +57,11 @@ module Jobs
                   end
                 else
                   log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
+                  large_images << original_src
                 end
               else
                 log(:info, "There was an error while downloading '#{src}' locally for post: #{post_id}")
+                broken_images << original_src
               end
             end
             # have we successfully downloaded that file?
@@ -98,6 +101,28 @@ module Jobs
         post.revise(Discourse.system_user, changes, options)
       elsif downloaded_urls.present?
         post.trigger_post_process(true)
+      elsif broken_images.present? || large_images.present?
+        start_html = post.cooked
+        doc = Nokogiri::HTML::fragment(start_html)
+        images = doc.css("img[src]") - doc.css("img.avatar")
+        images.each do |tag|
+          src = tag['src']
+          if broken_images.include?(src)
+            tag.name = 'span'
+            tag.set_attribute('class', 'broken-image fa fa-chain-broken')
+            tag.remove_attribute('src')
+          elsif large_images.include?(src)
+            tag.name = 'a'
+            tag.set_attribute('href', src)
+            tag.set_attribute('target', '_blank')
+            tag.remove_attribute('src')
+            tag.inner_html = '<span class="large-image fa fa-picture-o"></span>'
+          end
+        end
+        if start_html == post.cooked && doc.to_html != post.cooked
+          post.update_column(:cooked, doc.to_html)
+          post.publish_change_to_clients! :revised
+        end
       end
     end
 
