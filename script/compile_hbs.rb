@@ -2,8 +2,8 @@ ctx = MiniRacer::Context.new(timeout: 15000)
 ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
 ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
 ctx.eval("module = {}; exports = {};");
-ctx.attach("rails.logger.info", proc{|err| puts(">> #{err.to_s}")})
-ctx.attach("rails.logger.error", proc{|err| puts(">> #{err.to_s}")})
+ctx.attach("rails.logger.info", proc { |err| puts(">> #{err.to_s}") })
+ctx.attach("rails.logger.error", proc { |err| puts(">> #{err.to_s}") })
 ctx.eval <<JS
 console = {
   prefix: "",
@@ -22,4 +22,3 @@ if ARGV[0].present?
   js_source = ::JSON.generate(source, quirks_mode: true)
   puts ctx.eval("exports.compile(#{js_source})");
 end
-
