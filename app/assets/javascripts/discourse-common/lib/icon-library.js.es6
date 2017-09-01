@@ -1,6 +1,14 @@
 import { h } from 'virtual-dom';
 let _renderers = [];
 
+const REPLACEMENTS = {
+  'd-tracking': 'circle',
+  'd-muted': 'times-circle',
+  'd-regular': 'circle-o',
+  'd-watching': 'exclamation-circle',
+  'd-watching-first': 'dot-circle-o'
+};
+
 export function renderIcon(renderType, id, params) {
   for (let i=0; i<_renderers.length; i++) {
     let renderer = _renderers[i];
@@ -44,6 +52,8 @@ registerIconRenderer({
   name: 'font-awesome',
 
   string(id, params) {
+    id = REPLACEMENTS[id] || id;
+
     let tagName = params.tagName || 'i';
     let html = `<${tagName} class='${faClasses(id, params)}'`;
     if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
@@ -56,6 +66,8 @@ registerIconRenderer({
   },
 
   node(id, params) {
+    id = REPLACEMENTS[id] || id;
+
     let tagName = params.tagName || 'i';
 
     const properties = {
