@@ -1,98 +1,75 @@
+// Mobile
 // global styles that apply to the Discourse application specifically
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
+// Base Elements
 body {
   background-color: $secondary;
-  textarea {
-    background-color:$secondary;
-  }
 }
 
-// This sets the space between the application content and the edge of the
-// screen. This value is required in 'mobile/header.scss' to set the position
-// of the drop-down menu.
-$mobile-wrapper-padding: 10px;
-.wrap {
-  padding: 0 $mobile-wrapper-padding;
-}
-
-body {
-
-  .boxed {
-    .contents {
-      padding: 10px 0 0 0;
-    }
-    &.white {
-      background-color: $secondary;
-    }
-  }
-  #main {
-    position: relative;
-    img.avatar {
-      &.header {
-        width: 45px;
-        height: 45px;
-      }
-      &.medium {
-        width: 32px;
-        height: 32px;
-      }
-      &.small {
-        width: 25px;
-        height: 25px;
-      }
-      &.tiny {
-        width: 20px;
-        height: 20px;
-      }
-    }
-    .user-list {
-      .user {
-        padding-bottom: 5px;
-      }
-    }
-  }
-  .control-group {
-    margin-bottom: 9px;
-  }
+textarea {
+  background-color:$secondary;
 }
 
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 8px 10px 13px;
+
   p {
     margin: 0 0 10px 0;
+
+    &:last-of-type {
+      margin-bottom:0;
+    }
   }
-  p:last-of-type {
-    margin-bottom:0;
+
+}
+
+h1.page-not-found {
+  line-height: 24px;
+  margin: 5px 0 -5px 0;
+}
+
+h2 {
+  &.popular-topics-title {
+    margin-bottom: 6px;
+    font-size: 1.2em;
   }
+
+  &.recent-topics-title {
+    margin-bottom: 6px;
+    font-size: 1.2em;
+  }
+}
+
+// Common classes
+.wrap {
+  padding: 0 10px;
+}
+
+.boxed {
+  .contents {
+    padding: 10px 0 0 0;
+  }
+}
+
+.control-group {
+  margin-bottom: 9px;
 }
 
 .topic-statuses {
   display: inline-block;
+
   .topic-status {
     i {
       color: $secondary-medium;
     }
   }
-}
-.topic-statuses:empty {
-  display: none;
-}
 
-// Styles used before the user is logged into discourse. For example, activating their
-// account or changing their email.
-
-#simple-container {
-  width: 90%;
-}
-
-// somehow the image logo assumption inherits margins from earlier in the CSS stack
-// we must remove margins for text site titles
-h2#site-text-logo
-{
-  margin: 0 0 0 10px;
+  &:empty {
+    display: none;
+  }
 }
 
 // categories should not be bold on mobile; they fight with the topic title too much
@@ -101,22 +78,6 @@ h2#site-text-logo
 }
 
 .mobile-view .mobile-nav {
-  &.messages-nav, &.notifications-nav, &.activity-nav, &.preferences-nav {
-    position: absolute;
-    right: 0px;
-    top: -55px;
-  }
-}
-
-
-.mobile-view .mobile-nav {
-  a .fa {
-    margin-right: 8px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-  }
-  a {
-    color: $primary;
-  }
   margin: 0;
   padding: 0;
   background: $primary-low;
@@ -125,6 +86,24 @@ h2#site-text-logo
   position: relative;
   width: 45%;
 
+  &.messages-nav,
+  &.notifications-nav,
+  &.activity-nav,
+  &.preferences-nav {
+    position: absolute;
+    right: 0px;
+    top: -55px;
+  }
+
+  a {
+    color: $primary;
+
+    .fa {
+      margin-right: 8px;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+  }
+
   > li > a {
     padding: 8px 10px;
     height: 100%;
@@ -132,6 +111,7 @@ h2#site-text-logo
     box-sizing: border-box;
     display: block;
   }
+
   .d-icon-caret-down {
     position: absolute;
     right: 0px;
@@ -139,81 +119,63 @@ h2#site-text-logo
 
   .drop {
     display: none;
-  }
-  .drop.expanded {
-    left: 0;
-    display: block;
-    position: absolute;
-    z-index: 10000000;
-    background-color: $secondary;
-    width: 100%;
-    list-style: none;
-    margin: 0;
-    padding: 5px;
-    border: 1px solid #eaeaea;
-    box-sizing: border-box;
-    li {
-      margin: 5px 0;
-      padding: 0;
-      a {
-        height: 100%;
-        display: block;
-        padding: 5px 8px;
+    &.expanded {
+      left: 0;
+      display: block;
+      position: absolute;
+      z-index: 10000000;
+      background-color: $secondary;
+      width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 5px;
+      border: 1px solid #eaeaea;
+      box-sizing: border-box;
+
+      li {
+        margin: 5px 0;
+        padding: 0;
+
+        a {
+          height: 100%;
+          display: block;
+          padding: 5px 8px;
+        }
       }
     }
   }
 }
 
 /* page not found styles */
-h1.page-not-found {
-  line-height: 24px;
-  margin: 5px 0 -5px 0;
+.page-not-found {
+  &-topics a.badge-wrapper {
+    margin-left: 8px;
+  }
+
+  &-search h2 {
+    font-size: 1.2em;
+  }
 }
-
-.page-not-found-topics a.badge-wrapper {
-  margin-left: 8px;
-}
-
-h2.popular-topics-title {
-  margin-bottom: 6px;
-  font-size: 1.2em;
-}
-
-h2.recent-topics-title {
-  margin-bottom: 6px;
-  font-size: 1.2em;
-}
-
-.page-not-found-search h2 {
-  font-size: 1.2em;
-}
-
-
 
 .form-vertical {
-  input, textarea, select, .input-prepend, .input-append {
-    display: inline-block;
-    margin-bottom: 0;
-  }
-
   .control-group {
     margin-bottom: 12px;
-    &:before {
-      display: table;
-      content: "";
-    }
-    &:after {
-      display: table;
-      content: "";
-      clear: both;
-    }
   }
-  .control-label {
-    font-weight: bold;
-    font-size: 1.2em;
-    line-height: 2;
-  }
-  .controls {
-    margin-left: 0;
-  }
+}
+
+// Special elements
+#main {
+  position: relative;
+}
+
+// Styles used before the user is logged into discourse. For example, activating
+// their account or changing their email.
+#simple-container {
+  width: 90%;
+}
+
+// somehow the image logo assumption inherits margins from earlier in the CSS
+// stack we must remove margins for text site titles
+h2#site-text-logo {
+  margin: 0 0 0 10px;
 }
