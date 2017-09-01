@@ -7,6 +7,7 @@ const Discourse = Ember.Application.extend({
   rootElement: '#main',
   _docTitle: document.title,
   RAW_TEMPLATES: {},
+  __widget_helpers: {},
 
   getURL(url) {
     if (!url) return url;

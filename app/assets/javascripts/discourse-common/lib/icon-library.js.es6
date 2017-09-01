@@ -23,6 +23,8 @@ export function iconNode(id, params) {
   return renderIcon('node', id, params);
 }
 
+Discourse.__widget_helpers.iconNode = iconNode;
+
 export function registerIconRenderer(renderer) {
   _renderers.unshift(renderer);
 }
