@@ -80,7 +80,8 @@
         font-weight: normal;
         font-size: 1em;
         margin: 5px 0;
-        i:not(:first-of-type) {
+
+        .d-icon:not(:first-of-type) {
           margin-left: 10px;
         }
       }
