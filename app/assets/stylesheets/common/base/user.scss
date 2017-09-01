@@ -1,7 +1,264 @@
 // Common styles for "/user" section
+.user-right {
+  .list-actions {
+    margin-bottom: 10px;
+
+    .btn {
+      margin-right: 10px;
+    }
+  }
+}
+
 .user-main {
   .d-icon-heart {
     color: $love !important;
+  }
+
+  .about {
+    overflow: hidden;
+    width: 100%;
+
+    .secondary {
+      font-size: 0.929em;
+
+      .btn {
+        padding: 3px 12px;
+      }
+
+      dl {
+        margin: 0;
+      }
+
+      dd {
+        padding: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: $primary;
+
+        &.groups {
+          span:after {
+            content: ','
+          }
+          span:last-of-type:after {
+            content:''
+          }
+        }
+      }
+
+      dt {
+        color: $secondary-medium;
+        margin: 0;
+        display: inline-block;
+      }
+    }
+
+    .details {
+      background: rgba($secondary, .85);
+
+      blockquote {
+        background-color: $secondary-low;
+        border-left-color: $secondary-low;
+      }
+
+      h1 {
+        font-size: 2.143em;
+        font-weight: normal;
+        i {font-size: .8em;}
+      }
+
+      h2 {
+        font-size: 1.214em;
+        font-weight: normal;
+        margin-top: 10px;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      h3 {
+        font-weight: normal;
+        font-size: 1em;
+        margin: 5px 0;
+        i:not(:first-of-type) {
+          margin-left: 10px;
+        }
+      }
+
+      .groups {
+        margin-left: 10px;
+        display: inline;
+      }
+
+      img.avatar {
+        float: left;
+      }
+
+      .suspended {
+        color: $danger;
+      }
+
+      .primary {
+        width: 100%;
+        position: relative;
+        float: left;
+
+        h1 {
+          font-weight: bold;
+        }
+
+        .bio {
+          max-height: 300px;
+          overflow: auto;
+
+          a[href] {
+            text-decoration: underline;
+          }
+
+          img {
+            max-width: 100%;
+          }
+        }
+      }
+    }
+
+    .controls {
+      ul {
+        list-style-type: none;
+      }
+
+      a {
+        padding: 5px 10px;
+        margin-bottom: 10px;
+      }
+    }
+
+    &.collapsed-info {
+      .controls {
+        margin-top: 0;
+      }
+
+      .profile-image {
+        height: 0;
+      }
+
+      .details {
+        margin-top: 0;
+        background: rgba($secondary, .85);
+
+        .bio {
+          display: none;
+        }
+
+        .primary {
+          text-align: left;
+          margin-top: 0;
+          width: 100%;
+
+          .avatar {
+            float: left;
+            margin-right: 10px;
+            width: 45px;
+            height: 45px;
+          }
+
+          h1 {
+            font-size: 1.429em;
+          }
+
+          h2 {
+            font-size: 1.071em;
+            margin-top: 4px;
+          }
+
+          h3 {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .staff-counters {
+    text-align: left;
+    background: $primary;
+
+    > div {
+      margin: 0 10px 0 0;
+      display: inline-block;
+      padding: 5px 0;
+      &:first-of-type {
+        padding-left: 10px;
+      }
+      span {
+        padding: 1px 5px;
+        border-radius: 10px;
+      }
+    }
+
+    a {
+      color: $secondary;
+    }
+
+    .active {
+      font-weight: bold;
+    }
+  }
+
+  .pill {
+    border-radius: 15px;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+  }
+
+  .helpful-flags {
+    background-color: green;
+  }
+
+  .flagged-posts {
+    background-color: #E49735;
+  }
+
+  .warnings-received {
+    background-color: #EC441B;
+  }
+
+  .deleted-posts {
+    background-color: #EC441B;
+  }
+
+  .suspensions {
+    background-color: #c22020;
+  }
+
+  .user-field {
+    clear: both;
+    margin-bottom: 10px;
+
+    &.text {
+      padding-top: 18px;
+    }
+
+    .controls {
+      label {
+        width: auto;
+        text-align: left;
+        font-weight: normal;
+        float: auto;
+      }
+
+      .instructions {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-size: 80%;
+        line-height: 1.4em;
+      }
+    }
   }
 }
 
@@ -17,24 +274,26 @@
 .public-user-fields {
   margin-top: 8px;
   margin-bottom: 8px;
+
   .user-field-name {
     font-weight: bold;
   }
-}
 
-.collapsed-info .public-user-fields {
-  display: none;
+  .collapsed-info & {
+    display: none;
+  }
 }
 
 .user-navigation {
-
   .map {
     height: 50px;
   }
+
   .avatar {
     float: left;
     width: 45px;
   }
+
   nav.buttons {
     width: 180px;
     padding: 0;
@@ -44,6 +303,7 @@
       box-sizing: border-box;
     }
   }
+
   h2 {
     a {
       font-size: 1em;
@@ -51,7 +311,6 @@
       cursor: pointer;
     }
   }
-
 }
 
 .user-table {
@@ -78,84 +337,12 @@
   margin-bottom: 15px;
 }
 
-.user-info {
-  display: inline-block;
-  clear: both;
-  margin-bottom: 1em;
-
-  .user-image {
-    float: left;
-    padding-right: 4px;
-  }
-
-  .user-detail {
-    float: left;
-    width: 70%;
-    padding-left: 5px;
-    font-size: 13px;
-
-    .name-line {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .username a {
-      font-weight: bold;
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
-    }
-
-    .name {
-      margin-left: 5px;
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
-    }
-
-    .title {
-      margin-top: 3px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    }
-  }
-}
-
-.user-info.small {
-  width: 333px;
-}
-
-.user-info.medium {
-  width: 480px;
-  min-height: 60px;
-
-  .user-image {
-    width: 55px;
-  }
-  .user-detail {
-    width: 380px;
-  }
-
-  .username, .name {
-    display: block;
-  }
-
-  .name {
-    margin-left: 0;
-  }
-}
-
 .user-nav {
   margin: 5px 0px;
   padding-top: 10px;
 
   li a {
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
-  }
-}
-
-.user-right {
-  .list-actions {
-    margin-bottom: 10px;
-    .btn {
-      margin-right: 10px;
-    }
   }
 }
 
@@ -229,6 +416,11 @@
   .topic-info {
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
   }
+
+  @media all and (max-width : 600px) {
+    float: none;
+    width: 100%;
+  }
 }
 
 .replies-section,
@@ -252,19 +444,62 @@
   }
 }
 
-@media all
-and (max-width : 600px) {
-  .top-sub-section {
-    float: none;
-    width: 100%;
+.groups {
+  .group-link {
+    color: $tertiary;
   }
 }
 
-.user-preferences .tags .select2-container-multi {
-  border: 1px solid $primary-low;
-  width: 540px;
-  border-radius: 0;
-  .select2-choices {
-    border: none;
+.user-preferences {
+  textarea {
+    height: 100px;
+  }
+
+  .static {
+    color: $primary;
+    display: inline-block;
+  }
+
+  .instructions {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    margin-bottom: 10px;
+    font-size: 80%;
+    line-height: 1.4em;
+
+    a[href] {
+      color: $tertiary;
+    }
+  }
+
+  .avatar {
+    margin-left: 3px;
+  }
+
+  .warning {
+    background-color: scale-color($danger, $lightness: 30%);
+    padding: 5px 8px;
+    color: $secondary;
+    width: 520px;
+  }
+
+  .category-notifications .category-controls,
+  .tag-notifications .tag-controls {
+    margin-top: 24px;
+  }
+
+  .tags .select2-container-multi {
+    border: 1px solid $primary-low;
+    width: 540px;
+    border-radius: 0;
+    .select2-choices {
+      border: none;
+    }
+  }
+}
+
+.paginated-topics-list {
+  .user-content {
+    width: 100%;
+    margin-top: 0;
   }
 }
