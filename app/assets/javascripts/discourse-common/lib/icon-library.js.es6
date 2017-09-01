@@ -31,7 +31,10 @@ export function iconNode(id, params) {
   return renderIcon('node', id, params);
 }
 
-Discourse.__widget_helpers.iconNode = iconNode;
+// TODO: Improve how helpers are registered for vdom compliation
+if (typeof Discourse !== "undefined") {
+  Discourse.__widget_helpers.iconNode = iconNode;
+}
 
 export function registerIconRenderer(renderer) {
   _renderers.unshift(renderer);
