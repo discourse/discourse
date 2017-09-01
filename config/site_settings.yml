@@ -940,6 +940,10 @@ security:
   whitelist_internal_hosts:
     default: ''
     type: list
+  allowed_iframes:
+    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?'
+    type: list
+    client: true
 
 onebox:
   enable_flash_video_onebox: false

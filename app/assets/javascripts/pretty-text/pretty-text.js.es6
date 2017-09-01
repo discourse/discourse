@@ -62,6 +62,7 @@ export function buildOptions(state) {
     lookupImageUrls,
     censoredWords,
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
+    allowedIframes: (siteSettings.allowed_iframes || '').split('|'),
     markdownIt: true,
     previewing
   };

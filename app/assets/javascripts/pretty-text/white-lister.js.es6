@@ -9,6 +9,7 @@ export default class WhiteLister {
 
     this._enabled = { "default": true };
     this._allowedHrefSchemes =  (options && options.allowedHrefSchemes) || [];
+    this._allowedIframes = (options && options.allowedIframes) || [];
     this._rawFeatures = [["default", DEFAULT_LIST]];
 
     this._cache = null;
@@ -101,6 +102,10 @@ export default class WhiteLister {
 
   getAllowedHrefSchemes() {
     return this._allowedHrefSchemes;
+  }
+
+  getAllowedIframes() {
+    return this._allowedIframes;
   }
 }
 
