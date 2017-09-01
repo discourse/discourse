@@ -58,19 +58,6 @@
   }
 }
 
-.user-info.medium.badge-info {
-  min-height: 80px;
-
-  .granted-on {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-  }
-
-  .post-link {
-    display: block;
-    margin-top: 0.2em;
-  }
-}
-
 .show-badge .badge-user-info {
   .earned {
     font-size: 1.3em;

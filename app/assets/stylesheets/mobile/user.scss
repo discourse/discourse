@@ -8,140 +8,6 @@
   }
 }
 
-.user-preferences {
-  .control-group {
-    padding: 8px 36px 8px 8px;
-  }
-  textarea {
-    width: 530px;
-    height: 100px;
-  }
-  .static {
-    color: $primary;
-    margin-top: 5px;
-    margin-left: 5px;
-    display: inline-block;
-  }
-  .instructions {
-    color: $primary;
-    margin-top: 5px;
-  }
-  .category-controls {
-    padding-top: 8px;
-  }
-  .avatar {
-    margin-left: 3px;
-  }
-  .instructions a[href] {
-    color: $primary;
-  }
-  .warning {
-    @include border-radius-all(6px);
-    background-color: $danger;
-    padding: 5px 8px;
-    color: $primary;
-    width: 520px;
-  }
-
-  .controls-dropdown {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    padding-left: 5px;
-    select {
-      width: 280px;
-    }
-  }
-
-  .save-button {
-    width: 100%;
-    overflow: auto;
-    max-width: 200px;
-    button {
-      display: block;
-    }
-  }
-
-  .delete-account {
-    overflow: hidden;
-  }
-
-  .checkbox-label {
-    overflow: auto;
-    display: block;
-    width: 100%;
-    padding: 5px 8px;
-  }
-
-  textarea {width: 100%;}
-
-  .desktop-notifications button {
-    float: none;
-  }
-  .apps .controls button {
-    float: right;
-  }
-  .category-notifications .category-controls, .tag-notifications .tag-controls {
-    margin-top: 24px;
-  }
-}
-
-.profile-image {
-  height: 25px;
-  width: 100%;
-}
-
-
-.groups {
-  .group-link {
-    color: $tertiary;
-  }
-}
-
-.hasBackground .details {margin-top: 200px;
-}
-
-.user-preferences {
-  input.category-selector {
-  }
-
-  textarea {
-    height: 100px;
-  }
-
-  input[type=text] {
-    @include small-width {
-    }
-  }
-
-  .static {
-    color: $primary;
-    display: inline-block;
-  }
-  .instructions {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    margin-top: 5px;
-    margin-bottom: 10px;
-    font-size: 80%;
-    line-height: 1.4em;
-  }
-  .avatar {
-    margin-left: 3px;
-  }
-  .instructions a[href] {
-    color: $tertiary;
-  }
-  .warning {
-    background-color: scale-color($danger, $lightness: 30%);
-    padding: 5px 8px;
-    color: $secondary;
-  }
-
-}
-
-.form-horizontal .control-group.category {
-  margin-top: 18px;
-}
-
 .user-main {
 
   table.group-members {
@@ -205,97 +71,30 @@
 
   .about {
     background: dark-light-diff($primary, $secondary, 0%, -75%) center;
-    width: 100%;
     margin-bottom: 10px;
-    overflow: hidden;
     color: $secondary;
 
     .secondary {
       background: $primary-low;
-      font-size: 0.929em;
-
-      .btn { padding: 3px 12px; }
-
-      dl dd {
-        margin: 0 15px 0 5px;
-        padding: 0;
-      }
-
-      dl dt {
-        display: inline-block;
-      }
 
       dl {
         padding: 10px 15px;
-        margin: 0;
       }
 
       dd {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: $primary;
-      }
-
-      dt {
-        color: $secondary-medium;
-        margin: 0;
+        margin: 0 15px 0 5px;
       }
     }
 
     .details {
-      padding: 15px 10px 4px 10px;
-      background: rgba($secondary, .85);
-
-      blockquote {
-        background-color: $secondary-low;
-        border-left-color: $secondary-low;
-      }
+      padding: 15px 0 4px 0;
 
       h1 {
-        font-size: 2.143em;
-        font-weight: normal;
         margin: 10px 0 0 0;
       }
 
-      h2 {
-        font-size: 1.214em;
-        font-weight: normal;
-        margin-top: 10px;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      h3 {
-        font-weight: normal;
-        font-size: 1em;
-        margin: 5px 0;
-        i:not(:first-of-type) {
-          margin-left: 10px;
-        }
-      }
-
-      .groups {
-        margin-left: 10px;
-        display: inline;
-        }
-
-      img.avatar {
-        float: left;
-      }
-
-      .suspended {
-        color: $danger;
-      }
-
       .primary {
-        width: 100%;
-        position: relative;
-        float: left;
         color: $primary;
-
-        h1 {font-weight: bold;}
 
         .primary-textual {
           float: left;
@@ -307,17 +106,7 @@
 
         .bio {
           color: $primary;
-          max-height: 300px;
-          overflow: auto;
           max-width: 700px;
-
-          a[href] {
-            text-decoration: underline;
-          }
-
-          img {
-            max-width: 100%;
-          }
         }
       }
     }
@@ -325,119 +114,26 @@
     .controls {
       float: left;
       padding-left: 15px;
+
       ul {
-        list-style-type: none;
         margin: 0;
       }
+
       a {
-        padding: 5px 10px;
         width: 120px;
-        margin-bottom: 10px;
       }
     }
-  }
 
-  .about.collapsed-info {
-    .controls {
-      margin-top: 0;
-
-    }
-
-    .staff-counters {
-      display: none;
-    }
-    .secondary { display: none; }
-
-    .profile-image {
-      height: 0;
-    }
-
-    .details {
-      padding: 12px 15px 2px 15px;
-      margin-top: 0;
-      background: rgba($secondary, .85);
-      .bio { display: none; }
-
-      .primary {
-        text-align: left;
-        margin-top: 0;
-        width: 100%;
-
-        .avatar {
-          float: left;
-          margin-right: 10px;
-          width: 45px;
-          height: 45px;
-        }
-
-        h1 {
-          font-size: 1.429em;
-        }
-
-        h2 {
-          font-size: 1.071em;
-          margin-top: 4px;
-        }
-
-        h3 {
-          display: none;
-        }
+    &.collapsed-info {
+      .details {
+        padding: 12px 15px 2px 15px;
       }
     }
   }
 
   .staff-counters {
-    text-align: left;
-    background: $primary;
     padding: 7px 0;
     display: inline;
-    > div {
-      margin: 0 10px 0 0;
-      display: inline-block;
-      padding: 5px 0;
-      &:first-of-type {
-        padding-left: 10px;
-        }
-      span {
-        padding: 1px 5px;
-        border-radius: 10px;
-        }
-
-    }
-    a {
-      color: $secondary;
-    }
-    .active {
-      font-weight: bold;
-    }
-  }
-  .pill {
-    border-radius: 15px;
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;
-  }
-  .helpful-flags {
-    background-color: green;
-  }
-  .flagged-posts {
-    background-color: #E49735;
-  }
-  .warnings-received {
-    background-color: #EC441B;
-  }
-  .deleted-posts {
-    background-color: #EC441B;
-  }
-  .suspensions {
-    background-color: #c22020;
-  }
-
-  .user-field.text {
-    padding-top: 18px;
   }
 
   .user-field {
@@ -446,61 +142,96 @@
       text-align: left;
       font-weight: bold;
     }
-    .controls {
-      label {
-        width: auto;
-        text-align: left;
-        font-weight: normal;
-        float: auto;
-      }
-      .instructions {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        margin-top: 5px;
-        margin-bottom: 10px;
-        font-size: 80%;
-        line-height: 1.4em;
-      }
-    }
-    clear: both;
-    margin-bottom: 10px;
   }
+}
+
+.profile-image {
+  height: 25px;
+  width: 100%;
+}
+
+.has-background .details {
+  margin-top: 200px;
+}
+
+.form-horizontal .control-group.category {
+  margin-top: 18px;
 }
 
 .paginated-topics-list {
   margin-top: 20px;
-
-  .user-content {
-    width: 100%;
-    margin-top: 0;
-  }
 }
 
 // mobile fixups for badges
-
 .badge-card.medium {
   width: 300px;
-}
-
-.show-badge-details {
-  margin-bottom: 1em;
 }
 
 .user-badges {
   margin-bottom: 2em;
 }
 
-.show-badge-details .badge-grant-info {
-  display: none;
+.show-badge-details {
+  margin-bottom: 1em;
+
+  .badge-grant-info {
+    display: none;
+  }
 }
 
-.user-info.medium {
-  width: 300px;
-}
+.user-preferences {
+  .control-group {
+    padding: 8px 36px 8px 8px;
+  }
 
-.user-info.medium .user-detail {
-  width: 240px;
-}
+  .static {
+    margin-top: 5px;
+    margin-left: 5px;
+  }
 
-.user-info.medium .user-image {
-  width: auto;
+  .instructions {
+    margin-top: 5px;
+  }
+
+  .category-controls {
+    padding-top: 8px;
+  }
+
+  .controls-dropdown {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding-left: 5px;
+
+    select {
+      width: 280px;
+    }
+  }
+
+  .save-button {
+    width: 100%;
+    overflow: auto;
+    max-width: 200px;
+
+    button {
+      display: block;
+    }
+  }
+
+  .delete-account {
+    overflow: hidden;
+  }
+
+  .checkbox-label {
+    overflow: auto;
+    display: block;
+    width: 100%;
+    padding: 5px 8px;
+  }
+
+  .desktop-notifications button {
+    float: none;
+  }
+  .apps .controls button {
+    float: right;
+  }
 }
