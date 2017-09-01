@@ -2,7 +2,7 @@ function resolve(path) {
   return (path.indexOf('settings') === 0) ? `this.${path}` : path;
 }
 
-function mustacheValue(node) {
+function mustacheValue(node, state) {
   let path = node.path.original;
 
   switch(path) {
@@ -27,8 +27,9 @@ function mustacheValue(node) {
 
       break;
     case 'fa-icon':
+      state.helpersUsed.iconNode = true;
       let icon = node.params[0].value;
-      return `virtualDom.h('i.fa.fa-${icon}')`;
+      return `__iN("${icon}")`;
       break;
     default:
       return `${resolve(path)}`;
@@ -40,6 +41,10 @@ class Compiler {
   constructor(ast) {
     this.idx = 0;
     this.ast = ast;
+
+    this.state = {
+      helpersUsed: {}
+    };
   }
 
   newAcc() {
@@ -69,7 +74,7 @@ class Compiler {
           node.attributes.forEach(a => {
             const name = a.name === 'class' ? 'className' : a.name;
             if (a.value.type === "MustacheStatement") {
-              attributes.push(`"${name}":${mustacheValue(a.value)}`);
+              attributes.push(`"${name}":${mustacheValue(a.value, this.state)}`);
             } else {
               attributes.push(`"${name}":"${a.value.chars}"`);
             }
@@ -87,7 +92,7 @@ class Compiler {
         return `${parentAcc}.push(${JSON.stringify(node.chars)});`;
 
       case "MustacheStatement":
-        const value = mustacheValue(node);
+        const value = mustacheValue(node, this.state);
         if (value) {
           instructions.push(`${parentAcc}.push(${value})`);
         }
@@ -139,7 +144,14 @@ function compile(template) {
   const compiled = preprocessor.preprocess(template);
   const compiler = new Compiler(compiled);
 
-  return `function(attrs, state) { var _r = [];\n${compiler.compile()}\nreturn _r; }`;
+  let code = compiler.compile();
+
+  let imports = '';
+  if (compiler.state.helpersUsed.iconNode) {
+    imports = "var __iN = Discourse.__widget_helpers.iconNode; ";
+  }
+
+  return `function(attrs, state) { ${imports}var _r = [];\n${code}\nreturn _r; }`;
 }
 
 exports.compile = compile;
