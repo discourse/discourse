@@ -443,8 +443,8 @@ en:
         title: "Groups"
         empty: "There are no visible groups."
       title:
-        one: "group"
-        other: "groups"
+        one: "Group"
+        other: "Groups"
       activity: "Activity"
       members: "Members"
       topics: "Topics"
