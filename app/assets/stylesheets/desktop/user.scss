@@ -1,7 +1,17 @@
 // Desktop styles for "/user" section
-.groups {
-  .group-link {
-    color: $tertiary;
+.user-right {
+  display: table-cell;
+
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 10px;
+    }
+  }
+
+  .group-notification-menu {
+    float: right;
+    margin-bottom: 5px;
   }
 }
 
@@ -18,81 +28,6 @@
   }
 }
 
-.user-preferences {
-  display: table-cell;
-  vertical-align: top;
-  padding-top: 10px;
-  padding-left: 30px;
-
-  h3 {
-    color: $primary;
-    margin: 20px 0 10px 0;
-  }
-
-  input.category-selector, input.user-selector, input.tag-chooser {
-    width: 530px;
-  }
-
-  textarea {
-    width: 530px;
-    height: 100px;
-  }
-
-  input[type=text] {
-    @include small-width {
-      width: 450px;
-    }
-  }
-
-  .static {
-    color: $primary;
-    display: inline-block;
-  }
-  .instructions {
-    display: inline-block;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 80%;
-    line-height: 1.4em;
-  }
-  .form-horizontal .instructions {
-    margin-left: 160px;
-  }
-  .avatar {
-    margin-left: 3px;
-  }
-  .instructions a[href] {
-    color: $tertiary;
-  }
-  .warning {
-    background-color: scale-color($danger, $lightness: 30%);
-    padding: 5px 8px;
-    color: $secondary;
-    width: 520px;
-  }
-
-  .pref-mailing-list-mode .controls {
-    select {
-      width: 400px;
-    }
-  }
-
-  .notifications, .category-notifications, .tag-notifications, .user-custom-preferences-outlet {
-    .controls select {
-      width: 280px;
-    }
-  }
-
-  .category-notifications .category-controls, .tag-notifications .tag-controls {
-    margin-top: 24px;
-  }
-}
-
-.user-main .user-preferences .user-field.text {
-  padding-top: 0;
-}
-
 .form-horizontal .control-group.category {
   margin-top: 18px;
 }
@@ -101,6 +36,7 @@
   width: 100%;
   display: table;
   table-layout: fixed;
+
   .wrapper {
     display: table-row;
   }
@@ -135,12 +71,6 @@
         }
       }
     }
-  }
-}
-
-.viewing-self .user-main .about.collapsed-info {
-  .secondary, .staff-counters {
-    display: inherit;
   }
 }
 
@@ -206,8 +136,6 @@
   .about {
     background-position: center center;
     background-size: cover;
-    width: 100%;
-    overflow: hidden;
 
     &.group {
       .details {
@@ -221,108 +149,33 @@
       background: scale-color($secondary, $lightness: -5%);
       border-top: 1px solid $primary-low;
       border-bottom: 1px solid $primary-low;
-      font-size: 0.929em;
-
-      .btn {
-        padding: 3px 12px;
-      }
-
-      dl dd {
-        display: inline;
-        margin: 0 10px 0 0;
-        padding: 0;
-      }
-
-      dl dt {
-        display: inline-block;
-        margin: 0 5px 0 0;
-        padding: 0;
-      }
 
       dl {
-        margin: 0;
         padding: 8px 10px;
       }
 
       dd {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: $primary;
-      }
-
-      dd.groups {
-        span:after {
-          content: ','
-        }
-        span:last-of-type:after {
-          content:''
-        }
+        display: inline;
+        margin: 0 10px 0 0;
       }
 
       dt {
-        color: $secondary-medium;
-        margin: 0;
+        margin: 0 5px 0 0;
+        padding: 0;
       }
     }
 
     .details {
       padding: 0 0 4px 0;
-      background: rgba($secondary, .85);
       margin-top: -200px;
       transition: margin .15s linear;
 
-      blockquote {
-        background-color: $secondary-low;
-        border-left-color: $secondary-low;
-      }
-
-      h1 {
-        font-size: 2.143em;
-        font-weight: normal;
-        i {font-size: .8em;}
-      }
-
-      h2 {
-        font-size: 1.214em;
-        font-weight: normal;
-        margin-top: 10px;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      h3 {
-        font-weight: normal;
-        font-size: 1em;
-        margin: 5px 0;
-        i:not(:first-of-type) {
-          margin-left: 10px;
-        }
-      }
-
-      .groups {
-        margin-left: 10px;
-        display: inline;
-      }
-
       img.avatar {
         margin: 0 20px 10px 0;
-        float: left;
         transition: all .1s linear;
       }
 
-      .suspended {
-        color: $danger;
-      }
-
       .primary {
-        width: 100%;
-        position: relative;
-        float: left;
-
-        h1 {font-weight: bold;}
-
         .primary-textual {
           padding: 3px;
           a[href] {
@@ -331,20 +184,10 @@
         }
 
         .bio {
-          max-height: 300px;
-          overflow: auto;
           max-width: 750px;
-
-          a[href] {
-            text-decoration: underline;
-          }
 
           a.mention {
             text-decoration: none;
-          }
-
-          img {
-            max-width: 100%;
           }
         }
       }
@@ -361,13 +204,9 @@
       float: right;
       text-align: right;
       width: 180px;
-      ul {
-        list-style-type: none;
-      }
+
       a {
-        padding: 5px 10px;
         width: 140px;
-        margin-bottom: 10px;
       }
 
       .right {
@@ -378,176 +217,120 @@
 
     &.collapsed-info {
       .controls {
-        margin-top: 0;
         width: auto;
+
         ul {
-          li {display: inline;}
+
+          li {
+            display: inline;
+          }
+
           a {
             padding: 5px 10px;
             margin-bottom: 10px;
             width: auto;
-            }
+          }
         }
-      }
-
-      .staff-counters {
-        display: none;
-      }
-
-      .secondary {
-        display: none;
-      }
-
-      .profile-image {
-        height: 0;
       }
 
       .details {
         padding: 0 0 2px 0;
-        margin-top: 0;
-        background: rgba($secondary, .85);
         border-bottom: 1px solid $primary-low;
-        .bio {
-          display: none;
-        }
-
-        .primary {
-          text-align: left;
-          margin-top: 0;
-          width: 100%;
-
-          .avatar {
-            float: left;
-            margin-right: 10px;
-            width: 45px;
-            height: 45px;
-          }
-
-          h1 {
-            font-size: 1.429em;
-          }
-
-          h2 {
-            font-size: 1.071em;
-            margin-top: 4px;
-          }
-
-          h3 {
-            display: none;
-          }
-        }
       }
 
       &.has-background {
-        .details {  padding: 12px 15px 2px 15px;}
+        .details {
+          padding: 12px 15px 2px 15px;
+        }
       }
     }
   }
 
   .staff-counters {
-    text-align: left;
-    background: $primary;
     color: $secondary;
     margin-bottom: 20px;
-    a {
-      color: $secondary;
-    }
-    > div {
-      margin: 0 10px 0 0;
-      display: inline-block;
-      padding: 5px 0;
-      &:first-of-type {
-        padding-left: 10px;
-      }
-      span {
-        padding: 1px 5px;
-        border-radius: 10px;
-      }
-    }
-    .active {
-      font-weight: bold;
-    }
-  }
-
-  .pill {
-    border-radius: 15px;
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;
-  }
-  .helpful-flags {
-    background-color: green;
-  }
-  .flagged-posts {
-    background-color: #E49735;
-  }
-  .warnings-received {
-    background-color: #EC441B;
-  }
-  .deleted-posts {
-    background-color: #EC441B;
-  }
-  .suspensions {
-    background-color: #c22020;
-  }
-
-  .user-field.text {
-    padding-top: 18px;
   }
 
   .user-field {
     input[type=text] {
       width: 530px;
     }
+
     .controls {
-      label {
-        width: auto;
-        text-align: left;
-        font-weight: normal;
-        float: auto;
-      }
       .instructions {
         display: block;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-        margin-top: 5px;
-        margin-bottom: 10px;
-        font-size: 80%;
-        line-height: 1.4em;
       }
     }
-    clear: both;
-    margin-bottom: 10px;
   }
+
   .group-notification-menu .dropdown-menu {
     top: 30px;
     bottom: auto;
     left: auto;
     right: 10px;
   }
-}
 
-.paginated-topics-list {
-  .user-content {
-    width: 100%;
-    margin-top: 0;
+  .viewing-self & .about.collapsed-info {
+    .secondary, .staff-counters {
+      display: inherit;
+    }
   }
 }
 
-.user-right {
+.user-preferences {
   display: table-cell;
+  vertical-align: top;
+  padding-top: 10px;
+  padding-left: 30px;
 
-  &,
-  > .user-stream {
-    > .alert:first-child {
-      margin-top: 10px;
+  h3 {
+    color: $primary;
+    margin: 20px 0 10px 0;
+  }
+
+  textarea {
+    width: 530px;
+  }
+
+  input {
+    &.category-selector,
+    &.user-selector,
+    &.tag-chooser {
+      width: 530px;
+    }
+
+    &[type=text] {
+      @include small-width {
+        width: 450px;
+      }
     }
   }
 
-  .group-notification-menu {
-    float: right;
-    margin-bottom: 5px;
+  .instructions {
+    display: inline-block;
+    margin-top: 0;
+  }
+
+  .form-horizontal .instructions {
+    margin-left: 160px;
+  }
+
+  .pref-mailing-list-mode .controls {
+    select {
+      width: 400px;
+    }
+  }
+
+  .notifications,
+  .category-notifications,
+  .tag-notifications,
+  .user-custom-preferences-outlet {
+    .controls select {
+      width: 280px;
+    }
+  }
+
+  .user-main & .user-field.text {
+    padding-top: 0;
   }
 }
