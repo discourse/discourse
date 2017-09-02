@@ -64,37 +64,23 @@ class QueuedPost < ActiveRecord::Base
   end
 
   def approve!(approved_by)
-    created_post = nil
+    created_post = PostCreator.new(user, create_options.merge(skip_validations: true, acting_user: approved_by)).create!
 
-    creator = PostCreator.new(user, create_options.merge(skip_validations: true, skip_jobs: true))
-    revisor = nil
-    QueuedPost.transaction do
+    created_post.revise(
+      User.find(post_options['changes']['editor_id']),
+      post_options['changes'],
+      skip_validations: true,
+      force_new_version: true
+    ) if revised?
+
+    transaction do
+      UserBlocker.unsilence(user, approved_by) if user.silenced?
       change_to!(:approved, approved_by)
-
-      UserSilencer.unsilence(user, approved_by) if user.silenced?
-
-      created_post = creator.create
-
-      unless created_post && creator.errors.blank?
-        raise StandardError.new(creator.errors.full_messages.join(" "))
-      end
-
-      if revised?
-        revisor = PostRevisor.new(created_post)
-        revisor.revise!(
-          User.find(post_options['changes']['editor_id']),
-          post_options['changes'],
-          skip_validations: true,
-          skip_jobs: true,
-          force_new_version: true
-        )
-      end
     end
-
-    # Do sidekiq work outside of the transaction
-    creator.enqueue_jobs
-    revisor.post_process_post if revised?
-
+  rescue
+    PostDestroyer.new(approved_by, created_post).destroy if created_post&.persisted?
+    raise
+  else
     DiscourseEvent.trigger(:approved_post, self, created_post)
     created_post
   end

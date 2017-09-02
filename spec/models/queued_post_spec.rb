@@ -192,6 +192,17 @@ describe QueuedPost do
     end
   end
 
+  context 'approving a post by a blocked user' do
+    let(:blocked_user) { Fabricate(:user, blocked: true) }
+    let(:admin) { Fabricate(:admin) }
+    let(:qp) { Fabricate(:queued_post, user: blocked_user) }
+
+    it 'unblocks a blocked user' do
+      expect {
+        qp.approve!(admin)
+      }.to change { blocked_user.blocked? }.from(true).to(false)
+    end
+  end
   context "visibility" do
     it "works as expected in the invisible queue" do
       qp = Fabricate(:queued_post, queue: 'invisible')
