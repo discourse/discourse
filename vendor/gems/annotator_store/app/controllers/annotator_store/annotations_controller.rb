@@ -61,7 +61,7 @@ module AnnotatorStore
     def format_client_input_to_rails_convention_for_create
       params[:annotation] = {}
       params[:annotation][:version] = params[:annotator_schema_version] unless params[:annotator_schema_version].blank?
-      params[:annotation][:text] = params[:text] unless params[:text].blank?
+      params[:annotation][:text] = params[:text] #unless params[:text].blank?
       params[:annotation][:quote] = params[:quote] unless params[:quote].blank?
       params[:annotation][:uri] = params[:uri] unless params[:uri].blank?
       params[:annotation][:post_id] = params[:post] unless params[:post].blank?
@@ -81,7 +81,7 @@ module AnnotatorStore
     def format_client_input_to_rails_convention_for_update
       params[:annotation] = {}
       params[:annotation][:version] = params[:annotator_schema_version] unless params[:annotator_schema_version].blank?
-      params[:annotation][:text] = params[:text] unless params[:text].blank?
+      params[:annotation][:text] = params[:text] #unless params[:text].blank?
       params[:annotation][:quote] = params[:quote] unless params[:quote].blank?
       params[:annotation][:tag_id] = params[:tags].present? ? get_tag_id : nil
       params[:annotation][:uri] = params[:uri] unless params[:uri].blank?

@@ -14,7 +14,7 @@ module AnnotatorStore
     validates :post, presence: true
     validates :creator, presence: true
     validates :version, presence: true
-    validates :text, presence: true
+    # validates :text, presence: true
     validates :quote, presence: true
     validates :uri, presence: true
   end
