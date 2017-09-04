@@ -20,7 +20,7 @@ if Rails.env.production?
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
-    /^Can't verify CSRF token authenticity$/,
+    /^Can't verify CSRF token authenticity.$/,
 
     # Yandex bot triggers this JS error a lot
     /^Uncaught ReferenceError: I18n is not defined/,
