@@ -4,6 +4,27 @@ RSpec.describe TopicsController do
   let(:topic) { Fabricate(:topic) }
   let(:user) { Fabricate(:user) }
 
+  describe '#timings' do
+    let(:post_1) { Fabricate(:post, topic: topic) }
+
+    it 'should record the timing' do
+      sign_in(user)
+
+      post "/topics/timings.json",
+        topic_id: topic.id,
+        topic_time: 5,
+        timings: { post_1.post_number => 2 }
+
+      expect(response).to be_success
+
+      post_timing = PostTiming.first
+
+      expect(post_timing.topic).to eq(topic)
+      expect(post_timing.user).to eq(user)
+      expect(post_timing.msecs).to eq(2)
+    end
+  end
+
   describe '#timer' do
     context 'when a user is not logged in' do
       it 'should return the right response' do
