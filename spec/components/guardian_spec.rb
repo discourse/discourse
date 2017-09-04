@@ -1653,6 +1653,11 @@ describe Guardian do
       expect(Guardian.new(admin).can_approve?(user)).to be_falsey
     end
 
+    it "returns false when the user is not active" do
+      user.active = false
+      expect(Guardian.new(admin).can_approve?(user)).to be_falsey
+    end
+
     it "allows an admin to approve a user" do
       expect(Guardian.new(admin).can_approve?(user)).to be_truthy
     end
