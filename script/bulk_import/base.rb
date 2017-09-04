@@ -18,7 +18,8 @@ class BulkImport::Base
     @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port])
 
     @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML,
+      Redcarpet::Render::HTML.new(hard_wrap: true),
+      no_intra_emphasis: true,
       fenced_code_blocks: true,
       autolink: true
     )
@@ -579,8 +580,11 @@ class BulkImport::Base
     cooked = @markdown.render(cooked).scrub.strip
 
     cooked.gsub!(/\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[\/QUOTE\]/im) do
-      username, post_id, topic_id = $1, $2, $3
-      quote = @markdown.render($4.presence || "").scrub.strip
+      username, post_id, topic_id, quote = $1, $2, $3, $4
+
+      quote = quote.scrub.strip
+      quote.gsub!(/^(<br>\n?)+/, "")
+      quote.gsub!(/(<br>\n?)+$/, "")
 
       if post_id.present? && topic_id.present?
         <<-HTML
