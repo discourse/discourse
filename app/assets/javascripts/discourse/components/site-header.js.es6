@@ -62,7 +62,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
 
     this.dispatch('notifications:changed', 'user-notifications');
     this.dispatch('header:keyboard-trigger', 'header');
-    this.dispatch('header:keyboard-trigger', 'header');
     this.dispatch('search-autocomplete:after-complete', 'search-term');
 
     this.appEvents.on('dom:clean', () => {
