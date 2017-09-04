@@ -32,9 +32,7 @@ class Theme < ActiveRecord::Base
 
     @dependant_themes = nil
     @included_themes = nil
-  end
 
-  after_save do
     remove_from_cache!
     notify_scheme_change if color_scheme_id_changed?
   end
