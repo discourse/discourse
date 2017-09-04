@@ -95,7 +95,7 @@ class AdminUserIndexQuery
     when 'moderators' then @query.where(moderator: true)
     when 'blocked'    then @query.blocked
     when 'suspended'  then @query.suspended
-    when 'pending'    then @query.not_suspended.where(approved: false)
+    when 'pending'    then @query.not_suspended.where(approved: false, active: true)
     when 'suspect'    then suspect_users
     end
   end
