@@ -139,8 +139,6 @@ class User < ActiveRecord::Base
                        ucf.value::int > 0
                   )', 'master_id') }
 
-  scope :staff, -> { where("admin OR moderator") }
-
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
   # may want to create an index on (active, blocked, suspended_till)?
