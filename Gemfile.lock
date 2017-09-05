@@ -331,6 +331,7 @@ GEM
       ansi
       ast
     ruby-openid (2.7.0)
+    ruby-prof (0.16.2)
     ruby-progressbar (1.8.1)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
@@ -477,6 +478,7 @@ DEPENDENCIES
   rspec-rails
   rtlit
   rubocop
+  ruby-prof
   ruby-readability
   sanitize
   sassc
