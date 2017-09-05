@@ -10,6 +10,7 @@ require_dependency 'pretty_text'
 require_dependency 'url_helper'
 require_dependency 'letter_avatar'
 require_dependency 'promotion'
+require_dependency 'password_validator'
 
 class User < ActiveRecord::Base
   include Searchable
