@@ -245,9 +245,12 @@ class ImportScripts::Nabble < ImportScripts::Base
 
       break if posts.ntuples() < 1
 
+      print '.'
+      $stdout.flush
       next if all_records_exist? :posts, posts.map { |p| p['node_id'].to_i }
 
       create_posts(posts, total: post_count, offset: offset) do |p|
+        puts "Processing #{p['node_id']} for #{p['parent_id']}"
         parent_id = p['parent_id']
         id = p['node_id']
 
@@ -262,14 +265,18 @@ class ImportScripts::Nabble < ImportScripts::Base
 
         raw = body_from(p)
         next unless raw
+        puts "#{'-'*50}\nProcessing #{raw}"
         raw = process_content(raw)
+        puts "#{'-'*50}\nProcessing attachments"
         raw = process_attachments(raw, id)
+        puts "Adding #{id}"
         { id: id,
           topic_id: topic_id,
           user_id: user_id_from_imported_user_id(p['owner_id']) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(p["when_created"])),
           raw: raw,
-          cook_method: Post.cook_methods[:regular] }
+#          cook_method: Post.cook_methods[:regular]
+        }
       end
     end
   end
