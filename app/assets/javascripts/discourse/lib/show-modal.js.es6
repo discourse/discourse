@@ -7,7 +7,7 @@ export default function(name, opts) {
   const route = container.lookup('route:application');
   const modalController = route.controllerFor('modal');
 
-  modalController.set('modalClass', null);
+  modalController.set('modalClass', opts.modalClass);
 
   const controllerName = opts.admin ? `modals/${name}` : name;
 

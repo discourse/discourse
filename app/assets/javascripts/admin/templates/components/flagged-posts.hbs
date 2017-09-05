@@ -1,16 +1,16 @@
-{{#if model.length}}
-  {{#load-more selector="tbody tr" action="loadMore"}}
+{{#if flaggedPosts}}
+  {{#load-more selector=".flagged-post" action=(action "loadMore")}}
     <table class="admin-flags">
       <thead>
         <tr>
           <th class='excerpt'></th>
           <th class='flaggers'>{{i18n 'admin.flags.flagged_by'}}</th>
-          <th class='flaggers'>{{#if adminOldFlagsView}}{{i18n 'admin.flags.resolved_by'}}{{/if}}</th>
+          <th class='flaggers'>{{#if showResolvedBy}}{{i18n 'admin.flags.resolved_by'}}{{/if}}</th>
         </tr>
       </thead>
       <tbody>
-        {{#each content as |flaggedPost|}}
-          <tr class={{flaggedPost.extraClasses}}>
+        {{#each flaggedPosts as |flaggedPost|}}
+          <tr class="flagged-post {{flaggedPost.extraClasses}}">
 
             <td class='excerpt'>
 
@@ -24,7 +24,7 @@
                       {{/if}}
                     {{/if}}
                   {{/if}}
-                  {{#if adminActiveFlagsView}}
+                  {{#if canAct}}
                     {{#if flaggedPost.previous_flags_count}}
                       <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
                     {{/if}}
@@ -68,7 +68,7 @@
                           {{flagger.user.username}}
                         {{/link-to}}
                         {{format-age flagger.flaggedAt}}
-                        <br />
+                        <br>
                         {{flagger.flagType}}
                       </td>
                     </tr>
@@ -78,7 +78,7 @@
             </td>
 
             <td class='flaggers result'>
-              {{#if adminOldFlagsView}}
+              {{#if showResolvedBy}}
                 <table>
                   <tbody>
                     {{#each flaggedPost.flaggers as |flagger|}}
@@ -140,22 +140,20 @@
             </tr>
           {{/each}}
 
-          {{#unless adminOldFlagsView}}
+          {{#if canAct}}
             <tr>
               <td colspan="3" class="action">
-                {{#if adminActiveFlagsView}}
                 <button title='{{i18n 'admin.flags.agree_title'}}' class='btn' {{action "showAgreeFlagModal" flaggedPost}}>{{d-icon "thumbs-o-up"}}{{i18n 'admin.flags.agree'}}&hellip;</button>
-                  {{#if flaggedPost.postHidden}}
-                  <button title='{{i18n 'admin.flags.disagree_flag_unhide_post_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag_unhide_post'}}</button>
-                  {{else}}
-                  <button title='{{i18n 'admin.flags.disagree_flag_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag'}}</button>
-                  {{/if}}
-                  <button title='{{i18n 'admin.flags.defer_flag_title'}}' class='btn' {{action "deferFlags" flaggedPost}}>{{d-icon "external-link"}}{{i18n 'admin.flags.defer_flag'}}</button>
-                  <button title='{{i18n 'admin.flags.delete_title'}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}>{{d-icon "trash-o"}}{{i18n 'admin.flags.delete'}}&hellip;</button>
+                {{#if flaggedPost.postHidden}}
+                <button title='{{i18n 'admin.flags.disagree_flag_unhide_post_title'}}' class='btn' {{action "disagree" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag_unhide_post'}}</button>
+                {{else}}
+                <button title='{{i18n 'admin.flags.disagree_flag_title'}}' class='btn' {{action "disagree" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag'}}</button>
                 {{/if}}
+                <button title='{{i18n 'admin.flags.defer_flag_title'}}' class='btn' {{action "defer" flaggedPost}}>{{d-icon "external-link"}}{{i18n 'admin.flags.defer_flag'}}</button>
+                <button title='{{i18n 'admin.flags.delete_title'}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}>{{d-icon "trash-o"}}{{i18n 'admin.flags.delete'}}&hellip;</button>
               </td>
             </tr>
-          {{/unless}}
+          {{/if}}
 
         {{/each}}
 

@@ -1,30 +1,20 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  adminFlagsList: Ember.inject.controller(),
+  removeAfter: null,
 
   actions: {
     deletePostDeferFlag() {
-      const adminFlagController = this.get("adminFlagsList");
-      const post = this.get("content");
-
-      return post.deferFlags(true).then(() => {
-        adminFlagController.get('model').removeObject(post);
-        this.send("closeModal");
-      }, function () {
-        bootbox.alert(I18n.t("admin.flags.error"));
+      let flaggedPost = this.get('model');
+      this.removeAfter(flaggedPost.deferFlags(true), flaggedPost).then(() => {
+        this.send('closeModal');
       });
     },
 
     deletePostAgreeFlag() {
-      const adminFlagController = this.get("adminFlagsList");
-      const post = this.get("content");
-
-      return post.agreeFlags("delete").then(() => {
-        adminFlagController.get('model').removeObject(post);
-        this.send("closeModal");
-      }, function () {
-        bootbox.alert(I18n.t("admin.flags.error"));
+      let flaggedPost = this.get('model');
+      this.removeAfter(flaggedPost.agreeFlags('delete'), flaggedPost).then(() => {
+        this.send('closeModal');
       });
     }
   }
