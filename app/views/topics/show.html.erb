@@ -4,14 +4,17 @@
         nav#bar, header, footer {
             display: none;
         }
+
         body {
             padding-bottom: 70px;
         }
+
         .annotator-editor textarea {
-            display:none !important;
+            display: none !important;
         }
+
         .annotator-viewer .annotator-controls + div {
-             display:none;
+            display: none;
         }
     </style>
 <% end %>
@@ -61,13 +64,17 @@
 
 <%- if include_crawler_content? %>
 
-    <% @topic_view.posts.each do |post| %>
-
-        <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
+    <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
+    <% if params[:oe].present? %>
         <script>
             var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.where(creator_id: current_user.id)).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
         </script>
+    <% end %>
+    <%# -------------------------------------- -%>
 
+    <% @topic_view.posts.each do |post| %>
+
+        <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
         <% if params[:oe].present? %>
             <script>
                 jQuery(function ($) {
@@ -77,11 +84,11 @@
                     $('#post-<%= post.id %>').data('annotator').plugins.Tags.input.autocomplete({
                         source: availableTags,
                         minLength: 0,
-                        open: function(){
+                        open: function () {
                             $(this).autocomplete('widget').css('z-index', 10000);
                             return false;
                         }
-                    }).focus(function(){
+                    }).focus(function () {
                         $(this).data("uiAutocomplete").search($(this).val());
                     });
 

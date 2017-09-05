@@ -13,7 +13,6 @@ class Administration::ApplicationController < Administrate::ApplicationControlle
   before_filter :ensure_staff
 
 
-
   private
 
   def ensure_logged_in

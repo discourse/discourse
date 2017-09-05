@@ -1,7 +1,34 @@
-
 # https://github.com/thoughtbot/administrate/blob/master/app/controllers/administrate/application_controller.rb
 #
 class Administration::AnnotatorStore::TagsController < Administration::ApplicationController
+
+
+  def index
+    scope = if params[:search].present?
+              scoped_resource
+            else
+              # tree view
+              s = resource_class.where(ancestry: nil)
+              s = s.where(creator_id: params[:creator_id]) if params[:creator_id].present?
+              s
+            end
+
+    search_term = params[:search].to_s.strip
+    resources = Administrate::Search.new(scope,
+                                         dashboard_class,
+                                         search_term).run
+    resources = resources.includes(*resource_includes) if resource_includes.any?
+    resources = order.apply(resources)
+    resources = resources.page(params[:page]).per(records_per_page)
+    page = Administrate::Page::Collection.new(dashboard, order: order)
+
+    render locals: {
+             resources: resources,
+             search_term: search_term,
+             page: page,
+             show_search_bar: show_search_bar?
+           }
+  end
 
 
   def create
@@ -21,7 +48,6 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
   end
 
 
-
   def update
     if requested_resource.update(resource_params)
       redirect_to(
@@ -34,7 +60,6 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
                   }
     end
   end
-
 
 
   # Overwrite any of the RESTful controller actions to implement custom behavior
@@ -53,16 +78,10 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
   # def find_resource(param)
   #   Foo.find_by!(slug: param)
   # end
-  #
-  # Override this if you have certain roles that require a subset
-  # this will be used to set the records shown on the `index` action.
-  # def scoped_resource
-  #  if current_user.super_admin?
-  #    resource_class
-  #  else
-  #    resource_class.with_less_stuff
-  #  end
-  # end
 
+
+  def records_per_page
+    params[:per_page] || 100
+  end
 
 end

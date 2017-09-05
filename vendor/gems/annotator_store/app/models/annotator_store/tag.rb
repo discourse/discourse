@@ -9,7 +9,7 @@ module AnnotatorStore
     has_many :annotations, dependent: :destroy
 
     # Validations
-    validates :name, presence: true, uniqueness: {scope: :ancestry, case_sensitive: false}
+    validates :name, presence: true, uniqueness: {scope: [:ancestry, :creator_id], case_sensitive: false}
     validates :creator, presence: true
 
   end

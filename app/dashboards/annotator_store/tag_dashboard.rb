@@ -28,7 +28,7 @@ module AnnotatorStore
     COLLECTION_ATTRIBUTES = [
       :id,
       :name,
-      # :creator,
+      :creator,
     ].freeze
 
     # SHOW_PAGE_ATTRIBUTES

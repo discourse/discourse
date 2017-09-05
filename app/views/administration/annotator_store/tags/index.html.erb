@@ -45,7 +45,7 @@ It renders the `_table` partial to display details about the resources.
     <%= link_to(
                 "#{t("administrate.actions.new")} Tag",
                 [:new, namespace, page.resource_path],
-                class: "button",
+                class: "button"
         ) if valid_action? :new %>
   </div>
 </header>
@@ -53,8 +53,29 @@ It renders the `_table` partial to display details about the resources.
 <section class="main-content__body main-content__body--flush">
   <% if params[:search].present? %>
       <%= render("collection", collection_presenter: page, resources: resources, table_title: "page-title") %>
-      <%= paginate resources %>
   <% else %>
-      <%= render 'tree', tags: AnnotatorStore::Tag.where(ancestry: nil).order(:name).all %>
+      <style type="text/css">
+          .filter-nav {
+              margin: 0 0 20px 40px;
+          }
+        .filter-nav a {
+            margin-right:10px;
+            font-size: 80%;
+        }
+        .filter-nav a.active {
+            color:#333;
+            text-decoration:none;
+        }
+      </style>
+
+      <div class="filter-nav">
+        <%= link_to 'Any Creator', params.except(:page).deep_merge(creator_id: nil), class: (params[:creator_id].present? ? '' : 'active') %>
+        <% User.where(id: AnnotatorStore::Tag.select(:creator_id).uniq.pluck(:creator_id)).order(:name).each do |model| %>
+            <%= link_to "by #{model.username}", params.except(:page).deep_merge(creator_id: model.id), class: (params[:creator_id] == model.id.to_s ? 'active' : '') %>
+        <% end %>
+      </div>
+
+      <%= render 'tree', tags: resources %>
   <% end %>
+  <%= paginate resources %>
 </section>

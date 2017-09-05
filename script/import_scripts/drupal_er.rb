@@ -56,6 +56,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # normalize_urls
     # post_process_posts
 
+    import_taxonomy_tags
 
     # Reset "New" topics counter for all users.
     # User.find_each {|u| u.user_stat.update_column(:new_since, Time.now) }
@@ -646,6 +647,27 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         results = @client.query(sql, cache_rows: false)
 
         DiscourseTagging.tag_topic_by_names(topic, Guardian.new(Discourse.system_user), [topic_type] + results.map { |row| row['name'] }, append: true)
+      end
+    end
+  end
+
+
+  def import_taxonomy_tags
+    sql = "SELECT * from taxonomy_term_data WHERE vid = 6 and name != ''"
+    results = @client.query(sql, cache_rows: false)
+    results.each do |row|
+      AnnotatorStore::Tag.create!(
+        name: row['name'],
+        creator_id: user_id_from_imported_user_id(row['uid']) || -1
+      )
+    end
+
+    sql = "select td2.name parent, td.name child from taxonomy_term_hierarchy th, taxonomy_term_data td, taxonomy_term_data td2 where td.tid = th.tid and td2.tid = th.parent"
+    results = @client.query(sql, cache_rows: false)
+    results.each do |row|
+      if t = AnnotatorStore::Tag.find_by(name: row['child'])
+        t.parent = AnnotatorStore::Tag.find_by(name: row['parent'])
+        t.save!
       end
     end
   end
