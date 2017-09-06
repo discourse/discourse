@@ -28,23 +28,23 @@ createWidget('header-notifications', {
   },
 
   html(attrs) {
-    const { currentUser } = this;
+    const { user } = attrs;
 
     const contents = [ avatarImg(this.settings.avatarSize, {
-      template: currentUser.get('avatar_template'),
-      username: currentUser.get('username')
+      template: user.get('avatar_template'),
+      username: user.get('username')
     }) ];
 
-    const unreadNotifications = currentUser.get('unread_notifications');
+    const unreadNotifications = user.get('unread_notifications');
     if (!!unreadNotifications) {
       contents.push(this.attach('link', { action: attrs.action,
                                           className: 'badge-notification unread-notifications',
                                           rawLabel: unreadNotifications }));
     }
 
-    const unreadPMs = currentUser.get('unread_private_messages');
+    const unreadPMs = user.get('unread_private_messages');
     if (!!unreadPMs) {
-      if (!currentUser.get('read_first_notification')) {
+      if (!user.get('read_first_notification')) {
         contents.push(h('span.ring'));
         if (!attrs.active && attrs.ringBackdrop) {
           contents.push(h('span.ring-backdrop-spotlight'));
@@ -72,9 +72,7 @@ createWidget('user-dropdown', jQuery.extend({
   },
 
   html(attrs) {
-    const { currentUser } = this;
-
-    return h('a.icon', { attributes: { href: currentUser.get('path'), 'data-auto-route': true } },
+    return h('a.icon', { attributes: { href: attrs.user.get('path'), 'data-auto-route': true } },
              this.attach('header-notifications', attrs));
   }
 }, dropdown));
@@ -106,7 +104,7 @@ createWidget('header-dropdown', jQuery.extend({
 }, dropdown));
 
 createWidget('header-icons', {
-  tagName: 'ul.icons.clearfix',
+  tagName: 'ul.icons.d-header-icons.clearfix',
 
   buildAttributes() {
     return { role: 'navigation' };
@@ -139,10 +137,13 @@ createWidget('header-icons', {
                    });
 
     const icons = [search, hamburger];
-    if (this.currentUser) {
-      icons.push(this.attach('user-dropdown', { active: attrs.userVisible,
-                                                action: 'toggleUserMenu',
-                                                ringBackdrop: attrs.ringBackdrop }));
+    if (attrs.user) {
+      icons.push(this.attach('user-dropdown', {
+        active: attrs.userVisible,
+        action: 'toggleUserMenu',
+        ringBackdrop: attrs.ringBackdrop,
+        user: attrs.user
+      }));
     }
 
     return icons;
@@ -204,7 +205,8 @@ export default createWidget('header', {
                                                   userVisible: state.userVisible,
                                                   searchVisible: state.searchVisible,
                                                   ringBackdrop: state.ringBackdrop,
-                                                  flagCount: attrs.flagCount })];
+                                                  flagCount: attrs.flagCount,
+                                                  user: this.currentUser })];
 
     if (state.searchVisible) {
       const contextType = this.searchContextType();

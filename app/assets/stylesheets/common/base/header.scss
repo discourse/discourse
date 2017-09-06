@@ -46,106 +46,117 @@
     margin-left: 7px;
   }
 
-  .icons {
+  .d-header-icons {
     float: right;
-    text-align: center;
-    margin: 0 0 0 5px;
-    list-style: none;
-
-    > li {
-      float: left;
-    }
-    .icon {
-      display: block;
-      padding: 3px;
-      color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
-      text-decoration: none;
-      cursor: pointer;
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
-      transition: all linear .15s;
-
-
-      &:hover {
-        color: $primary;
-        background-color:  $primary-low;
-        border-top: 1px solid transparent;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-      }
-      &:active {
-        color: $primary;
-        background-color: $primary-low;
-      }
-    }
-    .drop-down-visible & {
-      .active .icon {
-        position: relative;
-        color: #7b7b7b;
-        background-color: $secondary;
-        cursor: default;
-        border-top: 1px solid $primary-low;
-        border-left: 1px solid $primary-low;
-        border-right: 1px solid $primary-low;
-
-        .badge-notification {
-          top: -10px;
-        }
-
-        .flagged-posts {
-          right: 24px;
-        }
-
-        &:after {
-          display: block;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          z-index: 1101;
-          width: 100%;
-          height: 0;
-          content: "";
-          border-top: 1px solid $secondary;
-        }
-        &:hover {
-          border-bottom: none;
-        }
-      }
-    }
-
-    .d-icon {
-      width: 32px;
-      height: 32px;
-      font-size: 1.714em;
-      line-height: 32px;
-      display: inline-block;
-    }
-    .notifications {
-      position: relative;
-    }
-    .badge-notification, .ring {
-      position: absolute;
-      top: -9px;
-      z-index: 1;
-      margin-left: 0;
-    }
-    .unread-notifications {
-      right: 0;
-      background-color: scale-color($tertiary, $lightness: 50%);
-    }
-    .unread-private-messages, .ring {
-      right: 25px;
-    }
-    .flagged-posts {
-      right: 65px;
-    }
-  }
-  .flagged-posts, .queued-posts {
-    background: $danger;
   }
 }
 
+.d-header-icons {
+  text-align: center;
+  margin: 0 0 0 5px;
+  list-style: none;
+
+  .flagged-posts, .queued-posts {
+    background: $danger;
+  }
+
+  > li {
+    float: left;
+  }
+  .icon {
+    display: block;
+    padding: 3px;
+    color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
+    text-decoration: none;
+    cursor: pointer;
+    border-top: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    transition: all linear .15s;
+
+
+    &:hover {
+      color: $primary;
+      background-color:  $primary-low;
+      border-top: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+    }
+    &:active {
+      color: $primary;
+      background-color: $primary-low;
+    }
+  }
+  .drop-down-visible & {
+    .active .icon {
+      position: relative;
+      color: #7b7b7b;
+      background-color: $secondary;
+      cursor: default;
+      border-top: 1px solid $primary-low;
+      border-left: 1px solid $primary-low;
+      border-right: 1px solid $primary-low;
+
+      .badge-notification {
+        top: -10px;
+      }
+
+      .flagged-posts {
+        right: 24px;
+      }
+
+      &:after {
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1101;
+        width: 100%;
+        height: 0;
+        content: "";
+        border-top: 1px solid $secondary;
+      }
+      &:hover {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .d-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1.714em;
+    line-height: 32px;
+    display: inline-block;
+  }
+  .notifications {
+    position: relative;
+  }
+  .ring {
+    position: absolute;
+    top: -9px;
+    z-index: 1;
+    margin-left: 0;
+  }
+  .header-dropdown-toggle {
+    position: relative;
+  }
+  .badge-notification {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: -9px;
+  }
+  .unread-notifications {
+    left: auto;
+    right: 0;
+    background-color: scale-color($tertiary, $lightness: 50%);
+  }
+  .unread-private-messages, .ring {
+    left: auto;
+    right: 25px;
+  }
+}
 
 .highlight-strong {
   background-color: $highlight-medium;
