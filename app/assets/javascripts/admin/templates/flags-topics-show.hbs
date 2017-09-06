@@ -1,0 +1,11 @@
+<div class='flagged-topic-details'>
+  <div class='topic-title'>
+    {{topic-status topic=topic}}
+    <h1>{{{topic.fancyTitle}}}</h1>
+  </div>
+
+  {{plugin-outlet name="flagged-topic-details-header" args=(hash topic=topic)}}
+</div>
+<div class='topic-flags'>
+  {{flagged-posts flaggedPosts=flaggedPosts filter="active"}}
+</div>

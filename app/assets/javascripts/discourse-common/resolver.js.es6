@@ -194,7 +194,6 @@ export function buildResolver(baseName) {
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
       var decamelized = parsedName.fullNameWithoutType.decamelize();
-
       if (decamelized.indexOf('components') === 0) {
         const compTemplate = Ember.TEMPLATES['admin/templates/' + decamelized];
         if (compTemplate) { return compTemplate; }

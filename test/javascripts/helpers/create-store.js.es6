@@ -13,7 +13,6 @@ export default function() {
         if (type === "adapter:rest") {
           if (!this._restAdapter) {
             this._restAdapter = RestAdapter.create({ owner: this });
-            // this._restAdapter.container = this;
           }
           return this._restAdapter;
         }

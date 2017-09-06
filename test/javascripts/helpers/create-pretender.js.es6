@@ -323,6 +323,14 @@ export default function() {
       ]);
     });
 
+    this.get('/admin/flagged_topics', () => {
+      return response(200, {
+        "flagged_topics": [
+          { id: 1 }
+        ]
+      });
+    });
+
     this.get('/admin/customize/site_texts', request => {
 
       if (request.queryParams.overridden) {

@@ -188,11 +188,14 @@ Discourse::Application.routes.draw do
 
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
+    get "flags/topics/:topic_id" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
     post "flags/disagree/:id" => "flags#disagree"
     post "flags/defer/:id" => "flags#defer"
 
+    resources :flagged_topics, constraints: AdminConstraint.new
     resources :themes, constraints: AdminConstraint.new
+
     post "themes/import" => "themes#import"
     post "themes/upload_asset" => "themes#upload_asset"
     get "themes/:id/preview" => "themes#preview"
