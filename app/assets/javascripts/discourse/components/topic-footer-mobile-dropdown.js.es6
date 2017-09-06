@@ -8,7 +8,7 @@ export default SelectBoxComponent.extend({
 
   dynamicHeaderText: false,
 
-  maxCollectionHeight: 300,
+  collectionHeight: 300,
 
   init() {
     this._super();

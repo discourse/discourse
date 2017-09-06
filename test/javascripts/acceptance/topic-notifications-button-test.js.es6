@@ -19,7 +19,7 @@ acceptance("Topic Notifications button", {
 QUnit.test("Updating topic notification level", assert => {
   visit("/t/internationalization-localization/280");
 
-  const notificationOptions = "#topic-footer-buttons .notification-options";
+  const notificationOptions = "#topic-footer-buttons .topic-notifications";
 
   andThen(() => {
     assert.ok(
@@ -29,7 +29,7 @@ QUnit.test("Updating topic notification level", assert => {
   });
 
   click(`${notificationOptions} .tracking`);
-  click(`${notificationOptions} .dropdown-menu .watching`);
+  click(`${notificationOptions} .select-box-collection .select-box-row[title=tracking]`);
 
   andThen(() => {
     assert.ok(

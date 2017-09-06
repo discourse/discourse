@@ -1,0 +1,39 @@
+.dropdown-select-box.dropdown-select-box {
+  &.is-expanded {
+    z-index: 9999;
+  }
+
+  .select-box-body {
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+
+  .select-box-row {
+    margin: 0;
+    padding: 5px 10px;
+
+    &.is-highlighted {
+      background: none;
+    }
+
+    &:hover {
+      background: $highlight-medium;
+    }
+  }
+
+  .dropdown-header {
+    padding: 0;
+    border: 0;
+    outline: 0;
+    justify-content: flex-start;
+    width: min-content;
+    background: none;
+
+    .btn {
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      display: inline-flex;
+      height: 100%;
+    }
+  }
+}
