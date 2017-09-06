@@ -28,19 +28,19 @@
     }
   }
 
-  .icons {
-    .badge-notification {
-      top: -5px;
-      color: $secondary;
-    }
-
-    .active .icon {
-      &:after { margin-top: -1px; }
-    }
-  }
-
   button.sign-up-button {
     display:none;
+  }
+}
+
+.d-header-icons {
+  .badge-notification {
+    top: -5px;
+    color: $secondary;
+  }
+
+  .active .icon {
+    &:after { margin-top: -1px; }
   }
 }
 
