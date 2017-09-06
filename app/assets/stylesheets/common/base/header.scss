@@ -64,6 +64,7 @@
     float: left;
   }
   .icon {
+    position: relative;
     display: block;
     padding: 3px;
     color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
@@ -96,10 +97,6 @@
       border-top: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
       border-right: 1px solid $primary-low;
-
-      .badge-notification {
-        top: -10px;
-      }
 
       .flagged-posts {
         right: 24px;
@@ -146,6 +143,7 @@
     z-index: 1;
     left: 0;
     top: -9px;
+    min-width: 6px;
   }
   .unread-notifications {
     left: auto;
