@@ -21,7 +21,7 @@ export default Ember.Component.extend({
     return templateForRow(this);
   },
 
-  @computed("shouldHighlightRow", "lastHovered", "value")
+  @computed("shouldHighlightRow", "value")
   isHighlighted(shouldHighlightRow) {
     return shouldHighlightRow(this);
   },

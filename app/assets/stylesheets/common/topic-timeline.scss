@@ -212,6 +212,10 @@
         margin-right: 0.5em;
       }
 
+      button:last-child {
+        margin-right: 0;
+      }
+
       ul.dropdown-menu {
         right: 0.5em;
         top: auto;
