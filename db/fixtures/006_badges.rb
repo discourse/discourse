@@ -415,6 +415,25 @@ Badge.seed do |b|
   b.system = true
 end
 
+[
+  [Badge::Enthusiast, "Enthusiast", BadgeType::Bronze, 10],
+  [Badge::Aficionado, "Aficionado", BadgeType::Silver, 100],
+  [Badge::Devotee,    "Devotee",    BadgeType::Gold,   365],
+].each do |id, name, level, days|
+  Badge.seed do |b|
+    b.id = id
+    b.name = name
+    b.default_icon = "fa-eye"
+    b.badge_type_id = level
+    b.query = BadgeQueries.consecutive_visits(days)
+    b.badge_grouping_id = BadgeGrouping::Community
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = false
+    b.system = true
+  end
+end
+
 Badge.where("NOT system AND id < 100").each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
   old_id = badge.id
