@@ -87,7 +87,8 @@ class Site
         filters: Discourse.filters.map(&:to_s),
         user_fields: UserField.all.map do |userfield|
           UserFieldSerializer.new(userfield, root: false, scope: guardian)
-        end
+        end,
+        disabled_plugins: Discourse.disabled_plugin_names
       }.to_json
     end
 
