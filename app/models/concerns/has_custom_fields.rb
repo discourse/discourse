@@ -132,6 +132,7 @@ module HasCustomFields
       if @preloaded.key?(key)
         @preloaded[key]
       else
+        raise "#{@preloaded.inspect} -> #{key.inspect}"
         # for now you can not mix preload an non preload, it better just to fail
         raise StandardError, "Attempting to access a non preloaded custom field, this is disallowed to prevent N+1 queries."
       end

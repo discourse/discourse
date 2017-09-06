@@ -1,0 +1,28 @@
+.flag-counts {
+  display: inline-block;
+  margin-right: 0.5em;
+
+  .type-count {
+    color: $primary-medium;
+    font-size: 0.9em;
+  }
+}
+
+.flagged-topic {
+  td.topic-title {
+    width: 400px;
+    a {
+      width: 400px;
+      display: inline-block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}
+
+.flagged-topic-details {
+  display: flex;
+  justify-content: space-between;
+
+}

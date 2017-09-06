@@ -1,7 +1,14 @@
 import { ajax } from 'discourse/lib/ajax';
 import { hashString } from 'discourse/lib/hash';
 
-const ADMIN_MODELS = ['plugin', 'theme', 'embeddable-host', 'web-hook', 'web-hook-event'];
+const ADMIN_MODELS = [
+  'plugin',
+  'theme',
+  'embeddable-host',
+  'web-hook',
+  'web-hook-event',
+  'flagged-topic'
+];
 
 export function Result(payload, responseJson) {
   this.payload = payload;
@@ -18,7 +25,6 @@ function rethrow(error) {
 }
 
 export default Ember.Object.extend({
-
 
   storageKey(type, findArgs, options) {
     if (options && options.cacheKey) {
