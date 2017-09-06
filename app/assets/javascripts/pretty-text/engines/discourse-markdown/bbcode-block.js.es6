@@ -178,8 +178,8 @@ function findInlineCloseTag(state, openTag, start, max) {
           closeTag = null;
         } else {
           closeTag.start = j;
+          break;
         }
-        break;
       }
     }
   }
