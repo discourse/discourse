@@ -827,7 +827,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     this.messageBus.subscribe(`/topic/${this.get('model.id')}`, data => {
       const topic = this.get('model');
 
-      if (data.notification_level_change) {
+      if (Ember.isPresent(data.notification_level_change)) {
         topic.set('details.notification_level', data.notification_level_change);
         topic.set('details.notifications_reason_id', data.notifications_reason_id);
         return;
