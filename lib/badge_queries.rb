@@ -232,4 +232,16 @@ SQL
     SQL
   end
 
+  def self.consecutive_visits(days)
+    <<~SQL
+      SELECT user_id, "start" + interval '1' day * COUNT(*) AS "granted_at"
+        FROM (
+          SELECT user_id, visited_at - (DENSE_RANK() OVER (PARTITION BY user_id ORDER BY visited_at))::int "start"
+            FROM user_visits
+        ) s
+        GROUP BY user_id, "start"
+        HAVING COUNT(*) >= #{days}
+    SQL
+  end
+
 end
