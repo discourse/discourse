@@ -520,7 +520,7 @@ class ApplicationController < ActionController::Base
     end
 
     def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development? || Rails.env.profile?)
+      defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
     end
 
     def authorize_mini_profiler
