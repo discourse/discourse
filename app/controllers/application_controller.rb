@@ -36,6 +36,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :check_readonly_mode
   before_filter :handle_theme
   before_filter :set_current_user_for_logs
   before_filter :clear_notifications
@@ -61,7 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   def add_readonly_header
-    response.headers['Discourse-Readonly'] = 'true' if Discourse.readonly_mode?
+    response.headers['Discourse-Readonly'] = 'true' if @readonly_mode
   end
 
   def perform_refresh_session
@@ -182,7 +183,7 @@ class ApplicationController < ActionController::Base
   end
 
   def clear_notifications
-    if current_user && !Discourse.readonly_mode?
+    if current_user && !@readonly_mode
 
       cookie_notifications = cookies['cn'.freeze]
       notifications = request.headers['Discourse-Clear-Notifications'.freeze]
@@ -400,6 +401,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+    def check_readonly_mode
+      @readonly_mode = Discourse.readonly_mode?
+    end
+
     def locale_from_header
       begin
         # Rails I18n uses underscores between the locale and the region; the request
@@ -574,7 +579,7 @@ class ApplicationController < ActionController::Base
 
     def block_if_readonly_mode
       return if request.fullpath.start_with?(path "/admin/backups")
-      raise Discourse::ReadOnly.new if !(request.get? || request.head?) && Discourse.readonly_mode?
+      raise Discourse::ReadOnly.new if !(request.get? || request.head?) && @readonly_mode
     end
 
     def build_not_found_page(status = 404, layout = false)

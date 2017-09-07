@@ -276,7 +276,7 @@ module Discourse
   end
 
   def self.readonly_mode?
-    recently_readonly? || READONLY_KEYS.any? { |key| !!$redis.get(key) }
+    recently_readonly? || $redis.mget(*READONLY_KEYS).compact.present?
   end
 
   def self.last_read_only
