@@ -407,6 +407,10 @@ const Topic = RestModel.extend({
     });
   },
 
+  @computed('excerpt')
+  escapedExcerpt(excerpt) {
+    return emojiUnescape(excerpt);
+  },
 
   hasExcerpt: Em.computed.notEmpty('excerpt'),
 
