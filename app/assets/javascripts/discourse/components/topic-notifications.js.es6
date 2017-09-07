@@ -9,7 +9,7 @@ export default DropdownSelectBoxComponent.extend({
 
   content: topicLevels,
 
-  i18nPrefix: 'category.notifications',
+  i18nPrefix: 'topic.notifications',
   i18nPostfix: '',
 
   textKey: "key",
