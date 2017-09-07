@@ -12,7 +12,7 @@ export default Ember.Component.extend({
 
   @computed('expanded')
   expandIcon(expanded) {
-    return expanded ? 'caret-down' : 'caret-right';
+    return expanded ? 'd-drop-expanded' : 'd-drop-collapsed';
   },
 
   allCategoriesUrl: function() {

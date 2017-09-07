@@ -22,7 +22,7 @@ export default Ember.Component.extend({
 
   @computed('expanded')
   expandedIcon(expanded) {
-    return expanded ? 'caret-down' : 'caret-right';
+    return expanded ? 'd-drop-expanded' : 'd-drop-collapsed';
   },
 
   @computed('tagId')
