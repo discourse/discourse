@@ -66,7 +66,7 @@ class TopicView
 
     filter_posts(options)
 
-    if @posts.present?
+    if @posts
       if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
@@ -388,7 +388,7 @@ class TopicView
 
     max = [max, post_count].min
 
-    return @posts = [] if min > max
+    return @posts = Post.none if min > max
 
     min = [[min, max].min, 0].max
 
