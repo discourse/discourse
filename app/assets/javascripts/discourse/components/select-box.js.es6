@@ -41,7 +41,6 @@ export default Ember.Component.extend({
   selectBoxHeaderComponent: "select-box/select-box-header",
   selectBoxCollectionComponent: "select-box/select-box-collection",
 
-  minWidth: 220,
   collectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
@@ -166,8 +165,6 @@ export default Ember.Component.extend({
     if (this.get("scrollableParent").length === 1) {
       this._removeFixedPosition();
     }
-
-    this.$().css("min-width", this.get("minWidth"));
 
     const computedWidth = this.$().outerWidth(false);
     const computedHeight = this.$().outerHeight(false);
