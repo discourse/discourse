@@ -6,7 +6,9 @@ const REPLACEMENTS = {
   'd-muted': 'times-circle',
   'd-regular': 'circle-o',
   'd-watching': 'exclamation-circle',
-  'd-watching-first': 'dot-circle-o'
+  'd-watching-first': 'dot-circle-o',
+  'd-drop-expanded': 'caret-down',
+  'd-drop-collapsed': 'caret-right',
 };
 
 export function renderIcon(renderType, id, params) {
