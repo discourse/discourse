@@ -68,11 +68,11 @@ class TopicView
 
     if @posts
       if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+        @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
       if (whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), whitelisted_fields)
       end
     end
 
