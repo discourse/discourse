@@ -173,7 +173,6 @@ export default Ember.Component.extend({
     const computedHeight = this.$().outerHeight(false);
 
     this.$(".select-box-filter").css("height", computedHeight);
-    this.$(".select-box-header").css("height", computedHeight);
 
     if (this.get("expanded")) {
       if (this.get("scrollableParent").length === 1) {
