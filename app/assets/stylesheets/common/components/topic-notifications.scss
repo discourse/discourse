@@ -1,5 +1,8 @@
-#topic-footer-buttons .topic-notifications .btn {
-  margin: 0;
+#topic-footer-buttons .topic-notifications {
+  min-width: auto;
+  .btn {
+    margin: 0;
+  }
 }
 
 #topic-footer-buttons p.reason {
