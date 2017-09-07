@@ -15,7 +15,7 @@ class FilterBestPosts
   def filter
     @posts =
       if @min_replies && @topic.posts_count < @min_replies + 1
-        []
+        Post.none
       else
         filter_posts_liked_by_moderators
         setup_posts
