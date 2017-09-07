@@ -1,9 +1,7 @@
 import { buildResolver } from 'discourse-common/resolver';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import PreloadStore from 'preload-store';
 
 const _pluginCallbacks = [];
-const _pluginDefinitions = {};
 
 const Discourse = Ember.Application.extend({
   rootElement: '#main',
@@ -103,16 +101,6 @@ const Discourse = Ember.Application.extend({
 
     $('noscript').remove();
 
-    // Load plugin definions.
-    const disabledPlugins = PreloadStore.get('site').disabled_plugins;
-    Object.keys(_pluginDefinitions).forEach((key) => {
-      if(!(disabledPlugins.includes(key))){ // Not disabled, so load it
-        _pluginDefinitions[key].forEach((func) => {
-          func();
-        });
-      }
-    });
-
     Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/pre\-initializers\//.test(key)) {
         const module = requirejs(key, null, null, true);
@@ -164,13 +152,6 @@ const Discourse = Ember.Application.extend({
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
-  },
-
-  _registerPluginScriptDefinition(pluginName, definition) {
-    if(!(pluginName in _pluginDefinitions)){
-      _pluginDefinitions[pluginName] = [];
-    }
-    _pluginDefinitions[pluginName].push(definition);
   },
 
   assetVersion: Ember.computed({
