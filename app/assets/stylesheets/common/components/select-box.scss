@@ -99,6 +99,7 @@
             justify-content: space-between;
     padding-left: 10px;
     padding-right: 10px;
+    height: inherit;
 
     &.is-focused {
       border: 1px solid $tertiary;
@@ -163,12 +164,6 @@
 
     &:hover {
       background: $highlight-medium;
-    }
-
-    &.is-selected {
-      a {
-        background: $highlight-medium;
-      }
     }
   }
 
