@@ -91,7 +91,7 @@ export default Ember.Component.extend({
     let options = { left: "auto", bottom: "auto", left: "auto", top: "auto" };
     const headerHeight = this.$(".select-box-header").outerHeight(false);
     const filterHeight = this.$(".select-box-filter").outerHeight(false);
-    const collectionHeight = this.$(".select-box-collection").outerHeight(false);
+    const bodyHeight = this.$(".select-box-body").outerHeight(false);
     const windowWidth = $(window).width();
     const windowHeight = $(window).height();
     const boundingRect = this.$()[0].getBoundingClientRect();
@@ -116,7 +116,7 @@ export default Ember.Component.extend({
       }
     }
 
-    const componentHeight = this.get("verticalOffset") + collectionHeight + filterHeight + headerHeight;
+    const componentHeight = this.get("verticalOffset") + bodyHeight + headerHeight;
     const hasBelowSpace = windowHeight - offsetTop - componentHeight > 0;
     if (hasBelowSpace) {
       this.$().addClass("is-below");
