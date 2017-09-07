@@ -1,9 +1,5 @@
 en:
   js:
     presence:
-      is_replying: 
-        one: "is also replying"
-        other: "are also replying"
-      is_editing: 
-        one: "is also editing"
-        other: "are also editing"
+      replying: "replying"
+      editing: "editing"
