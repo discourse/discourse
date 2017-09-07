@@ -37,9 +37,12 @@ createWidget('header-notifications', {
 
     const unreadNotifications = user.get('unread_notifications');
     if (!!unreadNotifications) {
-      contents.push(this.attach('link', { action: attrs.action,
-                                          className: 'badge-notification unread-notifications',
-                                          rawLabel: unreadNotifications }));
+      contents.push(this.attach('link', {
+        action: attrs.action,
+        className: 'badge-notification unread-notifications',
+        rawLabel: unreadNotifications,
+        omitSpan: true
+      }));
     }
 
     const unreadPMs = user.get('unread_private_messages');
@@ -55,9 +58,12 @@ createWidget('header-notifications', {
         }
       };
 
-      contents.push(this.attach('link', { action: attrs.action,
-                                          className: 'badge-notification unread-private-messages',
-                                          rawLabel: unreadPMs }));
+      contents.push(this.attach('link', {
+        action: attrs.action,
+        className: 'badge-notification unread-private-messages',
+        rawLabel: unreadPMs,
+        omitSpan: true
+      }));
     }
 
     return contents;
