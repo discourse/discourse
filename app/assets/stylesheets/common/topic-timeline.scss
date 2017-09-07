@@ -121,12 +121,6 @@
         bottom: 10px;
         left: 10px;
 
-        .dropdown-menu {
-          position: absolute;
-          left: 0;
-          bottom: 30px;
-        }
-
         button, .btn-group {
           float: none;
           display: inline-block;
@@ -204,11 +198,8 @@
         margin-right: 0;
       }
 
-      ul.dropdown-menu {
-        right: 0.5em;
-        top: auto;
-        bottom: 25px;
-        left: auto;
+      .topic-notifications {
+        min-width: auto;
       }
     }
 
