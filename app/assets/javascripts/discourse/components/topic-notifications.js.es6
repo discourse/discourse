@@ -25,7 +25,9 @@ export default DropdownSelectBoxComponent.extend({
   _bindGlobalLevelChanged() {
     this.appEvents.on("topic-notifications-button:changed", (msg) => {
       if (msg.type === "notification") {
-        this.set("value", msg.id);
+        if (this.get("topic.details.notification_level") !== msg.id) {
+          this.get("topic.details").updateNotifications(msg.id);
+        }
       }
     });
   },
@@ -37,7 +39,6 @@ export default DropdownSelectBoxComponent.extend({
 
   @observes("value")
   _notificationLevelChanged() {
-    this.get("topic.details").updateNotifications(this.get("value"));
     this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: this.get("value")});
   },
 
@@ -45,6 +46,11 @@ export default DropdownSelectBoxComponent.extend({
   icon(notificationLevel) {
     const details = buttonDetails(notificationLevel);
     return iconHTML(details.icon, {class: details.key}).htmlSafe();
+  },
+
+  @observes("topic.details.notification_level")
+  _content() {
+    this.set("value", this.get("topic.details.notification_level"));
   },
 
   @computed("topic.details.notification_level", "showFullTitle")
@@ -75,5 +81,5 @@ export default DropdownSelectBoxComponent.extend({
         </div>
       `;
     };
-  }.property(),
+  }.property()
 });
