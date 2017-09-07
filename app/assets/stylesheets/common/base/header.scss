@@ -51,14 +51,15 @@
   }
 }
 
+.flagged-posts, .queued-posts {
+  background: $danger;
+}
+
 .d-header-icons {
   text-align: center;
   margin: 0 0 0 5px;
   list-style: none;
 
-  .flagged-posts, .queued-posts {
-    background: $danger;
-  }
 
   > li {
     float: left;
