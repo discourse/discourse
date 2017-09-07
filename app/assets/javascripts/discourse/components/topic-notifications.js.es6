@@ -16,8 +16,6 @@ export default DropdownSelectBoxComponent.extend({
   showFullTitle: true,
   fullWidthOnMobile: true,
 
-  minWidth: "auto",
-
   @on("init")
   _setInitialNotificationLevel() {
     this.set("value", this.get("topic.details.notification_level"));
