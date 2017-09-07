@@ -70,8 +70,13 @@
     .texts {
       line-height: 18px;
       flex: 1;
+      align-items: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
 
       .title {
+        flex: 1;
         font-weight: bold;
         display: block;
         font-size: 1em;
@@ -79,6 +84,7 @@
       }
 
       .desc {
+        flex: 1;
         font-size: 0.857em;
         font-weight: normal;
         color: #919191;
