@@ -3394,12 +3394,15 @@ en:
         This badge is granted to congratulate two new users each month for their excellent overall contributions, as measured by how often their posts were liked, and by whom.
     enthusiast:
       name: Enthusiast
+      description:  Visited 10 days
       long_description: This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
     aficionado:
       name: Aficionado
+      description: Visited 100 days
       long_description: This badge is granted for visiting 100 consecutive days. That's more than three months!
     devotee:
       name: Devotee
+      description: Visited 365 days
       long_description: This badge is granted for visiting 365 consecutive days. Wow, an entire year!
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
