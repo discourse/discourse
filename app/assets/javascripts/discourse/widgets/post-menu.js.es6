@@ -173,20 +173,18 @@ registerButton('reply', attrs => {
 registerButton('bookmark', attrs => {
   if (!attrs.canBookmark) { return; }
 
-  let iconClass = 'read-icon';
-  let buttonClass = 'bookmark';
-  let tooltip = 'bookmarks.not_bookmarked';
+  let className = 'bookmark';
 
   if (attrs.bookmarked) {
-    iconClass += ' bookmarked';
-    buttonClass += ' bookmarked';
-    tooltip = 'bookmarks.created';
+    className += ' bookmarked';
   }
 
-  return { action: 'toggleBookmark',
-           title: tooltip,
-           className: buttonClass,
-           contents: h('div', { className: iconClass }) };
+  return {
+    action: 'toggleBookmark',
+    title: attrs.bookmarked ? "bookmarks.created" : "bookmarks.not_bookmarked",
+    className,
+    icon: 'bookmark'
+  };
 });
 
 registerButton('admin', attrs => {

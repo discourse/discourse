@@ -161,22 +161,10 @@ nav.post-controls {
       box-shadow: none;
     }
 
-    &.bookmark {padding: 8px 11px; }
-
-    .read-icon {
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f02e";
-      }
-      &.unseen {
-        &:before {
-          content: "\f097";
-        }
-      }
+    &.bookmark {
+      padding: 8px 11px;
       &.bookmarked {
-        &:before {
-          color: $tertiary;
-        }
+        color: $tertiary;
       }
     }
   }
