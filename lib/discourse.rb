@@ -3,6 +3,7 @@ require 'open3'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
+require 'digest/sha1'
 
 # Prevents errors with reloading dev with conditional includes
 if Rails.env.development?
@@ -119,6 +120,21 @@ module Discourse
 
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
+
+    if Rails.env.development?
+      plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
+      hash_file = "#{Rails.root}/tmp/plugin-hash"
+      old_hash = File.read(hash_file) rescue nil
+
+      if old_hash && old_hash != plugin_hash
+        puts "WARNING: It looks like your discourse plugins have recently changed."
+        puts "It is highly recommended to remove your `tmp` directory, otherwise"
+        puts "plugins might not work."
+        puts
+      else
+        File.write(hash_file, plugin_hash)
+      end
+    end
 
     @plugins = []
     all_plugins.each do |p|
