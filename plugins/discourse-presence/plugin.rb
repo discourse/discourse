@@ -50,12 +50,27 @@ after_initialize do
     end
 
     def self.publish(type, id)
+      topic =
+          if type == 'post'
+            Post.find_by(id: id).topic
+          else
+            Topic.find_by(id: id)
+          end
+
       users = get_users(type, id)
       serialized_users = users.map { |u| BasicUserSerializer.new(u, root: false) }
       message = {
         users: serialized_users
       }
-      MessageBus.publish(get_messagebus_channel(type, id), message.as_json)
+
+      messagebus_channel = get_messagebus_channel(type, id)
+      if topic.archetype == Archetype.private_message
+        user_ids = User.where('admin or moderator').pluck(:id)
+        user_ids += topic.allowed_users.pluck(:id)
+        MessageBus.publish(messagebus_channel, message.as_json, user_ids: user_ids)
+      else
+        MessageBus.publish(messagebus_channel, message.as_json, group_ids: topic.secure_group_ids)
+      end
 
       users
     end
@@ -86,16 +101,24 @@ after_initialize do
 
     def publish
       data = params.permit(:response_needed,
-              current: [:compose_state, :action, :topic_id, :post_id],
-              previous: [:compose_state, :action, :topic_id, :post_id]
+              current: [:action, :topic_id, :post_id],
+              previous: [:action, :topic_id, :post_id]
               )
 
       if data[:previous] &&
-          data[:previous][:compose_state] == 'open' &&
           data[:previous][:action].in?(['edit', 'reply'])
 
         type = data[:previous][:post_id] ? 'post' : 'topic'
         id = data[:previous][:post_id] ? data[:previous][:post_id] : data[:previous][:topic_id]
+
+        topic =
+          if type == 'post'
+            Post.find_by(id: id).topic
+          else
+            Topic.find_by(id: id)
+          end
+
+        guardian.ensure_can_see!(topic)
 
         any_changes = false
         any_changes ||= Presence::PresenceManager.remove(type, id, current_user.id)
@@ -105,11 +128,19 @@ after_initialize do
       end
 
       if data[:current] &&
-          data[:current][:compose_state] == 'open' &&
           data[:current][:action].in?(['edit', 'reply'])
 
         type = data[:current][:post_id] ? 'post' : 'topic'
         id = data[:current][:post_id] ? data[:current][:post_id] : data[:current][:topic_id]
+
+        topic =
+          if type == 'post'
+            Post.find_by!(id: id).topic
+          else
+            Topic.find_by!(id: id)
+          end
+
+        guardian.ensure_can_see!(topic)
 
         any_changes = false
         any_changes ||= Presence::PresenceManager.add(type, id, current_user.id)

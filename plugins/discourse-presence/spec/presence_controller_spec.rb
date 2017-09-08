@@ -10,9 +10,14 @@ describe ::Presence::PresencesController, type: :request do
   let(:user2) { Fabricate(:user) }
   let(:user3) { Fabricate(:user) }
 
+  let(:post1) { Fabricate(:post) }
+  let(:post2) { Fabricate(:post) }
+
   after(:each) do
-    $redis.del('presence:post:22')
-    $redis.del('presence:post:11')
+    $redis.del("presence:topic:#{post1.topic.id}")
+    $redis.del("presence:topic:#{post2.topic.id}")
+    $redis.del("presence:post:#{post1.id}")
+    $redis.del("presence:post:#{post2.id}")
   end
 
   context 'when not logged in' do
@@ -30,23 +35,38 @@ describe ::Presence::PresencesController, type: :request do
       expect { post '/presence/publish.json' }.not_to raise_error
     end
 
+    it "uses guardian to secure endpoint" do
+      # Private message
+      private_post = Fabricate(:private_message_post)
+      post '/presence/publish.json', current: { action: 'edit', post_id: private_post.id }
+      expect(response.code.to_i).to eq(403)
+
+      # Secure category
+      group = Fabricate(:group)
+      category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: category)
+
+      post '/presence/publish.json', current: { action: 'edit', topic_id: private_topic.id }
+      expect(response.code.to_i).to eq(403)
+    end
+
     it "returns a response when requested" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: 22 }, response_needed: true
+        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }, response_needed: true
       end
 
       expect(messages.count).to eq (1)
 
       data = JSON.parse(response.body)
 
-      expect(data['messagebus_channel']).to eq('/presence/post/22')
-      expect(data['messagebus_id']).to eq(MessageBus.last_id('/presence/post/22'))
+      expect(data['messagebus_channel']).to eq("/presence/post/#{post1.id}")
+      expect(data['messagebus_id']).to eq(MessageBus.last_id("/presence/post/#{post1.id}"))
       expect(data['users'][0]["id"]).to eq(user1.id)
     end
 
     it "doesn't return a response when not requested" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: 22 }
+        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
       end
 
       expect(messages.count).to eq (1)
@@ -57,20 +77,20 @@ describe ::Presence::PresencesController, type: :request do
 
     it "doesn't send duplicate messagebus messages" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: 22 }
+        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
       end
       expect(messages.count).to eq (1)
 
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: 22 }
+        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
       end
       expect(messages.count).to eq (0)
     end
 
     it "clears 'previous' state when supplied" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: 22 }
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: 11 }, previous: { compose_state: 'open', action: 'edit', post_id: 22 }
+        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post2.id }, previous: { compose_state: 'open', action: 'edit', post_id: post1.id }
       end
       expect(messages.count).to eq (3)
     end
