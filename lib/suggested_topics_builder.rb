@@ -24,7 +24,9 @@ class SuggestedTopicsBuilder
     if @category_id && SiteSetting.limit_suggested_to_category?
       results = results.where(category_id: @category_id)
     end
-    results = results.to_a.reject { |topic| @category_topic_ids.include?(topic.id) }
+
+    results = results.to_a
+    results.reject! { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?
       # Keep track of the ids we've added
