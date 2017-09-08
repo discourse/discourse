@@ -92,7 +92,7 @@ function initialize(api) {
 
 
     keepPresenceAlive(){
-      // If the composer isn't open, or we're not editing, 
+      // If the composer isn't open, or we're not editing,
       // don't update anything, and don't schedule this task again
       if(!this.shouldSharePresence()){
         return;
