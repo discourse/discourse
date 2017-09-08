@@ -23,7 +23,7 @@
 
   .select-box-row {
     margin: 0;
-    padding: 5px 10px;
+    padding: 10px 5px;
 
     .icons {
       display: flex;
@@ -31,6 +31,7 @@
       justify-content: space-between;
       align-self: center;
       margin-right: 10px;
+      margin-top: 2px;
 
       .d-icon {
         font-size: 1.286em;
@@ -66,7 +67,7 @@
     }
 
     &.is-highlighted {
-      background: none;
+      background: $tertiary-low;
     }
 
     &:hover {
