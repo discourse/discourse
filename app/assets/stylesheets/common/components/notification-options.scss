@@ -1,26 +1,12 @@
-.notification-options.notification-options {
+.notification-options.notification-options.notification-options {
   .select-box-body {
     min-width: 550px;
     max-width: 550px;
   }
 
   .select-box-row {
-    &.is-highlighted .icons .selection-indicator {
-      visibility: visible;
-    }
-
     .icons {
       align-self: flex-start;
-
-      .selection-indicator {
-        width: 6px;
-        height: 6px;
-        background: $tertiary;
-        visibility: hidden;
-        border-radius: 12px;
-        align-self: center;
-        margin-right: 5px;
-      }
     }
   }
 }
