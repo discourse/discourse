@@ -2,4 +2,8 @@
   .select-box-body {
     min-width: auto;
   }
+
+  .select-box-row .icons .d-icon {
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+  }
 }
