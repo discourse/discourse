@@ -27,7 +27,7 @@ const FlaggedPost = Post.extend({
         disposedAt: postAction.disposed_at,
         dispositionIcon: this.dispositionIcon(postAction.disposition),
         tookAction: postAction.staff_took_action
-      }
+      };
     });
   },
 
@@ -144,25 +144,31 @@ const FlaggedPost = Post.extend({
 });
 
 FlaggedPost.reopenClass({
-
   findAll(args) {
-    let { offset, filter } = args;
-    offset = offset || 0;
+    let { filter } = args;
 
     let result = [];
     result.set('loading', true);
 
-    return ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function (data) {
+    let data = {};
+    if (args.topic_id) {
+      data.topic_id = args.topic_id;
+    }
+    if (args.offset) {
+      data.offset = args.offset;
+    }
+
+    return ajax(`/admin/flags/${filter}.json`, { data }).then(response => {
       // users
       let userLookup = {};
-      data.users.forEach(user => userLookup[user.id] = AdminUser.create(user));
+      response.users.forEach(user => userLookup[user.id] = AdminUser.create(user));
 
       // topics
       let topicLookup = {};
-      data.topics.forEach(topic => topicLookup[topic.id] = Topic.create(topic));
+      response.topics.forEach(topic => topicLookup[topic.id] = Topic.create(topic));
 
       // posts
-      data.posts.forEach(post => {
+      response.posts.forEach(post => {
         let f = FlaggedPost.create(post);
         f.userLookup = userLookup;
         f.topicLookup = topicLookup;

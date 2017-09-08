@@ -10,157 +10,17 @@
       </thead>
       <tbody>
         {{#each flaggedPosts as |flaggedPost|}}
-          <tr class="flagged-post {{flaggedPost.extraClasses}}">
-
-            <td class='excerpt'>
-
-              <div class="flex-center-align">
-                <div class="flagged-post-avatar">
-                  {{#if flaggedPost.postAuthorFlagged}}
-                    {{#if flaggedPost.user}}
-                      {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="large"}}{{/link-to}}
-                      {{#if flaggedPost.wasEdited}}
-                        {{d-icon "pencil" title="admin.flags.was_edited"}}
-                      {{/if}}
-                    {{/if}}
-                  {{/if}}
-                  {{#if canAct}}
-                    {{#if flaggedPost.previous_flags_count}}
-                      <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
-                    {{/if}}
-                  {{/if}}
-                </div>
-                <div class="topic-excerpt">
-                  <h3>
-                    {{#if flaggedPost.topic.isPrivateMessage}}
-                      <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-                    {{/if}}
-                    {{topic-status topic=flaggedPost.topic}}
-                    <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
-                  </h3>
-                  {{#unless site.mobileView}}
-                    {{#if flaggedPost.postAuthorFlagged}}
-                      <p>{{{flaggedPost.excerpt}}}</p>
-                    {{/if}}
-                  {{/unless}}
-                </div>
-              </div>
-
-              {{#if site.mobileView}}
-                {{#if flaggedPost.postAuthorFlagged}}
-                  <p>{{{flaggedPost.excerpt}}}</p>
-                {{/if}}
-              {{/if}}
-            </td>
-
-            <td class='flaggers'>
-              <table>
-                <tbody>
-                  {{#each flaggedPost.flaggers as |flagger|}}
-                    <tr>
-                      <td class='avatar'>
-                        {{#link-to 'adminUser' flagger.user}}
-                          {{avatar flagger.user imageSize="medium"}}
-                        {{/link-to}}
-                      </td>
-                      <td>
-                        {{#link-to 'adminUser' flagger.user}}
-                          {{flagger.user.username}}
-                        {{/link-to}}
-                        {{format-age flagger.flaggedAt}}
-                        <br>
-                        {{flagger.flagType}}
-                      </td>
-                    </tr>
-                  {{/each}}
-                </tbody>
-              </table>
-            </td>
-
-            <td class='flaggers result'>
-              {{#if showResolvedBy}}
-                <table>
-                  <tbody>
-                    {{#each flaggedPost.flaggers as |flagger|}}
-                      <tr>
-                        <td class='avatar'>
-                          {{#link-to 'adminUser' flagger.disposedBy}}
-                            {{avatar flagger.disposedBy imageSize="medium"}}
-                          {{/link-to}}
-                        </td>
-                        <td>
-                          {{format-age flagger.disposedAt}}
-                          {{{flagger.dispositionIcon}}}
-                          {{#if flagger.tookAction}}
-                            {{d-icon "gavel" title="admin.flags.took_action"}}
-                          {{/if}}
-                        </td>
-                      </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              {{/if}}
-            </td>
-
-          </tr>
-
-          {{#if flaggedPost.topicFlagged}}
-            <tr class='message'>
-              <td colspan="3">
-                <div>
-                  {{{i18n 'admin.flags.topic_flagged'}}}&nbsp;<a href='{{unbound flaggedPost.url}}' class="btn">{{i18n 'admin.flags.visit_topic'}}</a>
-                </div>
-              </td>
-            </tr>
-          {{/if}}
-
-          {{#each flaggedPost.conversations as |c|}}
-            <tr class='message'>
-              <td colspan="3">
-                <div>
-                  {{#if c.response}}
-                    <p>
-                      {{#link-to 'adminUser' c.response.user}}{{avatar c.response.user imageSize="medium"}}{{/link-to}}&nbsp;{{{c.response.excerpt}}}
-                    </p>
-                    {{#if c.reply}}
-                      <p>
-                        {{#link-to 'adminUser' c.reply.user}}{{avatar c.reply.user imageSize="medium"}}{{/link-to}}&nbsp;{{{c.reply.excerpt}}}
-                        {{#if c.hasMore}}
-                          <a href="{{unbound c.permalink}}">{{i18n 'admin.flags.more'}}</a>
-                        {{/if}}
-                      </p>
-                    {{/if}}
-                    <a href="{{unbound c.permalink}}">
-                      <button class='btn btn-reply'>{{d-icon "reply"}}&nbsp;{{i18n 'admin.flags.reply_message'}}</button>
-
-                    </a>
-                  {{/if}}
-                </div>
-              </td>
-            </tr>
-          {{/each}}
-
-          {{#if canAct}}
-            <tr>
-              <td colspan="3" class="action">
-                <button title='{{i18n 'admin.flags.agree_title'}}' class='btn' {{action "showAgreeFlagModal" flaggedPost}}>{{d-icon "thumbs-o-up"}}{{i18n 'admin.flags.agree'}}&hellip;</button>
-                {{#if flaggedPost.postHidden}}
-                <button title='{{i18n 'admin.flags.disagree_flag_unhide_post_title'}}' class='btn' {{action "disagree" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag_unhide_post'}}</button>
-                {{else}}
-                <button title='{{i18n 'admin.flags.disagree_flag_title'}}' class='btn' {{action "disagree" flaggedPost}}>{{d-icon "thumbs-o-down"}}{{i18n 'admin.flags.disagree_flag'}}</button>
-                {{/if}}
-                <button title='{{i18n 'admin.flags.defer_flag_title'}}' class='btn' {{action "defer" flaggedPost}}>{{d-icon "external-link"}}{{i18n 'admin.flags.defer_flag'}}</button>
-                <button title='{{i18n 'admin.flags.delete_title'}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}>{{d-icon "trash-o"}}{{i18n 'admin.flags.delete'}}&hellip;</button>
-              </td>
-            </tr>
-          {{/if}}
-
+          {{flagged-post
+            flaggedPost=flaggedPost
+            canAct=canAct
+            showResolvedBy=showResolvedBy
+            removePost=(action "removePost" flaggedPost)
+          }}
         {{/each}}
 
       </tbody>
     </table>
   {{/load-more}}
-
 {{else}}
   <p>{{i18n 'admin.flags.no_results'}}</p>
 {{/if}}

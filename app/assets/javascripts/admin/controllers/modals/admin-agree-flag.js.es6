@@ -5,7 +5,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   _agreeFlag(action) {
     let flaggedPost = this.get('model');
-    return this.removeAfter(flaggedPost.agreeFlags(action), flaggedPost).then(() => {
+    return this.removeAfter(flaggedPost.agreeFlags(action)).then(() => {
       this.send('closeModal');
     });
   },

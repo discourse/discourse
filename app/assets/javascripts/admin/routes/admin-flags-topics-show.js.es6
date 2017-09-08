@@ -8,7 +8,10 @@ export default Ember.Route.extend({
 
     return Ember.RSVP.hash({
       topic,
-      flaggedPosts: FlaggedPost.findAll({ filter: 'active' })
+      flaggedPosts: FlaggedPost.findAll({
+        filter: 'active',
+        topic_id: params.id
+      })
     });
   },
 
