@@ -3,9 +3,8 @@ module PostGuardian
 
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
-  def post_can_act?(post, action_key, opts = {})
-
-    return false unless can_see_post?(post)
+  def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
+    return false unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
 
     # no warnings except for staff
     return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
@@ -187,7 +186,7 @@ module PostGuardian
   end
 
   def can_vote?(post, opts = {})
-    post_can_act?(post, :vote, opts)
+    post_can_act?(post, :vote, opts: opts)
   end
 
   def can_change_post_owner?

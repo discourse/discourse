@@ -83,7 +83,7 @@ class TopicViewSerializer < ApplicationSerializer
 
       result[:allowed_users] = object.topic.allowed_users.select do |user|
         !allowed_user_ids.include?(user.id)
-      end.map do |user|
+      end.map! do |user|
         BasicUserSerializer.new(user, scope: scope, root: false)
       end
     end
@@ -94,7 +94,7 @@ class TopicViewSerializer < ApplicationSerializer
       end
     end
 
-    if object.suggested_topics.try(:topics).present?
+    if object.suggested_topics&.topics.present?
       result[:suggested_topics] = object.suggested_topics.topics.map do |t|
         SuggestedTopicSerializer.new(t, scope: scope, root: false)
       end
@@ -215,7 +215,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   def actions_summary
     result = []
-    return [] unless post = object.posts.try(:first)
+    return [] unless post = object.posts&.first
     PostActionType.topic_flag_types.each do |sym, id|
       result << { id: id,
                   count: 0,
