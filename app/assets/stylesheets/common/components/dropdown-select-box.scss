@@ -1,15 +1,70 @@
 .dropdown-select-box.dropdown-select-box {
+  display: inline-flex;
+  height: 30px;
+  min-width: auto;
+
   &.is-expanded {
     z-index: 9999;
+
+    .collection,
+    .select-box-collection,
+    .select-box-body {
+      border-radius: 0;
+    }
   }
 
   .select-box-body {
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    background-clip: padding-box;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    width: max-content;
+    max-width: 300px;
   }
 
   .select-box-row {
     margin: 0;
     padding: 5px 10px;
+
+    .icons {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      align-self: center;
+      margin-right: 10px;
+
+      .d-icon {
+        font-size: 1.286em;
+        align-self: center;
+        margin-right: 0;
+        opacity: 1;
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+      }
+    }
+
+    .texts {
+      line-height: 18px;
+      flex: 1;
+      align-items: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+
+      .title {
+        flex: 1;
+        font-weight: bold;
+        display: block;
+        font-size: 1em;
+        color: $primary;
+      }
+
+      .desc {
+        flex: 1;
+        font-size: 0.857em;
+        font-weight: normal;
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
+        white-space: normal;
+      }
+    }
 
     &.is-highlighted {
       background: none;
@@ -20,13 +75,21 @@
     }
   }
 
+  .select-box-collection {
+    padding: 0;
+  }
+
   .dropdown-header {
     padding: 0;
     border: 0;
     outline: 0;
     justify-content: flex-start;
-    width: min-content;
+    width: max-content;
     background: none;
+
+    .d-icon + .d-icon {
+      margin-left: 5px;
+    }
 
     .btn {
       align-items: center;
@@ -34,6 +97,7 @@
       flex-direction: row;
       display: inline-flex;
       height: 100%;
+      margin: 0;
     }
   }
 }

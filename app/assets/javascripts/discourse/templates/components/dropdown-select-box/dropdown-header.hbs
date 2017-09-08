@@ -1,5 +1,11 @@
-<button class="btn {{if text 'btn-icon-text' 'no-text btn-icon'}}" aria-label="{{text}}" title="{{text}}">
+<button
+  class="btn {{if text 'btn-icon-text' 'no-text btn-icon'}}"
+  aria-label="{{text}}"
+  type="button"
+  title="{{text}}">
+
   {{icon}}
+
   {{#if text}}
     <span class="d-button-label">{{text}}</span>
   {{/if}}
