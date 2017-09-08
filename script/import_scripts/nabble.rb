@@ -39,7 +39,7 @@ class ImportScripts::Nabble < ImportScripts::Base
   BATCH_SIZE = 1000
 
   DB_NAME     = "nabble"
-  CATEGORY_ID = 6
+  TMP_DIR     = '/tmp/nabble'
 
   def initialize
     super
@@ -52,6 +52,7 @@ class ImportScripts::Nabble < ImportScripts::Base
 
   def execute
     import_users
+    import_mailing_lists_as_categories
     create_forum_topics
     import_replies
   end
@@ -91,7 +92,9 @@ class ImportScripts::Nabble < ImportScripts::Base
 
   def import_avatar(user, org_id)
     filename = 'avatar' + org_id.to_s
-    path = File.join('/tmp/nab', filename)
+    # TODO: make the freaking directory
+    FileUtils::mkdir_p(TMP_DIR)
+    path = File.join(TMP_DIR, filename)
     res = @client.exec("SELECT content FROM file_avatar WHERE name='avatar100.png' AND user_id = #{org_id} LIMIT 1")
     return if res.ntuples() < 1
 
@@ -119,23 +122,41 @@ class ImportScripts::Nabble < ImportScripts::Base
     mail = Mail.read_from_string(msg)
     mail.body
 
-    body, elided = receiver.select_body
-    body.force_encoding(body.encoding).encode("UTF-8")
+    body, elided = receiver.select_body unless body.nil?
+    body.force_encoding(body.encoding).encode("UTF-8") unless body.nil?
+  end
+
+  def import_mailing_lists_as_categories
+    puts "", "importing mailing lists..."
+
+    categories = @client.exec("
+                              SELECT node_id as category_id,
+                              list_name as name,
+                              list_home_url as description
+                              FROM mailing_list
+                              ORDER BY node_id
+                            ").to_a
+
+    create_categories(categories) do |category|
+      {
+        id: category['category_id'],
+        name: category['name'],
+        description: category['description']
+      }
+    end
   end
 
   def create_forum_topics
     puts "", "creating forum topics"
 
-    app_node_id = @client.exec("SELECT node_id FROM node WHERE is_app LIMIT 1")[0]['node_id']
-    topic_count = @client.exec("SELECT COUNT(node_id) AS count FROM node WHERE parent_id = #{app_node_id}")[0]["count"]
+    topic_count = @client.exec("SELECT COUNT(node_id) AS count FROM node")[0]["count"]
 
     batches(BATCH_SIZE) do |offset|
 
       topics = @client.exec <<-SQL
-        SELECT n.node_id, n.subject, n.owner_id, n.when_created, nm.message, n.msg_fmt
+        SELECT n.node_id, n.subject, n.owner_id, n.when_created, nm.message, n.msg_fmt, n.parent_id
         FROM node AS n
         INNER JOIN node_msg AS nm ON nm.node_id = n.node_id
-        WHERE n.parent_id = #{app_node_id}
         ORDER BY n.when_created
         LIMIT #{BATCH_SIZE}
         OFFSET #{offset}
@@ -155,7 +176,7 @@ class ImportScripts::Nabble < ImportScripts::Base
           title: t['subject'],
           user_id: user_id_from_imported_user_id(t["owner_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(t["when_created"])),
-          category: CATEGORY_ID,
+          category: category_id_from_imported_category_id(t['parent_id']),
           raw: raw,
           cook_method: Post.cook_methods[:regular] }
       end
