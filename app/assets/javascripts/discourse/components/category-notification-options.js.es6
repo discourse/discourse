@@ -1,5 +1,6 @@
 import NotificationOptionsComponent from "discourse/components/notification-options";
 import { observes } from "ember-addons/ember-computed-decorators";
+import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default NotificationOptionsComponent.extend({
@@ -12,7 +13,12 @@ export default NotificationOptionsComponent.extend({
 
   value: Em.computed.alias("category.notification_level"),
 
-  generatedHeadertext: iconHTML("caret-down").htmlSafe(),
+  @computed("value")
+  icon() {
+    return `${this._super()}${iconHTML("caret-down")}`.htmlSafe();
+  },
+
+  generatedHeadertext: null,
 
   @observes("value")
   _notificationLevelChanged() {
