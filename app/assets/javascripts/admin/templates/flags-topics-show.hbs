@@ -1,11 +1,15 @@
 <div class='flagged-topic-details'>
   <div class='topic-title'>
-    {{topic-status topic=topic}}
-    <h1>{{{topic.fancyTitle}}}</h1>
+    <h1>
+      {{topic-status topic=topic}}
+      {{#link-to 'topic' topic target="_blank"}}
+        {{{topic.fancyTitle}}}
+      {{/link-to}}
+    </h1>
   </div>
 
   {{plugin-outlet name="flagged-topic-details-header" args=(hash topic=topic)}}
 </div>
 <div class='topic-flags'>
-  {{flagged-posts flaggedPosts=flaggedPosts filter="active"}}
+  {{flagged-posts flaggedPosts=flaggedPosts query="active" topic=topic}}
 </div>
