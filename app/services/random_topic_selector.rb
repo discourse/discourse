@@ -4,7 +4,7 @@ class RandomTopicSelector
   BACKFILL_LOW_WATER_MARK = 500
 
   def self.backfill(category = nil)
-    exclude = category.try(:topic_id)
+    exclude = category&.topic_id
 
     # don't leak private categories into the "everything" group
     user = category ? CategoryFeaturedTopic.fake_admin : nil
@@ -28,10 +28,13 @@ class RandomTopicSelector
       .pluck(:id)
 
     key = cache_key(category)
-    results.each do |id|
-      $redis.rpush(key, id)
+
+    if results.present?
+      $redis.multi do
+        $redis.rpush(key, results)
+        $redis.expire(key, 2.days)
+      end
     end
-    $redis.expire(key, 2.days)
 
     results
   end
@@ -77,7 +80,7 @@ class RandomTopicSelector
   end
 
   def self.cache_key(category = nil)
-    "random_topic_cache_#{category.try(:id)}"
+    "random_topic_cache_#{category&.id}"
   end
 
 end
