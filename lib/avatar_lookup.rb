@@ -20,7 +20,6 @@ class AvatarLookup
   end
 
   def user_lookup_hash
-    # adding tap here is a personal taste thing
     hash = {}
     User.joins(:user_emails)
       .where(id: @user_ids)
