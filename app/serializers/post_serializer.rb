@@ -108,15 +108,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def moderator?
-    !!(object.try(:user).try(:moderator?))
+    !!(object&.user&.moderator?)
   end
 
   def admin?
-    !!(object.try(:user).try(:admin?))
+    !!(object&.user&.admin?)
   end
 
   def staff?
-    !!(object.try(:user).try(:staff?))
+    !!(object&.user&.staff?)
   end
 
   def yours
@@ -140,7 +140,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def display_username
-    object.user.try(:name)
+    object.user&.name
   end
 
   def primary_group_name
@@ -154,15 +154,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def primary_group_flair_url
-    object.user.try(:primary_group).try(:flair_url)
+    object.user&.primary_group&.flair_url
   end
 
   def primary_group_flair_bg_color
-    object.user.try(:primary_group).try(:flair_bg_color)
+    object.user&.primary_group&.flair_bg_color
   end
 
   def primary_group_flair_color
-    object.user.try(:primary_group).try(:flair_color)
+    object.user&.primary_group&.flair_color
   end
 
   def link_counts
@@ -189,11 +189,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_title
-    object.try(:user).try(:title)
+    object&.user&.title
   end
 
   def trust_level
-    object.try(:user).try(:trust_level)
+    object&.user&.trust_level
   end
 
   def reply_to_user
@@ -225,14 +225,18 @@ class PostSerializer < BasicPostSerializer
   # Summary of the actions taken on this post
   def actions_summary
     result = []
-    PostActionType.types.each do |sym, id|
-      next if [:bookmark].include?(sym)
+    can_see_post = scope.can_see_post?(object)
+
+    PostActionType.types.except(:bookmark).each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
       summary[:hidden] = true if sym == :vote
-      summary[:can_act] = true if scope.post_can_act?(object, sym, taken_actions: actions)
+
+      if scope.post_can_act?(object, sym, opts: { taken_actions: actions }, can_see_post: can_see_post)
+        summary[:can_act] = true
+      end
 
       if sym == :notify_user && scope.current_user.present? && scope.current_user == object.user
         summary.delete(:can_act)
@@ -276,7 +280,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_raw?
-    @add_raw.present? && (!object.hidden || scope.user.try(:staff?) || yours)
+    @add_raw.present? && (!object.hidden || scope.user&.staff? || yours)
   end
 
   def include_link_counts?
@@ -326,7 +330,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def is_auto_generated
-    object.incoming_email.try(:is_auto_generated)
+    object.incoming_email&.is_auto_generated
   end
 
   def include_is_auto_generated?

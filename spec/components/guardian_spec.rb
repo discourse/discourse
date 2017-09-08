@@ -57,11 +57,15 @@ describe Guardian do
     end
 
     it "returns false when you've already done it" do
-      expect(Guardian.new(user).post_can_act?(post, :like, taken_actions: { PostActionType.types[:like] => 1 })).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :like, opts: {
+        taken_actions: { PostActionType.types[:like] => 1 }
+      })).to be_falsey
     end
 
     it "returns false when you already flagged a post" do
-      expect(Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: { PostActionType.types[:spam] => 1 })).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :off_topic, opts: {
+        taken_actions: { PostActionType.types[:spam] => 1 }
+      })).to be_falsey
     end
 
     it "returns false for notify_user if private messages are disabled" do
@@ -863,11 +867,15 @@ describe Guardian do
       end
 
       it "doesn't allow voting if the user has an action from voting already" do
-        expect(guardian.post_can_act?(post, :vote, taken_actions: { PostActionType.types[:vote] => 1 })).to be_falsey
+        expect(guardian.post_can_act?(post, :vote, opts: {
+          taken_actions: { PostActionType.types[:vote] => 1 }
+        })).to be_falsey
       end
 
       it "allows voting if the user has performed a different action" do
-        expect(guardian.post_can_act?(post, :vote, taken_actions: { PostActionType.types[:like] => 1 })).to be_truthy
+        expect(guardian.post_can_act?(post, :vote, opts: {
+          taken_actions: { PostActionType.types[:like] => 1 }
+        })).to be_truthy
       end
 
       it "isn't allowed on archived topics" do

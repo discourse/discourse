@@ -250,7 +250,7 @@ module ApplicationHelper
   end
 
   def crawler_layout?
-    controller.try(:use_crawler_layout?)
+    controller&.use_crawler_layout?
   end
 
   def include_crawler_content?
