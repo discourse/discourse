@@ -21,6 +21,7 @@
 
 <script>
   <%- if !current_user && flash[:authentication_data] %>
+    Discourse.showingSignup = true
     require('discourse/routes/application').default.reopen({
       actions: {
         didTransition: function() {
