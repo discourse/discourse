@@ -158,6 +158,16 @@
       display: inline-block;
       padding: 5px 8px;
       line-height: 20px;
+
+      &.category-dropdown-button {
+        margin-left: -4px;
+        padding: 5px;
+        width: 13px;
+
+        .d-icon-caret-right {
+          margin-left: 2px;
+        }
+      }
     }
 
     li.bar>.dropdown-header:not(.home):first-child {
