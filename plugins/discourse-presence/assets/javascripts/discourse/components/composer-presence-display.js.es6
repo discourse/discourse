@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @computed('composer.presenceUsers', 'currentUser.id')
   users(presenceUsers, currentUser_id){
-    return presenceUsers.filter(user => user.id !== currentUser_id);
+    return (presenceUsers || []).filter(user => user.id !== currentUser_id);
   },
 
   @computed('composer.presenceState.action')
@@ -17,5 +17,4 @@ export default Ember.Component.extend({
   shouldDisplay(length){
     return length > 0;
   }
-
 });
