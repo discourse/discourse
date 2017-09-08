@@ -18,7 +18,7 @@
     {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
 
     {{#if currentUser}}
-      {{category-notifications-button category=category}}
+      {{category-notification-options category=category}}
     {{/if}}
 
     {{create-topic-button
@@ -33,4 +33,3 @@
     {{plugin-outlet name="category-navigation" args=(hash category=category)}}
   </div>
 {{/d-section}}
-

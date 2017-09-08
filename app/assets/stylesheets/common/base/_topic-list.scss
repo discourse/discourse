@@ -14,6 +14,13 @@
       font: 1.071em/0.9 "FontAwesome";
     }
   }
+
+  .select-box {
+    float: right;
+    margin-top: 0;
+    margin-left: 5px;
+    position: relative;
+  }
 }
 
 html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-medium; }
@@ -370,4 +377,3 @@ div.education {
   @extend .list-cell;
   border-bottom: 2px solid $primary-low;
 }
-

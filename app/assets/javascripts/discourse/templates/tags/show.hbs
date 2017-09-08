@@ -6,8 +6,8 @@
   <div class="container">
     {{#if tagNotification}}
       {{#unless additionalTags}}
-        {{tag-notifications-button action="changeTagNotification"
-                                   notificationLevel=tagNotification.notification_level}}
+        {{tag-notification-options action="changeTagNotification"
+                                   value=tagNotification.notification_level}}
       {{/unless}}
     {{/if}}
 

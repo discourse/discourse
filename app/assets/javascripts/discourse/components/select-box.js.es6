@@ -57,19 +57,22 @@ export default Ember.Component.extend({
     };
   },
 
+  @computed
   titleForRow: function() {
     return (rowComponent) => {
       return rowComponent.get(`content.${this.get("textKey")}`);
     };
-  }.property(),
+  },
 
+  @computed
   shouldHighlightRow: function() {
     return (rowComponent) => {
       const id = this._castInteger(rowComponent.get(`content.${this.get("idKey")}`));
       return id === this.get("value");
     };
-  }.property(),
+  },
 
+  @computed
   templateForRow: function() {
     return (rowComponent) => {
       let template = "";
@@ -83,7 +86,7 @@ export default Ember.Component.extend({
 
       return template;
     };
-  }.property(),
+  },
 
   applyDirection() {
     this.$().removeClass("is-above is-below is-left-aligned is-right-aligned");
