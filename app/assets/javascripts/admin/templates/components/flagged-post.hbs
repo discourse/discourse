@@ -1,0 +1,169 @@
+<tr class="flagged-post {{flaggedPost.extraClasses}}">
+  <td class='excerpt'>
+    <div class="flex-center-align">
+      <div class="flagged-post-avatar">
+        {{#if flaggedPost.postAuthorFlagged}}
+          {{#if flaggedPost.user}}
+            {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="large"}}{{/link-to}}
+            {{#if flaggedPost.wasEdited}}
+              {{d-icon "pencil" title="admin.flags.was_edited"}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+        {{#if canAct}}
+          {{#if flaggedPost.previous_flags_count}}
+            <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
+          {{/if}}
+        {{/if}}
+      </div>
+      <div class="topic-excerpt">
+        <h3>
+          {{#if flaggedPost.topic.isPrivateMessage}}
+            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+          {{/if}}
+          {{topic-status topic=flaggedPost.topic}}
+          <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
+        </h3>
+        {{#unless site.mobileView}}
+          {{#if flaggedPost.postAuthorFlagged}}
+            <p>{{{flaggedPost.excerpt}}}</p>
+          {{/if}}
+        {{/unless}}
+      </div>
+    </div>
+
+    {{#if site.mobileView}}
+      {{#if flaggedPost.postAuthorFlagged}}
+        <p>{{{flaggedPost.excerpt}}}</p>
+      {{/if}}
+    {{/if}}
+  </td>
+
+  <td class='flaggers'>
+    <table>
+      <tbody>
+        {{#each flaggedPost.flaggers as |flagger|}}
+          <tr>
+            <td class='avatar'>
+              {{#link-to 'adminUser' flagger.user}}
+                {{avatar flagger.user imageSize="medium"}}
+              {{/link-to}}
+            </td>
+            <td>
+              {{#link-to 'adminUser' flagger.user}}
+                {{flagger.user.username}}
+              {{/link-to}}
+              {{format-age flagger.flaggedAt}}
+              <br>
+              {{flagger.flagType}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </td>
+
+  <td class='flaggers result'>
+    {{#if showResolvedBy}}
+      <table>
+        <tbody>
+          {{#each flaggedPost.flaggers as |flagger|}}
+            <tr>
+              <td class='avatar'>
+                {{#link-to 'adminUser' flagger.disposedBy}}
+                  {{avatar flagger.disposedBy imageSize="medium"}}
+                {{/link-to}}
+              </td>
+              <td>
+                {{format-age flagger.disposedAt}}
+                {{{flagger.dispositionIcon}}}
+                {{#if flagger.tookAction}}
+                  {{d-icon "gavel" title="admin.flags.took_action"}}
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+  </td>
+
+</tr>
+
+{{#if flaggedPost.topicFlagged}}
+  <tr class='message'>
+    <td colspan="3">
+      <div>
+        {{{i18n 'admin.flags.topic_flagged'}}}&nbsp;<a href='{{unbound flaggedPost.url}}' class="btn">{{i18n 'admin.flags.visit_topic'}}</a>
+      </div>
+    </td>
+  </tr>
+{{/if}}
+
+{{#each flaggedPost.conversations as |c|}}
+  <tr class='message'>
+    <td colspan="3">
+      <div>
+        {{#if c.response}}
+          <p>
+            {{#link-to 'adminUser' c.response.user}}{{avatar c.response.user imageSize="medium"}}{{/link-to}}&nbsp;{{{c.response.excerpt}}}
+          </p>
+          {{#if c.reply}}
+            <p>
+              {{#link-to 'adminUser' c.reply.user}}{{avatar c.reply.user imageSize="medium"}}{{/link-to}}&nbsp;{{{c.reply.excerpt}}}
+              {{#if c.hasMore}}
+                <a href="{{unbound c.permalink}}">{{i18n 'admin.flags.more'}}</a>
+              {{/if}}
+            </p>
+          {{/if}}
+          <a href="{{unbound c.permalink}}">
+            {{d-button
+              class="btn-reply"
+              icon="reply"
+              label="admin.flags.reply_message"}}
+          </a>
+        {{/if}}
+      </div>
+    </td>
+  </tr>
+{{/each}}
+
+{{#if canAct}}
+  <tr>
+    <td colspan="3" class="action">
+      {{d-button
+        title="admin.flags.agree_title"
+        label="admin.flags.agree"
+        icon="thumbs-o-up"
+        action="showAgreeFlagModal"
+        ellipsis=true}}
+
+      {{#if flaggedPost.postHidden}}
+        {{d-button
+          title="admin.flags.disagree_flag_unhide_post_title"
+          action="disagree"
+          icon="thumbs-o-down"
+          label="admin.flags.disagree_flag_unhide_post"}}
+      {{else}}
+        {{d-button
+          title="admin.flags.disagree_flag_title"
+          action="disagree"
+          icon="thumbs-o-down"
+          label="admin.flags.disagree_flag"}}
+      {{/if}}
+
+      {{d-button
+        title="admin.flags.defer_flag_title"
+        action="defer"
+        icon="external-link"
+        label="admin.flags.defer_flag"}}
+
+      {{d-button
+        class="btn-danger"
+        title="admin.flags.delete_title"
+        action="showDeleteFlagModal"
+        icon="trash-o"
+        label="admin.flags.delete"}}
+    </td>
+  </tr>
+{{/if}}
