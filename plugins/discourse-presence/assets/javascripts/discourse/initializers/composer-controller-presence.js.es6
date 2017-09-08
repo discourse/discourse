@@ -10,6 +10,7 @@ function initialize(api) {
     presenceState: { compose_state: 'closed' },
     keepAliveTimer: null,
     messageBusChannel: null,
+    presenceUsers: null,
 
     @observes('model.composeState', 'model.action', 'model.post', 'model.topic')
     openStatusChanged(){
