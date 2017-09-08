@@ -19,7 +19,7 @@ acceptance("Topic Notifications button", {
 QUnit.test("Updating topic notification level", assert => {
   visit("/t/internationalization-localization/280");
 
-  const notificationOptions = "#topic-footer-buttons .topic-notifications";
+  const notificationOptions = "#topic-footer-buttons .topic-notification-options";
 
   andThen(() => {
     assert.ok(

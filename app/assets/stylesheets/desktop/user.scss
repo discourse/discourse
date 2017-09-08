@@ -8,11 +8,6 @@
       margin-top: 10px;
     }
   }
-
-  .group-notification-menu {
-    float: right;
-    margin-bottom: 5px;
-  }
 }
 
 .profile-image {
@@ -261,13 +256,6 @@
         display: block;
       }
     }
-  }
-
-  .group-notification-menu .dropdown-menu {
-    top: 30px;
-    bottom: auto;
-    left: auto;
-    right: 10px;
   }
 
   .viewing-self & .about.collapsed-info {

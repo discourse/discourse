@@ -1,0 +1,29 @@
+#topic-footer-buttons {
+  .topic-notification-options-button {
+    min-width: auto;
+
+    .btn {
+      margin: 0;
+    }
+
+    .reason {
+      line-height: 16px;
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
+.topic-notification-options-button .topic-notification-options {
+  min-width: auto;
+}
+
+.topic-notification-options-button {
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 5px 0;
+
+  .topic-notification-options, .reason {
+    display: inline-flex;
+  }
+}
