@@ -23,7 +23,7 @@ export function showEntrance(e) {
 export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
-  classNameBindings: [':topic-list-item', 'unboundClassNames'],
+  classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited'],
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('topic.id'),
 
@@ -38,6 +38,11 @@ export default Ember.Component.extend(bufferedRender({
     if (template) {
       buffer.push(template(this));
     }
+  },
+
+  @computed('topic.last_read_post_number', 'topic.highest_post_number')
+  visited(lastReadPost, highestPostNumber) {
+    return lastReadPost === highestPostNumber;
   },
 
   @computed('topic', 'lastVisitedTopic')
