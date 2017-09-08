@@ -68,11 +68,11 @@ class TopicView
 
     if @posts
       if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+        @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
       if (whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), whitelisted_fields)
       end
     end
 
@@ -331,14 +331,6 @@ class TopicView
     @filtered_posts.by_newest.with_user.first(25)
   end
 
-  def current_post_ids
-    @current_post_ids ||= if @posts.is_a?(Array)
-      @posts.map { |p| p.id }
-    else
-      @posts.pluck(:post_number)
-    end
-  end
-
   # Returns an array of [id, post_number, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
@@ -361,7 +353,7 @@ class TopicView
 
       post_numbers = PostTiming
         .where(topic_id: @topic.id, user_id: @user.id)
-        .where(post_number: current_post_ids)
+        .where(post_number: @posts.pluck(:post_number))
         .pluck(:post_number)
 
       post_numbers.each { |pn| result << pn }
@@ -396,7 +388,7 @@ class TopicView
 
     max = [max, post_count].min
 
-    return @posts = [] if min > max
+    return @posts = Post.none if min > max
 
     min = [[min, max].min, 0].max
 

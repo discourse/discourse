@@ -1,7 +1,7 @@
 development:
   prepared_statements: false
   adapter: postgresql
-  database: discourse_development
+  database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
   min_messages: warning
   pool: 5
   timeout: 5000

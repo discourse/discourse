@@ -1,0 +1,5 @@
+en:
+  js:
+    presence:
+      replying: "replying"
+      editing: "editing"

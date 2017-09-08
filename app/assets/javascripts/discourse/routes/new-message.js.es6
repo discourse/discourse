@@ -34,7 +34,11 @@ export default Discourse.Route.extend({
       });
     } else {
       $.cookie('destination_url', window.location.href);
-      this.replaceWith('login');
+      if (Discourse.showingSignup) {
+        Discourse.showingSignup = false;
+      } else {
+        self.replaceWith('login');
+      }
     }
   }
 

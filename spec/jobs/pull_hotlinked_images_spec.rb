@@ -17,6 +17,7 @@ describe Jobs::PullHotlinkedImages do
     stub_request(:head, large_image_url)
     SiteSetting.download_remote_images_to_local = true
     SiteSetting.max_image_size_kb = 2
+    SiteSetting.download_remote_images_threshold = 0
   end
 
   describe '#execute' do
@@ -82,12 +83,12 @@ describe Jobs::PullHotlinkedImages do
       end
 
       it 'replaces image src' do
-        SiteSetting.download_remote_images_threshold = 0
         post = Fabricate(:post, raw: "#{url}")
 
         Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
         Jobs::ProcessPost.new.execute(post_id: post.id)
+
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)

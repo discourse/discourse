@@ -222,7 +222,7 @@ componentTest('persists filter state when expandind/collapsing', {
 });
 
 componentTest('supports options to limit size', {
-  template: '{{select-box maxCollectionHeight=20 content=content}}',
+  template: '{{select-box collectionHeight=20 content=content}}',
 
   beforeEach() {
     this.set("content", [{ id: 1, text: "robin" }]);

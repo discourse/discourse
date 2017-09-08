@@ -1,0 +1,45 @@
+.presence-users{
+  
+  background-color: $primary-low;
+
+  color: $primary-medium;
+  padding: 0px 5px;
+  position: absolute;
+  top: 8px;
+  right: 30px;
+
+
+  .wave {
+
+    .dot {
+      display: inline-block;
+      animation: wave 1.8s linear infinite;
+
+      &:nth-child(2) {
+        animation-delay: -1.6s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: -1.4s;
+      }
+    }
+  }
+
+  @keyframes wave {
+    0%, 60%, 100% {
+      transform: initial;
+    }
+
+    30% {
+      transform: translateY(-0.2em);
+    }
+  }
+}
+
+.mobile-view .presence-users{
+  top: 5px;
+  right: 60px;
+  .description{
+    display:none;
+  }
+}

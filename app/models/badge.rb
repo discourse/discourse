@@ -56,6 +56,10 @@ class Badge < ActiveRecord::Base
   GivesBack = 32
   Empathetic = 39
 
+  Enthusiast = 45
+  Aficionado = 46
+  Devotee = 47
+
   NewUserOfTheMonth = 44
 
   # other consts

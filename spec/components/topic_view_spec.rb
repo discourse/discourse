@@ -64,7 +64,7 @@ describe TopicView do
       best = TopicView.new(topic.id, nil, best: 99)
       expect(best.posts.count).to eq(2)
       expect(best.filtered_post_ids.size).to eq(3)
-      expect(best.current_post_ids).to match_array([p2.id, p3.id])
+      expect(best.posts.pluck(:id)).to match_array([p2.id, p3.id])
 
       # should get no results for trust level too low
       best = TopicView.new(topic.id, nil, best: 99, min_trust_level: coding_horror.trust_level + 1)

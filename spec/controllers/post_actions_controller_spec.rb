@@ -53,7 +53,11 @@ describe PostActionsController do
 
       it "passes a list of taken actions through" do
         PostAction.create(post_id: @post.id, user_id: @user.id, post_action_type_id: PostActionType.types[:inappropriate])
-        Guardian.any_instance.expects(:post_can_act?).with(@post, :off_topic, has_entry(taken_actions: has_key(PostActionType.types[:inappropriate])))
+
+        Guardian.any_instance.expects(:post_can_act?).with(@post, :off_topic,
+          has_entry(opts: has_entry(taken_actions: has_key(PostActionType.types[:inappropriate])))
+        )
+
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:off_topic]
       end
 

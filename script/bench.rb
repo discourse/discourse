@@ -193,7 +193,7 @@ begin
   tests = [
     ["categories", "/categories"],
     ["home", "/"],
-    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"]
+    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/179"]
     # ["user", "/u/admin1/activity"],
   ]
 

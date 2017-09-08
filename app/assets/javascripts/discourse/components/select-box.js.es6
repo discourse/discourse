@@ -4,7 +4,6 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   layoutName: "components/select-box",
-
   classNames: "select-box",
   classNameBindings: ["expanded:is-expanded"],
 
@@ -26,7 +25,6 @@ export default Ember.Component.extend({
   value: null,
   selectedContent: null,
   noContentLabel: I18n.t("select_box.no_content"),
-  lastHovered: null,
   clearSelectionLabel: null,
 
   idKey: "id",
@@ -43,10 +41,10 @@ export default Ember.Component.extend({
   selectBoxHeaderComponent: "select-box/select-box-header",
   selectBoxCollectionComponent: "select-box/select-box-collection",
 
-  minWidth: 220,
-  maxCollectionHeight: 200,
+  collectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
+  fullWidthOnMobile: false,
 
   castInteger: false,
 
@@ -67,16 +65,8 @@ export default Ember.Component.extend({
 
   shouldHighlightRow: function() {
     return (rowComponent) => {
-      if (Ember.isNone(this.get("value")) && Ember.isNone(this.get("lastHovered"))) {
-        return false;
-      }
-
       const id = this._castInteger(rowComponent.get(`content.${this.get("idKey")}`));
-      if (Ember.isNone(this.get("lastHovered"))) {
-        return id === this.get("value");
-      } else {
-        return id === this.get("lastHovered");
-      }
+      return id === this.get("value");
     };
   }.property(),
 
@@ -96,26 +86,46 @@ export default Ember.Component.extend({
   }.property(),
 
   applyDirection() {
-    const offsetTop = this.$()[0].getBoundingClientRect().top;
-    const windowHeight = $(window).height();
+    this.$().removeClass("is-above is-below is-left-aligned is-right-aligned");
+    let options = { left: "auto", bottom: "auto", left: "auto", top: "auto" };
     const headerHeight = this.$(".select-box-header").outerHeight(false);
     const filterHeight = this.$(".select-box-filter").outerHeight(false);
+    const bodyHeight = this.$(".select-box-body").outerHeight(false);
+    const windowWidth = $(window).width();
+    const windowHeight = $(window).height();
+    const boundingRect = this.$()[0].getBoundingClientRect();
+    const offsetTop = boundingRect.top;
 
-    if (windowHeight - (offsetTop + this.get("maxCollectionHeight") + filterHeight + headerHeight) < 0) {
-      this.$().addClass("is-reversed");
-      this.$(".select-box-body").css({
-        left: this.get("horizontalOffset"),
-        top: "auto",
-        bottom: headerHeight + this.get("verticalOffset")
-      });
+    if (this.get("fullWidthOnMobile") && this.site.isMobileDevice) {
+      const margin = 10;
+      const relativeLeft = this.$().offset().left - $(window).scrollLeft();
+      options.left = margin - relativeLeft;
+      options.width = windowWidth - margin * 2;
     } else {
-      this.$().removeClass("is-reversed");
-      this.$(".select-box-body").css({
-        left: this.get("horizontalOffset"),
-        top: headerHeight + this.get("verticalOffset"),
-        bottom: "auto"
-      });
+      const offsetLeft = boundingRect.left;
+      const bodyWidth = this.$(".select-box-body").outerWidth(false);
+      const hasRightSpace = (windowWidth - (this.get("horizontalOffset") + offsetLeft + filterHeight + bodyWidth) > 0);
+
+      if (hasRightSpace) {
+        this.$().addClass("is-left-aligned");
+        options.left = this.get("horizontalOffset");
+      } else {
+        this.$().addClass("is-right-aligned");
+        options.right = this.get("horizontalOffset");
+      }
     }
+
+    const componentHeight = this.get("verticalOffset") + bodyHeight + headerHeight;
+    const hasBelowSpace = windowHeight - offsetTop - componentHeight > 0;
+    if (hasBelowSpace) {
+      this.$().addClass("is-below");
+      options.top = headerHeight + this.get("verticalOffset");
+    } else {
+      this.$().addClass("is-above");
+      options.bottom = headerHeight + this.get("verticalOffset");
+    }
+
+    this.$(".select-box-body").css(options);
   },
 
   init() {
@@ -156,12 +166,9 @@ export default Ember.Component.extend({
       this._removeFixedPosition();
     }
 
-    this.$().css("min-width", this.get("minWidth"));
-
     const computedWidth = this.$().outerWidth(false);
     const computedHeight = this.$().outerHeight(false);
 
-    this.$(".select-box-header").css("height", computedHeight);
     this.$(".select-box-filter").css("height", computedHeight);
 
     if (this.get("expanded")) {
@@ -169,14 +176,14 @@ export default Ember.Component.extend({
         this._applyFixedPosition(computedWidth, computedHeight);
       }
 
-      this.$(".select-box-body").css("width", computedWidth);
-      this.$(".select-box-collection").css("max-height", this.get("maxCollectionHeight"));
+      this.$(".select-box-collection").css("max-height", this.get("collectionHeight"));
 
-      this.applyDirection();
-
-      if (this.get("wrapper")) {
-        this._positionSelectBoxWrapper();
-      }
+      Ember.run.schedule("afterRender", () => {
+        this.applyDirection();
+        if (this.get("wrapper")) {
+          this._positionSelectBoxWrapper();
+        }
+      });
     } else {
       if (this.get("wrapper")) {
         this.$(".select-box-wrapper").hide();
@@ -311,10 +318,6 @@ export default Ember.Component.extend({
 
     onClearSelection() {
       this.setProperties({ value: null, expanded: false });
-    },
-
-    onHoverRow(content) {
-      this.set("lastHovered", this._castInteger(content[this.get("idKey")]));
     }
   },
 

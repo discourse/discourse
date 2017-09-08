@@ -15,7 +15,7 @@ class FilterBestPosts
   def filter
     @posts =
       if @min_replies && @topic.posts_count < @min_replies + 1
-        []
+        Post.none
       else
         filter_posts_liked_by_moderators
         setup_posts
@@ -59,7 +59,7 @@ class FilterBestPosts
   end
 
   def sort_posts
-    @posts.to_a.sort! { |a, b| a.post_number <=> b.post_number }
+    @posts = Post.from(@posts, :posts).order(post_number: :asc)
   end
 
 end

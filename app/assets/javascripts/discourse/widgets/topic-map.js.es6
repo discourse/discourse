@@ -136,7 +136,8 @@ createWidget('topic-map-link', {
              target: "_blank",
              'data-user-id': attrs.user_id,
              'data-ignore-post-id': 'true',
-             title: attrs.url };
+             title: attrs.url,
+             rel: 'nofollow noopener' };
   },
 
   html(attrs) {

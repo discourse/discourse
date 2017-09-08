@@ -1,45 +1,39 @@
-img.avatar {
-  border-radius: 50%;
-}
+// Common
+// global styles that apply to the Discourse application specifically
+// BEWARE: changing these styles implies they take effect anywhere they are seen
+// throughout the Discourse application
 
-.container {
-  @extend .clearfix;
-}
-
-.wrap {
-  @extend .clearfix;
-  margin-right: auto;
-  margin-left: auto;
-  padding: 0 8px;
-  .contents {
-    position: relative;
+// Animation Keyframes
+@keyframes ping {
+  from {
+    transform: scale(0.25);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 
-.full-width {
-  margin-left: 12px;
+@keyframes rotate-forever {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-big {
-  font-size: 28px;
+@keyframes background-fade-highlight {
+  0% {
+    background-color: $tertiary-low;
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
-small {
-  font-size: 9px;
-}
-
-//setting a static limit on big and small prevents nesting abuse
-
-
-blockquote {
-  @include post-aside;
-  clear: both;
-}
-
-a.no-href {
-  cursor: pointer;
-}
-
+// Base Elements
 html {
   height: 100%;
 }
@@ -52,55 +46,169 @@ body {
   @include clearfix;
 }
 
-h1, h2, h3, h4, h5, h6 {
+big {
+  font-size: 28px;
+}
+
+small {
+  font-size: 9px;
+}
+
+//setting a static limit on big and small prevents nesting abuse
+blockquote {
+  @include post-aside;
+  clear: both;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
   margin-bottom: .5rem;
 }
 
-button.ok {
-  background: $success;
-  color: $secondary;
-  @include hover {
-    background: lighten($success, 10%);
+button {
+  &.ok {
+    background: $success;
     color: $secondary;
+
+    @include hover {
+      background: lighten($success, 10%);
+      color: $secondary;
+    }
+  }
+
+  &.cancel {
+    background: $danger;
+    color: $secondary;
+
+    @include hover {
+      background: lighten($danger, 10%);
+      color: $secondary;
+    }
   }
 }
 
-button.cancel {
-  background: $danger;
-  color: $secondary;
-  @include hover {
-    background: lighten($danger, 10%);
-    color: $secondary;
+ul.breadcrumb {
+  margin: 0 10px 0 10px;
+}
+
+a.no-href {
+  cursor: pointer;
+}
+
+img.avatar {
+  border-radius: 50%;
+}
+
+// don't wrap relative dates; we want Jul 26, '15, not: Jul
+//                                                      26,
+//                                                      '15
+span.relative-date {
+  white-space:nowrap;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  &[type="radio"],
+  &[type="checkbox"] {
+    margin: 3px 0;
+    line-height: normal;
+    cursor: pointer;
   }
+  &[type="submit"],
+  &[type="reset"],
+  &[type="button"],
+  &[type="radio"],
+  &[type="checkbox"] {
+    width: auto;
+  }
+
+  &.invalid {
+    background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
+  }
+
+  .radio &[type="radio"],
+  .checkbox &[type="checkbox"] {
+    float: left;
+    margin-left: -18px;
+  }
+}
+
+// Common Classes
+.radio,
+.checkbox {
+  min-height: 18px;
+  padding-left: 18px;
+
+  .controls > &:first-child {
+    padding-top: 5px;
+  }
+
+  &.inline {
+    display: inline-block;
+    padding-top: 5px;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+}
+
+.radio.inline .radio.inline,
+.checkbox.inline .checkbox.inline {
+  margin-left: 10px;
+}
+
+.container {
+  @extend .clearfix;
+}
+
+.wrap {
+  @extend .clearfix;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0 8px;
+
+  .contents {
+    position: relative;
+  }
+}
+
+.boxed {
+  &.white {
+    background-color: $secondary;
+  }
+}
+
+.full-width {
+  margin-left: 12px;
 }
 
 // the default for table cells in topic list
 // is scale-color($primary, $lightness: 50%)
 // numbers get dimmer as they get colder
-.coldmap-high {
-  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
-}
-.coldmap-med {
-  color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)) !important;
-}
-.coldmap-low {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
+.coldmap {
+  &-high {
+    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
+  }
+
+  &-med {
+    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)) !important;
+  }
+
+  &-low {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
+  }
 }
 
-#loading-message {
-  position: absolute;
-  font-size: 2.143em;
-  text-align: center;
-  top: 120px;
-  left: 500px;
-  color: $primary;
-}
-  .top-space {
+.top-space {
   margin-top: 10px;
-}
-ul.breadcrumb {
-  margin: 0 10px 0 10px;
 }
 
 .message {
@@ -110,18 +218,6 @@ ul.breadcrumb {
 
   h2 {
     margin-bottom: 20px;
-  }
-}
-
-#footer {
-  .container {
-    height: 50px;
-    .contents {
-      padding-top: 10px;
-      a[href] {
-        color: $secondary;
-      }
-    }
   }
 }
 
@@ -139,10 +235,6 @@ ul.breadcrumb {
   }
 }
 
-input[type].invalid {
-  background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
-}
-
 .d-editor-input {
   resize: none;
 }
@@ -157,43 +249,6 @@ input[type].invalid {
   top: 60px !important;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-input {
-  &[type="radio"], &[type="checkbox"] {
-    margin: 3px 0;
-    line-height: normal;
-    cursor: pointer;
-  }
-  &[type="submit"], &[type="reset"], &[type="button"], &[type="radio"], &[type="checkbox"] {
-    width: auto;
-  }
-}
-.radio, .checkbox {
-  min-height: 18px;
-  padding-left: 18px;
-}
-.radio input[type="radio"], .checkbox input[type="checkbox"] {
-  float: left;
-  margin-left: -18px;
-}
-.controls > {
-  .radio:first-child, .checkbox:first-child {
-    padding-top: 5px;
-  }
-}
-.radio.inline, .checkbox.inline {
-  display: inline-block;
-  padding-top: 5px;
-  margin-bottom: 0;
-  vertical-align: middle;
-}
-.radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
-  margin-left: 10px;
-}
-
 .flex-center-align {
   display: flex;
   align-items: center;
@@ -202,7 +257,10 @@ input {
 .unread-private-messages {
   color: $secondary;
   background: $success;
-  &.badge-notification[href] {color: $secondary;}
+
+  &.badge-notification[href] {
+    color: $secondary;
+  }
 }
 
 .ring-backdrop-spotlight {
@@ -256,50 +314,12 @@ input {
   -webkit-animation-name: ping;
 }
 
-@-webkit-keyframes ping {
-  from {
-    $scale: 0.25;
-    transform: scale($scale);
-    -ms-transform: scale($scale);
-    -webkit-transform: scale($scale);
-    -o-transform: scale($scale);
-    -moz-transform: scale($scale);
-    opacity: 1;
-  }
-  to {
-    $scale: 2;
-    transform: scale($scale);
-    -ms-transform: scale($scale);
-    -webkit-transform: scale($scale);
-    -o-transform: scale($scale);
-    -moz-transform: scale($scale);
-    opacity: 0;
-  }
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
-}
 
-.fade.in {
-  opacity: 1;
-}
-
-@-webkit-keyframes rotate-forever {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-@keyframes rotate-forever {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+  &.in {
+    opacity: 1;
   }
 }
 
@@ -328,7 +348,6 @@ input {
 }
 
 .content-list {
-
   h3 {
     color: $primary-medium;
     font-size: 1.071em;
@@ -340,50 +359,106 @@ input {
     list-style: none;
     margin: 0;
 
-    li:first-of-type {
-      border-top: 1px solid $primary-low;
-    }
     li {
       border-bottom: 1px solid $primary-low;
-    }
 
-    li a {
-      display: block;
-      padding: 10px;
-      color: $primary;
-
-      &:hover {
-        background-color: $primary-low;
-        color: $primary;
+      &:first-of-type {
+        border-top: 1px solid $primary-low;
       }
 
-      &.active {
-        font-weight: bold;
+      a {
+        display: block;
+        padding: 10px;
         color: $primary;
+
+        &:hover {
+          background-color: $primary-low;
+          color: $primary;
+        }
+
+        &.active {
+          font-weight: bold;
+          color: $primary;
+        }
       }
     }
   }
 }
 
-// don't wrap relative dates, we want
-//
-// Jul 26, '15
-//
-// not
-//
-// Jul
-// 26,
-// '15
-//
-span.relative-date {
-  white-space:nowrap;
+.form-vertical {
+  input,
+  textarea,
+  select,
+  .input-prepend,
+  .input-append {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+
+  .control-group {
+    @include clearfix;
+  }
+
+  .control-label {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 2;
+  }
+
+  .controls {
+    margin-left: 0;
+  }
 }
 
-@keyframes background-fade-highlight {
-  0% {
-    background-color: $tertiary-low;
+// Special elements
+// Special elements
+#main {
+  img.avatar {
+    &.header {
+      width: 45px;
+      height: 45px;
+    }
+
+    &.medium {
+      width: 32px;
+      height: 32px;
+    }
+
+    &.small {
+      width: 25px;
+      height: 25px;
+    }
+
+    &.tiny {
+      width: 20px;
+      height: 20px;
+    }
   }
-  100% {
-    background-color: transparent;
+
+  .user-list {
+    .user {
+      padding-bottom: 5px;
+    }
+  }
+}
+
+#loading-message {
+  position: absolute;
+  font-size: 2.143em;
+  text-align: center;
+  top: 120px;
+  left: 500px;
+  color: $primary;
+}
+
+#footer {
+  .container {
+    height: 50px;
+    .contents {
+      padding-top: 10px;
+      a[href] {
+        color: $secondary;
+      }
+    }
   }
 }

@@ -10,6 +10,7 @@ require_dependency 'pretty_text'
 require_dependency 'url_helper'
 require_dependency 'letter_avatar'
 require_dependency 'promotion'
+require_dependency 'password_validator'
 
 class User < ActiveRecord::Base
   include Searchable
@@ -138,8 +139,6 @@ class User < ActiveRecord::Base
                        ucf.name = ? AND
                        ucf.value::int > 0
                   )', 'master_id') }
-
-  scope :staff, -> { where("admin OR moderator") }
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop

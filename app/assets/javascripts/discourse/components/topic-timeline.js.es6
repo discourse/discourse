@@ -84,6 +84,5 @@ export default MountWidget.extend(Docking, {
     }
 
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
-    this.dispatch('topic-notifications-button:changed', 'topic-notifications-button');
   }
 });

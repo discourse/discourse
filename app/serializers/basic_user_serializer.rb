@@ -9,7 +9,7 @@ class BasicUserSerializer < ApplicationSerializer
     if Hash === object
       User.avatar_template(user[:username], user[:uploaded_avatar_id])
     else
-      user.try(:avatar_template)
+      user&.avatar_template
     end
   end
 
