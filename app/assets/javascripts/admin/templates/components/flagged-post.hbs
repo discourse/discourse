@@ -17,13 +17,15 @@
         {{/if}}
       </div>
       <div class="topic-excerpt">
-        <h3>
-          {{#if flaggedPost.topic.isPrivateMessage}}
-            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-          {{/if}}
-          {{topic-status topic=flaggedPost.topic}}
-          <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
-        </h3>
+        {{#unless hideTitle}}
+          <h3>
+            {{#if flaggedPost.topic.isPrivateMessage}}
+              <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+            {{/if}}
+            {{topic-status topic=flaggedPost.topic}}
+            <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
+          </h3>
+        {{/unless}}
         {{#unless site.mobileView}}
           {{#if flaggedPost.postAuthorFlagged}}
             <p>{{{flaggedPost.excerpt}}}</p>

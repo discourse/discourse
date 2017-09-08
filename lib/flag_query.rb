@@ -2,15 +2,23 @@ require 'ostruct'
 
 module FlagQuery
 
-  def self.flagged_posts_report(current_user, filter, offset = 0, per_page = 25)
-    actions = flagged_post_actions(filter)
+  def self.flagged_posts_report(current_user, opts = nil)
+    opts ||= {}
+    filter = opts[:filter] || 'active'
+    offset = opts[:offset] || 0
+    per_page = opts[:per_page] || 25
+    topic_id = opts[:topic_id]
+
+    actions = flagged_post_actions(opts)
 
     guardian = Guardian.new(current_user)
 
     if !guardian.is_admin?
-      actions = actions.where('category_id IN (:allowed_category_ids) OR archetype = :private_message',
+      actions = actions.where(
+        'category_id IN (:allowed_category_ids) OR archetype = :private_message',
         allowed_category_ids: guardian.allowed_category_ids,
-        private_message: Archetype.private_message)
+        private_message: Archetype.private_message
+      )
     end
 
     post_ids = actions.limit(per_page)
@@ -111,14 +119,18 @@ module FlagQuery
     ]
   end
 
-  def self.flagged_post_actions(filter)
+  def self.flagged_post_actions(opts)
     post_actions = PostAction.flags
       .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
       .joins("INNER JOIN topics ON topics.id = posts.topic_id")
       .joins("LEFT JOIN users ON users.id = posts.user_id")
       .where("posts.user_id > 0")
 
-    if filter == "old"
+    if opts[:topic_id]
+      post_actions = post_actions.where("topics.id = ?", opts[:topic_id])
+    end
+
+    if opts[:filter] == "old"
       post_actions.where("post_actions.disagreed_at IS NOT NULL OR
                           post_actions.deferred_at IS NOT NULL OR
                           post_actions.agreed_at IS NOT NULL")
