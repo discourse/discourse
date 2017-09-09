@@ -1,10 +1,10 @@
-import NotificationOptionsComponent from "discourse/components/notification-options";
+import NotificationOptionsComponent from "discourse/components/notifications-button";
 import { observes, on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { topicLevels, buttonDetails } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
-  classNames: ["topic-notification-options"],
+  classNames: ["topic-notifications-options"],
 
   content: topicLevels,
   i18nPrefix: "topic.notifications",
@@ -16,7 +16,7 @@ export default NotificationOptionsComponent.extend({
 
   @on("didInsertElement")
   _bindGlobalLevelChanged() {
-    this.appEvents.on("topic-notifications-options:changed", (msg) => {
+    this.appEvents.on("topic-notifications-button:changed", (msg) => {
       if (msg.type === "notification") {
         if (this.get("topic.details.notification_level") !== msg.id) {
           this.get("topic.details").updateNotifications(msg.id);
@@ -27,12 +27,12 @@ export default NotificationOptionsComponent.extend({
 
   @on("willDestroyElement")
   _unbindGlobalLevelChanged() {
-    this.appEvents.off("topic-notifications-options:changed");
+    this.appEvents.off("topic-notifications-button:changed");
   },
 
   @observes("value")
   _notificationLevelChanged() {
-    this.appEvents.trigger("topic-notifications-options:changed", {type: "notification", id: this.get("value")});
+    this.appEvents.trigger("topic-notifications-button:changed", {type: "notification", id: this.get("value")});
   },
 
   @observes("topic.details.notification_level")

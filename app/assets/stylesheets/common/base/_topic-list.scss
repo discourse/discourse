@@ -16,10 +16,12 @@
   }
 
   .select-box {
-    float: right;
-    margin-top: 0;
-    margin-left: 5px;
-    position: relative;
+    align-self: center;
+
+    &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
+      float: right;
+      margin-left: 8px;
+    }
   }
 }
 
