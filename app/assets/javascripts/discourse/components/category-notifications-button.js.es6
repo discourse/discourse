@@ -1,10 +1,10 @@
-import NotificationOptionsComponent from "discourse/components/notification-options";
-import { observes } from "ember-addons/ember-computed-decorators";
+import NotificationOptionsComponent from "discourse/components/notifications-button";
+import { on, observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default NotificationOptionsComponent.extend({
-  classNames: ["category-notification-options"],
+  classNames: ["category-notifications-button"],
 
   classNameBindings: ["hidden:is-hidden"],
   hidden: Ember.computed.or("category.deleted", "site.isMobileDevice"),

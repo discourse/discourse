@@ -1,10 +1,10 @@
-import NotificationOptionsComponent from "discourse/components/notification-options";
+import NotificationOptionsComponent from "discourse/components/notifications-button";
 import { observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default NotificationOptionsComponent.extend({
-  classNames: ["tag-notification-options"],
+  classNames: ["tag-notifications-button"],
 
   i18nPrefix: "tagging.notifications",
 

@@ -1,0 +1,13 @@
+.categories-admin-dropdown.categories-admin-dropdown.categories-admin-dropdown {
+  .select-box-body {
+    min-width: auto;
+  }
+
+  .select-box-row .icons {
+    align-self: flex-start;
+
+    .d-icon {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    }
+  }
+}

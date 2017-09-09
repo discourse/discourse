@@ -1,5 +1,5 @@
 #topic-footer-buttons {
-  .topic-notification-options-button {
+  .topic-notifications-button {
     min-width: auto;
     margin: 10px 0 15px 0;
 
@@ -14,17 +14,17 @@
   }
 }
 
-.topic-notification-options-button .topic-notification-options {
+.topic-notifications-button .topic-notifications-options {
   min-width: auto;
 }
 
-.topic-notification-options-button {
+.topic-notifications-button {
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
   margin: 0;
 
-  .topic-notification-options, .reason {
+  .topic-notifications-options, .reason {
     display: inline-flex;
   }
 }

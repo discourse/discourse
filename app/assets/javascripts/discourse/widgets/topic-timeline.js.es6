@@ -315,7 +315,7 @@ createWidget('timeline-footer-controls', {
 
     if (currentUser) {
       controls.push(new ComponentConnector(this,
-        'topic-notification-options-button',
+        'topic-notifications-button',
         {
           topic,
           appendReason: false,

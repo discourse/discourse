@@ -451,16 +451,6 @@ a.star {
   }
 }
 
-.topic-notifications-container {
-  .btn {
-    @include topic-footer-button;
-  }
-  .notification-options p {
-    @include topic-footer-buttons-text;
-    display: inline-block;
-  }
-}
-
 #topic-footer-button {
   width: 757px;
 }
