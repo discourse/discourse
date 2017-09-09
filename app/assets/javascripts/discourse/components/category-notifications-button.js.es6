@@ -1,5 +1,5 @@
 import NotificationOptionsComponent from "discourse/components/notifications-button";
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
