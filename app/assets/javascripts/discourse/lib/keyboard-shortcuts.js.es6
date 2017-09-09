@@ -198,19 +198,19 @@ export default {
   },
 
   setTrackingToMuted(event) {
-    this.appEvents.trigger('topic-notifications-options:changed', {type: 'notification', id: 0, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 0, event});
   },
 
   setTrackingToRegular(event) {
-    this.appEvents.trigger('topic-notifications-options:changed', {type: 'notification', id: 1, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 1, event});
   },
 
   setTrackingToTracking(event) {
-    this.appEvents.trigger('topic-notifications-options:changed', {type: 'notification', id: 2, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 2, event});
   },
 
   setTrackingToWatching(event) {
-    this.appEvents.trigger('topic-notifications-options:changed', {type: 'notification', id: 3, event});
+    this.appEvents.trigger('topic-notifications-button:changed', {type: 'notification', id: 3, event});
   },
 
   sendToTopicListItemView(action) {

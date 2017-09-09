@@ -4,7 +4,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
-  classNames: ["categories-admin-actions"],
+  classNames: ["categories-admin-dropdown"],
 
   icon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
 

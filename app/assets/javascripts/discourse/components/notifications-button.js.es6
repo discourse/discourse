@@ -5,7 +5,7 @@ import { buttonDetails } from "discourse/lib/notification-levels";
 import { allLevels } from "discourse/lib/notification-levels";
 
 export default DropdownSelectBoxComponent.extend({
-  classNames: ["notification-options"],
+  classNames: ["notifications-button"],
 
   i18nPrefix: "",
   i18nPostfix: "",
@@ -13,6 +13,8 @@ export default DropdownSelectBoxComponent.extend({
   showFullTitle: true,
   fullWidthOnMobile: true,
   content: allLevels,
+
+  value: Em.computed.alias("notificationLevel"),
 
   @computed("value")
   icon(value) {

@@ -1,8 +1,8 @@
-import NotificationOptionsComponent from "discourse/components/notification-options";
+import NotificationOptionsComponent from "discourse/components/notifications-button";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 export default NotificationOptionsComponent.extend({
-  classNames: ["group-notification-options"],
+  classNames: ["group-notifications-button"],
 
   value: Em.computed.alias("group.group_user.notification_level"),
 
