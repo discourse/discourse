@@ -56,7 +56,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # normalize_urls
     # post_process_posts
 
-    import_taxonomy_tags
+    # import_taxonomy_tags
+    import_taxonomy_taggings
 
     # Reset "New" topics counter for all users.
     # User.find_each {|u| u.user_stat.update_column(:new_since, Time.now) }
@@ -656,7 +657,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     sql = "SELECT * from taxonomy_term_data WHERE vid = 6 and name != ''"
     results = @client.query(sql, cache_rows: false)
     results.each do |row|
-      AnnotatorStore::Tag.create!(
+      AnnotatorStore::Tag.create(
         name: row['name'],
         creator_id: user_id_from_imported_user_id(row['uid']) || -1
       )
@@ -667,13 +668,73 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     results.each do |row|
       if t = AnnotatorStore::Tag.find_by(name: row['child'])
         t.parent = AnnotatorStore::Tag.find_by(name: row['parent'])
-        t.save!
+        t.save
       end
     end
   end
 
 
+  # annotator.js annotation format: http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html
+  # Nokogiri cheat sheet: https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
+  def import_taxonomy_taggings
+    sql = 'SELECT a.entity_id, a.entity_type, a.quote, a.uid, a.created, a.updated, td.name tag_name FROM annotation a, taxonomy_term_data td WHERE a.tid = td.tid limit 1'
+    results = @client.query(sql, cache_rows: false)
+    results.each do |row|
+      # post = Post.find(post_id_from_imported_post_id("#{row['entity_type'] == 'comment' ? 'cid' : 'nid' }:#{row['entity_id']}"))
+      # quote = row['quote']
+      post = Post.find(4693)
+      quote = 'interviewing people here in'
+
+      doc = Nokogiri::HTML.fragment(post.cooked)
+      plain_text = doc.text
+      quote_query = quote.gsub(/\s+/m, ' ').split(' ').map { |w| Regexp.quote(w) }.join('\s+')
+      start_index = plain_text.index(/#{quote_query}/)
+      end_index = start_index+quote.size
+
+      start_xpath, start_offset, end_xpath, end_offset = nil
+      i = 0
+      doc.traverse do |x|
+        next unless x.text?
+        offset = 0
+        x.content.split('').each do
+          if i == start_index
+            puts start_xpath = x.path.gsub(/^\?/, '').gsub(/#{Regexp.quote('/text()')}.*$/, '')
+            puts start_offset = offset
+          elsif i == end_index
+            puts end_xpath = x.path.gsub(/^\?/, '').gsub(/#{Regexp.quote('/text()')}.*$/, '')
+            puts end_offset = offset
+          end
+          offset+=1
+          i+=1
+        end
+      end
+
+      AnnotatorStore::Annotation.create!(
+        version: 'v1.0',
+        quote: quote,
+        uri: "/post/#{post.id}",
+        post_id: post.id,
+        tag_id: AnnotatorStore::Tag.find_by(name: row['tag_name'].strip).id,
+        creator_id: user_id_from_imported_user_id(row['uid']) || -1,
+        created_at: Time.zone.at(row['created']),
+        updated_at: Time.zone.at(row['updated']),
+        ranges_attributes: [
+          {
+            start: start_xpath,
+            end: end_xpath,
+            start_offset: start_offset,
+            end_offset: end_offset,
+            created_at: Time.zone.at(row['created']),
+            updated_at: Time.zone.at(row['updated'])
+          }
+        ]
+      )
+    end
+  end
+
+
 end
+
 
 if __FILE__==$0
   ImportScripts::DrupalER.new.perform

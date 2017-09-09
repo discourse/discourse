@@ -79,9 +79,9 @@
             <script>
                 jQuery(function ($) {
 
-                    var content = $('#post-<%= post.id %>').annotator().annotator('addPlugin', 'Tags');
+                    var content = $('#post-<%= post.id %> > .post').annotator().annotator('addPlugin', 'Tags');
 
-                    $('#post-<%= post.id %>').data('annotator').plugins.Tags.input.autocomplete({
+                    $('#post-<%= post.id %> > .post').data('annotator').plugins.Tags.input.autocomplete({
                         source: availableTags,
                         minLength: 0,
                         open: function () {
