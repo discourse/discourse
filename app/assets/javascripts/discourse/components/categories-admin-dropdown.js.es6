@@ -10,6 +10,8 @@ export default DropdownSelectBoxComponent.extend({
 
   generatedHeadertext: null,
 
+  fullWidthOnMobile: true,
+
   @computed
   content() {
     const items = [

@@ -52,6 +52,12 @@
       margin-left: 8px;
     }
   }
+
+  .select-box {
+    &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
+      margin-top: 5px;
+    }
+  }
 }
 
 .list-container .full-width {
