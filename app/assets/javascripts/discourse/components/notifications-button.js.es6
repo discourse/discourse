@@ -33,6 +33,15 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @computed
+  titleForRow: function() {
+    return (rowComponent) => {
+      const notificationLevel = rowComponent.get(`content.${this.get("idKey")}`);
+      const details = buttonDetails(notificationLevel);
+      return I18n.t(`${this.get("i18nPrefix")}.${details.key}.title`);
+    };
+  },
+
+  @computed
   templateForRow: function() {
     return (rowComponent) => {
       const content = rowComponent.get("content");
