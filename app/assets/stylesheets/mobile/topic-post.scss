@@ -76,21 +76,8 @@ nav.post-controls {
     }
     &.has-like {color: $love;}
 
-    .read-icon {
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f02e";
-      }
-      &.unseen {
-        &:before {
-          content: "\f097";
-        }
-      }
-      &.bookmarked {
-        &:before {
-          color: $tertiary;
-        }
-      }
+    &.bookmarked {
+      color: $tertiary;
     }
   }
 
