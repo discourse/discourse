@@ -341,7 +341,7 @@ componentTest('supports custom row title', {
 });
 
 componentTest('supports keyboard events', {
-  template: '{{select-box content=content}}',
+  template: '{{select-box content=content filterable=true}}',
 
   beforeEach() {
     this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
@@ -369,6 +369,12 @@ componentTest('supports keyboard events', {
     const enterEvent = () => {
       const event = jQuery.Event("keydown");
       event.keyCode = 13;
+      find(".select-box").trigger(event);
+    };
+
+    const tabEvent = () => {
+      const event = jQuery.Event("keydown");
+      event.keyCode = 9;
       find(".select-box").trigger(event);
     };
 
@@ -406,7 +412,6 @@ componentTest('supports keyboard events', {
     });
 
     click(".select-box-header");
-
     andThen(() => {
       assert.equal(find(".select-box").hasClass("is-expanded"), true);
     });
@@ -415,6 +420,24 @@ componentTest('supports keyboard events', {
 
     andThen(() => {
       assert.equal(find(".select-box").hasClass("is-expanded"), false, "it collapses the select box");
+    });
+
+    click(".select-box-header");
+    andThen(() => {
+      assert.equal(find(".select-box").hasClass("is-expanded"), true);
+    });
+
+    fillIn(".filter-query", "regis");
+    triggerEvent('.filter-query', 'keyup');
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-highlighted").attr("title"), "regis", "it highlights the first result");
+    });
+
+    andThen(() => tabEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-selected").attr("title"), "regis", "it selects the row when pressing tab");
+      assert.equal(find(".select-box").hasClass("is-expanded"), false, "it collapses the select box when selecting a row");
     });
   }
 });

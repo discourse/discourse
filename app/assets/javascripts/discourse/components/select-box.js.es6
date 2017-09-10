@@ -208,6 +208,14 @@ export default Ember.Component.extend({
     const keyCode = event.keyCode || event.which;
 
     if (this.get("expanded")) {
+      if ((keyCode === 13 || keyCode === 9) && Ember.isPresent(this.get("highlightedValue"))) {
+        event.preventDefault();
+        this.setProperties({
+          value: this._castInteger(this.get("highlightedValue")),
+          expanded: false
+        });
+      }
+
       if (keyCode === 9) {
         this.set("expanded", false);
       }
@@ -215,14 +223,6 @@ export default Ember.Component.extend({
       if (keyCode === 27) {
         this.set("expanded", false);
         event.stopPropagation();
-      }
-
-      if (keyCode === 13 && Ember.isPresent(this.get("highlightedValue"))) {
-        event.preventDefault();
-        this.setProperties({
-          value: this._castInteger(this.get("highlightedValue")),
-          expanded: false
-        });
       }
 
       if (keyCode === 38) {
@@ -320,14 +320,18 @@ export default Ember.Component.extend({
     return headerText;
   },
 
-  @computed("content.[]", "filter")
-  filteredContent(content, filter) {
+  @computed("content.[]", "filter", "idKey")
+  filteredContent(content, filter, idKey) {
     let filteredContent;
 
     if (Ember.isEmpty(filter)) {
       filteredContent = content;
     } else {
       filteredContent = this.filterFunction(content)(this);
+
+      if (!Ember.isEmpty(filteredContent)) {
+        this.set("highlightedValue", filteredContent[0][idKey]);
+      }
     }
 
     return filteredContent;
