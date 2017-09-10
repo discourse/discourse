@@ -33,7 +33,7 @@ componentTest('accepts a value by reference', {
 
     andThen(() => {
       assert.equal(
-        find(".select-box-row.is-highlighted .text").html().trim(), "robin",
+        find(".select-box-row.is-selected .text").html().trim(), "robin",
         "it highlights the row corresponding to the value"
       );
     });
@@ -168,7 +168,7 @@ componentTest('accepts custom id/text keys', {
     click(".select-box-header");
 
     andThen(() => {
-      assert.equal(find(".select-box-row.is-highlighted .text").html().trim(), "robin");
+      assert.equal(find(".select-box-row.is-selected .text").html().trim(), "robin");
     });
   }
 });
@@ -268,7 +268,7 @@ componentTest('supports converting select value to integer', {
     click(".select-box-header");
 
     andThen(() => {
-      assert.equal(find(".select-box-row.is-highlighted .text").text(), "régis");
+      assert.equal(find(".select-box-row.is-selected .text").text(), "régis");
     });
 
     andThen(() => {
@@ -277,7 +277,7 @@ componentTest('supports converting select value to integer', {
     });
 
     andThen(() => {
-      assert.equal(find(".select-box-row.is-highlighted .text").text(), "jeff", "it works with dynamic content");
+      assert.equal(find(".select-box-row.is-selected .text").text(), "jeff", "it works with dynamic content");
     });
   }
 });
@@ -336,6 +336,85 @@ componentTest('supports custom row title', {
 
     andThen(() => {
       assert.equal(find(".select-box-row:first").attr("title"), "sam");
+    });
+  }
+});
+
+componentTest('supports keyboard events', {
+  template: '{{select-box content=content}}',
+
+  beforeEach() {
+    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+  },
+
+  test(assert) {
+    const arrowDownEvent = () => {
+      const event = jQuery.Event("keydown");
+      event.keyCode = 40;
+      find(".select-box").trigger(event);
+    };
+
+    const arrowUpEvent = () => {
+      const event = jQuery.Event("keydown");
+      event.keyCode = 38;
+      find(".select-box").trigger(event);
+    };
+
+    const escapeEvent = () => {
+      const event = jQuery.Event("keydown");
+      event.keyCode = 27;
+      find(".select-box").trigger(event);
+    };
+
+    const enterEvent = () => {
+      const event = jQuery.Event("keydown");
+      event.keyCode = 13;
+      find(".select-box").trigger(event);
+    };
+
+    click(".select-box-header");
+
+    andThen(() => arrowDownEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-highlighted").attr("title"), "robin", "it highlights the first row");
+    });
+
+    andThen(() => arrowDownEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-highlighted").attr("title"), "regis", "it highlights the next row");
+    });
+
+    andThen(() => arrowDownEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-highlighted").attr("title"), "regis", "it keeps highlighting the last row when reaching the end");
+    });
+
+    andThen(() => arrowUpEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-highlighted").attr("title"), "robin", "it highlights the previous row");
+    });
+
+    andThen(() => enterEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box-row.is-selected").attr("title"), "robin", "it selects the row when pressing enter");
+      assert.equal(find(".select-box").hasClass("is-expanded"), false, "it collapses the select box when selecting a row");
+    });
+
+    click(".select-box-header");
+
+    andThen(() => {
+      assert.equal(find(".select-box").hasClass("is-expanded"), true);
+    });
+
+    andThen(() => escapeEvent() );
+
+    andThen(() => {
+      assert.equal(find(".select-box").hasClass("is-expanded"), false, "it collapses the select box");
     });
   }
 });
