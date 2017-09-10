@@ -161,11 +161,15 @@
     }
 
     &.is-highlighted {
+      background: $tertiary-low;
+    }
+
+    &.is-selected {
       background: $highlight-medium;
     }
 
-    &:hover {
-      background: $highlight-medium;
+    &.is-selected.is-highlighted {
+      background: $tertiary-low;
     }
   }
 
@@ -194,12 +198,8 @@
       padding: 0;
       margin: 0;
 
-      &:hover .select-box-row.is-highlighted {
-        background: none;
-      }
-
       &:hover .select-box-row.is-highlighted:hover {
-        background: $highlight-medium;
+        background: $tertiary-low;
       }
     }
 
