@@ -17,7 +17,6 @@
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     background-clip: padding-box;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-    width: max-content;
     max-width: 300px;
   }
 
@@ -84,7 +83,6 @@
     border: 0;
     outline: 0;
     justify-content: flex-start;
-    width: max-content;
     background: none;
 
     .d-icon + .d-icon {
