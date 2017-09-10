@@ -26,6 +26,12 @@ export default SelectBoxComponent.extend({
       this.set("content", this.get("categories"));
       this._scopeCategories();
     }
+
+    if (Ember.isNone(this.get("value"))) {
+      if (this.siteSettings.allow_uncategorized_topics && this.get("allowUncategorized") !== false) {
+        this.set("value", Category.findUncategorized().id);
+      }
+    }
   },
 
   filterFunction: function(content) {

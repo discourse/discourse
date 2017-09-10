@@ -9,7 +9,7 @@ export default Ember.Component.extend({
 
   attributeBindings: ["title"],
 
-  classNameBindings: ["isHighlighted:is-highlighted"],
+  classNameBindings: ["isHighlighted:is-highlighted", "isSelected:is-selected"],
 
   @computed("titleForRow")
   title(titleForRow) {
@@ -21,9 +21,14 @@ export default Ember.Component.extend({
     return templateForRow(this);
   },
 
-  @computed("shouldHighlightRow", "value")
+  @computed("shouldHighlightRow", "highlightedValue")
   isHighlighted(shouldHighlightRow) {
     return shouldHighlightRow(this);
+  },
+
+  @computed("shouldSelectRow", "value")
+  isSelected(shouldSelectRow) {
+    return shouldSelectRow(this);
   },
 
   mouseEnter() {
