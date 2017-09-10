@@ -51,8 +51,10 @@
   }
 }
 
-.flagged-posts, .queued-posts {
-  background: $danger;
+.header-dropdown-toggle {
+  .flagged-posts, .queued-posts {
+    background: $danger;
+  }
 }
 
 .d-header-icons {
