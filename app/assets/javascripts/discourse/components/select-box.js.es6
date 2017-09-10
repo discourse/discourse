@@ -104,8 +104,7 @@ export default Ember.Component.extend({
       const relativeLeft = this.$().offset().left - $(window).scrollLeft();
       options.left = margin - relativeLeft;
       options.width = windowWidth - margin * 2;
-      options.maxWidth = "auto";
-      options.minWidth = "auto";
+      options.maxWidth = options.minWidth = "unset";
     } else {
       const offsetLeft = boundingRect.left;
       const bodyWidth = this.$(".select-box-body").outerWidth(false);
