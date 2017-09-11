@@ -84,15 +84,14 @@ const Post = RestModel.extend({
   }.property('link_counts.@each.internal'),
 
   flagsAvailable: function() {
-    const post = this;
-    return Discourse.Site.currentProp('flagTypes').filter(function(item) {
-      return post.get("actionByName." + item.get('name_key') + ".can_act");
+    return this.site.get('flagTypes').filter(item => {
+      return this.get(`actionByName.${item.get('name_key')}.can_act`);
     });
   }.property('actions_summary.@each.can_act'),
 
   afterUpdate(res) {
     if (res.category) {
-      Discourse.Site.current().updateCategory(res.category);
+      this.site.updateCategory(res.category);
     }
   },
 
