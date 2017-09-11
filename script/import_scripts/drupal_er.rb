@@ -677,8 +677,8 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   # annotator.js annotation format: http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html
   # Nokogiri cheat sheet: https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
   def import_taxonomy_taggings
-    # AnnotatorStore::Range.delete_all
-    # AnnotatorStore::Annotation.delete_all
+    AnnotatorStore::Range.delete_all
+    AnnotatorStore::Annotation.delete_all
     puts '#################################### IMPORT TAXONOMY TAGGINGS ####################################'
     post_not_found = []
     import_failed = 0
@@ -768,8 +768,9 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
         puts
         puts
         puts '__________________________________________________________________________________________________________'
+        puts "ERROR: #{$!.message}"
         puts "Post ID: #{post.id}"
-        puts "URL: dc.dev#{post.url}?oe=1"
+        puts "URL: https://edgeryders.eu#{post.url}?oe=1"
         puts "Tag: #{row['tag_name'].strip}"
         puts "Quote:"
         puts quote
