@@ -86,7 +86,7 @@ export default Ember.Component.extend({
     return (rowComponent) => {
       let template = "";
 
-      const icon = rowComponent.icon()
+      const icon = rowComponent.icon();
       if (icon) {
         template += icon;
       }
