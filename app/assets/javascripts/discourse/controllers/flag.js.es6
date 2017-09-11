@@ -139,8 +139,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   canDeleteSpammer: function() {
     if (this.get("flagTopic")) return false;
 
-    if (Discourse.User.currentProp('staff') && this.get('selected.name_key') === 'spam') {
-      return this.get('userDetails.can_be_deleted') && this.get('userDetails.can_delete_all_posts');
+    if (this.currentUser.get('staff') && this.get('selected.name_key') === 'spam') {
+      return this.get('userDetails.can_be_deleted') &&
+        this.get('userDetails.can_delete_all_posts');
     } else {
       return false;
     }

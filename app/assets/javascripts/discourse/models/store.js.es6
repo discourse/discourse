@@ -57,10 +57,19 @@ export default Ember.Object.extend({
 
   findAll(type, findArgs) {
     const adapter = this.adapterFor(type);
-    return adapter.findAll(this, type, findArgs).then((result) => {
+
+    let store = this;
+    return adapter.findAll(this, type, findArgs).then(result => {
       let results = this._resultSet(type, result);
       if (adapter.afterFindAll) {
-        results = adapter.afterFindAll(results);
+        results = adapter.afterFindAll(
+          results,
+          {
+            lookup(subType, id) {
+              return store._lookupSubType(subType, type, id, result);
+            }
+          }
+        );
       }
       return results;
     });
@@ -229,6 +238,10 @@ export default Ember.Object.extend({
     // removed.
     if (subType === 'category' && type !== 'topic') {
       return Discourse.Category.findById(id);
+    }
+
+    if (root.meta && root.meta.types) {
+      subType = root.meta.types[subType] || subType;
     }
 
     const pluralType = this.pluralize(subType);

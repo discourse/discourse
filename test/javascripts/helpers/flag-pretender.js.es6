@@ -36,19 +36,22 @@ export default function(helpers) {
 
   this.get('/admin/flags/active.json', () => {
     return response(200, {
-      posts: [
+      flagged_posts: [
         {
           id: 1,
           user_id: sam.id,
-          post_actions: [{
-            user_id: eviltrout.id,
-            post_action_type_id: 8,
-            name_key: 'spam'
-          }]
+          post_action_ids: [1]
         }
       ],
       users: [eviltrout, sam],
       topics: [],
+      post_actions: [{
+        id: 1,
+        user_id: eviltrout.id,
+        post_action_type_id: 8,
+        name_key: 'spam'
+      }],
+      "__rest_serializer": "1"
     });
   });
 

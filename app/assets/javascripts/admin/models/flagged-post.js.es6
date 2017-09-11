@@ -1,11 +1,8 @@
 import { ajax } from 'discourse/lib/ajax';
-import AdminUser from 'admin/models/admin-user';
-import Topic from 'discourse/models/topic';
 import Post from 'discourse/models/post';
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import computed from 'ember-addons/ember-computed-decorators';
 
-const FlaggedPost = Post.extend({
+export default Post.extend({
 
   @computed
   summary() {
@@ -15,34 +12,6 @@ const FlaggedPost = Post.extend({
       .join(',');
   },
 
-  @computed
-  flaggers() {
-    return this.post_actions.map(postAction => {
-      return {
-        user: this.userLookup[postAction.user_id],
-        topic: this.topicLookup[postAction.topic_id],
-        flagType: I18n.t('admin.flags.summary.action_type_' + postAction.post_action_type_id, { count: 1 }),
-        flaggedAt: postAction.created_at,
-        disposedBy: postAction.disposed_by_id ? this.userLookup[postAction.disposed_by_id] : null,
-        disposedAt: postAction.disposed_at,
-        dispositionIcon: this.dispositionIcon(postAction.disposition),
-        tookAction: postAction.staff_took_action
-      };
-    });
-  },
-
-  dispositionIcon(disposition) {
-    if (!disposition) { return null; }
-    let icon;
-    let title = 'admin.flags.dispositions.' + disposition;
-    switch (disposition) {
-      case "deferred": { icon = "external-link"; break; }
-      case "agreed": { icon = "thumbs-o-up"; break; }
-      case "disagreed": { icon = "thumbs-o-down"; break; }
-    }
-    return iconHTML(icon, { title });
-  },
-
   @computed('last_revised_at', 'post_actions.@each.created_at')
   wasEdited(lastRevisedAt) {
     if (Ember.isEmpty(this.get("last_revised_at"))) { return false; }
@@ -50,44 +19,6 @@ const FlaggedPost = Post.extend({
     return _.some(this.get("post_actions"), function (postAction) {
       return Date.parse(postAction.created_at) < lastRevisedAt;
     });
-  },
-
-  @computed
-  conversations() {
-    let conversations = [];
-
-    this.post_actions.forEach(postAction => {
-      if (postAction.conversation) {
-        let conversation = {
-          permalink: postAction.permalink,
-          hasMore: postAction.conversation.has_more,
-          response: {
-            excerpt: postAction.conversation.response.excerpt,
-            user: this.userLookup[postAction.conversation.response.user_id]
-          }
-        };
-
-        if (postAction.conversation.reply) {
-          conversation.reply = {
-            excerpt: postAction.conversation.reply.excerpt,
-            user: this.userLookup[postAction.conversation.reply.user_id]
-          };
-        }
-        conversations.push(conversation);
-      }
-    });
-
-    return conversations;
-  },
-
-  @computed
-  user() {
-    return this.userLookup[this.user_id];
-  },
-
-  @computed
-  topic() {
-    return this.topicLookup[this.topic_id];
   },
 
   @computed('post_actions.@each.name_key')
@@ -136,43 +67,3 @@ const FlaggedPost = Post.extend({
 
   deleted: Ember.computed.or('deleted_at', 'topic_deleted_at'),
 });
-
-FlaggedPost.reopenClass({
-  findAll(args) {
-    let { filter } = args;
-
-    let result = [];
-    result.set('loading', true);
-
-    let data = {};
-    if (args.topic_id) {
-      data.topic_id = args.topic_id;
-    }
-    if (args.offset) {
-      data.offset = args.offset;
-    }
-
-    return ajax(`/admin/flags/${filter}.json`, { data }).then(response => {
-      // users
-      let userLookup = {};
-      response.users.forEach(user => userLookup[user.id] = AdminUser.create(user));
-
-      // topics
-      let topicLookup = {};
-      response.topics.forEach(topic => topicLookup[topic.id] = Topic.create(topic));
-
-      // posts
-      response.posts.forEach(post => {
-        let f = FlaggedPost.create(post);
-        f.userLookup = userLookup;
-        f.topicLookup = topicLookup;
-        result.pushObject(f);
-      });
-
-      result.set('loading', false);
-      return result;
-    });
-  }
-});
-
-export default FlaggedPost;
