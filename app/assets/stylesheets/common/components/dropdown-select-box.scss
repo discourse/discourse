@@ -4,8 +4,6 @@
   min-width: auto;
 
   &.is-expanded {
-    z-index: 9999;
-
     .collection,
     .select-box-collection,
     .select-box-body {
