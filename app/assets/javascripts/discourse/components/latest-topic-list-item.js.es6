@@ -1,5 +1,4 @@
 import { showEntrance } from "discourse/components/topic-list-item";
-import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   click: showEntrance,
