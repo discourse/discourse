@@ -86,7 +86,10 @@ export default Ember.Component.extend({
     return (rowComponent) => {
       let template = "";
 
-      template += rowComponent.icon();
+      const icon = rowComponent.icon()
+      if (icon) {
+        template += icon;
+      }
 
       const text = rowComponent.get(`content.${this.get("textKey")}`);
       template += `<p class="text">${Handlebars.escapeExpression(text)}</p>`;
