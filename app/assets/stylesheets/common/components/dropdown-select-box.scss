@@ -16,6 +16,7 @@
     background-clip: padding-box;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
     max-width: 300px;
+    width: 300px;
   }
 
   .select-box-row {
@@ -25,16 +26,18 @@
     .icons {
       display: flex;
       align-items: flex-start;
-      justify-content: space-between;
-      align-self: center;
+      justify-content: center;
+      align-self: flex-start;
       margin-right: 10px;
       margin-top: 2px;
+      width: 30px;
 
       .d-icon {
         font-size: 1.286em;
         align-self: center;
         margin-right: 0;
         opacity: 1;
+        color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
       }
     }
 

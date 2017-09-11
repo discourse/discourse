@@ -3,14 +3,4 @@
     min-width: auto;
     width: 250px;
   }
-
-  .select-box-row .icons {
-    align-self: flex-start;
-    width: 30px;
-    justify-content: center;
-
-    .d-icon {
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
-    }
-  }
 }

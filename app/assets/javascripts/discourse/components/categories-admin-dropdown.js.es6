@@ -10,8 +10,6 @@ export default DropdownSelectBoxComponent.extend({
 
   generatedHeadertext: null,
 
-  fullWidthOnMobile: true,
-
   @computed
   content() {
     const items = [
@@ -45,20 +43,5 @@ export default DropdownSelectBoxComponent.extend({
   _didSelectRow() {
     this.sendAction(`actionNames.${this.get("value")}`);
     this.set("value", null);
-  },
-
-  @computed
-  templateForRow: function() {
-    return (rowComponent) => {
-      const content = rowComponent.get("content");
-
-      return `
-        <div class="icons">${iconHTML(content.icon)}</div>
-        <div class="texts">
-          <span class="title">${Handlebars.escapeExpression(content.text)}</span>
-          <span class="desc">${Handlebars.escapeExpression(content.description)}</span>
-        </div>
-      `;
-    };
   }
 });

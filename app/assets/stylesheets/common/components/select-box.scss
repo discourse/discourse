@@ -11,6 +11,10 @@
   height: 34px;
   min-width: 220px;
 
+  &.is-hidden {
+    display: none;
+  }
+
   &.small {
     height: 28px;
   }
@@ -127,6 +131,18 @@
     .caret-icon {
       margin-left: 5px;
       pointer-events: none;
+    }
+
+    .d-button-label {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+
+      .d-icon {
+        margin-left: 5px;
+        margin-right: 0;
+      }
     }
   }
 
