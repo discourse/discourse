@@ -1,24 +1,24 @@
 {{#if flaggedPosts}}
   {{#load-more selector=".flagged-post" action=(action "loadMore")}}
-    <table class="admin-flags">
-      <thead>
-        <tr>
-          <th class='excerpt'></th>
-          <th class='flaggers'>{{i18n 'admin.flags.flagged_by'}}</th>
-          <th class='flaggers'>{{#if showResolvedBy}}{{i18n 'admin.flags.resolved_by'}}{{/if}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each flaggedPosts as |flaggedPost|}}
-          {{flagged-post
-            flaggedPost=flaggedPost
-            canAct=canAct
-            showResolvedBy=showResolvedBy
-            removePost=(action "removePost" flaggedPost)
-            hideTitle=topic}}
-        {{/each}}
-      </tbody>
-    </table>
+    <div class='flagged-posts-header'>
+      <div class='flagged-by-header'>
+        {{i18n 'admin.flags.flagged_by'}}
+      </div>
+      {{#if showResolvedBy}}
+        {{i18n 'admin.flags.resolved_by'}}
+      {{/if}}
+    </div>
+
+    <div class='flagged-posts'>
+      {{#each flaggedPosts as |flaggedPost|}}
+        {{flagged-post
+          flaggedPost=flaggedPost
+          canAct=canAct
+          showResolvedBy=showResolvedBy
+          removePost=(action "removePost" flaggedPost)
+          hideTitle=topic}}
+      {{/each}}
+    </div>
   {{/load-more}}
 {{else}}
   <p>{{i18n 'admin.flags.no_results'}}</p>
