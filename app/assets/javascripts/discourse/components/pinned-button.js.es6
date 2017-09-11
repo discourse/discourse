@@ -17,6 +17,6 @@ export default Ember.Component.extend({
 
   @computed("topic.pinned", "topic.deleted", "topic.unpinned")
   hidden(pinned, deleted, unpinned) {
-    return deleted || (!pinned && !unpinned);
+    return deleted || (pinned === false && unpinned === false);
   }
 });
