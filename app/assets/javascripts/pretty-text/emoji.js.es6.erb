@@ -26,6 +26,8 @@ Object.keys(aliases).forEach(name => {
 });
 
 export function performEmojiUnescape(string, opts) {
+  if (!string) { return; }
+
   // this can be further improved by supporting matches of emoticons that don't begin with a colon
   if (string.indexOf(":") >= 0) {
     return string.replace(/\B:[^\s:]+(?::t\d)?:?\B/g, m => {

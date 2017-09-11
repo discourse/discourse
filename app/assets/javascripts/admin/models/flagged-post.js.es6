@@ -92,7 +92,7 @@ const FlaggedPost = Post.extend({
 
   @computed('post_actions.@each.name_key')
   flaggedForSpam() {
-    return !_.every(this.get('post_actions'), function(action) { return action.name_key !== 'spam'; });
+    return this.get('post_actions').every(action => action.name_key === 'spam');
   },
 
   @computed('post_actions.@each.targets_topic')
@@ -105,9 +105,11 @@ const FlaggedPost = Post.extend({
     return _.any(this.get('post_actions'), function(action) { return !action.targets_topic; });
   },
 
-  @computed('flaggedForSpan')
+  @computed('flaggedForSpam')
   canDeleteAsSpammer(flaggedForSpam) {
-    return Discourse.User.currentProp('staff') && flaggedForSpam && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted');
+    return flaggedForSpam &&
+      this.get('user.can_delete_all_posts') &&
+      this.get('user.can_be_deleted');
   },
 
   deletePost() {

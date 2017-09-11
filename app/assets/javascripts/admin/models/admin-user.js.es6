@@ -463,49 +463,56 @@ const AdminUser = Discourse.User.extend({
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
   },
 
-  deleteAsSpammer(successCallback) {
-    const user = this;
+  deleteAsSpammer() {
+    return this.checkEmail().then(() => {
 
-    user.checkEmail().then(function() {
-      const data = {
-        "POSTS": user.get('post_count'),
-        "TOPICS": user.get('topic_count'),
-        email: user.get('email') || I18n.t("flagging.hidden_email_address"),
-        ip_address: user.get('ip_address') || I18n.t("flagging.ip_address_missing")
-        };
+      let message = I18n.messageFormat('flagging.delete_confirm_MF', {
+        "POSTS": this.get('post_count'),
+        "TOPICS": this.get('topic_count'),
+        email: this.get('email') || I18n.t("flagging.hidden_email_address"),
+        ip_address: this.get('ip_address') || I18n.t("flagging.ip_address_missing")
+      });
 
-      const message = I18n.messageFormat('flagging.delete_confirm_MF', data),
-            buttons = [{
-        "label": I18n.t("composer.cancel"),
-        "class": "cancel-inline",
-        "link":  true
-      }, {
-        "label": `${iconHTML('exclamation-triangle')} ` + I18n.t("flagging.yes_delete_spammer"),
-        "class": "btn btn-danger",
-        "callback": function() {
-          return ajax("/admin/users/" + user.get('id') + '.json', {
-            type: 'DELETE',
-            data: {
-              delete_posts: true,
-              block_email: true,
-              block_urls: true,
-              block_ip: true,
-              delete_as_spammer: true,
-              context: window.location.pathname
+      let userId = this.get('id');
+
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        const buttons = [
+          {
+            label: I18n.t("composer.cancel"),
+            class: "cancel-inline",
+            link:  true
+          },
+          {
+            label: `${iconHTML('exclamation-triangle')} ` + I18n.t("flagging.yes_delete_spammer"),
+            class: "btn btn-danger confirm-delete",
+            callback() {
+              return ajax(`/admin/users/${userId}.json`, {
+                type: 'DELETE',
+                data: {
+                  delete_posts: true,
+                  block_email: true,
+                  block_urls: true,
+                  block_ip: true,
+                  delete_as_spammer: true,
+                  context: window.location.pathname
+                }
+              }).then(result => {
+                if (result.deleted) {
+                  resolve();
+                } else {
+                  throw 'failed to delete';
+                }
+              }).catch(() => {
+                bootbox.alert(I18n.t("admin.user.delete_failed"));
+                reject();
+              });
             }
-          }).then(function(result) {
-            if (result.deleted) {
-              if (successCallback) successCallback();
-            } else {
-              bootbox.alert(I18n.t("admin.user.delete_failed"));
-            }
-          }).catch(function() {
-            bootbox.alert(I18n.t("admin.user.delete_failed"));
-          });
-        }
-      }];
+          }
+        ];
 
-      bootbox.dialog(message, buttons, {"classes": "flagging-delete-spammer"});
+        bootbox.dialog(message, buttons, {classes: "flagging-delete-spammer"});
+      });
+
     });
   },
 

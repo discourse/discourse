@@ -22,7 +22,7 @@
           {{flag-counts details=fc}}
         {{/each}}
       </td>
-      <td>
+      <td class='flagged-topic-users'>
         {{flagged-topic-users users=ft.users tagName=""}}
       </td>
       <td>
@@ -32,7 +32,7 @@
         {{#link-to
           "adminFlags.topics.show"
           ft.id
-          class="btn d-button no-text btn-small btn-primary"
+          class="btn d-button no-text btn-small btn-primary show-details"
           title=(i18n "admin.flags.show_details")}}
           {{d-icon "search"}}
         {{/link-to}}

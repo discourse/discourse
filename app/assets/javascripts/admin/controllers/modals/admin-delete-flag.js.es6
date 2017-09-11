@@ -4,6 +4,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
   removeAfter: null,
 
   actions: {
+    deleteSpammer(user) {
+      return this.removeAfter(user.deleteAsSpammer()).then(() => {
+        this.send('closeModal');
+      });
+    },
+
     deletePostDeferFlag() {
       let flaggedPost = this.get('model');
       this.removeAfter(flaggedPost.deferFlags(true)).then(() => {
