@@ -11,5 +11,8 @@
   {{plugin-outlet name="flagged-topic-details-header" args=(hash topic=topic)}}
 </div>
 <div class='topic-flags'>
-  {{flagged-posts flaggedPosts=flaggedPosts query="active" topic=topic}}
+  {{flagged-posts
+    flaggedPosts=flaggedPosts
+    filter="active"
+    topic=topic}}
 </div>

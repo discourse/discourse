@@ -47,7 +47,7 @@
         {{#each flaggedPost.flaggers as |flagger|}}
           <tr>
             <td class='avatar'>
-              {{#link-to 'adminUser' flagger.user}}
+              {{#link-to 'adminUser' flagger.user class='flagger'}}
                 {{avatar flagger.user imageSize="medium"}}
               {{/link-to}}
             </td>
@@ -135,6 +135,7 @@
     <td colspan="3" class="action">
       {{d-button
         title="admin.flags.agree_title"
+        class="agree-flag"
         label="admin.flags.agree"
         icon="thumbs-o-up"
         action="showAgreeFlagModal"
@@ -143,25 +144,28 @@
       {{#if flaggedPost.postHidden}}
         {{d-button
           title="admin.flags.disagree_flag_unhide_post_title"
+          class="disagree-flag"
           action="disagree"
           icon="thumbs-o-down"
           label="admin.flags.disagree_flag_unhide_post"}}
       {{else}}
         {{d-button
           title="admin.flags.disagree_flag_title"
+          class="disagree-flag"
           action="disagree"
           icon="thumbs-o-down"
           label="admin.flags.disagree_flag"}}
       {{/if}}
 
       {{d-button
+        class="defer-flag"
         title="admin.flags.defer_flag_title"
         action="defer"
         icon="external-link"
         label="admin.flags.defer_flag"}}
 
       {{d-button
-        class="btn-danger"
+        class="btn-danger delete-flag"
         title="admin.flags.delete_title"
         action="showDeleteFlagModal"
         icon="trash-o"
