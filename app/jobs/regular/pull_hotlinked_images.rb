@@ -107,6 +107,11 @@ module Jobs
         images = doc.css("img[src]") - doc.css("img.avatar")
         images.each do |tag|
           src = tag['src']
+          if tag['class'] == 'thumbnail' && tag.parent['class'] == 'onebox-body' &&
+            (broken_images.include?(src) || large_images.include?(src))
+            tag.remove
+            next
+          end
           if broken_images.include?(src)
             tag.name = 'span'
             tag.set_attribute('class', 'broken-image fa fa-chain-broken')

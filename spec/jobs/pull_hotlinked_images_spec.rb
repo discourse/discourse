@@ -94,6 +94,46 @@ describe Jobs::PullHotlinkedImages do
         expect(post.cooked).to match(/<img src=.*\/uploads/)
       end
 
+      it 'removes broken image' do
+        stub_request(:head, image_url).to_return(status: 404)
+        stub_request(:get, large_image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
+
+        post = Fabricate(:post, raw: "
+<img src='#{large_image_url}'>
+#{url}
+        ")
+
+        Jobs::ProcessPost.new.execute(post_id: post.id)
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+        Jobs::ProcessPost.new.execute(post_id: post.id)
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+
+        post.reload
+
+        expect(post.cooked).to match(/<p><img src=.*\/uploads/)
+        expect(post.cooked).not_to match(/<span class="broken-image/)
+      end
+
+      it 'removes large image' do
+        stub_request(:get, image_url).to_return(body: large_png, headers: { "Content-Type" => "image/png" })
+        stub_request(:get, large_image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
+
+        post = Fabricate(:post, raw: "
+<img src='#{large_image_url}'>
+#{url}
+        ")
+
+        Jobs::ProcessPost.new.execute(post_id: post.id)
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+        Jobs::ProcessPost.new.execute(post_id: post.id)
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+
+        post.reload
+
+        expect(post.cooked).to match(/<p><img src=.*\/uploads/)
+        expect(post.cooked).not_to match(/<span class="large-image/)
+      end
+
       it 'all combinations' do
         post = Fabricate(:post, raw: "
 <img src='#{image_url}'>
