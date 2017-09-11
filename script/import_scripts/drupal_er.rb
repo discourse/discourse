@@ -677,59 +677,112 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   # annotator.js annotation format: http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html
   # Nokogiri cheat sheet: https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
   def import_taxonomy_taggings
-    sql = 'SELECT a.entity_id, a.entity_type, a.quote, a.uid, a.created, a.updated, td.name tag_name FROM annotation a, taxonomy_term_data td WHERE a.tid = td.tid limit 1'
+    # AnnotatorStore::Range.delete_all
+    # AnnotatorStore::Annotation.delete_all
+    puts '#################################### IMPORT TAXONOMY TAGGINGS ####################################'
+    post_not_found = []
+    import_failed = 0
+    sql = 'SELECT a.entity_id, a.entity_type, a.quote, a.uid, a.created, a.updated, td.name tag_name FROM annotation a, taxonomy_term_data td WHERE a.tid = td.tid'
     results = @client.query(sql, cache_rows: false)
     results.each do |row|
-      # post = Post.find(post_id_from_imported_post_id("#{row['entity_type'] == 'comment' ? 'cid' : 'nid' }:#{row['entity_id']}"))
-      # quote = row['quote']
-      post = Post.find(4693)
-      quote = 'interviewing people here in'
-
-      doc = Nokogiri::HTML.fragment(post.cooked)
-      plain_text = doc.text
-      quote_query = quote.gsub(/\s+/m, ' ').split(' ').map { |w| Regexp.quote(w) }.join('\s+')
-      start_index = plain_text.index(/#{quote_query}/)
-      end_index = start_index+quote.size
-
-      start_xpath, start_offset, end_xpath, end_offset = nil
-      i = 0
-      doc.traverse do |x|
-        next unless x.text?
-        offset = 0
-        x.content.split('').each do
-          if i == start_index
-            puts start_xpath = x.path.gsub(/^\?/, '').gsub(/#{Regexp.quote('/text()')}.*$/, '')
-            puts start_offset = offset
-          elsif i == end_index
-            puts end_xpath = x.path.gsub(/^\?/, '').gsub(/#{Regexp.quote('/text()')}.*$/, '')
-            puts end_offset = offset
-          end
-          offset+=1
-          i+=1
-        end
+      imported_id = "#{row['entity_type'] == 'comment' ? 'cid' : 'nid' }:#{row['entity_id']}"
+      post_id = post_id_from_imported_post_id(imported_id)
+      if post_id.blank?
+        post_not_found << imported_id
+        next
       end
+      post = Post.find(post_id)
+      quote = row['quote']
+      # Remove smileys from the quote as they were converted to images in discourse.
+      quote = quote.gsub(/[[:space:]]+(:\)|;\)|;-\)|:-\)|:D|:p|:-\()([[:space:]]+|$)/, ' ')
+      # Remove
+      quote = quote.gsub(/[[:space:]]+Edit[[:space:]]+Delete.*$/, '')
+      quote = quote.gsub(/[[:space:]]+Cancel[[:space:]]+Save.*$/, '')
+      quote = quote.gsub(/[[:space:]]+No Comment.*$/, '')
+      quote = quote.gsub(/View as webpage.*$/, '')
+      quote = quote.gsub(/[[:space:]]+No search results.*$/, '')
+      quote = quote.gsub(/[[:space:]]+Annotate[[:space:]]*$/, '')
+      quote = quote.gsub(/\d results are available, use up and down arrow keys to navigate.*$/, '')
+      quote = quote.gsub(/1 result is available, use up and down arrow keys to navigate.*$/, '')
+      quote = quote.gsub(/[[:space:]]+\d[[:space:]]*$/, '')
+      quote = quote.strip
 
-      AnnotatorStore::Annotation.create!(
-        version: 'v1.0',
-        quote: quote,
-        uri: "/post/#{post.id}",
-        post_id: post.id,
-        tag_id: AnnotatorStore::Tag.find_by(name: row['tag_name'].strip).id,
-        creator_id: user_id_from_imported_user_id(row['uid']) || -1,
-        created_at: Time.zone.at(row['created']),
-        updated_at: Time.zone.at(row['updated']),
-        ranges_attributes: [
-          {
-            start: start_xpath,
-            end: end_xpath,
-            start_offset: start_offset,
-            end_offset: end_offset,
-            created_at: Time.zone.at(row['created']),
-            updated_at: Time.zone.at(row['updated'])
-          }
-        ]
-      )
+      begin
+        doc = Nokogiri::HTML.fragment(post.cooked)
+        # NOTE: Do not use `\s` to also match non-breaking spaces. See: http://www.pnotepad.org/docs/search/regular_expressions/
+        quote_query = quote.split(/[[:space:]]+/).map { |w| Regexp.quote(w) }.join('[[:space:]]+')
+        start_index = doc.text.index(/#{quote_query}/i)
+        # NOTE: We use the length of the post's text to determine the exact position of the end of the quote.
+        # The length of the quote can't be used for this as white spaces can be missing in the quote.
+        end_index = start_index+doc.text[/#{quote_query}/i].size
+        start_xpath, start_offset, end_xpath, end_offset = nil
+        i = 0
+        doc.xpath('.//text() | text()').each do |x|
+          offset = 0
+          x.text.split('').each do
+            if i == start_index
+              e = x.previous
+              sum = 0
+              while e
+                sum+= e.text.size
+                e = e.previous
+              end
+              start_xpath = x.path.gsub(/^\?/, '').gsub(/#{Regexp.quote('/text()')}.*$/, '')
+              start_offset = offset+sum
+            elsif i+1 == end_index
+              e = x.previous
+              sum = 0
+              while e
+                sum+= e.text.size
+                e = e.previous
+              end
+              end_xpath = x.path.gsub(/^\?/, '').gsub(/#{Regexp.quote('/text()')}.*$/, '')
+              end_offset = offset+1+sum
+            end
+            offset+=1
+            i+=1
+          end
+        end
+
+        AnnotatorStore::Annotation.create!(
+          version: 'v1.0',
+          quote: quote,
+          uri: "/post/#{post.id}",
+          post_id: post.id,
+          tag_id: AnnotatorStore::Tag.find_by(name: row['tag_name'].strip).id,
+          creator_id: user_id_from_imported_user_id(row['uid']) || -1,
+          created_at: Time.zone.at(row['created']),
+          updated_at: Time.zone.at(row['updated']),
+          ranges_attributes: [
+            {
+              start: start_xpath,
+              end: end_xpath,
+              start_offset: start_offset,
+              end_offset: end_offset,
+              created_at: Time.zone.at(row['created']),
+              updated_at: Time.zone.at(row['updated'])
+            }
+          ]
+        )
+      rescue
+        puts
+        puts
+        puts '__________________________________________________________________________________________________________'
+        puts "Post ID: #{post.id}"
+        puts "URL: dc.dev#{post.url}?oe=1"
+        puts "Tag: #{row['tag_name'].strip}"
+        puts "Quote:"
+        puts quote
+        import_failed+=1
+      end
     end
+    3.times {puts}
+    puts "##### SUMMARY #####"
+    puts
+    puts "#{post_not_found.count} posts not found:"
+    puts post_not_found.to_s
+    puts
+    puts "#{AnnotatorStore::Annotation.count} annotations imported. Import failed for #{import_failed}"
   end
 
 
