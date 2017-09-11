@@ -16,20 +16,24 @@ export default DropdownSelectBoxComponent.extend({
 
   value: Em.computed.alias("notificationLevel"),
 
-  @computed("value")
-  icon(value) {
-    const details = buttonDetails(value);
+  @computed("selectedDetails")
+  icon(details) {
     return iconHTML(details.icon, {class: details.key}).htmlSafe();
   },
 
-  @computed("value", "showFullTitle")
-  generatedHeadertext(value, showFullTitle) {
-    if (showFullTitle) {
-      const details = buttonDetails(value);
-      return I18n.t(`${this.get("i18nPrefix")}.${details.key}.title`);
-    } else {
-      return null;
-    }
+  @computed("selectedDetails.key", "i18nPrefix")
+  selectedTitle(key, prefix) {
+    return I18n.t(`${prefix}.${key}.title`);
+  },
+
+  @computed("value")
+  selectedDetails(value) {
+    return buttonDetails(value);
+  },
+
+  @computed("selectedTitle", "showFullTitle")
+  generatedHeadertext(selectedTitle, showFullTitle) {
+    return showFullTitle ? selectedTitle : null;
   },
 
   @computed
