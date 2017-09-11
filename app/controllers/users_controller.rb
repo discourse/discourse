@@ -372,14 +372,21 @@ class UsersController < ApplicationController
         user_id: user.id
       }
     else
+      errors = user.errors.to_hash
+      errors[:email] = errors.delete(:primary_email) if errors[:primary_email]
+
       render json: {
         success: false,
         message: I18n.t(
           'login.errors',
           errors: user.errors.full_messages.join("\n")
         ),
-        errors: user.errors.to_hash,
-        values: user.attributes.slice('name', 'username', 'email'),
+        errors: errors,
+        values: {
+          name: user.name,
+          username: user.username,
+          email: user.primary_email&.email
+        },
         is_developer: UsernameCheckerService.is_developer?(user.email)
       }
     end
