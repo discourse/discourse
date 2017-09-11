@@ -25,9 +25,13 @@
   }
 }
 
-html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-medium; }
-.topic-list-item.visited a.title:not(.badge-notification) {color: $primary-medium; }
-.latest-topic-list-item.visited a.title:not(.badge-notification) {color: $primary-medium; }
+html.anon .topic-list,
+.topic-list-item.visited,
+.latest-topic-list-item.visited,
+.category-topic-link.visited,
+#suggested-topics .topic-list tr.visited {
+  a.title:not(.badge-notification) { color: $primary-medium; }
+}
 
 .topic-list-main-link {
   font-size: 1.143em;
@@ -57,7 +61,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: $primary-
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid $primary-low; 
+    border-bottom: 1px solid $primary-low;
 
     &.last-visit {
       border-bottom: none;
@@ -263,7 +267,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   background-color: $secondary;
   z-index: 100;
 
@@ -325,7 +329,7 @@ ol.category-breadcrumb {
     @include unselectable;
 
     font-size: 1.2em;
-    border: 1px solid $primary-low; 
+    border: 1px solid $primary-low;
     padding: 5px;
     background: $secondary;
     position: absolute;
