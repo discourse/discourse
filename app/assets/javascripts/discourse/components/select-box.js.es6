@@ -308,6 +308,15 @@ export default Ember.Component.extend({
     });
   },
 
+  @computed("headerText", "selectedContent", "textKey")
+  selectedTitle(headerText, selectedContent, textKey) {
+    if (Ember.isNone(selectedContent)) {
+      return headerText;
+    }
+
+    return selectedContent[textKey];
+  },
+
   @computed("headerText", "dynamicHeaderText", "selectedContent", "textKey", "clearSelectionLabel")
   generatedHeadertext(headerText, dynamic, selectedContent, textKey, clearSelectionLabel) {
     if (dynamic && !Ember.isNone(selectedContent)) {
