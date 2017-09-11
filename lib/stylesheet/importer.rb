@@ -61,7 +61,7 @@ module Stylesheet
     register_import "category_backgrounds" do
       contents = ""
       Category.where('uploaded_background_id IS NOT NULL').each do |c|
-        contents << category_css(c) if c.uploaded_background
+        contents << category_css(c) if c.uploaded_background&.url.present?
       end
 
       Import.new("categoy_background.scss", source: contents)
