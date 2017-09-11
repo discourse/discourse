@@ -4,7 +4,7 @@
 @import "common/foundation/helpers";
 
 @import "common/admin/customize";
-@import "common/admin/flagged_topics";
+@import "common/admin/flagging";
 
 $mobile-breakpoint: 700px;
 
@@ -61,11 +61,6 @@ $mobile-breakpoint: 700px;
   tr:hover { background-color: darken($secondary, 2.5%); }
   tr.selected { background-color: lighten($primary, 80%); }
   .filters input { margin-bottom: 0; }
-}
-
-td.flaggers td {
-  border-bottom: none;
-  border-top: none;
 }
 
 .site-texts {
@@ -766,49 +761,6 @@ section.details {
   }
 }
 
-.admin-flags {
-  .hidden-post td.excerpt,
-  .hidden-post td.user {
-    opacity: 0.5;
-  }
-
-  .deleted td.excerpt,
-  .deleted td.user {
-    background-color: scale-color($danger, $lightness: 70%);
-  }
-
-  .message { background-color: $highlight-medium; }
-  .message:hover { background-color: $highlight-low; }
-
-  .flagged-post-avatar {
-    margin-right: 10px;
-  }
-
-  .excerpt {
-    padding: 8px;
-    word-wrap: break-word;
-    .fa { display: inline-block; }
-    h3 {
-      margin-top: 0;
-      margin-bottom: 5px;
-    }
-    p:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  tr.message td {
-    padding-left: 60px;
-  }
-
-  .flagged-posts { background: $danger; }
-
-  .action {
-     button { margin: 4px; }
-     text-align: right;
-  }
-}
-
 /* Dashboard */
 
 .dashboard-left {
@@ -1421,14 +1373,6 @@ button.ru {
   visibility: hidden;
 }
 
-.delete-flag-modal, .agree-flag-modal {
-  button {
-    display: block;
-    margin: 10px 0 10px 10px;
-    padding: 10px 15px;
-  }
-}
-
 .start-backup-modal {
   .btn {
     margin: 10px 0 10px 5px;
@@ -1902,18 +1846,6 @@ table#user-badges {
 .mobile-view .admin-contents .ip-lookup .location-box {
   width: 300px;
   left: -100%;
-}
-
-.mobile-view .admin-flags {
-  .flaggers {
-    padding: 2px;
-    .avatar {
-      padding: 0;
-    }
-  }
-  tr.message td {
-    padding-left: 8px;
-  }
 }
 
 

@@ -134,15 +134,7 @@ const FlaggedPost = Post.extend({
 
   postHidden: Ember.computed.alias('hidden'),
 
-  @computed
-  extraClasses() {
-    let classes = [];
-    if (this.get('hidden')) { classes.push('hidden-post'); }
-    if (this.get('deleted')) { classes.push('deleted'); }
-    return classes.join(' ');
-  },
-
-  deleted: Ember.computed.or('deleted_at', 'topic_deleted_at')
+  deleted: Ember.computed.or('deleted_at', 'topic_deleted_at'),
 });
 
 FlaggedPost.reopenClass({

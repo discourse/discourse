@@ -1,7 +1,12 @@
 import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
-  tagName: '',
+  tagName: 'div',
+  classNameBindings: [
+    ':flagged-post',
+    'flaggedPost.hidden:hidden-post',
+    'flaggedPost.deleted'
+  ],
 
   removeAfter(promise) {
     return promise.then(() => {

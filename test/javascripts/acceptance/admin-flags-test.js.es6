@@ -4,7 +4,7 @@ acceptance("Admin - Flagging", { loggedIn: true });
 QUnit.test("flagged posts", assert => {
   visit("/admin/flags/active");
   andThen(() => {
-    assert.equal(find('.admin-flags .flagged-post').length, 1);
+    assert.equal(find('.flagged-posts .flagged-post').length, 1);
     assert.equal(find('.flagged-post .flaggers .flagger').length, 1, 'shows who flagged it');
   });
 });
