@@ -1,17 +1,17 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   layoutName: "components/select-box",
   classNames: "select-box",
-  classNameBindings: ["expanded:is-expanded"],
+  classNameBindings: ["expanded:is-expanded", "hidden:is-hidden"],
 
   expanded: false,
   focused: false,
   filterFocused: false,
   renderBody: false,
   wrapper: true,
+  hidden: false,
   tabindex: 0,
   scrollableParentSelector: ".modal-body",
 
@@ -86,9 +86,7 @@ export default Ember.Component.extend({
     return (rowComponent) => {
       let template = "";
 
-      if (rowComponent.get("content.icon")) {
-        template += iconHTML(Handlebars.escapeExpression(rowComponent.get("content.icon")));
-      }
+      template += rowComponent.icon();
 
       const text = rowComponent.get(`content.${this.get("textKey")}`);
       template += `<p class="text">${Handlebars.escapeExpression(text)}</p>`;

@@ -6,7 +6,6 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 export default NotificationOptionsComponent.extend({
   classNames: ["category-notifications-button"],
 
-  classNameBindings: ["hidden:is-hidden"],
   hidden: Ember.computed.or("category.deleted", "site.isMobileDevice"),
 
   i18nPrefix: "category.notifications",
