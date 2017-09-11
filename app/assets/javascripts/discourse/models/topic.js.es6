@@ -33,6 +33,11 @@ const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
 
+  @computed('last_read_post_number', 'highest_post_number')
+  visited(lastReadPostNumber, highestPostNumber) {
+    return lastReadPostNumber === highestPostNumber;
+  },
+
   @computed('posters.firstObject')
   creator(poster){
     return poster && poster.user;
