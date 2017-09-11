@@ -67,7 +67,8 @@
     <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
     <% if params[:oe].present? %>
         <script>
-            var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.where(creator_id: current_user.id)).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
+            <%# AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.where(creator_id: current_user.id)).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>
+            var availableTags = <%= AnnotatorStore::Tag.sort_by_ancestry(AnnotatorStore::Tag.all).map {|t| t.path.map(&:name).join(' → ') }.to_json.html_safe -%>;
         </script>
     <% end %>
     <%# -------------------------------------- -%>

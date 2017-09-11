@@ -57,7 +57,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # post_process_posts
 
     # import_taxonomy_tags
-    import_taxonomy_taggings
+    # import_taxonomy_taggings
 
     # Reset "New" topics counter for all users.
     # User.find_each {|u| u.user_stat.update_column(:new_since, Time.now) }
@@ -677,8 +677,6 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   # annotator.js annotation format: http://docs.annotatorjs.org/en/v1.2.x/annotation-format.html
   # Nokogiri cheat sheet: https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
   def import_taxonomy_taggings
-    AnnotatorStore::Range.delete_all
-    AnnotatorStore::Annotation.delete_all
     puts '#################################### IMPORT TAXONOMY TAGGINGS ####################################'
     post_not_found = []
     import_failed = 0
@@ -687,11 +685,13 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     results.each do |row|
       imported_id = "#{row['entity_type'] == 'comment' ? 'cid' : 'nid' }:#{row['entity_id']}"
       post_id = post_id_from_imported_post_id(imported_id)
-      if post_id.blank?
+      post = Post.find_by(id: post_id) if post_id.present?
+
+      unless post.present?
         post_not_found << imported_id
         next
       end
-      post = Post.find(post_id)
+
       quote = row['quote']
       # Remove smileys from the quote as they were converted to images in discourse.
       quote = quote.gsub(/[[:space:]]+(:\)|;\)|;-\)|:-\)|:D|:p|:-\()([[:space:]]+|$)/, ' ')
