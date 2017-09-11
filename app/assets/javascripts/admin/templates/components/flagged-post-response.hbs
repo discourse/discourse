@@ -1,4 +1,4 @@
-{{#link-to 'adminUser' response.user class="response-avatar"}}
+{{#link-to 'adminUser' response.user.id response.user.username class="response-avatar"}}
   {{avatar response.user imageSize="medium"}}
 {{/link-to}}
 <div class='excerpt'>{{{response.excerpt}}}</div>

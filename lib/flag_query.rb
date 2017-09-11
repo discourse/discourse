@@ -60,9 +60,17 @@ module FlagQuery
       .includes(related_post: { topic: { ordered_posts: :user } })
       .where(post_id: post_ids)
 
+    all_post_actions = []
+
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]
-      post.post_actions ||= []
+
+      if opts[:rest_api]
+        post.post_action_ids ||= []
+      else
+        post.post_actions ||= []
+      end
+
       # TODO: add serializer so we can skip this
       action = {
         id: pa.id,
@@ -101,7 +109,12 @@ module FlagQuery
         action.merge!(permalink: related_topic.relative_url, conversation: conversation)
       end
 
-      post.post_actions << action
+      if opts[:rest_api]
+        post.post_action_ids << action[:id]
+        all_post_actions << action
+      else
+        post.post_actions << action
+      end
 
       user_ids << pa.user_id
       user_ids << pa.disposed_by_id if pa.disposed_by_id
@@ -115,7 +128,8 @@ module FlagQuery
     [
       posts,
       Topic.with_deleted.where(id: topic_ids.to_a).to_a,
-      User.includes(:user_stat).where(id: user_ids.to_a).to_a
+      User.includes(:user_stat).where(id: user_ids.to_a).to_a,
+      all_post_actions
     ]
   end
 

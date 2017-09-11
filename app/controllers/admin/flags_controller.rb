@@ -10,22 +10,40 @@ class Admin::FlagsController < Admin::AdminController
     # we may get out of sync, fix it here
     PostAction.update_flagged_posts_count
 
-    posts, topics, users = FlagQuery.flagged_posts_report(
+    posts, topics, users, post_actions = FlagQuery.flagged_posts_report(
       current_user,
       filter: params[:filter],
       offset: params[:offset].to_i,
       topic_id: params[:topic_id],
-      per_page: Admin::FlagsController.flags_per_page
+      per_page: Admin::FlagsController.flags_per_page,
+      rest_api: params[:rest_api].present?
     )
 
     if posts.blank?
       render json: { posts: [], topics: [], users: [] }
     else
-      render json: MultiJson.dump(
-        posts: posts,
-        topics: serialize_data(topics, FlaggedTopicSerializer),
-        users: serialize_data(users, FlaggedUserSerializer)
-      )
+      if params[:rest_api]
+        render_json_dump(
+          {
+            flagged_posts: posts,
+            topics: serialize_data(topics, FlaggedTopicSerializer),
+            users: serialize_data(users, FlaggedUserSerializer),
+            post_actions: post_actions
+          },
+          rest_serializer: true,
+          meta: {
+            types: {
+              disposed_by: 'user'
+            }
+          }
+        )
+      else
+        render_json_dump(
+          posts: posts,
+          topics: serialize_data(topics, FlaggedTopicSerializer),
+          users: serialize_data(users, FlaggedUserSerializer)
+        )
+      end
     end
   end
 

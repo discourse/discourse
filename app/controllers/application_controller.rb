@@ -327,6 +327,7 @@ class ApplicationController < ActionController::Base
       end
 
       obj['extras'] = opts[:extras] if opts[:extras]
+      obj['meta'] = opts[:meta] if opts[:meta]
     end
 
     render json: MultiJson.dump(obj), status: opts[:status] || 200

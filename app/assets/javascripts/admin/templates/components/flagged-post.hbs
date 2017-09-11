@@ -2,7 +2,9 @@
   <div class="flagged-post-avatar">
     {{#if flaggedPost.postAuthorFlagged}}
       {{#if flaggedPost.user}}
-        {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="large"}}{{/link-to}}
+        {{#link-to 'adminUser' flaggedPost.user.id flaggedPost.user.username}}
+          {{avatar flaggedPost.user imageSize="large"}}
+        {{/link-to}}
         {{#if flaggedPost.wasEdited}}
           {{d-icon "pencil" title="admin.flags.was_edited"}}
         {{/if}}
@@ -37,22 +39,22 @@
       </div>
     {{/if}}
 
-    {{#each flaggedPost.flaggers as |flagger|}}
+    {{#each flaggedPost.post_actions as |postAction|}}
       <div class='flagger'>
-        {{#link-to 'adminUser' flagger.user class='flagger-avatar'}}
-          {{avatar flagger.user imageSize="medium"}}
+        {{#link-to 'adminUser' postAction.user.id postAction.user.username class='flagger-avatar'}}
+          {{avatar postAction.user imageSize="medium"}}
         {{/link-to}}
         <div class='flagger-details'>
           <div class='flagger-username'>
-            {{#link-to 'adminUser' flagger.user}}
-              {{flagger.user.username}}
+            {{#link-to 'adminUser' postAction.user.id postAction.user.username}}
+              {{postAction.user.username}}
             {{/link-to}}
           </div>
           <div class='flagger-flagged-at'>
-            {{format-age flagger.flaggedAt}}
+            {{format-age postAction.created_at}}
           </div>
           <div class='flagger-flag-type'>
-            {{flagger.flagType}}
+            {{i18n (concat "admin.flags.summary.action_type_" postAction.post_action_type_id) count=1}}
           </div>
         </div>
       </div>
@@ -61,15 +63,19 @@
 
   {{#if showResolvedBy}}
     <div class='flagged-post-resolved-by'>
-      {{#each flaggedPost.flaggers as |flagger|}}
+      {{#each flaggedPost.post_actions as |postAction|}}
         <div class='disposer'>
-          {{#link-to 'adminUser' flagger.disposedBy class="disposer-avatar"}}
-            {{avatar flagger.disposedBy imageSize="medium"}}
+          {{#link-to
+            'adminUser'
+            postAction.disposed_by.id
+            postAction.disposed_by.username
+            class="disposer-avatar"}}
+            {{avatar postAction.disposed_by imageSize="medium"}}
           {{/link-to}}
           <div class='disposer-details'>
-            {{format-age flagger.disposedAt}}
-            {{{flagger.dispositionIcon}}}
-            {{#if flagger.tookAction}}
+            {{format-age postAction.disposed_at}}
+            {{disposition-icon postAction.disposition}}
+            {{#if postAction.staff_took_action}}
               {{d-icon "gavel" title="admin.flags.took_action"}}
             {{/if}}
           </div>
