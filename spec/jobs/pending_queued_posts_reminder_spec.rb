@@ -6,8 +6,9 @@ describe Jobs::PendingQueuedPostReminder do
 
     it "never emails" do
       described_class.any_instance.expects(:should_notify_ids).never
-      Email::Sender.any_instance.expects(:send).never
-      described_class.new.execute({})
+      expect {
+        described_class.new.execute({})
+      }.to_not change { Post.count }
     end
   end
 
@@ -16,25 +17,32 @@ describe Jobs::PendingQueuedPostReminder do
       SiteSetting.notify_about_queued_posts_after = 24
     end
 
-    it "doesn't email if there are no queued posts" do
+    it "doesn't create system message if there are no queued posts" do
       described_class.any_instance.stubs(:should_notify_ids).returns([])
       described_class.any_instance.stubs(:last_notified_id).returns(nil)
-      Email::Sender.any_instance.expects(:send).never
-      described_class.new.execute({})
+      expect {
+        described_class.new.execute({})
+      }.to_not change { Post.count }
     end
 
-    it "emails if there are new queued posts" do
+    it "creates system message if there are new queued posts" do
       described_class.any_instance.stubs(:should_notify_ids).returns([1, 2])
       described_class.any_instance.stubs(:last_notified_id).returns(nil)
-      Email::Sender.any_instance.expects(:send).once
-      described_class.new.execute({})
+      expect {
+        described_class.new.execute({})
+      }.to change { Post.count }.by(1)
+      expect(Topic.where(
+        subtype: TopicSubtype.system_message,
+        title: I18n.t('system_messages.queued_posts_reminder.subject_template', count: 2)
+      ).exists?).to eq(true)
     end
 
-    it "doesn't email again about the same posts" do
+    it "doesn't create system message again about the same posts" do
       described_class.any_instance.stubs(:should_notify_ids).returns([2])
       described_class.any_instance.stubs(:last_notified_id).returns(2)
-      Email::Sender.any_instance.expects(:send).never
-      described_class.new.execute({})
+      expect {
+        described_class.new.execute({})
+      }.to_not change { Post.count }
     end
   end
 end

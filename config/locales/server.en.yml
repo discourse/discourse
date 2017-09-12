@@ -1952,16 +1952,6 @@ en:
 
       %{notes}
 
-  queued_posts_reminder:
-    title: "Queued Posts Reminder"
-    subject_template:
-      one: "[%{email_prefix}] 1 post waiting to be reviewed"
-      other: "[%{email_prefix}] %{count} posts waiting to be reviewed"
-    text_body_template: |
-      Hello,
-
-      Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
-
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
@@ -2397,6 +2387,18 @@ en:
         This award is only granted to two new users per month, and it will be permanently visible on [your user page](%{base_url}/my/badges).
 
         You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
+
+    queued_posts_reminder:
+      title: "Queued Posts Reminder"
+      subject_template:
+        one: "1 post waiting to be reviewed"
+        other: "%{count} posts waiting to be reviewed"
+      text_body_template: |
+        Hello,
+
+        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
+
+
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
