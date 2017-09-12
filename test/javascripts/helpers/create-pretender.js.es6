@@ -271,6 +271,10 @@ export default function() {
       return response(200, fixturesByUrl['/groups.json']);
     });
 
+    this.get("groups/search.json", () => {
+      return response(200, []);
+    });
+
     this.get("/groups/discourse/topics.json", () => {
       return response(200, fixturesByUrl['/groups/discourse/posts.json']);
     });
@@ -345,6 +349,14 @@ export default function() {
     });
 
     this.get('/tag_groups', () => response(200, {tag_groups: []}));
+
+    this.get('/admin/users/1234.json', request => {
+      return response(200, {
+        id: 1234,
+        username: 'regular',
+      });
+    });
+
     this.post('/admin/users/:user_id/generate_api_key', success);
     this.delete('/admin/users/:user_id/revoke_api_key', success);
     this.delete('/admin/users/:user_id.json', () => response(200, { deleted: true }));
