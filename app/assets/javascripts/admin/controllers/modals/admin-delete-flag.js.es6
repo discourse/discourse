@@ -1,15 +1,10 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import DeleteSpammerModal from 'admin/mixins/delete-spammer-modal';
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, DeleteSpammerModal, {
   removeAfter: null,
 
   actions: {
-    deleteSpammer(user) {
-      return this.removeAfter(user.deleteAsSpammer()).then(() => {
-        this.send('closeModal');
-      });
-    },
-
     deletePostDeferFlag() {
       let flaggedPost = this.get('model');
       this.removeAfter(flaggedPost.deferFlags(true)).then(() => {

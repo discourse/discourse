@@ -142,6 +142,13 @@ QUnit.test('find embedded', function(assert) {
   });
 });
 
+QUnit.test('meta types', function(assert) {
+  const store = createStore();
+  return store.find('barn', 1).then(function(f) {
+    assert.equal(f.get('owner.name'), 'Old MacDonald', 'it has the embedded farmer');
+  });
+});
+
 QUnit.test('findAll embedded', function(assert) {
   const store = createStore();
   return store.findAll('fruit').then(function(fruits) {

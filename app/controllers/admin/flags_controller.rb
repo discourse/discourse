@@ -10,40 +10,51 @@ class Admin::FlagsController < Admin::AdminController
     # we may get out of sync, fix it here
     PostAction.update_flagged_posts_count
 
-    posts, topics, users, post_actions = FlagQuery.flagged_posts_report(
+    offset = params[:offset].to_i
+    per_page = Admin::FlagsController.flags_per_page
+
+    posts, topics, users, post_actions, total_rows = FlagQuery.flagged_posts_report(
       current_user,
       filter: params[:filter],
-      offset: params[:offset].to_i,
+      offset: offset,
       topic_id: params[:topic_id],
-      per_page: Admin::FlagsController.flags_per_page,
+      per_page: per_page,
       rest_api: params[:rest_api].present?
     )
 
-    if posts.blank?
-      render json: { posts: [], topics: [], users: [] }
-    else
-      if params[:rest_api]
-        render_json_dump(
-          {
-            flagged_posts: posts,
-            topics: serialize_data(topics, FlaggedTopicSerializer),
-            users: serialize_data(users, FlaggedUserSerializer),
-            post_actions: post_actions
-          },
-          rest_serializer: true,
-          meta: {
-            types: {
-              disposed_by: 'user'
-            }
-          }
-        )
-      else
-        render_json_dump(
-          posts: posts,
-          topics: serialize_data(topics, FlaggedTopicSerializer),
-          users: serialize_data(users, FlaggedUserSerializer)
+    if params[:rest_api]
+      meta = {
+        types: {
+          disposed_by: 'user'
+        }
+      }
+
+      if (total_rows || 0) > (offset + per_page)
+        meta[:total_rows_flagged_posts] = total_rows
+        meta[:load_more_flagged_posts] = admin_flags_filtered_path(
+          filter: params[:filter],
+          offset: offset + per_page,
+          rest_api: params[:rest_api],
+          topic_id: params[:topic_id]
         )
       end
+
+      render_json_dump(
+        {
+          flagged_posts: posts,
+          topics: serialize_data(topics, FlaggedTopicSerializer),
+          users: serialize_data(users, FlaggedUserSerializer),
+          post_actions: post_actions
+        },
+        rest_serializer: true,
+        meta: meta
+      )
+    else
+      render_json_dump(
+        posts: posts,
+        topics: serialize_data(topics, FlaggedTopicSerializer),
+        users: serialize_data(users, FlaggedUserSerializer)
+      )
     end
   end
 

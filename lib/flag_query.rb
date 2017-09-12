@@ -4,10 +4,8 @@ module FlagQuery
 
   def self.flagged_posts_report(current_user, opts = nil)
     opts ||= {}
-    filter = opts[:filter] || 'active'
     offset = opts[:offset] || 0
     per_page = opts[:per_page] || 25
-    topic_id = opts[:topic_id]
 
     actions = flagged_post_actions(opts)
 
@@ -21,14 +19,14 @@ module FlagQuery
       )
     end
 
+    total_rows = actions.count
+
     post_ids = actions.limit(per_page)
       .offset(offset)
       .group(:post_id)
       .order('MIN(post_actions.created_at) DESC')
       .pluck(:post_id)
       .uniq
-
-    return nil if post_ids.blank?
 
     posts = SqlBuilder.new("
       SELECT p.id,
@@ -129,11 +127,14 @@ module FlagQuery
       posts,
       Topic.with_deleted.where(id: topic_ids.to_a).to_a,
       User.includes(:user_stat).where(id: user_ids.to_a).to_a,
-      all_post_actions
+      all_post_actions,
+      total_rows
     ]
   end
 
-  def self.flagged_post_actions(opts)
+  def self.flagged_post_actions(opts = nil)
+    opts ||= {}
+
     post_actions = PostAction.flags
       .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
       .joins("INNER JOIN topics ON topics.id = posts.topic_id")

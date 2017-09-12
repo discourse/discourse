@@ -49,7 +49,17 @@ export default function(helpers) {
         id: 1,
         user_id: eviltrout.id,
         post_action_type_id: 8,
-        name_key: 'spam'
+        name_key: 'spam',
+        conversation: {
+          response: {
+            user_id: eviltrout.id,
+            excerpt: "hello",
+          },
+          reply: {
+            user_id: eviltrout.id,
+            excerpt: "goodbye"
+          }
+        }
       }],
       "__rest_serializer": "1"
     });

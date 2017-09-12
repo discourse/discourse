@@ -24,10 +24,10 @@
     icon="thumbs-o-up"
     label="admin.flags.agree_flag"}}
 
-  {{#if model.canDeleteAsSpammer}}
+  {{#if canDeleteSpammer}}
     {{d-button
       title="admin.flags.delete_spammer_title"
-      action=(action "agreeDeleteSpammer" model.user)
+      action="deleteSpammer"
       class="btn-danger delete-spammer"
       icon="exclamation-triangle"
       label="admin.flags.delete_spammer"}}

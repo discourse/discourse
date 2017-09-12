@@ -39,10 +39,10 @@
       label="flagging.take_action"}}
   {{/if}}
 
-  {{#if canDeleteSpammer}}
+  {{#if showDeleteSpammer}}
     {{d-button
       class="btn-danger"
-      action=(route-action "deleteSpammer" userDetails)
+      action="deleteSpammer"
       disabled=submitDisabled
       icon="exclamation-triangle"
       label="flagging.delete_spammer"}}

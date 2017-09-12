@@ -57,7 +57,7 @@ describe FlagQuery do
       posts = FlagQuery.flagged_posts_report(admin, topic_id: post.topic_id)
       expect(posts).to be_present
       posts = FlagQuery.flagged_posts_report(admin, topic_id: -1)
-      expect(posts).to be_blank
+      expect(posts[0]).to be_blank
 
       # chuck post in category a mod can not see and make sure its missing
       category = Fabricate(:category)

@@ -3,17 +3,35 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
 import computed from 'ember-addons/ember-computed-decorators';
+import optionalService from 'discourse/lib/optional-service';
 
 export default Ember.Controller.extend(ModalFunctionality, {
+  adminTools: optionalService(),
   userDetails: null,
   selected: null,
   flagTopic: null,
   message: null,
   isWarning: false,
   topicActionByName: null,
+  spammerDetails: null,
 
   onShow() {
-    this.set('selected', null);
+    this.setProperties({
+      selected: null,
+      spammerDetails: null
+    });
+
+    let adminTools = this.get('adminTools');
+    if (adminTools) {
+      adminTools.checkSpammer(this.get('model.user_id')).then(result => {
+        this.set('spammerDetails', result);
+      });
+    }
+  },
+
+  @computed('spammerDetails.canDelete', 'selected.name_key')
+  showDeleteSpammer(canDeleteSpammer, nameKey) {
+    return canDeleteSpammer && nameKey === 'spam';
   },
 
   @computed('flagTopic')
@@ -74,13 +92,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   submitDisabled: Em.computed.not('submitEnabled'),
 
   // Staff accounts can "take action"
-  canTakeAction: function() {
-    if (this.get("flagTopic")) return false;
-
-    // We can only take actions on non-custom flags
-    if (this.get('selected.is_custom_flag')) return false;
-    return Discourse.User.currentProp('staff');
-  }.property('selected.is_custom_flag'),
+  @computed('flagTopic', 'selected.is_custom_flag')
+  canTakeAction(flagTopic, isCustomFlag) {
+    return !flagTopic && !isCustomFlag && this.currentUser.get('staff');
+  },
 
   submitText: function(){
     if (this.get('selected.is_custom_flag')) {
@@ -91,6 +106,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('selected.is_custom_flag'),
 
   actions: {
+    deleteSpammer() {
+      let details = this.get('spammerDetails');
+      if (details) {
+        details.deleteUser().then(() => window.location.reload());
+      }
+    },
+
     takeAction() {
       this.send('createFlag', {takeAction: true});
       this.set('model.hidden', true);
@@ -136,32 +158,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
   },
 
-  canDeleteSpammer: function() {
-    if (this.get("flagTopic")) return false;
-
-    if (this.currentUser.get('staff') && this.get('selected.name_key') === 'spam') {
-      return this.get('userDetails.can_be_deleted') &&
-        this.get('userDetails.can_delete_all_posts');
-    } else {
-      return false;
-    }
-  }.property('selected.name_key', 'userDetails.can_be_deleted', 'userDetails.can_delete_all_posts'),
-
   @computed('flagTopic', 'selected.name_key')
   canSendWarning(flagTopic, nameKey) {
     return !flagTopic && this.currentUser.get('staff') && nameKey === 'notify_user';
-  },
-
-  usernameChanged: function() {
-    this.set('userDetails', null);
-    this.fetchUserDetails();
-  }.observes('model.username'),
-
-  fetchUserDetails() {
-    if (Discourse.User.currentProp('staff') && this.get('model.username')) {
-      const AdminUser = requirejs('admin/models/admin-user').default;
-      AdminUser.find(this.get('model.user_id')).then(user => this.set('userDetails', user));
-    }
   }
 
 });

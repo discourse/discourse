@@ -463,59 +463,6 @@ const AdminUser = Discourse.User.extend({
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
   },
 
-  deleteAsSpammer() {
-    return this.checkEmail().then(() => {
-
-      let message = I18n.messageFormat('flagging.delete_confirm_MF', {
-        "POSTS": this.get('post_count'),
-        "TOPICS": this.get('topic_count'),
-        email: this.get('email') || I18n.t("flagging.hidden_email_address"),
-        ip_address: this.get('ip_address') || I18n.t("flagging.ip_address_missing")
-      });
-
-      let userId = this.get('id');
-
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        const buttons = [
-          {
-            label: I18n.t("composer.cancel"),
-            class: "cancel-inline",
-            link:  true
-          },
-          {
-            label: `${iconHTML('exclamation-triangle')} ` + I18n.t("flagging.yes_delete_spammer"),
-            class: "btn btn-danger confirm-delete",
-            callback() {
-              return ajax(`/admin/users/${userId}.json`, {
-                type: 'DELETE',
-                data: {
-                  delete_posts: true,
-                  block_email: true,
-                  block_urls: true,
-                  block_ip: true,
-                  delete_as_spammer: true,
-                  context: window.location.pathname
-                }
-              }).then(result => {
-                if (result.deleted) {
-                  resolve();
-                } else {
-                  throw 'failed to delete';
-                }
-              }).catch(() => {
-                bootbox.alert(I18n.t("admin.user.delete_failed"));
-                reject();
-              });
-            }
-          }
-        ];
-
-        bootbox.dialog(message, buttons, {classes: "flagging-delete-spammer"});
-      });
-
-    });
-  },
-
   loadDetails() {
     const user = this;
 
