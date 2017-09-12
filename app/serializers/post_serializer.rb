@@ -68,7 +68,8 @@ class PostSerializer < BasicPostSerializer
              :via_email,
              :is_auto_generated,
              :action_code,
-             :action_code_who
+             :action_code_who,
+             :last_wiki_edit
 
   def initialize(object, opts)
     super(object, opts)
@@ -351,6 +352,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_action_code_who?
     include_action_code? && action_code_who.present?
+  end
+
+  def last_wiki_edit
+    object.revisions.last.updated_at
+  end
+
+  def include_last_wiki_edit?
+    object.wiki && object.post_number == 1
   end
 
   private
