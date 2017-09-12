@@ -1,5 +1,4 @@
 import { loadTopicView } from 'discourse/models/topic';
-import FlaggedPost from 'admin/models/flagged-post';
 
 export default Ember.Route.extend({
   model(params) {
@@ -8,7 +7,7 @@ export default Ember.Route.extend({
 
     return Ember.RSVP.hash({
       topic,
-      flaggedPosts: FlaggedPost.findAll({
+      flaggedPosts: this.store.findAll('flagged-post', {
         filter: 'active',
         topic_id: params.id
       })

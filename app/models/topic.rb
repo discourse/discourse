@@ -272,7 +272,7 @@ class Topic < ActiveRecord::Base
   end
 
   def has_flags?
-    FlagQuery.flagged_post_actions("active")
+    FlagQuery.flagged_post_actions(filter: "active")
       .where("topics.id" => id)
       .exists?
   end

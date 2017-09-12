@@ -317,7 +317,7 @@ class Post < ActiveRecord::Base
   end
 
   def archetype
-    topic.archetype
+    topic&.archetype
   end
 
   def self.regular_order

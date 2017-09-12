@@ -2,7 +2,9 @@ import RestAdapter from 'discourse/adapters/rest';
 
 export default RestAdapter.extend({
   pathFor(store, type, findArgs) {
-    return `/admin/flags/${findArgs.filter}.json?rest_api=true`;
+    let args = Object.assign({ rest_api: true }, findArgs);
+    delete args.filter;
+    return `/admin/flags/${findArgs.filter}.json?${$.param(args)}`;
   },
 
   afterFindAll(results, helper) {

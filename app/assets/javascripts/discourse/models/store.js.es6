@@ -145,10 +145,12 @@ export default Ember.Object.extend({
     const self = this;
 
     return ajax(url).then(function(result) {
-      const typeName = Ember.String.underscore(self.pluralize(type)),
-            totalRows = result["total_rows_" + typeName] || result.get('totalRows'),
-            loadMoreUrl = result["load_more_" + typeName],
-            content = result[typeName].map(obj => self._hydrate(type, obj, result));
+      let typeName = Ember.String.underscore(self.pluralize(type));
+
+      let pageTarget = result.meta || result;
+      let totalRows = pageTarget["total_rows_" + typeName] || resultSet.get('totalRows');
+      let loadMoreUrl = pageTarget["load_more_" + typeName];
+      let content = result[typeName].map(obj => self._hydrate(type, obj, result));
 
       resultSet.setProperties({ totalRows, loadMoreUrl });
       resultSet.get('content').pushObjects(content);
@@ -192,12 +194,14 @@ export default Ember.Object.extend({
     const typeName = Ember.String.underscore(this.pluralize(type));
     const content = result[typeName].map(obj => this._hydrate(type, obj, result));
 
+    let pageTarget = result.meta || result;
+
     const createArgs = {
       content,
       findArgs,
-      totalRows: result["total_rows_" + typeName] || content.length,
-      loadMoreUrl: result["load_more_" + typeName],
-      refreshUrl: result['refresh_' + typeName],
+      totalRows: pageTarget["total_rows_" + typeName] || content.length,
+      loadMoreUrl: pageTarget["load_more_" + typeName],
+      refreshUrl: pageTarget['refresh_' + typeName],
       store: this,
       __type: type
     };

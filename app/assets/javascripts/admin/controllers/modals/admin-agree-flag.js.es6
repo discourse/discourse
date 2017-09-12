@@ -1,8 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import DeleteSpammerModal from 'admin/mixins/delete-spammer-modal';
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, DeleteSpammerModal, {
   removeAfter: null,
-  deleteSpammer: null,
 
   actions: {
     agreeDeleteSpammer(user) {

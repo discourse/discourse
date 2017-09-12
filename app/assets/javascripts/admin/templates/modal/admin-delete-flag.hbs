@@ -13,11 +13,11 @@
     icon="thumbs-o-up"
     label="admin.flags.delete_post_agree_flag"}}
 
-  {{#if model.canDeleteAsSpammer}}
+  {{#if canDeleteSpammer}}
     {{d-button
       class="btn-danger delete-spammer"
       title="admin.flags.delete_spammer_title"
-      action=(action "deleteSpammer" model.user)
+      action="deleteSpammer"
       icon="exclamation-triangle"
       label="admin.flags.delete_spammer"}}
   {{/if}}
