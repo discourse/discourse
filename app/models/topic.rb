@@ -1224,12 +1224,21 @@ SQL
   end
 
   def pm_with_non_human_user?
-    Topic.private_messages
-      .joins("LEFT JOIN topic_allowed_groups ON topics.id = topic_allowed_groups.topic_id")
-      .where("topic_allowed_groups.topic_id IS NULL")
-      .where("topics.id = ?", self.id)
-      .where("(SELECT COUNT(*) FROM topic_allowed_users WHERE topic_allowed_users.topic_id = ? AND topic_allowed_users.user_id > 0) = 1", self.id)
-      .exists?
+    sql = <<~SQL
+    SELECT 1 FROM topics
+    LEFT JOIN topic_allowed_groups ON topics.id = topic_allowed_groups.topic_id
+    WHERE topic_allowed_groups.topic_id IS NULL
+    AND topics.archetype = :private_message
+    AND topics.id = :topic_id
+    AND (
+      SELECT COUNT(*) FROM topic_allowed_users
+      WHERE topic_allowed_users.topic_id = :topic_id
+      AND topic_allowed_users.user_id > 0
+    ) = 1
+    SQL
+
+    result = Topic.exec_sql(sql, private_message: Archetype.private_message, topic_id: self.id)
+    result.ntuples != 0
   end
 
   private
