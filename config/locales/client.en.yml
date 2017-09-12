@@ -3266,6 +3266,7 @@ en:
         suspend_duration: "How long will the user be suspended for?"
         suspend_duration_units: "(days)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
+        suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"

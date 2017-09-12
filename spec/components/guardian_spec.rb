@@ -2541,4 +2541,32 @@ describe Guardian do
       end
     end
   end
+
+  context "suspension reasons" do
+    let(:user) { Fabricate(:user) }
+
+    it "will be shown by default" do
+      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
+    end
+
+    context "with hide suspension reason enabled" do
+      let(:moderator) { Fabricate(:moderator) }
+
+      before do
+        SiteSetting.hide_suspension_reasons = true
+      end
+
+      it "will not be shown to anonymous users" do
+        expect(Guardian.new.can_see_suspension_reason?(user)).to eq(false)
+      end
+
+      it "users can see their own suspensions" do
+        expect(Guardian.new(user).can_see_suspension_reason?(user)).to eq(true)
+      end
+
+      it "staff can see suspensions" do
+        expect(Guardian.new(moderator).can_see_suspension_reason?(user)).to eq(true)
+      end
+    end
+  end
 end

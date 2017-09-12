@@ -422,6 +422,9 @@ users:
   user_website_domains_whitelist:
     default: ''
     type: list
+  hide_suspension_reasons:
+    default: false
+    client: true
 
 groups:
   enable_group_directory:

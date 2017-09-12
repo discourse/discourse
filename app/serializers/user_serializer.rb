@@ -251,7 +251,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def include_suspend_reason?
-    object.suspended?
+    scope.can_see_suspension_reason?(object) && object.suspended?
   end
 
   def include_suspended_till?

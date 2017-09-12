@@ -84,8 +84,10 @@
               {{#if model.isSuspended}}
                 <div class='suspended'>
                   {{d-icon "ban"}}
-                  <b>{{i18n 'user.suspended_notice' date=model.suspendedTillDate}}</b><br/>
-                  <b>{{i18n 'user.suspended_reason'}}</b> {{model.suspend_reason}}
+                  <b>{{i18n 'user.suspended_notice' date=model.suspendedTillDate}}</b><br>
+                  {{#if model.suspend_reason}}
+                    <b>{{i18n 'user.suspended_reason'}}</b> {{model.suspend_reason}}
+                  {{/if}}
                 </div>
               {{/if}}
               {{#if isNotSuspendedOrIsStaff}}
