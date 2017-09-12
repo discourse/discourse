@@ -24,10 +24,11 @@ class UserActivator
 
   def factory
     invite = Invite.find_by(email: Email.downcase(@user.email))
-    if SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
-      ApprovalActivator
-    elsif !user.active?
+
+    if !user.active?
       EmailActivator
+    elsif SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
+      ApprovalActivator
     else
       LoginActivator
     end
