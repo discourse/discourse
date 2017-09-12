@@ -173,7 +173,7 @@ describe UsersController do
 
       context 'user is not approved' do
         before do
-          Guardian.any_instance.expects(:can_access_forum?).returns(false)
+          SiteSetting.must_approve_users = true
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
           put :perform_account_activation, token: 'asdfasdf'
         end
@@ -522,27 +522,20 @@ describe UsersController do
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
       end
 
-      context "and 'must approve users' site setting is enabled" do
+      context "`must approve users` site setting is enabled" do
         before { SiteSetting.must_approve_users = true }
 
-        it 'does not enqueue an email' do
-          Jobs.expects(:enqueue).never
-          post_user
-        end
+        it 'creates a user correctly' do
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
+          User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
 
-        it 'does not login the user' do
           post_user
-          expect(session[:current_user_id]).to be_blank
-        end
 
-        it 'indicates the user is not active in the response' do
-          post_user
           expect(JSON.parse(response.body)['active']).to be_falsey
-        end
 
-        it "shows the 'waiting approval' message" do
-          post_user
-          expect(JSON.parse(response.body)['message']).to eq(I18n.t 'login.wait_approval')
+          # should save user_created_message in session
+          expect(session["user_created_message"]).to be_present
+          expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
         end
       end
     end
