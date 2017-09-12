@@ -36,6 +36,7 @@ module Email
     def handle_failure(mail_string, e, incoming_email)
       message_template = case e
                          when Email::Receiver::EmptyEmailError             then :email_reject_empty
+                         when Email::Receiver::NoSenderDetectedError       then :email_reject_empty
                          when Email::Receiver::NoBodyDetectedError         then :email_reject_empty
                          when Email::Receiver::UserNotFoundError           then :email_reject_user_not_found
                          when Email::Receiver::ScreenedEmailError          then :email_reject_screened_email
@@ -52,7 +53,7 @@ module Email
                          when ActiveRecord::Rollback                       then :email_reject_invalid_post
                          when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
                          when Discourse::InvalidAccess                     then :email_reject_invalid_access
-        else                                                   :email_reject_unrecognized_error
+                         else                                                   :email_reject_unrecognized_error
       end
 
       template_args = {}
