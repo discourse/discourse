@@ -115,26 +115,29 @@ export default createWidget('search-menu', {
   panelContents() {
     const contextEnabled = searchData.contextEnabled;
 
-    const results = [
+    let searchInput = [
       this.attach('search-term', { value: searchData.term, contextEnabled }),
+    ];
+    if (searchData.term && searchData.loading) {
+      searchInput.push(h('div.searching', h('div.spinner')));
+    }
+
+    const results = [
+      h('div.search-input', searchInput),
       this.attach('search-context', {
         contextEnabled,
         url: this.fullSearchUrl({ expanded: true })
       })
     ];
 
-    if (searchData.term) {
-      if (searchData.loading) {
-        results.push(h('div.searching', h('div.spinner')));
-      } else {
-        results.push(this.attach('search-menu-results', {
-          term: searchData.term,
-          noResults: searchData.noResults,
-          results: searchData.results,
-          invalidTerm: searchData.invalidTerm,
-          searchContextEnabled: searchData.contextEnabled,
-        }));
-      }
+    if (searchData.term && !searchData.loading) {
+      results.push(this.attach('search-menu-results', {
+        term: searchData.term,
+        noResults: searchData.noResults,
+        results: searchData.results,
+        invalidTerm: searchData.invalidTerm,
+        searchContextEnabled: searchData.contextEnabled,
+      }));
     }
 
     return results;
