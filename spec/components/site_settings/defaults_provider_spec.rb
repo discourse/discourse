@@ -2,8 +2,7 @@ require 'rails_helper'
 require_dependency 'site_settings/defaults_provider'
 
 describe SiteSettings::DefaultsProvider do
-
-  let :provider_local do
+  let(:provider_local) do
     SiteSettings::LocalProcessProvider.new
   end
 
@@ -14,7 +13,7 @@ describe SiteSettings::DefaultsProvider do
     end
   end
 
-  let :settings do
+  let(:settings) do
     new_settings(provider_local)
   end
 
@@ -149,9 +148,15 @@ describe SiteSettings::DefaultsProvider do
   end
 
   describe '.site_locale=' do
+    it 'should store site locale in a distributed cache' do
+      expect(settings.defaults.class.class_variable_get(:@@site_locales))
+        .to be_a(DistributedCache)
+    end
+
     it 'changes and store the current site locale' do
       settings.defaults.site_locale = 'zh_CN'
-      expect(settings.defaults.site_locale).to eq 'zh_CN'
+
+      expect(settings.defaults.site_locale).to eq('zh_CN')
     end
 
     it 'changes and store the current site locale' do

@@ -9,13 +9,14 @@ class SiteSettings::DefaultsProvider
   DEFAULT_LOCALE = 'en'.freeze
   DEFAULT_CATEGORY = 'required'.freeze
 
+  @@site_locales ||= DistributedCache.new('site_locales')
+
   def initialize(site_setting)
     @site_setting = site_setting
     @site_setting.refresh_settings << DEFAULT_LOCALE_KEY
     @defaults = {}
     @defaults[DEFAULT_LOCALE.to_sym] = {}
 
-    @site_locales = {}
     refresh_site_locale!
   end
 
@@ -61,21 +62,21 @@ class SiteSettings::DefaultsProvider
   end
 
   def site_locale
-    @site_locales[current_db]
+    @@site_locales[current_db]
   end
 
   def site_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
 
-    if val != @site_locales[current_db]
+    if val != @@site_locales[current_db]
       @site_setting.provider.save(DEFAULT_LOCALE_KEY, val, SiteSetting.types[:string])
       refresh_site_locale!
       @site_setting.refresh!
       Discourse.request_refresh!
     end
 
-    @site_locales[current_db]
+    @@site_locales[current_db]
   end
 
   def each(&block)
@@ -92,7 +93,7 @@ class SiteSettings::DefaultsProvider
       description: @site_setting.description(DEFAULT_LOCALE_KEY),
       type: SiteSetting.types[SiteSetting.types[:enum]],
       preview: nil,
-      value: @site_locales[current_db],
+      value: @@site_locales[current_db],
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?
     }
@@ -100,7 +101,7 @@ class SiteSettings::DefaultsProvider
 
   def refresh_site_locale!
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      @site_locales[db] =
+      @@site_locales[db] =
         if GlobalSetting.respond_to?(DEFAULT_LOCALE_KEY) &&
             (global_val = GlobalSetting.send(DEFAULT_LOCALE_KEY)) &&
             !global_val.blank?
@@ -111,7 +112,7 @@ class SiteSettings::DefaultsProvider
           DEFAULT_LOCALE
         end
 
-      @site_locales[db]
+      @@site_locales[db]
     end
   end
 
