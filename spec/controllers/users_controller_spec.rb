@@ -1983,6 +1983,14 @@ describe UsersController do
         expect(response).to_not be_success
       end
 
+      it "raises an error when the email is blacklisted" do
+        user = Fabricate(:inactive_user)
+        SiteSetting.email_domains_blacklist = 'example.com'
+        session[SessionController::ACTIVATE_USER_KEY] = user.id
+        xhr :put, :update_activation_email, email: 'test@example.com'
+        expect(response).to_not be_success
+      end
+
       it "can be updated" do
         user = Fabricate(:inactive_user)
         token = user.email_tokens.first

@@ -619,9 +619,12 @@ class UsersController < ApplicationController
     raise Discourse::InvalidAccess.new if current_user.present?
 
     User.transaction do
-      @user.email = params[:email]
+      primary_email = @user.primary_email
 
-      if @user.save
+      primary_email.email = params[:email]
+      primary_email.should_validate_email = true
+
+      if primary_email.save
         @user.email_tokens.create(email: @user.email)
         enqueue_activation_email
         render json: success_json
