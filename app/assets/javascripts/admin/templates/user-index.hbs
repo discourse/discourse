@@ -306,7 +306,11 @@
       {{i18n 'admin.user.suspended_explanation'}}
     {{else}}
       {{#if model.canSuspend}}
-        {{d-button class="btn-danger" action="showSuspendModal" actionParam=model icon="ban" label="admin.user.suspend"}}
+        {{d-button
+          class="btn-danger suspend-user"
+          action="showSuspendModal"
+          icon="ban"
+          label="admin.user.suspend"}}
         {{i18n 'admin.user.suspended_explanation'}}
       {{/if}}
     {{/if}}

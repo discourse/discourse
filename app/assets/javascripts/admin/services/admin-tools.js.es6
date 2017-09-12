@@ -5,6 +5,7 @@
 import AdminUser from 'admin/models/admin-user';
 import { iconHTML } from 'discourse-common/lib/icon-library';
 import { ajax } from 'discourse/lib/ajax';
+import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Service.extend({
 
@@ -17,6 +18,14 @@ export default Ember.Service.extend({
       deleteUser: () => this._deleteSpammer(adminUser),
       canDelete: adminUser.get('can_be_deleted') && adminUser.get('can_delete_all_posts')
     };
+  },
+
+  showSuspendModal(user) {
+    showModal('admin-suspend-user', {
+      user,
+      admin: true,
+      modalClass: 'suspend-user-modal'
+    });
   },
 
   _deleteSpammer(adminUser) {

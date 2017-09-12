@@ -1,7 +1,7 @@
 {{#d-modal-body title="admin.user.suspend_modal_title"}}
   <form>
     {{i18n 'admin.user.suspend_duration'}}
-    {{text-field value=duration maxlength="5" autofocus="autofocus"}}
+    {{text-field value=duration maxlength="5" autofocus="autofocus" class="suspend-duration"}}
     {{i18n 'admin.user.suspend_duration_units'}}<br/>
     <br/>
     {{#if siteSettings.hide_suspension_reasons}}
@@ -11,11 +11,16 @@
     {{/if}}
 
     <br/>
-    {{text-field value=reason class="span8"}}
+    {{text-field value=reason class="suspend-reason"}}
   </form>
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  <button class='btn btn-danger' {{action "suspend"}} disabled={{submitDisabled}}>{{d-icon "ban"}}{{i18n 'admin.user.suspend'}}</button>
-  <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+  {{d-button
+    class="btn-danger perform-suspend"
+    action="suspend"
+    disabled=submitDisabled
+    icon="ban"
+    label="admin.user.suspend"}}
+  <a {{action "closeModal"}} class="cancel-suspend">{{i18n 'cancel'}}</a>
 </div>
