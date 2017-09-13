@@ -110,13 +110,25 @@ module Jobs
           if broken_images.include?(src)
             tag.name = 'span'
             tag.set_attribute('class', 'broken-image fa fa-chain-broken')
+            tag.set_attribute('title', I18n.t('post.image_placeholder.broken'))
             tag.remove_attribute('src')
+            tag.remove_attribute('width')
+            tag.remove_attribute('height')
           elsif large_images.include?(src)
             tag.name = 'a'
             tag.set_attribute('href', src)
             tag.set_attribute('target', '_blank')
+            tag.set_attribute('title', I18n.t('post.image_placeholder.large'))
             tag.remove_attribute('src')
+            tag.remove_attribute('width')
+            tag.remove_attribute('height')
             tag.inner_html = '<span class="large-image fa fa-picture-o"></span>'
+            parent = tag.parent
+            if parent.name == 'a'
+              parent.add_next_sibling(tag)
+              parent.add_next_sibling('<br>')
+              parent.content = parent["href"]
+            end
           end
         end
         if start_html == post.cooked && doc.to_html != post.cooked
