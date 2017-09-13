@@ -188,7 +188,7 @@ begin
   append = "?api_key=#{api_key}&api_username=admin1"
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o /dev/null"
+  run "wget http://127.0.0.1:#{@port}/ -O /dev/null"
 
   tests = [
     ["categories", "/categories"],
