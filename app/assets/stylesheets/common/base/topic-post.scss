@@ -423,6 +423,7 @@ a.mention, a.mention-group {
 }
 
 .broken-image, .large-image {
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   border: 1px solid $primary-low;
   font-size: 32px;
   padding: 16px;
