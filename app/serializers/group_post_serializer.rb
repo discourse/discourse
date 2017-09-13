@@ -7,7 +7,7 @@ class GroupPostSerializer < ApplicationSerializer
              :created_at,
              :title,
              :url,
-             :category,
+             :category_id,
              :post_number,
              :topic_id
 
@@ -22,7 +22,7 @@ class GroupPostSerializer < ApplicationSerializer
     SiteSetting.enable_names?
   end
 
-  def category
-    object.topic.category
+  def category_id
+    object.topic.category_id
   end
 end
