@@ -1,5 +1,4 @@
 import NotificationOptionsComponent from "discourse/components/notifications-button";
-import { observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
@@ -19,8 +18,11 @@ export default NotificationOptionsComponent.extend({
 
   generatedHeadertext: null,
 
-  @observes("value")
-  _notificationLevelChanged() {
-    this.get("category").setNotification(this.get("value"));
-  },
+  actions: {
+    onSelectRow(content) {
+      this._super(content);
+
+      this.get("category").setNotification(this.get("value"));
+    }
+  }
 });
