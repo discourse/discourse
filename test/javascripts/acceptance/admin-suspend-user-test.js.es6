@@ -1,6 +1,22 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Admin - Suspend User", { loggedIn: true });
+acceptance("Admin - Suspend User", {
+  loggedIn: true,
+
+  pretend(server, helper) {
+    server.put('/admin/users/:user_id/suspend', () => helper.response(200, {
+      suspension: {
+        suspended: true
+      }
+    }));
+
+    server.put('/admin/users/:user_id/unsuspend', () => helper.response(200, {
+      suspension: {
+        suspended: false
+      }
+    }));
+  }
+});
 
 QUnit.test("suspend a user - cancel", assert => {
   visit("/admin/users/1234/regular");
@@ -16,8 +32,13 @@ QUnit.test("suspend a user - cancel", assert => {
   });
 });
 
-QUnit.test("suspend a user", assert => {
+QUnit.test("suspend, then unsuspend a user", assert => {
   visit("/admin/users/1234/regular");
+
+  andThen(() => {
+    assert.ok(!exists('.suspension-info'));
+  });
+
   click(".suspend-user");
 
   andThen(() => {
@@ -32,5 +53,11 @@ QUnit.test("suspend a user", assert => {
   click('.perform-suspend');
   andThen(() => {
     assert.equal(find('.suspend-user-modal:visible').length, 0);
+    assert.ok(exists('.suspension-info'));
+  });
+
+  click('.unsuspend-user');
+  andThen(() => {
+    assert.ok(!exists('.suspension-info'));
   });
 });

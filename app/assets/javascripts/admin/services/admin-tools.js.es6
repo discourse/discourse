@@ -22,7 +22,7 @@ export default Ember.Service.extend({
 
   showSuspendModal(user) {
     showModal('admin-suspend-user', {
-      user,
+      model: user,
       admin: true,
       modalClass: 'suspend-user-modal'
     });
