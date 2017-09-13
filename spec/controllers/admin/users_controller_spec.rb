@@ -121,8 +121,53 @@ describe Admin::UsersController do
     end
 
     context '.suspend' do
+      let(:user) { Fabricate(:evil_trout) }
+      let!(:api_key) { Fabricate(:api_key, user: user) }
 
-      let(:evil_trout) { Fabricate(:evil_trout) }
+      it "works properly" do
+        put(
+          :suspend,
+          user_id: user.id,
+          duration: 10,
+          reason: "because I said so",
+          format: :json
+        )
+        expect(response).to be_success
+
+        user.reload
+        expect(user.suspended_at).to be_present
+        expect(user.suspended_till).to be_present
+        expect(ApiKey.where(user_id: user.id).count).to eq(0)
+
+        log = UserHistory.where(target_user_id: user.id).order('id desc').first
+        expect(log).to be_present
+        expect(log.details).to match(/because I said so/)
+      end
+
+      it "can send a message to the user" do
+        Jobs.expects(:enqueue).with(
+          :critical_user_email,
+          has_entries(
+            type: :account_suspended,
+            user_id: user.id,
+            message: "long reason"
+          )
+        )
+
+        put(
+          :suspend,
+          user_id: user.id,
+          duration: 10,
+          reason: "short reason",
+          message: "long reason",
+          format: :json
+        )
+        expect(response).to be_success
+
+        log = UserHistory.where(target_user_id: user.id).order('id desc').first
+        expect(log).to be_present
+        expect(log.details).to match(/short reason/)
+        expect(log.details).to match(/long reason/)
 
       it "also revoke any api keys" do
         User.any_instance.expects(:revoke_api_key)

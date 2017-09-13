@@ -244,17 +244,13 @@ const AdminUser = Discourse.User.extend({
     return ajax(`/admin/users/${this.id}/suspend`, {
       type: 'PUT',
       data
-    }).then(result => {
-      this.setProperties(result.suspension);
-    });
+    }).then(result => this.setProperties(result.suspension));
   },
 
   unsuspend() {
     return ajax(`/admin/users/${this.id}/unsuspend`, {
       type: 'PUT'
-    }).then(result => {
-      this.setProperties(result.suspension);
-    });
+    }).then(result => this.setProperties(result.suspension));
   },
 
   logOut() {

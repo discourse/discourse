@@ -68,6 +68,21 @@ class UserNotifications < ActionMailer::Base
                 email_token: opts[:email_token])
   end
 
+  def account_suspended(user, opts = nil)
+    opts ||= {}
+
+    return unless user_history = opts[:user_history]
+
+    build_email(
+      user.email,
+      template: "user_notifications.account_suspended",
+      locale: user_locale(user),
+      reason: user_history.details,
+      message: user_history.context,
+      suspended_till: I18n.l(user.suspended_till, format: :long)
+    )
+  end
+
   def short_date(dt)
     if dt.year == Time.now.year
       I18n.l(dt, format: :short_no_year)
