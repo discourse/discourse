@@ -1424,6 +1424,7 @@ pl_PL:
       filter_to:
         one: "1 post w temacie"
         few: "{{count}} posty w temacie"
+        many: "{{count}} postów w temacie"
         other: "{{count}} postów w temacie"
       create: 'Nowy temat'
       create_long: 'Utwórz nowy temat'
@@ -2164,6 +2165,7 @@ pl_PL:
       title:
         one: "jeszcze 1"
         few: "%{count} jeszcze"
+        many: "%{count} jeszcze"
         other: "%{count} jeszcze"
     topic_statuses:
       warning:
