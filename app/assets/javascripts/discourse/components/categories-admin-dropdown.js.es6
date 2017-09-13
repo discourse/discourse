@@ -1,7 +1,6 @@
 import DropdownSelectBoxComponent from "discourse/components/dropdown-select-box";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["categories-admin-dropdown"],
@@ -39,9 +38,12 @@ export default DropdownSelectBoxComponent.extend({
     reorder: "reorderCategories"
   },
 
-  @observes("value")
-  _didSelectRow() {
-    this.sendAction(`actionNames.${this.get("value")}`);
-    this.set("value", null);
+  actions: {
+    onSelectRow(content) {
+      this._super(content);
+
+      this.sendAction(`actionNames.${this.get("value")}`);
+      this.set("value", null);
+    }
   }
 });
