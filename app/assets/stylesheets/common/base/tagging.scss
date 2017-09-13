@@ -49,6 +49,36 @@
   padding-top: 5px;
 }
 
+.topic-category {
+  margin-top: 5px;
+
+  .topic-header-extra {
+    display: inline;
+    vertical-align: baseline;
+    margin: 0;
+  }
+
+  .badge-wrapper {
+    display: inline-block;
+    vertical-align: baseline;
+    margin-top: 0;
+
+    &.bullet .badge-category {
+      vertical-align: middle;
+    }
+
+    &.box, &.bullet {
+      vertical-align: middle;
+    }
+
+    &.box + .topic-header-extra,
+    &.bullet + .topic-header-extra,
+    &.bar + .topic-header-extra {
+      vertical-align: middle;
+    }
+  }
+}
+
 .add-tags .select2 {
   margin: 0;
 }
