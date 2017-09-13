@@ -215,10 +215,7 @@ export default Ember.Component.extend({
     if (this.get("expanded")) {
       if ((keyCode === 13 || keyCode === 9) && Ember.isPresent(this.get("highlightedValue"))) {
         event.preventDefault();
-        this.setProperties({
-          value: this._castInteger(this.get("highlightedValue")),
-          expanded: false
-        });
+        this.send("onSelectRow", this.get("highlightedContent"));
       }
 
       if (keyCode === 9) {
@@ -301,14 +298,25 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed("value", "content.[]")
-  selectedContent(value, content) {
+  @computed("value", "content.[]", "idKey")
+  selectedContent(value, content, idKey) {
     if (Ember.isNone(value)) {
       return null;
     }
 
     return content.find((c) => {
-      return this._castInteger(c[this.get("idKey")]) === value;
+      return this._castInteger(Ember.get(c, idKey)) === value;
+    });
+  },
+
+  @computed("highlightedValue", "content.[]", "idKey")
+  highlightedContent(highlightedValue, content, idKey) {
+    if (Ember.isNone(highlightedValue)) {
+      return null;
+    }
+
+    return content.find((c) => {
+      return this._castInteger(Ember.get(c, idKey)) === highlightedValue;
     });
   },
 
@@ -366,13 +374,13 @@ export default Ember.Component.extend({
     },
 
     onHoverRow(content) {
-      const id = this._castInteger(content[this.get("idKey")]);
+      const id = this._castInteger(Ember.get(content, this.get("idKey")));
       this.set("highlightedValue", id);
     },
 
     onSelectRow(content) {
       this.setProperties({
-        value: this._castInteger(content[this.get("idKey")]),
+        value: this._castInteger(Ember.get(content, this.get("idKey"))),
         expanded: false
       });
     },
@@ -444,15 +452,15 @@ export default Ember.Component.extend({
 
     if (direction === "down") {
       if (currentIndex < 0) {
-        this.set("highlightedValue", this._castInteger(content[0][idKey]));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[0], idKey)));
       } else if(currentIndex + 1 < content.length) {
-        this.set("highlightedValue", this._castInteger(content[currentIndex + 1][idKey]));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex + 1], idKey)));
       }
     } else {
       if (currentIndex <= 0) {
-        this.set("highlightedValue", this._castInteger(content[0][idKey]));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[0], idKey)));
       } else if(currentIndex - 1 < content.length) {
-        this.set("highlightedValue", this._castInteger(content[currentIndex - 1][idKey]));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex - 1], idKey)));
       }
     }
 

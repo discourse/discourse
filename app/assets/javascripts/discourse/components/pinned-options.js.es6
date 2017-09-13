@@ -57,14 +57,17 @@ export default DropdownSelectBoxComponent.extend({
     return `${title}${iconHTML("caret-down")}`.htmlSafe();
   },
 
-  @observes("value")
-  _didSelectRow() {
-    const topic = this.get("topic");
+  actions: {
+    onSelectRow(content) {
+      this._super(content);
 
-    if (this.get("value") === "unpinned") {
-      topic.clearPin();
-    } else {
-      topic.rePin();
+      const topic = this.get("topic");
+
+      if (this.get("value") === "unpinned") {
+        topic.clearPin();
+      } else {
+        topic.rePin();
+      }
     }
   }
 });
