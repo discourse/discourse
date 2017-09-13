@@ -56,10 +56,30 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_till = params[:duration].to_i.days.from_now
     @user.suspended_at = DateTime.now
 
-    @user.save!
-    @user.revoke_api_key
-    StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
+    message = params[:message]
+
+    user_history = nil
+
+    User.transaction do
+      @user.save!
+      @user.revoke_api_key
+
+      user_history = StaffActionLogger.new(current_user).log_user_suspend(
+        @user,
+        params[:reason],
+        context: message
+      )
+    end
     @user.logged_out
+
+    if message.present?
+      Jobs.enqueue(
+        :critical_user_email,
+        type: :account_suspended,
+        user_id: @user.id,
+        user_history_id: user_history.id
+      )
+    end
 
     render_json_dump(
       suspension: {

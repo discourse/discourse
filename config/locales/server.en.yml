@@ -2630,6 +2630,17 @@ en:
 
         %{message}
 
+    account_suspended:
+      title: "Account Suspended"
+      subject_template: "[%{email_prefix}] Your account has been suspended"
+      text_body_template: |
+        You have been suspended from the forum until %{suspended_till}.
+
+        %{reason}
+
+        %{message}
+
+
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
       since_last_visit: "Since your last visit"
