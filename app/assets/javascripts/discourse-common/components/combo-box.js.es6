@@ -124,7 +124,7 @@ export default Ember.Component.extend(bufferedRender({
       if (val && val.length && castInteger) {
         val = parseInt(val, 10);
       }
-      this.set('value', val);
+      Ember.run(() => this.set('value', val));
     });
 
     Ember.run.scheduleOnce('afterRender', this, this._triggerChange);

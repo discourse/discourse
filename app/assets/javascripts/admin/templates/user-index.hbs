@@ -298,7 +298,12 @@
 
     <div class="user-suspended display-row {{if model.isSuspended 'highlight-danger'}}">
       <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-      <div class='value'>{{i18n-yes-no model.isSuspended}}</div>
+      <div class='value'>
+        {{i18n-yes-no model.isSuspended}}
+        {{#if model.isSuspended}}
+          {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+        {{/if}}
+      </div>
       <div class='controls'>
       {{#if model.isSuspended}}
         {{d-button
@@ -306,7 +311,6 @@
           action=(action "unsuspend")
           icon="ban"
           label="admin.user.unsuspend"}}
-        {{suspendDuration}}
         {{i18n 'admin.user.suspended_explanation'}}
       {{else}}
         {{#if model.canSuspend}}
