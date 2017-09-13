@@ -188,7 +188,7 @@ begin
   append = "?api_key=#{api_key}&api_username=admin1"
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -O /dev/null"
+  run "wget http://127.0.0.1:#{@port}/ -o /dev/null -O /dev/null"
 
   tests = [
     ["categories", "/categories"],
@@ -197,7 +197,13 @@ begin
     # ["user", "/u/admin1/activity"],
   ]
 
-  tests = tests.map { |k, url| ["#{k}_admin", "#{url}#{append}"] } + tests
+  tests.concat(tests.map { |k, url| ["#{k}_admin", "#{url}#{append}"] })
+
+  tests.each do |_, path|
+    if `curl -s -I "http://127.0.0.1:#{@port}#{path}"` !~ /200 OK/
+      raise "#{path} returned non 200 response code"
+    end
+  end
 
   # NOTE: we run the most expensive page first in the bench
 

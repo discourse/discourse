@@ -693,14 +693,12 @@ class User < ActiveRecord::Base
     if email_token = self.email_tokens.active.where(email: self.email).first
       EmailToken.confirm(email_token.token)
     else
-      self.active = true
-      save
+      self.update!(active: true)
     end
   end
 
   def deactivate
-    self.active = false
-    save
+    self.update!(active: false)
   end
 
   def change_trust_level!(level, opts = nil)
