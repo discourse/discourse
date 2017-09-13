@@ -58,7 +58,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
     saveTrustLevel() { return this.get("model").saveTrustLevel(); },
     restoreTrustLevel() { return this.get("model").restoreTrustLevel(); },
     lockTrustLevel(locked) { return this.get("model").lockTrustLevel(locked); },
-    unsuspend() { return this.get("model").unsuspend(); },
     unblock() { return this.get("model").unblock(); },
     block() { return this.get("model").block(); },
     deleteAllPosts() { return this.get("model").deleteAllPosts(); },
@@ -67,6 +66,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     showSuspendModal() {
       this.get('adminTools').showSuspendModal(this.get('model'));
+    },
+    unsuspend() {
+      this.get("model").unsuspend().catch(popupAjaxError);
     },
 
 

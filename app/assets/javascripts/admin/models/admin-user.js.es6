@@ -240,21 +240,20 @@ const AdminUser = Discourse.User.extend({
     return suspended_at.format('L') + " - " + suspended_till.format('L');
   }.property('suspended_till', 'suspended_at'),
 
-  suspend(duration, reason) {
-    return ajax("/admin/users/" + this.id + "/suspend", {
+  suspend(data) {
+    return ajax(`/admin/users/${this.id}/suspend`, {
       type: 'PUT',
-      data: { duration: duration, reason: reason }
+      data
+    }).then(result => {
+      this.setProperties(result.suspension);
     });
   },
 
   unsuspend() {
-    return ajax("/admin/users/" + this.id + "/unsuspend", {
+    return ajax(`/admin/users/${this.id}/unsuspend`, {
       type: 'PUT'
-    }).then(function() {
-      window.location.reload();
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.unsuspend_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
+    }).then(result => {
+      this.setProperties(result.suspension);
     });
   },
 

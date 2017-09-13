@@ -296,29 +296,33 @@
     </div>
   </div>
 
-    <div class="display-row {{if model.isSuspended 'highlight-danger'}}">
-    <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-    <div class='value'>{{i18n-yes-no model.isSuspended}}</div>
-    <div class='controls'>
-    {{#if model.isSuspended}}
-      {{d-button class="btn-danger" action="unsuspend" icon="ban" label="admin.user.unsuspend"}}
-      {{suspendDuration}}
-      {{i18n 'admin.user.suspended_explanation'}}
-    {{else}}
-      {{#if model.canSuspend}}
+    <div class="user-suspended display-row {{if model.isSuspended 'highlight-danger'}}">
+      <div class='field'>{{i18n 'admin.user.suspended'}}</div>
+      <div class='value'>{{i18n-yes-no model.isSuspended}}</div>
+      <div class='controls'>
+      {{#if model.isSuspended}}
         {{d-button
-          class="btn-danger suspend-user"
-          action="showSuspendModal"
+          class="btn-danger unsuspend-user"
+          action=(action "unsuspend")
           icon="ban"
-          label="admin.user.suspend"}}
+          label="admin.user.unsuspend"}}
+        {{suspendDuration}}
         {{i18n 'admin.user.suspended_explanation'}}
+      {{else}}
+        {{#if model.canSuspend}}
+          {{d-button
+            class="btn-danger suspend-user"
+            action=(action "showSuspendModal")
+            icon="ban"
+            label="admin.user.suspend"}}
+          {{i18n 'admin.user.suspended_explanation'}}
+        {{/if}}
       {{/if}}
-    {{/if}}
     </div>
   </div>
 
   {{#if model.isSuspended}}
-    <div class='display-row highlight-danger'>
+    <div class='display-row highlight-danger suspension-info'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
         {{#link-to 'adminUser' suspendedBy}}{{avatar model.suspendedBy imageSize="tiny"}}{{/link-to}}

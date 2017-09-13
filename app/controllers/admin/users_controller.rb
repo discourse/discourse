@@ -55,11 +55,20 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_suspend!(@user)
     @user.suspended_till = params[:duration].to_i.days.from_now
     @user.suspended_at = DateTime.now
+
     @user.save!
     @user.revoke_api_key
     StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
     @user.logged_out
-    render body: nil
+
+    render_json_dump(
+      suspension: {
+        suspended: true,
+        suspend_reason: params[:reason],
+        suspended_till: @user.suspended_till,
+        suspended_at: @user.suspended_at
+      }
+    )
   end
 
   def unsuspend
@@ -68,7 +77,12 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_at = nil
     @user.save!
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
-    render body: nil
+
+    render_json_dump(
+      suspension: {
+        suspended: false
+      }
+    )
   end
 
   def log_out
