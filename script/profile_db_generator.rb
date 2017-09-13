@@ -46,10 +46,10 @@ def create_admin(seq)
     admin.email = "admin@localhost#{seq}.fake"
     admin.username = "admin#{seq}"
     admin.password = "password"
-    admin.save
+    admin.save!
     admin.grant_admin!
     admin.change_trust_level!(TrustLevel[4])
-    admin.email_tokens.update_all(confirmed: true)
+    admin.activate
   }
 end
 
