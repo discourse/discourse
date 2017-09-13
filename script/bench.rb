@@ -154,9 +154,9 @@ def bench(path, name)
   puts "Running apache bench warmup"
   add = ""
   add = "-c 3 " if @unicorn
-  `ab #{add} -n 10 "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
   puts "Benchmarking #{name} @ #{path}"
-  `ab -n #{@iterations} -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
