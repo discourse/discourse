@@ -4,7 +4,7 @@ import Category from 'discourse/models/category';
 
 export default Ember.Component.extend(bufferedRender({
   classNames: ['topic-status-info'],
-  delayedRerender: null,
+  _delayedRerender: null,
 
   rerenderTriggers: [
     'statusType',
@@ -58,12 +58,14 @@ export default Ember.Component.extend(bufferedRender({
     buffer.push('</h3>');
 
     // TODO Sam: concerned this can cause a heavy rerender loop
-    this.set('delayedRerender', Em.run.later(this, this.rerender, rerenderDelay));
+    if (!Ember.testing) {
+      this._delayedRerender = Ember.run.later(this, this.rerender, rerenderDelay);
+    }
   },
 
   willDestroyElement() {
-    if( this.delayedRerender ) {
-      Em.run.cancel(this.get('delayedRerender'));
+    if (this._delayedRerender) {
+      Em.run.cancel(this._delayedRerender);
     }
   },
 
