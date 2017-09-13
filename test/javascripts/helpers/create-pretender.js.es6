@@ -20,7 +20,7 @@ export function parsePostData(query) {
   return result;
 };
 
-function response(code, obj) {
+export function response(code, obj) {
   if (typeof code === "object") {
     obj = code;
     code = 200;
@@ -28,7 +28,10 @@ function response(code, obj) {
   return [code, {"Content-Type": "application/json"}, obj];
 }
 
-const success = () => response({ success: true });
+export function success() {
+  return response({ success: true });
+}
+
 const loggedIn = () => !!Discourse.User.current();
 
 

@@ -11,11 +11,11 @@ import { flushMap } from 'discourse/models/store';
 import { clearRewrites } from 'discourse/lib/url';
 
 
-function currentUser() {
+export function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
 }
 
-function logIn() {
+export function logIn() {
   Discourse.User.resetCurrent(currentUser());
 }
 
@@ -39,7 +39,19 @@ function AcceptanceModal(option, _relatedTarget) {
 window.bootbox.$body = $('#ember-testing');
 $.fn.modal = AcceptanceModal;
 
-function acceptance(name, options) {
+let _pretenderCallbacks = [];
+
+export function applyPretender(server, helper) {
+  _pretenderCallbacks.forEach(cb => cb(server, helper));
+}
+
+export function acceptance(name, options) {
+  options = options || {};
+
+  if (options.pretend) {
+    _pretenderCallbacks.push(options.pretend);
+  }
+
   QUnit.module("Acceptance: " + name, {
     beforeEach() {
       resetMobile();
@@ -49,26 +61,24 @@ function acceptance(name, options) {
 
       resetExtraClasses();
       const siteJson = siteFixtures['site.json'].site;
-      if (options) {
-        if (options.beforeEach) {
-          options.beforeEach.call(this);
-        }
+      if (options.beforeEach) {
+        options.beforeEach.call(this);
+      }
 
-        if (options.mobileView) {
-          forceMobile();
-        }
+      if (options.mobileView) {
+        forceMobile();
+      }
 
-        if (options.loggedIn) {
-          logIn();
-        }
+      if (options.loggedIn) {
+        logIn();
+      }
 
-        if (options.settings) {
-          Discourse.SiteSettings = jQuery.extend(true, Discourse.SiteSettings, options.settings);
-        }
+      if (options.settings) {
+        Discourse.SiteSettings = jQuery.extend(true, Discourse.SiteSettings, options.settings);
+      }
 
-        if (options.site) {
-          Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, siteJson, options.site)));
-        }
+      if (options.site) {
+        Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, siteJson, options.site)));
       }
 
       clearOutletCache();
@@ -95,13 +105,13 @@ function acceptance(name, options) {
   });
 }
 
-function controllerFor(controller, model) {
+export function controllerFor(controller, model) {
   controller = Discourse.__container__.lookup('controller:' + controller);
   if (model) { controller.set('model', model ); }
   return controller;
 }
 
-function asyncTestDiscourse(text, func) {
+export function asyncTestDiscourse(text, func) {
   QUnit.test(text, function(assert) {
     const done = assert.async();
     Ember.run(() => {
@@ -111,7 +121,7 @@ function asyncTestDiscourse(text, func) {
   });
 }
 
-function fixture(selector) {
+export function fixture(selector) {
   if (selector) {
     return $("#qunit-fixture").find(selector);
   }
@@ -151,7 +161,7 @@ QUnit.assert.containsInstance = function(collection, klass, message) {
   });
 };
 
-function waitFor(assert, callback, timeout) {
+export function waitFor(assert, callback, timeout) {
   timeout = timeout || 500;
 
   const done = assert.async();
@@ -160,11 +170,3 @@ function waitFor(assert, callback, timeout) {
     done();
   }, timeout);
 }
-
-export { acceptance,
-         controllerFor,
-         asyncTestDiscourse,
-         fixture,
-         logIn,
-         currentUser,
-         waitFor };

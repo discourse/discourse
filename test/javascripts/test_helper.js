@@ -68,11 +68,12 @@ if (window.Logster) {
 }
 
 var origDebounce = Ember.run.debounce,
-    createPretendServer = require('helpers/create-pretender', null, null, false).default,
+    pretender = require('helpers/create-pretender', null, null, false),
     fixtures = require('fixtures/site-fixtures', null, null, false).default,
     flushMap = require('discourse/models/store', null, null, false).flushMap,
     ScrollingDOMMethods = require('discourse/mixins/scrolling', null, null, false).ScrollingDOMMethods,
     _DiscourseURL = require('discourse/lib/url', null, null, false).default,
+    applyPretender = require('helpers/qunit-helpers', null, null, false).applyPretender,
     server;
 
 function dup(obj) {
@@ -87,7 +88,15 @@ function resetSite() {
 }
 
 QUnit.testStart(function(ctx) {
-  server = createPretendServer();
+  server = pretender.default();
+
+  var helper = {
+    parsePostData: pretender.parsePostData,
+    response: pretender.response,
+    success: pretender.success
+  };
+
+  applyPretender(server, helper);
 
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
