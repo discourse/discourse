@@ -49,6 +49,10 @@ export default Ember.Component.extend({
 
   castInteger: false,
 
+  click(event) {
+    event.stopPropagation();
+  },
+
   filterFunction: function(content) {
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
