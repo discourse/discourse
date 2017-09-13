@@ -3268,6 +3268,9 @@ en:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
+        suspend_reason_placeholder: "Suspension Reason"
+        suspend_message: "Email Message"
+        suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
 

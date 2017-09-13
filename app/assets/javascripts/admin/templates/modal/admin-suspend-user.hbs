@@ -1,18 +1,39 @@
 {{#d-modal-body title="admin.user.suspend_modal_title"}}
-  <form>
-    {{i18n 'admin.user.suspend_duration'}}
-    {{text-field value=duration maxlength="5" autofocus="autofocus" class="suspend-duration"}}
-    {{i18n 'admin.user.suspend_duration_units'}}<br/>
-    <br/>
-    {{#if siteSettings.hide_suspension_reasons}}
-      {{{i18n 'admin.user.suspend_reason_hidden_label'}}}<br/>
-    {{else}}
-      {{{i18n 'admin.user.suspend_reason_label'}}}<br/>
-    {{/if}}
+  <div class='duration-controls'>
+    <label>
+      {{i18n 'admin.user.suspend_duration'}}
+      {{text-field value=duration maxlength="5" autofocus="autofocus" class="suspend-duration"}}
+      {{i18n 'admin.user.suspend_duration_units'}}
+    </label>
+  </div>
 
-    <br/>
-    {{text-field value=reason class="suspend-reason"}}
-  </form>
+  <div class='reason-controls'>
+    <label>
+      <div class='suspend-reason-label'>
+        {{#if siteSettings.hide_suspension_reasons}}
+          {{{i18n 'admin.user.suspend_reason_hidden_label'}}}
+        {{else}}
+          {{{i18n 'admin.user.suspend_reason_label'}}}
+        {{/if}}
+      </div>
+
+      {{text-field
+        value=reason
+        class="suspend-reason"
+        placeholderKey="admin.user.suspend_reason_placeholder"}}
+    </label>
+  </div>
+
+  <label>
+    <div class='suspend-message-label'>
+      {{i18n "admin.user.suspend_message"}}
+    </div>
+    {{textarea
+      value=message
+      class="suspend-message"
+      placeholder=(i18n "admin.user.suspend_message_placeholder")}}
+  </label>
+
 {{/d-modal-body}}
 
 <div class="modal-footer">

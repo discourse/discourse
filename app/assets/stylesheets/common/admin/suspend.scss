@@ -1,0 +1,21 @@
+.suspend-user-modal {
+  font-size: 1.1em;
+
+  .duration-controls {
+    margin-bottom: 1em;
+  }
+
+  .suspend-reason {
+    width: 100%;
+  }
+
+  .suspend-reason-label, .suspend-message-label {
+    margin-bottom: 0.5em;
+  }
+
+  .textarea, input[type=text] {
+    box-sizing: border-box;
+    height: 2.5em;
+  }
+
+}
