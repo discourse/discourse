@@ -2,6 +2,9 @@ import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import GroupHistory from 'discourse/models/group-history';
 import RestModel from 'discourse/models/rest';
+import Category from "discourse/models/category";
+import User from "discourse/models/user";
+import Topic from "discourse/models/topic";
 
 const Group = RestModel.extend({
   limit: 50,
@@ -44,9 +47,9 @@ const Group = RestModel.extend({
           if (ownerIds[member.id]) {
             member.owner = true;
           }
-          return Discourse.User.create(member);
+          return User.create(member);
         }),
-        owners: result.owners.map(owner => Discourse.User.create(owner)),
+        owners: result.owners.map(owner => User.create(owner)),
       });
     });
   },
@@ -207,8 +210,9 @@ const Group = RestModel.extend({
 
     return ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
       return posts.map(p => {
-        p.user = Discourse.User.create(p.user);
-        p.topic = Discourse.Topic.create(p.topic);
+        p.user = User.create(p.user);
+        p.topic = Topic.create(p.topic);
+        p.category = Category.findById(p.category_id);
         return Em.Object.create(p);
       });
     });
