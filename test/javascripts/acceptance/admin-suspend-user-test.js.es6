@@ -25,6 +25,7 @@ QUnit.test("suspend a user", assert => {
   });
   fillIn('.suspend-duration', 12);
   fillIn('.suspend-reason', "for breaking the rules");
+  fillIn('.suspend-message', "this is an email reason why");
   andThen(() => {
     assert.equal(find('.perform-suspend[disabled]').length, 0);
   });
