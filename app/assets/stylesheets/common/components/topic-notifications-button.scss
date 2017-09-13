@@ -10,11 +10,6 @@
     .reason {
       line-height: 16px;
       margin: 0 0 0 10px;
-
-      a {
-        margin-left: 3px;
-        margin-right: 3px;
-      }
     }
   }
 }
@@ -29,7 +24,7 @@
   align-items: center;
   margin: 0;
 
-  .topic-notifications-options, .reason {
+  .topic-notifications-options {
     display: inline-flex;
   }
 }

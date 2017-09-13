@@ -14,11 +14,6 @@
     .reason {
       line-height: 16px;
       margin: 0 0 0 10px;
-
-      a {
-        margin-left: 3px;
-        margin-right: 3px;
-      }
     }
   }
 }
@@ -30,7 +25,7 @@
   margin: 0;
   min-width: auto;
 
-  .pinned-options, .reason {
+  .pinned-options {
     display: inline-flex;
   }
 
