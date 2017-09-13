@@ -359,7 +359,9 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_last_wiki_edit?
-    object.wiki && object.post_number == 1
+    object.wiki &&
+    object.post_number == 1 &&
+    object.revisions.size > 0
   end
 
   private
