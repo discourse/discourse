@@ -128,7 +128,7 @@ describe Admin::UsersController do
         put(
           :suspend,
           user_id: user.id,
-          duration: 10,
+          suspend_until: 5.hours.from_now,
           reason: "because I said so",
           format: :json
         )
@@ -149,15 +149,14 @@ describe Admin::UsersController do
           :critical_user_email,
           has_entries(
             type: :account_suspended,
-            user_id: user.id,
-            message: "long reason"
+            user_id: user.id
           )
         )
 
         put(
           :suspend,
           user_id: user.id,
-          duration: 10,
+          suspend_until: 10.days.from_now,
           reason: "short reason",
           message: "long reason",
           format: :json
@@ -168,10 +167,12 @@ describe Admin::UsersController do
         expect(log).to be_present
         expect(log.details).to match(/short reason/)
         expect(log.details).to match(/long reason/)
+      end
 
       it "also revoke any api keys" do
         User.any_instance.expects(:revoke_api_key)
         put :suspend, params: { user_id: evil_trout.id }, format: :json
+        expect(log.context).to match(/long reason/)
       end
 
     end

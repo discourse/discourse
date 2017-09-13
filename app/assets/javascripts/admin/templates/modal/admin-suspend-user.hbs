@@ -1,9 +1,10 @@
 {{#d-modal-body title="admin.user.suspend_modal_title"}}
-  <div class='duration-controls'>
+  <div class='until-controls'>
     <label>
-      {{i18n 'admin.user.suspend_duration'}}
-      {{text-field value=duration maxlength="5" autofocus="autofocus" class="suspend-duration"}}
-      {{i18n 'admin.user.suspend_duration_units'}}
+      {{auto-update-input
+        class="suspend-until"
+        label="admin.user.suspend_duration"
+        input=suspendUntil}}
     </label>
   </div>
 

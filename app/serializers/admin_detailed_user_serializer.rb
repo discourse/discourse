@@ -17,6 +17,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_be_deleted,
              :can_be_anonymized,
              :suspend_reason,
+             :suspended_till,
              :primary_group_id,
              :badge_count,
              :warnings_received_count,

@@ -43,12 +43,14 @@ QUnit.test("suspend, then unsuspend a user", assert => {
 
   andThen(() => {
     assert.equal(find('.perform-suspend[disabled]').length, 1, 'disabled by default');
+    find('.suspend-until .combobox').select2('val', 'tomorrow');
+    find('.suspend-until .combobox').trigger('change', 'tomorrow');
   });
-  fillIn('.suspend-duration', 12);
+
   fillIn('.suspend-reason', "for breaking the rules");
   fillIn('.suspend-message', "this is an email reason why");
   andThen(() => {
-    assert.equal(find('.perform-suspend[disabled]').length, 0);
+    assert.equal(find('.perform-suspend[disabled]').length, 0, 'no longer disabled');
   });
   click('.perform-suspend');
   andThen(() => {

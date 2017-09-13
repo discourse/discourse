@@ -197,14 +197,13 @@ describe Jobs::UserEmail do
       it "doesn't send the email if the notification has been seen" do
         notification.update_column(:read, true)
         message, err = Jobs::UserEmail.new.message_for_email(
-                                          user,
-                                          post,
-                                          :user_mentioned,
-                                          notification,
-                                          notification.notification_type,
-                                          notification.data_hash,
-                                          nil,
-                                          nil)
+          user,
+          post,
+          :user_mentioned,
+          notification,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash
+        )
 
         expect(message).to eq nil
         expect(err.skipped_reason).to match(/notification.*already/)

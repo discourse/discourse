@@ -53,7 +53,7 @@ class Admin::UsersController < Admin::AdminController
 
   def suspend
     guardian.ensure_can_suspend!(@user)
-    @user.suspended_till = params[:duration].to_i.days.from_now
+    @user.suspended_till = params[:suspend_until]
     @user.suspended_at = DateTime.now
 
     message = params[:message]
