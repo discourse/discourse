@@ -15,7 +15,7 @@
         label="groups.membership_request.submit"
         action="requestMember"}}
 
-    <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+    {{d-modal-cancel close=(action "closeModal")}}
     {{conditional-loading-spinner size="small" condition=loading}}
   </div>
 </form>

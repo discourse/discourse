@@ -10,7 +10,7 @@ QUnit.test("suspend a user - cancel", assert => {
     assert.equal(find('.suspend-user-modal:visible').length, 1);
   });
 
-  click('.cancel-suspend');
+  click('.d-modal-cancel');
   andThen(() => {
     assert.equal(find('.suspend-user-modal:visible').length, 0);
   });

@@ -39,7 +39,7 @@
         label="topic.topic_status_update.save"
         action="saveTimer"}}
 
-    <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+    {{d-modal-cancel close=(action "closeModal")}}
     {{conditional-loading-spinner size="small" condition=loading}}
 
     {{#if topicTimer.execute_at}}

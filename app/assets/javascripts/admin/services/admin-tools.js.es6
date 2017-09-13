@@ -44,7 +44,7 @@ export default Ember.Service.extend({
         const buttons = [
           {
             label: I18n.t("composer.cancel"),
-            class: "cancel-inline",
+            class: "d-modal-cancel",
             link:  true
           },
           {
