@@ -106,7 +106,7 @@ const AdminUser = Discourse.User.extend({
           message = I18n.messageFormat('admin.user.delete_all_posts_confirm_MF', { "POSTS": user.get('post_count'), "TOPICS": user.get('topic_count') }),
           buttons = [{
             "label": I18n.t("composer.cancel"),
-            "class": "cancel-inline",
+            "class": "d-modal-cancel",
             "link":  true
           }, {
             "label": `${iconHTML('exclamation-triangle')} ` + I18n.t("admin.user.delete_all_posts"),

@@ -78,7 +78,7 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
         model = this.get('model'),
         buttons = [
           { label: I18n.t("cancel"),
-            class: "cancel-inline",
+            class: "d-modal-cancel",
             link:  true,
             callback: () => { this.set('deleting', false); }
           },

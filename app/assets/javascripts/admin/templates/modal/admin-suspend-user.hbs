@@ -43,5 +43,5 @@
     disabled=submitDisabled
     icon="ban"
     label="admin.user.suspend"}}
-  <a {{action "closeModal"}} class="cancel-suspend">{{i18n 'cancel'}}</a>
+  {{d-modal-cancel close=(action "closeModal")}}
 </div>
