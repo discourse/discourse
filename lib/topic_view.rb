@@ -276,18 +276,21 @@ class TopicView
   end
 
   def post_counts_by_user
-    @post_counts_by_user ||= Post.where(topic_id: @topic.id)
-      .where("user_id IS NOT NULL")
-      .group(:user_id)
-      .order("count_all DESC")
-      .limit(24)
-      .count
+    @post_counts_by_user ||= begin
+      return {} if @posts.blank?
+      Post.where(id: @posts.pluck(:id))
+        .where("user_id IS NOT NULL")
+        .group(:user_id)
+        .order("count_all DESC")
+        .limit(24)
+        .count
+    end
   end
 
   def participants
     @participants ||= begin
       participants = {}
-      User.where(id: post_counts_by_user.map { |k, v| k }).includes(:primary_group).each { |u| participants[u.id] = u }
+      User.where(id: post_counts_by_user.keys).includes(:primary_group).each { |u| participants[u.id] = u }
       participants
     end
   end
