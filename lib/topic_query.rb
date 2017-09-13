@@ -107,8 +107,13 @@ class TopicQuery
       if topic.private_message?
 
         group_ids = topic.topic_allowed_groups
-          .where('group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)', user_id: @user.id)
+          .joins("
+            LEFT JOIN group_users gu
+            ON topic_allowed_groups.group_id = gu.group_id
+            AND user_id = #{@user.id.to_i}
+          ")
           .pluck(:group_id)
+
         {
           topic: topic,
           my_group_ids: group_ids,
@@ -743,21 +748,24 @@ class TopicQuery
     end
 
     def related_messages_user(params)
-      messages_for_user
-        .limit(params[:count])
-        .where('topics.id IN (
-                SELECT ta.topic_id
-                FROM topic_allowed_users ta
-                WHERE ta.user_id IN (:user_ids)
-              ) OR
-                topics.id IN (
-                  SELECT tg.topic_id
-                  FROM topic_allowed_groups tg
-                  WHERE tg.group_id IN (:group_ids)
-              )
-              ', user_ids: (params[:target_user_ids] || []) + [-10],
-                 group_ids: ((params[:target_group_ids] - params[:my_group_ids]) || []) + [-10])
+      user_ids = ((params[:target_user_ids] || []) << -10)
+      user_ids = ActiveRecord::Base.send(:sanitize_sql_array, user_ids.join(','))
+      group_ids = (((params[:target_group_ids] - params[:my_group_ids]) || []) << -10)
+      group_ids = ActiveRecord::Base.send(:sanitize_sql_array, group_ids.join(','))
 
+      result = messages_for_user
+        .limit(params[:count])
+        .joins("
+          LEFT JOIN topic_allowed_users ta2
+          ON topics.id = ta2.topic_id
+          AND ta2.user_id IN (#{user_ids})",
+        )
+        .joins("
+          LEFT JOIN topic_allowed_groups tg
+          ON topics.id = tg.topic_id
+          AND tg.group_id IN (#{group_ids})",
+        )
+        .where("ta2.topic_id IS NOT NULL OR tg.topic_id IS NOT NULL")
     end
 
     def related_messages_group(params)
@@ -793,11 +801,13 @@ class TopicQuery
     end
 
     def messages_for_user
-      base_messages.where('topics.id IN (
-                                  SELECT topic_id
-                                    FROM topic_allowed_users
-                                    WHERE user_id = :user_id
-                 )', user_id: @user.id)
+      base_messages
+        .joins("
+          LEFT JOIN topic_allowed_users ta
+          ON topics.id = ta.topic_id
+          AND ta.user_id = #{@user.id.to_i}
+        ")
+        .where("ta.topic_id IS NOT NULL")
     end
 
     def base_messages
