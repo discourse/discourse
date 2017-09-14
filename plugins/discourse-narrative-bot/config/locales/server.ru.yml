@@ -163,6 +163,12 @@ ru:
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Здорово! Это будет работать для большинства <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> ссылок. Помните, ссылка должна быть на одной линии _и_, ничего позади или впереди не должно находиться.
+        not_found: |-
+          Извините, я не могу найти ссылку Вашего ответа :cry:
+
+          Вы не могли бы добавить нужную ссылку в следующий ответ?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Вот картинка единорога:

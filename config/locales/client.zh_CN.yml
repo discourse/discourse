@@ -360,7 +360,7 @@ zh_CN:
         title: "群组"
         empty: "没有可见的群组。"
       title:
-        other: "群组"
+        other: "小组"
       activity: "活动"
       members: "成员"
       topics: "主题"
@@ -375,6 +375,8 @@ zh_CN:
         staff: "小组创建者及工作人员"
         owners: "小组创建者及管理员"
       alias_levels:
+        mentionable: "谁能@该小组"
+        messageable: "谁能私信此小组"
         nobody: "没有人"
         only_admins: "管理员"
         mods_and_admins: "版主与管理员"
@@ -480,7 +482,7 @@ zh_CN:
       preferences: "设置"
       expand_profile: "展开"
       bookmarks: "收藏"
-      bio: "个人信息"
+      bio: "我是谁"
       invited_by: "邀请人"
       trust_level: "信任等级"
       notifications: "通知"
@@ -577,7 +579,7 @@ zh_CN:
         select_all: "全选"
       preferences_nav:
         account: "帐号"
-        profile: "个人档案"
+        profile: "个人信息"
         emails: "邮件"
         notifications: "通知"
         categories: "分类"
@@ -619,10 +621,10 @@ zh_CN:
         image_is_not_a_square: "注意：图片不是正方形的，我们裁剪了部分图像。"
         cache_notice: "更改了头像成功，但是鉴于浏览器缓存可能需要一段时间后才会生效。"
       change_profile_background:
-        title: "个人资料背景"
+        title: "个人档背景"
         instructions: "显示在个人资料页面中，上传的图片将被居中且默认宽度为 850px。"
       change_card_background:
-        title: "用户卡片背景"
+        title: "用户卡背景"
         instructions: "显示在用户卡片中，上传的图片将被居中且默认宽度为 590px。"
       email:
         title: "邮箱"
@@ -665,7 +667,7 @@ zh_CN:
       location: "地点"
       card_badge:
         title: "用户卡片徽章"
-      website: "网站"
+      website: "网址"
       email_settings: "邮箱"
       like_notification_frequency:
         title: "用户被赞时通知提醒"
@@ -992,6 +994,8 @@ zh_CN:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      default_header_text: 选择...
+      no_content: 无符合的结果
       filter_placeholder: 搜索……
     emoji_picker:
       filter_placeholder: 查找表情符号

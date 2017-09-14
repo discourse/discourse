@@ -101,6 +101,7 @@ et:
           other: "%{count} aastat hiljem"
       previous_month: 'Eelmine Kuu'
       next_month: 'Järgmine Kuu'
+      placeholder: Vali kuupäev
     share:
       topic: 'jaga teema viidet'
       post: 'post nr%{postNumber}'

@@ -1997,6 +1997,7 @@ ja:
         new_style: "新しいスタイル"
         import: "インポート"
         delete: "削除"
+        delete_confirm: "このテーマを削除しますか?"
         about: "サイトカスタマイズ設定により、サイトのヘッダとスタイルシートを変更できます。設定を選択するか、編集を開始して新たな設定を追加してください。"
         color: "カラー"
         opacity: "透明度"
@@ -2049,6 +2050,7 @@ ja:
       email:
         title: "メール"
         settings: "設定"
+        templates: "テンプレート"
         preview_digest: "まとめのプレビュー"
         sending_test: "テストメールを送信中..."
         error: "<b>ERROR</b> - %{server_error}"
@@ -2069,6 +2071,9 @@ ja:
         delivery_method: "送信方法"
         preview_digest_desc: "しばらくログインしていないユーザーに送られるまとめメールです。"
         refresh: "更新"
+        send_digest_label: "この結果を送信:"
+        send_digest: "送信"
+        sending_email: "メールを送信しています..."
         format: "フォーマット"
         html: "html"
         text: "text"
@@ -2078,10 +2083,16 @@ ja:
         incoming_emails:
           from_address: "送信者"
           to_addresses: "宛先"
+          cc_addresses: "CC"
           subject: "件名"
           error: "エラー"
+          none: "受信メールはありません。"
           modal:
+            title: "受信メールの詳細"
+            error: "エラー"
+            headers: "ヘッダ"
             subject: "件名"
+            body: "本文"
           filters:
             subject_placeholder: "件名..."
             error_placeholder: "エラー"
@@ -2111,6 +2122,8 @@ ja:
           block: "ブロック"
           do_nothing: "何もしない"
         staff_actions:
+          all: "すべて"
+          filter: "フィルタ:"
           title: "スタッフ操作"
           clear_filters: "すべて表示する"
           staff_user: "スタッフユーザ"
@@ -2131,6 +2144,9 @@ ja:
             change_trust_level: "トラストレベルを変更"
             change_username: "ユーザ名変更"
             change_site_setting: "サイトの設定を変更"
+            change_theme: "テーマを変更"
+            delete_theme: "テーマを削除"
+            change_site_text: "サイトテキストを変更"
             suspend_user: "ユーザを凍結する"
             unsuspend_user: "ユーザの凍結を解除する"
             grant_badge: "バッジを付与"
@@ -2141,6 +2157,7 @@ ja:
             impersonate: "なりすまし"
             anonymize_user: "匿名ユーザ"
             roll_up: "IPブロックをロールアップ"
+            change_category_settings: "カテゴリ設定を変更"
             delete_category: "カテゴリを削除する"
             create_category: "カテゴリを作る"
             block_user: "ユーザをブロック"
@@ -2181,6 +2198,13 @@ ja:
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         logster:
           title: "エラーログ"
+      watched_words:
+        form:
+          label: '新しい単語:'
+          add: '追加'
+          success: '成功'
+          upload: "アップロード"
+          upload_successful: "アップロードが成功し、単語が追加されました。"
       impersonate:
         title: "このユーザに切り替える"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2213,6 +2237,9 @@ ja:
           pending: '保留中のユーザ'
           newuser: 'トラストレベル0のユーザ (新しいユーザ)'
           basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
+          member: 'トラストレベル2のユーザ (メンバー)'
+          regular: 'トラストレベル3のユーザ (レギュラー)'
+          leader: 'トラストレベル4のユーザ (リーダー)'
           staff: "スタッフ"
           admins: '管理者ユーザ'
           moderators: 'モデレータ'
@@ -2304,8 +2331,10 @@ ja:
         unblock_failed: 'ユーザのブロック解除に失敗しました。'
         block_failed: 'ユーザのブロックに失敗しました。'
         block_confirm: 'このユーザをブロックしてもよろしいですか? ユーザは新しくトピックを作成したり、投稿する事ができなくなります。'
+        block_accept: 'はい。このユーザーをブロックします。'
         bounce_score: "バウンススコア"
         reset_bounce_score:
+          label: "リセット"
           title: "バウンススコアを0にリセット"
         visit_profile: "<a href='%{url}'>設定ページ</a>からプロフィールの変更ができます"
         deactivate_explanation: "アクティベート解除されたユーザは、メールで再アクティベートする必要があります。"
@@ -2383,6 +2412,8 @@ ja:
           disabled: "プロフィール非表示"
         show_on_user_card:
           title: "ユーザカードに表示しますか？"
+          enabled: "ユーザーカードに表示する"
+          disabled: "ユーザーカードに表示しない"
         field_types:
           text: 'テキストフィールド'
           confirm: '確認'
@@ -2392,6 +2423,8 @@ ja:
         search: "編集したいものを入力して検索"
         title: 'テキストコンテンツ'
         edit: '編集'
+        revert: "変更を元に戻す"
+        revert_confirm: "本当に変更を元に戻しますか?"
         go_back: "戻る"
         recommended: "それぞれにあわせて、文章を変えることをオススメします:"
         show_overriden: '上書き部分のみ表示'
@@ -2421,11 +2454,14 @@ ja:
           developer: '開発者向け'
           embedding: "埋め込む"
           legal: "法律に基づく情報"
+          user_api: 'ユーザーAPI'
           uncategorized: 'その他'
           backups: "バックアップ"
           login: "ログイン"
           plugins: "プラグイン"
           user_preferences: "ユーザ設定"
+          tags: "タグ"
+          search: "検索"
           groups: "グループ"
       badges:
         title: バッジ
@@ -2502,10 +2538,15 @@ ja:
         image: "画像"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
       embedding:
+        confirm_delete: "本当にこのホストを削除してもよろしいですか?"
         title: "埋め込み"
+        host: "許可されたホスト"
+        class_name: "クラス名"
         edit: "編集"
         category: "カテゴリへ投稿"
+        add_host: "ホストの追加"
         settings: "埋め込みの設定"
+        feed_settings: "フィード設定"
         embed_whitelist_selector: "埋め込みで許可される要素のCSSセレクタ"
         embed_blacklist_selector: "埋め込みから削除された要素のCSSセレクタ"
         embed_classname_whitelist: "許可されたCSSクラス名"
@@ -2537,6 +2578,8 @@ ja:
       upload: "アップロード"
       uploading: "アップロード中..."
       quit: "後で"
+      staff_count:
+        other: "あなたのコミュニティには、あなたを含めて %{count} 名のスタッフがいます。"
       invites:
         add_user: "追加"
         none_added: "あなたはスタッフを招待していません。 続行してもよろしいですか？"

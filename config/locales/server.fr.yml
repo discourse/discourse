@@ -56,6 +56,7 @@ fr:
         topic_closed_error: "Se produit quand quelqu'un répond mais le sujet lié a été fermé."
         bounced_email_error: "Le courriel est un rapport de courriel rejeté."
         screened_email_error: "Arrive quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
+      unrecognized_error: "Erreur non reconnue"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -171,10 +172,12 @@ fr:
   too_many_links:
     one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
     other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
+  contains_blocked_words: "Votre message contient des mots non autorisés."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
   not_accepting_pms: "Désolé, %{username} n'accepte pas de messages pour le moment."
+  max_pm_recepients: "Désolé, vous pouvez envoyer un message à un maximum de %{recipients_limit} destinataires."
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   invalid_characters: "contient des caractères invalides"
   is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
@@ -207,6 +210,7 @@ fr:
     user_posts: "Derniers messages par @%{username}"
     user_topics: "Derniers sujets par @%{username}"
     tag: "Sujets tagués"
+    badge: "%{display_name} badge sur %{site_title}"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
@@ -321,6 +325,7 @@ fr:
               too_many_users: "Vous ne pouvez envoyer des avertissements qu'à un utilisateur à la fois."
               cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
+              reply_by_email_disabled: "Réponse par courriel désactivée."
             featured_link:
               invalid: "est invalide. L'URL doit inclure http:// ou https://."
               invalid_category: "ne peut pas être modifié dans cette catégorie."
@@ -357,6 +362,10 @@ fr:
           attributes:
             value:
               missing_interpolation_keys: 'Les clés d''interpolation suivantes sont absentes : « %{keys} »'
+        watched_word:
+          attributes:
+            word:
+              too_many: "Trop de mots pour cette action"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide,  <a href='/u/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
@@ -419,6 +428,7 @@ fr:
       invalid_email_in: "« %{email} » n'est pas une adresse de courriel valide."
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
+      description_incomplete: "Le message de description de la catégorie doit avoir au moins un paragraphe."
     cannot_delete:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -624,6 +634,9 @@ fr:
     no_likes_given:
       self: "Vous n'avez aimé aucun message"
       others: "Aucun message aimé"
+    no_replies:
+      self: "Vous n'avez répondu à aucun message."
+      others: "Aucune réponse."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -863,6 +876,8 @@ fr:
     search_tokenize_chinese_japanese_korean: "Forcer la tokenisation dans la recherche chinois/japonais/koréen, même sur des sites non-CJK."
     search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indéxation des messages les plus récents en premier"
     search_recent_posts_size: "Combien de messages récents à garder dans l'index"
+    log_search_queries: "Archiver les requêtes de recherche des utilisateurs"
+    search_query_log_max_size: "Nombre maximum de requêtes de recherche à conserver"
     allow_uncategorized_topics: "Autorise la création de sujets sans catégorie. ATTENTION : S'il existe des sujets non-catégorisés, vous devez les catégoriser avant de désactiver cette fonction."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"

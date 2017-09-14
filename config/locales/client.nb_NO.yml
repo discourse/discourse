@@ -386,8 +386,8 @@ nb_NO:
         title: "Grupper"
         empty: "Det er ingen synlige grupper"
       title:
-        one: "gruppe"
-        other: "grupper"
+        one: "Gruppe"
+        other: "Grupper"
       activity: "Aktivitet"
       members: "Medlemmer"
       topics: "Emner"
@@ -647,7 +647,7 @@ nb_NO:
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
         upload_picture: "Last opp bilde"
-        image_is_not_a_square: "Vi har beskjært bildet ditt, høyde og bredde er ikke lik"
+        image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
         cache_notice: "Profilbildet ditt er oppdatert, men på grunn av mellomlagring i nettlesere kan det ta litt tid før det synes."
       change_profile_background:
         title: "Profilbakgrunn"
@@ -1387,8 +1387,8 @@ nb_NO:
         one: "Det er 1 nytt innlegg i dette emnet siden sist du leste det"
         other: "Det er {{count}} nye innlegg i dette emnet siden sist du leste det"
       likes:
-        one: "det er ett kjærtegn i dette emnet"
-        other: "det er {{count}} likes i dette emnet"
+        one: "det er én like i dette emnet"
+        other: "det er {{number}} likes i dette emnet"
       back_to_list: "Tilbake til emnelisten"
       options: "Valg for emner"
       show_links: "vis lenker i dette emnet"
@@ -1676,7 +1676,7 @@ nb_NO:
         one: "{{count}} svar"
         other: "{{count}} svar"
       has_likes:
-        one: "{{count}} kjærtegn"
+        one: "{{count}} like"
         other: "{{count}} likes"
       has_likes_title:
         one: "{{count}} bruker likte dette innlegget"
@@ -1707,7 +1707,7 @@ nb_NO:
         about: "dette innlegget er en wiki"
       archetypes:
         save: 'Lagre alternativene'
-      few_likes_left: "Takk for at du sprer kjærlighet! Du vil nå grensen for antall ting du kan like i dag ganske snart."
+      few_likes_left: "Takk for at du gir likes! Du vil nå grensen for antall ting du kan like i dag ganske snart."
       controls:
         reply: "begynn å skrive et svar til dette innlegget"
         like: "lik dette innlegget"
@@ -2045,7 +2045,7 @@ nb_NO:
     activity: "Aktivitet"
     likes: "Likes"
     likes_lowercase:
-      one: "kjærtegn"
+      one: "like"
       other: "likes"
     likes_long: "det er {{number}} likes i dette emnet"
     users: "Deltakere"

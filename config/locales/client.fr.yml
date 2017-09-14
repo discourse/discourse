@@ -386,8 +386,8 @@ fr:
         title: "Groupes"
         empty: "Il n'y a aucun groupe visible."
       title:
-        one: "groupe"
-        other: "groupes"
+        one: "Groupe"
+        other: "Groupes"
       activity: "Activité"
       members: "Membres"
       topics: "Sujets"
@@ -402,6 +402,8 @@ fr:
         staff: "Propriétaires du groupe et responsables"
         owners: "Propriétaires du groupe et administrateurs"
       alias_levels:
+        mentionable: "Qui peut @mentionner ce groupe ?"
+        messageable: "Qui peut envoyer un message à ce groupe ?"
         nobody: "Personne"
         only_admins: "Seulement les administrateurs "
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
@@ -489,6 +491,7 @@ fr:
       topics_entered: "sujets visités"
       post_count: "# messages"
       confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer tous ces comptes ?"
+      powered_by: "propulsé par <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(choisir une option)"
     user:
@@ -1031,6 +1034,8 @@ fr:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      default_header_text: Sélectionner…
+      no_content: Aucune correspondance trouvée
       filter_placeholder: Recherche...
     emoji_picker:
       filter_placeholder: Chercher un emoji
@@ -1043,8 +1048,12 @@ fr:
       celebration: Fête
       custom: Emojis personnalisés
       recent: Utilisés récemment
-      default_tone: Aucune couleur de peau
-      light_tone: Couleur de peau claire
+      default_tone: Aucun teint
+      light_tone: Teint clair
+      medium_light_tone: Teint légèrement clair
+      medium_tone: Teint moyen
+      medium_dark_tone: Teint légèrement foncé
+      dark_tone: Teint foncé
     composer:
       emoji: "Emoji :)"
       more_emoji: "plus…"
@@ -1209,6 +1218,9 @@ fr:
       select_all: "Sélectionner tout"
       clear_all: "Tout désélectionner"
       too_short: "Votre terme de recherche est trop court."
+      result_count:
+        one: "1 résultat pour <span class='term'>{{term}}</span>"
+        other: "{{count}} résultats pour <span class='term'>{{term}}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
@@ -2922,6 +2934,9 @@ fr:
         search: "recherche"
         clear_filter: "Vider"
         show_words: "Afficher les mots"
+        word_count:
+          one: "1 mot"
+          other: "%{count} mots"
         actions:
           block: 'Bloquer'
           censor: 'Censurer'
@@ -3336,6 +3351,9 @@ fr:
       upload: "Envoi"
       uploading: "Envoi en cours…"
       quit: "Peut-être plus tard"
+      staff_count:
+        one: "Votre communauté a 1 responsable (vous)."
+        other: "Votre communauté a %{count} responsables, dont vous."
       invites:
         add_user: "ajouter"
         none_added: "Vous n'avez invité aucun responsable. Êtes-vous sûr de vouloir continuer ?"

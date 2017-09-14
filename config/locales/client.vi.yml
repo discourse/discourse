@@ -119,7 +119,7 @@ vi:
         enabled: 'được hiển thị lúc %{when}'
         disabled: 'bỏ hiển thị lúc %{when}'
       banner:
-        enabled: 'chọn đây làm banner %{when}. Nó sẽ xuất hiện tại đầu mỗi trang cho đến khi bị ẩn đi bởi người dùng,'
+        enabled: 'chọn đây làm banner %{when}. Nó sẽ xuất hiện ở đầu mỗi trang đến khi bị ẩn đi bởi người dùng,'
         disabled: 'xoá banner này %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang.'
     topic_admin_menu: "Lựa chọn quản lí chủ đề."
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
@@ -141,6 +141,7 @@ vi:
         eu_west_2: "EU (London)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
+        us_east_2: "US East (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -273,19 +274,19 @@ vi:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> đã đăng <a href='{{topicUrl}}'>chủ đề</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Bạn</a> đã đăng <a href='{{topicUrl}}'>chủ đề</a>"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> đã trả lời tới <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>Bạn</a> đã trả lời tới <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Bạn</a> đã trả lời <a href='{{postUrl}}'>{{post_number}}</a>"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> đã trả lời <a href='{{topicUrl}}'>chủ đề</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>Bạn</a> đã trả lời tới <a href='{{topicUrl}}'>chủ đề</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Bạn</a> đã trả lời <a href='{{topicUrl}}'>chủ đề</a>"
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> đã nhắc đến <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> đã nhắc tới <a href='{{user2Url}}'>bạn</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Bạn</a> đã đề cập <a href='{{user2Url}}'>{{another_user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Bạn</a> đã nhắc đến <a href='{{user2Url}}'>{{another_user}}</a>"
       posted_by_user: "Được đăng bởi <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Được đăng bởi <a href='{{userUrl}}'>bạn</a>"
       sent_by_user: "Đã gửi bởi <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Đã gửi bởi <a href='{{userUrl}}'>bạn</a>"
     directory:
       filter_name: "lọc theo tên đăng nhập"
-      title: "Thành viên"
+      title: "Người dùng"
       likes_given: "Đưa ra"
       likes_received: "Đã nhận"
       topics_entered: "Đã xem"
@@ -294,12 +295,12 @@ vi:
       topic_count: "Chủ đề"
       topic_count_long: "Chủ đề đã được tạo"
       post_count: "Trả lời"
-      post_count_long: "Trả lời đã được đăng"
+      post_count_long: "Trả lời đã đăng"
       no_results: "Không tìm thấy kết quả."
       days_visited: "Ghé thăm"
       days_visited_long: "Ngày đã ghé thăm"
-      posts_read: "Đọc"
-      posts_read_long: "Đọc bài viết"
+      posts_read: "Đã đọc"
+      posts_read_long: "Bài đăng đã đọc"
       total_rows:
         other: "%{count} người dùng"
     group_histories:
@@ -337,10 +338,13 @@ vi:
       join: "Tham gia nhóm"
       leave: "Rời nhóm"
       request: "Xin gia nhập nhóm"
+      message: "Tin nh"
       automatic_group: Nhóm tự động
-      closed_group: Nhóm riêng
+      closed_group: Nhóm kín
       is_group_user: "Bạn là một thành viên của nhóm này"
       allow_membership_requests: "Cho phép người dùng gửi đơn xin gia nhập nhóm đến người quản lí nhóm."
+      membership_request:
+        submit: "Gửi yêu c"
       membership: "Thành viên"
       name: "Tên"
       user_count: "Số lượng thành viên"
@@ -351,13 +355,16 @@ vi:
         title: "Nhóm"
         empty: "Không có nhóm công khai nào."
       title:
-        other: "các nhóm"
+        other: "Nhóm"
       activity: "Hoạt động"
       members: "Các thành viên"
       topics: "Chủ đề"
       posts: "Các bài viết"
       mentions: "Được nhắc đến"
       messages: "Tin nhắn"
+      visibility_levels:
+        title: "Ai có thể xem nhóm"
+        public: "Mọi người"
       alias_levels:
         nobody: "Không ai cả"
         only_admins: "Chỉ các quản trị viên"
@@ -393,7 +400,7 @@ vi:
       flair_preview_image: "Ảnh xem trước"
       flair_note: "Ghi chú: Ảnh đại diện chỉ hiển thị cho nhóm chính của người dùng"
     user_action_groups:
-      '1': "Lần thích"
+      '1': "Lượt thích"
       '2': "Lần được thích"
       '3': "Chỉ mục"
       '4': "Các chủ đề"
@@ -452,6 +459,7 @@ vi:
       mute: "Im lặng"
       edit: "Tùy chỉnh"
       download_archive:
+        button_text: "Tải tất c"
         confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
         success: "Quá trình tải về đã bắt đầu, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
         rate_limit_error: "Bài viết chỉ được tải về một lần mỗi người, hãy thử lại vào ngày mai."
@@ -710,6 +718,8 @@ vi:
         expired: "Thư mời này đã hết hạn."
         rescind: "Xoá"
         rescinded: "Lời mời bị xóa"
+        rescind_all: "Xóa tất cả lời m"
+        rescinded_all: "Tất cả lời mời đã được xóa!"
         reinvite: "Mời lại"
         reinvite_all: "Gửi lại tất cả lời mời"
         reinvited: "Gửi lại lời mời"
@@ -870,6 +880,7 @@ vi:
       complete_email_found: "Chúng tôi tìm thấy một tài khoản phù hợp với <b>% {email} </ b>, bạn sẽ nhận được một email với hướng dẫn về cách đặt lại mật khẩu của bạn trong thời gian ngắn."
       complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>% {username} </ b>"
       complete_email_not_found: "Không tìm thấy tài khoản nào tương ứng với <b>%{email}</b>"
+      button_help: "Giúp "
     login:
       title: "Đăng nhập"
       username: "Thành viên"
@@ -924,6 +935,9 @@ vi:
       invited_by: "Bạn đã được mời bởi:"
       your_email: "Địa chỉ email của bạn là <b>%{email}</b>."
       accept_invite: "Chấp nhận lời mời"
+      name_label: "T"
+      password_label: "Đặt mật kh"
+      optional_description: "(tùy chọn)"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:
@@ -938,6 +952,15 @@ vi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: Chọn...
+      no_content: Không tìm thấy
+      filter_placeholder: Tìm kiến...
+    emoji_picker:
+      people: Mọi ng
+      food: 'Thức '
+      activity: 'Hoạt '
+      objects: Vật th
     composer:
       emoji: "Emoji :)"
       more_emoji: "thêm..."
@@ -1092,6 +1115,8 @@ vi:
       searching: "Đang tìm ..."
       post_format: "#{{post_number}} bởi {{username}}"
       results_page: "Kết quả tìm kiếm"
+      search_google_button: "G"
+      search_google_title: "Tìm trong trang n"
       context:
         user: "Tìm bài viết của @{{username}}"
         topic: "Tìm trong chủ đề này"
@@ -1118,6 +1143,7 @@ vi:
           seen: Tôi đã đọc
           unseen: Tôi chưa đọc
           wiki: là wiki
+          images: 'gồm hình '
         statuses:
           open: mở
           closed: bị đóng
@@ -1243,11 +1269,14 @@ vi:
         tomorrow: "Ngày mai"
         this_weekend: "Cuối tuần này"
         next_week: "Tuần tới"
+        next_month: "Tháng t"
         pick_date_and_time: "Chọn ngày và giờ"
       temp_close:
         title: "Tạm đóng"
       auto_close:
         error: "Hãy nhập giá trị hợp lệ."
+      reminder:
+        title: "Nhắc t"
       status_update_notice:
         auto_open: "Chủ đề này sẽ tự động mở trong %{timeLeft}."
         auto_close: "Chủ đề này sẽ tự đóng trong %{timeLeft}."
