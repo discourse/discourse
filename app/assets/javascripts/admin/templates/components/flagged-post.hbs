@@ -17,134 +17,126 @@
     {{/if}}
   </div>
 
-  <div class="flagged-post-excerpt">
-    {{#unless hideTitle}}
-      <h3>
-        {{#if flaggedPost.topic.isPrivateMessage}}
-          <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+  <div class="flagged-post-contents">
+    <div class='flagged-post-excerpt'>
+      {{#unless hideTitle}}
+        <h3>
+          {{#if flaggedPost.topic.isPrivateMessage}}
+            <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+          {{/if}}
+          {{topic-status topic=flaggedPost.topic}}
+          <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
+        </h3>
+      {{/unless}}
+      {{#if flaggedPost.postAuthorFlagged}}
+        {{#if expanded}}
+          {{{flaggedPost.cooked}}}
+        {{else}}
+          <p>
+            {{{flaggedPost.excerpt}}}
+            <a href {{action "expand"}}>{{i18n "admin.flags.show_full"}}</a>
+          </p>
         {{/if}}
-        {{topic-status topic=flaggedPost.topic}}
-        <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
-      </h3>
-    {{/unless}}
-    {{#if flaggedPost.postAuthorFlagged}}
-      <p>{{{flaggedPost.excerpt}}}</p>
-    {{/if}}
-  </div>
+      {{/if}}
+    </div>
 
-  <div class='flaggers'>
-    {{#if site.mobileView}}
-      <div class='flaggers-title'>
-        {{i18n 'admin.flags.flagged_by'}}
+    {{#if flaggedPost.topicFlagged}}
+      <div class='flagged-post-message'>
+        <span class='text'>{{{i18n 'admin.flags.topic_flagged'}}}</span>
+        <a href={{flaggedPost.url}} class="btn">{{i18n 'admin.flags.visit_topic'}}</a>
       </div>
     {{/if}}
 
-    {{#each flaggedPost.post_actions as |postAction|}}
-      <div class='flagger'>
-        {{#link-to 'adminUser' postAction.user.id postAction.user.username class='flagger-avatar'}}
-          {{avatar postAction.user imageSize="medium"}}
-        {{/link-to}}
-        <div class='flagger-details'>
-          <div class='flagger-username'>
-            {{#link-to 'adminUser' postAction.user.id postAction.user.username}}
-              {{postAction.user.username}}
-            {{/link-to}}
-          </div>
-          <div class='flagger-flagged-at'>
-            {{format-age postAction.created_at}}
-          </div>
-          <div class='flagger-flag-type'>
-            {{i18n (concat "admin.flags.summary.action_type_" postAction.post_action_type_id) count=1}}
-          </div>
-        </div>
+    {{#each flaggedPost.conversations as |c|}}
+      <div class='flag-conversation'>
+        {{#if c.response}}
+          {{flagged-post-response response=c.response}}
+          {{#if c.reply}}
+            {{flagged-post-response response=c.reply hasMore=c.hasMore permalink=c.permalink}}
+          {{/if}}
+          <a href={{c.permalink}} class="btn reply-conversation btn-small">
+            {{d-icon "reply"}}
+            {{i18n "admin.flags.reply_message"}}
+          </a>
+        {{/if}}
       </div>
     {{/each}}
-  </div>
 
-  {{#if showResolvedBy}}
-    <div class='flagged-post-resolved-by'>
-      {{#each flaggedPost.post_actions as |postAction|}}
-        <div class='disposer'>
-          {{#link-to
-            'adminUser'
-            postAction.disposed_by.id
-            postAction.disposed_by.username
-            class="disposer-avatar"}}
-            {{avatar postAction.disposed_by imageSize="medium"}}
-          {{/link-to}}
-          <div class='disposer-details'>
-            {{format-age postAction.disposed_at}}
-            {{disposition-icon postAction.disposition}}
-            {{#if postAction.staff_took_action}}
-              {{d-icon "gavel" title="admin.flags.took_action"}}
-            {{/if}}
+    <div class='flag-user-lists'>
+      <div class='flagged-by'>
+        <div class='user-list-title'>
+          {{i18n "admin.flags.flagged_by"}}
+        </div>
+        <div class='flag-users'>
+          {{#each flaggedPost.post_actions as |postAction|}}
+            {{#flag-user user=postAction.user date=postAction.created_at}}
+              <div class='flagger-flag-type'>
+                {{i18n (concat "admin.flags.summary.action_type_" postAction.post_action_type_id) count=1}}
+              </div>
+            {{/flag-user}}
+          {{/each}}
+        </div>
+      </div>
+
+      {{#if showResolvedBy}}
+        <div class='flagged-post-resolved-by'>
+          <div class='user-list-title'>
+            {{i18n "admin.flags.resolved_by"}}
+          </div>
+          <div class='flag-users'>
+            {{#each flaggedPost.post_actions as |postAction|}}
+              {{#flag-user user=postAction.disposed_by date=postAction.disposed_at}}
+                {{disposition-icon postAction.disposition}}
+                {{#if postAction.staff_took_action}}
+                  {{d-icon "gavel" title="admin.flags.took_action"}}
+                {{/if}}
+              {{/flag-user}}
+            {{/each}}
           </div>
         </div>
-      {{/each}}
-    </div>
-  {{/if}}
-</div>
-
-{{#if flaggedPost.topicFlagged}}
-  <div class='flagged-post-message'>
-    <span class='text'>{{{i18n 'admin.flags.topic_flagged'}}}</span>
-    <a href={{flaggedPost.url}} class="btn">{{i18n 'admin.flags.visit_topic'}}</a>
-  </div>
-{{/if}}
-
-{{#each flaggedPost.conversations as |c|}}
-  <div class='flagged-post-message'>
-    {{#if c.response}}
-      {{flagged-post-response response=c.response}}
-      {{#if c.reply}}
-        {{flagged-post-response response=c.reply hasMore=c.hasMore permalink=c.permalink}}
       {{/if}}
-      <a href={{c.permalink}} class="btn btn-reply">
-        {{d-icon "reply"}}
-        {{i18n "admin.flags.reply_message"}}
-      </a>
+    </div>
+
+    {{#if canAct}}
+      <div class='flagged-post-controls'>
+        {{d-button
+          title="admin.flags.agree_title"
+          class="agree-flag"
+          label="admin.flags.agree"
+          icon="thumbs-o-up"
+          action="showAgreeFlagModal"
+          ellipsis=true}}
+
+        {{#if flaggedPost.postHidden}}
+          {{d-button
+            title="admin.flags.disagree_flag_unhide_post_title"
+            class="disagree-flag"
+            action="disagree"
+            icon="thumbs-o-down"
+            label="admin.flags.disagree_flag_unhide_post"}}
+        {{else}}
+          {{d-button
+            title="admin.flags.disagree_flag_title"
+            class="disagree-flag"
+            action="disagree"
+            icon="thumbs-o-down"
+            label="admin.flags.disagree_flag"}}
+        {{/if}}
+
+        {{d-button
+          class="defer-flag"
+          title="admin.flags.defer_flag_title"
+          action="defer"
+          icon="external-link"
+          label="admin.flags.defer_flag"}}
+
+        {{d-button
+          class="btn-danger delete-flag"
+          title="admin.flags.delete_title"
+          action="showDeleteFlagModal"
+          icon="trash-o"
+          label="admin.flags.delete"}}
+      </div>
     {{/if}}
   </div>
-{{/each}}
-
-{{#if canAct}}
-  <div class='flagged-post-controls'>
-    {{d-button
-      title="admin.flags.agree_title"
-      class="agree-flag"
-      label="admin.flags.agree"
-      icon="thumbs-o-up"
-      action="showAgreeFlagModal"
-      ellipsis=true}}
-
-    {{#if flaggedPost.postHidden}}
-      {{d-button
-        title="admin.flags.disagree_flag_unhide_post_title"
-        class="disagree-flag"
-        action="disagree"
-        icon="thumbs-o-down"
-        label="admin.flags.disagree_flag_unhide_post"}}
-    {{else}}
-      {{d-button
-        title="admin.flags.disagree_flag_title"
-        class="disagree-flag"
-        action="disagree"
-        icon="thumbs-o-down"
-        label="admin.flags.disagree_flag"}}
-    {{/if}}
-
-    {{d-button
-      class="defer-flag"
-      title="admin.flags.defer_flag_title"
-      action="defer"
-      icon="external-link"
-      label="admin.flags.defer_flag"}}
-
-    {{d-button
-      class="btn-danger delete-flag"
-      title="admin.flags.delete_title"
-      action="showDeleteFlagModal"
-      icon="trash-o"
-      label="admin.flags.delete"}}
-  </div>
-{{/if}}
+</div>

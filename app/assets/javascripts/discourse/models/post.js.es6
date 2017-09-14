@@ -53,7 +53,11 @@ const Post = RestModel.extend({
   }.property('firstPost', 'deleted_at', 'topic.deleted_at'),
 
   url: function() {
-    return postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
+    return postUrl(
+      this.get('topic.slug') || this.get('topic_slug'),
+      this.get('topic_id') || this.get('topic.id'),
+      this.get('post_number')
+    );
   }.property('post_number', 'topic_id', 'topic.slug'),
 
   // Don't drop the /1

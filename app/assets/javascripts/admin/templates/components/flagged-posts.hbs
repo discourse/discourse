@@ -1,14 +1,5 @@
 {{#if flaggedPosts}}
   {{#load-more selector=".flagged-post" action=(action "loadMore")}}
-    <div class='flagged-posts-header'>
-      <div class='flagged-by-header'>
-        {{i18n 'admin.flags.flagged_by'}}
-      </div>
-      {{#if showResolvedBy}}
-        {{i18n 'admin.flags.resolved_by'}}
-      {{/if}}
-    </div>
-
     <div class='flagged-posts'>
       {{#each flaggedPosts as |flaggedPost|}}
         {{flagged-post
