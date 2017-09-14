@@ -236,7 +236,7 @@ componentTest('supports custom row template', {
   test(assert) {
     expandSelectBox();
 
-    andThen(() => assert.equal(selectBox().row(1).el().html(), "<b>robin</b>") );
+    andThen(() => assert.equal(selectBox().row(1).el().html().trim(), "<b>robin</b>") );
   }
 });
 
