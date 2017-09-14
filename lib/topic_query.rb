@@ -285,15 +285,6 @@ class TopicQuery
   end
 
   def self.unread_filter(list, user_id, opts)
-    # PERF note
-    # We use the function first_unread_topic_for here instead of joining
-    # the table to assist the PostgreSQL query planner
-    #
-    # We want the query planner to have the actual value of the first_unread_topic so
-    # it can pick an appropriate plan. If it does not have this upfront it will just assume
-    # that the value will be 1/3 of the way through the topic table which makes it use terrible
-    # indexes for the plan.
-    #
     col_name = opts[:staff] ? "highest_staff_post_number" : "highest_post_number"
 
     list
