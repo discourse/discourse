@@ -7,6 +7,7 @@ import { emojiUnescape } from 'discourse/lib/text';
 import { postUrl, escapeExpression } from 'discourse/lib/utilities';
 import { setTransientHeader } from 'discourse/lib/ajax';
 import { userPath } from 'discourse/lib/url';
+import { iconNode } from 'discourse-common/lib/icon-library';
 
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
@@ -98,10 +99,14 @@ createWidget('notification-item', {
     const lookup = this.site.get('notificationLookup');
     const notName = lookup[notificationType];
 
-    const contents = new RawHtml({ html: `<div>${emojiUnescape(this.text(notificationType, notName))}</div>` });
+    let title = I18n.t(`notifications.alt.${notName}`);
+    let icon = iconNode(`notification.${notName}`, { title });
+    let text = emojiUnescape(this.text(notificationType, notName));
+    let html = new RawHtml({ html: `<p>${text}</p>` });
+    let contents = [ icon, html ];
+
     const href = this.url();
-    const alt = I18n.t(`notifications.alt.${notName}`);
-    return href ? h('a', { attributes: { href, alt, 'data-auto-route': true } }, contents) : contents;
+    return href ? h('a', { attributes: { href, title, 'data-auto-route': true } }, contents) : contents;
   },
 
   click(e) {
