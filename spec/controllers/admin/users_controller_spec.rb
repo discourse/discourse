@@ -122,9 +122,9 @@ describe Admin::UsersController do
 
     context '.suspend' do
       let(:user) { Fabricate(:evil_trout) }
-      let!(:api_key) { Fabricate(:api_key, user: user) }
 
       it "works properly" do
+        Fabricate(:api_key, user: user)
         put(
           :suspend,
           user_id: user.id,
@@ -142,6 +142,24 @@ describe Admin::UsersController do
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
         expect(log).to be_present
         expect(log.details).to match(/because I said so/)
+      end
+
+      it "can have an associated post" do
+        post = Fabricate(:post)
+
+        put(
+          :suspend,
+          user_id: user.id,
+          suspend_until: 5.hours.from_now,
+          reason: "because of this post",
+          post_id: post.id,
+          format: :json
+        )
+        expect(response).to be_success
+
+        log = UserHistory.where(target_user_id: user.id).order('id desc').first
+        expect(log).to be_present
+        expect(log.post_id).to eq(post.id)
       end
 
       it "can send a message to the user" do

@@ -107,6 +107,14 @@ QUnit.test("flagged posts - delete + deleteSpammer", assert => {
   });
 });
 
+QUnit.test("flagged posts - suspend", assert => {
+  visit("/admin/flags/active");
+  click('.suspend-user');
+  andThen(() => {
+    assert.equal(find('.suspend-user-modal:visible').length, 1);
+    assert.equal(find('.suspend-user-modal .cant-suspend').length, 1);
+  });
+});
 
 QUnit.test("topics with flags", assert => {
   visit("/admin/flags/topics");

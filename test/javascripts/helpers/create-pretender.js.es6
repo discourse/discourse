@@ -350,10 +350,18 @@ export default function() {
 
     this.get('/tag_groups', () => response(200, {tag_groups: []}));
 
-    this.get('/admin/users/1234.json', request => {
+    this.get('/admin/users/1234.json', () => {
       return response(200, {
         id: 1234,
         username: 'regular',
+      });
+    });
+
+    this.get('/admin/users/2.json', () => {
+      return response(200, {
+        id: 2,
+        username: 'sam',
+        admin: true
       });
     });
 
