@@ -6,34 +6,45 @@ export default Ember.Controller.extend(ModalFunctionality, {
   suspendUntil: null,
   reason: null,
   message: null,
-  loading: false,
+  suspending: false,
+  user: null,
+  post: null,
+  successCallback: null,
 
   onShow() {
     this.setProperties({
       suspendUntil: null,
       reason: null,
       message: null,
-      loading: false
+      suspending: false,
+      loadingUser: true,
+      post: null,
+      successCallback: null,
     });
   },
 
-  @computed('suspendUntil', 'reason', 'loading')
-  submitDisabled(suspendUntil, reason, loading) {
-    return (loading || Ember.isEmpty(suspendUntil) || !reason || reason.length < 1);
+  @computed('suspendUntil', 'reason', 'suspending')
+  submitDisabled(suspendUntil, reason, suspending) {
+    return (suspending || Ember.isEmpty(suspendUntil) || !reason || reason.length < 1);
   },
 
   actions: {
     suspend() {
       if (this.get('submitDisabled')) { return; }
 
-      this.set('loading', true);
-      this.get('model').suspend({
+      this.set('suspending', true);
+      this.get('user').suspend({
         suspend_until: this.get('suspendUntil'),
         reason: this.get('reason'),
-        message: this.get('message')
-      }).then(() => {
+        message: this.get('message'),
+        post_id: this.get('post.id')
+      }).then(result => {
         this.send('closeModal');
-      }).catch(popupAjaxError).finally(() => this.set('loading', false));
+        let callback = this.get('successCallback');
+        if (callback) {
+          callback(result);
+        }
+      }).catch(popupAjaxError).finally(() => this.set('suspending', false));
     }
   }
 

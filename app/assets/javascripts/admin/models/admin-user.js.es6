@@ -9,7 +9,7 @@ import TL3Requirements from 'admin/models/tl3-requirements';
 import { userPath } from 'discourse/lib/url';
 
 const AdminUser = Discourse.User.extend({
-
+  adminUserView: true,
   customGroups: Ember.computed.filter("groups", g => !g.automatic && Group.create(g)),
   automaticGroups: Ember.computed.filter("groups", g => g.automatic && Group.create(g)),
 

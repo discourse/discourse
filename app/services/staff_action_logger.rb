@@ -169,9 +169,13 @@ class StaffActionLogger
 
   def log_user_suspend(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:suspend_user],
-                                          target_user_id: user.id,
-                                          details: reason))
+    args = params(opts).merge(
+      action: UserHistory.actions[:suspend_user],
+      target_user_id: user.id,
+      details: reason
+    )
+    args[:post_id] = opts[:post_id] if opts[:post_id]
+    UserHistory.create(args)
   end
 
   def log_user_unsuspend(user, opts = {})

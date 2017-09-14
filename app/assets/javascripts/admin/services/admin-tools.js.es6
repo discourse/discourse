@@ -20,11 +20,27 @@ export default Ember.Service.extend({
     };
   },
 
-  showSuspendModal(user) {
-    showModal('admin-suspend-user', {
-      model: user,
+  showSuspendModal(user, opts) {
+    opts = opts || {};
+
+    let controller = showModal('admin-suspend-user', {
       admin: true,
       modalClass: 'suspend-user-modal'
+    });
+    if (opts.post) {
+      controller.set('post', opts.post);
+    }
+
+    let promise = user.adminUserView ?
+      Ember.RSVP.resolve(user) :
+      AdminUser.find(user.get('id'));
+
+    promise.then(loadedUser => {
+      controller.setProperties({
+        user: loadedUser,
+        loadingUser: false,
+        successCallback: opts.successCallback
+      });
     });
   },
 

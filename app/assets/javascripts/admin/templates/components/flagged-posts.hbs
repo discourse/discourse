@@ -4,7 +4,7 @@
       {{#each flaggedPosts as |flaggedPost|}}
         {{flagged-post
           flaggedPost=flaggedPost
-          canAct=canAct
+          filter=filter
           showResolvedBy=showResolvedBy
           removePost=(action "removePost" flaggedPost)
           hideTitle=topic}}

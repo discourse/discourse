@@ -97,6 +97,12 @@
       {{/if}}
     </div>
 
+    {{#if suspended}}
+      <div class='suspended-message'>
+        The user was suspended for this post.
+      </div>
+    {{/if}}
+
     {{#if canAct}}
       <div class='flagged-post-controls'>
         {{d-button
@@ -136,6 +142,15 @@
           action="showDeleteFlagModal"
           icon="trash-o"
           label="admin.flags.delete"}}
+
+        {{#unless suspended}}
+          {{d-button
+            class="btn-danger suspend-user"
+            icon="ban"
+            label="admin.flags.suspend_user"
+            title="admin.flags.suspend_user_title"
+            action=(action "showSuspendModal")}}
+        {{/unless}}
       </div>
     {{/if}}
   </div>

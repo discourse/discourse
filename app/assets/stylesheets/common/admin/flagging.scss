@@ -98,9 +98,16 @@
     }
   }
 
+  .suspended-message {
+    padding: 0.5em;
+    background-color: $danger;
+    margin-bottom: 1em;
+    color: $secondary;
+  }
+
   .flagged-post-message {
-    padding: 0.5em 0 0.5em 4em;
-    margin-bottom: 0.5em;
+    padding: 0.5em 1em;
+    margin: 0.5em 0;
     background-color: $highlight-medium;
 
     .text {

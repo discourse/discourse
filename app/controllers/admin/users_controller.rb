@@ -67,7 +67,8 @@ class Admin::UsersController < Admin::AdminController
       user_history = StaffActionLogger.new(current_user).log_user_suspend(
         @user,
         params[:reason],
-        context: message
+        context: message,
+        post_id: params[:post_id]
       )
     end
     @user.logged_out
