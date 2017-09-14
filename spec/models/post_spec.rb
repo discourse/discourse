@@ -919,6 +919,23 @@ describe Post do
       expect(post.user).to eq(coding_horror)
       expect(post.revisions.size).to eq(0)
     end
+
+    it "uses default locale for edit reason" do
+      I18n.locale = 'de'
+      old_username = post.user.username_lower
+
+      post.set_owner(coding_horror, Discourse.system_user)
+      post.reload
+
+      expected_reason = I18n.with_locale(SiteSetting.default_locale) do
+        I18n.t('change_owner.post_revision_text',
+               old_user: old_username,
+               new_user: coding_horror.username_lower
+        )
+      end
+
+      expect(post.edit_reason).to eq(expected_reason)
+    end
   end
 
   describe ".rebake_old" do
