@@ -1358,6 +1358,10 @@ uncategorized:
 
   share_anonymized_statistics: true
 
+  auto_handle_queued_age:
+    default: 60
+    min: 0
+
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'

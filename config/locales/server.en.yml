@@ -1472,6 +1472,8 @@ en:
 
     share_anonymized_statistics: "Share anonymized usage statistics."
 
+    auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be deferred. Queued posts and users will be rejected. Set to 0 to disable this feature."
+
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."
@@ -1753,6 +1755,7 @@ en:
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
+    auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
 
   flags_reminder:
     flags_were_submitted:
