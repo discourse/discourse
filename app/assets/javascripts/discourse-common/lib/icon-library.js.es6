@@ -9,7 +9,27 @@ const REPLACEMENTS = {
   'd-watching-first': 'dot-circle-o',
   'd-drop-expanded': 'caret-down',
   'd-drop-collapsed': 'caret-right',
+  'notification.mentioned': "at",
+  'notification.group_mentioned': "at",
+  'notification.quoted': "quote-right",
+  'notification.replied': "reply",
+  'notification.posted': "reply",
+  'notification.edited': "pencil",
+  'notification.liked': "heart",
+  'notification.liked_2': "heart",
+  'notification.liked_many': "heart",
+  'notification.private_message': "envelope-o",
+  'notification.invited_to_private_message': "envelope-o",
+  'notification.invited_to_topic': "hand-o-right",
+  'notification.invitee_accepted': "user",
+  'notification.moved_post': "sign-out",
+  'notification.linked': "link",
+  'notification.granted_badge': "certificate",
+  'notification.topic_reminder': "hand-o-right",
+  'notification.watching_first_post': "dot-circle-o",
+  'notification.group_message_summary': "group"
 };
+
 
 export function renderIcon(renderType, id, params) {
   for (let i=0; i<_renderers.length; i++) {

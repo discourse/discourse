@@ -74,7 +74,8 @@ export default createWidget('user-notifications', {
         const href = `${attrs.path}/notifications`;
 
         items.push(
-          h('li.read.last.heading', h('a', { attributes: { href } }, [I18n.t('notifications.more'), '...'])),
+          h('li.read.last.heading',
+            h('a', { attributes: { href } }, [I18n.t('notifications.more'), '...'])),
           h('hr')
         );
       }
