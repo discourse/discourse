@@ -2,11 +2,15 @@
   <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
   <span class='time'>{{format-date item.created_at}}</span>
   {{expand-post item=item}}
-  {{topic-status topic=item disableActions=true}}
-  <span class="title">
-    <a href={{item.postUrl}}>{{{item.title}}}</a>
-  </span>
-  <div class="category">{{category-link item.category}}</div>
+  <div class='stream-topic-details'>
+    <div class='stream-topic-title'>
+      {{topic-status topic=item disableActions=true}}
+      <span class="title">
+        <a href={{item.postUrl}}>{{{item.title}}}</a>
+      </span>
+    </div>
+    <div class="category">{{category-link item.category}}</div>
+  </div>
 
   {{#if item.deleted_by}}
     <span class="delete-info">
