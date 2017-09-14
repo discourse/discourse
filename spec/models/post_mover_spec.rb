@@ -232,6 +232,21 @@ describe PostMover do
 
           expect(new_topic.posts.pluck(:id).sort).to eq([p2.id, p3.id].sort)
         end
+
+        it "uses default locale for moderator post" do
+          I18n.locale = 'de'
+
+          new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id)
+          post = Post.find_by(topic_id: topic.id, post_type: Post.types[:small_action])
+
+          expected_text = I18n.with_locale(:en) do
+            I18n.t("move_posts.new_topic_moderator_post",
+                   count: 2,
+                   topic_link: "[#{new_topic.title}](#{new_topic.relative_url})")
+          end
+
+          expect(post.raw).to eq(expected_text)
+        end
       end
 
       context "to an existing topic" do
