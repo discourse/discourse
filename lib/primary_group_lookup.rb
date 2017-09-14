@@ -24,7 +24,9 @@ class PrimaryGroupLookup
       .select(:id, :primary_group_id)
 
     group_lookup = {}
-    group_ids = users_with_primary_group.map(&:primary_group_id).compact
+    group_ids = users_with_primary_group.map(&:primary_group_id)
+    group_ids.uniq!
+
     Group.where(id: group_ids).select(self.class.lookup_columns)
       .each { |g| group_lookup[g.id] = g }
 
