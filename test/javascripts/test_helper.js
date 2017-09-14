@@ -32,6 +32,7 @@
 //= require sinon-qunit-1.0.0
 
 //= require helpers/assertions
+//= require helpers/select-box-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures
@@ -168,4 +169,3 @@ Object.keys(requirejs.entries).forEach(function(entry) {
 });
 
 resetSite();
-

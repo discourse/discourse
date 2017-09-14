@@ -48,11 +48,14 @@ QUnit.test("Showing and hiding the edit controls", assert => {
 
 QUnit.test("Updating the topic title and category", assert => {
   visit("/t/internationalization-localization/280");
+
   click('#topic-title .d-icon-pencil');
 
   fillIn('#edit-title', 'this is the new title');
 
-  selectBox('.title-wrapper .category-select-box', 'faq');
+  expandSelectBox('.title-wrapper .category-select-box');
+
+  selectBoxSelectRow(4, {selector: '.title-wrapper .category-select-box'});
 
   click('#topic-title .submit-edit');
 
@@ -100,7 +103,7 @@ QUnit.test("Reply as new topic", assert => {
       "it fills composer with the ring string"
     );
     assert.equal(
-      find('.category-select-box .select-box-header .current-selection').html().trim(), "feature",
+      selectBox('.category-select-box').header.text(), "feature",
       "it fills category selector with the right category"
     );
   });

@@ -21,24 +21,20 @@ componentTest('updating the content refreshes the list', {
   },
 
   test(assert) {
-    andThen(() => {
-      assert.equal(find(".pinned-button").hasClass("is-hidden"), false);
-    });
+    andThen(() => assert.notOk(selectBox().isHidden) );
 
-    click(".select-box-header");
+    expandSelectBox();
 
-    andThen(() => {
-      assert.equal(find(".select-box-row.is-selected .title").html().trim(), "Pinned");
-    });
+    andThen(() => assert.equal(selectBox().selectedRow.el().find(".title").text(), "Pinned") );
 
     andThen(() => {
       this.set("topic.pinned", false);
-      assert.equal(find(".select-box-row.is-selected .title").html().trim(), "Unpinned");
+      assert.equal(selectBox().selectedRow.el().find(".title").text(), "Unpinned");
     });
 
     andThen(() => {
       this.set("topic.deleted", true);
-      assert.equal(find(".pinned-button").hasClass("is-hidden"), true);
+      assert.ok(find(".pinned-button").hasClass("is-hidden"), "it hides the button when topic is deleted");
     });
   }
 });
