@@ -15,7 +15,7 @@ export const SET_BASED_ON_LAST_POST = 'set_based_on_last_post';
 export const FORMAT = 'YYYY-MM-DD HH:mm';
 
 export default Combobox.extend({
-  classNames: ['auto-update-input-selector'],
+  classNames: ['future-date-input-selector'],
   isCustom: Ember.computed.equal("value", PICK_DATE_AND_TIME),
 
   @computed()
@@ -128,13 +128,13 @@ export default Combobox.extend({
     let output = "";
 
     if (!Ember.isEmpty(icons)) {
-      output += `<span class='auto-update-input-selector-icons'>${icons}</span>`;
+      output += `<span class='future-date-input-selector-icons'>${icons}</span>`;
     }
 
     output += `<span>${state.text}</span>`;
 
     if (time) {
-      output += `<span class='auto-update-input-selector-datetime'>${time}</span>`;
+      output += `<span class='future-date-input-selector-datetime'>${time}</span>`;
     }
 
     return output;
