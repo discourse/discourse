@@ -1,15 +1,3 @@
-.flagged-posts-header {
-  display: flex;
-  justify-content: flex-end;
-
-  font-weight: bold;
-  .flagged-by-header {
-    width: 12em;
-  }
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid $primary-low;
-}
-
 .flagged-post.hidden-post {
   .flagged-post-excerpt, .flagged-post-avatar {
     opacity: 0.5;
@@ -23,12 +11,11 @@
 }
 
 .flagged-post {
-  padding: 1em 0 0 0;
+  padding: 1em 0 0.55em 0;
   border-bottom: 1px solid $primary-low;
 
   .flagged-post-details {
     display: flex;
-    justify-content: space-between;
 
     .flagged-post-avatar {
       margin-right: 1em;
@@ -46,9 +33,7 @@
       }
     }
 
-    .flagged-post-excerpt {
-      min-width: 70%;
-      width: 80%;
+    .flagged-post-contents {
       word-wrap: break-word;
       .d-icon {
         display: inline-block;
@@ -64,26 +49,53 @@
     }
   }
 
-  .flagger {
-    width: 12em;
+  .flag-user-lists {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 1em;
+  }
+
+  .user-list-title {
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .flag-users {
+    margin: 0.5em 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .flag-user {
     display: flex;
     margin-bottom: 1em;
+    margin-right: 2em;
+    align-items: center;
+    justify-content: space-between;
+
+    .flag-user-who {
+      display: flex;
+      width: 13em;
+    }
+    .flag-user-username {
+      font-weight: bold;
+      margin-right: 0.5em;
+    }
+    .flag-user-date {
+      color: $primary-medium;
+    }
+
+    .flag-user-avatar {
+      margin-right: 0.5em;
+    }
   }
 
-  .flagger-avatar, .disposer-avatar {
-    margin-right: 1em;
-    min-width: 32px;
-  }
+  .flag-conversation {
+    padding: 1em;
 
-  .disposer {
-    width: 7em;
-    justify-content: flex-end;
-    display: flex;
-    margin-bottom: 1em;
-  }
-
-  .flagged-post-resolved-by {
-    width: 12em;
+    .reply-conversation {
+      margin-left: 32px;
+    }
   }
 
   .flagged-post-message {
@@ -117,7 +129,6 @@
   .flagged-post-controls {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
 
     button {
       margin-right: 0.5em;
@@ -164,9 +175,6 @@
 }
 
 .mobile-view {
-  .flagged-posts-header {
-    display: none;
-  }
   .flagged-posts {
     .flagged-post-details {
       flex-wrap: wrap;
@@ -178,11 +186,6 @@
 
       .flagged-post-excerpt {
         width: 70%;
-      }
-
-      .flaggers-title {
-        font-weight: bold;
-        margin: 0.5em 0;
       }
 
       .flaggers {

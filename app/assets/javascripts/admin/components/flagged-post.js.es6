@@ -1,6 +1,8 @@
 import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
+  expanded: false,
+
   tagName: 'div',
   classNameBindings: [
     ':flagged-post',
@@ -36,6 +38,12 @@ export default Ember.Component.extend({
 
     defer() {
       this.removeAfter(this.get('flaggedPost').deferFlags());
+    },
+
+    expand() {
+      this.get('flaggedPost').expandHidden().then(() => {
+        this.set('expanded', true);
+      });
     }
   }
 });

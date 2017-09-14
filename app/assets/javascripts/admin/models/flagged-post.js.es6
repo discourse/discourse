@@ -66,4 +66,5 @@ export default Post.extend({
   postHidden: Ember.computed.alias('hidden'),
 
   deleted: Ember.computed.or('deleted_at', 'topic_deleted_at'),
+
 });
