@@ -8,29 +8,24 @@ export default Ember.Component.extend({
 
   tagName: "li",
 
-  attributeBindings: ["title"],
+  attributeBindings: ["title", "id:data-id"],
 
   classNameBindings: ["isHighlighted:is-highlighted", "isSelected:is-selected"],
 
   @computed("titleForRow")
-  title(titleForRow) {
-    return titleForRow(this);
-  },
+  title(titleForRow) { return titleForRow(this); },
+
+  @computed("idForRow")
+  id(idForRow) { return idForRow(this); },
 
   @computed("templateForRow")
-  template(templateForRow) {
-    return templateForRow(this);
-  },
+  template(templateForRow) { return templateForRow(this); },
 
   @computed("shouldHighlightRow", "highlightedValue")
-  isHighlighted(shouldHighlightRow) {
-    return shouldHighlightRow(this);
-  },
+  isHighlighted(shouldHighlightRow) { return shouldHighlightRow(this); },
 
   @computed("shouldSelectRow", "value")
-  isSelected(shouldSelectRow) {
-    return shouldSelectRow(this);
-  },
+  isSelected(shouldSelectRow) { return shouldSelectRow(this); },
 
   icon() {
     if (this.get("content.icon")) {
