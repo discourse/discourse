@@ -6,7 +6,7 @@ import hbs from 'discourse/widgets/hbs-compiler';
 
 createWidget('pm-remove-group-link', {
   tagName: 'a.remove-invited',
-  template: hbs`{{fa-icon "times"}}`,
+  template: hbs`{{d-icon "times"}}`,
 
   click() {
     bootbox.confirm(I18n.t("private_message_info.remove_allowed_group", {name: this.attrs.name}), (confirmed) => {
@@ -33,7 +33,7 @@ createWidget('pm-map-user-group', {
 
 createWidget('pm-remove-link', {
   tagName: 'a.remove-invited',
-  template: hbs`{{fa-icon "times"}}`,
+  template: hbs`{{d-icon "times"}}`,
 
   click() {
     bootbox.confirm(I18n.t("private_message_info.remove_allowed_user", {name: this.attrs.username}), (confirmed) => {
