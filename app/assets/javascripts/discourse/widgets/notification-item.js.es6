@@ -102,7 +102,11 @@ createWidget('notification-item', {
     let title = I18n.t(`notifications.alt.${notName}`);
     let icon = iconNode(`notification.${notName}`, { title });
     let text = emojiUnescape(this.text(notificationType, notName));
-    let html = new RawHtml({ html: `<p>${text}</p>` });
+
+    // We can use a `<p>` tag here once other languages have fixed their HTML
+    // translations.
+    let html = new RawHtml({ html: `<div>${text}</div>` });
+
     let contents = [ icon, html ];
 
     const href = this.url();
