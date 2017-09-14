@@ -27,6 +27,7 @@ function mustacheValue(node, state) {
 
       break;
     case 'fa-icon':
+    case 'd-icon':
       state.helpersUsed.iconNode = true;
       let icon = node.params[0].value;
       return `__iN("${icon}")`;
