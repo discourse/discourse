@@ -967,6 +967,7 @@ it:
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
     whitelist_internal_hosts: "Un elenco di host interni di cui Discourse può eseguire la scansione in modo sicuro per la funzione di onebox e altri scopi"
+    allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Le voci di menu da nascondere per difetto nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
@@ -1178,6 +1179,7 @@ it:
     user_profile_view_duration_hours: "Conteggia una nuova visita del profilo utente una volta per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
     max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di esperienza 0 da questo IP (e nessuno è membro dello staff o TL2 o superiore), non accettare nuove iscrizioni utente da questo IP."
+    min_ban_entries_for_roll_up: "Quando si clicca il pulsante Riassumi Argomento , verrà creata una nuova voce di blocco se sono presenti almeno (N) voci."
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
@@ -1226,7 +1228,7 @@ it:
     pop3_polling_username: "Il nome utente dell'account POP3 per la ricezione di email."
     pop3_polling_password: "La password dell'account POP3 per la ricezione di email."
     log_mail_processing_failures: "Traccia tutti i fallimenti di lavorazione delle email all'indirizzo http://tuosito.com/logs "
-    email_in: "Permetti agli utenti di pubblicare nuovi argomenti per email (richiede il pop3 polling). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria."
+    email_in: "Permetti agli utenti di pubblicare nuovi argomenti via email (richiede il polling manuale o pop3). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria. "
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_prefix: "La [etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
@@ -2276,6 +2278,7 @@ it:
 
         %{respond_instructions}
     user_posted:
+      title: "Utente Pubblicato"
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2286,6 +2289,7 @@ it:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "Utente Osservando Primo Messaggio"
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3034,6 +3038,18 @@ it:
       description: Contributi eccezionali nel loro primo mese
       long_description: |
         Questo distintivo è assegnato per congratularsi con due nuovi utenti ogni mese per i loro ottimi contributi globali, misurati sulla frequenza dei like ricevuti per i loro messaggi e da chi li ha dati.
+    enthusiast:
+      name: Appassionato
+      description: 10 giorni di frequenza
+      long_description: Questo distintivo è assegnato per aver frequentato il sito per 10 giorni consecutivi. Grazie per essere stato con noi per più di una settimana!
+    aficionado:
+      name: Amatoriale
+      description: 100 giorni di frequenza
+      long_description: Questo distintivo è assegnato per aver frequentato il sito per 100 giorni consecutivi. Sono più di tre mesi!
+    devotee:
+      name: Devoto
+      description: 365 giorni di frequenza
+      long_description: Questo distintivo è assegnato per aver frequentato il sito per 365 giorni consecutivi. Wow, un anno intero!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
     success: "email Inviata"

@@ -51,13 +51,13 @@ vi:
       invalid_boolean: "Giá trị logic không hợp lệ"
       taken: "đã được lấy trước"
       accepted: phải được chấp nhận
-      blank: không thể để rỗng
-      present: phải để rỗng
+      blank: không được để trống
+      present: phải để trống
       confirmation: "%{attribute} không khớp"
       empty: không thể để trống
       equal_to: phải bằng %{count}
       even: phải là chắn
-      exclusion: được bảo lưu
+      exclusion: được dành riêng
       greater_than: phải lớn hơn %{count}
       greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
       has_already_been_used: "đã được sử dụng"

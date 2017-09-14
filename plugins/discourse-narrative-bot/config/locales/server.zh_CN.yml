@@ -80,7 +80,7 @@ zh_CN:
         quote: "心想事成。"
         author: "拿破仑·希尔"
       results: |-
-        > :left_speech_bubble：_%{quote}_ &mdash; %{author}
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: '财富'
       answers:

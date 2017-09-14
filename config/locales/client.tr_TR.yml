@@ -473,6 +473,7 @@ tr_TR:
       first_notification: "İlk bilidiriminiz! Başlamak için seçiniz"
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
+      theme_default_on_all_devices: "Seçilen temayı bütün cihazlarımda varsayılan yap"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
       change: "değiştir"
@@ -546,6 +547,9 @@ tr_TR:
         failed_to_move: "Seçilen iletileri taşımak başarısız oldu (muhtemelen ağınız çöktü)"
         select_all: "Tümünü seç"
       preferences_nav:
+        account: "Hesap"
+        notifications: "Bildirimler"
+        categories: "Kategoriler"
         interface: "Arayüz"
       change_password:
         success: "(e-posta gönderildi)"
@@ -1160,6 +1164,7 @@ tr_TR:
         actions: "Toplu Eylemler"
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
+        notification_level: "Bildirimler"
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."

@@ -79,6 +79,8 @@ nb_NO:
         '10': "Ting taler i favør av ja"
         '11': "Vagt svar, prøv igjen"
         '12': "Spør igjen senere"
+        '13': "Best å ikke fortelle deg det nå"
+        '14': "Kan ikke spå nå"
         '15': "Konsentrer deg og spør igjen"
         '16': "Ikke regn med det"
         '17': "Mitt svar er nei"
@@ -96,11 +98,16 @@ nb_NO:
           Hei! Finn ut hva jeg kan gjøre, si `@%{discobot_username} %{help_trigger}`.
     new_user_narrative:
       reset_trigger: "ny bruker"
+      hello:
+        title: ":robot: Heisann!"
       quoting:
         reply: |-
           Godt jobbet, du valgte mitt  favorittsitat! :left_speech_bubble:
     advanced_user_narrative:
       reset_trigger: 'avansert bruker'
+      title: ':arrow_up: Avanserte brukerfunksjoner'
+      edit:
+        bot_created_post_raw: "@%{discobot_username} er overlegent den kuleste bot-en jeg vet om :wink:"
       poll:
         reply: |-
           Hei, fin avstemning! Hvordan gjorde jeg det i opplæringsprosessen?

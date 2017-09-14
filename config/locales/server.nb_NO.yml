@@ -37,7 +37,7 @@ nb_NO:
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
-      show_trimmed_content: "Vis beskjært innhold"
+      show_trimmed_content: "Vis beskåret innhold"
       errors:
         no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
         auto_generated_email_error: "Skjer når «Precedence»-headeren er satt til list, junk, bulk eller auto_reply eller når en annen header innholder auto-submitted, auto-replied eller auto-generated."
@@ -1009,7 +1009,7 @@ nb_NO:
     appreciated:
       name: Verdsatt
     out_of_love:
-      name: Ikke mer kjærlighet å gi
+      name: Ikke flere likes å gi
     thank_you:
       name: Takk skal du ha
     gives_back:

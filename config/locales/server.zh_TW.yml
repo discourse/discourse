@@ -307,6 +307,10 @@ zh_TW:
           attributes:
             payload_url:
               invalid: "URL 不合法。URL 應包括 http:// 或 https://。並且其中沒有空格。"
+        custom_emoji:
+          attributes:
+            name:
+              taken: 已被其他表情符號使用
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -551,9 +555,9 @@ zh_TW:
     regular:
       title: "一般討論話題"
     banner:
-      title: "討論話題橫幅"
+      title: "橫幅主題"
       message:
-        make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其隱藏。"
+        make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其標記已讀。"
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: "退訂！"
@@ -877,10 +881,10 @@ zh_TW:
     min_password_length: "最小密碼長度"
     min_admin_password_length: "管理員最短密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
-    enable_sso: "啟用通過外部站點單點登錄（警告：用戶的郵件地址必須被外部站點驗證！）"
+    enable_sso: "啟用外部站點登入 (注意：必須確認外部站點已驗證使用者的電子郵件地址！)"
     verbose_sso_logging: "將 SSO 日誌詳情記錄至 /logs"
     enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
-    sso_url: "單點登錄 URL 入口點（必須包含 http:// 或 https://）"
+    sso_url: "SSO URL endpoint (必須包含 http:// 或 https://)"
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
     sso_overrides_bio: "在用戶頁面中覆蓋用戶的個人信息並禁止用戶修改"
     sso_overrides_email: "每一次登錄時，用 SSO 信息中的外部站點的郵件地址覆蓋本地郵件地址，並且阻止本地的郵件地址修改。（警告：因格本地郵件的正規化，郵件地址可能會有所差異）"
@@ -1132,7 +1136,7 @@ zh_TW:
     disable_avatar_education_message: "禁用更改頭像操作的教育消息。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
-    global_notice: "為所有訪客顯示“緊急的”全局橫幅，留空隱藏它（可以使用 HTML）"
+    global_notice: "為所有訪客顯示「緊急的」全局橫幅主題，留空將其隱藏（可以使用 HTML）"
     disable_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
     automatically_unpin_topics: "當用戶到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
@@ -1158,8 +1162,8 @@ zh_TW:
     prevent_anons_from_downloading_files: "禁止匿名用戶下載附件。警告：這將禁止他們訪問任何發表在帖子中的非圖片資源。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
-    emoji_set: "你會如何喜歡你的表情符號？"
-    enforce_square_emoji: "強制為所有 emojis 設置的正方形比例。"
+    emoji_set: "你喜歡怎麼樣的表情符號？"
+    enforce_square_emoji: "強制所有表情符號成為正方形比例。"
     approve_post_count: "新用戶或基礎用戶需要被審核的帖子數量"
     approve_unless_trust_level: "該信任等級之下的用戶的帖子必須被審核"
     approve_new_topics_unless_trust_level: "低於該信任等級的用戶的新帖子需要被審核"
@@ -1203,8 +1207,8 @@ zh_TW:
     max_tags_per_topic: "主題最多允許有多少個標籤。"
     max_tag_length: "標籤允許的最大字元數。"
     max_tag_search_results: "當搜索標籤時，顯示的結果數上限。"
-    show_filter_by_tag: "顯示下拉菜單以按照標籤過濾主題列表。"
-    max_tags_in_filter_list: "過濾菜單中顯示的標籤數上限。優先顯示最常用的標籤。"
+    show_filter_by_tag: "顯示下拉選單以按照標籤過濾主題列表。"
+    max_tags_in_filter_list: "過濾下拉選單中顯示的標籤數上限。優先顯示最常用的標籤。"
     tags_sort_alphabetically: "按照字母順序顯示標籤。預設按流行度顯示。"
     tag_style: "標籤的視覺樣式。"
     staff_tags: "只可由管理人員使用的標籤列表"
@@ -1910,6 +1914,14 @@ zh_TW:
       subject_template: "你已受到 %{site_name} 的認可！"
     signup:
       title: "註冊"
+      subject_template: "[%{site_name}] 確認你的新賬戶"
+      text_body_template: |
+        歡迎來到 %{site_name}！
+
+        請點擊以下連結，以確認和啟用你的新帳戶：
+        %{base_url}/users/activate-account/%{email_token}
+
+        如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器的網址列中開啟。
   page_not_found:
     title: "抱歉！這個頁面不存在或者是私密的。"
     popular_topics: "熱門"
@@ -2391,9 +2403,9 @@ zh_TW:
         該徽章授予給收到了 500 個贊，且讚過別人至少 1000 次的你。哇！你是一個富有同情心且會換位思考的模範。 :two_hearts:
     first_emoji:
       name: 首個表情
-      description: 在帖子中使用表情符號
+      description: 在文章中使用表情符號
       long_description: |
-        該徽章授予給第一次在帖子中使用 Emoji 的你 :thumbsup:。Emoji 讓你在帖子中表達快樂 :smiley:、悲傷 :anguished:、憤怒 :angry: 以及任何東西 :sunglasses:。輸入 :（冒號）或在編輯器中的 Emoji 工具欄中選擇吧 :ok_hand:
+        該徽章授予給第一次在文章中使用表情符號的你 :thumbsup:。表情符號讓你在文章中表達快樂 :smiley:、悲傷 :anguished:、憤怒 :angry: 以及任何東西 :sunglasses:。輸入 : (冒號) 或在編輯器中的表情符號工具列中按鈕選擇吧 :ok_hand:
     first_mention:
       name: 首次提及
       long_description: 該徽章授予給第一次在帖子中@別人的你。每個提及都將通知對方，讓他們知道你發了貼。輸入 @ 提及任何用戶，如果可以的話，也可以提及群組——這是個獲得他們注意的好辦法。
@@ -2433,9 +2445,9 @@ zh_TW:
       message: "<p>我們已重發啟用信件至 <b>%{email}</b>"
   safe_mode:
     title: "進入安全模式"
-    description: "安全模式讓你的站點不載入插件或站點自定義設置。"
-    only_official: "禁用非官方插件"
-    no_plugins: "禁用所以插件"
+    description: "安全模式讓你的網站不載入套件或站點自定義設定。"
+    only_official: "停用非官方套件"
+    no_plugins: "停用所有套件"
     enter: "進入安全模式"
   wizard:
     title: "Discourse 安裝"

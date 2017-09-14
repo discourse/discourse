@@ -45,7 +45,7 @@ ar:
       long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "منذ %{date}"
       tiny:
-        half_a_minute: "< 1دق"
+        half_a_minute: "< 1 دقيقة"
         less_than_x_seconds:
           zero: "< %{count}ث"
           one: "< %{count}ث"
@@ -178,12 +178,12 @@ ar:
       topic: 'شارك رابط هذا الموضوع'
       post: 'المشاركة رقم %{postNumber}'
       close: 'أغلق'
-      twitter: 'شارك هذا الرابط في تويتر'
-      facebook: 'شارك هذا الرابط في فيس بوك'
-      google+: 'شارك هذا الرابط في جوجل+'
-      email: 'شارك هذا الرابط في بريد إلكتروني'
+      twitter: 'شارك هذا الرابط علي تويتر'
+      facebook: 'شارك هذا الرابط علي فيس بوك'
+      google+: 'شارك هذا الرابط علي جوجل+'
+      email: 'شارك هذا الرابط علي بريد إلكتروني'
     action_codes:
-      public_topic: "جعل هذا الموضوع عامًّا %{when}"
+      public_topic: "أجعل هذا الموضوع عامًّا %{when}"
       private_topic: "جعل هذا الموضوع خاصًّا %{when}"
       split_topic: "قسَم هذا الموضوع %{when}"
       invited_user: "دعى %{who} %{when}"
@@ -211,11 +211,11 @@ ar:
       banner:
         enabled: 'جعل هذا إعلانًا %{when}. سيظهر أعلى كلّ صفحة حتّى يزيله المستخدم منها.'
         disabled: 'أزال هذا الإعلان %{when}. لن يظهر بعد الآن في أعلى كلّ صفحة.'
-    topic_admin_menu: "عمليات المدير"
+    topic_admin_menu: "صلاحيات المدير علي الموضوعات"
     wizard_required: "مرحبًا في دسكورس الجديد! فلنبدأ مستخدمين <a href='%{url}' data-auto-route='true'>مرشد الإعداد</a> ✨"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
-    bootstrap_mode_enabled: "الموقع اﻷن مفعل بالطريقة التمهيدية لكى تتمكن من اطلاق موقعك الجديد بسهولة. سيسجل كل الأعضاء الجدد بمستوى ثقة 1 وسيكون اختيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء تفعيل الطريقة التمهيدية تلقائيا عندما يتخطى عدد اﻷعضاء %{min_users} عضو."
-    bootstrap_mode_disabled: "سيتم الغاء تفعيل الطريقة التمهيدية خلال ال 24 ساعة القادمة"
+    bootstrap_mode_enabled: "لكى تتمكن من اطلاق موقعك الجديد بسهولة, الموقع اﻷن علي الوضع التمهيدي. كل المستخدمين الجدد سيحصلون علي مستوي الثقة 1 وسيكون خيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء تفعيل الطريقة التمهيدية تلقائيا عندما يتخطى عدد اﻷعضاء %{min_users} عضو."
+    bootstrap_mode_disabled: "سيتم الغاء الوضع التمهيدي خلال ال 24 ساعة القادمة."
     themes:
       default_description: "افتراضى"
     s3:
@@ -287,7 +287,7 @@ ar:
       many: "{{count}} محرفا"
       other: "{{count}} محرف"
     suggested_topics:
-      title: "مواضيع مقترحة"
+      title: "الموضوعات المقترحة"
       pm_title: "رسائل مقترحة "
     about:
       simple_title: "عنّا"
@@ -300,7 +300,7 @@ ar:
         last_7_days: "آخر 7 أيام "
         last_30_days: "آخر 30 يوما"
       like_count: "الإعجابات"
-      topic_count: "المواضيع"
+      topic_count: "الموضوعات"
       post_count: "المشاركات"
       user_count: "المستخدمون"
       active_user_count: "المستخدمون النشطون"
@@ -361,7 +361,7 @@ ar:
       close: "تجاهل هذا الإعلان."
       edit: "حرر هذا الإعلان >>"
     choose_topic:
-      none_found: "لا مواضيع."
+      none_found: "لم نجد اي موضوعات."
       title:
         search: "ابحث عن موضوع باسمه أو عنوانه أو معرّفه:"
         placeholder: "اكتب عنوان الموضوع هنا"
@@ -457,8 +457,8 @@ ar:
         add_members: "إضافة أعضاء"
         delete_member_confirm: "أأزيل ’%{username}‘ من مجموعة ’%{group}‘؟"
       name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
-      public_admission: "اسمح للمستخدمين بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
-      public_exit: "اسمح للمستخدمين بمغادرة المجموعة بحرية"
+      public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
+      public_exit: "السماح للأعضاء بمغادرة المجموعة بحرية"
       empty:
         posts: "لا مشاركات من أعضاء هذه المجموعة."
         members: "لا أعضاء في هذه المجموعة."
@@ -470,15 +470,15 @@ ar:
       join: "انضمّ للمجموعة"
       leave: "غادر المجموعة"
       request: "اطلب الانضمام للمجموعة"
-      message: "الرسائل"
+      message: "رسالة"
       automatic_group: مجموعة تلقائية
       closed_group: مجموعة مغلقة
       is_group_user: "أنت عضو في هذه المجموعة"
-      allow_membership_requests: "السماح للأعضاء بأرسالة طلب انضمام لمدراء المجموعة"
+      allow_membership_requests: "السماح للأعضاء بأرسال طلب انضمام لمدراء المجموعة"
       membership_request_template: "قالب مخصص ليظهر للمستخدمين عندما يرسلون طلب عضوية"
       membership_request:
         submit: "ارسل الطلب"
-        title: "اطلب الانضمام للمجموعة @ %{group_name}"
+        title: "اطلب الانضمام للمجموعة @%{group_name}"
         reason: "دع مدراء المجموعة يعرفون لماذا انت تنتمي لهذه المجموعة"
       membership: "العضوية"
       name: "الاسم"
@@ -510,6 +510,8 @@ ar:
         staff: "مدراء المجموعة و الطاقم"
         owners: "مدراء المجموعة و المشرفون"
       alias_levels:
+        mentionable: "من يستطيع @الاشارة الى هذه المجموعة؟"
+        messageable: "من يستطيع ارسال رسالة الى هذه المجموعة؟"
         nobody: "لا أحد"
         only_admins: "المدراء فقط"
         mods_and_admins: "المدراء والمشرفون فقط"
@@ -535,14 +537,14 @@ ar:
           title: "مكتوم"
           description: "لن نرسل لك أي إشعار لأي من المواضيع الجديدة في هذه المجموعة."
       flair_url: "الصورة الرمزية المميزة"
-      flair_url_placeholder: "(إختياري) رابط الصورة أو صنف Font Awesome"
-      flair_bg_color: "خلفية الصورة الرمزية المميزة"
+      flair_url_placeholder: "(إختياري) رابط الصورة أو كلاس Font Awesome"
+      flair_bg_color: "لون خلفية الصورة الرمزية"
       flair_bg_color_placeholder: "(إختياري) اللون برقم الهكس"
       flair_color: "لون الصورة الرمزية"
       flair_color_placeholder: "(إختياري) اللون برقم الهكس"
       flair_preview_icon: "معاينة الأيقونة"
       flair_preview_image: "معاينة الصورة"
-      flair_note: "ملاحظة: الصورة المميزة تظهر فقط لمجموعة العضو الرئيسية."
+      flair_note: "ملاحظة: الصورة المميزة سوف تظهر فقط لمجموعة العضو الرئيسية."
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المستلمة"
@@ -591,18 +593,18 @@ ar:
         many: "%{count} موضوعًا جديدًا في ال%{unit} الماضي."
         other: "%{count} موضوع جديد في ال%{unit} الماضي."
     ip_lookup:
-      title: 'جدول العناوين '
+      title: جدول عناوين الIP
       hostname: اسم المضيف
-      location: الموقع
-      location_not_found: (غيرمعرف)
+      location: الموقع الجغرافي
+      location_not_found: (غير معرف)
       organisation: المنظمات
-      phone: هاتف
+      phone: الهاتف
       other_accounts: "الحسابات الأخرى بعنوان IP هذا:"
-      delete_other_accounts: "حذف %{count}"
+      delete_other_accounts: "أحذف %{count}"
       username: "إسم المستخدم"
       trust_level: "TL"
       read_time: "وقت القراءة"
-      topics_entered: " مواضيع شوهدت"
+      topics_entered: " مواضيع فُتحت"
       post_count: "# مشاركات"
       confirm_delete_other_accounts: "أمتأكد من حذف هذه الحسابات؟"
       powered_by: "مقدم من قبل <a href='https://ipinfo.io'>ipinfo.io</a>"
@@ -644,12 +646,12 @@ ar:
       first_notification: "إشعارك الأول! قم بالضغط عليه للبدء."
       disable_jump_reply: "لا تنتقل إلى مشاركتي بعدما أردّ"
       dynamic_favicon: "أظهر عدد المواضيع الجديدة/المحدّثة في أيقونة المتصفّح"
-      theme_default_on_all_devices: "اجعل القالب افتراضياً على جميع اجهزتي"
+      theme_default_on_all_devices: "اجعل هذة الواجهة افتراضية على جميع اجهزتي"
       external_links_in_new_tab: "فتح الروابط الخارجية في ألسنة جديدة"
       enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
-      change: "تغيير"
-      moderator: "{{user}} مشرف"
-      admin: "{{user}} مدير"
+      change: "غيّر"
+      moderator: "{{user}} هو مشرف"
+      admin: "{{user}} هو مدير"
       moderator_tooltip: "هذا المستخدم مشرف"
       admin_tooltip: "هذا المستخدم مدير"
       blocked_tooltip: "هذا المستخدم محظور"
@@ -673,7 +675,7 @@ ar:
       tracked_tags: "المتابعة"
       tracked_tags_instructions: "ستتابع آليا كل مواضيع هذه الوسوم. سيظهر عدّاد للمشاركات الجديدة بجانب الموضوع."
       muted_tags: "المكتومة"
-      muted_tags_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة في هذه التصنيفات، ولن تظهر مواضيع هذه التصنيفات في قائمة المواضيع المنشورة مؤخراً."
+      muted_tags_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة التي تستخدم هذة الوسوم، ولن تظهر مواضيع هذه الوسوم في قائمة المواضيع المنشورة مؤخراً."
       watched_categories: "المراقبة"
       watched_categories_instructions: "ستراقب آليا كل مواضيع هذه الفئات. ستصلك إشعارات للمشاركات والمواضيع الجديدة، وسيظهر أيضا عدّاد للمشاركات الجديدة بجانب الموضوع."
       tracked_categories: "المتابعة"
@@ -683,22 +685,22 @@ ar:
       watched_first_post_tags: "المراقبة فيها أول مشاركة"
       watched_first_post_tags_instructions: "سيصلك إشعارا لأول مشاركة لكل موضوع موسوم بهذه الفئات."
       muted_categories: "المكتومة"
-      muted_categories_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة في هذه التصنيفات، ولن تظهر مواضيع هذه التصنيفات في قائمة المواضيع المنشورة مؤخراً."
-      no_category_access: "كـ مشرف لك وصول محدود للفئة, الحفظ معطل"
-      delete_account: "حذف الحساب"
+      muted_categories_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة في هذه الفئات، ولن تظهر مواضيع هذه الفئات في قائمة المواضيع المنشورة مؤخراً."
+      no_category_access: "كمشرف لديك صلاحيات محدودة علي الفئات, الحفظ معطل"
+      delete_account: "أحذف الحسابي"
       delete_account_confirm: "أمتأكّد من حذف حسابك للأبد؟ هذا إجراء لا عودة فيه!"
       deleted_yourself: "حُذف حسابك بنجاح."
       delete_yourself_not_allowed: "لا يمكنك حذف حسابك الآن. راسل أحد المدراء لحذف حسابك."
       unread_message_count: "الرسائل"
-      admin_delete: "حذف"
+      admin_delete: "أحذف"
       users: "الأعضاء"
       muted_users: "المكتومون"
       muted_users_instructions: "تجاهل الإشعارات من هؤلاء المستخدمين."
       muted_topics_link: "أظهر المواضيع المكتومة"
       watched_topics_link: "أظهر المواضيع المراقبة"
-      tracked_topics_link: "أظهر المواضيع المراقبة"
+      tracked_topics_link: "أظهر الموضوعات المُتابعة"
       automatically_unpin_topics: "ألغِ تثبيت المواضيع آليا عندما أصل إلى أسفلها."
-      apps: "برامج"
+      apps: "تطبيقات"
       revoke_access: "توقيف صلاحيات الوصول"
       undo_revoke_access: "رفع توقيف صلاحيات الوصول"
       api_approved: "موافق عليه:"
@@ -706,8 +708,8 @@ ar:
       staff_counters:
         flags_given: "مؤشرات مساعدة"
         flagged_posts: "المشاركات المبلغ عنها "
-        deleted_posts: "حذف جميع المشاركات"
-        suspensions: "موقوف"
+        deleted_posts: "المشاركات المحذوفة"
+        suspensions: "موقوفون"
         warnings_received: "تحذيرات"
       messages:
         all: "الكل"
@@ -715,26 +717,26 @@ ar:
         sent: "الصّادر"
         archive: "الأرشيف"
         groups: "مجموعاتي"
-        bulk_select: "إختيار رسائل"
+        bulk_select: "حدد الرسائل"
         move_to_inbox: "الذهاب إلى الرسائل الواردة"
         move_to_archive: "الارشيف"
         failed_to_move: "فشل في نقل الرسائل المحددة (ربما يكون اتصالك ضعيفاً)"
-        select_all: "إختيار الكل"
+        select_all: "تحديد الكل"
       preferences_nav:
         account: "الحساب"
-        profile: "اللاحة"
-        emails: "البُرد الإلكترونية"
+        profile: "الملف الشخصي"
+        emails: "البريد الإلكتروني"
         notifications: "التنبيهات"
         categories: "الفئات"
         tags: "الوسوم"
-        interface: "الواجهة"
+        interface: "واجهة المستخدم"
         apps: "التطبيقات"
       change_password:
-        success: "(تم ارسال الرسالة)"
-        in_progress: "(يتم ارسال رسالة)"
+        success: "(تم إرسال الرسالة)"
+        in_progress: "(يتم إرسال الرسالة)"
         error: "(خطأ)"
         action: "أرسل بريدًا لتصفير كلمة السّرّ"
-        set_password: " إعادة تعين الرمز السري"
+        set_password: " إعادة تعين كلمة المرور"
         choose_new: "اختر كلمة سرّ جديدة"
         choose: "اختر كلمة سرّ"
       change_about:
@@ -759,23 +761,23 @@ ar:
         letter_based: "صورة لاحة يصنعها النّظام"
         uploaded_avatar: "تخصيص صورة"
         uploaded_avatar_empty: "اضافة صورة مخصصة"
-        upload_title: "رفع صورتك "
-        upload_picture: "رفع الصورة"
+        upload_title: "ارفع صورتك "
+        upload_picture: "ارفع الصورة"
         image_is_not_a_square: "تحذير: لقد قصصنا الصورة، إذ أن عرضها وارتفاعها لا يتطابقان."
         cache_notice: "لقد غيّرت صورة ملفّك بنجاح، ولكنّها قد تأخذ وقتًا حتّى تظهر بسبب خبيئة المتصفّح."
       change_profile_background:
         title: "خلفيّة اللاحة"
-        instructions: "سيتم وضع خلفية الحساب في المنتصف بعرض 850px"
+        instructions: "سيتم وضع خلفية الحساب في المنتصف بعرض افتراضي يصل الى 850px"
       change_card_background:
-        title: "خلفية المستخدم"
-        instructions: "سيتم وضع الخلفية في المنتصف بعرض 590px"
+        title: "خلفية كارت المستخدم"
+        instructions: "سيتم وضع صورة الخلفية في المنتصف بعرض 590px"
       email:
         title: "البريد الإلكتروني"
         instructions: "لا يظهر للعموم"
         ok: "سنرسل لك بريدا للتأكيد"
         invalid: "من فضلك أدخل بريدا إلكترونيا صالحا"
         authenticated: "تم توثيق بريدك الإلكتروني بواسطة {{provider}}"
-        frequency_immediately: "سنرسل لك تذكير في حالة انك لم تقراً المشاركات التي ارسلناها لك سابقاً."
+        frequency_immediately: "سيتم ارسال رسالة الكترونية فورا في حال أنك لم تقرأ الرسائل السابقة التي كنا نرسلها لك."
         frequency:
           zero: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
           one: "سنراسلك على بريدك فقط في حال لم تزر الموقع منذ {{count}} دقيقة."
@@ -793,7 +795,7 @@ ar:
         title: "اسم المستخدم"
         instructions: "فريد دون مسافات وقصير"
         short_instructions: "يمكن للغير الإشارة إليك ب‍@{{username}}"
-        available: "اسم المستخدم متاح."
+        available: "اسم المستخدم متاح"
         not_available: "غير متاح. جرّب {{suggestion}} ؟"
         not_available_no_suggestion: "غير متاح"
         too_short: "اسم المستخدم قصير جدًّا"
@@ -808,7 +810,7 @@ ar:
       password_confirmation:
         title: "أعد كتابة كلمة السّرّ"
       last_posted: "آخر مشاركة"
-      last_emailed: "أخر مراسلة"
+      last_emailed: "اخر ما تم ارساله"
       last_seen: "كان هنا"
       created: "انضم"
       log_out: "اخرج"
@@ -836,8 +838,8 @@ ar:
         every_three_days: "كل ثلاثة أيام"
         weekly: "أسبوعيا"
         every_two_weeks: "كل أسبوعين"
-      include_tl0_in_digests: "في إيميلات تلخيص المحتوى إرفق مشاركات الأعضاء الجدد."
-      email_in_reply_to: " بالإشعار الألكتروني إرفق مقتطفات من الردود."
+      include_tl0_in_digests: "ارفق محتوى الاعضاء الجدد في رسائل الملخص"
+      email_in_reply_to: "ارفق مقتطف من الرد على الموضوع في رسائل البريد الالكتروني"
       email_direct: "أرسل إليّ بريدًا عندما يقتبس أحد كلامي، أو يرّد على إحدى مشاركاتي، أو يذكر @اسمي أو يدعوني إلى أحد المواضيع"
       email_private_messages: "أرسل إليّ بريدًا عندما يبعث أحدهم رسالة إليّ"
       email_always: "أرسل إليّ الإخطارات عبر البريد حتّى ولو كنت متّصلًا"
@@ -864,7 +866,7 @@ ar:
         after_10_minutes: "بعد 10 دقائق"
       notification_level_when_replying: "إن شاركت في موضوع ما، اجعله"
       invited:
-        search: "نوع البحث عن الدعوات"
+        search: "اكتب للبحث عن الدعوات..."
         title: "الدّعوات"
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
@@ -876,10 +878,10 @@ ar:
           few: "عرض الدعوات الأولية."
           many: "عرض الدعوات {{count}} الأولى."
           other: "عرض الدعوات  {{count}} الأولى."
-        redeemed: "دعوات مستخدمة"
+        redeemed: "دعوات محررة"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "({{count}}) محررة"
-        redeemed_at: "مستخدمة"
+        redeemed_at: "محررة"
         pending: "دعوات قيد الإنتضار"
         pending_tab: "قيد الانتظار"
         pending_tab_with_count: "معلق ({{count}})"
@@ -905,7 +907,7 @@ ar:
         valid_for: "رابط الدعوة صالح للبريد الإلكترونيّ هذا فقط: %{email}"
         bulk_invite:
           none: "لم تدعُ أحدًا إلى هنا بعد. أرسل الدّعوات إمّا فرديّة، أو إلى مجموعة أشخاص عبر <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>رفع ملفّ CSV</a>."
-          text: "الدعوة من ملف"
+          text: "دعوة جماعية بواسطة ملف"
           success: "رُفع الملف بنجاح. سيصلك إشعارا عبر رسالة عند اكتمال العملية."
           error: "نأسف، يجب أن يكون الملفّ بنسق CSV."
       password:
@@ -997,16 +999,16 @@ ar:
       filters:
         all: "الكل"
       stream:
-        posted_by: "ارسلت بواسطة"
+        posted_by: "نُشرت بواسطة"
         sent_by: " أرسلت بواسطة"
-        private_message: "رسالة خاصة"
-        the_topic: "موضوع جديد"
+        private_message: "رسالة"
+        the_topic: "الموضوع"
     loading: "يتم التحميل..."
     errors:
-      prev_page: "محاولة تحميل"
+      prev_page: "اثناء محاولة التحميل"
       reasons:
         network: "خطأ في الشبكة"
-        server: "خطأ في السيرفر"
+        server: "خطأ في الخادم"
         forbidden: "غير مصرح"
         unknown: "خطأ"
         not_found: "الصفحة غير متوفرة"
@@ -1020,7 +1022,7 @@ ar:
       buttons:
         back: "الرجوع"
         again: "أعد المحاولة"
-        fixed: "تحميل"
+        fixed: "حمل الصفحة"
     close: "اغلاق"
     assets_changed_confirm: "حُدّث الموقع لتوّه. أتريد إنعاش الصّفحة ورؤية أحدث إصدارة؟"
     logout: "لقد خرجت."
@@ -1029,7 +1031,9 @@ ar:
       enabled: "هذا الموقع في وضع القراءة فقط. نأمل أن تتابع تصفّحه، ولكنّ الرّدّ، والإعجاب وغيرها من إجراءات معطّلة حاليًّا."
       login_disabled: "الولوج معطّل في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "الخروج معطّل في حال كان الموقع في وضع القراءة فقط."
-    too_few_topics_and_posts_notice: " يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. "
+    too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>نبدأ هذه المناقشة!</a> يوجد حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> مواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزائرون الجدد بحاجة لبعض المحادثات للقراءة والرد عليها."
+    too_few_topics_notice: "هيا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>لنبدء هذه المناقشة</a> هناك حالياً<strong>%{currentTopics} \\ %{requiredTopics}</strong> مواضيع. الزوار الجدد يحتاجون لبعض المحادثات لقرأتها و الرد عليها."
+    too_few_posts_notice: "هيا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>لنبدء هذه المناقشة</a> هناك حالياً <strong>%{currentPosts} \\ %{requiredPosts}</strong> مساهمات. الزوار الجدد يحتاجون بعض المحادثات لقرأتها و الرد عليها."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> وصل الحد الأعلى لإعدادت الموقع %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> يتجاوز الحد الأعلى لإعدادت الموقع %{siteSettingRate}."
@@ -1056,7 +1060,7 @@ ar:
       many: الردود
       other: الردود
     signup_cta:
-      sign_up: "إشترك"
+      sign_up: "التسجيل"
       hide_session: "ذكرني غدا"
       hide_forever: "لا شكرا"
       hidden_for_session: "لا بأس، سأسلك غدًا. يمكنك دومًا استخدام ’لِج‘ لإنشاء حساب."
@@ -1074,7 +1078,7 @@ ar:
       enable: "أخفِ المشاركات المحذوفة"
       disable: "أظهر المشاركات المحذوفة"
     private_message_info:
-      title: " رسالة خاصة"
+      title: "رسالة"
       invite: " إدعو اخرين"
       remove_allowed_user: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
       remove_allowed_group: "أمتأكّد من إزالة {{name}} من هذه الرّسالة؟"
@@ -1083,7 +1087,7 @@ ar:
     last_seen: 'كان هنا'
     created: 'مكتوبة'
     created_lowercase: 'الإنشاء'
-    trust_level: 'مستوى التقة'
+    trust_level: 'مستوى الثقة'
     search_hint: 'اسم المستخدم، أو بريد إلكترونيّ أو عنوان IP'
     create_account:
       disclaimer: "التّسجيل يعني موافقتك على <a href='{{privacy_link}}'>سياسة الخصوصيّة</a> و<a href='{{tos_link}}'>بنود الخدمة</a>."
@@ -1093,7 +1097,7 @@ ar:
       title: " إعادة تعيين كلمة المرور"
       action: "نسيتُ كلمة السّرّ"
       invite: "أدخل اسم المستخدم أو البريد الإلكترونيّ وسنرسل بريدًا لتصفير كلمة السّرّ."
-      reset: " إعادة تعين الرمز السري"
+      reset: " إعادة تعين كلمة المرور"
       complete_username: "إن تطابق حساب ما مع اسم المستخدم <b>%{username}</b>، فيفترض أن تستلم قريبًا بريدًا به إرشادات تصفير كلمة السّرّ."
       complete_email: "إن تطابق حساب ما مع <b>%{email}</b>، فيفترض أن تستلم قريبًا بريدًا به إرشادات تصفير كلمة السّرّ."
       complete_username_found: "عثرنا على حساب يطابق اسم المستخدم <b>%{username}</b>. يفترض أن تستلم قريبًا بريدًا به إرشادات تصفير كلمة السّرّ."
@@ -1158,11 +1162,11 @@ ar:
       welcome_to: "مرحباً بك في %{site_name}!"
       invited_by: "لقد دعاك:"
       social_login_available: "يمكنك أيضًا الولوج عبر أيّ شبكة اجتماعيّة مستخدمًا هذا البريد."
-      your_email: "بريدك الإلكتروني  <b>%{email}</b>."
+      your_email: "البريد الالكتروني الخاص بحسابك هو  <b>%{email}</b>."
       accept_invite: "قُبول الدعوة "
       success: "أُنشئ حسابك وقد ولجت الآن."
       name_label: "الاسم"
-      password_label: "ضع كلمة المرور"
+      password_label: "حدد كلمة المرور"
       optional_description: "(إختياري)"
     password_reset:
       continue: "تابع نحو %{site_name}"
@@ -1183,6 +1187,7 @@ ar:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      default_header_text: اختر...
       no_content: لا يوجد نتائج مطابقة
       filter_placeholder: بحث...
     emoji_picker:
@@ -1202,6 +1207,7 @@ ar:
       options: "خيارات"
       whisper: "همس"
       unlist: "غير مدرج"
+      blockquote_text: "اقتباس الفقرة"
       add_warning: "هذا تحذير رسمي."
       toggle_whisper: "تبديل الهمس"
       toggle_unlisted: "تبديل الغير مدرج"
@@ -1351,6 +1357,9 @@ ar:
       no_more_results: "لا نتائج أخرى."
       searching: "يبحث..."
       post_format: "#{{post_number}} كتبها {{username}}"
+      results_page: "نتائج البحث"
+      search_google_button: "كوكل"
+      search_google_title: "ابحث في هذا الموقع"
       context:
         user: "ابحث عن مواضيع @{{username}}"
         category: "ابحث في فئة #{{category}}"
@@ -3102,6 +3111,12 @@ ar:
       watched_words:
         title: "مراقب الكلمات"
         search: "بحث"
+        clear_filter: "امسح"
+        show_words: "اظهر الكلمات"
+        actions:
+          block: 'احجب'
+          require_approval: 'يحتاج لموافقة'
+          flag: 'علم'
         form:
           label: 'كلمة جديدة:'
           add: 'اضف'
@@ -3366,38 +3381,40 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
-        title: 'إعدادات'
+        show_overriden: 'اظهر فقط الاعدادات المعدلة'
+        title: 'الإعدادات'
         reset: 'إعادة تعيين'
         none: 'لا شيء'
         no_results: "لا نتائج."
         clear_filter: "مسح"
-        add_url: "أضافة رابط"
-        add_host: "أضافة نطاق"
+        add_url: "اضافة رابط"
+        add_host: "اضافة نطاق"
         categories:
-          all_results: 'كل'
-          required: 'مطلوب'
-          basic: 'الإعداد الأساسي'
-          users: 'مستخدمون'
-          posting: 'مشاركة'
+          all_results: 'الكل'
+          required: 'المعلومات الأساسية'
+          basic: 'الإعدادات العامة'
+          users: 'الأعضاء'
+          posting: 'المنشورات'
           email: 'البريد الإلكتروني'
-          files: 'ملفات'
-          trust: 'المستويات الموثوقة'
-          security: 'أمن'
-          onebox: "رابط تفصيلي"
+          files: 'الملفات'
+          trust: 'مستويات الثقة'
+          security: 'الأمن'
+          onebox: "ادوبي فلاش"
           seo: 'SEO'
-          spam: 'سخام'
-          rate_limits: 'حدود المعدل'
-          developer: 'المطور'
+          spam: 'سبام'
+          rate_limits: 'الحدود'
+          developer: 'المطورون'
           embedding: "تضمين"
-          legal: "قانوني"
+          legal: "الأمور القانونية"
+          user_api: 'API المستخدمين'
           uncategorized: 'أخرى'
-          backups: "النسخ الإحتياطية"
-          login: "الولوج"
+          backups: "النُسخ الإحتياطية"
+          login: "تسجيل الدخول"
           plugins: "الإضافات "
           user_preferences: "تفضيلات العضو"
           tags: "الوسوم"
           search: "البحث"
-          groups: "مجموعات"
+          groups: "المجموعات"
       badges:
         title: الشارات
         new_badge: شعار جديد
@@ -3480,16 +3497,16 @@ ar:
       embedding:
         get_started: "إذا أردت تضمين Discourse في موقع اخر، أبدأ بإضافة مضيف."
         confirm_delete: "أمتأكّد من حذف هذا المضيف؟"
-        sample: "استخدم كود HTML التالي لموقعك لإنشاء وتضمين موضوع discourse. استبدل <b>REPLACE_ME</b> مع canonical URL لصفحة قمت بتضمينها فيه."
+        sample: "استخدم كود HTML التالي لموقعك لإنشاء وتضمين موضوع discourse. استبدل <b>REPLACE_ME</b> مع الرابط الاساسي لصفحة قمت بتضمينها فيه."
         title: "تضمين"
-        host: "أسمع بالمضيفين"
+        host: "المُظيفين المسموح بهم"
         edit: "تعديل"
         category: "مشاركة لفئة"
         add_host: "أضف مضيف"
         settings: "تضمين إعدادات"
         feed_settings: "إعدادات التغذية "
         feed_description: " توفير مغذي RSS/ATOM لموقعك سيطور قدرة Discourse على استيراد المحتوى الخاص بك."
-        crawling_settings: "إعدادات المتقدم ببطء."
+        crawling_settings: "اعدادات الزاحف"
         crawling_description: "عندما ينشأ Discourse مواضيع لمشاركتك، إذا لم يتوفر مغذي RSS/ATOM سيحاول تحليل محتواك من HTML الخاص بك. أحيانا يمكن أن يكون تحديا استخراج محتواك، لذا نمنحك القدرة لتحديد قواعد CSS لجعل الاستخراج أسهل."
         embed_by_username: "اسم العضو للموضوع المنشأ"
         embed_post_limit: "أقصى عدد مشاركات مضمنة"
@@ -3499,7 +3516,7 @@ ar:
         embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
         embed_classname_whitelist: "اسماء  اصناف المظاهر الجمالية المسموح بها"
         feed_polling_enabled: "استورد المشاركات عبر RSS/ATOM"
-        feed_polling_url: "URL مغذي RSS/ATOM يتقدم ببطء."
+        feed_polling_url: "رابط مغذي RSS/ATOM للزحف"
         save: "أحفظ الإعدادات المضمنة"
       permalink:
         title: "الرابط الثابت"

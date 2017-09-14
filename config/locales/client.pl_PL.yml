@@ -1109,6 +1109,7 @@ pl_PL:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      no_content: Nie znaleziono dopasowań
       filter_placeholder: Wyszukiwanie...
     emoji_picker:
       filter_placeholder: Szukaj emoji
@@ -1308,6 +1309,10 @@ pl_PL:
       post_format: "#{{post_number}} za {{username}}"
       results_page: "Wyniki wyszukiwania"
       more_results: "Istnieje więcej wyników wyszukiwania. Doprecyzuj kryteria wyszukiwania."
+      cant_find: "Nie możesz znaleźć tego, czego szukasz?"
+      start_new_topic: "Może utwórz nowy temat?"
+      or_search_google: "Albo spróbuj wyszukać w Google:"
+      search_google: "Spróbuj wyszukać w Google:"
       context:
         user: "Szukaj wpisów @{{username}}"
         category: "Szukaj w kategorii #{{category}}"
