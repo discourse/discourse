@@ -74,15 +74,15 @@ class Post < ActiveRecord::Base
                                               user_id: user.id)
   }
 
-  scope :by_newest, -> { order('created_at desc, id desc') }
+  scope :by_newest, -> { order('created_at DESC, id DESC') }
   scope :by_post_number, -> { order('post_number ASC') }
   scope :with_user, -> { includes(:user) }
-  scope :created_since, lambda { |time_ago| where('posts.created_at > ?', time_ago) }
+  scope :created_since, -> (time_ago) { where('posts.created_at > ?', time_ago) }
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
-  scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user)) }
+  scope :secured, -> (guardian) { where('posts.post_type IN (?)', Topic.visible_post_types(guardian&.user)) }
   scope :for_mailing_list, ->(user, since) {
     q = created_since(since)
       .joins(:topic)

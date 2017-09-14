@@ -304,11 +304,11 @@ class TopicView
   end
 
   def links
-    @links ||= TopicLink.topic_map(guardian, @topic.id)
+    @links ||= TopicLink.topic_map(@guardian, @topic.id)
   end
 
   def link_counts
-    @link_counts ||= TopicLink.counts_for(guardian, @topic, posts)
+    @link_counts ||= TopicLink.counts_for(@guardian, @topic, posts)
   end
 
   # Are we the initial page load? If so, we can return extra information like
@@ -454,7 +454,7 @@ class TopicView
     if @topic.present? && @topic.private_message? && @user.blank?
       raise Discourse::NotLoggedIn.new
     end
-    raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless guardian.can_see?(@topic)
+    raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
   end
 
   def get_minmax_ids(post_number)

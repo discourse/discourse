@@ -88,6 +88,33 @@ describe UsersController do
         end
       end
 
+      describe "include_post_count_for" do
+
+        let(:admin) { Fabricate(:admin) }
+        let(:topic) { Fabricate(:topic) }
+
+        before do
+          Fabricate(:post, user: user, topic: topic)
+          Fabricate(:post, user: admin, topic: topic)
+          Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper])
+        end
+
+        it "includes only visible posts" do
+          get :show, username: admin.username, include_post_count_for: topic.id, format: :json
+          topic_post_count = JSON.parse(response.body).dig("user", "topic_post_count")
+          expect(topic_post_count[topic.id.to_s]).to eq(1)
+        end
+
+        it "includes all post types for staff members" do
+          log_in_user(admin)
+
+          get :show, username: admin.username, include_post_count_for: topic.id, format: :json
+          topic_post_count = JSON.parse(response.body).dig("user", "topic_post_count")
+          expect(topic_post_count[topic.id.to_s]).to eq(2)
+        end
+
+      end
+
     end
 
   end
