@@ -154,11 +154,14 @@ class PostMover
   def create_moderator_post_in_original_topic
     move_type_str = PostMover.move_types[@move_type].to_s
 
-    original_topic.add_moderator_post(
-      user,
+    message = I18n.with_locale(SiteSetting.default_locale) do
       I18n.t("move_posts.#{move_type_str}_moderator_post",
              count: post_ids.count,
-             topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})"),
+             topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})")
+    end
+
+    original_topic.add_moderator_post(
+      user, message,
       post_type: Post.types[:small_action],
       action_code: "split_topic",
       post_number: @first_post_number_moved
