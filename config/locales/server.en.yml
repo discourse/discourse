@@ -519,7 +519,7 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
-      large: "Click to view the image"
+      large: "This image is too large to display here; click to view"
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
