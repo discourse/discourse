@@ -121,12 +121,6 @@
         bottom: 10px;
         left: 10px;
 
-        .dropdown-menu {
-          position: absolute;
-          left: 0;
-          bottom: 30px;
-        }
-
         button, .btn-group {
           float: none;
           display: inline-block;
@@ -177,18 +171,6 @@
 
   }
 
-  &.timeline-fullscreen .topic-timeline .timeline-footer-controls ul.dropdown-menu {
-    width: auto;
-    min-width: 250px;
-    right: auto;
-    .desc {
-      display: none;
-    }
-    .title {
-      padding-left: 0;
-    }
-  }
-
   .topic-timeline {
     margin-left: 3em;
     width: 150px;
@@ -212,11 +194,8 @@
         margin-right: 0.5em;
       }
 
-      ul.dropdown-menu {
-        right: 0.5em;
-        top: auto;
-        bottom: 25px;
-        left: auto;
+      button:last-child {
+        margin-right: 0;
       }
     }
 

@@ -54,7 +54,13 @@ export default createWidget('link', {
     }
 
     if (!attrs.hideLabel) {
-      result.push(this.label(attrs));
+      let label = this.label(attrs);
+
+      if (attrs.omitSpan) {
+        result.push(label);
+      } else {
+        result.push(h('span.d-label', label));
+      }
     }
 
     const currentUser = this.currentUser;

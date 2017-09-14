@@ -584,7 +584,9 @@ describe User do
 
     it 'whitelist should reject some emails based on the email_domains_whitelist site setting' do
       SiteSetting.email_domains_whitelist = 'vaynermedia.com'
-      expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
+      user = Fabricate.build(:user, email: 'notgood@mailinator.com')
+      expect(user).not_to be_valid
+      expect(user.errors.messages[:primary_email]).to include(I18n.t('user.email.not_allowed'))
       expect(Fabricate.build(:user, email: 'sbauch@vaynermedia.com')).to be_valid
     end
 

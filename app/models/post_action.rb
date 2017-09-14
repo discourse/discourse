@@ -572,7 +572,8 @@ SQL
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         flag_reason: I18n.t("flag_reasons.#{post_action_type}"),
       }
-      SystemMessage.create(post.user, :post_hidden, options)
+
+      Jobs.enqueue_in(5.seconds, :send_system_message, user_id: post.user.id, message_type: :post_hidden, message_options: options)
     end
   end
 

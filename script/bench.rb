@@ -154,9 +154,9 @@ def bench(path, name)
   puts "Running apache bench warmup"
   add = ""
   add = "-c 3 " if @unicorn
-  `ab #{add} -n 10 "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
   puts "Benchmarking #{name} @ #{path}"
-  `ab -n #{@iterations} -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -188,16 +188,22 @@ begin
   append = "?api_key=#{api_key}&api_username=admin1"
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o /dev/null"
+  run "wget http://127.0.0.1:#{@port}/ -o /dev/null -O /dev/null"
 
   tests = [
     ["categories", "/categories"],
     ["home", "/"],
-    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/69"]
+    ["topic", "/t/oh-how-i-wish-i-could-shut-up-like-a-tunnel-for-so/179"]
     # ["user", "/u/admin1/activity"],
   ]
 
-  tests = tests.map { |k, url| ["#{k}_admin", "#{url}#{append}"] } + tests
+  tests.concat(tests.map { |k, url| ["#{k}_admin", "#{url}#{append}"] })
+
+  tests.each do |_, path|
+    if `curl -s -I "http://127.0.0.1:#{@port}#{path}"` !~ /200 OK/
+      raise "#{path} returned non 200 response code"
+    end
+  end
 
   # NOTE: we run the most expensive page first in the bench
 

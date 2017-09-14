@@ -2,21 +2,21 @@ import PostCooked from 'discourse/widgets/post-cooked';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse-common/lib/icon-library';
 import DiscourseURL from 'discourse/lib/url';
+import hbs from 'discourse/widgets/hbs-compiler';
 
 createWidget('post-link-arrow', {
-  html(attrs) {
-   if (attrs.above) {
-     return h('a.post-info.arrow', {
-       attributes: { title: I18n.t('topic.jump_reply_up') }
-     }, iconNode('arrow-up'));
-   } else {
-     return h('a.post-info.arrow', {
-       attributes: { title: I18n.t('topic.jump_reply_down') }
-     }, iconNode('arrow-down'));
-   }
-  },
+  template: hbs`
+    {{#if attrs.above}}
+      <a class="post-info arrow" title={{i18n "topic.jump_reply_up"}}>
+        {{fa-icon "arrow-up"}}
+      </a>
+    {{else}}
+      <a class="post-info arrow" title={{i18n "topic.jump_reply_down"}}>
+        {{fa-icon "arrow-down"}}
+      </a>
+    {{/if}}
+  `,
 
   click() {
     DiscourseURL.routeTo(this.attrs.shareUrl);

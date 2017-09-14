@@ -107,8 +107,13 @@ class TopicQuery
       if topic.private_message?
 
         group_ids = topic.topic_allowed_groups
-          .where('group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)', user_id: @user.id)
+          .joins("
+            LEFT JOIN group_users gu
+            ON topic_allowed_groups.group_id = gu.group_id
+            AND user_id = #{@user.id.to_i}
+          ")
           .pluck(:group_id)
+
         {
           topic: topic,
           my_group_ids: group_ids,
@@ -280,15 +285,6 @@ class TopicQuery
   end
 
   def self.unread_filter(list, user_id, opts)
-    # PERF note
-    # We use the function first_unread_topic_for here instead of joining
-    # the table to assist the PostgreSQL query planner
-    #
-    # We want the query planner to have the actual value of the first_unread_topic so
-    # it can pick an appropriate plan. If it does not have this upfront it will just assume
-    # that the value will be 1/3 of the way through the topic table which makes it use terrible
-    # indexes for the plan.
-    #
     col_name = opts[:staff] ? "highest_staff_post_number" : "highest_post_number"
 
     list
@@ -341,8 +337,13 @@ class TopicQuery
       end
 
       avatar_lookup = AvatarLookup.new(user_ids)
+      primary_group_lookup = PrimaryGroupLookup.new(user_ids)
+
       topics.each do |t|
-        t.posters = t.posters_summary(avatar_lookup: avatar_lookup)
+        t.posters = t.posters_summary(
+          avatar_lookup: avatar_lookup,
+          primary_group_lookup: primary_group_lookup
+        )
       end
     end
 
@@ -743,61 +744,73 @@ class TopicQuery
     end
 
     def related_messages_user(params)
-      messages_for_user
-        .limit(params[:count])
-        .where('topics.id IN (
-                SELECT ta.topic_id
-                FROM topic_allowed_users ta
-                WHERE ta.user_id IN (:user_ids)
-              ) OR
-                topics.id IN (
-                  SELECT tg.topic_id
-                  FROM topic_allowed_groups tg
-                  WHERE tg.group_id IN (:group_ids)
-              )
-              ', user_ids: (params[:target_user_ids] || []) + [-10],
-                 group_ids: ((params[:target_group_ids] - params[:my_group_ids]) || []) + [-10])
-
+      messages = messages_for_user.limit(params[:count])
+      messages = allowed_messages(messages, params)
     end
 
     def related_messages_group(params)
-      messages_for_groups_or_user(params[:my_group_ids])
-        .limit(params[:count])
-        .where('topics.id IN (
-                SELECT ta.topic_id
-                FROM topic_allowed_users ta
-                WHERE ta.user_id IN (:user_ids)
-              ) OR
-                topics.id IN (
-                  SELECT tg.topic_id
-                  FROM topic_allowed_groups tg
-                  WHERE tg.group_id IN (:group_ids)
-              )
-              ', user_ids: (params[:target_user_ids] || []) + [-10],
-                 group_ids: ((params[:target_group_ids] - params[:my_group_ids]) || []) + [-10])
+      messages = messages_for_groups_or_user(params[:my_group_ids]).limit(params[:count])
+      messages = allowed_messages(messages, params)
+    end
 
+    def allowed_messages(messages, params)
+      user_ids = (params[:target_user_ids] || [])
+      group_ids = ((params[:target_group_ids] - params[:my_group_ids]) || [])
+
+      if user_ids.present?
+        messages =
+          messages.joins("
+            LEFT JOIN topic_allowed_users ta2
+            ON topics.id = ta2.topic_id
+            AND ta2.user_id IN (#{sanitize_sql_array(user_ids)})
+          ")
+      end
+
+      if group_ids.present?
+        messages =
+          messages.joins("
+            LEFT JOIN topic_allowed_groups tg2
+            ON topics.id = tg2.topic_id
+            AND tg2.group_id IN (#{sanitize_sql_array(group_ids)})
+          ")
+      end
+
+      messages =
+        if user_ids.present? && group_ids.present?
+          messages.where("ta2.topic_id IS NOT NULL OR tg2.topic_id IS NOT NULL")
+        elsif user_ids.present?
+          messages.where("ta2.topic_id IS NOT NULL")
+        elsif group_ids.present?
+          messages.where("tg2.topic_id IS NOT NULL")
+        end
     end
 
     def messages_for_groups_or_user(group_ids)
       if group_ids.present?
         base_messages
-          .where('topics.id IN (
-                                  SELECT topic_id
-                                    FROM topic_allowed_groups tg
-                                    JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
-                                    WHERE gu.group_id IN (:group_ids)
-                 )', user_id: @user.id, group_ids: group_ids)
+          .joins("
+            LEFT JOIN (
+              SELECT * FROM topic_allowed_groups _tg
+              LEFT JOIN group_users gu
+              ON gu.user_id = #{@user.id.to_i}
+              AND gu.group_id = _tg.group_id
+              AND gu.group_id IN (#{sanitize_sql_array(group_ids)})
+            ) tg ON topics.id = tg.topic_id
+          ")
+          .where("tg.topic_id IS NOT NULL")
       else
         messages_for_user
       end
     end
 
     def messages_for_user
-      base_messages.where('topics.id IN (
-                                  SELECT topic_id
-                                    FROM topic_allowed_users
-                                    WHERE user_id = :user_id
-                 )', user_id: @user.id)
+      base_messages
+        .joins("
+          LEFT JOIN topic_allowed_users ta
+          ON topics.id = ta.topic_id
+          AND ta.user_id = #{@user.id.to_i}
+        ")
+        .where("ta.topic_id IS NOT NULL")
     end
 
     def base_messages
@@ -840,5 +853,11 @@ class TopicQuery
       end
 
       result.order('topics.bumped_at DESC')
+    end
+
+  private
+
+    def sanitize_sql_array(input)
+      ActiveRecord::Base.send(:sanitize_sql_array, input.join(','))
     end
 end

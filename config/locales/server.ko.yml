@@ -56,6 +56,7 @@ ko:
         topic_closed_error: "답글을 했지만 해당 토픽이 닫힌 경우 발생합니다."
         bounced_email_error: "반송된 이메일 리포트 이메일입니다."
         screened_email_error: "발신자의 이메일 주소가 이미 차단되었을 때 발생합니다."
+      unrecognized_error: "인식되지 않은 에러"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -159,10 +160,12 @@ ko:
   no_links_allowed: "죄송합니다. 신규회원은 글에 링크를 넣을 수 없습니다."
   too_many_links:
     other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
+  contains_blocked_words: "포스트에 금지 단어가 포함되어 있습니다."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에  토픽이 닫혔거나 지워진 건 아닐까요?"
   not_accepting_pms: "죄송합니다. %{username} 님이 당분간 메시지를 받지 않습니다."
+  max_pm_recepients: "죄송합니다. 최대 %{recipients_limit} 명의 수신자에게만 메시지를 보낼 수 있습니다."
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
   is_invalid: "문장이 불분명합니다."
@@ -195,6 +198,7 @@ ko:
     user_posts: "@%{username}님의 최신 포스트"
     user_topics: "@%{username}님의 최신 토픽"
     tag: "태그된 토픽"
+    badge: "%{site_title}의 %{display_name} 배지"
   too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   revert_version_same: "복구하려는 버전과 현재 버전이 똑같습니다."
   excerpt_image: "이미지"
@@ -308,6 +312,7 @@ ko:
               too_many_users: "한 번에 한 명의 사용자에게 경고를 보낼 수 있습니다."
               cant_send_pm: "죄송합니다. 그 사용자에게 개인 메세지를 보낼 수 없습니다."
               no_user_selected: "유효한 사용자를 선택해주십시오"
+              reply_by_email_disabled: "이메일로 답글쓰기가 비활성화되었습니다."
             featured_link:
               invalid: "는 올바르지 않습니다. URL은 http:// 또는 https://를 포함해야 합니다."
               invalid_category: "이 카테고리에서는 편집할 수 없습니다."
@@ -315,8 +320,8 @@ ko:
           attributes:
             password:
               common: "가장 자주 사용되는 10000개의 비밀번호 중 하나입니다. 보다 안전한 비밀번호를 사용하세요."
-              same_as_username: "는 아이디랑 같음. 제발 좀 더 안전한 비밀번호를 사용해주세요."
-              same_as_email: "는 이메일 주소랑 같음. 좀 더 안전한 비밀번호를 사용해주세요."
+              same_as_username: "는 아이디랑 같음. 더 안전한 비밀번호를 사용해주세요."
+              same_as_email: "는 이메일 주소랑 같음. 더 안전한 비밀번호를 사용해주세요."
               same_as_current: "은(는) 현재 비밀번호와 동일합니다."
               unique_characters: "반복된 글자가 너무 많습니다. 좀 더 안전한 비밀번호를 사용해주세요."
             ip_address:
@@ -344,6 +349,10 @@ ko:
           attributes:
             value:
               missing_interpolation_keys: '다음 interpolation key가 없습니다: "%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "해당 행동을 위한 단어가 너무 많습니다."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>프로필의 자기소개란이 비어있습니다. <a href='/u/%{username_lower}/preferences/about-me'>뭔가 써보지 않으실래요?</a></div>"
@@ -388,6 +397,7 @@ ko:
       invalid_email_in: "'%{email}' 는 올바른 이메일 주소가 아닙니다."
       email_already_used_in_group: "'%{email}'는 '%{group_name}' 그룹에서 이미 사용중입니다."
       email_already_used_in_category: "'%{email}' 는 '%{category_name}' 카테고리에서 이미 사용중입니다."
+      description_incomplete: "카테고리 설명 포스트는 적어도 하나의 문장을 가져야 합니다."
     cannot_delete:
       uncategorized: "Uncategorized는 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
@@ -567,6 +577,9 @@ ko:
     no_likes_given:
       self: "좋아요한 게시글이 없습니다"
       others: "좋아요를 받은 게시글이 없습니다"
+    no_replies:
+      self: "어떠한 게시물에도 답글을 단 적이 없습니다."
+      others: "답글이 없습니다."
   topic_flag_types:
     spam:
       title: '스팸'
@@ -807,6 +820,8 @@ ko:
     search_tokenize_chinese_japanese_korean: "CJK(한중일) 설정이 되어 있지 않은 사이트라도, 검색시 한중일 언어를 토크나이징하도록 강제합니다."
     search_prefer_recent_posts: "이 옵션을 켜면, 포럼이 너무 커서 검색이 느리게 작동할 때 최근의 포스트부터 먼저 검색합니다."
     search_recent_posts_size: "대문에 실을 최신 포스트 수"
+    log_search_queries: "사용자에 의해 발생된 로그 탐색 쿼리"
+    search_query_log_max_size: "최대 쿼리 기록 저장 수"
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
     allow_duplicate_topic_titles: "같은 제목의 동일한 주제 허용"
     unique_posts_mins: "같은 컨텐츠를 다시 글 할 수 있는 기간(분)"

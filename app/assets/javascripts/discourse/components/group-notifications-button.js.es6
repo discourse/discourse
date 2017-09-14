@@ -1,11 +1,17 @@
-import NotificationsButton from 'discourse/components/notifications-button';
+import NotificationOptionsComponent from "discourse/components/notifications-button";
 
-export default NotificationsButton.extend({
-  classNames: ['notification-options', 'group-notification-menu'],
-  notificationLevel: Em.computed.alias('group.group_user.notification_level'),
-  i18nPrefix: 'groups.notifications',
+export default NotificationOptionsComponent.extend({
+  classNames: ["group-notifications-button"],
 
-  clicked(id) {
-    this.get('group').setNotification(id, this.get('user.id'));
+  value: Em.computed.alias("group.group_user.notification_level"),
+
+  i18nPrefix: "groups.notifications",
+
+  actions: {
+    onSelectRow(content) {
+      this._super(content);
+
+      this.get("group").setNotification(this.get("value"), this.get("user.id"));
+    }
   }
 });

@@ -386,8 +386,8 @@ it:
         title: "Gruppi"
         empty: "Non ci sono gruppi visibili."
       title:
-        one: "gruppo"
-        other: "gruppi"
+        one: "Group"
+        other: "Gruppi"
       activity: "Attività"
       members: "Membri"
       topics: "Argomenti"

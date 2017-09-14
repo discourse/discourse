@@ -64,7 +64,7 @@ describe TopicView do
       best = TopicView.new(topic.id, nil, best: 99)
       expect(best.posts.count).to eq(2)
       expect(best.filtered_post_ids.size).to eq(3)
-      expect(best.current_post_ids).to match_array([p2.id, p3.id])
+      expect(best.posts.pluck(:id)).to match_array([p2.id, p3.id])
 
       # should get no results for trust level too low
       best = TopicView.new(topic.id, nil, best: 99, min_trust_level: coding_horror.trust_level + 1)
@@ -160,13 +160,18 @@ describe TopicView do
     end
 
     context '.post_counts_by_user' do
-      it 'returns the two posters with their counts' do
-        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 1]])
+      it 'returns the two posters with their appropriate counts' do
+        Fabricate(:post, topic: topic, user: coding_horror, post_type: Post.types[:whisper])
+
+        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 2]])
+
+        expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 1]])
       end
 
       it "doesn't return counts for posts with authors who have been deleted" do
         p2.user_id = nil
         p2.save!
+
         expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2]])
       end
     end

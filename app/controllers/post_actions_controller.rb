@@ -13,8 +13,10 @@ class PostActionsController < ApplicationController
     guardian.ensure_post_can_act!(
       @post,
       PostActionType.types[@post_action_type_id],
-      is_warning: params[:is_warning],
-      taken_actions: taken
+      opts: {
+        is_warning: params[:is_warning],
+        taken_actions: taken
+      }
     )
 
     args = {}

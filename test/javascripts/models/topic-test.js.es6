@@ -75,3 +75,11 @@ QUnit.test('fancyTitle', assert => {
         `<img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/emoji_one/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img src='/images/emoji/emoji_one/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img src='/images/emoji/emoji_one/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,
         "supports emojis");
 });
+
+QUnit.test('excerpt', assert => {
+  var topic = Topic.create({ excerpt: "This is a test topic :smile:", pinned: true });
+
+  assert.equal(topic.get('escapedExcerpt'),
+        `This is a test topic <img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+        "supports emojis");
+});

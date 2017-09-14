@@ -46,10 +46,10 @@ def create_admin(seq)
     admin.email = "admin@localhost#{seq}.fake"
     admin.username = "admin#{seq}"
     admin.password = "password"
-    admin.save
+    admin.save!
     admin.grant_admin!
     admin.change_trust_level!(TrustLevel[4])
-    admin.email_tokens.update_all(confirmed: true)
+    admin.activate
   }
 end
 
@@ -62,8 +62,8 @@ unless Rails.env == "profile"
   exit
 end
 
-# by default, Discourse has a "system" account
-if User.count > 1
+# by default, Discourse has a "system" and `discobot` account
+if User.count > 2
   puts "Only run this script against an empty DB"
   exit
 end

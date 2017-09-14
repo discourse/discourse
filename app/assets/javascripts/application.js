@@ -66,7 +66,6 @@
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/components/edit-category-panel
 //= require ./discourse/components/dropdown-button
-//= require ./discourse/components/notifications-button
 //= require ./discourse/lib/link-mentions
 //= require ./discourse/components/site-header
 //= require ./discourse/components/d-editor

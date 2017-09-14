@@ -129,13 +129,9 @@
 
   .searching {
     position: absolute;
+    top: 0.25em;
+    right: 1.5em;
 
-    top: -3px;
-    right: 0.75em;
-    .drop-down-visible & {
-      top: 0.2em;
-      right: 1.2em;
-    }
     .spinner {
       width: 10px;
       height: 10px;

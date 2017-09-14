@@ -10,6 +10,10 @@ describe Theme do
     Fabricate(:user)
   end
 
+  let(:guardian) do
+    Guardian.new(user)
+  end
+
   let :customization_params do
     { name: 'my name', user_id: user.id, header: "my awesome header" }
   end
@@ -212,6 +216,34 @@ HTML
 
     expect(Theme.theme_keys).to eq(Set.new([]))
     expect(Theme.user_theme_keys).to eq(Set.new([]))
+  end
+
+  it 'correctly caches user_themes template' do
+    Theme.destroy_all
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"]
+    expect(user_themes).to eq([])
+
+    theme = Theme.create!(name: "bob", user_id: -1, user_selectable: true)
+    theme.save!
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"].map { |t| t["name"] }
+    expect(user_themes).to eq(["bob"])
+
+    theme.name = "sam"
+    theme.save!
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"].map { |t| t["name"] }
+    expect(user_themes).to eq(["sam"])
+
+    Theme.destroy_all
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"]
+    expect(user_themes).to eq([])
   end
 
 end

@@ -9,8 +9,9 @@ export default Ember.Component.extend({
     this._setCaretIcon();
   },
 
-  click() {
+  click(event) {
     this.sendAction("onToggle");
+    event.stopPropagation();
   },
 
   _setCaretIcon() {

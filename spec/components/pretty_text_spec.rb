@@ -1104,4 +1104,24 @@ HTML
 
   end
 
+  it "can properly whitelist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
+    raw = <<~IFRAMES
+      <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
+      <iframe src='https://bob.com/a?testing'></iframe>
+      <iframe src='HTTP://SILLY.COM?EMBED=111'></iframe>
+    IFRAMES
+
+    # we require explicit HTTPS here
+    html = <<~IFRAMES
+      <iframe src="https://bob.com/a?testing"></iframe>
+      <iframe src="HTTP://SILLY.COM?EMBED=111"></iframe>
+    IFRAMES
+
+    cooked = PrettyText.cook(raw).strip
+
+    expect(cooked).to eq(html.strip)
+
+  end
+
 end

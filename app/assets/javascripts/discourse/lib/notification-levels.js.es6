@@ -9,15 +9,15 @@ export const NotificationLevels = { WATCHING_FIRST_POST, WATCHING, TRACKING, REG
 export function buttonDetails(level) {
   switch(level) {
     case WATCHING_FIRST_POST:
-      return { id: WATCHING_FIRST_POST, key: 'watching_first_post', icon: 'dot-circle-o' };
+      return { id: WATCHING_FIRST_POST, key: 'watching_first_post', icon: 'd-watching-first' };
     case WATCHING:
-      return { id: WATCHING, key: 'watching', icon: 'exclamation-circle' };
+      return { id: WATCHING, key: 'watching', icon: 'd-watching' };
     case TRACKING:
-      return { id: TRACKING, key: 'tracking', icon: 'circle' };
+      return { id: TRACKING, key: 'tracking', icon: 'd-tracking' };
     case MUTED:
-      return { id: MUTED, key: 'muted', icon: 'times-circle' };
+      return { id: MUTED, key: 'muted', icon: 'd-muted' };
     default:
-      return { id: REGULAR, key: 'regular', icon: 'circle-o' };
+      return { id: REGULAR, key: 'regular', icon: 'd-regular' };
   }
 }
 

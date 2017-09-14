@@ -376,7 +376,7 @@ export default Ember.Component.extend({
             return resolve([translations[full]]);
           }
 
-          const match = term.match(/^:?(.*?):t(\d)?$/);
+          const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             let name = match[1];
             let scale = match[2];

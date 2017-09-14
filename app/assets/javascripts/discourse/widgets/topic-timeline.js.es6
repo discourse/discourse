@@ -1,4 +1,5 @@
 import { createWidget } from 'discourse/widgets/widget';
+import ComponentConnector from 'discourse/widgets/component_connector';
 import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse-common/lib/icon-library';
@@ -313,7 +314,14 @@ createWidget('timeline-footer-controls', {
     }
 
     if (currentUser) {
-      controls.push(this.attach('topic-notifications-button', { topic }));
+      controls.push(new ComponentConnector(this,
+        'topic-notifications-button',
+        {
+          topic,
+          appendReason: false,
+          showFullTitle: false
+        }
+      ));
     }
 
     return controls;

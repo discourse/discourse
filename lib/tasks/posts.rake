@@ -3,6 +3,20 @@ task 'posts:rebake' => :environment do
   ENV['RAILS_DB'] ? rebake_posts : rebake_posts_all_sites
 end
 
+task 'posts:rebake_uncooked_posts' => :environment do
+  uncooked = Post.where(baked_version: nil)
+
+  rebaked = 0
+  total = uncooked.count
+
+  uncooked.find_each do |post|
+    rebake_post(post)
+    print_status(rebaked += 1, total)
+  end
+
+  puts "", "#{rebaked} posts done!", ""
+end
+
 desc 'Update each post with latest markdown and refresh oneboxes'
 task 'posts:refresh_oneboxes' => :environment do
   ENV['RAILS_DB'] ? rebake_posts(invalidate_oneboxes: true) : rebake_posts_all_sites(invalidate_oneboxes: true)

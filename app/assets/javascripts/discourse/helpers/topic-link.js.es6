@@ -7,10 +7,6 @@ registerUnbound('topic-link', (topic, args) => {
     topic.get('lastUnreadUrl');
 
   const classes = ['title'];
-  if (topic.get('last_read_post_number') === topic.get('highest_post_number')) {
-    classes.push('visited');
-  }
-
   if (args.class) {
     args.class.split(" ").forEach(c => classes.push(c));
   }

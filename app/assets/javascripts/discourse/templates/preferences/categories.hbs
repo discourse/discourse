@@ -3,7 +3,7 @@
   <label class="control-label">{{i18n 'user.categories_settings'}}</label>
 
   <div class="controls category-controls">
-    <label>{{d-icon "exclamation-circle" class="icon watching"}} {{i18n 'user.watched_categories'}}</label>
+    <label>{{d-icon "d-watching" class="icon watching"}} {{i18n 'user.watched_categories'}}</label>
     {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
@@ -12,7 +12,7 @@
   </div>
 
   <div class="controls category-controls">
-    <label>{{d-icon "circle" class="icon tracking"}} {{i18n 'user.tracked_categories'}}</label>
+    <label>{{d-icon "d-tracking" class="icon tracking"}} {{i18n 'user.tracked_categories'}}</label>
     {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
@@ -21,13 +21,13 @@
   </div>
 
   <div class="controls category-controls">
-    <label>{{d-icon "dot-circle-o" class="icon watching-first-post"}} {{i18n 'user.watched_first_post_categories'}}</label>
+    <label>{{d-icon "d-watching-first" class="icon watching-first-post"}} {{i18n 'user.watched_first_post_categories'}}</label>
     {{category-selector categories=model.watchedFirstPostCategories}}
   </div>
   <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
 
   <div class="controls category-controls">
-    <label>{{d-icon "times-circle" class="icon muted"}} {{i18n 'user.muted_categories'}}</label>
+    <label>{{d-icon "d-muted" class="icon muted"}} {{i18n 'user.muted_categories'}}</label>
     {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>

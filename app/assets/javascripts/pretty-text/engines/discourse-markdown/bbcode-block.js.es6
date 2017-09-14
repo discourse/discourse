@@ -176,9 +176,10 @@ function findInlineCloseTag(state, openTag, start, max) {
         closeTag = parseBBCodeTag(state.src, j, max);
         if (!closeTag || closeTag.tag !== openTag.tag || !closeTag.closing) {
           closeTag = null;
+        } else {
+          closeTag.start = j;
+          break;
         }
-        closeTag.start = j;
-        break;
       }
     }
   }

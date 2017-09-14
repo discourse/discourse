@@ -516,6 +516,10 @@ en:
       title: "leader"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
 
+  post:
+    image_placeholder:
+      broken: "This image is broken"
+      large: "This image is too large to display here; click to view"
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
@@ -1058,6 +1062,7 @@ en:
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     whitelist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
+    allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1391,7 +1396,7 @@ en:
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
     log_mail_processing_failures: "Log all email processing failures to http://yoursitename.com/logs"
-    email_in: "Allow users to post new topics via email (requires pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
+    email_in: "Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -1951,16 +1956,6 @@ en:
 
       %{notes}
 
-  queued_posts_reminder:
-    title: "Queued Posts Reminder"
-    subject_template:
-      one: "[%{email_prefix}] 1 post waiting to be reviewed"
-      other: "[%{email_prefix}] %{count} posts waiting to be reviewed"
-    text_body_template: |
-      Hello,
-
-      Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
-
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
@@ -2396,6 +2391,18 @@ en:
         This award is only granted to two new users per month, and it will be permanently visible on [your user page](%{base_url}/my/badges).
 
         You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
+
+    queued_posts_reminder:
+      title: "Queued Posts Reminder"
+      subject_template:
+        one: "1 post waiting to be reviewed"
+        other: "%{count} posts waiting to be reviewed"
+      text_body_template: |
+        Hello,
+
+        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
+
+
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -3391,6 +3398,18 @@ en:
       description: Outstanding contributions in their first month
       long_description: |
         This badge is granted to congratulate two new users each month for their excellent overall contributions, as measured by how often their posts were liked, and by whom.
+    enthusiast:
+      name: Enthusiast
+      description:  Visited 10 days
+      long_description: This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
+    aficionado:
+      name: Aficionado
+      description: Visited 100 days
+      long_description: This badge is granted for visiting 100 consecutive days. That's more than three months!
+    devotee:
+      name: Devotee
+      description: Visited 365 days
+      long_description: This badge is granted for visiting 365 consecutive days. Wow, an entire year!
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:

@@ -21,7 +21,6 @@ class TopicViewSerializer < ApplicationSerializer
                         :created_at,
                         :views,
                         :reply_count,
-                        :participant_count,
                         :like_count,
                         :last_posted_at,
                         :visible,
@@ -35,17 +34,18 @@ class TopicViewSerializer < ApplicationSerializer
                         :deleted_at,
                         :pending_posts_count,
                         :user_id,
-                        :pm_with_non_human_user?
+                        :pm_with_non_human_user?,
+                        :featured_link,
+                        :pinned_globally,
+                        :pinned_at,
+                        :pinned_until
 
   attributes :draft,
              :draft_key,
              :draft_sequence,
              :posted,
              :unpinned,
-             :pinned_globally,
-             :pinned,    # Is topic pinned and viewer hasn't cleared the pin?
-             :pinned_at, # Ignores clear pin
-             :pinned_until,
+             :pinned,
              :details,
              :highest_post_number,
              :last_read_post_number,
@@ -59,10 +59,10 @@ class TopicViewSerializer < ApplicationSerializer
              :bookmarked,
              :message_archived,
              :tags,
-             :featured_link,
              :topic_timer,
              :unicode_title,
-             :message_bus_last_id
+             :message_bus_last_id,
+             :participant_count
 
   # TODO: Split off into proper object / serializer
   def details
@@ -83,7 +83,7 @@ class TopicViewSerializer < ApplicationSerializer
 
       result[:allowed_users] = object.topic.allowed_users.select do |user|
         !allowed_user_ids.include?(user.id)
-      end.map do |user|
+      end.map! do |user|
         BasicUserSerializer.new(user, scope: scope, root: false)
       end
     end
@@ -94,7 +94,7 @@ class TopicViewSerializer < ApplicationSerializer
       end
     end
 
-    if object.suggested_topics.try(:topics).present?
+    if object.suggested_topics&.topics.present?
       result[:suggested_topics] = object.suggested_topics.topics.map do |t|
         SuggestedTopicSerializer.new(t, scope: scope, root: false)
       end
@@ -193,10 +193,6 @@ class TopicViewSerializer < ApplicationSerializer
   end
   alias_method :include_posted?, :has_topic_user?
 
-  def pinned_globally
-    object.topic.pinned_globally
-  end
-
   def pinned
     PinnedCheck.pinned?(object.topic, object.topic_user)
   end
@@ -205,17 +201,9 @@ class TopicViewSerializer < ApplicationSerializer
     PinnedCheck.unpinned?(object.topic, object.topic_user)
   end
 
-  def pinned_at
-    object.topic.pinned_at
-  end
-
-  def pinned_until
-    object.topic.pinned_until
-  end
-
   def actions_summary
     result = []
-    return [] unless post = object.posts.try(:first)
+    return [] unless post = object.posts&.first
     PostActionType.topic_flag_types.each do |sym, id|
       result << { id: id,
                   count: 0,
@@ -243,7 +231,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def bookmarked
-    object.topic_user.try(:bookmarked)
+    object.topic_user&.bookmarked
   end
 
   def include_pending_posts_count?
@@ -266,10 +254,6 @@ class TopicViewSerializer < ApplicationSerializer
     SiteSetting.topic_featured_link_enabled
   end
 
-  def featured_link
-    object.topic.featured_link
-  end
-
   def include_unicode_title?
     !!(object.topic.title =~ /:([\w\-+]*):/)
   end
@@ -280,6 +264,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_pm_with_non_human_user?
     private_message?(object.topic)
+  end
+
+  def participant_count
+    object.participants.size
   end
 
   private

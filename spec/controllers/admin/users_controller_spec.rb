@@ -621,7 +621,7 @@ describe Admin::UsersController do
 
       xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(403)
-      expect(JSON.parse(response.body)["message"]).to include("Primary email is invalid")
+      expect(JSON.parse(response.body)["message"]).to include("Primary email can't be blank")
     end
   end
 end

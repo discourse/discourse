@@ -312,6 +312,7 @@ zh_CN:
               too_many_users: "一次只能发送警告给一个用户。"
               cant_send_pm: "抱歉，不能向该用户发送私信。"
               no_user_selected: "必须选择一个有效的用户。"
+              reply_by_email_disabled: "用邮件回复已被禁止"
             featured_link:
               invalid: "不合法。URL 应包括 http:// 或 https://。"
               invalid_category: "无法编辑该分类。"
@@ -594,6 +595,9 @@ zh_CN:
     no_likes_given:
       self: "你还没有赞任何帖子。"
       others: "没有被赞的帖子。"
+    no_replies:
+      self: "你还未回复任何主题"
+      others: "无回复"
   topic_flag_types:
     spam:
       title: '垃圾'
@@ -856,6 +860,7 @@ zh_CN:
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     fixed_category_positions_on_create: "如果选择了，目录排序将会在话题创建对话框中被包含(要求固定目录位置选项)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
+    exclude_rel_nofollow_domains: "Nofollow 的域名列表不应被加入到链接中。 填写 example.com 也将自动允许 sub.example.com。至少你应该填写本站域名来帮助爬虫获得所有内容。如果你网站的其余部分在另外的域名，也请添加那些域名。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     show_pinned_excerpt_mobile: "移动版显示置顶主题剪辑。"
     show_pinned_excerpt_desktop: "移动版显示置顶主题剪辑。"
@@ -881,6 +886,7 @@ zh_CN:
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     summary_max_results: "“概括主题”返回的最大帖子数量"
     enable_private_messages: "允许信任等级1（可以另外选择发送私信的信任等级）的用户创建私信和回复私信。注意：管理人员不受限制。"
+    enable_private_email_messages: "允许信任等级 4 (可通过发送私信的最低信任等级进行设置) 的用户创建私信和回复私信。注意：管理人员不受限制。"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
@@ -918,6 +924,7 @@ zh_CN:
     use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
     blacklist_ip_blocks: "Discourse 不会访问抓取的保密 IP 封禁列表"
     whitelist_internal_hosts: "discourse 可以安全抓取以用于 Onebox 和其他目的的内部主机列表"
+    allowed_iframes: "可以令 Discourse 在主题中安全地发布的 iframe src 域名前缀列表"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
@@ -1028,6 +1035,7 @@ zh_CN:
     clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "彻底删除孤立上传资料的宽限期（单位：天）"
+    purge_unactivated_users_grace_period_days: "删除未激活用户账户的宽限期（单位：天）。设置为 0 将永不清除未激活用户。"
     enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点，无下划线。"
@@ -1076,6 +1084,7 @@ zh_CN:
     min_trust_to_edit_post: "能编辑帖子的最小信任等级。"
     min_trust_to_allow_self_wiki: "用户将自己的帖子设置为维基模式的最低信任等级。"
     min_trust_to_send_messages: "发送私信所需的最低信任等级。"
+    min_trust_to_send_email_messages: "通过 email 发送私信所需的最低信任等级。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
     newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量。"
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
@@ -1176,7 +1185,7 @@ zh_CN:
     pop3_polling_username: "轮询 POP3 账户所用的用户名。"
     pop3_polling_password: "轮询 POP3 账户所用的密码。"
     log_mail_processing_failures: "记录所有邮件失败处理日志至 http://yoursitename.com/logs"
-    email_in: "允许用户通过邮件发表新主题（需要 pop3 轮询）。在每一个分类的“设置”标签页配置地址。"
+    email_in: "允许用户通过邮件发表新主题（需要手动或 pop3 轮询）。在每一个分类的“设置”标签页配置地址。"
     email_in_min_trust: "能通过邮件发表新主题的最低用户信任等级。"
     email_prefix: "邮件主题中使用的 [标签]。留空将缺省使用 'title'。"
     email_site_title: "邮件发送人站点标题。如果没有设置，默认为“title”。如果标题包含了任何不允许的字符，使用这个设置。"
@@ -1332,6 +1341,8 @@ zh_CN:
       invalid_regex: "正则表达式非法或者不允许。"
       email_editable_enabled: "你必须先禁用 'email editable' 再启用该设置。"
       enable_sso_disabled: "你必须先启用 'enable sso' 再启用该设置。"
+      staged_users_disabled: "你必须先启用 'staged users' 再启用该设置。"
+      reply_by_email_disabled: "你必须先启用 '用 email 回复' 再启用该设置。"
   search:
     within_post: "#{{post_number}} 由 {{username}}"
     types:
@@ -1913,6 +1924,10 @@ zh_CN:
     email_reject_bad_destination_address:
       title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
+      text_body_template: |
+        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件消息无法发送。
+
+        无法识别目标邮件地址，或是邮件的 Message-ID 头已被修改。请确认在你正在将邮件发送至工作人员提供的正确的地址中。
     email_reject_topic_not_found:
       title: "Email被拒绝：主题不存"
       subject_template: "[%{email_prefix}] 邮件问题 -- 主题未找到"
@@ -2957,6 +2972,18 @@ zh_CN:
       description: 第一个月做出杰出贡献
       long_description: |
         该徽章授予给每个月中做出杰出贡献的两位新用户。这是根据你收到的赞和谁赞了你决定的。
+    enthusiast:
+      name: 十全十美
+      description: 连续 10 天访问
+      long_description: 连续 10 天访问论坛会被授予该勋章。感谢与我们共度超过一周的时光！
+    aficionado:
+      name: 百尺竿头
+      description: 连续 100 天访问
+      long_description: 连续 100 天访问论坛会被授予该勋章。这可是超过三个月的时间！
+    devotee:
+      name: 全年不落
+      description: 连续 365 天访问
+      long_description: 连续365 天访问论坛会被授予该勋章。哇哦，一整年了！
     badge_title_metadata: "%{site_title}的%{display_name}徽章"
   admin_login:
     success: "邮件已发送"

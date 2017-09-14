@@ -60,7 +60,7 @@ class PostAnalyzer
 
     raw_mentions.compact!
     raw_mentions.uniq!
-    @raw_mention = raw_mentions
+    @raw_mentions = raw_mentions
   end
 
   # from rack ... compat with ruby 2.2

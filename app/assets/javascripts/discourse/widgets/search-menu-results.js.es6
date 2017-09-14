@@ -130,15 +130,19 @@ createWidget('search-menu-results', {
                                                            className: "filter filter-type"})));
       }
 
-      return [
+      let resultNode = [
         h('ul', this.attach(rt.componentName, {
           searchContextEnabled: attrs.searchContextEnabled,
           searchLogId: attrs.results.grouped_search_result.search_log_id,
           results: rt.results,
           term: attrs.term
         })),
-        h('div.no-results', more)
       ];
+      if (more.length) {
+        resultNode.push(h('div.no-results', more));
+      }
+
+      return resultNode;
     });
   }
 });

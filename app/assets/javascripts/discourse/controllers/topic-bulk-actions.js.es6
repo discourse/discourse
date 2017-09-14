@@ -25,7 +25,7 @@ function addBulkButton(action, key, opts) {
 addBulkButton('showChangeCategory', 'change_category', {icon: 'pencil'});
 addBulkButton('closeTopics', 'close_topics', {icon: 'lock'});
 addBulkButton('archiveTopics', 'archive_topics', {icon: 'folder'});
-addBulkButton('showNotificationLevel', 'notification_level', {icon: 'circle-o'});
+addBulkButton('showNotificationLevel', 'notification_level', {icon: 'd-regular'});
 addBulkButton('resetRead', 'reset_read', {icon: 'backward'});
 addBulkButton('unlistTopics', 'unlist_topics', {
   icon: 'eye-slash',

@@ -163,6 +163,12 @@ fr:
           - https://fr.wikipedia.org/wiki/Orthographe_pour_calculatrice
         reply: |-
           Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne _vide_, sans rien devant, ni derrière.
+        not_found: |-
+          Désolé, je n'ai pas pu trouvé le lien dans votre réponse ! :cry:
+
+          Pouvez-vous essayer d'ajouter le lien suivant, sur une seule ligne, dans votre prochaine réponse ?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Voici une photo de licorne :
