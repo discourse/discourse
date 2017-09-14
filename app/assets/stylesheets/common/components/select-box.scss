@@ -1,3 +1,7 @@
+.mobile-view .select-box.is-expanded {
+  z-index: 1000;
+}
+
 .select-box {
   border-radius: 3px;
   -webkit-box-sizing: border-box;
