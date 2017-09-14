@@ -2,7 +2,7 @@ import RestAdapter from 'discourse/adapters/rest';
 
 export default RestAdapter.extend({
   pathFor(store, type, findArgs) {
-    let args = Object.assign({ rest_api: true }, findArgs);
+    let args = _.merge({ rest_api: true }, findArgs);
     delete args.filter;
     return `/admin/flags/${findArgs.filter}.json?${$.param(args)}`;
   },
