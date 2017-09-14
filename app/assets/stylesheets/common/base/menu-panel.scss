@@ -214,6 +214,13 @@
         margin-right: 5px;
         padding-top: 2px;
       }
+
+      // This is until other languages remove the HTML from within
+      // notifications. It can then be removed
+      div i.fa {
+        display: none;
+      }
+
       span { color: $primary; }
       &:hover { background-color: $highlight-medium; }
       a { padding: 0; }
