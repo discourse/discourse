@@ -112,6 +112,7 @@ class TopicQuery
             ON topic_allowed_groups.group_id = gu.group_id
             AND user_id = #{@user.id.to_i}
           ")
+          .where("gu.group_id IS NOT NULL")
           .pluck(:group_id)
 
         {
@@ -729,10 +730,8 @@ class TopicQuery
     end
 
     def new_messages(params)
-
       TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
         .limit(params[:count])
-
     end
 
     def unread_messages(params)
@@ -744,53 +743,60 @@ class TopicQuery
     end
 
     def related_messages_user(params)
-      user_ids = ((params[:target_user_ids] || []) << -10)
-      user_ids = ActiveRecord::Base.send(:sanitize_sql_array, user_ids.join(','))
-      group_ids = (((params[:target_group_ids] - params[:my_group_ids]) || []) << -10)
-      group_ids = ActiveRecord::Base.send(:sanitize_sql_array, group_ids.join(','))
-
-      result = messages_for_user
-        .limit(params[:count])
-        .joins("
-          LEFT JOIN topic_allowed_users ta2
-          ON topics.id = ta2.topic_id
-          AND ta2.user_id IN (#{user_ids})",
-        )
-        .joins("
-          LEFT JOIN topic_allowed_groups tg
-          ON topics.id = tg.topic_id
-          AND tg.group_id IN (#{group_ids})",
-        )
-        .where("ta2.topic_id IS NOT NULL OR tg.topic_id IS NOT NULL")
+      messages = messages_for_user.limit(params[:count])
+      messages = allowed_messages(messages, params)
     end
 
     def related_messages_group(params)
-      messages_for_groups_or_user(params[:my_group_ids])
-        .limit(params[:count])
-        .where('topics.id IN (
-                SELECT ta.topic_id
-                FROM topic_allowed_users ta
-                WHERE ta.user_id IN (:user_ids)
-              ) OR
-                topics.id IN (
-                  SELECT tg.topic_id
-                  FROM topic_allowed_groups tg
-                  WHERE tg.group_id IN (:group_ids)
-              )
-              ', user_ids: (params[:target_user_ids] || []) + [-10],
-                 group_ids: ((params[:target_group_ids] - params[:my_group_ids]) || []) + [-10])
+      messages = messages_for_groups_or_user(params[:my_group_ids]).limit(params[:count])
+      messages = allowed_messages(messages, params)
+    end
 
+    def allowed_messages(messages, params)
+      user_ids = (params[:target_user_ids] || [])
+      group_ids = ((params[:target_group_ids] - params[:my_group_ids]) || [])
+
+      if user_ids.present?
+        messages =
+          messages.joins("
+            LEFT JOIN topic_allowed_users ta2
+            ON topics.id = ta2.topic_id
+            AND ta2.user_id IN (#{sanitize_sql_array(user_ids)})
+          ")
+      end
+
+      if group_ids.present?
+        messages =
+          messages.joins("
+            LEFT JOIN topic_allowed_groups tg2
+            ON topics.id = tg2.topic_id
+            AND tg2.group_id IN (#{sanitize_sql_array(group_ids)})
+          ")
+      end
+
+      messages =
+        if user_ids.present? && group_ids.present?
+          messages.where("ta2.topic_id IS NOT NULL OR tg2.topic_id IS NOT NULL")
+        elsif user_ids.present?
+          messages.where("ta2.topic_id IS NOT NULL")
+        elsif group_ids.present?
+          messages.where("tg2.topic_id IS NOT NULL")
+        end
     end
 
     def messages_for_groups_or_user(group_ids)
       if group_ids.present?
         base_messages
-          .where('topics.id IN (
-                                  SELECT topic_id
-                                    FROM topic_allowed_groups tg
-                                    JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
-                                    WHERE gu.group_id IN (:group_ids)
-                 )', user_id: @user.id, group_ids: group_ids)
+          .joins("
+            LEFT JOIN (
+              SELECT * FROM topic_allowed_groups _tg
+              LEFT JOIN group_users gu
+              ON gu.user_id = #{@user.id.to_i}
+              AND gu.group_id = _tg.group_id
+              WHERE gu.group_id IN (#{sanitize_sql_array(group_ids)})
+            ) tg ON topics.id = tg.topic_id
+          ")
+          .where("tg.topic_id IS NOT NULL")
       else
         messages_for_user
       end
@@ -846,5 +852,11 @@ class TopicQuery
       end
 
       result.order('topics.bumped_at DESC')
+    end
+
+  private
+
+    def sanitize_sql_array(input)
+      ActiveRecord::Base.send(:sanitize_sql_array, input.join(','))
     end
 end

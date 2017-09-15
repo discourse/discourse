@@ -759,6 +759,65 @@ describe TopicQuery do
 
       end
 
+      context 'with private messages' do
+        let(:group_user) { Fabricate(:user) }
+        let(:group) { Fabricate(:group) }
+        let(:another_group) { Fabricate(:group) }
+
+        let!(:topic) do
+          Fabricate(:private_message_topic,
+            topic_allowed_users: [
+              Fabricate.build(:topic_allowed_user, user: user)
+            ],
+            topic_allowed_groups: [
+              Fabricate.build(:topic_allowed_group, group: group)
+            ]
+          )
+        end
+
+        let!(:private_message) do
+          Fabricate(:private_message_topic,
+            topic_allowed_users: [
+              Fabricate.build(:topic_allowed_user, user: user)
+            ],
+            topic_allowed_groups: [
+              Fabricate.build(:topic_allowed_group, group: group),
+              Fabricate.build(:topic_allowed_group, group: another_group),
+            ]
+          )
+        end
+
+        let!(:private_group_topic) do
+          Fabricate(:private_message_topic,
+            user: Fabricate(:user),
+            topic_allowed_groups: [
+              Fabricate.build(:topic_allowed_group, group: group)
+            ]
+          )
+        end
+
+        before do
+          group.add(group_user)
+          another_group.add(user)
+        end
+
+        describe 'as user not part of group' do
+          let!(:user) { Fabricate(:user) }
+
+          it 'should not return topics by the group user' do
+            expect(suggested_topics).to eq([private_message.id])
+          end
+        end
+
+        describe 'as user part of group' do
+          let!(:user) { group_user }
+
+          it 'should return the group topics' do
+            expect(suggested_topics).to eq([private_group_topic.id, private_message.id])
+          end
+        end
+      end
+
       context 'with some existing topics' do
         let!(:partially_read) { Fabricate(:post, user: creator).topic }
         let!(:new_topic) { Fabricate(:post, user: creator).topic }
