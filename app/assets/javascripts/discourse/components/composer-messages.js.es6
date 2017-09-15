@@ -148,7 +148,6 @@ export default Ember.Component.extend({
         message.set('similarTopics', similarTopics);
         this.send('popup', message);
       } else if (message) {
-        debugger
         this.send('hideMessage', message);
       }
     });
