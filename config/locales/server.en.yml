@@ -68,6 +68,7 @@ en:
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
+        no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
         inactive_user_error: "Happens when the sender is not active."
         blocked_user_error: "Happens when the sender has been blocked."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."

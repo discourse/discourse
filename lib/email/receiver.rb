@@ -9,6 +9,9 @@ module Email
   class Receiver
     include ActionView::Helpers::NumberHelper
 
+    # If you add a new error, you need to
+    #   * add it to Email::Processor#handle_failure()
+    #   * add text to server.en.yml (parent key: "emails.incoming.errors")
     class ProcessingError              < StandardError; end
     class EmptyEmailError              < ProcessingError; end
     class ScreenedEmailError           < ProcessingError; end
@@ -265,6 +268,13 @@ module Email
 
     def parse_from_field(mail)
       return unless mail[:from]
+
+      if mail.subject == "Test"
+        foo = []
+        if foo[/<[^>]+>/]
+          bar = 2
+        end
+      end
 
       if mail[:from].errors.blank?
         mail[:from].address_list.addresses.each do |address_field|
