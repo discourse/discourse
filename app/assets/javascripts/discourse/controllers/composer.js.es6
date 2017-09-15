@@ -340,7 +340,7 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
-      if (Ember.$(".emoji-picker-modal").length === 1) {
+      if (Ember.$(".emoji-picker-modal.fadeIn").length === 1) {
         this.appEvents.trigger('emoji-picker:close');
         return;
       }
