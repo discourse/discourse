@@ -48,7 +48,6 @@ Discourse.SiteSettingsOriginal = {
   "min_private_message_title_length":2,
   "allow_uncategorized_topics":true,
   "min_title_similar_length":10,
-  "min_body_similar_length":15,
   "edit_history_visible_to_public":true,
   "delete_removed_posts_after":24,
   "traditional_markdown_linebreaks":false,
