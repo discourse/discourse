@@ -285,6 +285,8 @@ module Email
       end
 
       nil
+    rescue StandardError
+      nil
     end
 
     def extract_from_address_and_name(value)
