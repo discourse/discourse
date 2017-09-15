@@ -499,12 +499,6 @@ posting:
     locale_default:
       zh_CN: 4
       zh_TW: 4
-  min_body_similar_length:
-    client: true
-    default: 15
-    locale_default:
-      zh_CN: 5
-      zh_TW: 5
   enable_private_messages:
     default: true
     client: true

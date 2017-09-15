@@ -50,9 +50,7 @@ class Search
     data = search_data.squish
     # TODO cppjieba_rb is designed for chinese, we need something else for Korean / Japanese
     if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
-      unless defined? CppjiebaRb
-        require 'cppjieba_rb'
-      end
+      require 'cppjieba_rb' unless defined? CppjiebaRb
       mode = (purpose == :query ? :query : :mix)
       data = CppjiebaRb.segment(search_data, mode: mode)
       data = CppjiebaRb.filter_stop_word(data).join(' ')
