@@ -4,7 +4,7 @@ import { dateNode } from 'discourse/helpers/node';
 
 createWidget('large-notification-item', {
   buildClasses(attrs) {
-    const result = ['item', 'notification'];
+    const result = ['item', 'notification', 'large-notification'];
     if (!attrs.get('read')) {
       result.push('unread');
     }

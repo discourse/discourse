@@ -504,3 +504,32 @@
     margin-top: 0;
   }
 }
+
+.large-notification {
+  display: flex;
+  align-items: center;
+
+  a {
+    display: flex;
+    align-items: center;
+
+    .d-icon {
+      margin-right: 0.5em;
+    }
+
+    span {
+      color: $primary;
+    }
+
+    // Can remove this once other languages have removed html from i18n values
+    div  {
+      .fa {
+        display: none;
+      }
+      p {
+        margin: 0;
+      }
+    }
+  }
+}
+
