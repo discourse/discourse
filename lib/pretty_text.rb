@@ -3,7 +3,6 @@ require 'nokogiri'
 require 'erb'
 require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
-require_dependency 'post'
 require_dependency 'discourse_tagging'
 require_dependency 'pretty_text/helpers'
 

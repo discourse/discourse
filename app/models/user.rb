@@ -1,3 +1,4 @@
+require_dependency 'jobs/base'
 require_dependency 'email'
 require_dependency 'email_token'
 require_dependency 'email_validator'
@@ -11,6 +12,7 @@ require_dependency 'url_helper'
 require_dependency 'letter_avatar'
 require_dependency 'promotion'
 require_dependency 'password_validator'
+require_dependency 'notification_serializer'
 
 class User < ActiveRecord::Base
   include Searchable
