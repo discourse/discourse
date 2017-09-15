@@ -44,6 +44,8 @@ after_initialize do
   # Disable welcome message because that is what the bot is supposed to replace.
   SiteSetting.send_welcome_message = false
 
+  require_dependency 'plugin_store'
+
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
 

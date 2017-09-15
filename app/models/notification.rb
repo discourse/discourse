@@ -1,4 +1,5 @@
 require_dependency 'enum'
+require_dependency 'notification_emailer'
 
 class Notification < ActiveRecord::Base
   belongs_to :user

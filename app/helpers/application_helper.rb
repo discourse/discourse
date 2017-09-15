@@ -7,7 +7,7 @@ require_dependency 'configurable_urls'
 require_dependency 'mobile_detection'
 require_dependency 'category_badge'
 require_dependency 'global_path'
-require_dependency 'canonical_url'
+require_dependency 'emoji'
 
 module ApplicationHelper
   include CurrentUser

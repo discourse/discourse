@@ -8,6 +8,9 @@ require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
 require_dependency 'search'
+require_dependency 'list_controller'
+require_dependency 'topic_posters_summary'
+require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end

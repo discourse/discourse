@@ -1,4 +1,3 @@
-require_dependency 'jobs/base'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
@@ -200,7 +199,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
+    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji']
   end
 
   def post_analyzer

@@ -1,4 +1,5 @@
 require_dependency 'email/sender'
+require_dependency 'user_notifications'
 
 module Jobs
 
