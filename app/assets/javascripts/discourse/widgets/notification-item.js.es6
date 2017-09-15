@@ -99,8 +99,11 @@ createWidget('notification-item', {
     const lookup = this.site.get('notificationLookup');
     const notName = lookup[notificationType];
 
-    let title = I18n.t(`notifications.alt.${notName}`);
-    let icon = iconNode(`notification.${notName}`, { title });
+    let { data } = attrs;
+    let infoKey = notName === 'custom' ? data.message : notName;
+    let title = I18n.t(`notifications.alt.${infoKey}`);
+    let icon = iconNode(`notification.${infoKey}`, { title });
+
     let text = emojiUnescape(this.text(notificationType, notName));
 
     // We can use a `<p>` tag here once other languages have fixed their HTML
