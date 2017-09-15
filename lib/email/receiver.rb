@@ -9,6 +9,9 @@ module Email
   class Receiver
     include ActionView::Helpers::NumberHelper
 
+    # If you add a new error, you need to
+    #   * add it to Email::Processor#handle_failure()
+    #   * add text to server.en.yml (parent key: "emails.incoming.errors")
     class ProcessingError              < StandardError; end
     class EmptyEmailError              < ProcessingError; end
     class ScreenedEmailError           < ProcessingError; end
@@ -284,6 +287,8 @@ module Email
         end
       end
 
+      nil
+    rescue StandardError
       nil
     end
 

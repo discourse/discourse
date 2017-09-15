@@ -74,15 +74,15 @@ class Post < ActiveRecord::Base
                                               user_id: user.id)
   }
 
-  scope :by_newest, -> { order('created_at desc, id desc') }
+  scope :by_newest, -> { order('created_at DESC, id DESC') }
   scope :by_post_number, -> { order('post_number ASC') }
   scope :with_user, -> { includes(:user) }
-  scope :created_since, lambda { |time_ago| where('posts.created_at > ?', time_ago) }
+  scope :created_since, -> (time_ago) { where('posts.created_at > ?', time_ago) }
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
-  scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user)) }
+  scope :secured, -> (guardian) { where('posts.post_type IN (?)', Topic.visible_post_types(guardian&.user)) }
   scope :for_mailing_list, ->(user, since) {
     q = created_since(since)
       .joins(:topic)
@@ -498,16 +498,22 @@ class Post < ActiveRecord::Base
   def set_owner(new_user, actor, skip_revision = false)
     return if user_id == new_user.id
 
-    edit_reason = I18n.t('change_owner.post_revision_text',
-      old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
-      new_user: new_user.username_lower
+    edit_reason = I18n.with_locale(SiteSetting.default_locale) do
+      I18n.t('change_owner.post_revision_text',
+             old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
+             new_user: new_user.username_lower
+      )
+    end
+
+    revise(
+      actor,
+      { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
+      bypass_bump: true, skip_revision: skip_revision
     )
-    revise(actor, { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason }, bypass_bump: true, skip_revision: skip_revision)
 
     if post_number == topic.highest_post_number
       topic.update_columns(last_post_user_id: new_user.id)
     end
-
   end
 
   before_create do

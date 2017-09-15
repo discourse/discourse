@@ -112,6 +112,7 @@ class TopicQuery
             ON topic_allowed_groups.group_id = gu.group_id
             AND user_id = #{@user.id.to_i}
           ")
+          .where("gu.group_id IS NOT NULL")
           .pluck(:group_id)
 
         {
@@ -729,10 +730,8 @@ class TopicQuery
     end
 
     def new_messages(params)
-
       TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
         .limit(params[:count])
-
     end
 
     def unread_messages(params)
@@ -794,7 +793,7 @@ class TopicQuery
               LEFT JOIN group_users gu
               ON gu.user_id = #{@user.id.to_i}
               AND gu.group_id = _tg.group_id
-              AND gu.group_id IN (#{sanitize_sql_array(group_ids)})
+              WHERE gu.group_id IN (#{sanitize_sql_array(group_ids)})
             ) tg ON topics.id = tg.topic_id
           ")
           .where("tg.topic_id IS NOT NULL")

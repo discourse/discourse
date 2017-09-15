@@ -1659,14 +1659,6 @@ zh_CN:
       ### 发行注记
 
       %{notes}
-  queued_posts_reminder:
-    title: "有帖子在队列中提醒"
-    subject_template:
-      other: "[%{email_prefix}] %{count} 个帖子需要审核"
-    text_body_template: |
-      你好，
-
-      新用户的帖子等待被编辑或审核。[审核通过或者拒绝](%{base_url}/queued-posts)。
   flag_reasons:
     off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社区成员们感觉它不适合处于这个主题中。"
     inappropriate: "你的帖子被标记为 **不恰当**：社区成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社区准则](/guidelines)。"

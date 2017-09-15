@@ -956,7 +956,6 @@ sk:
     pop3_polling_username: "Používateľské meno na kontrolu emailového POP3 účtu."
     pop3_polling_password: "Heslo na kontrolu emailového POP3 účtu."
     log_mail_processing_failures: "Zaznamenávať všetky chyby pri spracovaní emailov do http://yoursitename.com/logs"
-    email_in: "Umožniť používateľom posielať nové príspevky pomocou emailu (vyžaduje POP3 kontrolu). Adresy nastavte v záložke \"Nastavenia\" pre každú kategóriu."
     email_in_min_trust: "MInimálna úroveň dôveru použivateľa, ktorý môže posielať nové príspevky pomocou emailu."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
     email_site_title: "Názov stránok, použitý ako odosieľateľ emailov zo stránok. Ak nie ne nastavený bude použitý 'nadpis'. Použite toto nastavenie, ak Váš nadpis obsahuje nepovolené znaky pre emailový reťazec odosieľateľ."

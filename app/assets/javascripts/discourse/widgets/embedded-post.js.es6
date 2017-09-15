@@ -9,11 +9,11 @@ createWidget('post-link-arrow', {
   template: hbs`
     {{#if attrs.above}}
       <a class="post-info arrow" title={{i18n "topic.jump_reply_up"}}>
-        {{fa-icon "arrow-up"}}
+        {{d-icon "arrow-up"}}
       </a>
     {{else}}
       <a class="post-info arrow" title={{i18n "topic.jump_reply_down"}}>
-        {{fa-icon "arrow-down"}}
+        {{d-icon "arrow-down"}}
       </a>
     {{/if}}
   `,

@@ -97,6 +97,12 @@
   max-height: 450px;
 }
 
+@media only screen and (max-device-width: 568px) {
+  .modal .flag-modal .flag-message {
+    height: 1.2em;
+  }
+}
+
 .custom-message-length {
   margin: -4px 0 10px 20px;
   color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));

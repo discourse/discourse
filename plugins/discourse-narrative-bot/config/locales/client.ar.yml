@@ -9,5 +9,5 @@ ar:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "ابدأ برنامج تعليم العضو الجديد لكل الأعضاء الجدد"
+        new_user_track: "ابدأ برنامج تعليم الأعضاء الجدد لكل الأعضاء الجدد !"
         welcome_message: "أرسل إلى كلّ الاعضاء الجدد رسالة ترحيبيّة فيها دليل البدء سريع"

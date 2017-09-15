@@ -1,4 +1,4 @@
-import NotificationLevels from 'discourse/lib/notification-levels';
+import { NotificationLevels } from 'discourse/lib/notification-levels';
 
 export default Ember.Mixin.create({
   bulkSelectEnabled: false,

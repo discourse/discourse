@@ -50,7 +50,7 @@ class UsersController < ApplicationController
 
     topic_id = params[:include_post_count_for].to_i
     if topic_id != 0
-      user_serializer.topic_post_count = { topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
+      user_serializer.topic_post_count = { topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count }
     end
 
     if !params[:skip_track_visit] && (@user != current_user)

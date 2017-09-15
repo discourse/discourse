@@ -1159,7 +1159,6 @@ ko:
     pop3_polling_username: "이메일 설문조사를 위한 POP3 사용자 계정 이름"
     pop3_polling_password: "이메일 설문조사를 위한 POP3 사용자 비밀번호"
     log_mail_processing_failures: "이메일 처리 실패 로그를 http://yoursitename.com/logs 에 남기기"
-    email_in: "이메일을 통해 새로운 글타래를 포스팅할 수 있도록 허가한다.(POP3 polling 필요) 각 카테고리의 \"Setting\" 탭에서 주소를 설정합니다."
     email_in_min_trust: "이메일을 통해 새 글타래를 포스팅 할 수 있는 최소 사용자 회원등급"
     email_prefix: "이메일 제목에 쓰일 [라벨]. 설정하지 않으면 기본적으로 'title(필수 설정의)' 이 된다."
     email_site_title: "사이트에서 전송되는 이메일의 보내는 이를 사이트 이름으로 설정. 설정하지 않으면 'title(필수 설정의)'이 된다. 만약 'title'에 보내는 이에 허용되지 않는 글자가 포함되어 있으면 이 설정이 사용된다."

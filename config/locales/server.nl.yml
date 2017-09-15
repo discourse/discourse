@@ -1139,7 +1139,6 @@ nl:
     pop3_polling_username: "De gebruikersnaam van het te pollen POP3 account voor e-mail."
     pop3_polling_password: "Het wachtwoord van het te pollen POP3 account voor e-mail."
     log_mail_processing_failures: "Log alle e-mail verwerkingsfouten naar http://yoursitename.com/logs"
-    email_in: "Sta toe dat gebruikers een nieuw topic via e-mail (vereist het pollen van pop3). Configureer het adres in de \"Instellingen\" tabblad van elke categorie."
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'title' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als uw 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
@@ -1376,11 +1375,6 @@ nl:
     subject_template: "%{invitee_name} heeft je uitgenodigd voor %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Geeft wachtwoord voor je %{site_name} account"
-  queued_posts_reminder:
-    text_body_template: |
-      Hallo,
-
-      Er zijn berichten van nieuwe gebruikers voor moderatie achtergehouden die momenteel op goedkeuring wachten. [Keur ze goed of weiger ze hier](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de gemeenschap meent het niet goed past bij het onderwerp, zoals momenteel bepaald door de titel en de eerste post."
     inappropriate: "Je bericht is gemarkeerd als **ongepast**: de gemeenschap vindt het bericht beledigend, grof, of een schending van [onze gemeenschapsrichtlijnen](/guidelines)."

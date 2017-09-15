@@ -18,11 +18,6 @@ Ember.Test.registerAsyncHelper('selectDropdown', function(app, selector, itemId)
   $select2.trigger("change");
 });
 
-Ember.Test.registerAsyncHelper('selectBox', function(app, selector, title) {
-  click(selector + ' .select-box-header');
-  click(selector + ' .select-box-row[title="' + title + '"]');
-});
-
 function invisible(selector) {
   var $items = find(selector + ":visible");
   return $items.length === 0 ||

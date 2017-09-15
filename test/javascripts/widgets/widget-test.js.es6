@@ -198,12 +198,12 @@ widgetTest('widget attaching', {
   }
 });
 
-widgetTest("handlebars fa-icon", {
+widgetTest("handlebars d-icon", {
   template: `{{mount-widget widget="hbs-icon-test" args=args}}`,
 
   beforeEach() {
     createWidget('hbs-icon-test', {
-      template: hbs`{{fa-icon "arrow-down"}}`
+      template: hbs`{{d-icon "arrow-down"}}`
     });
   },
 

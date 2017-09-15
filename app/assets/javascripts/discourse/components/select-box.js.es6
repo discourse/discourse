@@ -62,10 +62,17 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed
-  titleForRow: function() {
+  @computed("textKey")
+  titleForRow(textKey) {
     return (rowComponent) => {
-      return rowComponent.get(`content.${this.get("textKey")}`);
+      return rowComponent.get(`content.${textKey}`);
+    };
+  },
+
+  @computed("idKey")
+  idForRow(idKey) {
+    return (rowComponent) => {
+      return rowComponent.get(`content.${idKey}`);
     };
   },
 
