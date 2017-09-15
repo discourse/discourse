@@ -405,9 +405,11 @@ class User < ActiveRecord::Base
       ) AS y
     "
 
-    recent = User.exec_sql(sql, user_id: id,
-                                type:  Notification.types[:private_message]).values.map do |id, read|
-      [id.to_i, read == 't'.freeze]
+    recent = User.exec_sql(sql,
+      user_id: id,
+      type: Notification.types[:private_message]
+    ).values.map! do |id, read|
+      [id.to_i, read]
     end
 
     MessageBus.publish("/notification/#{id}",

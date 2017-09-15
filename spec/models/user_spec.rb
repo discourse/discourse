@@ -2,6 +2,7 @@ require 'rails_helper'
 require_dependency 'user'
 
 describe User do
+  let(:user) { Fabricate(:user) }
 
   context 'validations' do
     it { is_expected.to validate_presence_of :username }
@@ -1518,6 +1519,21 @@ describe User do
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])
+    end
+  end
+
+  describe '#publish_notifications_state' do
+    it 'should publish the right message' do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+
+      message = MessageBus.track_publish do
+        user.publish_notifications_state
+      end.find { |m| m.channel = "/notification/#{user.id}" }
+
+      expect(message.data[:recent]).to eq([
+        [notification2.id, true], [notification.id, false]
+      ])
     end
   end
 end
