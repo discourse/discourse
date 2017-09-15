@@ -24,7 +24,7 @@ module Email
       rescue => e
         log_email_process_failure(@mail, e)
         incoming_email = receiver.try(:incoming_email)
-        rejection_message = handle_failure(@mail, e, incoming_email)
+        rejection_message = handle_failure(@mail, e)
         if rejection_message.present?
           set_incoming_email_rejection_message(incoming_email, rejection_message.body.to_s)
         end
@@ -33,7 +33,7 @@ module Email
 
     private
 
-    def handle_failure(mail_string, e, incoming_email)
+    def handle_failure(mail_string, e)
       message_template = case e
                          when Email::Receiver::EmptyEmailError             then :email_reject_empty
                          when Email::Receiver::NoSenderDetectedError       then :email_reject_empty
@@ -105,7 +105,7 @@ module Email
     end
 
     def set_incoming_email_rejection_message(incoming_email, message)
-      incoming_email.update_attributes!(rejection_message: message)
+      incoming_email.update_attributes!(rejection_message: message) if incoming_email
     end
 
     def log_email_process_failure(mail_string, exception)
