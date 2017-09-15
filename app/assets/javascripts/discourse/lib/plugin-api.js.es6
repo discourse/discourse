@@ -19,12 +19,12 @@ import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
 import { addPostClassesCallback } from 'discourse/widgets/post';
 import { addPostTransformCallback } from 'discourse/widgets/post-stream';
 import { attachAdditionalPanel } from 'discourse/widgets/header';
-import { registerIconRenderer } from 'discourse-common/lib/icon-library';
+import { registerIconRenderer, replaceIcon } from 'discourse-common/lib/icon-library';
 import { addNavItem } from 'discourse/models/nav-item';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.9';
+const PLUGIN_API_VERSION = '0.8.10';
 
 class PluginApi {
   constructor(version, container) {
@@ -88,6 +88,18 @@ class PluginApi {
    **/
   registerIconRenderer(fn) {
     registerIconRenderer(fn);
+  }
+
+  /**
+   * Replace all ocurrences of one icon with another without having to
+   * resort to a custom IconRenderer. If you want to do something more
+   * complicated than a simple replacement then create a new icon renderer.
+   *
+   * api.replaceIcon('d-tracking', 'smile-o');
+   *
+   **/
+  replaceIcon(source, destination) {
+    replaceIcon(source, destination);
   }
 
   /**

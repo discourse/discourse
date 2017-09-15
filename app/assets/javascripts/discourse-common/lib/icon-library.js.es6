@@ -30,6 +30,9 @@ const REPLACEMENTS = {
   'notification.group_message_summary': "group"
 };
 
+export function replaceIcon(source, destination) {
+  REPLACEMENTS[source] = destination;
+}
 
 export function renderIcon(renderType, id, params) {
   for (let i=0; i<_renderers.length; i++) {
