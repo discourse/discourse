@@ -269,13 +269,6 @@ module Email
     def parse_from_field(mail)
       return unless mail[:from]
 
-      if mail.subject == "Test"
-        foo = []
-        if foo[/<[^>]+>/]
-          bar = 2
-        end
-      end
-
       if mail[:from].errors.blank?
         mail[:from].address_list.addresses.each do |address_field|
           address_field.decoded
