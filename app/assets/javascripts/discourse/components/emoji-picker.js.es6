@@ -22,11 +22,11 @@ export default Ember.Component.extend({
   automaticPositioning: true,
 
   close() {
+    this._unbindEvents();
+
     this.$picker
       .css({width: "", left: "", bottom: "", display: "none"})
       .empty();
-
-    this._unbindEvents();
 
     this.$modal.removeClass("fadeIn");
 
@@ -44,9 +44,8 @@ export default Ember.Component.extend({
     this.set("selectedDiversity", keyValueStore.getObject(EMOJI_SELECTED_DIVERSITY) || 1);
     this.set("recentEmojis", keyValueStore.getObject(EMOJI_USAGE) || []);
 
-    this._bindEvents();
-
     Ember.run.scheduleOnce("afterRender", this, function() {
+      this._bindEvents();
       this._sectionLoadingCheck();
       this._loadCategoriesEmojis();
       this._positionPicker();
@@ -190,9 +189,10 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _unbindEvents() {
+    this.$().off();
     this.$(window).off("resize");
     this.$modal.off("click");
-    Ember.$("#reply-control").off("div-resizing");
+    $("#reply-control").off("div-resizing");
     this.$(document).off("click.emoji-picker");
   },
 
@@ -267,7 +267,7 @@ export default Ember.Component.extend({
       Ember.run.throttle(this, this._positionPicker, 16);
     });
 
-    Ember.$("#reply-control").on("div-resizing", () => {
+    $("#reply-control").on("div-resizing", () => {
       Ember.run.throttle(this, this._positionPicker, 16);
     });
   },
@@ -387,8 +387,8 @@ export default Ember.Component.extend({
 
   _isReplyControlExpanded() {
     const verticalSpace = this.$(window).height() -
-                          Ember.$(".d-header").height() -
-                          Ember.$("#reply-control").height();
+                          $(".d-header").height() -
+                          $("#reply-control").height();
 
     return verticalSpace < this.$picker.height() - 48;
   },
@@ -454,18 +454,18 @@ export default Ember.Component.extend({
       mobilePositioning();
     } else {
       if(this._isReplyControlExpanded()) {
-        let $editorWrapper = Ember.$(".d-editor-preview-wrapper");
+        let $editorWrapper = $(".d-editor-preview-wrapper");
         if(($editorWrapper.is(":visible") && $editorWrapper.width() < 400) || windowWidth < 485) {
           desktopModalePositioning();
         } else {
           if($editorWrapper.is(":visible")) {
-            let previewOffset = Ember.$(".d-editor-preview-wrapper").offset();
-            let replyControlOffset = Ember.$("#reply-control").offset();
+            let previewOffset = $(".d-editor-preview-wrapper").offset();
+            let replyControlOffset = $("#reply-control").offset();
             let left = previewOffset.left - replyControlOffset.left;
             desktopPositioning({left});
           } else {
             desktopPositioning({
-              right: (Ember.$("#reply-control").width() - Ember.$(".d-editor-container").width()) / 2
+              right: ($("#reply-control").width() - $(".d-editor-container").width()) / 2
             });
           }
         }
@@ -473,10 +473,10 @@ export default Ember.Component.extend({
         if(windowWidth < 485) {
           desktopModalePositioning();
         } else {
-          let previewInputOffset = Ember.$(".d-editor-input").offset();
-          let replyControlOffset = Ember.$("#reply-control").offset() || {left: 0};
+          let previewInputOffset = $(".d-editor-input").offset();
+          let replyControlOffset = $("#reply-control").offset() || {left: 0};
           let left = previewInputOffset.left - replyControlOffset.left;
-          desktopPositioning({left, bottom: Ember.$("#reply-control").height() - 48});
+          desktopPositioning({left, bottom: $("#reply-control").height() - 48});
         }
       }
     }
