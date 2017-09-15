@@ -374,10 +374,6 @@ sk:
       index:
         title: "Skupiny"
         empty: "Nenašli sa viditeľné skupiny."
-      title:
-        one: "skupina"
-        few: "skupiny"
-        other: "skupiny"
       activity: "Aktivita"
       members: "Členovia"
       topics: "Témy"
@@ -1036,22 +1032,6 @@ sk:
       empty: "Žiadne upozornenia sa nenašli."
       more: "zobraziť staršie upozornenia"
       total_flagged: "označených príspevkov celkom"
-      mentioned: "<i title='zmienený' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='zmienená skupina' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> prijal Vaše pozvanie</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> presunul {{description}}</p>"
-      granted_badge: "<i title='udelený odznak' class='fa fa-certificate'></i><p>Získal '{{description}}'</p>"
-      group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správa vo vašej {{group_name}} schránke</p>"
-        few: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správy vo vašej {{group_name}} schránke</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správ vo vašej {{group_name}} schránke</p>"
       alt:
         mentioned: "Zmienený od"
         quoted: "Citovaný používateľom"

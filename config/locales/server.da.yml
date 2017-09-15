@@ -1180,15 +1180,6 @@ da:
     subject_template: "[%{email_prefix}] Ny version af Discourse, opdatering tilgængelig"
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] opdatering tilgængelig"
-  queued_posts_reminder:
-    title: "Påmindelse om indlæg, der skal godkendes"
-    subject_template:
-      one: "[%{email_prefix}] 1 post waiting to be reviewed"
-      other: "[%{email_prefix}] %{count} indlæg venter på at blive gennemgået"
-    text_body_template: |
-      Hej,
-
-      Indlæg fra nye brugere er tilbageholdt for at blive godkendt og afventer at blive gennemgået. [Godkend eller afvis dem her](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Dit indlæg blev flagmarkeret som **off-topic**: Fællesskabet synes ikke, at det passer godt ind i emnet, som er blevet defineret af titlen og det første indlæg."
     inappropriate: "Dit indlæg blev markeret som **upassende**: Fællesskabet synes, at det er stødende, groft eller krænker [vores fællesskabs retningslinier](/guidelines)."

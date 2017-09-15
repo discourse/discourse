@@ -371,6 +371,11 @@ de:
       closed_group: Geschlossene Gruppe
       is_group_user: "Du bist ein Mitglied in dieser Gruppe."
       allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppen-Eigentümer zu senden."
+      membership_request_template: "Benutzerdefinierte Vorlage, das Benutzern angezeigt wird, die eine Mitgliedschaftsanfrage senden"
+      membership_request:
+        submit: "Anfrage abschicken"
+        title: "Anfrage, um @%{group_name} beizutreten"
+        reason: "Lass’ die Gruppenbesitzer wissen, warum du in diese Gruppe gehörst"
       membership: "Mitgliedschaft"
       name: "Name"
       user_count: "Anzahl der Mitglieder"
@@ -397,6 +402,8 @@ de:
         staff: "Gruppenbesitzer und Team"
         owners: "Gruppenbesitzer und Admins"
       alias_levels:
+        mentionable: "Wer kann diese Gruppe @erwähnen?"
+        messageable: "Wer cann dieser Gruppe eine Nachricht schicken?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -484,6 +491,7 @@ de:
       topics_entered: "betrachtete Themen"
       post_count: "# Beiträge"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
+      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(wähle eine Option aus)"
     user:
@@ -628,6 +636,7 @@ de:
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
         error: "Beim Ändern der E-Mail-Adresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
+        success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
@@ -1024,6 +1033,10 @@ de:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
+    select_box:
+      default_header_text: Auswählen…
+      no_content: Keine Treffer gefunden
+      filter_placeholder: Suchen…
     emoji_picker:
       filter_placeholder: Emoji suchen
       people: Personen
@@ -1135,29 +1148,29 @@ de:
       empty: "Keine Benachrichtigungen gefunden."
       more: "ältere Benachrichtigungen anzeigen"
       total_flagged: "Anzahl der gemeldeten Beiträge"
-      mentioned: "<i title='erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='Gruppe erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='zitiert' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='bearbeitet' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und 1 anderer</span> {{description}}</p>"
-        other: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}</p>"
-      private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='zu Thema eingeladen' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='Einladung angenommen' class='fa fa-user'></i><p><span>{{username}}</span> hat deine Einladung angenommen</p>"
-      moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
-      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Neues Thema</span> {{description}}</p>"
+        one: "<span>{{username}}, {{username2}} und jemand anderes</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> hat deine Einladung angenommen"
+      moved_post: "<span>{{username}}</span> hat {{description}} verschoben"
+      linked: "<span>{{username}}</span> {{description}}"
+      granted_badge: "Hat '{{description}}' verliehen bekommen"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>New Topic</span> {{description}}"
       group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> Eine Nachricht in deinem {{group_name}} Postfach</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} Nachrichten in deinem {{group_name}} Postfach</p>"
+        one: "{{count}} Nachricht in deinem {{group_name}} Posteingang"
+        other: "{{count}} Nachrichten in deinem {{group_name}} Posteingang"
       alt:
         mentioned: "Erwähnt von"
         quoted: "Zitiert von"
@@ -1215,7 +1228,12 @@ de:
       post_format: "#{{post_number}} von {{username}}"
       results_page: "Suchergebnisse"
       more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
+      cant_find: "Nicht gefunden, wonach du suchst?"
+      start_new_topic: "Wie wär’s mit einem neuen Thema?"
+      or_search_google: "Oder versuche stattdessen mit Google zu suchen:"
+      search_google: "Versuche stattdessen mit Google zu suchen:"
       search_google_button: "Google"
+      search_google_title: "Durchsuche diese Seite"
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie #{{category}} durchsuchen"
@@ -2146,6 +2164,7 @@ de:
         hamburger_menu: '<b>=</b> „Hamburger“-Menü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Aktualisierte Themen anzeigen'
+        search: '<b>/</b> oder <b>Strg</b>+<b>Shift</b>+<b>s</b> Suche'
         help: '<b>?</b> Tastaturhilfe öffnen'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Neue/ausgewählte Beiträge ausblenden'
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ausblenden'
@@ -3328,6 +3347,9 @@ de:
       upload: "Hochladen"
       uploading: "Hochladen..."
       quit: "Vielleicht später"
+      staff_count:
+        one: "Deine Community hat ein Team-Mitglied (du)."
+        other: "Deine Community hat %{count} Team-Mitglieder, einschließlich dir."
       invites:
         add_user: "Hinzufügen"
         none_added: "Du hast bisher kein Team eingeladen. Möchtest du wirklich fortfahren?"

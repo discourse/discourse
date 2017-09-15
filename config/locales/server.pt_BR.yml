@@ -1059,7 +1059,6 @@ pt_BR:
     pop3_polling_host: "O host no qual conectar via POP3 para pegar emails."
     pop3_polling_username: "O nome de usuário para a conta POP3 na qual pegar emails."
     pop3_polling_password: "A senha para a conta POP3 na qual pegar emails."
-    email_in: "Permitir usuários de postar novos tópicos via email (requer pegar emails via POP3). Configure os endereços na aba \"Configurações\" de cada categoria."
     email_in_min_trust: "O nível de confiança mínimo que um usuário necessita ter para ser permitido a postar novos tópicos via email."
     email_prefix: "A [etiqueta] usada no assunto dos emails. Ele será por padrão 'título' se não configurada."
     email_site_title: "O título do site usado como o enviador dos emails do site. Por padrão será 'título' se não for configurado. Se o seu 'título' contiver caracteres que não são permitidos em strings de enviador de emails, utilize esta configuração."

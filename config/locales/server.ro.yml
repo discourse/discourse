@@ -1131,7 +1131,6 @@ ro:
     pop3_polling_username: "Numele de utilizator al contului POP3 pentru retragerea emailurilor."
     pop3_polling_password: "Parola contului de POP3 pentru retragerea emailurilor."
     log_mail_processing_failures: "Înregistrează toate erorile de procesare la http://yoursitename.com/logs"
-    email_in: "Permite utilizatorilor să posteze noi subiecte prin email (necesită retragere de emailuri prin POP3). Configurează adresa în tab-ul \"Setări\" al fiecărei categorii."
     email_in_min_trust: "Nivelul minim de încredere de care are nevoie un utilizator pentru a i se permite să posteze noi subiecte prin email."
     email_prefix: "[Eticheta] e folosită în subiectul email-ului. Implicit va fi \"titlul\", dacă nu este setată altfel."
     email_site_title: "Titlul site-ului folosit ca expeditor de email-uri trimise de site. Implicit va fi 'titlu', dacă nu este setat altfel. Dacă 'titlul' conține caractere care nu sunt permise în email, folosiți această setare."
@@ -1489,11 +1488,6 @@ ro:
       ### Note de versiune
 
       %{notes}
-  queued_posts_reminder:
-    text_body_template: |
-      Salutare,
-
-      Există postări de utilizatori noi care așteaptă să fie moderate. [Aprobă-le sau respinge-le aici](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
     inappropriate: "Postarea ta a fost marcată cu marcaj de avertizare **inadecvat**: comunitatea simte că este ofensatoare, abuzivă sau în contradicție cu [ghidul comunității noastre](/guidelines)."

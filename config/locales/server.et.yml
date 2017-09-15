@@ -730,6 +730,8 @@ et:
     csv_export_failed:
       subject_template: "Andmete eksportimine ebaõnnestus"
   user_notifications:
+    previous_discussion: "Varasemad vastused"
+    in_reply_to: "Vastuseks"
     unsubscribe:
       title: "Tühista tellimus"
     user_posted_pm_staged:

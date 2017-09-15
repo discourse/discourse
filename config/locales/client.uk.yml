@@ -252,10 +252,6 @@ uk:
       add: "Додати"
       closed_group: Закрита Група
       selector_placeholder: "Додати учасників"
-      title:
-        one: "група"
-        few: "групи"
-        other: "групи"
       members: "Учасники"
       topics: "Теми"
       posts: "Дописи"
@@ -686,8 +682,6 @@ uk:
     notifications:
       more: "переглянути старіші сповіщення"
       total_flagged: "всього дописів, на які поскаржилися"
-      quoted: "<i title='Цитування' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='Відповідь від' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       alt:
         posted: "Опубліковано"
     upload_selector:

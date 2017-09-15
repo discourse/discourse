@@ -1119,7 +1119,6 @@ pt:
     pop3_polling_username: "Nome de utilizador para a conta POP3 para resgatar emails."
     pop3_polling_password: "Palavra-passe para a conta POP3 solicitar emails ao servidor."
     log_mail_processing_failures: "Registar todas as falhas de processamento de email em http://nomedoseusítio.com/logs"
-    email_in: "Permitir que utilizadores publiquem novos tópicos através de email (requer pop3). Configurar os endereços no separador \"Configurações\" de cada categoria."
     email_in_min_trust: "Nível de Confiança mínimo que um utilizador necessita de ter para poder publicar novos tópicos por email."
     email_prefix: "A [etiqueta] usada no assunto dos emails. Se não estiver configurada, será 'Título' por defeito."
     email_site_title: "Título do sítio usado como remetente de emails. Se não for configurado, será 'título' por defeito. Se o seu 'título' contém caracteres que não são permitidos na string do remetente de email, utilize esta configuração."
@@ -1472,14 +1471,6 @@ pt:
       ### Notas de lançamento
 
       %{notes}
-  queued_posts_reminder:
-    subject_template:
-      one: "[%{email_prefix}] 1 artigo a aguardar revisão"
-      other: "[%{email_prefix}] %{count} artigos a aguardar revisão"
-    text_body_template: |
-      Olá,
-
-      Existem publicações de novos utilizadores que estão à espera de revisão. [Podem ser aprovadas ou rejeitadas aqui](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "A sua mensagem foi marcada como **fora do contexto**: a comunidade sente que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
     inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das [orientações da nossa comunidade](/guidelines)."

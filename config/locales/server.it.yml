@@ -452,6 +452,10 @@ it:
     leader:
       title: "veterano"
     change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Comunque il suo livello di esperienza è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}' - se vuoi degradarlo, prima blocca il suo livello di esperienza"
+  post:
+    image_placeholder:
+      broken: "Questa immagine è assente"
+      large: "Questa immagine è troppo grande da visualizzare; clicca per vederla"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "C'è un limite giornaliero su quante volte si può fare questa azione. Per favore attendi %{time_left} prima di riprovare."
@@ -1281,6 +1285,7 @@ it:
     topic_page_title_includes_category: "Il titolo dell'argomento sulla pagina include il nome della categoria."
     native_app_install_banner: "Domanda ai visitatori ricorrenti di installare l'app nativa di Discourse."
     share_anonymized_statistics: "Condividi statistiche anonime di utilizzo."
+    auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Imposta a 0 per disattivare questa funzionalità."
     max_prints_per_hour_per_user: "Numero massimo di impressioni /pagine di stampa (imposta a 0 per disattivare)"
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
@@ -1530,6 +1535,7 @@ it:
       max_new_accounts_per_registration_ip: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP (limite massimo raggiunto). Contatta un membro dello staff."
     website:
       domain_not_allowed: "Il sito web non è valido. I domini consentiti sono: %{domains}"
+    auto_rejected: "Rifiutato automaticamente a causa dell'età. Vedi l'impostazione del sito auto_handle_queued_age."
   flags_reminder:
     flags_were_submitted:
       one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
@@ -1720,15 +1726,6 @@ it:
       ### Note di rilascio
 
       %{notes}
-  queued_posts_reminder:
-    title: "Promemoria Messaggi in Coda"
-    subject_template:
-      one: "[%{email_prefix}] 1 post waiting to be reviewed"
-      other: "[%{email_prefix}] %{count} messaggi in attesa di essere revisionati"
-    text_body_template: |
-      Ciao,
-
-      I messaggi di nuovi utenti sono stati trattenuti per la moderazione e attualmente sono in attesa di essere rivisti.  [Approvali o rifiutali qui](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."
@@ -2120,6 +2117,15 @@ it:
         Questo premio viene assegnato solo a due nuovi utenti al mese e sarà visibile permanentemente sulla [tua pagina utente](%{base_url}/my/badges).
 
         Sei diventato velocemente un membro prezioso della nostra comunità. Grazie per l'adesione e continua a fare un buon lavoro!
+    queued_posts_reminder:
+      title: "Promemoria Messaggi in Coda"
+      subject_template:
+        one: "messaggi in attesa di essere revisionati "
+        other: "%{count} messaggi in attesa di essere revisionati"
+      text_body_template: |
+        Ciao,
+
+        dei messaggi di nuovi utenti sono stati trattenuti per la moderazione e attualmente sono in attesa di essere rivisti. [Approvali o rifiutali qui](%{base_url}/queued-posts).
   unsubscribe_link: |
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
