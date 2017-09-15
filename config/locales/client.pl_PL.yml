@@ -438,10 +438,10 @@ pl_PL:
         title: "Grupy"
         empty: "Nie ma widocznych grup"
       title:
-        one: "grupa"
-        few: "grupy"
-        many: "grupy"
-        other: "grupy"
+        one: "Grupa"
+        few: "Grupy"
+        many: "Grup"
+        other: "Grup"
       activity: "Aktywność"
       members: "Członkowie"
       topics: "Tematy"
@@ -456,6 +456,8 @@ pl_PL:
         staff: "Właściciele grupy i zespół"
         owners: "Właściciele grupy i administratorzy"
       alias_levels:
+        mentionable: "Kto może @wspomnieć tę grupę?"
+        messageable: "Kto może wysyłać wiadomości do tej grupy?"
         nobody: "Nikt"
         only_admins: "Tylko administratorzy"
         mods_and_admins: "Tylko moderatorzy i administratorzy"
@@ -481,7 +483,7 @@ pl_PL:
           title: "Wyciszony"
           description: "Nie otrzymasz powiadomień o nowych tematach w tej grupie."
       flair_url: "Awatar "
-      flair_url_placeholder: "(Opconalne) Link do obrazka lub klasa Font Awesome"
+      flair_url_placeholder: "(Opcjonalne) Link do obrazka lub klasa Font Awesome"
       flair_bg_color: "Kolor tła odznaki grupowej"
       flair_bg_color_placeholder: "(Opcjonalne) Kolor w formacie Hex"
       flair_color: "Kolor odznaki grupowej "
@@ -547,6 +549,7 @@ pl_PL:
       topics_entered: "wprowadzone tematy:"
       post_count: "# wpisów"
       confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
+      powered_by: "obsługiwane przez <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(wybierz opcję)"
     user:
@@ -960,6 +963,7 @@ pl_PL:
       rate:
         one: "1 błąd/%{duration}"
         few: "%{count} błędy/%{duration}"
+        many: "%{count} błędów/%{duration}"
         other: "%{count} błędów/%{duration}"
     learn_more: "dowiedz się więcej…"
     all_time: 'łącznie'
@@ -1109,6 +1113,7 @@ pl_PL:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
       filter_placeholder: Wyszukiwanie...
     emoji_picker:
@@ -1145,9 +1150,10 @@ pl_PL:
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
       group_mentioned:
-        one: "Wspomiinając {{group}}, powiadomisz <a href='{{group_link}}'>1 osobę</a> – czy jesteś pewien ?"
-        few: "Wspominając  {{group}}, powiadomisz <a href='{{group_link}}'>{{count}} osoby</a> –czy jesteś pewien ?"
-        other: "Wspominając  {{group}}, powiadomisz <a href='{{group_link}}'>{{count}} osób</a> –czy jesteś pewien ?"
+        one: "Wspominając {{group}}, powiadomisz <a href='{{group_link}}'>1 osobę</a> – czy jesteś pewien?"
+        few: "Wspominając {{group}}, powiadomisz <a href='{{group_link}}'>{{count}} osoby</a> – czy jesteś pewien?"
+        many: "Wspominając {{group}}, powiadomisz <a href='{{group_link}}'>{{count}} osób</a> – czy jesteś pewien?"
+        other: "Wspominając {{group}}, powiadomisz <a href='{{group_link}}'>{{count}} osób</a> –czy jesteś pewien?"
       cannot_see_mention:
         category: "Wspomniałeś o {{username}} lecz nie zostaną oni powiadomieni ponieważ nie mają dostępu do tej kategorii. Dodaj ich do grupy która ma dostęp do tej kategorii."
         private: "Wspomniałeś o {{username}} lecz nie zostaną powiadomieni ponieważ nie mogą odczytać tej wiadomości . Będziesz musiał ich zaprosić do odczytania tej wiadomości "
@@ -1223,33 +1229,33 @@ pl_PL:
       empty: "Nie znaleziono powiadomień."
       more: "pokaż starsze powiadomienia"
       total_flagged: "wszystkie oflagowane wpisy"
-      mentioned: "<i title='wspomniano' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='wywołanie grupy' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='cytat' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='odpowiedź' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edycja' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='polubienie' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='polubienie' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} oraz 1 inna osoba</span> {{description}}</p>"
-        few: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}</p>"
-        many: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}</p>"
-        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}</p>"
-      private_message: "<i title='prywatna wiadomość' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='prywatna wiadomość' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='zaproszenie do tematu' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='przyjęcie twojego zaproszenia' class='fa fa-user'></i><p><span>{{username}}</span> przyjmuje twoje zaproszenie</p>"
-      moved_post: "<i title='przeniesienie wpisu' class='fa fa-sign-out'></i><p><span>{{username}}</span> przenosi {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='otrzymano odznakę' class='fa fa-certificate'></i><p>Otrzymujesz '{{description}}'</p>"
-      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nowy temat</span> {{description}}</p>"
+        one: "<span>{{username}}, {{username2}} i 1 inna osoba</span> {{description}}"
+        few: "<span>{{username}}, {{username2}} i {{count}} inne osoby</span> {{description}}"
+        many: "<span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> przyjmuje twoje zaproszenie"
+      moved_post: "<span>{{username}}</span> przenosi {{description}}"
+      linked: "<span>{{username}}</span> {{description}}"
+      granted_badge: "Otrzymujesz '{{description}}'"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Nowy temat</span> {{description}}"
       group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomość w skrzynce odbiorczej {{group_name}} </p>"
-        few: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}} </p>"
-        many: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}</p>"
+        one: "masz {{count}} wiadomość w skrzynce odbiorczej {{group_name}}"
+        few: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
+        many: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
+        other: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
       alt:
         mentioned: "Wywołanie przez"
         quoted: "Cytowanie przez"
@@ -1313,6 +1319,8 @@ pl_PL:
       start_new_topic: "Może utwórz nowy temat?"
       or_search_google: "Albo spróbuj wyszukać w Google:"
       search_google: "Spróbuj wyszukać w Google:"
+      search_google_button: "Google"
+      search_google_title: "Przeszukaj tę stronę"
       context:
         user: "Szukaj wpisów @{{username}}"
         category: "Szukaj w kategorii #{{category}}"
@@ -1429,6 +1437,7 @@ pl_PL:
       filter_to:
         one: "1 post w temacie"
         few: "{{count}} posty w temacie"
+        many: "{{count}} postów w temacie"
         other: "{{count}} postów w temacie"
       create: 'Nowy temat'
       create_long: 'Utwórz nowy temat'
@@ -1539,7 +1548,8 @@ pl_PL:
       auto_close_title: 'Ustawienia automatycznego zamykania'
       auto_close_immediate:
         one: "Ostatni wpis w tym temacie został zamieszczony 1 godzinę temu, więc zostanie on natychmiastowo zamknięty."
-        few: "Ostatni wpis w tym temacie został zamieszczony %{hours} godzin temu, więc zostanie on natychmiastowo zamknięty."
+        few: "Ostatni wpis w tym temacie został zamieszczony %{hours} godziny temu, więc zostanie on natychmiastowo zamknięty."
+        many: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
         other: "Ostatni wpis w tym temacie został zamieszczony %{hours} godzin temu, więc zostanie on natychmiastowo zamknięty."
       timeline:
         back: "Wstecz"
@@ -2139,16 +2149,19 @@ pl_PL:
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
       custom_message:
         at_least:
-          one: "wprowadz co najmniej 1 znak"
-          few: "wprowadz co najmniej {{count}} znaki"
-          other: "wprowadz co najmniej {{count}} znaków"
+          one: "wprowadź co najmniej 1 znak"
+          few: "wprowadź co najmniej {{count}} znaki"
+          many: "wprowadź co najmniej {{count}} znaków"
+          other: "wprowadź co najmniej {{count}} znaków"
         more:
           one: " pozostał 1"
           few: "pozostały {{count}}"
+          many: "pozostało {{count}}"
           other: "pozostało {{count}} "
         left:
           one: "1 pozostał"
           few: "{{count}} pozostało"
+          many: "{{count}} pozostało"
           other: "{{count}} pozostało"
     flagging_topic:
       title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
@@ -2169,6 +2182,7 @@ pl_PL:
       title:
         one: "jeszcze 1"
         few: "%{count} jeszcze"
+        many: "%{count} jeszcze"
         other: "%{count} jeszcze"
     topic_statuses:
       warning:
@@ -2211,6 +2225,7 @@ pl_PL:
     views_long:
       one: "ten temat był przeglądany 1 raz"
       few: "ten temat był przeglądany {{number}} razy"
+      many: "ten temat był przeglądany {{number}} razy"
       other: "ten temat był przeglądany {{number}} razy"
     activity: "Aktywność"
     likes: "Lajki"
@@ -2354,6 +2369,7 @@ pl_PL:
         hamburger_menu: '<b>=</b> Otwórz menu'
         user_profile_menu: '<b>p</b> Otwórz menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> Pokaż zaktualizowane tematy'
+        search: '<b>/</b> lub <b>ctrl</b>+<b>shift</b>+<b>s</b> Wyszukaj'
         help: '<b>?</b> Pokaż skróty klawiszowe'
         dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
@@ -2731,14 +2747,16 @@ pl_PL:
           incoming:
             one: "Istnieje nowe wydarzenie "
             few: "Istnieją {{count}} nowe wydarzenia. "
+            many: "Istnieje {{count}} nowych wydarzeń."
             other: "Istnieje {{count}} nowych wydarzeń. "
           completed_in:
             one: "Ukończono w 1 sekundę."
-            few: "Ukończono w  {{count}} sekundy."
-            other: "Ukończono w  {{count}} sekund."
+            few: "Ukończono w {{count}} sekundy."
+            many: "Ukończono w {{count}} sekund."
+            other: "Ukończono w {{count}} sekund."
           request: "Żądanie"
           response: "Odpowiedź"
-          redeliver_confirm: "Czy jesteś pewien, że chcesz dostarczyć ponownie tą samą zawartość ?"
+          redeliver_confirm: "Czy jesteś pewien, że chcesz dostarczyć ponownie tą samą zawartość?"
           headers: "Nagłówki"
           payload: "Zawartość"
           body: "Body"
@@ -2757,7 +2775,7 @@ pl_PL:
         name: "Nazwa"
         none_installed: "Brak zainstalowanych wtyczek."
         version: "Wersja"
-        enabled: "Włączono?"
+        enabled: "Włączona?"
         is_enabled: "T"
         not_enabled: "N"
         change_settings: "Zmień ustawienia"
@@ -3143,7 +3161,7 @@ pl_PL:
         show_words: "pokaż słowa"
         word_count:
           one: "1 słowo"
-          few: "%{count} słów"
+          few: "%{count} słówa"
           many: "%{count} słów"
           other: "%{count} słów"
         actions:
@@ -3233,7 +3251,7 @@ pl_PL:
         suspend_reason: "Powód"
         suspended_by: "Zawieszony przez"
         delete_all_posts: "Usuń wszystkie wpisy"
-        delete_all_posts_confirm_MF: "Żamierzasz usunąć {POSTS, plural, one {1 post} other {# posts}} i {TOPICS, plural, one {1 topic} other {# topics}}. Czy jesteś pewien ?"
+        delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
         suspend: "Zawieś"
         unsuspend: "Odwieś"
         suspended: "Zawieszony?"
@@ -3578,6 +3596,11 @@ pl_PL:
       upload: "Wyślij"
       uploading: "Wysyłanie…"
       quit: "Może później"
+      staff_count:
+        one: "W twojej społeczności jest 1 członek załogi (Ty)."
+        few: "W twojej społeczności jest %{count} członków załogi, w tym Ty."
+        many: "W twojej społeczności jest %{count} członków załogi, w tym Ty."
+        other: "W twojej społeczności jest %{count}członków załogi, w tym  Ty."
       invites:
         add_user: "dodaj"
         none_added: "Nie zaprosiłeś nikogo. Czy na pewno chcesz kontynuować?"

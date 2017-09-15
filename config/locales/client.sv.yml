@@ -375,9 +375,6 @@ sv:
       index:
         title: "Grupper"
         empty: "Det finns inga synliga grupper"
-      title:
-        one: "grupp"
-        other: "grupper"
       activity: "Aktivitet"
       members: "Medlemmar"
       topics: "Ämnen"
@@ -1075,28 +1072,6 @@ sv:
       empty: "Inga notifieringar hittades."
       more: "visa äldre notifikationer"
       total_flagged: "totalt antal flaggade inlägg"
-      mentioned: "<i title='omnämnd' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
-      liked_many:
-        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} och en annan</span> {{description}}</p>"
-        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} och {{count}} andra</span> {{description}}</p>"
-      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='inbjuden till ämne' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepterade din inbjudan</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> flyttade {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Förtjänade '{{description}}'</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nytt ämne</span> {{description}}</p>"
-      group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} meddelande i din {{group_name}}-inkorg</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} meddelanden i din {{group_name}}-inkorg</p>"
       alt:
         mentioned: "Omnämnd av"
         quoted: "Citerad av"

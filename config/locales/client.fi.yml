@@ -248,7 +248,7 @@ fi:
     topic_count_new:
       one: "{{count}} uusi ketju."
       other: "{{count}} uutta ketjua."
-    click_to_show: "Klikkaa nähdäksesi."
+    click_to_show: "Klikkaa niin näet."
     preview: "esikatselu"
     cancel: "peruuta"
     save: "Tallenna muutokset"
@@ -371,6 +371,11 @@ fi:
       closed_group: Suljettu ryhmä
       is_group_user: "Olet tämän ryhmän jäsen"
       allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille"
+      membership_request_template: "Viestipohja, joka näytetään käyttäjälle, kun hän lähettää jäsenhakemusta ryhmään."
+      membership_request:
+        submit: "Lähetä hakemus"
+        title: "Hakemus ryhmään @%{group_name}"
+        reason: "Kerro ryhmän isännille, miksi haluat kuulua tähän ryhmään"
       membership: "Jäsenyys"
       name: "Nimi"
       user_count: "Jäsenmäärä"
@@ -381,8 +386,8 @@ fi:
         title: "Ryhmät"
         empty: "Näkyvillä olevia ryhmiä ei ole."
       title:
-        one: "ryhmä"
-        other: "ryhmät"
+        one: "Ryhmä"
+        other: "Ryhmät"
       activity: "Toiminta"
       members: "Jäsenet"
       topics: "Ketjut"
@@ -397,6 +402,8 @@ fi:
         staff: "Ryhmän isännät ja henkilökunta"
         owners: "Ryhmän isännät ja ylläpitäjät"
       alias_levels:
+        mentionable: "Ketkä voivat @mainita ryhmän?"
+        messageable: "Ketkä voivat lähettää ryhmälle viestin?"
         nobody: "Ei kukaan"
         only_admins: "Vain ylläpitäjät"
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
@@ -484,6 +491,7 @@ fi:
       topics_entered: "katseltuja ketjuja"
       post_count: "# viestiä"
       confirm_delete_other_accounts: "Oletko varma, että haluat poistaa nämä tunnukset?"
+      powered_by: "voimanlähteenä <a href='https://ipinfo.io'>1ipinfo.io</a>"
     user_fields:
       none: "(valitse vaihtoehto)"
     user:
@@ -629,6 +637,7 @@ fi:
         taken: "Pahoittelut, tämä sähköpostiosoite ei ole saatavilla."
         error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä sama sähköpostiosoite on jo käytössä?"
         success: "Annettuun osoitteeseen on lähetetty viesti. Seuraa sen ohjeita sähköpostiosoitteen varmentamiseksi."
+        success_staff: "Lähetimme sähköpostia nykyiseen osoitteeseesi. Noudata vahvistusohjeita."
       change_avatar:
         title: "Vaihda profiilikuvasi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
@@ -1025,6 +1034,10 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: Valitse...
+      no_content: Ei osumia
+      filter_placeholder: Hae...
     emoji_picker:
       filter_placeholder: Etsi emojia
       people: Ihmiset
@@ -1048,6 +1061,7 @@ fi:
       options: "Asetukset"
       whisper: "kuiskaus"
       unlist: "listaamaton"
+      blockquote_text: "Sitaatti"
       add_warning: "Tämä on virallinen varoitus."
       toggle_whisper: "Vaihda kuiskaus"
       toggle_unlisted: "Listauksissa näkyminen"
@@ -1135,29 +1149,6 @@ fi:
       empty: "Ilmoituksia ei löydetty."
       more: "vanhat ilmoitukset"
       total_flagged: "yhteensä liputettuja viestejä"
-      mentioned: "<i title='viittasi' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='lainasi' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='vastasi' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='kirjoitti' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='muokkasi' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
-      liked_many:
-        one: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} ja 1 muu</span> {{description}}</p>"
-        other: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} ja {{count}} muuta</span> {{description}}</p>"
-      private_message: "<i title='yksityisviesti' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='yksityisviesti' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='kutsui ketjuun' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='hyväksyi kutsusi' class='fa fa-user'></i><p><span>{{username}}</span> hyväksyi kutsusi</p>"
-      moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
-      linked: "<i title='linkkasi viestiin' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='ansiomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
-      topic_reminder: "<i title='topic reminder' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Uusi ketju</span> {{description}}</p>"
-      group_message_summary:
-        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viesti ryhmän {{group_name}} saapuneissa</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viestiä ryhmän {{group_name}} saapuneissa</p>"
       alt:
         mentioned: "Mainitsija"
         quoted: "Lainaaja"
@@ -1211,6 +1202,13 @@ fi:
       searching: "Etsitään ..."
       post_format: "#{{post_number}} käyttäjältä {{username}}"
       results_page: "Hakutulokset"
+      more_results: "Tuloksia olisi enemmänkin. Rajaa hakuasi."
+      cant_find: "Etkö löydä etsimääsi?"
+      start_new_topic: "Haluaisitko aloittaa uuden ketjun?"
+      or_search_google: "Tai kokeile Google-hakua:"
+      search_google: "Kokeile Google-hakua:"
+      search_google_button: "Google"
+      search_google_title: "Hae tältä sivustolta"
       context:
         user: "Etsi @{{username}} viestejä"
         category: "Etsi alueelta #{{category}}"
@@ -1242,6 +1240,7 @@ fi:
           seen: jotka olen lukenut
           unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä
+          images: joissa on kuv(i)a
           all_tags: Ketjulla on kaikki tunnisteet
         statuses:
           label: Ketju/Ketjuun
@@ -1572,6 +1571,7 @@ fi:
         success_email: "Olemme lähettäneet kutsun osoitteeseen <b>{{emailOrUsername}}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
         error: "Pahoittelut, emme onnistuneet kutsumaan tätä henkilöä. Ehkäpä hänet on jo kutsuttu? (Huomaa, että kutsumistiheyttä rajoitetaan)"
+        success_existing_email: "On jo olemassa käyttäjä sähköpostiosoitteella <b>{{emailOrUsername}}</b>. Hänet kutsuttiin osallistumaan tähän ketjuun."
       login_reply: 'Kirjaudu sisään vastataksesi'
       filters:
         n_posts:
@@ -2143,6 +2143,7 @@ fi:
         hamburger_menu: '<b>=</b> Avaa hampurilaisvalikko'
         user_profile_menu: '<b>p</b> Avaa käyttäjävalikko'
         show_incoming_updated_topics: '<b>.</b> Näytä päivttyneet ketjut'
+        search: '<b>/</b> tai <b>ctrl</b>+<b>shift</b>+<b>s</b> Haku'
         help: '<b>?</b> Näytä näppäimistöoikotiet'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Unohda Uudet/Viestit'
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
@@ -2906,6 +2907,9 @@ fi:
         search: "haku"
         clear_filter: "Tyhjennä"
         show_words: "näytä sanat"
+        word_count:
+          one: "1 sana"
+          other: "%{count} sanaa"
         actions:
           block: 'Estä'
           censor: 'Sensuroi'
@@ -2918,6 +2922,7 @@ fi:
           flag: 'Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä.'
         form:
           label: 'Uusi sana:'
+          placeholder: 'kokonainen sana tai * jokerimerkkinä'
           add: 'Lisä'
           success: 'Onnistui'
           upload: "Lataa"
@@ -3318,6 +3323,9 @@ fi:
       upload: "Lataa"
       uploading: "Ladataan..."
       quit: "Ehkä myöhemmin"
+      staff_count:
+        one: "Henkilökuntalaisia on 1 (eli sinä)"
+        other: "Henkilökuntalaisia on %{count}, sinä mukaan lukien."
       invites:
         add_user: "lisää"
         none_added: "Et ole kutsunut lainkaan henkilökuntaa. Haluatko todella jatkaa?"

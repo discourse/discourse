@@ -210,6 +210,7 @@ de:
     user_posts: "Neueste Beiträge von @%{username}"
     user_topics: "Neueste Themen von @%{username}"
     tag: "Themen mit Schlagwörtern"
+    badge: "%{display_name} Abzeichen auf %{site_title}"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
   excerpt_image: "Bild"
@@ -324,6 +325,7 @@ de:
               too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
               cant_send_pm: "Entschuldigung, du kannst diesem Benutzer keine Direktnachricht schicken."
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
+              reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
             featured_link:
               invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
               invalid_category: "kann in dieser Kategorie nicht bearbeitet werden."
@@ -447,6 +449,10 @@ de:
     leader:
       title: "Anführer"
     change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Die Vertrauensstufe ist jedoch bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'. Wenn du den Benutzer zurückstufen möchtest, musst du zuerst seine Vertrauensstufe sperren."
+  post:
+    image_placeholder:
+      broken: "Dieses Bild ist beschädigt"
+      large: "Dieses Bild ist zu groß, um es hier darzustellen; klicke um es anzuzeigen"
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuche es später wieder."
     too_many_requests: "Diese Aktion kann nur ein begrenztes Mal pro Tag durchgeführt werden. Bitte warte %{time_left} bis zum nächsten Versuch."
@@ -632,6 +638,9 @@ de:
     no_likes_given:
       self: "Du hast noch keine Beiträge mit einem „Like“ markiert."
       others: "Keine Beiträge mit „Like“."
+    no_replies:
+      self: "Du hast auf keine Beiträge geantwortet."
+      others: "Keine Antworten."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -895,6 +904,7 @@ de:
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     fixed_category_positions_on_create: "Wenn aktiviert wird die Kategoriezuordnung beim Erstellen eines Themas erhalten (benötigt fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten 'rel nofollow' hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Markdown-Beiträge aktualisierst: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Eine Liste von Domains, bei denen nofollow bei Links nicht hinzugefügt werden soll. example.com wird automatisch auch Subdomains wie sub.example.com erlauben. Zumindest solltest du die Domain dieser Seite hinzufügen, um Web-Crawlern zu helfen, alle Inhalte zu finden. Wenn andere Teile der Seite auf anderen Domains liegen, füge auch diese hinzu."
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
     show_pinned_excerpt_mobile: "Zeige einen Auszug angehefteter Themen in der mobilen Ansicht."
     show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
@@ -920,6 +930,7 @@ de:
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
     enable_private_messages: "Erlaube Benutzer mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten und Antworten senden können."
+    enable_private_email_messages: "Erlaube Benutzern mit Vertrauensstufe 4 (konfigurierbar über die Mindestvertrauensstufe, um Nachrichten zu senden), private E-Mail-Nachrichten zu senden. Bitte beachte, dass Team-Mitglieder immer und in jedem Fall Nachrichten senden können."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -957,6 +968,7 @@ de:
     use_admin_ip_whitelist: "Administratoren können sich nur anmelden, wenn sie von einer IP-Adresse aus zugreifen, welcher unter den vertrauenswürden IP-Adressen gelistet ist (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     whitelist_internal_hosts: "Eine Liste interner Hostnamen, die Discourse sicher abrufen kann für Oneboxing und andere Zwecke"
+    allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
     top_menu: "Legt fest, welche Elemente in der Navigationsleiste der Startseite auftauchen sollen, und in welcher Reihenfolge. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
@@ -1067,6 +1079,7 @@ de:
     clean_up_uploads: "Lösche verwaiste Uploads, um illegales Hosting zu vermeiden. ACHTUNG: du solltest ein Backup deines /uploads-Verzeichnis erstellen, bevor du diese Funktion aktivierst."
     clean_orphan_uploads_grace_period_hours: "Schonfrist (in Stunden), bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Schonfrist (in Tagen), bevor ein entfernter Upload endgültig gelöscht wird."
+    purge_unactivated_users_grace_period_days: "Frist (in Tagen), bevor ein Benutzer gelöscht wird, der sein Konto nicht aktiviert hat. Setze sie auf 0, um nicht aktivierte Benutzer nie zu bereinigen."
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3. WICHTIG: benötigt gültige S3 Anmeldedaten (sowohl access_key_id als auch secret_access_key)."
     s3_use_iam_profile: 'Benutze die AWS EC2 IAM Rolle zum Abrufen von Keys. ANMERKUNG: Das Aktivieren überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
     s3_upload_bucket: "Der Name des Amazon S3 Buckets, in dem hochgeladene Dateien gespeichert werden sollen. ACHTUNG: nur Kleinbuchstaben, keine Punkte, keine Unterstriche."
@@ -1115,6 +1128,7 @@ de:
     min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
     min_trust_to_send_messages: "Benötigte Vertrauensstufe um neue private Nachrichten erstellen zu dürfen."
+    min_trust_to_send_email_messages: "Mindestvertrauensstufe, die nötig ist, um neue private Nachrichten per E-Mail (an vorbereitete Benutzer) zu schicken."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_attachments: "Maximale Anzahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -1215,7 +1229,7 @@ de:
     pop3_polling_username: "Benutzername für die POP3-Abfrage."
     pop3_polling_password: "Passwort für die POP3-Abfrage."
     log_mail_processing_failures: "Protokolliere Fehler bei der E-Mail-Verarbeitung in http://yoursitename.com/logs"
-    email_in: "Erlaube Benutzern neue Themen per E-Mail (benötigt POP3-Abfrage) zu erstellen. Konfiguriere die Adressen im Reiter „Einstellungen“ für jede Kategorie."
+    email_in: "Erlaube Benutzern, neue Themen per E-Mail einzutragen (erfordert manuelles oder POP3-Polling). Konfiguriere die Adressen im „Einstellungen“-Reiter in jeder Kategorie."
     email_in_min_trust: "Minimale Vertrauensstufe um neue Themen per E-Mail erstellen zu können."
     email_prefix: "Das [Präfix], das für den Betreff von E-Mails genutzt wird. Standardwert ist 'title', wenn nicht gesetzt."
     email_site_title: "Titel der Site, der als Absender beim Versand von E-Mails verwendet wird. Wenn nicht angegeben wird 'title' verwendet. Verwende diese Einstellung, wenn 'title' spezielle Zeichen enthält, die im Absender-Feld einer E-Mail nicht verwendet werden dürfen."
@@ -1268,6 +1282,7 @@ de:
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
     native_app_install_banner: "Wiederkehrende Benutzer dazu einladen, die native Discourse-App herunterzuladen."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
+    auto_handle_queued_age: "Automatische Behandlung von Einträgen, die auf Überprüfung warten, nach dieser Anzahl an Tagen. Meldungen werden aufgeschoben. Anstehende Beiträge und Benutzer werden abgelehnt. Setze sie auf 0, um diese Funktion zu deaktivieren."
     max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
@@ -1371,6 +1386,8 @@ de:
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
       email_editable_enabled: "Du musst die Einstellung 'email editable' deaktivieren, bevor du diese Einstellung aktivierst."
       enable_sso_disabled: "Du musst erst die Einstellung 'enable sso' aktivieren, bevor du diese Einstellung aktivierst."
+      staged_users_disabled: "Du musst erst 'vorbereitete Benutzer' aktivieren, bevor du diese Einstellung aktivierst."
+      reply_by_email_disabled: "Du musst erst 'Antwort per E-Mail' aktivieren, bevor du diese Einstellung aktivierst."
   search:
     within_post: "#%{post_number} von %{username}"
     types:
@@ -1515,6 +1532,7 @@ de:
       max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (limit erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
     website:
       domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
+    auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Seiteneinstellung auto_handle_queued_age."
   flags_reminder:
     flags_were_submitted:
       one: "Meldungen wurden vor über 1 Stunde eingereicht. [Bitte übeprüfe sie](/admin/flags)."
@@ -1705,15 +1723,6 @@ de:
       ### Versionshinweise
 
       %{notes}
-  queued_posts_reminder:
-    title: "Erinnerung an Freischaltung wartender Beiträge"
-    subject_template:
-      one: "[%{email_prefix}] 1 Beitrag wartet auf Überprüfung"
-      other: "[%{email_prefix}] %{count} Beiträge warten auf Überprüfung"
-    text_body_template: |
-      Hallo,
-
-      Beiträge von neuen Benutzern wurden zur Moderation aufgehalten und warten gerade auf Überprüfung. [Akzeptiere sie hier oder lehne sie ab](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community glaubt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
     inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: die Community glaubt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community Richtlinien](/guidelines) darstellt."

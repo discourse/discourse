@@ -894,7 +894,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     log_mail_processing_failures: "Ghi lại tất cả các lỗi xử lý email vào http://yoursitename.com/logs"
-    email_in: "Cho phép người dùng tạo chủ đề mới thông qua email (yêu cầu pop3 polling). Cấu hình các địa chỉ trong tab \"Thiết lập\" cho mỗi chuyên mục."
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."

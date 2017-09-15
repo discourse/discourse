@@ -919,7 +919,6 @@ tr_TR:
     pop3_polling_username: "E-postaların sorgulanacağı POP3 hesabının kullanıcı adı."
     pop3_polling_password: "E-postaların sorgulanacağı POP3 hesabının parolası."
     log_mail_processing_failures: "Bütün e-posta işleme hatalarını http://yoursitename.com/logs adresine logla."
-    email_in: "Kullanıcıların e-posta aracılığıyla yeni konu oluşturabilmesine izin ver (pop3 sorgulaması gerektirir). Adresleri her kategorinin \"Ayarlar\" sekmesinden düzenleyin."
     email_in_min_trust: "Bir kullanıcının e-posta aracılığı ile yeni konu oluşturabilmesi için sahip olması gereken en az güven seviyesi."
     email_prefix: "E-postaların konu bölümünü belirten [etiket]. Boş bırakılırsa 'title' yazacak."
     email_site_title: "Bu siteden giden e-postalarda gönderici olarak kullanılacak sitenin başlığı. Herhangi bir şey girilmezse öntanımlı olarak 'title' yazacak. Eğer 'başlık\" içeriğinizde, e-posta göndericisinin stringlerinde izin verilmeyen karakterler varsa, bu ayarı kullanın.  "

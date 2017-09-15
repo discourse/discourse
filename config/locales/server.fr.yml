@@ -1210,7 +1210,6 @@ fr:
     pop3_polling_username: "Le nom d'utilisateur du compte POP3 pour le pooling des courriels."
     pop3_polling_password: "Le mot de passe du compte POP3 pour le pooling des courriels."
     log_mail_processing_failures: "Enregistrer tous les problèmes de mails sur\nhttp://yoursitename.com/logs"
-    email_in: "Autoriser les utilisateurs à poster de nouveaux sujets par courriel (requêtes via pop3 requise). Configurer les adresses dans l'onglet \"Paramètres\" de chaque catégorie."
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisé à poster de nouveaux sujets par courriel."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des courriels. Par défaut il prend la valeur de 'title'."
     email_site_title: "Le titre du site utilisé comme expéditeur pour les courriels du site. Par défaut il prend la valeur de 'title'. Si votre 'title\" utilise des caractères interdits dans les courriels, utiliser ce paramètre."
@@ -1666,15 +1665,6 @@ fr:
       ### Notes de version
 
       %{notes}
-  queued_posts_reminder:
-    title: "Messages dans la file d'attente"
-    subject_template:
-      one: "[%{email_prefix}] 1 message en attente de modération"
-      other: "[%{email_prefix}] %{count} messages en attente de modération"
-    text_body_template: |
-      Bonjour,
-
-      Des messages de nouveaux utilisateurs sont en attente de modération. [Approuvez ou rejetez-les ici](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond au sujet en discussion qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](/guidelines)."

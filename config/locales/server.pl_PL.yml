@@ -1294,7 +1294,6 @@ pl_PL:
     pop3_polling_username: "Nazwa użytkownika dla konta POP3 do przeglądania cyklicznego emaila."
     pop3_polling_password: "Hasło dla konta POP3 do przeglądania cyklicznego maila."
     log_mail_processing_failures: "Zapisuj wszystkie błędy w przetwarzaniu emaili na http://yoursitename.com/logs"
-    email_in: "Zezwalaj użytkownikom na dodawanie nowych tematów poprzez email (wymaga przeglądania cyklicznego pop3). Skonfiguruj adresy w sekcji \"Ustawienia\" każdej z kategorii."
     email_in_min_trust: "Minimalny poziom zaufania, który musi posiadać użytkownik, aby móc dodawać nowe posty w tematach poprzez email."
     email_prefix: "Etykieta używana w temacie emaili. Domyślnie będzie ustawiana jako \"tytuł\", w przypadku braku ustawienia."
     email_site_title: "Tytuł strony używany jako nadawca emaili ze strony. Domyślnie ustawiony jako \"tytuł\", w przypadku braku ustawienia. Jeśli twój \"tytuł\" zawiera znaki, które nie są dozwolone przez ciągi znaków nadawcy emaila, użyj tego ustawienia."
@@ -1793,12 +1792,6 @@ pl_PL:
       ### Release notes
 
       %{notes}
-  queued_posts_reminder:
-    title: "Przypomnienie o postach w kolejce"
-    text_body_template: |
-      Witaj,
-
-      Posty od nowych użytkowników zostały przekazane do moderacji i oczekują na przejrzenie. [Zatwierdź lub odrzuć je tutaj](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Twój post został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do wątku, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego posta."
     inappropriate: "Twój wpis został oznaczony jako  **nieodpowiedni**: społeczność uznała, że zbyt agresywny lub niezgodny z [jej wytycznymi](/guidelines)."

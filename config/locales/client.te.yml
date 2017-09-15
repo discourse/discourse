@@ -209,9 +209,6 @@ te:
     directory:
       title: "వాడుకరులు"
     groups:
-      title:
-        one: "గుంపు"
-        other: "గుంపులు"
       members: "సభ్యులు"
       posts: "టపాలు"
       alias_levels:
@@ -586,15 +583,6 @@ te:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
       more: "పాత ప్రకటనలు చూడు"
       total_flagged: "మొత్తం కేతనించిన టపాలు"
-      quoted: "<i title='కోట్ చేసారు' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title=' సవరించారు' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='ఇష్టపడ్డారు' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='మీ ఆహ్వానాన్ని మన్నించారు' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
-      moved_post: "<i title='టపా జరిపారు' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      granted_badge: "<i title='బ్యాడ్జ్ ప్రసాదించారు' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
     upload_selector:
       title: "ఒక బొమ్మ కలుపు"
       title_with_attachments: "ఒక బొమ్మ లేదా దస్త్రం కలుపు"
