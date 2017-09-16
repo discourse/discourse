@@ -89,7 +89,7 @@ end
 # Add comments to the top of files and replace the language (first key in YAML file)
 def update_file_header(filename, language)
   lines = File.readlines(filename)
-  lines.collect! { |line| line =~ /^[a-z_]+:$/i ? "#{language}:" : line }
+  lines.collect! { |line| line.gsub!(/^[a-z_]+:( {})?$/i, "#{language}:\\1") || line }
 
   File.open(filename, 'w+') do |f|
     f.puts(YML_FILE_COMMENTS, '') unless lines[0][0] == '#'
