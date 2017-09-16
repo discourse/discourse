@@ -46,6 +46,7 @@ it:
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
         auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
+        no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
         inactive_user_error: "Succede quando il mittente non è attivo."
         blocked_user_error: "Succede quando il mittente è stato bloccato."
         bad_destination_address: "Succede quando nessuno degli indirizzi email presente nei campi A/Cc/Bcc corrisponde ad alcun indirizzo email entrante tra quelli configurati."
