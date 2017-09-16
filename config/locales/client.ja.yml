@@ -141,6 +141,7 @@ ja:
         eu_west_2: "EU(ロンドン)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
+        us_east_2: "US East (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -326,6 +327,8 @@ ja:
         add_members: "メンバーを追加"
         delete_member_confirm: "%{group}から%{username}を削除しますか?"
       name_placeholder: "グループネームはユーザー名と同様にスペース無し"
+      public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
+      public_exit: "ユーザーがグループから自由に離脱できるようにする"
       empty:
         posts: "このグループのメンバーによる投稿はありません。"
         members: "このグループにはメンバーがいません。"
@@ -342,8 +345,11 @@ ja:
       closed_group: クローズドグループ
       is_group_user: "このグループのメンバーです"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
+      membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
       membership_request:
         submit: "リクエストを送信"
+        title: "参加をリクエスト @%{group_name}"
+        reason: "グループに参加したい旨をグループオーナーに伝える"
       membership: "メンバーシップ"
       name: "名前"
       user_count: "メンバー数"
@@ -353,6 +359,8 @@ ja:
       index:
         title: "グループ"
         empty: "表示するグループはありません。"
+      title:
+        other: "グループ"
       activity: "アクティビティ"
       members: "メンバー"
       topics: "トピック"
@@ -367,6 +375,8 @@ ja:
         staff: "グループオーナーとスタッフのみ"
         owners: "グループオーナーと管理者のみ"
       alias_levels:
+        mentionable: "誰がこのグループに@メンションを送れますか?"
+        messageable: "誰がこのグループにメッセージを送れますか?"
         nobody: "無し"
         only_admins: "管理者のみ"
         mods_and_admins: "管理者とモデレータのみ"
@@ -379,20 +389,26 @@ ja:
         watching:
           title: "ウォッチ中"
         watching_first_post:
-          description: "グループ内新規トピック欄における最初の投稿はあなただけに通知されます。"
+          title: "最初の投稿をウォッチする"
+          description: "グループ内の新規トピックに対する最初の投稿のみ通知されます。"
         tracking:
           title: "追跡中"
           description: "誰かがあなた宛に返信をすると通知があり、新規返信数が表示されます。"
         regular:
           title: "デフォルト"
+          description: "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート"
           description: "グループ内の新規トピックについては何も通知されません。"
       flair_url: "アバター画像"
+      flair_url_placeholder: "(オプション) 画像URL or Font Awesomeのクラス名"
       flair_bg_color: "アバターの背景色"
+      flair_bg_color_placeholder: "(オプション) HEXカラー値"
       flair_color: "アバター色"
+      flair_color_placeholder: "(オプション) HEXカラー値"
       flair_preview_icon: "アイコンプレビュー"
       flair_preview_image: "画像プレビュー"
+      flair_note: "アバターはユーザーのプライマリーグループにだけ表示されます。"
     user_action_groups:
       '1': "「いいね！」 "
       '2': "「いいね！」 された"
@@ -445,6 +461,7 @@ ja:
       topics_entered: "入力したトピック"
       post_count: "# 投稿"
       confirm_delete_other_accounts: "これらのアカウントを削除してもよろしいですか?"
+      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(オプションを選択)"
     user:
@@ -503,18 +520,19 @@ ja:
           この設定は、アクティビティの情報機能を無効化します。<br />
           ミュートしているトピックやカテゴリはこれらのメールには含まれません。
         individual: "新しい投稿がある場合にメールで送る"
-        individual_no_echo: "自分自身を除いて新規投稿関連のメールを送信してください。"
-        few_per_day: "新規投稿に関連するメッセージを送信してください。(大体2日おき)"
+        individual_no_echo: "自分以外の新しい投稿がある場合にメールで送る"
+        many_per_day: "投稿される度にメールで通知を受け取る (日に {{dailyEmailEstimate}} 回程度)"
+        few_per_day: "投稿される度にメールで通知を受け取る (日に2回程度)"
       tag_settings: "タグ"
-      watched_tags: "閲覧済み"
+      watched_tags: "ウォッチ中"
       muted_tags: "通知しない"
       watched_categories: "ウォッチ中"
       watched_categories_instructions: "自動的にカテゴリー内の全てのトピックを監視します。全ての新規投稿と新規トピックが通知されまた、新規投稿数がトピックの隣に表示されます。"
       tracked_categories: "追跡中"
       tracked_categories_instructions: "自動的にカテゴリー内の全てのトピックを追跡します。新規投稿数がトピックの隣に表示されます。"
-      watched_first_post_categories: "新規投稿を監視中"
-      watched_first_post_categories_instructions: "カテゴリー内の新規トピックに対する新規投稿について通知されます。"
-      watched_first_post_tags: "新規投稿を監視中"
+      watched_first_post_categories: "最初の投稿をウォッチする"
+      watched_first_post_categories_instructions: "カテゴリー内の新規トピックに対する最初の投稿が通知されます。"
+      watched_first_post_tags: "最初の投稿をウォッチする"
       watched_first_post_tags_instructions: "これらのタグの新規トピック内の新規投稿は通知されます。"
       muted_categories: "通知しない"
       muted_categories_instructions: "カテゴリー内の新規トピックについて何も通知せず、また最新を表示しません。"
@@ -529,7 +547,7 @@ ja:
       muted_users: "ミュート"
       muted_users_instructions: "ユーザーからの通知をすべて行いません"
       muted_topics_link: "ミュートしたトピックを表示する"
-      watched_topics_link: "監視トピックを表示"
+      watched_topics_link: "ウォッチ中のトピックを表示"
       tracked_topics_link: "追跡トピックを表示"
       api_approved: "承認されました:"
       theme: "テーマ"
@@ -638,6 +656,8 @@ ja:
       like_notification_frequency:
         title: "いいねされた時に通知"
         always: "常時"
+        first_time_and_daily: "その日の最初の「いいね！」"
+        first_time: "最初の「いいね！」"
       email_previous_replies:
         title: "メールの文章の下部に以前の返信を含める"
         always: "常に"
@@ -738,7 +758,7 @@ ja:
         top_badges: "最近ゲットしたバッジ"
         no_badges: "まだバッジはありません。"
         more_badges: "バッジをもっと見る"
-        no_likes: "好きなものはまだ有りません。"
+        no_likes: "「いいね！」はまだありません。"
       associated_accounts: "関連アカウント"
       ip_address:
         title: "最後のIPアドレス"
@@ -981,7 +1001,8 @@ ja:
       admin_options_title: "このトピックの詳細設定"
     notifications:
       title: "@ユーザ名 のメンション、投稿やトピックへの返信、メッセージなどの通知"
-      none: "通知はありません"
+      none: "通知を読み込むことができませんでした。"
+      empty: "通知はありません。"
       more: "通知をすべて確認する"
       total_flagged: "通報された投稿の合計"
       alt:
@@ -1049,6 +1070,7 @@ ja:
           label: グループ内
         filters:
           posted: 投稿済
+          watching: ウォッチ中
           bookmarks: ブックマーク済
           seen: 既読
     hamburger_menu: "他のトピック一覧やカテゴリを見る"
@@ -1070,6 +1092,7 @@ ja:
         actions: "操作"
         close_topics: "トピックをクローズする"
         archive_topics: "アーカイブトピック"
+        notification_level: "通知"
         choose_new_category: "このトピックの新しいカテゴリを選択してください"
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
@@ -1163,11 +1186,12 @@ ja:
         current: 現在の投稿
       notifications:
         reasons:
-          '3_6': 'このカテゴリに参加中のため通知されます'
+          '3_10': 'このトピックのタグをウォッチしているため通知されます。'
+          '3_6': 'このカテゴリをウォッチしているため通知されます。'
           '3_5': 'このトピックに参加中のため通知されます'
-          '3_2': 'このトピックに参加中のため通知されます。'
+          '3_2': 'このトピックをウォッチしているため通知されます。'
           '3_1': 'このトピックを作成したため通知されます。'
-          '3': 'このトピックに参加中のため通知されます。'
+          '3': 'このトピックをウォッチしているため通知されます。'
           '1_2': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
           '1': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
           '0_7': 'このカテゴリに関して一切通知を受け取りません。'
@@ -1339,7 +1363,7 @@ ja:
         other: "{{count}}人のユーザがこの返信に「いいね！」しました"
       has_likes_title_only_you: "あなたがいいねした投稿"
       has_likes_title_you:
-        other: "あなたと{{count}} 人の人がこの投稿に「いいね!」しました。"
+        other: "あなたと{{count}} 人の人がこの投稿に「いいね！」しました。"
       errors:
         create: "申し訳ありませんが、投稿中にエラーが発生しました。もう一度やり直してください。"
         edit: "申し訳ありませんが、投稿の編集中にエラーが発生しました。もう一度やり直してください。"
@@ -1519,6 +1543,9 @@ ja:
       notifications:
         watching:
           title: "ウォッチ中"
+        watching_first_post:
+          title: "最初の投稿をウォッチする"
+          description: "カテゴリー内の新規トピックに対する最初の投稿のみ通知されます。"
         tracking:
           title: "追跡中"
         regular:
@@ -1729,7 +1756,22 @@ ja:
       title: バッジ
       badge_count:
         other: "%{count}個のバッジ"
+    google_search: |
+      <h3>Googleで検索</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>
     tagging:
+      notifications:
+        watching:
+          title: "ウォッチ中"
+        watching_first_post:
+          title: "最初の投稿をウォッチする"
+          description: "このタグの新規トピックに対する最初の投稿のみ通知されます。"
       topics:
         none:
           latest: "最新のトピックはありません。"
@@ -2027,7 +2069,7 @@ ja:
             description: '操作が成功したことを示すために使用します'
           love:
             name: 'love'
-            description: "いいねボタンの色"
+            description: "「いいね！」ボタンの色"
       email:
         title: "メール"
         settings: "設定"
@@ -2180,6 +2222,7 @@ ja:
         logster:
           title: "エラーログ"
       watched_words:
+        title: "監視ワード"
         form:
           label: '新しい単語:'
           add: '追加'

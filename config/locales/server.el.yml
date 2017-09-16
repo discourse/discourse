@@ -46,6 +46,7 @@ el:
         no_message_id_error: "Συμβαίνει όταν το email δεν έχει επικεφαλίδα 'Message-Id' ."
         auto_generated_email_error: "Συμβαίνει όταν η επικεφαλίδα που προηγείται έχει οριστεί ώς: list, junk, bulk ή auto_reply ή όταν οποιαδήποτε άλλη επικεφαλίδα περιέχει: auto-submitted, auto-replied ή auto-generated."
         no_body_detected_error: "Συμβαίνει όταν είναι αδύνατο να βρεθεί το κύριο μέρος του μηνύματος και όταν δεν υπάρχουν επισυναπτόμενα."
+        no_sender_detected_error: "Συμβαίνει όταν δεν μπορεί να βρεθεί μία έγκυρη διεύθυνση email στο From header."
         inactive_user_error: "Συμβαίνει όταν ο αποστολέας είναι ανενεργός"
         blocked_user_error: "Συμβαίνει όταν ο αποστολέας έχει μπλοκαριστεί"
         bad_destination_address: "Συμβαίνει όταν καμία από τις διευθύνσεις email στα πεδία To/Cc/Bcc δεν αντιστοιχίζεται σε κάποια ρυθμισμένη διεύθυνση εισερχόμενων email."
