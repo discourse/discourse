@@ -34,7 +34,7 @@ export default Ember.Component.extend({
   },
 
   show() {
-    const template = findRawTemplate("emoji-picker")(this.$picker, {customEmojis});
+    const template = findRawTemplate("emoji-picker")({customEmojis});
     this.$picker.html(template);
 
     this.$filter = this.$picker.find(".filter");
