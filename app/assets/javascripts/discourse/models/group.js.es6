@@ -256,6 +256,10 @@ Group.reopenClass({
 
   mentionable(name) {
     return ajax(`/groups/${name}/mentionable`, { data: { name } });
+  },
+
+  messageable(name) {
+    return ajax(`/groups/${name}/messageable`, { data: { name } });
   }
 });
 
