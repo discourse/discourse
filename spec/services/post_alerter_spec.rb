@@ -533,6 +533,46 @@ describe PostAlerter do
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], reply])
     end
+
+    it "notifies about regular reply" do
+      user = Fabricate(:user)
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, user: user, topic: topic)
+
+      reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+      PostAlerter.post_created(reply)
+
+      expect(user.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+    end
+
+    it "doesn't notify regular user about whispered reply" do
+      user = Fabricate(:user)
+      admin = Fabricate(:admin)
+
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, user: user, topic: topic)
+
+      whispered_reply = Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 1)
+      PostAlerter.post_created(whispered_reply)
+
+      expect(user.notifications.where(notification_type: Notification.types[:replied]).count).to eq(0)
+    end
+
+    it "notifies staff user about whispered reply" do
+      user = Fabricate(:user)
+      admin1 = Fabricate(:admin)
+      admin2 = Fabricate(:admin)
+
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, user: user, topic: topic)
+
+      whispered_reply1 = Fabricate(:post, user: admin1, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 1)
+      whispered_reply2 = Fabricate(:post, user: admin2, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 2)
+      PostAlerter.post_created(whispered_reply1)
+      PostAlerter.post_created(whispered_reply2)
+
+      expect(admin1.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
+    end
   end
 
   context "watching" do

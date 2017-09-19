@@ -37,6 +37,10 @@ class PostAlerter
     allowed_group_users(post)
   end
 
+  def notify_about_reply?(post)
+    post.post_type == Post.types[:regular] || post.post_type == Post.types[:whisper]
+  end
+
   def after_save_post(post, new_record = false)
     notified = [post.user]
 
@@ -65,7 +69,7 @@ class PostAlerter
     # replies
     reply_to_user = post.reply_notification_target
 
-    if new_record && reply_to_user && !notified.include?(reply_to_user) && post.post_type == Post.types[:regular]
+    if new_record && reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
       notify_non_pm_users(reply_to_user, :replied, post)
       notified += [reply_to_user]
     end
