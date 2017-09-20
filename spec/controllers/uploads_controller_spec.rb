@@ -154,7 +154,7 @@ describe UploadsController do
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: fake_jpg, type: "composer"
-        end.first
+        end.find { |m| m.channel == '/uploads/composer' }
 
         expect(response.status).to eq 200
 
