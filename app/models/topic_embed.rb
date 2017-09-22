@@ -125,7 +125,7 @@ class TopicEmbed < ActiveRecord::Base
             uri.host = original_uri.host
             node[url_param] = uri.to_s
           end
-        rescue URI::InvalidURIError
+        rescue URI::InvalidURIError, URI::InvalidComponentError
           # If there is a mistyped URL, just do nothing
         end
       end

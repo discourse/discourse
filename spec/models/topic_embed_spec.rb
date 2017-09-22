@@ -195,6 +195,23 @@ describe TopicEmbed do
       end
     end
 
+    context "emails" do
+      let(:url) { 'http://example.com/foo' }
+      let(:contents) { '<p><a href="mailto:foo%40example.com">URL encoded @ symbol</a></p><p><a href="mailto:bar@example.com">normal mailto link</a></p>' }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      before do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+      end
+
+      it "handles mailto links" do
+        response = TopicEmbed.find_remote(url)
+        expect(response.body).to have_tag('a', with: { href: 'mailto:foo%40example.com' })
+        expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
+      end
+    end
   end
 
 end
