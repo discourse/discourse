@@ -3573,6 +3573,7 @@ en:
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
+        embed_link_to_top: "When embedding, the continue button links to the top of the topic instead of the bottom"
         embed_username_key_from_feed: "Key to pull discourse username from feed"
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"

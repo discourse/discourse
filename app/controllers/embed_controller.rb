@@ -32,7 +32,7 @@ class EmbedController < ApplicationController
       @topic_view = TopicView.new(topic_id,
                                   current_user,
                                   limit: SiteSetting.embed_post_limit,
-                                  exclude_first: true,
+                                  exclude_first: !SiteSetting.embed_link_to_top,
                                   exclude_deleted_users: true,
                                   exclude_hidden: true)
 
@@ -45,6 +45,12 @@ class EmbedController < ApplicationController
       if @topic_view
         @reply_count = @topic_view.topic.posts_count - 1
         @reply_count = 0 if @reply_count < 0
+
+        if SiteSetting.embed_link_to_top || SiteSetting.embed_post_limit == 0
+          @topic_view_continue_url = @topic_view.absolute_url
+        else
+          @topic_view_continue_url = @topic_view.posts.last.full_url
+        end
       end
 
     elsif embed_url.present?

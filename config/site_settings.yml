@@ -1110,6 +1110,9 @@ embedding:
   embed_post_limit:
     default: 100
     hidden: true
+  embed_link_to_top:
+    default: false
+    hidden: false
   embed_title_scrubber:
     default: ''
     hidden: true
