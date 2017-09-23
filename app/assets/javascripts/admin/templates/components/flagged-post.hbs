@@ -153,5 +153,9 @@
         {{/unless}}
       </div>
     {{/if}}
+    {{plugin-outlet
+      name="flagged-post-below-controls"
+      tagName=""
+      args=(hash flaggedPost=flaggedPost canAct=canAct)}}
   </div>
 </div>

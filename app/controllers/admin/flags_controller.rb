@@ -60,8 +60,16 @@ class Admin::FlagsController < Admin::AdminController
 
   def agree
     params.permit(:id, :action_on_post)
-
     post = Post.find(params[:id])
+
+    DiscourseEvent.trigger(
+      :before_staff_flag_action,
+      type: 'agree',
+      post: post,
+      action_on_post: params[:action_on_post],
+      user: current_user
+    )
+
     post_action_type = PostAction.post_action_type_for_post(post.id)
 
     keep_post = params[:action_on_post] == "keep"
@@ -85,6 +93,13 @@ class Admin::FlagsController < Admin::AdminController
     params.permit(:id)
     post = Post.find(params[:id])
 
+    DiscourseEvent.trigger(
+      :before_staff_flag_action,
+      type: 'disagree',
+      post: post,
+      user: current_user
+    )
+
     PostAction.clear_flags!(post, current_user)
 
     post.unhide!
@@ -96,8 +111,14 @@ class Admin::FlagsController < Admin::AdminController
     params.permit(:id, :delete_post)
     post = Post.find(params[:id])
 
-    PostAction.defer_flags!(post, current_user, params[:delete_post])
+    DiscourseEvent.trigger(
+      :before_staff_flag_action,
+      type: 'defer',
+      post: post,
+      user: current_user
+    )
 
+    PostAction.defer_flags!(post, current_user, params[:delete_post])
     PostDestroyer.new(current_user, post).destroy if params[:delete_post]
 
     render body: nil

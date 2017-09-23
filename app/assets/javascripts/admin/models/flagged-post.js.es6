@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import Post from 'discourse/models/post';
 import computed from 'ember-addons/ember-computed-decorators';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Post.extend({
 
@@ -52,15 +53,15 @@ export default Post.extend({
   },
 
   disagreeFlags() {
-    return ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
+    return ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false }).catch(popupAjaxError);
   },
 
   deferFlags(deletePost) {
-    return ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } });
+    return ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } }).catch(popupAjaxError);
   },
 
   agreeFlags(actionOnPost) {
-    return ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { action_on_post: actionOnPost } });
+    return ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { action_on_post: actionOnPost } }).catch(popupAjaxError);
   },
 
   postHidden: Ember.computed.alias('hidden'),
