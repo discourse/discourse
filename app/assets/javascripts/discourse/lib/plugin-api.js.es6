@@ -54,12 +54,21 @@ class PluginApi {
    * });
    * ```
    **/
-  modifyClass(resolverName, changes) {
+  modifyClass(resolverName, changes, opts) {
+    opts = opts || {};
+
     if (this.container.cache[resolverName]) {
       console.warn(`"${resolverName}" was already cached in the container. Changes won't be applied.`);
     }
 
     const klass = this.container.factoryFor(resolverName);
+    if (!klass) {
+      if (!opts.ignoreMissing) {
+        console.warn(`"${resolverName}" was not found by modifyClass`);
+      }
+      return;
+    }
+
     klass.class.reopen(changes);
     return klass;
   }
