@@ -114,7 +114,7 @@ class ApplicationController < ActionController::Base
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
     if (request.format && request.format.json?) || request.xhr? || !request.get?
-      rescue_discourse_actions(:not_logged_in, 403, true)
+      rescue_discourse_actions(:not_logged_in, 403, include_ember: true)
     else
       rescue_discourse_actions(:not_found, 404)
     end
@@ -140,16 +140,21 @@ class ApplicationController < ActionController::Base
     rescue_discourse_actions(:not_found, 404)
   end
 
-  rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions(:invalid_access, 403, true)
+  rescue_from Discourse::InvalidAccess do |e|
+    rescue_discourse_actions(
+      :invalid_access,
+      403,
+      include_ember: true,
+      custom_message: e.custom_message
+    )
   end
 
   rescue_from Discourse::ReadOnly do
     render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
-  def rescue_discourse_actions(type, status_code, include_ember = false)
-
+  def rescue_discourse_actions(type, status_code, opts = nil)
+    opts ||= {}
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
@@ -160,9 +165,9 @@ class ApplicationController < ActionController::Base
         return render status: status_code, layout: false, text: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : I18n.t(type)
       end
 
-      render_json_error I18n.t(type), type: type, status: status_code
+      render_json_error I18n.t(opts[:custom_message] || type), type: type, status: status_code
     else
-      render html: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
+      render html: build_not_found_page(status_code, opts[:include_ember] ? 'application' : 'no_ember')
     end
   end
 
