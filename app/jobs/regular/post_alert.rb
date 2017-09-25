@@ -1,3 +1,5 @@
+require_dependency 'post_alerter'
+
 module Jobs
   class PostAlert < Jobs::Base
 

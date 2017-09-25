@@ -5,10 +5,6 @@ require 'rails_helper'
 describe Topic do
   let(:job_klass) { Jobs::ToggleTopicClosed }
 
-  before do
-    job_klass.jobs.clear
-  end
-
   context 'creating a topic without auto-close' do
     let(:topic) { Fabricate(:topic, category: category) }
 

@@ -1,4 +1,4 @@
-class CreateStars < ActiveRecord::Migration
+class CreateStars < ActiveRecord::Migration[4.2]
   def change
     create_table :stars, id: false do |t|
       t.integer  :parent_id, null: false

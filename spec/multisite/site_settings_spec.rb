@@ -8,6 +8,7 @@ RSpec.describe 'Multisite SiteSettings' do
     SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
     conn.config_filename = "spec/fixtures/multisite/two_dbs.yml"
     conn.load_settings!
+    conn.remove_class_variable(:@@current_db)
   end
 
   after do
@@ -21,6 +22,7 @@ RSpec.describe 'Multisite SiteSettings' do
       conn.remove_class_variable(class_variable)
     end
 
+    conn.set_current_db
     SiteSetting.provider = @original_provider
   end
 

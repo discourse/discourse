@@ -14,23 +14,14 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  # Rails 5 is going to ship with Action Cable, we have no use for it as
-  # we already ship MessageBus, AC introduces dependencies on Event Machine,
-  # Celluloid and Faye Web Sockets.
-  #
-  # Note this means upgrading Rails is more annoying, to do so, comment out the
-  # explicit dependencies, and add gem 'rails', bundle update rails and then
-  # comment back the explicit dependencies. Leaving this in a comment till we
-  # upgrade to Rails 5
-  #
-  # gem 'activesupport'
-  # gem 'actionpack'
-  # gem 'activerecord'
-  # gem 'actionmailer'
-  # gem 'activejob'
-  # gem 'railties'
-  # gem 'sprockets-rails'
-  gem 'rails', '~> 4.2'
+  gem 'actionmailer', '~> 5.1'
+  gem 'actionpack', '~> 5.1'
+  gem 'actionview', '~> 5.1'
+  gem 'activemodel', '~> 5.1'
+  gem 'activerecord', '~> 5.1'
+  gem 'activesupport', '~> 5.1'
+  gem 'railties', '~> 5.1'
+  gem 'sprockets-rails'
   gem 'seed-fu', '~> 2.3.5'
 end
 
@@ -55,7 +46,7 @@ gem 'barber'
 
 gem 'message_bus'
 
-gem 'rails_multisite'
+gem 'rails_multisite', '~> 1.1.0.rc4'
 
 gem 'fast_xs'
 
@@ -120,8 +111,6 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  # TODO: Remove once we upgrade to Rails 5.
-  gem 'test_after_commit'
 end
 
 group :test, :development do
@@ -144,6 +133,7 @@ group :test, :development do
 end
 
 group :development do
+  gem 'ruby-prof', require: false
   gem 'bullet', require: !!ENV['BULLET']
   gem 'better_errors'
   gem 'binding_of_caller'

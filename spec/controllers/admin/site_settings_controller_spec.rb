@@ -13,12 +13,12 @@ describe Admin::SiteSettingsController do
 
     context 'index' do
       it 'returns success' do
-        xhr :get, :index
+        get :index, format: :json
         expect(response).to be_success
       end
 
       it 'returns JSON' do
-        xhr :get, :index
+        get :index, format: :json
         expect(::JSON.parse(response.body)).to be_present
       end
     end
@@ -31,34 +31,47 @@ describe Admin::SiteSettingsController do
       end
 
       it 'sets the value when the param is present' do
-        xhr :put, :update, id: 'test_setting', test_setting: 'hello'
+        put :update, params: {
+          id: 'test_setting', test_setting: 'hello'
+        }, format: :json
 
         expect(SiteSetting.test_setting).to eq('hello')
       end
 
       it 'allows value to be a blank string' do
-        xhr :put, :update, id: 'test_setting', test_setting: ''
+        put :update, params: {
+          id: 'test_setting', test_setting: ''
+        }, format: :json
+
         expect(SiteSetting.test_setting).to eq('')
       end
 
       it 'logs the change' do
         SiteSetting.test_setting = 'previous'
         StaffActionLogger.any_instance.expects(:log_site_setting_change).with('test_setting', 'previous', 'hello')
-        xhr :put, :update, id: 'test_setting', test_setting: 'hello'
+
+        put :update, params: {
+          id: 'test_setting', test_setting: 'hello'
+        }, format: :json
+
         expect(SiteSetting.test_setting).to eq('hello')
       end
 
       it 'does not allow changing of hidden settings' do
         SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
         SiteSetting.refresh!
-        result = xhr :put, :update, id: 'hidden_setting', hidden_setting: 'not allowed'
+
+        put :update, params: {
+          id: 'hidden_setting', hidden_setting: 'not allowed'
+        }, format: :json
+
         expect(SiteSetting.hidden_setting).to eq("hidden")
-        expect(result.status).to eq(422)
+        expect(response.status).to eq(422)
       end
 
       it 'fails when a setting does not exist' do
         expect {
-          xhr :put, :update, id: 'provider', provider: 'gotcha'
+          put :update, params: { id: 'provider', provider: 'gotcha' }, format: :json
         }.to raise_error(ArgumentError)
       end
     end

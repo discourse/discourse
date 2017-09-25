@@ -1,4 +1,4 @@
-class CreateDirectoryItems < ActiveRecord::Migration
+class CreateDirectoryItems < ActiveRecord::Migration[4.2]
   def change
     create_table :directory_items, force: true do |t|
       t.integer :period_type, null: false

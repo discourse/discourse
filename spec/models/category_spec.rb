@@ -131,9 +131,9 @@ describe Category do
 
       group.add(user)
       category.set_permissions(group.id => :full)
-      category.save
+      category.save!
       category_2.set_permissions(group.id => :full)
-      category_2.save
+      category_2.save!
 
       expect(Category.secured).to match_array([uncategorized])
       expect(Category.secured(Guardian.new(user))).to match_array([uncategorized, category, category_2])

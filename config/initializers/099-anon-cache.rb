@@ -9,5 +9,5 @@ enabled =
 
 if !ENV['DISCOURSE_DISABLE_ANON_CACHE'] && enabled
   # in an ideal world this is position 0, but mobile detection uses ... session and request and params
-  Rails.configuration.middleware.insert_after ActionDispatch::ParamsParser, Middleware::AnonymousCache
+  Rails.configuration.middleware.insert_after ActionDispatch::Flash, Middleware::AnonymousCache
 end

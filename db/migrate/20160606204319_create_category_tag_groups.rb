@@ -1,4 +1,4 @@
-class CreateCategoryTagGroups < ActiveRecord::Migration
+class CreateCategoryTagGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :category_tag_groups do |t|
       t.references :category,  null: false

@@ -1,4 +1,4 @@
-class FixIncorrectUserHistory < ActiveRecord::Migration
+class FixIncorrectUserHistory < ActiveRecord::Migration[4.2]
   def up
     # see https://meta.discourse.org/t/old-user-suspension-reasons-have-gone-missing/3730
     # we had a window of 21 days where all user history records with action > 5 were off by one

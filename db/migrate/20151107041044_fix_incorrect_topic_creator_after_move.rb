@@ -1,4 +1,4 @@
-class FixIncorrectTopicCreatorAfterMove < ActiveRecord::Migration
+class FixIncorrectTopicCreatorAfterMove < ActiveRecord::Migration[4.2]
   def up
     execute "UPDATE topics SET user_id = p.user_id
              FROM posts p

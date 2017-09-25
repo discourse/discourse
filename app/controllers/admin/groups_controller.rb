@@ -14,11 +14,11 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def show
-    render nothing: true
+    render body: nil
   end
 
   def bulk
-    render nothing: true
+    render body: nil
   end
 
   def bulk_perform

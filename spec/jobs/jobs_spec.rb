@@ -82,7 +82,6 @@ describe Jobs do
 
       Sidekiq::Testing.disable! do
         scheduled_jobs = Sidekiq::ScheduledSet.new
-        scheduled_jobs.clear
 
         expect(scheduled_jobs.size).to eq(0)
 

@@ -1,4 +1,4 @@
-class CreateWebHookEvents < ActiveRecord::Migration
+class CreateWebHookEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :web_hook_events do |t|
       t.belongs_to :web_hook, null: false, index: true

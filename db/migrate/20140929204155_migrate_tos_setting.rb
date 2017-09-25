@@ -1,4 +1,4 @@
-class MigrateTosSetting < ActiveRecord::Migration
+class MigrateTosSetting < ActiveRecord::Migration[4.2]
   def up
     res = execute("SELECT * FROM site_settings WHERE name = 'tos_accept_required' AND value = 't'")
     if res.present? && res.cmd_tuples > 0

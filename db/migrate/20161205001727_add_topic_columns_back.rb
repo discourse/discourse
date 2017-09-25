@@ -1,4 +1,4 @@
-class AddTopicColumnsBack < ActiveRecord::Migration
+class AddTopicColumnsBack < ActiveRecord::Migration[4.2]
 
   # This really sucks big time, we have no use for these columns yet can not remove them
   # if we remove them then sites will be down during migration

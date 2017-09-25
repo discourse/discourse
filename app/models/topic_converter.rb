@@ -71,7 +71,7 @@ class TopicConverter
   def watch_topic(topic)
     @topic.notifier.watch_topic!(topic.user_id)
 
-    @topic.topic_allowed_users(true).each do |tau|
+    @topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id < 0 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
     end

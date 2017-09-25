@@ -82,12 +82,15 @@ describe TopicQuery do
       topic_query = TopicQuery.new(user)
       results = topic_query.send(:default_results)
 
-      expect(topic_query.prioritize_pinned_topics(results,         per_page: per_page,
-                                                                   page: 0)).to eq(topics[0...per_page])
+      expect(topic_query.prioritize_pinned_topics(results,
+        per_page: per_page,
+        page: 0)
+      ).to eq(topics[0...per_page])
 
-      expect(topic_query.prioritize_pinned_topics(results,         per_page: per_page,
-                                                                   page: 1)).to eq(topics[per_page...num_topics])
-
+      expect(topic_query.prioritize_pinned_topics(results,
+        per_page: per_page,
+        page: 1)
+      ).to eq(topics[per_page...num_topics])
     end
 
   end

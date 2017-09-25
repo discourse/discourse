@@ -44,6 +44,8 @@ after_initialize do
   # Disable welcome message because that is what the bot is supposed to replace.
   SiteSetting.send_welcome_message = false
 
+  require_dependency 'plugin_store'
+
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
 
@@ -75,7 +77,7 @@ after_initialize do
 
     class CertificatesController < ::ApplicationController
       layout :false
-      skip_before_filter :check_xhr
+      skip_before_action :check_xhr
 
       def generate
         raise Discourse::InvalidParameters.new('user_id must be present') unless params[:user_id]&.present?

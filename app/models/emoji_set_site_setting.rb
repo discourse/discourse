@@ -7,7 +7,7 @@ class EmojiSetSiteSetting < EnumSiteSetting
     if site_setting.name.to_s == "emoji_set" && site_setting.value_changed?
       Emoji.clear_cache
 
-      previous_value = site_setting.value_was || SiteSetting.defaults[:emoji_set]
+      previous_value = site_setting.attribute_in_database(:value) || SiteSetting.defaults[:emoji_set]
       before = "/images/emoji/#{previous_value}/"
       after = "/images/emoji/#{site_setting.value}/"
 

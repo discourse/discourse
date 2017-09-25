@@ -1,4 +1,4 @@
-class CreateIncomingLinks < ActiveRecord::Migration
+class CreateIncomingLinks < ActiveRecord::Migration[4.2]
   def change
     create_table :incoming_links do |t|
       t.integer :site_id, null: false

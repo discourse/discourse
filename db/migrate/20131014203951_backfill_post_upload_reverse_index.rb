@@ -1,4 +1,4 @@
-class BackfillPostUploadReverseIndex < ActiveRecord::Migration
+class BackfillPostUploadReverseIndex < ActiveRecord::Migration[4.2]
 
   def up
     # clean the reverse index

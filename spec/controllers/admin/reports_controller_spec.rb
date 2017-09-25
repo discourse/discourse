@@ -16,11 +16,11 @@ describe Admin::ReportsController do
 
         it "never calls Report.find" do
           Report.expects(:find).never
-          xhr :get, :show, type: invalid_id
+          get :show, params: { type: invalid_id }, format: :json
         end
 
         it "returns 404" do
-          xhr :get, :show, type: invalid_id
+          get :show, params: { type: invalid_id }, format: :json
           expect(response.status).to eq(404)
         end
       end
@@ -30,7 +30,7 @@ describe Admin::ReportsController do
         context 'missing report' do
           before do
             Report.expects(:find).with('active', instance_of(Hash)).returns(nil)
-            xhr :get, :show, type: 'active'
+            get :show, params: { type: 'active' }, format: :json
           end
 
           it "renders the report as JSON" do
@@ -41,7 +41,7 @@ describe Admin::ReportsController do
         context 'a report is found' do
           before do
             Report.expects(:find).with('active', instance_of(Hash)).returns(Report.new('active'))
-            xhr :get, :show, type: 'active'
+            get :show, params: { type: 'active' }, format: :json
           end
 
           it "renders the report as JSON" do
@@ -65,7 +65,7 @@ describe Admin::ReportsController do
           topic
           other_topic
 
-          xhr :get, :show, type: 'topics', category_id: category.id
+          get :show, params: { type: 'topics', category_id: category.id }, format: :json
 
           expect(response).to be_success
 
@@ -85,7 +85,7 @@ describe Admin::ReportsController do
           other_user
           group.add(user)
 
-          xhr :get, :show, type: 'signups', group_id: group.id
+          get :show, params: { type: 'signups', group_id: group.id }, format: :json
 
           expect(response).to be_success
 

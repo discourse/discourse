@@ -1,4 +1,4 @@
-class CreateArchetypes < ActiveRecord::Migration
+class CreateArchetypes < ActiveRecord::Migration[4.2]
   def up
     create_table :archetypes do |t|
       t.string :name_key, null: false

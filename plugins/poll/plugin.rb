@@ -181,7 +181,7 @@ after_initialize do
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_filter :ensure_logged_in, except: [:voters]
+    before_action :ensure_logged_in, except: [:voters]
 
     def vote
       post_id   = params.require(:post_id)

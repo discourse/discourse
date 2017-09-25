@@ -202,13 +202,15 @@ class PostDestroyer
     post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
 
     if post_ids.present?
-      PostReply.delete_all reply_id: @post.id
+      PostReply.where(reply_id: @post.id).delete_all
       Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
     end
   end
 
   def remove_associated_notifications
-    Notification.delete_all topic_id: @post.topic_id, post_number: @post.post_number
+    Notification
+      .where(topic_id: @post.topic_id, post_number: @post.post_number)
+      .delete_all
   end
 
   def update_associated_category_latest_topic

@@ -9,7 +9,7 @@ describe Admin::ScreenedUrlsController do
 
   context '.index' do
     before do
-      xhr :get, :index
+      get :index, format: :json
     end
 
     subject { response }

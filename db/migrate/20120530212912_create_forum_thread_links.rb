@@ -1,4 +1,4 @@
-class CreateForumThreadLinks < ActiveRecord::Migration
+class CreateForumThreadLinks < ActiveRecord::Migration[4.2]
   def change
     create_table :forum_thread_links do |t|
       t.integer :forum_thread_id, null: false

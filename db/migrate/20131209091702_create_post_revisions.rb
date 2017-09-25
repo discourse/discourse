@@ -1,4 +1,4 @@
-class CreatePostRevisions < ActiveRecord::Migration
+class CreatePostRevisions < ActiveRecord::Migration[4.2]
   def up
     create_table :post_revisions do |t|
       t.belongs_to :user

@@ -14,7 +14,7 @@ class Admin::ImpersonateController < Admin::AdminController
     # Log on as the user
     log_on_user(user)
 
-    render nothing: true
+    render body: nil
   end
 
 end

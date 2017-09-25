@@ -1,4 +1,4 @@
-class AddPositionToCategories < ActiveRecord::Migration
+class AddPositionToCategories < ActiveRecord::Migration[4.2]
   def up
     add_column :categories, :position, :integer
     execute "UPDATE categories SET position = id"

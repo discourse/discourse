@@ -1,4 +1,4 @@
-class CreatePostActions < ActiveRecord::Migration
+class CreatePostActions < ActiveRecord::Migration[4.2]
   def up
     create_table :post_actions do |t|
       t.integer :post_id, null: false

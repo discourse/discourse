@@ -1,4 +1,4 @@
-class CreateTopicEmbeds < ActiveRecord::Migration
+class CreateTopicEmbeds < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_embeds, force: true do |t|
       t.integer :topic_id, null: false

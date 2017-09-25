@@ -1,4 +1,4 @@
-class AddIconToExpressionTypes < ActiveRecord::Migration
+class AddIconToExpressionTypes < ActiveRecord::Migration[4.2]
   def change
     add_column :expression_types, :icon, :string, limit: 20
 

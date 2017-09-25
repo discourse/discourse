@@ -1,4 +1,4 @@
-class AddThreadCountsToCategories < ActiveRecord::Migration
+class AddThreadCountsToCategories < ActiveRecord::Migration[4.2]
   def change
     add_column :categories, :threads_year, :integer
     add_column :categories, :threads_month, :integer

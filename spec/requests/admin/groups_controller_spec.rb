@@ -11,12 +11,14 @@ RSpec.describe Admin::GroupsController do
 
   describe '#create' do
     it 'should work' do
-      post "/admin/groups.json", group: {
-        name: 'testing',
-        usernames: [admin.username, user.username].join(","),
-        owner_usernames: [user.username].join(","),
-        allow_membership_requests: true,
-        membership_request_template: 'Testing',
+      post "/admin/groups.json", params: {
+        group: {
+          name: 'testing',
+          usernames: [admin.username, user.username].join(","),
+          owner_usernames: [user.username].join(","),
+          allow_membership_requests: true,
+          membership_request_template: 'Testing',
+        }
       }
 
       expect(response).to be_success
@@ -32,8 +34,10 @@ RSpec.describe Admin::GroupsController do
 
   describe '#add_owners' do
     it 'should work' do
-      put "/admin/groups/#{group.id}/owners.json", group: {
-        usernames: [user.username, admin.username].join(",")
+      put "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: [user.username, admin.username].join(",")
+        }
       }
 
       expect(response).to be_success

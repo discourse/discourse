@@ -1,4 +1,6 @@
 # This is used in topic lists
+require_dependency 'topic_poster'
+
 class TopicPostersSummary
   attr_reader :topic, :options
 

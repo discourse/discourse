@@ -1,4 +1,4 @@
-class AddMetaCategory < ActiveRecord::Migration
+class AddMetaCategory < ActiveRecord::Migration[4.2]
   def up
     return if Rails.env.test?
 

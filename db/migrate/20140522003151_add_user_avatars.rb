@@ -1,4 +1,4 @@
-class AddUserAvatars < ActiveRecord::Migration
+class AddUserAvatars < ActiveRecord::Migration[4.2]
   def up
     create_table :user_avatars do |t|
       t.integer :user_id, null: false

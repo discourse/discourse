@@ -1,4 +1,4 @@
-class CreateSiteCustomizations < ActiveRecord::Migration
+class CreateSiteCustomizations < ActiveRecord::Migration[4.2]
   def change
     create_table :site_customizations do |t|
       t.string :name, null: false

@@ -22,7 +22,7 @@ describe Admin::EmojisController do
     context ".index" do
       it "returns a list of custom emojis" do
         Emoji.expects(:custom).returns([custom_emoji])
-        xhr :get, :index
+        get :index, format: :json
         expect(response).to be_success
         json = ::JSON.parse(response.body)
         expect(json[0]["name"]).to eq(custom_emoji.name)

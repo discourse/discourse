@@ -1,4 +1,4 @@
-class CreateAdminLogs < ActiveRecord::Migration
+class CreateAdminLogs < ActiveRecord::Migration[4.2]
   def up
     create_table :admin_logs, force: true do |t|
       t.integer :action,          null: false

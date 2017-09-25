@@ -9,7 +9,8 @@ describe CategoryHashtagsController do
 
       it 'only returns the categories that are valid' do
         category = Fabricate(:category)
-        xhr :get, :check, category_slugs: [category.slug, 'none']
+
+        get :check, params: { category_slugs: [category.slug, 'none'] }, format: :json
 
         expect(JSON.parse(response.body)).to eq(
           "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url_with_id }]
@@ -19,7 +20,8 @@ describe CategoryHashtagsController do
       it 'does not return restricted categories for a normal user' do
         group = Fabricate(:group)
         private_category = Fabricate(:private_category, group: group)
-        xhr :get, :check, category_slugs: [private_category.slug]
+
+        get :check, params: { category_slugs: [private_category.slug] }, format: :json
 
         expect(JSON.parse(response.body)).to eq("valid" => [])
       end
@@ -29,7 +31,10 @@ describe CategoryHashtagsController do
         group = Fabricate(:group)
         group.add(admin)
         private_category = Fabricate(:private_category, group: group)
-        xhr :get, :check, category_slugs: [private_category.slug]
+
+        get :check,
+          params: { category_slugs: [private_category.slug] },
+          format: :json
 
         expect(JSON.parse(response.body)).to eq(
           "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url_with_id }]
@@ -39,7 +44,9 @@ describe CategoryHashtagsController do
 
     describe "not logged in" do
       it 'raises an exception' do
-        expect { xhr :get, :check, category_slugs: [] }.to raise_error(Discourse::NotLoggedIn)
+        expect do
+          get :check, params: { category_slugs: [] }, format: :json
+        end.to raise_error(Discourse::NotLoggedIn)
       end
     end
   end

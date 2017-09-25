@@ -119,7 +119,14 @@ module ActiveRecord
 
     def verify_replica(connection)
       value = connection.raw_connection.exec("SELECT pg_is_in_recovery()").values[0][0]
-      raise "Replica database server is not in recovery mode." if value == 'f'
+
+      if !value
+        begin
+          raise "Replica database server is not in recovery mode."
+        ensure
+          connection.close
+        end
+      end
     end
   end
 end

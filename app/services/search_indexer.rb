@@ -91,7 +91,7 @@ class SearchIndexer
   def self.index(obj, force: false)
     return if @disabled
 
-    if obj.class == Post && (obj.cooked_changed? || force)
+    if obj.class == Post && (obj.saved_change_to_cooked? || force)
       if obj.topic
         category_name = obj.topic.category.name if obj.topic.category
         SearchIndexer.update_posts_index(obj.id, obj.cooked, obj.topic.title, category_name)
@@ -101,11 +101,11 @@ class SearchIndexer
       end
     end
 
-    if obj.class == User && (obj.username_changed? || obj.name_changed? || force)
+    if obj.class == User && (obj.saved_change_to_username? || obj.saved_change_to_name? || force)
       SearchIndexer.update_users_index(obj.id, obj.username_lower || '', obj.name ? obj.name.downcase : '')
     end
 
-    if obj.class == Topic && (obj.title_changed? || force)
+    if obj.class == Topic && (obj.saved_change_to_title? || force)
       if obj.posts
         post = obj.posts.find_by(post_number: 1)
         if post
@@ -116,11 +116,11 @@ class SearchIndexer
       end
     end
 
-    if obj.class == Category && (obj.name_changed? || force)
+    if obj.class == Category && (obj.saved_change_to_name? || force)
       SearchIndexer.update_categories_index(obj.id, obj.name)
     end
 
-    if obj.class == Tag && (obj.name_changed? || force)
+    if obj.class == Tag && (obj.saved_change_to_name? || force)
       SearchIndexer.update_tags_index(obj.id, obj.name)
     end
   end

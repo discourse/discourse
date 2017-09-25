@@ -1,4 +1,4 @@
-class AddStylesheetCache < ActiveRecord::Migration
+class AddStylesheetCache < ActiveRecord::Migration[4.2]
   def change
     create_table :stylesheet_cache do |t|
       t.string :target, null: false

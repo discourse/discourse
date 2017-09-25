@@ -1,4 +1,4 @@
-class AddThemeRemoteFields < ActiveRecord::Migration
+class AddThemeRemoteFields < ActiveRecord::Migration[4.2]
   def change
     create_table :remote_themes do |t|
       t.string :remote_url, null: false

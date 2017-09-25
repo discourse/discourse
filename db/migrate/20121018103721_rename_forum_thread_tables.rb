@@ -1,4 +1,4 @@
-class RenameForumThreadTables < ActiveRecord::Migration
+class RenameForumThreadTables < ActiveRecord::Migration[4.2]
   def change
     rename_table 'forum_threads', 'topics'
     rename_table 'forum_thread_link_clicks', 'topic_link_clicks'

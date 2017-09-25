@@ -1,4 +1,4 @@
-class CreateScreenedUrls < ActiveRecord::Migration
+class CreateScreenedUrls < ActiveRecord::Migration[4.2]
   def change
     create_table :screened_urls do |t|
       t.string :url, null: false

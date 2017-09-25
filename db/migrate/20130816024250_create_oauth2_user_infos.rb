@@ -1,4 +1,4 @@
-class CreateOauth2UserInfos < ActiveRecord::Migration
+class CreateOauth2UserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :oauth2_user_infos do |t|
       t.integer :user_id, null: false

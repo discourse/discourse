@@ -3,14 +3,16 @@ require 'rails_helper'
 describe InlineOneboxController do
 
   it "requires the user to be logged in" do
-    expect { xhr :get, :show, urls: [] }.to raise_error(Discourse::NotLoggedIn)
+    expect do
+      get :show, params: { urls: [] }, format: :json
+    end.to raise_error(Discourse::NotLoggedIn)
   end
 
   context "logged in" do
     let!(:user) { log_in(:user) }
 
     it "returns empty JSON for empty input" do
-      xhr :get, :show, urls: []
+      get :show, params: { urls: [] }, format: :json
       expect(response).to be_success
       json = JSON.parse(response.body)
       expect(json['inline-oneboxes']).to eq([])
@@ -20,7 +22,7 @@ describe InlineOneboxController do
       let(:topic) { Fabricate(:topic) }
 
       it "returns information for a valid link" do
-        xhr :get, :show, urls: [ topic.url ]
+        get :show, params: { urls: [ topic.url ] }, format: :json
         expect(response).to be_success
         json = JSON.parse(response.body)
         onebox = json['inline-oneboxes'][0]

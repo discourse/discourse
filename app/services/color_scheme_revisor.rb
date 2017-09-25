@@ -27,7 +27,12 @@ class ColorSchemeRevisor
         @color_scheme.clear_colors_cache
       end
 
-      @color_scheme.save if has_colors || @color_scheme.name_changed? || @color_scheme.base_scheme_id_changed?
+      if has_colors ||
+         @color_scheme.saved_change_to_name? ||
+         @color_scheme.saved_change_to_base_scheme_id?
+
+        @color_scheme.save
+      end
     end
     @color_scheme
   end

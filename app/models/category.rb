@@ -32,7 +32,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   validates :user_id, presence: true
-  validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
+  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
@@ -60,8 +60,8 @@ class Category < ActiveRecord::Base
 
   after_create :delete_category_permalink
 
-  after_update :rename_category_definition, if: :name_changed?
-  after_update :create_category_permalink, if: :slug_changed?
+  after_update :rename_category_definition, if: :saved_change_to_name?
+  after_update :create_category_permalink, if: :saved_change_to_slug?
 
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
@@ -75,6 +75,7 @@ class Category < ActiveRecord::Base
 
   scope :secured, -> (guardian = nil) {
     ids = guardian.secure_category_ids if guardian
+
     if ids.present?
       where("NOT categories.read_restricted OR categories.id IN (:cats)", cats: ids).references(:categories)
     else
@@ -456,7 +457,7 @@ SQL
   # If the name changes, try and update the category definition topic too if it's
   # an exact match
   def rename_category_definition
-    old_name = changed_attributes["name"]
+    old_name = saved_changes.transform_values(&:first)["name"]
     return unless topic.present?
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
@@ -464,7 +465,7 @@ SQL
   end
 
   def create_category_permalink
-    old_slug = changed_attributes["slug"]
+    old_slug = saved_changes.transform_values(&:first)["slug"]
     if self.parent_category
       url = "c/#{self.parent_category.slug}/#{old_slug}"
     else

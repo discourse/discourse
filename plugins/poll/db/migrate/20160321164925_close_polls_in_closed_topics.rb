@@ -1,4 +1,4 @@
-class ClosePollsInClosedTopics < ActiveRecord::Migration
+class ClosePollsInClosedTopics < ActiveRecord::Migration[4.2]
 
   def up
     PostCustomField.joins(post: :topic)

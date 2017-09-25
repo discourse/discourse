@@ -1,6 +1,6 @@
 
 
-class CommentMigration < ActiveRecord::Migration
+class CommentMigration < ActiveRecord::Migration[4.2]
   def comments_up
     raise "Not implemented"
   end

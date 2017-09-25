@@ -1,4 +1,4 @@
-class CorrectIndexingOnPosts < ActiveRecord::Migration
+class CorrectIndexingOnPosts < ActiveRecord::Migration[4.2]
   def up
     execute "update posts pp
 set post_number = c.real_number

@@ -1,4 +1,4 @@
-class AddShowSubcategoryListToCategories < ActiveRecord::Migration
+class AddShowSubcategoryListToCategories < ActiveRecord::Migration[4.2]
   def up
     add_column :categories, :show_subcategory_list, :boolean, default: false
 

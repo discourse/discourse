@@ -12,19 +12,27 @@ describe Admin::UserFieldsController do
     context '.create' do
       it "creates a user field" do
         expect {
-          xhr :post, :create, user_field: { name: 'hello', description: 'hello desc', field_type: 'text' }
+          post :create, params: {
+            user_field: { name: 'hello', description: 'hello desc', field_type: 'text' }
+          }, format: :json
+
           expect(response).to be_success
         }.to change(UserField, :count).by(1)
       end
 
       it "creates a user field with options" do
-        expect {
-          xhr :post, :create, user_field: { name: 'hello',
-                                            description: 'hello desc',
-                                            field_type: 'dropdown',
-                                            options: ['a', 'b', 'c'] }
+        expect do
+          post :create, params: {
+            user_field: {
+              name: 'hello',
+              description: 'hello desc',
+              field_type: 'dropdown',
+              options: ['a', 'b', 'c']
+            }
+          }, format: :json
+
           expect(response).to be_success
-        }.to change(UserField, :count).by(1)
+        end.to change(UserField, :count).by(1)
 
         expect(UserFieldOption.count).to eq(3)
       end
@@ -34,7 +42,7 @@ describe Admin::UserFieldsController do
       let!(:user_field) { Fabricate(:user_field) }
 
       it "returns a list of user fields" do
-        xhr :get, :index
+        get :index, format: :json
         expect(response).to be_success
         json = ::JSON.parse(response.body)
         expect(json['user_fields']).to be_present
@@ -46,7 +54,7 @@ describe Admin::UserFieldsController do
 
       it "deletes the user field" do
         expect {
-          xhr :delete, :destroy, id: user_field.id
+          delete :destroy, params: { id: user_field.id }, format: :json
           expect(response).to be_success
         }.to change(UserField, :count).by(-1)
       end
@@ -56,7 +64,11 @@ describe Admin::UserFieldsController do
       let!(:user_field) { Fabricate(:user_field) }
 
       it "updates the user field" do
-        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle', field_type: 'confirm', description: 'muppet' }
+        put :update, params: {
+          id: user_field.id,
+          user_field: { name: 'fraggle', field_type: 'confirm', description: 'muppet' }
+        }, format: :json
+
         expect(response).to be_success
         user_field.reload
         expect(user_field.name).to eq('fraggle')
@@ -64,10 +76,16 @@ describe Admin::UserFieldsController do
       end
 
       it "updates the user field options" do
-        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle',
-                                                            field_type: 'dropdown',
-                                                            description: 'muppet',
-                                                            options: ['hello', 'hello', 'world'] }
+        put :update, params: {
+          id: user_field.id,
+          user_field: {
+            name: 'fraggle',
+            field_type: 'dropdown',
+            description: 'muppet',
+            options: ['hello', 'hello', 'world']
+          }
+        }, format: :json
+
         expect(response).to be_success
         user_field.reload
         expect(user_field.name).to eq('fraggle')
@@ -76,19 +94,31 @@ describe Admin::UserFieldsController do
       end
 
       it "keeps options when updating the user field" do
-        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle',
-                                                            field_type: 'dropdown',
-                                                            description: 'muppet',
-                                                            options: ['hello', 'hello', 'world'],
-                                                            position: 1 }
+        put :update, params: {
+          id: user_field.id,
+          user_field: {
+            name: 'fraggle',
+            field_type: 'dropdown',
+            description: 'muppet',
+            options: ['hello', 'hello', 'world'],
+            position: 1
+          }
+        }, format: :json
+
         expect(response).to be_success
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
 
-        xhr :put, :update, id: user_field.id, user_field: { name: 'fraggle',
-                                                            field_type: 'dropdown',
-                                                            description: 'muppet',
-                                                            position: 2 }
+        put :update, params: {
+          id: user_field.id,
+          user_field: {
+            name: 'fraggle',
+            field_type: 'dropdown',
+            description: 'muppet',
+            position: 2
+          }
+        }, format: :json
+
         expect(response).to be_success
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)

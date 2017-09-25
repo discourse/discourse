@@ -6,7 +6,7 @@ require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
-  before_filter :ensure_logged_in, only: [:timings,
+  before_action :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
                                           :star,
@@ -32,9 +32,9 @@ class TopicsController < ApplicationController
                                           :convert_topic,
                                           :bookmark]
 
-  before_filter :consider_user_for_promotion, only: :show
+  before_action :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:show, :unsubscribe, :feed]
+  skip_before_action :check_xhr, only: [:show, :unsubscribe, :feed]
 
   def id_for_slug
     topic = Topic.find_by(slug: params[:slug].downcase)
@@ -218,7 +218,7 @@ class TopicsController < ApplicationController
 
   def destroy_timings
     PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
-    render nothing: true
+    render body: nil
   end
 
   def update
@@ -234,6 +234,7 @@ class TopicsController < ApplicationController
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
     success = true
+
     if changes.length > 0
       first_post = topic.ordered_posts.first
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
@@ -332,7 +333,7 @@ class TopicsController < ApplicationController
 
     topic.make_banner!(current_user)
 
-    render nothing: true
+    render body: nil
   end
 
   def remove_banner
@@ -341,7 +342,7 @@ class TopicsController < ApplicationController
 
     topic.remove_banner!(current_user)
 
-    render nothing: true
+    render body: nil
   end
 
   def remove_bookmarks
@@ -354,7 +355,7 @@ class TopicsController < ApplicationController
       PostAction.remove_act(current_user, pa.post, PostActionType.types[:bookmark])
     end
 
-    render nothing: true
+    render body: nil
   end
 
   def archive_message
@@ -396,7 +397,7 @@ class TopicsController < ApplicationController
       name = Group.find_by(id: group_id).try(:name)
       render_json_dump(group_name: name)
     else
-      render nothing: true
+      render body: nil
     end
   end
 
@@ -408,7 +409,7 @@ class TopicsController < ApplicationController
 
     PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
 
-    render nothing: true
+    render body: nil
   end
 
   def destroy
@@ -418,7 +419,7 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
     PostDestroyer.new(current_user, first_post, context: params[:context]).destroy
 
-    render nothing: true
+    render body: nil
   end
 
   def recover
@@ -428,11 +429,11 @@ class TopicsController < ApplicationController
     first_post = topic.posts.with_deleted.order(:post_number).first
     PostDestroyer.new(current_user, first_post).recover
 
-    render nothing: true
+    render body: nil
   end
 
   def excerpt
-    render nothing: true
+    render body: nil
   end
 
   def remove_allowed_user
@@ -573,26 +574,25 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)
     topic.clear_pin_for(current_user)
-    render nothing: true
+    render body: nil
   end
 
   def re_pin
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)
     topic.re_pin_for(current_user)
-    render nothing: true
+    render body: nil
   end
 
   def timings
     PostTiming.process_timings(
       current_user,
-      params[:topic_id].to_i,
-      params[:topic_time].to_i,
-      (params[:timings] || {}).map { |post_number, t| [post_number.to_i, t.to_i] },
+      topic_params[:topic_id].to_i,
+      topic_params[:topic_time].to_i,
+      (topic_params[:timings].to_h || {}).map { |post_number, t| [post_number.to_i, t.to_i] },
       mobile: view_context.mobile_view?
     )
-
-    render nothing: true
+    render body: nil
   end
 
   def feed
@@ -613,7 +613,10 @@ class TopicsController < ApplicationController
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
 
-    operation = params.require(:operation).symbolize_keys
+    operation = params.require(:operation)
+    operation.permit!
+    operation = operation.to_h.symbolize_keys
+
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
     changed_topic_ids = operator.perform!
@@ -622,7 +625,7 @@ class TopicsController < ApplicationController
 
   def reset_new
     current_user.user_stat.update_column(:new_since, Time.now)
-    render nothing: true
+    render body: nil
   end
 
   def convert_topic
@@ -643,12 +646,20 @@ class TopicsController < ApplicationController
 
   private
 
+  def topic_params
+    params.permit(
+      :topic_id,
+      :topic_time,
+      timings: {}
+    )
+  end
+
   def toggle_mute
     @topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(@topic)
 
     @topic.toggle_mute(current_user)
-    render nothing: true
+    render body: nil
   end
 
   def consider_user_for_promotion

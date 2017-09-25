@@ -1,4 +1,4 @@
-class AddUniqueIndexToForumThreadLinks < ActiveRecord::Migration
+class AddUniqueIndexToForumThreadLinks < ActiveRecord::Migration[4.2]
   def change
 
     execute "DELETE FROM forum_thread_links USING forum_thread_links ftl2
