@@ -163,6 +163,8 @@ module FlagQuery
       .flags
       .active
       .includes(post: [:user, :topic])
+      .references(:post)
+      .where("posts.user_id > 0")
       .order('post_actions.created_at DESC')
 
     ft_by_id = {}
