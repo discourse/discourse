@@ -6,7 +6,9 @@
           {{avatar flaggedPost.user imageSize="large"}}
         {{/link-to}}
         {{#if flaggedPost.wasEdited}}
-          {{d-icon "pencil" title="admin.flags.was_edited"}}
+          <div class='edited-after'>
+            {{d-icon "pencil" title="admin.flags.was_edited"}}
+          </div>
         {{/if}}
       {{/if}}
     {{/if}}
