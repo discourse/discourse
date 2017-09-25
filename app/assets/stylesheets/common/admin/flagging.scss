@@ -36,6 +36,11 @@
     .flagged-post-contents {
       width: 100%;
       word-wrap: break-word;
+
+      .flagged-post-excerpt {
+        word-break: break-all;
+      }
+
       .d-icon {
         display: inline-block;
       }
