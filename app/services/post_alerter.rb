@@ -473,7 +473,7 @@ class PostAlerter
     post.topic_links.where(reflection: false).map do |link|
       linked_post = link.link_post
       if !linked_post && topic = link.link_topic
-        linked_post = topic.posts(post_number: 1).first
+        linked_post = topic.posts.find_by(post_number: 1)
       end
       (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
     end.compact
