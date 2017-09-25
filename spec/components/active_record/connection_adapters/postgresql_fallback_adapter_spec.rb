@@ -91,12 +91,10 @@ describe ActiveRecord::ConnectionHandling do
         postgresql_fallback_handler.initiate_fallback_to_master
 
         expect(Discourse.readonly_mode?).to eq(false)
-
         expect(postgresql_fallback_handler.master_down?).to eq(nil)
-
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
 
-        ActiveRecord::Base.connection_handler.clear_active_connections!
+        ActiveRecord::Base.clear_all_connections!
         connection = ActiveRecord::Base.connection
 
         begin
