@@ -15,9 +15,11 @@
     {{/each}}
   </ul>
   {{#if editingPermissions}}
-    {{combo-box content=category.availableGroups value=selectedGroup}}
-    {{combo-box class="permission-selector"
-                nameProperty="description"
+  {{log category.availableGroups}}
+  {{log category.availablePermissions}}
+    {{combo-box data-done="true" textKey="name" content=category.availableGroups value=selectedGroup}}
+    {{combo-box data-done="true" class="permission-selector"
+                textKey="description"
                 content=category.availablePermissions
                 value=selectedPermission}}
     <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-small">{{i18n 'category.add_permission'}}</button>

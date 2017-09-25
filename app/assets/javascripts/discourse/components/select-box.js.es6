@@ -4,8 +4,9 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Component.extend({
   layoutName: "components/select-box",
   classNames: "select-box",
-  classNameBindings: ["expanded:is-expanded", "hidden:is-hidden"],
+  classNameBindings: ["expanded:is-expanded", "hidden:is-hidden", "disabled:is-disabled"],
 
+  disabled: false,
   expanded: false,
   focused: false,
   filterFocused: false,
@@ -57,7 +58,9 @@ export default Ember.Component.extend({
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, (c) => {
-        return c[selectBox.get("textKey")].toLowerCase().indexOf(filter) > -1;
+        return this.textForContent(c, selectBox.get("textKey"))
+                   .toLowerCase()
+                   .indexOf(filter) > -1;
       });
     };
   },
@@ -65,21 +68,21 @@ export default Ember.Component.extend({
   @computed("textKey")
   titleForRow(textKey) {
     return (rowComponent) => {
-      return rowComponent.get(`content.${textKey}`);
+      return this.textForContent(rowComponent.get("content"), textKey)
     };
   },
 
   @computed("idKey")
   idForRow(idKey) {
     return (rowComponent) => {
-      return rowComponent.get(`content.${idKey}`);
+      return this.idForContent(rowComponent.get("content"), idKey);
     };
   },
 
   @computed
   shouldHighlightRow: function() {
     return (rowComponent) => {
-      const id = this._castInteger(rowComponent.get(`content.${this.get("idKey")}`));
+      const id = this.idForContent(rowComponent.get("content"));
       return id === this.get("highlightedValue");
     };
   },
@@ -87,13 +90,36 @@ export default Ember.Component.extend({
   @computed("value", "idKey")
   shouldSelectRow(value, idKey) {
     return (rowComponent) => {
-      const id = this._castInteger(rowComponent.get(`content.${idKey}`));
+      const id = this.idForContent(rowComponent.get("content"), idKey);
       return id === value;
     };
   },
 
+  textForContent(content, textKey) {
+    textKey = textKey || this.get("textKey");
+
+    switch (typeof content){
+    case 'string':
+      return content;
+    default:
+      return Ember.get(content, textKey);
+    }
+  },
+
+
+  idForContent(content, idKey) {
+    idKey = idKey || this.get("idKey");
+
+    switch (typeof content){
+    case 'string':
+      return this._castInteger(content);
+    default:
+      return this._castInteger(Ember.get(content, idKey));
+    }
+  },
+
   @computed
-  templateForRow: function() {
+  templateForRow() {
     return (rowComponent) => {
       let template = "";
 
@@ -102,7 +128,7 @@ export default Ember.Component.extend({
         template += icon;
       }
 
-      const text = rowComponent.get(`content.${this.get("textKey")}`);
+      const text = this.textForContent(rowComponent.get("content"));
       template += `<p class="text">${Handlebars.escapeExpression(text)}</p>`;
 
       return template;
@@ -156,15 +182,12 @@ export default Ember.Component.extend({
   init() {
     this._super();
 
-    const content = this.getWithDefault("content", []);
-    this.set("content", content);
-
     if (this.site.isMobileDevice) {
       this.set("filterable", false);
     }
 
     this.setProperties({
-      value: this._castInteger(this.get("value")),
+      content: this.getWithDefault("content", []),
       componentId: this.elementId
     });
   },
@@ -176,7 +199,7 @@ export default Ember.Component.extend({
   },
 
   @on("willDestroyElement")
-  _unbindEvents: function() {
+  _unbindEvents() {
     this.$(".select-box-offscreen").off(
       "focusin.select-box",
       "focusout.select-box",
@@ -213,6 +236,10 @@ export default Ember.Component.extend({
       if (this.get("wrapper")) {
         this.$(".select-box-wrapper").hide();
       }
+    }
+
+    if (Ember.isNone(this.get("clearSelectionLabel")) && Ember.isNone(this.get("value")) && !Ember.isEmpty(this.get("content"))) {
+      this.set("value", this.idForContent(this.get("content.0")));
     }
   },
 
@@ -268,7 +295,7 @@ export default Ember.Component.extend({
   },
 
   @on("didInsertElement")
-  _bindEvents: function() {
+  _bindEvents() {
     this.$(".select-box-offscreen")
       .on("focusin.select-box", () => this.set("focused", true) )
       .on("focusout.select-box", () => this.set("focused", false) );
@@ -295,7 +322,7 @@ export default Ember.Component.extend({
   },
 
   @observes("expanded")
-  _expandedChanged: function() {
+  _expandedChanged() {
     if (this.get("expanded")) {
       this.setProperties({ highlightedValue: null, renderBody: true, focused: false });
 
@@ -306,24 +333,24 @@ export default Ember.Component.extend({
   },
 
   @computed("value", "content.[]", "idKey")
-  selectedContent(value, content, idKey) {
+  selectedContent(value, contents, idKey) {
     if (Ember.isNone(value)) {
       return null;
     }
 
-    return content.find((c) => {
-      return this._castInteger(Ember.get(c, idKey)) === value;
+    return contents.find((content) => {
+      return this.idForContent(content, idKey) === value;
     });
   },
 
   @computed("highlightedValue", "content.[]", "idKey")
-  highlightedContent(highlightedValue, content, idKey) {
+  highlightedContent(highlightedValue, contents, idKey) {
     if (Ember.isNone(highlightedValue)) {
       return null;
     }
 
-    return content.find((c) => {
-      return this._castInteger(Ember.get(c, idKey)) === highlightedValue;
+    return contents.find((content) => {
+      return this.idForContent(content, idKey) === highlightedValue;
     });
   },
 
@@ -333,13 +360,13 @@ export default Ember.Component.extend({
       return headerText;
     }
 
-    return selectedContent[textKey];
+    return this.textForContent(selectedContent, textKey);
   },
 
   @computed("headerText", "dynamicHeaderText", "selectedContent", "textKey", "clearSelectionLabel")
   generatedHeadertext(headerText, dynamic, selectedContent, textKey, clearSelectionLabel) {
     if (dynamic && !Ember.isNone(selectedContent)) {
-      return selectedContent[textKey];
+      return this.textForContent(selectedContent, textKey);
     }
 
     if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(clearSelectionLabel)) {
@@ -381,13 +408,13 @@ export default Ember.Component.extend({
     },
 
     onHoverRow(content) {
-      const id = this._castInteger(Ember.get(content, this.get("idKey")));
+      const id = this.idForContent(content);
       this.set("highlightedValue", id);
     },
 
     onSelectRow(content) {
       this.setProperties({
-        value: this._castInteger(Ember.get(content, this.get("idKey"))),
+        value: this.idForContent(content),
         expanded: false
       });
     },
