@@ -257,7 +257,6 @@ describe PostAlerter do
       # don't notify on reflection
       post1.reload
       expect(PostAlerter.new.extract_linked_users(post1).length).to eq(0)
-
     end
 
     it "triggers :before_create_notifications_for_users" do
@@ -603,6 +602,31 @@ describe PostAlerter do
           PostAlerter.post_created(post)
         end
         expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+      end
+    end
+  end
+
+  describe '#extract_linked_users' do
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post, topic: topic) }
+    let(:post2) { Fabricate(:post) }
+
+    describe 'when linked post has been deleted' do
+      let(:topic_link) do
+        TopicLink.create!(
+          url: "/t/#{topic.id}",
+          topic_id: topic.id,
+          link_topic_id: post2.topic.id,
+          link_post_id: nil,
+          post_id: post.id,
+          user: user,
+          domain: 'test.com'
+        )
+      end
+
+      it 'should use the first post of the topic' do
+        topic_link
+        expect(PostAlerter.new.extract_linked_users(post.reload)).to eq([post2.user])
       end
     end
   end
