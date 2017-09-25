@@ -8,7 +8,10 @@ function postStreamTest(name, attrs) {
   widgetTest(name, {
     template: `{{mount-widget widget="post-stream" args=(hash posts=posts)}}`,
     beforeEach() {
-      this.set('posts', attrs.posts.call(this));
+      const site = this.container.lookup('site:main');
+      let posts = attrs.posts.call(this);
+      posts.forEach(p => p.set('site', site));
+      this.set('posts', posts);
     },
     test: attrs.test
   });
