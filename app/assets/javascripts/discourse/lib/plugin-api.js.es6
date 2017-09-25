@@ -24,7 +24,7 @@ import { addNavItem } from 'discourse/models/nav-item';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.10';
+const PLUGIN_API_VERSION = '0.8.11';
 
 class PluginApi {
   constructor(version, container) {
