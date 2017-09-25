@@ -2641,7 +2641,7 @@ en:
         system: "System"
         error: "Something went wrong"
         reply_message: "Reply"
-        no_results: "There are no flaged posts."
+        no_results: "There are no flagged posts."
         topic_flagged: "This <strong>topic</strong> has been flagged."
         show_full: "show full post"
         visit_topic: "Visit the topic to take action"
