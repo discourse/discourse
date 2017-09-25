@@ -14,10 +14,9 @@
 
     <div>
       <label for='content-type'>{{i18n 'admin.web_hooks.content_type'}}</label>
-      {{combo-box content=contentTypes
+      {{combo-box data-done="true" content=contentTypes
                   name="content-type"
-                  nameProperty="name"
-                  valueAttribute="id"
+                  textKey="name"
                   value=model.content_type}}
     </div>
 

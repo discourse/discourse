@@ -23,21 +23,19 @@
 
     <div>
       <label for="badge_type_id">{{i18n 'admin.badges.badge_type'}}</label>
-      {{combo-box name="badge_type_id"
+      {{combo-box data-done="true" name="badge_type_id"
                   value=buffered.badge_type_id
                   content=badgeTypes
-                  optionValuePath="content.id"
-                  optionLabelPath="content.name"
+                  textKey="name"
                   disabled=readOnly}}
     </div>
 
     <div>
       <label for="badge_grouping_id">{{i18n 'admin.badges.badge_grouping'}}</label>
-      {{combo-box name="badge_grouping_id"
+      {{combo-box data-done="true" name="badge_grouping_id"
                   value=buffered.badge_grouping_id
                   content=badgeGroupings
-                  optionValuePath="content.id"
-                  optionLabelPath="content.displayName"}}
+                  textKey="name"}}
       &nbsp;<button {{action "editGroupings"}} class='btn'>{{d-icon 'pencil'}}</button>
     </div>
 

@@ -1561,7 +1561,7 @@ en:
         publish_to: "Publish To:"
         when: "When:"
       auto_update_input:
-        none: ""
+        none: "Select a timeframe"
         later_today: "Later today"
         tomorrow: "Tomorrow"
         later_this_week: "Later this week"

@@ -1,7 +1,8 @@
 <form>
   {{#d-modal-body title="topic.topic_status_update.title" autoFocus="false"}}
     <div class="control-group">
-      {{combo-box content=timerTypes value=selection width="50%"}}
+      {{!-- TODO  width="50%" --}}
+      {{combo-box data-done="true" textKey="name" content=timerTypes value=selection}}
     </div>
 
     <div>
@@ -12,7 +13,7 @@
             basedOnLastPost=false}}
       {{else if publishToCategory}}
         <div class="control-group">
-          <label>{{i18n 'topic.topic_status_update.publish_to'}}</label>
+          <label>{{i18n 'topic.topic_status_update.publish_to'}}</label><br />
           {{category-select-box
             value=topicTimer.category_id
             excludeCategoryId=excludeCategoryId}}
