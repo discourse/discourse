@@ -318,7 +318,7 @@ class Search
         .joins("INNER JOIN post_timings ON
           post_timings.topic_id = posts.topic_id
           AND post_timings.post_number = posts.post_number
-          AND post_timings.user_id = #{Post.sanitize(@guardian.user.id)}
+          AND post_timings.user_id = #{ActiveRecord::Base.connection.quote(@guardian.user.id)}
         ")
     end
   end
@@ -329,7 +329,7 @@ class Search
         .joins("LEFT JOIN post_timings ON
           post_timings.topic_id = posts.topic_id
           AND post_timings.post_number = posts.post_number
-          AND post_timings.user_id = #{Post.sanitize(@guardian.user.id)}
+          AND post_timings.user_id = #{ActiveRecord::Base.connection.quote(@guardian.user.id)}
         ")
         .where("post_timings.user_id IS NULL")
     end
@@ -776,13 +776,18 @@ class Search
                            config: 'simple',
                            term: term).values[0][0]
 
-      ts_config = Post.sanitize(ts_config) if ts_config
+      ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
       all_terms = data.scan(/'([^']+)'\:\d+/).flatten
       all_terms.map! do |t|
         t.split(/[\)\(&']/)[0]
       end.compact!
 
-      query = Post.sanitize(all_terms.map { |t| "'#{PG::Connection.escape_string(t)}':*" }.join(" #{joiner} "))
+      query = ActiveRecord::Base.connection.quote(
+        all_terms
+          .map { |t| "'#{PG::Connection.escape_string(t)}':*" }
+          .join(" #{joiner} ")
+      )
+
       "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
     end
 

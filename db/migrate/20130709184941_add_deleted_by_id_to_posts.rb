@@ -1,4 +1,4 @@
-class AddDeletedByIdToPosts < ActiveRecord::Migration
+class AddDeletedByIdToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :deleted_by_id, :integer, null: true
     add_column :topics, :deleted_by_id, :integer, null: true

@@ -1,4 +1,4 @@
-class AddBadgeGrantedTitleToUserProfile < ActiveRecord::Migration
+class AddBadgeGrantedTitleToUserProfile < ActiveRecord::Migration[4.2]
   def up
     add_column :user_profiles, :badge_granted_title, :boolean, default: false
 

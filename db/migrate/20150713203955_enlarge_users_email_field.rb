@@ -1,4 +1,4 @@
-class EnlargeUsersEmailField < ActiveRecord::Migration
+class EnlargeUsersEmailField < ActiveRecord::Migration[4.2]
   def up
     change_column :users, :email, :string, limit: 513
   end

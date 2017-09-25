@@ -1,4 +1,4 @@
-class AddTrustLevelLockedColumn < ActiveRecord::Migration
+class AddTrustLevelLockedColumn < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :trust_level_locked, :boolean, default: false, null: false
 

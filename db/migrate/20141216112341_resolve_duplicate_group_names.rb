@@ -1,4 +1,4 @@
-class ResolveDuplicateGroupNames < ActiveRecord::Migration
+class ResolveDuplicateGroupNames < ActiveRecord::Migration[4.2]
 
   def up
     results = Group.exec_sql 'SELECT id FROM groups

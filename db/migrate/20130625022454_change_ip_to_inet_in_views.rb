@@ -1,6 +1,6 @@
 require 'ipaddr'
 
-class ChangeIpToInetInViews < ActiveRecord::Migration
+class ChangeIpToInetInViews < ActiveRecord::Migration[4.2]
   def up
     table = :views
     add_column table, :ip_address, :inet

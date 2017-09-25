@@ -4,7 +4,7 @@
 #   for local urls we need to upload an image and have a pointer to the upload, then use the upload id in the user table
 #   for gravatar we already have the email and can hash it
 
-class DropAvatarUrlFromUsers < ActiveRecord::Migration
+class DropAvatarUrlFromUsers < ActiveRecord::Migration[4.2]
   def up
     remove_column :users, :avatar_url
   end

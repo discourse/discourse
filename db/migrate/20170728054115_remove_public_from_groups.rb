@@ -1,4 +1,4 @@
-class RemovePublicFromGroups < ActiveRecord::Migration
+class RemovePublicFromGroups < ActiveRecord::Migration[4.2]
   def up
     # Defer dropping of the columns until the new application code has been deployed.
   end

@@ -1,4 +1,5 @@
 require_dependency 'distributed_mutex'
+require_dependency 'user_action_creator'
 
 class PostAlerter
   def self.post_created(post, opts = {})

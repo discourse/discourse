@@ -1,4 +1,4 @@
-class RemoveUrlFromIncomingReferer < ActiveRecord::Migration
+class RemoveUrlFromIncomingReferer < ActiveRecord::Migration[4.2]
   def up
     remove_column :incoming_referers, :url
   end

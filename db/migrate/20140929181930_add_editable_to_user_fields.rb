@@ -1,4 +1,4 @@
-class AddEditableToUserFields < ActiveRecord::Migration
+class AddEditableToUserFields < ActiveRecord::Migration[4.2]
   def change
     add_column :user_fields, :editable, :boolean, default: false, null: false
   end

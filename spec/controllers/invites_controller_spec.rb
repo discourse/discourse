@@ -3,26 +3,40 @@ require 'rails_helper'
 describe InvitesController do
 
   context '.show' do
+    render_views
+
     it "shows error if invite not found" do
-      get :show, id: 'nopeNOPEnope'
-      expect(response).to render_template(layout: 'no_ember')
-      expect(flash[:error]).to be_present
+      get :show, params: { id: 'nopeNOPEnope' }
+
+      expect(response).to be_success
+
+      body = response.body
+
+      expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found'))
     end
 
     it "renders the accept invite page if invite exists" do
       i = Fabricate(:invite)
-      get :show, id: i.invite_key
-      expect(response).to render_template(layout: 'application')
-      expect(flash[:error]).to be_nil
+      get :show, params: { id: i.invite_key }
+
+      expect(response).to be_success
+
+      body = response.body
+
+      expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+      expect(CGI.unescapeHTML(body)).to_not include(I18n.t('invite.not_found'))
     end
   end
 
   context '.destroy' do
 
     it 'requires you to be logged in' do
-      expect {
-        delete :destroy, email: 'jake@adventuretime.ooo'
-      }.to raise_error(Discourse::NotLoggedIn)
+      expect do
+        delete :destroy,
+          params: { email: 'jake@adventuretime.ooo' },
+          format: :json
+      end.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -31,20 +45,24 @@ describe InvitesController do
       let(:another_invite) { Fabricate(:invite, email: 'anotheremail@address.com') }
 
       it 'raises an error when the email is missing' do
-        expect { delete :destroy }.to raise_error(ActionController::ParameterMissing)
+        expect { delete :destroy, format: :json }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the email cannot be found" do
-        expect { delete :destroy, email: 'finn@adventuretime.ooo' }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          delete :destroy, params: { email: 'finn@adventuretime.ooo' }, format: :json
+        end.to raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error when the invite is not yours' do
-        expect { delete :destroy, email: another_invite.email }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          delete :destroy, params: { email: another_invite.email }, format: :json
+        end.to raise_error(Discourse::InvalidParameters)
       end
 
       it "destroys the invite" do
         Invite.any_instance.expects(:trash!).with(user)
-        delete :destroy, email: invite.email
+        delete :destroy, params: { email: invite.email }, format: :json
       end
 
     end
@@ -54,7 +72,7 @@ describe InvitesController do
   context '#create' do
     it 'requires you to be logged in' do
       expect do
-        post :create, email: 'jake@adventuretime.ooo'
+        post :create, params: { email: 'jake@adventuretime.ooo' }, format: :json
       end.to raise_error(Discourse::NotLoggedIn)
     end
 
@@ -63,7 +81,7 @@ describe InvitesController do
 
       it "fails if you can't invite to the forum" do
         log_in
-        post :create, email: email
+        post :create, params: { email: email }, format: :json
         expect(response).not_to be_success
       end
 
@@ -71,7 +89,7 @@ describe InvitesController do
         user = log_in(:trust_level_4)
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
-        post :create, email: invite.email
+        post :create, params: { email: invite.email }, format: :json
         expect(response).not_to be_success
         json = JSON.parse(response.body)
         expect(json["failed"]).to be_present
@@ -80,7 +98,7 @@ describe InvitesController do
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         log_in(:admin)
-        post :create, email: email, group_names: group.name
+        post :create, params: { email: email, group_names: group.name }, format: :json
         expect(response).to be_success
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
@@ -91,7 +109,7 @@ describe InvitesController do
         user.update!(trust_level: TrustLevel[2])
         group.add_owner(user)
 
-        post :create, email: email, group_names: group.name
+        post :create, params: { email: email, group_names: group.name }, format: :json
 
         expect(response).to be_success
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
@@ -101,13 +119,13 @@ describe InvitesController do
         user = log_in(:admin)
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
-        post :create, email: invite.email
+        post :create, params: { email: invite.email }, format: :json
         expect(response).to be_success
       end
 
       it "responds with error message in case of validation failure" do
         log_in(:admin)
-        post :create, email: "test@mailinator.com"
+        post :create, params: { email: "test@mailinator.com" }, format: :json
         expect(response).not_to be_success
         json = JSON.parse(response.body)
         expect(json["errors"]).to be_present
@@ -119,7 +137,9 @@ describe InvitesController do
   context '.create_invite_link' do
     it 'requires you to be logged in' do
       expect {
-        post :create_invite_link, email: 'jake@adventuretime.ooo'
+        post :create_invite_link, params: {
+          email: 'jake@adventuretime.ooo'
+        }, format: :json
       }.to raise_error(Discourse::NotLoggedIn)
     end
 
@@ -128,7 +148,7 @@ describe InvitesController do
 
       it "fails if you can't invite to the forum" do
         log_in
-        post :create_invite_link, email: email
+        post :create_invite_link, params: { email: email }, format: :json
         expect(response).not_to be_success
       end
 
@@ -136,14 +156,22 @@ describe InvitesController do
         user = log_in(:trust_level_4)
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
-        post :create_invite_link, email: invite.email
+
+        post :create_invite_link, params: {
+          email: invite.email
+        }, format: :json
+
         expect(response).not_to be_success
       end
 
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         log_in(:admin)
-        post :create_invite_link, email: email, group_names: group.name
+
+        post :create_invite_link, params: {
+          email: email, group_names: group.name
+        }, format: :json
+
         expect(response).to be_success
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
@@ -152,7 +180,11 @@ describe InvitesController do
         Fabricate(:group, name: "security")
         Fabricate(:group, name: "support")
         log_in(:admin)
-        post :create_invite_link, email: email, group_names: "security,support"
+
+        post :create_invite_link, params: {
+          email: email, group_names: "security,support"
+        }, format: :json
+
         expect(response).to be_success
         expect(Invite.find_by(email: email).invited_groups.count).to eq(2)
       end
@@ -163,7 +195,7 @@ describe InvitesController do
 
     context 'with an invalid invite id' do
       before do
-        xhr :put, :perform_accept_invitation, id: "doesn't exist", format: :json
+        put :perform_accept_invitation, params: { id: "doesn't exist" }, format: :json
       end
 
       it "redirects to the root" do
@@ -183,7 +215,7 @@ describe InvitesController do
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
       let(:deleted_invite) { invite.destroy; invite }
       before do
-        xhr :put, :perform_accept_invitation, id: deleted_invite.invite_key, format: :json
+        put :perform_accept_invitation, params: { id: deleted_invite.invite_key }, format: :json
       end
 
       it "redirects to the root" do
@@ -204,14 +236,14 @@ describe InvitesController do
 
       it 'redeems the invite' do
         Invite.any_instance.expects(:redeem)
-        xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+        put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
       end
 
       context 'when redeem returns a user' do
         let(:user) { Fabricate(:coding_horror) }
 
         context 'success' do
-          subject { xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json }
+          subject { put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json }
 
           before do
             Invite.any_instance.expects(:redeem).returns(user)
@@ -236,7 +268,7 @@ describe InvitesController do
         end
 
         context 'failure' do
-          subject { xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json }
+          subject { put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json }
 
           it "doesn't log in the user if there's a validation error" do
             user.errors.add(:password, :common)
@@ -260,32 +292,32 @@ describe InvitesController do
             user.send_welcome_message = true
             user.expects(:enqueue_welcome_message).with('welcome_invite')
             Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_entries(username: user.username))
-            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+            put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
           end
 
           it "sends password reset email if password is not set" do
             user.expects(:enqueue_welcome_message).with('welcome_invite').never
             Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_entries(username: user.username))
-            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+            put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
           end
 
           it "does not send password reset email if sso is enabled" do
             SiteSetting.enable_sso = true
             Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+            put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
           end
 
           it "does not send password reset email if local login is disabled" do
             SiteSetting.enable_local_logins = false
             Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
-            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+            put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
           end
 
           it 'sends an activation email if password is set' do
             user.password_hash = 'qaw3ni3h2wyr63lakw7pea1nrtr44pls'
             Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
             Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, user_id: user.id))
-            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
+            put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
           end
         end
       end
@@ -298,7 +330,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
-        put :perform_accept_invitation, id: invite.invite_key
+        put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
       end
     end
 
@@ -309,7 +341,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
-        put :perform_accept_invitation, id: invite.invite_key
+        put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
       end
     end
   end
@@ -318,7 +350,7 @@ describe InvitesController do
 
     it 'requires you to be logged in' do
       expect {
-        delete :resend_invite, email: 'first_name@example.com'
+        delete :resend_invite, params: { email: 'first_name@example.com' }, format: :json
       }.to raise_error(Discourse::NotLoggedIn)
     end
 
@@ -328,20 +360,24 @@ describe InvitesController do
       let(:another_invite) { Fabricate(:invite, email: 'last_name@example.com') }
 
       it 'raises an error when the email is missing' do
-        expect { post :resend_invite }.to raise_error(ActionController::ParameterMissing)
+        expect { post :resend_invite, format: :json }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the email cannot be found" do
-        expect { post :resend_invite, email: 'first_name@example.com' }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          post :resend_invite, params: { email: 'first_name@example.com' }, format: :json
+        end.to raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error when the invite is not yours' do
-        expect { post :resend_invite, email: another_invite.email }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          post :resend_invite, params: { email: another_invite.email }, format: :json
+        end.to raise_error(Discourse::InvalidParameters)
       end
 
       it "resends the invite" do
         Invite.any_instance.expects(:resend_invite)
-        post :resend_invite, email: invite.email
+        post :resend_invite, params: { email: invite.email }, format: :json
       end
 
     end
@@ -351,26 +387,28 @@ describe InvitesController do
   context '.upload_csv' do
     it 'requires you to be logged in' do
       expect {
-        xhr :post, :upload_csv
+        post :upload_csv, format: :json
       }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
       let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
+
       let(:file) do
-        ActionDispatch::Http::UploadedFile.new(filename: 'discourse.csv', tempfile: csv_file)
+        Rack::Test::UploadedFile.new(File.open(csv_file))
       end
+
       let(:filename) { 'discourse.csv' }
 
       it "fails if you can't bulk invite to the forum" do
         log_in
-        xhr :post, :upload_csv, file: file, name: filename
+        post :upload_csv, params: { file: file, name: filename }, format: :json
         expect(response).not_to be_success
       end
 
       it "allows admin to bulk invite" do
         log_in(:admin)
-        xhr :post, :upload_csv, file: file, name: filename
+        post :upload_csv, params: { file: file, name: filename }, format: :json
         expect(response).to be_success
       end
     end

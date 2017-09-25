@@ -1,20 +1,19 @@
 require 'rails_helper'
 
-describe RobotsTxtController do
-
-  context '.index' do
-
+RSpec.describe RobotsTxtController do
+  describe '#index' do
     it "returns index when indexing is allowed" do
       SiteSetting.allow_index_in_robots_txt = true
-      get :index
-      expect(response).to render_template :index
+      get '/robots.txt'
+
+      expect(response.body).to include("Disallow: /u/")
     end
 
     it "returns noindex when indexing is disallowed" do
       SiteSetting.allow_index_in_robots_txt = false
-      get :index
-      expect(response).to render_template :no_index
-    end
+      get '/robots.txt'
 
+      expect(response.body).to_not include("Disallow: /u/")
+    end
   end
 end

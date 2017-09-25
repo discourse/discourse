@@ -30,7 +30,7 @@ class Group < ActiveRecord::Base
   after_save :update_title
 
   after_save :enqueue_update_mentions_job,
-    if: Proc.new { |g| g.name_was && g.name_changed? }
+    if: Proc.new { |g| g.name_before_last_save && g.saved_change_to_name? }
 
   after_save :expire_cache
   after_destroy :expire_cache
@@ -552,7 +552,7 @@ class Group < ActiveRecord::Base
     def update_title
       return if new_record? && !self.title.present?
 
-      if self.title_changed?
+      if self.saved_change_to_title?
         sql = <<-SQL.squish
           UPDATE users
              SET title = :title
@@ -561,14 +561,14 @@ class Group < ActiveRecord::Base
              AND id IN (SELECT user_id FROM group_users WHERE group_id = :id)
         SQL
 
-        self.class.exec_sql(sql, title: title, title_was: title_was, id: id)
+        self.class.exec_sql(sql, title: title, title_was: title_before_last_save, id: id)
       end
     end
 
     def update_primary_group
       return if new_record? && !self.primary_group?
 
-      if self.primary_group_changed?
+      if self.saved_change_to_primary_group?
         sql = <<~SQL
           UPDATE users
           /*set*/
@@ -613,7 +613,7 @@ class Group < ActiveRecord::Base
 
     def enqueue_update_mentions_job
       Jobs.enqueue(:update_group_mentions,
-        previous_name: self.name_was,
+        previous_name: self.name_before_last_save,
         group_id: self.id
       )
     end

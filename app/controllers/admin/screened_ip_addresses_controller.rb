@@ -2,7 +2,7 @@ require_dependency 'ip_addr'
 
 class Admin::ScreenedIpAddressesController < Admin::AdminController
 
-  before_filter :fetch_screened_ip_address, only: [:update, :destroy]
+  before_action :fetch_screened_ip_address, only: [:update, :destroy]
 
   def index
     filter = params[:filter]

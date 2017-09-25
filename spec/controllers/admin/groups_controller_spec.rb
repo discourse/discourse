@@ -18,7 +18,9 @@ describe Admin::GroupsController do
       user = Fabricate(:user, trust_level: 2)
       user2 = Fabricate(:user, trust_level: 4)
 
-      xhr :put, :bulk_perform, group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
+      put :bulk_perform, params: {
+        group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
+      }, format: :json
 
       expect(response).to be_success
 
@@ -44,10 +46,13 @@ describe Admin::GroupsController do
       group.add_owner(user)
 
       expect do
-        xhr :put, :update, id: group.id, group: {
-          visibility_level: Group.visibility_levels[:owners],
-          allow_membership_requests: "true"
-        }
+        put :update, params: {
+          id: group.id,
+          group: {
+            visibility_level: Group.visibility_levels[:owners],
+            allow_membership_requests: "true"
+          }
+        }, format: :json
 
       end.to change { GroupHistory.count }.by(2)
 
@@ -60,7 +65,7 @@ describe Admin::GroupsController do
     end
 
     it "ignore name change on automatic group" do
-      xhr :put, :update, id: 1, group: { name: "WAT" }
+      put :update, params: { id: 1, group: { name: "WAT" } }, format: :json
       expect(response).to be_success
 
       group = Group.find(1)
@@ -70,14 +75,22 @@ describe Admin::GroupsController do
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
       Jobs.expects(:enqueue).never
       group = Fabricate(:group)
-      xhr :put, :update, id: group.id, group: { automatic_membership_retroactive: "false" }
+
+      put :update, params: {
+        id: group.id, group: { automatic_membership_retroactive: "false" }
+      }, format: :json
+
       expect(response).to be_success
     end
 
     it "launches the 'automatic group membership' job when it's retroactive" do
       group = Fabricate(:group)
       Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: group.id)
-      xhr :put, :update, id: group.id, group: { automatic_membership_retroactive: "true" }
+
+      put :update, params: {
+        id: group.id, group: { automatic_membership_retroactive: "true" }
+      }, format: :json
+
       expect(response).to be_success
     end
 
@@ -87,14 +100,14 @@ describe Admin::GroupsController do
 
     it "returns a 422 if the group is automatic" do
       group = Fabricate(:group, automatic: true)
-      xhr :delete, :destroy, id: group.id
+      delete :destroy, params: { id: group.id }, format: :json
       expect(response.status).to eq(422)
       expect(Group.where(id: group.id).count).to eq(1)
     end
 
     it "is able to destroy a non-automatic group" do
       group = Fabricate(:group)
-      xhr :delete, :destroy, id: group.id
+      delete :destroy, params: { id: group.id }, format: :json
       expect(response.status).to eq(200)
       expect(Group.where(id: group.id).count).to eq(0)
     end
@@ -106,7 +119,7 @@ describe Admin::GroupsController do
     it "is able to refresh automatic groups" do
       Group.expects(:refresh_automatic_groups!).returns(true)
 
-      xhr :post, :refresh_automatic_groups
+      post :refresh_automatic_groups, format: :json
       expect(response.status).to eq(200)
     end
 

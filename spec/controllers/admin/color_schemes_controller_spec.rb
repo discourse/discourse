@@ -17,33 +17,29 @@ describe Admin::ColorSchemesController do
     } }
 
     describe "index" do
-      it "returns success" do
-        xhr :get, :index
-        expect(response).to be_success
-      end
-
       it "returns JSON" do
         Fabricate(:color_scheme)
-        xhr :get, :index
+        get :index, format: :json
+
+        expect(response).to be_success
         expect(::JSON.parse(response.body)).to be_present
       end
     end
 
     describe "create" do
-      it "returns success" do
-        xhr :post, :create, valid_params
-        expect(response).to be_success
-      end
-
       it "returns JSON" do
-        xhr :post, :create, valid_params
+        post :create, params: valid_params, format: :json
+
+        expect(response).to be_success
         expect(::JSON.parse(response.body)['id']).to be_present
       end
 
       it "returns failure with invalid params" do
         params = valid_params
         params[:color_scheme][:colors][0][:hex] = 'cool color please'
-        xhr :post, :create, valid_params
+
+        post :create, params: valid_params, format: :json
+
         expect(response).not_to be_success
         expect(::JSON.parse(response.body)['errors']).to be_present
       end
@@ -54,13 +50,13 @@ describe Admin::ColorSchemesController do
 
       it "returns success" do
         ColorSchemeRevisor.expects(:revise).returns(existing)
-        xhr :put, :update, valid_params.merge(id: existing.id)
+        put :update, params: valid_params.merge(id: existing.id), format: :json
         expect(response).to be_success
       end
 
       it "returns JSON" do
         ColorSchemeRevisor.expects(:revise).returns(existing)
-        xhr :put, :update, valid_params.merge(id: existing.id)
+        put :update, params: valid_params.merge(id: existing.id), format: :json
         expect(::JSON.parse(response.body)['id']).to be_present
       end
 
@@ -69,7 +65,7 @@ describe Admin::ColorSchemesController do
         params = valid_params.merge(id: color_scheme.id)
         params[:color_scheme][:colors][0][:name] = color_scheme.colors.first.name
         params[:color_scheme][:colors][0][:hex] = 'cool color please'
-        xhr :put, :update, params
+        put :update, params: params, format: :json
         expect(response).not_to be_success
         expect(::JSON.parse(response.body)['errors']).to be_present
       end
@@ -80,7 +76,7 @@ describe Admin::ColorSchemesController do
 
       it "returns success" do
         expect {
-          xhr :delete, :destroy, id: existing.id
+          delete :destroy, params: { id: existing.id }, format: :json
         }.to change { ColorScheme.count }.by(-1)
         expect(response).to be_success
       end

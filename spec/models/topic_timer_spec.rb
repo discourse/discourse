@@ -5,10 +5,6 @@ RSpec.describe TopicTimer, type: :model do
   let(:topic) { Fabricate(:topic) }
   let(:admin) { Fabricate(:admin) }
 
-  before do
-    Jobs::ToggleTopicClosed.jobs.clear
-  end
-
   context "validations" do
     describe '#status_type' do
       it 'should ensure that only one active public topic status update exists' do
@@ -245,7 +241,6 @@ RSpec.describe TopicTimer, type: :model do
   describe '.ensure_consistency!' do
     before do
       SiteSetting.queue_jobs = true
-      Jobs::ToggleTopicClosed.jobs.clear
     end
 
     it 'should enqueue jobs that have been missed' do

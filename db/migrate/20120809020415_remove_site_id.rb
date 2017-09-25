@@ -1,4 +1,4 @@
-class RemoveSiteId < ActiveRecord::Migration
+class RemoveSiteId < ActiveRecord::Migration[4.2]
   def up
     drop_table 'sites'
     remove_index 'incoming_links', name: "incoming_index"

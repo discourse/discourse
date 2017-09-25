@@ -1,4 +1,5 @@
 require_dependency 'enum'
+require_dependency 'notification_emailer'
 
 class Notification < ActiveRecord::Base
   belongs_to :user
@@ -15,10 +16,7 @@ class Notification < ActiveRecord::Base
   attr_accessor :skip_send_email
 
   after_commit :send_email, on: :create
-  # This is super weird because the tests fail if we don't specify `on: :destroy`
-  # TODO: Revert back to default in Rails 5
-  after_commit :refresh_notification_count, on: :destroy
-  after_commit :refresh_notification_count, on: [:create, :update]
+  after_commit :refresh_notification_count, on: [:create, :update, :destroy]
 
   def self.ensure_consistency!
     Notification.exec_sql <<-SQL

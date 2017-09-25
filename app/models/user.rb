@@ -1,3 +1,4 @@
+require_dependency 'jobs/base'
 require_dependency 'email'
 require_dependency 'email_token'
 require_dependency 'email_validator'
@@ -11,6 +12,7 @@ require_dependency 'url_helper'
 require_dependency 'letter_avatar'
 require_dependency 'promotion'
 require_dependency 'password_validator'
+require_dependency 'notification_serializer'
 
 class User < ActiveRecord::Base
   include Searchable
@@ -72,15 +74,15 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
-  has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: GroupHistory
-  has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: GroupHistory
+  has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'
+  has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
 
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username
-  validate :username_validator, if: :username_changed?
+  validate :username_validator, if: :will_save_change_to_username?
   validate :password_validator
-  validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
+  validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
   validates_associated :primary_email, message: -> (_, user_email) { user_email[:value]&.errors[:email]&.first }
@@ -110,8 +112,8 @@ class User < ActiveRecord::Base
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
-    PostTiming.delete_all(user_id: self.id)
-    TopicViewItem.delete_all(user_id: self.id)
+    PostTiming.where(user_id: self.id).delete_all
+    TopicViewItem.where(user_id: self.id).delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin
@@ -403,9 +405,11 @@ class User < ActiveRecord::Base
       ) AS y
     "
 
-    recent = User.exec_sql(sql, user_id: id,
-                                type:  Notification.types[:private_message]).values.map do |id, read|
-      [id.to_i, read == 't'.freeze]
+    recent = User.exec_sql(sql,
+      user_id: id,
+      type: Notification.types[:private_message]
+    ).values.map! do |id, read|
+      [id.to_i, read]
     end
 
     MessageBus.publish("/notification/#{id}",
@@ -819,7 +823,7 @@ class User < ActiveRecord::Base
     end
 
     # mark all the user's quoted posts as "needing a rebake"
-    Post.rebake_all_quoted_posts(self.id) if self.uploaded_avatar_id_changed?
+    Post.rebake_all_quoted_posts(self.id) if self.will_save_change_to_uploaded_avatar_id?
   end
 
   def first_post_created_at
@@ -950,7 +954,7 @@ class User < ActiveRecord::Base
   end
 
   def expire_old_email_tokens
-    if password_hash_changed? && !id_changed?
+    if saved_change_to_password_hash? && !saved_change_to_id?
       email_tokens.where('not expired').update_all(expired: true)
     end
   end
@@ -1023,7 +1027,7 @@ class User < ActiveRecord::Base
     username_format_validator || begin
       lower = username.downcase
       existing = User.find_by(username_lower: lower)
-      if username_changed? && existing && existing.id != self.id
+      if will_save_change_to_username? && existing && existing.id != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end

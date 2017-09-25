@@ -1,4 +1,4 @@
-class SplitAliasLevels < ActiveRecord::Migration
+class SplitAliasLevels < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :messageable_level, :integer, default: 0
     add_column :groups, :mentionable_level, :integer, default: 0

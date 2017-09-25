@@ -1,4 +1,4 @@
-class AddUserAuthTokens < ActiveRecord::Migration
+class AddUserAuthTokens < ActiveRecord::Migration[4.2]
   def down
     execute <<SQL
       UPDATE users

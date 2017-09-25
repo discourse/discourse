@@ -1,4 +1,4 @@
-class AddSortOrderToPosts < ActiveRecord::Migration
+class AddSortOrderToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :sort_order, :integer
     remove_index :posts, :user_id

@@ -1,4 +1,4 @@
-class CreateBlockedEmails < ActiveRecord::Migration
+class CreateBlockedEmails < ActiveRecord::Migration[4.2]
   def change
     create_table :blocked_emails do |t|
       t.string :email, null: false

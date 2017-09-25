@@ -1,4 +1,4 @@
-class AddUserIndexesToPostsAndTopics < ActiveRecord::Migration
+class AddUserIndexesToPostsAndTopics < ActiveRecord::Migration[4.2]
   def up
     execute "CREATE INDEX idx_posts_user_id_deleted_at
               ON posts(user_id) WHERE deleted_at IS NULL"

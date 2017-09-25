@@ -1,4 +1,4 @@
-class FixGroupAllowMembershipRequests < ActiveRecord::Migration
+class FixGroupAllowMembershipRequests < ActiveRecord::Migration[4.2]
   def up
     execute <<~SQL
     UPDATE groups g

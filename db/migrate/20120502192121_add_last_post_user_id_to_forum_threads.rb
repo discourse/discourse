@@ -1,4 +1,4 @@
-class AddLastPostUserIdToForumThreads < ActiveRecord::Migration
+class AddLastPostUserIdToForumThreads < ActiveRecord::Migration[4.2]
 
   def up
     add_column :forum_threads, :last_post_user_id, :integer

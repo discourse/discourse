@@ -1,5 +1,5 @@
 class StylesheetsController < ApplicationController
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_source_map]
+  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_source_map]
 
   def show_source_map
     show_resource(source_map: true)
@@ -56,7 +56,7 @@ class StylesheetsController < ApplicationController
     end
 
     if cache_time && stylesheet_time && stylesheet_time <= cache_time
-      return render nothing: true, status: 304
+      return render body: nil, status: 304
     end
 
     unless File.exist?(location)

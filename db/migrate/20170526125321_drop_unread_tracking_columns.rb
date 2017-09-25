@@ -1,4 +1,4 @@
-class DropUnreadTrackingColumns < ActiveRecord::Migration
+class DropUnreadTrackingColumns < ActiveRecord::Migration[4.2]
   def up
   end
 

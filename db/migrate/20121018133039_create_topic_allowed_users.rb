@@ -1,4 +1,4 @@
-class CreateTopicAllowedUsers < ActiveRecord::Migration
+class CreateTopicAllowedUsers < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_allowed_users do |t|
       t.integer :user_id, null: false

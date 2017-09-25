@@ -16,13 +16,13 @@ describe Admin::ScreenedIpAddressesController do
       Fabricate(:screened_ip_address, ip_address: "1.2.3.6")
       Fabricate(:screened_ip_address, ip_address: "4.5.6.7")
 
-      xhr :get, :index, filter: "1.2.*"
+      get :index, params: { filter: "1.2.*" }, format: :json
 
       expect(response).to be_success
       result = JSON.parse(response.body)
       expect(result.length).to eq(3)
 
-      xhr :get, :index, filter: "4.5.6.7"
+      get :index, params: { filter: "4.5.6.7" }, format: :json
 
       expect(response).to be_success
       result = JSON.parse(response.body)
@@ -44,7 +44,7 @@ describe Admin::ScreenedIpAddressesController do
       StaffActionLogger.any_instance.expects(:log_roll_up)
       SiteSetting.min_ban_entries_for_roll_up = 3
 
-      xhr :post, :roll_up
+      post :roll_up, format: :json
       expect(response).to be_success
 
       subnet = ScreenedIpAddress.where(ip_address: "1.2.3.0/24").first
@@ -64,7 +64,7 @@ describe Admin::ScreenedIpAddressesController do
       StaffActionLogger.any_instance.expects(:log_roll_up)
       SiteSetting.min_ban_entries_for_roll_up = 5
 
-      xhr :post, :roll_up
+      post :roll_up, format: :json
       expect(response).to be_success
 
       subnet = ScreenedIpAddress.where(ip_address: "1.2.0.0/16").first

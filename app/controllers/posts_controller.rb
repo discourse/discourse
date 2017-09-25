@@ -8,9 +8,9 @@ require_dependency 'new_post_result_serializer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
+  before_action :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
 
-  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
+  skip_before_action :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -239,7 +239,7 @@ class PostsController < ApplicationController
     destroyer = PostDestroyer.new(current_user, post, context: params[:context])
     destroyer.destroy
 
-    render nothing: true
+    render body: nil
   end
 
   def expand_embed
@@ -272,7 +272,7 @@ class PostsController < ApplicationController
       posts.each { |p| PostDestroyer.new(current_user, p).destroy }
     end
 
-    render nothing: true
+    render body: nil
   end
 
   def merge_posts
@@ -280,7 +280,7 @@ class PostsController < ApplicationController
     posts = Post.where(id: params[:post_ids]).order(:id)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.pluck(:id) == params[:post_ids]
     PostMerger.new(current_user, posts).merge
-    render nothing: true
+    render body: nil
   end
 
   # Direct replies to this post
@@ -312,7 +312,7 @@ class PostsController < ApplicationController
     post.public_version -= 1
     post.save
 
-    render nothing: true
+    render body: nil
   end
 
   def show_revision
@@ -325,7 +325,7 @@ class PostsController < ApplicationController
     post.public_version += 1
     post.save
 
-    render nothing: true
+    render body: nil
   end
 
   def revert
@@ -365,6 +365,7 @@ class PostsController < ApplicationController
 
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
+
     link_counts = TopicLink.counts_for(guardian, topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
 
@@ -401,7 +402,7 @@ class PostsController < ApplicationController
 
     post.revise(current_user, wiki: params[:wiki])
 
-    render nothing: true
+    render body: nil
   end
 
   def post_type
@@ -410,7 +411,7 @@ class PostsController < ApplicationController
     post = find_post_from_params
     post.revise(current_user, post_type: params[:post_type].to_i)
 
-    render nothing: true
+    render body: nil
   end
 
   def rebake
@@ -419,7 +420,7 @@ class PostsController < ApplicationController
     post = find_post_from_params
     post.rebake!(invalidate_oneboxes: true)
 
-    render nothing: true
+    render body: nil
   end
 
   def unhide
@@ -429,7 +430,7 @@ class PostsController < ApplicationController
 
     post.unhide!
 
-    render nothing: true
+    render body: nil
   end
 
   def flagged_posts
@@ -624,11 +625,13 @@ class PostsController < ApplicationController
       result[:target_group_names] = groups.join(",")
     end
 
-    result
+    result.permit!
+    result.to_h
   end
 
   def signature_for(args)
     "post##" << Digest::SHA1.hexdigest(args
+      .to_h
       .to_a
       .concat([["user", current_user.id]])
       .sort { |x, y| x[0] <=> y[0] }.join do |x, y|

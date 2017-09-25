@@ -1,4 +1,4 @@
-class GroupManagers < ActiveRecord::Migration
+class GroupManagers < ActiveRecord::Migration[4.2]
   def change
     create_table :group_managers do |t|
       t.integer :group_id, null: false

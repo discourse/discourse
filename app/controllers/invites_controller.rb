@@ -2,13 +2,13 @@ require_dependency 'rate_limiter'
 
 class InvitesController < ApplicationController
 
-  skip_before_filter :check_xhr, except: [:perform_accept_invitation]
-  skip_before_filter :preload_json, except: [:show]
-  skip_before_filter :redirect_to_login_if_required
+  skip_before_action :check_xhr, except: [:perform_accept_invitation]
+  skip_before_action :preload_json, except: [:show]
+  skip_before_action :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
-  before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
-  before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
+  before_action :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
+  before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
+  before_action :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
 
   def show
     expires_now
@@ -122,14 +122,14 @@ class InvitesController < ApplicationController
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.trash!(current_user)
 
-    render nothing: true
+    render body: nil
   end
 
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
     Invite.rescind_all_invites_from(current_user)
-    render nothing: true
+    render body: nil
   end
 
   def resend_invite
@@ -139,7 +139,7 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.resend_invite
-    render nothing: true
+    render body: nil
 
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
@@ -149,7 +149,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_resend_all_invites!(current_user)
 
     Invite.resend_all_invites_from(current_user.id)
-    render nothing: true
+    render body: nil
   end
 
   def upload_csv

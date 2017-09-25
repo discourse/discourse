@@ -1,4 +1,4 @@
-class RenameDigestAfterDaysToDigestAfterMinutes < ActiveRecord::Migration
+class RenameDigestAfterDaysToDigestAfterMinutes < ActiveRecord::Migration[4.2]
   def up
     rename_column :user_options, :digest_after_days, :digest_after_minutes
     execute "UPDATE user_options SET digest_after_minutes = digest_after_minutes * 1440 WHERE digest_after_minutes IS NOT NULL"

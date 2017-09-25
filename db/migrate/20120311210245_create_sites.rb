@@ -1,4 +1,4 @@
-class CreateSites < ActiveRecord::Migration
+class CreateSites < ActiveRecord::Migration[4.2]
   def change
     create_table :sites  do |t|
       t.string :title, limit: 100, null: false

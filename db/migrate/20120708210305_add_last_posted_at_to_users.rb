@@ -1,4 +1,4 @@
-class AddLastPostedAtToUsers < ActiveRecord::Migration
+class AddLastPostedAtToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :last_posted_at, :datetime, null: true
     add_index :users, :last_posted_at

@@ -1,4 +1,4 @@
-class CreateExpressions < ActiveRecord::Migration
+class CreateExpressions < ActiveRecord::Migration[4.2]
   def change
     create_table :expressions, id: false, force: true do |t|
       t.integer :parent_id, null: false

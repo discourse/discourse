@@ -121,6 +121,7 @@ RSpec.configure do |config|
     SiteSetting.automatically_download_gravatars = false
 
     Discourse.clear_readonly!
+    Sidekiq::Worker.clear_all
 
     I18n.locale = :en
   end

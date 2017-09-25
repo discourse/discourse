@@ -258,7 +258,6 @@ SQL
   end
 
   def self.act(user, post, post_action_type_id, opts = {})
-
     limit_action!(user, post, post_action_type_id)
 
     related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)

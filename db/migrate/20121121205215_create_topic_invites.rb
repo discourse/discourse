@@ -1,4 +1,4 @@
-class CreateTopicInvites < ActiveRecord::Migration
+class CreateTopicInvites < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_invites do |t|
       t.references :topic, null: false

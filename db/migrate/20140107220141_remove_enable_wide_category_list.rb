@@ -1,4 +1,4 @@
-class RemoveEnableWideCategoryList < ActiveRecord::Migration
+class RemoveEnableWideCategoryList < ActiveRecord::Migration[4.2]
   def up
     execute "DELETE FROM site_settings WHERE name = 'enable_wide_category_list'"
   end

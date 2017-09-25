@@ -3,27 +3,33 @@ task 'set_locale' do
   I18n.locale = (SiteSetting.default_locale || :en) rescue :en
 end
 
+task 'db:environment:set', [:multisite] => [:load_config]  do |_, args|
+  if Rails.env.test? && !args[:multisite]
+    system("MULTISITE=multisite rails db:environment:set['true'] RAILS_ENV=test")
+  end
+end
+
 task 'db:create', [:multisite] => [:load_config] do |_, args|
   if Rails.env.test? && !args[:multisite]
-    system("MULTISITE=multisite rake db:create['true']")
+    system("MULTISITE=multisite rails db:create['true']")
   end
 end
 
 task 'db:drop', [:multisite] => [:load_config] do |_, args|
   if Rails.env.test? && !args[:multisite]
-    system("MULTISITE=multisite rake db:drop['true']")
+    system("MULTISITE=multisite rails db:drop['true']")
   end
 end
 
-# we need to run seed_fu every time we run rake db:migrate
+# we need to run seed_fu every time we run rails db:migrate
 task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed
   Jobs::Onceoff.enqueue_all
 
   if Rails.env.test? && !args[:multisite]
-    system("rake db:schema:dump")
-    system("MULTISITE=multisite rake db:schema:load")
-    system("RAILS_DB=discourse_test_multisite rake db:migrate['multisite']")
+    system("rails db:schema:dump")
+    system("MULTISITE=multisite rails db:schema:load")
+    system("RAILS_DB=discourse_test_multisite rails db:migrate['multisite']")
   end
 end
 

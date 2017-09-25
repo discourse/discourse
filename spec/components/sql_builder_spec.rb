@@ -48,12 +48,12 @@ describe SqlBuilder do
     end
 
     it "should allow for 1 param exec" do
-      expect(@builder.exec(a: 1, b: 2).values[0][0]).to eq('1')
+      expect(@builder.exec(a: 1, b: 2).values[0][0]).to eq(1)
     end
 
     it "should allow for a single where" do
       @builder.where(":a = 1")
-      expect(@builder.exec(a: 1, b: 2).values[0][0]).to eq('1')
+      expect(@builder.exec(a: 1, b: 2).values[0][0]).to eq(1)
     end
 
     it "should allow where chaining" do
@@ -64,11 +64,11 @@ describe SqlBuilder do
 
     it "should allow order by" do
       expect(@builder.order_by("A desc").limit(1)
-        .exec(a: 1, b: 2).values[0][0]).to eq("2")
+        .exec(a: 1, b: 2).values[0][0]).to eq(2)
     end
     it "should allow offset" do
       expect(@builder.order_by("A desc").offset(1)
-        .exec(a: 1, b: 2).values[0][0]).to eq("1")
+        .exec(a: 1, b: 2).values[0][0]).to eq(1)
     end
   end
 

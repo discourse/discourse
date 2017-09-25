@@ -3,8 +3,8 @@ require_dependency 'file_helper'
 
 class StaticController < ApplicationController
 
-  skip_before_filter :check_xhr, :redirect_to_login_if_required
-  skip_before_filter :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
+  skip_before_action :check_xhr, :redirect_to_login_if_required
+  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -121,13 +121,13 @@ class StaticController < ApplicationController
     if data.bytesize == 0
       @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
       response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
-      render text: @@default_favicon, content_type: "image/png"
+      render plain: @@default_favicon, content_type: "image/png"
     else
       immutable_for 1.year
       response.headers["Expires"] = 1.year.from_now.httpdate
       response.headers["Content-Length"] = data.bytesize.to_s
       response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
-      render text: data, content_type: "image/png"
+      render plain: data, content_type: "image/png"
     end
   end
 

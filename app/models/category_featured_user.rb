@@ -36,7 +36,8 @@ class CategoryFeaturedUser < ActiveRecord::Base
     return if current == user_ids
 
     transaction do
-      CategoryFeaturedUser.delete_all category_id: category_id
+      CategoryFeaturedUser.where(category_id: category_id).delete_all
+
       user_ids.each do |user_id|
         create(category_id: category_id, user_id: user_id)
       end

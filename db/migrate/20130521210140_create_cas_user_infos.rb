@@ -1,4 +1,4 @@
-class CreateCasUserInfos < ActiveRecord::Migration
+class CreateCasUserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :cas_user_infos do |t|
       t.integer :user_id, null: false

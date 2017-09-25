@@ -1,4 +1,4 @@
-class RebuildDirectoryItemWithIndex < ActiveRecord::Migration
+class RebuildDirectoryItemWithIndex < ActiveRecord::Migration[4.2]
   def up
     remove_index :directory_items, [:period_type]
     execute "TRUNCATE TABLE directory_items RESTART IDENTITY"

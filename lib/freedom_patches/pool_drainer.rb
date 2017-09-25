@@ -11,7 +11,7 @@ if Rails.version >= "4.2.0"
       end
 
       def lease
-        synchronize do
+        @lock.synchronize do
           unless in_use?
             @last_use = Time.now
             super

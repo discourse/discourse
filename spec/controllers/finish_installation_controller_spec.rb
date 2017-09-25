@@ -50,19 +50,34 @@ describe FinishInstallationController do
       end
 
       it "raises an error when the email is not in the allowed list" do
-        expect {
-          post :register, email: 'notrobin@example.com', username: 'eviltrout', password: 'disismypasswordokay'
-        }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          post :register, params: {
+            email: 'notrobin@example.com',
+            username: 'eviltrout',
+            password: 'disismypasswordokay'
+          }, format: :json
+        end.to raise_error(Discourse::InvalidParameters)
       end
 
       it "doesn't redirect when fields are wrong" do
-        post :register, email: 'robin@example.com', username: '', password: 'disismypasswordokay'
+        post :register, params: {
+          email: 'robin@example.com',
+          username: '',
+          password: 'disismypasswordokay'
+        }
+
         expect(response).not_to be_redirect
       end
 
       it "registers the admin when the email is in the list" do
         Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
-        post :register, email: 'robin@example.com', username: 'eviltrout', password: 'disismypasswordokay'
+
+        post :register, params: {
+          email: 'robin@example.com',
+          username: 'eviltrout',
+          password: 'disismypasswordokay'
+        }, format: :json
+
         expect(response).to be_redirect
         expect(User.where(username: 'eviltrout').exists?).to eq(true)
       end
@@ -87,7 +102,12 @@ describe FinishInstallationController do
     before do
       SiteSetting.has_login_hint = true
       GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
-      post :register, email: 'robin@example.com', username: 'eviltrout', password: 'disismypasswordokay'
+
+      post :register, params: {
+        email: 'robin@example.com',
+        username: 'eviltrout',
+        password: 'disismypasswordokay'
+      }
     end
 
     it "resends the email" do

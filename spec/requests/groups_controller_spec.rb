@@ -62,7 +62,7 @@ describe GroupsController do
       sign_in(user)
       group.update_attributes!(name: 'test')
 
-      get "/groups/test/mentionable.json", name: group.name
+      get "/groups/test/mentionable.json", params: { name: group.name }
 
       expect(response).to be_success
 
@@ -71,7 +71,7 @@ describe GroupsController do
 
       group.update_attributes!(mentionable_level: Group::ALIAS_LEVELS[:everyone])
 
-      get "/groups/test/mentionable.json", name: group.name
+      get "/groups/test/mentionable.json", params: { name: group.name }
       expect(response).to be_success
 
       response_body = JSON.parse(response.body)
@@ -103,15 +103,17 @@ describe GroupsController do
         group.update!(allow_membership_requests: false)
 
         expect do
-          put "/groups/#{group.id}.json", group: {
-            flair_bg_color: 'FFF',
-            flair_color: 'BBB',
-            flair_url: 'fa-adjust',
-            bio_raw: 'testing',
-            full_name: 'awesome team',
-            public_admission: true,
-            public_exit: true,
-            allow_membership_requests: true
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              flair_bg_color: 'FFF',
+              flair_color: 'BBB',
+              flair_url: 'fa-adjust',
+              bio_raw: 'testing',
+              full_name: 'awesome team',
+              public_admission: true,
+              public_exit: true,
+              allow_membership_requests: true
+            }
           }
         end.to change { GroupHistory.count }.by(8)
 
@@ -138,7 +140,7 @@ describe GroupsController do
       end
 
       it 'should be able to update the group' do
-        put "/groups/#{group.id}.json", group: { flair_color: 'BBB' }
+        put "/groups/#{group.id}.json", params: { group: { flair_color: 'BBB' } }
 
         expect(response).to be_success
         expect(group.reload.flair_color).to eq('BBB')
@@ -149,7 +151,7 @@ describe GroupsController do
       it 'should not be able to update the group' do
         sign_in(user)
 
-        put "/groups/#{group.id}.json", group: { name: 'testing' }
+        put "/groups/#{group.id}.json", params: { group: { name: 'testing' } }
 
         expect(response.status).to eq(403)
       end
@@ -184,7 +186,9 @@ describe GroupsController do
     let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
 
     it "should allow members to be sorted by" do
-      xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at', desc: true
+      get "/groups/#{group.name}/members.json", params: {
+        order: 'last_seen_at', desc: true
+      }
 
       expect(response).to be_success
 
@@ -192,7 +196,7 @@ describe GroupsController do
 
       expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
 
-      xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at'
+      get "/groups/#{group.name}/members.json", params: { order: 'last_seen_at' }
 
       expect(response).to be_success
 
@@ -200,7 +204,9 @@ describe GroupsController do
 
       expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
 
-      xhr :get, "/groups/#{group.name}/members", order: 'last_posted_at', desc: true
+      get "/groups/#{group.name}/members.json", params: {
+        order: 'last_posted_at', desc: true
+      }
 
       expect(response).to be_success
 
@@ -210,7 +216,7 @@ describe GroupsController do
     end
 
     it "should not allow members to be sorted by columns that are not allowed" do
-      xhr :get, "/groups/#{group.name}/members", order: 'email'
+      get "/groups/#{group.name}/members.json", params: { order: 'email' }
 
       expect(response).to be_success
 
@@ -225,10 +231,10 @@ describe GroupsController do
 
     context 'when user is not signed in' do
       it 'should be fobidden' do
-        xhr :put, "/groups/#{group.id}/members", usernames: "bob"
+        put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
-        xhr :delete, "/groups/#{group.id}/members", username: "bob"
+        delete "/groups/#{group.id}/members.json", params: { username: "bob" }
         expect(response).to be_forbidden
       end
 
@@ -239,10 +245,10 @@ describe GroupsController do
             public_exit: true
           )
 
-          expect { xhr :put, "/groups/#{group.id}/members", usernames: "bob" }
+          expect { put "/groups/#{group.id}/members.json", params: { usernames: "bob" } }
             .to raise_error(Discourse::NotLoggedIn)
 
-          expect { xhr :delete, "/groups/#{group.id}/members", username: "bob" }
+          expect { delete "/groups/#{group.id}/members.json", params: { username: "bob" } }
             .to raise_error(Discourse::NotLoggedIn)
         end
       end
@@ -254,10 +260,10 @@ describe GroupsController do
       end
 
       it "refuses membership changes to unauthorized users" do
-        xhr :put, "/groups/#{group.id}/members", usernames: "bob"
+        put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
-        xhr :delete, "/groups/#{group.id}/members", username: "bob"
+        delete "/groups/#{group.id}/members.json", params: { username: "bob" }
         expect(response).to be_forbidden
       end
     end
@@ -271,10 +277,10 @@ describe GroupsController do
       end
 
       it "cannot add members to automatic groups" do
-        xhr :put, "/groups/#{group.id}/members", usernames: "bob"
+        put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
-        xhr :delete, "/groups/#{group.id}/members", username: "bob"
+        delete "/groups/#{group.id}/members.json", params: { username: "bob" }
         expect(response).to be_forbidden
       end
     end
@@ -292,7 +298,7 @@ describe GroupsController do
         user2 = Fabricate(:user)
 
         expect do
-          xhr :put, "/groups/#{group.id}/members", usernames: user2.username
+          put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
         end.to change { group.users.count }.by(1)
 
         expect(response).to be_success
@@ -307,7 +313,7 @@ describe GroupsController do
       it "cannot add members to automatic groups" do
         group.update!(automatic: true)
 
-        xhr :put, "/groups/#{group.id}/members", usernames: "l77t"
+        put "/groups/#{group.id}/members.json", params: { usernames: "l77t" }
         expect(response.status).to eq(403)
       end
 
@@ -316,35 +322,41 @@ describe GroupsController do
         let(:user2) { Fabricate(:user) }
 
         it "adds by username" do
-          expect { xhr :put, "/groups/#{group.id}/members", usernames: [user1.username, user2.username].join(",") }
-            .to change { group.users.count }.by(2)
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { usernames: [user1.username, user2.username].join(",") }
+          end.to change { group.users.count }.by(2)
 
           expect(response).to be_success
         end
 
         it "adds by id" do
-          expect { xhr :put, "/groups/#{group.id}/members", user_ids: [user1.id, user2.id].join(",") }
-            .to change { group.users.count }.by(2)
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_ids: [user1.id, user2.id].join(",") }
+          end.to change { group.users.count }.by(2)
 
           expect(response).to be_success
         end
 
         it "adds by email" do
-          expect { xhr :put, "/groups/#{group.id}/members", user_emails: [user1.email, user2.email].join(",") }
-            .to change { group.users.count }.by(2)
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_emails: [user1.email, user2.email].join(",") }
+          end.to change { group.users.count }.by(2)
 
           expect(response).to be_success
         end
       end
 
       it "returns 422 if member already exists" do
-        xhr :put, "/groups/#{group.id}/members", usernames: user.username
+        put "/groups/#{group.id}/members.json", params: { usernames: user.username }
 
         expect(response.status).to eq(422)
       end
 
       it "returns 404 if member is not found" do
-        xhr :put, "/groups/#{group.id}/members", usernames: 'some donkey'
+        put "/groups/#{group.id}/members.json", params: { usernames: 'some donkey' }
 
         expect(response.status).to eq(404)
       end
@@ -362,7 +374,8 @@ describe GroupsController do
         context 'admin' do
           it "can make incremental adds" do
             expect do
-              xhr :put, "/groups/#{group.id}/members", usernames: other_user.username
+              put "/groups/#{group.id}/members.json",
+                params: { usernames: other_user.username }
             end.to change { group.users.count }.by(1)
 
             expect(response).to be_success
@@ -378,8 +391,10 @@ describe GroupsController do
         it 'should allow a user to join the group' do
           sign_in(other_user)
 
-          expect { xhr :put, "/groups/#{group.id}/members", usernames: other_user.username }
-            .to change { group.users.count }.by(1)
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { usernames: other_user.username }
+          end.to change { group.users.count }.by(1)
 
           expect(response).to be_success
         end
@@ -387,7 +402,8 @@ describe GroupsController do
         it 'should not allow an underprivilege user to add another user to a group' do
           sign_in(user)
 
-          xhr :put, "/groups/#{group.id}/members", usernames: other_user.username
+          put "/groups/#{group.id}/members.json",
+            params: { usernames: other_user.username }
 
           expect(response).to be_forbidden
         end
@@ -398,26 +414,28 @@ describe GroupsController do
       it "cannot remove members from automatic groups" do
         group.update!(automatic: true)
 
-        xhr :delete, "/groups/#{group.id}/members", user_id: 42
+        delete "/groups/#{group.id}/members.json", params: { user_id: 42 }
         expect(response.status).to eq(403)
       end
 
       it "raises an error if user to be removed is not found" do
-        xhr :delete, "/groups/#{group.id}/members", user_id: -10
+        delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
         expect(response.status).to eq(404)
       end
 
       context "is able to remove a member" do
         it "removes by id" do
-          expect { xhr :delete, "/groups/#{group.id}/members", user_id: user.id }
-            .to change { group.users.count }.by(-1)
+          expect do
+            delete "/groups/#{group.id}/members.json", params: { user_id: user.id }
+          end.to change { group.users.count }.by(-1)
 
           expect(response).to be_success
         end
 
         it "removes by username" do
-          expect { xhr :delete, "/groups/#{group.id}/members", username: user.username }
-            .to change { group.users.count }.by(-1)
+          expect do
+            delete "/groups/#{group.id}/members.json", params: { username: user.username }
+          end.to change { group.users.count }.by(-1)
 
           expect(response).to be_success
         end
@@ -425,14 +443,16 @@ describe GroupsController do
         it "removes user.primary_group_id when user is removed from group" do
           user.update!(primary_group_id: group.id)
 
-          xhr :delete, "/groups/#{group.id}/members", user_id: user.id
+          delete "/groups/#{group.id}/members.json", params: { user_id: user.id }
 
           expect(user.reload.primary_group_id).to eq(nil)
         end
 
         it "removes by user_email" do
-          expect { xhr :delete, "/groups/#{group.id}/members", user_email: user.email }
-            .to change { group.users.count }.by(-1)
+          expect do
+            delete "/groups/#{group.id}/members.json",
+              params: { user_email: user.email }
+          end.to change { group.users.count }.by(-1)
 
           expect(response).to be_success
         end
@@ -443,8 +463,10 @@ describe GroupsController do
 
           context "admin" do
             it "removes by username" do
-              expect { xhr :delete, "/groups/#{group.id}/members", username: other_user.username }
-                .to change { group.users.count }.by(-1)
+              expect do
+                delete "/groups/#{group.id}/members.json",
+                  params: { username: other_user.username }
+              end.to change { group.users.count }.by(-1)
 
               expect(response).to be_success
             end
@@ -453,8 +475,10 @@ describe GroupsController do
           it 'should allow a user to leave a group' do
             sign_in(other_user)
 
-            expect { xhr :delete, "/groups/#{group.id}/members", username: other_user.username }
-              .to change { group.users.count }.by(-1)
+            expect do
+              delete "/groups/#{group.id}/members.json",
+              params: { username: other_user.username }
+            end.to change { group.users.count }.by(-1)
 
             expect(response).to be_success
           end
@@ -462,7 +486,8 @@ describe GroupsController do
           it 'should not allow a underprivilege user to leave a group for another user' do
             sign_in(user)
 
-            xhr :delete, "/groups/#{group.id}/members", username: other_user.username
+            delete "/groups/#{group.id}/members.json",
+              params: { username: other_user.username }
 
             expect(response).to be_forbidden
           end
@@ -474,8 +499,9 @@ describe GroupsController do
   describe "group histories" do
     context 'when user is not signed in' do
       it 'should raise the right error' do
-        expect { xhr :get, "/groups/#{group.name}/logs" }
-          .to raise_error(Discourse::NotLoggedIn)
+        expect do
+          get "/groups/#{group.name}/logs.json"
+        end.to raise_error(Discourse::NotLoggedIn)
       end
     end
 
@@ -485,7 +511,7 @@ describe GroupsController do
       end
 
       it 'should be forbidden' do
-        xhr :get, "/groups/#{group.name}/logs"
+        get "/groups/#{group.name}/logs.json"
 
         expect(response).to be_forbidden
       end
@@ -506,11 +532,11 @@ describe GroupsController do
         end
 
         it 'should allow group owner to view history' do
-          xhr :get, "/groups/#{group.name}/logs"
+          get "/groups/#{group.name}/logs.json"
 
           expect(response).to be_success
 
-          result = JSON.parse(response.body)["logs"].first
+          result = JSON.parse(response.body)["logs"].last
 
           expect(result["action"]).to eq(GroupHistory.actions[1].to_s)
           expect(result["subject"]).to eq('public_exit')
@@ -529,7 +555,7 @@ describe GroupsController do
         it 'should be able to view history' do
           GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
 
-          xhr :get, "/groups/#{group.name}/logs"
+          get "/groups/#{group.name}/logs.json"
 
           expect(response).to be_success
 
@@ -542,7 +568,9 @@ describe GroupsController do
           GroupActionLogger.new(admin, group).log_add_user_to_group(user)
           GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
 
-          xhr :get, "/groups/#{group.name}/logs", filters: { "action" => "add_user_to_group" }
+          get "/groups/#{group.name}/logs.json", params: {
+            filters: { "action" => "add_user_to_group" }
+          }
 
           expect(response).to be_success
 
@@ -560,7 +588,7 @@ describe GroupsController do
 
     it 'requires the user to log in' do
       expect do
-        xhr :post, "/groups/#{group.name}/request_membership"
+        post "/groups/#{group.name}/request_membership.json"
       end.to raise_error(Discourse::NotLoggedIn)
     end
 
@@ -568,7 +596,7 @@ describe GroupsController do
       sign_in(user)
 
       expect do
-        xhr :post, "/groups/#{group.name}/request_membership"
+        post "/groups/#{group.name}/request_membership.json"
       end.to raise_error(ActionController::ParameterMissing)
     end
 
@@ -579,8 +607,8 @@ describe GroupsController do
 
       sign_in(user)
 
-      xhr :post, "/groups/#{group.name}/request_membership",
-        reason: 'Please add me in'
+      post "/groups/#{group.name}/request_membership.json",
+        params: { reason: 'Please add me in' }
 
       expect(response).to be_success
 
@@ -621,7 +649,9 @@ describe GroupsController do
 
     context 'as an anon user' do
       it "returns the right response" do
-        expect { xhr :get, '/groups/search' }.to raise_error(Discourse::NotLoggedIn)
+        expect do
+          get '/groups/search.json'
+        end.to raise_error(Discourse::NotLoggedIn)
       end
     end
 
@@ -629,7 +659,7 @@ describe GroupsController do
       it "returns the right response" do
         sign_in(user)
 
-        xhr :get, '/groups/search'
+        get '/groups/search.json'
 
         expect(response).to be_success
         groups = JSON.parse(response.body)
@@ -641,7 +671,7 @@ describe GroupsController do
         expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
 
         ['GO', 'nerys'].each do |term|
-          xhr :get, "/groups/search?term=#{term}"
+          get "/groups/search.json?term=#{term}"
 
           expect(response).to be_success
           groups = JSON.parse(response.body)
@@ -650,7 +680,7 @@ describe GroupsController do
           expect(groups.first['id']).to eq(group.id)
         end
 
-        xhr :get, "/groups/search?term=KingOfTheNorth"
+        get "/groups/search.json?term=KingOfTheNorth"
 
         expect(response).to be_success
         groups = JSON.parse(response.body)
@@ -667,7 +697,7 @@ describe GroupsController do
       it "returns the right response" do
         sign_in(user)
 
-        xhr :get, "/groups/search?term=north"
+        get "/groups/search.json?term=north"
 
         expect(response).to be_success
         groups = JSON.parse(response.body)
@@ -681,7 +711,7 @@ describe GroupsController do
       it "returns the right response" do
         sign_in(Fabricate(:admin))
 
-        xhr :get, '/groups/search?ignore_automatic=true'
+        get '/groups/search.json?ignore_automatic=true'
 
         expect(response).to be_success
         groups = JSON.parse(response.body)

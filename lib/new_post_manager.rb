@@ -92,7 +92,7 @@ class NewPostManager
       validator.validate(post)
       if post.errors[:raw].present?
         result = NewPostResult.new(:created_post, false)
-        result.errors[:base] = post.errors[:raw]
+        result.errors[:base] << post.errors[:raw]
         return result
       end
 
