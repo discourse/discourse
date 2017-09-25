@@ -160,7 +160,7 @@ GEM
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (2.99.3)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.3.0)
     mini_racer (0.1.9)
       libv8 (~> 5.3)
     minitest (5.10.1)
@@ -174,8 +174,8 @@ GEM
     multipart-post (2.0.0)
     mustache (1.0.5)
     netrc (0.11.0)
-    nokogiri (1.7.2)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
     nokogumbo (1.4.10)
       nokogiri
     oauth (0.5.1)
@@ -491,4 +491,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.14.6
+   1.15.4
