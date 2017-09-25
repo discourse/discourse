@@ -1,5 +1,3 @@
-import computed from 'ember-addons/ember-computed-decorators';
-
 export default Ember.Mixin.create({
   adminTools: Ember.inject.service(),
   spammerDetails: null,
@@ -22,5 +20,4 @@ export default Ember.Mixin.create({
       });
     }
   }
-
 });
