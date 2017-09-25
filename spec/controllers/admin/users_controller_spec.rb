@@ -127,10 +127,12 @@ describe Admin::UsersController do
         Fabricate(:api_key, user: user)
         put(
           :suspend,
-          user_id: user.id,
-          suspend_until: 5.hours.from_now,
-          reason: "because I said so",
-          format: :json
+          params: {
+            user_id: user.id,
+            suspend_until: 5.hours.from_now,
+            reason: "because I said so",
+            format: :json
+          }
         )
         expect(response).to be_success
 
@@ -149,11 +151,13 @@ describe Admin::UsersController do
 
         put(
           :suspend,
-          user_id: user.id,
-          suspend_until: 5.hours.from_now,
-          reason: "because of this post",
-          post_id: post.id,
-          format: :json
+          params: {
+            user_id: user.id,
+            suspend_until: 5.hours.from_now,
+            reason: "because of this post",
+            post_id: post.id,
+            format: :json
+          }
         )
         expect(response).to be_success
 
@@ -173,24 +177,25 @@ describe Admin::UsersController do
 
         put(
           :suspend,
-          user_id: user.id,
-          suspend_until: 10.days.from_now,
-          reason: "short reason",
-          message: "long reason",
-          format: :json
+          params: {
+            user_id: user.id,
+            suspend_until: 10.days.from_now,
+            reason: "short reason",
+            message: "long reason",
+            format: :json
+          }
         )
         expect(response).to be_success
 
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
         expect(log).to be_present
         expect(log.details).to match(/short reason/)
-        expect(log.details).to match(/long reason/)
+        expect(log.context).to match(/long reason/)
       end
 
       it "also revoke any api keys" do
         User.any_instance.expects(:revoke_api_key)
-        put :suspend, params: { user_id: evil_trout.id }, format: :json
-        expect(log.context).to match(/long reason/)
+        put :suspend, params: { user_id: user.id }, format: :json
       end
 
     end
