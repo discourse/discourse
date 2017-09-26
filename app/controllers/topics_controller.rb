@@ -720,8 +720,7 @@ class TopicsController < ApplicationController
     topic_view_serializer = TopicViewSerializer.new(@topic_view,
       scope: guardian,
       root: false,
-      include_raw: !!params[:include_raw],
-      page: params[:page]
+      include_raw: !!params[:include_raw]
     )
 
     respond_to do |format|
