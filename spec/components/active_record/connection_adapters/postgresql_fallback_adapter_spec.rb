@@ -15,6 +15,7 @@ describe ActiveRecord::ConnectionHandling do
 
   after do
     postgresql_fallback_handler.setup!
+    ActiveRecord::Base.clear_active_connections!
   end
 
   describe "#postgresql_fallback_connection" do
@@ -94,15 +95,8 @@ describe ActiveRecord::ConnectionHandling do
         expect(postgresql_fallback_handler.master_down?).to eq(nil)
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
 
-        ActiveRecord::Base.clear_all_connections!
-        connection = ActiveRecord::Base.connection
-
-        begin
-          expect(connection)
-            .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
-        ensure
-          connection.close
-        end
+        expect(ActiveRecord::Base.connection)
+          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       end
     end
 
