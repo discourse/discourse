@@ -2,7 +2,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
-  layoutName: "components/select-box/select-box-row",
+  layoutName: "discourse-common/templates/components/select-box/select-box-row",
 
   classNames: "select-box-row",
 

@@ -2,7 +2,7 @@ import { on, observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  layoutName: "components/select-box",
+  layoutName: "discourse-common/templates/components/select-box",
   classNames: "select-box",
   classNameBindings: ["expanded:is-expanded", "hidden:is-hidden", "disabled:is-disabled"],
 
@@ -146,7 +146,7 @@ export default Ember.Component.extend({
     const boundingRect = this.$()[0].getBoundingClientRect();
     const offsetTop = boundingRect.top;
 
-    if (this.get("fullWidthOnMobile") && this.site.isMobileDevice) {
+    if (this.get("fullWidthOnMobile") && windowWidth <= 420) {
       const margin = 10;
       const relativeLeft = this.$().offset().left - $(window).scrollLeft();
       options.left = margin - relativeLeft;
@@ -182,7 +182,7 @@ export default Ember.Component.extend({
   init() {
     this._super();
 
-    if (this.site.isMobileDevice) {
+    if ($(window).outerWidth(false) <= 420) {
       this.set("filterable", false);
     }
 
@@ -363,14 +363,18 @@ export default Ember.Component.extend({
     return this.textForContent(selectedContent, textKey);
   },
 
-  @computed("headerText", "dynamicHeaderText", "selectedContent", "textKey", "clearSelectionLabel")
-  generatedHeadertext(headerText, dynamic, selectedContent, textKey, clearSelectionLabel) {
+  @computed("headerText", "dynamicHeaderText", "selectedContent", "clearSelectionLabel", "filteredContent")
+  generatedHeadertext(headerText, dynamic, selectedContent, clearSelectionLabel, filteredContent) {
     if (dynamic && !Ember.isNone(selectedContent)) {
-      return this.textForContent(selectedContent, textKey);
+      return this.textForContent(selectedContent);
     }
 
     if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(clearSelectionLabel)) {
       return I18n.t(clearSelectionLabel);
+    }
+
+    if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(filteredContent)) {
+      return this.textForContent(filteredContent[0]);
     }
 
     return headerText;

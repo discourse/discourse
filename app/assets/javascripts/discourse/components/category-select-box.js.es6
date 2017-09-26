@@ -1,4 +1,4 @@
-import SelectBoxComponent from "discourse/components/select-box";
+import SelectBoxComponent from "discourse-common/components/select-box";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { observes, on } from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
@@ -8,6 +8,8 @@ export default SelectBoxComponent.extend({
   classNames: ["category-select-box"],
 
   selectBoxRowComponent: "category-select-box/category-select-box-row",
+
+  layoutName: "discourse-common/templates/components/select-box",
 
   textKey: "name",
 

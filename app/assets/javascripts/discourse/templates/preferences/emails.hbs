@@ -39,7 +39,7 @@
     <div class='instructions'>{{{i18n 'user.mailing_list_mode.instructions'}}}</div>
     {{#if model.user_option.mailing_list_mode}}
       <div class='controls controls-dropdown'>
-        {{combo-box valueAttribute="value" content=mailingListModeOptions value=model.user_option.mailing_list_mode_frequency}}
+        {{combo-box data-done="true" textKey="name" idKey="value" content=mailingListModeOptions value=model.user_option.mailing_list_mode_frequency}}
       </div>
     {{/if}}
   </div>
