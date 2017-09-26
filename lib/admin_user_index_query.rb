@@ -81,6 +81,7 @@ class AdminUserIndexQuery
     where_conds << "user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1"
 
     @query.activated
+      .human_users
       .references(:user_stats)
       .includes(:user_profile)
       .where("COALESCE(user_profiles.bio_raw, '') != ''")
