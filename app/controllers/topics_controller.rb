@@ -717,7 +717,12 @@ class TopicsController < ApplicationController
       return
     end
 
-    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
+    topic_view_serializer = TopicViewSerializer.new(@topic_view,
+      scope: guardian,
+      root: false,
+      include_raw: !!params[:include_raw],
+      page: params[:page]
+    )
 
     respond_to do |format|
       format.html do

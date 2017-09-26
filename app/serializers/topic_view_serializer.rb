@@ -3,6 +3,7 @@ require_dependency 'new_post_manager'
 
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
+  include SuggestedTopicsMixin
   include ApplicationHelper
 
   def self.attributes_from_topic(*list)
@@ -91,12 +92,6 @@ class TopicViewSerializer < ApplicationSerializer
     if object.post_counts_by_user.present?
       result[:participants] = object.post_counts_by_user.map do |pc|
         TopicPostCountSerializer.new({ user: object.participants[pc[0]], post_count: pc[1] }, scope: scope, root: false)
-      end
-    end
-
-    if object.suggested_topics&.topics.present?
-      result[:suggested_topics] = object.suggested_topics.topics.map do |t|
-        SuggestedTopicSerializer.new(t, scope: scope, root: false)
       end
     end
 
