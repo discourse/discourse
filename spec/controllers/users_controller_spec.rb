@@ -1440,13 +1440,15 @@ describe UsersController do
           put :update, params: {
             username: user.username,
             muted_usernames: "",
-            theme_key: theme.key
+            theme_key: theme.key,
+            email_direct: false
           }, format: :json
 
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_key).to eq(theme.key)
+          expect(user.user_option.email_direct).to eq(false)
 
         end
 

@@ -849,7 +849,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      result = params.permit(
+      permitted = [
         :name,
         :email,
         :password,
@@ -858,11 +858,15 @@ class UsersController < ApplicationController
         :muted_usernames,
         :theme_key,
         :locale
-      ).reverse_merge(
-        ip_address: request.remote_ip,
-        registration_ip_address: request.remote_ip,
-        locale: user_locale
-      )
+      ] + UserUpdater::OPTION_ATTR
+
+      result = params
+        .permit(permitted)
+        .reverse_merge(
+          ip_address: request.remote_ip,
+          registration_ip_address: request.remote_ip,
+          locale: user_locale
+        )
 
       if !UsernameCheckerService.is_developer?(result['email']) &&
           is_api? &&
