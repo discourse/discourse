@@ -245,7 +245,7 @@
 
               {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
 
-              {{#if model.details.suggested_topics.length}}
+              {{#if model.suggestedTopics.length}}
                 {{suggested-topics topic=model}}
               {{/if}}
             {{/if}}
