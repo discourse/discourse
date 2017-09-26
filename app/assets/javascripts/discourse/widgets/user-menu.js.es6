@@ -23,9 +23,14 @@ createWidget('user-menu-links', {
     const glyphs = [];
 
     if (extraGlyphs) {
-      // yes glyphs.push(...extraGlyphs) is nicer, but pulling in
-      // _toConsumableArray seems totally uneeded here
-      glyphs.push.apply(glyphs, extraGlyphs);
+      extraGlyphs.forEach(g => {
+        if (typeof g === "function") {
+          g = g(this);
+        }
+        if (g) {
+          glyphs.push(g);
+        }
+      });
     }
 
     glyphs.push({ label: 'user.bookmarks',
