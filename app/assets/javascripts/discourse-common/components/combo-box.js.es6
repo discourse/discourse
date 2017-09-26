@@ -2,6 +2,8 @@ import SelectBoxComponent from "discourse-common/components/select-box";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 
 export default SelectBoxComponent.extend({
+  classNames: ['combobox'],
+
   clearable: true,
 });
 

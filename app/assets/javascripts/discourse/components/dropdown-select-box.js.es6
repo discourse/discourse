@@ -22,7 +22,7 @@ export default SelectBoxComponent.extend({
 
       template += `
         <div class="texts">
-          <span class="title">${Handlebars.escapeExpression(Ember.get(content, this.get("textKey")))}</span>
+          <span class="title">${Handlebars.escapeExpression(Ember.get(content, this.get("nameProperty")))}</span>
           <span class="desc">${Handlebars.escapeExpression(content.description)}</span>
         </div>
       `;

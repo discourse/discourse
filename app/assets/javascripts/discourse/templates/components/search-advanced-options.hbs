@@ -60,13 +60,13 @@
           <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>
         </section>
       {{/if}}
-      {{combo-box data-done="true" id="in" textKey="name" idKey="value" content=inOptions value=searchedTerms.in clearSelectionLabel="user.locale.any"}}
+      {{combo-box data-done="true" id="in" valueAttribute="value" content=inOptions value=searchedTerms.in none="user.locale.any"}}
     </div>
   </div>
   <div class="control-group pull-left">
     <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
     <div class="controls">
-      {{combo-box data-done="true" id="status" textKey="name" idKey="value" content=statusOptions value=searchedTerms.status clearSelectionLabel="user.locale.any"}}
+      {{combo-box data-done="true" id="status" valueAttribute="value" content=statusOptions value=searchedTerms.status none="user.locale.any"}}
     </div>
   </div>
 </div>
@@ -75,7 +75,7 @@
   <div class="control-group pull-left">
     <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
     <div class="controls">
-      {{combo-box data-done="true" id="postTime" textKey="name" idKey="value" content=postTimeOptions value=searchedTerms.time.when}}
+      {{combo-box data-done="true" id="postTime" valueAttribute="value" content=postTimeOptions value=searchedTerms.time.when}}
       {{input type="date" value=searchedTerms.time.days class="input-small" id='search-post-date'}}
     </div>
   </div>

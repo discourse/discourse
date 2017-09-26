@@ -2,7 +2,7 @@ import { observes } from 'ember-addons/ember-computed-decorators';
 import SelectBoxComponent from "discourse-common/components/select-box";
 
 export default SelectBoxComponent.extend({
-  textKey: "name",
+  nameProperty: "name",
 
   headerText: I18n.t("topic.controls"),
 

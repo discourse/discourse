@@ -27,10 +27,10 @@ export default Ember.Component.extend({
   highlightedValue: null,
   selectedContent: null,
   noContentLabel: I18n.t("select_box.no_content"),
-  clearSelectionLabel: null,
+  none: null,
 
-  idKey: "id",
-  textKey: "text",
+  valueAttribute: "id",
+  nameProperty: "name",
   iconKey: "icon",
 
   filterable: false,
@@ -58,63 +58,63 @@ export default Ember.Component.extend({
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, (c) => {
-        return this.textForContent(c, selectBox.get("textKey"))
+        return this.textForContent(c, selectBox.get("nameProperty"))
                    .toLowerCase()
                    .indexOf(filter) > -1;
       });
     };
   },
 
-  @computed("textKey")
-  titleForRow(textKey) {
+  @computed("nameProperty")
+  titleForRow(nameProperty) {
     return (rowComponent) => {
-      return this.textForContent(rowComponent.get("content"), textKey)
+      return this.textForContent(rowComponent.get("content"), nameProperty)
     };
   },
 
-  @computed("idKey")
-  idForRow(idKey) {
+  @computed("valueAttribute")
+  idForRow(valueAttribute) {
     return (rowComponent) => {
-      return this.idForContent(rowComponent.get("content"), idKey);
+      return this.valueForContent(rowComponent.get("content"), valueAttribute);
     };
   },
 
   @computed
   shouldHighlightRow: function() {
     return (rowComponent) => {
-      const id = this.idForContent(rowComponent.get("content"));
+      const id = this.valueForContent(rowComponent.get("content"));
       return id === this.get("highlightedValue");
     };
   },
 
-  @computed("value", "idKey")
-  shouldSelectRow(value, idKey) {
+  @computed("value", "valueAttribute")
+  shouldSelectRow(value, valueAttribute) {
     return (rowComponent) => {
-      const id = this.idForContent(rowComponent.get("content"), idKey);
+      const id = this.valueForContent(rowComponent.get("content"), valueAttribute);
       return id === value;
     };
   },
 
-  textForContent(content, textKey) {
-    textKey = textKey || this.get("textKey");
+  textForContent(content, nameProperty) {
+    nameProperty = nameProperty || this.get("nameProperty");
 
     switch (typeof content){
     case 'string':
       return content;
     default:
-      return Ember.get(content, textKey);
+      return Ember.get(content, nameProperty);
     }
   },
 
 
-  idForContent(content, idKey) {
-    idKey = idKey || this.get("idKey");
+  valueForContent(content, valueAttribute) {
+    valueAttribute = valueAttribute || this.get("valueAttribute");
 
     switch (typeof content){
     case 'string':
       return this._castInteger(content);
     default:
-      return this._castInteger(Ember.get(content, idKey));
+      return this._castInteger(Ember.get(content, valueAttribute));
     }
   },
 
@@ -238,8 +238,8 @@ export default Ember.Component.extend({
       }
     }
 
-    if (Ember.isNone(this.get("clearSelectionLabel")) && Ember.isNone(this.get("value")) && !Ember.isEmpty(this.get("content"))) {
-      this.set("value", this.idForContent(this.get("content.0")));
+    if (Ember.isNone(this.get("none")) && Ember.isNone(this.get("value")) && !Ember.isEmpty(this.get("content"))) {
+      this.set("value", this.valueForContent(this.get("content.0")));
     }
   },
 
@@ -332,45 +332,64 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed("value", "content.[]", "idKey")
-  selectedContent(value, contents, idKey) {
+  @computed("value", "content.[]", "valueAttribute")
+  selectedContent(value, contents, valueAttribute) {
     if (Ember.isNone(value)) {
       return null;
     }
 
     return contents.find((content) => {
-      return this.idForContent(content, idKey) === value;
+      return this.valueForContent(content, valueAttribute) === value;
     });
   },
 
-  @computed("highlightedValue", "content.[]", "idKey")
-  highlightedContent(highlightedValue, contents, idKey) {
+  @computed("highlightedValue", "content.[]", "valueAttribute")
+  highlightedContent(highlightedValue, contents, valueAttribute) {
     if (Ember.isNone(highlightedValue)) {
       return null;
     }
 
     return contents.find((content) => {
-      return this.idForContent(content, idKey) === highlightedValue;
+      return this.valueForContent(content, valueAttribute) === highlightedValue;
     });
   },
 
-  @computed("headerText", "selectedContent", "textKey")
-  selectedTitle(headerText, selectedContent, textKey) {
+  @computed("none")
+  clearSelectionLabel(none) {
+    if(Ember.isNone(none)) {
+      return null;
+    }
+
+    switch (typeof none){
+    case 'string':
+      return I18n.t(none);
+    default:
+      return this.textForContent(none);
+    }
+  },
+
+  @computed("headerText", "selectedContent", "nameProperty")
+  selectedTitle(headerText, selectedContent, nameProperty) {
     if (Ember.isNone(selectedContent)) {
       return headerText;
     }
 
-    return this.textForContent(selectedContent, textKey);
+    return this.textForContent(selectedContent, nameProperty);
   },
 
-  @computed("headerText", "dynamicHeaderText", "selectedContent", "clearSelectionLabel", "filteredContent")
-  generatedHeadertext(headerText, dynamic, selectedContent, clearSelectionLabel, filteredContent) {
+  @computed("headerText", "dynamicHeaderText", "selectedContent", "none", "filteredContent")
+  generatedHeadertext(headerText, dynamic, selectedContent, none, filteredContent) {
     if (dynamic && !Ember.isNone(selectedContent)) {
       return this.textForContent(selectedContent);
     }
 
-    if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(clearSelectionLabel)) {
-      return I18n.t(clearSelectionLabel);
+    if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(none)) {
+      switch (typeof none){
+      case 'string':
+        return I18n.t(none);
+      default:
+        return this.textForContent(none);
+      }
     }
 
     if (dynamic && Ember.isNone(selectedContent) && !Ember.isNone(filteredContent)) {
@@ -380,8 +399,8 @@ export default Ember.Component.extend({
     return headerText;
   },
 
-  @computed("content.[]", "filter", "idKey")
-  filteredContent(content, filter, idKey) {
+  @computed("content.[]", "filter", "valueAttribute")
+  filteredContent(content, filter, valueAttribute) {
     let filteredContent;
 
     if (Ember.isEmpty(filter)) {
@@ -390,7 +409,7 @@ export default Ember.Component.extend({
       filteredContent = this.filterFunction(content)(this);
 
       if (!Ember.isEmpty(filteredContent)) {
-        this.set("highlightedValue", filteredContent[0][idKey]);
+        this.set("highlightedValue", filteredContent[0][valueAttribute]);
       }
     }
 
@@ -412,13 +431,13 @@ export default Ember.Component.extend({
     },
 
     onHoverRow(content) {
-      const id = this.idForContent(content);
+      const id = this.valueForContent(content);
       this.set("highlightedValue", id);
     },
 
     onSelectRow(content) {
       this.setProperties({
-        value: this.idForContent(content),
+        value: this.valueForContent(content),
         expanded: false
       });
     },
@@ -484,21 +503,21 @@ export default Ember.Component.extend({
 
   _handleArrow(direction) {
     const content = this.get("filteredContent");
-    const idKey = this.get("idKey");
-    const selectedContent = content.findBy(idKey, this.get("highlightedValue"));
+    const valueAttribute = this.get("valueAttribute");
+    const selectedContent = content.findBy(valueAttribute, this.get("highlightedValue"));
     const currentIndex = content.indexOf(selectedContent);
 
     if (direction === "down") {
       if (currentIndex < 0) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[0], idKey)));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[0], valueAttribute)));
       } else if(currentIndex + 1 < content.length) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex + 1], idKey)));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex + 1], valueAttribute)));
       }
     } else {
       if (currentIndex <= 0) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[0], idKey)));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[0], valueAttribute)));
       } else if(currentIndex - 1 < content.length) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex - 1], idKey)));
+        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex - 1], valueAttribute)));
       }
     }
 

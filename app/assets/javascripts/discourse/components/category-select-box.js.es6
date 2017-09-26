@@ -11,7 +11,7 @@ export default SelectBoxComponent.extend({
 
   layoutName: "discourse-common/templates/components/select-box",
 
-  textKey: "name",
+  nameProperty: "name",
 
   filterable: true,
 
@@ -45,7 +45,7 @@ export default SelectBoxComponent.extend({
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, (c) => {
         const category = Category.findById(c[selectBox.get("idKey")]);
-        const text = c[selectBox.get("textKey")];
+        const text = c[selectBox.get("nameProperty")];
         if (category && category.get("parentCategory")) {
           const categoryName = category.get("parentCategory.name");
           return _matchFunction(filter, text) || _matchFunction(filter, categoryName);
@@ -63,7 +63,7 @@ export default SelectBoxComponent.extend({
 
     if (Ember.isNone(this.get("selectedContent"))) {
       if (this.siteSettings.allow_uncategorized_topics) {
-        headerText = Ember.get(Category.findUncategorized(), this.get("textKey"));
+        headerText = Ember.get(Category.findUncategorized(), this.get("nameProperty"));
       } else {
         headerText = I18n.t("category.choose").htmlSafe();
       }

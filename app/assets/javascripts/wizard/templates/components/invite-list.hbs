@@ -13,7 +13,7 @@
   </div>
 
   {{!-- TODO width="200px" --}}
-  {{combo-box data-done="true" value=inviteRole content=roles textKey="label"}}
+  {{combo-box data-done="true" value=inviteRole content=roles nameProperty="label"}}
 
   <button class="wizard-btn small add-user" {{action "addUser"}}>
     {{d-icon "plus"}}{{i18n "wizard.invites.add_user"}}
