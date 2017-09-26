@@ -9,7 +9,7 @@ export default DropdownSelectBoxComponent.extend({
 
   i18nPrefix: "",
   i18nPostfix: "",
-  textKey: "key",
+  nameProperty: "key",
   showFullTitle: true,
   fullWidthOnMobile: true,
   content: allLevels,

@@ -148,7 +148,7 @@ componentTest('select-box is expandable', {
 });
 
 componentTest('accepts custom id/text keys', {
-  template: '{{select-box value=value content=content idKey="identifier" textKey="name"}}',
+  template: '{{select-box value=value content=content valueAttribute="identifier"}}',
 
   beforeEach() {
     this.set("value", 1);
@@ -165,7 +165,7 @@ componentTest('accepts custom id/text keys', {
 });
 
 componentTest('doesn’t render collection content before first expand', {
-  template: '{{select-box value=1 content=content idKey="identifier" textKey="name"}}',
+  template: '{{select-box value=1 content=content valueAttribute="identifier"}}',
 
   beforeEach() {
     this.set("content", [{ identifier: 1, name: "robin" }]);

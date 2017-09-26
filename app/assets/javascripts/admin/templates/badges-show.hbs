@@ -26,7 +26,6 @@
       {{combo-box data-done="true" name="badge_type_id"
                   value=buffered.badge_type_id
                   content=badgeTypes
-                  textKey="name"
                   disabled=readOnly}}
     </div>
 
@@ -35,7 +34,7 @@
       {{combo-box data-done="true" name="badge_grouping_id"
                   value=buffered.badge_grouping_id
                   content=badgeGroupings
-                  textKey="name"}}
+                  nameProperty="name"}}
       &nbsp;<button {{action "editGroupings"}} class='btn'>{{d-icon 'pencil'}}</button>
     </div>
 

@@ -40,7 +40,7 @@ export default NotificationOptionsComponent.extend({
 
   actions: {
     onSelectRow(content) {
-      const notificationLevelId = Ember.get(content, this.get("idKey"));
+      const notificationLevelId = this.valueForContent(content);
 
       if (notificationLevelId !== this.get("value")) {
         this.get("topic.details").updateNotifications(notificationLevelId);

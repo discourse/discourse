@@ -2,9 +2,8 @@
   {{#d-modal-body title="admin.customize.colors.select_base.title"}}
     {{i18n "admin.customize.colors.select_base.description"}}
     {{combo-box data-done="true" content=model
-                   textKey="name"
                    value=selectedBaseThemeId
-                   idKey="base_scheme_id"}}
+                   valueAttribute="base_scheme_id"}}
   {{/d-modal-body}}
   <div class="modal-footer">
     <button class='btn btn-primary' {{action "selectBase"}}>{{d-icon 'plus'}}{{i18n 'admin.customize.new'}}</button>

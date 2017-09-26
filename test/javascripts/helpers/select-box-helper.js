@@ -114,6 +114,8 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
       return rowHelper(find(selector).find('.select-box-row[data-id="' + id + '"]'));
     },
 
+    noneRow: rowHelper(find(selector).find('.select-box-row.clear-selection')),
+
     selectedRow: rowHelper(find(selector).find('.select-box-row.is-selected')),
 
     highlightedRow: rowHelper(find(selector).find('.select-box-row.is-highlighted'))

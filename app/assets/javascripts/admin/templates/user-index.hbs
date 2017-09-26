@@ -278,7 +278,7 @@
   <div class='display-row'>
     <div class='field'>{{i18n 'trust_level'}}</div>
     <div class="value">
-      {{combo-box data-done="true" content=site.trustLevels value=model.trust_level textKey="detailedName"}}
+      {{combo-box data-done="true" content=site.trustLevels value=model.trust_level nameProperty="detailedName"}}
       {{#if model.dirty}}
         <div>
           {{d-button class="ok no-text" action="saveTrustLevel" icon="check"}}
@@ -379,7 +379,7 @@
         <div class='controls'>
           {{#if model.customGroups}}
             {{i18n 'admin.groups.primary'}}
-            {{combo-box data-done="true" content=model.customGroups value=model.primary_group_id textKey="name" none="admin.groups.no_primary"}}
+            {{combo-box data-done="true" content=model.customGroups value=model.primary_group_id none="admin.groups.no_primary"}}
           {{/if}}
           {{#if primaryGroupDirty}}
             {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
