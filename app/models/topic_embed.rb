@@ -26,6 +26,14 @@ class TopicEmbed < ActiveRecord::Base
     "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
   end
 
+  DOUBLE_ESCAPED_EXPR = /%25([0-9a-f]{2})/i
+
+  # Prevents double URL encode
+  # https://stackoverflow.com/a/37599235
+  def self.escape_uri(uri)
+    URI.encode(uri).gsub(DOUBLE_ESCAPED_EXPR, '%\1')
+  end
+
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
@@ -77,7 +85,8 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    original_uri = URI.parse(URI.encode(url))
+    url = escape_uri(url)
+    original_uri = URI.parse(url)
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
       attributes: %w[href src class],
@@ -90,7 +99,7 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = open(URI.encode(url), allow_redirections: :safe).read
+      html = open(url, allow_redirections: :safe).read
     rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end
@@ -119,7 +128,7 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(URI.encode(src))
+          uri = URI.parse(escape_uri(src))
           unless uri.host
             uri.scheme = original_uri.scheme
             uri.host = original_uri.host
@@ -148,6 +157,8 @@ class TopicEmbed < ActiveRecord::Base
   def self.import_remote(import_user, url, opts = nil)
     opts = opts || {}
     response = find_remote(url)
+    return if response.nil?
+
     response.title = opts[:title] if opts[:title].present?
     import_user = response.author if response.author.present?
 
@@ -157,7 +168,7 @@ class TopicEmbed < ActiveRecord::Base
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
-    uri = URI(URI.encode(url))
+    uri = URI(escape_uri(url))
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
