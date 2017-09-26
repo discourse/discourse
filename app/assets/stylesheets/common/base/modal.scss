@@ -227,6 +227,12 @@
 
 .reply-where-modal {
   .modal-footer {
+    a {
+      display: block;
+    }
+    .d-modal-cancel {
+      margin-top: 1em;
+    }
     .btn {
       text-align: left;
       font-size: 1.286em;
@@ -241,7 +247,7 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        background: $primary-low; 
+        background: $primary-low;
         text-shadow: none;
         color: $primary;
       }

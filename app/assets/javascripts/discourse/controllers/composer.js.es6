@@ -430,7 +430,7 @@ export default Ember.Controller.extend({
 
         let buttons = [{
           "label": I18n.t("composer.cancel"),
-          "class": "cancel",
+          "class": "d-modal-cancel",
           "link": true
         }];
 
