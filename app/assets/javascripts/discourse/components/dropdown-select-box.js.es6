@@ -1,5 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
-import SelectBoxComponent from "discourse/components/select-box";
+import SelectBoxComponent from "discourse-common/components/select-box";
 
 export default SelectBoxComponent.extend({
   classNames: ["dropdown-select-box"],

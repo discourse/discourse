@@ -2,9 +2,10 @@
   <form class="poll-ui-builder-form form-horizontal">
     <div class="input-group">
       <label class="input-group-label">{{i18n 'poll.ui_builder.poll_type.label'}}</label>
-      {{combo-box content=pollTypes
+      {{combo-box data-done="true" content=pollTypes
                   value=pollType
-                  valueAttribute="value"}}
+                  textKey="name"
+                  idKey="value"}}
     </div>
 
     {{#if showMinMax}}

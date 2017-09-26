@@ -14,7 +14,7 @@
   <div class="control-group pref-locale">
     <label class="control-label">{{i18n 'user.locale.title'}}</label>
     <div class="controls">
-      {{combo-box valueAttribute="value" content=availableLocales value=model.locale none="user.locale.default"}}
+      {{combo-box data-done="true" filterable=true textKey="name" idKey="value" content=availableLocales value=model.locale clearSelectionLabel="user.locale.default"}}
     </div>
     <div class='instructions'>
       {{i18n 'user.locale.instructions'}}

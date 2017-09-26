@@ -1,5 +1,5 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import SelectBoxRowComponent from "discourse/components/select-box/select-box-row";
+import SelectBoxRowComponent from "discourse-common/components/select-box/select-box-row";
 import Category from "discourse/models/category";
 
 export default SelectBoxRowComponent.extend({

@@ -1,8 +1,8 @@
-import SelectBoxComponent from "discourse/components/select-box";
+import SelectBoxComponent from "discourse-common/components/select-box";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 
 export default SelectBoxComponent.extend({
-  clearable: true
+  clearable: true,
 });
 
   // import { bufferedRender } from 'discourse-common/lib/buffered-render';
