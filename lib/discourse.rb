@@ -74,13 +74,7 @@ module Discourse
   end
 
   # When something they want is not found
-  class NotFound < StandardError
-    attr_reader :location
-    def initialize(opts = nil)
-      opts ||= {}
-      @location = opts[:location]
-    end
-  end
+  class NotFound < StandardError; end
 
   # When a setting is missing
   class SiteSettingMissing < StandardError; end
