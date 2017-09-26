@@ -1401,11 +1401,16 @@ describe UsersController do
           put :update, params: {
             username: user.username,
             name: 'Jim Tom',
+            title: "foobar",
             user_fields: { user_field.id.to_s => 'happy' }
           }, format: :json
 
           expect(response).to be_success
+
+          user.reload
+
           expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+          expect(user.title).to eq("foobar")
         end
       end
 
@@ -1416,7 +1421,6 @@ describe UsersController do
         let!(:user) { log_in(:user) }
 
         it 'allows the update' do
-
           user2 = Fabricate(:user)
           user3 = Fabricate(:user)
 
@@ -1449,7 +1453,6 @@ describe UsersController do
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_key).to eq(theme.key)
           expect(user.user_option.email_direct).to eq(false)
-
         end
 
         context 'a locale is chosen that differs from I18n.locale' do

@@ -854,6 +854,7 @@ class UsersController < ApplicationController
         :email,
         :password,
         :username,
+        :title,
         :date_of_birth,
         :muted_usernames,
         :theme_key,
