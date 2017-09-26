@@ -186,6 +186,19 @@
           {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
             {{#if loadedAllPosts}}
 
+              {{#if model.pending_posts_count}}
+                <div class="has-pending-posts">
+                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
+
+                  {{#if currentUser.show_queued_posts}}
+                    {{#link-to "queued-posts"}}
+                      {{d-icon "check"}}
+                      {{i18n "queue.view_pending"}}
+                    {{/link-to}}
+                  {{/if}}
+                </div>
+              {{/if}}
+
               {{topic-timer-info
                   statusType=model.topic_timer.status_type
                   executeAt=model.topic_timer.execute_at
@@ -222,19 +235,6 @@
                     {{d-button icon="reply" class="btn-primary pull-right" action="showLogin" label="topic.reply.title"}}
                   </div>
                 {{/if}}
-              {{/if}}
-
-              {{#if model.pending_posts_count}}
-                <div class="has-pending-posts">
-                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
-
-                  {{#if currentUser.show_queued_posts}}
-                    {{#link-to "queued-posts"}}
-                      {{d-icon "check"}}
-                      {{i18n "queue.view_pending"}}
-                    {{/link-to}}
-                  {{/if}}
-                </div>
               {{/if}}
 
               {{#if showSelectedPostsAtBottom}}
