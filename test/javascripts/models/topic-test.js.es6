@@ -24,6 +24,13 @@ QUnit.test('has a postStream', assert => {
   assert.equal(postStream.get('topic'), topic, "the postStream has a reference back to the topic");
 });
 
+QUnit.test('has suggestedTopics', assert => {
+  const topic = Topic.create({ suggested_topics: [{ id: 1 }, { id: 2 }] });
+  const suggestedTopics = topic.get('suggestedTopics');
+
+  assert.equal(suggestedTopics.length, 2, 'it loaded the suggested_topics');
+  assert.containsInstance(suggestedTopics, Topic);
+});
 
 QUnit.test('category relationship', assert => {
   // It finds the category by id
