@@ -223,6 +223,12 @@
     </div>
   </div>
 
+  <div class="display-row">
+    <div class='field'>{{i18n 'admin.user.staged'}}</div>
+    <div class='value'>{{i18n-yes-no model.staged}}</div>
+    <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
+  </div>
+
   {{#if currentUser.admin}}
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.api.key'}}</div>
@@ -353,12 +359,6 @@
         {{/if}}
       {{/conditional-loading-spinner}}
     </div>
-  </div>
-
-  <div class="display-row">
-    <div class='field'>{{i18n 'admin.user.staged'}}</div>
-    <div class='value'>{{i18n-yes-no model.staged}}</div>
-    <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
   </div>
 </section>
 
