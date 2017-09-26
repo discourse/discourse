@@ -708,6 +708,9 @@ en:
       long_form: 'voted for this post'
 
   user_activity:
+    no_default:
+      self: "You have no activity yet."
+      others: "No activity."
     no_bookmarks:
       self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
       others: "No bookmarks."
