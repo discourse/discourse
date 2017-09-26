@@ -443,6 +443,9 @@ describe TopicQuery do
   end
 
   context 'unread / read topics' do
+    after do
+      $redis.flushall
+    end
 
     context 'with no data' do
       it "has no unread topics" do
@@ -484,10 +487,15 @@ describe TopicQuery do
 
       context 'list_unread' do
         it 'lists topics correctly' do
-          new_topic = Fabricate(:post, user: creator).topic
+          freeze_time do
+            new_topic = Fabricate(:post, user: creator).topic
 
-          expect(topic_query.list_unread.topics).to eq([])
-          expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
+            expect(topic_query.list_unread.topics).to eq([])
+            expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
+
+            expect($redis.get(topic_query.unread_results_redis_key))
+              .to eq(Time.zone.now.to_s)
+          end
         end
       end
 
@@ -495,10 +503,16 @@ describe TopicQuery do
         before do
           user.user_option.auto_track_topics_after_msecs = 0
           user.user_option.save
+          partially_read.update!(bumped_at: 2.days.ago)
         end
 
         it 'only contains the partially read topic' do
-          expect(topic_query.list_unread.topics).to eq([partially_read])
+          freeze_time do
+            expect(topic_query.list_unread.topics).to eq([partially_read])
+
+            expect($redis.get(topic_query.unread_results_redis_key))
+              .to eq(partially_read.bumped_at.to_s)
+          end
         end
       end
 
