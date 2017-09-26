@@ -20,7 +20,7 @@ test:
   adapter: postgresql
   database: discourse_test<%= ENV['MULTISITE'] ? "_#{ENV['MULTISITE']}" : '' %>
   min_messages: warning
-  pool: 5
+  pool: 10
   timeout: 5000
   host_names:
     - test.localhost
