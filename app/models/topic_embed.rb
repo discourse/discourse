@@ -30,8 +30,10 @@ class TopicEmbed < ActiveRecord::Base
 
   # Prevents double URL encode
   # https://stackoverflow.com/a/37599235
-  def self.escape_uri(uri)
-    URI.encode(uri).gsub(DOUBLE_ESCAPED_EXPR, '%\1')
+  def self.escape_uri(uri, pattern = URI::UNSAFE)
+    encoded = URI.encode(uri, pattern)
+    encoded.gsub!(DOUBLE_ESCAPED_EXPR, '%\1')
+    encoded
   end
 
   # Import an article from a source (RSS/Atom/Other)

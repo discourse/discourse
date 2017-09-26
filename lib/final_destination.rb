@@ -180,7 +180,10 @@ class FinalDestination
   end
 
   def escape_url
-    URI.escape(CGI.unescapeHTML(@url), Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]"))
+    TopicEmbed.escape_uri(
+      CGI.unescapeHTML(@url),
+      Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]")
+    )
   end
 
   def private_ranges
