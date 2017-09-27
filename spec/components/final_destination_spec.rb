@@ -53,9 +53,15 @@ describe FinalDestination do
       expect(fd('https://eviltrout.com').status).to eq(:ready)
     end
 
-    it "returns nil an invalid url" do
+    it "returns nil for an invalid url" do
       expect(fd(nil).resolve).to be_nil
       expect(fd('asdf').resolve).to be_nil
+    end
+
+    it "returns nil when read timeouts" do
+      Excon.expects(:public_send).raises(Excon::Errors::Timeout)
+
+      expect(fd('https://discourse.org').resolve).to eq(nil)
     end
 
     context "without redirects" do
