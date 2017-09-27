@@ -1,11 +1,17 @@
 import WatchedWord from 'admin/models/watched-word';
-import { on, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   classNames: ['watched-word-form'],
   formSubmitted: false,
   actionKey: null,
   showSuccessMessage: false,
+
+  @computed('regularExpressions')
+  placeholderKey(regularExpressions) {
+    return "admin.watched_words.form.placeholder" +
+      (regularExpressions ? "_regexp" : "");
+  },
 
   @observes('word')
   removeSuccessMessage() {

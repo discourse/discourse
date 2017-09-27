@@ -3203,6 +3203,7 @@ en:
         form:
           label: 'New Word:'
           placeholder: 'full word or * as wildcard'
+          placeholder_regexp: "regular expression"
           add: 'Add'
           success: 'Success'
           upload: "Upload"

@@ -625,6 +625,8 @@ posting:
   max_allowed_message_recipients:
     default: 30
     min: 1
+  watched_words_regular_expressions:
+    default: false
 
 email:
   email_time_window_mins:
