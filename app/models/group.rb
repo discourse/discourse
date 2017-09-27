@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require_dependency 'enum'
+require_dependency 'multisite_class_var'
 
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
+  include MultisiteClassVar
 
-  cattr_accessor :preloaded_custom_field_names
-  self.preloaded_custom_field_names = Set.new
+  multisite_class_var(:preloaded_custom_field_names) { Set.new }
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
