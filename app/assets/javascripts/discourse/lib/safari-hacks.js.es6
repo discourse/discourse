@@ -6,17 +6,38 @@ export function isAppleDevice() {
          !navigator.userAgent.match(/Trident/g);
 }
 
-
 // we can't tell what the actual visible window height is
 // because we cannot account for the height of the mobile keyboard
 // and any other mobile autocomplete UI that may appear
 // so let's be conservative here rather than trying to max out every
 // available pixel of height for the editor
-function calcHeight(composingTopic) {
-  const winHeight = window.innerHeight;
-  const ratio = composingTopic ? 0.45 : 0.45;
-  const min = composingTopic ? 300 : 300;
-  return Math.max(parseInt(winHeight*ratio), min);
+function calcHeight() {
+
+  // estimate 270 px for keyboard
+  let withoutKeyboard = window.innerHeight - 270;
+  const min = 270;
+
+  // iPhone 6/7/8
+  if (window.innerHeight === 553) {
+    withoutKeyboard = 308;
+  }
+
+  // iPhone 6/7/8 plus
+  if (window.innerHeight === 622) {
+    withoutKeyboard = 360;
+  }
+
+  // iPad landscape, so we have a bigger keyboard
+  if (window.innerWidth > window.innerHeight && window.innerHeight > 690) {
+    withoutKeyboard -= 128;
+  }
+
+  // iPad portrait also has a bigger keyboard
+  if (window.innerWidth < window.innerHeight && window.innerHeight > 950) {
+    withoutKeyboard -= 45;
+  }
+
+  return Math.max(withoutKeyboard, min);
 }
 
 let workaroundActive = false;
