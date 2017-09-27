@@ -4,6 +4,13 @@ require "open-uri"
 
 class FileHelper
 
+  def self.log(log_level, message)
+      Rails.logger.public_send(
+        log_level,
+        "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+      )
+    end
+
   def self.is_image?(filename)
     filename =~ images_regexp
   end
@@ -23,7 +30,11 @@ class FileHelper
       max_redirects: follow_redirect ? 5 : 1,
       skip_rate_limit: skip_rate_limit
     ).resolve
-    return unless uri.present?
+
+    unless uri.present?
+      log(:error, "FinalDestination did not work for: #{url}")
+      return
+    end
 
     downloaded = uri.open("rb", read_timeout: read_timeout)
 
