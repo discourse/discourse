@@ -42,16 +42,34 @@ class Admin::EmailTemplatesController < Admin::AdminController
     key = params[:id]
     raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
 
-    TranslationOverride.upsert!(I18n.locale, "#{key}.subject_template", et[:subject])
-    TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", et[:body])
+    subject_result = update_key("#{key}.subject_template", et[:subject])
+    body_result = update_key("#{key}.text_body_template", et[:body])
 
-    render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
+    error_messages = []
+    if subject_result[:error_messages].present?
+      TranslationOverride.upsert!(I18n.locale, "#{key}.subject_template", subject_result[:old_value])
+      error_messages << format_error_message(subject_result, "subject")
+    end
+    if body_result[:error_messages].present?
+      TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", body_result[:old_value])
+      error_messages << format_error_message(body_result, "body")
+    end
+
+    if error_messages.blank?
+      log_site_text_change(subject_result)
+      log_site_text_change(body_result)
+
+      render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
+    else
+      render_json_error(error_messages)
+    end
   end
 
   def revert
     key = params[:id]
     raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
-    TranslationOverride.revert!(I18n.locale, "#{key}.subject_template", "#{key}.text_body_template")
+
+    revert_and_log("#{key}.subject_template", "#{key}.text_body_template")
     render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
   end
 
@@ -59,4 +77,41 @@ class Admin::EmailTemplatesController < Admin::AdminController
     render_serialized(self.class.email_keys, AdminEmailTemplateSerializer, root: 'email_templates', rest_serializer: true)
   end
 
+  private
+
+  def update_key(key, value)
+    old_value = I18n.t(key)
+    translation_override = TranslationOverride.upsert!(I18n.locale, key, value)
+
+    {
+      key: key,
+      old_value: old_value,
+      error_messages: translation_override.errors.full_messages
+    }
+  end
+
+  def revert_and_log(*keys)
+    old_values = {}
+    keys.each { |key| old_values[key] = I18n.t(key) }
+
+    TranslationOverride.revert!(I18n.locale, keys)
+
+    keys.each do |key|
+      old_value = old_values[key]
+      new_value = I18n.t(key)
+      StaffActionLogger.new(current_user).log_site_text_change(key, new_value, old_value)
+    end
+  end
+
+  def log_site_text_change(update_result)
+    new_value = I18n.t(update_result[:key])
+    StaffActionLogger.new(current_user).log_site_text_change(
+      update_result[:key], new_value, update_result[:old_value])
+  end
+
+  def format_error_message(update_result, attribute_key)
+    attribute = I18n.t("admin_js.admin.customize.email_templates.#{attribute_key}")
+    message = update_result[:error_messages].join("<br>")
+    I18n.t("errors.format_with_full_message", attribute: attribute, message: message)
+  end
 end
