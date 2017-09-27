@@ -100,8 +100,10 @@ describe Admin::ThemesController do
     end
 
     context ' .update' do
+      let(:theme) { Theme.create(name: 'my name', user_id: -1) }
+
       it 'can change default theme' do
-        theme = Theme.create(name: 'my name', user_id: -1)
+        SiteSetting.default_theme_key = nil
 
         put :update, params: {
           id: theme.id, theme: { default: true }
@@ -111,7 +113,6 @@ describe Admin::ThemesController do
       end
 
       it 'can unset default theme' do
-        theme = Theme.create(name: 'my name', user_id: -1)
         SiteSetting.default_theme_key = theme.key
 
         put :update, params: {
@@ -122,7 +123,6 @@ describe Admin::ThemesController do
       end
 
       it 'updates a theme' do
-        theme = Theme.new(name: 'my name', user_id: -1)
         theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
         theme.save
 
