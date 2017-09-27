@@ -2,7 +2,10 @@
 
 <p class="about">{{actionDescription}}</p>
 
-{{watched-word-form actionKey=actionNameKey action="recordAdded"}}
+{{watched-word-form
+  actionKey=actionNameKey
+  action="recordAdded"
+  regularExpressions=adminWatchedWords.regularExpressions}}
 
 {{watched-word-uploader uploading=uploading actionKey=actionNameKey done="uploadComplete"}}
 

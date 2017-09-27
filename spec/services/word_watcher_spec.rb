@@ -47,6 +47,21 @@ describe WordWatcher do
         m = WordWatcher.new("I acknowledge you.").word_matches_for_action?(:require_approval)
         expect(m[1]).to eq("acknowledge")
       end
+
+      it "supports regular expressions as a site setting" do
+        SiteSetting.watched_words_regular_expressions = true
+        Fabricate(
+          :watched_word,
+          word: "tro[uo]+t",
+          action: WatchedWord.actions[:require_approval]
+        )
+        m = WordWatcher.new("Evil Trout is cool").word_matches_for_action?(:require_approval)
+        expect(m[1]).to eq("Trout")
+        m = WordWatcher.new("Evil Troot is cool").word_matches_for_action?(:require_approval)
+        expect(m[1]).to eq("Troot")
+        m = WordWatcher.new("trooooooooot").word_matches_for_action?(:require_approval)
+        expect(m[1]).to eq("trooooooooot")
+      end
     end
   end
 
