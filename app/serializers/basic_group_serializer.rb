@@ -40,7 +40,7 @@ class BasicGroupSerializer < ApplicationSerializer
     staff?
   end
 
-  def include_has_messsages
+  def include_has_messages
     staff?
   end
 
