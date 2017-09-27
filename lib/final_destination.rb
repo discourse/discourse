@@ -124,6 +124,8 @@ class FinalDestination
     end
 
     nil
+  rescue Excon::Errors::Timeout
+    nil
   end
 
   def validate_uri
