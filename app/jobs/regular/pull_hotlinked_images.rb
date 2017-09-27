@@ -44,6 +44,7 @@ module Jobs
                   follow_redirect: true
                 )
               rescue Discourse::InvalidParameters
+                log(:error, "InvalidParameters while downloading hotlinked image (#{src}) for post: #{post_id}")
               end
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
@@ -87,7 +88,7 @@ module Jobs
               raw.gsub!(/^#{escaped_src}(\s?)$/) { "<img src='#{url}'>#{$1}" }
             end
           rescue => e
-            log(:error, "Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            log(:error, "Failed to pull hotlinked image (#{src}) post: #{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           end
         end
 
