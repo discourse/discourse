@@ -5,11 +5,11 @@ require "open-uri"
 class FileHelper
 
   def self.log(log_level, message)
-      Rails.logger.public_send(
-        log_level,
-        "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
-      )
-    end
+    Rails.logger.public_send(
+      log_level,
+      "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+    )
+  end
 
   def self.is_image?(filename)
     filename =~ images_regexp
