@@ -40,6 +40,20 @@ describe TopicStatusUpdater do
     expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_minutes", count: 0))
   end
 
+  it "triggers a DiscourseEvent on close" do
+    topic = create_topic
+
+    called = false
+    updater = -> (topic) { called = true }
+
+    DiscourseEvent.on(:topic_closed, &updater)
+    TopicStatusUpdater.new(topic, admin).update!("closed", true)
+    DiscourseEvent.off(:topic_closed, &updater)
+
+    expect(topic).to be_closed
+    expect(called).to eq(true)
+  end
+
   it "adds an autoclosed message based on last post" do
     topic = create_topic
     Fabricate(:post, topic: topic)
