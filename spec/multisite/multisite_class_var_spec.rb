@@ -29,10 +29,12 @@ RSpec.describe MultisiteClassVar do
     end
 
     after do
+      conn.clear_settings!
       [:@@db_spec_cache, :@@host_spec_cache, :@@default_spec].each do |class_variable|
         conn.remove_class_variable(class_variable)
       end
       conn.set_current_db
+      SiteSetting.provider = @original_provider
     end
 
     it "keeps the variable specific to the current site" do
