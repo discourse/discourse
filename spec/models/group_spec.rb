@@ -577,4 +577,21 @@ describe Group do
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
     end
   end
+
+  it "Correctly updates has_messages" do
+    group = Fabricate(:group, has_messages: true)
+    topic = Fabricate(:private_message_topic)
+
+    # when group message is not present
+    Group.refresh_has_messages!
+    group.reload
+    expect(group.has_messages?).to eq false
+
+    # when group message is present
+    group.update!(has_messages: true)
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    Group.refresh_has_messages!
+    group.reload
+    expect(group.has_messages?).to eq true
+  end
 end
