@@ -22,7 +22,11 @@ export function startPageTracking(router, appEvents) {
     // next runloop to have the correct title.
     Ember.run.next(() => {
       let title = Discourse.get('_docTitle');
-      appEvents.trigger('page:changed', { url, title });
+      appEvents.trigger('page:changed', {
+        url,
+        title,
+        currentRouteName: router.get('currentRouteName')
+      });
     });
 
     transitionCount++;
