@@ -46,6 +46,7 @@ zh_CN:
         no_message_id_error: "邮件头部没有“Message-Id”。"
         auto_generated_email_error: "邮件头部的“precedence”为：list、junk、bulk 或 auto_reply，或者头部包含了：auto-submitted、auto-replied 或 auto-generated。"
         no_body_detected_error: "无法解析正文并且没有附件。"
+        no_sender_detected_error: "当无法在来源信息中找到有效邮件地址时发生。"
         inactive_user_error: "发送者未激活。"
         blocked_user_error: "发送者被封禁。"
         bad_destination_address: "发至/抄送/密送栏中的所有邮件都不匹配进站邮件地址。"
@@ -435,6 +436,10 @@ zh_CN:
     leader:
       title: "资深"
     change_failed_explanation: "你尝试将%{user_name}降至%{new_trust_level}。然而他们的信任等级已经是%{current_trust_level}。%{user_name}将仍处于%{current_trust_level}——如果你想要降级用户，先锁定信任等级。"
+  post:
+    image_placeholder:
+      broken: "此图片已损坏"
+      large: "此图片太大无法在此显示; 点击以查看"
   rate_limiter:
     slow_down: "你执行这个操作太多次了，请稍后再试。"
     too_many_requests: "你的请求过于频繁，请等待%{time_left}之后再试。"
@@ -1084,7 +1089,7 @@ zh_CN:
     min_trust_to_edit_post: "能编辑帖子的最小信任等级。"
     min_trust_to_allow_self_wiki: "用户将自己的帖子设置为维基模式的最低信任等级。"
     min_trust_to_send_messages: "发送私信所需的最低信任等级。"
-    min_trust_to_send_email_messages: "通过 email 发送私信所需的最低信任等级。"
+    min_trust_to_send_email_messages: "通过 email 发送新私信（给暂存用户）所需的最低信任等级。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
     newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量。"
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
@@ -1238,6 +1243,7 @@ zh_CN:
     topic_page_title_includes_category: "主题页面标题包含分类名。"
     native_app_install_banner: "邀請常客安裝 Discourse 本机应用程序"
     share_anonymized_statistics: "分享匿名使用数据。"
+    auto_handle_queued_age: "此设定天数后自动处理待审核的记录。标记将被推迟。队列中的帖子及用户将被拒绝。设为 0 将禁用此功能。"
     max_prints_per_hour_per_user: "/print 页面的每小时最大展示量（设置为 0 禁用）"
     full_name_required: "全名是用户个人信息的必填项。"
     enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用将在所有地方隐藏全名。"
@@ -1341,7 +1347,7 @@ zh_CN:
       invalid_regex: "正则表达式非法或者不允许。"
       email_editable_enabled: "你必须先禁用 'email editable' 再启用该设置。"
       enable_sso_disabled: "你必须先启用 'enable sso' 再启用该设置。"
-      staged_users_disabled: "你必须先启用 'staged users' 再启用该设置。"
+      staged_users_disabled: "你必须先启用“暂存用户”再启用该设置。"
       reply_by_email_disabled: "你必须先启用 '用 email 回复' 再启用该设置。"
   search:
     within_post: "#{{post_number}} 由 {{username}}"
@@ -1362,7 +1368,7 @@ zh_CN:
   most_recent_poster: "当前大部分帖子作者"
   frequent_poster: "频繁发帖者"
   redirected_to_top_reasons:
-    new_user: "欢迎来到我们的社区！这是我们最近的热门主题。"
+    new_user: "欢迎来到我们的社区！这些都是最近热门主题。"
     not_seen_in_a_month: "欢迎回来！我们已经好久没见到你了。这些是你不在时的最热门主题。"
   merge_posts:
     edit_reason:
@@ -1470,6 +1476,7 @@ zh_CN:
       max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
     website:
       domain_not_allowed: "网站无效。允许的域名有：%{domains}"
+    auto_rejected: "因时限被自动拒绝。查看站点自动处理队列时限设置。"
   flags_reminder:
     flags_were_submitted:
       other: "标志已经提交%{count}小时前。[请审核他们](/admin/flags)。"
@@ -2049,6 +2056,14 @@ zh_CN:
         该奖项每月只授予给两位新用户，并且你永远都可以在[你的用户页](%{base_url}/my/badges)找到。
 
         你迅速成为了我们社区中的宝贵一员。感谢你参与，未来继续努力！
+    queued_posts_reminder:
+      title: "待处理帖子提醒"
+      subject_template:
+        other: "%{count} 个帖子等待审核"
+      text_body_template: |
+        你好，
+
+        新用户的帖子因规则被暂存正等待审核。[在此审核通过或者拒绝](%{base_url}/queued-posts)。
   unsubscribe_link: |
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |

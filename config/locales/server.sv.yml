@@ -1159,7 +1159,7 @@ sv:
     default_categories_watching: "Lista av kategorier som är bevakade som standard."
     default_categories_tracking: "Lista av kategorier som är följda som standard."
     default_categories_muted: "Lista av kategorier som är tystade som standard."
-    default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämnet kommer att ses som standard."
+    default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämne kommer att bevakas som standard."
     max_user_api_reqs_per_day: "Maximalt antal användare som API´t kräver per nyckel/dag"
     max_user_api_reqs_per_minute: "Maximalt antal användare API kräver på nyckel/minut"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API nycklar "

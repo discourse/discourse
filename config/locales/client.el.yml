@@ -113,7 +113,7 @@ el:
     action_codes:
       public_topic: "έκανε το νήμα δημόσιο στις %{when}"
       private_topic: "έκανε το νήμα ιδιωτικό στις %{when}"
-      split_topic: "διαχώρισε αυτό το νήμα στις %{when}"
+      split_topic: "διαχώρισε αυτό το νήμα %{when}"
       invited_user: "προσκάλεσε τον χρήστη %{who} στις %{when}"
       invited_group: "προσκάλεσε την ομάδα %{who} στις %{when}"
       removed_user: "αφαίρεσε τον χρήστη %{who} στις %{when}"
@@ -248,7 +248,7 @@ el:
     topic_count_new:
       one: "{{count}} νέο νήμα."
       other: "{{count}} νέα νήματα."
-    click_to_show: "Κάνε κλικ για να εμφανιστεί."
+    click_to_show: "Κλικ εδώ για να τα δεις."
     preview: "προεπισκόπιση"
     cancel: "ακύρωση"
     save: "Αποθήκευση Αλλαγών"
@@ -691,7 +691,7 @@ el:
         title: "Επανάληψη του κωδικού πρόσβασης"
       last_posted: "Τελευταία Ανάρτηση"
       last_emailed: "Τελευταίο email"
-      last_seen: "Ειδώθηκε"
+      last_seen: "Εθεάθη"
       created: "Μέλος από"
       log_out: "Αποσύνδεση"
       location: "Τοποθεσία"
@@ -931,7 +931,7 @@ el:
       remove_allowed_group: "Θέλεις σίγουρα να αφαιρέσεις τον/την {{name}} από αυτό το μήνυμα;"
     email: 'Email'
     username: 'Όνομα Χρήστη'
-    last_seen: 'Ειδώθηκε'
+    last_seen: 'Εθεάθη'
     created: 'Δημιουργήθηκε'
     created_lowercase: 'δημιουργήθηκε'
     trust_level: 'Επίπεδο Εμπιστοσύνης'
@@ -2369,8 +2369,9 @@ el:
         by: "από"
       flags:
         title: "Σημάνσεις"
-        old: "Παλιά"
-        active: "Ενεργά"
+        active_posts: "Επισημασμένες Αναρτήσεις"
+        old_posts: "Παλιές Επισημασμένες Αναρτήσεις"
+        topics: "Επισημασμένα Νήματα"
         agree: "Συμφωνώ"
         agree_title: "Επιβεβαίωσε αυτή τη σήμανση ως έγκυρη και σωστή"
         agree_flag_modal_title: "Συμφωνώ και..."
@@ -2398,6 +2399,8 @@ el:
         clear_topic_flags: "Έγινε"
         clear_topic_flags_title: "Το νήμα ελέγχθηκε και τα προβλήματα επιλύθηκαν. Κάνε κλίκ στο «έγινε» για να αφαιρέσεις τις επισημάνσεις."
         more: "(περισσότερες απαντήσεις...)"
+        suspend_user: "Αποβολή Χρήστη"
+        suspend_user_title: "Αποβολή χρήστη για αυτή την ανάρτηση"
         dispositions:
           agreed: "συμφώνησε"
           disagreed: "διαφώνησε"
@@ -2408,11 +2411,18 @@ el:
         system: "Σύστημα"
         error: "Κάτι πήγε λάθος"
         reply_message: "Απάντηση"
-        no_results: "Δεν υπάρχουν επισημάνσεις."
+        no_results: "Δεν υπάρχουν επισημασμένες αναρτήσεις."
         topic_flagged: "Αυτό το <strong>νήμα</strong> έχει επισημανθεί."
+        show_full: "εμφάνιση πλήρους ανάρτησης"
         visit_topic: "Επισκέψου το νήμα για να ενεργήσεις"
         was_edited: "Η ανάρτηση έχει υποστεί επεξεργασία μετά την πρώτη επισήμανση"
         previous_flags_count: "Αυτό το νήμα έχει επισημανθεί ήδη {{count}} φορές"
+        show_details: "Εμφάνιση λεπτομερειών επισήμανσης"
+        flagged_topics:
+          topic: "Νήμα"
+          type: "Τύπος"
+          users: "Χρήστες"
+          last_flagged: "Τελευταίες Επισημάνσεις"
         summary:
           action_type_3:
             one: "εκτός θέματος"
@@ -2950,6 +2960,7 @@ el:
         form:
           label: 'Νέα Λέξη:'
           placeholder: 'ολόκληρη λέξη ή * ως μπαλαντέρ'
+          placeholder_regexp: "regular expression"
           add: 'Προσθήκη'
           success: 'Επιτυχία'
           upload: "Μεταφόρτωση"
@@ -2969,7 +2980,7 @@ el:
         show_emails: "Προβολή Emails"
         nav:
           new: "Νέα"
-          active: "Ενεργά"
+          active: "Ενεργοί"
           pending: "Εκκρεμή"
           staff: 'Συνεργάτες'
           suspended: 'Αποβλημένοι'
@@ -3011,10 +3022,15 @@ el:
         suspend_failed: "Κάποιο λάθος εμφανίστηκε κατά την αποβολή αυτού του χρήστη {{error}}"
         unsuspend_failed: "Κάτι πήγε στραβά κατά την αναίρεση της αποβολής αυτού του χρήστη {{error}}"
         suspend_duration: "Πόσο χρονικό διάστημα θα κρατήσει η αποβολή του χρήστη;"
-        suspend_duration_units: "(ημέρες)"
         suspend_reason_label: "Γιατί αποβάλεις τον χρήστη; Αυτό το κείμενο <b>θα είναι ορατό σε όλους</b> στη σελίδα προφίλ αυτού του χρήστη και θα εμφανίζεται στο χρήστη όταν αυτός προσπαθήσει να συνδεθεί. Φρόντισε να είναι σύντομο."
+        suspend_reason_hidden_label: "Ποιος είναι ο λόγος της αποβολής; Το κείμενο αυτό θα εμφανίζεται στον χρήστη όταν προσπαθήσει να συνδεθεί. Φροντίστε να είναι σύντομο."
         suspend_reason: "Αιτία"
+        suspend_reason_placeholder: "Αιτιολόγηση Αποβολής"
+        suspend_message: "Μήνυμα Email"
+        suspend_message_placeholder: "Προεραιτικά συμπληρώστε αναλυτική αιτιολόγηση για τον λόγο αποβολής και αυτή θα σταλεί με email στον χρήστη."
         suspended_by: "Αποβλήθηκε από τον/την"
+        suspended_until: "(έως %{until})"
+        cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
         delete_all_posts: "Σβήσε όλες τις αναρτήσεις"
         delete_all_posts_confirm_MF: "Πρόκειται να διαγράψεις {POSTS, plural, one {1 ανάρτηση} other {# αναρτήσεις}} and {TOPICS, plural, one {1 νήμα} other {# νήματα}}. Είσαι σίγουρος;"
         suspend: "Αποβολή"

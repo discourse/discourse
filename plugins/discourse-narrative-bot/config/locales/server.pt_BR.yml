@@ -12,6 +12,7 @@ pt_BR:
     discourse_narrative_bot_ignored_usernames: "Nomes de Usuário que o Robô de Narrativas do Discourse deve ignorar"
     discourse_narrative_bot_disable_public_replies: "Desabilitar respostas públicas do Robô de Narrativas do Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de mensagem de boas vindas que o Robô de Narrativas do Discourse deve enviar"
+    discourse_narrative_bot_welcome_post_delay: "Espere (n) segundos antes de enviar o post de boas-vindas do Bot Narrativo do Discourse."
   badges:
     certified:
       name: Certificado

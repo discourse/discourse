@@ -327,6 +327,8 @@ ko:
         add_members: "구성원 추가"
         delete_member_confirm: "'%{username}'를 '%{group}' 그룹에서 삭제하겠습니까?"
       name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
+      public_admission: "사용자가 그룹에 자유롭게 가입할 수 있도록 허용합니다. (그룹이 공개되어야 함)"
+      public_exit: "사용자가 그룹을 자유롭게 탈퇴할 수 있도록 허용합니다."
       empty:
         posts: "이 그룹에는 아직 멤버들이 포스트를 작성하지 않았습니다."
         members: "이 그룹에는 구성원이 없습니다."
@@ -338,6 +340,7 @@ ko:
       join: "그룹 참여하기"
       leave: "그룹 나가기"
       request: "그룹 참여 요청하기"
+      message: "메세지"
       automatic_group: 자동 그룹
       closed_group: 닫힌 그룹
       is_group_user: "당신은 이 그룹의 구성원입니다."
@@ -351,6 +354,8 @@ ko:
       index:
         title: "그룹"
         empty: "보이는 그룹이 없습니다."
+      title:
+        other: "그룹"
       activity: "활동"
       members: "멤버"
       topics: "토픽"
@@ -365,6 +370,8 @@ ko:
         staff: "그룹 소유자와 운영진"
         owners: "그룹 소유자와 관리자"
       alias_levels:
+        mentionable: "누가 이 그룹에 @멘션을 할 수 있나요?"
+        messageable: "누가 이 그룹에 메시지를 보낼 수 있나요?"
         nobody: "0명"
         only_admins: "관리자 전용"
         mods_and_admins: "운영자 및 관리자만"
@@ -450,6 +457,7 @@ ko:
       topics_entered: "입력된 제목:"
       post_count: "포스트 개수"
       confirm_delete_other_accounts: "정말 이 계정들을 삭제하시겠습니까?"
+      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(옵션을 선택하세요)"
     user:
@@ -594,6 +602,7 @@ ko:
         taken: "죄송합니다. 해당 이메일은 사용 할 수 없습니다."
         error: "이메일 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일인지 확인해주세요."
         success: "이메일 발송이 완료되었습니다. 확인하신 후 절차에 따라주세요."
+        success_staff: "현재 주소로 이메일을 보냈습니다. 확인 절차에 따라 진행해 주세요."
       change_avatar:
         title: "프로필 사진 변경"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
@@ -979,7 +988,11 @@ ko:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: 선택...
+      filter_placeholder: 검색...
     emoji_picker:
+      filter_placeholder: 이모지 찾기
       people: 인물
       nature: 자연
       food: 음식
@@ -988,6 +1001,13 @@ ko:
       objects: 사물
       celebration: 축하
       custom: 커스텀 emoji
+      recent: 최근 사용
+      default_tone: 피부색 없음
+      light_tone: 밝은 피부색
+      medium_light_tone: 약간 밝은 피부색
+      medium_tone: 중간 피부색
+      medium_dark_tone: 약간 어두운 피부색
+      dark_tone: 어두운 피부색
     composer:
       emoji: "이모지 :)"
       more_emoji: "더보기..."
@@ -2239,11 +2259,14 @@ ko:
         system: "System"
         error: "뭔가 잘못 됐어요"
         reply_message: "답글"
-        no_results: "신고가 없습니다."
         topic_flagged: "이 <strong> 주제 </strong>는 신고 되었습니다."
         visit_topic: "처리하기 위해 주제로 이동"
         was_edited: "첫 신고 이후에 글이 수정되었음"
         previous_flags_count: "이 글은 이미 {{count}}번 이상 신고 되었습니다."
+        flagged_topics:
+          topic: "토픽"
+          type: "타입"
+          users: "사용자"
         summary:
           action_type_3:
             other: "off-topic x{{count}}"
@@ -2752,6 +2775,14 @@ ko:
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         logster:
           title: "에러 로그"
+      watched_words:
+        search: "검색"
+        clear_filter: "지우기"
+        form:
+          placeholder_regexp: "정규표현식"
+          add: '추가'
+          success: '성공'
+          upload: "업로드"
       impersonate:
         title: "이 사용자 행세하기"
         help: "디버깅 목적으로 사용자 계정으로 로그인 할 수 있습니다. 사용이 끝나면 로그아웃하여야 합니다."
@@ -2805,9 +2836,9 @@ ko:
         suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 {{error}}"
         unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 {{error}}"
         suspend_duration: "사용자를 몇일 접근 금지 하시겠습니까?"
-        suspend_duration_units: "(일)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
+        suspend_message: "이메일 메시지"
         suspended_by: "접근 금지자"
         delete_all_posts: "모든 글을 삭제합니다"
         delete_all_posts_confirm_MF: " {POSTS, plural, one {1개의 포스트} other {#개의 포스트}} 와 {TOPICS, plural, one {1개의 토픽} other {#개의 토픽}}을 삭제하려고 합니다. 정말로 삭제할까요?"

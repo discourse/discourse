@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-tr_TR: {}
+tr_TR:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Botu etkinleştir'
+  badges:
+    certified:
+      name: Sertifikalı

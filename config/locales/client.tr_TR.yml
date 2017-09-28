@@ -83,6 +83,7 @@ tr_TR:
           other: "%{count} yıl sonra"
       previous_month: 'Önceki Ay'
       next_month: 'Sonraki Ay'
+      placeholder: Tarih seç
     share:
       topic: 'bu konunun bağlantısını paylaşın'
       post: '#%{postNumber} numaralı gönderiyi paylaşın'
@@ -121,6 +122,8 @@ tr_TR:
     emails_are_disabled: "Tüm giden e-postalar yönetici tarafından genel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi kolayca çalıştırmak için bootstrap modundasınız. Tüm yeni kullanıcılar güven seviyesi 1den başlar ve e-posta uyarıcıları açıksa günlük mail alırlar. Bu özellik kullanıcı sayısı %{min_users} rakamına ulaştığında otomatik kapatılacaktır."
     bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
+    themes:
+      default_description: "Varsayılan "
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -329,9 +332,12 @@ tr_TR:
       join: "Gruba katıl"
       leave: "Gruptan ayrıl"
       request: "Gruba katılmak için istek yolla"
+      message: "ileti"
       automatic_group: Otomatik Grup
       closed_group: Kapanmış Grup
       is_group_user: "Bu grubun bir üyesisiniz."
+      membership_request:
+        submit: "İstek Gönderin"
       membership: "Üyelik"
       name: "İsim"
       user_count: "Grup Sayısı"
@@ -888,6 +894,8 @@ tr_TR:
       not_allowed_from_ip_address: "Bu IP adresiyle oturum açamazsınız."
       admin_not_allowed_from_ip_address: "Bu IP adresinden yönetici olarak oturum açamazsınız."
       resend_activation_email: "Etkinleştirme e-postasını tekrar yollamak için buraya tıklayın. "
+      resend_title: "Etkinleştirme epostasını tekrar gönder"
+      change_email: "Eposta adresini değiştir"
       sent_activation_email_again: "<b>{{currentEmail}}</b> adresine yeni bir etkinleştirme e-postası yolladık. Bu e-postanın size ulaşması bir kaç dakika sürebilir; istenmeyen klasörüzü kontrol etmeyi unutmayın."
       to_continue: "Lütfen Giriş Yap"
       preferences: "Tercihlerinizi değiştirebilmek için giriş yapmanız gerekiyor."
@@ -918,6 +926,8 @@ tr_TR:
       accept_title: "Davet"
       welcome_to: "%{site_name} topluluğuna hoş geldiniz!"
       invited_by: "Davet gönderen:"
+      accept_invite: "Daveti kabul et"
+      name_label: "İsim"
     password_reset:
       continue: "%{site_name} devam edin"
     emoji_set:
@@ -1573,6 +1583,7 @@ tr_TR:
           show: "Düzenlemeyi göster"
           revert: "Bu sürüme geri dön"
           edit_wiki: "Wiki'yi düzenle"
+          edit_post: "İletiyi düzenle"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -2586,9 +2597,9 @@ tr_TR:
         suspend_failed: "Bu kullanıcı uzaklaştırılırken bir şeyler ters gitti {{error}}"
         unsuspend_failed: "Bu kullanıcının uzaklaştırması kaldırılırken bir şeyler ters gitti {{error}}"
         suspend_duration: "Kullanıcı ne kadar uzun bir süre için uzaklaştırılacak?"
-        suspend_duration_units: "(günler)"
         suspend_reason_label: "Neden uzaklaştırıyorsunuz? Buraya yazdıklarınız bu kullanıcının profil sayfasında <b>herkese gözükecek<b> ve sistemde oturum açtığı anda kullanıcıya gösterilecek. Lütfen yazıyı kısa tutun."
         suspend_reason: "Neden"
+        suspend_message: "E Posta Mesajı"
         suspended_by: "Uzaklaştıran"
         delete_all_posts: "Tüm gönderileri sil"
         delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Emin misiniz?"

@@ -60,6 +60,7 @@ it:
       unrecognized_error: "Errore Non Riconosciuto"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
@@ -636,6 +637,9 @@ it:
       short_description: 'Vota per questo messaggio'
       long_form: 'hai votato questo messaggio'
   user_activity:
+    no_default:
+      self: "Non hai ancora nessuna attività."
+      others: "Nessuna attività."
     no_bookmarks:
       self: "Non hai aggiunto nessun segnalibro ai messaggi, farlo ti consentirà di ritrovarli facilmente più avanti. "
       others: "Nessun segnalibro."
@@ -1270,6 +1274,7 @@ it:
     anonymous_posting_min_trust_level: "Livello di esperienza minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
     hide_user_profiles_from_public: "Disabilita schede utenti, profili utenti e directory utenti per gli utenti anonimi."
+    hide_suspension_reasons: "Non visualizzare pubblicamente le ragioni della sospensione sui profili utente."
     user_website_domains_whitelist: "Verrà verificato il sito web dell'utente per questi domini. Lista delimitata dal carattere pipe."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     sequential_replies_threshold: "Numero di messaggi che un utente deve pubblicare di fila in un argomento prima che gli venga ricordato delle troppe risposte sequenziali."
@@ -2321,6 +2326,15 @@ it:
       title: "Pubblicazione MP da Utente Temporaneo"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
+
+        %{message}
+    account_suspended:
+      title: "Account Sospeso"
+      subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
+      text_body_template: |
+        Sei stato sospeso dal forum fino a %{suspended_till}.
+
+        %{reason}
 
         %{message}
     digest:

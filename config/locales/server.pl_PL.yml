@@ -2492,7 +2492,7 @@ pl_PL:
 
 
   terms_of_service:
-    title: "Warunki użytkowania"
+    title: "Warunki użytkowania serwisu"
     signup_form_message: 'Przeczytałem i zgadzam się z <a href="/tos" target="_blank">Regulaminem Serwisu</a>.'
   deleted: 'usunięte'
   image: "obraz"
