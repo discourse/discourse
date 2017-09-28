@@ -60,6 +60,7 @@ el:
       unrecognized_error: "Άγνωστο Σφάλμα"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "επιτρέπονται μέχρι %{max} χαρακτήρες, έχεις εισάγει %{length}."
       invalid_boolean: "Λανθασμένη τιμή boolean."
@@ -641,6 +642,9 @@ el:
       short_description: 'Ψηφίστε την ανάρτηση'
       long_form: 'ψήφισαν την ανάρτηση'
   user_activity:
+    no_default:
+      self: "Δεν έχετε ακόμη καμία δραστηριότητα."
+      others: "Χωρίς δραστηριότητα."
     no_bookmarks:
       self: "Δεν έχεις κανέναν σελιδοδείκτη σε αναρτήσεις, οι σελιδοδείκτες στις αναρτήσεις σου επιτρέπουν εύκολη πρόσβαση σε αυτές αργότερα."
       others: "Κανένας σελιδοδείκτης."
@@ -1277,6 +1281,7 @@ el:
     anonymous_posting_min_trust_level: "Το ελάχιστο απαιτούμενο επίπεδο εμπιστοσύνης για ενεργοποίηση της ανώνυμης ανάρτησης"
     anonymous_account_duration_minutes: "Για να προστατευθεί η ανωνυμία δημιούργησε ένα νέο ανώνυμο λογαριασμό κάθε Ν λεπτά για κάθε χρήστη. Παράδειγμα: εάν τεθεί στο 600, μόλις περάσουν 600 λεπτά από την τελευταία ανάρτηση ΚΑΙ ο χρήστης αλλάξει σε ανώνυμος, ένας νέος ανώνυμος λογαριασμός δημιουργείται."
     hide_user_profiles_from_public: "Απενεργοποιήσε τις κάρτες χρηστών, τα προφίλ χρηστών και τον κατάλογο χρηστών για ανώνυμους χρήστες. "
+    hide_suspension_reasons: "Να μην εμφανίζονται οι λόγοι αποβολής δημόσια στα προφίλ των χρηστών."
     user_website_domains_whitelist: "Ο  ιστότοπος του χρήστη θα επιβεβαιώνεται με αυτά τα domains. Pipe-delimited λίστα"
     allow_profile_backgrounds: "Επίτρεψε στους χρήστες να μεταφορτώνουν εικόνες φόντου στο προφίλ."
     sequential_replies_threshold: "Ο αριθμός των αναρτήσεων που πρέπει να κάνει ένας χρήστης στη σειρά για το ίδιο θέμα πριν ειδοποιηθεί για παρα πολλές συνεχόμενες απαντήσεις."
@@ -1325,6 +1330,7 @@ el:
     auto_close_topics_post_count: "Ανώτατο όριο αναρτήσεων που επιτρέπονται σε ένα νήμα πριν αυτό κλείσει αυτομάτως (0 για απενεργοποίηση)"
     code_formatting_style: "Το κουμπί κώδικα στον συνθέτη θα έχει ως αποτέλεσμα αυτό το στυλ μορφοποίησης κώδικα "
     max_allowed_message_recipients: "Μέγιστος αριθμός παραληπτών που επιτρέπονται σε ένα μήνυμα"
+    watched_words_regular_expressions: "Οι λέξεις που επιτηρούνται είναι regular expressions."
     default_email_digest_frequency: "Πόσο συχνά οι χρήστες λαμβάνουν συνοπτικά email από προεπιλογή."
     default_include_tl0_in_digests: "Συμπεριέλαβε αναρτήσεις από νέους χρήστες στα συνοπτικά email από προεπιλογή. Οι χρήστες μπορούν να το αλλάξουν αυτό στις προτιμήσεις τους. "
     default_email_private_messages: "Στείλε email όταν κάποιος στέλνει μήνυμα στο χρήστη από προεπιλογή."
@@ -2333,6 +2339,15 @@ el:
       title: "Χρήστης που ανάρτησε σταδιακό ΠΜ"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
+
+        %{message}
+    account_suspended:
+      title: "Χρήστης σε Αποβολη"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
+      text_body_template: |
+        Αποβλήθηκες από την ιστοσελίδα έως %{suspended_till}.
+
+        %{reason}
 
         %{message}
     digest:

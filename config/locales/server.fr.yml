@@ -46,6 +46,7 @@ fr:
         no_message_id_error: "Se produit quand le courriel n'a pas d'entête \"Message-Id\"."
         auto_generated_email_error: "Se produit quand l'entête « precedence » est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre entête contient : auto-submitted, auto-replied ou auto-generated."
         no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
+        no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'entête From."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
         blocked_user_error: "Se produit quand l'expéditeur a été bloqué."
         bad_destination_address: "Se produit quand aucune des adresses de courriel des champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
@@ -449,6 +450,10 @@ fr:
     leader:
       title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
+  post:
+    image_placeholder:
+      broken: "Cette image ne fonctionne pas"
+      large: "Cette image est trop grande pour l'afficher ici ; cliquer pour voir"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
@@ -1078,6 +1083,7 @@ fr:
     twitter_summary_large_image_url: "URL de l'image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280px en largeur et 150px en hauteur). "
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
+    strip_image_metadata: "Enlever les métadonnées de l'image."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1110,6 +1116,7 @@ fr:
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
     min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages privés."
+    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages privés par courriel (aux utilisateurs générés)."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
@@ -1573,9 +1580,9 @@ fr:
     title: "Téléchargement de la sauvegarde"
     subject_template: "[%{email_prefix}] Lien Téléchargement Sauvegarde"
     text_body_template: |
-      Voici le [site backup download](%{backup_file_path}) que vous avez demandé.
+      Voici le [téléchargement de la sauvegarde du site](%{backup_file_path}) que vous avez demandé.
 
-      Nous avons envoyé ce lien par email pour des raisons de sécurité.
+      Nous avons envoyé ce lien à votre adresse de courriel validée pour des raisons de sécurité.
 
       (Si vous *n'avez pas* effectué cette demande, vous devriez vous poser des questions -- quelqu'un a accès à l'administration de votre site.)
     no_token: |

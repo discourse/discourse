@@ -7,13 +7,13 @@
 
 ar:
   site_settings:
-    poll_enabled: "أيمكن للمستخدمين إنشاء تصويتات؟"
+    poll_enabled: "السماح للاعضاء بإنشاء تصويتات؟"
     poll_maximum_options: "أقصى عدد للخيارات في كلّ تصويت."
-    poll_edit_window_mins: "عدد الدقائق المسموح فيها تعديل التصويتات بعد نشر المشاركة."
+    poll_edit_window_mins: "عدد الدقائق بعد نشر المنشور المسموح فيها بتعديل التصويت."
   poll:
     multiple_polls_without_name: "توجد بضعة تصويتات بلا اسم. استخدم خاصية '<code>name</code>' لتمييزها."
     multiple_polls_with_same_name: "توجد بضعة تصويتات بالاسم <strong>%{name}</strong> نفسه. استخدم خاصية '<code>name</code>' لتمييزها."
-    default_poll_must_have_at_least_2_options: "على التصويت توفير خيارين على الأقل."
+    default_poll_must_have_at_least_2_options: "يجب ان يكون التصويت بين خيارين على الأقل."
     named_poll_must_have_at_least_2_options: "على التصويت ذو الاسم <strong>%{name}</strong> توفير خيارين على الأقل."
     default_poll_must_have_less_options:
       zero: "على التصويت ألا يوفّر أي خيار."

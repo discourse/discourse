@@ -14,7 +14,7 @@ ar:
         two: "إثنان صوّتا"
         few: "صوّتوا"
         many: "صوّتوا"
-        other: "صوّتوا"
+        other: "الناخبين"
       total_votes:
         zero: "لم يصوت أحد"
         one: "صوت واحد"
@@ -40,7 +40,7 @@ ar:
             two: "اختر ما حدّه <strong>خيارين</strong>"
             few: "اختر ما حدّه <strong>%{count}</strong> خيارات"
             many: "اختر ما حدّه <strong>%{count}</strong> خيارا"
-            other: "اختر ما حدّه <strong>%{count}</strong> خيار"
+            other: "اختر حتي <strong>%{count}</strong> خيار"
           x_options:
             zero: "لا تختر شيئا"
             one: "اختر خيار <strong>واحد</strong>"
@@ -48,7 +48,7 @@ ar:
             few: "اختر <strong>%{count}</strong> خيارات"
             many: "اختر <strong>%{count}</strong> خيارا"
             other: "اختر <strong>%{count}</strong> خيار"
-          between_min_and_max_options: "اختر بين <strong>%{min}</strong> و <strong>%{max}</strong> خيارات"
+          between_min_and_max_options: "اختر بين <strong>%{min}</strong> و <strong>%{max}</strong> خيار"
       cast-votes:
         title: "أدلِ بصوتك"
         label: "صوّت اﻵن!"
@@ -56,7 +56,7 @@ ar:
         title: "اعرض نتائج التصويت"
         label: "أظهر النتائج"
       hide-results:
-        title: "عُد إلى أصواتك"
+        title: "ارجع إلى أصواتك"
         label: "أخفِ النتائج"
       open:
         title: "افتح التّصويت"
@@ -66,11 +66,11 @@ ar:
         title: "أغلق التّصويت"
         label: "أغلق"
         confirm: "أمتأكد من إغلاق هذا التّصويت؟"
-      error_while_toggling_status: "آسفون، حدثت مشكلة في تبديل حالة هذا التّصويت."
-      error_while_casting_votes: "آسفون، حدث خطأ في الإدلاء بأصواتك."
-      error_while_fetching_voters: "آسفون، حدث خطأ في عرض المصوّتين."
+      error_while_toggling_status: "عذرا، حدثت مشكلة في تبديل حالة هذا التّصويت."
+      error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
+      error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."
       ui_builder:
-        title: ابنِ تصويتا
+        title: انشأ تصويتا
         insert: أدرج التصويت
         help:
           options_count: أدخل خيارين على الأقل
@@ -81,10 +81,10 @@ ar:
           multiple: عدّة خيارات
           number: تقييم عددي
         poll_config:
-          max: الأقصى
-          min: الأدنى
+          max: الحد الأقصى
+          min: الحد الأدنى
           step: الخطوة
         poll_public:
-          label: أظهر المصوّتون
+          label: أظهر الناخبين
         poll_options:
           label: أدخل خيارًا واحدًا في كل سطر

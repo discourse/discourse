@@ -49,6 +49,7 @@ zh_TW:
         insert: 插入投票
         help:
           options_count: 輸入至少 2 個選項
+          invalid_values: 最小值必須比最大值小。
         poll_type:
           label: 類型
           regular: 單選

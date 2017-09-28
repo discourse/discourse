@@ -46,6 +46,7 @@ fi:
         no_message_id_error: "Näin käy, kun viestin otsikkotiedoista puuttuu ID-tunniste (engl. message-ID)."
         auto_generated_email_error: "Näin käy, kun viestin kiireellisyysluokitus (engl. precedence header) on joku seuraavista: list, junk, bulk tai auto_reply, tai kun joku muu otsikkotiedoista sisältää jonkun seuraavista: auto-submitted, auto-replied tai auto-generated."
         no_body_detected_error: "Näin käy, kun leipätekstin poiminta epäonnistuu eikä liitteitä ole."
+        no_sender_detected_error: "Näin käy, kun emme tunnista käypää sähköpostiosoitetta viestin From-otsikkotiedosta."
         inactive_user_error: "Näin käy, kun lähettäjä ei ole aktiivinen."
         blocked_user_error: "Näin käy, kun lähettäjä on estetty."
         bad_destination_address: "Näin käy, kun viestin vastaanottaja/kopio/piilokopio -kenttien osoitteet eivät täsmää asetettuihin saapuvan sähköpostin osoitteiden kanssa."
@@ -59,6 +60,7 @@ fi:
       unrecognized_error: "Tuntematon virhe"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
       invalid_boolean: "Totuusarvomuuttuja ei kelpaa"
@@ -588,31 +590,31 @@ fi:
   post_action_types:
     off_topic:
       title: 'Se eksyy aiheesta'
-      description: 'Tämä viesti ei ole relevantti tässä ketjussa, jonka määrittelee ketjun otsikko ja aloitusviesti, ja pitäisi todennäköisesti siirtää toiselle alueelle.'
+      description: 'Viesti ei ole liity meneillään olevaan keskusteluun, jonka aiheen määrittelee ketjun otsikko ja aloitusviesti. Viesti pitäisi luultavasti siirtää toiseen paikkaan.'
       short_description: 'Ei liity aiheeseen'
       long_form: 'liputti tämän eksyvän aiheesta'
     spam:
       title: 'Roskaposti'
-      description: 'Viesti on mainos tai häiriköintiä. Se on hyödytön ja epäolennainen tähän ketjuun.'
+      description: 'Viesti on mainos tai ilkivaltaa. Se on hyödytön ja epäolennainen tähän ketjuun.'
       short_description: 'On mainos tai häiriköintiä'
       long_form: 'liputti tämän roskapostiksi'
       email_title: '"%{title}" liputettiin roskapostiksi'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Sopimaton'
-      description: 'Tämän viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
+      description: 'Viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
       short_description: '<a href="/guidelines">Palstan sääntöjen</a> vastainen'
       long_form: 'liputti tämän sopimattomaksi'
     notify_user:
       title: 'Lähetä käyttäjälle @{{username}} viesti.'
-      description: 'Haluan keskustella tästä viestistä kirjoittajan kanssa kahden kesken.'
+      description: 'Haluan keskustella viestistä kirjoittajan kanssa kahden kesken.'
       short_description: 'Haluan keskustella viestistä kirjoittajan kanssa suoraan kahden kesken.'
       long_form: 'lähetä käyttäjälle viesti'
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Jotain muuta"
-      description: 'Valvojan tulee huomioida tämä viesti muusta kuin yllä listatusta syystä.'
+      description: 'Valvojan tulee huomioida viesti muusta kuin yllä listatusta syystä.'
       short_description: 'Henkilökunnan tulisi huomioida muusta syystä'
       long_form: 'liputti tämän valvojien nähtäväksi'
       email_title: 'Valvojien tulisi huomioida viesti ketjussa "%{title}" '
@@ -624,12 +626,12 @@ fi:
       long_form: 'viesti lisätty kirjanmerkkeihin'
     like:
       title: 'Tykkää'
-      description: 'Tykkää tästä viestistä'
+      description: 'Tykkää viestistä'
       short_description: 'Tykkää viestistä'
       long_form: 'tykkäsi tästä'
     vote:
       title: 'Äänestä'
-      description: 'Äänestä tätä viestiä'
+      description: 'Äänestä viestiä'
       short_description: 'Äänestä viestiä'
       long_form: 'viestiä äänestetty'
   user_activity:
@@ -1539,9 +1541,41 @@ fi:
   invite_mailer:
     title: "Kutsu keskusteluun"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} kutsui sinut keskusteluun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
+
+      Jos kiinnostuit, klikkaa alla olevaa linkkiä:
+
+      %{invite_link}
   custom_invite_mailer:
     title: "Kutsu keskusteluun saatesanoilla"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} kutsui sinut keskusteluun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
+
+      Tällaisin saatesanoin
+
+      > %{user_custom_message}
+
+      Jos kiinnostuit, klikkaa alla olevaa linkkiä:
+
+      %{invite_link}
   invite_forum_mailer:
     title: "Kutsu palstalle"
     subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
@@ -1696,6 +1730,20 @@ fi:
     post_hidden:
       title: "Viesti piilotettu"
       subject_template: "Yhteisön piiloon liputtama viesti"
+      text_body_template: |
+        Hei,
+
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme sinulle, että viestisi piilotettiin.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Usea sivuston käyttäjä liputti viestin ennen sen piilottamista, joten mieti miten voisit muokata sitä heidän antamansa palautteen pohjalta. **Kun %{edit_delay} minuuttia on kulunut, voit muokata viestiä, mikä palauttaa sen näkyville.**
+
+        Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen.
+
+        Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
@@ -1851,6 +1899,10 @@ fi:
     email_reject_no_account:
       title: "Sähköposti hylätty - ei käyttäjätiliä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon tili"
+      text_body_template: |
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
+        Sähköpostiosoitteesi ei kuulu kenellekään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about)..
     email_reject_empty:
       title: "Sähköposti hylätty - tyhjä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Ei sisältöä"
@@ -2894,6 +2946,7 @@ fi:
         description: "Minkä emojityylin haluat yhteisöösi? Voit milloin vain lisätä mukautettuja emojeita navigoimalla Ylläpito --> Mukauta --> Emoji."
       invites:
         title: "Kutsu henkiökuntaa"
+        description: "Melkein valmista! Kutsutaan ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> kiintoisilla ketjunavauksilla ja vastauksilla, jotta yhteisö pääsee alkuun."
       finished:
         title: "Discoursesi on valmis!"
         description: |
