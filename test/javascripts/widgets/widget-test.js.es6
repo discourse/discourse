@@ -188,7 +188,7 @@ widgetTest('widget attaching', {
 
     createWidget('attach-test', {
       tagName: 'div.container',
-      template: hbs`{{attach widget="test-embedded"}}`
+      template: hbs`{{attach widget="test-embedded" attrs=attrs}}`
     });
   },
 
