@@ -1064,6 +1064,14 @@ describe TopicsController do
           }, format: :json
 
           expect(response.code.to_i).to be(403)
+          expect(response.body).to eq(I18n.t("invalid_access"))
+
+          get :show, params: {
+            topic_id: topic.id, slug: topic.slug, api_key: "bad"
+          }, format: :html
+
+          expect(response.code.to_i).to be(403)
+          expect(response.body).to eq(I18n.t("invalid_access"))
         end
       end
     end
